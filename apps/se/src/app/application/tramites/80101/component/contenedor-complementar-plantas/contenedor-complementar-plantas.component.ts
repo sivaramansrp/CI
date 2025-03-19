@@ -24,24 +24,22 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
     private destroyNotifier$: Subject<void> = new Subject();
 
     plantasSeleccionadas:PlantasSubfabricante[]=[]
-  constructor( private query: Tramite80101Query,
-    private router:Router,
-    private activatedRoute:ActivatedRoute
-  )
-  {
-    //temp
-  }
-
-  ngOnInit():void{
     
-        this.query.plantasPorCompletar$
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((plantasPorCompletar) => {
-            if (plantasPorCompletar.length > 0) {
-              this.plantasSeleccionadas =
-              plantasPorCompletar;
-            }
-          });
+  constructor(private query: Tramite80101Query,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  // eslint-disable-next-line no-empty-function
+  ) { }
+
+  ngOnInit(): void {
+    this.query.plantasPorCompletar$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((plantasPorCompletar) => {
+        if (plantasPorCompletar.length > 0) {
+          this.plantasSeleccionadas =
+            plantasPorCompletar;
+        }
+      });
   }
 
   regressarPlantas():void{

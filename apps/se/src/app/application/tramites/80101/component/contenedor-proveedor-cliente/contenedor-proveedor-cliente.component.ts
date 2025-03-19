@@ -1,4 +1,4 @@
-import { AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ProveedorClienteComponent } from '../../../../shared/components/proveedor-cliente/proveedor-cliente.component';
@@ -14,9 +14,13 @@ export class ContenedorProveedorClienteComponent {
   fraccionTablaDatos!:AnexoUnoEncabezado;
   datosDelProveedor:ProveedorClienteTabla[]=[];
 
-  public datosActualizadosProveedorCliente($event:ProveedorClienteTabla[]):void{
-    this.datosDelProveedor=$event;
-    //Datos del proveedor
+  /**
+   * Método que actualiza los datos del proveedor o cliente con la información proporcionada.
+   * 
+   * @param $event - Arreglo de objetos de tipo `ProveedorClienteTabla` que contiene los datos actualizados.
+   */
+  public datosActualizadosProveedorCliente($event: ProveedorClienteTabla[]): void {
+    this.datosDelProveedor = $event;
   }
 
 }

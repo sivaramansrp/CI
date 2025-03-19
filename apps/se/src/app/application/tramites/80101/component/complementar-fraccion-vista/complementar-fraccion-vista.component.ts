@@ -1,4 +1,6 @@
 import { Catalogo, ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { COMPLEMENTAR_FRACCION_CATALOGO_DATOS } from '../../constantes/nuevo-programa.enum';
+import { COMPLEMENTAR_FRACCION_DATOS } from '../../constantes/nuevo-programa.enum';
 import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
 import { Component } from '@angular/core';
@@ -12,22 +14,8 @@ import { Component } from '@angular/core';
 })
 export class ComplementarFraccionVistaComponent {
   public complimentarDatos!: ComplimentarFraccionResoponse;
-  public catagoriaSeleccionDatos: Catalogo[] = [{
-    id: 0,
-    descripcion: ''
-  }];
-  public complimentarFraccionDatos: ComplimentarFraccion = {
-    fraccionArancelaria: '',
-    anexoDos: '',
-    tipo: '',
-    umt: '',
-    catagoria: '',
-    descripcion: '',
-    monedaNacionalMensual: 0,
-    monedaNacionalDeDosPeriodos: 0,
-    volumenMensual: 0,
-    twoPeriodVolume: 0
-  }
+  public catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
+  public complimentarFraccionDatos: ComplimentarFraccion = COMPLEMENTAR_FRACCION_DATOS;
 
   getDatos(event: ComplimentarFraccionResoponse): void {
     this.complimentarDatos = event;
