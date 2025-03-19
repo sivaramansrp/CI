@@ -27,7 +27,7 @@ export * from './core/services/120402/representacionFederal/representacion-feder
 export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
 export * from './core/services/130118/pexim/pexim.service';
-export * from './core/services/220471/servicios-pantallas.enum';
+export {PANTAPASOS} from './core/services/220471/servicios-pantallas.enum';
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
@@ -97,6 +97,7 @@ export { ConfiguracionColumna } from './core/models/shared/configuracion-columna
 export { TablaSeleccion } from './core/enums/tabla-seleccion.enum';
 export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
+export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export * from './core/models/shared/configuracion-columna.model'
 export * from './core/services/220501/revision.service';
 export * from './core/services/220501/sagarpa/sagarpa.service';
@@ -133,6 +134,7 @@ export * from './tramites/components/requerimiento-informacion/requerimiento-inf
 export * from './tramites/components/acuse/acuse.component';
 
 export * from './core/models/shared/configuracion-columna.model';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/directives/Uppercase/uppercase.directive'
 export * from './tramites/constantes/constantes';
@@ -152,3 +154,16 @@ export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/pipes/booleanoSiNo/booleano-si-no.pipe';
 export * from './tramites/shared.module';
 
+export * from './core/models/shared/configuracion-columna.model';
+export * from './core/enums/tabla-seleccion.enum';
+
+export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export * from './tramites/directives/Uppercase/uppercase.directive'
+export * from './tramites/directives/Uppercase/uppercase.directive';
+export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/models/shared/configuracion-columna.model';
+export * from './core/enums/tabla-seleccion.enum';
+
+export * from './core/services/231001/materia-prima-formservice.service';
+export * from './core/services/231001/administrar-residuos.service';
