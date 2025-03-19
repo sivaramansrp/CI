@@ -22,5 +22,4 @@ describe('PasoUnoComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });
