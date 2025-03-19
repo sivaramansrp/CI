@@ -4,7 +4,6 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
-import { FECHA_CERTIFICADO } from '../../constantes/pexim-enum';
 import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 
@@ -94,11 +93,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario principal de la solicitud.
    */
   FormSolicitud!: FormGroup;
-
-  /**
-   * Para obtener la fecha.
-   */
-  setFecha: string = FECHA_CERTIFICADO;
 
   /**
    * Citas HTML de escape.
