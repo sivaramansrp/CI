@@ -94,7 +94,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       .get('correoElectronico')
       ?.setValue(this.derechoState.correoElectronico);
   }
-  continuar() {
+  continuar(): void {
     this.continuarEvento.emit('');
   }
   ngOnDestroy(): void {

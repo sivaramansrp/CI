@@ -40,7 +40,7 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-  continuar() {
+  continuar(): void {
     this.continuarEvento.emit('');
   }
 }
