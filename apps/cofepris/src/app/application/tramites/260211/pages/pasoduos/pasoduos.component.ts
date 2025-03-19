@@ -32,7 +32,7 @@ export class PasoduosComponent implements OnInit {
    *
    * @param catalogosServices Servicio para obtener los catálogos necesarios.
    */
-  constructor(private catalogosServices: CatalogosService) {
+  constructor(public catalogosServices: CatalogosService) {
     // Dependencia inyectada para uso posterior
   }
  
