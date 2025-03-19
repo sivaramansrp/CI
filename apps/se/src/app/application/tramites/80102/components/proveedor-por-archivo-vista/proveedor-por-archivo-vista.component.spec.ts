@@ -1,17 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProveedorPorArchivoVistaComponent } from './proveedor-por-archivo-vista.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule } from 'ngx-toastr';
+import { Location } from '@angular/common';
+import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ProveedorPorArchivoVistaComponent', () => {
   let component: ProveedorPorArchivoVistaComponent;
   let fixture: ComponentFixture<ProveedorPorArchivoVistaComponent>;
+  let mockLocation: any;
+  let mockToastrService: any;
 
   beforeEach(async () => {
+    // Create mocks for dependencies
+    mockLocation = { back: jest.fn() };
+    mockToastrService = { success: jest.fn(), error: jest.fn() };
+
+    // Configure TestBed
     await TestBed.configureTestingModule({
-      imports: [ProveedorPorArchivoVistaComponent, HttpClientTestingModule, ToastrModule.forRoot()],
+      imports: [HttpClientModule,ProveedorPorArchivoVistaComponent],
+      declarations: [],
       providers: [
-        { provide: 'ToastConfig', useValue: { timeOut: 3000, positionClass: 'toast-top-right', preventDuplicates: true } }
+        { provide: Location, useValue: mockLocation },
+        { provide: ToastrService, useValue: mockToastrService },
+        { provide: TOAST_CONFIG, useValue: {} },
       ],
     }).compileComponents();
 
@@ -20,7 +31,12 @@ describe('ProveedorPorArchivoVistaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call Location.back when regrssarAnnexoI is called', () => {
+    component.regrssarAnnexoI();
+    expect(mockLocation.back).toHaveBeenCalled();
   });
 });
