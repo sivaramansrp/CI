@@ -22,6 +22,6 @@ export class DatostratadosacuerdosService {
    * @returns {Observable<any>} Un observable que emite los datos obtenidos.
    */
   getData(): Observable<any> {
-    return this.http.get('./assets/json/110102/datostratadosacuerdos.json');
+    return this.http.get('./assets/json/110102/datosTratadosAcuerdos.json');
   }
 }
