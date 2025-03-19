@@ -1,19 +1,28 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Solicitud11201State, Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { Component, } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup, } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule, } from '@angular/forms';
+import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
+import { Subject, } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
+import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.css',
+  styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
    * El formulario incluye un campo 'linea' y un campo 'monto' con validaciones de 'required'.
@@ -48,6 +57,7 @@ export class PasoDosComponent {
     private fb: FormBuilder,
     private tramite11201Store: Tramite11201Store,
     private tramite301Query: Tramite11201Query
+    // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
@@ -113,7 +123,7 @@ export class PasoDosComponent {
     metodoNombre: keyof Tramite11201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite11201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite11201Store[metodoNombre] as (value: Tramite11201Store) => void)(VALOR);
   }
 
   /**
