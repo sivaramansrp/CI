@@ -27,7 +27,7 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
   standalone: true,
   imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule],
   templateUrl: './manifiestos-declaraciones.component.html',
-  styleUrl: './manifiestos-declaraciones.component.scss',
+  styleUrl: './manifiestos-declaraciones.component.css',
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**

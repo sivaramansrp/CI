@@ -23,7 +23,7 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './representante-legal.component.html',
-  styleUrl: './representante-legal.component.scss',
+  styleUrl: './representante-legal.component.css',
 })
 export class RepresentanteLegalComponent implements OnInit {
   /**
