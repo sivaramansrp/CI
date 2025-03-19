@@ -30,6 +30,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
@@ -68,8 +70,12 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     HistorialInspeccionFisicaComponent,
     CatalogoSelectComponent,
     TableComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    ToastrModule.forRoot()
   ],
   exports: [SolicitudComponent, SolicitudPageComponent],
+  providers:[
+    ToastrService,
+  ]
 })
 export class SagarpaModule {}
