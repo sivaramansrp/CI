@@ -12,8 +12,10 @@ import { PantallasFormData } from '../../../../../../../../../libs/shared/data-a
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ServiciosPantallasService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
 
+interface Solicitude {
   fechaCreacion: string;
   mercancia: string;
+  cantidad: number;
   proovedor: string;
 }
 /**
