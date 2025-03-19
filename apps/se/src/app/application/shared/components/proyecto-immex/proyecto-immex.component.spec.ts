@@ -39,7 +39,7 @@ describe('ProyectoImmexComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.crearProyectoForm = jest.fn();
     component.ngOnInit();
-    // expect(component.crearProyectoForm).toHaveBeenCalled();
+     expect(component.crearProyectoForm).toHaveBeenCalled();
   });
 
   it('should run #crearProyectoForm()', async () => {
@@ -50,14 +50,14 @@ describe('ProyectoImmexComponent', () => {
     component.proyectoImmexDatos.fechaDeFirma = 'fechaDeFirma';
     component.proyectoImmexDatos.fechaDeVigencia = 'fechaDeVigencia';
     component.crearProyectoForm();
-    // expect(component.fb.group).toHaveBeenCalled();
+     expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #setProyectpLista()', async () => {
     component.obtenerProyectoTablaDevolverLaLlamada = component.obtenerProyectoTablaDevolverLaLlamada || {};
     component.obtenerProyectoTablaDevolverLaLlamada.emit = jest.fn();
     component.setProyectpLista({});
-    // expect(component.obtenerProyectoTablaDevolverLaLlamada.emit).toHaveBeenCalled();
+     expect(component.obtenerProyectoTablaDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #aggregar()', async () => {
@@ -82,19 +82,14 @@ describe('ProyectoImmexComponent', () => {
     component.obtenerProyectoTablaDevolverLaLlamada = component.obtenerProyectoTablaDevolverLaLlamada || {};
     component.obtenerProyectoTablaDevolverLaLlamada.emit = jest.fn();
     component.aggregar();
-    // expect(component.proyectoForm.get).toHaveBeenCalled();
-    // expect(component.proyectoForm.reset).toHaveBeenCalled();
-    // expect(component.proyectoImmexTablaLista.findIndex).toHaveBeenCalled();
-    // expect(component.proyectoImmexTablaLista.splice).toHaveBeenCalled();
-    // expect(component.proyectoImmexTablaLista.push).toHaveBeenCalled();
-    // expect(component.obtenerProyectoTablaDevolverLaLlamada.emit).toHaveBeenCalled();
+     expect(component.obtenerProyectoTablaDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #limpar()', async () => {
     component.proyectoForm = component.proyectoForm || {};
     component.proyectoForm.reset = jest.fn();
     component.limpar();
-    // expect(component.proyectoForm.reset).toHaveBeenCalled();
+     expect(component.proyectoForm.reset).toHaveBeenCalled();
   });
 
   it('should run #elimiar()', async () => {
