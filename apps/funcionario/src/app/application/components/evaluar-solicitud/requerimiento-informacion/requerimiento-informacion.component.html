@@ -1,0 +1,25 @@
+<div class="container rounded p-3 bg-light">
+    <div class="row padding-top">
+        <br>
+        <ul class="nav nav-tabs">
+            <li [ngClass]="indice === 1 ? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
+                (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Capturar requerimiento</a>
+            </li>
+            <li [ngClass]="indice === 2 ? 'active' : ''">
+                <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
+                (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Solicitar documentos</a>
+            </li>
+        </ul>
+        <ng-container>
+            @switch (indice) {
+            @case (1) {
+             <app-capturar-requerimiento></app-capturar-requerimiento>
+            }
+            @case (2) {
+             <app-solicitar-documentos></app-solicitar-documentos>
+            } 
+            }
+          </ng-container>
+    </div>
+</div>

@@ -19,7 +19,14 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/sener/public"
+            "input": "apps/sener/src/assets/",
+            "output": "./assets/"
+          },
+          { "glob": "favicon.ico", "input": "./", "output": "./" },
+          {
+            "glob": "**/*",
+            "input": "libs/shared/theme/assets/",
+            "output": "./assets/"
           }
         ],
         "styles": ["apps/sener/src/styles.scss"],

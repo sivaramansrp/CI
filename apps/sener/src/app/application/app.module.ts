@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 import { ToastrModule, provideToastr } from 'ngx-toastr';
 
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
@@ -11,9 +12,9 @@ import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
+import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 @NgModule({
   declarations: [
@@ -42,4 +43,4 @@ import { TituloComponent } from "@ng-mf/data-access-user";
   ],
   bootstrap: [AppComponent],
 })
-export class AppAgaModule {}
+export class AppSenerModule {}

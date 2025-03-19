@@ -1,5 +1,6 @@
 <div class="container">
-  <form>
+  <form [formGroup]="datosdelForm">
+
     <ng-titulo titulo="Datos del tramite a realizar" />
     <div class="row">
       <div class="col-md-12">
@@ -7,28 +8,39 @@
         <span class="require">*</span>
       </div>
     </div>
-    <app-input-radio [radioOptions]="radioOptions" [selectedValue]="selectedValue" [isRequired]="true"
-      (valueChange)="onValueChange($event)" [layout]="'vertical'"></app-input-radio>
+    <app-input-radio [radioOptions]="radioOptions" [isRequired]="true"  [selectedValue]="selectedValue"
+    (change)="setValoresStore(datosdelForm,'certificada', 'setCertificada')" [layout]="'vertical'"  formControlName="certificada"></app-input-radio>
     <div class="row mt-4">
       <div class="col-md-12">
         <label for="message" class="form-label">Tratamiento :</label>
-        <textarea id="message" class="form-control mb-5" placeholder="" readonly="true"></textarea>
+        <textarea id="message" class="form-control mb-5" placeholder="" readonly="true" disabled></textarea>
       </div>
     </div>
   </form>
 
-  <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+  <form [formGroup]="formGroup1">
+    <ng-titulo titulo="Unidad expedidora"></ng-titulo>
  
-  <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
-      (valueChange)="onValueChange($event)" [layout]="'horizontal'"></app-input-radio>
+    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true" formControlName="osia"  (valueChange)="onValueChange($event)"
+    [layout]="'horizontal'"  (change)="setValoresStore(formGroup1,'osia', 'setosia')" ></app-input-radio>
+  
+        <div *ngIf="defaultSelect === 'oficina central'">
+              <div class="row">
+                
+                  <div class="col-md-4" *ngFor="let config of catalogConfigs"> 
+                    <app-catalogo-select
+                    [required]="config.required"
+                    [catalogo]="config.catalogo"
+                    [label]="config.label"
+                    [formControlName]="config.controlName"
+                    (change)="getDelegaciones()"
+                  ></app-catalogo-select>
+                  </div>
+              </div>
+          </div>
+  </form>
 
-      <div *ngIf="defaultSelect === 'oficina central'">
-            <div class="row">
-                <div class="col-md-4" *ngFor="let config of dropdownConfigs">
-                    <select-catalogos [catalogosDatos]="config" (valorSeleccion)="seleccionar($event)"></select-catalogos>
-                </div>
-            </div>
-        </div>
+
 
         <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
         <h6>Mercancias</h6>
@@ -44,11 +56,12 @@
     
         <div class="mb-5">
             <label for="message" class="form-label">Tratamiento:</label>
-            <textarea class="form-control" rows="5"></textarea>
+            <textarea class="form-control" rows="5" formControlName="datoscertificado" 
+            (change)="setValoresStore(datosdelForm,'datoscertificado','setdatoscertificado')"></textarea>
         </div>
-    
-        <div class="container text-end mt-5">
+<div class="container text-end mt-5">
             <button class="btn btn-default me-2">Guardar</button>
             <button class="btn btn-primary">Continuar</button>
         </div>
+     
 </div>

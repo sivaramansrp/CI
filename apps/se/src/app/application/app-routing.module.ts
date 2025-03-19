@@ -1,8 +1,5 @@
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
-
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -17,12 +14,25 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+   {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule)
+      },
 
   {
     path: 'exportador-autorizado',
     loadChildren: () =>
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
+      ),
+  },
+  {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
       ),
   },
   {
@@ -44,6 +54,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/110101/pantallas/pantallas.module').then(
         (m) => m.Pantallas110101Module
+      ),
+  },
+  {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
       ),
   },
   {
@@ -70,6 +87,12 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  }, 
+  {
+    path: 'cancelacion-de',
+    loadChildren: () =>
+      import('./tramites/140103/cancelacion-de.module').then(
+        (m) => m.CancelacionDeModule)
   },
   {
     path: 'certificado-registro',
