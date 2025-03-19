@@ -1,112 +1,96 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { SeccionStore } from '../../../../estados/seccion.store';
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
-
-// Mock Store Service
-@Injectable()
-class MockSeccionStore {
-  establecerSeccion = jest.fn();
-  establecerFormaValida = jest.fn();
-}
-
-// Custom Directive Mock
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-// Pipe Mocks
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
+import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { By } from '@angular/platform-browser';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 
 describe('SolicitantePageComponent', () => {
-  let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let seccionQueryMock: jest.Mocked<SeccionQuery>;
-  let seccionStoreMock: MockSeccionStore;
+  let fixture: ComponentFixture<SolicitantePageComponent>;
 
   beforeEach(async () => {
-    // Correcting Mock for SeccionQuery
-    seccionQueryMock = {
-      selectSeccionState$: observableOf({
-        pasos: [],
-        currentStep: 1
-      }) // ✅ Now it's an Observable
-    } as unknown as jest.Mocked<SeccionQuery>;
-
-    // Creating Mock for SeccionStore
-    seccionStoreMock = new MockSeccionStore();
-
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [
-        SolicitantePageComponent,
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: SeccionQuery, useValue: seccionQueryMock },
-        { provide: SeccionStore, useValue: seccionStoreMock }
-      ]
+      imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, BtnContinuarComponent, PasoTresComponent],
+      declarations: [SolicitantePageComponent],
+      providers: [ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        })]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    fixture.destroy();
-    jest.clearAllMocks();
-  });
-
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call seleccionaTab() with a given value', () => {
-    const tabMock = 1;
-    jest.spyOn(component, 'seleccionaTab');
-
-    component.seleccionaTab(tabMock);
-
-    expect(component.seleccionaTab).toHaveBeenCalledWith(tabMock);
+  it('should initialize pasos and datosPasos on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.pasos.length).toBe(3);
+    expect(component.datosPasos.nroPasos).toBe(3);
+    expect(component.datosPasos.indice).toBe(1);
   });
 
-  it('should call getValorIndice() and trigger wizard navigation', () => {
+  it('should update paso title on ngOnInit', () => {
+    component.ngOnInit();
+    const paso = component.pasos.find(p => p.indice === 2);
+    expect(paso?.titulo).toBe('Cargar pago');
+  });
+
+  it('should set indice on seleccionaTab', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+  });
+
+  it('should call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn()
-    } as any; // FIXED TypeScript error
-
-    component.getValorIndice({ valor: 2, accion: 'cont' });
+    } as any;
+    component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
 
-    component.getValorIndice({ valor: 1, accion: 'prev' });
+  it('should call wizardComponent.atras on getValorIndice with accion "prev"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
+    component.getValorIndice({ accion: 'prev', valor: 1 });
     expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should call getValorIndice on continuar', () => {
+    const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
+    component.continuar();
+    expect(getValorIndiceSpy).toHaveBeenCalledWith({ accion: 'cont', valor: component.indice });
+  });
+
+  it('should render paso-uno component when indice is 1', () => {
+    component.indice = 1;
+    fixture.detectChanges();
+    const pasoUnoElement = fixture.debugElement.query(By.css('paso-uno'));
+    expect(pasoUnoElement).toBeTruthy();
+  });
+
+  it('should render paso-tres component when indice is 3', () => {
+    component.indice = 3;
+    fixture.detectChanges();
+    const pasoTresElement = fixture.debugElement.query(By.css('paso-tres'));
+    expect(pasoTresElement).toBeTruthy();
+  });
+
+  it('should render app-paso-dos component when indice is 2', () => {
+    component.indice = 2;
+    fixture.detectChanges();
+    const pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
+    expect(pasoDosElement).toBeTruthy();
   });
 });
