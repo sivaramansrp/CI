@@ -54,12 +54,7 @@ import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core
     FirmaElectronicaComponent,
     AlertComponent
   ],
-  // providers:[SanitarioService]
-  //   AnexarDocumentosComponent,
-  //   TituloComponent,
-  //   ToastrModule.forRoot(),
-  //   FirmaElectronicaComponent
-  // ],
+  
   providers: [
       ToastrService,
       provideHttpClient(),

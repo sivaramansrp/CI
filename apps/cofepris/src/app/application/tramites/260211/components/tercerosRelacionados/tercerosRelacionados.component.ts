@@ -11,9 +11,9 @@ import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { PermisoModel } from '../detos.model';
-import { AgregarProveedorComponent } from '../agregarProveedor/agregarProveedor.component';
+
 import { AgregarFacturatorComponent } from '../agregarFacturator/agregarFacturator.component';
-import { AgregarRequeridaComponent } from '../agregarRequerida/agregarRequerida.component';
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
 import { Solicitud260211State, } from '../../../../estados/tramites/sanitario260211.store';
@@ -56,9 +56,7 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
     TableComponent,
     AlertComponent,
     TablaDinamicaComponent,
-    AgregarProveedorComponent,
     AgregarFacturatorComponent,
-    AgregarRequeridaComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
     AgregarDestinatarioComponent,
