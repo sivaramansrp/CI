@@ -1,7 +1,6 @@
 import { Query } from '@datorama/akita';
-import { TramiteStore } from 'apps/aga/src/app/application/estados/tramite.store';
-import { TramiteState } from 'apps/aga/src/app/application/estados/tramite.store';
 import { Injectable } from '@angular/core';
+import { TramiteState, TramiteStore } from '../estados/tramite.store';
 
 @Injectable({
   providedIn: 'root',
