@@ -32,7 +32,14 @@
         </div>
         <div class="row mb-5">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estadoSeleccionar" [label]="'Estado'" [required]="true" formControlName="Estado" name="Estado" (selectionChange)="estadoSeleccion($event)"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="estadoSeleccionar" [label]="'Estado'" [required]="true" formControlName="Estado" name="Estado"
+                (change)="
+                    setValoresStore(
+                    forma,
+                    'Estado',
+                    'setEstado'
+                    )" >
+                </app-catalogo-select>
             </div>
             <div class="col-md-4"></div>
             <div class="col-md-4 text-end">
@@ -58,10 +65,22 @@
         </div>
         <div class="row mb-5">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="RepresentacionFederal" [label]="'Representación federal'" [required]="true" formControlName="RepresentacionFederal" name="RepresentacionFederal" (selectionChange)="fedralSeleccion($event)" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="RepresentacionFederal" [label]="'Representación federal'" [required]="true" formControlName="RepresentacionFederal" name="RepresentacionFederal" 
+                (change)="
+                setValoresStore(
+                forma,
+                'RepresentacionFederal',
+                'setRepresentacionFederal'
+                )" ></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="ActividadProductiva" [label]="'Actividad productiva'" [required]="true" formControlName="ActividadProductiva" name="ActividadProductiva" (selectionChange)="productivaSeleccion($event)" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="ActividadProductiva" [label]="'Actividad productiva'" [required]="true" formControlName="ActividadProductiva" name="ActividadProductiva" 
+                (change)="
+                setValoresStore(
+                forma,
+                'ActividadProductiva',
+                'setActividadProductiva'
+                )"  ></app-catalogo-select>
             </div>
         </div>
     </form>
