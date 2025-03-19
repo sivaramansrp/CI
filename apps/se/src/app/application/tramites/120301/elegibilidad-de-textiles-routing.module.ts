@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ElegibilidadTextilesComponent } from './pages/elegibilidad-textiles/elegibilidad-textiles.component';
+import { NgModule } from '@angular/core';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'elegibilidad-textiles',
     component: ElegibilidadTextilesComponent,
@@ -15,7 +15,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class ElegibilidadDeTextilesRoutingModule { }

@@ -1,4 +1,4 @@
-import { ToastrModule, provideToastr } from 'ngx-toastr';
+import { ToastrModule, ToastrService, provideToastr } from 'ngx-toastr';
 
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
@@ -28,10 +28,12 @@ import { BandejaTareasPendientesComponent } from './bandejaPendientes/bandeja-ta
     BandejaTareasPendientesComponent,
 ],
   providers: [
+    ToastrService,
     provideToastr({
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
+    ToastrService
   ],
   bootstrap: [AppComponent],
 })
