@@ -15,6 +15,13 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+   {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule)
+      },
+
   {
     path: 'exportador-autorizado',
     loadChildren: () =>
