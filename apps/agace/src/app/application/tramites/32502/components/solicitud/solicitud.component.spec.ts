@@ -8,9 +8,7 @@ import { By } from '@angular/platform-browser';
 
 import { SolicitudComponent } from './solicitud.component';
 import { AvisoService } from '../../services/aviso.service';
-import { TranslatePipe } from '@ng-mf/data-access-user';
-import { PhoneNumberPipe } from '@ng-mf/data-access-user';
-import { SafeHtmlPipe } from '@ng-mf/data-access-user';
+import { TranslatePipe } from '../../../32502/pipes/traducir.pipe.mock';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Tramite32502Store } from '../../../../estados/queries/tramite32502.query';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
@@ -27,7 +25,7 @@ describe('SolicitudComponent', () => {
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         SolicitudComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe
+        TranslatePipe
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [

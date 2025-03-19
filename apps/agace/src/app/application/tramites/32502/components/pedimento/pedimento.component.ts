@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable dot-notation */
 import { Component, Input, OnChanges, SimpleChanges, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';

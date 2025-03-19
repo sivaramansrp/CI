@@ -306,7 +306,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Selecciona la Num Pedimento.
    */
-  sanitizeNumPedimento(): void {
+  sanitizarNumeroPedimento(): void {
     const NUMPEDIMENTO = this.FormSolicitud.get('reglaFraccion')?.value;
     this.tramite32502Store.setFraccionRegla(NUMPEDIMENTO);
   }

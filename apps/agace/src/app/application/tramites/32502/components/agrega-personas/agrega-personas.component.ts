@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -103,7 +104,6 @@ export class AgregaPersonasComponent {
         'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.'
       );
       this.habilitarCamposFormulario();
-      //return;
     }
   }
 
