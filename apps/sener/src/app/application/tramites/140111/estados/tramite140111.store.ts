@@ -26,7 +26,7 @@ export class Tramite140111Store extends Store<Tramite140111State> {
     super(createInitialState());
   }
 
-  public setMotivoRenunciaDeDerechos(motivoRenunciaDeDerechos: string) {
+  setMotivoRenunciaDeDerechos(motivoRenunciaDeDerechos: string): void {
     this.update((state) => ({
       ...state,
       motivoRenunciaDeDerechos,

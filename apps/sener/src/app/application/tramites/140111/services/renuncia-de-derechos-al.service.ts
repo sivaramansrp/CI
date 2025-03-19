@@ -6,7 +6,9 @@ import { PermisoFormInterface } from '../model/renuncia-de-derechos.model';
   providedIn: 'root'
 })
 export class RenunciaDeDerechosAlServicio {
-  constructor( private http: HttpClient) { }
+  constructor( private http: HttpClient) { 
+    // constructor
+  }
  
   getDescripcionDelCupo(): Observable<PermisoFormInterface> {
     return this.http.get<PermisoFormInterface>('assets/json/140111/renuncia-de-derechos.json');

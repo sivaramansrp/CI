@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
+
 import { RenunciaDeDerechosDePermisosComponent } from './pages/renuncia-de-derechos-de-permisos/renuncia-de-derechos-de-permisos.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'solicitante',
     component: RenunciaDeDerechosDePermisosComponent,
@@ -10,7 +12,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class RenunciaDeDerechosDeRoutingModule { }
