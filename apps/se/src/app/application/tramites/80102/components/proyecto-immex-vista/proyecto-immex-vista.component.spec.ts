@@ -26,7 +26,7 @@ describe('ProyectoImmexVistaComponent', () => {
       anexoDos: 'NO SENSIBLE',
       tipo: 'EXPORTACCION',
       umt: 'KILOGRAM',
-      descripcion: 'TEST COMPLEMENTOR',
+      descripcion: '',
       tipoDeDocumente: '',
       fechaDeFirma: '',
       fechaDeVigencia: '',

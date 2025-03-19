@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FederatariosYPlantasComponent } from './federatarios-y-plantas.component';
+import { ActivatedRoute } from '@angular/router';
 
 describe('FederatariosYPlantasComponent', () => {
   let component: FederatariosYPlantasComponent;
@@ -8,11 +9,13 @@ describe('FederatariosYPlantasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FederatariosYPlantasComponent],
+      providers: [
+        { provide: ActivatedRoute, useValue: {} }
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FederatariosYPlantasComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

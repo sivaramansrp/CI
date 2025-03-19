@@ -1,12 +1,10 @@
-
-import { Component, OnDestroy ,OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
 import { Location } from '@angular/common';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
-import { Tramite80102Query} from '../../estados/tramite80102.query';
-
+import { Tramite80102Query } from '../../estados/tramite80102.query';
 
 @Component({
   selector: 'app-contenedor-complementar-plantas',
@@ -15,45 +13,41 @@ import { Tramite80102Query} from '../../estados/tramite80102.query';
   templateUrl: './contenedor-complementar-plantas.component.html',
   styleUrl: './contenedor-complementar-plantas.component.scss',
 })
-export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy {
-    /**
+export class ContenedorComplementarPlantasComponent
+  implements OnInit, OnDestroy
+{
+  /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
    * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
    *
    * @property {Subject<void>} destroyNotifier$
    */
-    private destroyNotifier$: Subject<void> = new Subject();
+  private destroyNotifier$: Subject<void> = new Subject();
 
-    plantasSeleccionadas:PlantasSubfabricante[]=[]
-  constructor( private query: Tramite80102Query,
-    private ubicaccion: Location
-  )
-  {
-    //temp
+  plantasSeleccionadas: PlantasSubfabricante[] = [];
+  constructor(private query: Tramite80102Query, private ubicaccion: Location) {
+    //Constructor vacío
   }
 
-  ngOnInit():void{
-    
-        this.query.plantasPorCompletar$
-          .pipe(takeUntil(this.destroyNotifier$))
-          .subscribe((plantasPorCompletar) => {
-            if (plantasPorCompletar.length > 0) {
-              this.plantasSeleccionadas =
-              plantasPorCompletar;
-            }
-          });
+  ngOnInit(): void {
+    this.query.plantasPorCompletar$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((plantasPorCompletar) => {
+        if (plantasPorCompletar.length > 0) {
+          this.plantasSeleccionadas = plantasPorCompletar;
+        }
+      });
   }
 
-  regressarPlantas():void{
+  regressarPlantas(): void {
     this.ubicaccion.back();
-    
   }
-   /**
-     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-     * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-     * @method ngOnDestroy
-     */
-   ngOnDestroy(): void {
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

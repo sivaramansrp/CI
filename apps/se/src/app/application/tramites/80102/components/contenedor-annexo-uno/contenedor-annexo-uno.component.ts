@@ -93,7 +93,7 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
   }
 
   public rutaLaFraccionDeComplemento(event: RutaNombre): void{
-    if(event && event.catagoria && event.id && event.datos){
+    if(event && event.catagoria && event.id && (event.datos || event.catagoria ==='proveedor-por-archivo')){
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
       this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });

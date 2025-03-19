@@ -1,4 +1,3 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   AnexoDosConfiguartion,
   AnexoDosEncabezado,
@@ -77,9 +76,7 @@ export class AnexoUnoComponent {
   public datosExportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private fb: FormBuilder
   ) {
     this.createAnexoUnoForm();
     this.createAnexoDosForm();

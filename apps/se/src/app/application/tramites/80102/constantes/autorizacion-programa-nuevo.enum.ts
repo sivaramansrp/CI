@@ -263,3 +263,91 @@ export enum TIPO_FORMA {
   TIPO_PERSONA = 2,
   NATIONALIDAD_MEXICANA = 3,
 }
+
+/**
+ * @constant
+ * @description Constante que representa un catálogo de datos para complementar fracciones.
+ * Contiene un arreglo de objetos con propiedades `id` y `descripcion`.
+ * 
+ * @type {Array<{ id: number; descripcion: string }>}
+ * @example
+ * // Ejemplo de uso:
+ * console.log(COMPLEMENTAR_FRACCION_CATALOGO_DATOS);
+ * // Salida: [{ id: 0, descripcion: '' }]
+ */
+export const COMPLEMENTAR_FRACCION_CATALOGO_DATOS = [{
+  id: 0,
+  descripcion: ''
+}];
+
+/**
+ * @constant
+* @description Objeto que representa los datos complementarios de una fracción arancelaria.
+ * Contiene información como la fracción arancelaria, anexos, tipo, unidad de medida, categoría,
+ * descripción, y valores relacionados con moneda nacional y volumen.
+ * 
+ * @property {string} fraccionArancelaria - Código de la fracción arancelaria.
+ * @property {string} anexoDos - Información adicional del anexo dos.
+ * @property {string} tipo - Tipo de fracción o categoría.
+ * @property {string} umt - Unidad de medida utilizada.
+ * @property {string} catagoria - Categoría a la que pertenece la fracción.
+ * @property {string} descripcion - Descripción detallada de la fracción.
+ * @property {number} monedaNacionalMensual - Valor mensual en moneda nacional.
+ * @property {number} monedaNacionalDeDosPeriodos - Valor acumulado de dos periodos en moneda nacional.
+ * @property {number} volumenMensual - Volumen mensual asociado.
+ * @property {number} twoPeriodVolume - Volumen acumulado de dos periodos.
+ */
+export const COMPLEMENTAR_FRACCION_DATOS = {
+  fraccionArancelaria: '',
+  anexoDos: '',
+  tipo: '',
+  umt: '',
+  catagoria: '',
+  descripcion: '',
+  monedaNacionalMensual: 0,
+  monedaNacionalDeDosPeriodos: 0,
+  volumenMensual: 0,
+  twoPeriodVolume: 0
+}
+
+/**
+ * Contiene los datos del proyecto relacionados con el trámite.
+ * 
+ * @property fraccionArancelaria - Representa la fracción arancelaria del proyecto.
+ * @property anexoDos - Indica si el proyecto es sensible o no sensible.
+ * @property tipo - Define el tipo de operación, como exportación.
+ * @property umt - Unidad de medida utilizada, por ejemplo, kilogramos.
+ * @property descripcion - Descripción complementaria del proyecto.
+ * @property tipoDeDocumente - Tipo de documento asociado al proyecto.
+ * @property fechaDeFirma - Fecha en la que se firmó el documento.
+ * @property fechaDeVigencia - Fecha de vigencia del documento.
+ * @property rfcTaxId - RFC o Tax ID del contribuyente asociado al proyecto.
+ * @property razonSocial - Razón social del contribuyente asociado al proyecto.
+ */
+export const PROYECTO_DATOS = {
+  fraccionArancelaria: '6465469',
+  anexoDos: 'NO SENSIBLE',
+  tipo: 'EXPORTACCION',
+  umt: 'KILOGRAM',
+  descripcion: 'TEST COMPLEMENTOR',
+  tipoDeDocumente: '',
+  fechaDeFirma: '',
+  fechaDeVigencia: '',
+  rfcTaxId: 0,
+  razonSocial: ''
+}
+
+/**
+ * @constant DOCUMENTO_CATALOGO_DATOS
+ * @description Representa un catálogo de documentos con sus respectivos identificadores y descripciones.
+ * Contiene una lista de objetos que describen los documentos disponibles.
+ * 
+ * @property {number} id - Identificador único del documento.
+ * @property {string} descripcion - Descripción del documento.
+ */
+export const DOCUMENTO_CATALOGO_DATOS = [
+  {
+    id: 0,
+    descripcion: 'Cantrado De Maqula'
+  }
+]

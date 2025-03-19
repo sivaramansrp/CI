@@ -1,4 +1,5 @@
 import { Component, OnDestroy,OnInit} from '@angular/core';
+import { DOCUMENTO_CATALOGO_DATOS, PROYECTO_DATOS } from '../../constantes/autorizacion-programa-nuevo.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -17,25 +18,8 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   styleUrl: './proyecto-immex-vista.component.scss',
 })
 export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
-  public proyectoImmexDatos: PoryectoDatos = {
-    fraccionArancelaria: '6465469',
-    anexoDos: 'NO SENSIBLE',
-    tipo: 'EXPORTACCION',
-    umt: 'KILOGRAM',
-    descripcion: 'TEST COMPLEMENTOR',
-    tipoDeDocumente: '',
-    fechaDeFirma: '',
-    fechaDeVigencia: '',
-    rfcTaxId: 0,
-    razonSocial: ''
-  }
-
-  public documentoCatalogDatos: Catalogo[] = [
-    {
-      id: 0,
-      descripcion: 'Cantrado De Maqula'
-    }
-  ]
+  public proyectoImmexDatos: PoryectoDatos = PROYECTO_DATOS;
+  public documentoCatalogDatos: Catalogo[] = DOCUMENTO_CATALOGO_DATOS;
   public proyectoImmexConfiguartion = {
        proyectoImmexSeleccionCheckBox: TablaSeleccion.CHECKBOX,
         proyectoImmexTabla: PROYECTO_IMMEX_CONFIG
