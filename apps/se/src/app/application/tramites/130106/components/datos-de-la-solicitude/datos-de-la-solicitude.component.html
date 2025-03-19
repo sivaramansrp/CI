@@ -1,1 +1,38 @@
-<p>datos-de-la-solicitude works!</p>
+<div class="container">
+    <ng-titulo titulo="Datos del tramite a realizer" />
+    <form [formGroup]="formulario">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="solicitud" class="form-label">Solicitud*:</label>
+                <div>
+                    <input type="radio" id="solicitudInicial" formControlName="Solicitud" name="Solicitud"
+                        value="inicial" checked> Inicial
+                </div>
+            </div>
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="Régimen"
+                    [label]="'Régimen al que se destinará la mercancía'" [required]="true"
+                    name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'Régimen', 'setRégimen')"></app-catalogo-select>
+                <br>
+                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="Clasificación"
+                    [label]="'Clasificación del régimen'" [required]="true"
+                    name="Clasificación del régimen" (change)="setValoresStore(formulario,'Clasificación', 'setClasificación')"></app-catalogo-select>
+            </div>
+        </div>
+    </form>
+    <ng-titulo titulo="Datos de la mercancía" />
+    <form [formGroup]="formulario">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="producto" class="form-label">Producto*:</label>
+                <app-input-radio [radioOptions]="radioOptions" [isRequired]="true"
+                     [layout]="'vertical'"></app-input-radio>
+            </div>
+            <div class="col-md-6">
+                <label for="descripcion">Descripción de la mercancía*:</label>
+                <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                    formControlName="SolitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'SolitudDescripcion', 'setSolitudeDescripcion')"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
