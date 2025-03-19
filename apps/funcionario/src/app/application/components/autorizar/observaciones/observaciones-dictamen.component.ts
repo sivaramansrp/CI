@@ -1,8 +1,9 @@
+
 import { Component,OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
 
 /**
    * @description Estructura de las observaciones de dictamen
@@ -22,7 +23,7 @@ interface Observacion {
   templateUrl: './observaciones-dictamen.component.html',
   styleUrl: './observaciones-dictamen.component.css',
 })
-export class ObservacionesDictamenComponent implements OnInit {
+export class ObservacionesDictamenComponent {
   /**
    * @description Variable que almacena el formulario de dictamen
    */
@@ -43,9 +44,6 @@ export class ObservacionesDictamenComponent implements OnInit {
       { id: 3, Detalle: 'Observación 3', fechaGeneracion: '2025-03-12', fechaAtencion: '2025-03-14', Estatus: 'Atendido', GeneradaPor: 'Funcionario 1' }
     ];
   }
-  ngOnInit(): void {
-    //code
-  }
   /**
    * @description Metodo que redirige a la pantalla de Autorizar Dictamen
    */
@@ -56,17 +54,17 @@ export class ObservacionesDictamenComponent implements OnInit {
    * @description Metodo que redirige al Guardado de la Observacion
    */
   BtnGuardarObs(): void { 
-    const mensajeDictamen = this.dictamenForm.get('mensajeDictamen')?.value;
-    if (mensajeDictamen) {
-      const nuevaObservacion: Observacion = {
+    const MENSAJE_DICTAMEN = this.dictamenForm.get('mensajeDictamen')?.value;
+    if (MENSAJE_DICTAMEN) {
+      const NUEVA_OBSERVACION: Observacion = {
         id: this.observaciones.length + 1,
-        Detalle: mensajeDictamen,
+        Detalle: MENSAJE_DICTAMEN,
         fechaAtencion: new Date().toISOString().split('T')[0], // Fecha actual en formato YYYY-MM-DD
         fechaGeneracion: new Date().toISOString().split('T')[0],
         Estatus: 'Atendido',
         GeneradaPor: 'Funcionario 1'
       };
-      this.observaciones.push(nuevaObservacion);
+      this.observaciones.push(NUEVA_OBSERVACION);
     }
     // Redirigir al componente BandejaPendientesComponent
     this.router.navigate(['funcionario/bandeja']);  

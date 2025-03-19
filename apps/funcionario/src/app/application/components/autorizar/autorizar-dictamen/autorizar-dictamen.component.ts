@@ -1,8 +1,8 @@
 import { Component,OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { EncabezadoRequerimientoComponent } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-autorizar-dictamen',
