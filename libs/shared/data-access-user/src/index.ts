@@ -126,3 +126,4 @@ export * from './core/enums/tabla-seleccion.enum';
 
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
+export * from './core/models/260303/certificados-licencias-permisos.model';

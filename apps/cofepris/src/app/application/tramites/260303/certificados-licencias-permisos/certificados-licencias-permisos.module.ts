@@ -11,6 +11,8 @@ import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud
 import { PagoDeDerechosComponent } from '../components/pago-de-derechos/pago-de-derechos.component';
 import { TercerosRelacionadosComponent } from '../components/terceros-relacionados/terceros-relacionados.component';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { provideHttpClient } from '@angular/common/http';
+import { CertificadosLicenciasPermisosService } from '../services/certificados-licencias-permisos.service';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 
 ],
 providers: [
-  BsModalService
+  BsModalService,
+  provideHttpClient(),
+  CertificadosLicenciasPermisosService
 ]
 }) 
 export class CertificadosLicenciasPermisosModule { }
