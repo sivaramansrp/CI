@@ -36,8 +36,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
     ReactiveFormsModule,
     CatalogoSelectComponent,
   ],
-  templateUrl: './NotifDomicile.component.html',
-  styleUrl: './NotifDomicile.component.scss',
+  templateUrl: './notif-domicile.component.html',
+  styleUrl: './notif-domicile.component.scss',
 })
 /***
  *  NotifDomicileComponent */
