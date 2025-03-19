@@ -12,26 +12,75 @@
     @if(tipoSolicitudSeleccionada) {
     <ng-titulo titulo="Datos del importador/exportador" />
     <div formGroupName="datosImportadorExportador">
+      @if (isApoderado && masDeUnaPatente) {
+      <!-- Sección Apoderado elegir patente -->
+      <div class="row">
+        <div class="col-md-12">
+          <h6>
+            Debes seleccionar una patente para la solicitud del servicio
+            extraordinario
+          </h6>
+        </div>
+        @for (patente of patentes; track $index ) {
+        <div class="col-md-4">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="apoderadoPatente" [value]="patente"
+              id="apoderadoPatente_{{ $index + 1 }}" formControlName="apoderadoPatente" (change)="patenteApoderado()" />
+            <label class="form-check-label" for="apoderadoPatente_{{ $index + 1 }}">{{
+              patente
+              }}</label>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Sección RFC y Nombre  -->
+      <div class="row">
+        <div class="col-md-4">
+          <label for="empresaApoderado" id="RFCempresa">RFC</label>
+          <span class="require">*</span>
+          <select id="empresaApoderado" formControlName="empresaApoderado" class="form-control">
+            <option value="-1" selected>Seleccione una opción</option>
+            <!-- Add options as needed -->
+          </select>
+        </div>
+
+        @if (isApoderado && masDeUnaEmpresa) {
+        <div class="col-md-4">
+          <label for="empresasApoderado" id="RFCEmpresas">RFC</label>
+          <span class="require">*</span>
+          <select formControlName="empresasApoderado" id="empresasApoderado" class="form-control">
+            <option value="-1" selected>Seleccione una opción</option>
+          </select>
+          <span id="errorEmpresasApoderado" name="errorEmpresasApoderado" class="text-danger"></span>
+        </div>
+
+        }
+      </div>
+
+      } @else {
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="RFCImpExp">RFC*:</label>
-            <input class="form-control" id="RFCImpExp" placeholder="RFC" type="text" formControlName="RFCImpExp"
-              [ngClass]="
-                isValid(datosImportadorExportador, 'RFCImpExp')
-                  ? 'required'
-                  : ''
-              " libUppercase (blur)="busqueda_rfc()" />
+            <label class="form-label" for="rfcImportExport">RFC*:</label>
+            <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"
+              formControlName="rfcImportExport" [ngClass]="
+                  isValid(datosImportadorExportador, 'rfcImportExport')
+                    ? 'required'
+                    : ''
+                " appUppercase (blur)="busqueda_rfc()" />
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="nombre">Nombre:</label>
-            <input class="form-control" id="nombre" formControlName="nombre" placeholder="Nombre" type="text"
-              libUppercase />
+            <label class="form-label" for="nombreImportExport">Nombre:</label>
+            <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
+              placeholder="Nombre" type="text" appUppercase />
           </div>
         </div>
       </div>
+      }
+
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -55,12 +104,17 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="programa">Programa de fomento:</label>
-            <input class="form-control" id="programa" placeholder="" type="text" formControlName="programa" (change)="
+            <div class="form-check-custome">
+              <label class="form-label" for="programa">Programa de fomento:</label>
+              <input class="form-check-input check-ms" type="checkbox" id="programa" formControlName="programa"
+                (change)="checkPrograma()" />
+            </div>
+            <input class="form-control" id="desProgramaFomento" placeholder="" type="text"
+              formControlName="desProgramaFomento" (change)="
                 setValoresStore(
                   datosImportadorExportador,
-                  'programa',
-                  'setPrograma'
+                  'desProgramaFomento',
+                  'setDesProgramaFomento'
                 )
               " />
           </div>
@@ -68,12 +122,17 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="desImmex">Immex (Número/aaaa):</label>
+            <div class="form-check-reverse">
+              <label class="form-check-label" for="checkIMMEX">Immex (Número/aaaa):</label>
+              <input class="form-check-input" type="checkbox" id="checkIMMEX" formControlName="checkIMMEX"
+                (change)="checkImmex()" />
+
+            </div>
             <input class="form-control" id="desImmex" placeholder="" type="text" formControlName="desImmex" (change)="
                 setValoresStore(
                   datosImportadorExportador,
                   'desImmex',
-                  'setdesImmexValue'
+                  'setDesImmex'
                 )
               " />
           </div>
@@ -81,7 +140,11 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="desIndustrialAutomotriz">Industria Automotriz:</label>
+            <div class="form-check-reverse">
+              <label class="form-label" for="industriaAutomotriz">Industria Automotriz:</label>
+              <input class="form-check-input" type="checkbox" id="industriaAutomotriz"
+                formControlName="industriaAutomotriz" (change)="checkAutomotriz()" />
+            </div>
             <input class="form-control" id="desIndustrialAutomotriz" placeholder="" type="text"
               formControlName="desIndustrialAutomotriz" (change)="
                 setValoresStore(
@@ -103,40 +166,40 @@
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a"
-                id="certificacionALab" formControlName="tipoEmpresaCertificada" (change)="
+                id="certificacionA" formControlName="tipoEmpresaCertificada" (change)="
                   setValoresStore(
                     datosImportadorExportador,
                     'tipoEmpresaCertificada',
                     'setTipoEmpresaCertificada'
                   )
                 " />
-              <label class="form-check-label" for="certificacionALab">I.V.A e I.E.P.S Certificación A:</label>
+              <label class="form-check-label" for="certificacionA">I.V.A e I.E.P.S Certificación A:</label>
             </div>
           </div>
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa"
-                id="certificacionAALab" formControlName="tipoEmpresaCertificada" (change)="
+                id="certificacionAA" formControlName="tipoEmpresaCertificada" (change)="
                   setValoresStore(
                     datosImportadorExportador,
                     'tipoEmpresaCertificada',
                     'setTipoEmpresaCertificada'
                   )
                 " />
-              <label class="form-check-label" for="certificacionAALab">I.V.A e I.E.P.S Certificación AA:</label>
+              <label class="form-check-label" for="certificacionAA">I.V.A e I.E.P.S Certificación AA:</label>
             </div>
           </div>
           <div class="col">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aaa"
-                id="certificacionAAALab" formControlName="tipoEmpresaCertificada" (change)="
+                id="certificacionAAA" formControlName="tipoEmpresaCertificada" (change)="
                   setValoresStore(
                     datosImportadorExportador,
                     'tipoEmpresaCertificada',
                     'setTipoEmpresaCertificada'
                   )
                 " />
-              <label class="form-check-label" for="certificacionAAALab">I.V.A e I.E.P.S Certificación AAA:</label>
+              <label class="form-check-label" for="certificacionAAA">I.V.A e I.E.P.S Certificación AAA:</label>
             </div>
           </div>
         </div>
@@ -152,29 +215,29 @@
 
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="opEconomicoAut"
-                formControlName="opEconomicoAut" (change)="
+              <input class="form-check-input" type="checkbox" value="" id="certificacionOEA"
+                formControlName="certificacionOEA" (change)="
                   setValoresStore(
                     datosImportadorExportador,
-                    'opEconomicoAut',
-                    'setOpEconomicoAut'
+                    'certificacionOEA',
+                    'setCertificacionOEA'
                   )
                 " />
-              <label class="form-check-label" for="opEconomicoAut">Operador económico autorizado</label>
+              <label class="form-check-label" for="certificacionOEA">Operador económico autorizado</label>
             </div>
           </div>
 
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="revisionOrigen"
-                formControlName="revisionOrigen" (change)="
+              <input class="form-check-input" type="checkbox" value="" id="revision"
+                formControlName="revision" (change)="
                   setValoresStore(
                     datosImportadorExportador,
-                    'revisionOrigen',
-                    'setRevisionOrigen'
+                    'revision',
+                    'setRevision'
                   )
                 " />
-              <label class="form-check-label" for="revisionOrigen">Revisión en origen</label>
+              <label class="form-check-label" for="revision">Revisión en origen</label>
             </div>
           </div>
         </div>
@@ -418,16 +481,16 @@
     <div formGroupName="transporte">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="tipoVehiculo" formControlName="tipoTransporte"
-            [label]="'Tipo de transporte'" [required]="true" (change)="
+          <app-catalogo-select [catalogo]="tipoVehiculo" formControlName="tipoTransporte" [label]="'Tipo de transporte'"
+            [required]="true" (change)="
               setValoresStore(transporte, 'tipoTransporte', 'setTipoTransporte')
             "></app-catalogo-select>
         </div>
       </div>
       @if (transporte.get('tipoTransporte')?.value) {
-        <div class="row">
-          <lib-agregar-transporte [tipo]="transporte.get('tipoTransporte')?.value"></lib-agregar-transporte>
-        </div>
+      <div class="row">
+        <lib-agregar-transporte [tipo]="transporte.get('tipoTransporte')?.value"></lib-agregar-transporte>
+      </div>
       }
     </div>
 
@@ -488,8 +551,8 @@
 </div>
 
 <!-- Modal error -->
-<div class="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel"
-  aria-hidden="true" data-bs-backdrop="static">
+<div class="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true"
+  data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -510,4 +573,3 @@
     </div>
   </div>
 </div>
-

@@ -88,7 +88,7 @@
           Cancelar
         </button>
 
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarFormulario()">
+        <button type="button" class="btn btn-default" (click)="limpiarFormulario()">
           Limpiar
         </button>
 
@@ -151,58 +151,52 @@
 </ng-template>
 
 <ng-template #ferroviario>
-  <div class="row">
+  <div class="row" [formGroup]="ferroviarioForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Npumero de BL:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="numeroBL">Npumero de BL:</label>
+        <input class="form-control" id="numeroBL" placeholder="" type="text" formControlName="numeroBL">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Tipo de equipo:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="tipoEquipo">Tipo de equipo:</label>
+        <input class="form-control" id="tipoEquipo" placeholder="" type="text" formControlName="tipoEquipo">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Iniciales de equipo:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="inicialesEquipo">Iniciales de equipo:</label>
+        <input class="form-control" id="inicialesEquipo" placeholder="" type="text" formControlName="inicialesEquipo">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Número de equipo:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="numeroEquipo">Número de equipo:</label>
+        <input class="form-control" id="numeroEquipo" placeholder="" type="text" formControlName="numeroEquipo">
       </div>
     </div>
   </div>
 </ng-template>
 
 <ng-template #peatonal>
-  <div class="row">
+  <div class="row" [formGroup]="peatonalForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">RFC empresa responsable:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="rfcEmpresa">RFC empresa responsable:</label>
+        <input class="form-control" id="rfcEmpresa" placeholder="" type="text" formControlName="rfcEmpresa">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Empresa transportista:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="nombreTransportista">Nombre transportista:</label>
+        <input class="form-control" id="nombreTransportista" placeholder="" type="text" formControlName="nombreTransportista">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Nombre transportista:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="form-group">
-        <label class="form-label" for="idPedimento">ID de Gafete:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="numGafete">ID de Gafete:</label>
+        <input class="form-control" id="numGafete" placeholder="" type="text" formControlName="numGafete">
       </div>
     </div>
   </div>
@@ -213,23 +207,23 @@
 <ng-template #aereo></ng-template>
 
 <ng-template #otro>
-  <div class="row">
+  <div class="row" [formGroup]="otroForma">
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Tipo de transporte:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="tipoTransporteDes">Tipo de transporte:</label>
+        <input class="form-control" id="tipoTransporteDes" placeholder="" type="text" formControlName="tipoTransporteDes">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Empresa transportista:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="empTransportista">Empresa transportista:</label>
+        <input class="form-control" id="empTransportista" placeholder="" type="text" formControlName="empTransportista">
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
-        <label class="form-label" for="idPedimento">Datos del transporte:</label>
-        <input class="form-control" id="idPedimento" placeholder="" type="text">
+        <label class="form-label" for="datosTransporte">Datos del transporte:</label>
+        <input class="form-control" id="datosTransporte" placeholder="" type="text" formControlName="datosTransporte">
       </div>
     </div>
   </div>

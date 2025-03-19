@@ -15,6 +15,7 @@ import {
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import {
+  DatosAgregarFormulario,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -47,7 +48,6 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
-import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
@@ -98,6 +98,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   selectRangoDias: string[] = [];
   mostrarRangoFechas: boolean = false;
+  isApoderado: boolean = true;
+  masDeUnaPatente: boolean = true;
+  masDeUnaEmpresa: boolean = true;
+
+  patentes: string[] = ['3061', '3062', '3063'];
 
   // Pedimento -crea una señal para validar
   validacionPedimento: boolean = false;
@@ -434,6 +439,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
+
   /**
    * Obtiene la patente y la agrega al formulario.
    * 
@@ -444,7 +450,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private obtenerPatente(): void {
     // Busqueda de la patente a algun endpoint
-    const DATOS_PATENTE: datosAgregarFormulario = {
+    const DATOS_PATENTE: DatosAgregarFormulario = {
       form: this.despacho,
       field: 'patente',
       valor: '3061',
@@ -463,6 +469,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
       datosImportadorExportador: this.fb.group({
+        apoderadoPatente: [],
+        empresaApoderado: [],
+        empresasApoderado: [],
+
         RFCImpExp: [
           this.solicitudState?.RFCImpExp,
           [
@@ -477,13 +487,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.desNumeroRegistro,
           [Validators.maxLength(25)],
         ],
-        programa: [this.solicitudState?.programa, [Validators.maxLength(300)]],
-        desImmex: [this.solicitudState?.desImmex],
-        desIndustrialAutomotriz: [this.solicitudState?.desIndustrialAutomotriz],
+
+        programa: [this.solicitudState?.programa],
+        desProgramaFomento: [{ value: this.solicitudState?.desProgramaFomento, disabled: true }, [Validators.maxLength(300)]],
+
+        checkIMMEX: [this.solicitudState?.checkIMMEX],
+        desImmex: [{ value: this.solicitudState?.desImmex, disabled: true }, [Validators.maxLength(300)]],
+
+        industriaAutomotriz: [this.solicitudState?.industriaAutomotriz],
+        desIndustrialAutomotriz: [{ value: this.solicitudState?.desIndustrialAutomotriz, disabled: true }, [Validators.maxLength(25)]],
+
         tipoEmpresaCertificada: [this.solicitudState?.tipoEmpresaCertificada],
         socioComercial: [this.solicitudState?.socioComercial],
-        opEconomicoAut: [this.solicitudState?.opEconomicoAut],
-        revisionOrigen: [this.solicitudState?.revisionOrigen],
+        certificacionOEA: [this.solicitudState?.certificacionOEA],
+        revision: [this.solicitudState?.revision],
         idSocioComercial: [
           { value: this.solicitudState?.idSocioComercial, disabled: true },
         ],
@@ -790,7 +807,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosImportadorExportador.get('socioComercial')?.value;
     if (SOCIO_COMERCIAL) {
       this.datosImportadorExportador.get('idSocioComercial')?.enable();
-      this.datosImportadorExportador.get('idSocioComercial')?.setValidators([Validators.required, Validators.maxLength(30)],);
+      this.datosImportadorExportador.get('idSocioComercial')?.setValidators([Validators.required, Validators.maxLength(30), Validators.pattern(this.validacionesService.alfaNumericosEspacioPattern)]);
       this.datosImportadorExportador.get('idSocioComercial')?.updateValueAndValidity();
     } else {
       this.datosImportadorExportador.get('idSocioComercial')?.clearValidators();
@@ -966,5 +983,76 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       'setNombreRecinto'
     )
   }
+
+  patenteApoderado(): void {
+    // Busqueda de la patente a algun endpoint
+    const PATENTE = this.FormSolicitud.get('apoderadoPatente')?.value;
+    const DATOS_PATENTE: DatosAgregarFormulario = {
+      form: this.despacho,
+      field: 'patente',
+      valor: PATENTE,
+    };
+    this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+
+    this.obtenerEmpresasPatente(PATENTE);
+    this.obtenerIdPatentesAduanales(PATENTE);
+  }
+
+  obtenerEmpresasPatente(patente: string) {
+    console.log('Peticion POST a la api para obtener las empresas con la patente: ', patente);
+
+
+  }
+  obtenerIdPatentesAduanales(patente: string): void {
+    console.log('Peticion POST a la api para obtener las patentes aduanales con la patente: ', patente);
+
+
+  }
+
+  checkPrograma(): void {
+    const PROGRAMA = this.datosImportadorExportador.get('programa')?.value;
+    if (PROGRAMA) {
+      this.datosImportadorExportador.get('desProgramaFomento')?.enable();
+      this.datosImportadorExportador.get('desProgramaFomento')?.setValidators([Validators.required, Validators.maxLength(300)]);
+      this.datosImportadorExportador.get('desProgramaFomento')?.updateValueAndValidity();
+    } else {
+      this.datosImportadorExportador.get('desProgramaFomento')?.clearValidators();
+      this.datosImportadorExportador.get('desProgramaFomento')?.updateValueAndValidity();
+      this.datosImportadorExportador.get('desProgramaFomento')?.reset();
+      this.datosImportadorExportador.get('desProgramaFomento')?.disable();
+    }
+
+  }
+
+  checkImmex(): void {
+    const IMMEX = this.datosImportadorExportador.get('checkIMMEX')?.value;
+    if (IMMEX) {
+      this.datosImportadorExportador.get('desImmex')?.enable();
+      this.datosImportadorExportador.get('desImmex')?.setValidators([Validators.required, Validators.maxLength(300)]);
+      this.datosImportadorExportador.get('desImmex')?.updateValueAndValidity();
+    } else {
+      this.datosImportadorExportador.get('desImmex')?.clearValidators();
+      this.datosImportadorExportador.get('desImmex')?.updateValueAndValidity();
+      this.datosImportadorExportador.get('desImmex')?.reset();
+      this.datosImportadorExportador.get('desImmex')?.disable();
+    }
+  }
+
+  checkAutomotriz(): void {
+    const AUTOMOTRIZ = this.datosImportadorExportador.get('industriaAutomotriz')?.value;
+    if (AUTOMOTRIZ) {
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.enable();
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.setValidators([Validators.required, Validators.maxLength(25)]);
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.updateValueAndValidity();
+    } else {
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.clearValidators();
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.updateValueAndValidity();
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.reset();
+      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.disable();
+    }
+  }
+
+
+
 
 }

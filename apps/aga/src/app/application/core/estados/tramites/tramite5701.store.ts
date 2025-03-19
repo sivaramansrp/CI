@@ -18,15 +18,22 @@ export interface Solicitud5701State {
   RFCImpExp: string;
   nombre: string;
   desNumeroRegistro: string;
-  programa: string;
+
+  programa: boolean;
+  desProgramaFomento: string;
+
+
+  checkIMMEX: boolean;
   desImmex: string;
-  desImmexValue: string;
+
+  industriaAutomotriz: boolean;
   desIndustrialAutomotriz: string;
+
   tipoEmpresaCertificada: string;
   idSocioComercial: string;
   socioComercial: boolean;
-  opEconomicoAut: boolean;
-  revisionOrigen: boolean;
+  certificacionOEA: boolean;
+  revision: boolean;
 
   fechaInicio: string;
   horaInicio: string;
@@ -86,15 +93,17 @@ export function createInitialState(): Solicitud5701State {
     RFCImpExp: '',
     nombre: '',
     desNumeroRegistro: '',
-    programa: '',
+    programa: false,
+    desProgramaFomento: '',
+    checkIMMEX: false,
     desImmex: '',
-    desImmexValue: '',
+    industriaAutomotriz: false,
     desIndustrialAutomotriz: '',
     tipoEmpresaCertificada: '',
     idSocioComercial: '',
     socioComercial: false,
-    opEconomicoAut: false,
-    revisionOrigen: false,
+    certificacionOEA: false,
+    revision: false,
     fechaInicio: '',
     horaInicio: '',
     fechaFinal: '',
@@ -181,24 +190,38 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setPrograma(programa: string): void {
+  public setPrograma(programa: boolean): void {
     this.update((state) => ({
       ...state,
       programa,
     }));
   }
+  
+  public setDesProgramaFomento(desProgramaFomento: string): void {
+    this.update((state) => ({
+      ...state,
+      desProgramaFomento,
+    }));
+  }
 
-  public setdesImmex(desImmex: string): void {
+  public setCheckIMMEX(checkIMMEX: boolean): void {
+    this.update((state) => ({
+      ...state,
+      checkIMMEX,
+    }));
+  }
+
+  public setDesImmex(desImmex: string): void {
     this.update((state) => ({
       ...state,
       desImmex,
     }));
   }
 
-  public setdesImmexValue(desImmexValue: string): void {
+  public setIndustriaAutomotriz(industriaAutomotriz: boolean): void {
     this.update((state) => ({
       ...state,
-      desImmexValue,
+      industriaAutomotriz,
     }));
   }
 
@@ -230,17 +253,17 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setOpEconomicoAut(opEconomicoAut: boolean): void {
+  public setCertificacionOEA(certificacionOEA: boolean): void {
     this.update((state) => ({
       ...state,
-      opEconomicoAut,
+      certificacionOEA,
     }));
   }
 
-  public setRevisionOrigen(revisionOrigen: boolean): void {
+  public setRevision(revision: boolean): void {
     this.update((state) => ({
       ...state,
-      revisionOrigen,
+      revision,
     }));
   }
 

@@ -60,6 +60,8 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   maritimoForma!: FormGroup;
   aereoForma!: FormGroup;
 
+  formaSeleccionada!: string;
+
   public observaciones: FormControl = new FormControl('');
   anios!: number[];
 
@@ -148,6 +150,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   tipoTabla(): ItemTransporte[] {
     switch (parseInt(this.tipo, 10)) {
       case 1:
+        this.formaSeleccionada = 'carreteroForma';
         this.anios = this.obtenerAniosModelo();
         this.crearCarreteroForm();
         return this.HEADER_TABLA_CARRETERO;
@@ -205,7 +208,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     this.mensajeModal = '';
   }
 
-  limpiarFormulario(): void { }
+  limpiarFormulario(): void {
+    this.carreteroForma.reset();
+   
+  }
 
   agregarTipoTransporte(): void {
     const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
@@ -213,7 +219,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
     this.bodyTabla.push(TRANSPORTE);
     console.log(this.bodyTabla);
-    
+
     this.cerrarModal();
 
 

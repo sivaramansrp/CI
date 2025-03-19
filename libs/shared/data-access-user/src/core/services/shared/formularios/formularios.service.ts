@@ -1,7 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { datosAgregarFormulario } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
+import { DatosAgregarFormulario } from 'libs/shared/data-access-user/src/core/models/shared/forms-model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class FormulariosService {
    * @param datosForm datos del formulario
    */
   public agregarValorCamposDesactivados(
-    datosForm: datosAgregarFormulario
+    datosForm: DatosAgregarFormulario
   ): void {
     datosForm.form.controls[datosForm.field].enable();
     datosForm.form.controls[datosForm.field].setValue(datosForm.valor);
@@ -52,7 +52,7 @@ export class FormulariosService {
    * Inserta un valor en un campo específico de un formulario.
    * @param datosForm - Objeto que contiene la información necesaria para agregar el valor al formulario.
    */
-  public insertarValorCampoForm(datosForm: datosAgregarFormulario): void {
+  public insertarValorCampoForm(datosForm: DatosAgregarFormulario): void {
     datosForm.form.get(datosForm.field)?.setValue(datosForm.valor);
   }
 
