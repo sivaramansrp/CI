@@ -352,17 +352,17 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="despachoLDA" (change)="changeDespacho('LDA')"
+            <input class="form-check-input" type="checkbox" id="lda" (change)="showConfirmDialogLDA_DD('lda')"
               formControlName="lda">
-            <label class="form-check-label" for="despachoLDA">Despacho LDA:</label>
+            <label class="form-check-label" for="lda">Despacho LDA:</label>
           </div>
 
         </div>
         <div class="col-md-4">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="despachoDD" (change)="changeDespacho('DD')"
+            <input class="form-check-input" type="checkbox" id="dd" (change)="showConfirmDialogLDA_DD('dd')"
               formControlName="dd">
-            <label class="form-check-label" for="despachoDD">Despacho DD:</label>
+            <label class="form-check-label" for="dd">Despacho DD:</label>
           </div>
 
         </div>
@@ -387,11 +387,11 @@
     <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="aduanas" formControlName="idAduana" [label]="'Aduana'" [required]="true"
-            (change)="setValoresStore(despacho, 'idAduana', 'setIdAduana')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="aduanas" formControlName="idAduanaDespacho" [label]="'Aduana'" [required]="true"
+            (change)="setValoresStore(despacho, 'idAduanaDespacho', 'setIdAduanaDespacho')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionDespacho"
             [label]="'Sección aduanera'" [required]="false" [isDisabled]="desactivarSelectSeccionAduanera"
             (change)="changeSeccionAduanera()"></app-catalogo-select>
         </div>
@@ -560,8 +560,8 @@
 </div>
 
 <!-- Modal error -->
-<div class="modal" id="modalError" #modalError tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true"
-  data-bs-backdrop="static">
+<div class="modal fade modal" #modalAviso tabindex="-1" aria-labelledby="modalAviso"
+aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -575,8 +575,11 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="cerrarModal('aviso', true)">
+          Sí
+        </button>
         <button type="button" data-bs-dismiss="modal" class="btn btn-default" #closeModal>
-          Cerrar
+          No
         </button>
       </div>
     </div>

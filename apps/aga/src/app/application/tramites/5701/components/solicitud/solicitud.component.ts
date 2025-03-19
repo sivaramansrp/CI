@@ -52,7 +52,6 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Modal } from 'bootstrap';
-import { throws } from 'assert';
 
 
 @Component({
@@ -62,6 +61,10 @@ import { throws } from 'assert';
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
+  @ViewChild('modalAviso') modalAviso!: ElementRef;
+  @ViewChild('closeModal') closeModal!: ElementRef;
+
+
 
 
   tiposSolicitud!: Catalogo[];
@@ -205,6 +208,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
     const SOCIO_COMERCIAL = this.datosImportadorExportador.get('socioComercial')?.value;
+
     if (SOCIO_COMERCIAL) {
       this.datosImportadorExportador.get('idSocioComercial')?.enable();
       this.datosImportadorExportador.get('idSocioComercial')?.setValue(this.solicitudState?.idSocioComercial);
@@ -537,11 +541,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }),
 
       despacho: this.fb.group({
-        idAduana: [this.solicitudState?.idAduana, [Validators.required]],
-        descripcionAduana: [
-          this.solicitudState?.descripcionAduana,
+        idAduanaDespacho: [this.solicitudState?.idAduanaDespacho, [Validators.required]],
+        aduanaDespacho: [
+          this.solicitudState?.aduanaDespacho,
         ],
-        idSeccionAduanera: [this.solicitudState?.idSeccionAduanera],
+        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
@@ -567,15 +571,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
       pedimento: this.fb.group({
         idPedimento: [this.solicitudState?.idPedimento],
-        datosPedimento: this.fb.group({
-          patentePedimento: [this.solicitudState?.patente],
-          pedimento: [this.solicitudState?.pedimento],
-          aduana: [this.solicitudState?.aduana],
-          tipoPedimento: [this.solicitudState?.tipoPedimento],
-          numeros: [this.solicitudState?.numero],
-          comprobanteValor: [this.solicitudState?.comprobanteValor],
-          pedimentoValidado: [this.solicitudState?.pedimentoValidado],
-        }),
+
+        patentePedimento: [this.solicitudState?.patente],
+        pedimento: [this.solicitudState?.pedimento],
+        aduana: [this.solicitudState?.aduana],
+        tipoPedimento: [this.solicitudState?.tipoPedimento],
+        numeros: [this.solicitudState?.numero],
+        comprobanteValor: [this.solicitudState?.comprobanteValor],
+        pedimentoValidado: [this.solicitudState?.pedimentoValidado],
+
       }),
 
       personasResponsablesDespacho: this.fb.array([]),
@@ -723,6 +727,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setTipoSolicitud(TIPO_SOLICITUD);
   }
 
+
   obtenerRangoFechas(): void {
     const F_INICIO = this.datosServicio.get('fechaInicio')?.value;
     const F_FINAL = this.datosServicio.get('fechaFinal')?.value;
@@ -813,15 +818,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   checkIdSocioComercial(): void {
     const SOCIO_COMERCIAL =
       this.datosImportadorExportador.get('socioComercial')?.value;
+
     if (SOCIO_COMERCIAL) {
       this.datosImportadorExportador.get('idSocioComercial')?.enable();
       this.datosImportadorExportador.get('idSocioComercial')?.setValidators([Validators.required, Validators.maxLength(30), Validators.pattern(this.validacionesService.alfaNumericosEspacioPattern)]);
       this.datosImportadorExportador.get('idSocioComercial')?.updateValueAndValidity();
+
     } else {
       this.datosImportadorExportador.get('idSocioComercial')?.clearValidators();
       this.datosImportadorExportador.get('idSocioComercial')?.updateValueAndValidity();
       this.datosImportadorExportador.get('idSocioComercial')?.reset();
       this.datosImportadorExportador.get('idSocioComercial')?.disable();
+      this.setValoresStore(
+        this.datosImportadorExportador,
+        'idSocioComercial',
+        'setIdSocioComercial'
+      );
     }
 
     this.setValoresStore(
@@ -829,6 +841,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       'socioComercial',
       'setSocioComercial'
     );
+
   }
 
   /**
@@ -901,28 +914,49 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 * @param {number} i - El índice del documento.
 */
   abrirModal() {
-    this.modal = 'show';
+    // this.modal = 'show';
+    const MODAL_AVISO = new Modal(this.modalAviso.nativeElement);
+    MODAL_AVISO.show();
   }
 
   /**
  * Cierra el modal.
  */
-  cerrarModal(tipo: string): void {
-    this.modal = '';
+  cerrarModal(tipo: string, acepta: boolean = false): void {
+    this.closeModal.nativeElement.click();
     this.tituloModal = '';
     this.mensajeModal = '';
+
+    if (tipo === 'aviso' && acepta) {
+      console.log('limpio el formulario de despacho');
+      
+      this.despacho.reset();
+    } 
+
+
 
     if (tipo === 'fecha') {
       this.datosServicio.reset();
     }
   }
 
-  changeDespacho(tipo: string): void {
-    const ADUANA = this.despacho.get('idAduana')?.value;
-    const SECCION_ADUANERA = this.despacho.get('idSeccionAduanera')?.value;
+  showConfirmDialogLDA_DD(tipo: string): void {
+    console.log('entro en el change de tipos despacho');
+    
+    const SELECCION = this.despachoSeleccion.get(tipo)?.value;
+    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+    const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
-    if (ADUANA || SECCION_ADUANERA || RECINTO) {
+    console.log(SELECCION);    
+    console.log(ADUANA);
+    console.log(DESPACHO);
+    console.log(RECINTO);
+    
+    
+    
+
+    if (ADUANA !== '' || DESPACHO !== '' || RECINTO !== '') {      
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = ADV_LIMPIA_CAMPOS;
       this.abrirModal();
@@ -938,14 +972,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.labelTipoDespacho = '';
     }
 
-    if (tipo === 'LDA' && this.tipoDespacho) {
+    if (tipo === 'lda' && this.tipoDespacho) {
       this.labelTipoDespacho = LABEL_DESPACHO_LDA;
       this.idNameAutorizacion = ID_NAME_LDA
 
       this.despachoSeleccion.get('dd')?.disable();
       this.setValoresStore(this.despacho, 'lda', 'setLDA');
       this.selectCatalogoDespacho = this.despachoLdaCatalogo;
-    } else if (tipo === 'DD' && this.tipoDespacho) {
+    } else if (tipo === 'dd' && this.tipoDespacho) {
       this.labelTipoDespacho = LABEL_DESPACHO_DD;
       this.idNameAutorizacion = ID_NAME_DD;
 
@@ -960,7 +994,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   changeSeccionAduanera(): void {
-    const SECCION_ADUANERA = this.despacho.get('idSeccionAduanera')?.value;
+    const SECCION_ADUANERA = this.despacho.get('idSeccionDespacho')?.value;
 
     if (SECCION_ADUANERA) {
       this.desactivarSelectRecinto = true;
@@ -968,8 +1002,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.setValoresStore(
       this.despacho,
-      'idSeccionAduanera',
-      'setIdSeccionAduanera'
+      'idSeccionDespacho',
+      'setIdSeccionDespacho'
     )
   }
 
@@ -1062,6 +1096,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
 
     this.setValoresStore(this.datosImportadorExportador, 'industriaAutomotriz', 'setIndustriaAutomotriz');
+  }
+
+  obtenerFechasServicio(): void {
+    console.log('Se hace una peticion POST a la api para obtener las fechas del servicio');
+
   }
 
 

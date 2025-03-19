@@ -49,7 +49,7 @@ export interface DatosDespacho {
     idAduana: string;
     descripcionAduana: string;
 
-    idSeccionAduanera: string;
+    idSeccionDespacho: string;
     seccionAduanera: string;
 
     nombreRecinto: string;

@@ -48,9 +48,9 @@ export interface Solicitud5701State {
   autorizacionDDEX: string;
   
   ddexAutorizacion: string;
-  idAduana: string;
-  descripcionAduana: string;
-  idSeccionAduanera: string;
+  idAduanaDespacho: string;
+  aduanaDespacho: string;
+  idSeccionDespacho: string;
   seccionAduanera: string;
   nombreRecinto: string;
   tipoDespacho: string;
@@ -115,9 +115,9 @@ export function createInitialState(): Solicitud5701State {
     dd: false,
     autorizacionDDEX: '',
     ddexAutorizacion: '',
-    idAduana: '',
-    descripcionAduana: '',
-    idSeccionAduanera: '',
+    idAduanaDespacho: '',
+    aduanaDespacho: '',
+    idSeccionDespacho: '',
     seccionAduanera: '',
     nombreRecinto: '',
     tipoDespacho: '',
@@ -344,24 +344,24 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setIdAduana(idAduana: string): void {
+  public setIdAduanaDespacho(idAduanaDespacho: string): void {
     this.update((state) => ({
       ...state,
-      idAduana,
+      idAduanaDespacho,
     }));
   }
 
-  public setDescripcionAduana(descripcionAduana: string): void {
+  public setAduanaDespacho(aduanaDespacho: string): void {
     this.update((state) => ({
       ...state,
-      descripcionAduana,
+      aduanaDespacho,
     }));
   }
 
-  public setIdSeccionAduanera(idSeccionAduanera: string): void {
+  public setIdSeccionDespacho(idSeccionDespacho: string): void {
     this.update((state) => ({
       ...state,
-      idSeccionAduanera,
+      idSeccionDespacho,
     }));
   }
 
