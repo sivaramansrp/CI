@@ -164,11 +164,11 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       .obtenerOpcionesDesplegables()
       .subscribe({
         next: (res: ImportanteCatalogoSeleccion) => {
-          const PAGODERECHOSLISTA = [
+          const PAGO_DERECHOS_LISTA = [
             ...this.solicitud30901State.pagoDerechosLista,
             ...res.pagoDerechosLista,
           ];
-          this.solicitud30901Store.setPagoDerechosLista(PAGODERECHOSLISTA);
+          this.solicitud30901Store.setPagoDerechosLista(PAGO_DERECHOS_LISTA);
           this.solicitud30901Store.setValorPago(res.pagoDerechosLista[0].monto);
         },
       });
@@ -211,13 +211,13 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     if (!LINEA_CAPTURA || !VALOR_PAGO) {
       return;
     }
-    const JSONOBJECT = [
+    const JSON_OBJECT = [
       {
         linea: LINEA_CAPTURA,
         monto: VALOR_PAGO,
       },
     ];
-    this.solicitud30901Store.setPagoDerechosLista(JSONOBJECT);
+    this.solicitud30901Store.setPagoDerechosLista(JSON_OBJECT);
   }
 
   /**

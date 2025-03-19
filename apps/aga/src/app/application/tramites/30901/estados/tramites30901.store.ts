@@ -3,7 +3,7 @@ import { PagoDerechosLista } from '../models/registro-muestras-mercancias.model'
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
-/** 
+/**
  * Estado de la solicitud 30901.
  * Contiene los datos necesarios para gestionar la solicitud.
  */
@@ -46,7 +46,7 @@ export interface Solicitud30901State {
   pagoDerechosLista: PagoDerechosLista[];
 }
 
-/** 
+/**
  * Función para crear el estado inicial de la solicitud.
  * Devuelve un objeto con los valores predeterminados.
  */
@@ -235,7 +235,8 @@ export class Solicitud30901Store extends Store<Solicitud30901State> {
         (newItem) =>
           !EXISTING_LIST.some(
             (existingItem) =>
-              existingItem.linea === newItem.linea && existingItem.monto === newItem.monto
+              existingItem.linea === newItem.linea &&
+              existingItem.monto === newItem.monto
           )
       );
 
@@ -244,5 +245,12 @@ export class Solicitud30901Store extends Store<Solicitud30901State> {
         ? { ...state, pagoDerechosLista: [...EXISTING_LIST, ...NEW_ITEMS] }
         : state;
     });
+  }
+
+  /**
+   * Restablece el estado de la tienda a su estado inicial.
+   */
+  resetStore(): void {
+    this.reset();
   }
 }
