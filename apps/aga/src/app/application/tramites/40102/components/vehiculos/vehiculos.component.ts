@@ -20,7 +20,11 @@ import {
   Emisor2daPlaca,
   VehiculoColor,
   VehiculoVEHs,
+  TipoVehicleTerrestra,
+  ColorCatalogo,
+  PaisCatalogo,
 } from 'libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
+
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
@@ -70,6 +74,9 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
   botonLimpiar: string = 'Limpiar';
   botonCancelar: string = 'Cancelar';
   botonGuardar: string = 'Guardar';
+  tipoVehiculoArrastreAGA: any[] = [];
+  colorCatalogo: any[] = [];
+  paisCatalogo: any[] = [];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Selecciona una pestaña.
@@ -178,7 +185,8 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       .subscribe((vehiculos: any) => {
         this.vehiculos = vehiculos;
       });
-    this.unidadesdearrastreList$ = this.tramite40102Query.getUnidadesdeArrastre$;
+    this.unidadesdearrastreList$ =
+      this.tramite40102Query.getUnidadesdeArrastre$;
     this.unidadesDearrastre();
     this.tramite40102Query.getUnidadesdeArrastre$
       .pipe(takeUntil(this.destroyed$))
@@ -395,37 +403,40 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  tipoVehiculoArrastreAGA = [
-    { clave: 'TR1', descripcion: 'Trailer' },
-    { clave: 'SR2', descripcion: 'Semi-Trailer' },
-    { clave: 'FL3', descripcion: 'Flatbed' },
-    { clave: 'CN4', descripcion: 'Container Carrier' },
-    { clave: 'TN5', descripcion: 'Tanker' },
-    { clave: 'DB6', descripcion: 'Double Trailer' },
-    { clave: 'FR7', descripcion: 'Fridge Trailer' },
-  ];
-  colorCatalogo = [
-    { clave: 'BL', descripcion: 'Blanco' },
-    { clave: 'NG', descripcion: 'Negro' },
-    { clave: 'AZ', descripcion: 'Azul' },
-    { clave: 'RO', descripcion: 'Rojo' },
-    { clave: 'VD', descripcion: 'Verde' },
-    { clave: 'GR', descripcion: 'Gris' },
-    { clave: 'AM', descripcion: 'Amarillo' },
-    { clave: 'MR', descripcion: 'Marrón' },
-    { clave: 'PL', descripcion: 'Plateado' },
-  ];
-  paisCatalogo = [
-    { clave: 'MX', descripcion: 'México' },
-    { clave: 'US', descripcion: 'Estados Unidos' },
-    { clave: 'CA', descripcion: 'Canadá' },
-    { clave: 'ES', descripcion: 'España' },
-    { clave: 'AR', descripcion: 'Argentina' },
-    { clave: 'BR', descripcion: 'Brasil' },
-    { clave: 'CO', descripcion: 'Colombia' },
-    { clave: 'FR', descripcion: 'Francia' },
-    { clave: 'DE', descripcion: 'Alemania' },
-  ];
+  fetchTipoVehiculoArrastreAGA() {
+    this.tramite40102Service
+      .getTipoVehiculoArrastre()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: TipoVehicleTerrestra[]) => {
+          this.tipoVehiculoArrastreAGA = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
+  }
+  fetchColorCatalogo() {
+    this.tramite40102Service
+      .getColorCatalogo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: ColorCatalogo[]) => {
+          this.colorCatalogo = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
+  }
+  fecthPaisCatalogo() {
+    this.tramite40102Service
+      .getPaisCatalogo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: PaisCatalogo[]) => {
+          this.colorCatalogo = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
+  }
+
   /**
    * Cierra el modal.
    */
