@@ -147,6 +147,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'importacion-de-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130111/importacion-de-vehiculos-usados.module').then(
+        (m) => m.ImportacionDeVehiculosUsadosModule
+      ),
   }
 ];
 
