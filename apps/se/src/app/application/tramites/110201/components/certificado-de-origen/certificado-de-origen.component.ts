@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CatalogosSelect,
@@ -81,6 +81,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   selectTratado: string | null = null;
   isMercancia: boolean = false;
   fraccionArancelariaValue!: string;
+  unidadMedidaValue: unknown[] = [];
   //MercanciaDisponsibles
   tableData: {
     headers: {
@@ -202,19 +203,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     ],
     data: [
       {
-        fraccionArancelaria: this.fraccionArancelariaValue ,
+        fraccionArancelaria: this.mercanciaForm?.value.validacionMercanciaForm.fraccionArancelaria ,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
+        unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
+        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valorMercancia,
+        tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
+        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.numFactura,
+        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementoDescripcion,
+        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
         
       },
     ],
   };
 
+ 
   constructor(
     private registroService: RegistroService,
     private fb: FormBuilder,
@@ -224,6 +226,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
+ 
+ 
 
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
@@ -238,6 +242,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    
     this.mercanciaDisponsible();
     this.mercanciaSeleccionadas();
     this.mercanciatable();
@@ -298,7 +303,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           required: true,
           primerOpcion: 'Selecciona un valor',
           catalogos: unidadMedida ?? [],
-        }
+        };
+        this.unidadMedidaValue = this.unidadMedida.catalogos;
       })
     );
 
@@ -322,20 +328,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   }
 
   agregar(){
-    // if(this.mercanciaForm.valid){
+    if(this.mercanciaForm.valid){
       this.tableSeleccionadas.data.push({
-        fraccionArancelaria: this.fraccionArancelariaValue,
+        fraccionArancelaria: this.mercanciaForm?.value.validacionMercanciaForm.fraccionMercanArancelaria,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
         unidadMedida: this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
-        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valorMercancia,
+        valorMercancia: this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
         tipoFactura: this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.numFactura,
-        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementoDescripcion,
-        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fechaFactura,
+        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.nFactura,
+        complementoDescripcion: this.mercanciaForm?.value.validacionMercanciaForm.complementodeladescripcion,
+        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
 
-      
-    // }
+      this.isMercancia = true;
+    }
    
     
   }
