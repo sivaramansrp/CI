@@ -120,13 +120,13 @@ export class FederatariosYPlantasComponent {
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
       nombre: new FormControl('', Validators.required),
-      fechaInicioInput: new FormControl(''),
-      primerApellido: new FormControl(''),
-      segundoApellido: new FormControl(''),
-      numeroDeActa: new FormControl(''),
-      numeroDeNotaria: new FormControl(''),
-      estado: new FormControl(''),
-      estadoOptions: new FormControl(''),
+      fechaInicioInput: new FormControl('', Validators.required),
+      primerApellido: new FormControl('', Validators.required),
+      segundoApellido: new FormControl('', Validators.required),
+      numeroDeActa: new FormControl('', Validators.required),
+      numeroDeNotaria: new FormControl('', Validators.required),
+      estado: new FormControl('', Validators.required),
+      estadoOptions: new FormControl('', Validators.required),
     });
   }
   /**
