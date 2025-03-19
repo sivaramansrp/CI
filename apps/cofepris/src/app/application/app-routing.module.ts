@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'importacion-psicotropicos',
+    loadChildren: () =>
+      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
+        (m) => m.CertificadosLicenciasPermisosModule
+      ),
+  },
 ];
 
 @NgModule({
