@@ -27,6 +27,9 @@ describe('FraccionComponent', () => {
     entidad: 'Entity 1',
     representacion: 'Rep 1',
     bloque: 'Block 1',
+    régimen: '',
+    clasificación: '',
+    solitudDescripcion: ''
   };
 
   beforeEach(async () => {
