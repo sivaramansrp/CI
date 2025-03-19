@@ -1,15 +1,37 @@
-import { Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
+/* eslint-disable class-methods-use-this */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Sanitario260215Store,
+  Solicitud260215State,
+} from '../../estados/tramites/sanitario260215.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { PermisoModel } from '../../models/permiso-sanitario.model';
-import { Sanitario260215Store, Solicitud260215State } from '../../estados/tramites/sanitario260215.store';
-import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Permiso260215Query } from '../../estados/queries/permiso260215.query';
-
-
-
+import { PermisoModel } from '../../models/permiso-sanitario.model';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 
 /**
  * component
@@ -17,7 +39,7 @@ import { Permiso260215Query } from '../../estados/queries/permiso260215.query';
  * description
  * Este componente es responsable de gestionar la funcionalidad de agregar facturadores en el sistema.
  * Proporciona un formulario para capturar los datos del facturador y una tabla para mostrar información relacionada.
- * 
+ *
  * selector app-agregar-facturator
  * standalone true
  * imports
@@ -28,14 +50,22 @@ import { Permiso260215Query } from '../../estados/queries/permiso260215.query';
  * - TablaDinamicaComponent
  * - CatalogoSelectComponent
  * - ReactiveFormsModule
- * 
+ *
  * templateUrl ./agregarFacturator.component.html
  * styleUrl ./agregarFacturator.component.css
  */
 @Component({
   selector: 'app-agregar-facturator',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TableComponent, AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    TableComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './agregar-facturator.component.html',
   styleUrls: ['./agregar-facturator.component.scss'],
 })
@@ -108,7 +138,9 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
     private service: ServiciosPermisoSanitarioService,
     private sanitario260215Store: Sanitario260215Store,
     private permiso260215Query: Permiso260215Query
-  ) {}
+  ) {
+    // Constructor
+  }
 
   /**
    * property {ElementRef} closeModal
@@ -122,12 +154,28 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
    * description Configuración de las columnas de la tabla.
    */
   configuracionTabla: ConfiguracionColumna<PermisoModel>[] = [
-    { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
+    {
+      encabezado: 'Nombre/denominacion o razon social',
+      clave: (item: PermisoModel) => item.Nombre,
+      orden: 1,
+    },
     { encabezado: 'RFC', clave: (item: PermisoModel) => item.RFC, orden: 2 },
     { encabezado: 'CURP', clave: (item: PermisoModel) => item.CURP, orden: 3 },
-    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 3 },
-    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 4 },
-    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 5 },
+    {
+      encabezado: 'Telefono',
+      clave: (item: PermisoModel) => item.Teléfono,
+      orden: 3,
+    },
+    {
+      encabezado: 'Correo electronico',
+      clave: (item: PermisoModel) => item.CorreoElectrónico,
+      orden: 4,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (item: PermisoModel) => item.calle,
+      orden: 5,
+    },
   ];
 
   /**
@@ -153,7 +201,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
    * description Carga los datos de mercancías relacionadas.
    */
   loadMercancias(): void {
-    this.service.getTable()
+    this.service
+      .getTable()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         this.tercerosProd = resp;
@@ -165,7 +214,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
    * description Carga las localidades disponibles.
    */
   loadLocalidad(): void {
-    this.service.getLocalidaddata()
+    this.service
+      .getLocalidaddata()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
@@ -190,18 +240,36 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
       facturatorfisica: ['', Validators.required],
       facturatormoral: ['', Validators.required],
       nombres: [this.solicitudState?.nombres, Validators.required],
-      facturatorapellido: [this.solicitudState?.facturatorapellido, Validators.required],
+      facturatorapellido: [
+        this.solicitudState?.facturatorapellido,
+        Validators.required,
+      ],
       facturatorsapellido: [this.solicitudState?.facturatorsapellido],
       facturatorcpail: ['', Validators.required],
-      facturatorestado: [this.solicitudState?.facturatorestado, Validators.required],
+      facturatorestado: [
+        this.solicitudState?.facturatorestado,
+        Validators.required,
+      ],
       facturatorcp: [this.solicitudState?.facturatorcp],
       facturatorequivalente: [this.solicitudState?.facturatorequivalente],
-      facturatorcalle: [this.solicitudState?.facturatorcalle, Validators.required],
-      facturatorexperior: [this.solicitudState?.facturatorexperior, Validators.required],
+      facturatorcalle: [
+        this.solicitudState?.facturatorcalle,
+        Validators.required,
+      ],
+      facturatorexperior: [
+        this.solicitudState?.facturatorexperior,
+        Validators.required,
+      ],
       facturatorinterior: [this.solicitudState?.facturatorinterior],
-      facturatorlada: [this.solicitudState?.facturatorlada, Validators.required],
+      facturatorlada: [
+        this.solicitudState?.facturatorlada,
+        Validators.required,
+      ],
       facturatortelefono: [this.solicitudState?.facturatortelefono],
-      facturatorElectronico: [this.solicitudState?.facturatorElectronico, [Validators.required, Validators.email]],
+      facturatorElectronico: [
+        this.solicitudState?.facturatorElectronico,
+        [Validators.required, Validators.email],
+      ],
     });
   }
 
@@ -213,7 +281,10 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
    * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
    */
   isValid(form: FormGroup, field: string): boolean {
-    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+    return (
+      form.controls[field].invalid &&
+      (form.controls[field].dirty || form.controls[field].touched)
+    );
   }
 
   /**
@@ -223,9 +294,13 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
    * param {string} campo - El nombre del campo.
    * param {keyof Sanitario260215Store} metodoNombre - El método del almacén a invocar.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260215Store): void {
-    const valor = form.get(campo)?.value;
-    (this.sanitario260215Store[metodoNombre] as (value: any) => void)(valor);
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Sanitario260215Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.sanitario260215Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**

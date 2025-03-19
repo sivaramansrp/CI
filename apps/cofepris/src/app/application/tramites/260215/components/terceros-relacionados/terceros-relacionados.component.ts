@@ -1,25 +1,36 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Catalogo, ConfiguracionColumna, TableComponent } from '@ng-mf/data-access-user';
-import { AlertComponent } from '@ng-mf/data-access-user';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable class-methods-use-this */
+import {
+  Catalogo,
+  ConfiguracionColumna,
+  TableComponent,
+} from '@ng-mf/data-access-user';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  Sanitario260215Store,
+  Solicitud260215State,
+} from '../../estados/tramites/sanitario260215.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 // import terceros from 'libs/shared/theme/assets/json/260215/terceros.json';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-
-
-import { ReactiveFormsModule } from '@angular/forms';
 import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
 import { AgregarFacturatorComponent } from '../agregar-facturator/agregar-facturator.component';
-import { Sanitario260215Store, Solicitud260215State } from '../../estados/tramites/sanitario260215.store';
-import { PermisoModel } from '../../models/permiso-sanitario.model';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { Permiso260215Query } from '../../estados/queries/permiso260215.query';
+import { PermisoModel } from '../../models/permiso-sanitario.model';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
-
-
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 /**
  * component
@@ -27,7 +38,7 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
  * description
  * Este componente es responsable de gestionar la funcionalidad relacionada con terceros relacionados en el sistema.
  * Proporciona formularios para capturar datos de proveedores y requeridos, así como tablas para mostrar información relacionada.
- * 
+ *
  * selector app-terceros-relacionados
  * standalone true
  * imports
@@ -42,7 +53,7 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
  * - CatalogoSelectComponent
  * - ReactiveFormsModule
  * - AgregarDestinatarioComponent
- * 
+ *
  * templateUrl ./tercerosRelacionados.component.html
  * styleUrl ./tercerosRelacionados.component.css
  */
@@ -63,7 +74,7 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
   templateUrl: './terceros-relacionados.component.html',
   styleUrls: ['./terceros-relacionados.component.scss'],
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * property {FormGroup} proveedorForm
    * description Formulario reactivo para capturar los datos del proveedor.
@@ -124,7 +135,14 @@ export class TercerosRelacionadosComponent implements OnInit {
    * property {string[]} tableHeaderData
    * description Encabezados de la tabla.
    */
-  tableHeaderData: string[] = ['Nombre/denominacion o razon social', 'RFC', 'CURP', 'Telefono', 'Correo electronico', 'Calle'];
+  tableHeaderData: string[] = [
+    'Nombre/denominacion o razon social',
+    'RFC',
+    'CURP',
+    'Telefono',
+    'Correo electronico',
+    'Calle',
+  ];
 
   /**
    * property {typeof TablaSeleccion} TablaSeleccion
@@ -168,7 +186,9 @@ export class TercerosRelacionadosComponent implements OnInit {
     private service: ServiciosPermisoSanitarioService,
     private sanitario260215Store: Sanitario260215Store,
     private permiso260215Query: Permiso260215Query
-  ) {}
+  ) {
+    // Inicializa el formulario de destinatario.
+  }
 
   /**
    * property {ElementRef} closeModal
@@ -182,12 +202,28 @@ export class TercerosRelacionadosComponent implements OnInit {
    * description Configuración de las columnas de la tabla.
    */
   configuracionTabla: ConfiguracionColumna<PermisoModel>[] = [
-    { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
+    {
+      encabezado: 'Nombre/denominacion o razon social',
+      clave: (item: PermisoModel) => item.Nombre,
+      orden: 1,
+    },
     { encabezado: 'RFC', clave: (item: PermisoModel) => item.RFC, orden: 2 },
     { encabezado: 'CURP', clave: (item: PermisoModel) => item.CURP, orden: 3 },
-    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 3 },
-    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 4 },
-    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 5 },
+    {
+      encabezado: 'Telefono',
+      clave: (item: PermisoModel) => item.Teléfono,
+      orden: 3,
+    },
+    {
+      encabezado: 'Correo electronico',
+      clave: (item: PermisoModel) => item.CorreoElectrónico,
+      orden: 4,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (item: PermisoModel) => item.calle,
+      orden: 5,
+    },
   ];
 
   /**
@@ -212,7 +248,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    * description Carga los datos de mercancías relacionadas.
    */
   loadMercancias(): void {
-    this.service.getTable()
+    this.service
+      .getTable()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         this.tercerosProd = resp;
@@ -261,7 +298,10 @@ export class TercerosRelacionadosComponent implements OnInit {
       interior: [this.solicitudState?.interior],
       lada: [this.solicitudState?.lada],
       numerotelefono: [this.solicitudState?.numerotelefono],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
+      correoElectronico: [
+        this.solicitudState?.correoElectronico,
+        [Validators.required, Validators.email],
+      ],
     });
     this.proveedorForm.get('pail')?.disable();
     this.loadComboUnidad();
@@ -278,7 +318,10 @@ export class TercerosRelacionadosComponent implements OnInit {
       moral: ['', Validators.required],
       tiporfc: [this.solicitudState?.tiporfc, Validators.required],
       tipocurp: [this.solicitudState?.tipocurp, Validators.required],
-      tipodenominacion: [this.solicitudState?.tipodenominacion, Validators.required],
+      tipodenominacion: [
+        this.solicitudState?.tipodenominacion,
+        Validators.required,
+      ],
       tipopail: [{ value: '', disabled: true }, Validators.required],
       numeroEstado: [this.solicitudState?.numeroEstado, Validators.required],
       numerosCalle: [{ value: '', disabled: true }, Validators.required],
@@ -286,7 +329,10 @@ export class TercerosRelacionadosComponent implements OnInit {
       numbrointerior: [this.solicitudState?.numbrointerior],
       numbrolada: [this.solicitudState?.numbrolada],
       numerostelefono: [{ value: '', disabled: true }],
-      tipocorreoElectronico: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+      tipocorreoElectronico: [
+        { value: '', disabled: true },
+        [Validators.required, Validators.email],
+      ],
     });
   }
 
@@ -295,7 +341,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    * description Carga la lista de proveedores disponibles.
    */
   loadComboUnidad(): void {
-    this.service.getProveedordata()
+    this.service
+      .getProveedordata()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.proveedorList = data as Catalogo[];
@@ -307,7 +354,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    * description Carga la lista de localidades disponibles.
    */
   loadLocalidad(): void {
-    this.service.getLocalidaddata()
+    this.service
+      .getLocalidaddata()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
@@ -334,7 +382,10 @@ export class TercerosRelacionadosComponent implements OnInit {
    * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
    */
   isValid(form: FormGroup, field: string): boolean {
-    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+    return (
+      form.controls[field].invalid &&
+      (form.controls[field].dirty || form.controls[field].touched)
+    );
   }
 
   /**
@@ -344,9 +395,13 @@ export class TercerosRelacionadosComponent implements OnInit {
    * param {string} campo - El nombre del campo.
    * param {keyof Sanitario260215Store} metodoNombre - El método del almacén a invocar.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260215Store): void {
-    const valor = form.get(campo)?.value;
-    (this.sanitario260215Store[metodoNombre] as (value: any) => void)(valor);
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Sanitario260215Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.sanitario260215Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**
