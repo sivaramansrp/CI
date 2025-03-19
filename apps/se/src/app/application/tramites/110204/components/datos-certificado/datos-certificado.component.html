@@ -1,5 +1,5 @@
 <div>
-  <form [formGroup]="formDatesCerticado">
+  <form [formGroup]="formDatosCertificado">
     <ng-titulo titulo="Datos del certificado" />
 
     <div class="row">
@@ -22,7 +22,7 @@
           (selectionChange)="entidadFederativaSeleccion($event)"></app-catalogo-select>
         </div>
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Representación federal'"  [catalogo]="(representaconFederal$ | async) || []" 
+          <app-catalogo-select [label]="'Representación federal'"  [catalogo]="(representacionFederal$ | async) || []" 
           [required]="true" name="estado" formControlName="representacionFederalDates"
           (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
         </div>

@@ -25,7 +25,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Formulario reactivo que contiene los datos del certificado.
    * Utilizado para la validación y gestión de los datos en el formulario.
    */
-  formDatesCerticado!: FormGroup;
+  formDatosCertificado!: FormGroup;
 
   /**
    * Subject utilizado para gestionar el ciclo de vida del componente y cancelar las suscripciones.
@@ -45,7 +45,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Observable que contiene la lista de representaciones federales disponibles.
    */
-  representaconFederal$!: Observable<Catalogo[]>;
+  representacionFederal$!: Observable<Catalogo[]>;
 
     /**
      * Estado de la sección, gestionado mediante el store.
@@ -64,7 +64,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @param toastr Servicio de notificaciones (Toastr).
    */
 
-  private isUpdatingForm = false;
+  private actualizandoFormulario = false;
 
   constructor(
     private fb: FormBuilder, public store: Tramite110204Store,
@@ -78,7 +78,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     /**
      * Inicialización del formulario reactivo con los controles y validaciones correspondientes.
      */
-    this.formDatesCerticado = this.fb.group({
+    this.formDatosCertificado = this.fb.group({
       observacionesDates: [''],
       idiomaDates: ['', [Validators.required, Validators.min(0)]],
       EntidadFederativaDates: ['', [Validators.required, Validators.min(0)]],
@@ -88,13 +88,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     /**
      * Suscripción al estado del formulario para actualizar los valores del formulario al obtener datos.
      */
-    this.tramiteQuery.formDatesCerticado$.pipe(
+    this.tramiteQuery.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
-      if (!this.isUpdatingForm && estado) {
-        this.isUpdatingForm = true;
-        this.formDatesCerticado.patchValue(estado);
-        this.isUpdatingForm = false;
+      if (!this.actualizandoFormulario && estado) {
+        this.actualizandoFormulario = true;
+        this.formDatosCertificado.patchValue(estado);
+        this.actualizandoFormulario = false;
       }
     });
        /**
@@ -114,7 +114,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      */
     this.idioma$ = this.tramiteQuery.selectIdioma$;
     this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
-    this.representaconFederal$ = this.tramiteQuery.selectrepresentaconFederal$;
+    this.representacionFederal$ = this.tramiteQuery.selectrepresentacionFederal$;
   }
 
   /**
@@ -122,7 +122,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @returns FormControl del formulario.
    */
   get formularioControl(): FormControl {
-    return this.formDatesCerticado.get('') as FormControl;
+    return this.formDatosCertificado.get('') as FormControl;
   }
 
    /**
@@ -131,10 +131,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
    esFormValido(): boolean {
     // Recorre todos los controles del formulario para verificar si alguno es inválido.
-    for (const NOMBRE_DEL_CONTROL in this.formDatesCerticado.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.formDatesCerticado.controls,
+    for (const NOMBRE_DEL_CONTROL in this.formDatosCertificado.controls) {
+      if (Object.prototype.hasOwnProperty.call(this.formDatosCertificado.controls,
         NOMBRE_DEL_CONTROL)) {
-        const CONTROL = this.formDatesCerticado.get(NOMBRE_DEL_CONTROL);
+        const CONTROL = this.formDatosCertificado.get(NOMBRE_DEL_CONTROL);
         if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
           return false;
         }
@@ -147,7 +147,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      * Valida el formulario y actualiza el estado de la sección en el store.
      */
     validarFormulario(): void {
-      this.formDatesCerticado.statusChanges
+      this.formDatosCertificado.statusChanges
         .pipe(
           takeUntil(this.destroyNotifier$),
           delay(10),
@@ -156,7 +156,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
             const FORMAS_VALIDADAS = this.seccion.formaValida;
             const ES_VALIDO_EL_FORM = this.esFormValido();
   
-            if (this.formDatesCerticado.valid || (ES_VALIDO_EL_FORM)) {
+            if (this.formDatosCertificado.valid || (ES_VALIDO_EL_FORM)) {
               FORMAS_VALIDADAS[SECCION] = true;
               this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
             } else {
@@ -180,9 +180,9 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     /**
      * Suscripción a los cambios de valor del formulario para enviar los datos al store.
     */
-   this.formDatesCerticado.valueChanges.subscribe(value => {
-    if (!this.isUpdatingForm) {
-      this.store.setFormDatesCerticado(value);
+   this.formDatosCertificado.valueChanges.subscribe(value => {
+    if (!this.actualizandoFormulario) {
+      this.store.setFormDatosCertificado(value);
       this.validarFormulario();
     }
     });

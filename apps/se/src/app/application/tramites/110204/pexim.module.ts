@@ -9,7 +9,6 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PeximRoutingModule } from './pexim-routing.module';
 import { RouterModule } from '@angular/router';
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { ToastrService } from 'ngx-toastr';
 
@@ -19,7 +18,6 @@ import { ToastrService } from 'ngx-toastr';
     PasoDosComponent,
     PasoTresComponent,
     SolicitudPageComponent,
-    SolicitudComponent,
   ],
   imports: [
     CommonModule,
@@ -45,7 +43,6 @@ import { ToastrService } from 'ngx-toastr';
     CertificadoOrigenComponent
   ],
   exports: [
-    SolicitudComponent,
     DatosCertificadoComponent,
     CertificadoOrigenComponent
   ],

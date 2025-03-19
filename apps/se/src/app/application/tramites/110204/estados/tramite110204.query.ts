@@ -43,8 +43,8 @@ export class Tramite110204Query extends Query<TramiteState> {
    * Selecciona las fechas del certificado.
    * @returns {Observable<any>} - Observable con las fechas del certificado.
    */
-  formDatesCerticado$ = this.select((state) => {    
-    return state.formDatesCerticado;
+  formDatosCertificado$ = this.select((state) => {    
+    return state.formDatosCertificado;
   });
 
 
@@ -115,7 +115,7 @@ export class Tramite110204Query extends Query<TramiteState> {
    * Selecciona los datos de la representación federal.
    * @returns {Observable<any>} - Observable con los datos de la representación federal.
    */
-  selectrepresentaconFederal$ = this.select((state) => {
+  selectrepresentacionFederal$ = this.select((state) => {
     return state.representacionFederalDatos;
   });
 

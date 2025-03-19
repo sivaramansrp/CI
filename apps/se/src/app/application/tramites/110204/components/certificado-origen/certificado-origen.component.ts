@@ -7,7 +7,7 @@ import { CertificadosOrigenGridService } from '../../services/certificadosOrigen
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { Mercancia } from '../../models/plantas-consulta.model';
-import { MerchandiseModalComponent } from '../merchandise-modal/merchandise-modal.component';
+import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
 import { Modal } from 'bootstrap';                     
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110204Query } from '../../estados/tramite110204.query';
@@ -57,7 +57,7 @@ export const FECHA_FINAL = {
     TablaDinamicaComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
-    MerchandiseModalComponent
+    MercanciasModalComponent
 ],
   providers: [ToastrService],
   templateUrl: './certificado-origen.component.html',
@@ -143,7 +143,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @type {Mercancia[]}
    */
 
-  selectedData!: Mercancia;
+    datosSeleccionados!: Mercancia;
     /**
    * Instancia del modal de modificación.
    */
@@ -165,8 +165,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @param seccionQuery Consulta para obtener el estado de la sección.
    * @param seccionStore Store para actualizar el estado de la sección.
    */
-  private isUpdatingForm = false;
-
+  private actualizandoFormulario = false;
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,
@@ -194,10 +193,10 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.tramiteQuery.formCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
-      if (!this.isUpdatingForm && estado) {
-        this.isUpdatingForm = true;
+      if (!this.actualizandoFormulario && estado) {
+        this.actualizandoFormulario = true;
         this.formCertificado.patchValue(estado);
-        this.isUpdatingForm = false;
+        this.actualizandoFormulario = false;
       }
     });
   
@@ -249,7 +248,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     this.cargarEstados();
     this.cargarBloque();
     this.formCertificado.valueChanges.subscribe(value => {
-      if (!this.isUpdatingForm) {
+      if (!this.actualizandoFormulario) {
       this.store.setFormCertificado(value);
       this.validarFormulario();
       }
@@ -393,8 +392,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
     /**
    * Método para abrir el modal de modificación.
    */
-    openModifyModal(datos1: Mercancia): void {
-      this.selectedData = datos1;    
+    abrirModificarModal(datos1: Mercancia): void {
+      this.datosSeleccionados = datos1;    
       this.store.setFormMercancia({ ...datos1 });
         
       if (this.modalInstance) {
@@ -402,12 +401,26 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       }      
     }
 
-    closeModifyModal():void {
+    /**
+     * Cierra el modal de modificación si está abierto.
+     * 
+     * @remarks
+     * Este método verifica si hay una instancia de modal activa y, 
+     * en caso afirmativo, la oculta.
+     */
+    cerrarModificarModal():void {
       if (this.modalInstance) {
         this.modalInstance.hide();
       }
     }
 
+    /**
+     * @inheritdoc
+     * @method
+     * @description
+     * Este método se ejecuta después de que la vista del componente ha sido inicializada.
+     * Inicializa el modal de modificación si está disponible.
+     */
     ngAfterViewInit():void {
       // Inicializa el modal de modificación
       if (this.modifyModal) {

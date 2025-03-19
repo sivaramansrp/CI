@@ -17,7 +17,7 @@ export interface TramiteState {
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
-  formDatesCerticado: { [key: string]: undefined | boolean | string | number | object };
+  formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
   mercanciaForm:{ [key: string]: undefined | boolean | string | number | object}
   buscarMercancia: Mercancia[];
   formaValida: { [key: string]: boolean };
@@ -74,7 +74,7 @@ export const INITIAL_STATE: TramiteState = {
     registroProductoForm: '',
     fracciónArancelariaForm: '',
   },
-  formDatesCerticado: {
+  formDatosCertificado: {
     observacionesDates: '',
     idiomaDates: '',
     EntidadFederativaDates: '',
@@ -123,7 +123,7 @@ export const INITIAL_STATE: TramiteState = {
  * @extends {Store<TramiteState>}
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite-80308', resettable: true })
+@StoreConfig({ name: 'tramite-110204', resettable: true })
 export class Tramite110204Store extends Store<TramiteState> {
   
   constructor() {
@@ -219,10 +219,10 @@ export class Tramite110204Store extends Store<TramiteState> {
    * 
    * @returns {void} - No devuelve ningún valor.
    */
-  setFormDatesCerticado(values: { [key: string]: undefined | boolean | string | number | object }): void {
+  setFormDatosCertificado(values: { [key: string]: undefined | boolean | string | number | object }): void {
     this.update((state) => ({
-      formDatesCerticado: {
-        ...state.formDatesCerticado,
+      formDatosCertificado: {
+        ...state.formDatosCertificado,
         ...values,
       },
     }));

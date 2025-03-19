@@ -21,7 +21,7 @@ class MockTramite110204Store {}
 
 @Injectable()
 class MockTramite110204Query {
-  formDatesCerticado$ = observableOf({});
+  formDatosCertificado$ = observableOf({});
   selectAltaPlanta$ = {};
   selectPaisBloque$ = {};
   selectBuscarMercancia$ = {};
@@ -60,24 +60,24 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('should run GetterDeclaration #formularioControl', async () => {
-    component.formDatesCerticado = component.formDatesCerticado || {};
-    component.formDatesCerticado.get = jest.fn();
+    component.formDatosCertificado = component.formDatosCertificado || {};
+    component.formDatosCertificado.get = jest.fn();
     const formularioControl = component.formularioControl;
-    expect(component.formDatesCerticado.get).toHaveBeenCalled();
+    expect(component.formDatosCertificado.get).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
     component.cargarIdioma = jest.fn();
     component.cargarEntidadFederativa = jest.fn();
-    component.formDatesCerticado = component.formDatesCerticado || {};
-    component.formDatesCerticado.valueChanges = observableOf({});
+    component.formDatosCertificado = component.formDatosCertificado || {};
+    component.formDatosCertificado.valueChanges = observableOf({});
     component.store = component.store || {};
-    component.store.setFormDatesCerticado = jest.fn();
+    component.store.setFormDatosCertificado = jest.fn();
     component.cargarRepresentacionFederal = jest.fn();
     component.ngOnInit();
     expect(component.cargarIdioma).toHaveBeenCalled();
     expect(component.cargarEntidadFederativa).toHaveBeenCalled();
-    expect(component.store.setFormDatesCerticado).toHaveBeenCalled();
+    expect(component.store.setFormDatosCertificado).toHaveBeenCalled();
     expect(component.cargarRepresentacionFederal).toHaveBeenCalled();
   });
 
