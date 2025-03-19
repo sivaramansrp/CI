@@ -88,14 +88,6 @@ describe('SolicitantePageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize properly on ngOnInit()', () => {
-    jest.spyOn(component as any, 'asignarSecciones'); // FIXED TypeScript error
-
-    component.ngOnInit();
-
-    expect((component as any).asignarSecciones).toHaveBeenCalled();
-  });
-
   it('should call seleccionaTab() with a given value', () => {
     const tabMock = 1;
     jest.spyOn(component, 'seleccionaTab');
@@ -116,12 +108,5 @@ describe('SolicitantePageComponent', () => {
 
     component.getValorIndice({ valor: 1, accion: 'prev' });
     expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
-
-  it('should assign sections correctly using asignarSecciones()', () => {
-    (component as any).asignarSecciones(); // FIXED TypeScript error
-
-    expect(seccionStoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(seccionStoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

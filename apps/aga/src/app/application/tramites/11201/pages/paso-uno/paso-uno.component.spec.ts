@@ -14,17 +14,17 @@ class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
@@ -35,13 +35,12 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
       declarations: [
-        PasoUnoComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
 
       ]
@@ -53,7 +52,7 @@ describe('PasoUnoComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () { };
     fixture.destroy();
   });
 
