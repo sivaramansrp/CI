@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
+
 import { BtnContinuarComponent, ServiciosPantallasService } from '@ng-mf/data-access-user';
 import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -17,17 +18,23 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { TransporteComponent } from './pages/transporte/transporte.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 import { DatosDelCertificadoComponent } from './components/datos-del-certificado/datos-del-certificado.component';
 import { DatosGeneralesAnimalesComponent } from './components/datos-generales-animales/datos-generales-animales.component';
 import { provideHttpClient } from '@angular/common/http';
 
+ import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
+ import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
+import { ToastrService } from 'ngx-toastr';
+
+
 @NgModule({
-  declarations: [
+  declarations: [ 
     PantallasComponent,
     DatosComponent,
-    TransporteComponent
-   ],
+    TransporteComponent,
+    ],
   imports: [
     CommonModule,
     PagoDeDerechoComponent,
@@ -37,18 +44,24 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     BtnContinuarComponent,
     SolicitudPantallasComponent,
-    DatosDelCertificadoComponent,
+    // DatosDelCertificadoComponent,
     FormsModule,
     ReactiveFormsModule,
     CombinacionRequeridaComponent,
     TercerosRelacionadosComponent,
     AgregarDestinatoriaComponent,
     DatosGeneralesAnimalesComponent,
-    SelectCatalogosComponent 
+    SelectCatalogosComponent ,
+    DatosDelCertificadoComponent,
+   SolicitanteComponent,
+   PasoDosComponent,
+   PasoTresComponent
   ],
+  
   providers: [
       provideHttpClient(),
-      ServiciosPantallasService
+      ServiciosPantallasService,
+      ToastrService,
     ],
 })
 /**

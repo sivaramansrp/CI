@@ -40,3 +40,33 @@ export const REGEX_DESCRIPCION_ESPECIALES =
  * - $: Aserción para el final de la cadena.
  */
 export const REGEX_RFC = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
+
+/**
+ * Expresión regular para reemplazar caracteres que no sean
+ * letras (a-z, A-Z) ni números (0-9).
+ * 
+ * - `[^a-zA-Z0-9]`: Coincide con cualquier carácter que no sea una letra o un número.
+ * - `g`: Bandera global que asegura que se reemplacen todas las coincidencias.
+ */
+export const REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
+
+/**
+ * Expresión regular para validar una fecha en formato DD/MM/YYYY.
+ *
+ * El formato de la fecha consta de las siguientes partes:
+ * - 2 dígitos para el día (DD).
+ * - 2 dígitos para el mes (MM).
+ * - 4 dígitos para el año (YYYY).
+ *
+ * Ejemplo de fecha válida: 31/12/2023
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{2}: Coincide con exactamente 2 dígitos para el día.
+ * - \/: Coincide con el carácter de barra (/).
+ * - \d{2}: Coincide con exactamente 2 dígitos para el mes.
+ * - \/: Coincide con el carácter de barra (/).
+ * - \d{4}: Coincide con exactamente 4 dígitos para el año.
+ * - $: Aserción para el final de la cadena.
+ */
+export const REGEX_FECHA_VALIDA = /^\d{2}\/\d{2}\/\d{4}$/;

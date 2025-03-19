@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/220202/fitosanitario.enums';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { DatosPasos, WizardComponent } from '@ng-mf/data-access-user';
 
-import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
+import { AccionBoton, ListaPasosWizard } from '../../models/220202/fitosanitario.model';
+import { PASOS } from '../../constantes/220202/fitosanitario.enums';
 
 /**
  * @fileoverview Componente para la gestión del formulario de agricultura.
@@ -14,11 +13,9 @@ import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/
 
 /**
  * Componente para el formulario de agricultura.
+ * Este componente se encarga de gestionar el formulario de agricultura, incluyendo
+ * la navegación entre los pasos del formulario y la actualización de datos.
  * @class AgriculturaComponent
- */
-/**
- * Componente para mostrar el subtítulo del asistente.
- * @component AgriculturaComponent
  * @selector app-agricultura
  * @templateUrl ./agricultura.component.html
  */
@@ -27,18 +24,21 @@ import { AccionBoton, ListaPasosWizard } from 'libs/shared/data-access-user/src/
   templateUrl: './agricultura.component.html',
 })
 export class AgriculturaComponent {
+
   /**
-    * @description Array de objetos que definen los pasos del formulario.
-    * Cada objeto contiene información sobre un paso específico,
-    * incluyendo su número, título y si está completado.
-    * @type {ListaPasosWizard[]}
-    */
+   * @description Array de objetos que definen los pasos del formulario.
+   * Cada objeto contiene información sobre un paso específico,
+   * incluyendo su número, título y si está completado.
+   * Este array permite la gestión de las secciones o pasos dentro del formulario.
+   * @type {ListaPasosWizard[]}
+   */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @description Referencia al componente Wizard.
    * Esta referencia permite acceder a los métodos y propiedades del componente Wizard,
    * como `siguiente()` y `atras()`, para controlar la navegación entre los pasos.
+   * 
    * @type {WizardComponent}
    * @viewChild WizardComponent
    */
@@ -47,6 +47,8 @@ export class AgriculturaComponent {
   /**
    * @description Índice actual del paso en el que se encuentra el usuario.
    * Este índice se utiliza para determinar qué paso se muestra en cada momento.
+   * Los valores posibles de `indice` corresponden a los pasos definidos en el arreglo `pasos`.
+   * 
    * @type {number}
    * @default 1
    */
@@ -55,8 +57,9 @@ export class AgriculturaComponent {
   /**
    * @description Objeto que contiene los datos de los pasos del formulario.
    * Este objeto se utiliza para comunicar información entre el componente Agricultura
-   * y el componente Wizard, como el número de pasos, el índice actual y los textos
-   * para los botones de navegación.
+   * y el componente Wizard, como el número total de pasos, el índice del paso actual
+   * y los textos de los botones de navegación (anterior y siguiente).
+   * 
    * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
@@ -68,12 +71,17 @@ export class AgriculturaComponent {
 
   /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * Este método se llama cuando el usuario hace clic en uno de los botones de navegación.
+   * Este método se llama cuando el usuario hace clic en uno de los botones de navegación
+   * del formulario.
+   * 
    * Recibe un objeto `AccionBoton` que contiene la acción a realizar (`cont` o `atras`)
    * y el valor del índice del paso al que se debe navegar.
-   * @param {AccionBoton} e - Objeto de acción que contiene la acción y el valor a manejar.
-   * El `valor` representa el índice del paso al que ir.
-   * La `accion` determina si avanzar (`cont`) o retroceder (`atras`).
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor a manejar.
+   *   El `valor` representa el índice del paso al que ir. La `accion` determina si avanzar
+   *   (valor `cont`) o retroceder (valor `atras`).
+   * 
+   * @returns {void}
    */
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
