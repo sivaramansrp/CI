@@ -106,7 +106,7 @@ export interface DatosComponentePedimento {
 }
 
 export interface Persona {
-    gafete?: number ;
+    gafeteRespoDespacho?: number ;
     nombre: string;
     primerApellido: string;
     segundoApellido: string;

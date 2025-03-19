@@ -19,12 +19,12 @@ import { Persona } from '../../../../core/models/5701/tramite5701.model';
   styleUrl: './agrega-personas.component.scss',
 })
 export class AgregaPersonasComponent {
-  gafete: FormControl = new FormControl('', [Validators.maxLength(25)]);
+  gafeteRespoDespacho: FormControl = new FormControl('', [Validators.maxLength(25)]);
 
   personaForm: FormGroup = this.fb.group({
-    nombre: [{ value: '', disabled: true }],
-    primerApellido: [{ value: '', disabled: true }],
-    segundoApellido: [{ value: '', disabled: true }],
+    nombreRespoDespacho: [{ value: '', disabled: true }],
+    paternoRespoDespacho: [{ value: '', disabled: true }],
+    maternoRespoDespacho: [{ value: '', disabled: true }],
   });
 
   persona!: Persona;
@@ -56,7 +56,7 @@ export class AgregaPersonasComponent {
    *                             o `null` si no se puede determinar.
    */
   get gafeteIsValid(): boolean | null {
-    return this.gafete.errors && this.gafete.touched;
+    return this.gafeteRespoDespacho.errors && this.gafeteRespoDespacho.touched;
   }
 
   /**
@@ -69,7 +69,7 @@ export class AgregaPersonasComponent {
    */
   buscarGafete(): void {
     // Aquí va a buscar por gafete a un endpoint
-    const GAFETE = this.gafete.value;
+    const GAFETE = this.gafeteRespoDespacho.value;
 
     if (!GAFETE) {
       this.tituloModal = TITULO_MODAL;
@@ -118,15 +118,15 @@ export class AgregaPersonasComponent {
    * @returns {void}
    */
   agregarPersona(): void {
-    this.gafete.setValidators([Validators.required, Validators.maxLength(25)]);
-    this.gafete.updateValueAndValidity();
+    this.gafeteRespoDespacho.setValidators([Validators.required, Validators.maxLength(25)]);
+    this.gafeteRespoDespacho.updateValueAndValidity();
 
-    if (this.gafete.invalid || this.personaForm.invalid) {
+    if (this.gafeteRespoDespacho.invalid || this.personaForm.invalid) {
       this.tituloModal = TITULO_MODAL;
       this.mensajeModal = ERR_CAMPOS_OBLIGATORIOS;
       this.abrirModal();
 
-      this.gafete.markAllAsTouched();
+      this.gafeteRespoDespacho.markAllAsTouched();
       this.personaForm.markAllAsTouched();
       this.habilitarCamposFormulario();
       return;
@@ -140,19 +140,20 @@ export class AgregaPersonasComponent {
     }
 
     let responsable: Persona | null = {
-      gafete: this.gafete.value,
-      nombre: this.personaForm.get('nombre')?.value,
-      primerApellido: this.personaForm.get('primerApellido')?.value,
-      segundoApellido: this.personaForm.get('segundoApellido')?.value,
+      gafeteRespoDespacho: this.gafeteRespoDespacho.value,
+      nombre: this.personaForm.get('nombreRespoDespacho')?.value,
+      primerApellido: this.personaForm.get('paternoRespoDespacho')?.value,
+      segundoApellido: this.personaForm.get('maternoRespoDespacho')?.value,
     };
 
     if (responsable !== null) {
       this.personas.push(responsable);
     }
 
-    this.gafete.setValue('');
+    this.gafeteRespoDespacho.setValue('');
     responsable = null;
 
+    this.gafeteRespoDespacho.reset();
     this.personaForm.reset();
   }
 
