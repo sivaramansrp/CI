@@ -66,34 +66,157 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   @Input() tabindex!: number;
 
+  /**
+   * Suscripción privada.
+   * @type {Subscription}
+   */
   private subscription: Subscription = new Subscription();
+
+  /**
+   * Formulario reactivo.
+   * @type {FormGroup}
+   */
   formulario: FormGroup;
+
+  /**
+   * Tipo de persona.
+   * @type {number}
+   */
   tipoPersona!: number;
+
+  /**
+   * Domicilio fiscal.
+   * @type {FormularioDinamico[]}
+   */
   domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Servicios desplegables.
+   * @type {string}
+   */
   serviciosDropDown: string = '';
+
+  /**
+   * Datos recibidos del servicio.
+   * @type {Servicio[]}
+   */
   recibioDatos: Servicio[] = [];
+
+  /**
+   * Tabla de selección.
+   * @type {TablaSeleccion}
+   */
   tablaSeleccion = TablaSeleccion;
+
+  /**
+   * RFC de la empresa.
+   * @type {string}
+   */
   rfcEmpresa: string = '';
+
+  /**
+   * Número del programa.
+   * @type {string}
+   */
   numeroPrograma: string = '';
+
+  /**
+   * Tiempo del programa.
+   * @type {string}
+   */
   tiempoPrograma: string = '';
+
+  /**
+   * Configuración de la tabla de domicilios.
+   * @type {ConfiguracionColumna<ServicioInmex>[]}
+   */
   configuracionTabla: ConfiguracionColumna<ServicioInmex>[] =
     CONFIGURACION_DOMICILIOS;
+
+  /**
+   * Configuración de la tabla de servicios.
+   * @type {ConfiguracionColumna<Servicio>[]}
+   */
   configuracionTablaServicio: ConfiguracionColumna<Servicio>[] =
     CONFIGURACION_SERVICIO_IMMEX;
+
+  /**
+   * Configuración de la tabla de empresas extranjeras.
+   * @type {ConfiguracionColumna<DatosEmpresaExtranjera>[]}
+   */
   configuracionTablaEmpresaExtranjera: ConfiguracionColumna<DatosEmpresaExtranjera>[] =
     CONFIGURACION_EMPRESA_ECTRANJERA;
+
+  /**
+   * Datos de servicios Inmex.
+   * @type {ServicioInmex[]}
+   */
   datos: ServicioInmex[] = [];
+
+  /**
+   * Datos de servicios Immex.
+   * @type {Servicio[]}
+   */
   datosImmex: Servicio[] = [];
+
+  /**
+   * Domicilios seleccionados.
+   * @type {Servicio[]}
+   */
   domiciliosSeleccionados: Servicio[] = [];
+
+  /**
+   * Empresas seleccionadas.
+   * @type {ServicioInmex[]}
+   */
   empresasSeleccionados: ServicioInmex[] = [];
+
+  /**
+   * Empresas extranjeras seleccionadas.
+   * @type {DatosEmpresaExtranjera[]}
+   */
   empresaExtranjeraSeleccionados: DatosEmpresaExtranjera[] = [];
 
+  /**
+   * Formulario reactivo.
+   * @type {FormGroup}
+   */
   forma!: FormGroup;
+
+  /**
+   * Aduanas de ingreso.
+   * @type {Catalogo[]}
+   */
   aduanaDeIngreso!: Catalogo[];
+
+  /**
+   * Datos del cuerpo autorizados.
+   * @type {[]}
+   */
   autorizadosBodyData: [] = [];
+
+  /**
+   * Información del registro de servicios.
+   * @type {Servicios}
+   */
   infoRegistro!: Servicios;
+
+  /**
+   * Formulario de empresa extranjera.
+   * @type {FormGroup}
+   */
   formularioEmpresaExtranjera!: FormGroup;
+
+  /**
+   * Campos del formulario de empresa extranjera.
+   * @type {DatosCatalago[]}
+   */
   camposFormulario: DatosCatalago[] = FORMA_EMPRESA_ECTRANJERA;
+
+  /**
+   * Observable de datos de empresas extranjeras.
+   * @type {Observable<DatosEmpresaExtranjera[]>}
+   */
   datosEmpresaExtranjera$!: Observable<DatosEmpresaExtranjera[]>;
 
   /**
@@ -123,7 +246,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
           });
         }
         this.Tramite80102Store.setFormValida({
-          servicios: this.formulario.valid
+          servicios: this.formulario.valid,
         });
       });
 
@@ -137,7 +260,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.datosEmpresaExtranjera$ =this.Tramite80102Query.selectdatosEmpresaExtranjera$;
+    this.datosEmpresaExtranjera$ =
+      this.Tramite80102Query.selectdatosEmpresaExtranjera$;
   }
 
   /**
@@ -153,17 +277,30 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     this.getCatalogoPaises();
   }
 
+  /**
+   * Obtiene el catálogo de países y actualiza las opciones del formulario.
+   * @returns {void}
+   */
   getCatalogoPaises(): void {
     this.subscription.add(
       this.catalogosServices
         .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
         .subscribe((datos) => {
-          const INDICE = this.camposFormulario.findIndex( ele => ele.campo === ENTIDADFEDERATIVA)
+          const INDICE = this.camposFormulario.findIndex(
+            (ele) => ele.campo === ENTIDADFEDERATIVA
+          );
           this.camposFormulario[INDICE].opciones = datos;
           this.Tramite80102Store.setPaisesOrigen(datos);
         })
     );
   }
+
+  /**
+   * Maneja el cambio de valor de un campo específico y actualiza el estado correspondiente.
+   * @param {string} fieldName - El nombre del campo que ha cambiado.
+   * @param {string} newValue - El nuevo valor del campo.
+   * @returns {void}
+   */
   enCambioDeCampo(fieldName: string, newValue: string): void {
     switch (fieldName) {
       case 'rfcEmpresa':
@@ -191,22 +328,29 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  /**
+   * Se suscribe a los campos del estado y actualiza las propiedades correspondientes.
+   * @returns {void}
+   */
   suscribirseAFields(): void {
     this.subscription.add(
-      this.Tramite80102Query
-        .select((state) => ({
-          rfcEmpresa: state.rfcEmpresa,
-          numeroPrograma: state.numeroPrograma,
-          tiempoPrograma: state.tiempoPrograma,
-        }))
-        .subscribe((fields) => {
-          this.rfcEmpresa = fields.rfcEmpresa;
-          this.numeroPrograma = fields.numeroPrograma;
-          this.tiempoPrograma = fields.tiempoPrograma;
-        })
+      this.Tramite80102Query.select((state) => ({
+        rfcEmpresa: state.rfcEmpresa,
+        numeroPrograma: state.numeroPrograma,
+        tiempoPrograma: state.tiempoPrograma,
+      })).subscribe((fields) => {
+        this.rfcEmpresa = fields.rfcEmpresa;
+        this.numeroPrograma = fields.numeroPrograma;
+        this.tiempoPrograma = fields.tiempoPrograma;
+      })
     );
   }
 
+  /**
+   * Obtiene los datos del servicio de autorización de programa nuevo y los almacena en el store.
+   * @returns {void}
+   */
   getDatos(): void {
     this.subscription.add(
       this.autorizacionProgrmaNuevoService.getDatos().subscribe((respuesta) => {
@@ -217,17 +361,17 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  /**
+   * Se suscribe a `datosImmex` desde el store para mantener el componente actualizado de manera reactiva.
+   * @returns {void}
+   */
   suscribirseADatosImmex(): void {
     // Subscribe to `datosImmex` from the store to keep the component updated reactively
     this.Tramite80102Query.selectDatosImmex$.subscribe((datosImmex) => {
       this.datosImmex = datosImmex; // Update local variable with the latest data from the store
     });
   }
-
-  /**
-   * Crea un formulario vacío con dos grupos de formularios, datosGenerales y domicilioFiscal.
-   * @method crearFormulario
-   */
 
   /**
    * Obtiene la lista de selección de ingreso.
@@ -280,10 +424,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       descripiónDelServicio: this.recibioDatos[0].descripcion,
       tipode: this.recibioDatos[0].tipode,
     };
-    this.Tramite80102Store.setDatosImmex([
-      ...this.datosImmex,
-      CUERPODATOS,
-    ]);
+    this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
   }
 
   /**
@@ -365,9 +506,13 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     this.empresasSeleccionados = [{ ...empresas }];
   }
 
+  /**
+   * Elimina las empresas extranjeras seleccionadas del store.
+   * @returns {void}
+   */
   eliminarEmpresaExtranjera(): void {
-    if(!this.empresaExtranjeraSeleccionados.length) {
-      return
+    if (!this.empresaExtranjeraSeleccionados.length) {
+      return;
     }
     this.Tramite80102Store.eliminarDatosEmpresaExtranjera(
       this.empresaExtranjeraSeleccionados
@@ -375,6 +520,10 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     this.empresaExtranjeraSeleccionados = [];
   }
 
+  /**
+   * Agrega una nueva empresa extranjera al store utilizando los valores del formulario.
+   * @returns {void}
+   */
   agregarEmpresaExtranjera(): void {
     this.Tramite80102Store.agregarDdatosEmpresaExtranjera(
       this.formularioEmpresaExtranjera.value
