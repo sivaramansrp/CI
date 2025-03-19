@@ -4,7 +4,7 @@ import { PermisosCancelarService } from '../../service/permisos-cancelar.service
 import { Tramite140112Store } from '../../estados/tramite-140112.store';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { MockService } from 'ng-mocks'; // Para simular servicios como PermisosCancelarService
+import { MockService } from 'ng-mocks';
 
 /**
  * Test suite for PermisosCancelarComponent
@@ -53,7 +53,7 @@ describe('PermisosCancelarComponent', () => {
   it('debe inicializar con valores predeterminados', () => {
     expect(component.TablaSeleccion).toBeDefined();
     expect(component.configuracionTabla.length).toBeGreaterThan(0);
-    expect(component.PermisosCancelar).toEqual([]);
+    expect(component.permisosCancelar).toEqual([]);
   });
 
   /**
@@ -69,7 +69,7 @@ describe('PermisosCancelarComponent', () => {
    * Test to check if permisosCancelar is updated when loadPermisoCancelar is successful
    */
   it('debe actualizar permisosCancelar cuando loadPermisoCancelar sea exitoso', () => {
-    const mockData = [{  code: 'code', data: [], message: 'message' }];
+    const mockData = [{ code: 1, data: [], message: 'message' }];
     jest.spyOn(permisosCancelarService, 'getPermisosCancelar').mockReturnValue(of(mockData));
     
     component.loadPermisoCancelar();
@@ -94,7 +94,7 @@ describe('PermisosCancelarComponent', () => {
    * Test to check if obtenerFilasSeleccionadas is updated when handleListaDeFilaSeleccionada is called
    */
   it('debe actualizar obtenerFilasSeleccionadas cuando se llame a handleListaDeFilaSeleccionada', () => {
-    const mockData = { FolioTtrámite: 1, TipoSolicitud: 'Test' };
+    const mockData = [{ code: 1, data: [], message: 'Test message' }];
     component.handleListaDeFilaSeleccionada(mockData);
     expect(component.obtenerFilasSeleccionadas).toEqual(mockData);
   });
@@ -103,7 +103,8 @@ describe('PermisosCancelarComponent', () => {
    * Test to check if confirmarVeracidad is updated when seleccionarDeseleccionarTodos is called with checked=true
    */
   it('debe actualizar confirmarVeracidad cuando se llame a seleccionarDeseleccionarTodos con checked=true', () => {
-    const event = { target: { checked: true } };
+    const event = new Event('change') as Event & { target: { checked: boolean } };
+    event.target = { checked: true } as any;
     component.seleccionarDeseleccionarTodos(event);
     expect(component.estmarcado).toBe(true);
     expect(component.confirmarVeracidad).toBe('De conformidad con el artículo 57, fracción 11, y 58 de la ley Federal de Procedimiento Administrativo* Manifiesto decir verdad');
@@ -113,7 +114,8 @@ describe('PermisosCancelarComponent', () => {
    * Test to check if confirmarVeracidad is updated when seleccionarDeseleccionarTodos is called with checked=false
    */
   it('debe actualizar confirmarVeracidad cuando se llame a seleccionarDeseleccionarTodos con checked=false', () => {
-    const event = { target: { checked: false } };
+    const event = new Event('change') as Event & { target: { checked: boolean } };
+    event.target = { checked: false } as any;
     component.seleccionarDeseleccionarTodos(event);
     expect(component.estmarcado).toBe(false);
     expect(component.confirmarVeracidad).toBe('');
