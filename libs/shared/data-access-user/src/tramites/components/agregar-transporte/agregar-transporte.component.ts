@@ -109,6 +109,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   crearPeatonalForm(): void {
     this.peatonalForma = this.fb.group({
       rfcEmpresa: ['', [Validators.maxLength(13)]],
+      empTransportista: ['', [Validators.maxLength(80)]],
       nombreTransportista: ['', [Validators.maxLength(100)]],
       numGafete: ['', [Validators.maxLength(20)]],
     });
@@ -210,19 +211,45 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
   limpiarFormulario(): void {
     this.carreteroForma.reset();
-   
+
   }
 
   agregarTipoTransporte(): void {
-    const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
-    TRANSPORTE.observaciones = this.observaciones.value;
+    switch (parseInt(this.tipo, 10)) {
+      case 1: {
+        const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
+        TRANSPORTE.observaciones = this.observaciones.value;
 
-    this.bodyTabla.push(TRANSPORTE);
-    console.log(this.bodyTabla);
+        this.bodyTabla.push(TRANSPORTE);
+
+        break;
+      }
+
+      case 2: {
+        const TRANSPORTE: TransporteFerroviario = this.ferroviarioForma.value;
+        TRANSPORTE.observaciones = this.observaciones.value;
+        this.bodyTabla.push(TRANSPORTE);
+        break;
+      }
+
+
+      case 5: {
+        const TRANSPORTE: TransportePeatonal = this.peatonalForma.value;
+        TRANSPORTE.observaciones = this.observaciones.value;
+        this.bodyTabla.push(TRANSPORTE);
+        break;
+      }
+
+      default: {
+        const TRANSPORTE: TransporteOtro = this.otroForma.value;
+        TRANSPORTE.observaciones = this.observaciones.value;
+        this.bodyTabla.push(TRANSPORTE);
+        break;
+      }
+
+    }
 
     this.cerrarModal();
-
-
   }
 
   seleccionarTodos(event: Event): void {

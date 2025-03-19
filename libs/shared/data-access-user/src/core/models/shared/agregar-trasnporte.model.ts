@@ -18,6 +18,7 @@ export interface TransporteFerroviario {
 }
 
 export interface TransportePeatonal {
+    empTransportista: string;
     rfcEmpresa: string;
     nombreTransportista: string;
     numGafete: string;
