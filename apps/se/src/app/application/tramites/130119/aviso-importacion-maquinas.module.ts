@@ -6,8 +6,10 @@ import { AvisoImportacionMaquinasRoutingModule } from './aviso-importacion-maqui
 
 import { BtnContinuarComponent, SolicitanteComponent } from "@ng-mf/data-access-user";
 import { DatosComponent } from './pages/datos/datos.component';
+import { DatosDelTramiteComponent } from "./components/datos-del-tramite/datos-del-tramite.component";
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { WizardComponent } from "@ng-mf/data-access-user";
+
 
 
 
@@ -18,7 +20,8 @@ import { WizardComponent } from "@ng-mf/data-access-user";
     CommonModule,
     AvisoImportacionMaquinasRoutingModule,
     WizardComponent,
-    BtnContinuarComponent,SolicitanteComponent
+    BtnContinuarComponent, SolicitanteComponent,
+    DatosDelTramiteComponent
 ]
 })
 export class AvisoImportacionMaquinasModule { }
