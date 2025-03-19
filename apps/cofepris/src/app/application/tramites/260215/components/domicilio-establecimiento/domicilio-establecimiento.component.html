@@ -91,7 +91,7 @@
                     class="form-control"
                     id="lada"
                     placeholder=""
-                    type="text"
+                    type="number"
                     formControlName="lada"
                     (change)="setValoresStore(domicilio,'lada', 'setLada')"
                 />
@@ -104,7 +104,7 @@
                     class="form-control"
                     id="telefono"
                     placeholder=""
-                    type="text"
+                    type="number"
                     formControlName="telefono"
                     (change)="setValoresStore(domicilio,'telefono', 'setTelefono')"
                 />
@@ -128,9 +128,7 @@
     <div class="row align-item-center">
         <div class="col-md-4">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="avisoCheckbox" 
-                formControlName="avisoCheckbox" (change)="onAvisoCheckboxChange($event);
-                 setValoresStore(domicilio,'avisoCheckbox', 'setAvisoCheckbox')"/>
+                <input class="form-check-input" type="checkbox" id="avisoCheckbox" formControlName="avisoCheckbox" (change)="onAvisoCheckboxChange($event); setValoresStore(domicilio,'avisoCheckbox', 'setAvisoCheckbox')">
                 <label class="form-check-label" for="avisoCheckbox">
                     <span>Aviso de funcionamiento:</span>
                 </label>
@@ -155,10 +153,10 @@
         <div class="col-md-4">
             <app-catalogo-select
                 [catalogo]="estado"
-               [label]="'Régimen'"
+                formControlName="regimen"
+                [label]="'Régimen'"
                 [required]="true"
                 name="regimen"
-                formControlName="regimen"
                 (change)="setValoresStore(domicilio,'regimen', 'setRegimen')"
             ></app-catalogo-select>
         </div>
@@ -222,6 +220,7 @@
                             [label]="'Clave S.C.I.A.N.'"
                             [required]="true"
                             name="claveScianModal"
+                            (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -231,6 +230,7 @@
                             [label]="'Descripción del S.C.I.A.N.'"
                             [required]="false"
                             name="claveDescripcionModal"
+                            (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"
                         ></app-catalogo-select>
                     </div>
                 </form>
@@ -259,6 +259,7 @@
                             [label]="'Clasificación del producto'"
                             [required]="true"
                             name="clasificacion"
+                            (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -268,19 +269,20 @@
                             [label]="'Especificar clasificación del producto'"
                             [required]="true"
                             name="especificar"
+                            (change)="setValoresStore(formMercancias,'especificar', 'setEspecificar')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
                         <label for="denominacionEspecifica">Denominación específica del producto*:</label>
-                        <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica" class="form-control">
+                        <input type="text" id="denominacionEspecifica" formControlName="denominacionEspecifica" class="form-control" (change)="setValoresStore(formMercancias,'denominacionEspecifica', 'setDenominacionEspecifica')">
                     </div>
                     <div class="form-group">
                         <label for="denominacionDistintiva">Denominación distintiva*:</label>
-                        <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva" class="form-control">
+                        <input type="text" id="denominacionDistintiva" formControlName="denominacionDistintiva" class="form-control" (change)="setValoresStore(formMercancias,'denominacionDistintiva', 'setDenominacionDistintiva')">
                     </div>
                     <div class="form-group">
                         <label for="denominacionComun">Denominación común, nombre común o nombre científico*:</label>
-                        <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control">
+                        <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control" (change)="setValoresStore(formMercancias,'denominacionComun', 'setDenominacionComun')">
                     </div>
                     <div class="form-group">
                         <app-catalogo-select
@@ -289,6 +291,7 @@
                             [label]="'Tipo de producto'"
                             [required]="true"
                             name="tipoDeProducto"
+                            (change)="setValoresStore(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -298,27 +301,28 @@
                             [label]="'Estado físico'"
                             [required]="true"
                             name="estadoFisico"
+                            (change)="setValoresStore(formMercancias,'estadoFisico', 'setEstadoFisico')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
                         <label for="fraccionArancelaria">Fracción arancelaria*:</label>
-                        <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control">
+                        <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control" (change)="setValoresStore(formMercancias,'fraccionArancelaria', 'setFraccionArancelaria')">
                     </div>
                     <div class="form-group">
                         <label for="descripcionFraccion">Descripción de la fracción*:</label>
-                        <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control">
+                        <input type="text" id="descripcionFraccion" formControlName="descripcionFraccion" class="form-control" (change)="setValoresStore(formMercancias,'descripcionFraccion', 'setDescripcionFraccion')">
                     </div>
                     <div class="form-group">
                         <label for="cantidadUMT">Cantidad UMT*:</label>
-                        <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control">
+                        <input type="text" id="cantidadUMT" formControlName="cantidadUMT" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMT', 'setCantidadUMT')">
                     </div>
                     <div class="form-group">
                         <label for="UMT">UMT*:</label>
-                        <input type="text" id="UMT" formControlName="UMT" class="form-control">
+                        <input type="text" id="UMT" formControlName="UMT" class="form-control" (change)="setValoresStore(formMercancias,'UMT', 'setUMT')">
                     </div>
                     <div class="form-group">
                         <label for="cantidadUMC">Cantidad UMC*:</label>
-                        <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control">
+                        <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMC', 'setCantidadUMC')">
                     </div>
                     <div class="form-group">
                         <app-catalogo-select
@@ -327,19 +331,20 @@
                             [label]="'UMC'"
                             [required]="true"
                             name="UMC"
+                            (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
                         <label for="presentacion">Presentación farmacéutica o tipo de envase*:</label>
-                        <input type="text" id="presentacion" formControlName="presentacion" class="form-control">
+                        <input type="text" id="presentacion" formControlName="presentacion" class="form-control" (change)="setValoresStore(formMercancias,'presentacion', 'setPresentacion')">
                     </div>
                     <div class="form-group">
                         <label for="numeroRegistro">Número de registro sanitario*:</label>
-                        <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control">
+                        <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" (change)="setValoresStore(formMercancias,'numeroRegistro', 'setNumeroRegistro')">
                     </div>
                     <div class="form-group">
                         <label for="fechaCaducidad">Fecha de caducidad</label>
-                        <input type="date" class="form-control" id="fechaCaducidad" formControlName="fechaCaducidad">
+                        <input type="date" class="form-control" id="fechaCaducidad" formControlName="fechaCaducidad"  (change)="setValoresStore(formMercancias,'fechaCaducidad', 'setFechaCaducidad')">
                     </div>
                     <div class="form-group mt-5">
                         <div class="panel-group ficha-collapse" id="accordion">

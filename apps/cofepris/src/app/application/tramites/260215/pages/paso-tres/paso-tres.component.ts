@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+/**
+ * componente doc
+ * @component PasoTresComponent
+ */ 
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',

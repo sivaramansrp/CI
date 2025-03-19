@@ -45,6 +45,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -56,6 +57,10 @@ export interface MercanciasTabla {
   data: MercanciasInfo[];
   message: string;
 }
+
+/**
+ * Componente para el domicilio del establecimiento.
+ */
 @Component({
   selector: 'app-domicillo',
   standalone: true,

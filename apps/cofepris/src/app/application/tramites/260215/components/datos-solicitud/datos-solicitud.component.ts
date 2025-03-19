@@ -55,7 +55,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * @param tramite260215Query
    */
   constructor(
-    private readonly fb: FormBuilder,
+    public readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
     private tramite260215Query: Tramite260215Query
   ) {

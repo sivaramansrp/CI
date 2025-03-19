@@ -5,6 +5,9 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 
+/**
+ * Componente para el paso dos del trámite.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',

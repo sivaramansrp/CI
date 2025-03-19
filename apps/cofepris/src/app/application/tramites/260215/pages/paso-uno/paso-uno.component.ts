@@ -2,6 +2,9 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
+/**
+ * Componente para el paso uno del trámite.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -21,8 +24,15 @@ export class PasoUnoComponent implements AfterViewInit {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
+  /**
+   * Índice del tab seleccionado.
+   */
   indice: number = 1;
 
+  /**
+   * Método para seleccionar un tab.
+   * @param i Índice del tab.
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
