@@ -1,0 +1,159 @@
+<div class="container">
+  <form [formGroup]="formDelLa">
+    <ng-titulo titulo="Datos del la mercancia"> </ng-titulo>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="producto">Producto*:</label>
+          <app-input-radio
+            [radioOptions]="producto"
+            [selectedValue]="defaultSelect"
+            [isRequired]="true"
+            (valueChange)="onValueChange($event)"
+            [layout]="'vertical'"
+          ></app-input-radio>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <label for="message" class="form-label"
+          >Descripcion de la mercancia* :</label
+        >
+        <textarea
+          id="message"
+          class="form-control mb-5"
+          placeholder="Descripcion de la mercancia"
+          rows="8"
+          formControlName="descripcion"
+          (change)="setValoresStore(formDelLa, 'descripcion', 'setDescripcion')"
+        ></textarea>
+        <div
+          *ngIf="
+            formDelLa.controls['descripcion'].invalid &&
+            formDelLa.controls['descripcion'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['required']"
+            >La descripción es obligatoria.</small
+          >
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['minlength']"
+            >Debe tener al menos 10 caracteres.</small
+          >
+          <small *ngIf="formDelLa.controls['descripcion'].errors?.['maxlength']"
+            >No puede exceder 500 caracteres.</small
+          >
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <app-catalogo-select
+        [catalogo]="fraccionF"
+        [label]="'Fracción arancelaria'"
+        [required]="true"
+        (change)="fetchFraccion()"
+        [placeholder]="'Seleccione un documento'"
+        formControlName="fraccion"
+        (change)="setValoresStore(formDelLa, 'fraccion', 'setFraccion')"
+      ></app-catalogo-select>
+      <div
+        *ngIf="
+          formDelLa.controls['fraccion'].invalid && formDelLa.controls['fraccion'].touched
+        "
+        class="text-danger"
+      >
+        <small *ngIf="formDelLa.controls['fraccion'].errors?.['required']"
+          >Debe seleccionar un valor.</small
+        >
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="nombre_imp"
+          >Cantidad<span class="require">*</span>:</label
+        >
+        <input
+          class="form-control"
+          id="Cantidad"
+          placeholder=""
+          type="text"
+          formControlName="cantidad"
+          (change)="setValoresStore(formDelLa, 'cantidad', 'setCantidad')"
+        />
+        <div
+          *ngIf="
+            formDelLa.controls['cantidad'].invalid &&
+            formDelLa.controls['cantidad'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="formDelLa.controls['cantidad'].errors?.['required']"
+            >Este campo es obligatorio.</small
+          >
+          <small *ngIf="formDelLa.controls['cantidad'].errors?.['pattern']"
+            >Solo se permiten números.</small
+          >
+          <small *ngIf="formDelLa.controls['cantidad'].errors?.['min']"
+            >Debe ser mayor que 0.</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="nombre_imp"
+          >Valor factura USD<span class="require">*</span>:</label
+        ><span
+          class="bi bi-question-circle-fill"
+          title="En caso de no contar con valor factura proporciona el valor estimado"
+          data-bs-toggle="tooltip"
+        ></span>
+        <input
+          class="form-control"
+          id="Valor_factura_USD"
+          placeholder=""
+          type="text"
+          formControlName="valorFacturaUSD"
+          (change)="setValoresStore(formDelLa, 'valorFacturaUSD', 'setvalorPartidaUSD')"
+        />
+        <div
+          *ngIf="
+            formDelLa.controls['valorFacturaUSD'].invalid &&
+            formDelLa.controls['valorFacturaUSD'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['required']"
+            >Este campo es obligatorio.</small
+          >
+          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['pattern']"
+            >Ingrese un valor numérico válido (ej. 100.50).</small
+          >
+          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['min']"
+            >Debe ser mayor que 0.</small
+          >
+        </div>
+      </div>
+      <div class="col-md-4 form-group">
+        <app-catalogo-select
+          [tooltipQuestionCircle]="true"
+          [catalogo]="Unidad"
+          [label]="'UMT'"
+          [required]="true"
+          (change)="fetchUnidad()"
+          [placeholder]="'Seleccione un valor'"
+          formControlName="unidadMedida"
+          (change)="setValoresStore(formDelLa, 'unidadMedida', 'setUnidadMedida')"
+        ></app-catalogo-select>
+        <div
+          *ngIf="
+            formDelLa.controls['unidadMedida'].invalid &&
+            formDelLa.controls['unidadMedida'].touched
+          "
+          class="text-danger"
+        >
+          <small *ngIf="formDelLa.controls['unidadMedida'].errors?.['required']"
+            >Debe seleccionar una unidad de medida.</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
