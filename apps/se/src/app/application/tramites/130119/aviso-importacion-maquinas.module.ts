@@ -12,12 +12,6 @@ import { DatosDelTramiteComponent } from "./components/datos-del-tramite/datos-d
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { WizardComponent } from "@ng-mf/data-access-user";
 
-
-
-
-
-
-
 @NgModule({
   declarations: [DatosComponent,PasoUnoComponent,DatosDeLaSolicitudComponent],
   imports: [

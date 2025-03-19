@@ -7,9 +7,11 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent],
+      declarations: [PasoUnoComponent]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -17,5 +19,14 @@ describe('PasoUnoComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize indice with default value 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
   });
 });

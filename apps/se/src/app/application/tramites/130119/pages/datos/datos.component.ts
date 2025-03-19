@@ -1,6 +1,10 @@
+/**
+ * Archivo de componente DatosComponent.
+ */
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../modelos/aviso-importacion-maquinas.model';
+import { PASOS } from '../../constants/aviso-importacion-maquinas.enum';
 
 /**
  * Componente DatosComponent.

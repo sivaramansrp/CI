@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogoSelectComponent } from "@ng-mf/data-access-user";
-import { DatosDelTramiteService } from '../../services/datos-del-tramite/datos-del-tramite.service';
+import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
@@ -55,13 +55,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente DatosDelTramiteComponent.
-   * 
-   * @param {FormBuilder} fb - El servicio FormBuilder proporcionado por Angular.
-   * @param {DatosDelTramiteService} service - El servicio para obtener los datos del trámite.
-   * @param {Tramite130119Store} tramite130119Store - El store del trámite 130119.
-   * @param {Tramite130119Query} tramite130119Query - La consulta del trámite 130119.
    */
-  constructor(private fb: FormBuilder, private service: DatosDelTramiteService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query) {
+  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query) {
     this.datosDelTramiteForm = this.fb.group({
       regimen: [''],
       clasificacionDeRegimen: ['']

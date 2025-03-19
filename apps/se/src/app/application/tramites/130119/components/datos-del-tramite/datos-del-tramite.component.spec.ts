@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { of} from 'rxjs';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
 import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { DatosDelTramiteService } from '../../services/datos-del-tramite/datos-del-tramite.service';
+import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let datosDelTramiteService: DatosDelTramiteService;
+  let datosDelTramiteService: DatosDeLaSolicitudService;
   let tramite130119Query: Tramite130119Query;
   let tramite130119Store: Tramite130119Store;
 
@@ -38,13 +38,13 @@ describe('DatosDelTramiteComponent', () => {
       declarations: [],
       imports: [CommonModule,DatosDelTramiteComponent, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
       providers: [
-        { provide: DatosDelTramiteService, useValue: datosDelTramiteServiceMock },
+        { provide: DatosDeLaSolicitudService, useValue: datosDelTramiteServiceMock },
         { provide: Tramite130119Query, useValue: tramite130119QueryMock },
         { provide: Tramite130119Store, useValue: {} }
       ]
     }).compileComponents();
 
-    datosDelTramiteService = TestBed.inject(DatosDelTramiteService);
+    datosDelTramiteService = TestBed.inject(DatosDeLaSolicitudService);
     tramite130119Query = TestBed.inject(Tramite130119Query);
     tramite130119Store = TestBed.inject(Tramite130119Store);
   });

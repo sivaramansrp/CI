@@ -1,23 +1,31 @@
+/**
+ * Componente encargado de gestionar el primer paso del trámite.
+ */
 import { Component } from '@angular/core';
-
+/**
+ * Componente encargado de gestionar el primer paso del trámite.
+ */
 @Component({
   selector: 'app-paso-uno',
   standalone: false,
   templateUrl: './paso-uno.component.html',
 })
+/**
+ * Componente encargado de gestionar el primer paso del trámite.
+ */
 export class PasoUnoComponent {
 
-    /**
-   * @property {number} indice - El índice de la pestaña seleccionada.
+  /**
+   * El índice de la pestaña seleccionada.
+   * @type {number}
    */
-    indice: number = 1;
+  indice: number = 1;
 
-    /**
-     * @method seleccionaTab
-     * @description Selecciona una pestaña y actualiza el índice.
-     * @param {number} i - El índice de la pestaña seleccionada.
-     */
-    seleccionaTab(i: number): void {
-      this.indice = i;
-    }
+  /**
+   * Selecciona una pestaña y actualiza el índice.
+   * @param {number} i - El índice de la pestaña seleccionada.
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
 }
