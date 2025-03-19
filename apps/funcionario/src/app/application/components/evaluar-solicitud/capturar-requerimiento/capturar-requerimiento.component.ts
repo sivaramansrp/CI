@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import data from '../../../../../../../../libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
 import { map, Subject, takeUntil } from 'rxjs';
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
+import { FuncionarioService } from '../../../../../../../../libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 
 @Component({
   selector: 'app-capturar-requerimiento',
@@ -28,9 +29,10 @@ export class CapturarRequerimientoComponent {
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
+     private estadoService: FuncionarioService,
   ) {
-  }
 
+  }
   ngOnInit(): void {
     this.catTipoRequerimiento = data;
     this.solicitudRequerimientoQuery.selectSolicitud$
@@ -42,6 +44,7 @@ export class CapturarRequerimientoComponent {
       )
       .subscribe();
       this.crearFormRequerimiento();
+    
   }
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
@@ -58,12 +61,15 @@ export class CapturarRequerimientoComponent {
     switch (tipoRequerimientoId) {
       case "1":
         this.documentacion = true;
+        this.estadoService.setFirmar(false);
         break;
       case "2":
         this.documentacion = true;
+        this.estadoService.setFirmar(false);
         break;
       case "3":
         this.documentacion = false;
+        this.estadoService.setFirmar(true);
         break;
       default:
         break;

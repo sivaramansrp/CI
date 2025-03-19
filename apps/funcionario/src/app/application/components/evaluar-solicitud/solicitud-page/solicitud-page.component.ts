@@ -6,6 +6,7 @@ import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
 import { EncabezadoRequerimientoComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
+import { FuncionarioService } from '../../../../../../../../libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 
 @Component({
   selector: 'app-solicitud-page',
@@ -15,18 +16,22 @@ import { Router } from '@angular/router';
   styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
-  constructor(
-    private router: Router
-  ){}
   /**
-   * Índice de la pestaña seleccionada
-   */
+     * Índice de la pestaña seleccionada
+     */
   indice: number = 1;
 
   /**
    * Variable para firmar
    */
-  public firmar: boolean = true;
+  public firmarFuncionario: boolean = true;
+
+  constructor(
+    private router: Router,
+    private estadoService: FuncionarioService,
+  ) {
+    this.estadoService.firmarFuncionario$.subscribe(valor => this.firmarFuncionario = valor);
+  }
 
   /**
    * Método para seleccionar la pestaña
@@ -39,7 +44,11 @@ export class SolicitudPageComponent {
   /*
    * Método que se ejecuta para guardar y firmar
   */
-  guardarFirmar(): void { 
+  guardarFirmar(): void {
     this.router.navigate(['funcionario/firma-electronica']);
+  }
+
+  continuar() {
+    this.estadoService.setTabIndex(2);
   }
 }

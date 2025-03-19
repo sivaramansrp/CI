@@ -6,6 +6,7 @@ import data from '../../../../../../../../libs/shared/theme/assets/json/funciona
 import { DocumentosStates, SolicitudDocumentosState } from '../../../estados/evaluacion-solicitud/documentos.store';
 import { SolicitudDocumentosQuery } from '../../../estados/queries/documentos.query';
 import { map, Subject, takeUntil } from 'rxjs';
+import { FuncionarioService } from '../../../../../../../../libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 
 @Component({
   selector: 'app-solicitar-documentos',
@@ -25,14 +26,12 @@ export class SolicitarDocumentosEvaluacionComponent {
   constructor(private fb: FormBuilder,
     private documentosStates: DocumentosStates,
     private solicitudRequerimientoQuery: SolicitudDocumentosQuery,
+    private estadoService: FuncionarioService,
   ) { }
-
-  // formSolicitudDocumentos: FormGroup = this.fb.group({
-  //   tipoDocumento: ['', [Validators.required]],
-  // });
 
   ngOnInit(): void {
     this.catTipoDocumento = data;
+    
     this.solicitudRequerimientoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -41,6 +40,7 @@ export class SolicitarDocumentosEvaluacionComponent {
         })
       )
       .subscribe();
+     
       this.crearFormDocumentos();
   }
 

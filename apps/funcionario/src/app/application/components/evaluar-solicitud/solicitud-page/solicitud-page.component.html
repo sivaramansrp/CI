@@ -32,8 +32,8 @@
     </div>
     <div class="d-flex justify-content-lg-end">
       <button type="button" class="btn btn-default ms-2">Cancelar</button>
-      <button *ngIf="!firmar" class="btn  btn-primary ms-2" type="button">Continuar</button>
-      <button *ngIf="firmar" class="btn  btn-primary ms-2" (click)="guardarFirmar()" type="button">Guardar y firmar</button>
+      <button *ngIf="!firmarFuncionario" class="btn  btn-primary ms-2" type="button" (click)="continuar()">Continuar</button>
+      <button *ngIf="firmarFuncionario" class="btn  btn-primary ms-2" (click)="guardarFirmar()" type="button">Guardar y firmar</button>
     </div>
   </div>
 </div>

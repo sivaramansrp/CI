@@ -8,7 +8,7 @@ export interface SolicitudRequerimientosState {
   }
   export function createInitialState(): SolicitudRequerimientosState {
     return {
-        idTipoRequerimiento: 1,
+        idTipoRequerimiento: 0,
         justificacionRequerimiento: ''
     };
   }

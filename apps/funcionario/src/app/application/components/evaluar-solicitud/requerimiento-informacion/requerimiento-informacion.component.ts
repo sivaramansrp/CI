@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
+import { FuncionarioService } from '@libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 
 @Component({
   selector: 'app-requerimiento-informacion',
@@ -11,15 +12,18 @@ import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-
   styleUrl: './requerimiento-informacion.component.scss',
 })
 export class RequerimientoInformacionComponent {
-/**
-   * Índice de la pestaña seleccionada
-   */
+  /**
+     * Índice de la pestaña seleccionada
+     */
   indice: number = 1;
- /**
-   * Método para seleccionar la pestaña
-   * @param i indica el número de la pestaña seleccionada
-   */
+
+  constructor() {
+  }
+  /**
+    * Método para seleccionar la pestaña
+    * @param i indica el número de la pestaña seleccionada
+    */
   seleccionaTab(i: number): void {
-  this.indice = i;
-}
+    this.indice = i;
+  }
 }
