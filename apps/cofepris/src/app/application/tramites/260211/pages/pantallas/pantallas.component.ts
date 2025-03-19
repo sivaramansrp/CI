@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { PANTA_PASOS } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
+import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
  
 /**
  * @component

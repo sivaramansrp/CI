@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { map, Subject, takeUntil } from 'rxjs';
  
 /**
  * Componente principal para gestionar el formulario de representante.
@@ -46,7 +47,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query
-  ) {}
+  ) {
+    // Dependencia inyectada para uso posterior
+  }
  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -96,8 +99,8 @@ this.representante = this.fb.group({
     campo: string,
     metodoNombre: keyof Tramite260211Store
   ): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
   }
  
   /**

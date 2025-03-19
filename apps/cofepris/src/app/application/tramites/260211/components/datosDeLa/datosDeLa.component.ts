@@ -1,13 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Solicitud260211State,
+  Tramite260211Store
+} from '../../../../estados/tramites/tramite260211.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DomicilloComponent } from '../domicillo/domicillo.component';
 import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
 import { RepresentanteLegalComponent } from '../representanteLegal/representanteLegal.component';
-import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { map, Subject, takeUntil } from 'rxjs';
  
 /**
  * @component
@@ -75,7 +80,9 @@ constructor(
   private readonly fb: FormBuilder,
   private tramite260211Store: Tramite260211Store,
   private tramite260211Query: Tramite260211Query
-) {}
+) {
+  // Dependencia inyectada para uso posterior
+}
   /**
    * Método del ciclo de vida de Angular que se llama al inicializar el componente.
    * Obtiene datos del estado de la solicitud y configura el formulario.
@@ -130,9 +137,9 @@ constructor(
    */
   public toggleFormControls(): void {
     Object.keys(this.forma.controls).forEach((controlName) => {
-      const control = this.forma.get(controlName);
-      if (control?.disabled) {
-        control.enable();
+      const CONTROL = this.forma.get(controlName);
+      if (CONTROL?.disabled) {
+        CONTROL.enable();
       }
     });
   }
@@ -150,8 +157,9 @@ constructor(
     campo: string,
     metodoNombre: keyof Tramite260211Store
   ): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    // eslint-disabled-next-line
+    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
   }
  
   /**

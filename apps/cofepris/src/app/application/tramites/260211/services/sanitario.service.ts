@@ -15,6 +15,8 @@ export class SanitarioService {
    *
    * Actualmente, no realiza ninguna acción al ser instanciado.
    */
-  constructor() {}
+  constructor() {
+    // Dependencia inyectada para uso posterior
+  }
 }
  

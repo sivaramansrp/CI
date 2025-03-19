@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /**
  * Interfaz que define la estructura de la información NICO.
  * 
  * Esta interfaz se utiliza para modelar la información de las claves y descripciones
  * del Sistema de Clasificación Industrial de América del Norte (S.C.I.A.N.).
  */
-export interface nicoInfo {
+export interface NicoInfo {
     /** Clave del S.C.I.A.N. */
     clave_Scian: string;
     /** Descripción asociada a la clave del S.C.I.A.N. */
@@ -21,7 +22,7 @@ export interface nicoInfo {
       /** Encabezado para la clave del S.C.I.A.N. */
       encabezado: 'Clave S.C.I.A.N.',
       /** Función que obtiene la clave del elemento */
-      clave: (ele: nicoInfo) => ele.clave_Scian,
+      clave: (ele: NicoInfo) => ele.clave_Scian,
       /** Orden de visualización de la columna */
       orden: 1,
     },
@@ -29,7 +30,7 @@ export interface nicoInfo {
       /** Encabezado para la descripción del S.C.I.A.N. */
       encabezado: 'Descripción del S.C.I.A.N.',
       /** Función que obtiene la descripción del elemento */
-      clave: (ele: nicoInfo) => ele.descripcion_Scian,
+      clave: (ele: NicoInfo) => ele.descripcion_Scian,
       /** Orden de visualización de la columna */
       orden: 2,
     },
@@ -41,7 +42,7 @@ export interface nicoInfo {
    * Esta interfaz se utiliza para modelar todos los atributos relacionados con las mercancías,
    * incluyendo clasificación, denominaciones, medidas, procedencia y caducidad.
    */
-  export interface mercanciasInfo {
+  export interface MercanciasInfo {
     /** Clasificación del producto */
     clasificacion: string;
     /** Especificación de la clasificación */
@@ -92,102 +93,102 @@ export interface nicoInfo {
   export const MERCANCIAS_DATA = [
     {
       encabezado: 'Clasificación del producto',
-      clave: (ele: mercanciasInfo) => ele.clasificacion,
+      clave: (ele: MercanciasInfo) => ele.clasificacion,
       orden: 1,
     },
     {
       encabezado: 'Especificar clasificación del producto',
-      clave: (ele: mercanciasInfo) => ele.especificar,
+      clave: (ele: MercanciasInfo) => ele.especificar,
       orden: 2,
     },
     {
       encabezado: 'Denominación específica del producto',
-      clave: (ele: mercanciasInfo) => ele.denominacionEspecifica,
+      clave: (ele: MercanciasInfo) => ele.denominacionEspecifica,
       orden: 3,
     },
     {
       encabezado: 'Denominación distintiva',
-      clave: (ele: mercanciasInfo) => ele.denominacionDistintiva,
+      clave: (ele: MercanciasInfo) => ele.denominacionDistintiva,
       orden: 4,
     },
     {
       encabezado: 'Denominación común, nombre común o nombre científico',
-      clave: (ele: mercanciasInfo) => ele.denominacionComun,
+      clave: (ele: MercanciasInfo) => ele.denominacionComun,
       orden: 5,
     },
     {
       encabezado: 'Forma farmacéutica',
-      clave: (ele: mercanciasInfo) => ele.formaFarmaceutica,
+      clave: (ele: MercanciasInfo) => ele.formaFarmaceutica,
       orden: 6,
     },
     {
       encabezado: 'Estado físico',
-      clave: (ele: mercanciasInfo) => ele.estadoFisico,
+      clave: (ele: MercanciasInfo) => ele.estadoFisico,
       orden: 7,
     },
     {
       encabezado: 'Fracción arancelaria',
-      clave: (ele: mercanciasInfo) => ele.fraccionArancelaria,
+      clave: (ele: MercanciasInfo) => ele.fraccionArancelaria,
       orden: 8,
     },
     {
       encabezado: 'Descripción de la fracción',
-      clave: (ele: mercanciasInfo) => ele.descripcionFraccion,
+      clave: (ele: MercanciasInfo) => ele.descripcionFraccion,
       orden: 9,
     },
     {
       encabezado: 'Unidad de medida de comercialización (UMC)',
-      clave: (ele: mercanciasInfo) => ele.unidad,
+      clave: (ele: MercanciasInfo) => ele.unidad,
       orden: 10,
     },
     {
       encabezado: 'Cantidad UMC',
-      clave: (ele: mercanciasInfo) => ele.cantidadUMC,
+      clave: (ele: MercanciasInfo) => ele.cantidadUMC,
       orden: 11,
     },
     {
       encabezado: 'Unidad de medida de tarifa (UMT)',
-      clave: (ele: mercanciasInfo) => ele.unidadUMT,
+      clave: (ele: MercanciasInfo) => ele.unidadUMT,
       orden: 12,
     },
     {
       encabezado: 'Cantidad UMT',
-      clave: (ele: mercanciasInfo) => ele.cantidadUMT,
+      clave: (ele: MercanciasInfo) => ele.cantidadUMT,
       orden: 13,
     },
     {
       encabezado: 'Presentación',
-      clave: (ele: mercanciasInfo) => ele.presentacion,
+      clave: (ele: MercanciasInfo) => ele.presentacion,
       orden: 14,
     },
     {
       encabezado: 'Número de registro sanitario',
-      clave: (ele: mercanciasInfo) => ele.numeroRegistro,
+      clave: (ele: MercanciasInfo) => ele.numeroRegistro,
       orden: 15,
     },
     {
       encabezado: 'País de origen',
-      clave: (ele: mercanciasInfo) => ele.paisDeOrigen,
+      clave: (ele: MercanciasInfo) => ele.paisDeOrigen,
       orden: 16,
     },
     {
       encabezado: 'País de procedencia',
-      clave: (ele: mercanciasInfo) => ele.paisDeProcedencia,
+      clave: (ele: MercanciasInfo) => ele.paisDeProcedencia,
       orden: 17,
     },
     {
       encabezado: 'Tipo producto',
-      clave: (ele: mercanciasInfo) => ele.tipoProducto,
+      clave: (ele: MercanciasInfo) => ele.tipoProducto,
       orden: 18,
     },
     {
       encabezado: 'Uso específico',
-      clave: (ele: mercanciasInfo) => ele.usoEspecifico,
+      clave: (ele: MercanciasInfo) => ele.usoEspecifico,
       orden: 19,
     },
     {
       encabezado: 'Fecha de caducidad',
-      clave: (ele: mercanciasInfo) => ele.fechaCaducidad,
+      clave: (ele: MercanciasInfo) => ele.fechaCaducidad,
       orden: 20,
     },
   ];

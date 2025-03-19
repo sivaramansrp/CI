@@ -1,16 +1,22 @@
-import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { CommonModule } from '@angular/common';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  CrosslistComponent,
   CrossListLable,
+  CrosslistComponent,
   RespuestaCatalogos,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -18,23 +24,22 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import {
   MERCANCIAS_DATA,
-  mercanciasInfo,
+  MercanciasInfo,
   NICO_TABLA,
-  nicoInfo,
+  NicoInfo,
 } from '../../modelos/domicilo.model';
-import {
-  CONTINUAR,
-  CROSLISTA_DE_PAISES,
-} from '../../enum/domicilo.enum';
 import {
   Solicitud260211State,
   Tramite260211Store,
 } from '../../../../estados/tramites/tramite260211.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CROSLISTA_DE_PAISES } from '../../enum/domicilo.enum';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { map, Subject, takeUntil } from 'rxjs';
+ 
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.
@@ -47,7 +52,7 @@ export interface RespuestaTabla {
   /**
    * Datos de la tabla NICO.
    */
-  data: nicoInfo[];
+  data: NicoInfo[];
   /**
    * Mensaje de la respuesta.
    */
@@ -65,7 +70,7 @@ export interface MercanciasTabla {
   /**
    * Datos de la tabla de mercancías.
    */
-  data: mercanciasInfo[];
+  data: MercanciasInfo[];
   /**
    * Mensaje de la respuesta.
    */
@@ -89,7 +94,7 @@ export interface MercanciasTabla {
   templateUrl: './domicillo.component.html',
   styleUrl: './domicillo.component.css',
 })
-export class DomicilloComponent implements OnInit, AfterViewInit {
+export class DomicilloComponent implements OnInit,OnDestroy {
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -117,7 +122,9 @@ export class DomicilloComponent implements OnInit, AfterViewInit {
     private readonly httpServicios: HttpClient,
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query
-  ) {}
+  ) {
+    // Dependencia inyectada para uso posterior
+  }
  
   /**
    * Grupo de formularios para domicilio.
@@ -162,22 +169,22 @@ export class DomicilloComponent implements OnInit, AfterViewInit {
   /**
    * Configuración de columnas para la tabla NICO.
    */
-  nicoTabla: ConfiguracionColumna<nicoInfo>[] = NICO_TABLA;
+  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
  
   /**
    * Datos cargados para la tabla NICO.
    */
-  nicoTablaDatos: nicoInfo[] = [];
+  nicoTablaDatos: NicoInfo[] = [];
  
   /**
    * Configuración de columnas para la tabla de mercancías.
    */
-  mercanciasTabla: ConfiguracionColumna<mercanciasInfo>[] = MERCANCIAS_DATA;
+  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
  
   /**
    * Datos cargados para la tabla de mercancías.
    */
-  mercanciasTablaDatos: mercanciasInfo[] = [];
+  mercanciasTablaDatos: MercanciasInfo[] = [];
  
   /**
    * Lista de aduanas seleccionadas.
@@ -295,38 +302,33 @@ ngOnInit(): void {
 }
  
 /**
- * Método que se ejecuta después de que la vista ha sido inicializada.
- */
-ngAfterViewInit(): void {}
- 
-/**
  * Botones de acción para gestionar listas de países en la primera sección.
  */
 paisDeProcedenciaBotons = [
-  { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: () => this.crossList.toArray()[0].agregar('t') },
-  { btnNombre: 'Agregar selección', class: 'btn-default', funcion: () => this.crossList.toArray()[0].agregar('') },
-  { btnNombre: 'Restar selección', class: 'btn-danger', funcion: () => this.crossList.toArray()[0].quitar('') },
-  { btnNombre: 'Restar todos', class: 'btn-default', funcion: () => this.crossList.toArray()[0].quitar('t') },
+  { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
+  { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('') },
+  { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[0].quitar('') },
+  { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
 ];
  
 /**
  * Botones de acción para gestionar listas de países en la segunda sección.
  */
 paisDeProcedenciaBotonsDuos = [
-  { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: () => this.crossList.toArray()[1].agregar('t') },
-  { btnNombre: 'Agregar selección', class: 'btn-default', funcion: () => this.crossList.toArray()[1].agregar('') },
-  { btnNombre: 'Restar selección', class: 'btn-danger', funcion: () => this.crossList.toArray()[1].quitar('') },
-  { btnNombre: 'Restar todos', class: 'btn-default', funcion: () => this.crossList.toArray()[1].quitar('t') },
+  { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[1].agregar('t') },
+  { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[1].agregar('') },
+  { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[1].quitar('') },
+  { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[1].quitar('t') },
 ];
  
 /**
  * Botones de acción para gestionar listas de países en la tercera sección.
  */
 paisDeProcedenciaBotonsTres = [
-  { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: () => this.crossList.toArray()[2].agregar('t') },
-  { btnNombre: 'Agregar selección', class: 'btn-default', funcion: () => this.crossList.toArray()[2].agregar('') },
-  { btnNombre: 'Restar selección', class: 'btn-danger', funcion: () => this.crossList.toArray()[2].quitar('') },
-  { btnNombre: 'Restar todos', class: 'btn-default', funcion: () => this.crossList.toArray()[2].quitar('t') },
+  { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[2].agregar('t') },
+  { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].agregar('') },
+  { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[2].quitar('') },
+  { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].quitar('t') },
 ];
  
 /**
@@ -336,8 +338,8 @@ obtenerEstadoList(): void {
   this.httpServicios
     .get<RespuestaCatalogos>('../../../../../assets/json/260211/seleccion.json')
     .subscribe((data): void => {
-      const datos = data?.data;
-      this.estado = datos;
+      const DATOS = data?.data;
+      this.estado = DATOS;
     });
 }
  
@@ -376,14 +378,14 @@ onAvisoCheckboxChange(
   campo: string,
   metodoNombre: keyof Tramite260211Store
 ): void {
-  const checkbox = event.target as HTMLInputElement;
-  if (checkbox.checked) {
+  const CHECKBOX = event.target as HTMLInputElement;
+  if (CHECKBOX.checked) {
     this.domicilio.get('licenciaSanitaria')?.disable();
   } else {
     this.domicilio.get('licenciaSanitaria')?.enable();
   }
-  const valor = form.get(campo)?.value;
-  (this.tramite260211Store[metodoNombre] as (value: any) => void)(valor);
+  const VALOR = form.get(campo)?.value;
+  (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
 }
  
 /**
@@ -414,8 +416,8 @@ mostrar_colapsableTres(): void {
    * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260211Store): void {
-    const valor = form.get(campo)?.value;
-    (this.tramite260211Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   /**

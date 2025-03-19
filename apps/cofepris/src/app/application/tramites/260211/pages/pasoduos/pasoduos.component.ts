@@ -1,5 +1,5 @@
+import { CATALOGOS_ID, Catalogo,CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
-import { CATALOGOS_ID, Catalogo, TEXTOS, ServiciosExtraordinariosService, CatalogosService } from '@ng-mf/data-access-user';
  
 /**
  * Componente que maneja la selección de documentos en el paso de DUOS.
@@ -32,7 +32,9 @@ export class PasoduosComponent implements OnInit {
    *
    * @param catalogosServices Servicio para obtener los catálogos necesarios.
    */
-  constructor(private catalogosServices: CatalogosService) {}
+  constructor(private catalogosServices: CatalogosService) {
+    // Dependencia inyectada para uso posterior
+  }
  
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
