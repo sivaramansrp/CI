@@ -58,7 +58,6 @@ export class ObservacionesDictamenComponent implements OnInit {
   BtnGuardarObs(): void { 
     const mensajeDictamen = this.dictamenForm.get('mensajeDictamen')?.value;
     if (mensajeDictamen) {
-      debugger;
       const nuevaObservacion: Observacion = {
         id: this.observaciones.length + 1,
         Detalle: mensajeDictamen,
@@ -70,6 +69,6 @@ export class ObservacionesDictamenComponent implements OnInit {
       this.observaciones.push(nuevaObservacion);
     }
     // Redirigir al componente BandejaPendientesComponent
-    this.router.navigate(['funcionario/app-bandeja-tareas-pendientes']);  
+    this.router.navigate(['funcionario/bandeja']);  
   } 
 }

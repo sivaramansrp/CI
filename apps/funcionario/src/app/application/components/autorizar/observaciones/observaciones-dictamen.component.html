@@ -50,12 +50,7 @@
         <label for="razonSocial" class="form-label texto_resaltado">
           * Justificación de la observación:
         </label>
-        <textarea
-          id="mensajeDictamen"
-          class="form-control"
-          style="height: 50%; resize: none"
-          formControlName="mensajeDictamen"
-        ></textarea>
+        <textarea class="form-control" style="height: 120px;" id="mensajeDictamen" formControlName="mensajeDictamen"></textarea>
       </div>
     </div>
 
@@ -74,7 +69,8 @@
   <div class="row mt-5" *ngIf="observaciones.length > 0">
     <div class="col-md-12">
       <h3>Observaciones al dictamen</h3>
-      <table class="table table-bordered">
+
+      <table class="table table-bordered table-responsive table-striped table-hover">
         <thead>
           <tr>
             <th>Id</th>
