@@ -2,11 +2,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {
   Component,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
 } from '@angular/core';
 import { TableData } from '../../../core/models/shared/components.model';
@@ -40,8 +38,6 @@ export class TableComponent implements OnInit, OnChanges {
    * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
    */
 
-  @Output() dataRowSelected = new EventEmitter<any>();
-
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -74,13 +70,4 @@ export class TableComponent implements OnInit, OnChanges {
       this.tableData.tableBody = changes[TBODYDATA]?.currentValue;
     }
   }
-
-  rowSelection(ev: any, data: any) {
-    const dataObj = {
-      checked: ev.target?.checked,
-      data: data,
-    };
-    this.dataRowSelected.emit(dataObj) }
-
-
 }

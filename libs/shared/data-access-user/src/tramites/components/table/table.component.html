@@ -14,7 +14,7 @@
         <tbody>
             @for (data of tableData.tableBody; track $index) {
                 <tr>
-                    <td><input type="checkbox" aria-label="Select Row" (change)="rowSelection($event,data)"></td>
+                    <td><input type="checkbox" aria-label="Select Row"></td>
                     @for (element of data.tbodyData; track $index) {
                         <td>{{element}}</td>
     

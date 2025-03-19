@@ -1,4 +1,4 @@
 {
-    "include": ["apps/cofepris/src/**/*.ts"],
+    "include": ["apps/**/src/**/*.ts"],
     "exclude": ["src/test.ts", "src/**/*.spec.ts"]
   }
