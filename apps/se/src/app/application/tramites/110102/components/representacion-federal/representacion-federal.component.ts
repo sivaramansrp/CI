@@ -10,8 +10,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { BtnContinuarComponent, CatalogoSelectComponent, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
-import { Catalogo, DatosPasos } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, RepresentacionfederalService, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo} from '@ng-mf/data-access-user';
 
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
@@ -22,7 +22,7 @@ import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 @Component({
   selector: 'app-representacion-federal',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, BtnContinuarComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,ReactiveFormsModule],
   templateUrl: './representacion-federal.component.html',
   styleUrl: './representacion-federal.component.scss',
 })
@@ -53,16 +53,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
-  /**
-   * Objeto que contiene los datos de los botones de navegación entre pasos.
-   * @type {DatosPasos}
-   */
-  btnData: DatosPasos = {
-    txtBtnSig: 'Continuar', // Texto del botón "Siguiente".
-    txtBtnAnt: '', // Texto del botón "Anterior".
-    indice: 1, // Índice del paso actual.
-    nroPasos: 0 // Número total de pasos.
-  };
 
   /**
    * Constructor del componente.
