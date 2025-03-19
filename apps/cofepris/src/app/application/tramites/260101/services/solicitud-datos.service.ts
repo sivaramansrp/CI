@@ -28,4 +28,8 @@ export class SolicitudDatosService {
   obtenerAduanaListo() {
     return this.http.get<CatalogosSelect>(this.datosAduanaUrl).pipe();
   }
+
+  obtenerEstadoCatalogo() {
+    return this.http.get<CatalogosSelect>('../../../assets/json/260101/estado-catalogo.json').pipe();
+  }
 }
