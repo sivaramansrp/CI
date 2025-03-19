@@ -37,6 +37,12 @@ const ROUTES: Routes = [
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
   {
+    path: 'donaciones-extranjeras',
+    loadChildren: () =>
+      import('./tramites/10303/donaciones-extranjeras.module').then(
+        (m) => m.DonacionesExtranjerasModule)
+  },
+  {
     path: 'muestras-mercancias',
     loadChildren: () =>
       import('./tramites/30901/renovaciones-muestras-mercancias.module').then(

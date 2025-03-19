@@ -118,3 +118,13 @@ export { TramiteFolioState, TramiteFolioStore } from './core/estados/tramiteFoli
 export * from './core/models/shared/datos-generales.model';
 export * from './core/enums/constantes-alertas.enum';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive'
+
+export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export * from './tramites/directives/Uppercase/uppercase.directive'
+export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
+export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
+export * from './core/models/shared/configuracion-columna.model';
+export * from './core/enums/tabla-seleccion.enum';
+
+export * from './core/services/231001/materia-prima-formservice.service';
+export * from './core/services/231001/administrar-residuos.service';
