@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
-
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
@@ -27,9 +26,27 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-cuentas-bancarias',
+    loadChildren: () =>
+      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+  },
+  {
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+  },
+  {
+    path: 'donaciones-extranjeras',
+    loadChildren: () =>
+      import('./tramites/10303/donaciones-extranjeras.module').then(
+        (m) => m.DonacionesExtranjerasModule)
+  },
+  {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
   },
   {
     path: 'atender-requerimientos',
@@ -48,7 +65,12 @@ const ROUTES: Routes = [
   {
     path: 'acuse',
     component: AcusePageComponent
-  }
+  },
+  {
+    path: 'cancelacion-servicios-extraordinarios',
+    loadChildren: () =>
+      import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
+  },
 ];
 
 @NgModule({

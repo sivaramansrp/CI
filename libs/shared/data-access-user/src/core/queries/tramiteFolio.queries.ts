@@ -1,7 +1,6 @@
-import { Query } from '@datorama/akita';
-import { TramiteFolioStore } from '../estados/tramiteFolio.store';
-import { TramiteFolioState } from '../estados/tramiteFolio.store';
+import { TramiteFolioState, TramiteFolioStore } from '../estados/tramiteFolio.store';
 import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root',
