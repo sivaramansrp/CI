@@ -5,6 +5,8 @@ import { BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/
 import { PermisoMaquilaComponent } from './pages/permiso-maquila/permiso-maquila.component';
 import { Datos260212Component } from './pages/datos-260212/datos-260212.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -14,6 +16,9 @@ import { SolicitudService } from './services/solicitud.service';
 import { ClaveScianComponent } from './components/clave-scian/clave-scian.component';
 import { FormularioOperacionComercialComponent } from './components/formulario-operacion-comercial/formulario-operacion-comercial.component';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
+import { PagoDeDerechosService } from './services/pago-de-derechos.service';
+import { TercerosService } from './services/terceros.service';
+
 
 @NgModule({
   declarations: [PermisoMaquilaComponent,
@@ -25,6 +30,8 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
     WizardComponent,
     TituloComponent,
     DatosDeLaSolicitudComponent,
+    TercerosRelacionadosComponent,
+    PagoDeDerechosComponent,
     ClaveScianComponent,
     FormularioOperacionComercialComponent,
     RepresentanteLegalComponent,
@@ -33,6 +40,6 @@ import { RepresentanteLegalComponent } from './components/representante-legal/re
     PasoTresComponent,
     BtnContinuarComponent
   ],
-  providers: [provideHttpClient(), ToastrService,SolicitudService],
+  providers: [provideHttpClient(), ToastrService,SolicitudService,PagoDeDerechosService,TercerosService],
 })
 export class PermisoMaquilaModule { }
