@@ -2,8 +2,8 @@ import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-import { TramiteStore } from '../../../../estados/tramite.store';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso tres del trámite.
@@ -23,8 +23,8 @@ export class PasoTresComponent {
    */
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
-    private tramiteStore: TramiteStore
+    private tramiteFolioService: TramiteFolioService,
+    private tramiteFolioStore: TramiteFolioStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -37,11 +37,11 @@ export class PasoTresComponent {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.tramiteFolioService
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            this.tramiteFolioStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
           catchError((_error) => {
