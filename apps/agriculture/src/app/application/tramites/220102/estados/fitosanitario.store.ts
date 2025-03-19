@@ -1,12 +1,24 @@
 import { Injectable } from "@angular/core";
-import { Store, StoreConfig } from "@datorama/akita";
-import { createDatosState, MercanciaForm } from "../models/fitosanitario.model";
+
+import {
+    Store,
+
+    StoreConfig
+} from "@datorama/akita";
+
+import {
+    FinalDataToSend,
+
+    MercanciaForm,
+
+    createDatosState,
+} from "../models/fitosanitario.model";
 
 @Injectable({
     providedIn: 'root',
 })
 @StoreConfig({ name: 'fitosanitariostore', resettable: true })
-export class FitosanitarioStore extends Store<MercanciaForm[]> {
+export class FitosanitarioStore extends Store<FinalDataToSend> {
     constructor() {
         super(createDatosState());
     }
@@ -14,17 +26,16 @@ export class FitosanitarioStore extends Store<MercanciaForm[]> {
         * Actualiza el estado con la información del formulario.
         * @param datos Datos del formulario.
         */
-    public actualizarDatosForma(datos: MercanciaForm): void {
+    public actualizarDatosForma(datos: MercanciaForm[]): void {
         this.update(state => ({
-            ...state,
-            datos, // Envuelve los datos en un array
+            datos
         }));
     }
 
     public eliminarDatoPorId(id: number): void {
         this.update(state => ({
             ...state,
-            datos: state.filter(dato => dato.id !== id),
+            datos: state.datos.filter(dato => dato.id !== id),
         }));
     }
 }

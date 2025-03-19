@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosMercanciaComponent } from './datos-mercancia.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('DatosMercanciaComponent', () => {
   let component: DatosMercanciaComponent;
@@ -7,7 +10,8 @@ describe('DatosMercanciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosMercanciaComponent],
+      declarations: [DatosMercanciaComponent],
+      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosMercanciaComponent);

@@ -18,7 +18,7 @@
         [tipoSeleccionTabla]="tipoSeleccionsoli"
         [configuracionTabla]="configuracionColumnasoli"
         [datos]="cuerpoTabla"
-        (filaSeleccionada)="onFilaSeleccionada($event)" 
+        (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
       >
       </app-tabla-dinamica>
       </div>
@@ -150,15 +150,15 @@
     <button type="button" class="btn btn-default btn-space me-2" (click)="almacenarDatoEnTabla('close')">
       Cancelars
     </button>
-    <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla('add')">
+    <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla(formMercancia.value.id !== null ? 'edit':'add')">
       Agregar
     </button>
   </div>
   <div *ngIf="!estadoChecker">
-    <button type="button" class="btn btn-default btn-space me-2"  *ngIf="cuerpoTabla.length !==  0">
+    <button type="button" class="btn btn-default btn-space me-2"  *ngIf="cuerpoTabla.length !==  0" [disabled]="!(selectedTableList.length === 1)" (click)="seleccionarParaModificacion()">
       Modificar
     </button>
-    <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0">
+    <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0 " [disabled]="!(selectedTableList.length === 1)" (click)="eliminarElementoSeleccionado()">
       Eliminarss
     </button>
     <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')" >

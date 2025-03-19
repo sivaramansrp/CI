@@ -14,6 +14,12 @@ export interface MercanciaForm {
     umc: string;
     descripcion: string;
 }
-export function createDatosState(params: Partial<MercanciaForm>[] = []): MercanciaForm[] {
-    return params as MercanciaForm[];
+export interface FinalDataToSend {
+    datos: MercanciaForm[];
+}
+export function createDatosState(params: Partial<FinalDataToSend> = {}): FinalDataToSend {
+    return {
+        datos: params as MercanciaForm[]
+    }
+
 }

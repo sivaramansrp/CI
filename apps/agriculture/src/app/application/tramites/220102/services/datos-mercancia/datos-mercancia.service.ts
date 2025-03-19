@@ -12,7 +12,7 @@ import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@libs/shared/data
 
 import { FitosanitarioStore } from '../../estados/fitosanitario.store';
 
-import { MercanciaForm } from '../../models/fitosanitario.model';
+import { FinalDataToSend, MercanciaForm } from '../../models/fitosanitario.model';
 
 
 @Injectable({
@@ -36,7 +36,7 @@ export class DatosMercanciaService {
     * Actualizar el formulario de movilización en el store.
     * @param formularioMovilizacion Datos del formulario de movilización.
     */
-  public actualizarFormularioMovilizacion(formularioMovilizacion: MercanciaForm): void {
+  public actualizarFormularioMovilizacion(formularioMovilizacion: MercanciaForm[]): void {
     this.fitosanitarioStore.actualizarDatosForma(formularioMovilizacion);
   }
   /**
@@ -46,5 +46,16 @@ export class DatosMercanciaService {
   public eliminarDatoPorId(id: number): void {
     this.fitosanitarioStore.eliminarDatoPorId(id);
   }
+  public obtenerDatos(): Observable<FinalDataToSend> {
+    return this.fitosanitarioStore._select(state => state); // Devuelve el estado completo
+  }
+  public botonDesactivarCampos(status: boolean): void {
+    this.seccionStore.establecerSeccion([true]);
+    this.seccionStore.establecerFormaValida([status]);
+  }
+
+
+
+
 
 }

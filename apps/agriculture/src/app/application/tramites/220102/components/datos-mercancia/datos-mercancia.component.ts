@@ -65,21 +65,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @description Arreglo que contiene los datos de la mercancía para la tabla.
    */
   cuerpoTabla: MercanciaForm[] = [
-    {
-      "nombreComun": "7",
-      "nombreCientifico": "2",
-      "uso": "9",
-      "paisOrigen": "6",
-      "paisProcedencia": "1",
-      "tipoProducto": "4",
-      "fraccionArancelaria": "dasdasda",
-      "descripcionFraccionArancelaria": "CR-123456",
-      "cantidadUMT": "sadasdasd",
-      "umt": "Dependencia-34",
-      "cantidadUMC": "sadasdasda",
-      "umc": "2",
-      "descripcion": "asdasdasdsadasdasdasdasd"
-    }
   ];
 
   /**
@@ -143,6 +128,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   */
   catalogoUmc: Catalogo[] = [];
 
+  selectedTableList: MercanciaForm[] = [];
   /**
    * @constructor
    * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
@@ -320,16 +306,24 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   almacenarDatoEnTabla(nombre: string) {
+    this.estadoChecker = !this.estadoChecker;
     if (nombre === 'add') {
       this.formMercancia.patchValue({
         id: Math.floor(Math.random() * 90) + 10
       })
       this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
-      this.estadoChecker = !this.estadoChecker;
+      this.datosMercanciaService.actualizarFormularioMovilizacion(this.cuerpoTabla as MercanciaForm[]);
+      this.datosMercanciaService.botonDesactivarCampos(this.cuerpoTabla.length > 0 ? true : false)
     }
-    else {
-      this.estadoChecker = !this.estadoChecker;
+    else if (nombre === 'edit') {
+      const ARTICULOACTUALIZADO = this.formMercancia.value as MercanciaForm;
+      const IDACTUALIZADO = ARTICULOACTUALIZADO.id;
+      this.cuerpoTabla = this.cuerpoTabla.map(item =>
+        item.id === IDACTUALIZADO ? ARTICULOACTUALIZADO : item
+      );
+      this.datosMercanciaService.actualizarFormularioMovilizacion(this.cuerpoTabla as MercanciaForm[]);
     }
+
     this.limpiarDatosFormulario();
   }
 
@@ -343,12 +337,47 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.formMercancia.reset();
   }
 
-  onFilaSeleccionada(fila: any) {
-    console.log('Fila seleccionada:', fila);
+
+  /**
+   * @method onListaDeFilaSeleccionada
+   * @description Método que recibe las filas seleccionadas de la tabla y las almacena en la propiedad `selectedTableList`.
+   * @param {MercanciaForm[]} filasSeleccionadas - Lista de las filas seleccionadas en la tabla.
+   * @returns {void}
+   */
+  onListaDeFilaSeleccionada(filasSeleccionadas: MercanciaForm[]): void {
+    this.selectedTableList = filasSeleccionadas;
   }
 
-  onListaDeFilaSeleccionada(filasSeleccionadas: any[]) {
-    console.log('Filas seleccionadas:', filasSeleccionadas);
+  /**
+   * @method eliminarElementoSeleccionado
+   * @description Método que elimina el elemento seleccionado de la tabla basado en el ID del mismo. 
+   * Si el ID del elemento está presente en `selectedTableList`, se realiza la eliminación tanto en la lista como en el servicio correspondiente.
+   * @returns {void}
+   */
+  eliminarElementoSeleccionado(): void {
+    const ID = this.selectedTableList[0]?.id;
+    if (ID !== undefined) {
+      const INDICE = this.cuerpoTabla.findIndex(item => item.id === ID);
+      if (INDICE !== -1) {
+        this.datosMercanciaService.eliminarDatoPorId(ID);
+        this.cuerpoTabla.splice(INDICE, 1);
+      }
+    }
+  }
+
+  /**
+   * @method seleccionarParaModificacion
+   * @description Método que permite seleccionar un elemento de la tabla para modificar sus datos. 
+   * Cuando se selecciona una fila, los valores del formulario (`formMercancia`) se llenan con los datos de ese elemento.
+   * @returns {void}
+   */
+  seleccionarParaModificacion(): void {
+    this.estadoChecker = true;
+    const ID = this.selectedTableList[0]?.id;
+    if (ID !== undefined) {
+      const VALOR = this.cuerpoTabla.filter(item => item.id === ID);
+      this.formMercancia.patchValue(VALOR[0]);
+    }
   }
 
   /**
