@@ -12,4 +12,20 @@ import { Component } from '@angular/core';
   templateUrl: './datos-mercancia.component.html',
   standalone: false, // Indica que este componente no es un componente independiente (standalone).
 })
-export class DatosMercanciaComponent {}
+export class DatosMercanciaComponent {
+
+    /**
+   * Índice de la pestaña actualmente seleccionada.
+   * Inicializado a 1 por defecto.
+   */
+    indice: number = 1;
+
+    /**
+     * Método para seleccionar una pestaña específica.
+     *
+     * @param i El índice de la pestaña a seleccionar.
+     */
+    seleccionaTab(i: number): void {
+      this.indice = i;
+    }
+}
