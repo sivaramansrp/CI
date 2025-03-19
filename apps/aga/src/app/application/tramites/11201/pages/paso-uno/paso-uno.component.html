@@ -14,9 +14,9 @@
 
     <ng-container>
       @switch (indice) { @case (1) {
-      <app-solicitante #Solicitante></app-solicitante>
+      <app-solicitante #Solicitante (continuarEvento)="continuar()"></app-solicitante>
       } @case (2) {
-      <app-contenedor></app-contenedor>
+      <app-contenedor (continuarEvento)="continuar()"></app-contenedor>
       } }
     </ng-container>
   </div>

@@ -1,4 +1,4 @@
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
@@ -22,6 +22,7 @@ export class PasoUnoComponent implements AfterViewInit {
   persona: FormularioDinamico[] = [];
   domicilioFiscal: FormularioDinamico[] = [];
   indice: number = 1;
+  @Output() continuarEvento = new EventEmitter<string>();
   validacion: boolean = false;
   // @Input() validacion!: boolean;
   @Input() datosNroPedimento!: unknown;
@@ -38,5 +39,8 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  continuar() {
+    this.continuarEvento.emit('');
   }
 }

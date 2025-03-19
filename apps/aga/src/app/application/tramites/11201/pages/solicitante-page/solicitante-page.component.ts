@@ -1,11 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
-import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
@@ -20,8 +16,6 @@ interface AccionBoton {
 export class SolicitantePageComponent implements OnInit {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
-  public seccion!: SeccionState;
-  private destroyNotifier$: Subject<void> = new Subject();
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -29,12 +23,6 @@ export class SolicitantePageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  constructor(
-    private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore
-  // eslint-disable-next-line no-empty-function
-  ) {
-  }
 
   ngOnInit(): void {
     this.pasos = PASOS.slice(0, 2);
@@ -44,16 +32,6 @@ export class SolicitantePageComponent implements OnInit {
       }
       return paso;
     });
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.asignarSecciones();
   }
 
   seleccionaTab(i: number): void {
@@ -62,6 +40,7 @@ export class SolicitantePageComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -69,20 +48,7 @@ export class SolicitantePageComponent implements OnInit {
       }
     }
   }
-  /**
-   * Método para asignar las secciones existentes al stored
-   */
-  private asignarSecciones(): void {
-    type SeccionKeys = keyof typeof SECCIONES_TRAMITE_5701.PASO_1;
-    const SECCIONES: boolean[] = [];
-    const FORMAVALIDA: boolean[] = [];
-    for (const LLAVESECCION in SECCIONES_TRAMITE_5701.PASO_1) {
-      if (Object.prototype.hasOwnProperty.call(SECCIONES_TRAMITE_5701.PASO_1, LLAVESECCION)) {
-        SECCIONES.push(SECCIONES_TRAMITE_5701.PASO_1[LLAVESECCION as SeccionKeys]);
-        FORMAVALIDA.push(false);
-      }
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMAVALIDA);
+  continuar(): void {
+    this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
   }
 }

@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Solicitud11201Query } from '../../estados/queries/tramites11201.query';
-import { Solicitud11201State } from '../../estados/tramites/tramites11201.store';
+import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
 import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
+import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
 
 /**
  * Componente para gestionar el formulario del solicitante.
@@ -22,8 +22,12 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private solicitud11201Query: Solicitud11201Query) { }
+  constructor(private fb: FormBuilder,
+    public tramite11201Store: Tramite11201Store,
+    // eslint-disable-next-line no-empty-function
+    private tramite11201Query: Tramite11201Query) {
+
+  }
 
   /**
    * Grupo de formulario para el formulario de solicitud.
@@ -31,6 +35,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
   private destroyNotifier$: Subject<void> = new Subject();
   public derechoState: Solicitud11201State = {} as Solicitud11201State;
+  @Output() continuarEvento = new EventEmitter<string>();
 
   /**
    * Datos simulados que representan a un solicitante con varios atributos.
@@ -47,7 +52,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.solicitud11201Query.selectSolicitud$
+    this.tramite11201Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -89,7 +94,9 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       .get('correoElectronico')
       ?.setValue(this.derechoState.correoElectronico);
   }
-
+  continuar() {
+    this.continuarEvento.emit('');
+  }
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

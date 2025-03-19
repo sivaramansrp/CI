@@ -5,11 +5,12 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Contenedores } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { EventEmitter } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -17,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
 import { Subject } from 'rxjs';
@@ -59,7 +61,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   showArchivoSeleccionadoTable: boolean = false;
   showSeccionExcel: boolean = false;
   mostrarMensaje: boolean = false;
-  mensajeCamposObligatorios: string = 'Faltan campos por capturar.';
+  mensajeCamposObligatorios: string = '* Campos obligatorios';
   aduanaList: Aduanas[] = [];
   contenedores: Contenedores[] = [];
   requiereGuardadoParcial: boolean = false;
@@ -136,6 +138,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   abiertoModeloDatos: string = '';
   modalRef?: BsModalRef | null;
   @ViewChild('plantillademodelo') plantillaDeModelo!: TemplateRef<Element>;
+  @Output() continuarEvento = new EventEmitter<string>();
 
   constructor(
     private fb: FormBuilder,
@@ -287,9 +290,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       (data) => {
         this.contenedores = data.data;
       },
-      (error) => {
-        console.error('Error al cargar contenedores', error);
-      }
     );
   }
 
@@ -403,7 +403,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('numManifiesto')?.valid &&
       this.solicitudForm.get('dropdown')?.valid
     ) {
-      this.mostrarMensaje = true;      
+      this.mostrarMensaje = true;
     }
   }
 
@@ -413,10 +413,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.datosTramiteService.submitSolicitud().subscribe(
         () => {
           // Manejar envío exitoso
-        },
-        (error) => {
-          console.error('Error al enviar solicitud', error);
-          // Mostrar mensaje de error
         }
       );
     } else {
@@ -459,10 +455,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
         }
-      },
-      (error) => {
-        console.error('Error al agregar solicitud', error);
-        // Mostrar mensaje de error
       }
     );
   }
@@ -521,6 +513,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
   }
 
+  continuar(): void {
+    this.continuarEvento.emit('');
+  }
 
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
