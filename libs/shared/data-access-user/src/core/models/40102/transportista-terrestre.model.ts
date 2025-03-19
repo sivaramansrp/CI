@@ -20,7 +20,7 @@ export interface Nacional {
   paisOrigenCHN: string;
   ciudad: string;
 }
-export interface extranjero {
+export interface Extranjero {
   curp: string;
   nombre: string;
   calle: string;

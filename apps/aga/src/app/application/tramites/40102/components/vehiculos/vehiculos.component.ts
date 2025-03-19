@@ -3,15 +3,17 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Chofer40102Query } from '../../estados/tramite40102.query';
-import { Chofer40102Service } from '../../estados/tramite40102.service';
-import { Chofer40102Store } from '../../estados/tramite40102.store';
+import { Tramite40102Query } from '../../estados/tramite40102.query';
+import { Tramite40102Service } from '../../estados/tramite40102.service';
+import { Tramite40102Store } from '../../estados/tramite40102.store';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import {
   DatosDelVehículo,
   DatosDelVehículoPaisEmisor,
@@ -24,7 +26,7 @@ import {
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss',
 })
-export class VehiculosComponent implements AfterViewInit {
+export class VehiculosComponent implements AfterViewInit, OnDestroy {
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
@@ -68,6 +70,7 @@ export class VehiculosComponent implements AfterViewInit {
   botonLimpiar: string = 'Limpiar';
   botonCancelar: string = 'Cancelar';
   botonGuardar: string = 'Guardar';
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
@@ -80,9 +83,9 @@ export class VehiculosComponent implements AfterViewInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private chofer40102Store: Chofer40102Store,
-    private chofer40102Service: Chofer40102Service,
-    private chofer40102Query: Chofer40102Query
+    private tramite40102Store: Tramite40102Store,
+    private tramite40102Service: Tramite40102Service,
+    private tramite40102Query: Tramite40102Query
   ) {}
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
@@ -169,17 +172,19 @@ export class VehiculosComponent implements AfterViewInit {
       desc: '',
     });
 
-    this.vehiculosList$ = this.chofer40102Query.getvehiculos$;
-    this.chofer40102Query.getvehiculos$.subscribe((vehiculos: any) => {
-      this.vehiculos = vehiculos;
-    });
-    this.unidadesdearrastreList$ = this.chofer40102Query.getUnidadesdeArrastre$;
-    this.UnidadesDearrastre();
-    this.chofer40102Query.getUnidadesdeArrastre$.subscribe(
-      (unidadesdearrastre: any) => {
+    this.vehiculosList$ = this.tramite40102Query.getvehiculos$;
+    this.tramite40102Query.getvehiculos$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((vehiculos: any) => {
+        this.vehiculos = vehiculos;
+      });
+    this.unidadesdearrastreList$ = this.tramite40102Query.getUnidadesdeArrastre$;
+    this.unidadesDearrastre();
+    this.tramite40102Query.getUnidadesdeArrastre$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((unidadesdearrastre: any) => {
         this.unidadesdearrastre = unidadesdearrastre;
-      }
-    );
+      });
     this.conVehiculoArrastre();
     this.anioVehiculoveh();
     this.solicitudVehiculoColor();
@@ -243,19 +248,19 @@ export class VehiculosComponent implements AfterViewInit {
     }
 
     // Actualizar el estado de Akita
-    this.chofer40102Store.setVehiculos([...this.vehiculos, newVehiculo]);
+    this.tramite40102Store.setVehiculos([...this.vehiculos, newVehiculo]);
     this.formVehiculo.reset();
     this.toastr.success('🚗 Vehiculo agregado exitosamente!');
     this.closeModal();
   }
 
-  UnidadesDearrastre() {
+  unidadesDearrastre() {
     if (this.formVehiculo.valid) {
       const newUnidad = this.formVehiculo.value;
-      const currentData = this.chofer40102Query.getunidadesdearrastre();
-      this.chofer40102Store.setUnidadesdeArrastre([...currentData, newUnidad]);
+      const currentData = this.tramite40102Query.getunidadesdearrastre();
+      this.tramite40102Store.setUnidadesdeArrastre([...currentData, newUnidad]);
       this.unidadesdearrastreList$ =
-        this.chofer40102Query.getUnidadesdeArrastre$;
+        this.tramite40102Query.getUnidadesdeArrastre$;
     }
     this.formVehiculo = this.fb.group({
       solicitudVehiculoVin2:
@@ -334,48 +339,60 @@ export class VehiculosComponent implements AfterViewInit {
     const solicitudVehiculoTipoVehiculo = this.formVehiculo.get(
       'solicitudVehiculoTipoVehiculo'
     )?.value;
-    this.chofer40102Store.setsolicitudVehiculoTipoVehiculo(
+    this.tramite40102Store.setsolicitudVehiculoTipoVehiculo(
       solicitudVehiculoTipoVehiculo
     );
-    this.chofer40102Service.getClasifiRegimen().subscribe({
-      next: (data: DatosDelVehículo[]) => {
-        this.vehiculoArrastr = data;
-      },
-      error: (error) => this.toastr.error('Error al obtener datos:', error),
-    });
+    this.tramite40102Service
+      .getClasifiRegimen()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: DatosDelVehículo[]) => {
+          this.vehiculoArrastr = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
   }
   anioVehiculoveh() {
     const anioVehiculoVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
-    this.chofer40102Store.setanioVehiculoVEH(anioVehiculoVEH);
-    this.chofer40102Service.getVehiculoVEH().subscribe({
-      next: (data: VehiculoVEHs[]) => {
-        this.VehiculoVEH = data;
-      },
-      error: (error) => this.toastr.error('Error al obtener datos:', error),
-    });
+    this.tramite40102Store.setanioVehiculoVEH(anioVehiculoVEH);
+    this.tramite40102Service
+      .getVehiculoVEH()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: VehiculoVEHs[]) => {
+          this.VehiculoVEH = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
   }
 
   solicitudVehiculoColor() {
     const solicitudVehiculoColor = this.formVehiculo.get(
       'solicitudVehiculoColor'
     )?.value;
-    this.chofer40102Store.solicitudVehiculoColor(solicitudVehiculoColor);
-    this.chofer40102Service.getVehiculoColor().subscribe({
-      next: (data: VehiculoColor[]) => {
-        this.VehiculoColors = data;
-      },
-      error: (error) => this.toastr.error('Error al obtener datos:', error),
-    });
+    this.tramite40102Store.solicitudVehiculoColor(solicitudVehiculoColor);
+    this.tramite40102Service
+      .getVehiculoColor()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: VehiculoColor[]) => {
+          this.VehiculoColors = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
   }
   solicitudVehiculoPaisEmisor2daPlaca() {
     const solicitudVehiculo = this.formVehiculo.get('solicitudVehiculo')?.value;
-    this.chofer40102Store.VehiculoPaisEmisor2daPlaca(solicitudVehiculo);
-    this.chofer40102Service.getPaisEmisor2daPlaca().subscribe({
-      next: (data: Emisor2daPlaca[]) => {
-        this.PaisEmisor2daPlaca = data;
-      },
-      error: (error) => this.toastr.error('Error al obtener datos:', error),
-    });
+    this.tramite40102Store.VehiculoPaisEmisor2daPlaca(solicitudVehiculo);
+    this.tramite40102Service
+      .getPaisEmisor2daPlaca()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: Emisor2daPlaca[]) => {
+          this.PaisEmisor2daPlaca = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
   }
 
   tipoVehiculoArrastreAGA = [
@@ -426,6 +443,10 @@ export class VehiculosComponent implements AfterViewInit {
   /**
    * Limpia los datos del formulario de vehículos.
    */
-  toggleAll(event: any) {
+  toggleAll(event: any) {}
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

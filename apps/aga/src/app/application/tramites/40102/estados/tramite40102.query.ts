@@ -1,13 +1,10 @@
+import { Tramite40102State, Tramite40102Store } from './tramite40102.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import {
-  Chofer40102Store,
-  Choferesnacionales40102State,
-} from './tramite40102.store';
 
 @Injectable({ providedIn: 'root' })
-export class Chofer40102Query extends Query<Choferesnacionales40102State> {
-  constructor(protected override store: Chofer40102Store) {
+export class Tramite40102Query extends Query<Tramite40102State> {
+  constructor(protected override store: Tramite40102Store) {
     super(store);
   }
   getChoferes$ = this.select((state) => state.choferes);
