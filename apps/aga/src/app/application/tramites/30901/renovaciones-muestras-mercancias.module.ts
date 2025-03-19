@@ -21,6 +21,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     AnexarDocumentosComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    ToastrModule.forRoot()
   ],
   exports: [
     PasoUnoComponent, 
@@ -57,6 +59,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PagoLineaDeCapturaComponent,
     DatosProrrogaMuestrasMercanciasComponent,
   ],
-  providers: [RenovacionesMuestrasMercanciasService],
+  providers: [RenovacionesMuestrasMercanciasService, ToastrService],
 })
 export class RenovacionesMuestrasMercanciasModule {}
