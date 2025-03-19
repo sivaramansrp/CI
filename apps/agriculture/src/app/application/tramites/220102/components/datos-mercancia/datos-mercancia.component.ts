@@ -182,6 +182,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   crearFormulario() {
     this.formMercancia = this.fb.group({
+      id: [null],
       nombreComun: ['', Validators.required],
       nombreCientifico: ['', Validators.required],
       uso: ['', Validators.required],
@@ -274,7 +275,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * @method obtenerUmc
   * @description Obtiene la lista de unidades de medida de comercialización (UMC) desde un archivo JSON a través del servicio.
   * Suscribe al observable para actualizar el catálogo de UMCs.
-  * @returns {void}
+  * @returns {void} 
   */
   obtenerUmc() {
     this.datosMercanciaService.obtenerSelectorList('umc.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
@@ -320,7 +321,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   almacenarDatoEnTabla(nombre: string) {
     if (nombre === 'add') {
-      console.log(this.formMercancia.value);
+      this.formMercancia.patchValue({
+        id: Math.floor(Math.random() * 90) + 10
+      })
       this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
       this.estadoChecker = !this.estadoChecker;
     }
@@ -340,11 +343,19 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     this.formMercancia.reset();
   }
 
+  onFilaSeleccionada(fila: any) {
+    console.log('Fila seleccionada:', fila);
+  }
+
+  onListaDeFilaSeleccionada(filasSeleccionadas: any[]) {
+    console.log('Filas seleccionadas:', filasSeleccionadas);
+  }
+
   /**
   * @method ngOnDestroy
   * @lifecycle OnDestroy
   * @description Método del ciclo de vida que se ejecuta cuando el componente es destruido.
-*/
+  */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

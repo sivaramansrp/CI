@@ -10,6 +10,10 @@ import { URL } from '../../constantes/fitosanitario.enum';
 
 import { Catalogo, RespuestaCatalogos, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
+import { FitosanitarioStore } from '../../estados/fitosanitario.store';
+
+import { MercanciaForm } from '../../models/fitosanitario.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +22,7 @@ export class DatosMercanciaService {
   url: string = URL;
   constructor(private readonly http: HttpClient,
     private readonly seccionStore: SeccionLibStore,
+    private readonly fitosanitarioStore: FitosanitarioStore
   ) {
     // Constructor logic can be added here if needed
   }
@@ -27,4 +32,19 @@ export class DatosMercanciaService {
       map(response => response.data)
     );
   }
+  /**
+    * Actualizar el formulario de movilización en el store.
+    * @param formularioMovilizacion Datos del formulario de movilización.
+    */
+  public actualizarFormularioMovilizacion(formularioMovilizacion: MercanciaForm): void {
+    this.fitosanitarioStore.actualizarDatosForma(formularioMovilizacion);
+  }
+  /**
+    * Actualizar el formulario de movilización en el store.
+    * @param formularioMovilizacion Datos del formulario de movilización.
+    */
+  public eliminarDatoPorId(id: number): void {
+    this.fitosanitarioStore.eliminarDatoPorId(id);
+  }
+
 }

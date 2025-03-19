@@ -18,6 +18,7 @@
         [tipoSeleccionTabla]="tipoSeleccionsoli"
         [configuracionTabla]="configuracionColumnasoli"
         [datos]="cuerpoTabla"
+        (filaSeleccionada)="onFilaSeleccionada($event)" 
       >
       </app-tabla-dinamica>
       </div>
@@ -154,13 +155,13 @@
     </button>
   </div>
   <div *ngIf="!estadoChecker">
-    <button type="button" class="btn btn-default btn-space me-2"  (click)="limpiarDatosFormulario()">
+    <button type="button" class="btn btn-default btn-space me-2"  *ngIf="cuerpoTabla.length !==  0">
       Modificar
     </button>
-    <button type="button" class="btn btn-default btn-space me-2" (click)="almacenarDatoEnTabla('close')">
-      Eliminar
+    <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0">
+      Eliminarss
     </button>
-    <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')">
+    <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')" >
       Agregar
     </button>
   </div>
