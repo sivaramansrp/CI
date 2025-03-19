@@ -1,235 +1,362 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, ConfiguracionColumna, TableComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { MENSAJEDEALERTA, TituloComponent } from '@ng-mf/data-access-user';
-// import terceros from 'libs/shared/theme/assets/json/260211/terceros.json';
+// import terceros from 'libs/shared/theme/assets/json/260215/terceros.json';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-// import { AgregarProveedorComponent } from '../agregarProveedor/agregarProveedor.component';
-import { AgregarFacturatorComponent } from '../agregar-facturator/agregar-facturator.component';
-// import { AgregarRequeridaComponent } from '../agregarRequerida/agregarRequerida.component';
-// import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
+
+
 import { ReactiveFormsModule } from '@angular/forms';
 import { AgregarDestinatarioComponent } from '../agregar-destinatario/agregar-destinatario.component';
+import { AgregarFacturatorComponent } from '../agregar-facturator/agregar-facturator.component';
+import { Sanitario260215Store, Solicitud260215State } from '../../estados/tramites/sanitario260215.store';
 import { PermisoModel } from '../../models/permiso-sanitario.model';
+import { Permiso260215Query } from '../../estados/queries/permiso260215.query';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 
+
+
+/**
+ * component
+ * name TercerosRelacionadosComponent
+ * description
+ * Este componente es responsable de gestionar la funcionalidad relacionada con terceros relacionados en el sistema.
+ * Proporciona formularios para capturar datos de proveedores y requeridos, así como tablas para mostrar información relacionada.
+ * 
+ * selector app-terceros-relacionados
+ * standalone true
+ * imports
+ * - CommonModule
+ * - TituloComponent
+ * - TableComponent
+ * - AlertComponent
+ * - TablaDinamicaComponent
+ * - AgregarProveedorComponent
+ * - AgregarFacturatorComponent
+ * - AgregarRequeridaComponent
+ * - CatalogoSelectComponent
+ * - ReactiveFormsModule
+ * - AgregarDestinatarioComponent
+ * 
+ * templateUrl ./tercerosRelacionados.component.html
+ * styleUrl ./tercerosRelacionados.component.css
+ */
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule,TituloComponent,TableComponent,AlertComponent,TablaDinamicaComponent,AgregarFacturatorComponent,CatalogoSelectComponent,ReactiveFormsModule,AgregarDestinatarioComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    TableComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    AgregarFacturatorComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    AgregarDestinatarioComponent,
+  ],
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.css',
+  styleUrls: ['./terceros-relacionados.component.scss'],
 })
-export class TercerosRelacionadosComponent {
- proveedorForm!:FormGroup;
- requeridaForm!:FormGroup;
-   private destroyed$ = new Subject<void>();
-   public proveedorList!: Catalogo[];
-   public  localidadList !: Catalogo[];
-   public modal = 'modal';
-   
-   public hideCurp = true;
+export class TercerosRelacionadosComponent implements OnInit {
+  /**
+   * property {FormGroup} proveedorForm
+   * description Formulario reactivo para capturar los datos del proveedor.
+   */
+  proveedorForm!: FormGroup;
 
-  // private destroyed$ = new Subject<void>();
-  tableHeaderData: string[] = [  'Nombre/denominacion o razon social', 'RFC', 'CURP','Telefono','corro electronica','calle'];
-  // public derechosList!: tableHeaderData[];
+  /**
+   * property {FormGroup} requeridaForm
+   * description Formulario reactivo para capturar los datos requeridos.
+   */
+  requeridaForm!: FormGroup;
+
+  /**
+   * property {Subject<void>} destroyed$
+   * description Sujeto utilizado para manejar la destrucción de observables.
+   * private
+   */
+  private destroyed$ = new Subject<void>();
+
+  /**
+   * property {Subject<void>} destroyNotifier$
+   * description Sujeto utilizado para notificar la destrucción del componente.
+   * private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * property {Catalogo[]} proveedorList
+   * description Lista de proveedores disponibles.
+   */
+  public proveedorList!: Catalogo[];
+
+  /**
+   * property {Catalogo[]} localidadList
+   * description Lista de localidades disponibles.
+   */
+  public localidadList!: Catalogo[];
+
+  /**
+   * property {string} modal
+   * description Estado del modal (por ejemplo, 'modal' o 'show').
+   */
+  public modal = 'modal';
+
+  /**
+   * property {boolean} hideCurp
+   * description Indica si el campo CURP debe estar oculto.
+   */
+  public hideCurp = true;
+
+  /**
+   * property {Solicitud260215State} solicitudState
+   * description Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud260215State;
+
+  /**
+   * property {string[]} tableHeaderData
+   * description Encabezados de la tabla.
+   */
+  tableHeaderData: string[] = ['Nombre/denominacion o razon social', 'RFC', 'CURP', 'Telefono', 'Correo electronico', 'Calle'];
+
+  /**
+   * property {typeof TablaSeleccion} TablaSeleccion
+   * description Enumeración para la selección de tablas.
+   */
   TablaSeleccion = TablaSeleccion;
-  tercerosProd: PermisoModel [] = [];
+
+  /**
+   * property {PermisoModel[]} tercerosProd
+   * description Lista de productos relacionados con terceros.
+   */
+  tercerosProd: PermisoModel[] = [];
+
+  /**
+   * property {Object[]} tableBodyData
+   * description Datos del cuerpo de la tabla.
+   */
   tableBodyData: { tbodyData: string[] }[] = [];
+
+  /**
+   * property {string} TEXTOS
+   * description Mensajes de alerta.
+   */
   public TEXTOS = MENSAJEDEALERTA;
+
+  /**
+   * property {string} infoAlert
+   * description Tipo de alerta informativa.
+   */
   public infoAlert = 'alert-info';
-  public hasAgregar = false;
-  public hasdestinatario = false;
-  public hasproveedor = false;
-  public hasrequerida = false;
 
-  // public getEstablecimientoTableData = tercerostable;
-  constructor(private fb: FormBuilder,private service:ServiciosPermisoSanitarioService){}
+  /**
+   * constructor
+   * param {FormBuilder} fb - Constructor para formularios reactivos.
+   * param {SanitarioService} service - Servicio para manejar datos sanitarios.
+   * param {Sanitario260215Store} sanitario260215Store - Almacén de estado para la solicitud.
+   * param {Permiso260215Query} permiso260215Query - Consulta para obtener datos relacionados con permisos.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private service: ServiciosPermisoSanitarioService,
+    private sanitario260215Store: Sanitario260215Store,
+    private permiso260215Query: Permiso260215Query
+  ) {}
 
+  /**
+   * property {ElementRef} closeModal
+   * description Referencia al botón de cierre del modal.
+   * viewChild
+   */
   @ViewChild('closeModal') closeModal!: ElementRef;
-  configuracionTabla: ConfiguracionColumna<PermisoModel >[] = [
-    {
-      encabezado: 'Nombre/denominacion o razon social',
-      clave: (item: PermisoModel ) => item.Nombre,
-      orden: 1,
-    },
-    {
-      encabezado: 'RFC',
-      clave: (item: PermisoModel ) => item.RFC,
-      orden: 2,
-    },
-    {
-      encabezado: 'CURP',
-      clave: (item: PermisoModel ) => item.CURP,
-      orden: 3,
-    },
-    {
-      encabezado: 'Telefono',
-      clave: (item: PermisoModel ) => item.Teléfono,
-      orden: 3,
-    },
-    {
-      encabezado: 'Correo electronico',
-      clave: (item: PermisoModel ) => item.CorreoElectrónico,
-      orden: 4,
-    },{
-      encabezado: 'Calle',
-      clave: (item: PermisoModel ) => item.calle,
-      orden: 5,
-    }
+
+  /**
+   * property {ConfiguracionColumna<PermisoModel>[]} configuracionTabla
+   * description Configuración de las columnas de la tabla.
+   */
+  configuracionTabla: ConfiguracionColumna<PermisoModel>[] = [
+    { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
+    { encabezado: 'RFC', clave: (item: PermisoModel) => item.RFC, orden: 2 },
+    { encabezado: 'CURP', clave: (item: PermisoModel) => item.CURP, orden: 3 },
+    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 3 },
+    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 4 },
+    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 5 },
   ];
-  ngOnInit():void {
+
+  /**
+   * method ngOnInit
+   * description Método de inicialización del componente.
+   */
+  ngOnInit(): void {
+    this.permiso260215Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.loadMercancias();
     this.getRegistroForm();
   }
-  JustificacionSeleccion():void{
-    this.hasAgregar = false;
-  }
- 
+
+  /**
+   * method loadMercancias
+   * description Carga los datos de mercancías relacionadas.
+   */
   loadMercancias(): void {
     this.service.getTable()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((resp) => {
-      this.tercerosProd = resp;
-    });
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.tercerosProd = resp;
+      });
   }
 
-
-  public agregar(agregar:string) {
-    if(agregar === 'Agregar'){
-      this.hasAgregar = true;
-    }
+  /**
+   * method abrirModal
+   * description Abre el modal para agregar un proveedor.
+   */
+  public abrirModal(): void {
+    this.modal = 'show';
+    this.getRegistroForm();
   }
 
- public destinatario(destinatario:string) {
-    if(destinatario === 'destinatario'){
-      this.hasdestinatario = true;
-    }
-  }
-
- public proveedor(proveedor:string) {
-    if(proveedor === 'proveedor'){
-      this.hasproveedor = true;
-    }
-  }
- 
- public requerida(requerida:string) {
-    if(requerida === 'requerida'){
-      this.hasrequerida = true;
-    }
-  }
-
-  public abrirModal() {
-    this.modal = 'show'; // Muestra el modal
-    this.getRegistroForm(); // Carga los datos en el formulario
-  }
-
-  abrirModalrequerida(){
-    this.modal = 'show'; // Muestra el modal
+  /**
+   * method abrirModalrequerida
+   * description Abre el modal para agregar datos requeridos.
+   */
+  abrirModalrequerida(): void {
+    this.modal = 'show';
     this.getFormrequerida();
   }
 
-  getRegistroForm() {
-
-     this.proveedorForm = this.fb.group({
-          nacional: ["nacional", Validators.required],
-          extranjero: [false],
-          fisica: [false],
-          moral: ["moral", Validators.required],
-          rfc: ['', Validators.required],
-          curp: ['', Validators.required],
-          denominacion: ['', Validators.required],
-          pail: ['', Validators.required ],
-          localidad: ['', Validators.required],
-          municipio: ['', Validators.required],
-          nombrelocalidad: ['', Validators.required],
-          primerApellido: [''],
-          segundoApellido: [''],
-          equivalente: [''],
-          numeroCalle: ['', Validators.required],
-          experior: ['', Validators.required],
-          interior: [''],
-          lada: [''],
-          numerotelefono: [''],
-          correoElectronico: ['', [Validators.required, Validators.email]]
-        });
-        this.proveedorForm.get('pail')?.disable();
-        this.loadComboUnidad();
-        this.loadLocalidad();
-      
-      }
-
-
-      getFormrequerida(){
-
-        this.requeridaForm = this.fb.group({
-             profisica: ["", Validators.required],
-             moral: ["", Validators.required],
-             tiporfc: ['', Validators.required],
-             tipocurp: ['', Validators.required],
-             tipodenominacion: ['', Validators.required],
-             tipopail: ['', Validators.required],
-             numeroEstado: ['', Validators.required],
-            numeroCalle: ['', Validators.required],
-             numbroexperior: ['', Validators.required],
-             numbrointerior: [''],
-             numbrolada: [''],
-             numerotelefono: [''],
-             tipocorreoElectronico: ['', [Validators.required, Validators.email]]
-           });
-          
-      }
-
-      
-
-      loadComboUnidad(): void {
-        this.service.getProveedordata().pipe(
-          takeUntil(this.destroyed$)
-        ).subscribe((data): void => {
-          this.proveedorList = data as Catalogo[];
-        });
-      }
-    
-      loadLocalidad(): void {
-        this.service.getLocalidaddata().pipe(
-          takeUntil(this.destroyed$)
-        ).subscribe((data): void => {
-          this.localidadList = data as Catalogo[];
-        });
-      }
-
-      guardarProveedor(){
-        if (this.proveedorForm.valid) {
-          console.log('Proveedor guardado:', this.proveedorForm.value);
-        } else {
-          console.log('Formulario no válido');
-        }
-      }
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      ngOnDestroy(): void {
-        this.destroyed$.next();
-        this.destroyed$.complete();
-      }
+  /**
+   * method getRegistroForm
+   * description Inicializa el formulario de proveedores.
+   */
+  getRegistroForm(): void {
+    this.proveedorForm = this.fb.group({
+      nacional: ['nacional', Validators.required],
+      extranjero: [false],
+      fisica: [false],
+      moral: ['moral', Validators.required],
+      rfc: [{ value: '', disabled: true }, Validators.required],
+      denominacion: [this.solicitudState?.denominacion, Validators.required],
+      pail: ['', Validators.required],
+      localidad: ['', Validators.required],
+      municipio: ['', Validators.required],
+      nombrelocalidad: ['', Validators.required],
+      primerApellido: [''],
+      segundoApellido: [''],
+      equivalente: [{ value: '', disabled: true }],
+      numeroCalle: [this.solicitudState?.numeroCalle, Validators.required],
+      experior: [this.solicitudState?.experior, Validators.required],
+      interior: [this.solicitudState?.interior],
+      lada: [this.solicitudState?.lada],
+      numerotelefono: [this.solicitudState?.numerotelefono],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
+    });
+    this.proveedorForm.get('pail')?.disable();
+    this.loadComboUnidad();
+    this.loadLocalidad();
   }
 
+  /**
+   * method getFormrequerida
+   * description Inicializa el formulario de datos requeridos.
+   */
+  getFormrequerida(): void {
+    this.requeridaForm = this.fb.group({
+      profisica: ['', Validators.required],
+      moral: ['', Validators.required],
+      tiporfc: [this.solicitudState?.tiporfc, Validators.required],
+      tipocurp: [this.solicitudState?.tipocurp, Validators.required],
+      tipodenominacion: [this.solicitudState?.tipodenominacion, Validators.required],
+      tipopail: [{ value: '', disabled: true }, Validators.required],
+      numeroEstado: [this.solicitudState?.numeroEstado, Validators.required],
+      numerosCalle: [{ value: '', disabled: true }, Validators.required],
+      numbroexperior: [{ value: '', disabled: true }, Validators.required],
+      numbrointerior: [this.solicitudState?.numbrointerior],
+      numbrolada: [this.solicitudState?.numbrolada],
+      numerostelefono: [{ value: '', disabled: true }],
+      tipocorreoElectronico: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+    });
+  }
+
+  /**
+   * method loadComboUnidad
+   * description Carga la lista de proveedores disponibles.
+   */
+  loadComboUnidad(): void {
+    this.service.getProveedordata()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.proveedorList = data as Catalogo[];
+      });
+  }
+
+  /**
+   * method loadLocalidad
+   * description Carga la lista de localidades disponibles.
+   */
+  loadLocalidad(): void {
+    this.service.getLocalidaddata()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.localidadList = data as Catalogo[];
+      });
+  }
+
+  /**
+   * method guardarProveedor
+   * description Guarda los datos del proveedor si el formulario es válido.
+   */
+  guardarProveedor(): void {
+    if (this.proveedorForm.valid) {
+      // Lógica para guardar proveedor
+    } else {
+      // Lógica para manejar errores
+    }
+  }
+
+  /**
+   * method isValid
+   * description Verifica si un campo del formulario es válido.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} field - El nombre del campo a verificar.
+   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+  }
+
+  /**
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} campo - El nombre del campo.
+   * param {keyof Sanitario260215Store} metodoNombre - El método del almacén a invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260215Store): void {
+    const valor = form.get(campo)?.value;
+    (this.sanitario260215Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  /**
+   * method ngOnDestroy
+   * description Método de limpieza al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+}

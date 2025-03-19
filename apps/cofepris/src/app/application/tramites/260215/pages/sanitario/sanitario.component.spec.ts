@@ -64,4 +64,12 @@ describe('SanitarioComponent', () => {
     expect(wizardSpySiguiente).not.toHaveBeenCalled();
     expect(wizardSpyAtras).not.toHaveBeenCalled();
   });
+
+  it('should not call wizardComponent methods if wizardComponent is undefined', () => {
+    component.wizardComponent = undefined as unknown as WizardComponent;
+
+    expect(() => {
+      component.getValorIndice({ accion: 'cont', valor: 2 });
+    }).not.toThrow();
+  });
 });

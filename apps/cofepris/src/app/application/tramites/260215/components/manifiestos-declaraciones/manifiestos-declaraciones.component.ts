@@ -19,12 +19,15 @@ import { CommonModule } from '@angular/common';
 import { MENSAJE_DE_ALERTA } from '../../enum/permiso.enum';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
+/**
+ * Componente principal para gestionar el formulario de manifiestos.
+ */
 @Component({
   selector: 'app-manifiestos',
   standalone: true,
   imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule],
   templateUrl: './manifiestos-declaraciones.component.html',
-  styleUrl: './manifiestos-declaraciones.component.css',
+  styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
