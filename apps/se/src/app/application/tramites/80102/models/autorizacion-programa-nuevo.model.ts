@@ -1,4 +1,4 @@
-import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
+import { AnexoDosEncabezado,AnexoEncabezado,AnexoUnoEncabezado } from "../../../shared/models/nuevo-programa-industrial.model";
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 
 export interface ServicioInmex {
@@ -56,8 +56,8 @@ export interface AnnexoDosTres{
 }
 
 export interface AnnexoUno{
-  exportarDatosTabla: AnexoImportacionEncabezado[];
+  exportarDatosTabla: AnexoDosEncabezado[];
   importarDatosTabla:AnexoUnoEncabezado[];
-  datosParaNavegar:AnexoUnoEncabezado | AnexoImportacionEncabezado ;
+  datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado ;
   seccionActiva: string;
 }

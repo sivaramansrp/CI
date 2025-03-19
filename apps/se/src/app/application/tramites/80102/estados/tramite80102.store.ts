@@ -1,6 +1,7 @@
 import {
+  AnexoDosEncabezado,
   AnexoEncabezado,
-  AnexoImportacionEncabezado,
+
   AnexoUnoEncabezado,
 } from '../../../shared/models/nuevo-programa-industrial.model';
 import {
@@ -468,7 +469,7 @@ export class Tramite80102Store extends Store<Tramite80102State> {
   }
 
   setExportarDatosTabla(
-    exportarDatosTabla: AnexoImportacionEncabezado[]
+    exportarDatosTabla: AnexoDosEncabezado[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -480,7 +481,7 @@ export class Tramite80102Store extends Store<Tramite80102State> {
   }
 
   setDatosParaNavegar(
-    datosParaNavegar: AnexoUnoEncabezado | AnexoImportacionEncabezado
+    datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado
   ): void {
     this.update((state) => ({
       ...state,

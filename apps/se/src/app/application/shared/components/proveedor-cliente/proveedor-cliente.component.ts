@@ -1,4 +1,4 @@
-import { AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -15,6 +15,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
+import { PAIS_DESTINO_CATALOG } from '../../constantes/proveedor-cliente.enum';
 import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tres.enum';
 
 @Component({
@@ -31,22 +32,13 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
   styleUrl: './proveedor-cliente.component.scss',
 })
 export class ProveedorClienteComponent implements OnChanges{
-  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado | AnexoImportacionEncabezado;
+  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado | AnexoDosEncabezado;
   @Output() public datosActualizadosProveedorCliente = new EventEmitter<ProveedorClienteTabla[]>();
   public formularioProveedorCliente!: FormGroup;
 
   
 
-  public paisDestinoCatalog: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'Mexico',
-    },
-    {
-      id: 2,
-      descripcion: 'USA',
-    },
-  ];
+  public paisDestinoCatalog = PAIS_DESTINO_CATALOG
 
   public proveedorClienteTablsDatos: ProveedorClienteTabla[] = [];
 

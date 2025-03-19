@@ -1,4 +1,4 @@
-import { AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   styleUrl: './contenedor-proveedor-cliente.component.scss',
 })
 export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
-  fraccionTablaDatos!:AnexoUnoEncabezado | AnexoImportacionEncabezado;
+  fraccionTablaDatos!:AnexoUnoEncabezado | AnexoDosEncabezado;
   datosDelProveedor:ProveedorClienteTabla[]=[];
 
   /**

@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  AnexoImportacionConfiguartion,
-  AnexoImportacionEncabezado,
+  AnexoDosConfiguartion,
+  AnexoDosEncabezado,
   AnexoUnoConfiguartion,
   AnexoUnoEncabezado,
   RutaNombre,
@@ -46,7 +46,7 @@ export class AnexoUnoComponent {
    * Configuración de Anexo 1 y 3
    */
   @Input()
-  anexoImportacionConfiguartion!: AnexoImportacionConfiguartion<AnexoImportacionEncabezado>;
+  anexoDosConfiguartion!: AnexoDosConfiguartion<AnexoDosEncabezado>;
   /**
    * Lista de tabla del Anexo Tres
    */
@@ -55,7 +55,7 @@ export class AnexoUnoComponent {
   /**
    * Lista de tabla del Anexo Dos
    */
-  @Input() anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
+  @Input() anexoDosTablaLista: AnexoDosEncabezado[] = [];
   /**
    * Evento para devolver la llamada del Anexo Uno
    */
@@ -67,14 +67,14 @@ export class AnexoUnoComponent {
    * Evento para devolver la llamada del Anexo Dos
    */
   @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
-    AnexoImportacionEncabezado[]
-  > = new EventEmitter<AnexoImportacionEncabezado[]>(true);
+    AnexoDosEncabezado[]
+  > = new EventEmitter<AnexoDosEncabezado[]>(true);
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-  public datosImportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+  public datosImportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
 
-  public datosExportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+  public datosExportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
 
   constructor(
     private fb: FormBuilder,
@@ -150,7 +150,7 @@ export class AnexoUnoComponent {
    * Agrega un nuevo elemento al Anexo Dos
    */
   agregarAnexoDos(): void {
-    const OBJECTO_IDX: AnexoImportacionEncabezado = {
+    const OBJECTO_IDX: AnexoDosEncabezado = {
       ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
       ENCABEZADO_DESCRIPCION_COMERCIAL:
@@ -179,11 +179,11 @@ export class AnexoUnoComponent {
   /**
    * Establece la lista de Anexo Dos y emite un evento con la lista seleccionada.
    *
-   * @param {AnexoImportacionEncabezado[]} event - La lista de encabezados de importación de anexo.
+   * @param {AnexoDosEncabezado[]} event - La lista de encabezados de importación de anexo.
    * Si no se proporciona, se utilizará una lista vacía.
    * @returns {void}
    */
-  setAnexoDosLista(event: AnexoImportacionEncabezado): void {
+  setAnexoDosLista(event: AnexoDosEncabezado): void {
    this.datosExportacionSeleccionados = event;
   }
 

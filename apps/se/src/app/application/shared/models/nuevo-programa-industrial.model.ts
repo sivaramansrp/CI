@@ -18,7 +18,7 @@ export interface AnexoUnoConfiguartion<T> {
   anexoUnoTablaSeleccionRadio: TablaSeleccion;
   anexoUnoEncabezadoDeTabla: ConfiguracionColumna<T>[];
 }
-export interface AnexoImportacionConfiguartion<T> {
+export interface AnexoDosConfiguartion<T> {
   anexoDosTablaSeleccionRadio: TablaSeleccion;
   anexoDosEncabezadoDeTabla: ConfiguracionColumna<T>[];
 }
@@ -39,7 +39,7 @@ export interface AnexoUnoEncabezado {
   estatus: boolean;
 }
 
-export interface AnexoImportacionEncabezado {
+export interface AnexoDosEncabezado {
   ENCABEZADO_FRACCION: string;
   ENCABEZADO_FRACCION_EXPORTACION: string;
   ENCABEZADO_DESCRIPCION_COMERCIAL: string;
@@ -104,7 +104,7 @@ export interface ComplimentarFraccionResoponse {
 export interface RutaNombre {
   catagoria: string;
   id: string;
-  datos: AnexoUnoEncabezado | AnexoImportacionEncabezado;
+  datos: AnexoUnoEncabezado | AnexoDosEncabezado;
 }
 
 export interface ProveedorClienteTabla {

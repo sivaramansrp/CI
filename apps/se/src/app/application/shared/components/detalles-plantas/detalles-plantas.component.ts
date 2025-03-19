@@ -1,4 +1,3 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -11,6 +10,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { CATALOGO_SI_NO } from '../../constantes/detalles-plantas.enum';
 import { CommonModule } from '@angular/common';
 import { PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
 
@@ -36,16 +36,7 @@ export class DetallesPlantasComponent {
    * @property {FormGroup} formularioDatosPlantas
    */
   formularioDatosPlantas!: FormGroup;
-  catalogoSiNo: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'Si',
-    },
-    {
-      id: 2,
-      descripcion: 'No',
-    },
-  ];
+  catalogoSiNo= CATALOGO_SI_NO
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
