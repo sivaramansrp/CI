@@ -1,12 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
 import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, TituloComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { Catalogo,CatalogosService,TEXTOS } from '@ng-mf/data-access-user';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'paso-dos',
+  selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
   standalone: true,
@@ -22,7 +20,9 @@ export class PasoDosComponent implements OnInit {
 
   constructor(
     private catalogosServices: CatalogosService,
-  ) { }
+  ) { 
+       // El constructor se utiliza para la inyección de dependencias.
+  }
 
   ngOnInit(): void {
     this.getTiposDocumentos();
@@ -51,7 +51,9 @@ export class PasoDosComponent implements OnInit {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { },
+        error: (_error): void => { 
+          //Error al obtener los tipos de documentos.
+        },
       });
   }
 }

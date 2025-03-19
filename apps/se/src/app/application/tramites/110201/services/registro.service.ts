@@ -1,12 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { enviroment } from '../../../../enviroments/enviroment';
+import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegistroService {
-  constructor(private http: HttpClient) {}
+
+    urlServer = enviroment.URL_SERVER;
+    urlServerCatalogos = enviroment.URL_SERVER_JSON_AUXILIAR;
+
+
+  constructor(private http: HttpClient) {
+     // El constructor se utiliza para la inyección de dependencias.
+  }
 
   getTratado() {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/tratado.json');
@@ -38,4 +47,9 @@ export class RegistroService {
   getUnidadMedida() {
     return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
   }
+
+   getCatalogoById(id: number) {
+      return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`);
+    }
+ 
 }

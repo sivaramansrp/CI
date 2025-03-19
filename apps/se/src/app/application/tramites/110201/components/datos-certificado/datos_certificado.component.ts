@@ -1,33 +1,34 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import {
+  CatalogoSelectComponent,
   CatalogosSelect,
+  TituloComponent,
   ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import { RegistroService } from '../../services/registro.service';
+} from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Tramite110201Query } from '../../state/Tramite110201.query';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RegistroService } from '../../services/registro.service';
+import { Tramite110201Query } from '../../state/Tramite110201.query';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-datos-certificado',
   standalone: true,
   imports: [
-    CommonModule,
-    TituloComponent,
     CatalogoSelectComponent,
+    CommonModule,
     ReactiveFormsModule,
+    TituloComponent,
   ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
@@ -42,11 +43,15 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   entidad!: CatalogosSelect;
   representacion!: CatalogosSelect;
   public solicitudState!: Solicitud110201State;
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
+  @Input() entidadFederativaData: any;
+  isJustificacion:boolean = false;
+
+  entidadDescripcion: unknown[] = [];
 
   constructor(
     private registroService: RegistroService,
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService
@@ -64,6 +69,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.getIdioma();
     this.getEntidad();
     this.getRepresentacion();
+
+    console.log(this.entidadFederativaData);
 
     this.query.selectSolicitud$
       .pipe(
@@ -94,6 +101,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
           primerOpcion: 'Selecciona un valor',
           catalogos: entidad ?? [],
         };
+        this.entidadDescripcion = this.entidad.catalogos;
+        if(this.entidadDescripcion.includes('8') && this.entidadFederativaData =="DURANGO"){
+          this.isJustificacion = true;
+        } else {
+          this.isJustificacion = false;
+        }
       })
     );
 
@@ -165,10 +178,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         presica: [this.solicitudState?.presica, [Validators.required]],
         presenta: [this.solicitudState?.presenta, [Validators.required]],
         idioma: [this.solicitudState?.idioma, [Validators.required]],
-        entidadFederativa: [
-          this.solicitudState?.entidad,
-          [Validators.required],
-        ],
+        entidad: [this.solicitudState?.entidad, [Validators.required]],
         representacion: [
           this.solicitudState?.representacion,
           [Validators.required],

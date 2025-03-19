@@ -1,22 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { CatalogoSelectComponent,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RegistroService } from '../../services/registro.service';
-import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Tramite110201Query } from '../../state/Tramite110201.query';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
+import { RegistroService } from '../../services/registro.service';
+import { Tramite110201Query } from '../../state/Tramite110201.query';
+
 
 @Component({
   selector: 'app-destinatario',
@@ -36,26 +35,30 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   transporte!: CatalogosSelect;
   private subscriptions: Subscription[] = [];
   public solicitudState!: Solicitud110201State;
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
   getPaisDestinoSubscription!: Subscription;
   getTransporteSubscription!: Subscription;
+  isDisabled : boolean = false;
+  isEmpty : boolean = false;
 
   constructor(
     private registroService: RegistroService,
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
     }
   }
 
+  onClick(){
+    this.isDisabled = true;
+  }
   ngOnInit(): void {
     this.getPaisDestino();
     this.getTransporte();
@@ -117,6 +120,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.registroForm.valid) {
+       // Aquí se implementará la lógica para manejar el envío del formulario.
     }
   }
 
@@ -131,6 +135,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+
   }
 
   get validacionForm(): FormGroup {

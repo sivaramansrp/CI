@@ -1,11 +1,11 @@
+import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { catchError, map } from 'rxjs';
-import { TramiteStore } from 'apps/aga/src/app/application/estados/tramite.store'; 
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '../../../../estados/tramite.store';
 
 @Component({
-  selector: 'paso-tres',
+  selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
   standalone: true,
@@ -17,7 +17,9 @@ export class PasoTresComponent {
     private router: Router,
     private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
     private tramiteStore: TramiteStore
-  ) { }
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+   }
 
   /**
   * Maneja el evento para obtener la firma y realiza acciones adicionales.

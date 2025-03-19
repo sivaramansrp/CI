@@ -18,6 +18,7 @@
           class="form-control"
           id="primerApellido"
           formControlName="apellidoPrimer"
+          (click)="onClick()"
           (change)="
             setValoresStore(
               validacionForm,
@@ -46,7 +47,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Número de registro fiscal*:</label>
+        <label>Número de registro fiscal*:</label> 
         <input
           type="text"
           class="form-control"
@@ -57,12 +58,13 @@
           "
         />
       </div>
-      <div class="col-md-8 mb-3">
+      <div class="col-md-8 mb-3" >
         <label>Razón social:</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control" [ngClass]="{'GrayClass' : registroForm.get('validacionForm.apellidoPrimer')?.value != ''}"
           id="denominacion"
+          [readonly] ="registroForm.get('validacionForm.apellidoPrimer')?.value != ''"
           formControlName="razonSocial"
           (change)="
             setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')

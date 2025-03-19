@@ -127,13 +127,13 @@
           ></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="isDisponibles">
-          <div #tableContainer>
-          <app-tabla-dinamica
-            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-            [configuracionTabla]="tableData.headers"
-            [datos]="tableData.data"
-          ></app-tabla-dinamica>
-          </div>
+          
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+              [configuracionTabla]="tableData.headers"
+              [datos]="tableData.data"
+            ></app-tabla-dinamica>
+          
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
       </ng-container>
@@ -225,7 +225,6 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="tableSeleccionadas.headers"
-            
           ></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="isMercancia">
@@ -236,7 +235,10 @@
           ></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
-        <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="isMercancia">
+        <div
+          class="col-md-12 mt-5 d-flex justify-content-end"
+          *ngIf="isMercancia"
+        >
           <button type="button" class="btn btn-default ms-3">Eliminar</button>
           <button type="button" class="btn btn-primary ms-3">Modificar</button>
         </div>
@@ -358,9 +360,7 @@
             value=""
             (change)="
               setValoresStore(
-                validacionMercanciaForm,
-                'criterioparaconferir',
-                'setcriterioparaconferir'
+                validacionMercanciaForm, 'criterioparaconferir','setcriterioparaconferir'
               )
             "
           />
@@ -487,11 +487,7 @@
             class="form-control"
             formControlName="fecha"
             (change)="
-              setValoresStore(
-                validacionMercanciaForm,
-                'fecha',
-                'setFecha'
-              )
+              setValoresStore(validacionMercanciaForm, 'fecha', 'setFecha')
             "
           />
         </div>
@@ -504,9 +500,7 @@
             formControlName="nFactura"
             (change)="
               setValoresStore(
-                validacionMercanciaForm,
-                'nFactura',
-                'setNFactura'
+                validacionMercanciaForm, 'nFactura', 'setNFactura'
               )
             "
           />
@@ -531,7 +525,9 @@
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
         <button type="button" class="btn btn-default ms-3">Cancelar</button>
-        <button type="button" class="btn btn-primary ms-3" (click)="agregar()">Agregar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregar()">
+          Agregar
+        </button>
       </div>
     </ng-container>
   </form>
