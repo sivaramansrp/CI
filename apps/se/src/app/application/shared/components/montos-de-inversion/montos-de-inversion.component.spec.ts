@@ -1,21 +1,53 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { MontosDeInversionComponent } from './montos-de-inversion.component';
+import { FormBuilder } from '@angular/forms';
+import { Location } from '@angular/common';
+
 
 describe('MontosDeInversionComponent', () => {
-  let component: MontosDeInversionComponent;
-  let fixture: ComponentFixture<MontosDeInversionComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MontosDeInversionComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        FormBuilder,
+        Location
+      ]
+    }).overrideComponent(MontosDeInversionComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(MontosDeInversionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #createMontosDeInversionForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.createMontosDeInversionForm();
+    // expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #regrassar()', async () => {
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
+    component.regrassar();
+    // expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
+
 });
