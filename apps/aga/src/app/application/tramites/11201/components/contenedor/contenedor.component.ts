@@ -35,6 +35,9 @@ import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para gestionar la solicitud de contenedores.
+ */
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
@@ -52,32 +55,102 @@ import { takeUntil } from 'rxjs';
   providers: [BsModalService]
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario principal de la solicitud.
+   */
   solicitudForm!: FormGroup;
+
+  /**
+   * Bandera para mostrar la sección de adjuntar archivo.
+   */
   showAdjuntarArchivo: boolean = false;
+
+  /**
+   * Bandera para mostrar la sección de aduana y fecha.
+   */
   showSeccionAduanaaFecha: boolean = false;
+
+  /**
+   * Bandera para mostrar la sección de contenedor.
+   */
   showSeccionContenedor: boolean = false;
+
+  /**
+   * Bandera para mostrar la sección de número de manifiesto.
+   */
   showSeccionNoManifiesto: boolean = false;
+
+  /**
+   * Bandera para mostrar la tabla de cargar archivo.
+   */
   showCargarArchivoTable: boolean = false;
+
+  /**
+   * Bandera para mostrar la tabla de archivo seleccionado.
+   */
   showArchivoSeleccionadoTable: boolean = false;
+
+  /**
+   * Bandera para mostrar la sección de Excel.
+   */
   showSeccionExcel: boolean = false;
+
+  /**
+   * Bandera para mostrar el mensaje.
+   */
   mostrarMensaje: boolean = false;
+
+  /**
+   * Mensaje de campos obligatorios.
+   */
   mensajeCamposObligatorios: string = '* Campos obligatorios';
+
+  /**
+   * Lista de aduanas.
+   */
   aduanaList: Aduanas[] = [];
+
+  /**
+   * Lista de contenedores.
+   */
   contenedores: Contenedores[] = [];
+
+  /**
+   * Bandera para requerir guardado parcial.
+   */
   requiereGuardadoParcial: boolean = false;
+
+  /**
+   * Índice actual.
+   */
   currentIdx: number = 0;
+
+  /**
+   * Lista de catálogos.
+   */
   @Input() catalogoList: Catalogo[] = [];
+
+  /**
+   * Lista de transporte.
+   */
   transporteList: {
     catalogos: Catalogo[];
     labelNombre: string;
     primerOpcion: string;
   };
+
+  /**
+   * Lista de aduanas.
+   */
   aduana: {
     catalogos: Catalogo[];
     labelNombre: string;
     primerOpcion: string;
   };
-  // Define the data to be displayed in the dynamic table
+
+  /**
+   * Define los datos que se mostrarán en la tabla dinámica.
+   */
   datosTabla = [
     {
       inicialesEquipo: 'BBZM',
@@ -97,7 +170,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * Obtener el valor de la instrucción e inicializar la variable
+   * Obtener el valor de la instrucción e inicializar la variable.
    */
   TEXTOS = TEXTOS;
 
@@ -112,11 +185,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Formulario principal de la solicitud.
+   * Monto de la solicitud.
    */
-  // checkboxForm!: FormGroup;
-
   amount: number = 328.5;
+
+  /**
+   * Configuración de las columnas de la tabla.
+   */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
     { encabezado: '', clave: (item) => item.id, orden: 1 },
     { encabezado: 'Iniciales del equipo', clave: (item) => item.inicialesEquipo, orden: 1 },
@@ -131,13 +206,32 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Id constancia', clave: (item) => item.idConstancia, orden: 10 },
     { encabezado: 'Número manifiesto', clave: (item) => item.numeroManifiesto, orden: 11 },
     { encabezado: 'Id solicitud', clave: (item) => item.idSolicitud, orden: 12 },
-    { encabezado: 'echa inicio', clave: (item) => item.fechaInicio, orden: 13 }
+    { encabezado: 'Fecha inicio', clave: (item) => item.fechaInicio, orden: 13 }
   ];
+
+  /**
+   * Datos del contenedor.
+   */
   public datosDelContenedor: DatosDelContenedor[] = [];
 
+  /**
+   * Datos del modelo abierto.
+   */
   abiertoModeloDatos: string = '';
+
+  /**
+   * Referencia al modal.
+   */
   modalRef?: BsModalRef | null;
+
+  /**
+   * Plantilla del modal.
+   */
   @ViewChild('plantillademodelo') plantillaDeModelo!: TemplateRef<Element>;
+
+  /**
+   * Evento para continuar.
+   */
   @Output() continuarEvento = new EventEmitter<string>();
 
   constructor(
@@ -160,6 +254,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Método de inicialización del componente.
+   */
   ngOnInit(): void {
     this.tramite11201Query.selectSolicitud$
       .pipe(
@@ -179,6 +276,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.fetchAduanaList();
   }
 
+  /**
+   * Método de destrucción del componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Inicializa el formulario reactivo.
+   */
   initializeForm(): void {
     this.solicitudForm = this.fb.group({
       tipoBusqueda: [this.solicitud11201State?.tipoBusqueda, Validators.required],
@@ -263,17 +371,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtener el array de checkboxes individuales
+   * Obtener el array de checkboxes individuales.
    */
   get individualCheckbox(): FormArray {
     return this.solicitudForm.get('individualCheckbox') as FormArray;
   }
 
   /**
-   * Establecer valores en el store del trámite
-   * @param form Formulario reactivo
-   * @param campo Nombre del campo
-   * @param metodoNombre Nombre del método en el store
+   * Establecer valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.
    */
   setValoresStore(
     form: FormGroup,
@@ -284,6 +392,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     (this.tramite11201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Cargar catálogos de datos.
+   */
   cargarCatalogos(): void {
     // Cargar catálogo de contenedores
     this.datosTramiteService.getContenedores().subscribe(
@@ -293,6 +404,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Mostrar campos según el tipo de búsqueda seleccionado.
+   */
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
     this.showAdjuntarArchivo = false;
@@ -317,6 +431,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Limpiar campos del formulario.
+   */
   limpiarCampos(): void {
     this.solicitudForm.reset();
     // Resetear banderas y estados adicionales
@@ -330,6 +447,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm.get('archivoSeleccionado')?.disable();
   }
 
+  /**
+   * Validar si un campo es válido.
+   * @param field Nombre del campo.
+   * @returns Verdadero si el campo es válido, falso en caso contrario.
+   */
   isValid(field: string): boolean {
     const VALIDATIONRESULT = this.validacionesService.isValid(
       this.solicitudForm,
@@ -338,6 +460,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     return VALIDATIONRESULT === null ? false : VALIDATIONRESULT;
   }
 
+  /**
+   * Validar el dígito verificador y agregar la solicitud.
+   */
   validarDigitoVerificador(): void {
     this.solicitudForm.markAllAsTouched();
     const ADUANA = this.solicitudForm.value.aduana;
@@ -350,6 +475,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Adjuntar archivo CSV y parsear su contenido.
+   */
   adjuntarArchivo(): void {
     const FILE_INPUT = document.getElementById(
       'archivoSeleccionado'
@@ -366,6 +494,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Cargar archivo CSV y parsear su contenido.
+   */
   Archivo(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
@@ -424,8 +555,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const CURRENT_IDX = localStorage.getItem('currentIdx');
     if (CURRENT_IDX !== null) {
       this.currentIdx = Number(CURRENT_IDX);
-      // Implementar lógica para establecer la pestaña activa basada en currentIdx
-      // Si se usa una librería de pestañas, establecer el índice activo según corresponda
     }
   }
 
@@ -515,11 +644,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   continuar(): void {
     this.continuarEvento.emit('');
-  }
-
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 
 }
