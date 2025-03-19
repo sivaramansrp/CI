@@ -31,6 +31,7 @@ import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
   styleUrl: './complementar-planta.component.scss',
 })
 export class ComplementarPlantaComponent {
+  // eslint-disable-next-line no-empty-function
   constructor(private ubicaccion: Location) {}
 
   /**

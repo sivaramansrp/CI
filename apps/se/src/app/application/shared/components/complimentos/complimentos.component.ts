@@ -30,11 +30,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable, Subscription, delay } from 'rxjs';
+import { Subscription, delay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { DatosCatalago } from '../../../tramites/80101/models/nuevo-programa-industrial.model';
-
 
 @Component({
   selector: 'app-complimentos',
@@ -340,20 +339,17 @@ export class ComplimentosComponent implements OnInit {
    */
   getCatalogoEstado(): void {
     this.subscription.add(
-      this.complimentosService
-        .obtenerListaEstado()
-        .subscribe((datos) => {
-          const INDICE = this.camposFormulario.findIndex(
-            (ele) => ele.campo === ESTADO
-          );
-          const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-            (ele) => ele.campo === ESTADO
-          );
-          this.estados = datos;
-          this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo =
-            datos;
-          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
-        })
+      this.complimentosService.obtenerListaEstado().subscribe((datos) => {
+        const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === ESTADO
+        );
+        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+          (ele) => ele.campo === ESTADO
+        );
+        this.estados = datos;
+        this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
+        this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+      })
     );
   }
 

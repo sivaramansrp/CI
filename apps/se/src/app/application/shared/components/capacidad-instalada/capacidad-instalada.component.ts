@@ -25,6 +25,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './capacidad-instalada.component.css',
 })
 export class CapacidadInstaladaComponent {
+  // eslint-disable-next-line no-empty-function
   constructor(private ubicaccion: Location) {}
 
   /**
