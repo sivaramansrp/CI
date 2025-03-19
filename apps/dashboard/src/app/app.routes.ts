@@ -76,7 +76,7 @@ export const appRoutes: Route[] = [
             remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
             remoteName: 'sener',
             exposedModule: './Module'
-        }).then((m) => m.AppAgaModule)
+        }).then((m) => m.AppSenerModule)
   },
   {
     path: 'funcionario',

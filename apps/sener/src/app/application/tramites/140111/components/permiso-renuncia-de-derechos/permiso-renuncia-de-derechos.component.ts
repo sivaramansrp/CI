@@ -3,16 +3,18 @@
  * @packageDocumentation
  * @module PermisoRenunciaDeDerechosComponent
  */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
-import { PermisoFormInterface } from '../../model/renuncia-de-derechos.model';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite140111State, Tramite140111Store } from '../../estados/tramite140111.store';
+import { CommonModule } from '@angular/common';
 import { MANIFIESTO_BAJO_PROTESTA } from '../../enums/permiso-renuncia-de-derechos.enum';
+import { PermisoFormInterface } from '../../model/renuncia-de-derechos.model';
+import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite140111Query } from '../../../../estados/queries/tramite140111.query';
-import { Tramite140111Store } from '../../../../estados/tramites/tramite140111.store';
+import { Tramite140111Query } from '../../estados/tramite140111.query';
+
 
 /**
  * PermisoRenunciaDeDerechosComponent es un componente que maneja la renuncia de derechos de permisos.
@@ -132,7 +134,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.tramite140111Query.selectTramite140111$
         .pipe(
           takeUntil(this.destroyed$),
-          map((seccionState) => {
+          map((seccionState:Tramite140111State) => {
             this.permisoForm.patchValue(
                 {
                   motivoRenunciaDeDerechos:seccionState.motivoRenunciaDeDerechos,
@@ -149,9 +151,9 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
    */
    esInvalido(nombreControl: string): boolean {
-    const control = this.permisoForm.get(nombreControl);
-    return control
-      ? control.invalid && (control.touched || control.dirty)
+    const CONTROL = this.permisoForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
 

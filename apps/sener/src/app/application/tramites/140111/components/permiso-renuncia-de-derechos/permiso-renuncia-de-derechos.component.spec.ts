@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisoRenunciaDeDerechosComponent } from './permiso-renuncia-de-derechos.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RenunciaDeDerechosAlServicio } from '@ng-mf/data-access-user';
-import { Tramite140111Store } from '../../../../estados/tramites/tramite140111.store';
-import { Tramite140111Query } from '../../../../estados/queries/tramite140111.query';
+import { RenunciaDeDerechosAlServicio } from '../../services/renuncia-de-derechos-al.service';
+import { Tramite140111Store } from '../../estados/tramite140111.store';
+import { Tramite140111Query } from '../../estados/tramite140111.query';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
