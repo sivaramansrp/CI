@@ -1,4 +1,4 @@
-export const CANCELACIONES_140201 = [
+export const CANCELACIONES = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

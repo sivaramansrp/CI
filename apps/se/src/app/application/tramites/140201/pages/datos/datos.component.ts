@@ -2,10 +2,10 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 
 @Component({
-  selector: 'app-datos-140201',
-  templateUrl: './datos-140201.component.html',
+  selector: 'app-datos',
+  templateUrl: './datos.component.html',
 })
-export class Datos140201Component implements AfterViewInit {
+export class DatosComponent implements AfterViewInit {
     /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */

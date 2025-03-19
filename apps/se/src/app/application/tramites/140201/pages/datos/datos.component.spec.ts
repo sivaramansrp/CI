@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Datos140201Component } from './datos-140201.component';
+import { DatosComponent } from './datos.component';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('Datos140201Component', () => {
-  let component: Datos140201Component;
-  let fixture: ComponentFixture<Datos140201Component>;
+describe('DatosComponent', () => {
+  let component: DatosComponent;
+  let fixture: ComponentFixture<DatosComponent>;
   let solicitanteComponent: SolicitanteComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [Datos140201Component],
+      declarations: [DatosComponent],
       schemas: [NO_ERRORS_SCHEMA], // To ignore unknown component errors
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Datos140201Component);
+    fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
     solicitanteComponent = TestBed.createComponent(SolicitanteComponent).componentInstance;
     fixture.detectChanges();

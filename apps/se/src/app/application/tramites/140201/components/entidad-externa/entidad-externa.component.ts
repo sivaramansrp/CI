@@ -6,9 +6,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
 import { Subject } from 'rxjs';
 
@@ -19,16 +19,16 @@ import { takeUntil } from 'rxjs/operators';
  * Este componente maneja el formulario y la lógica para la entidad externa.
  * 
  * @example
- * <app-entidad-externa-140201></app-entidad-externa-140201>
+ * <app-entidad-externa></app-entidad-externa>
  */
 @Component({
-  selector: 'app-entidad-externa-140201',
+  selector: 'app-entidad-externa',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent],
-  templateUrl: './entidad-externa-140201.component.html',
-  styleUrl: './entidad-externa-140201.component.scss',
+  templateUrl: './entidad-externa.component.html',
+  styleUrl: './entidad-externa.component.scss',
 })
-export class EntidadExterna140201Component implements OnInit, OnDestroy {
+export class EntidadExternaComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para la entidad externa.
    */
@@ -42,34 +42,34 @@ export class EntidadExterna140201Component implements OnInit, OnDestroy {
   /**
    * Observable para la entidad externa.
    */
-  entidadExterna$ = this.cancelaciones140201Query.entidadExterna$;
+  entidadExterna$ = this.cancelacionesQuery.entidadExterna$;
 
   /**
    * Observable para el nombre del solicitante IPC.
    */
-  nombreSolicitanteIPC$ = this.cancelaciones140201Query.nombreSolicitanteIPC$;
+  nombreSolicitanteIPC$ = this.cancelacionesQuery.nombreSolicitanteIPC$;
 
   /**
    * Observable para el cargo del solicitante IPC.
    */
-  cargoSolicitanteIPC$ = this.cancelaciones140201Query.cargoSolicitanteIPC$;
+  cargoSolicitanteIPC$ = this.cancelacionesQuery.cargoSolicitanteIPC$;
 
   /**
    * Observable para el folio del oficio de solicitud IPC.
    */
-  folioOficioSolicitudIPC$ = this.cancelaciones140201Query.folioOficioSolicitudIPC$;
+  folioOficioSolicitudIPC$ = this.cancelacionesQuery.folioOficioSolicitudIPC$;
 
   /**
    * Observable para el correo del solicitante IPC.
    */
-  correoSolicitanteIPC$ = this.cancelaciones140201Query.correoSolicitanteIPC$;
+  correoSolicitanteIPC$ = this.cancelacionesQuery.correoSolicitanteIPC$;
 
   /**
    * @ignore
    */
   constructor(private fb: FormBuilder,
-    private cancelaciones140201Store: Cancelaciones140201Store,
-    private cancelaciones140201Query: Cancelaciones140201Query
+    private cancelacionesStore: CancelacionesStore,
+    private cancelacionesQuery: CancelacionesQuery
   ) {
     //constructor
   }
@@ -130,7 +130,7 @@ export class EntidadExterna140201Component implements OnInit, OnDestroy {
    */
   updateEntidadExterna() {
     const ENTIDADEXTERNA = this.entidadForm.get('entidadExterna')?.value;
-    this.cancelaciones140201Store.setEntidadExterna(ENTIDADEXTERNA);
+    this.cancelacionesStore.setEntidadExterna(ENTIDADEXTERNA);
   }
 
   /**
@@ -138,7 +138,7 @@ export class EntidadExterna140201Component implements OnInit, OnDestroy {
    */
   updateNombreSolicitanteIPC() {
     const NOMBRESOLICITANTEIPC = this.entidadForm.get('nombreSolicitanteIPC')?.value;
-    this.cancelaciones140201Store.setNombreSolicitanteIPC(NOMBRESOLICITANTEIPC);
+    this.cancelacionesStore.setNombreSolicitanteIPC(NOMBRESOLICITANTEIPC);
   }
 
   /**
@@ -146,7 +146,7 @@ export class EntidadExterna140201Component implements OnInit, OnDestroy {
    */
   updateCargoSolicitanteIPC() {
     const CARGOSOLICITANTEIPC = this.entidadForm.get('cargoSolicitanteIPC')?.value;
-    this.cancelaciones140201Store.setCargoSolicitanteIPC(CARGOSOLICITANTEIPC);
+    this.cancelacionesStore.setCargoSolicitanteIPC(CARGOSOLICITANTEIPC);
   }
 
   /**
@@ -154,7 +154,7 @@ export class EntidadExterna140201Component implements OnInit, OnDestroy {
    */
   updateFolioOficioSolicitudIPC() {
     const FOLIOOFICIOSOLICITUDIPC = this.entidadForm.get('folioOficioSolicitudIPC')?.value;
-    this.cancelaciones140201Store.setFolioOficioSolicitudIPC(FOLIOOFICIOSOLICITUDIPC);
+    this.cancelacionesStore.setFolioOficioSolicitudIPC(FOLIOOFICIOSOLICITUDIPC);
   }
 
   /**
@@ -162,7 +162,7 @@ export class EntidadExterna140201Component implements OnInit, OnDestroy {
    */
   updateCorreoSolicitanteIPC() {
     const CORREOSOLICITANTEIPC = this.entidadForm.get('correoSolicitanteIPC')?.value;
-    this.cancelaciones140201Store.setCorreoSolicitanteIPC(CORREOSOLICITANTEIPC);
+    this.cancelacionesStore.setCorreoSolicitanteIPC(CORREOSOLICITANTEIPC);
   }
 
   /**

@@ -13,10 +13,10 @@ import {
 } from '@libs/shared/data-access-user/src';
 
 
-import { Cancelaciones140201Service } from '../../services/cancelaciones-140201.service';
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
+import { CancelacionesService } from '../../services/cancelaciones.service';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
 import { Subject, takeUntil } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -45,35 +45,35 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
   /**
    * Observable para la entidad federativa
    */
-  entidadFederativa$ = this.cancelaciones140201Query.entidadFederativa$;
+  entidadFederativa$ = this.cancelacionesQuery.entidadFederativa$;
   /**
    * Observable para la colonia
    */
-  colonia$ = this.cancelaciones140201Query.colonia$;
+  colonia$ = this.cancelacionesQuery.colonia$;
   /**
    * Observable para la localidad
    */
-  localidad$ = this.cancelaciones140201Query.localidad$;
+  localidad$ = this.cancelacionesQuery.localidad$;
   /**
    * Observable para el municipio
    */
-  municipio$ = this.cancelaciones140201Query.municipio$;
+  municipio$ = this.cancelacionesQuery.municipio$;
   /**
    * Observable para el país
    */
-  paisInput$ = this.cancelaciones140201Query.paisInput$;
+  paisInput$ = this.cancelacionesQuery.paisInput$;
   /**
    * Observable para el número interior
    */
-  numeroInterior$ = this.cancelaciones140201Query.numeroInterior$;
+  numeroInterior$ = this.cancelacionesQuery.numeroInterior$;
   /**
    * Observable para el código postal
    */
-  codigoPostal$ = this.cancelaciones140201Query.codigoPostal$;
+  codigoPostal$ = this.cancelacionesQuery.codigoPostal$;
   /**
    * Observable para el teléfono
    */
-  telefona$ = this.cancelaciones140201Query.telefona$;
+  telefona$ = this.cancelacionesQuery.telefona$;
 
   /**
    * Formulario reactivo para la notificación de domicilio
@@ -104,9 +104,9 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    * Constructor */
   constructor(
     private fb: FormBuilder,
-    private cancelacionService: Cancelaciones140201Service,
-    private cancelaciones140201Store: Cancelaciones140201Store,
-    private cancelaciones140201Query: Cancelaciones140201Query
+    private cancelacionService: CancelacionesService,
+    private cancelacionesStore: CancelacionesStore,
+    private cancelacionesQuery: CancelacionesQuery
   ) {
     // Constructor
   }
@@ -267,7 +267,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   getEntidad(): void {
     const ENTIDAD_FED = this.notifDomicileForm.get('entidadFederativa')?.value;
-    this.cancelaciones140201Store.setEntidadFed(ENTIDAD_FED);
+    this.cancelacionesStore.setEntidadFed(ENTIDAD_FED);
   }
 
   /**
@@ -278,7 +278,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
   getMunicipiosOalcaldia(): void {
     const MUNICIPIOS_ALCALDIA =
       this.notifDomicileForm.get('municipioAlcaldia')?.value;
-    this.cancelaciones140201Store.setMunicipiosAlcaldia(MUNICIPIOS_ALCALDIA);
+    this.cancelacionesStore.setMunicipiosAlcaldia(MUNICIPIOS_ALCALDIA);
   }
 
   /**
@@ -288,7 +288,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   getColonia(): void {
     const COLONIA = this.notifDomicileForm.get('colonia')?.value;
-    this.cancelaciones140201Store.setColonia(COLONIA);
+    this.cancelacionesStore.setColonia(COLONIA);
   }
 
   /**
@@ -298,7 +298,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   getLocalidad(): void {
     const LOCALIDAD = this.notifDomicileForm.get('localidad')?.value;
-    this.cancelaciones140201Store.setLocalidad(LOCALIDAD);
+    this.cancelacionesStore.setLocalidad(LOCALIDAD);
   }
 
   /**
@@ -308,7 +308,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   updatePais(): void {
     const PAIS = this.notifDomicileForm.get('pais')?.value;
-    this.cancelaciones140201Store.setPaisInput(PAIS);
+    this.cancelacionesStore.setPaisInput(PAIS);
   }
 
   /**
@@ -318,7 +318,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   updateNumeroInterior(): void {
     const NUMERO_INTERIOR = this.notifDomicileForm.get('numeroInterior')?.value;
-    this.cancelaciones140201Store.setNumeroInterior(NUMERO_INTERIOR);
+    this.cancelacionesStore.setNumeroInterior(NUMERO_INTERIOR);
   }
 
   /**
@@ -328,7 +328,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   updateCodigoPostal(): void {
     const CODIGO_POSTAL = this.notifDomicileForm.get('codigoPostal')?.value;
-    this.cancelaciones140201Store.setCodigoPostal(CODIGO_POSTAL);
+    this.cancelacionesStore.setCodigoPostal(CODIGO_POSTAL);
   }
 
   /**
@@ -338,7 +338,7 @@ export class NotifDomicileComponent implements OnInit, OnDestroy {
    */
   updateTelefona(): void {
     const TELEFONA = this.notifDomicileForm.get('telefona')?.value;
-    this.cancelaciones140201Store.setTelefona(TELEFONA);
+    this.cancelacionesStore.setTelefona(TELEFONA);
   }
 
   /**

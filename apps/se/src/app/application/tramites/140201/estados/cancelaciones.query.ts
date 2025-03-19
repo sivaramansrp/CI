@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { Cancelaciones140201State, Cancelaciones140201Store } from './cancelaciones.store';
+import { CancelacionesState, CancelacionesStore } from './cancelaciones.store';
 
 /**
  * @description
- * Consulta para obtener el estado de las cancelaciones 140201.
+ * Consulta para obtener el estado de las cancelaciones.
  * Esta clase proporciona observables para seleccionar partes específicas del estado.
  */
 @Injectable({ providedIn: 'root' })
-export class Cancelaciones140201Query extends Query<Cancelaciones140201State> {
+export class CancelacionesQuery extends Query<CancelacionesState> {
   /**
    * Observable para la entidad federativa.
    */
@@ -103,7 +103,7 @@ export class Cancelaciones140201Query extends Query<Cancelaciones140201State> {
   /**
    * @ignore
    */
-  constructor(private Store: Cancelaciones140201Store) {
+  constructor(private Store: CancelacionesStore) {
     super(Store);
   }
 }

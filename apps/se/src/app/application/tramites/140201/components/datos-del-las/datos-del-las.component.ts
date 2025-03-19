@@ -13,24 +13,24 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { NotifDomicileComponent } from '../NotifDomicile/NotifDomicile.component';
+import { NotifDomicileComponent } from '../notif-domicile/notif-domicile.component';
 
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
-import { Cancelaciones140201Service } from '../../services/cancelaciones-140201.service';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
+import { CancelacionesService } from '../../services/cancelaciones.service';
 
 import { Subject, takeUntil } from 'rxjs';
 
 /**
- * Componente DatosDelLas140201Component
+ * Componente DatosDelLasComponent
  * 
  * Este componente es responsable de manejar el formulario de notificación de personas
  * para el trámite 140201. Permite la actualización de los datos de nombre, apellido paterno
  * y correo electrónico, y carga la información adicional desde el servicio.
  */
 @Component({
-  selector: 'app-datos-del-las-140201',
+  selector: 'app-datos-del-las',
   standalone: true,
   imports: [
     CommonModule,
@@ -38,11 +38,11 @@ import { Subject, takeUntil } from 'rxjs';
     ReactiveFormsModule,
     NotifDomicileComponent,
   ],
-  templateUrl: './datos-del-las-140201.component.html',
-  styleUrl: './datos-del-las-140201.component.scss',
+  templateUrl: './datos-del-las.component.html',
+  styleUrl: './datos-del-las.component.scss',
 })
-/** DatosDelLas140201Component */
-export class DatosDelLas140201Component implements OnInit, OnDestroy {
+/** DatosDelLasComponent */
+export class DatosDelLasComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para la notificación de personas */
   authNotifPersonsForm!: FormGroup;
   /** Subject para manejar la destrucción de las suscripciones */
@@ -51,19 +51,19 @@ export class DatosDelLas140201Component implements OnInit, OnDestroy {
   /** Constructor */
   constructor(
     private fb: FormBuilder,
-    private cancelacionService: Cancelaciones140201Service,
-    private cancelaciones140201Store: Cancelaciones140201Store,
-    private cancelaciones140201Query: Cancelaciones140201Query
+    private cancelacionService: CancelacionesService,
+    private cancelacionesStore: CancelacionesStore,
+    private cancelacionesQuery: CancelacionesQuery
   ) {
     // Constructor
   }
 
   /** Observable para el nombre */
-  nombre$ = this.cancelaciones140201Query.nombre$;
+  nombre$ = this.cancelacionesQuery.nombre$;
   /** Observable para el apellido paterno */
-  apellidoPaterno$ = this.cancelaciones140201Query.apellidoPaterno$;
+  apellidoPaterno$ = this.cancelacionesQuery.apellidoPaterno$;
   /** Observable para el correo electrónico */
-  correoElectronico$ = this.cancelaciones140201Query.correoElectronico$;
+  correoElectronico$ = this.cancelacionesQuery.correoElectronico$;
 
   /**
    * Método ngOnInit
@@ -114,7 +114,7 @@ export class DatosDelLas140201Component implements OnInit, OnDestroy {
    */
   updateNombre(): void {
     const NOMBRE = this.authNotifPersonsForm.get('nombre')?.value;
-    this.cancelaciones140201Store.setNombre(NOMBRE);
+    this.cancelacionesStore.setNombre(NOMBRE);
   }
 
   /**
@@ -124,7 +124,7 @@ export class DatosDelLas140201Component implements OnInit, OnDestroy {
    */
   updateApellidoPaterno(): void {
     const APELLIDO_PATERNO = this.authNotifPersonsForm.get('apellidoPaterno')?.value;
-    this.cancelaciones140201Store.setApellidoPaterno(APELLIDO_PATERNO);
+    this.cancelacionesStore.setApellidoPaterno(APELLIDO_PATERNO);
   }
 
   /**
@@ -134,7 +134,7 @@ export class DatosDelLas140201Component implements OnInit, OnDestroy {
    */
   updateCorreoElectronico(): void {
     const CORREO_ELECTRONICO = this.authNotifPersonsForm.get('correoElectronico')?.value;
-    this.cancelaciones140201Store.setCorreoElectronico(CORREO_ELECTRONICO);
+    this.cancelacionesStore.setCorreoElectronico(CORREO_ELECTRONICO);
   }
 
   /**

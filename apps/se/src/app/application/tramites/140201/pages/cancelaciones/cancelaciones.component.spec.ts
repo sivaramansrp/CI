@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Cancelaciones140201Component } from './cancelaciones-140201.component';
+import { CancelacionesComponent } from './cancelaciones.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { WizardComponent, DatosPasos, ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../../80205/models/datos-info.model';
-import { CANCELACIONES_140201 } from '../../constantes/cancelaciones-140201.enum';
+import { CANCELACIONES } from '../../constantes/cancelaciones.enum';
 import { Component, Input, EventEmitter } from '@angular/core';
 
 @Component({
@@ -27,9 +27,9 @@ class MockWizardComponent {
   ngOnChanges() {}
 }
 
-describe('Cancelaciones140201Component', () => {
-  let component: Cancelaciones140201Component;
-  let fixture: ComponentFixture<Cancelaciones140201Component>;
+describe('CancelacionesComponent', () => {
+  let component: CancelacionesComponent;
+  let fixture: ComponentFixture<CancelacionesComponent>;
   let wizardComponentMock: jest.Mocked<WizardComponent>;
 
   beforeEach(async () => {
@@ -40,13 +40,13 @@ describe('Cancelaciones140201Component', () => {
 
     await TestBed.configureTestingModule({
       imports: [WizardComponent], 
-      declarations: [Cancelaciones140201Component],
+      declarations: [CancelacionesComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], 
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Cancelaciones140201Component);
+    fixture = TestBed.createComponent(CancelacionesComponent);
     component = fixture.componentInstance;
 
     component.wizardComponent = wizardComponentMock;
@@ -68,8 +68,8 @@ describe('Cancelaciones140201Component', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should initialize pantallasPasos with CANCELACIONES_140201', () => {
-    expect(component.pantallasPasos).toBe(CANCELACIONES_140201);
+  it('should initialize pantallasPasos with CANCELACIONES', () => {
+    expect(component.pantallasPasos).toBe(CANCELACIONES);
   });
 
   it('should initialize pasos with PASOS', () => {

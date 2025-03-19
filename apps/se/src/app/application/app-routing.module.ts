@@ -144,8 +144,8 @@ const ROUTES: Routes = [
   {
     path: 'cancelaciones-ministerioEconomia',
     loadChildren: () =>
-      import('./tramites/140201/cancelaciones-140201.module').then(
-        (m) => m.Cancelaciones140201Module
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   }
 ];

@@ -7,10 +7,10 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * @description
- * Estado de las cancelaciones 140201.
+ * Estado de las cancelaciones.
  * Esta interfaz define la estructura del estado para las cancelaciones.
  */
-export interface Cancelaciones140201State {
+export interface CancelacionesState {
   entidadFederativa: Catalogo | null;
   colonia: Catalogo | null;
   localidad: Catalogo | null;
@@ -33,10 +33,10 @@ export interface Cancelaciones140201State {
 
 /**
  * @description
- * Crea el estado inicial para las cancelaciones 140201.
- * @returns {Cancelaciones140201State} El estado inicial.
+ * Crea el estado inicial para las cancelaciones.
+ * @returns {CancelacionesState} El estado inicial.
  */
-export function createInitialState(): Cancelaciones140201State {
+export function createInitialState(): CancelacionesState {
   return {
     entidadFederativa: null,
     colonia: null,
@@ -61,13 +61,13 @@ export function createInitialState(): Cancelaciones140201State {
 
 /**
  * @description
- * Almacén para manejar el estado de las cancelaciones 140201.
+ * Almacén para manejar el estado de las cancelaciones.
  */
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'cancelaciones140201', resettable: true })
-export class Cancelaciones140201Store extends Store<Cancelaciones140201State> {
+@StoreConfig({ name: 'cancelaciones', resettable: true })
+export class CancelacionesStore extends Store<CancelacionesState> {
   /**
    * @ignore
    */

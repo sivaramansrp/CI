@@ -16,7 +16,7 @@ import { CancellationOfAuthorizations } from '../models/cancelacions.model'
 @Injectable({
   providedIn: 'root',
 })
-export class Cancelaciones140201Service {
+export class CancelacionesService {
   /**
    * @ignore
    */

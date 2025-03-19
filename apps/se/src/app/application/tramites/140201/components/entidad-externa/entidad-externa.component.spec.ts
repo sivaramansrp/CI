@@ -2,22 +2,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { EntidadExterna140201Component } from './entidad-externa-140201.component';
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
+import { EntidadExternaComponent } from './entidad-externa.component';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
 jest.mock('../../estados/cancelaciones.store');
 jest.mock('../../estados/cancelaciones.query');
 
-describe('EntidadExterna140201Component', () => {
-  let component: EntidadExterna140201Component;
-  let fixture: ComponentFixture<EntidadExterna140201Component>;
-  let cancelacionesStore: jest.Mocked<Cancelaciones140201Store>;
-  let cancelacionesQuery: jest.Mocked<Cancelaciones140201Query>;
+describe('EntidadExternaComponent', () => {
+  let component: EntidadExternaComponent;
+  let fixture: ComponentFixture<EntidadExternaComponent>;
+  let cancelacionesStore: jest.Mocked<CancelacionesStore>;
+  let cancelacionesQuery: jest.Mocked<CancelacionesQuery>;
 
   beforeEach(async () => {
-    // Create Mock for Cancelaciones140201Store
-    cancelacionesStore = new Cancelaciones140201Store() as jest.Mocked<Cancelaciones140201Store>;
+    // Create Mock for CancelacionesStore
+    cancelacionesStore = new CancelacionesStore() as jest.Mocked<CancelacionesStore>;
     cancelacionesStore.setEntidadExterna = jest.fn();
     cancelacionesStore.setNombreSolicitanteIPC = jest.fn();
     cancelacionesStore.setCargoSolicitanteIPC = jest.fn();
@@ -33,8 +33,8 @@ describe('EntidadExterna140201Component', () => {
     cancelacionesStore.setTelefona = jest.fn();
     cancelacionesStore.destroy = jest.fn();
 
-    // Create Mock for Cancelaciones140201Query
-    cancelacionesQuery = new Cancelaciones140201Query(cancelacionesStore) as jest.Mocked<Cancelaciones140201Query>;
+    // Create Mock for CancelacionesQuery
+    cancelacionesQuery = new CancelacionesQuery(cancelacionesStore) as jest.Mocked<CancelacionesQuery>;
     cancelacionesQuery.entidadExterna$ = of('Entidad Externa');
     cancelacionesQuery.nombreSolicitanteIPC$ = of('Nombre Solicitante');
     cancelacionesQuery.cargoSolicitanteIPC$ = of('Cargo Solicitante');
@@ -42,14 +42,14 @@ describe('EntidadExterna140201Component', () => {
     cancelacionesQuery.correoSolicitanteIPC$ = of('correo@ejemplo.com');
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,EntidadExterna140201Component],
+      imports: [ReactiveFormsModule,EntidadExternaComponent],
       providers: [
-        { provide: Cancelaciones140201Store, useValue: cancelacionesStore },
-        { provide: Cancelaciones140201Query, useValue: cancelacionesQuery },
+        { provide: CancelacionesStore, useValue: cancelacionesStore },
+        { provide: CancelacionesQuery, useValue: cancelacionesQuery },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EntidadExterna140201Component);
+    fixture = TestBed.createComponent(EntidadExternaComponent);
     component = fixture.componentInstance;
   });
 

@@ -2,52 +2,52 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 
-import { CancelacionDeAutorizaciones140201Component } from './cancelacion-de-autorizaciones-140201.component';
-import { Cancelaciones140201Service } from '../../services/cancelaciones-140201.service';
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
+import { CancelacionDeAutorizacionesComponent } from './cancelacion-de-autorizaciones.component';
+import { CancelacionesService } from '../../services/cancelaciones.service';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-jest.mock('../../services/cancelaciones-140201.service');
+jest.mock('../../services/cancelaciones.service');
 jest.mock('../../estados/cancelaciones.store');
 jest.mock('../../estados/cancelaciones.query');
 
-describe('CancelacionDeAutorizaciones140201Component', () => {
-  let component: CancelacionDeAutorizaciones140201Component;
-  let fixture: ComponentFixture<CancelacionDeAutorizaciones140201Component>;
-  let cancelacionesService: jest.Mocked<Cancelaciones140201Service>;
-  let cancelacionesStore: jest.Mocked<Cancelaciones140201Store>;
-  let cancelacionesQuery: jest.Mocked<Cancelaciones140201Query>;
+describe('CancelacionDeAutorizacionesComponent', () => {
+  let component: CancelacionDeAutorizacionesComponent;
+  let fixture: ComponentFixture<CancelacionDeAutorizacionesComponent>;
+  let cancelacionesService: jest.Mocked<CancelacionesService>;
+  let cancelacionesStore: jest.Mocked<CancelacionesStore>;
+  let cancelacionesQuery: jest.Mocked<CancelacionesQuery>;
 
   beforeEach(async () => {
-    // Properly mock Cancelaciones140201Query
+    // Properly mock CancelacionesQuery
     cancelacionesQuery = {
       rfcIngresado$: of('RFC123456789'),
       motivoCancelacion$: of('Motivo de cancelación'),
-    } as unknown as jest.Mocked<Cancelaciones140201Query>;
+    } as unknown as jest.Mocked<CancelacionesQuery>;
 
     // Mock service methods
     cancelacionesService = {
       getCancelacionDeAutorizaciones: jest.fn().mockReturnValue(of([])),
-    } as unknown as jest.Mocked<Cancelaciones140201Service>;
+    } as unknown as jest.Mocked<CancelacionesService>;
 
     // Mock store methods
     cancelacionesStore = {
       setRfcIngresado: jest.fn(),
       setMotivoCancelacion: jest.fn(),
-    } as unknown as jest.Mocked<Cancelaciones140201Store>;
+    } as unknown as jest.Mocked<CancelacionesStore>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CancelacionDeAutorizaciones140201Component, HttpClientModule], // Added HttpClientModule to fix NullInjectorError
+      imports: [ReactiveFormsModule, CancelacionDeAutorizacionesComponent, HttpClientModule], // Added HttpClientModule to fix NullInjectorError
       providers: [
-        { provide: Cancelaciones140201Service, useValue: cancelacionesService },
-        { provide: Cancelaciones140201Store, useValue: cancelacionesStore },
-        { provide: Cancelaciones140201Query, useValue: cancelacionesQuery },
+        { provide: CancelacionesService, useValue: cancelacionesService },
+        { provide: CancelacionesStore, useValue: cancelacionesStore },
+        { provide: CancelacionesQuery, useValue: cancelacionesQuery },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CancelacionDeAutorizaciones140201Component);
+    fixture = TestBed.createComponent(CancelacionDeAutorizacionesComponent);
     component = fixture.componentInstance;
   });
 

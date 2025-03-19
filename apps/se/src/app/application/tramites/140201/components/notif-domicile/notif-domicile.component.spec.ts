@@ -1,10 +1,10 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { NotifDomicileComponent } from './NotifDomicile.component';
+import { NotifDomicileComponent } from './notif-domicile.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Observable, of, Subject } from 'rxjs';
-import { Cancelaciones140201Service } from '../../services/cancelaciones-140201.service';
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
+import { CancelacionesService } from '../../services/cancelaciones.service';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -13,9 +13,9 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 describe('NotifDomicileComponent', () => {
   let component: NotifDomicileComponent;
   let fixture: ComponentFixture<NotifDomicileComponent>;
-  let mockService: Partial<Cancelaciones140201Service>;
-  let mockStore: Partial<Cancelaciones140201Store>;
-  let mockQuery: Partial<Cancelaciones140201Query>;
+  let mockService: Partial<CancelacionesService>;
+  let mockStore: Partial<CancelacionesStore>;
+  let mockQuery: Partial<CancelacionesQuery>;
 
   beforeEach(async () => {
     mockService = {
@@ -61,9 +61,9 @@ describe('NotifDomicileComponent', () => {
       imports: [ReactiveFormsModule, CommonModule, NotifDomicileComponent, TituloComponent, CatalogoSelectComponent],
       declarations: [],
       providers: [
-        { provide: Cancelaciones140201Service, useValue: mockService },
-        { provide: Cancelaciones140201Store, useValue: mockStore },
-        { provide: Cancelaciones140201Query, useValue: mockQuery }
+        { provide: CancelacionesService, useValue: mockService },
+        { provide: CancelacionesStore, useValue: mockStore },
+        { provide: CancelacionesQuery, useValue: mockQuery }
       ]
     }).compileComponents();
 

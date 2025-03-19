@@ -7,7 +7,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { TablaDinamicaComponent, TablaSeleccion, } from '@libs/shared/data-access-user/src';
 
-import { Cancelaciones140201Service } from '../../services/cancelaciones-140201.service'
+import { CancelacionesService } from '../../services/cancelaciones.service'
 
 import { CancellationOfAuthorizations } from '../../models/cancelacions.model'
 
@@ -16,35 +16,35 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Cancelaciones140201Store } from '../../estados/cancelaciones.store';
+import { CancelacionesStore } from '../../estados/cancelaciones.store';
 
-import { Cancelaciones140201Query } from '../../estados/cancelaciones.query';
+import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 
-import { CANCELLATIONOFAUTHORIZATIONS } from '../../constantes/cancelacion-table140201.enum'
+import { CANCELLATIONOFAUTHORIZATIONS } from '../../constantes/cancelacion-table.enum'
 /**
  * @description
  * Componente para la cancelación de autorizaciones 140201.
  * Este componente maneja el formulario y la lógica para la cancelación de autorizaciones.
  * 
  * @example
- * <app-cancelacion-de-autorizaciones-140201></app-cancelacion-de-autorizaciones-140201>
+ * <app-cancelacion-de-autorizaciones></app-cancelacion-de-autorizaciones>
  */
 @Component({
-  selector: 'app-cancelacion-de-autorizaciones-140201',
+  selector: 'app-cancelacion-de-autorizaciones',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
-  templateUrl: './cancelacion-de-autorizaciones-140201.component.html',
-  styleUrl: './cancelacion-de-autorizaciones-140201.component.scss',
+  templateUrl: './cancelacion-de-autorizaciones.component.html',
+  styleUrl: './cancelacion-de-autorizaciones.component.scss',
 })
-export class CancelacionDeAutorizaciones140201Component implements OnInit, OnDestroy {
+export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
 
   /**
    * @ignore
    */
   constructor(private fb: FormBuilder,
-    private cancelacionesService: Cancelaciones140201Service,
-    private cancelaciones140201Store: Cancelaciones140201Store,
-    private cancelaciones140201Query: Cancelaciones140201Query
+    private cancelacionesService: CancelacionesService,
+    private cancelacionesStore: CancelacionesStore,
+    private cancelacionesQuery: CancelacionesQuery
   ) {
     //constructor
   }
@@ -67,12 +67,12 @@ export class CancelacionDeAutorizaciones140201Component implements OnInit, OnDes
   /**
    * Observable para el RFC ingresado.
    */
-  rfcIngresado$ = this.cancelaciones140201Query.rfcIngresado$;
+  rfcIngresado$ = this.cancelacionesQuery.rfcIngresado$;
 
   /**
    * Observable para el motivo de cancelación.
    */
-  motivoCancelacion$ = this.cancelaciones140201Query.motivoCancelacion$;
+  motivoCancelacion$ = this.cancelacionesQuery.motivoCancelacion$;
 
   /**
    * Configuración de las columnas de la tabla.
@@ -125,7 +125,7 @@ export class CancelacionDeAutorizaciones140201Component implements OnInit, OnDes
    */
   updateRfcIngresado() {
     const RFCINGRESADO = this.cancelacionForm.get('rfcIngresado')?.value;
-    this.cancelaciones140201Store.setRfcIngresado(RFCINGRESADO);
+    this.cancelacionesStore.setRfcIngresado(RFCINGRESADO);
   }
 
   /**
@@ -133,7 +133,7 @@ export class CancelacionDeAutorizaciones140201Component implements OnInit, OnDes
    */
   updateMotivoCancelacion() {
     const MOTIVOCANCELACION = this.cancelacionForm.get('motivoCancelacion')?.value;
-    this.cancelaciones140201Store.setMotivoCancelacion(MOTIVOCANCELACION);
+    this.cancelacionesStore.setMotivoCancelacion(MOTIVOCANCELACION);
   }
 
   /**
@@ -150,7 +150,8 @@ export class CancelacionDeAutorizaciones140201Component implements OnInit, OnDes
     this.cancelacionesService
       .getCancelacionDeAutorizaciones()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => { 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((resp:any) => { 
         this.cancelacionData = resp;
       });
   }
