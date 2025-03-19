@@ -68,7 +68,8 @@ const ROUTES: Routes = [
     component: AcusePageComponent
 
   },
-  {path: 'registro-digitalizar-documentos',
+  {
+    path: 'registro-digitalizar-documentos',
     loadChildren: () =>
       import('./tramites/701/registro-digitalizar-documentos.module').then(
         (m) => m.RegistroDigitalizarDocumentosModule
