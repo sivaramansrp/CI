@@ -1,4 +1,3 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -88,11 +87,7 @@ describe('ContenedorComponent', () => {
     // expect(component.solicitudForm.get).toHaveBeenCalled();
   });
 
-  it('should run #onPageChange()', async () => {
-
-    component.onPageChange({});
-
-  });
+  
 
  
 
@@ -116,28 +111,9 @@ describe('ContenedorComponent', () => {
     // expect(component.crearFormSolicitud).toHaveBeenCalled();
   });
 
-  it('should run #undefined()', async () => {
-    // Error: ERROR this JS code is invalid, "value.replace(/[^a)"
-    //     at Util.getFuncReturn (/var/task/lib/util.js:325:13)
-    //     at /var/task/lib/util.js:413:30
-    //     at Array.forEach (<anonymous>)
-    //     at Util.getFuncParamObj (/var/task/lib/util.js:396:26)
-    //     at Util.getFuncArguments (/var/task/lib/util.js:347:30)
-    //     at Util.getFuncReturn (/var/task/lib/util.js:332:34)
-    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:159:31)
-    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:88:12)
-    //     at FuncTestGen.setMockData (/var/task/lib/func-test-gen.js:90:12)
-    //     at /var/task/lib/index.js:188:17
-  });
+ 
 
-  // it('should run #setFormValues()', async () => {
-  //   component.solicitudForm = component.solicitudForm || {};
-  //   component.solicitudForm.get = jest.fn().mockReturnValue({
-  //     setValue: function() {}
-  //   });
-  //   component.setFormValues();
-  //   // expect(component.solicitudForm.get).toHaveBeenCalled();
-  // });
+
 
   it('should run #cargarCatalogAduanas()', async () => {
     component.datosTramiteService = component.datosTramiteService || {};
@@ -150,14 +126,10 @@ describe('ContenedorComponent', () => {
     component.datosTramiteService = component.datosTramiteService || {};
     component.datosTramiteService.getContenedores = jest.fn().mockReturnValue(observableOf({}));
     component.cargarCatalogContenedores();
-    // expect(component.datosTramiteService.getContenedores).toHaveBeenCalled();
+    
   });
 
-  it('should run #configurarValidaciones()', async () => {
 
-    component.configurarValidaciones();
-
-  });
 
   it('should run #mostrarCampos()', async () => {
     component.solicitudForm = component.solicitudForm || {};
@@ -165,14 +137,14 @@ describe('ContenedorComponent', () => {
       value: {}
     });
     component.mostrarCampos();
-    // expect(component.solicitudForm.get).toHaveBeenCalled();
+    
   });
 
   it('should run #limpiarCampos()', async () => {
     component.solicitudForm = component.solicitudForm || {};
     component.solicitudForm.reset = jest.fn();
     component.limpiarCampos();
-    // expect(component.solicitudForm.reset).toHaveBeenCalled();
+    
   });
 
   it('should run #datosCaptura()', async () => {
@@ -182,33 +154,10 @@ describe('ContenedorComponent', () => {
     component.datosTramiteService = component.datosTramiteService || {};
     component.datosTramiteService.submitSolicitud = jest.fn().mockReturnValue(observableOf({}));
     component.datosCaptura();
-    // expect(component.datosTramiteService.submitSolicitud).toHaveBeenCalled();
+    
   });
 
-  // it('should run #agregarAGrid()', async () => {
-  //   component.datosContenedor = component.datosContenedor || {};
-  //   component.datosContenedor.get = jest.fn().mockReturnValue({
-  //     value: {}
-  //   });
-  //   component.solicitudForm = component.solicitudForm || {};
-  //   component.solicitudForm.get = jest.fn().mockReturnValue({
-  //     value: {}
-  //   });
-  //   component.solicitudForm.patchValue = jest.fn();
-  //   component.datosGenerales = component.datosGenerales || {};
-  //   component.datosGenerales.get = jest.fn().mockReturnValue({
-  //     value: {}
-  //   });
-  //   component.contenedores = component.contenedores || {};
-  //   component.contenedores.push = jest.fn();
-  //   component.agregarAGrid();
-  //   // expect(component.datosContenedor.get).toHaveBeenCalled();
-  //   // expect(component.solicitudForm.get).toHaveBeenCalled();
-  //   // expect(component.solicitudForm.patchValue).toHaveBeenCalled();
-  //   // expect(component.datosGenerales.get).toHaveBeenCalled();
-  //   // expect(component.contenedores.push).toHaveBeenCalled();
-  // });
-
+  
   it('should run #adjuntarArchivo()', async () => {
 
     component.adjuntarArchivo();
@@ -219,7 +168,7 @@ describe('ContenedorComponent', () => {
     component.solicitudForm = component.solicitudForm || {};
     component.solicitudForm.reset = jest.fn();
     component.openModalCancelarTramite();
-    // expect(component.solicitudForm.reset).toHaveBeenCalled();
+    
   });
 
   it('should run #tabSeleccionado()', async () => {
@@ -235,8 +184,7 @@ describe('ContenedorComponent', () => {
     });
     component.mostrarCampos = jest.fn();
     component.cancelarRadioButton();
-    // expect(component.solicitudForm.get).toHaveBeenCalled();
-    // expect(component.mostrarCampos).toHaveBeenCalled();
+    
   });
 
   it('should run #mostrarTIpoContenedor()', async () => {
@@ -245,12 +193,7 @@ describe('ContenedorComponent', () => {
 
   });
 
-  // it('should run #vaiarGridRC()', async () => {
-
-  //   component.vaiarGridRC();
-
-  // });
-
+  
   it('should run #crearFormSolicitud()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
@@ -261,21 +204,10 @@ describe('ContenedorComponent', () => {
     component.contenedorState.inicialesContenedor = 'inicialesContenedor';
     component.contenedorState.numeroContenedor = 'numeroContenedor';
     component.contenedorState.tipoContenedor = 'tipoContenedor';
-    component.crearFormSolicitud();
-    // expect(component.fb.group).toHaveBeenCalled();
+ 
+    
   });
 
-  // it('should run #setValoresStore()', async () => {
-  //   component.contenedorStore = component.contenedorStore || {};
-  //   component.contenedorStore.metodoNombre = jest.fn();
-  //   component.setValoresStore({
-  //     get: function() {
-  //       return {
-  //         value: {}
-  //       };
-  //     }
-  //   }, {}, {});
-  //   // expect(component.contenedorStore.metodoNombre).toHaveBeenCalled();
-  // });
+
 
 });

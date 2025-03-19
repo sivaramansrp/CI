@@ -18,9 +18,9 @@ export interface Contenedor11202State {
     return{
         idSolicitud:'',
        tipoBusqueda: '',
-        inicialesContenedor:'',
+        inicialesContenedor:'incial contenedor',
         aduana:'',
-        numeroContenedor: '',
+        numeroContenedor: '123456',
         tipoContenedor:'',
     };
 

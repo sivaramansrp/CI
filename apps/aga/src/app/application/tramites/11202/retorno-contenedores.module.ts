@@ -30,6 +30,7 @@ import {
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+
 @NgModule({
   declarations: [
     SolicitanteComponent,
@@ -45,12 +46,14 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     SharedModule,
     RouterModule,
     WizardComponent,
-    ReactiveFormsModule,
+   ReactiveFormsModule,
+    FormsModule,
     TituloComponent,
     BtnContinuarComponent,
     AlertComponent,
     FirmaElectronicaComponent,
-    AnexarDocumentosComponent,
+    FirmaElectronicaComponent,
+    PasoTresComponent,
     SelectCatalogosComponent,
     InputFechaComponent,
     InputCheckComponent,
