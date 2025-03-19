@@ -166,7 +166,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             ...this.solicitud11201State,
             ...seccionState,
           };
-          console.log(this.solicitud11201State);
         })
       )
       .subscribe();
@@ -341,7 +340,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   validarDigitoVerificador(): void {
     this.solicitudForm.markAllAsTouched();
-    console.log(this.solicitudForm);
     const ADUANA = this.solicitudForm.value.aduana;
     const FECHAINGRESO = this.solicitudForm.value.fechaIngreso;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
@@ -420,7 +418,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   esPago(): void {
-    console.log('Pago');
     if (this.solicitudForm.valid) {
       // Implementar lógica de pago y envío del formulario
       this.datosTramiteService.submitSolicitud().subscribe(

@@ -20,7 +20,13 @@
     >
       Guardar
     </button>
-    } @if (btnContVisible) {
+    }
+    @if (btnConVisible) {
+    <button type="button" class="btn btn-danger ms-3" (click)="cancelar()" [style.visibility]="btnConVisible">
+      {{ btnCancelar?.txtBtnCan }}
+    </button>
+    }
+    @if (btnContVisible) {
     <button
       type="button"
       class="btn btn-primary ms-3"

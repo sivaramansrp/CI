@@ -25,8 +25,7 @@ export class DatosTramiteService {
   /**
   * Simulate file upload
   */
-  uploadArchivo(archivo: File): Observable<RespuestaApi> {
-    console.log('Simulating file upload:', archivo.name);
+  uploadArchivo(): Observable<RespuestaApi> {
     return this.http.get<RespuestaApi>(`assets/json/11201/contenedorLista.json`);
   }
 
@@ -34,7 +33,6 @@ export class DatosTramiteService {
   * Simulate a successful form submission
   */
   submitSolicitud(): Observable<RespuestaAduanas> {
-    console.log('Simulating form submission');
     return this.http.get<RespuestaAduanas>(`assets/json/11201/aduanaList.json`);
   }
 

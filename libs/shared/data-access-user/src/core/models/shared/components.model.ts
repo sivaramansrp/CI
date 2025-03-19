@@ -127,3 +127,9 @@ export interface DatosPageAcuse {
   datosTablaAcuse: ConfiguracionTabla[];
   accionesTablaAcuse: AccionesTabla[];
 }
+
+export interface DatosPasosCancelar {
+  txtBtnCan: string;
+  fin: number;
+  iniciar: number;
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { DatosPasos, DatosPasosCancelar } from '@ng-mf/data-access-user';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
@@ -29,11 +29,16 @@ export class SolicitantePageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  btnCancelar: DatosPasosCancelar = {
+    fin: 1,
+    iniciar: 1,
+    txtBtnCan: 'Cancelar',
+  };
   constructor(
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore
+  // eslint-disable-next-line no-empty-function
   ) {
-    console.log();
   }
 
   ngOnInit(): void {
@@ -44,7 +49,6 @@ export class SolicitantePageComponent implements OnInit {
       }
       return paso;
     });
-    console.log('Updated pasos:', this.pasos);
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -85,5 +89,11 @@ export class SolicitantePageComponent implements OnInit {
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMAVALIDA);
+  }
+
+  getCancelarEvento(e: AccionBoton): void {
+    if (e.valor > 0 && e.valor < 6) {
+      this.indice = e.valor;
+    }
   }
 }

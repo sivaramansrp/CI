@@ -12,7 +12,8 @@
       } @case (2) {
       <paso-tres></paso-tres>
       }}
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      <btn-continuar [datos]="datosPasos" [btnCancelar]="btnCancelar" (continuarEvento)="getValorIndice($event)"
+        (cancelarEvento)="getCancelarEvento($event)"></btn-continuar>
     </div>
   </div>
 </div>
