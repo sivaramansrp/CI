@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 // import { HttpCoreService } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
-import { catchError, Observable,throwError } from 'rxjs';
-import { PermisoModel } from '../components/detos.model';
 
+import { catchError, Observable,throwError } from 'rxjs';
+
+import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
  
 /**

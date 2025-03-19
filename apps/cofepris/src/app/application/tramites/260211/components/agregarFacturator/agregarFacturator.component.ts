@@ -1,10 +1,13 @@
 import { Component, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PermisoModel } from '../detos.model';
+// import { PermisoModel } from '../detos.model';
 import { map, Subject, takeUntil } from 'rxjs';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { SanitarioService } from '../../services/sanitario.service';
+
+import { PermisoModel } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/260211/detos.model'
+
 
 import { Solicitud260211State, } from '../../../../estados/tramites/sanitario260211.store';
 

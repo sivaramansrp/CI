@@ -9,7 +9,9 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { PermisoModel } from '../detos.model';
+// import { PermisoModel } from '../detos.model';
+// import { PermisoModel } from '../../../../../../../../../libs/shared/data-access-user/src/lib/data-access-user'
+import { PermisoModel } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/260211/detos.model'
 import { Solicitud260211State, } from '../../../../estados/tramites/sanitario260211.store';
 
 import { Sanitario260211Store } from '../../../../estados/tramites/sanitario260211.store';

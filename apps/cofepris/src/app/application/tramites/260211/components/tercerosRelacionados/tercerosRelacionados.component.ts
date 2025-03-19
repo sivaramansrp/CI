@@ -10,7 +10,8 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { PermisoModel } from '../detos.model';
+// import { PermisoModel } from '../detos.model';
+import { PermisoModel } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/260211/detos.model'
 
 import { AgregarFacturatorComponent } from '../agregarFacturator/agregarFacturator.component';
 
