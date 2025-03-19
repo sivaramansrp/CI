@@ -1,6 +1,6 @@
 <div class="container">
   <form [formGroup]="datosEstablecimientoForm">
-    <div *ngIf="!mostrarFormularioScian && !mostrarFormularioMercancias">
+    <div *ngIf="!mostrarFormularioMercancias">
       <div class="container mt-4">
         <div class="panel-group ficha-collapse" id="accordion">
           <div class="panel panel-default">
@@ -67,8 +67,8 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="estado" [label]="'Estado*:'" [required]="true" 
-              name="estado"  formControlName="estado">
+              <app-catalogo-select [catalogo]="estado" [label]="'Estado'" [required]="true" name="estado"
+                formControlName="estado" (change)="getMunicipios()">
               </app-catalogo-select>
             </div>
           </div>
@@ -96,9 +96,9 @@
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="caller">Caller:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip" formControlName="caller"></span>
+                  title="Title" ata-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" class="form-control" id="caller">
+              <input type="text" class="form-control" id="caller" formControlName="caller">
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@
 
         <h5 class="fs-4">S.C.I.A.N.*</h5>
         <div class="table-responsive">
-          <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveDatas"
+          <app-tabla-dinamica [configuracionTabla]="configuracionTablaScian" [datos]="claveScianDatas"
             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
           </app-tabla-dinamica>
         </div>
@@ -154,7 +154,7 @@
       </div>
       <ng-titulo titulo="Manifiestos y declaraciones" />
       <div class="alert alert-info manifest-box">
-        <input class="form-check-input" type="checkbox" id="datosManifiestos" formControlName="datosManifiestos">
+        <input class="form-check-input" type="checkbox" id="datosManifiestos">
         <p>{{ MANIFIESTOS_ALERT.DATOS_MANIFIESTOS }}</p>
       </div>
 
@@ -164,9 +164,10 @@
 </div>
 
 <div *ngIf="mostrarFormularioMercancias">
-  <app-mercancias-table-form (cancel)="closeMercanciasForm()"></app-mercancias-table-form>
+  <app-mercancias-table-form (Cancelar)="closeMercanciasForm()"></app-mercancias-table-form>
 </div>
 
-<div *ngIf="mostrarFormularioScian">
+<div class="modal fade" tabindex="-1" role="dialog" *ngIf="mostrarFormularioScian" id="myModal"
+  [ngClass]="{ show: mostrarFormularioScian }" aria-hidden="true">
   <app-clave-scian (cancel)="cerrarScianFormulario()"></app-clave-scian>
 </div>

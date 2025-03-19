@@ -1,23 +1,21 @@
-<div class="row">
-    <div class="col-md-4">
+<div class="row mb-4">
+    <div class="col-md-4 mt-5">
         <label>
-            <input type="checkbox" (change)="toggleReadonly($event)" /> Aviso de funcionamiento:
+            <input type="checkbox" (change)="alternarSoloLectura($event)" /> Aviso de funcionamiento:
         </label>
     </div>
 
     <div class="col-md-4">
         <div class="form-group">
             <label class="form-label" for="noLicenciaSanitaria:">No. de licencia sanitaria:</label>
-            <input class="form-control" type="text" id="noLicenciaSanitaria" [readonly]="isReadonly"
-                [ngClass]="{'readonly-input': isReadonly}">
+            <input class="form-control" type="text" id="noLicenciaSanitaria" [readonly]="esSoloLectura"
+                [ngClass]="{'readonly-input': esSoloLectura}">
         </div>
     </div>
 </div>
 <div class="row pb-5 mb-5">
     <div class="col-md-4">
         <div class="form-group">
-            <!-- <label class="form-label" for="régimen">Régimen*:</label>
-            <input class="form-control" type="text" id="régimen"> -->
             <app-catalogo-select [catalogo]="clave" [label]="'Régimen*:'" [required]="true" name="régimen">
             </app-catalogo-select>
         </div>

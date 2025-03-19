@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PermisoMaquilaRoutingModule } from './permiso-maquila-routing.module';
-import { TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { PermisoMaquilaComponent } from './pages/permiso-maquila/permiso-maquila.component';
 import { Datos260212Component } from './pages/datos-260212/datos-260212.component';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
-
-
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 import { SolicitudService } from './services/solicitud.service';
@@ -33,7 +34,11 @@ import { TercerosService } from './services/terceros.service';
     PagoDeDerechosComponent,
     ClaveScianComponent,
     FormularioOperacionComercialComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
+    SolicitanteComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    BtnContinuarComponent
   ],
   providers: [provideHttpClient(), ToastrService,SolicitudService,PagoDeDerechosService,TercerosService],
 })

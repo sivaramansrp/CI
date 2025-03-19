@@ -111,3 +111,4 @@ export const COLONIASELECTDATA = [
   { id: 2, descripcion: 'CERRO COLORADO' },
   { id: 3, descripcion: 'EL BONDHO' },
 ]
+

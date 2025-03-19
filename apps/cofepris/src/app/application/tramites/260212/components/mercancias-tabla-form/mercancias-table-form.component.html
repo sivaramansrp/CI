@@ -3,13 +3,13 @@
     <form [formGroup]="datosMercanciaForm">
         <div class="row">
             <div class="col-md-8">
-                <app-catalogo-select [catalogo]="clave" [label]="'Clasificación del producto*:'" [required]="true"
-                    name="clave" formControlName="clasificacion">
+                <app-catalogo-select [catalogo]="clasificacionProducto" [label]="'Clasificación del producto*:'" [required]="true"
+                    name="clasificacionProducto" formControlName="clasificacion">
                 </app-catalogo-select>
             </div>
             <div class="col-md-8">
-                <app-catalogo-select [catalogo]="clave" [label]="'Especificar clasificación del producto*:'"
-                    [required]="true" name="clave" formControlName="especificarClasificacion">
+                <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto*:'"
+                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getMunicipios()">
                 </app-catalogo-select>
             </div>
             <div class="col-md-8">
@@ -40,8 +40,9 @@
             </div>
             <div class="col-md-8">
                 <div class="form-group">
-                    <label class="form-label" for="estadoFísico">Estado físico*:</label>
-                    <input class="form-control" type="text" id="estadoFísico" formControlName="estadoFisico">
+                    <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico*:'" [required]="true"
+                    name="estadoFisico" formControlName="estadoFisico">
+                </app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-8">
@@ -96,42 +97,13 @@
             </div>
         </div>
 
-        <!-- <div class="row mt-5">
-        <div class="col-md-12">
-          <div class="panel-group ficha-collapse" id="accordion">
-            <div class="panel panel-default">
-              <div
-                class="panel-heading"
-                (click)="mostrar_colapsable()"
-                tabindex="0"
-              >
-                <h4 class="panel-title">
-                  <a aria-label="Repeat"
-                    ><i class="bi bi-repeat" aria-hidden="true"></i>.</a
-                  >
-                </h4>
-                <button type="button" class="collpase-button collapsed"></button>
-              </div>
-              @if(colapsable){
-              <div class="panel-collapse collapse in" id="panel-01">
-                <div class="panel-body">
-                  <crosslist [fechas]="selectRangoDias"
-                  ></crosslist>
-                </div>
-              </div>
-              }
-            </div>
-          </div>
-        </div>
-    </div> -->
-
         <app-pais-de-origin></app-pais-de-origin>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" (click)="close()">
+            <button class="btn btn-primary" (click)="cerrarMercanciasTableForm()">
                 Cancelar
             </button>
             <button class="btn btn-default ms-2">Agregar</button>
             <button class="btn btn-default ms-2">Limpiar</button>
         </div>
-</form>
+    </form>
 </div>
