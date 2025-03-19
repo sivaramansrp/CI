@@ -154,16 +154,16 @@
                     <div class="col-md-6">
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
                             [placeholder]="transporteList.primerOpcion" formControlName="dropdown"
-                            (change)="setValoresStore(solicitudForm,'dropdown', 'setDropdown')"
-                            [required]="true"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudForm,'dropdown', 'setDropdown')" [required]="true"
+                            [ngClass]="isValid('numManifiesto') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numManifiesto">No. Manifiesto</label>
+                            <label for="numManifiesto" class="mt-2">No. Manifiesto</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="numManifiesto" id="numManifiesto" maxlength="50"
-                                class="form-control"
+                                class="form-control" [ngClass]="isValid('numManifiesto') ? 'required' : ''"
                                 (change)="setValoresStore(solicitudForm,'numManifiesto', 'setNumManifiesto')">
                         </div>
                     </div>
@@ -360,7 +360,8 @@
                 </div>
             </div>
         </ng-container>
-        <div class="col-md-12" id="IdGridContenedoresITC">
+        <div class="col-md-12" id="IdGridContenedoresITC"
+            *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'Contenedor'">
             <br>
             <div class="table-responsive">
                 <div class="innercontainer">
@@ -375,7 +376,7 @@
                     </ul>
                 </nav>
             </div>
-        </div>       
+        </div>
     </form>
     <ng-template #plantillademodelo>
         <div class="modal-header">

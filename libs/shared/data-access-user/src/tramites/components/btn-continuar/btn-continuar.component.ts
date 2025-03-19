@@ -7,7 +7,7 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { DatosPasos, DatosPasosCancelar } from '../../../core/models/shared/components.model';
+import { DatosPasos } from '../../../core/models/shared/components.model';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
@@ -29,11 +29,9 @@ interface AccionBoton {
 export class BtnContinuarComponent {
   @Input({ required: true }) datos!: DatosPasos;
   @Input() btnGuardar: boolean = false;
-  @Input() btnCancelar: DatosPasosCancelar | null = null;
 
   @Output() continuarEvento = new EventEmitter<AccionBoton>();
   @Output() btnGuardarClicked = new EventEmitter<void>();
-  @Output() cancelarEvento = new EventEmitter<AccionBoton>();
 
   wizardService = inject(WizardService);
   public seccion!: SeccionLibState;
@@ -63,10 +61,6 @@ export class BtnContinuarComponent {
   get btnContVisible() {
     return this.datos.indice === this.datos.nroPasos ? false : true;
   }
-  
-  get btnConVisible() {
-    return this.btnCancelar ? this.datos?.indice >= this.btnCancelar?.iniciar && this.datos?.indice <= this.btnCancelar?.fin ? true : false : false;
-  }
 
   continuar(): void {
     const condicion =
@@ -95,13 +89,5 @@ export class BtnContinuarComponent {
   }
   guardar() {
     this.btnGuardarClicked.emit();
-  }
-
-  cancelar() {
-    const datosContinuar: AccionBoton = {
-      accion: 'cont',
-      valor: this.datos.indice,
-    };
-    this.cancelarEvento.emit(datosContinuar);
   }
 }

@@ -398,22 +398,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   enviarManifiesto(): void {
+    this.solicitudForm.markAllAsTouched();
     if (
       this.solicitudForm.get('numManifiesto')?.valid &&
-      this.solicitudForm.get('tipoTransporte')?.valid
+      this.solicitudForm.get('dropdown')?.valid
     ) {
-      // const MANIFIESTO_DATA = this.solicitudForm.value;
-      // this.datosTramiteService.enviarManifiesto(MANIFIESTO_DATA).subscribe(
-      //   (response) => {
-      //     // Manejar éxito, posiblemente mostrar mensaje o navegar
-      //   },
-      //   (error) => {
-      //     console.error('Error al enviar manifiesto', error);
-      //     // Mostrar mensaje de error
-      //   }
-      // );
-    } else {
-      this.mostrarMensaje = true;
+      this.mostrarMensaje = true;      
     }
   }
 
