@@ -19,7 +19,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
-  @Output() rowClicked = new EventEmitter<T>();
+  @Output() filaClic = new EventEmitter<T>();
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
 /*
@@ -157,7 +157,12 @@ export class TablaDinamicaComponent<T> {
     }
   }
 
-  onRowClick(data: T): void {    
-    this.rowClicked.emit(data);
+  /**
+   * Maneja el evento de clic en una fila de la tabla.
+   * 
+   * @param data - Los datos de la fila que fue clickeada.
+   */
+  onFilaClic(data: T): void {    
+    this.filaClic.emit(data);
   }
 }
