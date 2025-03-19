@@ -142,7 +142,7 @@
 </div>
 </form>
 <div class="row mt-2" style="padding-bottom: 20px; text-align: right">
-  <div>
+  <div *ngIf="estadoChecker">
     <button type="button" class="btn btn-default btn-space me-2"  (click)="limpiarDatosFormulario()">
       Limpiar
     </button>
@@ -150,6 +150,17 @@
       Cancelars
     </button>
     <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla('add')">
+      Agregar
+    </button>
+  </div>
+  <div *ngIf="!estadoChecker">
+    <button type="button" class="btn btn-default btn-space me-2"  (click)="limpiarDatosFormulario()">
+      Modificar
+    </button>
+    <button type="button" class="btn btn-default btn-space me-2" (click)="almacenarDatoEnTabla('close')">
+      Eliminar
+    </button>
+    <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')">
       Agregar
     </button>
   </div>
