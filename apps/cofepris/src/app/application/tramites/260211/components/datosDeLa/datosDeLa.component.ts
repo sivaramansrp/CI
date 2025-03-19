@@ -77,7 +77,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
 * @param {Tramite260211Query} tramite260211Query - Consulta para obtener datos del estado del trámite.
 */
 constructor(
-  private readonly fb: FormBuilder,
+  public readonly fb: FormBuilder,
   private tramite260211Store: Tramite260211Store,
   private tramite260211Query: Tramite260211Query
 ) {
