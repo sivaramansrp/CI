@@ -23,15 +23,15 @@ import { Sanitario260211Store } from '../../../../estados/tramites/sanitario2602
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query';
 
 /**
- * @component
- * @name TercerosRelacionadosComponent
- * @description
+ * component
+ * name TercerosRelacionadosComponent
+ * description
  * Este componente es responsable de gestionar la funcionalidad relacionada con terceros relacionados en el sistema.
  * Proporciona formularios para capturar datos de proveedores y requeridos, así como tablas para mostrar información relacionada.
  * 
- * @selector app-terceros-relacionados
- * @standalone true
- * @imports
+ * selector app-terceros-relacionados
+ * standalone true
+ * imports
  * - CommonModule
  * - TituloComponent
  * - TableComponent
@@ -44,115 +44,127 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
  * - ReactiveFormsModule
  * - AgregarDestinatarioComponent
  * 
- * @templateUrl ./tercerosRelacionados.component.html
- * @styleUrl ./tercerosRelacionados.component.css
+ * templateUrl ./tercerosRelacionados.component.html
+ * styleUrl ./tercerosRelacionados.component.css
  */
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TableComponent, AlertComponent, TablaDinamicaComponent, AgregarProveedorComponent, AgregarFacturatorComponent, AgregarRequeridaComponent, CatalogoSelectComponent, ReactiveFormsModule, AgregarDestinatarioComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    TableComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    AgregarProveedorComponent,
+    AgregarFacturatorComponent,
+    AgregarRequeridaComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    AgregarDestinatarioComponent,
+  ],
   templateUrl: './tercerosRelacionados.component.html',
   styleUrls: ['./tercerosRelacionados.component.css'],
 })
 export class TercerosRelacionadosComponent implements OnInit {
   /**
-   * @property {FormGroup} proveedorForm
-   * @description Formulario reactivo para capturar los datos del proveedor.
+   * property {FormGroup} proveedorForm
+   * description Formulario reactivo para capturar los datos del proveedor.
    */
   proveedorForm!: FormGroup;
 
   /**
-   * @property {FormGroup} requeridaForm
-   * @description Formulario reactivo para capturar los datos requeridos.
+   * property {FormGroup} requeridaForm
+   * description Formulario reactivo para capturar los datos requeridos.
    */
   requeridaForm!: FormGroup;
 
   /**
-   * @property {Subject<void>} destroyed$
-   * @description Sujeto utilizado para manejar la destrucción de observables.
-   * @private
+   * property {Subject<void>} destroyed$
+   * description Sujeto utilizado para manejar la destrucción de observables.
+   * private
    */
   private destroyed$ = new Subject<void>();
 
   /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Sujeto utilizado para notificar la destrucción del componente.
-   * @private
+   * property {Subject<void>} destroyNotifier$
+   * description Sujeto utilizado para notificar la destrucción del componente.
+   * private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {Catalogo[]} proveedorList
-   * @description Lista de proveedores disponibles.
+   * property {Catalogo[]} proveedorList
+   * description Lista de proveedores disponibles.
    */
   public proveedorList!: Catalogo[];
 
   /**
-   * @property {Catalogo[]} localidadList
-   * @description Lista de localidades disponibles.
+   * property {Catalogo[]} localidadList
+   * description Lista de localidades disponibles.
    */
   public localidadList!: Catalogo[];
 
   /**
-   * @property {string} modal
-   * @description Estado del modal (por ejemplo, 'modal' o 'show').
+   * property {string} modal
+   * description Estado del modal (por ejemplo, 'modal' o 'show').
    */
   public modal = 'modal';
 
   /**
-   * @property {boolean} hideCurp
-   * @description Indica si el campo CURP debe estar oculto.
+   * property {boolean} hideCurp
+   * description Indica si el campo CURP debe estar oculto.
    */
   public hideCurp = true;
 
   /**
-   * @property {Solicitud260211State} solicitudState
-   * @description Estado actual de la solicitud.
+   * property {Solicitud260211State} solicitudState
+   * description Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud260211State;
 
   /**
-   * @property {string[]} tableHeaderData
-   * @description Encabezados de la tabla.
+   * property {string[]} tableHeaderData
+   * description Encabezados de la tabla.
    */
-  tableHeaderData: string[] = ['Nombre/denominacion o razon social', 'RFC', 'CURP', 'Telefono', 'corro electronica', 'calle'];
+  tableHeaderData: string[] = ['Nombre/denominacion o razon social', 'RFC', 'CURP', 'Telefono', 'Correo electronico', 'Calle'];
 
   /**
-   * @property {typeof TablaSeleccion} TablaSeleccion
-   * @description Enumeración para la selección de tablas.
+   * property {typeof TablaSeleccion} TablaSeleccion
+   * description Enumeración para la selección de tablas.
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * @property {PermisoModel[]} tercerosProd
-   * @description Lista de productos relacionados con terceros.
+   * property {PermisoModel[]} tercerosProd
+   * description Lista de productos relacionados con terceros.
    */
   tercerosProd: PermisoModel[] = [];
 
   /**
-   * @property {Object[]} tableBodyData
-   * @description Datos del cuerpo de la tabla.
+   * property {Object[]} tableBodyData
+   * description Datos del cuerpo de la tabla.
    */
   tableBodyData: { tbodyData: string[] }[] = [];
 
   /**
-   * @property {string} TEXTOS
-   * @description Mensajes de alerta.
+   * property {string} TEXTOS
+   * description Mensajes de alerta.
    */
   public TEXTOS = MENSAJEDEALERTA;
 
   /**
-   * @property {string} infoAlert
-   * @description Tipo de alerta informativa.
+   * property {string} infoAlert
+   * description Tipo de alerta informativa.
    */
   public infoAlert = 'alert-info';
 
   /**
-   * @constructor
-   * @param {FormBuilder} fb - Constructor para formularios reactivos.
-   * @param {SanitarioService} service - Servicio para manejar datos sanitarios.
-   * @param {Sanitario260211Store} sanitario260211Store - Almacén de estado para la solicitud.
-   * @param {Permiso260211Query} permiso260211Query - Consulta para obtener datos relacionados con permisos.
+   * constructor
+   * param {FormBuilder} fb - Constructor para formularios reactivos.
+   * param {SanitarioService} service - Servicio para manejar datos sanitarios.
+   * param {Sanitario260211Store} sanitario260211Store - Almacén de estado para la solicitud.
+   * param {Permiso260211Query} permiso260211Query - Consulta para obtener datos relacionados con permisos.
    */
   constructor(
     private fb: FormBuilder,
@@ -162,15 +174,15 @@ export class TercerosRelacionadosComponent implements OnInit {
   ) {}
 
   /**
-   * @property {ElementRef} closeModal
-   * @description Referencia al botón de cierre del modal.
-   * @viewChild
+   * property {ElementRef} closeModal
+   * description Referencia al botón de cierre del modal.
+   * viewChild
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * @property {ConfiguracionColumna<PermisoModel>[]} configuracionTabla
-   * @description Configuración de las columnas de la tabla.
+   * property {ConfiguracionColumna<PermisoModel>[]} configuracionTabla
+   * description Configuración de las columnas de la tabla.
    */
   configuracionTabla: ConfiguracionColumna<PermisoModel>[] = [
     { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
@@ -182,8 +194,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   ];
 
   /**
-   * @method ngOnInit
-   * @description Método de inicialización del componente.
+   * method ngOnInit
+   * description Método de inicialización del componente.
    */
   ngOnInit(): void {
     this.permiso260211Query.selectSolicitud$
@@ -199,8 +211,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method loadMercancias
-   * @description Carga los datos de mercancías relacionadas.
+   * method loadMercancias
+   * description Carga los datos de mercancías relacionadas.
    */
   loadMercancias(): void {
     this.service.getTable()
@@ -211,8 +223,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method abrirModal
-   * @description Abre el modal para agregar un proveedor.
+   * method abrirModal
+   * description Abre el modal para agregar un proveedor.
    */
   public abrirModal(): void {
     this.modal = 'show';
@@ -220,8 +232,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method abrirModalrequerida
-   * @description Abre el modal para agregar datos requeridos.
+   * method abrirModalrequerida
+   * description Abre el modal para agregar datos requeridos.
    */
   abrirModalrequerida(): void {
     this.modal = 'show';
@@ -229,8 +241,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method getRegistroForm
-   * @description Inicializa el formulario de proveedores.
+   * method getRegistroForm
+   * description Inicializa el formulario de proveedores.
    */
   getRegistroForm(): void {
     this.proveedorForm = this.fb.group({
@@ -260,8 +272,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method getFormrequerida
-   * @description Inicializa el formulario de datos requeridos.
+   * method getFormrequerida
+   * description Inicializa el formulario de datos requeridos.
    */
   getFormrequerida(): void {
     this.requeridaForm = this.fb.group({
@@ -273,17 +285,17 @@ export class TercerosRelacionadosComponent implements OnInit {
       tipopail: [{ value: '', disabled: true }, Validators.required],
       numeroEstado: [this.solicitudState?.numeroEstado, Validators.required],
       numerosCalle: [{ value: '', disabled: true }, Validators.required],
-      numbroexperior: [ { value: '', disabled: true }, Validators.required],
+      numbroexperior: [{ value: '', disabled: true }, Validators.required],
       numbrointerior: [this.solicitudState?.numbrointerior],
       numbrolada: [this.solicitudState?.numbrolada],
-      numerostelefono: [ { value: '', disabled: true }],
-      tipocorreoElectronico: [ { value: '', disabled: true }, [Validators.required, Validators.email]],
+      numerostelefono: [{ value: '', disabled: true }],
+      tipocorreoElectronico: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
     });
   }
 
   /**
-   * @method loadComboUnidad
-   * @description Carga la lista de proveedores disponibles.
+   * method loadComboUnidad
+   * description Carga la lista de proveedores disponibles.
    */
   loadComboUnidad(): void {
     this.service.getProveedordata()
@@ -294,8 +306,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method loadLocalidad
-   * @description Carga la lista de localidades disponibles.
+   * method loadLocalidad
+   * description Carga la lista de localidades disponibles.
    */
   loadLocalidad(): void {
     this.service.getLocalidaddata()
@@ -306,34 +318,34 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method guardarProveedor
-   * @description Guarda los datos del proveedor si el formulario es válido.
+   * method guardarProveedor
+   * description Guarda los datos del proveedor si el formulario es válido.
    */
   guardarProveedor(): void {
     if (this.proveedorForm.valid) {
-      
+      // Lógica para guardar proveedor
     } else {
-     
+      // Lógica para manejar errores
     }
   }
 
   /**
-   * @method isValid
-   * @description Verifica si un campo del formulario es válido.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} field - El nombre del campo a verificar.
-   * @returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
+   * method isValid
+   * description Verifica si un campo del formulario es válido.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} field - El nombre del campo a verificar.
+   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
    */
   isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
 
   /**
-   * @method setValoresStore
-   * @description Actualiza el valor de un campo en el almacén de estado.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} campo - El nombre del campo.
-   * @param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} campo - El nombre del campo.
+   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
     const valor = form.get(campo)?.value;
@@ -341,8 +353,8 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * @method ngOnDestroy
-   * @description Método de limpieza al destruir el componente.
+   * method ngOnDestroy
+   * description Método de limpieza al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

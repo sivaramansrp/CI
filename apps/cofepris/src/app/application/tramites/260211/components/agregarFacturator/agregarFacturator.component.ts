@@ -13,15 +13,15 @@ import { Sanitario260211Store } from '../../../../estados/tramites/sanitario2602
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query';
 
 /**
- * @component
- * @name AgregarFacturatorComponent
- * @description
+ * component
+ * name AgregarFacturatorComponent
+ * description
  * Este componente es responsable de gestionar la funcionalidad de agregar facturadores en el sistema.
  * Proporciona un formulario para capturar los datos del facturador y una tabla para mostrar información relacionada.
  * 
- * @selector app-agregar-facturator
- * @standalone true
- * @imports
+ * selector app-agregar-facturator
+ * standalone true
+ * imports
  * - CommonModule
  * - TituloComponent
  * - TableComponent
@@ -30,8 +30,8 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
  * - CatalogoSelectComponent
  * - ReactiveFormsModule
  * 
- * @templateUrl ./agregarFacturator.component.html
- * @styleUrl ./agregarFacturator.component.css
+ * templateUrl ./agregarFacturator.component.html
+ * styleUrl ./agregarFacturator.component.css
  */
 @Component({
   selector: 'app-agregar-facturator',
@@ -42,67 +42,67 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
 })
 export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   /**
-   * @property {PermisoModel[]} tercerosProd
-   * @description Lista de productos relacionados con terceros.
+   * property {PermisoModel[]} tercerosProd
+   * description Lista de productos relacionados con terceros.
    */
   tercerosProd: PermisoModel[] = [];
 
   /**
-   * @property {Subject<void>} destroyed$
-   * @description Sujeto utilizado para manejar la destrucción de observables.
-   * @private
+   * property {Subject<void>} destroyed$
+   * description Sujeto utilizado para manejar la destrucción de observables.
+   * private
    */
   private destroyed$ = new Subject<void>();
 
   /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Sujeto utilizado para notificar la destrucción del componente.
-   * @private
+   * property {Subject<void>} destroyNotifier$
+   * description Sujeto utilizado para notificar la destrucción del componente.
+   * private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {Solicitud260211State} solicitudState
-   * @description Estado actual de la solicitud.
+   * property {Solicitud260211State} solicitudState
+   * description Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud260211State;
 
   /**
-   * @property {FormGroup} facturatorForm
-   * @description Formulario reactivo para capturar los datos del facturador.
+   * property {FormGroup} facturatorForm
+   * description Formulario reactivo para capturar los datos del facturador.
    */
   facturatorForm!: FormGroup;
 
   /**
-   * @property {Catalogo[]} proveedorList
-   * @description Lista de proveedores disponibles.
+   * property {Catalogo[]} proveedorList
+   * description Lista de proveedores disponibles.
    */
   public proveedorList!: Catalogo[];
 
   /**
-   * @property {Catalogo[]} localidadList
-   * @description Lista de localidades disponibles.
+   * property {Catalogo[]} localidadList
+   * description Lista de localidades disponibles.
    */
   public localidadList!: Catalogo[];
 
   /**
-   * @property {string} modal
-   * @description Estado del modal (por ejemplo, 'modal' o 'show').
+   * property {string} modal
+   * description Estado del modal (por ejemplo, 'modal' o 'show').
    */
   public modal = 'modal';
 
   /**
-   * @property {typeof TablaSeleccion} TablaSeleccion
-   * @description Enumeración para la selección de tablas.
+   * property {typeof TablaSeleccion} TablaSeleccion
+   * description Enumeración para la selección de tablas.
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * @constructor
-   * @param {FormBuilder} fb - Constructor para formularios reactivos.
-   * @param {SanitarioService} service - Servicio para manejar datos sanitarios.
-   * @param {Sanitario260211Store} sanitario260211Store - Almacén de estado para la solicitud.
-   * @param {Permiso260211Query} permiso260211Query - Consulta para obtener datos relacionados con permisos.
+   * constructor
+   * param {FormBuilder} fb - Constructor para formularios reactivos.
+   * param {SanitarioService} service - Servicio para manejar datos sanitarios.
+   * param {Sanitario260211Store} sanitario260211Store - Almacén de estado para la solicitud.
+   * param {Permiso260211Query} permiso260211Query - Consulta para obtener datos relacionados con permisos.
    */
   constructor(
     private fb: FormBuilder,
@@ -112,15 +112,15 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   ) {}
 
   /**
-   * @property {ElementRef} closeModal
-   * @description Referencia al botón de cierre del modal.
-   * @viewChild
+   * property {ElementRef} closeModal
+   * description Referencia al botón de cierre del modal.
+   * viewChild
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * @property {ConfiguracionColumna<PermisoModel>[]} configuracionTabla
-   * @description Configuración de las columnas de la tabla.
+   * property {ConfiguracionColumna<PermisoModel>[]} configuracionTabla
+   * description Configuración de las columnas de la tabla.
    */
   configuracionTabla: ConfiguracionColumna<PermisoModel>[] = [
     { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
@@ -132,8 +132,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   ];
 
   /**
-   * @method ngOnInit
-   * @description Método de inicialización del componente.
+   * method ngOnInit
+   * description Método de inicialización del componente.
    */
   ngOnInit(): void {
     this.permiso260211Query.selectSolicitud$
@@ -150,8 +150,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * @method loadMercancias
-   * @description Carga los datos de mercancías relacionadas.
+   * method loadMercancias
+   * description Carga los datos de mercancías relacionadas.
    */
   loadMercancias(): void {
     this.service.getTable()
@@ -162,8 +162,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * @method loadLocalidad
-   * @description Carga las localidades disponibles.
+   * method loadLocalidad
+   * description Carga las localidades disponibles.
    */
   loadLocalidad(): void {
     this.service.getLocalidaddata()
@@ -174,8 +174,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * @method abrirModalfacurator
-   * @description Abre el modal para agregar facturadores.
+   * method abrirModalfacurator
+   * description Abre el modal para agregar facturadores.
    */
   abrirModalfacurator(): void {
     this.modal = 'show';
@@ -183,8 +183,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * @method getFacturator
-   * @description Inicializa el formulario de facturadores.
+   * method getFacturator
+   * description Inicializa el formulario de facturadores.
    */
   getFacturator(): void {
     this.facturatorForm = this.fb.group({
@@ -207,22 +207,22 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * @method isValid
-   * @description Verifica si un campo del formulario es válido.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} field - El nombre del campo a verificar.
-   * @returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
+   * method isValid
+   * description Verifica si un campo del formulario es válido.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} field - El nombre del campo a verificar.
+   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
    */
   isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
 
   /**
-   * @method setValoresStore
-   * @description Actualiza el valor de un campo en el almacén de estado.
-   * @param {FormGroup} form - El formulario reactivo.
-   * @param {string} campo - El nombre del campo.
-   * @param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} campo - El nombre del campo.
+   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
     const valor = form.get(campo)?.value;
@@ -230,8 +230,8 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * @method ngOnDestroy
-   * @description Método de limpieza al destruir el componente.
+   * method ngOnDestroy
+   * description Método de limpieza al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
