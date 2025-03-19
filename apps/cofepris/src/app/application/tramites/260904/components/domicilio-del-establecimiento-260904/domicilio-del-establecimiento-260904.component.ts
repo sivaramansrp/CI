@@ -1,4 +1,4 @@
-import { ALERT } from '../../enums/datos-de-la-solicitud-260904.enum';
+import { ALERT } from '../../enums/domicilio-del-establecimiento-260904.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
