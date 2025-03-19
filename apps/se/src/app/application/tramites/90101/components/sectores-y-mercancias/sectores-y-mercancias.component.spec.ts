@@ -44,7 +44,7 @@ describe('SectoresYMercanciasComponent', () => {
   });
 
   it('should call obtenserLista on init', () => {
-    const spy = jest.spyOn(component, 'obtenserLista');
+    const spy = jest.spyOn(component, 'obtenserListaEstado');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
