@@ -5,8 +5,15 @@ import { catchError, Observable,throwError } from 'rxjs';
 import { PermisoModel } from '../components/detos.model';
 
 
+ 
+/**
+ * Servicio para gestionar funcionalidades relacionadas con el ámbito sanitario.
+ *
+ * Este servicio puede ser extendido para incluir métodos que interactúen
+ * con APIs o manipulen datos relacionados con trámites sanitarios.
+ */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SanitarioService {
   
@@ -43,3 +50,13 @@ getTable(): Observable<PermisoModel []> {
   
   
 
+  /**
+   * Constructor del servicio.
+   *
+   * Actualmente, no realiza ninguna acción al ser instanciado.
+   */
+  // constructor() {
+  //   // Dependencia inyectada para uso posterior
+  // }
+// }
+ 

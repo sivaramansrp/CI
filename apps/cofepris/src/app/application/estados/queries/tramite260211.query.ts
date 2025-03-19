@@ -1,17 +1,17 @@
 
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud216001State, Tramite216001Store } from '../tramites/tramite261001.store';
+import { Solicitud260211State, Tramite260211Store } from '../tramites/tramite260211.store';
 
 /**
  * Service to query the state of Solicitud31601.
  */
 @Injectable({ providedIn: 'root' })
-export class Tramite216001Query extends Query<Solicitud216001State> {
+export class Tramite260211Query extends Query<Solicitud260211State> {
 
   /**
    * Observable to select the complete state of the solicitud.
-   * @returns {Observable<Solicitud216001State>} The complete state of the solicitud.
+   * @returns {Observable<Solicitud260211State>} The complete state of the solicitud.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
@@ -19,10 +19,10 @@ export class Tramite216001Query extends Query<Solicitud216001State> {
 
   /**
    * Constructor for Tramite31601Query.
-   * @param {Tramite216001Store} store - The store that holds the state of Solicitud216001.
+   * @param {Tramite260211Store} store - The store that holds the state of Solicitud260211.
    */
   constructor(
-    protected override store: Tramite216001Store) {
+    protected override store: Tramite260211Store) {
     super(store);
   }
 }
