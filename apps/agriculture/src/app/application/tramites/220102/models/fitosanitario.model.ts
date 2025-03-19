@@ -1,4 +1,5 @@
 export interface MercanciaForm {
+    id?: number;
     nombreComun: string;
     nombreCientifico: string;
     uso: string;
@@ -12,4 +13,7 @@ export interface MercanciaForm {
     cantidadUMC: string;
     umc: string;
     descripcion: string;
+}
+export function createDatosState(params: Partial<MercanciaForm>[] = []): MercanciaForm[] {
+    return params as MercanciaForm[];
 }

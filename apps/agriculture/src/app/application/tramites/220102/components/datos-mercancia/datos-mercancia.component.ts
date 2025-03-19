@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -64,7 +64,23 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @property {MercanciaForm[]} cuerpoTabla
    * @description Arreglo que contiene los datos de la mercancía para la tabla.
    */
-  cuerpoTabla: MercanciaForm[] = [];
+  cuerpoTabla: MercanciaForm[] = [
+    {
+      "nombreComun": "7",
+      "nombreCientifico": "2",
+      "uso": "9",
+      "paisOrigen": "6",
+      "paisProcedencia": "1",
+      "tipoProducto": "4",
+      "fraccionArancelaria": "dasdasda",
+      "descripcionFraccionArancelaria": "CR-123456",
+      "cantidadUMT": "sadasdasd",
+      "umt": "Dependencia-34",
+      "cantidadUMC": "sadasdasda",
+      "umc": "2",
+      "descripcion": "asdasdasdsadasdasdasdasd"
+    }
+  ];
 
   /**
    * @property {FormGroup} formMercancia
@@ -76,7 +92,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @property {boolean} estadoChecker
    * @description Variable para controlar el estado de visibilidad de un elemento (ej. un formulario).
    */
-  estadoChecker: boolean = true;
+  estadoChecker: boolean = false;
 
   /**
    * @private
@@ -132,7 +148,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
    * @param {DatosMercanciaService} datosMercanciaService Servicio para obtener datos de la mercancía.
    */
-  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService) {
+  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService, private readonly cdr: ChangeDetectorRef) {
     this.obtenerNombreComun();
     this.obtenerNombreCientifico();
     this.obtenerUso();
@@ -304,6 +320,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   almacenarDatoEnTabla(nombre: string) {
     if (nombre === 'add') {
+      console.log(this.formMercancia.value);
       this.cuerpoTabla.push(this.formMercancia.value as MercanciaForm);
       this.estadoChecker = !this.estadoChecker;
     }
@@ -319,6 +336,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   limpiarDatosFormulario() {
+    this.cdr.detectChanges();
     this.formMercancia.reset();
   }
 

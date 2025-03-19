@@ -22,11 +22,6 @@
       </app-tabla-dinamica>
       </div>
     </div>
-    <div class="row">
-        <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-            <button class="btn btn-primary" (click)="abrirDatosPara()" >Agregar</button>
-        </div>
-    </div>
 </div>
 <form [formGroup]="formMercancia">
 <div  *ngIf ="estadoChecker">
@@ -157,4 +152,5 @@
     <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla('add')">
       Agregar
     </button>
+  </div>
   </div>
