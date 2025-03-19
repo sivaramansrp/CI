@@ -3,12 +3,12 @@ import { AnexoDosEncabezado, AnexoEncabezado , AnexoUnoEncabezado, ProveedorClie
 export const ANEXO_SERVICIO = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: AnexoEncabezado):string => ele.ENCABEZADO_FRACCION,
+    clave: (ele: AnexoEncabezado):string => ele.encabezadoFraccion,
     orden: 1
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: AnexoEncabezado) :string=> ele.ENCABEZADO_DESCRIPCION,
+    clave: (ele: AnexoEncabezado) :string=> ele.encabezadoDescripcion,
     orden: 2
   }
 ]
@@ -23,42 +23,42 @@ Materiales primas, partes, componentes, materiales auxiliares, envases, material
 export const ANEXO_I_SERVICIO = [
   {
     encabezado: 'Fracción',
-    clave: (ele: AnexoUnoEncabezado):string => ele.ENCABEZADO_FRACCION,
+    clave: (ele: AnexoUnoEncabezado):string => ele.encabezadoFraccion,
     orden: 1
   },
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: AnexoUnoEncabezado) :string=> ele.ENCABEZADO_FRACCION_ARANCELARIA,
+    clave: (ele: AnexoUnoEncabezado) :string=> ele.encabezadoFraccionArancelaria,
     orden: 2
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: AnexoUnoEncabezado):string => ele.ENCABEZADO_DESCRIPCION_COMERCIAL,
+    clave: (ele: AnexoUnoEncabezado):string => ele.encabezadoDescripcionComercial,
     orden: 3
   },
   {
     encabezado: 'Anexo II',
-    clave: (ele: AnexoUnoEncabezado):string => ele.ENCABEZADO_ANEXO_II,
+    clave: (ele: AnexoUnoEncabezado):string => ele.encabezadoAnexoII,
     orden: 4
   },
   {
     encabezado: 'Tipo',
-    clave: (ele: AnexoUnoEncabezado):string => ele.ENCABEZADO_TIPO,
+    clave: (ele: AnexoUnoEncabezado):string => ele.encabezadoTipo,
     orden: 5
   },
   {
     encabezado: 'UMT',
-    clave: (ele: AnexoUnoEncabezado) :string=> ele.ENCABEZADO_UMT,
+    clave: (ele: AnexoUnoEncabezado) :string=> ele.encabezadoUmt,
     orden: 6
   },
   {
     encabezado: 'Categoría',
-    clave: (ele: AnexoUnoEncabezado):string => ele.ENCABEZADO_CATEGORIA,
+    clave: (ele: AnexoUnoEncabezado):string => ele.encabezadoCategoria,
     orden: 7
   },
   {
     encabezado: 'Valor en mercado',
-    clave: (ele: AnexoUnoEncabezado):string => ele.ENCABEZADO_VALOR_EN_MERCADO,
+    clave: (ele: AnexoUnoEncabezado):string => ele.encabezadoValorEnMercado,
     orden: 8
   },
 ]
@@ -66,22 +66,22 @@ export const ANEXO_I_SERVICIO = [
 export const ANEXO_IMPORTACION_SERVICIO = [
   {
     encabezado: 'Fracción',
-    clave: (ele: AnexoDosEncabezado):string => ele.ENCABEZADO_FRACCION,
+    clave: (ele: AnexoDosEncabezado):string => ele.encabezadoFraccion,
     orden: 1
   },
   {
     encabezado: 'Fracción arancelaria del producto de exportación',
-    clave: (ele: AnexoDosEncabezado):string => ele.ENCABEZADO_FRACCION_EXPORTACION,
+    clave: (ele: AnexoDosEncabezado):string => ele.encabezadoFraccionExportacion,
     orden: 2
   },
   {
     encabezado: 'Descripción comercial',
-    clave: (ele: AnexoDosEncabezado):string => ele.ENCABEZADO_DESCRIPCION_COMERCIAL,
+    clave: (ele: AnexoDosEncabezado):string => ele.encabezadoDescripcionComercial,
     orden: 3
   },
   {
     encabezado: 'Fracción arancelaria de la mercancía de importación',
-    clave: (ele: AnexoDosEncabezado):string => ele.ENCABEZADO_FRACCION_IMPORTACION,
+    clave: (ele: AnexoDosEncabezado):string => ele.encabezadoFraccionImportacion,
     orden: 4
   }
 
@@ -123,37 +123,37 @@ export const PROVEEDOR_CLIENTE_TABLA_CONFIG=[
 export const PROYECTO_IMMEX_CONFIG=[
   {
     encabezado: 'Fracción',
-    clave: (ele: ProyectoImmexEncabezado):string => ele.ENCABEZADO_FRACCION,
+    clave: (ele: ProyectoImmexEncabezado):string => ele.encabezadoFraccion,
     orden: 1
   },
   {
     encabezado: 'Tipo document',
-    clave: (ele: ProyectoImmexEncabezado):string => ele.ENCABEZADO_TIPO_DOCUMENT,
+    clave: (ele: ProyectoImmexEncabezado):string => ele.encabezadoTipoDocument,
     orden: 2
   },
   {
     encabezado: 'Descripción otro',
-    clave: (ele: ProyectoImmexEncabezado):string => ele.ENCABEZADO_DESCRIPCION_OTRO,
+    clave: (ele: ProyectoImmexEncabezado):string => ele.encabezadoDescripcionOtro,
     orden: 3
   },
   {
     encabezado: 'Fecha firma',
-    clave: (ele: ProyectoImmexEncabezado) :string=> ele.ENCABEZADO_FECHA_FIRMA,
+    clave: (ele: ProyectoImmexEncabezado) :string=> ele.encabezadoFechaFirma,
     orden: 4
   },
   {
     encabezado: 'Fecha fin vigencia',
-    clave: (ele: ProyectoImmexEncabezado):string => ele.ENCABEZADO_FECHA_VIGENCIA,
+    clave: (ele: ProyectoImmexEncabezado):string => ele.encabezadoFechaVigencia,
     orden: 5
   },
   {
     encabezado: 'RFC de la parte firmante',
-    clave: (ele: ProyectoImmexEncabezado):string => ele.ENCABEZADO_RFC,
+    clave: (ele: ProyectoImmexEncabezado):string => ele.encabezadoRfc,
     orden: 6
   },
   {
     encabezado: 'Nómbre/Razón social de la parte firmante',
-    clave: (ele: ProyectoImmexEncabezado):string => ele.ENCABEZADO_RAZON_FIRMANTE,
+    clave: (ele: ProyectoImmexEncabezado):string => ele.encabezadoRazonFirmante,
     orden: 7
   }
 ]

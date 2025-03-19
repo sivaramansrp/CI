@@ -48,7 +48,7 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
     this.query.selectDatosParaNavegar$
         .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((datosParaNavegar) => {
-         this.complimentarFraccionDatos.descripcion=datosParaNavegar.ENCABEZADO_DESCRIPCION_COMERCIAL;
+         this.complimentarFraccionDatos.descripcion=datosParaNavegar.encabezadoDescripcionComercial;
         });
 }
 

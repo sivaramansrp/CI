@@ -129,17 +129,17 @@ export class AnexoUnoComponent {
    */
   agregarAnexoUno(): void {
     const OBJECTO_IDX: AnexoUnoEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoUnoFormGroup.get('fraccionArancelaria')
+      encabezadoFraccion: this.anexoUnoFormGroup.get('fraccionArancelaria')
         ?.value,
-      ENCABEZADO_DESCRIPCION_COMERCIAL:
+        encabezadoDescripcionComercial:
         this.anexoUnoFormGroup.get('descripcion')?.value,
       estatus: false,
-      ENCABEZADO_FRACCION_ARANCELARIA: '',
-      ENCABEZADO_ANEXO_II: '',
-      ENCABEZADO_TIPO: '',
-      ENCABEZADO_UMT: '',
-      ENCABEZADO_CATEGORIA: '',
-      ENCABEZADO_VALOR_EN_MERCADO: '',
+      encabezadoFraccionArancelaria: '',
+      encabezadoAnexoII: '',
+      encabezadoTipo: '',
+      encabezadoUmt: '',
+      encabezadoCategoria: '',
+      encabezadoValorEnMercado: '',
     };
     this.anexoUnoTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
@@ -151,12 +151,12 @@ export class AnexoUnoComponent {
    */
   agregarAnexoDos(): void {
     const OBJECTO_IDX: AnexoDosEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')
+      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
-      ENCABEZADO_DESCRIPCION_COMERCIAL:
+        encabezadoDescripcionComercial:
         this.anexoDosFormGroup.get('descripcion')?.value,
-      ENCABEZADO_FRACCION_EXPORTACION: '',
-      ENCABEZADO_FRACCION_IMPORTACION: '',
+        encabezadoFraccionExportacion: '',
+        encabezadoFraccionImportacion: '',
       estatus: false,
     };
     this.anexoDosTablaLista.push(OBJECTO_IDX);

@@ -58,7 +58,7 @@ export class ProveedorClienteComponent implements OnChanges{
   ngOnChanges(): void {
     if(this.fraccionTablaDatos){
       this.formularioProveedorCliente.patchValue({
-        descripcionComercial: this.fraccionTablaDatos.ENCABEZADO_DESCRIPCION_COMERCIAL,
+        descripcionComercial: this.fraccionTablaDatos.encabezadoDescripcionComercial
       });
     }
   }
