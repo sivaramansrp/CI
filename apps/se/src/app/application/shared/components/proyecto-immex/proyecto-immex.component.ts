@@ -98,17 +98,17 @@ export class ProyectoImmexComponent implements OnInit {
     if (this.esTablaeleccionada && this.seleccionList.length) {
       const OBJECTO_IDX: ProyectoImmexEncabezado = {
         ...this.seleccionList[0],
-        ENCABEZADO_DESCRIPCION_OTRO: this.proyectoForm.get('descripcion')?.value,
-        ENCABEZADO_TIPO_DOCUMENT: this.proyectoForm.get('tipoDeDocumente')?.value,
-        ENCABEZADO_FECHA_FIRMA: this.proyectoForm.get('fechaDeFirma')?.value,
-        ENCABEZADO_FECHA_VIGENCIA: this.proyectoForm.get('fechaDeVigencia')?.value,
-        ENCABEZADO_RFC: this.proyectoForm.get('rfcTaxId')?.value,
-        ENCABEZADO_RAZON_FIRMANTE: this.proyectoForm.get('razonSocial')?.value,
+        encabezadoDescripcionOtro: this.proyectoForm.get('descripcion')?.value,
+        encabezadoTipoDocument: this.proyectoForm.get('tipoDeDocumente')?.value,
+        encabezadoFechaFirma: this.proyectoForm.get('fechaDeFirma')?.value,
+        encabezadoFechaVigencia: this.proyectoForm.get('fechaDeVigencia')?.value,
+        encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
+        encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
         estatus: this.seleccionList[0].estatus,
-        ENCABEZADO_FRACCION: this.seleccionList[0].ENCABEZADO_FRACCION
+        encabezadoFraccion: this.seleccionList[0].encabezadoFraccion
       }
       const OBJECTO_INDICE = this.proyectoImmexTablaLista.findIndex((idx) => {
-        return idx.ENCABEZADO_RFC === OBJECTO_IDX.ENCABEZADO_RFC;
+        return idx.encabezadoRfc === OBJECTO_IDX.encabezadoRfc;
       })
       this.proyectoImmexTablaLista.splice(OBJECTO_INDICE, 1, OBJECTO_IDX);
       this.obtenerProyectoTablaDevolverLaLlamada.emit(this.proyectoImmexTablaLista);
@@ -118,14 +118,14 @@ export class ProyectoImmexComponent implements OnInit {
       return;
     }
     const OBJECTO_IDX: ProyectoImmexEncabezado = {
-      ENCABEZADO_DESCRIPCION_OTRO: this.proyectoForm.get('descripcion')?.value,
-      ENCABEZADO_TIPO_DOCUMENT: this.proyectoForm.get('tipoDeDocumente')?.value,
-      ENCABEZADO_FECHA_FIRMA: this.proyectoForm.get('fechaDeFirma')?.value,
-      ENCABEZADO_FECHA_VIGENCIA: this.proyectoForm.get('fechaDeVigencia')?.value,
-      ENCABEZADO_RFC: this.proyectoForm.get('rfcTaxId')?.value,
-      ENCABEZADO_RAZON_FIRMANTE: this.proyectoForm.get('razonSocial')?.value,
+      encabezadoDescripcionOtro: this.proyectoForm.get('descripcion')?.value,
+      encabezadoTipoDocument: this.proyectoForm.get('tipoDeDocumente')?.value,
+      encabezadoFechaFirma: this.proyectoForm.get('fechaDeFirma')?.value,
+      encabezadoFechaVigencia: this.proyectoForm.get('fechaDeVigencia')?.value,
+      encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
+      encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
       estatus: false,
-      ENCABEZADO_FRACCION: ''
+      encabezadoFraccion: ''
     }
     this.proyectoImmexTablaLista.push(OBJECTO_IDX);
     this.obtenerProyectoTablaDevolverLaLlamada.emit(this.proyectoImmexTablaLista);
@@ -171,12 +171,12 @@ export class ProyectoImmexComponent implements OnInit {
       return idx.estatus;
     });
     this.proyectoForm.patchValue({
-      descripcion: this.seleccionList[0].ENCABEZADO_DESCRIPCION_OTRO,
-      tipoDeDocumente: this.seleccionList[0].ENCABEZADO_TIPO_DOCUMENT,
-      fechaDeFirma: this.seleccionList[0].ENCABEZADO_FECHA_FIRMA,
-      fechaDeVigencia: this.seleccionList[0].ENCABEZADO_FECHA_VIGENCIA,
-      rfcTaxId: this.seleccionList[0].ENCABEZADO_RFC,
-      razonSocial: this.seleccionList[0].ENCABEZADO_RAZON_FIRMANTE
+      descripcion: this.seleccionList[0].encabezadoDescripcionOtro,
+      tipoDeDocumente: this.seleccionList[0].encabezadoTipoDocument,
+      fechaDeFirma: this.seleccionList[0].encabezadoFechaFirma,
+      fechaDeVigencia: this.seleccionList[0].encabezadoFechaVigencia,
+      rfcTaxId: this.seleccionList[0].encabezadoRfc,
+      razonSocial: this.seleccionList[0].encabezadoRazonFirmante
     })
   }
 

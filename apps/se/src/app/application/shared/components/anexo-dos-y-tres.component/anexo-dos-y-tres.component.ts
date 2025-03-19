@@ -115,8 +115,8 @@ export class AnexoDosYTresComponent {
    */
   agregarAnexoDos(): void {
     const OBJECTO_IDX: AnexoEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')?.value,
-      ENCABEZADO_DESCRIPCION: this.anexoDosFormGroup.get('descripcion')?.value,
+      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')?.value,
+      encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
       estatus: false,
     };
     this.anexoDosTablaLista.push(OBJECTO_IDX);
@@ -139,8 +139,8 @@ export class AnexoDosYTresComponent {
    */
   agregarAnexoTres(): void {
     const OBJECTO_IDX: AnexoEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoTresFormGroup.get('fraccionArancelaria')?.value,
-      ENCABEZADO_DESCRIPCION: this.anexoTresFormGroup.get('descripcion')?.value,
+      encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')?.value,
+      encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
       estatus: false,
     };
     this.anexoTresTablaLista.push(OBJECTO_IDX);
@@ -155,7 +155,7 @@ export class AnexoDosYTresComponent {
   setAnexoDosLista(event: AnexoEncabezado[]): void {
     const LISTA_SELECCIONADA = event ? event : [];
     this.anexoDosTablaLista = this.anexoDosTablaLista.map((idx) => {
-      const INDICE = LISTA_SELECCIONADA.findIndex((obj) => obj.ENCABEZADO_FRACCION === idx.ENCABEZADO_FRACCION);
+      const INDICE = LISTA_SELECCIONADA.findIndex((obj) => obj.encabezadoFraccion === idx.encabezadoFraccion);
       if (INDICE !== -1) {
         idx.estatus = true;
       }
@@ -171,7 +171,7 @@ export class AnexoDosYTresComponent {
   setAnexoTresLista(event: AnexoEncabezado[]): void {
     const LISTA_SELECCIONADA = event ? event : [];
     this.anexoTresTablaLista = this.anexoTresTablaLista.map((idx) => {
-      const INDICE = LISTA_SELECCIONADA.findIndex((obj) => obj.ENCABEZADO_FRACCION === idx.ENCABEZADO_FRACCION);
+      const INDICE = LISTA_SELECCIONADA.findIndex((obj) => obj.encabezadoFraccion === idx.encabezadoFraccion);
       if (INDICE !== -1) {
         idx.estatus = true;
       }

@@ -3,7 +3,7 @@ import { AnexoVistaUnoComponent } from './anexo-vista-uno.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ANEXO_I_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
-import { AnexoImportacionEncabezado, AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 
 describe('AnexoVistaUnoComponent', () => {
   let component: AnexoVistaUnoComponent;
@@ -41,14 +41,14 @@ describe('AnexoVistaUnoComponent', () => {
 
   it('should update anexoUnoTablaLista on obtenerAnexoUnoDevolverLaLlamada', () => {
     const MOCK_EVENT: AnexoUnoEncabezado[] = [{
-      ENCABEZADO_FRACCION: 'sample',
-      ENCABEZADO_FRACCION_ARANCELARIA: 'sample',
-      ENCABEZADO_DESCRIPCION_COMERCIAL: 'sample',
-      ENCABEZADO_ANEXO_II: 'sample',
-      ENCABEZADO_TIPO: '',
-      ENCABEZADO_UMT: '',
-      ENCABEZADO_CATEGORIA: '',
-      ENCABEZADO_VALOR_EN_MERCADO: '',
+      encabezadoFraccion: 'sample',
+      encabezadoFraccionArancelaria: 'sample',
+      encabezadoDescripcionComercial: 'sample',
+      encabezadoAnexoII: 'sample',
+      encabezadoTipo: '',
+      encabezadoUmt: '',
+      encabezadoCategoria: '',
+      encabezadoValorEnMercado: '',
       estatus: false
     }];
     component.obtenerAnexoUnoDevolverLaLlamada(MOCK_EVENT);
@@ -56,11 +56,11 @@ describe('AnexoVistaUnoComponent', () => {
   });
 
   it('should update anexoDosTablaLista on obtenerAnexoDosDevolverLaLlamada', () => {
-    const mockEvent: AnexoImportacionEncabezado[] = [{
-      ENCABEZADO_FRACCION: '',
-      ENCABEZADO_FRACCION_EXPORTACION: '',
-      ENCABEZADO_DESCRIPCION_COMERCIAL: '',
-      ENCABEZADO_FRACCION_IMPORTACION: '',
+    const mockEvent: AnexoDosEncabezado[] = [{
+      encabezadoFraccion: '',
+      encabezadoFraccionExportacion: '',
+      encabezadoDescripcionComercial: '',
+      encabezadoFraccionImportacion: '',
       estatus: false
     }];
     component.obtenerAnexoDosDevolverLaLlamada(mockEvent);

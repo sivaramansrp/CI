@@ -1,7 +1,7 @@
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
-import { AnexoImportacionEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
@@ -44,7 +44,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     * Lista de encabezados del anexo dos.
     * @type {AnexoEncabezado[]}
     */
-  public anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
+  public anexoDosTablaLista: AnexoDosEncabezado[] = [];
 
   /**
  * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -92,7 +92,7 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @param {T[]} event - Evento que contiene la lista de encabezados del anexo Dos.
    * @returns {void}
    */
-   public obtenerAnexoDosDevolverLaLlamada(event: AnexoImportacionEncabezado[]): void {
+   public obtenerAnexoDosDevolverLaLlamada(event: AnexoDosEncabezado[]): void {
     this.anexoDosTablaLista = event ? event : [];
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }

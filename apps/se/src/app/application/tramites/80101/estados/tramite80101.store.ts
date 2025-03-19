@@ -1,11 +1,13 @@
-import { AnexoEncabezado, AnexoImportacionEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
+import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
+import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabricanta.model';
 import { Servicio } from '../models/nuevo-programa-industrial.model';
@@ -14,7 +16,6 @@ import { Servicios } from '../models/nuevo-programa-industrial.model';
 import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 
 export interface Tramite80101State {
   infoRegistro: Servicios;
@@ -141,16 +142,16 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   annexoUno:{
     exportarDatosTabla:[],
     importarDatosTabla:[],
-    datosParaNavegar:{
-      ENCABEZADO_FRACCION: '',
-      ENCABEZADO_DESCRIPCION_COMERCIAL: '',
+    datosParaNavegar: {
+      encabezadoFraccion: '',
+      encabezadoDescripcionComercial: '',
       estatus: false,
-      ENCABEZADO_FRACCION_ARANCELARIA: '',
-      ENCABEZADO_ANEXO_II: '',
-      ENCABEZADO_TIPO: '',
-      ENCABEZADO_UMT: '',
-      ENCABEZADO_CATEGORIA: '',
-      ENCABEZADO_VALOR_EN_MERCADO: '',
+      encabezadoFraccionArancelaria: '',
+      encabezadoAnexoII: '',
+      encabezadoTipo: '',
+      encabezadoUmt: '',
+      encabezadoCategoria: '',
+      encabezadoValorEnMercado: '',
     },
     seccionActiva:''
   },
@@ -460,7 +461,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
-  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado | AnexoImportacionEncabezado):void{
+  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado):void{
     this.update((state) => ({
       ...state,
       annexoUno: {
@@ -482,7 +483,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
     }));
   }
 
-  setExportarDatosTabla(exportarDatosTabla:AnexoImportacionEncabezado[]):void{
+  setExportarDatosTabla(exportarDatosTabla:AnexoDosEncabezado[]):void{
     this.update((state) => ({
       ...state,
       annexoUno: {

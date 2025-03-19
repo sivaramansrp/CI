@@ -1,4 +1,4 @@
-import { AnexoImportacionEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
+import { AnexoDosEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -31,7 +31,7 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
   styleUrl: './proveedor-cliente.component.scss',
 })
 export class ProveedorClienteComponent implements OnChanges{
-  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado | AnexoImportacionEncabezado;
+  @Input() public fraccionTablaDatos!: AnexoUnoEncabezado | AnexoDosEncabezado;
   @Output() public datosActualizadosProveedorCliente = new EventEmitter<ProveedorClienteTabla[]>();
   public formularioProveedorCliente!: FormGroup;
 
@@ -66,7 +66,7 @@ export class ProveedorClienteComponent implements OnChanges{
   ngOnChanges(): void {
     if(this.fraccionTablaDatos){
       this.formularioProveedorCliente.patchValue({
-        descripcionComercial: this.fraccionTablaDatos.ENCABEZADO_DESCRIPCION_COMERCIAL,
+        descripcionComercial: this.fraccionTablaDatos.encabezadoDescripcionComercial,
       });
     }
   }

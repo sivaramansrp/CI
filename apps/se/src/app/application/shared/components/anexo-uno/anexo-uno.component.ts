@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
+  AnexoDosEncabezado,
   AnexoImportacionConfiguartion,
-  AnexoImportacionEncabezado,
   AnexoUnoConfiguartion,
   AnexoUnoEncabezado,
   RutaNombre,
@@ -46,7 +46,7 @@ export class AnexoUnoComponent {
    * Configuración de Anexo 1 y 3
    */
   @Input()
-  anexoImportacionConfiguartion!: AnexoImportacionConfiguartion<AnexoImportacionEncabezado>;
+  anexoImportacionConfiguartion!: AnexoImportacionConfiguartion<AnexoDosEncabezado>;
   /**
    * Lista de tabla del Anexo Tres
    */
@@ -55,7 +55,7 @@ export class AnexoUnoComponent {
   /**
    * Lista de tabla del Anexo Dos
    */
-  @Input() anexoDosTablaLista: AnexoImportacionEncabezado[] = [];
+  @Input() anexoDosTablaLista: AnexoDosEncabezado[] = [];
   /**
    * Evento para devolver la llamada del Anexo Uno
    */
@@ -67,14 +67,14 @@ export class AnexoUnoComponent {
    * Evento para devolver la llamada del Anexo Dos
    */
   @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
-    AnexoImportacionEncabezado[]
-  > = new EventEmitter<AnexoImportacionEncabezado[]>(true);
+    AnexoDosEncabezado[]
+  > = new EventEmitter<AnexoDosEncabezado[]>(true);
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-  public datosImportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+  public datosImportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
 
-  public datosExportacionSeleccionados!: AnexoImportacionEncabezado | AnexoUnoEncabezado;
+  public datosExportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
 
   constructor(
     private fb: FormBuilder,
@@ -129,17 +129,17 @@ export class AnexoUnoComponent {
    */
   agregarAnexoUno(): void {
     const OBJECTO_IDX: AnexoUnoEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoUnoFormGroup.get('fraccionArancelaria')
+      encabezadoFraccion: this.anexoUnoFormGroup.get('fraccionArancelaria')
         ?.value,
-      ENCABEZADO_DESCRIPCION_COMERCIAL:
+        encabezadoDescripcionComercial:
         this.anexoUnoFormGroup.get('descripcion')?.value,
       estatus: false,
-      ENCABEZADO_FRACCION_ARANCELARIA: '',
-      ENCABEZADO_ANEXO_II: '',
-      ENCABEZADO_TIPO: '',
-      ENCABEZADO_UMT: '',
-      ENCABEZADO_CATEGORIA: '',
-      ENCABEZADO_VALOR_EN_MERCADO: '',
+      encabezadoFraccionArancelaria: '',
+      encabezadoAnexoII: '',
+      encabezadoTipo: '',
+      encabezadoUmt: '',
+      encabezadoCategoria: '',
+      encabezadoValorEnMercado: '',
     };
     this.anexoUnoTablaLista.push(OBJECTO_IDX);
     this.obtenerAnexoUnoDevolverLaLlamada.emit(this.anexoUnoTablaLista);
@@ -150,13 +150,13 @@ export class AnexoUnoComponent {
    * Agrega un nuevo elemento al Anexo Dos
    */
   agregarAnexoDos(): void {
-    const OBJECTO_IDX: AnexoImportacionEncabezado = {
-      ENCABEZADO_FRACCION: this.anexoDosFormGroup.get('fraccionArancelaria')
+    const OBJECTO_IDX: AnexoDosEncabezado = {
+      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
-      ENCABEZADO_DESCRIPCION_COMERCIAL:
+        encabezadoDescripcionComercial:
         this.anexoDosFormGroup.get('descripcion')?.value,
-      ENCABEZADO_FRACCION_EXPORTACION: '',
-      ENCABEZADO_FRACCION_IMPORTACION: '',
+        encabezadoFraccionExportacion: '',
+        encabezadoFraccionImportacion: '',
       estatus: false,
     };
     this.anexoDosTablaLista.push(OBJECTO_IDX);
@@ -178,11 +178,11 @@ export class AnexoUnoComponent {
   /**
    * Establece la lista de Anexo Dos y emite un evento con la lista seleccionada.
    *
-   * @param {AnexoImportacionEncabezado[]} event - La lista de encabezados de importación de anexo.
+   * @param {AnexoDosEncabezado[]} event - La lista de encabezados de importación de anexo.
    * Si no se proporciona, se utilizará una lista vacía.
    * @returns {void}
    */
-  setAnexoDosLista(event: AnexoImportacionEncabezado): void {
+  setAnexoDosLista(event: AnexoDosEncabezado): void {
    this.datosExportacionSeleccionados = event;
   }
 

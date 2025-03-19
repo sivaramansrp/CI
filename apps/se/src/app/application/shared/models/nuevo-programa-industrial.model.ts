@@ -9,8 +9,8 @@ export interface Anexo1y3Configuartion<T> {
 }
 
 export interface AnexoEncabezado {
-  ENCABEZADO_FRACCION: string;
-  ENCABEZADO_DESCRIPCION: string;
+  encabezadoFraccion: string;
+  encabezadoDescripcion: string;
   estatus: boolean;
 }
 
@@ -28,33 +28,33 @@ export interface ProyectoImmexConfiguartion<T> {
 }
 
 export interface AnexoUnoEncabezado {
-  ENCABEZADO_FRACCION: string;
-  ENCABEZADO_FRACCION_ARANCELARIA: string;
-  ENCABEZADO_DESCRIPCION_COMERCIAL: string;
-  ENCABEZADO_ANEXO_II: string;
-  ENCABEZADO_TIPO: string;
-  ENCABEZADO_UMT: string;
-  ENCABEZADO_CATEGORIA: string;
-  ENCABEZADO_VALOR_EN_MERCADO: string;
+  encabezadoFraccion: string;
+  encabezadoFraccionArancelaria: string;
+  encabezadoDescripcionComercial: string;
+  encabezadoAnexoII: string;
+  encabezadoTipo: string;
+  encabezadoUmt: string;
+  encabezadoCategoria: string;
+  encabezadoValorEnMercado: string;
   estatus: boolean;
 }
 
-export interface AnexoImportacionEncabezado {
-  ENCABEZADO_FRACCION: string;
-  ENCABEZADO_FRACCION_EXPORTACION: string;
-  ENCABEZADO_DESCRIPCION_COMERCIAL: string;
-  ENCABEZADO_FRACCION_IMPORTACION: string;
+export interface AnexoDosEncabezado {
+  encabezadoFraccion: string;
+  encabezadoFraccionExportacion: string;
+  encabezadoDescripcionComercial: string;
+  encabezadoFraccionImportacion: string;
   estatus: boolean;
 }
 
 export interface ProyectoImmexEncabezado {
-  ENCABEZADO_FRACCION : string;
-  ENCABEZADO_TIPO_DOCUMENT : string;
-  ENCABEZADO_DESCRIPCION_OTRO : string;
-  ENCABEZADO_FECHA_FIRMA : string;
-  ENCABEZADO_FECHA_VIGENCIA : string;
-  ENCABEZADO_RFC : string;
-  ENCABEZADO_RAZON_FIRMANTE : string;
+  encabezadoFraccion: string;
+  encabezadoTipoDocument: string;
+  encabezadoDescripcionOtro: string;
+  encabezadoFechaFirma: string;
+  encabezadoFechaVigencia: string;
+  encabezadoRfc: string;
+  encabezadoRazonFirmante: string;
   estatus: boolean;
 }
 
@@ -104,7 +104,7 @@ export interface ComplimentarFraccionResoponse {
 export interface RutaNombre {
   catagoria: string;
   id: string;
-  datos: AnexoUnoEncabezado | AnexoImportacionEncabezado;
+  datos: AnexoUnoEncabezado | AnexoDosEncabezado;
 }
 
 export interface ProveedorClienteTabla {
