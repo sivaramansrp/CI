@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dashboard": "npx nx serve dashboard --port 5200",    
+    "dashboard": "npx nx serve dashboard --port 5200",
     "compodoc": "npx compodoc -p tsconfig.doc.json",
     "reset": "npx nx reset"
   },
