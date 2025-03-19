@@ -94,7 +94,7 @@ export class SolicitudPageComponent implements OnInit {
       })
     ).subscribe();
 
-    this.asignarSecciones();
+  
   }
 
   /**
@@ -123,14 +123,5 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Método para asignar las secciones existentes al store.
    */
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const LLAVESECCION of Object.keys(SECCIONES_TRAMITE_5701.PASO_1) as (keyof typeof SECCIONES_TRAMITE_5701.PASO_1)[]) {
-      SECCIONES.push(SECCIONES_TRAMITE_5701.PASO_1[LLAVESECCION]);
-      formaValida.push(false);
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(formaValida);
-  }
+
 }
