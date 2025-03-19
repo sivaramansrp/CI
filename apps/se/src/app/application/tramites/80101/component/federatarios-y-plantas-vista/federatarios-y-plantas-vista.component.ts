@@ -11,6 +11,9 @@ import {
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
+import { Observable } from 'rxjs';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { Tramite80101Store } from '../../estados/tramite80101.store';
 
 /**
  * Componente para la vista de federatarios y plantas
@@ -69,4 +72,18 @@ export class FederatariosYPlantasVistaComponent {
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
+    /**
+   * Lista de federatarios para mostrar en la tabla
+   * @property {FederatariosEncabezado[]} federatariosTablaLista
+   */
+    public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
+
+  constructor(private store: Tramite80101Store, private query: Tramite80101Query) {
+
+    this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
+  }
+
+  setFormaDatos(datos: FederatariosEncabezado): void {
+    this.store.setFederatarios(datos);
+  }
 }

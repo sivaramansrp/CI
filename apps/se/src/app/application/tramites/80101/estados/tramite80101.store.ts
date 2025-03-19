@@ -14,6 +14,7 @@ import { Servicios } from '../models/nuevo-programa-industrial.model';
 import { SociaoAccionistas } from '../../../shared/models/complimentos.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 
 export interface Tramite80101State {
   infoRegistro: Servicios;
@@ -41,6 +42,7 @@ export interface Tramite80101State {
   annexoUno: AnnexoUno,
   
   indicePrevioRuta: number;
+  tablaDatosFederatarios: FederatariosEncabezado[]
 }
 
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
@@ -154,6 +156,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
   },
 
   indicePrevioRuta: 0,
+  tablaDatosFederatarios: []
 };
 
 /**
@@ -487,6 +490,13 @@ export class Tramite80101Store extends Store<Tramite80101State> {
         exportarDatosTabla: exportarDatosTabla,
       }
      
+    }));
+  }
+
+  setFederatarios(formaFederatarios: FederatariosEncabezado): void {
+    this.update((state) => ({
+      ...state,
+      tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
 }
