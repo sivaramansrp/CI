@@ -2,18 +2,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { TerritorioNacionalSolicitudeRoutingModule } from './territorio-nacional-solicitude-routing.module';
-import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import {
+  BtnContinuarComponent,
+  WizardComponent,
+} from '@libs/shared/data-access-user/src';
 import { FormsModule } from '@angular/forms';
 import { TerritorioNacionalSolicitudeComponent } from './pages/territorio-nacional-solicitude/territorio-nacional-solicitude.component';
-
+import { DatosTerritorioComponent } from './pages/datos-territorio.component';
 
 @NgModule({
   declarations: [
-    TerritorioNacionalSolicitudeComponent
+    TerritorioNacionalSolicitudeComponent,
+    DatosTerritorioComponent,
   ],
   imports: [
-    WizardComponent, BtnContinuarComponent, CommonModule,FormsModule,
-    TerritorioNacionalSolicitudeRoutingModule
-  ]
+    WizardComponent,
+    BtnContinuarComponent,
+    CommonModule,
+    FormsModule,
+    TerritorioNacionalSolicitudeRoutingModule,
+  ],
 })
-export class TerritorioNacionalSolicitudeModule { }
+export class TerritorioNacionalSolicitudeModule {}
