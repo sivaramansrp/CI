@@ -12,7 +12,7 @@
 
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import { FirmaElectronicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component";
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'paso-tres',

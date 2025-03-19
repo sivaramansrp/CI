@@ -11,9 +11,9 @@
 
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { AnexarDocumentosComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component";
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'paso-dos',

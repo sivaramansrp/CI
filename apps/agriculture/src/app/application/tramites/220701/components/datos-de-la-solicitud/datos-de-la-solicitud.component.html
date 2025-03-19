@@ -37,13 +37,14 @@
 
     <div class="row">
       <div class="col-md-8 mb-4">
-        <label for="justificación" class="form-label text-start"
+        <label for="justificación" class="form-label text-start" 
           >Justificación*:</label
         >
         <textarea
           id="justificación"
           class="form-control"
           formControlName="justificacion"
+          [required]="true"
           style="height: 100%; resize: vertical"
         ></textarea>
       </div>
@@ -60,6 +61,7 @@
             type="text"
             id="certificadosAutorizados"
             class="form-control"
+            [required]="true"
             formControlName="certificadosAutorizados"
           />
         </div>
@@ -163,6 +165,7 @@
             class="form-control"
             type="text"
             id="mercancia"
+            [required]="true"
             formControlName="cantidadContenedores"
           />
         </div>
@@ -187,6 +190,7 @@
             [label]="medioDeTransporte.labelNombre"
             [placeholder]="medioDeTransporte.primerOpcion"
             [isDisabled]="true"
+            [required]="true"
             formControlName="medioDeTransporte"
           ></app-catalogo-select>
         </div>
@@ -218,6 +222,7 @@
               name="esSolicitudFerros"
               id="SiSolicitudFerros"
               value="1"
+              [required]="true"
               formControlName="esSolicitudFerros"
             />
             <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
