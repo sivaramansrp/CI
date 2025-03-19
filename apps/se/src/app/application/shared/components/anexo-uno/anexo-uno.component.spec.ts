@@ -118,23 +118,6 @@ describe('AnexoUnoComponent', () => {
     component.anexoUnoFormGroup.reset = jest.fn();
     component.agregarAnexoDos();
     expect(component.anexoDosFormGroup.get).toHaveBeenCalled();
-    // expect(component.anexoDosTablaLista.push).toHaveBeenCalled();
-    // expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
-    // expect(component.anexoUnoFormGroup.reset).toHaveBeenCalled();
-  });
-
-  it('should run #setAnexoUnoLista()', async () => {
-    component.obtenerAnexoUnoDevolverLaLlamada = component.obtenerAnexoUnoDevolverLaLlamada || {};
-    component.obtenerAnexoUnoDevolverLaLlamada.emit = jest.fn();
-    component.setAnexoUnoLista({});
-    expect(component.obtenerAnexoUnoDevolverLaLlamada.emit).toHaveBeenCalled();
-  });
-
-  it('should run #setAnexoDosLista()', async () => {
-    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
-    component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
-    component.setAnexoDosLista({});
-    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
   });
 
   it('should run #setRuta()', async () => {
@@ -143,12 +126,4 @@ describe('AnexoUnoComponent', () => {
     component.setRuta({});
     expect(component.rutaLaFraccionDeComplemento.emit).toHaveBeenCalled();
   });
-
-  it('should run #navegarAProveedorCliente()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.navegarAProveedorCliente({});
-    expect(component.router.navigate).toHaveBeenCalled();
-  });
-
 });

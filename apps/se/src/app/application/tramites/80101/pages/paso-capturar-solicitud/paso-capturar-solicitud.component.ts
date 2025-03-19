@@ -1,6 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, PASOS4, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, PASOS4, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/nuevo-programa-industrial.model';
+import { Subject } from 'rxjs';
+import { Tramite80101Query } from '../../estados/tramite80101.query';
+import { takeUntil } from 'rxjs';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 
 @Component({
@@ -23,6 +26,24 @@ export class PasoCapturarSolicitudComponent {
  * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
  */
   public infoAlert = 'alert-info';
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(
+    private tramiteQuery: Tramite80101Query,
+    private seccion: SeccionLibStore
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccion.establecerSeccion([true]);
+      this.seccion.establecerFormaValida([res]);
+    });
+  }
 
   /**
    * Obtiene el valor del índice de la acción del botón.

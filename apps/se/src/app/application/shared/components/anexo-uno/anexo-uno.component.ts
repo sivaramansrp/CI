@@ -173,7 +173,6 @@ export class AnexoUnoComponent {
    */
   setAnexoUnoLista(event: AnexoUnoEncabezado): void {
     this.datosImportacionSeleccionados = event;
-    //this.obtenerAnexoUnoDevolverLaLlamada.emit(LISTA_SELECCIONADA);
   }
 
   /**

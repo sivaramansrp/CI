@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AggregarComplimentosComponent } from './aggregar-complimentos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AggregarComplimentosComponent', () => {
   let component: AggregarComplimentosComponent;
@@ -7,7 +8,7 @@ describe('AggregarComplimentosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AggregarComplimentosComponent],
+      imports: [AggregarComplimentosComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AggregarComplimentosComponent);

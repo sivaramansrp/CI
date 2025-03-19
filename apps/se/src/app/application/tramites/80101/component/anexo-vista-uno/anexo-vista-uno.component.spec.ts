@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnexoVistaUnoComponent } from './anexo-vista-uno.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ANEXO_I_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/enum/anexo-dos-y-tres.enum';
-import { AnexoImportacionEncabezado, AnexoUnoEncabezado, RutaNombre } from '../../../../shared/models/se-shared.model';
+import { ANEXO_I_SERVICIO, ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
+import { AnexoImportacionEncabezado, AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 
 describe('AnexoVistaUnoComponent', () => {
   let component: AnexoVistaUnoComponent;
