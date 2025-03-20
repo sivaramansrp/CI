@@ -1,4 +1,5 @@
 import { Catalogo, ProyectoImmexConfiguartion, ProyectoImmexEncabezado } from '../../models/nuevo-programa-industrial.model';
+import { OnInit,Output } from '@angular/core';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -7,13 +8,12 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { Location } from '@angular/common';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 import { PoryectoDatos } from '../../models/nuevo-programa-industrial.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-proyecto-immex',
   standalone: true,
@@ -23,40 +23,76 @@ import { Validators } from '@angular/forms';
   templateUrl: './proyecto-immex.component.html',
   styleUrl: './proyecto-immex.component.scss',
 })
+/**
+ * Componente para gestionar los proyectos IMMEX.
+ */
 export class ProyectoImmexComponent implements OnInit {
 
+  /**
+   * Datos del proyecto IMMEX.
+   * @type {PoryectoDatos}
+   */
   @Input() proyectoImmexDatos!: PoryectoDatos;
+
+  /**
+   * Datos del catálogo de documentos.
+   * @type {Catalogo[]}
+   */
   @Input() documentoCatalogDatos!: Catalogo[];
+
+  /**
+   * Configuración del proyecto IMMEX.
+   * @type {ProyectoImmexConfiguartion<ProyectoImmexEncabezado>}
+   */
   @Input() proyectoImmexConfiguartion!: ProyectoImmexConfiguartion<ProyectoImmexEncabezado>;
+
+  /**
+   * Lista de encabezados del proyecto IMMEX.
+   * @type {ProyectoImmexEncabezado[]}
+   */
   @Input() proyectoImmexTablaLista: ProyectoImmexEncabezado[] = [];
   
+  /**
+   * Emisor de eventos para devolver la lista de encabezados del proyecto IMMEX.
+   * @type {EventEmitter<ProyectoImmexEncabezado[]>}
+   */
   @Output() obtenerProyectoTablaDevolverLaLlamada: EventEmitter<ProyectoImmexEncabezado[]> = new EventEmitter<ProyectoImmexEncabezado[]>(true);
 
+  /**
+   * Formulario reactivo para gestionar los datos del proyecto IMMEX.
+   * @type {FormGroup}
+   */
   public proyectoForm!: FormGroup;
+
+  /**
+   * Indica si la tabla está seleccionada.
+   * @type {boolean}
+   */
   public esTablaeleccionada: boolean = false;
+
+  /**
+   * Lista de encabezados seleccionados del proyecto IMMEX.
+   * @type {ProyectoImmexEncabezado[]}
+   */
   public seleccionList: ProyectoImmexEncabezado[] = [];
 
-  // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private ubicaccion: Location) { }
+  /**
+   * Constructor de la clase ProyectoImmexComponent.
+   * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
+   * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
+   */
+  constructor(private fb: FormBuilder, private ubicaccion: Location) {
+   //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
+  }
 
-  ngOnInit(): void {
+  ngOnInit():void{
     this.crearProyectoForm();
   }
 
   /**
-     * Crea y configura el formulario del proyecto IMMEX.
-     * 
-     * Este método inicializa el formulario `proyectoForm` con los campos necesarios
-     * y sus validaciones correspondientes. Los campos incluyen:
-     * - descripcion: Descripción del proyecto, requerido.
-     * - tipoDeDocumente: Tipo de documento, requerido.
-     * - fechaDeFirma: Fecha de firma del proyecto, requerido.
-     * - fechaDeVigencia: Fecha de vigencia del proyecto, requerido.
-     * - rfcTaxId: RFC o Tax ID, requerido.
-     * - razonSocial: Razón social, requerido.
-     * 
-     * @returns {void} No retorna ningún valor.
-     */
+   * Crea el formulario reactivo para el proyecto IMMEX.
+   * @returns {void}
+   */
   crearProyectoForm(): void {
     this.proyectoForm = this.fb.group({
       descripcion: [this.proyectoImmexDatos.descripcion, Validators.required],
@@ -69,11 +105,10 @@ export class ProyectoImmexComponent implements OnInit {
   }
 
   /**
-  * Establece la lista de proyectos seleccionados y emite un evento con la lista.
-  * 
-  * @param {ProyectoImmexEncabezado[]} event - La lista de proyectos seleccionados.
-  * @returns {void}
-  */
+   * Establece la lista de proyectos seleccionados.
+   * @param {ProyectoImmexEncabezado[]} event - Lista de encabezados seleccionados.
+   * @returns {void}
+   */
   setProyectpLista(event: ProyectoImmexEncabezado[]): void {
     const LISTA_SELECCIONADA = event ? event : [];
     this.obtenerProyectoTablaDevolverLaLlamada.emit(LISTA_SELECCIONADA);
@@ -81,17 +116,7 @@ export class ProyectoImmexComponent implements OnInit {
   }
 
   /**
-   * Agrega un nuevo objeto a la lista `proyectoImmexTablaLista` o actualiza uno existente.
-   * 
-   * Si `esTablaeleccionada` es verdadero y `seleccionList` no está vacío, actualiza el objeto existente en la lista.
-   * De lo contrario, agrega un nuevo objeto a la lista.
-   * 
-   * El objeto se crea utilizando los valores del formulario `proyectoForm`.
-   * 
-   * Después de agregar o actualizar el objeto, se emite un evento `obtenerProyectoTablaDevolverLaLlamada` con la lista actualizada.
-   * 
-   * Finalmente, el formulario `proyectoForm` se restablece.
-   * 
+   * Agrega un nuevo proyecto IMMEX a la lista.
    * @returns {void}
    */
   aggregar(): void {
@@ -133,21 +158,16 @@ export class ProyectoImmexComponent implements OnInit {
   }
 
   /**
-   * Restablece el formulario del proyecto a su estado inicial.
-   * 
-   * Este método limpia todos los campos del formulario `proyectoForm` 
-   * y los restablece a sus valores predeterminados.
+   * Limpia el formulario del proyecto IMMEX.
+   * @returns {void}
    */
   limpar(): void {
     this.proyectoForm.reset();
   }
 
   /**
-   * Elimina los elementos de la lista `proyectoImmexTablaLista` que no tienen el estatus activo.
-   * 
-   * Filtra la lista `proyectoImmexTablaLista` y elimina los elementos cuyo campo `estatus` es falso.
-   * 
-   * @returns {void} No retorna ningún valor.
+   * Elimina los proyectos IMMEX seleccionados de la lista.
+   * @returns {void}
    */
   elimiar(): void {
     this.proyectoImmexTablaLista = this.proyectoImmexTablaLista.filter((idx) => {
@@ -156,14 +176,7 @@ export class ProyectoImmexComponent implements OnInit {
   }
 
   /**
-   * Filtra la lista de proyectos Immex para seleccionar aquellos con estatus activo
-   * y actualiza el formulario del proyecto con los valores del primer elemento seleccionado.
-   *
-   * @remarks
-   * Este método filtra la lista `proyectoImmexTablaLista` para obtener los elementos
-   * cuyo estatus es verdadero. Luego, actualiza los campos del formulario `proyectoForm`
-   * con los valores del primer elemento de la lista filtrada.
-   *
+   * Edita el proyecto IMMEX seleccionado en el formulario.
    * @returns {void}
    */
   eidtar(): void {
@@ -180,12 +193,11 @@ export class ProyectoImmexComponent implements OnInit {
     })
   }
 
-
   /**
-   * Navega a la ubicación anterior en el historial de navegación.
-   * Utiliza el servicio de ubicación para retroceder una página.
+   * Regresa a la ubicación anterior en el historial del navegador.
+   * @returns {void}
    */
-  regressar(): void {
+  regresar(): void {
     this.ubicaccion.back();
   }
 }

@@ -76,14 +76,14 @@ export class AnexoDosYTresComponent {
    * @param fb FormBuilder para crear formularios
    */
   constructor(private fb: FormBuilder) {
-    this.createAnexoDosForm();
-    this.createAnexoTresForm();
+    this.crearFormularioAnexoDos();
+    this.crearFormularioAnexoTres();
   }
 
   /**
    * Crea el formulario del Anexo Dos
    */
-  createAnexoDosForm(): void {
+  crearFormularioAnexoDos(): void {
     this.anexoDosFormGroup = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -93,7 +93,7 @@ export class AnexoDosYTresComponent {
   /**
    * Crea el formulario del Anexo Tres
    */
-  createAnexoTresForm(): void {
+  crearFormularioAnexoTres(): void {
     this.anexoTresFormGroup = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
       descripcion: ['', Validators.required],

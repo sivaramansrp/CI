@@ -68,24 +68,45 @@ export class AnexoUnoComponent {
   @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<
     AnexoDosEncabezado[]
   > = new EventEmitter<AnexoDosEncabezado[]>(true);
+
+  /**
+   * Evento para emitir la ruta de la fracción de complemento
+   * @property {EventEmitter<RutaNombre>} rutaLaFraccionDeComplemento
+   */
   @Output() rutaLaFraccionDeComplemento: EventEmitter<RutaNombre> =
     new EventEmitter<RutaNombre>();
 
-  public datosImportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
+  /**
+   * Datos seleccionados de importación
+   * @property {AnexoDosEncabezado | AnexoUnoEncabezado} datosImportacionSeleccionados
+   */
+  public datosImportacionSeleccionados!:
+    | AnexoDosEncabezado
+    | AnexoUnoEncabezado;
 
-  public datosExportacionSeleccionados!: AnexoDosEncabezado | AnexoUnoEncabezado;
+  /**
+   * Datos seleccionados de exportación
+   * @property {AnexoDosEncabezado | AnexoUnoEncabezado} datosExportacionSeleccionados
+   */
+  public datosExportacionSeleccionados!:
+    | AnexoDosEncabezado
+    | AnexoUnoEncabezado;
 
-  constructor(
-    private fb: FormBuilder
-  ) {
-    this.createAnexoUnoForm();
-    this.createAnexoDosForm();
+
+  /**
+ * Constructor de la clase AnexoUnoComponent
+ * @param {FormBuilder} fb - Constructor para crear formularios reactivos
+ */
+  constructor(private fb: FormBuilder) {
+    this.crearFormularioAnexoUno();
+    this.crearFormularioAnexoDos();
   }
 
   /**
-   * Crea el formulario del Anexo Uno
-   */
-  createAnexoUnoForm(): void {
+ * Crea el formulario del Anexo Uno
+ * @returns {void}
+ */
+  crearFormularioAnexoUno(): void {
     this.anexoUnoFormGroup = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -95,7 +116,7 @@ export class AnexoUnoComponent {
   /**
    * Crea el formulario del Anexo Uno
    */
-  createAnexoDosForm(): void {
+  crearFormularioAnexoDos(): void {
     this.anexoDosFormGroup = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -128,7 +149,7 @@ export class AnexoUnoComponent {
     const OBJECTO_IDX: AnexoUnoEncabezado = {
       encabezadoFraccion: this.anexoUnoFormGroup.get('fraccionArancelaria')
         ?.value,
-        encabezadoDescripcionComercial:
+      encabezadoDescripcionComercial:
         this.anexoUnoFormGroup.get('descripcion')?.value,
       estatus: false,
       encabezadoFraccionArancelaria: '',
@@ -150,10 +171,10 @@ export class AnexoUnoComponent {
     const OBJECTO_IDX: AnexoDosEncabezado = {
       encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
         ?.value,
-        encabezadoDescripcionComercial:
+      encabezadoDescripcionComercial:
         this.anexoDosFormGroup.get('descripcion')?.value,
-        encabezadoFraccionExportacion: '',
-        encabezadoFraccionImportacion: '',
+      encabezadoFraccionExportacion: '',
+      encabezadoFraccionImportacion: '',
       estatus: false,
     };
     this.anexoDosTablaLista.push(OBJECTO_IDX);
@@ -181,7 +202,7 @@ export class AnexoUnoComponent {
    * @returns {void}
    */
   setAnexoDosLista(event: AnexoDosEncabezado): void {
-   this.datosExportacionSeleccionados = event;
+    this.datosExportacionSeleccionados = event;
   }
 
   /**
@@ -190,12 +211,15 @@ export class AnexoUnoComponent {
    * @param {string} nombre - El nombre de la categoría para establecer la ruta.
    * @returns {void}
    */
-  setRuta(nombre: string,id:string): void {
+  setRuta(nombre: string, id: string): void {
     if (nombre) {
       const RUTA_NOMBRE: RutaNombre = {
         catagoria: nombre,
         id: id,
-        datos:id ==='IMPORT'? this.datosImportacionSeleccionados:this.datosExportacionSeleccionados
+        datos:
+          id === 'IMPORT'
+            ? this.datosImportacionSeleccionados
+            : this.datosExportacionSeleccionados,
       };
       this.rutaLaFraccionDeComplemento.emit(RUTA_NOMBRE);
     }

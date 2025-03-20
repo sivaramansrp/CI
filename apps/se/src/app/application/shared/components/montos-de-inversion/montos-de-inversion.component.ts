@@ -88,7 +88,11 @@ export class MontosDeInversionComponent {
     });
   }
 
-  regrassar(): void {
+  /**
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
+   */
+  regrasar(): void {
     this.ubicaccion.back();
   }
 }

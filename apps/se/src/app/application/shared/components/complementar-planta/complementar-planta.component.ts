@@ -31,9 +31,13 @@ import { Location } from '@angular/common';
   styleUrl: './complementar-planta.component.scss',
 })
 export class ComplementarPlantaComponent {
-
-  // eslint-disable-next-line no-empty-function
-  constructor(private ubicaccion: Location) {}
+  /**
+   * Constructor de la clase ComplementarPlantaComponent.
+   * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
+   */
+  constructor(private ubicaccion: Location) {
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
+  }
   /**
    * Configuración de la fecha de firma.
    * @property {InputFecha} fetchaDeFirma
@@ -75,8 +79,12 @@ export class ComplementarPlantaComponent {
    * @property {Array} complementoDePlantaDatos
    */
   complementoDePlantaDatos = [];
-
-  regrassar(): void {
+  
+  /**
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
+   */
+  regrasar(): void {
     this.ubicaccion.back();
-}
+  }
 }

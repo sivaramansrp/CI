@@ -6,7 +6,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnChanges,Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,47 +31,95 @@ import { PROVEEDOR_CLIENTE_TABLA_CONFIG } from '../../constantes/anexo-dos-y-tre
   templateUrl: './proveedor-cliente.component.html',
   styleUrl: './proveedor-cliente.component.scss',
 })
-export class ProveedorClienteComponent implements OnChanges{
+/**
+ * Componente para gestionar los datos de proveedores y clientes.
+ */
+export class ProveedorClienteComponent implements OnChanges {
+  /**
+   * Datos de la fracción seleccionada en la tabla.
+   * @type {AnexoUnoEncabezado | AnexoDosEncabezado}
+   */
   @Input() public fraccionTablaDatos!: AnexoUnoEncabezado | AnexoDosEncabezado;
+
+  /**
+   * Emisor de eventos para los datos actualizados de proveedores y clientes.
+   * @type {EventEmitter<ProveedorClienteTabla[]>}
+   */
   @Output() public datosActualizadosProveedorCliente = new EventEmitter<ProveedorClienteTabla[]>();
+
+  /**
+   * Formulario reactivo para gestionar los datos de proveedores y clientes.
+   * @type {FormGroup}
+   */
   public formularioProveedorCliente!: FormGroup;
 
-  
+  /**
+   * Catálogo de países de destino.
+   * @type {Catalogo[]}
+   */
+  public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
 
-  public paisDestinoCatalog = PAIS_DESTINO_CATALOG
-
+  /**
+   * Datos de la tabla de proveedores y clientes.
+   * @type {ProveedorClienteTabla[]}
+   */
   public proveedorClienteTablsDatos: ProveedorClienteTabla[] = [];
 
+  /**
+   * Lista de proveedores y clientes seleccionados.
+   * @type {ProveedorClienteTabla[]}
+   */
   public proveedorClienteListaSeleccionada: ProveedorClienteTabla[] = [];
 
+  /**
+   * Configuración de la selección de la tabla.
+   * @type {TablaSeleccion}
+   */
   tablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
-  public readonly PROVEEDOR_CLIENTE_TABLA_CONFIG =
-    PROVEEDOR_CLIENTE_TABLA_CONFIG;
+  /**
+   * Configuración de la tabla de proveedores y clientes.
+   * @type {any}
+   */
+  public readonly PROVEEDOR_CLIENTE_TABLA_CONFIG = PROVEEDOR_CLIENTE_TABLA_CONFIG;
 
-  constructor(private fb: FormBuilder,
-    private ubicaccion:Location
-  ) {
+  /**
+   * Constructor de la clase ProveedorClienteComponent.
+   * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
+   * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
+   */
+  constructor(private fb: FormBuilder, private ubicaccion: Location) {
     this.inicializarFormularioProveedorCliente();
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando se detectan cambios en las propiedades de entrada.
+   * Actualiza el formulario con los datos de la fracción seleccionada.
+   * @returns {void}
+   */
   ngOnChanges(): void {
-    if(this.fraccionTablaDatos){
+    if (this.fraccionTablaDatos) {
       this.formularioProveedorCliente.patchValue({
-        descripcionComercial: this.fraccionTablaDatos.encabezadoDescripcionComercial
+        descripcionComercial: this.fraccionTablaDatos.encabezadoDescripcionComercial,
       });
     }
   }
 
-     //in NgOnInit using store value of isfromImport or export set fraccionTablaDatos
-    //accordingly
-
+  /**
+   * Maneja el cambio de país de destino en el formulario.
+   * @param {Catalogo} event - El catálogo seleccionado.
+   * @returns {void}
+   */
   cambioPaisDestino(event: Catalogo): void {
     this.formularioProveedorCliente.patchValue({
       paisDestino: event.id,
     });
   }
 
+  /**
+   * Inicializa el formulario de proveedores y clientes.
+   * @returns {void}
+   */
   inicializarFormularioProveedorCliente(): void {
     this.formularioProveedorCliente = this.fb.group({
       descripcionComercial: ['Test Complementar', Validators.required],
@@ -82,19 +130,32 @@ export class ProveedorClienteComponent implements OnChanges{
     this.formularioProveedorCliente.get('descripcionComercial')?.disable();
   }
 
+  /**
+   * Limpia los campos del formulario de proveedores y clientes.
+   * @returns {void}
+   */
   limpar(): void {
     this.formularioProveedorCliente.setValue({
       descripcionComercial: '',
-      paisDestino: {id:-1,descripcion:''},
+      paisDestino: { id: -1, descripcion: '' },
       rfc: '',
       razonSocialCliente: '',
-    })
+    });
   }
 
+  /**
+   * Maneja la selección de proveedores y clientes en la tabla.
+   * @param {ProveedorClienteTabla[]} lista - La lista de proveedores y clientes seleccionados.
+   * @returns {void}
+   */
   proveedorClienteSeleccinados(lista: ProveedorClienteTabla[]): void {
     this.proveedorClienteListaSeleccionada = lista;
   }
 
+  /**
+   * Agrega un nuevo proveedor o cliente a la tabla.
+   * @returns {void}
+   */
   aggregar(): void {
     const PROVEEDOR_CLIENTE: ProveedorClienteTabla = {
       fraccion: 2,
@@ -108,16 +169,30 @@ export class ProveedorClienteComponent implements OnChanges{
     this.proveedorClienteTablsDatos.push(PROVEEDOR_CLIENTE);
   }
 
+  /**
+   * Obtiene la descripción del país de destino a partir de su ID.
+   * @param {number} id - El ID del país de destino.
+   * @returns {string} La descripción del país de destino.
+   */
   obtenerValorPaisDeDestino(id: number): string {
-    const PAIS = this.paisDestinoCatalog.find((ele) => ele.id === parseInt(id.toString(),10));
+    const PAIS = this.paisDestinoCatalog.find((ele) => ele.id === parseInt(id.toString(), 10));
     return PAIS ? PAIS.descripcion : '';
   }
 
-  obtenerValorPaisDeDestinoId(valor:string): number {
+  /**
+   * Obtiene el ID del país de destino a partir de su descripción.
+   * @param {string} valor - La descripción del país de destino.
+   * @returns {number} El ID del país de destino.
+   */
+  obtenerValorPaisDeDestinoId(valor: string): number {
     const PAIS = this.paisDestinoCatalog.find((ele) => ele.descripcion === valor);
-    return PAIS? PAIS.id : 0;
+    return PAIS ? PAIS.id : 0;
   }
 
+  /**
+   * Elimina los proveedores o clientes seleccionados de la tabla.
+   * @returns {void}
+   */
   elimiar(): void {
     if (this.proveedorClienteListaSeleccionada.length > 0) {
       this.proveedorClienteTablsDatos = this.proveedorClienteTablsDatos.filter(
@@ -125,6 +200,11 @@ export class ProveedorClienteComponent implements OnChanges{
       );
     }
   }
+
+  /**
+   * Edita los datos del proveedor o cliente seleccionado en el formulario.
+   * @returns {void}
+   */
   eidtar(): void {
     if (this.proveedorClienteListaSeleccionada.length > 0) {
       this.formularioProveedorCliente.patchValue({
@@ -135,9 +215,12 @@ export class ProveedorClienteComponent implements OnChanges{
     }
   }
 
-  regrssarAnnexoI():void{
+  /**
+   * Regresa a la vista anterior y emite los datos actualizados de proveedores y clientes.
+   * @returns {void}
+   */
+  regrsarAnnexoI(): void {
     this.ubicaccion.back();
     this.datosActualizadosProveedorCliente.emit(this.proveedorClienteTablsDatos);
   }
-
 }

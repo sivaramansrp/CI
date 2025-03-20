@@ -93,16 +93,16 @@ export class EmpleadosComponent {
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(public fb: FormBuilder, private ubicaccion:Location) {
-    this.createEmpleadosForm();
+  constructor(public fb: FormBuilder, private ubicaccion: Location) {
+    this.crearFormularioEmpleados();
   }
 
   /**
    * Crea el formulario de empleados.
-   * @method createEmpleadosForm
+   * @method crearFormularioEmpleados
    * @returns {void}
    */
-  createEmpleadosForm(): void {
+  crearFormularioEmpleados(): void {
     this.empleadosForm = this.fb.group({
       totalDeEmpleados: [''],
       directos: [''],
@@ -118,7 +118,11 @@ export class EmpleadosComponent {
     });
   }
 
-  regrassar(): void {
-      this.ubicaccion.back();
+  /**
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
+   */
+  regrasar(): void {
+    this.ubicaccion.back();
   }
 }

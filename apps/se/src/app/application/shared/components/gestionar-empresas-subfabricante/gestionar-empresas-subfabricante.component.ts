@@ -354,6 +354,11 @@ export class GestionarEmpresasSubfabricantesComponent {
     this.plantasPorEliminar.emit(this.plantasSeleccionadas);
     }
   }
+
+/**
+ * Emite el evento para complementar las plantas seleccionadas.
+ * @returns {void}
+ */
   complementarPlantas():void{
     if(this.plantasSeleccionadas.length>0){
     this.plantasPorComplementar.emit(this.plantasSeleccionadas);

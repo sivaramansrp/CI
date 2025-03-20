@@ -59,13 +59,13 @@ export class ComplementarFraccionComponent implements OnInit {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.createComplimentarForm();
+    this.crearFormularioComplimentar();
   }
 
   /**
    * Crea el formulario del Anexo Uno.
    */
-  createComplimentarForm(): void {
+  crearFormularioComplimentar(): void {
     this.complimentarForm = this.fb.group({
       catagoria: [this.complimentarFraccionDatos.catagoria, Validators.required],
       descripcion: [this.complimentarFraccionDatos.descripcion, Validators.required],
@@ -84,7 +84,8 @@ export class ComplementarFraccionComponent implements OnInit {
   }
 
   /**
-   * Método para regresar a la ubicación anterior.
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
    */
   regresar(): void {
     this.ubicaccion.back();

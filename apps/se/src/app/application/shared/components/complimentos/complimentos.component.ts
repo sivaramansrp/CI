@@ -8,7 +8,14 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   DatosComplimentos,
   SociaoAccionistas,
@@ -30,11 +37,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription, delay } from 'rxjs';
+import { Subject, Subscription, delay, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
-
 
 @Component({
   selector: 'app-complimentos',
@@ -51,7 +57,7 @@ import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-progr
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
 })
-export class ComplimentosComponent implements OnInit {
+export class ComplimentosComponent implements OnInit, OnDestroy {
   /**
    * @type {FormGroup}
    * @description Grupo de formularios para los complementos.
@@ -177,8 +183,29 @@ export class ComplimentosComponent implements OnInit {
   @Output() accionistasExtranjerosEliminado: EventEmitter<SociaoAccionistas[]> =
     new EventEmitter<SociaoAccionistas[]>(true);
 
-  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(false);
+  /**
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+    false
+  );
 
+  /**
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   *
+   * @property {Subject<void>} destroyNotifier$
+   */
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * Constructor para inicializar el formulario de datos del subcontratista.
+ * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
+ * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
+ * @param {ComplimentosService} complimentosService - Servicio para obtener los datos de complementos.
+ */
   constructor(
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
@@ -221,16 +248,23 @@ export class ComplimentosComponent implements OnInit {
     }
   }
 
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Obtiene los catálogos de países y estados, y configura las suscripciones para los cambios en el formulario.
+ * Si hay datos de complementos disponibles, los establece en el formulario.
+ * @returns {void}
+ */
   ngOnInit(): void {
     this.getCatalogoPaises();
     this.getCatalogoEstado();
 
-    this.subscription.add(
-      this.formaComplimentos.valueChanges.pipe(delay(100)).subscribe((_) => {
+    this.formaComplimentos.valueChanges
+      .pipe(delay(100))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_) => {
         this.complimentosDatos.emit(this.formaComplimentos.value);
-        this.formaValida.emit(this.formaComplimentos.valid)
-      })
-    );
+        this.formaValida.emit(this.formaComplimentos.valid);
+      });
 
     if (this.datosFormaComplimentos) {
       this.formaComplimentos.patchValue(this.datosFormaComplimentos);
@@ -321,20 +355,19 @@ export class ComplimentosComponent implements OnInit {
    * @returns {void}
    */
   getCatalogoPaises(): void {
-    this.subscription.add(
-      this.catalogosServices
-        .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
-        .subscribe((datos) => {
-          const INDICE = this.camposFormulario.findIndex(
-            (ele) => ele.campo === PAIS
-          );
-          const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-            (ele) => ele.campo === PAIS
-          );
-          this.camposFormularioDefault[INDICE].opciones = datos;
-          this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
-        })
-    );
+    this.catalogosServices
+      .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === PAIS
+        );
+        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+          (ele) => ele.campo === PAIS
+        );
+        this.camposFormularioDefault[INDICE].opciones = datos;
+        this.camposFormularioTipoPersona[INDICEALT].opciones = datos;
+      });
   }
 
   /**
@@ -342,22 +375,20 @@ export class ComplimentosComponent implements OnInit {
    * @returns {void}
    */
   getCatalogoEstado(): void {
-    this.subscription.add(
-      this.complimentosService
-        .obtenerListaEstado()
-        .subscribe((datos) => {
-          const INDICE = this.camposFormulario.findIndex(
-            (ele) => ele.campo === ESTADO
-          );
-          const INDICEALT = this.camposFormularioTipoPersona.findIndex(
-            (ele) => ele.campo === ESTADO
-          );
-          this.estados = datos;
-          this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo =
-            datos;
-          this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
-        })
-    );
+    this.complimentosService
+      .obtenerListaEstado()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        const INDICE = this.camposFormulario.findIndex(
+          (ele) => ele.campo === ESTADO
+        );
+        const INDICEALT = this.camposFormularioTipoPersona.findIndex(
+          (ele) => ele.campo === ESTADO
+        );
+        this.estados = datos;
+        this.camposFormularioTipoPersona[INDICEALT].opcionesCatalogo = datos;
+        this.camposFormularioDefault[INDICE].opcionesCatalogo = datos;
+      });
   }
 
   /**
@@ -420,5 +451,14 @@ export class ComplimentosComponent implements OnInit {
         );
       }
     }
+  }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
