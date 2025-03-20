@@ -5,7 +5,7 @@
       class="panel-group ficha-collapse margin-bottom-30px"
       id="accordion"
     ></div>
-    <div class="row" formGroupName="datosDelaSolicitud">
+    <div class="row">
       <div class="col-md-8">
         <label class="form-label" for="foliodel">Folio del trámite:</label>
         <input
@@ -20,7 +20,7 @@
         />
       </div>
     </div>
-    <div class="row" formGroupName="datosDelaSolicitud">
+    <div class="row">
       <ng-titulo titulo="Datos del tramite a realizar" />
       <div class="row">
         <div class="col-md-4">
@@ -30,6 +30,8 @@
             [label]="aduanaIngreso.labelNombre"
             [placeholder]="aduanaIngreso.primerOpcion"
             [isDisabled]="false"
+            formControlName="aduanaIngreso"
+            (selectionChange)="seleccionarAduanaIngreso($event)"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8">
@@ -38,6 +40,8 @@
             [label]="oficianaInspeccion.labelNombre"
             [placeholder]="oficianaInspeccion.primerOpcion"
             [isDisabled]="false"
+            formControlName="oficinaInspeccion"
+            (selectionChange)="seleccionarOficianaInspeccion($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -48,6 +52,8 @@
             [label]="puntoInspeccion.labelNombre"
             [placeholder]="puntoInspeccion.primerOpcion"
             [isDisabled]="false"
+            formControlName="puntoInspeccion"
+            (selectionChange)="seleccionarPuntoInspeccion($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -78,6 +84,7 @@
             [label]="establecimiento.labelNombre"
             [placeholder]="establecimiento.primerOpcion"
             [isDisabled]="true"
+            formControlName="establecimientoTIF"
           ></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -85,7 +92,7 @@
             >Nombre del médico veterinario:</label
           >
           <input
-            formControlName="claveUCON"
+            formControlName="nombre"
             readonly
             value=""
             class="form-control"
@@ -104,9 +111,9 @@
             <input
               class="form-control"
               readonly
-              [disabled]="true"
               id="numeroGuia"
               placeholder=""
+              formControlName="numeroguia"
               type="text"
               libUppercase
             />
@@ -117,7 +124,9 @@
             [catalogo]="regimenDestinaran.catalogos"
             [label]="regimenDestinaran.labelNombre"
             [placeholder]="regimenDestinaran.primerOpcion"
+            formControlName="regimen"
             [isDisabled]="false"
+            (selectionChange)="seleccionarRegimen($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -129,26 +138,14 @@
         <label for="certficacion_a">Captura de datos de mercancía*:</label>
       </div>
       <div class="col-md-12">
-        <input
-          class="form-check-input me-3"
-          type="radio"
-          name="certficacion"
-          value="a"
-          id="certficacion_a"
-        />
-        <label class="form-label" for="certficacion_a">Animales Vivos:</label>
-      </div>
-      <div class="col-md-12">
-        <input
-          class="form-check-input me-3"
-          type="radio"
-          name="certficacion"
-          value="aa"
-          id="certficacion_aa"
-        />
-        <label class="form-label" for="certficacion_aa"
-          >Productos Subproductos</label
-        >
+        <app-input-radio
+        [radioOptions]="opcionDeBotonDeRadio"
+        [isRequired]="true"
+        [selectedValue]="esSolicitudFerrosValor"
+        [layout]="'vertical'"
+        formControlName="capturaDatosMercancia"
+        (valueChange)="setCapturaDatosMercancia($event)"
+      ></app-input-radio>
       </div>
     </div>
     <div class="row">
@@ -228,7 +225,6 @@
         </div>
       </div>
       <div class="container">
-        <form [formGroup]="movilizacionForm">
           <ng-titulo titulo="Destino" />
           <div class="row">
             <div class="col-md-4 form-group">
@@ -253,6 +249,8 @@
                 [label]="movilizacionNacional.labelNombre"
                 [placeholder]="movilizacionNacional.primerOpcion"
                 [isDisabled]="false"
+                formControlName="movilizacion"
+                (selectionChange)="seleccionarMovilizacionNacional($event)"
               ></app-catalogo-select>
             </div>
             <div class="col-md-8 form-group">
@@ -274,6 +272,8 @@
                 [label]="puntoVerificacion.labelNombre"
                 [placeholder]="puntoVerificacion.primerOpcion"
                 [isDisabled]="false"
+                formControlName="punto"
+                (selectionChange)="seleccionarPuntoVerificacion($event)"
               ></app-catalogo-select>
             </div>
             <div class="col-md-8">
@@ -282,10 +282,10 @@
                 [label]="empresaTransportista.labelNombre"
                 [placeholder]="empresaTransportista.primerOpcion"
                 [isDisabled]="true"
+                formControlName="nombreEmpresa"
               ></app-catalogo-select>
             </div>
           </div>
-        </form>
       </div>
       <div class="row my-5">
         <div class="col-md-12 d-flex justify-content-end"></div>
