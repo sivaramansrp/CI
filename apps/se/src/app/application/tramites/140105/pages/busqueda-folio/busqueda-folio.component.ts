@@ -18,6 +18,12 @@ export class BusquedaFolioComponent {
     this.estableDetalleDelPermisoForm();
   }
   public buscar(event: any): void {
+    if (this.busquedaForm.invalid) {
+      this.busquedaForm.markAllAsTouched();
+      alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
+      return;
+    }
+
     this.detalleDelPermiso = true;
     this.establecerFormularioDeDetallesDe();
   }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
