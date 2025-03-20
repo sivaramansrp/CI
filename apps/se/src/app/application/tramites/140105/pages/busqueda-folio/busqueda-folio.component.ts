@@ -10,13 +10,25 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class BusquedaFolioComponent {
   public busquedaForm!: FormGroup;
+  public detalleDelPermisoForm!: FormGroup;
+  public detalleDelPermiso: boolean = false;
 
   constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder){
     this.establecerBusquedaForm();
+    this.estableDetalleDelPermisoForm();
    }
   public buscar(event: any): void{
-    this.servicioDeMensajesService.sendMessage(false);
+    // this.servicioDeMensajesService.sendMessage(false);
+    this.detalleDelPermiso = true;
+    this.establecerFormularioDeDetallesDe();
       }
+      public agregar(event: any): void{
+        this.servicioDeMensajesService.sendMessage(false);
+          }
+          public detalleCancelar(event: any): void{
+            this.detalleDelPermiso = false;
+          }
+          
       public cancelar(event: any): void{
         this.servicioDeMensajesService.sendMessage(false);
           }
@@ -25,4 +37,13 @@ export class BusquedaFolioComponent {
           tramite: [{value: '',disabled: false}]
         });
       }
+      public estableDetalleDelPermisoForm(): void {
+        this.detalleDelPermisoForm = this.fb.group({
+          folioTramite: [{value: '', disabled: true}]
+        });
+      }
+      public establecerFormularioDeDetallesDe(): void {
+        this.detalleDelPermisoForm.get('folioTramite')?.setValue('AALM87326');
+      }
+    
 }

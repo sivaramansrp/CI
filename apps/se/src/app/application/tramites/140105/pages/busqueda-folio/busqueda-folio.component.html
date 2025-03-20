@@ -1,22 +1,136 @@
 <div class="container">
-<ng-titulo titulo="Buscar permiso a cancelar" />
-<form [formGroup]="busquedaForm">
-    <div class="row">
-        <div class="col-md-8">
-            <label class="form-label" for="rfc">Folio tramite*:<span 
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title" 
-                ata-bs-toggle="tooltip"></span>
-            </label>
-            <input type="text" class="form-control" id="tramite" formControlName="tramite">
-        </div>
-        </div>
+
+    <ng-titulo *ngIf="!detalleDelPermiso" titulo="Buscar permiso a cancelar" />
+    <ng-titulo *ngIf="detalleDelPermiso" titulo="Detalle del permiso" />
+    <div *ngIf="!detalleDelPermiso">
+        <form [formGroup]="busquedaForm">
+            <div class="row">
+                <div class="col-md-8">
+                    <label class="form-label" for="tramite">Folio tramite*:</label>
+                    <input type="text" class="form-control" id="tramite" formControlName="tramite">
+                </div>
+            </div>
         </form>
-        <div class="row"><div class="col-md-8 d-flex justify-content-end"></div></div>
+        <div class="row">
+            <div class="col-md-8 d-flex justify-content-end"></div>
+        </div>
         <div class="row mt-2">
             <div class="col-md-8 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="cancelar($event)">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" (click)="buscar($event)">Buscar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                    (click)="cancelar($event)">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                    (click)="buscar($event)">Buscar</button>
             </div>
-          </div>
-          </div>
-        
+        </div>
+    </div>
+    <div *ngIf="detalleDelPermiso">
+        <form [formGroup]="detalleDelPermisoForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Folio tramite:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Tipo de solicitud:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Regimen:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Condicion de la mercancia:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Unidad de medida de la tarifa (UMT):
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Cantidad:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Clasificacion del regimen:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="folioTramite">Valor de factura USD:
+                    </label>
+                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label" for="folioTramite">Fraccion arancelaria:
+                    </label>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="folioTramite">Descripcion de la mercancia:
+                    </label>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label" for="folioTramite">pais(es) procedencia:
+                    </label>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="folioTramite">Uso(s) especifico(s) de la mercancia:
+                    </label>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <label class="form-label" for="folioTramite">Justificacion de la importacion o exportacion y el beneficio que se obtiene:
+                    </label>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <label class="form-label" for="folioTramite">Observaciones:
+                    </label>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                </div>
+
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-md-12 d-flex justify-content-end"></div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                    (click)="detalleCancelar($event)">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                    (click)="agregar($event)">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
