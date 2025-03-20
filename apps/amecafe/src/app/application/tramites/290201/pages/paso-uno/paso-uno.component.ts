@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { DatosTramiteComponent } from '../../components/datosTramite.component';
 
 @Component({
   selector: 'paso-uno',

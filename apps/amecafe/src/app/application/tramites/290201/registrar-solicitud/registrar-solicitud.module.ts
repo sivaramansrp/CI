@@ -13,8 +13,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosComponent } from '@libs/shared/data-access-user/src';
-
-
+import { DatosTramiteComponent } from '../components/datosTramite.component';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     PasoDosComponent,
@@ -25,6 +25,7 @@ import { TercerosComponent } from '@libs/shared/data-access-user/src';
   ],
   imports: [
     TituloComponent,
+    DatosTramiteComponent,
     BtnContinuarComponent,
     CommonModule,
     RegistrarSolicitudRoutingModule,
@@ -33,7 +34,8 @@ import { TercerosComponent } from '@libs/shared/data-access-user/src';
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
-    TercerosComponent
+    TercerosComponent,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
