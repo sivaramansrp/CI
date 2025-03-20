@@ -1,6 +1,6 @@
 import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, SeleccionadasTabla } from '../../models/registro.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
@@ -10,7 +10,6 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110201/mercancia-disponsible.json';
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110201/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110201/mercancia.json';
-import { DomSanitizer } from '@angular/platform-browser';
 
 
 const TERCEROS_TEXTO_DE_ALERTA =
@@ -50,7 +49,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   cargarArchivo: boolean = false;
   giveErrors: boolean = false;
   isDisponibles: boolean = false;
-  isMercancia: boolean = false;
+  isMercancia = false;
   public getMercanciaDisponsibleTableData = mercanciaDisponsibleTable;
   public getmercanciaSeleccionadasTable = mercanciaSeleccionadasTable;
   public getMercanciaTable = mercanciaTable;
@@ -66,6 +65,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   selectTratado: string | null = null;
   fraccionArancelariaValue!: string;
   nombreArchivo: string = '';
+  isForm:boolean = false;
+  
 
   //MercanciaDisponsibles
   tableData: {
@@ -213,9 +214,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
-    private sanitizer: DomSanitizer
+   
   ) {
     // El constructor se utiliza para la inyección de dependencias.
+  }
+
+
+  handleClick(row:any){
+    this.isForm = true;
   }
 
   validarDestinatarioFormulario(): void {
@@ -239,7 +245,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -293,6 +298,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           catalogos: unidadMedida ?? [],
         };
         this.unidadMedidaValue = this.unidadMedida.catalogos;
+        
       })
     );
 
@@ -311,12 +317,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   buscarMercancias() {
     if (this.Tratadodescripcion.includes('1')) {
       this.isDisponibles = true;
-    }
+    } else {
+      this.isDisponibles = false;
+    }  
+
   }
 
   agregar() {
     if (this.mercanciaForm.valid) {
-      this.tableSeleccionadas.data.push({
+      this.isMercancia = true;
+      this.isForm = false
+      this.tableSeleccionadas.data.splice(0,1,{
         fraccionArancelaria:
           this.mercanciaForm?.value.validacionMercanciaForm
             .fraccionMercanArancelaria,
@@ -334,8 +345,13 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
 
-      this.isMercancia = true;
+    
     }
+  }
+
+  modificar(){
+    this.isForm = true;
+    this.isMercancia = false;
   }
 
   public mercanciaDisponsible(): void {
@@ -471,25 +487,25 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanArancelaria: [
-          this.solicitudState?.fraccionMercanArancelaria,
+        fraccionMercanArancelaria: [ 
+          '123456789',
           [Validators.required],
         ],
         nombretecnico: [
-          this.solicitudState?.nombretecnico,
+          'Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o',
           [Validators.required],
         ],
         nombrecomercialdelamercancia: [
-          this.solicitudState?.nombrecomercialdelamercancia,
+          'Patitos de hule',
           [Validators.required],
         ],
 
         criterioparaconferir: [
-          this.solicitudState?.criterioparaconferir,
+         'SIN_CRIT',
           [Validators.required],
         ],
         nomreeningles: [
-          this.solicitudState?.nomreeningles,
+          'rubber ducklings',
           [Validators.required],
         ],
         marca: [this.solicitudState?.marca, [Validators.required]],
@@ -513,6 +529,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         nFactura: [this.solicitudState?.nFactura, [Validators.required]],
       }),
     });
+
   }
   ngOnDestroy(): void {
     if (this.getTratadoSubscription) {

@@ -1,9 +1,11 @@
+<ng-container *ngIf="!isForm">
 <ng-titulo
   *ngIf="!cargarArchivo"
   titulo="Validación inicial del certificado de circulación de mercancías"
 />
 <ng-titulo *ngIf="!cargarArchivo" titulo="Tratado y país o bloque" />
-<div class="container">
+</ng-container>
+<div class="container" *ngIf="!isForm">
   <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
     <ng-container formGroupName="validacionForm">
       <ng-container *ngIf="!cargarArchivo">
@@ -131,9 +133,9 @@
             <app-tabla-dinamica
               [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
               [configuracionTabla]="tableData.headers"
-              [datos]="tableData.data"
+              [datos]="tableData.data" (click)="handleClick(tableData.data)"
             ></app-tabla-dinamica>
-          
+         
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
       </ng-container>
@@ -221,12 +223,14 @@
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
+        
         <div class="table-container mt-5" *ngIf="!isMercancia">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="tableSeleccionadas.headers"
           ></app-tabla-dinamica>
         </div>
+     
         <div class="table-container mt-5" *ngIf="isMercancia">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
@@ -240,7 +244,7 @@
           *ngIf="isMercancia"
         >
           <button type="button" class="btn btn-default ms-3">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3">Modificar</button>
+          <button type="button" class="btn btn-primary ms-3" (click)="modificar()">Modificar</button>
         </div>
         <div class="row mt-5">
           <div
@@ -271,7 +275,8 @@
     </ng-container>
   </form>
 </div>
-<div class="container" *ngIf="!isMercancia">
+
+<div class="container" *ngIf="(!isMercancia && isForm)">
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarmercanciaForm()">
     <ng-container formGroupName="validacionMercanciaForm">
@@ -281,9 +286,9 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control grisColor"
+            readonly
             formControlName="fraccionMercanArancelaria"
-            value=""
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -300,9 +305,9 @@
           <input
             type="text"
             required="true"
-            class="form-control"
-            formControlName="nombrecomercialdelamercancia"
-            value=""
+            class="form-control grisColor"
+            formControlName="nombrecomercialdelamercancia" 
+            readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -319,9 +324,9 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control grisColor"
             formControlName="nombretecnico"
-            value=""
+            readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -338,9 +343,9 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control grisColor"
             formControlName="nomreeningles"
-            value=""
+            readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -355,9 +360,9 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control grisColor"
             formControlName="criterioparaconferir"
-            value=""
+            readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm, 'criterioparaconferir','setcriterioparaconferir'
