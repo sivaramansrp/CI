@@ -8,6 +8,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { SolicitudeComponent } from './pages/solicitude/solicitude.component';
 import { DatosPageComponent } from './pages/datos-page/datos-page.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { TercerosRelaciondosComponent } from './components/terceros-relaciondos/terceros-relaciondos.component';
+import { provideHttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [SolicitudeComponent, DatosPageComponent],
@@ -16,6 +21,10 @@ import { DatosPageComponent } from './pages/datos-page/datos-page.component';
     AvisoDeImportacionRoutingModule,
     BtnContinuarComponent,
     WizardComponent,
+    SolicitanteComponent,
+    DatosDeLaSolicitudComponent,
+    TercerosRelaciondosComponent
   ],
+  providers: [provideHttpClient(),ToastrService],
 })
 export class AvisoDeImportacionModule {}

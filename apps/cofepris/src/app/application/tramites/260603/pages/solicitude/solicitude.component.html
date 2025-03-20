@@ -2,23 +2,23 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Solicitud importacion regla octava temporal</h1>
+                <h1>Aviso de importación de precursores químicos o productos químicos esenciales</h1>
             </div>
             <app-wizard [listaPasos]="solicitudePasos"></app-wizard>
         </div>
         <div class="row">
             @switch (indice) {
             @case (1) {
-         1
+            <app-datos-page></app-datos-page>
             }
             @case (2) {
             2
             }
             @case (3) {
-               3
+            3
             }}
         </div>
         <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
-  
-  </div>
+
+</div>

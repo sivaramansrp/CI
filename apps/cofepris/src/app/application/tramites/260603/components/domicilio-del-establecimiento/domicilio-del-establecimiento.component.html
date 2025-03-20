@@ -1,0 +1,64 @@
+<div class="container">
+    <ng-titulo titulo="Domicilio del establecimiento" />
+    <form [formGroup]="domicilioForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="codigoPostal">Código postal*:</label>
+                    <input class="form-control" id="codigoPostal" formControlName="codigoPostal" type="text" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select
+                [label]="'Estado*:'"
+                [placeholder]="'Seleccione un valor'"
+                [catalogo]="estadoData"
+                formControlName="estado"
+                >
+              </app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="municipio">Municipio o alcaldía*:</label>
+                    <input class="form-control" id="municipio" formControlName="municipio" type="text" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="localidad">Localidad*:</label>
+                    <input class="form-control" id="localidad" formControlName="localidad" type="text" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="colonia">Colonia*:</label>
+                    <input class="form-control" id="colonia" formControlName="colonia" type="text" />
+                </div>
+            </div>
+            </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="calle">Calle*:<i class="bi bi-question-circle-fill"></i></label>
+                    <input class="form-control" id="calle" formControlName="calle" type="text" />
+                </div>
+            </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                    <div class="form-group">
+                        <label class="form-label" for="lada">Lada:</label>
+                        <input class="form-control" id="lada" formControlName="lada" type="text" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label class="form-label" for="telefono">Teléfono:</label>
+                        <input class="form-control" id="telefono" formControlName="telefono" type="text" />
+                    </div>
+                </div>
+                </div>
+    </form>
+</div>
