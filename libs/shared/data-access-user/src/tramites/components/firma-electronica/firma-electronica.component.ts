@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LOGIN, PADDING } from '../../constantes/constantes';
+import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 
 import * as forge from 'node-forge';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-import { LOGIN, PADDING } from '../../constantes/constantes';
 
 @Component({
   selector: 'firma-electronica',
