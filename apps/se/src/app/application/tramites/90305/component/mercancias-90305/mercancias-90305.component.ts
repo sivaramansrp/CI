@@ -82,6 +82,7 @@ export class Mercancias90305Component implements OnInit ,OnDestroy {
       orden: 3,
     },
   ];
+
   /**
    * Método del ciclo de vida de Angular - inicializa el componente y carga las mercancías
    */
