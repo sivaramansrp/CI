@@ -4,7 +4,10 @@
       <div class="panel-group ficha-collapse" id="accordion">
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()">
-              <a> Opciones de pre-llenado de Solicitud </a>
+            <p class="panel-title">
+              <span>Opciones</span><span>de</span><span>pre-llenado</span
+              ><span>de</span><span>Solicitud</span>
+            </p>
             <button type="button" class="collpase-button collapsed"></button>
           </div>
           @if(colapsable){
@@ -15,7 +18,9 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" type="button">Copiar datos en una Nueva Solicitud</button>
+                    <button class="btn btn-primary me-2" type="button">
+                      Copiar datos en una Nueva Solicitud
+                    </button>
                   </div>
                 </div>
               </div>
@@ -25,5 +30,99 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="row mt-5">
+    <form [formGroup]="form">
+      <h6>Seleccione el tipo de operación que desea realizar*:</h6>
+      <div class="row px-3">
+        <app-input-radio
+          [radioOptions]="btonDeRadio"
+          [layout]="'horizontal'"
+          formControlName="btonDeRadio"
+        ></app-input-radio>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Justificación*:</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              formControlName="justificación"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row">
+    <form [formGroup]="datosDelEstablecimiento">
+      <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="toggleFormControls()"
+          >
+            Seleccionar establecimiento
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="rfcDel"
+              >RFC del responsable sanitario:</label
+            >
+            <input
+              class="form-control"
+              id="rfcDel"
+              placeholder=""
+              type="text"
+              formControlName="rfcDel"
+            />
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="denominacion"
+              >Denominación o razón social*:</label
+            >
+            <input
+              class="form-control"
+              id="denominacion"
+              placeholder=""
+              type="text"
+              formControlName="denominacion"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="correo"
+              >Correo electrónico*:
+              <span
+                class="bi bi-question-circle-fill"
+                title="Correo electrónico"
+                data-bs-toggle="tooltip"
+              ></span
+            ></label>
+            <input
+              class="form-control"
+              id="correo"
+              placeholder=""
+              type="text"
+              formControlName="correo"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
