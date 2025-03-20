@@ -2,7 +2,13 @@
     <form [formGroup]="sectoresYMercancias">
         <div class="form-group">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" (selectionChange)="sectorSeleccion($event)"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" 
+                (change)="
+                setValoresStore(
+                sectoresYMercancias,
+                'sector',
+                'setSector'
+                )"></app-catalogo-select>
             </div>
         </div>
         <div class="row">

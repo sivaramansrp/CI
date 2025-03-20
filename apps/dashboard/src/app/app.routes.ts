@@ -72,7 +72,11 @@ export const appRoutes: Route[] = [
   {
     path: 'funcionario',
     loadChildren: () =>
-      loadRemoteModule('funcionario', './Routes').then((m) => m.remoteRoutes),
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4210/remoteAppEntry.js',
+            remoteName: 'funcionario',
+            exposedModule: './Module'
+        }).then((m) => m.AppFuncionarioModule)
   },
   {
     path: 'agace',
@@ -82,5 +86,14 @@ export const appRoutes: Route[] = [
         remoteName: 'agace',
         exposedModule: './Module'
       }).then((m) => m.AppAgaceModule)
+  },
+  {
+    path: 'sener',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
+            remoteName: 'sener',
+            exposedModule: './Module'
+        }).then((m) => m.AppSenerModule)
   }
 ];
