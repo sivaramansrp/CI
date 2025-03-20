@@ -1,6 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Solicitud220501State, Solicitud220501Store } from '../../estados/tramites220501.store';
+import { Solicitud220501Query } from '../../estados/tramites220501.query';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Componente para agregar mercancía.
  */
@@ -9,7 +13,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './agregar-mercancia.component.html',
   styleUrl: './agregar-mercancia.component.scss'
 })
-export class AgregarMercanciaComponent implements OnChanges, OnInit {
+export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy{
   /**
    * Formulario para agregar mercancía.
    */
@@ -28,10 +32,26 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
   @Output() cancelarEvento = new EventEmitter<boolean>();
 
   /**
+    * Subject para desuscribirse de los observables.
+    * @type {Subject<void>}
+    */
+  private destroyed$ = new Subject<void>();
+
+  /** 
+    * Estado de la solicitud 220501. 
+    * Se inicializa como un objeto vacío con la estructura de Solicitud220501State.
+    */
+  solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    public solicitud220501Store:Solicitud220501Store,
+    public solicitud220501Query: Solicitud220501Query,
+  ) {
     this.crearFormulario();
   }
 
@@ -50,17 +70,27 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    */
   crearFormulario(): void {
     this.agregarMercanciaForm = this.fb.group({
-      agregarMercancia: this.fb.group({
-        fraccionArancelaria: [{ value: '', disabled: true }],
-        descripcionFraccion: [{ value: '', disabled: true }],
-        nico: [{ value: '', disabled: true }],
-        descripcion: [{ value: '', disabled: true }],
-        unidaddeMedidaDeUMT: [{ value: '', disabled: true }],
-        cantidadTotalUMT: [{ value: '', disabled: true }],
-        saldoPendiente: [{ value: '', disabled: true }],
-        saldoACapturar: ['', [Validators.required, Validators.maxLength(16)]]
-      })
+        fraccionArancelaria: [{ value: this.solicitud220501State.fraccionArancelaria, disabled: true }],
+        descripcionFraccion: [{ value: this.solicitud220501State.descripcionFraccion, disabled: true }],
+        nico: [{ value: this.solicitud220501State.nico, disabled: true }],
+        descripcion: [{ value: this.solicitud220501State.descripcion, disabled: true }],
+        unidaddeMedidaDeUMT: [{ value: this.solicitud220501State.unidaddeMedidaDeUMT, disabled: true }],
+        cantidadTotalUMT: [{ value: this.solicitud220501State.cantidadTotalUMT, disabled: true }],
+        saldoPendiente: [{ value: this.solicitud220501State.saldoPendiente, disabled: true }],
+        saldoACapturar: [this.solicitud220501State.saldoACapturar, [Validators.required, Validators.maxLength(16)]]
     });
+
+    this.solicitud220501Query.selectSolicitud$
+           .pipe(
+             takeUntil(this.destroyed$),
+             map((data: Solicitud220501State) => {
+               this.solicitud220501State = data;
+               this.agregarMercanciaForm.patchValue({
+                 saldoACapturar: this.solicitud220501State.saldoACapturar,
+               });
+             })
+           )
+           .subscribe();
   }
 
   /**
@@ -68,19 +98,20 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
    */
   setFormData(): void {
     const DATA = this.mercanciasDatos[0].tbodyData;
-
     this.agregarMercanciaForm.patchValue({
-      agregarMercancia: {
         fraccionArancelaria: DATA[0],
         descripcionFraccion: DATA[1],
         nico: DATA[2],
         descripcion: DATA[3],
-        saldoACapturar: DATA[4],
         unidaddeMedidaDeUMT: DATA[5],
         saldoPendiente:  DATA[6],
         cantidadTotalUMT:  DATA[7]        
-      }
     });
+  }
+
+  setSaldoACapturar(event: Event): void{
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220501Store.setSaldoACapturar(VALUE);
   }
 
   /**
@@ -102,4 +133,14 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit {
       this.cancelarEvento.emit(false);
     }
   }
+
+        /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+    ngOnDestroy(): void {
+      this.destroyed$.next();
+      this.destroyed$.complete();
+    }
 }
