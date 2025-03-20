@@ -8,10 +8,10 @@ import { By } from '@angular/platform-browser';
 
 import { SolicitudComponent } from './solicitud.component';
 import { AvisoService } from '../../services/aviso.service';
-import { TranslatePipe } from '../../../32502/pipes/traducir.pipe.mock';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Tramite32502Store } from '../../../../estados/queries/tramite32502.query';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
+import { provideHttpClient } from '@angular/common/http';
 
 @Injectable()
 class MockTramite32502Store {}
@@ -24,11 +24,11 @@ describe('SolicitudComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
-        SolicitudComponent,
-        TranslatePipe
+        SolicitudComponent
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
+        provideHttpClient(),
         AvisoService,
         FormBuilder,
         ValidacionesFormularioService,
@@ -201,7 +201,6 @@ describe('SolicitudComponent', () => {
     });
     component.tramite32502Store = component.tramite32502Store || {};
     component.tramite32502Store.setFraccionRegla = jest.fn();
-    component.sanitizeNumPedimento();
     expect(component.FormSolicitud.get).toHaveBeenCalledWith('reglaFraccion');
     expect(component.tramite32502Store.setFraccionRegla).toHaveBeenCalled();
   });

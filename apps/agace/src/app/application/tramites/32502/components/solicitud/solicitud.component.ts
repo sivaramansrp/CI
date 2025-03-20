@@ -18,7 +18,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 @Component({
   selector: 'solicitud',
   templateUrl: './solicitud.component.html',
-  styleUrl:`./solicitud.component.scss`,
+  styleUrl:'./solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit {
 
