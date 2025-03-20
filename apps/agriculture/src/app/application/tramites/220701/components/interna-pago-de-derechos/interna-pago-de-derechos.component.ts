@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -27,12 +25,12 @@ import { Subject } from 'rxjs';
 
 import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TramiteState } from '../../estados/tramite220701.store'; 
 import { TramiteStore } from '../../estados/tramite220701.store'; 
 import { TramiteStoreQuery } from '../../estados/tramite220701.query'; 
 import { Validators } from '@angular/forms';
 import { delay } from 'rxjs/operators'; 
 import { map } from 'rxjs/operators'; 
-import { pipe } from 'rxjs'; 
 import { takeUntil } from 'rxjs/operators'; 
 import { tap } from 'rxjs/operators'; 
 
@@ -44,84 +42,94 @@ import { tap } from 'rxjs/operators';
   templateUrl: './interna-pago-de-derechos.component.html',
   styleUrl: './interna-pago-de-derechos.component.scss'
 })
+/**
+ * Componente para gestionar el pago de derechos.
+ * Este componente permite capturar y validar la información relacionada con el pago de derechos.
+ */
 export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
-   * @property {FormGroup} formularioPago
-   * @description Formulario para gestionar el pago de derechos.
+   * Formulario reactivo para gestionar el pago de derechos.
+   * Contiene los campos y validaciones necesarias.
+   * @type {FormGroup}
    */
   formularioPago!: FormGroup;
-   
-  /**
-   * @property {FormularioPagoInt} FormularioPagoState
-   * @description Estado del formulario de pago.
-   */
-   FormularioPagoState!: FormularioPagoInt;
 
   /**
-   * @property {OpcionDeRadio[]} exentoPagoRadio
-   * @description Opciones de radio para la exención de pago.
+   * Estado del formulario de pago.
+   * Contiene la información manejada dentro del componente.
+   * @type {FormularioPagoInt}
+   */
+  formularioPagoState!: FormularioPagoInt;
+
+  /**
+   * Opciones de radio para la exención de pago.
+   * Contiene las opciones disponibles para seleccionar si el pago está exento.
+   * @type {OpcionDeRadio[]}
    */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
   /**
-   * @property {string} exentoPagoValor
-   * @description Valor seleccionado para la exención de pago.
+   * Valor seleccionado para la exención de pago.
+   * Indica si el pago está exento o no.
+   * @type {string}
    * @default 'Si'
    */
   exentoPagoValor: string = 'Si';
 
   /**
-   * @property {Catalogo[]} justificacionCatalogo
-   * @description Catálogo de justificaciones para la exención de pago.
+   * Catálogo de justificaciones para la exención de pago.
+   * Contiene las opciones disponibles para justificar la exención de pago.
+   * @type {Catalogo[]}
    */
   justificacionCatalogo: Catalogo[] = [];
 
   /**
-   * @property {Catalogo[]} bancoCatalogo
-   * @description Catálogo de bancos disponibles para el pago.
+   * Catálogo de bancos disponibles para el pago.
+   * Contiene las opciones disponibles para seleccionar un banco.
+   * @type {Catalogo[]}
    */
   bancoCatalogo: Catalogo[] = [];
 
   /**
-   * @property {InputFecha} fechaFinalInput
-   * @description Configuración para el input de fecha de salida.
+   * Configuración para el input de fecha de salida.
+   * Proporciona un valor inicial para el campo de fecha.
+   * @type {InputFecha}
    */
   fechaFinalInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
-    /**
-   * @property {string} fechaPagoDate
-   * @description Fecha seleccionada para el pago.
+  /**
+   * Fecha seleccionada para el pago.
+   * Contiene el valor actual de la fecha de pago.
+   * @type {string}
    * @default ''
    */
   fechaPagoDate: string = '';
 
-   
   /**
-   * @property {Subject<void>} unsubscribe$
-   * @description Subject para manejar la desuscripción de observables y evitar memory leaks.
+   * Subject para manejar la desuscripción de observables.
+   * Utilizado para evitar fugas de memoria.
+   * @type {Subject<void>}
    */
-
   private unsubscribe$ = new Subject<void>();
-    /**
-   * @property {SeccionLibState} seccion
-   * @description Estado de la sección actual en la tienda.
+
+  /**
+   * Estado de la sección actual en la tienda.
+   * Contiene información sobre el estado de la sección.
+   * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
 
-    /**
-   * @property {Subject<void>} destroyNotifier$
-   * @description Subject utilizado para desuscribirse de observables al destruir el componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-    /**
-   * @property {FormularioPago} formularioPagoStore
-   * @description Estado del formulario de pago almacenado en el store.
+  /**
+   * Estado del formulario de pago almacenado en el store.
+   * Contiene los datos iniciales del formulario.
+   * @type {FormularioPago}
    */
   formularioPagoStore: FormularioPago = {} as FormularioPago;
+
   /**
+   * Constructor del componente.
+   * Inicializa servicios y dependencias necesarias para el funcionamiento del componente.
    * @constructor
-   * @description Inicializa el servicio de formularios y los servicios relacionados con la importación de acuicultura y el estado del trámite.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {ImportacionDeAcuiculturaService} importacionAcuiculturaServicio - Servicio para obtener datos de importación de acuicultura.
    * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta del estado de la tienda Akita para trámites.
@@ -137,54 +145,51 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery, 
     private seccionStore: SeccionLibStore, 
   ) {
-    this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+    this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.unsubscribe$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
     })
 
   }
 
   /**
+   * Inicializa el componente y obtiene los datos necesarios para el formulario de pago.
+   * Configura las suscripciones y el formulario reactivo.
    * @method ngOnInit
-   * @description Inicializa el componente y obtiene los datos necesarios para el formulario de pago.
    */
   ngOnInit(): void {
          
          this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           map((seccionState) => {
-            this.FormularioPagoState = seccionState.FormularioPagoState;
+            this.formularioPagoState = seccionState.FormularioPagoState;
           })
         ).subscribe();
 
     this.crearFormularioPago();
     this.formularioPago.statusChanges
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(
-        () => {
-          this.verificarEstadoDelBoton(); 
-        },
-        (error) => {
-          console.error('Error durante los cambios de estado del formulario:', error);
-        }
-      );
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        error: (e) => console.error('Error durante los cambios de estado del formulario:', e),
+        complete: () => this.verificarEstadoDelBoton(),
+      });
 
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
 
         this.tramiteStoreQuery.selectSolicitudTramite$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState: any) => {
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState: TramiteState) => {
             if (seccionState) {
-              this.FormularioPagoState = seccionState.FormularioPagoState;
-              this.formularioPago.patchValue(this.FormularioPagoState);
+              this.formularioPagoState = seccionState.FormularioPagoState;
+              this.formularioPago.patchValue(this.formularioPagoState);
             }
           })
         ).subscribe();
 
         this.formularioPago.statusChanges
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           delay(10),
           tap(() => {
             const ACTIVE_STATE = { ...this.formularioPago.value };
@@ -196,7 +201,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       // Para el botón de validación Continuar
       this.seccionQuery.selectSeccionState$
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           map((seccionState) => {
             this.seccion = seccionState;
           })
@@ -208,7 +213,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
      *
      * @description
      * - Se suscribe a los cambios en el estado del formulario.
-     * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+     * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
      * - Aplica un retraso de 10ms antes de ejecutar la lógica.
      * - Obtiene el estado actual de la sección desde `seccionQuery`.
      * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
@@ -218,14 +223,14 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
      */
       this.formularioPago.statusChanges
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           delay(10),
           tap(() => {
             const SECCION: number = 1;
-            const seccionState = this.seccionQuery.getValue();
-            const FORMAS_VALIDADAS = [...seccionState.formaValida];
-            const controlPath = 'formularioPago';
-            const CONTROL = this.formularioPago.get(controlPath)?.status;
+            const SECCION_STATE = this.seccionQuery.getValue();
+            const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+            const CONTROL_PATH = 'formularioPago';
+            const CONTROL = this.formularioPago.get(CONTROL_PATH)?.status;
   
             FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid || CONTROL === 'VALID';
   
@@ -236,26 +241,30 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
+   * Crea el formulario de pago según el valor de `exentoPagoValor`.
+   * Configura los campos y sus validaciones.
+   * @method crearFormularioPago
    */
   private crearFormularioPago(): void {
-    const ESEXENTO = this.formularioPagoStore.exentoPago === 'Si';
+    const ES_EXENTO = this.formularioPagoStore.exentoPago === 'Si';
     this.formularioPago = this.fb.group({
       exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
       justificacion: [this.formularioPagoStore.justificacion, Validators.required],
       claveReferencia: [{ value: this.formularioPagoStore.claveReferencia, disabled: true }, Validators.required],
       cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia, disabled: true }, Validators.required],
       banco: [this.formularioPagoStore.banco, Validators.required],
-      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ESEXENTO }, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ES_EXENTO }, Validators.required],
       fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
       importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
     });
   }
 
   /**
-   * @description Cambia el valor de un campo del formulario.
-   * @param {string} nombreControl Nombre del campo del formulario.
-   * @param {string} valor Nuevo valor a asignar.
+   * Cambia el valor de un campo del formulario.
+   * Actualiza el formulario y recrea su estructura si es necesario.
+   * @method cambioValorRadio
+   * @param {string} nombreControl - Nombre del campo del formulario.
+   * @param {string} valor - Nuevo valor a asignar.
    */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.formularioPago.patchValue({
@@ -266,7 +275,8 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Actualiza la fecha de pago en el formulario.
+   * Actualiza la fecha de pago en el formulario.
+   * @method cambioFechaFinal
    * @param {string} nuevoValor - Nueva fecha de pago.
    */
   cambioFechaFinal(nuevoValor: string): void {
@@ -277,23 +287,30 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Obtiene la lista de bancos desde el servicio.
+   * Obtiene la lista de bancos desde el servicio.
+   * Actualiza el catálogo de bancos disponibles.
+   * @method obtenerListaBanco
    */
-  private obtenerListaBanco(): void {
-    this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
+private obtenerListaBanco(): void {
+  this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe({
+      next: (data) => {
         this.justificacionCatalogo = data.data as Catalogo[];
         this.bancoCatalogo = data.data as Catalogo[];
-      }, (error) => {
+      },
+      error: (error) => {
         console.error(error);
-      });
-  }
+      }
+    });
+}
+
 
   /**
-   * @description Verifica si el formulario es válido y actualiza el estado del botón.
+   * Verifica si el formulario es válido y actualiza el estado del botón.
+   * @method verificarEstadoDelBoton
    */
-  verificarEstadoDelBoton() {
+  verificarEstadoDelBoton(): void {
     const DATOS = {
       pagoDeformaValida: false,
     }
@@ -304,31 +321,33 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Obtiene la lista de justificaciones desde el servicio.
+   * Obtiene la lista de justificaciones desde el servicio.
+   * Actualiza el catálogo de justificaciones disponibles.
+   * @method obtenerListaJustificacion
    */
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data) => {
-        // this.justificacionCatalogo = data.data as Catalogo[];
-      }, (error) => {
-        console.error(error);
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (data) => {
+           this.justificacionCatalogo = data.data as Catalogo[];
+        },
+        error: (error) => {
+          console.error(error);
+        }
       });
   }
+  
 
   /**
-   * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
-   * @param {FormGroup} form El formulario con el campo que se está actualizando.
-   * @param {string} campo El nombre del campo que se actualizará.
+   * Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
+   * @method setValoresStore
+   * @param {FormGroup} formulario - El formulario con el campo que se está actualizando.
+   * @param {string} campo - El nombre del campo que se actualizará.
    */
-  /**
- * @description Actualiza el valor de un campo en el formulario y lo guarda en el servicio de importación de acuicultura.
- * @param {FormGroup} formulario El formulario con el campo que se está actualizando.
- * @param {string} campo El nombre del campo que se actualizará.
- */
   setValoresStore(
-    formulario: FormGroup,
-    campo: string,
+    _formulario: FormGroup,
+    _campo: string,
   ): void {
     this.actualizarValorAleatorio();
     const VALOR = this.formularioPago.value;
@@ -336,8 +355,9 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Actualiza ciertos valores en el formulario basados en condiciones.
-   * @remarks Si se cumple una condición, se actualizan los valores del formulario.
+   * Actualiza ciertos valores en el formulario basados en condiciones.
+   * Si se cumplen las condiciones, se actualizan los valores del formulario.
+   * @method actualizarValorAleatorio
    */
   actualizarValorAleatorio(): void {
     const HOY = InternaPagoDeDerechosComponent.formatearFecha(new Date());
@@ -370,8 +390,9 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description Formatea la fecha en el formato 'dd/mm/yyyy'.
-   * @param {Date} fecha La fecha a formatear.
+   * Formatea la fecha en el formato 'dd/mm/yyyy'.
+   * @method formatearFecha
+   * @param {Date} fecha - La fecha a formatear.
    * @returns {string} La fecha formateada como un string.
    */
   static formatearFecha(fecha: Date): string {
@@ -383,13 +404,14 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
  
   /**
+   * Maneja la limpieza de recursos antes de destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
    * @method ngOnDestroy
-   * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
@@ -42,14 +41,16 @@ export class ImportacionDeAcuiculturaService {
    * @param nombreDelArchivo Nombre del archivo JSON del catálogo.
    * @returns Observable con la respuesta del catálogo.
    */
-  obtenerDetallesDelCatalogo(nombreDelArchivo: string) {
+  obtenerDetallesDelCatalogo(nombreDelArchivo: string): Observable<RespuestaCatalogos> {
     const BASEURL: string = this.url + nombreDelArchivo; 
     return this.http.get<RespuestaCatalogos>(BASEURL);
   }
   /**
    * Obtener todos los datos del estado de Agricultura.
    * @returns Observable con el estado completo.
+   * 
    */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   public obtenerDatos(): Observable<Agricultura> {
     return this.agriculturaStore._select((state: any) => state); // Devuelve el estado completo
   }

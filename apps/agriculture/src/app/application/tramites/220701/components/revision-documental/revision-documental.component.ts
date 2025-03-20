@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-empty-function */
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,9 +6,8 @@ import { EventEmitter } from '@angular/core';
 import { InternaDatosGeneralesComponent } from "../interna-datos-generales/interna-datos-generales.component";
 import { InternaPagoDeDerechosComponent } from '../interna-pago-de-derechos/interna-pago-de-derechos.component';
 import { InternaTercerosRelacionadosComponent } from '../interna-terceros-relacionados/interna-terceros-relacionados.component';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 
+import { Output } from '@angular/core';
 
 @Component({
   selector: 'revision-documental',
@@ -22,37 +16,25 @@ import { Output } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, InternaDatosGeneralesComponent, InternaTercerosRelacionadosComponent, InternaPagoDeDerechosComponent],
-
 })
-export class RevisionDocumentalComponent implements OnInit{
+/**
+ * Componente para gestionar la revisión documental.
+ * Este componente permite navegar entre diferentes secciones del formulario, como datos generales, terceros relacionados y pago de derechos.
+ */
+export class RevisionDocumentalComponent {
 
   /**
    * Índice de la pestaña seleccionada.
+   * Controla qué pestaña está activa en la interfaz.
    * @type {number}
    * @default 1
-   * @description Controla qué pestaña está activa en la interfaz.
    */
   indice: number = 1;
  
-  
-  /**
-   * @constructor
-   * @param {ChangeDetectorRef} cdr - Servicio para la detección de cambios en el componente.
-   */
-  constructor(private cdr: ChangeDetectorRef){}
- 
-    /**
-   * @method ngOnInit
-   * @description Inicializa el componente, actualmente sin lógica adicional.
-   */
-  ngOnInit(): void {
-    
-  }
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   /**
    * Lista de secciones del formulario.
+   * Define las pestañas disponibles dentro del formulario, cada una asociada a un componente específico.
    * @type {Array<{ index: number; title: string; component: string }>}
-   * @description Define las pestañas disponibles dentro del formulario, cada una asociada a un componente específico.
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Dtos Generales', component: 'interna-datos-generales' },
@@ -62,17 +44,27 @@ export class RevisionDocumentalComponent implements OnInit{
 
   /**
    * Evento emitido cuando el usuario cambia de pestaña.
+   * Notifica el cambio de pestaña a otros componentes.
    * @event tabChanged
    * @type {EventEmitter<number>}
-   * @description Notifica el cambio de pestaña a otros componentes.
    */
   @Output() tabChanged = new EventEmitter<number>();
 
   /**
+   * Constructor del componente.
+   * Inicializa el servicio de detección de cambios.
+   * @constructor
+   * @param {ChangeDetectorRef} cdr - Servicio para la detección de cambios en el componente.
+   */
+  constructor(private cdr: ChangeDetectorRef){
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
+ 
+  /**
    * Cambia el índice de la pestaña seleccionada y emite el evento correspondiente.
+   * Actualiza la pestaña activa y notifica el cambio a otros componentes.
    * @method seleccionaTab
    * @param {number} i - El índice de la pestaña a seleccionar.
-   * @description Actualiza la pestaña activa y notifica el cambio a otros componentes.
    */
   seleccionaTab(i: number): void {
     this.indice = i;

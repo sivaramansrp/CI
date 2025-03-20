@@ -1,16 +1,13 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @nx/enforce-module-boundaries */
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { InspeccionFisicaComponent } from './pages/inspeccion-fisica/inspeccion-fisica.component';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 
 import { InspeccionFisicaZoosanitarioRoutingModule } from './inspeccion-fisica-zoosanitario-routing.module';
-import { InspeccionFisicaComponent } from './pages/inspeccion-fisica/inspeccion-fisica.component';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';

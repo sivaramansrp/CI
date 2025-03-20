@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AcuicolaService } from '../../servicios/acuicola.service';
 import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
-import { FECHA_DE_PAGO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@libs/shared/data-access-user/src';
@@ -26,7 +23,6 @@ import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 import { Validators } from '@angular/forms';
 import { delay } from 'rxjs/operators'; 
 import { map } from 'rxjs/operators'; 
-import { pipe } from 'rxjs'; 
 import { takeUntil } from 'rxjs/operators'; 
 import { tap } from 'rxjs/operators'; 
 
@@ -137,7 +133,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.tramiteStoreQuery.selectSolicitudTramite$
     .pipe(
       takeUntil(this.destroyNotifier$),
-      map((seccionState: any) => {
+      map((seccionState: { PagosDeDerechosState: PagosDeDerechosFormInt }) => {
         if (seccionState) {
           this.PagosDeDerechosState = seccionState.PagosDeDerechosState;
           this.pagosDeDerechosForm.patchValue(this.PagosDeDerechosState);
@@ -201,10 +197,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       delay(10),
       tap(() => {
         const SECCION: number = 1;
-        const seccionState = this.seccionQuery.getValue();
-        const FORMAS_VALIDADAS = [...seccionState.formaValida];
-        const controlPath = 'pagosDeDerechosForm';
-        const CONTROL = this.pagosDeDerechosForm.get(controlPath)?.status;
+        const SECCION_STATE = this.seccionQuery.getValue();
+        const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+        const CONTROL_PATH = 'pagosDeDerechosForm';
+        const CONTROL = this.pagosDeDerechosForm.get(CONTROL_PATH)?.status;
 
         FORMAS_VALIDADAS[SECCION] = this.pagosDeDerechosForm.valid || CONTROL === 'VALID';
 

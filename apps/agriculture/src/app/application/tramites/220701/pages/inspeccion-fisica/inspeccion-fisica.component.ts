@@ -1,21 +1,21 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-redeclare */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @component ImmexRegistroSolicitudModalityComponent
  * @description Este componente es responsable de manejar el flujo de pasos para el registro de solicitud IMMEX.
  * Incluye la lógica para la navegación entre pasos y la obtención de títulos.
  */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+
+import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { DatosPasos } from '@libs/shared/data-access-user/src';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
+import { PASOS } from '@libs/shared/data-access-user/src';
+
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 /**
  * Interfaz para definir la acción y el valor del botón.
  */
@@ -81,7 +81,7 @@ export class InspeccionFisicaComponent {
    * El `valor` representa el índice del paso al que ir.
    * La `accion` determina si avanzar (`cont`) o retroceder (`atras`).
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

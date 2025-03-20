@@ -1,54 +1,41 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-imports */
-/* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-empty-function */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { ChangeDetectorRef } from '@angular/core';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
+import { CatalogosService } from '../../servicios/catalogos.service';
+import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
-import { InternaDatosGeneralesInt } from '../../modelos/datos-de-interfaz.model'
-import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+import { InternaDatosGeneralesInt } from '../../modelos/datos-de-interfaz.model';
 import { MERCANCIA_SERVICIO } from '../../modelos/datos-de-interfaz.model';
+import { MercanciaDatosService } from '../../servicios/mercancia-datos.service';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { OnDestroy } from '@angular/core'; 
-import { mercanciaInfo} from '../../modelos/datos-de-interfaz.model';
-import { MercanciaDatosService } from '../../servicios/mercancia-datos.service'
 import { ReactiveFormsModule } from '@angular/forms';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RevisionService } from '@libs/shared/data-access-user/src';
-import { SeccionLibQuery} from '@libs/shared/data-access-user/src'; 
-import { SeccionLibState} from '@libs/shared/data-access-user/src'; 
-import { SeccionLibStore } from '@libs/shared/data-access-user/src'; 
-import { TramiteStore } from '../../estados/tramite220701.store'; 
-import { TramiteStoreQuery } from '../../estados/tramite220701.query'; 
+import { RevisionService } from '../../servicios/revision.service';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibState } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TramiteState } from '../../estados/tramite220701.store';
+import { TramiteStore } from '../../estados/tramite220701.store';
+import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from "@angular/forms";
-import { delay } from 'rxjs/operators'; 
-import { map } from 'rxjs/operators'; 
-import { pipe } from 'rxjs'; 
-import { Subject } from 'rxjs'; 
-import { takeUntil } from 'rxjs/operators'; 
-import { tap } from 'rxjs/operators'; 
+import { delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { mercanciaInfo } from '../../modelos/datos-de-interfaz.model';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+
 /**
- * Interfaz para definir la estructura de las filas.
+ * Componente para manejar los datos generales internos.
+ * Este componente permite gestionar formularios y datos relacionados con los trámites.
  */
-interface PuntoInspeccion {
-  labelNombre: string;
-  required: boolean;
-  primerOpcion: string;
-  catalogos: Catalogo[];
-}
 @Component({
   selector: 'interna-datos-generales',
   standalone: true,
@@ -59,6 +46,7 @@ interface PuntoInspeccion {
 export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     /**
      * Grupo de formularios principal.
+     * Contiene la estructura del formulario principal del componente.
      * @type {FormGroup}
      */
     forma!: FormGroup;
@@ -68,7 +56,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Contiene la información manejada dentro del componente.
    * @type {InternaDatosGeneralesInt}
    */
-   InternaDatosGeneralesState!: InternaDatosGeneralesInt;
+   internaDatosGeneralesState!: InternaDatosGeneralesInt;
     
   /**
    * Grupo de formularios anidado para los datos de la solicitud.
@@ -92,6 +80,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     movilizacionForm!: FormGroup;
   /**
    * Dirección actual de rotación.
+   * Indica la dirección de rotación actual.
    * @type {number | null}
    */
   currentDirection: number | null = 1;
@@ -103,76 +92,108 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   dropdownData = [];
   /**
    * Selección de aduana de ingreso.
+   * Contiene las opciones disponibles para la selección de aduanas de ingreso.
    * @type {CatalogosSelect}
    */
     aduanaIngreso!: CatalogosSelect;
   /**
-   * Configuración para el select de aduana de ingreso. --220701
-   * @property {Catalogo} aduanaDeIngreso
+   * Configuración para el select de aduana de ingreso.
+   * Contiene los datos de configuración para el menú desplegable de aduanas de ingreso.
+   * @type {Catalogo[]}
    */
   aduanaDeIngreso: Catalogo[] = [];
 
     /**
-   * Configuración para el select de sanidad agropecuaria. --220701
-   * @property {CatalogosSelect} sanidadAgropecuaria
+   * Configuración para el select de sanidad agropecuaria.
+   * Contiene los datos de configuración para el menú desplegable de sanidad agropecuaria.
+   * @type {Catalogo[]}
    */
     sanidadAgropecuaria: Catalogo[] = [];
   /**
-   * Configuración para el select de punto de inspección.--220701
-   * @property {CatalogosSelect} puntoInspeccion
+   * Configuración para el select de punto de inspección.
+   * Contiene los datos de configuración para el menú desplegable de puntos de inspección.
+   * @type {Catalogo[]}
    */
   puntoInspeccion: Catalogo[] = [];
   /**
    * Selección de punto de verificación.
+   * Contiene las opciones disponibles para la selección de puntos de verificación.
    * @type {CatalogosSelect}
    */
   puntoVerificacion!: CatalogosSelect;
     /**
    * Selección de oficina de inspección.
+   * Contiene las opciones disponibles para la selección de oficinas de inspección.
    * @type {CatalogosSelect}
    */
     oficianaInspeccion!: CatalogosSelect;
   /**
    * Selección de establecimiento.
+   * Contiene las opciones disponibles para la selección de establecimientos.
    * @type {CatalogosSelect}
    */
   establecimiento!: CatalogosSelect;
 
   /**
    * Selección de régimen al que se destinarán.
+   * Contiene las opciones disponibles para la selección de regímenes.
    * @type {CatalogosSelect}
    */
   regimenDestinaran!: CatalogosSelect;
 
   /**
    * Selección de movilización nacional.
+   * Contiene las opciones disponibles para la selección de movilización nacional.
    * @type {CatalogosSelect}
    */
   movilizacionNacional!: CatalogosSelect;
 
   /**
-   * Configuración para el select de establecimiento TIF.--220701
-   * @property {CatalogosSelect} establecimientoTIF
+   * Configuración para el select de establecimiento TIF.
+   * Contiene los datos de configuración para el menú desplegable de establecimientos TIF.
+   * @type {Catalogo[]}
    */
   establecimientoTIF: Catalogo[] = [];
 
   /**
-   * Configuración para el select de veterinario.--220701
-   * @property {CatalogosSelect} veterinario
+   * Configuración para el select de veterinario.
+   * Contiene los datos de configuración para el menú desplegable de veterinarios.
+   * @type {Catalogo[]}
    */
   veterinario: Catalogo[] = [];
+  /**
+   * Identificador único.
+   * @type {number | undefined}
+   */
   id?: number;
+  /**
+   * Descripción del elemento.
+   * @type {string}
+   */
   descripcion: string = '';
+  /**
+   * Tamaño del elemento.
+   * @type {string | undefined}
+   */
   tam?: string;
+  /**
+   * DPI del elemento.
+   * @type {string | undefined}
+   */
   dpi?: string
 
   /**
-   * Configuración para el select de régimen.--220701
-   * @property {CatalogosSelect} regimen
+   * Configuración para el select de régimen.
+   * Contiene los datos de configuración para el menú desplegable de regímenes.
+   * @type {Catalogo[]}
    */
   regimen: Catalogo[] = [];
-  selectedValue: string = 'no';
-
+  /**
+   * Valor seleccionado por defecto.
+   * Indica si se ha realizado una selección en el formulario.
+   * @type {string}
+   */
+  seleccionadoValor: string = 'no';
 
   /**
    * Configuración de las columnas de la tabla para servicios de mercancía.
@@ -186,7 +207,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Contiene la información mostrada en la tabla de mercancía.
    * @type {mercanciaInfo[]}
    */
-      mercanciaTableDatos: mercanciaInfo[] = [];
+  mercanciaTablaDatos: mercanciaInfo[] = [];
 
   /**
    * Datos obtenidos de la API para mercancía.
@@ -196,13 +217,18 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mercanciaApiDatos: any[] = [];
    
-  /**
+/**
  * Subject para manejar la desuscripción de observables.
+ * Utilizado para evitar fugas de memoria.
  * @type {Subject<void>}
  */
   private unsubscribe$ = new Subject<void>();
+  /**
+   * Estado de la sección actual.
+   * Contiene información sobre el estado de la sección.
+   * @type {SeccionLibState}
+   */
   private seccion!: SeccionLibState;
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    * Inicializa servicios y dependencias necesarias para el funcionamiento del componente.
@@ -223,6 +249,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       private revisionService: RevisionService,
       private validacionesService: ValidacionesFormularioService,
       private mercanciaDatosService: MercanciaDatosService,
+      private catalogosService: CatalogosService, // Inyecta el nuevo servicio
       private httpServicios: HttpClient,
       private cdr: ChangeDetectorRef,
       private tramiteStoreQuery: TramiteStoreQuery, 
@@ -275,7 +302,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
-      claveUCON: ['', [Validators.required]],
+      claveControlUnico: ['', [Validators.required]],
       establecimientoTIF: ['', Validators.required],
       regimen: ['', Validators.required],
       foliodel: [{ value: '1502200200120240301000015', disabled: true }],
@@ -302,7 +329,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @param {string} field - El campo a verificar.
    * @returns {boolean} - Verdadero si el campo es válido, falso en caso contrario.
    */
-  isValid(form: FormGroup, field: string): boolean {
+  esValido(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) === true;
   }
   /**
@@ -310,11 +337,10 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-       
        this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.unsubscribe$),
         map((seccionState) => {
-          this.InternaDatosGeneralesState = seccionState.InternaDatosGeneralesState;
+          this.internaDatosGeneralesState = seccionState.InternaDatosGeneralesState;
         })
       ).subscribe();
     this.datosDelaSolicitud = this.fb.group({
@@ -336,20 +362,20 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     this.getEmpresaTransportista();
     this.obtenerListasDesplegables();
 
-        this.tramiteStoreQuery.selectSolicitudTramite$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState: any) => {
-            if (seccionState) {
-              this.InternaDatosGeneralesState = seccionState.InternaDatosGeneralesState;
-              this.forma.patchValue(this.InternaDatosGeneralesState);
-            }
-          })
-        ).subscribe();
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState: TramiteState) => {
+          if (seccionState) {
+            this.internaDatosGeneralesState = seccionState?.InternaDatosGeneralesState;
+            this.forma.patchValue(this.internaDatosGeneralesState);
+          }
+        })
+      ).subscribe();
 
         this.forma.statusChanges
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           delay(10),
           tap(() => {
             const ACTIVE_STATE = { ...this.forma.value };
@@ -358,11 +384,11 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         )
         .subscribe();
 
-      this.fetchData(); 
+      this.obtenerDatos(); 
   
       this.seccionQuery.selectSeccionState$
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           map((seccionState) => {
             this.seccion = seccionState;
           })
@@ -374,7 +400,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
        * 
        * @description 
        * - Se suscribe a los cambios en el estado del formulario.
-       * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+       * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
        * - Aplica un retraso de 10ms antes de ejecutar la lógica.
        * - Obtiene el estado actual de la sección desde `seccionQuery`.
        * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
@@ -384,14 +410,14 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
        */
       this.forma.statusChanges
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.unsubscribe$),
           delay(10),
           tap(() => {
             const SECCION: number = 1;
-            const seccionState = this.seccionQuery.getValue();
-            const FORMAS_VALIDADAS = [...seccionState.formaValida];
-            const controlPath = 'forma';
-            const CONTROL = this.forma.get(controlPath)?.status;
+            const SECCION_STATE = this.seccionQuery.getValue();
+            const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+            const CONTROL_PATH = 'forma';
+            const CONTROL = this.forma.get(CONTROL_PATH)?.status;
   
             FORMAS_VALIDADAS[SECCION] = this.forma.valid || CONTROL === 'VALID';
   
@@ -402,13 +428,13 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   }
 
 
-  fetchData(): void {
+  obtenerDatos(): void {
     this.mercanciaDatosService.getDatos()
-      // .pipe(takeUntil(this.unsubscribe$))
+    .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (response: any) => {
+        next: (response: { mercanciaApiDatos: mercanciaInfo[] }) => {
           if (response && Array.isArray(response.mercanciaApiDatos)) {
-            this.mercanciaTableDatos = response.mercanciaApiDatos;
+            this.mercanciaTablaDatos = response.mercanciaApiDatos;
             this.cdr.detectChanges();
             } else {
               console.error('La respuesta de la API no tiene el formato esperado:', response);
@@ -430,7 +456,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    *   - Veterinarios (`obtenerVeterinarioList`)
    *   - Régimen (`obtenerRegimenList`)
    */
-    obtenerListasDesplegables() {
+    obtenerListasDesplegables(): void {
       this.obtenerIngresoSelectList();
       this.obtenerSanidadAgropecuariaList();
       this.obtenerPuntoInspeccionList();
@@ -443,8 +469,8 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de aduana de ingreso.
    * @method obtenerIngresoSelectList
    */
-    obtenerIngresoSelectList() {
-      this.httpServicios.get<RespuestaCatalogos>('/assets/json/220701/aduana_de_ingreso.json').subscribe((data): void => {
+    obtenerIngresoSelectList(): void {
+      this.catalogosService.obtenerAduanaDeIngreso().subscribe((data): void => {
         const DATOS = data?.data;
         this.aduanaDeIngreso = DATOS;
       });
@@ -454,8 +480,8 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de sanidad agropecuaria.
    * @method obtenerSanidadAgropecuariaList
    */
-  obtenerSanidadAgropecuariaList() {
-    this.httpServicios.get<RespuestaCatalogos>('/assets/json/220701/oficina_de_inspeccion.json').subscribe((data): void => {
+  obtenerSanidadAgropecuariaList(): void {
+    this.catalogosService.obtenerSanidadAgropecuaria().subscribe((data): void => {
       const DATOS = data?.data;
       this.sanidadAgropecuaria = DATOS;
     });
@@ -465,8 +491,8 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList() {
-    this.httpServicios.get<RespuestaCatalogos>('/assets/json/220701/punto.json').subscribe((data): void => {
+  obtenerPuntoInspeccionList(): void {
+    this.catalogosService.obtenerPuntoInspeccion().subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoInspeccion = DATOS;
     });
@@ -476,8 +502,8 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de establecimiento.
    * @method obtenerEstablecimientoList
    */
-  obtenerEstablecimientoList() {
-    this.httpServicios.get<RespuestaCatalogos>('/assets/json/220701/establecimiento.json').subscribe((data): void => {
+  obtenerEstablecimientoList(): void {
+    this.catalogosService.obtenerEstablecimiento().subscribe((data): void => {
       const DATOS = data?.data;
       this.establecimientoTIF = DATOS;
     });
@@ -488,8 +514,8 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method obtenerVeterinarioList
    */
 
-  obtenerVeterinarioList() {
-    this.httpServicios.get<RespuestaCatalogos>('/assets/json/220701/nombre.json').subscribe((data): void => {
+  obtenerVeterinarioList(): void {
+    this.catalogosService.obtenerVeterinario().subscribe((data): void => {
       const DATOS = data?.data;
       this.veterinario = DATOS;
     });
@@ -499,8 +525,8 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList() {
-    this.httpServicios.get<RespuestaCatalogos>('/assets/json/220701/regimen.json').subscribe((data): void => {
+  obtenerRegimenList(): void {
+    this.catalogosService.obtenerRegimen().subscribe((data): void => {
       const DATOS = data?.data;
       this.regimen = DATOS;
     });
@@ -511,7 +537,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaIngreso(): void {
-    this.revisionService.getAduanaIngreso().subscribe((resp) => {
+    this.revisionService.getAduanaIngreso()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -531,7 +559,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficianaInspeccion(): void {
-    this.revisionService.getOficianaInspeccion().subscribe((resp) => {
+    this.revisionService.getOficianaInspeccion()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -558,7 +588,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEstablecimiento(): void {
-    this.revisionService.getEstablecimiento().subscribe((resp) => {
+    this.revisionService.getEstablecimiento()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -577,7 +609,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getRegimenDestinaran(): void {
-    this.revisionService.getRegimenDestinaran().subscribe((resp) => {
+    this.revisionService.getRegimenDestinaran()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -597,7 +631,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMovilizacionNacional(): void {
-    this.revisionService.getMovilizacionNacional().subscribe((resp) => {
+    this.revisionService.getMovilizacionNacional()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -617,7 +653,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoVerificacion(): void {
-    this.revisionService.getPuntoVerificacion().subscribe((resp) => {
+    this.revisionService.getPuntoVerificacion()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -636,7 +674,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getEmpresaTransportista(): void {
-    this.revisionService.getEmpresaTransportista().subscribe((resp) => {
+    this.revisionService.getEmpresaTransportista()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
 
@@ -663,12 +703,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    * - Completa y libera `unsubscribe$` para detener suscripciones activas.
-   * - Completa y libera `destroyNotifier$` para evitar fugas de memoria.
    */
     ngOnDestroy(): void {
       this.unsubscribe$.next();
       this.unsubscribe$.complete();
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
     }
 }

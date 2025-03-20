@@ -12,7 +12,7 @@ export interface DatosDeLaSolicitudInt {
   aduanaDeIngreso: string;
   sanidadAgropecuaria: string;
   puntoDeInspeccion: string;
-  nombreInsp: string;
+  nombreInspector: string;
   primerApellido: string;
   segundoApellido: string;
   cantidadContenedores: string;
@@ -31,7 +31,7 @@ export interface InternaDatosGeneralesInt {
   aduanaIngreso: string;
   oficinaInspeccion: string;
   puntoInspeccion: string;
-  claveUCON: string;
+  claveControlUnico: string;
   establecimientoTIFs: string;
   nombreVeterinario: string;
   numeroGuia: string;

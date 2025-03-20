@@ -1,6 +1,3 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @angular-eslint/component-selector */
 /**
  * @component PasoTresComponent
  * @description Este componente es responsable de manejar el tercer paso del trámite.
@@ -11,8 +8,8 @@
  */
 
 import { Component } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-tres',

@@ -1,10 +1,3 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-empty-function */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { AcuicolaService } from '../../servicios/acuicola.service';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -21,7 +14,6 @@ import { FormGroup } from '@angular/forms';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { JsonPipe } from '@angular/common';
 import { MEDIO_SERVICIO } from '../../modelos/datos-de-interfaz.model';
 import { MedioDeTransporteService } from '../../servicios/medio-de-transporte';
 import { OnDestroy } from '@angular/core';
@@ -32,15 +24,14 @@ import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
-import { TEXTOS_220501 } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { TramiteState } from '../../estados/tramite220701.store';
 import { TramiteStore } from '../../estados/tramite220701.store';
 import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
 
@@ -56,7 +47,6 @@ import { medioInfo } from '../../modelos/datos-de-interfaz.model';
     InputFechaComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    JsonPipe,
     CommonModule
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
@@ -69,98 +59,122 @@ import { medioInfo } from '../../modelos/datos-de-interfaz.model';
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para capturar los datos de la solicitud.
+   * Contiene los campos y validaciones necesarias para el formulario.
+   * @type {FormGroup}
    */
   datosDeLaSolicitudForm!: FormGroup;
   /**
  * Estado actual de la solicitud basado en el modelo `DatosDeLaSolicitudInt`.
+ * Contiene la información manejada dentro del componente.
+ * @type {DatosDeLaSolicitudInt}
  */
-  SolicitudState!: DatosDeLaSolicitudInt;
+  solicitudState!: DatosDeLaSolicitudInt;
   /**
  * Indica si la sección del formulario es colapsable.
+ * Permite mostrar u ocultar contenido adicional.
+ * @type {boolean}
  * @default false
  */
   colapsable: boolean = false;
   /**
  * Mensaje de instrucción para la acción de doble clic.
+ * Proporciona información al usuario sobre cómo interactuar con el formulario.
+ * @type {string}
  */
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
   /**
    * Catálogo de opciones para la hora de inspección.
+   * Contiene las opciones disponibles para seleccionar la hora de inspección.
+   * @type {CatalogosSelect}
    */
   horaDeInspeccion!: CatalogosSelect;
   /**
  * Catálogo de opciones para la aduana de ingreso.
+ * Contiene las opciones disponibles para seleccionar la aduana de ingreso.
+ * @type {CatalogosSelect}
  */
   aduanaDeIngreso!: CatalogosSelect;
   /**
  * Catálogo de opciones para la oficina de inspección.
+ * Contiene las opciones disponibles para seleccionar la oficina de inspección.
+ * @type {CatalogosSelect}
  */
   oficinaDeInspeccion!: CatalogosSelect;
   /**
  * Catálogo de opciones para el punto de inspección.
+ * Contiene las opciones disponibles para seleccionar el punto de inspección.
+ * @type {CatalogosSelect}
  */
   puntoDeInspeccion!: CatalogosSelect;
   /**
  * Catálogo de opciones para el tipo de contenedor.
+ * Contiene las opciones disponibles para seleccionar el tipo de contenedor.
+ * @type {CatalogosSelect}
  */
   tipoContenedor!: CatalogosSelect;
   /**
  * Catálogo de opciones para el medio de transporte.
+ * Contiene las opciones disponibles para seleccionar el medio de transporte.
+ * @type {CatalogosSelect}
  */
   medioDeTransporte!: CatalogosSelect;
   /**
    * Constante que contiene los textos utilizados en el componente.
-   */
-  TEXTOS = TEXTOS_220501;
-  /**
-   * Lista de datos relacionados con la mercancía.
+   * Proporciona mensajes y etiquetas predefinidas.
+   * @type {any}
    */
   mercanciaDatos: string[] = [];
   /**
    * Fecha de inicio utilizada en el componente, basada en la expedición de la factura.
+   * Proporciona un valor inicial para el campo de fecha.
+   * @type {InputFecha}
    */
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
  * Tipo de selección de la tabla (Checkbox).
+ * Define el tipo de interacción permitida en la tabla.
  * @type {TablaSeleccion}
  */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
   /**
   * Configuración de las columnas de la tabla para los servicios de mercancía.  
+  * Define la estructura y propiedades de las columnas.
   * @type {ConfiguracionColumna<medioInfo>[]}
   */
   exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
   /**
   * Datos de los servicios de mercancía.
+  * Contiene la información mostrada en la tabla de mercancía.
   * @type {medioInfo[]}
   */
   medioTableDatos: medioInfo[] = [];
 
   /**
   * Contenido relacionado con el medio de transporte.
-  * @type {any[]} 
-  * @note Se permite `any[]` debido a la estructura variable de los datos.
-  * @property {any[]} medioContenido - Array de datos Medio de transporte.
+  * Contiene información sobre los elementos del medio de transporte.
+  * @type {medioInfo[]}
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  medioContenido: any[] = [];
-
+ 
+  medioContenido: medioInfo[] = [];
 
   /**
-   * Subject para manejar la desuscripción de observables y evitar fugas de memoria.
+   * Subject para manejar la desuscripción de observables.
+   * Utilizado para evitar fugas de memoria.
    * @type {Subject<void>}
    */
   private unsubscribe$ = new Subject<void>();
 
   /**
    * Estado de la sección actual.
+   * Contiene información sobre el estado de la sección.
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
 
   /**
    * Subject para notificar la destrucción del componente.
+   * Utilizado para gestionar la limpieza de recursos.
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -184,7 +198,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  ) { }
+  ) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * Inicializa el componente y obtiene los datos necesarios.
@@ -198,7 +214,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-        this.SolicitudState = seccionState.SolicitudState;
+        this.solicitudState = seccionState.SolicitudState;
       })
     ).subscribe();
 
@@ -220,10 +236,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState: any) => {
+        map((seccionState: TramiteState) => {
           if (seccionState) {
-            this.SolicitudState = seccionState.SolicitudState;
-            this.datosDeLaSolicitudForm.patchValue(this.SolicitudState);
+            this.solicitudState = seccionState?.SolicitudState;
+            this.datosDeLaSolicitudForm.patchValue(this.solicitudState);
           }
         })
       ).subscribe();
@@ -245,7 +261,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos iniciales requeridos para el componente.
    */
-    this.fetchData();
+    this.obtenerDatos();
 
       /**
    * Se suscribe a los cambios en el estado de la sección.
@@ -282,10 +298,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         delay(10),
         tap(() => {
           const SECCION: number = 1;
-          const seccionState = this.seccionQuery.getValue();
-          const FORMAS_VALIDADAS = [...seccionState.formaValida];
-          const controlPath = 'datosDeLaSolicitudForm';
-          const CONTROL = this.datosDeLaSolicitudForm.get(controlPath)?.status;
+          const SECCION_STATE = this.seccionQuery.getValue();
+          const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+          const CONTROL_PATH = 'datosDeLaSolicitudForm';
+          const CONTROL = this.datosDeLaSolicitudForm.get(CONTROL_PATH)?.status;
 
           FORMAS_VALIDADAS[SECCION] = this.datosDeLaSolicitudForm.valid || CONTROL === 'VALID';
 
@@ -329,14 +345,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * 
    * Se gestiona la suscripción con `takeUntil(this.unsubscribe$)` para evitar fugas de memoria.
    * 
-   * @method fetchData
+   * @method obtenerDatos
    * @returns {void}
    */
-  fetchData(): void {
+  obtenerDatos(): void {
     this.medioDeTransporteService.getDatos()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (response: any) => {
+        next: (response: { medioContenido: medioInfo[] }) => {
           if (response && Array.isArray(response.medioContenido)) {
             this.medioTableDatos = response.medioContenido;
             this.cdr.detectChanges();

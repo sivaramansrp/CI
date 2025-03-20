@@ -1,7 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-extra-semi */
-/* eslint-disable no-empty-function */
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -80,7 +76,7 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
    * Contiene la información de los destinos relacionados con el trámite.
    * @type {destinoInfo[]}
    */
-      destinoTableDatos: destinoInfo[] = [];
+      destinoTablaDatos: destinoInfo[] = [];
   
 
   /**
@@ -101,30 +97,31 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
     constructor(
       private exportadorDatosService: ExportadorDatosService,
       private cdr: ChangeDetectorRef
-    ) {};
+    ) {
+      // Se puede agregar aquí la lógica del constructor si es necesario
+    }
 
       /**
    * @method ngOnInit
    * @description Método de inicialización del componente.
-   * Llama a `fetchData` para obtener los datos necesarios al cargar el componente.
+   * Llama a `obtenerDatos` para obtener los datos necesarios al cargar el componente.
    */
      ngOnInit(): void {
-      this.fetchData();
+      this.obtenerDatos();
      }
      
-       /**
-   * @method fetchData
-   * @description Obtiene los datos de exportadores y destinos desde el servicio `ExportadorDatosService`.
-   * Actualiza las tablas y detecta cambios en la vista.
-   */
-     fetchData(): void {
+/**
+ * @description Obtiene los datos de exportadores y destinos desde el servicio `ExportadorDatosService`.
+ * Actualiza las tablas y detecta cambios en la vista.
+ */
+    obtenerDatos(): void {
       this.exportadorDatosService.getDatos()
       .subscribe({
-        next: (response: any) => {
+        next: (response: { exportadorContenido: exportadorInfo[]; destinoContenido: destinoInfo[] }) => {
           if (response && Array.isArray(response.exportadorContenido) &&
           Array.isArray(response.destinoContenido)) {
             this.exportadorTableDatos = response.exportadorContenido;
-            this.destinoTableDatos = response.destinoContenido;
+            this.destinoTablaDatos = response.destinoContenido;
             this.cdr.detectChanges(); 
           } else {
             console.error("La respuesta de la API no tiene el formato esperado: ", response);

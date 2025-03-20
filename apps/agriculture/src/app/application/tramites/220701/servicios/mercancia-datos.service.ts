@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-empty-function */
 /**
  * @@Injectable
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
-import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +18,9 @@ export class MercanciaDatosService {
    * @constructor
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * @method getDatos
@@ -29,6 +29,7 @@ export class MercanciaDatosService {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getDatos(): Observable<any> {
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.httpClient.get<any[]>(this.jsonUrl).pipe(
     );
   }  

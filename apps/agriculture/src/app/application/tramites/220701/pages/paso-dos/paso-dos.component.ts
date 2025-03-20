@@ -1,5 +1,3 @@
-/* eslint-disable @angular-eslint/component-selector */
-/* eslint-disable */
 /**
  * @component PasoDosComponent
  * @description Este componente es responsable de manejar el segundo paso del trámite.
@@ -9,11 +7,11 @@
  * @import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
  */
 
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'paso-dos',
