@@ -1,213 +1,114 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { ContenedorComponent } from './contenedor.component';
-import { FormBuilder } from '@angular/forms';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import { Contenedor11202Store } from '../../../../estados/tramites/contenedor11202.store';
 import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
 
-@Injectable()
-class MockContenedor11202Store {}
-
-@Injectable()
-class MockContenedor11202Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any) { return value; }
-}
-
 describe('ContenedorComponent', () => {
+  let component: ContenedorComponent;
   let fixture: ComponentFixture<ContenedorComponent>;
-  let component: { ngOnDestroy: () => void; solicitudForm: { get?: any; reset?: any; valid?: any; value?: any; patchValue?: any; }; datosGenerales: { get?: any; }; datosContenedor: { get?: any; }; onPageChange: (arg0: {}) => void; ngSubmit: () => void; inicializarFormulario: jest.Mock<any, any, any>; cargarCatalogAduanas: jest.Mock<any, any, any> | (() => void); cargarCatalogContenedores: jest.Mock<any, any, any> | (() => void); tabSeleccionado: jest.Mock<any, any, any> | (() => void); configurarValidaciones: jest.Mock<any, any, any> | (() => void); setFormValues: jest.Mock<any, any, any> | (() => void); contenedorQuery: { selectSolicitud$?: any; }; crearFormSolicitud: jest.Mock<any, any, any> | (() => void); ngOnInit: () => void; datosTramiteService: { getAduanas?: any; getContenedores?: any; submitSolicitud?: any; }; mostrarCampos: jest.Mock<any, any, any> | (() => void); limpiarCampos: () => void; datosCaptura: () => void; contenedores: { push?: any; }; agregarAGrid: () => void; adjuntarArchivo: () => void; openModalCancelarTramite: () => void; cancelarRadioButton: () => void; mostrarTIpoContenedor: () => void; vaiarGridRC: () => void; fb: { group?: any; }; contenedorState: { idSolicitud?: any; tipoBusqueda?: any; aduana?: any; inicialesContenedor?: any; numeroContenedor?: any; tipoContenedor?: any; }; contenedorStore: { metodoNombre?: any; }; setValoresStore: (arg0: { get: () => { value: {}; }; }, arg1: {}, arg2: {}) => void; };
+  let datosTramiteService: jest.Mocked<DatosTramiteService>;
+  let contenedorStore: jest.Mocked<Contenedor11202Store>;
+  let contenedorQuery: jest.Mocked<Contenedor11202Query>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        ContenedorComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    const datosTramiteServiceMock = {
+      getAduanas: jest.fn(),
+      getContenedores: jest.fn(),
+      submitSolicitud: jest.fn(),
+    };
+
+    const contenedorStoreMock = {
+      setTipoBusqueda: jest.fn(),
+    };
+
+    const contenedorQueryMock = {
+      selectSolicitud$: of({}),
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [ContenedorComponent],
+      imports: [ReactiveFormsModule],
       providers: [
-        FormBuilder,
-        DatosTramiteService,
-        { provide: Contenedor11202Store, useClass: MockContenedor11202Store },
-        { provide: Contenedor11202Query, useClass: MockContenedor11202Query }
-      ]
-    }).overrideComponent(ContenedorComponent, {
-
+        { provide: DatosTramiteService, useValue: datosTramiteServiceMock },
+        { provide: Contenedor11202Store, useValue: contenedorStoreMock },
+        { provide: Contenedor11202Query, useValue: contenedorQueryMock },
+      ],
     }).compileComponents();
+
     fixture = TestBed.createComponent(ContenedorComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    datosTramiteService = TestBed.inject(DatosTramiteService) as jest.Mocked<DatosTramiteService>;
+    contenedorStore = TestBed.inject(Contenedor11202Store) as jest.Mocked<Contenedor11202Store>;
+    contenedorQuery = TestBed.inject(Contenedor11202Query) as jest.Mocked<Contenedor11202Query>;
+
+   // contenedorQuery.selectSolicitud$.mockReturnValue(of({}));
+    datosTramiteService.getAduanas.mockReturnValue(of([]));
+    datosTramiteService.getContenedores.mockReturnValue(of([]));
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run GetterDeclaration #datosGenerales', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.get = jest.fn();
-    const datosGenerales = component.datosGenerales;
-    // expect(component.solicitudForm.get).toHaveBeenCalled();
-  });
-
-  it('should run GetterDeclaration #datosContenedor', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.get = jest.fn();
-    const datosContenedor = component.datosContenedor;
-    // expect(component.solicitudForm.get).toHaveBeenCalled();
-  });
-
-  
-
- 
-
-  it('should run #ngOnInit()', async () => {
-    component.inicializarFormulario = jest.fn();
-    component.cargarCatalogAduanas = jest.fn();
-    component.cargarCatalogContenedores = jest.fn();
-    component.tabSeleccionado = jest.fn();
-    component.configurarValidaciones = jest.fn();
-    component.setFormValues = jest.fn();
-    component.contenedorQuery = component.contenedorQuery || {};
-    component.contenedorQuery.selectSolicitud$ = observableOf({});
-    component.crearFormSolicitud = jest.fn();
+  it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.cargarCatalogAduanas).toHaveBeenCalled();
-    // expect(component.cargarCatalogContenedores).toHaveBeenCalled();
-    // expect(component.tabSeleccionado).toHaveBeenCalled();
-    // expect(component.configurarValidaciones).toHaveBeenCalled();
-    // expect(component.setFormValues).toHaveBeenCalled();
-    // expect(component.crearFormSolicitud).toHaveBeenCalled();
+    expect(component.solicitudForm).toBeDefined();
   });
 
- 
-
-
-
-  it('should run #cargarCatalogAduanas()', async () => {
-    component.datosTramiteService = component.datosTramiteService || {};
-    component.datosTramiteService.getAduanas = jest.fn().mockReturnValue(observableOf({}));
-    component.cargarCatalogAduanas();
-    // expect(component.datosTramiteService.getAduanas).toHaveBeenCalled();
+  it('should call cargarCatalogAduanas on ngOnInit', () => {
+    jest.spyOn(component, 'cargarCatalogAduanas');
+    component.ngOnInit();
+    expect(component.cargarCatalogAduanas).toHaveBeenCalled();
   });
 
-  it('should run #cargarCatalogContenedores()', async () => {
-    component.datosTramiteService = component.datosTramiteService || {};
-    component.datosTramiteService.getContenedores = jest.fn().mockReturnValue(observableOf({}));
-    component.cargarCatalogContenedores();
-    
+  it('should call cargarCatalogContenedores on ngOnInit', () => {
+    jest.spyOn(component, 'cargarCatalogContenedores');
+    component.ngOnInit();
+    expect(component.cargarCatalogContenedores).toHaveBeenCalled();
   });
 
+  it('should call mostrarCampos when tipoBusqueda changes', () => {
+    component.ngOnInit();
+    jest.spyOn(component, 'mostrarCampos');
+    component.solicitudForm.get('tipoBusqueda')?.setValue('Contenedor');
+    expect(component.mostrarCampos).toHaveBeenCalled();
+  });
 
+  
 
-  it('should run #mostrarCampos()', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.get = jest.fn().mockReturnValue({
-      value: {}
+  it('should not call submitSolicitud on datosCaptura if form is invalid', () => {
+    component.ngOnInit();
+    component.solicitudForm.setValue({
+      idSolicitud: null,
+      tipoBusqueda: '',
+      datosGenerales: { aduana: '' },
+      datosContenedor: { inicialesContenedor: '', numeroContenedor: '', tipoContenedor: '' },
     });
-    component.mostrarCampos();
-    
-  });
-
-  it('should run #limpiarCampos()', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.reset = jest.fn();
-    component.limpiarCampos();
-    
-  });
-
-  it('should run #datosCaptura()', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.valid = 'valid';
-    component.solicitudForm.value = 'value';
-    component.datosTramiteService = component.datosTramiteService || {};
-    component.datosTramiteService.submitSolicitud = jest.fn().mockReturnValue(observableOf({}));
     component.datosCaptura();
-    
+    expect(datosTramiteService.submitSolicitud).not.toHaveBeenCalled();
   });
 
-  
-  it('should run #adjuntarArchivo()', async () => {
-
-    component.adjuntarArchivo();
-
-  });
-
-  it('should run #openModalCancelarTramite()', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.reset = jest.fn();
-    component.openModalCancelarTramite();
-    
-  });
-
-  it('should run #tabSeleccionado()', async () => {
-
-    component.tabSeleccionado();
-
-  });
-
-  it('should run #cancelarRadioButton()', async () => {
-    component.solicitudForm = component.solicitudForm || {};
-    component.solicitudForm.get = jest.fn().mockReturnValue({
-      setValue: function() {}
+  it('should add a new contenedor to the grid on agregarAGrid', () => {
+    component.ngOnInit();
+    component.solicitudForm.setValue({
+      idSolicitud: 1,
+      tipoBusqueda: 'Contenedor',
+      datosGenerales: { aduana: 'Aduana1' },
+      datosContenedor: { inicialesContenedor: 'ABC', numeroContenedor: '123', tipoContenedor: 'Tipo1' },
     });
-    component.mostrarCampos = jest.fn();
-    component.cancelarRadioButton();
-    
-  });
-
-  it('should run #mostrarTIpoContenedor()', async () => {
-
-    component.mostrarTIpoContenedor();
-
+    component.agregarAGrid();
+    expect(component.contenedores.length).toBe(1);
   });
 
   
-  it('should run #crearFormSolicitud()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.contenedorState = component.contenedorState || {};
-    component.contenedorState.idSolicitud = 'idSolicitud';
-    component.contenedorState.tipoBusqueda = 'tipoBusqueda';
-    component.contenedorState.aduana = 'aduana';
-    component.contenedorState.inicialesContenedor = 'inicialesContenedor';
-    component.contenedorState.numeroContenedor = 'numeroContenedor';
-    component.contenedorState.tipoContenedor = 'tipoContenedor';
- 
-    
+
+  it('should call setValoresStore on tipoBusqueda value change', () => {
+    jest.spyOn(component, 'setValoresStore');
+    component.ngOnInit();
+    component.solicitudForm.get('tipoBusqueda')?.setValue('Archivo CSV');
+    expect(component.setValoresStore).toHaveBeenCalledWith(component.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
   });
-
-
-
 });

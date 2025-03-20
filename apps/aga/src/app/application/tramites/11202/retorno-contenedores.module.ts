@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
+import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RetornoContenedoresRoutingModule } from './retorno-contenedores-routing.module';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { ContenedorComponent } from './components/contenedor/contenedor.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { SharedModule } from '@ng-mf/data-access-user';
+import { InputRadioComponent, SharedModule } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -39,8 +39,11 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     SolicitantePageComponent,
     PasoDosComponent,
     
+    
+    
   ],
   imports: [
+    PasoTresComponent,
     CommonModule,
     RetornoContenedoresRoutingModule,
     SharedModule,
@@ -50,19 +53,20 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     FormsModule,
     TituloComponent,
     BtnContinuarComponent,
+    FirmaElectronicaComponent,
     AlertComponent,
     FirmaElectronicaComponent,
-    FirmaElectronicaComponent,
-    PasoTresComponent,
+  
     SelectCatalogosComponent,
     InputFechaComponent,
     InputCheckComponent,
     InputHoraComponent,
     CrosslistComponent,
     SelectPaisesComponent,
-    CatalogoSelectComponent,
-    RepresentanteFiscalComponent,
+      RepresentanteFiscalComponent,
     FirmaElectronicaComponent,
+ CatalogoSelectComponent,
+ InputRadioComponent,
     
     
   ],

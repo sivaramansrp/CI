@@ -15,50 +15,44 @@
   <div class="row">
     <div class="col-md-12">
       <br><br>
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <div class="radio">
           <label>
-              <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor" value="Contenedor"
-                  class="form-check-input">
-              Contenedor
+            <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor" value="Contenedor"
+              class="form-check-input">
+            Contenedor
           </label>
-      </div>
-      </div>
+        </div>
+      </div> -->
+
       <div class="col-md-4">
-        <div class="radio">
-          <label>
-              <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                  class="form-check-input">
-              Archivo CSV
-          </label>
-      </div>
+        <app-input-radio
+          [radioOptions]="radioOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          [gap]="'493px'"
+          [isBold]="true"
+          [labelMargin]="'0px'"
+          formControlName="tipoBusqueda"
+          (change)="setValoresStore(solicitudForm,'tipoBusqueda', 'setTipoBusqueda')"
+        ></app-input-radio>
       </div>
     </div>
   </div>
-
-  
+   
   <div id="seccionAduanaaFecha" *ngIf="seccionAduanaaFechaVisible">
     <ng-titulo titulo="Datos generales" />
     <ng-container formGroupName="datosGenerales">
       <div class="row">
         <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="Aduana-sección-aduanera">Aduana/sección aduanera:
-            </label>
-            <select formControlName="aduana" id="aduana" class="form-control"
-            (change)="setValoresStore(datosGenerales, 'aduana','setAduana' )">
-              <option value="">Selecciona un valor</option>
-              <option *ngFor="let item of catalogAduanas" [value]="item.id">
-                {{ item.nombre }}
-              </option>
-            </select>
-          </div>
+          <app-catalogo-select [catalogo]="options" formControlName="aduana" [label]="'Aduana/sección aduanera'"
+            [required]="true" (change)="setValoresStore(datosGenerales, 'aduana','setAduana' )"></app-catalogo-select>
         </div>
       </div>
     </ng-container>
 
   </div>
-<!-- Datas del contenedor -->
+  <!-- Datas del contenedor -->
   <div id="seccionAduanaaFecha" *ngIf="seccionContenedor">
     <ng-titulo titulo="Datos del Contenedor" />
     <ng-container formGroupName="datosContenedor">
@@ -95,24 +89,15 @@
           </div>
         </div>
 
-       
+
       </div>
       <div class="row">
         <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="tipoContenedor">Tipo de Contenedor:</label>
-            <span class="require">*</span>
-            <select formControlName="tipoContenedor" id="tipoContenedor" class="form-control"
-                (change)="setValoresStore(datosContenedor, 'tipoContenedor','setTipoContenedor' )">
-              <option value="">Selecciona un valor</option>
-              <option *ngFor="let item of catalogContenedores" [value]="item.id">
-                {{ item.tipo }}
-              </option>
-            </select>
-
-          </div>
+          <app-catalogo-select [catalogo]="options" formControlName="tipoContenedor" [label]="'Tipo de Contenedor:'"
+            [required]="true" (change)="setValoresStore(datosContenedor, 'tipoContenedor','setTipoContenedor' )"></app-catalogo-select>
         </div>
-      </div>
+
+             </div>
       <div class="row">
         <div class="col-md-8">
           <div class="form-group pull-right">
@@ -167,44 +152,25 @@
       <div class="row" style="margin-top: 30px;">
         <div class="form-group">
           <div class="col-md-12">
-            <div
-              class="pull-left text-muted text-vertical-align-button"
-              id="lblCamposObligatorios"
-            >
+            <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
               Faltan campos por capturar.
             </div>
             <br /><br />
             <div style="margin-top: -50px;" class="pull-right">
               <div class="col-md-3">
-                <button
-                  type="button"
-                  name="cancelarTramite"
-                  id="cancelarTramite"
-                  class="btn btn-danger"
-                  (click)="openModalCancelarTramite()"
-                >
+                <button type="button" name="cancelarTramite" id="cancelarTramite" class="btn btn-danger"
+                  (click)="openModalCancelarTramite()">
                   Cancelar
                 </button>
               </div>
               <div class="col-md-3">
-                <button
-                  *ngIf="actionBean.requiereGuardadoParcial"
-                  type="button"
-                  name="guardarParcial"
-                  id="guardarSolicitudParcial"
-                  class="btn btn-default"
-                  (click)="tabSeleccionado()"
-                >
+                <button *ngIf="actionBean.requiereGuardadoParcial" type="button" name="guardarParcial"
+                  id="guardarSolicitudParcial" class="btn btn-default" (click)="tabSeleccionado()">
                   Guardar
                 </button>
               </div>
               <div class="col-md-3">
-                <button
-                  type="submit"
-                  name="guardar"
-                  id="guardarSolicitud"
-                  class="btn btn-primary"
-                >
+                <button type="submit" name="guardar" id="guardarSolicitud" class="btn btn-primary">
                   Continuar
                 </button>
                 <input type="hidden" formControlName="idSolicitud" id="idSolicitud" />
@@ -215,74 +181,63 @@
       </div>
     </div>
   </div>
- 
-      <div id="seccionExcel" *ngIf="seccionExcelVisible">
-        <div class="row">
-          <div class="col-md-12">
-            <h3>Adjuntar archivo</h3>
-            <hr class="red" />
-          </div>
+
+  <div id="seccionExcel" *ngIf="seccionExcelVisible">
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Adjuntar archivo</h3>
+        <hr class="red" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="pull-left">
+          <label>Archivo seleccionado</label>
+          <span class="require">*</span>
+          <label>:</label>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="pull-left">
-              <label>Archivo seleccionado</label>
-              <span class="require">*</span>
-              <label>:</label>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <input
-              type="text"
-              name="archivoSeleccionado"
-              id="archivoSeleccionado"
-              class="form-control"
-              readonly
-              [value]="archivoSeleccionado"
-            />
-          </div>
-          
+      </div>
+      <div class="col-md-4">
+        <input type="text" name="archivoSeleccionado" id="archivoSeleccionado" class="form-control" readonly
+          [value]="archivoSeleccionado" />
+      </div>
+
+    </div>
+    <div class="row" style="margin-bottom: 30px">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button type="button" name="Cargar Archivo" class="btn btn-default" (click)="adjuntarArchivo()">
+            Cargar Archivo
+          </button>
         </div>
-        <div class="row" style="margin-bottom: 30px">
-          <div class="col-md-12">
-            <div class="pull-right">
-              <button
-                type="button"
-                name="Cargar Archivo"
-                class="btn btn-default"
-                (click)="adjuntarArchivo()"
-              >
-                Cargar Archivo
-              </button>
-            </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="cargarArchivos" *ngIf="cargarArchivoVisible">
+
+    <ng-titulo titulo="Cargar Archivos" />
+    <ng-container formGroupName="datosContenedor">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label " for="archivo">Archivo:</label>
+            <input type="file" class="form-control" id="archivo" formControlName="archivo" />
           </div>
         </div>
       </div>
+    </ng-container>
 
-      <div id="cargarArchivos" *ngIf="cargarArchivoVisible">
+  </div>
+  <!-- Table to Display Excel Data -->
 
-        <ng-titulo titulo="Cargar Archivos" />
-        <ng-container formGroupName="datosContenedor">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label class="form-label " for="archivo">Archivo:</label>
-                <input type="file" class="form-control" id="archivo" formControlName="archivo" />
-              </div>  
-            </div>
-          </div>
-        </ng-container>
-       
+  <div id="seccionContenedor" *ngIf="cargarArchivo">
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Cargar Archivo</h3>
+        <hr class="red" />
       </div>
-      <!-- Table to Display Excel Data -->
-
-      <div id="seccionContenedor" *ngIf="cargarArchivo">
-        <div class="row">
-          <div class="col-md-12">
-            <h3>Cargar Archivo</h3>
-            <hr class="red" />
-          </div>
-           </div>
-        <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
-          </div>
+    </div>
+    <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
+  </div>
 </form>
