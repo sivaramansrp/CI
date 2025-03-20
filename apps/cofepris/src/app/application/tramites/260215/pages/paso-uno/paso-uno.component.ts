@@ -12,6 +12,7 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
 export class PasoUnoComponent implements AfterViewInit {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
