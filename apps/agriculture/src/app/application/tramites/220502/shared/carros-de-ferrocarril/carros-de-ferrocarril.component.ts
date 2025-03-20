@@ -1,4 +1,4 @@
-import { CarrosDeFerrocarril } from '@ng-mf/data-access-user';
+import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnChanges } from '@angular/core';
