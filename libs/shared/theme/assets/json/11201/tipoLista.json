@@ -1,0 +1,18 @@
+{
+    "code": 200,
+    "data": [
+        {
+            "id": "C12345",
+            "tipo": "20 Pies"
+        },
+        {
+            "id": "C67890",
+            "tipo": "40 Pies"
+        },
+        {
+            "id": "C11223",
+            "tipo": "Refrigerado"
+        }
+    ],
+    "message": ""
+}
