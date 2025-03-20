@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
 import { BusquedaFolioComponent } from './pages/busqueda-folio/busqueda-folio.component';
+import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
+import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'solicitante',
     component: IntroPermisoComponent,
@@ -21,7 +21,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class DesistimientoDePermisoRoutingModule { }

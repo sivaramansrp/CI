@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
@@ -8,7 +8,7 @@ import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.s
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy{
   /**
  * @description Índice de la pestaña/paso actual.
  * Este valor indica el paso actual en el proceso de formulario.

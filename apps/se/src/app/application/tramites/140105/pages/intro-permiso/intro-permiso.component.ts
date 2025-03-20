@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { BusquedaFolioComponent } from '../busqueda-folio/busqueda-folio.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/intropermiso.enum';
-import { BusquedaFolioComponent } from '../busqueda-folio/busqueda-folio.component';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -16,7 +16,7 @@ interface AccionBoton {
   styleUrl: './intro-permiso.component.scss',
 
 })
-export class IntroPermisoComponent {
+export class IntroPermisoComponent implements OnInit, OnDestroy{
   /**
  * @description Array de objetos que definen los pasos del formulario.
  * Cada objeto contiene información sobre un paso específico,

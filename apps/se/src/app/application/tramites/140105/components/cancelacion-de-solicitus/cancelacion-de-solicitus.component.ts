@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
-import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import * as formData from '../../constants/datos-del-formulario.json';
+import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 @Component({
   selector: 'app-cancelacion-de-solicitus',
   templateUrl: './cancelacion-de-solicitus.component.html',
   styleUrl: './cancelacion-de-solicitus.component.scss',
 })
-export class CancelacionDeSolicitusComponent implements OnInit {
+export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
   solicitudForm?: FormGroup;
   public cancelacionForm!: FormGroup;
   configuracionColumnasoli: ConfiguracionColumna<Cancelacion>[] = [
@@ -57,10 +57,10 @@ export class CancelacionDeSolicitusComponent implements OnInit {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
   }
 
-  public busqueda(event: any): void {
+  public busqueda(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
-  public eliminarRegistro(event: any): void {
+  public eliminarRegistro(event: Event): void {
     this.cuerpoTabla = [];
   }
 

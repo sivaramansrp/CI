@@ -5,8 +5,6 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class ServicioDeMensajesService {
-
-  constructor() { }
   private fuenteDelMensaje = new Subject<boolean>();
   mensaje$ = this.fuenteDelMensaje.asObservable();
 

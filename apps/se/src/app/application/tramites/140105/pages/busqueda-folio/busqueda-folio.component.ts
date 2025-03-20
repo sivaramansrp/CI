@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import * as formData from '../../constants/datos-del-formulario.json';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
@@ -17,25 +17,25 @@ export class BusquedaFolioComponent {
     this.establecerBusquedaForm();
     this.estableDetalleDelPermisoForm();
   }
-  public buscar(event: any): void {
+  public buscar(event: Event): void {
     if (this.busquedaForm.invalid) {
       this.busquedaForm.markAllAsTouched();
-      alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
+      // alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
       return;
     }
 
     this.detalleDelPermiso = true;
     this.establecerFormularioDeDetallesDe();
   }
-  public agregar(event: any): void {
+  public agregar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
-  public detalleCancelar(event: any): void {
+  public detalleCancelar(event: Event): void {
     this.detalleDelPermiso = false;
   }
 
-  public cancelar(event: any): void {
+  public cancelar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
   public establecerBusquedaForm(): void {
