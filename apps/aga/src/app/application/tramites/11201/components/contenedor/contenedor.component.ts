@@ -15,7 +15,6 @@ import { FormArray } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -306,9 +305,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     this.solicitudForm
       .get('inicialesContenedor')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((value) => {
-        if (value) {
-          const SANITIZED = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
+        if (valor) {
+          const SANITIZED = valor.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
           this.solicitudForm
             .get('inicialesContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -322,9 +321,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
     this.solicitudForm
       .get('numeroContenedor')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((value) => {
-        if (value) {
-          const SANITIZED = value.replace(/[^a-zA-Z0-9]/g, '');
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
+        if (valor) {
+          const SANITIZED = valor.replace(/[^a-zA-Z0-9]/g, '');
           this.solicitudForm
             .get('numeroContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -333,9 +332,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
     this.solicitudForm
       .get('digitoDeControl')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((value) => {
-        if (value) {
-          const SANITIZED = value.replace(/[^0-9]/g, '');
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
+        if (valor) {
+          const SANITIZED = valor.replace(/[^0-9]/g, '');
           this.solicitudForm
             .get('digitoDeControl')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -381,7 +380,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite11201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite11201Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.tramite11201Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
   /**
@@ -531,7 +530,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             OBJ[KEY] = VALUES[index]?.trim();
         });
         return OBJ;
-    }).filter(artículo => Object.values(artículo).some(value => value));
+    }).filter(artículo => Object.values(artículo).some(valor => valor));
     this.datosTabla = DATA;
 }
 
@@ -578,7 +577,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
-          (this.tramite11201Store.setDelContenedor as (value: DatosDelContenedor[]) => void)(this.datosDelContenedor);
+          (this.tramite11201Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
           this.solicitudForm.patchValue({
             aduana: '',
             fechaIngreso: '',
