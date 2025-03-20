@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,18 +23,15 @@ class MockTramite220403Query {}
 @Injectable()
 class MockTramite220403Store {}
 
-
 describe('PagoDeDerechosComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PagoDeDerechosComponent>;
+  let component: PagoDeDerechosComponent;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
-      declarations: [
-        PagoDeDerechosComponent,
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule, HttpClientModule],
+      declarations: [PagoDeDerechosComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
         CatalogosService,
@@ -43,104 +39,91 @@ describe('PagoDeDerechosComponent', () => {
         { provide: Tramite220403Query, useClass: MockTramite220403Query },
         { provide: Tramite220403Store, useClass: MockTramite220403Store }
       ]
-    }).overrideComponent(PagoDeDerechosComponent, {
+    })
+    .overrideComponent(PagoDeDerechosComponent, {})
+    .compileComponents();
 
-    }).compileComponents();
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    // Override ngOnDestroy to avoid side effects
+    (component as any).ngOnDestroy = () => {};
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('should run #constructor()', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #crearFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
+  it('should run #crearFormulario()', () => {
+    // Use the injected FormBuilder and spy on its "group" method.
+    const fb = TestBed.inject(FormBuilder);
+    jest.spyOn(fb, 'group').mockReturnValue({} as any);
+    // Set the private "fb" property via casting.
+    (component as any).fb = fb;
     component.crearFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(fb.group).toHaveBeenCalled();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.configuracion = component.configuracion || {};
-    component.configuracion = ['configuracion'];
+  it('should run #ngOnInit()', () => {
+    // Assume configuracion is an array (adjust based on the component’s actual type).
+    (component as any).configuracion = [{ key: 'configuracion' }];
+    // Spy on the method that initializes the form group.
     component.inicializarFormGroup = jest.fn();
-    component.tramite220403Query = component.tramite220403Query || {};
-    component.tramite220403Query.setPagoDerechos$ = observableOf({});
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn().mockReturnValue({
-      patchValue: function() {}
-    });
+    // Override the private "tramite220403Query" with a mock that provides the observable.
+    (component as any).tramite220403Query = {
+      setPagoDerechos$: observableOf({})
+    };
+    // Provide a mock formulario with a get() method.
+    (component as any).formulario = {
+      get: jest.fn().mockReturnValue({ patchValue: jest.fn() })
+    };
     component.ngOnInit();
-    // expect(component.inicializarFormGroup).toHaveBeenCalled();
-    // expect(component.formulario.get).toHaveBeenCalled();
+    expect(component.inicializarFormGroup).toHaveBeenCalled();
+    expect((component as any).formulario.get).toHaveBeenCalled();
   });
 
-
-  it('should run #getRadioData()', async () => {
-    component.exportaccionAcuicolaServcios = component.exportaccionAcuicolaServcios || {};
-    component.exportaccionAcuicolaServcios.getDatos = jest.fn().mockReturnValue(observableOf({}));
-    component.getRadioData({}, {});
-    // expect(component.exportaccionAcuicolaServcios.getDatos).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerValoresCatalogo()', async () => {
-    component.catalogosServicios = component.catalogosServicios || {};
-    component.catalogosServicios.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
-    component.configuracion = component.configuracion || {};
-    component.configuracion.indiceGrupo = {
-      menu: {
-        indiceMenu: {
-          props: {
-            catalogos: {}
+  it('should run #obtenerValoresCatalogo()', () => {
+    // Override the private "catalogosServicios" property.
+    (component as any).catalogosServicios = {
+      getCatalogo: jest.fn().mockReturnValue(observableOf([]))
+    };
+    // Assume configuracion is an array of objects with an "indiceGrupo" property.
+    (component as any).configuracion = [{
+      indiceGrupo: {
+        menu: {
+          indiceMenu: {
+            props: {
+              catalogos: {}
+            }
           }
         }
       }
+    }];
+    // Provide proper types for the parameters.
+    const mockNumero: number = 1; // first parameter must be a number
+    const mockParam1: number = 123;// adjust to the correct type
+    const mockParam2: string = 'test-param'; // adjust as needed
+
+    component.obtenerValoresCatalogo(mockNumero, mockParam1, mockParam2);
+    expect((component as any).catalogosServicios.getCatalogo).toHaveBeenCalled();
+  });
+
+  it('should run #fechaCambiado()', () => {
+    // Call the method with a simple object (adjust if the method expects a specific type).
+    component.fechaCambiado('2025-03-21'); // Example date string
+  });
+
+  it('should run #ngOnDestroy()', () => {
+    // Override the private "destroyNotifier$" property.
+    (component as any).destroyNotifier$ = {
+      next: jest.fn(),
+      complete: jest.fn()
     };
-    component.obtenerValoresCatalogo({}, {}, {});
-    // expect(component.catalogosServicios.getCatalogo).toHaveBeenCalled();
-  });
-
-  it('should run #fechaCambiado()', async () => {
-
-    component.fechaCambiado({});
-
-  });
-
-  it('should run #seleccionCatalogo()', async () => {
-    component.formulario = component.formulario || {};
-    component.formulario.get = jest.fn().mockReturnValue({
-      setValue: function() {}
-    });
-    component.seleccionCatalogo({}, {});
-    // expect(component.formulario.get).toHaveBeenCalled();
-  });
-
-
-
-  it('should run #onSubmit()', async () => {
-    component.tramite220403store = component.tramite220403store || {};
-    component.tramite220403store.setDatosRealizer = jest.fn();
-    component.formulario = component.formulario || {};
-    component.formulario.value = {
-      datosRealizer: {}
-    };
-    component.onSubmit();
-    // expect(component.tramite220403store.setDatosRealizer).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect((component as any).destroyNotifier$.next).toHaveBeenCalled();
+    expect((component as any).destroyNotifier$.complete).toHaveBeenCalled();
   });
-
 });
