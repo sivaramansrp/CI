@@ -17,8 +17,8 @@ describe('DatosCertificadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DatosCertificadoComponent],
+      imports: [ReactiveFormsModule, DatosCertificadoComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         {
@@ -26,7 +26,9 @@ describe('DatosCertificadoComponent', () => {
           useValue: {
             getIdioma: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
             getEntidad: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
-            getRepresentacion: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+            getRepresentacion: jest
+              .fn()
+              .mockReturnValue(of({ code: 200, data: [] })),
           },
         },
         {
@@ -131,9 +133,18 @@ describe('DatosCertificadoComponent', () => {
 
   it('should unsubscribe from all subscriptions on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const idiomaUnsubscribeSpy = jest.spyOn(component.getIdiomaSubscripcion, 'unsubscribe');
-    const entidadUnsubscribeSpy = jest.spyOn(component.getEntidadSubscripcion, 'unsubscribe');
-    const representacionUnsubscribeSpy = jest.spyOn(component.getRepresentacionSubscripcion, 'unsubscribe');
+    const idiomaUnsubscribeSpy = jest.spyOn(
+      component.getIdiomaSubscripcion,
+      'unsubscribe'
+    );
+    const entidadUnsubscribeSpy = jest.spyOn(
+      component.getEntidadSubscripcion,
+      'unsubscribe'
+    );
+    const representacionUnsubscribeSpy = jest.spyOn(
+      component.getRepresentacionSubscripcion,
+      'unsubscribe'
+    );
 
     component.ngOnDestroy();
 

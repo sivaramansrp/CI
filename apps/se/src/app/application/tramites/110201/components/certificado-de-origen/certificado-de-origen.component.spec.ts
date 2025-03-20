@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -28,19 +37,25 @@ class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
 describe('CertificadoDeOrigenComponent', () => {
@@ -49,30 +64,33 @@ describe('CertificadoDeOrigenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [FormsModule, ReactiveFormsModule, CertificadoDeOrigenComponent],
       declarations: [
-        CertificadoDeOrigenComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: RegistroService, useClass: MockRegistroService },
         FormBuilder,
         { provide: Tramite110201Store, useClass: MockTramite110201Store },
         { provide: Tramite110201Query, useClass: MockTramite110201Query },
-        ValidacionesFormularioService
-      ]
-    }).overrideComponent(CertificadoDeOrigenComponent, {
-
-    }).compileComponents();
+        ValidacionesFormularioService,
+      ],
+    })
+      .overrideComponent(CertificadoDeOrigenComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(CertificadoDeOrigenComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    // component.ngOnDestroy = function() {};
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {
@@ -121,12 +139,12 @@ describe('CertificadoDeOrigenComponent', () => {
     component.query = component.query || {};
     component.query.selectSolicitud$ = observableOf({});
     component.query.selectTratado$ = observableOf({
-      catalogos: {}
+      catalogos: {},
     });
     component.query.selectPais$ = observableOf({});
     component.query.selectUMC$ = observableOf({});
     component.query.selectUnidadMedida$ = observableOf({
-      catalogos: {}
+      catalogos: {},
     });
     component.query.selectTipoFactura$ = observableOf({});
     component.donanteDomicilio = jest.fn();
@@ -151,12 +169,25 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should run #buscarMercancias()', async () => {
     component.Tratadodescripcion = component.Tratadodescripcion || {};
+    component.Tratadodescripcion.includes = jest.fn(1);
+    component.buscarMercancias();
+    expect(component.Tratadodescripcion.includes).toHaveBeenCalled();
+  });
+
+  it('should run #buscarMercancias()', async () => {
+    component.Tratadodescripcion = component.Tratadodescripcion || {};
     component.Tratadodescripcion.includes = jest.fn();
     component.buscarMercancias();
     expect(component.Tratadodescripcion.includes).toHaveBeenCalled();
   });
 
   it('should run #agregar()', async () => {
+    component.getTratado = jest.fn();
+    component.getPais = jest(fn);
+    component.agregar();
+    expect(component.getTratado).toHaveBeenCalled();
+    expect(component.getPais).toHaveBeenCalled();
+
     component.mercanciaForm = component.mercanciaForm || {};
     component.mercanciaForm.valid = 'valid';
     component.mercanciaForm.value = {
@@ -168,29 +199,28 @@ describe('CertificadoDeOrigenComponent', () => {
         tipoFactura: {},
         nFactura: {},
         complementodeladescripcion: {},
-        fecha: {}
-      }
+        fecha: {},
+      },
     };
     component.tableSeleccionadas = component.tableSeleccionadas || {};
     component.tableSeleccionadas.data = {
-      push: function() {}
+      push: function () {},
     };
     component.agregar();
-
   });
 
   it('should run #mercanciaDisponsible()', async () => {
-    component.getMercanciaDisponsibleTableData = component.getMercanciaDisponsibleTableData || {};
+    component.getMercanciaDisponsibleTableData =
+      component.getMercanciaDisponsibleTableData || {};
     component.getMercanciaDisponsibleTableData.tableHeader = 'tableHeader';
     component.mercanciaDisponsible();
-
   });
 
   it('should run #mercanciaSeleccionadas()', async () => {
-    component.getmercanciaSeleccionadasTable = component.getmercanciaSeleccionadasTable || {};
+    component.getmercanciaSeleccionadasTable =
+      component.getmercanciaSeleccionadasTable || {};
     component.getmercanciaSeleccionadasTable.tableHeader = 'tableHeader';
     component.mercanciaSeleccionadas();
-
   });
 
   it('should run #mercanciatable()', async () => {
@@ -198,27 +228,55 @@ describe('CertificadoDeOrigenComponent', () => {
     component.getMercanciaTable.tableHeader = 'tableHeader';
     component.getMercanciaTable.tableBody = 'tableBody';
     component.mercanciatable();
-
   });
 
   it('should run #cargaArchivo()', async () => {
-
     component.cargaArchivo();
-
   });
 
   it('should run #giveError()', async () => {
-
     component.giveError();
+  });
 
+  it('should call agregar when the form is valid', () => {
+    const agregarSpy = jest.spyOn(component, 'agregar');
+    component.mercanciaForm = component.fb.group({
+      validacionMercanciaForm: component.fb.group({
+        fraccionMercanArancelaria: ['123456789', Validators.required],
+        cantidad: ['10', Validators.required],
+        unidadMedida: ['kg', Validators.required],
+        valordelamercancia: ['100.00', Validators.required],
+        tipoFactura: ['Factura A', Validators.required],
+        nFactura: ['12345', Validators.required],
+        complementoDescripcion: ['Descripción', Validators.required],
+        fecha: ['2025-03-20', Validators.required],
+      }),
+    });
+    component.agregar();
+    expect(agregarSpy).toHaveBeenCalled();
+  });
+
+  it('should run #modificar()', async () => {
+    component.getUMC = jest.fn();
+    component.getTipoFactura = jest(fn);
+    component.getUnidadMedida = jest.fn();
+    component.modificar();
+    expect(component.getUMC).toHaveBeenCalled();
+    expect(component.getTipoFactura).toHaveBeenCalled();
+  });
+
+  it('should run #handleClick()', async () => {
+    component.handleClick();
   });
 
   it('should run #getTratado()', async () => {
     component.registroService = component.registroService || {};
-    component.registroService.getTratado = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
+    component.registroService.getTratado = jest.fn().mockReturnValue(
+      observableOf({
+        code: {},
+        data: {},
+      })
+    );
     component.store = component.store || {};
     component.store.setTratado = jest.fn();
     component.getTratado();
@@ -228,10 +286,12 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should run #getPais()', async () => {
     component.registroService = component.registroService || {};
-    component.registroService.getPais = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
+    component.registroService.getPais = jest.fn().mockReturnValue(
+      observableOf({
+        code: {},
+        data: {},
+      })
+    );
     component.store = component.store || {};
     component.store.setPais = jest.fn();
     component.getPais();
@@ -241,10 +301,12 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should run #getUMC()', async () => {
     component.registroService = component.registroService || {};
-    component.registroService.getUMC = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
+    component.registroService.getUMC = jest.fn().mockReturnValue(
+      observableOf({
+        code: {},
+        data: {},
+      })
+    );
     component.store = component.store || {};
     component.store.setUMC = jest.fn();
     component.getUMC();
@@ -254,10 +316,12 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should run #getUnidadMedida()', async () => {
     component.registroService = component.registroService || {};
-    component.registroService.getUnidadMedida = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
+    component.registroService.getUnidadMedida = jest.fn().mockReturnValue(
+      observableOf({
+        code: {},
+        data: {},
+      })
+    );
     component.store = component.store || {};
     component.store.setUnidadMedida = jest.fn();
     component.getUnidadMedida();
@@ -267,10 +331,12 @@ describe('CertificadoDeOrigenComponent', () => {
 
   it('should run #getTipoFactura()', async () => {
     component.registroService = component.registroService || {};
-    component.registroService.getTipoFactura = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
+    component.registroService.getTipoFactura = jest.fn().mockReturnValue(
+      observableOf({
+        code: {},
+        data: {},
+      })
+    );
     component.store = component.store || {};
     component.store.setTipoFactura = jest.fn();
     component.getTipoFactura();
@@ -279,30 +345,25 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   it('should run #cerrarAdjuntarArchivoMercancias()', async () => {
-
     component.cerrarAdjuntarArchivoMercancias();
-
   });
 
   it('should run #alSeleccionarArchivo()', async () => {
-
     component.alSeleccionarArchivo({
       target: {
         files: {
           0: {
-            name: {}
-          }
-        }
-      }
+            name: {},
+          },
+        },
+      },
     });
-
   });
 
   it('should run #onSubmit()', async () => {
     component.registroForm = component.registroForm || {};
     component.registroForm.valid = 'valid';
     component.onSubmit();
-
   });
 
   it('should run #isValid()', async () => {
@@ -315,13 +376,17 @@ describe('CertificadoDeOrigenComponent', () => {
   it('should run #setValoresStore()', async () => {
     component.store = component.store || {};
     component.store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
+    component.setValoresStore(
+      {
+        get: function () {
+          return {
+            value: {},
+          };
+        },
+      },
+      {},
+      {}
+    );
     expect(component.store.metodoNombre).toHaveBeenCalled();
   });
 
@@ -337,16 +402,19 @@ describe('CertificadoDeOrigenComponent', () => {
     component.solicitudState.fechInicioB = 'fechInicioB';
     component.solicitudState.fechFinB = 'fechFinB';
     component.solicitudState.archivo = 'archivo';
-    component.solicitudState.fraccionMercanArancelaria = 'fraccionMercanArancelaria';
+    component.solicitudState.fraccionMercanArancelaria =
+      'fraccionMercanArancelaria';
     component.solicitudState.nombretecnico = 'nombretecnico';
-    component.solicitudState.nombrecomercialdelamercancia = 'nombrecomercialdelamercancia';
+    component.solicitudState.nombrecomercialdelamercancia =
+      'nombrecomercialdelamercancia';
     component.solicitudState.criterioparaconferir = 'criterioparaconferir';
     component.solicitudState.nomreeningles = 'nomreeningles';
     component.solicitudState.marca = 'marca';
     component.solicitudState.cantidad = 'cantidad';
     component.solicitudState.umc = 'umc';
     component.solicitudState.valordelamercancia = 'valordelamercancia';
-    component.solicitudState.complementodeladescripcion = 'complementodeladescripcion';
+    component.solicitudState.complementodeladescripcion =
+      'complementodeladescripcion';
     component.solicitudState.masabruta = 'masabruta';
     component.solicitudState.unidadMedida = 'unidadMedida';
     component.solicitudState.tipoFactura = 'tipoFactura';
@@ -363,9 +431,11 @@ describe('CertificadoDeOrigenComponent', () => {
     component.getPaisSubscription.unsubscribe = jest.fn();
     component.getUMCSubscription = component.getUMCSubscription || {};
     component.getUMCSubscription.unsubscribe = jest.fn();
-    component.getUnidadMedidaSubscription = component.getUnidadMedidaSubscription || {};
+    component.getUnidadMedidaSubscription =
+      component.getUnidadMedidaSubscription || {};
     component.getUnidadMedidaSubscription.unsubscribe = jest.fn();
-    component.getTipoFacturaSubscription = component.getTipoFacturaSubscription || {};
+    component.getTipoFacturaSubscription =
+      component.getTipoFacturaSubscription || {};
     component.getTipoFacturaSubscription.unsubscribe = jest.fn();
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
@@ -373,9 +443,10 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.getTratadoSubscription.unsubscribe).toHaveBeenCalled();
     expect(component.getPaisSubscription.unsubscribe).toHaveBeenCalled();
     expect(component.getUMCSubscription.unsubscribe).toHaveBeenCalled();
-    expect(component.getUnidadMedidaSubscription.unsubscribe).toHaveBeenCalled();
+    expect(
+      component.getUnidadMedidaSubscription.unsubscribe
+    ).toHaveBeenCalled();
     expect(component.getTipoFacturaSubscription.unsubscribe).toHaveBeenCalled();
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
   });
-
 });

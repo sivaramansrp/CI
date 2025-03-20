@@ -17,6 +17,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroRoutingModule } from './registro-routing.module';
+import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [],
@@ -39,5 +40,6 @@ import { RegistroRoutingModule } from './registro-routing.module';
     DestinatarioComponent,
     TituloComponent,
   ],
+  providers:[ToastrService]
 })
 export class RegistroModule {}

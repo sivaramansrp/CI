@@ -47,7 +47,7 @@
     </div>
     <div class="row">
       <div class="col-md-4 mb-3">
-        <label>Número de registro fiscal*:</label> 
+        <label>Número de registro fiscal*:</label>
         <input
           type="text"
           class="form-control"
@@ -58,13 +58,19 @@
           "
         />
       </div>
-      <div class="col-md-8 mb-3" >
+      <div class="col-md-8 mb-3">
         <label>Razón social:</label>
         <input
           type="text"
-          class="form-control" [ngClass]="{'GrayClass' : registroForm.get('validacionForm.apellidoPrimer')?.value != ''}"
+          class="form-control"
+          [ngClass]="{
+            GrayClass:
+              registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
+          }"
           id="denominacion"
-          [readonly] ="registroForm.get('validacionForm.apellidoPrimer')?.value != ''"
+          [readonly]="
+            registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
+          "
           formControlName="razonSocial"
           (change)="
             setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')
@@ -141,8 +147,12 @@
         />
       </div>
       <div class="col-md-4 mb-3">
-        <label>Correo electrónico*:</label><span class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
-        data-bs-toggle="tooltip"></span>
+        <label>Correo electrónico*:</label
+        ><span
+          class="bi bi-question-circle-fill"
+          title="ejemplo@dominio.com"
+          data-bs-toggle="tooltip"
+        ></span>
         <input
           type="text"
           class="form-control"

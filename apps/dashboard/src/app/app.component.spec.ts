@@ -1,7 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { NxWelcomeComponent } from './nx-welcome.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NxWelcomeComponent } from '../nx-welcome/nx-welcome.component'; // Adjust the path as needed
 import { Router } from '@angular/router';
 
 describe('AppComponent', () => {

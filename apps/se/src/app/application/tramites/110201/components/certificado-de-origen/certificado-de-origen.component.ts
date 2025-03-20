@@ -1,8 +1,26 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent,ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  CatalogosSelect,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, SeleccionadasTabla } from '../../models/registro.model';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud110201State, Tramite110201Store } from '../../state/Tramite110201.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  Solicitud110201State,
+  Tramite110201Store,
+} from '../../state/Tramite110201.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
@@ -11,10 +29,11 @@ import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110201/mer
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110201/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110201/mercancia.json';
 
-
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
-
+/**
+ * Componente que representa el formulario de certificado de origen en el trámite.
+ */
 @Component({
   selector: 'app-certificado-de-origen',
   standalone: true,
@@ -32,43 +51,177 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  /**
+   * Texto de alerta mostrado en el componente.
+   */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
-  registroForm!: FormGroup;
-  mercanciaForm!: FormGroup;
-  private subscriptions: Subscription[] = [];
-  getTratadoSubscription!: Subscription;
-  getPaisSubscription!: Subscription;
-  getUMCSubscription!: Subscription;
-  getUnidadMedidaSubscription!: Subscription;
-  getTipoFacturaSubscription!: Subscription;
-  pais!: CatalogosSelect;
-  tratado!: CatalogosSelect;
-  umc!: CatalogosSelect;
-  unidadMedida!: CatalogosSelect;
-  tipoFactura!: CatalogosSelect;
-  cargarArchivo: boolean = false;
-  giveErrors: boolean = false;
-  isDisponibles: boolean = false;
-  isMercancia = false;
-  public getMercanciaDisponsibleTableData = mercanciaDisponsibleTable;
-  public getmercanciaSeleccionadasTable = mercanciaSeleccionadasTable;
-  public getMercanciaTable = mercanciaTable;
-  public mercanciasdisponibles: string[] = [];
-  public encabezadosTablas: string[] = [];
-  public mercanciasHeader: string[] = [];
-  public mercanciasBody: unknown[] = [];
-  public solicitudState!: Solicitud110201State;
-  public destroyNotifier$: Subject<void> = new Subject();
-  TablaSeleccion = TablaSeleccion;
-  Tratadodescripcion: unknown[] = [];
-  unidadMedidaValue: unknown[] = [];
-  selectTratado: string | null = null;
-  fraccionArancelariaValue!: string;
-  nombreArchivo: string = '';
-  isForm:boolean = false;
-  
 
-  //MercanciaDisponsibles
+  /**
+   * Formulario reactivo para los datos del certificado.
+   */
+  registroForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para los datos de la mercancía.
+   */
+  mercanciaForm!: FormGroup;
+
+  /**
+   * Lista de suscripciones activas.
+   */
+  private subscriptions: Subscription[] = [];
+
+  /**
+   * Suscripción para obtener el catálogo de tratados.
+   */
+  getTratadoSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de países.
+   */
+  getPaisSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de UMC.
+   */
+  getUMCSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de unidades de medida.
+   */
+  getUnidadMedidaSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de tipos de factura.
+   */
+  getTipoFacturaSubscription!: Subscription;
+
+  /**
+   * Catálogo de países.
+   */
+  pais!: CatalogosSelect;
+
+  /**
+   * Catálogo de tratados.
+   */
+  tratado!: CatalogosSelect;
+
+  /**
+   * Catálogo de unidades de medida comercial (UMC).
+   */
+  umc!: CatalogosSelect;
+
+  /**
+   * Catálogo de unidades de medida.
+   */
+  unidadMedida!: CatalogosSelect;
+
+  /**
+   * Catálogo de tipos de factura.
+   */
+  tipoFactura!: CatalogosSelect;
+
+  /**
+   * Indica si se debe mostrar el formulario para cargar un archivo.
+   */
+  cargarArchivo: boolean = false;
+
+  /**
+   * Indica si se deben mostrar errores en el formulario.
+   */
+  mostrarErrores: boolean = false;
+
+  /**
+   * Indica si hay mercancías disponibles.
+   */
+  isDisponibles: boolean = false;
+
+  /**
+   * Indica si se está editando una mercancía.
+   */
+  isMercancia = false;
+
+  /**
+   * Datos de la tabla de mercancías disponibles.
+   */
+  public getMercanciaDisponsibleTableData = mercanciaDisponsibleTable;
+
+  /**
+   * Datos de la tabla de mercancías seleccionadas.
+   */
+  public getmercanciaSeleccionadasTable = mercanciaSeleccionadasTable;
+
+  /**
+   * Datos de la tabla de mercancías.
+   */
+  public getMercanciaTable = mercanciaTable;
+
+  /**
+   * Lista de mercancías disponibles.
+   */
+  public mercanciasdisponibles: string[] = [];
+
+  /**
+   * Encabezados de las tablas.
+   */
+  public encabezadosTablas: string[] = [];
+
+  /**
+   * Encabezados de la tabla de mercancías.
+   */
+  public mercanciasHeader: string[] = [];
+
+  /**
+   * Cuerpo de la tabla de mercancías.
+   */
+  public mercanciasBody: unknown[] = [];
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud110201State;
+
+  /**
+   * Notificador para destruir observables al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Tabla de selección de mercancías.
+   */
+  TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Descripciones de los tratados.
+   */
+  Tratadodescripcion: unknown[] = [];
+
+  /**
+   * Valores de las unidades de medida.
+   */
+  unidadMedidaValue: unknown[] = [];
+
+  /**
+   * Tratado seleccionado.
+   */
+  selectTratado: string | null = null;
+
+  /**
+   * Valor de la fracción arancelaria.
+   */
+  fraccionArancelariaValue!: string;
+
+  /**
+   * Nombre del archivo seleccionado.
+   */
+  nombreArchivo: string = '';
+
+  /**
+   * Indica si se está mostrando el formulario.
+   */
+  esFormulario: boolean = false;
+
+ 
   tableData: {
     headers: {
       encabezado: string;
@@ -127,7 +280,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       },
     ],
   };
-  //MercanciaSeleccionadas
+
   tableSeleccionadas: {
     headers: {
       encabezado: string;
@@ -190,52 +343,70 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     data: [
       {
         fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm.fraccionArancelaria,
+          this.mercanciaForm?.value.validacionMercanciaForm
+            .fraccionMercanArancelaria,
         cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
         unidadMedida:
           this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
         valorMercancia:
-          this.mercanciaForm?.value.validacionMercanciaForm.valorMercancia,
+          this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
         tipoFactura:
           this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.numFactura,
+        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.nFactura,
         complementoDescripcion:
           this.mercanciaForm?.value.validacionMercanciaForm
-            .complementoDescripcion,
+            .complementodeladescripcion,
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       },
     ],
   };
-
+/**
+   * Constructor del componente.
+   * @param registroService Servicio para obtener datos de catálogos.
+   * @param fb Constructor de formularios reactivos.
+   * @param store Tienda para gestionar el estado del trámite.
+   * @param query Consultas para obtener datos del estado del trámite.
+   * @param validacionesService Servicio para validar formularios.
+   */
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
     private store: Tramite110201Store,
     private query: Tramite110201Query,
-    private validacionesService: ValidacionesFormularioService,
-   
+    private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
-
-  handleClick(row:any){
-    this.isForm = true;
+/**
+   * Maneja el evento de clic para habilitar el formulario de edición.
+   * @param row Fila seleccionada.
+   */
+  handleClick(row: unknown) {
+    this.esFormulario = true;
   }
-
+/**
+   * Valida el formulario del destinatario.
+   * Marca todos los campos como tocados si el formulario es inválido.
+   */
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
     }
   }
 
+  /**
+   * Valida el formulario de mercancías.
+   * Marca todos los campos como tocados si el formulario es inválido.
+   */
   validarmercanciaForm(): void {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
     }
   }
-
+ /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura los formularios y obtiene los catálogos necesarios.
+   */
   ngOnInit(): void {
     this.mercanciaDisponsible();
     this.mercanciaSeleccionadas();
@@ -298,7 +469,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           catalogos: unidadMedida ?? [],
         };
         this.unidadMedidaValue = this.unidadMedida.catalogos;
-        
       })
     );
 
@@ -319,15 +489,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.isDisponibles = true;
     } else {
       this.isDisponibles = false;
-    }  
-
+    }
   }
-
+/**
+   * Agrega una mercancía al formulario.
+   */
   agregar() {
+    this.getTratado();
+    this.getPais();
+
     if (this.mercanciaForm.valid) {
       this.isMercancia = true;
-      this.isForm = false
-      this.tableSeleccionadas.data.splice(0,1,{
+      this.esFormulario = false;
+      this.tableSeleccionadas.data.splice(0, 1, {
         fraccionArancelaria:
           this.mercanciaForm?.value.validacionMercanciaForm
             .fraccionMercanArancelaria,
@@ -344,14 +518,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
             .complementodeladescripcion,
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
-
-    
     }
   }
-
-  modificar(){
-    this.isForm = true;
+ /**
+   * Modifica una mercancía existente.
+   */
+  modificar() {
+    this.esFormulario = true;
     this.isMercancia = false;
+
+    this.getUnidadMedida();
+    this.getUMC();
+    this.getTipoFactura();
   }
 
   public mercanciaDisponsible(): void {
@@ -371,10 +549,12 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.cargarArchivo = true;
   }
   giveError() {
-    this.giveErrors = true;
+    this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
-
+/**
+   * Obtiene el catálogo de tratados desde el servicio.
+   */
   getTratado(): void {
     this.getTratadoSubscription = this.registroService
       .getTratado()
@@ -385,7 +565,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+ /**
+   * Obtiene el catálogo de países desde el servicio.
+   */
   getPais(): void {
     this.getPaisSubscription = this.registroService
       .getPais()
@@ -396,7 +578,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+/**
+   * Obtiene el catálogo de UMC desde el servicio.
+   */
   getUMC(): void {
     this.getUMCSubscription = this.registroService
       .getUMC()
@@ -407,7 +591,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+ /**
+   * Obtiene el catálogo de unidades de medida desde el servicio.
+   */
   getUnidadMedida(): void {
     this.getUnidadMedidaSubscription = this.registroService
       .getUnidadMedida()
@@ -418,7 +604,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+/**
+   * Obtiene el catálogo de tipos de factura desde el servicio.
+   */
   getTipoFactura(): void {
     this.getTipoFacturaSubscription = this.registroService
       .getTipoFactura()
@@ -430,8 +618,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       });
   }
 
- cerrarAdjuntarArchivoMercancias(): void {
-    // Implement the logic to close the form or navigate away
+  cerrarAdjuntarArchivoMercancias(): void {
     this.cargarArchivo = false;
   }
 
@@ -439,17 +626,29 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const FILE = event.target.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
-
+/**
+   * Maneja el envío del formulario.
+   */
   onSubmit(): void {
     if (this.registroForm.valid) {
-       // Aquí se implementará la lógica para manejar el envío del formulario.
+      // Aquí se implementará la lógica para manejar el envío del formulario.
     }
   }
-
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo a validar.
+   * @returns `true` si el campo es válido, de lo contrario `false`.
+   */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
-
+ /**
+   * Establece valores en el estado de la tienda.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Método de la tienda para actualizar el estado.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -458,14 +657,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+  /**
+   * Obtiene el formulario de validación.
+   */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
-
+/**
+   * Obtiene el formulario de validación de mercancías.
+   */
   get validacionMercanciaForm(): FormGroup {
     return this.mercanciaForm.get('validacionMercanciaForm') as FormGroup;
   }
-
+  /**
+   * Configura el formulario reactivo con los valores iniciales del estado.
+   */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
@@ -473,24 +679,27 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         pais: [this.solicitudState?.pais, [Validators.required]],
         fraccionArancelaria: [
           this.solicitudState?.fraccionArancelaria,
+          [Validators.required, Validators.pattern(/^\d+$/)],
+        ],
+        numeroRegistro: [
+          this.solicitudState?.numeroRegistro,
           [Validators.required],
         ],
-        numRegistro: [this.solicitudState?.numRegistro, [Validators.required]],
-        nomComercial: [
-          this.solicitudState?.nomComercial,
+        nombreComercial: [
+          this.solicitudState?.nombreComercial,
           [Validators.required],
         ],
-        fechInicioB: [this.solicitudState?.fechInicioB, [Validators.required]],
+        fechaInicioB: [
+          this.solicitudState?.fechaInicioB,
+          [Validators.required],
+        ],
         fechFinB: [this.solicitudState?.fechFinB, [Validators.required]],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
       }),
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanArancelaria: [ 
-          '123456789',
-          [Validators.required],
-        ],
+        fraccionMercanArancelaria: ['123456789', [Validators.required]],
         nombretecnico: [
           'Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o',
           [Validators.required],
@@ -500,26 +709,26 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           [Validators.required],
         ],
 
-        criterioparaconferir: [
-         'SIN_CRIT',
-          [Validators.required],
-        ],
-        nomreeningles: [
-          'rubber ducklings',
-          [Validators.required],
-        ],
+        criterioparaconferir: ['SIN_CRIT', [Validators.required]],
+        nombreEnIngles: ['rubber ducklings', [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
-        cantidad: [this.solicitudState?.cantidad, [Validators.required]],
+        cantidad: [
+          this.solicitudState?.cantidad,
+          [Validators.required, Validators.pattern(/^\d+$/)],
+        ],
         umc: [this.solicitudState?.umc, [Validators.required]],
         valordelamercancia: [
           this.solicitudState?.valordelamercancia,
-          [Validators.required],
+          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
         ],
         complementodeladescripcion: [
           this.solicitudState?.complementodeladescripcion,
           [Validators.required],
         ],
-        masabruta: [this.solicitudState?.masabruta, [Validators.required]],
+        masabruta: [
+          this.solicitudState?.masabruta,
+          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
+        ],
         unidadMedida: [
           this.solicitudState?.unidadMedida,
           [Validators.required],
@@ -529,8 +738,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         nFactura: [this.solicitudState?.nFactura, [Validators.required]],
       }),
     });
-
   }
+   /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
   ngOnDestroy(): void {
     if (this.getTratadoSubscription) {
       this.getTratadoSubscription.unsubscribe();

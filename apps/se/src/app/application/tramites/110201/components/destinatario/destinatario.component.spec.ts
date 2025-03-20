@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+} from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DestinatarioComponent } from './destinatario.component';
 import { RegistroService } from '../../services/registro.service';
@@ -17,15 +22,19 @@ describe('DestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DestinatarioComponent],
+      imports: [ReactiveFormsModule, FormsModule, DestinatarioComponent],
+      declarations: [],
       providers: [
         FormBuilder,
         {
           provide: RegistroService,
           useValue: {
-            getPaisDestino: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
-            getTransporte: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+            getPaisDestino: jest
+              .fn()
+              .mockReturnValue(of({ code: 200, data: [] })),
+            getTransporte: jest
+              .fn()
+              .mockReturnValue(of({ code: 200, data: [] })),
           },
         },
         {
@@ -119,8 +128,14 @@ describe('DestinatarioComponent', () => {
 
   it('should unsubscribe from all subscriptions on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const paisDestinoUnsubscribeSpy = jest.spyOn(component.getPaisDestinoSubscription, 'unsubscribe');
-    const transporteUnsubscribeSpy = jest.spyOn(component.getTransporteSubscription, 'unsubscribe');
+    const paisDestinoUnsubscribeSpy = jest.spyOn(
+      component.getPaisDestinoSubscription,
+      'unsubscribe'
+    );
+    const transporteUnsubscribeSpy = jest.spyOn(
+      component.getTransporteSubscription,
+      'unsubscribe'
+    );
 
     component.ngOnDestroy();
 

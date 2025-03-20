@@ -1,5 +1,9 @@
-import { CatalogoSelectComponent,TituloComponent,ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  CatalogoSelectComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,7 +20,9 @@ import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
 
-
+/**
+ * Componente que representa el formulario de destinatario en el trámite.
+ */
 @Component({
   selector: 'app-destinatario',
   standalone: true,
@@ -30,17 +36,64 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para el destinatario.
+   */
   registroForm!: FormGroup;
-  nacion!: CatalogosSelect;
-  transporte!: CatalogosSelect;
-  private subscriptions: Subscription[] = [];
-  public solicitudState!: Solicitud110201State;
-  public destroyNotifier$: Subject<void> = new Subject();
-  getPaisDestinoSubscription!: Subscription;
-  getTransporteSubscription!: Subscription;
-  isDisabled : boolean = false;
-  isEmpty : boolean = false;
 
+  /**
+   * Catálogo de países de destino.
+   */
+  nacion!: CatalogosSelect;
+
+  /**
+   * Catálogo de medios de transporte.
+   */
+  transporte!: CatalogosSelect;
+
+  /**
+   * Lista de suscripciones activas.
+   */
+  private subscriptions: Subscription[] = [];
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud110201State;
+
+  /**
+   * Notificador para destruir observables al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Suscripción para obtener el catálogo de países de destino.
+   */
+  getPaisDestinoSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de medios de transporte.
+   */
+  getTransporteSubscription!: Subscription;
+
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  isDisabled: boolean = false;
+
+  /**
+   * Indica si el formulario está vacío.
+   */
+  estaVacio: boolean = false;
+
+  /**
+   * Constructor del componente.
+   * @param registroService Servicio para obtener datos de catálogos.
+   * @param fb Constructor de formularios reactivos.
+   * @param store Tienda para gestionar el estado del trámite.
+   * @param query Consultas para obtener datos del estado del trámite.
+   * @param validacionesService Servicio para validar formularios.
+   */
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
@@ -50,15 +103,28 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
+
+  /**
+   * Valida el formulario del destinatario.
+   * Marca todos los campos como tocados si el formulario es inválido.
+   */
   validarDestinatarioFormulario(): void {
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
     }
   }
 
-  onClick(){
+  /**
+   * Maneja el evento de clic para deshabilitar el formulario.
+   */
+  onClick(): void {
     this.isDisabled = true;
   }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Obtiene los catálogos de países de destino y medios de transporte.
+   */
   ngOnInit(): void {
     this.getPaisDestino();
     this.getTransporte();
@@ -71,6 +137,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     this.donanteDomicilio();
 
     this.subscriptions.push(
@@ -96,6 +163,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Obtiene el catálogo de países de destino desde el servicio.
+   */
   getPaisDestino(): void {
     this.getPaisDestinoSubscription = this.registroService
       .getPaisDestino()
@@ -107,6 +177,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene el catálogo de medios de transporte desde el servicio.
+   */
   getTransporte(): void {
     this.getTransporteSubscription = this.registroService
       .getTransporte()
@@ -118,16 +191,31 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja el envío del formulario.
+   */
   onSubmit(): void {
     if (this.registroForm.valid) {
-       // Aquí se implementará la lógica para manejar el envío del formulario.
+      // Aquí se implementará la lógica para manejar el envío del formulario.
     }
   }
 
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param form Formulario reactivo.
+   * @param field Nombre del campo a validar.
+   * @returns `true` si el campo es válido, de lo contrario `false`.
+   */
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
 
+  /**
+   * Establece valores en el estado de la tienda.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo del formulario.
+   * @param metodoNombre Método de la tienda para actualizar el estado.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -135,13 +223,18 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-
   }
 
+  /**
+   * Obtiene el formulario de validación.
+   */
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
 
+  /**
+   * Configura el formulario reactivo con los valores iniciales del estado.
+   */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
@@ -165,15 +258,23 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         calle: [this.solicitudState?.calle, [Validators.required]],
         numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
         lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [this.solicitudState?.telefono, [Validators.required]],
-        fax: [this.solicitudState?.fax, [Validators.required, ]],
+        telefono: [
+          this.solicitudState?.telefono,
+          [Validators.required, Validators.pattern(/^\d+$/)],
+        ],
+        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
         correoElectronico: [
           this.solicitudState?.correoElectronico,
-          [Validators.required],
+          [Validators.required, Validators.email],
         ],
       }),
     });
   }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
   ngOnDestroy(): void {
     if (this.getPaisDestinoSubscription) {
       this.getPaisDestinoSubscription.unsubscribe();

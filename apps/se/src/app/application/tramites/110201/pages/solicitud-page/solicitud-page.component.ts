@@ -1,4 +1,7 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import {
+  BtnContinuarComponent,
+  DatosPasos,
+} from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,11 +12,11 @@ import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-
 /**
  * Texto de alerta para terceros.
  */
-const TERCEROS_TEXTO_DE_ALERTA ='La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+const TERCEROS_TEXTO_DE_ALERTA =
+  'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -35,13 +38,21 @@ interface AccionBoton {
   templateUrl: './solicitud-page.component.html',
   styles: ``,
   standalone: true,
-  imports:[WizardComponent,CommonModule,BtnContinuarComponent,FormsModule,PasoDosComponent,PasoTresComponent,PasoUnoComponent, ReactiveFormsModule]
+  imports: [
+    WizardComponent,
+    CommonModule,
+    BtnContinuarComponent,
+    FormsModule,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    ReactiveFormsModule,
+  ],
 })
 /**
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
-
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.

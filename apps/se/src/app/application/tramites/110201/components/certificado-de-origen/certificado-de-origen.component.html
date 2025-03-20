@@ -1,11 +1,11 @@
-<ng-container *ngIf="!isForm">
-<ng-titulo
-  *ngIf="!cargarArchivo"
-  titulo="Validación inicial del certificado de circulación de mercancías"
-/>
-<ng-titulo *ngIf="!cargarArchivo" titulo="Tratado y país o bloque" />
+<ng-container *ngIf="!esFormulario">
+  <ng-titulo
+    *ngIf="!cargarArchivo"
+    titulo="Validación inicial del certificado de circulación de mercancías"
+  />
+  <ng-titulo *ngIf="!cargarArchivo" titulo="Tratado y país o bloque" />
 </ng-container>
-<div class="container" *ngIf="!isForm">
+<div class="container" *ngIf="!esFormulario">
   <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
     <ng-container formGroupName="validacionForm">
       <ng-container *ngIf="!cargarArchivo">
@@ -39,7 +39,7 @@
           <div class="col-md-4">
             <label>Fracción arancelaria:</label>
             <input
-              type="text"
+              type="number"
               required="true"
               class="form-control"
               formControlName="fraccionArancelaria"
@@ -58,9 +58,13 @@
               type="text"
               required="true"
               class="form-control"
-              formControlName="numRegistro"
+              formControlName="numeroRegistro"
               (change)="
-                setValoresStore(validacionForm, 'numRegistro', 'setNumRegistro')
+                setValoresStore(
+                  validacionForm,
+                  'numeroRegistro',
+                  'setNumRegistro'
+                )
               "
             />
           </div>
@@ -70,11 +74,11 @@
               type="text"
               required="true"
               class="form-control"
-              formControlName="nomComercial"
+              formControlName="nombreComercial"
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'nomComercial',
+                  'nombreComercial',
                   'setNomComercial'
                 )
               "
@@ -91,9 +95,13 @@
               type="date"
               required="true"
               class="form-control"
-              formControlName="fechInicioB"
+              formControlName="fechaInicioB"
               (change)="
-                setValoresStore(validacionForm, 'fechInicioB', 'setFechInicioB')
+                setValoresStore(
+                  validacionForm,
+                  'fechaInicioB',
+                  'setFechInicioB'
+                )
               "
             />
           </div>
@@ -129,13 +137,12 @@
           ></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="isDisponibles">
-          
-            <app-tabla-dinamica
-              [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-              [configuracionTabla]="tableData.headers"
-              [datos]="tableData.data" (click)="handleClick(tableData.data)"
-            ></app-tabla-dinamica>
-         
+          <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+            [configuracionTabla]="tableData.headers"
+            [datos]="tableData.data"
+            (click)="handleClick(tableData.data)"
+          ></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
       </ng-container>
@@ -223,14 +230,14 @@
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
-        
+
         <div class="table-container mt-5" *ngIf="!isMercancia">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="tableSeleccionadas.headers"
           ></app-tabla-dinamica>
         </div>
-     
+
         <div class="table-container mt-5" *ngIf="isMercancia">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
@@ -238,19 +245,30 @@
             [datos]="tableSeleccionadas.data"
           ></app-tabla-dinamica>
         </div>
-        <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
+        <i
+          *ngIf="isMercancia"
+          id="bi-1-square"
+          class="bi bi-1-square"
+          viewBox="0 0 16 16"
+        ></i>
         <div
           class="col-md-12 mt-5 d-flex justify-content-end"
           *ngIf="isMercancia"
         >
           <button type="button" class="btn btn-default ms-3">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3" (click)="modificar()">Modificar</button>
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            (click)="modificar()"
+          >
+            Modificar
+          </button>
         </div>
         <div class="row mt-5">
           <div
             class="alert alert-danger"
             style="margin-top: 40px"
-            *ngIf="giveErrors"
+            *ngIf="mostrarErrores"
           >
             <strong
               >Existen errores en la carga de mercancías por archivo</strong
@@ -258,9 +276,12 @@
           </div>
         </div>
         <div class="row mt-5">
-          <label *ngIf="giveErrors">Mercancías*:</label>
+          <label *ngIf="mostrarErrores">Mercancías*:</label>
         </div>
-        <div class="table-container instance-special mt-5" *ngIf="giveErrors">
+        <div
+          class="table-container instance-special mt-5"
+          *ngIf="mostrarErrores"
+        >
           <label style="margin-left: 490px">Error</label>
           <ng-table
             id="myElement "
@@ -276,7 +297,7 @@
   </form>
 </div>
 
-<div class="container" *ngIf="(!isMercancia && isForm)">
+<div class="container" *ngIf="!isMercancia && esFormulario">
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarmercanciaForm()">
     <ng-container formGroupName="validacionMercanciaForm">
@@ -306,7 +327,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombrecomercialdelamercancia" 
+            formControlName="nombrecomercialdelamercancia"
             readonly
             (change)="
               setValoresStore(
@@ -344,12 +365,12 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nomreeningles"
+            formControlName="nombreEnIngles"
             readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nomreeningles',
+                'nombreEnIngles',
                 'setnomreeningles'
               )
             "
@@ -365,7 +386,9 @@
             readonly
             (change)="
               setValoresStore(
-                validacionMercanciaForm, 'criterioparaconferir','setcriterioparaconferir'
+                validacionMercanciaForm,
+                'criterioparaconferir',
+                'setcriterioparaconferir'
               )
             "
           />
@@ -387,7 +410,7 @@
         <div class="col-md-4">
           <label>Cantidad:</label>
           <input
-            type="text"
+            type="number"
             required="true"
             class="form-control"
             formControlName="cantidad"
@@ -399,6 +422,19 @@
               )
             "
           />
+        </div>
+        <div
+          *ngIf="
+            mercanciaForm.get('validacionMercanciaForm.cantidad')?.invalid &&
+            mercanciaForm.get('validacionMercanciaForm.cantidad')?.touched
+          "
+          class="text-danger"
+        >
+          <small
+            class="text-danger"
+            *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']"
+            >Este campo es obligatorio.</small
+          >
         </div>
       </div>
       <div class="row mt-5">
@@ -505,7 +541,9 @@
             formControlName="nFactura"
             (change)="
               setValoresStore(
-                validacionMercanciaForm, 'nFactura', 'setNFactura'
+                validacionMercanciaForm,
+                'nFactura',
+                'setNFactura'
               )
             "
           />
