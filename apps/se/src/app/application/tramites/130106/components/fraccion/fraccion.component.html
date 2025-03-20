@@ -111,10 +111,10 @@
                 </div>
             </div>
            
-                <div class="row">
+                
                     <ng-titulo titulo="País(es) procedencia"> </ng-titulo>
                 
-                    <div class="row mb-5">
+                    <div class="row mb-6">
                       <div class="col-md-4">
                         <app-catalogo-select [catalogo]="bloque" [label]="'Bloque'"   name="bloque" 
                         formControlName="bloque" (change)="setValoresStore(fraccionForm,'bloque', 'setBloque')">
@@ -128,14 +128,14 @@
                         <button type="button" class="btn-primary btn" name="todos países">Todos los países</button>
                       </div>
                       </div>
-                      <div class="row mb-5">
+                      <div class="row mb-6" style="padding-bottom: 20px">
                       <div class="col-md-4">
                         <div class="form-group">
                             <label class="form-label" for="disponible">Páis disponible:</label>
                             <input class="form-control" id="disponible" formControlName="disponible"  type="text" (change)="setValoresStore(fraccionForm,'disponible', 'setDisponible')">
                           </div>
                       </div>
-                   
+                                         
                       <div class="col-md-4 offset-md-4">
                         <div class="form-group">
                             <label class="form-label" for="seleccionado">Páis seleccionado: *</label>
@@ -185,7 +185,7 @@
         
                 </div>
                 
-            </div> 
+            
                      
     
 <div>
