@@ -1,8 +1,8 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
-import { Solicitud } from '@ng-mf/data-access-user';
-import { TEXTOS_220501 } from '@ng-mf/data-access-user';
+import { Solicitud } from '../../models/solicitud-pantallas.model';
+import { TEXTOS } from '../../../220501/constantes/texto-enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -22,7 +22,7 @@ export class SolicitudDatosComponent {
   /**
    * Obtiene los datos de enumeración y establece valores de TEXTOS
    */
-  TEXTOS = TEXTOS_220501;
+  TEXTOS = TEXTOS;
   /**
    * Controla la visibilidad del panel plegable.
    * El valor predeterminado está establecido en verdadero (ampliado)
