@@ -36,8 +36,9 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
-    // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.

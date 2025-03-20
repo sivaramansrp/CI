@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeLaSolicitudInt, DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
@@ -43,7 +42,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud.
    * @type {DatosDeLaSolicitudInt}
    */
-  SolicitudState!: DatosDeLaSolicitudInt;
+  solicitudState!: DatosDeLaSolicitudInt;
 
   /**
    * Indica si la sección colapsable está abierta o cerrada.
@@ -124,12 +123,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
-   */
-  private unsubscribe$ = new Subject<void>();
-
-  /**
    * Subject para notificar la destrucción del componente.
    * @type {Subject<void>}
    */
@@ -157,9 +150,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore,
-  // eslint-disable-next-line no-empty-function
-  ) { }
+    private seccionStore: SeccionLibStore
+  ) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -171,7 +165,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-        this.SolicitudState = seccionState.SolicitudState;
+        this.solicitudState = seccionState.solicitudState;
       })
     ).subscribe();
 
@@ -184,14 +178,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
+    this.getMercanciaDatos();
 
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState: any) => {
+        map((seccionState) => {
           if (seccionState) {
-            this.SolicitudState = seccionState.SolicitudState;
-            this.datosDeLaSolicitudForm.patchValue(this.SolicitudState);
+            this.solicitudState = seccionState.solicitudState;
+            this.datosDeLaSolicitudForm.patchValue(this.solicitudState);
           }
         })
       ).subscribe();
@@ -252,6 +247,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+  * Cambia el valor de la fecha final en el formulario.
+  * @param nuevo_valor Nuevo valor de la fecha final.
+  */
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.datosDeLaSolicitudForm.get('fechaInicioInput')?.setValue(nuevo_valor);
+    this.datosDeLaSolicitudForm.get('fechaInicioInput')?.markAsUntouched();
+  }
+
+  /**
    * Carga los datos de los certificados desde el servicio.
    * @method cargarDatos
    * @returns {void}
@@ -266,22 +270,35 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene las aduanas de ingreso desde el servicio.
+   * @method getMercanciaDatos
+   * @returns {void}
+   */
+  getMercanciaDatos(): void {
+    this.acuicolaService.getDatosMercancia()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+        this.mercanciaDatos = data;
+      })
+  }
+
+  /**
    * Obtiene las horas de inspección desde el servicio.
    * @method getHoraDeInspeccion
    * @returns {void}
    */
   getHoraDeInspeccion(): void {
-    this.acuicolaService.getHoraDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.horaDeInspeccion = {
-          labelNombre: 'Hora de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    })
+    this.acuicolaService.getHoraDeInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.horaDeInspeccion = {
+            labelNombre: 'Hora de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      })
   }
 
   /**
@@ -290,17 +307,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaDeIngreso(): void {
-    this.acuicolaService.getAduanaDeIngreso().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.aduanaDeIngreso = {
-          labelNombre: 'Aduana de ingreso',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getAduanaDeIngreso()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.aduanaDeIngreso = {
+            labelNombre: 'Aduana de ingreso',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -309,17 +327,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficinaDeInspeccion(): void {
-    this.acuicolaService.getOficinaDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.oficinaDeInspeccion = {
-          labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getOficinaDeInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.oficinaDeInspeccion = {
+            labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -328,17 +347,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoDeInspeccion(): void {
-    this.acuicolaService.getPuntoDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.puntoDeInspeccion = {
-          labelNombre: 'Punto de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getPuntoDeInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.puntoDeInspeccion = {
+            labelNombre: 'Punto de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -347,17 +367,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getTipoContenedor(): void {
-    this.acuicolaService.getTipoContenedor().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.tipoContenedor = {
-          labelNombre: 'Tipo contenedor',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getTipoContenedor()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.tipoContenedor = {
+            labelNombre: 'Tipo contenedor',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -366,17 +387,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMedioDeTransporte(): void {
-    this.acuicolaService.getMedioDeTransporte().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.medioDeTransporte = {
-          labelNombre: 'Medio de transporte*',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getMedioDeTransporte()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.medioDeTransporte = {
+            labelNombre: 'Medio de transporte*',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**

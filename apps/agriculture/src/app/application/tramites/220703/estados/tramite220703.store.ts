@@ -15,7 +15,7 @@ import { DatosDeLaSolicitudInt, InternaDatosGeneralesInt } from '../modelos/acui
  * Representa el estado de la modalidad de cambio.
  */
 export interface TramiteState {
-    SolicitudState: DatosDeLaSolicitudInt;
+    solicitudState: DatosDeLaSolicitudInt;
     InternaDatosGeneralesState: InternaDatosGeneralesInt;
 }
 
@@ -27,10 +27,10 @@ export interface TramiteState {
  */
 export function createInitialState(): TramiteState {
     return {
-        SolicitudState: {
+        solicitudState: {
             justificacion: '',
             certificadosAutorizados: '',
-            fechaInicio: '',
+            fechaInicioInput: '',
             horaDeInspeccion: '',
             aduanaDeIngreso: '',
             sanidadAgropecuaria: '',
@@ -86,12 +86,12 @@ export class TramiteStore extends Store<TramiteState> {
      * @method setSolicitudTramite
      * @description
      * Actualiza el estado de `SolicitudState` con nuevos valores.
-     * @param {DatosDeLaSolicitudInt} SolicitudState - Datos del formulario de cambio de modalidad.
+     * @param {DatosDeLaSolicitudInt} solicitudState - Datos del formulario de cambio de modalidad.
      */
-    public setSolicitudTramite(SolicitudState: DatosDeLaSolicitudInt): void {
+    public setSolicitudTramite(solicitudState: DatosDeLaSolicitudInt): void {
         this.update((state) => ({
             ...state,
-            SolicitudState,
+            solicitudState,
         }));
     }
 

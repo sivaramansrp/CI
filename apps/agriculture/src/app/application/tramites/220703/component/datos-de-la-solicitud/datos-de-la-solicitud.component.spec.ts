@@ -13,17 +13,15 @@ import { AcuicolaService } from '../../service/acuicola.service';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 import { TramiteStore } from '../../estados/tramite220703.store';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-@Injectable()
-class MockAcuicolaService {}
 
 @Injectable()
-class MockMedioDeTransporteService {}
+class MockAcuicolaService { }
 
 @Injectable()
-class MockTramiteStoreQuery {}
+class MockTramiteStoreQuery { }
 
 @Injectable()
-class MockTramiteStore {}
+class MockTramiteStore { }
 
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture;
@@ -31,7 +29,7 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent,],
+      imports: [FormsModule, ReactiveFormsModule, DatosDeLaSolicitudComponent],
       declarations: [
 
       ],
@@ -67,6 +65,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.getTipoContenedor = jest.fn();
     component.obtenerResponsableDatos = jest.fn();
     component.getMedioDeTransporte = jest.fn();
+    component.getMercanciaDatos = jest.fn();
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.patchValue = jest.fn();
     component.datosDeLaSolicitudForm.statusChanges = observableOf({});
@@ -83,8 +82,11 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
     expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
     expect(component.getTipoContenedor).toHaveBeenCalled();
+    expect(component.obtenerResponsableDatos).toHaveBeenCalled();
+    expect(component.getMedioDeTransporte).toHaveBeenCalled();
 
-
+   
+  
   });
 
   it('should run #iniciarFormulario()', async () => {
@@ -100,6 +102,16 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   });
 
+  it('should run #cambioFechaFinal()', async () => {
+    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
+    component.datosDeLaSolicitudForm.get = jest.fn().mockReturnValue({
+      markAsUntouched: function () { },
+      setValue: function () { }
+    });
+    component.cambioFechaFinal({});
+    expect(component.datosDeLaSolicitudForm.get).toHaveBeenCalled();
+  });
+
   it('should run #cargarDatos()', async () => {
     component.acuicolaService = component.acuicolaService || {};
     component.acuicolaService.obtenerDatosCertificados = jest.fn().mockReturnValue(observableOf({}));
@@ -108,6 +120,13 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.cargarDatos();
     expect(component.acuicolaService.obtenerDatosCertificados).toHaveBeenCalled();
     expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
+  });
+
+  it('should run #getMercanciaDatos()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.getDatosMercancia = jest.fn().mockReturnValue(observableOf({}));
+    component.getMercanciaDatos();
+    expect(component.acuicolaService.getDatosMercancia).toHaveBeenCalled();
   });
 
   it('should run #getHoraDeInspeccion()', async () => {

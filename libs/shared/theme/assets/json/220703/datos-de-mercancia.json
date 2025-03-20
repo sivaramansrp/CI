@@ -1,11 +1,29 @@
-{
-    "data": {
-        "id": 1,
-        "Fraccion arancelaria": "02109301",
-        "Descripción de la fracción": "De reptiles (incluidas las serpientes y tortugas terrestres), vivos",
-        "Nico": "00",
-        "Descripción Nico": "De reptiles (incluidas las serpientes y tortugas terrestres), vivos",
-        "Unidad de medida de tarifa (UMT)": "Killogramo",
-        "Cantidad total UMT": "12"
+[
+    {
+        "TABLA_Columna_1": "1234.56.78",
+        "TABLA_Columna_2": "+52 55 1234 5678",
+        "TABLA_Columna_3": "example1@example.com",
+        "TABLA_Columna_4": "Calle Falsa 123, Ciudad de México",
+        "TABLA_Columna_5": "México",
+        "TABLA_Columna_6": "México",
+        "estatus": true
+    },
+    {
+        "TABLA_Columna_1": "8765.43.21",
+        "TABLA_Columna_2": "+1 123 456 7890",
+        "TABLA_Columna_3": "example2@example.com",
+        "TABLA_Columna_4": "123 Fake St, Springfield",
+        "TABLA_Columna_5": "Estados Unidos",
+        "TABLA_Columna_6": "Estados Unidos",
+        "estatus": false
+    },
+    {
+        "TABLA_Columna_1": "5678.90.12",
+        "TABLA_Columna_2": "+44 20 7946 0958",
+        "TABLA_Columna_3": "example3@example.com",
+        "TABLA_Columna_4": "221B Baker St, London",
+        "TABLA_Columna_5": "Reino Unido",
+        "TABLA_Columna_6": "Reino Unido",
+        "estatus": true
     }
-}
+]

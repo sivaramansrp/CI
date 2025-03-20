@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_SERVICIO, mercanciaInfo } from '../../constantes/acuicola.enum';
 import { AcuicolaService } from '../../service/acuicola.service';
@@ -27,7 +26,7 @@ import { tap } from 'rxjs';
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss'
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Formulario reactivo para capturar los datos generales de la solicitud.
@@ -111,19 +110,13 @@ export class DatosGeneralesComponent implements OnInit {
    * Datos de la mercancía para la tabla.
    * @type {mercanciaInfo[]}
    */
-  immexTableDatos: mercanciaInfo[] = [];
+  mercanciaTablaDatos: mercanciaInfo[] = [];
 
   /**
    * Estado actual de la solicitud.
    * @type {DatosDeLaSolicitudInt}
    */
-  SolicitudState!: DatosDeLaSolicitudInt;
-
-  /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
-   */
-  private unsubscribe$ = new Subject<void>();
+  solicitudState!: DatosDeLaSolicitudInt;
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -154,8 +147,9 @@ export class DatosGeneralesComponent implements OnInit {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -167,7 +161,7 @@ export class DatosGeneralesComponent implements OnInit {
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-        this.SolicitudState = seccionState.SolicitudState;
+        this.solicitudState = seccionState.solicitudState;
       })
     ).subscribe();
 
@@ -178,14 +172,15 @@ export class DatosGeneralesComponent implements OnInit {
     this.getRegimenAlQue();
     this.getPuntoDeVerificacion();
     this.getDatosParaMovilizacion();
+    this.getMercanciaTablaDatos();
 
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState: any) => {
+        map((seccionState) => {
           if (seccionState) {
-            this.SolicitudState = seccionState.SolicitudState;
-            this.datosGeneralesForm.patchValue(this.SolicitudState);
+            this.solicitudState = seccionState.solicitudState;
+            this.datosGeneralesForm.patchValue(this.solicitudState);
           }
         })
       ).subscribe();
@@ -233,21 +228,34 @@ export class DatosGeneralesComponent implements OnInit {
 
   /**
    * Obtiene las aduanas de ingreso desde el servicio.
+   * @method getMercanciaDatos
+   * @returns {void}
+   */
+  getMercanciaTablaDatos(): void {
+    this.acuicolaService.getMercanciaDatos()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+        this.mercanciaTablaDatos = data;
+      })
+  }
+
+  /**
+   * Obtiene las aduanas de ingreso desde el servicio.
    * @method getAduanaDeIngreso
    * @returns {void}
    */
   getAduanaDeIngreso(): void {
-    this.acuicolaService.getAduanaDeIngreso().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.aduanaDeIngreso = {
-          labelNombre: 'Aduana de ingreso',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getAduanaDeIngreso()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.aduanaDeIngreso = {
+            labelNombre: 'Aduana de ingreso',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -256,17 +264,18 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getOficinaDeInspeccion(): void {
-    this.acuicolaService.getOficinaDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.oficinaDeInspeccion = {
-          labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getOficinaDeInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.oficinaDeInspeccion = {
+            labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -275,17 +284,18 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getPuntoDeInspeccion(): void {
-    this.acuicolaService.getPuntoDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.puntoDeInspeccion = {
-          labelNombre: 'Punto de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getPuntoDeInspeccion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.puntoDeInspeccion = {
+            labelNombre: 'Punto de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -294,17 +304,18 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getRegimenAlQue(): void {
-    this.acuicolaService.getRegimenAlQue().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.regimenAlQueDestina = {
-          labelNombre: 'Regimen al que se destinara la mercancia',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getRegimenAlQue()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.regimenAlQueDestina = {
+            labelNombre: 'Regimen al que se destinara la mercancia',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -313,17 +324,18 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getDatosParaMovilizacion(): void {
-    this.acuicolaService.getDatosParaMovilizacion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.datosParaMovilizacion = {
-          labelNombre: 'Datos para movilización nacional',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getDatosParaMovilizacion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.datosParaMovilizacion = {
+            labelNombre: 'Datos para movilización nacional',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**
@@ -332,17 +344,29 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getPuntoDeVerificacion(): void {
-    this.acuicolaService.getPuntoDeVerificacion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.puntoDeVerificacion = {
-          labelNombre: 'Punto de verificación federal',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getPuntoDeVerificacion()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.puntoDeVerificacion = {
+            labelNombre: 'Punto de verificación federal',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Aquí se desuscriben los observables para evitar fugas de memoria.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.unsubscribe();
   }
 
 }

@@ -42,8 +42,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
-  // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -89,20 +90,30 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
+    * Cambia el valor de la fecha final en el formulario.
+    * @param nuevo_valor Nuevo valor de la fecha final.
+    */
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.pagosDeDerechosForm.get('fechaInicioInput')?.setValue(nuevo_valor);
+    this.pagosDeDerechosForm.get('fechaInicioInput')?.markAsUntouched();
+  }
+
+  /**
    * Obtiene los datos del banco desde el servicio y los asigna al catálogo de bancos.
    */
   getBancoDatos(): void {
-    this.acuicolaService.getBancoDatos().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.banco = {
-          labelNombre: 'Banco*',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getBancoDatos()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.banco = {
+            labelNombre: 'Banco*',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   /**

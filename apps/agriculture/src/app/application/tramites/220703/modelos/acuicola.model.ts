@@ -23,7 +23,7 @@ export interface PagoDeDerechos {
     cadenaDependencia: string;
     banco: string;
     llaveDePago: string;
-    fechaInicio: string;
+    fechaInicioInput: string;
     importeDePago: string;
 
 }
@@ -53,7 +53,7 @@ export interface DatosGenerales {
 export interface DatosDeLaSolicitudInt {
     justificacion: string;
     certificadosAutorizados: string;
-    fechaInicio: string;
+    fechaInicioInput: string;
     horaDeInspeccion: string;
     aduanaDeIngreso: string;
     sanidadAgropecuaria: string;

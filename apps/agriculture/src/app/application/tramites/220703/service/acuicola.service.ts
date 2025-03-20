@@ -4,8 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { destinoInfo } from '../constantes/acuicola.enum';
+import { exportadorInfo } from '../constantes/acuicola.enum';
 import { map } from 'rxjs';
-
+import { medioInfo } from '../constantes/acuicola.enum';
+import { mercanciaInfo } from '../constantes/acuicola.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -203,6 +206,54 @@ export class AcuicolaService {
    */
   getPuntoDeVerificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}punto-de-verificacion.json`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  /**
+   * Obtiene los datos de la mercancía desde un archivo JSON.
+   * @returns Un Observable que emite un array de objetos de tipo `medioInfo`.
+   */
+  getDatosMercancia(): Observable<medioInfo[]> {
+    return this.http.get<medioInfo[]>(`${this.apiUrl}datos-de-mercancia.json`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  /**
+   * Obtiene los datos de la mercancía (merchandise) desde un archivo JSON.
+   * @returns Un Observable que emite un array de objetos de tipo `mercanciaInfo`.
+   */
+  getMercanciaDatos(): Observable<mercanciaInfo[]> {
+    return this.http.get<mercanciaInfo[]>(`${this.apiUrl}datos-de-merchandise.json`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  /**
+   * Obtiene los datos del exportador desde un archivo JSON.
+   * @returns Un Observable que emite un array de objetos de tipo `exportadorInfo`.
+   */
+  getExportadorDatos(): Observable<exportadorInfo[]> {
+    return this.http.get<exportadorInfo[]>(`${this.apiUrl}datos-de-exportador.json`).pipe(
+      map(response => {
+        return response;
+      })
+    );
+  }
+
+  /**
+   * Obtiene los datos del destino desde un archivo JSON.
+   * @returns Un Observable que emite un array de objetos de tipo `destinoInfo`.
+   */
+  getDestinoDatos(): Observable<destinoInfo[]> {
+    return this.http.get<destinoInfo[]>(`${this.apiUrl}datos-de-destino.json`).pipe(
       map(response => {
         return response;
       })

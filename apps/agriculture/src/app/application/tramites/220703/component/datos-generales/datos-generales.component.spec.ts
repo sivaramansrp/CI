@@ -18,13 +18,11 @@ import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/
 class MockAcuicolaService { }
 
 @Injectable()
-class MockMedioDeTransporteService { }
-
-@Injectable()
 class MockTramiteStoreQuery { }
 
 @Injectable()
 class MockTramiteStore { }
+
 
 describe('DatosGeneralesComponent', () => {
   let fixture;
@@ -32,9 +30,8 @@ describe('DatosGeneralesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, DatosGeneralesComponent,],
+      imports: [FormsModule, ReactiveFormsModule, DatosGeneralesComponent],
       declarations: [
-
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
@@ -66,6 +63,7 @@ describe('DatosGeneralesComponent', () => {
     component.getRegimenAlQue = jest.fn();
     component.getPuntoDeVerificacion = jest.fn();
     component.getDatosParaMovilizacion = jest.fn();
+    component.getMercanciaTablaDatos = jest.fn();
     component.datosGeneralesForm = component.datosGeneralesForm || {};
     component.datosGeneralesForm.patchValue = jest.fn();
     component.datosGeneralesForm.statusChanges = observableOf({});
@@ -81,8 +79,9 @@ describe('DatosGeneralesComponent', () => {
     expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
     expect(component.getRegimenAlQue).toHaveBeenCalled();
     expect(component.getPuntoDeVerificacion).toHaveBeenCalled();
+    expect(component.getDatosParaMovilizacion).toHaveBeenCalled();
 
-   
+
   });
 
   it('should run #iniciarFormulario()', async () => {
@@ -90,6 +89,13 @@ describe('DatosGeneralesComponent', () => {
     component.fb.group = jest.fn();
     component.iniciarFormulario();
     expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #getMercanciaTablaDatos()', async () => {
+    component.acuicolaService = component.acuicolaService || {};
+    component.acuicolaService.getMercanciaDatos = jest.fn().mockReturnValue(observableOf({}));
+    component.getMercanciaTablaDatos();
+    expect(component.acuicolaService.getMercanciaDatos).toHaveBeenCalled();
   });
 
   it('should run #getAduanaDeIngreso()', async () => {
@@ -150,6 +156,15 @@ describe('DatosGeneralesComponent', () => {
     }));
     component.getPuntoDeVerificacion();
     expect(component.acuicolaService.getPuntoDeVerificacion).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.unsubscribe = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
   });
 
 });
