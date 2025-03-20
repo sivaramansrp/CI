@@ -166,6 +166,13 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
+  },
+  {
+    path: 'importacion',
+    loadChildren: () =>
+      import('./tramites/130109/vehiculos-usados-adaptados.module').then(
+        (m) => m.VehiculosUsadosAdaptadosModule
+      ),
   }
 ];
 
