@@ -373,7 +373,8 @@
           <div class="form-group">
             <label for="tipo" class="form-label">{{this.labelTipoDespacho}}*:</label>
             <input type="text" [id]="idNameAutorizacion" class="form-control" [formControlName]="idNameAutorizacion"
-              placeholder="" (change)="setValoresStore(mercancia, idNameAutorizacion, 'setAutorizacionDDEX')" [ngClass]="
+              placeholder="" (change)="setValoresStore(despachoSeleccion, idNameAutorizacion, funcionStoreAutorizacion)"
+              [ngClass]="
             isValid(despachoSeleccion, idNameAutorizacion)
               ? 'required'
               : ''
@@ -387,7 +388,8 @@
     <div formGroupName="despacho">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="aduanas" formControlName="idAduanaDespacho" [label]="'Aduana'" [required]="true"
+          <app-catalogo-select [catalogo]="aduanas" formControlName="idAduanaDespacho" [label]="'Aduana'"
+            [required]="true"
             (change)="setValoresStore(despacho, 'idAduanaDespacho', 'setIdAduanaDespacho')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -477,7 +479,8 @@
         <div class="col-md-8">
           <div class="form-group">
             <label for="descripcionGenerica" class="form-label">Descripción genérica*:</label>
-            <textarea class="form-control" rows="3" id="descripcionGenerica" formControlName="descripcionGenerica" (change)="
+            <textarea class="form-control" rows="3" id="descripcionGenerica" formControlName="descripcionGenerica"
+              (change)="
                 setValoresStore(mercancia, 'descripcionGenerica', 'setDescripcionGenerica')
               "></textarea>
           </div>
@@ -570,8 +573,8 @@
 </div>
 
 <!-- Modal error -->
-<div class="modal fade modal" #modalAviso tabindex="-1" aria-labelledby="modalAviso"
-aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade modal" #modalAviso tabindex="-1" aria-labelledby="modalAviso" aria-hidden="true"
+  data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">

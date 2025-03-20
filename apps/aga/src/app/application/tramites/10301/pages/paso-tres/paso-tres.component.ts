@@ -1,13 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import {
   FirmaElectronicaComponent,
-  ServiciosExtraordinariosService,
+  TramiteFolioService,
+  TramiteFolioStore,
 } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subscription, catchError, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TramiteStore } from '../../../../estados/tramite.store';
 
 /**
  * Componente que representa el paso tres del trámite.
@@ -42,8 +42,8 @@ export class PasoTresComponent implements OnDestroy {
    */
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
-    private tramiteStore: TramiteStore
+    private tramiteFolioService: TramiteFolioService,
+    private tramiteStore: TramiteFolioStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -63,7 +63,7 @@ export class PasoTresComponent implements OnDestroy {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.obtienerTramiteSubscriber = this.serviciosExtraordinariosServices
+      this.obtienerTramiteSubscriber = this.tramiteFolioService
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
