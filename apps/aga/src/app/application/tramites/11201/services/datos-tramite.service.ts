@@ -17,7 +17,7 @@ export class DatosTramiteService {
   ) {
   }
   /**
-   * Get a dummy list of Contenedores
+   * Get a lista of Contenedores
    */
   getContenedores(): Observable<RespuestaContenedores> {
     return this.http.get<RespuestaContenedores>(`assets/json/11201/tipoLista.json`);
@@ -44,7 +44,7 @@ export class DatosTramiteService {
     return this.http.get<RespuestaCatalogos>(`assets/json/11201/${catalogo}.json`);
   }
   /**
-  * Get a dummy list of Aduanas
+  * Get a lista of Aduanas
   */
   getAduanaList(catalogo: string): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(`assets/json/11201/${catalogo}.json`);
