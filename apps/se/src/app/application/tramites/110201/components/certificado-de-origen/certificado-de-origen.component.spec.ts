@@ -87,7 +87,6 @@ describe('CertificadoDeOrigenComponent', () => {
   });
 
   afterEach(() => {
-    // component.ngOnDestroy = function() {};
     if (fixture) {
       fixture.destroy();
     }

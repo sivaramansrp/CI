@@ -85,7 +85,7 @@ describe('PasoDosComponent', () => {
     });
 
     it('should not update `catalogoDocumentos` when the service response contains no data', () => {
-      const initialData: Catalogo[] = []; // Use the shared Catalogo type
+      const initialData: Catalogo[] = []; 
       component.catalogoDocumentos = initialData;
 
       const mockResponse: Catalogo[] = [];

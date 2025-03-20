@@ -2,6 +2,7 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
   TableComponent,
@@ -221,146 +222,87 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    */
   esFormulario: boolean = false;
 
- 
-  tableData: {
-    headers: {
-      encabezado: string;
-      clave: (ele: ColumnasTabla) => string;
-      orden: number;
-    }[];
-    data: {
-      fraccionArancelaria: string;
-      nombreTecnico: string;
-      nombreComercial: string;
-      numeroRegistroProductos: string;
-      fechaExpedicion: string;
-      fechaVencimiento: string;
-    }[];
-  } = {
-    headers: [
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
-        orden: 1,
-      },
-      {
-        encabezado: 'Nombre técnico',
-        clave: (ele: ColumnasTabla) => ele.nombreTecnico,
-        orden: 2,
-      },
-      {
-        encabezado: 'Nombre comercial',
-        clave: (ele: ColumnasTabla) => ele.nombreComercial,
-        orden: 3,
-      },
-      {
-        encabezado: 'Número de registro de productos',
-        clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
-        orden: 4,
-      },
-      {
-        encabezado: 'Fecha expedición',
-        clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
-        orden: 5,
-      },
-      {
-        encabezado: 'Fecha vencimíento',
-        clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
-        orden: 6,
-      },
-    ],
-    data: [
-      {
-        fraccionArancelaria: '123456789',
-        nombreTecnico: 'Los demás',
-        nombreComercial: 'NOM COMERCIAL',
-        numeroRegistroProductos: '112233445566',
-        fechaVencimiento: '2041-12-01',
-        fechaExpedicion: '2021-12-01',
-      },
-    ],
-  };
+  public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
 
-  tableSeleccionadas: {
-    headers: {
-      encabezado: string;
-      clave: (ele: SeleccionadasTabla) => string;
-      orden: number;
-    }[];
-    data: {
-      fraccionArancelaria: string;
-      cantidad: string;
-      unidadMedida: string;
-      valorMercancia: string;
-      tipoFactura: string;
-      numFactura: string;
-      complementoDescripcion: string;
-      fechaFactura: string;
-    }[];
-  } = {
-    headers: [
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-        orden: 1,
-      },
-      {
-        encabezado: 'Cantidad',
-        clave: (ele: SeleccionadasTabla) => ele.cantidad,
-        orden: 2,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-        orden: 3,
-      },
-      {
-        encabezado: 'Valor mercancía',
-        clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-        orden: 4,
-      },
-      {
-        encabezado: 'Tipo de factura',
-        clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-        orden: 5,
-      },
-      {
-        encabezado: 'Número factura',
-        clave: (ele: SeleccionadasTabla) => ele.numFactura,
-        orden: 6,
-      },
-      {
-        encabezado: 'Complemento descripción',
-        clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-        orden: 7,
-      },
-      {
-        encabezado: 'Fecha factura',
-        clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-        orden: 8,
-      },
-    ],
-    data: [
-      {
-        fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .fraccionMercanArancelaria,
-        cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        unidadMedida:
-          this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
-        valorMercancia:
-          this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
-        tipoFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.nFactura,
-        complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .complementodeladescripcion,
-        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
-      },
-    ],
-  };
-/**
+  public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
+
+  public headers: ConfiguracionColumna<ColumnasTabla>[] = [
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
+      orden: 1,
+    },
+    {
+      encabezado: 'Nombre técnico',
+      clave: (ele: ColumnasTabla) => ele.nombreTecnico,
+      orden: 2,
+    },
+    {
+      encabezado: 'Nombre comercial',
+      clave: (ele: ColumnasTabla) => ele.nombreComercial,
+      orden: 3,
+    },
+    {
+      encabezado: 'Número de registro de productos',
+      clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
+      orden: 4,
+    },
+    {
+      encabezado: 'Fecha expedición',
+      clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
+      orden: 5,
+    },
+    {
+      encabezado: 'Fecha vencimíento',
+      clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
+      orden: 6,
+    },
+  ];
+
+  public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+      orden: 1,
+    },
+    {
+      encabezado: 'Cantidad',
+      clave: (ele: SeleccionadasTabla) => ele.cantidad,
+      orden: 2,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+      orden: 3,
+    },
+    {
+      encabezado: 'Valor mercancía',
+      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+      orden: 4,
+    },
+    {
+      encabezado: 'Tipo de factura',
+      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+      orden: 5,
+    },
+    {
+      encabezado: 'Número factura',
+      clave: (ele: SeleccionadasTabla) => ele.numFactura,
+      orden: 6,
+    },
+    {
+      encabezado: 'Complemento descripción',
+      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+      orden: 7,
+    },
+    {
+      encabezado: 'Fecha factura',
+      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+      orden: 8,
+    },
+  ];
+
+  /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
    * @param fb Constructor de formularios reactivos.
@@ -377,14 +319,14 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-/**
+  /**
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
   handleClick(row: unknown) {
     this.esFormulario = true;
   }
-/**
+  /**
    * Valida el formulario del destinatario.
    * Marca todos los campos como tocados si el formulario es inválido.
    */
@@ -403,19 +345,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       this.mercanciaForm.markAllAsTouched();
     }
   }
- /**
+  /**
    * Método que se ejecuta al inicializar el componente.
    * Configura los formularios y obtiene los catálogos necesarios.
    */
   ngOnInit(): void {
-    this.mercanciaDisponsible();
-    this.mercanciaSeleccionadas();
     this.mercanciatable();
     this.getTratado();
     this.getPais();
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
+    this.getSolicitudesTabla();
+
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -490,18 +432,26 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     } else {
       this.isDisponibles = false;
     }
+    this.getTratado();
+    this.getPais();
+    this.getUMC();
+    this.getUnidadMedida();
+    this.getTipoFactura();
   }
-/**
+  /**
    * Agrega una mercancía al formulario.
    */
   agregar() {
     this.getTratado();
     this.getPais();
+    this.getUMC();
+    this.getUnidadMedida();
+    this.getTipoFactura();
 
     if (this.mercanciaForm.valid) {
       this.isMercancia = true;
       this.esFormulario = false;
-      this.tableSeleccionadas.data.splice(0, 1, {
+      this.mercanciaSeleccionadasTablaData.splice(0, 1, {
         fraccionArancelaria:
           this.mercanciaForm?.value.validacionMercanciaForm
             .fraccionMercanArancelaria,
@@ -520,26 +470,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       });
     }
   }
- /**
+  /**
    * Modifica una mercancía existente.
    */
   modificar() {
     this.esFormulario = true;
     this.isMercancia = false;
 
-    this.getUnidadMedida();
+    this.getTratado();
+    this.getPais();
     this.getUMC();
+    this.getUnidadMedida();
     this.getTipoFactura();
   }
 
-  public mercanciaDisponsible(): void {
-    this.mercanciasdisponibles =
-      this.getMercanciaDisponsibleTableData.tableHeader;
-  }
-
-  public mercanciaSeleccionadas(): void {
-    this.encabezadosTablas = this.getmercanciaSeleccionadasTable.tableHeader;
-  }
   public mercanciatable(): void {
     this.mercanciasHeader = this.getMercanciaTable.tableHeader;
     this.mercanciasBody = this.getMercanciaTable.tableBody;
@@ -552,7 +496,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
-/**
+  /**
    * Obtiene el catálogo de tratados desde el servicio.
    */
   getTratado(): void {
@@ -565,7 +509,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
- /**
+  /**
    * Obtiene el catálogo de países desde el servicio.
    */
   getPais(): void {
@@ -578,7 +522,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-/**
+  /**
    * Obtiene el catálogo de UMC desde el servicio.
    */
   getUMC(): void {
@@ -591,7 +535,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
- /**
+  /**
    * Obtiene el catálogo de unidades de medida desde el servicio.
    */
   getUnidadMedida(): void {
@@ -604,7 +548,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-/**
+  /**
    * Obtiene el catálogo de tipos de factura desde el servicio.
    */
   getTipoFactura(): void {
@@ -626,7 +570,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     const FILE = event.target.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
-/**
+  /**
    * Maneja el envío del formulario.
    */
   onSubmit(): void {
@@ -643,7 +587,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   isValid(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
- /**
+  /**
    * Establece valores en el estado de la tienda.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo del formulario.
@@ -663,7 +607,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   get validacionForm(): FormGroup {
     return this.registroForm.get('validacionForm') as FormGroup;
   }
-/**
+  /**
    * Obtiene el formulario de validación de mercancías.
    */
   get validacionMercanciaForm(): FormGroup {
@@ -739,7 +683,20 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       }),
     });
   }
-   /**
+
+  public getSolicitudesTabla(): void {
+    this.registroService.getSolicitudesTabla().subscribe((data) => {
+      this.mercanciaDisponsiblesTablaDatos = data;
+    });
+  }
+
+  public getSolicitudesDataTabla(): void {
+    this.registroService.getSolicitudesDataTabla().subscribe((data) => {
+      this.mercanciaSeleccionadasTablaData = data;
+    });
+  }
+
+  /**
    * Método que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
    */

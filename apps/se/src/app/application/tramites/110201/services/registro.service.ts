@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
+import { Observable, catchError, throwError } from 'rxjs';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110201.
@@ -119,4 +121,29 @@ export class RegistroService {
   getCatalogoById(id: number) {
     return this.http.get<JSONResponse>(`${this.urlServerCatalogos}/${id}`);
   }
+
+ /**
+   * Recupera la lista de "Registro de Solicitudes" desde un archivo JSON.
+   *
+   * @returns {Observable<ColumnasTabla[]>} Un observable que contiene un array de objetos RegistroDeSolicitudesTabla.
+   *
+   * @throws Lanzará un error si la solicitud HTTP falla.
+   */
+ public getSolicitudesTabla():Observable<ColumnasTabla[]> {
+  return this.http.get<ColumnasTabla[]>('assets/json/110201/mercancia-disponsible.json').pipe(
+    catchError((error) => {
+      return throwError(() => error);
+    })
+  );
+}
+
+public getSolicitudesDataTabla():Observable<SeleccionadasTabla[]> {
+  return this.http.get<SeleccionadasTabla[]>('assets/json/110201/mercancia-seleccionadas.json').pipe(
+    catchError((error) => {
+      return throwError(() => error);
+    })
+  );
+}
+
+
 }

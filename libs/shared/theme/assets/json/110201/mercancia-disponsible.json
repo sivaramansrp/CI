@@ -1,22 +1,10 @@
-{
-  "tableHeader": [
-    "Fracción arancelaria",
-    "Nombre técnico",
-    "Nombre comercial",
-    "Número de registro de productos",
-    "Fecha expedición",
-    "Fecha vencimíento"
-  ],
-  "tableBody": [
-    {
-      "tbodyData":[
-        "0101.21.01",
-        "Caballos",
-        "Caballos",
-        "123456",
-        "2021-01-01",
-        "2021-01-01"
-      ]
+[
+  {
+      "fraccionArancelaria": "123456789",
+      "nombreTecnico": "Los demás",
+      "nombreComercial": "NOM COMERCIAL",
+      "numeroRegistroProductos": "112233445566",
+      "fechaVencimiento": "2041-12-01",
+      "fechaExpedicion": "2021-12-01"
     }
   ]
-}

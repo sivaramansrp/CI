@@ -133,15 +133,15 @@
         <div class="table-container mt-5" *ngIf="!isDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-            [configuracionTabla]="tableData.headers"
+            [configuracionTabla]="headers"
           ></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="isDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-            [configuracionTabla]="tableData.headers"
-            [datos]="tableData.data"
-            (click)="handleClick(tableData.data)"
+            [configuracionTabla]="headers"
+            [datos]="mercanciaDisponsiblesTablaDatos"
+            (click)="handleClick(mercanciaDisponsiblesTablaDatos)"
           ></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
@@ -234,15 +234,15 @@
         <div class="table-container mt-5" *ngIf="!isMercancia">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
-            [configuracionTabla]="tableSeleccionadas.headers"
+            [configuracionTabla]="headersData"
           ></app-tabla-dinamica>
         </div>
 
         <div class="table-container mt-5" *ngIf="isMercancia">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
-            [configuracionTabla]="tableSeleccionadas.headers"
-            [datos]="tableSeleccionadas.data"
+            [configuracionTabla]="headersData"
+            [datos]="mercanciaSeleccionadasTablaData"
           ></app-tabla-dinamica>
         </div>
         <i

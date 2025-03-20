@@ -1,13 +1,12 @@
-{
-  "tableHeader": [
-    "Fracción arancelaria",
-    "Cantidad",
-    "Unidad de medida",
-    "Valor mercancía",
-    "Tipo de factura",
-    "Número factura",
-    "Complemento descripción",   
-    "Fecha factura"
-  ],
-  "tableBody": []
-}
+[
+    {
+      "fraccionArancelaria":"",
+      "cantidad": "",
+      "unidadMedida":"",
+      "valorMercancia":"",
+      "tipoFactura":"",
+      "numFactura":"",
+      "complementoDescripcion":"",
+      "fechaFactura": ""
+    }
+  ]
