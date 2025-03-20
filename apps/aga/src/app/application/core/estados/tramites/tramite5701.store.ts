@@ -6,6 +6,7 @@ import {
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
+import { state } from '@angular/animations';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
@@ -46,7 +47,7 @@ export interface Solicitud5701State {
   autorizacionLDA: string;
   dd: boolean;
   autorizacionDDEX: string;
-  
+
   ddexAutorizacion: string;
   idAduanaDespacho: string;
   aduanaDespacho: string;
@@ -82,6 +83,9 @@ export interface Solicitud5701State {
   montoPagar: string;
   lineaCaptura: string;
   monto: string;
+
+  rangoFechas: boolean;
+  selectRangoDias: string[];
 
   tercerosRelacionados: Personas[];
 }
@@ -152,6 +156,8 @@ export function createInitialState(): Solicitud5701State {
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
+    rangoFechas: false,
+    selectRangoDias: [],
     tercerosRelacionados: [],
   };
 }
@@ -163,6 +169,20 @@ export function createInitialState(): Solicitud5701State {
 export class Tramite5701Store extends Store<Solicitud5701State> {
   constructor() {
     super(createInitialState());
+  }
+
+  public setRangoFechas(rangoFechas: boolean): void {
+    this.update((state) => ({
+      ...state,
+      rangoFechas,
+    }));
+  }
+
+  public setRangoDias(selectRangoDias: string[]): void {
+    this.update((state) => ({
+      ...state,
+      selectRangoDias,
+    }));
   }
 
   /**
@@ -204,7 +224,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
       programa,
     }));
   }
-  
+
   public setDesProgramaFomento(desProgramaFomento: string): void {
     this.update((state) => ({
       ...state,

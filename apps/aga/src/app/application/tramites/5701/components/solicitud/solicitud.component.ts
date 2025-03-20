@@ -154,7 +154,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -601,6 +600,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState.monto, [Validators.required]],
       })
     });
+    debugger
+    this.mostrarRangoFechas = this.solicitudState?.rangoFechas;
+    this.selectRangoDias = this.solicitudState?.selectRangoDias;
+
   }
 
   /**
@@ -731,12 +734,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   obtenerRangoFechas(): void {
     const F_INICIO = this.datosServicio.get('fechaInicio')?.value;
     const F_FINAL = this.datosServicio.get('fechaFinal')?.value;
-
     this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
       F_INICIO,
       F_FINAL
     );
-
+    this.tramite5701Store.setRangoDias(this.selectRangoDias);
     this.colapsable = true;
   }
 
@@ -879,21 +881,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
-
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = MSJ_ERROR_FECHA;
-
       this.abrirModal();
       return;
     }
 
     if (!this.individual()) {
       this.mostrarRangoFechas = true;
+      (this.tramite5701Store['setRangoFechas'] as (value: boolean) => void)(this.mostrarRangoFechas);
       this.obtenerRangoFechas();
     }
-
-
   }
 
   /**
@@ -926,8 +925,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.closeModal.nativeElement.click();
     this.tituloModal = '';
     this.mensajeModal = '';
-    
-    if (tipo === 'aviso' && acepta) {      
+
+    if (tipo === 'aviso' && acepta) {
       this.despacho.reset({
         idAduanaDespacho: '',
         aduanaDespacho: '',
@@ -940,15 +939,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         encargoConferido: '',
         domicilioDespacho: '',
       });
-     
+
       this.setValoresStore(this.despacho, 'idAduanaDespacho', 'setIdAduanaDespacho');
       this.setValoresStore(this.despacho, 'aduanaDespacho', 'setAduanaDespacho');
       this.setValoresStore(this.despacho, 'idSeccionDespacho', 'setIdSeccionDespacho');
       this.setValoresStore(this.despacho, 'seccionAduanera', 'setSeccionAduanera');
       this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
-      this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');  
-      this.setValoresStore(this.mercancia, this.idNameAutorizacion, 'setAutorizacionDDEX' )    
-    } 
+      this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
+      this.setValoresStore(this.mercancia, this.idNameAutorizacion, 'setAutorizacionDDEX')
+    }
 
 
 
@@ -957,13 +956,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  showConfirmDialogLDA_DD(tipo: string): void {   
+  showConfirmDialogLDA_DD(tipo: string): void {
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
     const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
- 
 
-    if (ADUANA !== '' || DESPACHO !== '' || RECINTO !== '') {      
+
+    if (ADUANA !== '' || DESPACHO !== '' || RECINTO !== '') {
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = ADV_LIMPIA_CAMPOS;
       this.abrirModal();
