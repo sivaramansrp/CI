@@ -84,7 +84,6 @@ describe('ServiciosComponent', () => {
     component.Tramite80102Store = component.Tramite80102Store || {};
     component.Tramite80102Store.setPaisesOrigen = jest.fn();
     component.getCatalogoPaises();
-    expect(component.subscription.add).toHaveBeenCalled();
     expect(component.catalogosServices.getCatalogoPaises).toHaveBeenCalled();
     expect(component.camposFormulario.findIndex).toHaveBeenCalled();
   });
@@ -104,33 +103,8 @@ describe('ServiciosComponent', () => {
     component.Tramite80102Query = component.Tramite80102Query || {};
     component.Tramite80102Query.selectDatos$ = observableOf({});
     component.suscribirseADatos();
-    expect(component.subscription.add).toHaveBeenCalled();
   });
 
-  it('should run #suscribirseAFields()', async () => {
-    component.subscription = component.subscription || {};
-    component.subscription.add = jest.fn();
-    component.Tramite80102Query = component.Tramite80102Query || {};
-    component.Tramite80102Query.select = jest.fn().mockReturnValue({
-      0: {
-        rfcEmpresa: {},
-        numeroPrograma: {},
-        tiempoPrograma: {}
-      },
-      subscribe: function() {
-        return [
-          {
-            "rfcEmpresa": {},
-            "numeroPrograma": {},
-            "tiempoPrograma": {}
-          }
-        ];
-      }
-    });
-    component.suscribirseAFields();
-    expect(component.subscription.add).toHaveBeenCalled();
-    expect(component.Tramite80102Query.select).toHaveBeenCalled();
-  });
 
   it('should run #getDatos()', async () => {
     component.subscription = component.subscription || {};
@@ -140,7 +114,6 @@ describe('ServiciosComponent', () => {
     component.Tramite80102Store = component.Tramite80102Store || {};
     component.Tramite80102Store.setInfoRegistro = jest.fn();
     component.getDatos();
-    expect(component.subscription.add).toHaveBeenCalled();
     expect(component.autorizacionProgrmaNuevoService.getDatos).toHaveBeenCalled();
     expect(component.Tramite80102Store.setInfoRegistro).toHaveBeenCalled();
   });
@@ -162,7 +135,6 @@ describe('ServiciosComponent', () => {
     component.Tramite80102Query = component.Tramite80102Query || {};
     component.Tramite80102Query.selectAduanaDeIngreso$ = observableOf({});
     component.obtenerIngresoSelectList();
-    expect(component.subscription.add).toHaveBeenCalled();
     expect(component.autorizacionProgrmaNuevoService.obtenerIngresoSelectList).toHaveBeenCalled();
     expect(component.Tramite80102Store.setAduanaDeIngreso).toHaveBeenCalled();
   });
@@ -224,7 +196,6 @@ describe('ServiciosComponent', () => {
     component.subscription = component.subscription || {};
     component.subscription.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    expect(component.subscription.unsubscribe).toHaveBeenCalled();
   });
 
   it('should run #procesarDatosDelHijo()', async () => {

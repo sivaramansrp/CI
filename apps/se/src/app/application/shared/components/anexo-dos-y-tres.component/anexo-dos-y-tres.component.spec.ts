@@ -60,17 +60,17 @@ describe('AnexoDosYTresComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #createAnexoDosForm()', async () => {
+  it('should run #crearFormularioAnexoDos()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.createAnexoDosForm();
+    component.crearFormularioAnexoDos();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #createAnexoTresForm()', async () => {
+  it('should run #crearFormularioAnexoTres()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.createAnexoTresForm();
+    component.crearFormularioAnexoTres();
     expect(component.fb.group).toHaveBeenCalled();
   });
 

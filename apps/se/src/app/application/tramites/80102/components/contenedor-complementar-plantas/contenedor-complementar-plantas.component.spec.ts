@@ -79,7 +79,7 @@ describe('ContenedorComplementarPlantasComponent', () => {
   it('should run #regressarPlantas()', async () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
-    component.regressarPlantas();
+    component.regresarPlantas();
     expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 

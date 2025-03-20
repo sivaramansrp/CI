@@ -119,7 +119,7 @@ describe('ProyectoImmexComponent', () => {
   it('should run #goBack()', async () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
-    component.regressar();
+    component.regresar();
      expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 

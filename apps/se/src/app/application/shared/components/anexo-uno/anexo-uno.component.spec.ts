@@ -56,17 +56,17 @@ describe('AnexoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #createAnexoUnoForm()', async () => {
+  it('should run #crearFormularioAnexoUno()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.createAnexoUnoForm();
+    component.crearFormularioAnexoUno();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #createAnexoDosForm()', async () => {
+  it('should run #crearFormularioAnexoDos()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.createAnexoDosForm();
+    component.crearFormularioAnexoDos();
     expect(component.fb.group).toHaveBeenCalled();
   });
 

@@ -33,10 +33,10 @@ describe('CapacidadInstaladaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #regrassar()', async () => {
+  it('should run #regrasar()', async () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
-    component.regrassar();
+    component.regrasar();
     expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 

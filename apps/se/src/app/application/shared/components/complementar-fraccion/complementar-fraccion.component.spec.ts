@@ -36,12 +36,12 @@ describe('ComplementarFraccionComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.createComplimentarForm = jest.fn();
+    component.crearFormularioComplimentar = jest.fn();
     component.ngOnInit();
-    expect(component.createComplimentarForm).toHaveBeenCalled();
+    expect(component.crearFormularioComplimentar).toHaveBeenCalled();
   });
 
-  it('should run #createComplimentarForm()', async () => {
+  it('should run #crearFormularioComplimentar()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.complimentarFraccionDatos = component.complimentarFraccionDatos || {};
@@ -51,7 +51,7 @@ describe('ComplementarFraccionComponent', () => {
     component.complimentarFraccionDatos.monedaNacionalDeDosPeriodos = 'monedaNacionalDeDosPeriodos';
     component.complimentarFraccionDatos.volumenMensual = 'volumenMensual';
     component.complimentarFraccionDatos.twoPeriodVolume = 'twoPeriodVolume';
-    component.createComplimentarForm();
+    component.crearFormularioComplimentar();
     expect(component.fb.group).toHaveBeenCalled();
   });
 

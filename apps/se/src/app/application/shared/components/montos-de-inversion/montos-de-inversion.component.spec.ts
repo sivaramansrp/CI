@@ -43,11 +43,10 @@ describe('MontosDeInversionComponent', () => {
     // expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #regrassar()', async () => {
+  it('should run #regrasar()', async () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
-    component.regrassar();
-    // expect(component.ubicaccion.back).toHaveBeenCalled();
+    component.regrasar();
   });
 
 });

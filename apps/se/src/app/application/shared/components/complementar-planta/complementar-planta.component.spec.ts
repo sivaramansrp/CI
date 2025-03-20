@@ -37,7 +37,7 @@ describe('ComplementarPlantaComponent', () => {
   it('should run #regrassar()', async () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
-    component.regrassar();
+    component.regrasar();
     expect(component.ubicaccion.back).toHaveBeenCalled();
   });
 
