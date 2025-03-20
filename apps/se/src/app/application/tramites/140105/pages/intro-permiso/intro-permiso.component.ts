@@ -1,10 +1,12 @@
-import { BusquedaFolioComponent } from '../busqueda-folio/busqueda-folio.component';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
+import { Component } from '@angular/core';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { PASOS } from '../../constants/intropermiso.enum';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { ViewChild } from '@angular/core';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;

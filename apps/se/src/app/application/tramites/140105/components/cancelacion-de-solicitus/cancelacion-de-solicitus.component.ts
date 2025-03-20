@@ -1,9 +1,14 @@
 import * as formData from '../../constants/datos-del-formulario.json';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FormBuilder} from '@angular/forms';
+import { FormGroup} from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Validators} from '@angular/forms';
 @Component({
   selector: 'app-cancelacion-de-solicitus',
   templateUrl: './cancelacion-de-solicitus.component.html',

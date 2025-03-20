@@ -1,8 +1,10 @@
 import * as formData from '../../constants/datos-del-formulario.json';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { Validators } from '@angular/forms';
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
