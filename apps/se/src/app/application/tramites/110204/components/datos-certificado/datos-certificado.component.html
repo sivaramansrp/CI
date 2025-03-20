@@ -1,0 +1,32 @@
+<div>
+  <form [formGroup]="formDatosCertificado">
+    <ng-titulo titulo="Datos del certificado" />
+
+    <div class="row">
+      <div class="col-md-8">
+        <label for="justificacionDictamen" class="form-label">Observaciones</label>
+        <textarea id="justificacionDictamen" formControlName="observacionesDates"  class="mb-4 h-20 w-100" placeholder="" rows="6"></textarea>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <app-catalogo-select [label]="'Idioma'" [catalogo]="(idioma$ | async) || []" 
+          [required]="true" name="estado" formControlName="idiomaDates"
+          (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
+        </div>
+      </div>
+      <div class="row">
+        <ng-titulo titulo="Representación federal" />
+        <div class="col-md-6">
+          <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="(entidadFederativas$ | async) || []" 
+          [required]="true" name="estado"formControlName="EntidadFederativaDates"
+          (selectionChange)="entidadFederativaSeleccion($event)"></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+          <app-catalogo-select [label]="'Representación federal'"  [catalogo]="(representacionFederal$ | async) || []" 
+          [required]="true" name="estado" formControlName="representacionFederalDates"
+          (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
