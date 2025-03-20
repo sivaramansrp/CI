@@ -2,7 +2,7 @@
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { Chofer40101Service } from './estados/chofer40101.service';
+import { Chofer40103Service } from './estados/chofer40103.service';
 import { ChoferesComponent } from './components/choferes/choferes.component';
 import { CommonModule } from '@angular/common';
 import { DirectorGeneralComponent } from './components/director-general/director-general.component';
@@ -70,6 +70,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoDosComponent,
    
   ],
-  providers: [ToastrService, CatalogosService, Chofer40101Service],
+  providers: [ToastrService, CatalogosService, Chofer40103Service],
 })
 export class ModificarCaatTerrestreModule {}

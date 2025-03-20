@@ -47,9 +47,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
             this.catalogoDocumentos = resp;
           }
         },
-        error: (error): void => {
-          console.error('Error fetching catalog:', error);
-        },
       });
   }
 }

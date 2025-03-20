@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Chofer40101Store } from './chofer40101.store';
+import { Chofer40103Store } from './chofer40103.store';
 import { Injectable } from '@angular/core';
 
 import {
@@ -14,13 +14,13 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
-export class Chofer40101Service {
+export class Chofer40103Service {
   private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
   private choferesListSubject = new BehaviorSubject<DatosDelVehículo[]>([]);
   choferesList$ = this.choferesListSubject.asObservable();
 
   constructor(
-    private chofer40101Store: Chofer40101Store,
+    private chofer40103Store: Chofer40103Store,
     private http: HttpClient
   ) {
     const STORE_DATA = localStorage.getItem('choferesList');
@@ -50,7 +50,7 @@ export class Chofer40101Service {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(CHOFER_ARRAY));
 
     // Actualizar tienda Akita
-    this.chofer40101Store.update((state) => ({
+    this.chofer40103Store.update((state) => ({
       ...state,
       choferesextranjero: isExtranjero
         ? CHOFER_ARRAY
@@ -61,8 +61,6 @@ export class Chofer40101Service {
     if (isExtranjero) {
       this.choferesListSubject.next(CHOFER_ARRAY);
     }
-
-    console.log('Updated Akita Store:', CHOFER_ARRAY);
   }
 
   /**

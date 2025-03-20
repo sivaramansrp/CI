@@ -1,13 +1,13 @@
 import {
-  Chofer40101Store,
-  Choferesnacionales40101State,
-} from './chofer40101.store';
+  Chofer40103Store,
+  Choferesnacionales40103State,
+} from './chofer40103.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class Chofer40101Query extends Query<Choferesnacionales40101State> {
-  constructor(protected override store: Chofer40101Store) {
+export class Chofer40103Query extends Query<Choferesnacionales40103State> {
+  constructor(protected override store: Chofer40103Store) {
     super(store);
   }
 

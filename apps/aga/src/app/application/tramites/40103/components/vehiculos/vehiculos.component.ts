@@ -8,9 +8,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
-import { Chofer40101Service } from '../../estados/chofer40101.service';
-import { Chofer40101Store } from '../../estados/chofer40101.store';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
+import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { Emisor2daPlaca } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
@@ -81,9 +81,9 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private chofer40101Store: Chofer40101Store,
-    private chofer40101Service: Chofer40101Service,
-    private chofer40101Query: Chofer40101Query
+    private chofer40103Store: Chofer40103Store,
+    private chofer40103Service: Chofer40103Service,
+    private chofer40103Query: Chofer40103Query
   ) {}
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
@@ -171,13 +171,13 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
       desc: '',
     });
 
-    this.vehiculosList$ = this.chofer40101Query.getvehiculos$;
-    this.chofer40101Query.getvehiculos$.subscribe((vehiculos: any) => {
+    this.vehiculosList$ = this.chofer40103Query.getvehiculos$;
+    this.chofer40103Query.getvehiculos$.subscribe((vehiculos: any) => {
       this.vehiculos = vehiculos;
     });
-    this.unidadesdearrastreList$ = this.chofer40101Query.getUnidadesdeArrastre$;
+    this.unidadesdearrastreList$ = this.chofer40103Query.getUnidadesdeArrastre$;
     this.UnidadesDearrastre();
-    this.chofer40101Query.getUnidadesdeArrastre$.subscribe(
+    this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
       (unidadesdearrastre: any) => {
         this.unidadesdearrastre = unidadesdearrastre;
       }
@@ -246,7 +246,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     }
 
     // Actualizar el estado de Akita
-    this.chofer40101Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
+    this.chofer40103Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
     this.formVehiculo.reset();
     this.toastr.success('🚗 Vehiculo added successfully!');
     this.closeModal();
@@ -255,13 +255,13 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
   UnidadesDearrastre(): void {
     if (this.formVehiculo.valid) {
       const NEW_UNIDAD = this.formVehiculo.value;
-      const CURRENT_DATA = this.chofer40101Query.getunidadesdearrastre();
-      this.chofer40101Store.setUnidadesdeArrastre([
+      const CURRENT_DATA = this.chofer40103Query.getunidadesdearrastre();
+      this.chofer40103Store.setUnidadesdeArrastre([
         ...CURRENT_DATA,
         NEW_UNIDAD,
       ]);
       this.unidadesdearrastreList$ =
-        this.chofer40101Query.getUnidadesdeArrastre$;
+        this.chofer40103Query.getUnidadesdeArrastre$;
     }
     this.formVehiculo = this.fb.group({
       solicitudVehiculoVin2:
@@ -340,10 +340,10 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     const SOLICITUD_VEHICULOTIPOVEHICULO = this.formVehiculo.get(
       'solicitudVehiculoTipoVehiculo'
     )?.value;
-    this.chofer40101Store.setsolicitudVehiculoTipoVehiculo(
+    this.chofer40103Store.setsolicitudVehiculoTipoVehiculo(
       SOLICITUD_VEHICULOTIPOVEHICULO
     );
-    Chofer40101Service.getClasifiRegimen().subscribe({
+    Chofer40103Service.getClasifiRegimen().subscribe({
       next: (data: DatosDelVehículo[]) => {
         this.vehiculoArrastr = data;
       },
@@ -351,12 +351,11 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
   }
   anioVehiculoveh(): void {
     const ANIO_VEHICULOVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
-    this.chofer40101Store.setanioVehiculoVEH(ANIO_VEHICULOVEH);
-    Chofer40101Service.getVehiculoVEH().subscribe({
+    this.chofer40103Store.setanioVehiculoVEH(ANIO_VEHICULOVEH);
+    Chofer40103Service.getVehiculoVEH().subscribe({
       next: (data: VehiculoVEHs[]) => {
         this.VehiculoVEH = data;
       },
-      error: (error) => console.error('Error fetching data:', error),
     });
   }
 
@@ -364,10 +363,10 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     const SOLICITUD_VEHICULOTIPOVEHICULOCOLOR: string = this.formVehiculo.get(
       'SOLICITUD_VEHICULOTIPOVEHICULOCOLOR'
     )?.value;
-    this.chofer40101Store.solicitudVehiculoColor(
+    this.chofer40103Store.solicitudVehiculoColor(
       SOLICITUD_VEHICULOTIPOVEHICULOCOLOR
     );
-    Chofer40101Service.getVehiculoColor().subscribe({
+    Chofer40103Service.getVehiculoColor().subscribe({
       next: (data: VehiculoColor[]) => {
         this.VehiculoColors = data;
       },
@@ -376,10 +375,10 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
   solicitudVehiculoPaisEmisor2daPlaca(): void {
     const SOLICITUD_VEHICULOTIPOVEHICULO =
       this.formVehiculo.get('solicitudVehiculo')?.value;
-    this.chofer40101Store.VehiculoPaisEmisor2daPlaca(
+    this.chofer40103Store.VehiculoPaisEmisor2daPlaca(
       SOLICITUD_VEHICULOTIPOVEHICULO
     );
-    Chofer40101Service.getPaisEmisor2daPlaca().subscribe({
+    Chofer40103Service.getPaisEmisor2daPlaca().subscribe({
       next: (data: Emisor2daPlaca[]) => {
         this.PaisEmisor2daPlaca = data;
       },

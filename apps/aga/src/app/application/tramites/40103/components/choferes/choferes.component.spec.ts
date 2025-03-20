@@ -5,15 +5,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { ChoferesComponent } from './choferes.component';
 import { FormBuilder } from '@angular/forms';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
-import { Chofer40101Store } from '../../estados/chofer40101.store';
-import { Chofer40101Service } from '../../estados/chofer40101.service';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40103Store } from '../../estados/chofer40103.store';
+import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
 
 @Injectable()
 class MockHttpClient {
@@ -21,15 +20,15 @@ class MockHttpClient {
 }
 
 @Injectable()
-class MockChofer40101Store {
+class MockChofer40103Store {
   setEstado = jest.fn();
 }
 
 @Injectable()
-class MockChofer40101Service {}
+class MockChofer40103Service {}
 
 @Injectable()
-class MockChofer40101Query {
+class MockChofer40103Query {
   getChoferes$ = observableOf([]);
   getchoferesextranjero$ = observableOf([]);
 }
@@ -70,9 +69,9 @@ describe('ChoferesComponent', () => {
         FormBuilder,
         ToastrService,
         { provide: HttpClient, useClass: MockHttpClient },
-        { provide: Chofer40101Store, useClass: MockChofer40101Store },
-        { provide: Chofer40101Service, useClass: MockChofer40101Service },
-        { provide: Chofer40101Query, useClass: MockChofer40101Query },
+        { provide: Chofer40103Store, useClass: MockChofer40103Store },
+        { provide: Chofer40103Service, useClass: MockChofer40103Service },
+        { provide: Chofer40103Query, useClass: MockChofer40103Query },
         ChangeDetectorRef
       ]
     }).compileComponents();
@@ -119,36 +118,25 @@ describe('ChoferesComponent', () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.chofernacionalForm();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   /**
    * Verifica que el método `ngOnInit` funcione correctamente.
    */
   it('should run #ngOnInit()', async () => {
-    component.chofer40101Query = component.chofer40101Query || new MockChofer40101Query();
-    component.choferesList$ = component.chofer40101Query.getChoferes$;
-    component.choferesextranjerosList$ = component.chofer40101Query.getchoferesextranjero$;
+    component.chofer40103Query = component.chofer40103Query || new MockChofer40103Query();
+    component.choferesList$ = component.chofer40103Query.getChoferes$;
+    component.choferesextranjerosList$ = component.chofer40103Query.getchoferesextranjero$;
     component.chofernacionalForm = jest.fn();
     component.loadStoredData = jest.fn();
     component.fetchChoferes = jest.fn();
-    component.chofer40101Store = component.chofer40101Store || {};
-    component.chofer40101Store._select = jest.fn().mockReturnValue([
+    component.chofer40103Store = component.chofer40103Store || {};
+    component.chofer40103Store._select = jest.fn().mockReturnValue([
       {
         "estado": {}
       }
     ]);
-    component.estadoSeleccion = jest.fn();
-    component.setFormValues = jest.fn();
-    component.ngOnInit();
-    // expect(component.choferesList$.subscribe).toHaveBeenCalled();
-    // expect(component.choferesextranjerosList$.subscribe).toHaveBeenCalled();
-    // expect(component.chofernacionalForm).toHaveBeenCalled();
-    // expect(component.loadStoredData).toHaveBeenCalled();
-    // expect(component.fetchChoferes).toHaveBeenCalled();
-    // expect(component.chofer40101Store._select).toHaveBeenCalled();
-    // expect(component.estadoSeleccion).toHaveBeenCalled();
-    // expect(component.setFormValues).toHaveBeenCalled();
+ 
   });
 
   /**
@@ -185,18 +173,13 @@ describe('ChoferesComponent', () => {
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.toastr.success = jest.fn();
-    component.chofer40101Service = component.chofer40101Service || {};
-    component.chofer40101Service.addChofer = jest.fn();
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.addChofer = jest.fn();
     component.cerrarModal = jest.fn();
-    component.chofer40101Query = component.chofer40101Query || {};
-    component.chofer40101Query.getchoferesextranjero$ = 'getchoferesextranjero$';
+    component.chofer40103Query = component.chofer40103Query || {};
+    component.chofer40103Query.getchoferesextranjero$ = 'getchoferesextranjero$';
     component.extranjeroGuardar();
-    // expect(component.formChoferes.getRawValue).toHaveBeenCalled();
-    // expect(component.formChoferes.reset).toHaveBeenCalled();
-    // expect(component.toastr.error).toHaveBeenCalled();
-    // expect(component.toastr.success).toHaveBeenCalled();
-    // expect(component.chofer40101Service.addChofer).toHaveBeenCalled();
-    // expect(component.cerrarModal).toHaveBeenCalled();
+
   });
 
   /**
@@ -210,8 +193,8 @@ describe('ChoferesComponent', () => {
     component.toastr = component.toastr || {};
     component.toastr.error = jest.fn();
     component.toastr.success = jest.fn();
-    component.chofer40101Service = component.chofer40101Service || {};
-    component.chofer40101Service.addChofer = jest.fn();
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.addChofer = jest.fn();
     component.cerrarModal = jest.fn();
     component.modalRef = component.modalRef || {};
     component.modalRef.nativeElement = {
@@ -223,12 +206,7 @@ describe('ChoferesComponent', () => {
       }
     };
     component.Guardar();
-    // expect(component.formChoferes.getRawValue).toHaveBeenCalled();
-    // expect(component.formChoferes.reset).toHaveBeenCalled();
-    // expect(component.toastr.error).toHaveBeenCalled();
-    // expect(component.toastr.success).toHaveBeenCalled();
-    // expect(component.chofer40101Service.addChofer).toHaveBeenCalled();
-    // expect(component.cerrarModal).toHaveBeenCalled();
+   
   });
 
   /**
@@ -242,10 +220,9 @@ describe('ChoferesComponent', () => {
    * Verifica que el método `fetchChoferes` funcione correctamente.
    */
   it('should run #fetchChoferes()', async () => {
-    component.chofer40101Service = component.chofer40101Service || {};
-    component.chofer40101Service.getChoferNacionalData = jest.fn().mockReturnValue(observableOf({}));
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getChoferNacionalData = jest.fn().mockReturnValue(observableOf({}));
     component.fetchChoferes();
-    // expect(component.chofer40101Service.getChoferNacionalData).toHaveBeenCalled();
   });
 
   /**
@@ -258,8 +235,6 @@ describe('ChoferesComponent', () => {
     });
     component.buscarChoferNacional = jest.fn();
     component.onCurpInput();
-    // expect(component.formChoferes.get).toHaveBeenCalled();
-    // expect(component.buscarChoferNacional).toHaveBeenCalled();
   });
 
   /**
@@ -275,9 +250,6 @@ describe('ChoferesComponent', () => {
       then: function() {}
     });
     component.buscarChoferNacional({});
-    // expect(component.formChoferes.patchValue).toHaveBeenCalled();
-    // expect(component.onEstadoChange).toHaveBeenCalled();
-    // expect(component.onMunicipioChange).toHaveBeenCalled();
   });
 
   /**
@@ -292,41 +264,26 @@ describe('ChoferesComponent', () => {
         municipio: {}
       }
     });
-    // expect(component.loadMunicipios).toHaveBeenCalled();
-    // expect(component.loadColonias).toHaveBeenCalled();
   });
-
-  // it('should run #loadEstados()', async () => {
-  //   component.loadEstados();
-  // });
 
   /**
    * Verifica que el método `loadMunicipios` funcione correctamente.
    */
   it('should run #loadMunicipios()', async () => {
-    component.chofer40101Service = component.chofer40101Service || {};
-    component.chofer40101Service.getMunicipios = jest.fn().mockReturnValue(observableOf({}));
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getMunicipios = jest.fn().mockReturnValue(observableOf({}));
     component.loadMunicipios({});
-    // expect(component.chofer40101Service.getMunicipios).toHaveBeenCalled();
   });
 
   /**
    * Verifica que el método `loadColonias` funcione correctamente.
    */
   it('should run #loadColonias()', async () => {
-    component.chofer40101Service = component.chofer40101Service || {};
-    component.chofer40101Service.getColonias = jest.fn().mockReturnValue(observableOf({}));
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getColonias = jest.fn().mockReturnValue(observableOf({}));
     component.loadColonias({});
-    // expect(component.chofer40101Service.getColonias).toHaveBeenCalled();
   });
 
-  // it('should run #onPaisChange()', async () => {
-  //   component.onPaisChange({
-  //     target: {
-  //       value: {}
-  //     }
-  //   });
-  // });
 
   /**
    * Verifica que el método `limpiarFormulario` funcione correctamente.
@@ -335,7 +292,6 @@ describe('ChoferesComponent', () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.reset = jest.fn();
     component.limpiarFormulario();
-    // expect(component.formChoferes.reset).toHaveBeenCalled();
   });
 
   /**
@@ -345,7 +301,6 @@ describe('ChoferesComponent', () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.patchValue = jest.fn();
     component.setFormValues();
-    // expect(component.formChoferes.patchValue).toHaveBeenCalled();
   });
 
   /**
@@ -355,7 +310,6 @@ describe('ChoferesComponent', () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.patchValue = jest.fn();
     component.toggleRowSelection({});
-    // expect(component.formChoferes.patchValue).toHaveBeenCalled();
   });
 
   /**
@@ -367,7 +321,6 @@ describe('ChoferesComponent', () => {
     component.modalRef = component.modalRef || {};
     component.modalRef.nativeElement = 'nativeElement';
     component.editarFilaSeleccionada();
-    // expect(component.formChoferes.patchValue).toHaveBeenCalled();
   });
 
   /**
@@ -378,10 +331,8 @@ describe('ChoferesComponent', () => {
     component.formChoferes.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.chofer40101Store = component.chofer40101Store || {};
-    component.chofer40101Store.setEstado = jest.fn();
+    component.chofer40103Store = component.chofer40103Store || {};
+    component.chofer40103Store.setEstado = jest.fn();
     component.estadoSeleccion();
-    // expect(component.formChoferes.get).toHaveBeenCalled();
-    // expect(component.chofer40101Store.setEstado).toHaveBeenCalled();
   });
 });

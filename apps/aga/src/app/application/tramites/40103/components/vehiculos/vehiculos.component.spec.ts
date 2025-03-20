@@ -21,20 +21,20 @@ import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 import { VehiculosComponent } from './vehiculos.component';
-import { Chofer40101Service } from '../../estados/chofer40101.service';
-import { Chofer40101Store } from '../../estados/chofer40101.store';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { Chofer40103Store } from '../../estados/chofer40103.store';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
 
 @Injectable()
-class MockChofer40101Store {
+class MockChofer40103Store {
   setUnidadesdeArrastre = jest.fn();
 }
 
 @Injectable()
-class MockChofer40101Service {}
+class MockChofer40103Service {}
 
 @Injectable()
-class MockChofer40101Query {
+class MockChofer40103Query {
   getvehiculos$ = of([]);
   getUnidadesdeArrastre$ = of([]);
   getunidadesdearrastre = jest.fn().mockReturnValue([]);
@@ -92,9 +92,9 @@ describe('VehiculosComponent', () => {
           provide: HttpClient,
           useValue: { get: jest.fn(), post: jest.fn() },
         },
-        { provide: Chofer40101Store, useClass: MockChofer40101Store },
-        { provide: Chofer40101Service, useClass: MockChofer40101Service },
-        { provide: Chofer40101Query, useClass: MockChofer40101Query },
+        { provide: Chofer40103Store, useClass: MockChofer40103Store },
+        { provide: Chofer40103Service, useClass: MockChofer40103Service },
+        { provide: Chofer40103Query, useClass: MockChofer40103Query },
       ],
     }).compileComponents();
 
@@ -189,17 +189,17 @@ describe('VehiculosComponent', () => {
       solicitudVehiculoNumeroEconomico: new FormControl(''),
     });
     component.formVehiculo.value = 'value';
-    component.chofer40101Query = component.chofer40101Query || new MockChofer40101Query();
-    component.chofer40101Store = component.chofer40101Store || new MockChofer40101Store();
-    const CURRENT_DATA = component.chofer40101Query.getunidadesdearrastre();
+    component.chofer40103Query = component.chofer40103Query || new MockChofer40103Query();
+    component.chofer40103Store = component.chofer40103Store || new MockChofer40103Store();
+    const CURRENT_DATA = component.chofer40103Query.getunidadesdearrastre();
     const NEW_UNIDAD = { /* datos de la nueva unidad */ };
-    component.chofer40101Store.setUnidadesdeArrastre([
+    component.chofer40103Store.setUnidadesdeArrastre([
       ...CURRENT_DATA,
       NEW_UNIDAD,
     ]);
-    component.unidadesdearrastreList$ = component.chofer40101Query.getUnidadesdeArrastre$;
-    expect(component.chofer40101Query.getunidadesdearrastre).toHaveBeenCalled();
-    expect(component.chofer40101Store.setUnidadesdeArrastre).toHaveBeenCalled();
+    component.unidadesdearrastreList$ = component.chofer40103Query.getUnidadesdeArrastre$;
+    expect(component.chofer40103Query.getunidadesdearrastre).toHaveBeenCalled();
+    expect(component.chofer40103Store.setUnidadesdeArrastre).toHaveBeenCalled();
   });
 
   /**
@@ -234,11 +234,9 @@ describe('VehiculosComponent', () => {
     component.formVehiculo.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.chofer40101Store = component.chofer40101Store || {};
-    // component.chofer40101Store.setsolicitudVehiculoTipoVehiculo = jest.fn();
+    component.chofer40103Store = component.chofer40103Store || {};
     component.conVehiculoArrastre();
     expect(component.formVehiculo.get).toHaveBeenCalled();
-    // expect(component.chofer40101Store.setsolicitudVehiculoTipoVehiculo).toHaveBeenCalled();
   });
 
   /**
@@ -253,11 +251,11 @@ describe('VehiculosComponent', () => {
     component.formVehiculo.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.chofer40101Store = component.chofer40101Store || {};
-    component.chofer40101Store.setanioVehiculoVEH = jest.fn();
+    component.chofer40103Store = component.chofer40103Store || {};
+    component.chofer40103Store.setanioVehiculoVEH = jest.fn();
     component.anioVehiculoveh();
     expect(component.formVehiculo.get).toHaveBeenCalled();
-    expect(component.chofer40101Store.setanioVehiculoVEH).toHaveBeenCalled();
+    expect(component.chofer40103Store.setanioVehiculoVEH).toHaveBeenCalled();
   });
 
   /**
@@ -272,11 +270,11 @@ describe('VehiculosComponent', () => {
     component.formVehiculo.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.chofer40101Store = component.chofer40101Store || {};
-    component.chofer40101Store.solicitudVehiculoColor = jest.fn();
+    component.chofer40103Store = component.chofer4013Store || {};
+    component.chofer40103Store.solicitudVehiculoColor = jest.fn();
     component.solicitudVehiculoColor();
     expect(component.formVehiculo.get).toHaveBeenCalled();
-    expect(component.chofer40101Store.solicitudVehiculoColor).toHaveBeenCalled();
+    expect(component.chofer40103Store.solicitudVehiculoColor).toHaveBeenCalled();
   });
 
   /**
@@ -291,11 +289,11 @@ describe('VehiculosComponent', () => {
     component.formVehiculo.get = jest.fn().mockReturnValue({
       value: {}
     });
-    component.chofer40101Store = component.chofer40101Store || {};
-    component.chofer40101Store.VehiculoPaisEmisor2daPlaca = jest.fn();
+    component.chofer40103Store = component.chofer40103Store || {};
+    component.chofer40103Store.VehiculoPaisEmisor2daPlaca = jest.fn();
     component.solicitudVehiculoPaisEmisor2daPlaca();
     expect(component.formVehiculo.get).toHaveBeenCalled();
-    expect(component.chofer40101Store.VehiculoPaisEmisor2daPlaca).toHaveBeenCalled();
+    expect(component.chofer40103Store.VehiculoPaisEmisor2daPlaca).toHaveBeenCalled();
   });
 
   /**

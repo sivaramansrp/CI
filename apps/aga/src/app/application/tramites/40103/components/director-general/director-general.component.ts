@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
-import { Chofer40101Store } from '../../estados/chofer40101.store';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
+import { Chofer40103Store } from '../../estados/chofer40103.store';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 
 @Component({
@@ -11,9 +11,8 @@ import mockData from '@libs/shared/theme/assets/json/40103/director-general-mock
 })
 export class DirectorGeneralComponent implements OnInit {
   directorGeneralForm!: FormGroup;
-
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder, private chofer40101Query: Chofer40101Query, private chofer40101Store: Chofer40101Store) {}
+  constructor(private fb: FormBuilder, private chofer40103Query: Chofer40103Query, private chofer40103Store: Chofer40103Store) {}
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
@@ -61,7 +60,7 @@ export class DirectorGeneralComponent implements OnInit {
    * @param updatedData Los datos actualizados del formulario.
    */
   updateStore(updatedData: string): void {
-    const EXISTINGDATA = this.chofer40101Query.getValue().choferes;
+    const EXISTINGDATA = this.chofer40103Query.getValue().choferes;
     // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
   }
 }

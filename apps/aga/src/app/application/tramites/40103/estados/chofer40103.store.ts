@@ -2,7 +2,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { Injectable } from '@angular/core';
 import { Store} from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-export interface Choferesnacionales40101State {
+export interface Choferesnacionales40103State {
   choferes: string[];
   choferesextranjero: string[];
   vehiculos: string[];
@@ -15,7 +15,7 @@ export interface Choferesnacionales40101State {
   segundoApellido: string;
 }
 
-export function createChoferState(): Choferesnacionales40101State {
+export function createChoferState(): Choferesnacionales40103State {
   const STORED_DATA = localStorage.getItem('choferesList');
   return {
     choferes: STORED_DATA ? JSON.parse(STORED_DATA) : [],
@@ -32,8 +32,8 @@ export function createChoferState(): Choferesnacionales40101State {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'chofer40101', resettable: true })
-export class Chofer40101Store extends Store<Choferesnacionales40101State> {
+@StoreConfig({ name: 'chofer40103', resettable: true })
+export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   constructor() {
     super(createChoferState());
   }

@@ -29,9 +29,9 @@ import {
   extranjero,
 } from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { ChangeDetectorRef } from '@angular/core';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
-import { Chofer40101Service } from '../../estados/chofer40101.service';
-import { Chofer40101Store } from '../../estados/chofer40101.store';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
+import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
@@ -115,9 +115,9 @@ export class ChoferesComponent implements OnInit {
     private toastr: ToastrService,
     private http: HttpClient,
     // private storeService: StoreService,
-    private chofer40101Store: Chofer40101Store,
-    private chofer40101Service: Chofer40101Service,
-    private chofer40101Query: Chofer40101Query,
+    private chofer40103Store: Chofer40103Store,
+    private chofer40103Service: Chofer40103Service,
+    private chofer40103Query: Chofer40103Query,
     private cdRef: ChangeDetectorRef
   ) {
     // Initialization logic can be added here if needed
@@ -186,9 +186,9 @@ export class ChoferesComponent implements OnInit {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
-    this.choferesList$ = this.chofer40101Query.getChoferes$;
+    this.choferesList$ = this.chofer40103Query.getChoferes$;
     this.choferesextranjerosList$ =
-      this.chofer40101Query.getchoferesextranjero$;
+      this.chofer40103Query.getchoferesextranjero$;
 
     // eslint-disable-next-line no-empty-function
     this.choferesList$.subscribe((_choferes: unknown) => {});
@@ -202,7 +202,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.chofernacionalForm();
     this.loadStoredData();
     this.fetchChoferes();
-    this.estado$ = this.chofer40101Store._select((state) => state.estado);
+    this.estado$ = this.chofer40103Store._select((state) => state.estado);
 
     ChoferesComponent.loadEstados();
     this.estadoSeleccion();
@@ -246,7 +246,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       return;
     }
     // Utilice el servicio para agregar el nuevo registro a la lista de extranjeros
-    this.chofer40101Service.addChofer(NUEVO_MIEMBRO, true);
+    this.chofer40103Service.addChofer(NUEVO_MIEMBRO, true);
 
     //Restablecer el formulario
     this.formChoferes.reset();
@@ -256,7 +256,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
     // Obtener una lista actualizada para garantizar que la tabla se actualice
     this.choferesextranjerosList$ =
-      this.chofer40101Query.getchoferesextranjero$;
+      this.chofer40103Query.getchoferesextranjero$;
   }
 
   /**
@@ -275,7 +275,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
 
     // Llamar al método de servicio para agregar el nuevo miembro
-    this.chofer40101Service.addChofer(NUEVO_MIEMBRO);
+    this.chofer40103Service.addChofer(NUEVO_MIEMBRO);
     this.toastr.success('Chofer Nacional forms data added successfully');
     this.formChoferes.reset();
     this.cerrarModal();
@@ -304,7 +304,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Obtiene datos de los choferes del servicio.
    */
   fetchChoferes(): void {
-    this.chofer40101Service.getChoferNacionalData().subscribe(
+    this.chofer40103Service.getChoferNacionalData().subscribe(
       (response) => {
         this.choferes = response;
         this.municipios = response;
@@ -404,7 +404,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     if (!claveEstado) {
       return;
     }
-    this.chofer40101Service.getMunicipios(claveEstado).subscribe(
+    this.chofer40103Service.getMunicipios(claveEstado).subscribe(
       (data) => {
         this.municipios = data;
       },
@@ -419,7 +419,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       return;
     }
 
-    this.chofer40101Service.getColonias(claveMunicipio).subscribe(
+    this.chofer40103Service.getColonias(claveMunicipio).subscribe(
       (data) => {
         this.colonias = data;
       },
@@ -529,6 +529,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   }
   estadoSeleccion(): void {
     const ESTADO = this.formChoferes.get('estado')?.value;
-    this.chofer40101Store.setEstado(ESTADO);
+    this.chofer40103Store.setEstado(ESTADO);
   }
 }

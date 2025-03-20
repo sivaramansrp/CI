@@ -11,12 +11,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { Chofer40101Store } from '../../estados/chofer40101.store';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40103Store } from '../../estados/chofer40103.store';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockChofer40101Store {
+class MockChofer40103Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
@@ -50,17 +50,17 @@ class SafeHtmlPipe implements PipeTransform {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let Chofer40101QueryMock: jest.Mocked<Chofer40101Query>;
-  let chofer40101StoreMock: MockChofer40101Store;
+  let Chofer40103QueryMock: jest.Mocked<Chofer40103Query>;
+  let chofer40103StoreMock: MockChofer40103Store;
 
   beforeEach(async () => {
-    Chofer40101QueryMock = {
+    Chofer40103QueryMock = {
       selectSeccionState$: observableOf({
         pasos: [],
         currentStep: 1,
       }),
-    } as unknown as jest.Mocked<Chofer40101Query>;
-    chofer40101StoreMock = new MockChofer40101Store();
+    } as unknown as jest.Mocked<Chofer40103Query>;
+    chofer40103StoreMock = new MockChofer40103Store();
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -72,8 +72,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: Chofer40101Query, useValue: Chofer40101QueryMock },
-        { provide: Chofer40101Store, useValue: chofer40101StoreMock },
+        { provide: Chofer40103Query, useValue: Chofer40103QueryMock },
+        { provide: Chofer40103Store, useValue: chofer40103StoreMock },
       ],
     }).compileComponents();
 
@@ -136,7 +136,7 @@ describe('SolicitantePageComponent', () => {
    */
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
-    expect(chofer40101StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(chofer40101StoreMock.establecerFormaValida).toHaveBeenCalled();
+    expect(chofer40103StoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(chofer40103StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

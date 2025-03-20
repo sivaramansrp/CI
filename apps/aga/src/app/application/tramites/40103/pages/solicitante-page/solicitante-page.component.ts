@@ -1,10 +1,10 @@
 /* eslint-disable guard-for-in */
 import {
-  Chofer40101Store,
-  Choferesnacionales40101State,
-} from '../../estados/chofer40101.store';
+  Chofer40103Store,
+  Choferesnacionales40103State,
+} from '../../estados/chofer40103.store';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Chofer40101Query } from '../../estados/chofer40101.query';
+import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
@@ -27,7 +27,7 @@ interface AccionBoton {
 export class SolicitantePageComponent implements OnInit {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
-  public seccion!: Choferesnacionales40101State;
+  public seccion!: Choferesnacionales40103State;
   private destroyNotifier$: Subject<void> = new Subject();
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
@@ -38,8 +38,8 @@ export class SolicitantePageComponent implements OnInit {
   };
 
   constructor(
-    private chofer40101Query: Chofer40101Query,
-    private chofer40101Store: Chofer40101Store // eslint-disable-next-line no-empty-function
+    private chofer40103Query: Chofer40103Query,
+    private chofer40103Store: Chofer40103Store // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -54,8 +54,7 @@ export class SolicitantePageComponent implements OnInit {
       }
       return paso;
     });
-    console.log('Updated pasos:', this.pasos);
-    this.chofer40101Query.selectSeccionState$
+    this.chofer40103Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -102,7 +101,7 @@ export class SolicitantePageComponent implements OnInit {
       SESSION.push(SECCIONES_TRAMITE_5701.PASO_1[key]);
       FORMAVALIDA.push(false);
     }
-    this.chofer40101Store.establecerSeccion(SESSION);
-    this.chofer40101Store.establecerFormaValida(FORMAVALIDA);
+    this.chofer40103Store.establecerSeccion(SESSION);
+    this.chofer40103Store.establecerFormaValida(FORMAVALIDA);
   }
 }
