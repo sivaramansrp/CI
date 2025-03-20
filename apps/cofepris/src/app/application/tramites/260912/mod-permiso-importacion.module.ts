@@ -1,15 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-
 import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { SanitaryPermitComponent } from './pages/sanitary-permit/sanitary-permit.component';
+import { CommonModule } from '@angular/common';
 import { DatosEmpresaComponent } from './component/datos-empresa/datos-empresa.component';
+import { NgModule } from '@angular/core';
+import { PagoDeDerechosComponent } from './component/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroComoEmpresaRoutingModule } from './mod-permiso-importacion-routing.module';
-
+import { SanitaryPermitComponent } from './pages/sanitary-permit/sanitary-permit.component';
+import { ToastrService } from 'ngx-toastr';
+import { TramitesAsociadoComponent } from './component/tramites-asociado/tramites-asociado.component';
 
 
 
@@ -28,7 +29,10 @@ import { RegistroComoEmpresaRoutingModule } from './mod-permiso-importacion-rout
     TablaDinamicaComponent,
     PasoDosComponent,
     PasoTresComponent,
-    AlertComponent
+    AlertComponent,
+    PagoDeDerechosComponent,
+    TramitesAsociadoComponent,
   ],
+  providers:[ToastrService]
 })
 export class ModPermisoImportacionModule {}

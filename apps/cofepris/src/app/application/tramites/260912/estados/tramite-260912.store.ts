@@ -7,12 +7,22 @@ import { Injectable } from '@angular/core';
  * @returns Tramites260912State
  */
 export interface Tramites260912State {
- 
+  claveDeReferencia: string;
+  cadenaPagoDependencia: string;
+  clave: string;
+  llaveDePago: string;
+  fecPago: string;
+  impPago: string;
 }
 
 export function createInitialState(): Tramites260912State {
   return {
-    
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    clave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: '',
   };
 }
 
@@ -25,6 +35,46 @@ export class Tramite260912Store extends Store<Tramites260912State> {
     super(createInitialState());
   }
 
-  
+  public setClaveDeReferencia(claveDeReferencia: string) {
+    this.update((state) => ({
+      ...state,
+      claveDeReferencia,
+    }));
+  }
+
+  public setCadenaPagoDependencia(cadenaPagoDependencia: string) {
+    this.update((state) => ({
+      ...state,
+      cadenaPagoDependencia,
+    }));
+  }
+
+  public setClave(clave: string) {
+    this.update((state) => ({
+      ...state,
+      clave,
+    }));
+  }
+
+  public setLlaveDePago(llaveDePago: string) {
+    this.update((state) => ({
+      ...state,
+      llaveDePago,
+    }));
+  }
+
+  public setFecPago(fecPago: string) {
+    this.update((state) => ({
+      ...state,
+      fecPago,
+    }));
+  }
+
+  public setImpPago(impPago: string) {
+    this.update((state) => ({
+      ...state,
+      impPago,
+    }));
+  }
 
 }
