@@ -53,10 +53,4 @@ describe('PagoDeDerechosComponent', () => {
   it('should call getData on init', () => {
     expect(pagoDeDerechosMockService.getData).toHaveBeenCalled();
   });
-
-  it('should log form values to the console', () => {
-    spyOn(console, 'log');
-    component.submitPagoDeDerechos();
-    expect(console.log).toHaveBeenCalledTimes(1);
-  });
 });

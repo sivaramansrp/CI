@@ -31,7 +31,7 @@ export class PagoDeDerechosComponent implements OnInit {
   /**
    * Datos para el selector de opciones.
    */
-  dropdownData: any[] = [];
+  dropdownData: Catalogo[] = [];
 
   /**
    * Formulario reactivos para el pago de derechos.

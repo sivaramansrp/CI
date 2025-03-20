@@ -32,7 +32,6 @@ import {
 } from '../../constantes/permiso-maquila.enum';
 import { ModalComponent } from '../modal/modal.component';
 import {
-  selectedRowData,
   tableData,
 } from '../../models/permiso-maquila.models';
 import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.store';
@@ -43,8 +42,6 @@ import { Tramite260212Store } from '../../../../estados/tramites/tramite260212.s
  */
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
-
-
 
 /**
  * Componente que gestiona los terceros relacionados.
@@ -72,171 +69,162 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit {
+  /**
+   * Indicador de visibilidad para la sección de la tabla.
+   * Inicialmente visible (`true`).
+   *
+   * @description Controla si se muestra o no la sección de la tabla.
+   */
+  showTableDiv = true;
 
-/**
- * Indicador de visibilidad para la sección de la tabla.
- * Inicialmente visible (`true`).
- * 
- * @description Controla si se muestra o no la sección de la tabla.
- */
-showTableDiv = true;
+  /**
+   * Indicador de visibilidad para la sección del formulario de fabricante.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestra o no el formulario para agregar un fabricante.
+   */
+  showFabricante = false;
 
-/**
- * Indicador de visibilidad para la sección del formulario de fabricante.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestra o no el formulario para agregar un fabricante.
- */
-showFabricante = false;
+  /**
+   * Indicador de visibilidad para la sección del formulario de destinatario.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestra o no el formulario para agregar un destinatario.
+   */
+  showDestinatario = false;
 
-/**
- * Indicador de visibilidad para la sección del formulario de destinatario.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestra o no el formulario para agregar un destinatario.
- */
-showDestinatario = false;
+  /**
+   * Indicador de visibilidad para la sección del formulario de proveedor.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestra o no el formulario para agregar un proveedor.
+   */
+  showProveedor = false;
 
-/**
- * Indicador de visibilidad para la sección del formulario de proveedor.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestra o no el formulario para agregar un proveedor.
- */
-showProveedor = false;
+  /**
+   * Indicador de visibilidad para la sección del formulario de facturador.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestra o no el formulario para agregar un facturador.
+   */
+  showFacturador = false;
 
-/**
- * Indicador de visibilidad para la sección del formulario de facturador.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestra o no el formulario para agregar un facturador.
- */
-showFacturador = false;
+  /**
+   * Indicador de visibilidad para los botones del formulario de fabricante.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestran o no los botones para el formulario de fabricante.
+   */
+  showFabricanteButtons = false;
 
-/**
- * Indicador de visibilidad para los botones del formulario de fabricante.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestran o no los botones para el formulario de fabricante.
- */
-showFabricanteButtons = false;
+  /**
+   * Indicador de visibilidad para los botones del formulario de destinatario.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestran o no los botones para el formulario de destinatario.
+   */
+  showDestinatarioButtons = false;
 
-/**
- * Indicador de visibilidad para los botones del formulario de destinatario.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestran o no los botones para el formulario de destinatario.
- */
-showDestinatarioButtons = false;
+  /**
+   * Indicador de visibilidad para los botones del formulario de proveedor.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestran o no los botones para el formulario de proveedor.
+   */
+  showProveedorButtons = false;
 
-/**
- * Indicador de visibilidad para los botones del formulario de proveedor.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestran o no los botones para el formulario de proveedor.
- */
-showProveedorButtons = false;
-
-/**
- * Indicador de visibilidad para los botones del formulario de facturador.
- * Inicialmente no visible (`false`).
- * 
- * @description Controla si se muestran o no los botones para el formulario de facturador.
- */
-showFacturadorButtons = false;
-
-
-
-
-
+  /**
+   * Indicador de visibilidad para los botones del formulario de facturador.
+   * Inicialmente no visible (`false`).
+   *
+   * @description Controla si se muestran o no los botones para el formulario de facturador.
+   */
+  showFacturadorButtons = false;
 
   /**
    * Selección del tipo de persona.
    */
   tipoPersonaSelection!: string;
 
+  /**
+   * Datos generales para los dropdowns.
+   * Inicialmente vacío, se llenará con datos según sea necesario.
+   *
+   * @description Este arreglo almacena los datos generales para los selectores.
+   */
+  dropdownData: Catalogo[] = [];
 
+  /**
+   * Datos para el dropdown de países.
+   * Utiliza los datos predefinidos en `PAISSELECTDATA`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de países.
+   */
+  paisDropdownData: Catalogo[] = PAISSELECTDATA;
 
-/**
- * Datos generales para los dropdowns.
- * Inicialmente vacío, se llenará con datos según sea necesario.
- * 
- * @description Este arreglo almacena los datos generales para los selectores.
- */
-dropdownData: Catalogo[] = [];
+  /**
+   * Datos para el dropdown de localidades.
+   * Utiliza los datos predefinidos en `LOCALIDADSELECTDATA`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de localidades.
+   */
+  localidadDropdownData: Catalogo[] = LOCALIDADSELECTDATA;
 
-/**
- * Datos para el dropdown de países.
- * Utiliza los datos predefinidos en `PAISSELECTDATA`.
- * 
- * @description Este arreglo almacena las opciones para el selector de países.
- */
-paisDropdownData: Catalogo[] = PAISSELECTDATA;
+  /**
+   * Datos para el dropdown de municipios.
+   * Utiliza los datos predefinidos en `MUNICIPIOSELECTDATA`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de municipios.
+   */
+  municipioDropdownData: Catalogo[] = MUNICIPIOSELECTDATA;
 
-/**
- * Datos para el dropdown de localidades.
- * Utiliza los datos predefinidos en `LOCALIDADSELECTDATA`.
- * 
- * @description Este arreglo almacena las opciones para el selector de localidades.
- */
-localidadDropdownData: Catalogo[] = LOCALIDADSELECTDATA;
+  /**
+   * Datos para el dropdown de códigos postales.
+   * Utiliza los datos predefinidos en `CODIGOPOSTALSELECTDATA`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de códigos postales.
+   */
+  codigoPostalDropdownData: Catalogo[] = CODIGOPOSTALSELECTDATA;
 
-/**
- * Datos para el dropdown de municipios.
- * Utiliza los datos predefinidos en `MUNICIPIOSELECTDATA`.
- * 
- * @description Este arreglo almacena las opciones para el selector de municipios.
- */
-municipioDropdownData: Catalogo[] = MUNICIPIOSELECTDATA;
+  /**
+   * Datos para el dropdown de colonias.
+   * Utiliza los datos predefinidos en `COLONIASELECTDATA`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de colonias.
+   */
+  coloniaDropdownData: Catalogo[] = COLONIASELECTDATA;
 
-/**
- * Datos para el dropdown de códigos postales.
- * Utiliza los datos predefinidos en `CODIGOPOSTALSELECTDATA`.
- * 
- * @description Este arreglo almacena las opciones para el selector de códigos postales.
- */
-codigoPostalDropdownData: Catalogo[] = CODIGOPOSTALSELECTDATA;
+  /**
+   * Formulario reactivo para agregar un fabricante.
+   * Este formulario contiene los campos necesarios para ingresar los datos de un fabricante.
+   *
+   * @description Se utiliza para validar y procesar los datos del fabricante.
+   */
+  agregarFabricanteFormGroup!: FormGroup;
 
-/**
- * Datos para el dropdown de colonias.
- * Utiliza los datos predefinidos en `COLONIASELECTDATA`.
- * 
- * @description Este arreglo almacena las opciones para el selector de colonias.
- */
-coloniaDropdownData: Catalogo[] = COLONIASELECTDATA;
+  /**
+   * Formulario reactivo para agregar un destinatario.
+   * Este formulario contiene los campos necesarios para ingresar los datos de un destinatario.
+   *
+   * @description Se utiliza para validar y procesar los datos del destinatario.
+   */
+  agregarDestinatarioFormGroup!: FormGroup;
 
-/**
- * Formulario reactivo para agregar un fabricante.
- * Este formulario contiene los campos necesarios para ingresar los datos de un fabricante.
- * 
- * @description Se utiliza para validar y procesar los datos del fabricante.
- */
-agregarFabricanteFormGroup!: FormGroup;
+  /**
+   * Formulario reactivo para agregar un proveedor.
+   * Este formulario contiene los campos necesarios para ingresar los datos de un proveedor.
+   *
+   * @description Se utiliza para validar y procesar los datos del proveedor.
+   */
+  agregarProveedorFormGroup!: FormGroup;
 
-/**
- * Formulario reactivo para agregar un destinatario.
- * Este formulario contiene los campos necesarios para ingresar los datos de un destinatario.
- * 
- * @description Se utiliza para validar y procesar los datos del destinatario.
- */
-agregarDestinatarioFormGroup!: FormGroup;
-
-/**
- * Formulario reactivo para agregar un proveedor.
- * Este formulario contiene los campos necesarios para ingresar los datos de un proveedor.
- * 
- * @description Se utiliza para validar y procesar los datos del proveedor.
- */
-agregarProveedorFormGroup!: FormGroup;
-
-/**
- * Formulario reactivo para agregar un facturador.
- * Este formulario contiene los campos necesarios para ingresar los datos de un facturador.
- * 
- * @description Se utiliza para validar y procesar los datos del facturador.
- */
-agregarFacturadorFormGroup!: FormGroup;
-
+  /**
+   * Formulario reactivo para agregar un facturador.
+   * Este formulario contiene los campos necesarios para ingresar los datos de un facturador.
+   *
+   * @description Se utiliza para validar y procesar los datos del facturador.
+   */
+  agregarFacturadorFormGroup!: FormGroup;
 
   /**
    * Constructor del componente.
@@ -302,10 +290,21 @@ agregarFacturadorFormGroup!: FormGroup;
        * Requiere validación adicional mediante `curpValidator`.
        */
       curp: new FormControl('', [Validators.required, this.curpValidator]),
-
-      nombre: new FormControl('',[Validators.required]),
-      primerApellido: new FormControl('',[Validators.required]),
-      segundoApellido: new FormControl('',[Validators.required]),
+      /**
+       * Control del formulario para el nombre del usuario.
+       * Este campo es obligatorio.
+       */
+      nombre: new FormControl('', [Validators.required]),
+      /**
+       * Control del formulario para el primer apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      primerApellido: new FormControl('', [Validators.required]),
+      /**
+       * Control del formulario para el segundo apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      segundoApellido: new FormControl('', [Validators.required]),
       /**
        * Denominación o razón social del tercero.
        */
@@ -467,7 +466,7 @@ agregarFacturadorFormGroup!: FormGroup;
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl(''),
+      telefono: new FormControl('', [this.telefonoValidator]),
       /**
        * Correo electrónico del destinatario.
        */
@@ -556,7 +555,7 @@ agregarFacturadorFormGroup!: FormGroup;
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl(''),
+      telefono: new FormControl('', [this.telefonoValidator]),
       /**
        * Correo electrónico del proveedor (opcional).
        */
@@ -649,7 +648,7 @@ agregarFacturadorFormGroup!: FormGroup;
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl(''),
+      telefono: new FormControl('', [this.telefonoValidator]),
       /**
        * Correo electrónico del facturador (opcional).
        */
@@ -675,102 +674,89 @@ agregarFacturadorFormGroup!: FormGroup;
       });
   }
 
+  /**
+   * Encabezados para la tabla de fabricantes.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   *
+   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de fabricantes.
+   */
+  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
-/**
- * Encabezados para la tabla de fabricantes.
- * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
- * 
- * @description Estos encabezados definen las columnas que se mostrarán en la tabla de fabricantes.
- */
-fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  /**
+   * Encabezados para la tabla de destinatarios.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   *
+   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de destinatarios.
+   */
+  destinatarioHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
-/**
- * Encabezados para la tabla de destinatarios.
- * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
- * 
- * @description Estos encabezados definen las columnas que se mostrarán en la tabla de destinatarios.
- */
-destinatarioHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  /**
+   * Encabezados para la tabla de proveedores.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   *
+   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de proveedores.
+   */
+  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
-/**
- * Encabezados para la tabla de proveedores.
- * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
- * 
- * @description Estos encabezados definen las columnas que se mostrarán en la tabla de proveedores.
- */
-proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  /**
+   * Encabezados para la tabla de facturadores.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   *
+   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de facturadores.
+   */
+  facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
-/**
- * Encabezados para la tabla de facturadores.
- * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
- * 
- * @description Estos encabezados definen las columnas que se mostrarán en la tabla de facturadores.
- */
-facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  public nacional = false;
 
+  public extranjero = false;
 
+  /**
+   * Indicador para determinar si se ha seleccionado una persona física.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Este indicador se utiliza para controlar la lógica relacionada con personas físicas.
+   */
+  public fisica = false;
 
+  /**
+   * Indicador para determinar si se ha seleccionado una persona moral.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Este indicador se utiliza para controlar la lógica relacionada con personas morales.
+   */
+  public moral = false;
 
-public nacional = false;
+  /**
+   * Datos de las filas para la tabla de fabricantes.
+   * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+   *
+   * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
+   */
+  fabricanteRowData: tableData[] = [];
 
-public extranjero = false;
+  /**
+   * Datos de las filas para la tabla de destinatarios.
+   * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+   *
+   * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
+   */
+  destinatarioRowData: tableData[] = [];
 
+  /**
+   * Datos de las filas para la tabla de proveedores.
+   * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+   *
+   * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
+   */
+  proveedorRowData: tableData[] = [];
 
-
-
-
-
-/**
- * Indicador para determinar si se ha seleccionado una persona física.
- * Inicialmente establecido en `false`.
- * 
- * @description Este indicador se utiliza para controlar la lógica relacionada con personas físicas.
- */
-public fisica = false;
-
-/**
- * Indicador para determinar si se ha seleccionado una persona moral.
- * Inicialmente establecido en `false`.
- * 
- * @description Este indicador se utiliza para controlar la lógica relacionada con personas morales.
- */
-public moral = false;
-
-
-
-/**
- * Datos de las filas para la tabla de fabricantes.
- * Inicialmente vacío, se llenará con los datos agregados por el usuario.
- * 
- * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
- */
-fabricanteRowData: tableData[] = [];
-
-/**
- * Datos de las filas para la tabla de destinatarios.
- * Inicialmente vacío, se llenará con los datos agregados por el usuario.
- * 
- * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
- */
-destinatarioRowData: tableData[] = [];
-
-/**
- * Datos de las filas para la tabla de proveedores.
- * Inicialmente vacío, se llenará con los datos agregados por el usuario.
- * 
- * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
- */
-proveedorRowData: tableData[] = [];
-
-/**
- * Datos de las filas para la tabla de facturadores.
- * Inicialmente vacío, se llenará con los datos agregados por el usuario.
- * 
- * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
- */
-facturadorRowData: tableData[] = [];
-
-
+  /**
+   * Datos de las filas para la tabla de facturadores.
+   * Inicialmente vacío, se llenará con los datos agregados por el usuario.
+   *
+   * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
+   */
+  facturadorRowData: tableData[] = [];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -788,20 +774,15 @@ facturadorRowData: tableData[] = [];
     }
   }
 
-
-
-public tercerosInputChecked(checkBoxName:string){
-  if (checkBoxName === 'nacional') {
-    console.log("nacional")
-    this.nacional = true;
-    this.extranjero = false;
-  } else {
-    console.log("extranjero")
-    this.nacional = false;
-    this.extranjero = true;
+  public tercerosInputChecked(checkBoxName: string) {
+    if (checkBoxName === 'nacional') {
+      this.nacional = true;
+      this.extranjero = false;
+    } else {
+      this.nacional = false;
+      this.extranjero = true;
+    }
   }
-}
-
 
   /**
    * Cambia la visibilidad del formulario de Fabricante.
@@ -845,46 +826,6 @@ public tercerosInputChecked(checkBoxName:string){
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showFacturador = !this.showFacturador;
-  }
-
-  /**
-   * Maneja la selección de filas en la tabla de Fabricante.
-   * Actualiza la visibilidad de los botones según el estado de selección.
-   *
-   * @param data Datos de la fila seleccionada.
-   */
-  selectedFabricanteRows(data: selectedRowData) {
-    this.showFabricanteButtons = data.checked;
-  }
-
-  /**
-   * Maneja la selección de filas en la tabla de Destinatario.
-   * Actualiza la visibilidad de los botones según el estado de selección.
-   *
-   * @param data Datos de la fila seleccionada.
-   */
-  selectedDestinatarioRows(data: selectedRowData) {
-    this.showDestinatarioButtons = data.checked;
-  }
-
-  /**
-   * Maneja la selección de filas en la tabla de Proveedor.
-   * Actualiza la visibilidad de los botones según el estado de selección.
-   *
-   * @param data Datos de la fila seleccionada.
-   */
-  selectedProveedorRows(data: selectedRowData) {
-    this.showProveedorButtons = data.checked;
-  }
-
-  /**
-   * Maneja la selección de filas en la tabla de Facturador.
-   * Actualiza la visibilidad de los botones según el estado de selección.
-   *
-   * @param data Datos de la fila seleccionada.
-   */
-  selectedFacturadorRows(data: selectedRowData) {
-    this.showFacturadorButtons = data.checked;
   }
 
   /**
@@ -933,105 +874,101 @@ public tercerosInputChecked(checkBoxName:string){
         item.id == this.agregarFabricanteFormGroup.value.colonia
     )?.descripcion;
 
-
-/**
- * Crea una nueva fila para la tabla de fabricantes.
- * Esta fila contiene los datos del formulario de agregar un fabricante.
- * 
- * @description Esta fila se agrega a la lista de filas del fabricante.
- */
-const fabricanteRow = {
-  /**
-   * Datos de la fila que se mostrarán en la tabla.
-   * Cada elemento del arreglo corresponde a una columna de la tabla.
-   */
-  tbodyData: [
     /**
-     * Denominación o razón social del fabricante.
+     * Crea una nueva fila para la tabla de fabricantes.
+     * Esta fila contiene los datos del formulario de agregar un fabricante.
+     *
+     * @description Esta fila se agrega a la lista de filas del fabricante.
      */
-    this.agregarFabricanteFormGroup.value.denominacionRazonSocial,
+    const fabricanteRow = {
+      /**
+       * Datos de la fila que se mostrarán en la tabla.
+       * Cada elemento del arreglo corresponde a una columna de la tabla.
+       */
+      tbodyData: [
+        /**
+         * Denominación o razón social del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.denominacionRazonSocial,
 
-    /**
-     * RFC del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.rfc,
+        /**
+         * RFC del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.rfc,
 
-    /**
-     * CURP del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.curp,
+        /**
+         * CURP del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.curp,
 
-    /**
-     * Teléfono del fabricante, incluyendo lada.
-     */
-    this.agregarFabricanteFormGroup.value.lada +
-      '-' +
-      this.agregarFabricanteFormGroup.value.telefono,
+        /**
+         * Teléfono del fabricante, incluyendo lada.
+         */
+        this.agregarFabricanteFormGroup.value.lada +
+          '-' +
+          this.agregarFabricanteFormGroup.value.telefono,
 
-    /**
-     * Correo electrónico del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.correoElectronico,
+        /**
+         * Correo electrónico del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.correoElectronico,
 
-    /**
-     * Calle del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.calle,
+        /**
+         * Calle del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.calle,
 
-    /**
-     * Número exterior del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.numeroExterior,
+        /**
+         * Número exterior del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.numeroExterior,
 
-    /**
-     * Número interior del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.numeroInterior,
+        /**
+         * Número interior del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.numeroInterior,
 
-    /**
-     * País del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.pais,
+        /**
+         * País del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.pais,
 
-    /**
-     * Colonia del fabricante.
-     */
-    coloniaValue,
+        /**
+         * Colonia del fabricante.
+         */
+        coloniaValue,
 
-    /**
-     * Municipio del fabricante.
-     */
-    municipioValue,
+        /**
+         * Municipio del fabricante.
+         */
+        municipioValue,
 
-    /**
-     * Localidad del fabricante.
-     */
-    localidadValue,
+        /**
+         * Localidad del fabricante.
+         */
+        localidadValue,
 
-    /**
-     * Entidad federativa del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.entidadFederativa,
+        /**
+         * Entidad federativa del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.entidadFederativa,
 
-    /**
-     * Estado o localidad del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.estadoLocalidad,
+        /**
+         * Estado o localidad del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.estadoLocalidad,
 
-    /**
-     * Código postal del fabricante.
-     */
-    codigoPostalValue,
+        /**
+         * Código postal del fabricante.
+         */
+        codigoPostalValue,
 
-    /**
-     * Colonia equivalente del fabricante.
-     */
-    this.agregarFabricanteFormGroup.value.coloniaoEquivalente,
-  ],
-};
-
-
-
+        /**
+         * Colonia equivalente del fabricante.
+         */
+        this.agregarFabricanteFormGroup.value.coloniaoEquivalente,
+      ],
+    };
 
     /**
      * Agrega la nueva fila a la lista de filas del fabricante.
@@ -1090,104 +1027,101 @@ const fabricanteRow = {
         item.id == this.agregarDestinatarioFormGroup.value.colonia
     )?.descripcion;
 
-/**
- * Crea una nueva fila para la tabla de destinatarios.
- * Esta fila contiene los datos del formulario de agregar un destinatario.
- * 
- * @description Esta fila se agrega a la lista de filas del destinatario.
- */
-const destinatarioRow = {
-  /**
-   * Datos de la fila que se mostrarán en la tabla.
-   * Cada elemento del arreglo corresponde a una columna de la tabla.
-   */
-  tbodyData: [
     /**
-     * Denominación o razón social del destinatario.
+     * Crea una nueva fila para la tabla de destinatarios.
+     * Esta fila contiene los datos del formulario de agregar un destinatario.
+     *
+     * @description Esta fila se agrega a la lista de filas del destinatario.
      */
-    this.agregarDestinatarioFormGroup.value.denominacionRazonSocial,
+    const destinatarioRow = {
+      /**
+       * Datos de la fila que se mostrarán en la tabla.
+       * Cada elemento del arreglo corresponde a una columna de la tabla.
+       */
+      tbodyData: [
+        /**
+         * Denominación o razón social del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.denominacionRazonSocial,
 
-    /**
-     * RFC del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.rfc,
+        /**
+         * RFC del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.rfc,
 
-    /**
-     * CURP del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.curp,
+        /**
+         * CURP del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.curp,
 
-    /**
-     * Teléfono del destinatario, incluyendo lada.
-     */
-    this.agregarDestinatarioFormGroup.value.lada +
-      '-' +
-      this.agregarDestinatarioFormGroup.value.telefono,
+        /**
+         * Teléfono del destinatario, incluyendo lada.
+         */
+        this.agregarDestinatarioFormGroup.value.lada +
+          '-' +
+          this.agregarDestinatarioFormGroup.value.telefono,
 
-    /**
-     * Correo electrónico del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.correoElectronico,
+        /**
+         * Correo electrónico del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.correoElectronico,
 
-    /**
-     * Calle del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.calle,
+        /**
+         * Calle del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.calle,
 
-    /**
-     * Número exterior del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.numeroExterior,
+        /**
+         * Número exterior del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.numeroExterior,
 
-    /**
-     * Número interior del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.numeroInterior,
+        /**
+         * Número interior del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.numeroInterior,
 
-    /**
-     * País del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.pais,
+        /**
+         * País del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.pais,
 
-    /**
-     * Colonia del destinatario.
-     */
-    coloniaValue,
+        /**
+         * Colonia del destinatario.
+         */
+        coloniaValue,
 
-    /**
-     * Municipio del destinatario.
-     */
-    municipioValue,
+        /**
+         * Municipio del destinatario.
+         */
+        municipioValue,
 
-    /**
-     * Localidad del destinatario.
-     */
-    localidadValue,
+        /**
+         * Localidad del destinatario.
+         */
+        localidadValue,
 
-    /**
-     * Entidad federativa del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.entidadFederativa,
+        /**
+         * Entidad federativa del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.entidadFederativa,
 
-    /**
-     * Estado o localidad del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.estadoLocalidad,
+        /**
+         * Estado o localidad del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.estadoLocalidad,
 
-    /**
-     * Código postal del destinatario.
-     */
-    codigoPostalValue,
+        /**
+         * Código postal del destinatario.
+         */
+        codigoPostalValue,
 
-    /**
-     * Colonia equivalente del destinatario.
-     */
-    this.agregarDestinatarioFormGroup.value.coloniaoEquivalente,
-  ],
-};
-
-
-
+        /**
+         * Colonia equivalente del destinatario.
+         */
+        this.agregarDestinatarioFormGroup.value.coloniaoEquivalente,
+      ],
+    };
 
     /**
      * Agrega la nueva fila a la lista de filas del destinatario.
