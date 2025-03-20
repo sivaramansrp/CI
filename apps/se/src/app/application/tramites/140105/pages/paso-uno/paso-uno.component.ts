@@ -59,11 +59,23 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
   seleccionaPestana(i: number): void {
     this.indice = i;
   }
+
+  /**
+ * Método que se ejecuta al inicializar el componente.
+ * Se suscribe a los cambios en el mensaje enviado desde el servicio de mensajes,
+ * y actualiza la propiedad 'mostrarBusqueda' con el valor recibido.
+ */
   ngOnInit() {
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
     });
   }
+
+  /**
+ * Método que se ejecuta al destruir el componente.
+ * Envía un mensaje con el valor 'false' al servicio de mensajes para indicar 
+ * que se ha cancelado o finalizado la acción relacionada.
+ */
   ngOnDestroy(){
   this.servicioDeMensajesService.enviarMensaje(false);
   }

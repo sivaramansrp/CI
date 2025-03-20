@@ -10,10 +10,6 @@ const ROUTES: Routes = [
     component: IntroPermisoComponent,
   },
   {
-    path: 'busqueda',
-    component: BusquedaFolioComponent,
-  },
-  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'solicitante',

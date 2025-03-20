@@ -35,6 +35,13 @@ export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
   public datosDePermiso: boolean = false;
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
+   /**
+   * Método que se ejecuta al iniciar el componente.
+   * Inicializa los formularios de solicitud y cancelación, 
+   * así como sus validaciones. También suscribe a los datos 
+   * del servicio de mensajes para actualizar la tabla y los datos
+   * de la solicitud de cancelación.
+   */
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
       folioTramite: ['', Validators.required],
@@ -58,6 +65,8 @@ export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
         this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTabla as Cancelacion[]);
       }
     });
+
+     // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
@@ -71,13 +80,33 @@ export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia los datos de permiso en el servicio de mensajes
+   * para evitar posibles fugas de memoria o actualizaciones 
+   * innecesarias cuando el componente ya no está activo.
+   */
   ngOnDestroy() {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
   }
 
+  /**
+   * Método que se ejecuta al realizar una búsqueda.
+   * Envía un mensaje al servicio para indicar que se ha iniciado una búsqueda.
+   * 
+   * @param event Evento que desencadena la búsqueda.
+   */
+
   public busqueda(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
+   /**
+   * Método que se ejecuta al eliminar un registro de la tabla.
+   * Limpia el contenido de la tabla de cancelación y actualiza los datos 
+   * en el servicio de mensajes.
+   * 
+   * @param event Evento que desencadena la eliminación.
+   */
   public eliminarRegistro(event: Event): void {
     this.cuerpoTabla = [];
     this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTabla as Cancelacion[]);
