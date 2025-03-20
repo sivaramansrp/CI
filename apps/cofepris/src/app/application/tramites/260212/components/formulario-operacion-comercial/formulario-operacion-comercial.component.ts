@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catalogoResponse, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { CatalogoSelectComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 
 /**
@@ -13,7 +14,8 @@ import { SolicitudService } from '../../services/solicitud.service';
   selector: 'app-formulario-operacion-comercial',
   standalone: true,
   imports: [CommonModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    ReactiveFormsModule
   ],
   templateUrl: './formulario-operacion-comercial.component.html',
   styleUrl: './formulario-operacion-comercial.component.scss',
@@ -40,6 +42,7 @@ export class FormularioOperacionComercialComponent implements OnInit {
    * @param fb - Una instancia de FormBuilder para manejar la creación de formularios reactivos.
    * @param solicitudService - Servicio para manejar las solicitudes relacionadas con la operación comercial.
    */
+  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService) { }
 
   /**
@@ -60,10 +63,11 @@ export class FormularioOperacionComercialComponent implements OnInit {
   /**
    * Inicializa el formulario `formularioOperacionForm` con campos y sus validaciones requeridas.
    */
-  formularioOperacionInitial() {
+  formularioOperacionInitial():void {
     this.formularioOperacionForm = this.fb.group({
       noLicenciaSanitaria: [''],
       regimen: ['', Validators.required],
+      entradas:[]
 
     })
   }
@@ -72,8 +76,8 @@ export class FormularioOperacionComercialComponent implements OnInit {
    * Cambia el estado de solo lectura del formulario según el estado del checkbox.
    * @param event Evento que activa el cambio de estado.
    */
-  alternarSoloLectura(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    this.esSoloLectura = !checkbox.checked;
+  alternarSoloLectura(event: Event):void {
+    const CHECK_BOX = event.target as HTMLInputElement;
+    this.esSoloLectura = !CHECK_BOX.checked;
   }
 }

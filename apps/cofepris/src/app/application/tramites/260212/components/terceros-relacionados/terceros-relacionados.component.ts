@@ -2,15 +2,19 @@
  * Importaciones necesarias para el funcionamiento del componente.
  */
 import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { AlertComponent } from '@ng-mf/data-access-user';
+
 import {
   Catalogo,
   CatalogoSelectComponent,
 } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { TableComponent } from '@ng-mf/data-access-user';
+
 import {
   AbstractControl,
   FormBuilder,
@@ -31,6 +35,7 @@ import {
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../constantes/permiso-maquila.enum';
 import { ModalComponent } from '../modal/modal.component';
+
 import {
   selectedRowData,
   tableData,
@@ -278,7 +283,7 @@ agregarFacturadorFormGroup!: FormGroup;
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup() {
+  initializeAgregarFabricanteFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -394,7 +399,7 @@ agregarFacturadorFormGroup!: FormGroup;
    * Inicializa el formulario para agregar un destinatario.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup() {
+  initializeAgregarDestinatarioFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un destinatario.
      * Cada campo tiene sus propias validaciones.
@@ -584,6 +589,7 @@ agregarFacturadorFormGroup!: FormGroup;
    * Inicializa el formulario para agregar un facturador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   initializeAgregarFacturadorFormGroup() {
     /**
      * Crea el formulario reactivos para agregar un facturador.
@@ -778,6 +784,7 @@ facturadorRowData: tableData[] = [];
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   public inputChecked(checkBoxName: string) {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
@@ -792,11 +799,9 @@ facturadorRowData: tableData[] = [];
 
 public tercerosInputChecked(checkBoxName:string){
   if (checkBoxName === 'nacional') {
-    console.log("nacional")
     this.nacional = true;
     this.extranjero = false;
   } else {
-    console.log("extranjero")
     this.nacional = false;
     this.extranjero = true;
   }
@@ -807,6 +812,7 @@ public tercerosInputChecked(checkBoxName:string){
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toggleDivFabricante() {
     this.fisica = false;
     this.moral = false;
@@ -818,6 +824,7 @@ public tercerosInputChecked(checkBoxName:string){
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toggleDivDestinatario() {
     this.fisica = false;
     this.moral = false;
@@ -829,6 +836,7 @@ public tercerosInputChecked(checkBoxName:string){
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toggleDivProveedor() {
     this.fisica = false;
     this.moral = false;
@@ -840,6 +848,7 @@ public tercerosInputChecked(checkBoxName:string){
    * Cambia la visibilidad del formulario de Facturador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toggleDivFacturador() {
     this.fisica = false;
     this.moral = false;
@@ -903,34 +912,38 @@ public tercerosInputChecked(checkBoxName:string){
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const localidadValue = this.localidadDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarFabricanteFormGroup.value.localidad
+        item.id === this.agregarFabricanteFormGroup.value.localidad
     )?.descripcion;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const municipioValue = this.municipioDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarFabricanteFormGroup.value.municipioAlcaldia
+        item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
     )?.descripcion;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const codigoPostalValue = this.codigoPostalDropdownData.find(
       (item: Catalogo) =>
-        item.id ==
+        item.id ===
         this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
     )?.descripcion;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const coloniaValue = this.coloniaDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarFabricanteFormGroup.value.colonia
+        item.id === this.agregarFabricanteFormGroup.value.colonia
     )?.descripcion;
 
 
@@ -940,6 +953,7 @@ public tercerosInputChecked(checkBoxName:string){
  * 
  * @description Esta fila se agrega a la lista de filas del fabricante.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const fabricanteRow = {
   /**
    * Datos de la fila que se mostrarán en la tabla.
@@ -1060,34 +1074,38 @@ const fabricanteRow = {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const localidadValue = this.localidadDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarDestinatarioFormGroup.value.localidad
+        item.id === this.agregarDestinatarioFormGroup.value.localidad
     )?.descripcion;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const municipioValue = this.municipioDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarDestinatarioFormGroup.value.municipioAlcaldia
+        item.id === this.agregarDestinatarioFormGroup.value.municipioAlcaldia
     )?.descripcion;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const codigoPostalValue = this.codigoPostalDropdownData.find(
       (item: Catalogo) =>
-        item.id ==
+        item.id ===
         this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente
     )?.descripcion;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const coloniaValue = this.coloniaDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarDestinatarioFormGroup.value.colonia
+        item.id === this.agregarDestinatarioFormGroup.value.colonia
     )?.descripcion;
 
 /**
@@ -1096,6 +1114,7 @@ const fabricanteRow = {
  * 
  * @description Esta fila se agrega a la lista de filas del destinatario.
  */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const destinatarioRow = {
   /**
    * Datos de la fila que se mostrarán en la tabla.
@@ -1216,6 +1235,7 @@ const destinatarioRow = {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const proveedorRow = {
       tbodyData: [
         this.agregarProveedorFormGroup.value.denominacionRazonSocial,
@@ -1266,6 +1286,7 @@ const destinatarioRow = {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const facturadorRow = {
       tbodyData: [
         this.agregarFacturadorFormGroup.value.denominacionRazonSocial,
@@ -1312,6 +1333,7 @@ const destinatarioRow = {
    * @param control Control del formulario a validar.
    * @returns Nulo si el valor es válido, de lo contrario devuelve un objeto con la propiedad `requiredPais`.
    */
+  // eslint-disable-next-line class-methods-use-this
   requiredPaisValidator(control: AbstractControl) {
     return control.value !== '' && control.value !== '-1'
       ? null
@@ -1325,10 +1347,11 @@ const destinatarioRow = {
    * @param control Control del formulario a validar.
    * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
    */
+  // eslint-disable-next-line class-methods-use-this
   rfcValidator(control: AbstractControl) {
-    const rfcFisica = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
-    const rfcMoral = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
-    return rfcFisica.test(control.value) || rfcMoral.test(control.value)
+    const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
+    const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
+    return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
       ? null
       : { invalidRFC: true };
   }
@@ -1340,7 +1363,9 @@ const destinatarioRow = {
    * @param control Control del formulario a validar.
    * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
    */
+  // eslint-disable-next-line class-methods-use-this
   curpValidator(control: AbstractControl) {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const pattern = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
     return pattern.test(control.value) ? null : { invalidCURP: true };
   }
@@ -1352,8 +1377,9 @@ const destinatarioRow = {
    * @param control Control del formulario a validar.
    * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
    */
+  // eslint-disable-next-line class-methods-use-this
   telefonoValidator(control: AbstractControl) {
-    const pattern = /^([0-9A-Za-z\-() ])*$/;
-    return pattern.test(control.value) ? null : { invalidTelefono: true };
+    const PATTERN = /^([0-9A-Za-z\-() ])*$/;
+    return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }
 }

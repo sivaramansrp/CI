@@ -1,20 +1,27 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catalogoResponse, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+
+import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, catalogoResponse } from '@ng-mf/data-access-user';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+// eslint-disable-next-line sort-imports
 import { ClaveModel, MercanciaModel, solicitudModel } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
+// eslint-disable-next-line sort-imports
 import { DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
 import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+// eslint-disable-next-line sort-imports
 import { FormularioOperacionComercialComponent } from '../formulario-operacion-comercial/formulario-operacion-comercial.component';
 import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancias-table-form.component';
+// eslint-disable-next-line sort-imports
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+// eslint-disable-next-line sort-imports
 import { Observable, Subject } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
+// eslint-disable-next-line sort-imports
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 /**
@@ -123,6 +130,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(private solicitudService: SolicitudService, private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query
+  // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
@@ -164,6 +172,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Configura los campos requeridos y sus validaciones correspondientes.
  * - Incluye campos como RFC, razón social, correo, dirección, y contacto.
  */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   fomInitialize() {
     this.datosEstablecimientoForm = this.fb.group({
       rfcDelResponsableSanitario: [''],
@@ -184,6 +193,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Alterna el estado de la variable `plegable`.
  * Cambia entre mostrar y ocultar una sección plegable.
  */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   mostrarPlegable() {
     this.plegable = !this.plegable;
   }
@@ -192,6 +202,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Muestra el formulario para S.C.I.A.N.
  * Establece la variable `mostrarFormularioScian` en true.
  */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   toggleScianFormulario() {
     this.mostrarFormularioScian = true
   }
@@ -199,6 +210,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Oculta el formulario para S.C.I.A.N.
    * Establece la variable `mostrarFormularioScian` en false.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   cerrarScianFormulario() {
     this.mostrarFormularioScian = false;
   }
@@ -207,6 +219,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Muestra el formulario para las mercancías.
  * Establece la variable `mostrarFormularioMercancias` en true.
  */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   openMercanciasForm() {
     this.mostrarFormularioMercancias = true;
   }
@@ -215,6 +228,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Oculta el formulario para las mercancías.
  * Establece la variable `mostrarFormularioMercancias` en false.
  */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   closeMercanciasForm() {
     this.mostrarFormularioMercancias = false;
   }

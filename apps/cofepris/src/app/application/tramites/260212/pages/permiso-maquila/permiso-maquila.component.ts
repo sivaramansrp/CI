@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/permiso-maquila.enum';
+
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
@@ -38,6 +39,7 @@ export class PermisoMaquilaComponent {
   };
 
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

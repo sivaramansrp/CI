@@ -1,10 +1,13 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catalogoResponse, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+
+import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, catalogoResponse } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
+
 import { Observable, Subject } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
+
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 /**
@@ -65,6 +68,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
               private solicitudService: SolicitudService,
               private tramite260212Store: Tramite260212Store,
+              // eslint-disable-next-line no-empty-function
               private tramite260212Query: Tramite260212Query) {}
 
   /**
@@ -94,7 +98,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Configures the reactive form with "clave" and "descripcion" fields.
    */
-  claveScianForm() {
+  claveScianForm():void {
     this.claveForm = this.fb.group({
       clave: ['', Validators.required],
       descripcion: [''] 
@@ -104,7 +108,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Emits the cancel event to notify parent components about the action.
    */
-  cancelar() {
+  cancelar():void {
     this.cancel.emit();
   }
 

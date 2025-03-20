@@ -4,10 +4,13 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 
 /**
@@ -31,7 +34,20 @@ export class PagoDeDerechosComponent implements OnInit {
   /**
    * Datos para el selector de opciones.
    */
-  dropdownData: any[] = [];
+  dropdownData: Catalogo[] = [];
+
+  /**
+ * Constructor del componente.
+ * Inyecta el FormBuilder y el servicio de pago de derechos.
+ * 
+ * @param fb Constructor de formularios para crear el formulario reactivos.
+ * @param pagoDeDerechosService Servicio que proporciona datos para el componente.
+ */
+  constructor(
+    private fb: FormBuilder,
+    private pagoDeDerechosService: PagoDeDerechosService
+    // eslint-disable-next-line no-empty-function
+  ) { }
 
   /**
    * Formulario reactivos para el pago de derechos.
@@ -74,15 +90,5 @@ export class PagoDeDerechosComponent implements OnInit {
     });
   }
 
-  /**
-   * Constructor del componente.
-   * Inyecta el FormBuilder y el servicio de pago de derechos.
-   * 
-   * @param fb Constructor de formularios para crear el formulario reactivos.
-   * @param pagoDeDerechosService Servicio que proporciona datos para el componente.
-   */
-  constructor(
-    private fb: FormBuilder,
-    private pagoDeDerechosService: PagoDeDerechosService
-  ) { }
+
 }
