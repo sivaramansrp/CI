@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { catchError, map } from 'rxjs';
+import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { TramiteAgaceStore } from '../../../../estados/tramite.store';
@@ -14,6 +14,7 @@ export class PasoTresComponent {
    * Tipo de persona.
    */
   tipoPersona!: number;
+  private destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor que se utiliza para la inyección de dependencias.
@@ -53,9 +54,15 @@ export class PasoTresComponent {
           }),
           catchError((_error) => {
             return _error;
-          })
+          }),
+          takeUntil(this.destroy$)
         )
         .subscribe();
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

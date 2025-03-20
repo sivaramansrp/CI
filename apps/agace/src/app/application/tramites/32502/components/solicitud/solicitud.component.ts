@@ -87,6 +87,11 @@ export class SolicitudComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   /**
    * Obtiene el grupo de formulario 'adaceForm' del formulario principal 'FormSolicitud'.
    * @returns {FormGroup} El grupo de formulario 'adaceForm'.
