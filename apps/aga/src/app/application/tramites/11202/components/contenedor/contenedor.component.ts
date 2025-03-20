@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
-import { Contenedor11202State, Contenedor11202Store } from '../../../../estados/tramites/contenedor11202.store';
+import {
+  Contenedor11202State,
+  Contenedor11202Store,
+} from '../../../../estados/tramites/contenedor11202.store';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import { TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -13,15 +16,14 @@ import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json'
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
   styleUrl: './contenedor.component.scss',
-  
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
   public contenedorState!: Contenedor11202State;
   TEXTOS = TEXTOS_REQUISITOS;
- /**
+  /**
    * Lista de catálogos de Seleccione una opción.
    */
- options!: Catalogo[];
+  options!: Catalogo[];
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
@@ -44,7 +46,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     },
   ];
 
- radioOptions = preOperativo;
+  radioOptions = preOperativo;
   private subscription: Subscription = new Subscription();
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -100,7 +102,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         .subscribe()
     );
     this.crearFormSolicitud();
-      this.cargarCatalogContenedores();
+    this.cargarCatalogContenedores();
     this.tabSeleccionado();
   }
 
@@ -109,22 +111,21 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   cargarCatalogAduanas(): void {
     this.datosTramiteService
-    .getAduanas()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((data: any): void => {
-      this.options = data as Catalogo[];
-    });
-    
+      .getAduanas()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: any): void => {
+        this.options = data as Catalogo[];
+      });
   }
 
   /**
    * Carga el catálogo de contenedores.
    */
   cargarCatalogContenedores(): void {
-    this.datosTramiteService.getContenedores()
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe(
-       (data: any) => {
+    this.datosTramiteService
+      .getContenedores()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: any) => {
         this.options = data as Catalogo[];
       });
   }
@@ -173,10 +174,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         .submitSolicitud(this.solicitudForm.value)
         .subscribe(
           (response) => {
-            console.log('Solicitud enviada correctamente', response);
+            this.exceptionCaught = false;
           },
           (error) => {
-            console.error('Error al enviar solicitud', error);
+           
             this.exceptionCaught = true;
           }
         );
@@ -193,7 +194,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       tipoContenedor: this.datosContenedor.get('tipoContenedor')?.value,
       digito: this.solicitudForm.get('digitoDeControl')?.value,
       aduana: this.datosGenerales.get('aduana')?.value,
-      inicialesContenedor: this.datosContenedor.get('inicialesContenedor')?.value,
+      inicialesContenedor: this.datosContenedor.get('inicialesContenedor')
+        ?.value,
       numeroContenedor: this.datosContenedor.get('numeroContenedor')?.value,
     };
 
@@ -209,9 +211,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Muestra el campo para adjuntar archivo.
-   */
   /**
    * Adjuntar archivo CSV y parsear su contenido.
    */
@@ -231,55 +230,59 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Cargar archivo CSV y parsear su contenido.
+   */
   parseCSV(csv: string): void {
-    const LINES = csv.split('\n').filter(line => line.trim() !== '');
+    const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
     const headerMap: { [key: string]: string } = {
-      'Aduana': 'aduana',
+      Aduana: 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
-      'Tipo de equipo':'tipoEquipo',
-      'N�mero de equipo':'numeroEquipo',
-      'D�gito Verificador':'digitoVerificador',
-      'Fecha Ingreso':'fechaIngreso',
-      'Vigencia':'vigencia',
-      'Estado de constancia':'estadoConstancia',
-      'Existe en VUCEM':'existeEnVUCEM',
-      'Id constancia':'idConstancia',
-      'N�mero manifiesto':'numeroManifiesto',
-      'Id solicitud':'idSolicitud',
-      'Fecha inicio':'fechaInicio'
+      'Tipo de equipo': 'tipoEquipo',
+      'N�mero de equipo': 'numeroEquipo',
+      'D�gito Verificador': 'digitoVerificador',
+      'Fecha Ingreso': 'fechaIngreso',
+      Vigencia: 'vigencia',
+      'Estado de constancia': 'estadoConstancia',
+      'Existe en VUCEM': 'existeEnVUCEM',
+      'Id constancia': 'idConstancia',
+      'N�mero manifiesto': 'numeroManifiesto',
+      'Id solicitud': 'idSolicitud',
+      'Fecha inicio': 'fechaInicio',
     };
-    const DATA = LINES.slice(1).map((line) => {
+    const DATA = LINES.slice(1)
+      .map((line) => {
         const VALUES = line.split(',');
         const OBJ: any = {};
         HEADERS.forEach((header, index) => {
-            const key = headerMap[header.trim()] || header.trim();
-            OBJ[key] = VALUES[index]?.trim();
+          const key = headerMap[header.trim()] || header.trim();
+          OBJ[key] = VALUES[index]?.trim();
         });
         return OBJ;
-    }).filter(artículo => Object.values(artículo).some(value => value));
+      })
+      .filter((artículo) => Object.values(artículo).some((value) => value));
     this.datosTabla = DATA;
-}
+  }
 
-
-    /**
+  /**
    * Cargar archivo CSV y parsear su contenido.
    */
-    Archivo(): void {
-      const FILE_INPUT = document.getElementById(
-        'cargarArchivo'
-      ) as HTMLInputElement;
-      const FILE = FILE_INPUT.files?.[0];
-      if (FILE) {
-        const READER = new FileReader();
-        READER.onload = (e): void => {
-          const TEXT = e.target?.result as string;
-          this.parseCSV(TEXT);
-          this.showCargarArchivoTable = true;
-        };
-        READER.readAsText(FILE);
-      }
+  Archivo(): void {
+    const FILE_INPUT = document.getElementById(
+      'cargarArchivo'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      const READER = new FileReader();
+      READER.onload = (e): void => {
+        const TEXT = e.target?.result as string;
+        this.parseCSV(TEXT);
+        this.showCargarArchivoTable = true;
+      };
+      READER.readAsText(FILE);
     }
+  }
   /**
    * Abre el modal para cancelar el trámite.
    */
@@ -354,7 +357,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @param campo El campo del formulario.
    * @param metodoNombre El nombre del método en el store.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Contenedor11202Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Contenedor11202Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.contenedorStore[metodoNombre] as (value: string) => void)(VALOR);
   }

@@ -26,21 +26,21 @@ export interface Solicitud11202State {
 
 export function createInitialState(): Solicitud11202State {
   return {
-    "rfc": "1234567890",
-    "denominacion": "abc",
-    "actividadEconomica": "abc",
-    "correoElectronico": "abc@example.com",
-    "pais": "Mexico",
-    "codigoPostal": 12345,
-    "estado": "CDMX",
-    "municipioAlcaldia": "Miguel Hidalgo",
-    "localidad": "Polanco",
-    "colonia": "Chapultepec",
-    "calle": "Reforma",
-    "numeroExterior": "123",
-    "numeroInterior": "456",
-    "lada": "55",
-    "telefono": 1234567890
+    "rfc": "",
+    "denominacion": "",
+    "actividadEconomica": "",
+    "correoElectronico": "",
+    "pais": "",
+    "codigoPostal": 0,
+    "estado": "",
+    "municipioAlcaldia": "",
+    "localidad": "",
+    "colonia": "",
+    "calle": "",
+    "numeroExterior": "",
+    "numeroInterior": "",
+    "lada": "",
+    "telefono": 0
   };
 }
 

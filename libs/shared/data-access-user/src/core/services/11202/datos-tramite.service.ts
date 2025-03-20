@@ -16,23 +16,23 @@ export class DatosTramiteService {
       this.uploadArchivo;
   }
   /**
-   * Get a dummy list of Contenedores
+   * 
+Obtenga una lista ficticia de Contenedores
    */
   getContenedores(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(this.url);
   }
   /**
-   * Get a dummy list of Aduanas
+   * Obtenga una lista ficticia de Aduanas
    */
   getAduanas(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(this.url);
   }
 
   /**
-   * Simulate file upload
+   * Simular carga de archivos
    */
   uploadArchivo(archivo: File): Observable<any> {
-    console.log('Simulating file upload:', archivo.name);
     return of({
       success: true,
       message: `Archivo ${archivo.name} cargado exitosamente`,
@@ -43,7 +43,6 @@ export class DatosTramiteService {
    * Simulate a successful form submission
    */
   submitSolicitud(solicitudData: any): Observable<any> {
-    console.log('Simulating form submission with data:', solicitudData);
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
 }

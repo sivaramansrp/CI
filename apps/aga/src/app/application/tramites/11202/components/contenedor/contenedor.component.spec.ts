@@ -44,32 +44,46 @@ describe('ContenedorComponent', () => {
     contenedorStore = TestBed.inject(Contenedor11202Store) as jest.Mocked<Contenedor11202Store>;
     contenedorQuery = TestBed.inject(Contenedor11202Query) as jest.Mocked<Contenedor11202Query>;
 
-   // contenedorQuery.selectSolicitud$.mockReturnValue(of({}));
     datosTramiteService.getAduanas.mockReturnValue(of([]));
     datosTramiteService.getContenedores.mockReturnValue(of([]));
   });
 
+  /**
+   * Prueba para verificar que el componente se crea correctamente.
+   */
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Prueba para verificar que el formulario se inicializa en ngOnInit.
+   */
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.solicitudForm).toBeDefined();
   });
 
+  /**
+   * Prueba para verificar que se llama a cargarCatalogAduanas en ngOnInit.
+   */
   it('should call cargarCatalogAduanas on ngOnInit', () => {
     jest.spyOn(component, 'cargarCatalogAduanas');
     component.ngOnInit();
     expect(component.cargarCatalogAduanas).toHaveBeenCalled();
   });
 
+  /**
+   * Prueba para verificar que se llama a cargarCatalogContenedores en ngOnInit.
+   */
   it('should call cargarCatalogContenedores on ngOnInit', () => {
     jest.spyOn(component, 'cargarCatalogContenedores');
     component.ngOnInit();
     expect(component.cargarCatalogContenedores).toHaveBeenCalled();
   });
 
+  /**
+   * Prueba para verificar que se llama a mostrarCampos cuando cambia tipoBusqueda.
+   */
   it('should call mostrarCampos when tipoBusqueda changes', () => {
     component.ngOnInit();
     jest.spyOn(component, 'mostrarCampos');
@@ -77,8 +91,9 @@ describe('ContenedorComponent', () => {
     expect(component.mostrarCampos).toHaveBeenCalled();
   });
 
-  
-
+  /**
+   * Prueba para verificar que no se llama a submitSolicitud en datosCaptura si el formulario es inválido.
+   */
   it('should not call submitSolicitud on datosCaptura if form is invalid', () => {
     component.ngOnInit();
     component.solicitudForm.setValue({
@@ -91,6 +106,9 @@ describe('ContenedorComponent', () => {
     expect(datosTramiteService.submitSolicitud).not.toHaveBeenCalled();
   });
 
+  /**
+   * Prueba para verificar que se agrega un nuevo contenedor a la cuadrícula en agregarAGrid.
+   */
   it('should add a new contenedor to the grid on agregarAGrid', () => {
     component.ngOnInit();
     component.solicitudForm.setValue({
@@ -103,8 +121,9 @@ describe('ContenedorComponent', () => {
     expect(component.contenedores.length).toBe(1);
   });
 
-  
-
+  /**
+   * Prueba para verificar que se llama a setValoresStore cuando cambia el valor de tipoBusqueda.
+   */
   it('should call setValoresStore on tipoBusqueda value change', () => {
     jest.spyOn(component, 'setValoresStore');
     component.ngOnInit();
