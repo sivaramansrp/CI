@@ -25,9 +25,9 @@ export function create4012State(): Tramite40102State {
     estado: [],
     seccion: [],
     formaValida: [],
-    nombre: "",
-    primerApellido: "",
-    segundoApellido: ""
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
   };
 }
 
@@ -63,30 +63,30 @@ export class Tramite40102Store extends Store<Tramite40102State> {
       solicitudVehiculo,
     }));
   }
-    public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
-      this.update((state) => ({
-        ...state,
-        solicitudVehiculo,
-      }));
-    }
-    public solicitudVehiculoColor(vehiculoColor: string) {
-      this.update((state) => ({
-        ...state,
-        vehiculoColor,
-      }));
-    }
-    public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
-      this.update((state) => ({
-        ...state,
-        PaisEmisor2daPlaca,
-      }));
-    }
-    public setanioVehiculoVEH(VehiculoVEH: string) {
-      this.update((state) => ({
-        ...state,
-        VehiculoVEH,
-      }));
-    }
+  public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
+    this.update((state) => ({
+      ...state,
+      solicitudVehiculo,
+    }));
+  }
+  public solicitudVehiculoColor(vehiculoColor: string) {
+    this.update((state) => ({
+      ...state,
+      vehiculoColor,
+    }));
+  }
+  public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
+    this.update((state) => ({
+      ...state,
+      PaisEmisor2daPlaca,
+    }));
+  }
+  public setanioVehiculoVEH(VehiculoVEH: string) {
+    this.update((state) => ({
+      ...state,
+      VehiculoVEH,
+    }));
+  }
   setEstado(estado: Catalogo[]) {
     this.update((state) => ({
       ...state,
@@ -117,5 +117,34 @@ export class Tramite40102Store extends Store<Tramite40102State> {
   }
   public clearChoferes() {
     this.reset();
+  }
+
+  public setUnidadDeArrestreTipoVehiculo(unidadDeArrestreTipoVehiculo: string) {
+    this.update((state) => ({
+      ...state,
+      unidadDeArrestreTipoVehiculo,
+    }));
+  }
+  public setUnidadDeArrestrePaisEmisor(unidadDeArrestrePaisEmisor: string) {
+    this.update((state) => ({
+      ...state,
+      unidadDeArrestrePaisEmisor,
+    }));
+  }
+  public setUnidadDeArrestreVehiculoColor(
+    unidadDeArrestreVehiculoColor: string
+  ) {
+    this.update((state) => ({
+      ...state,
+      unidadDeArrestreVehiculoColor,
+    }));
+  }
+  public setUnidadDeArrestreVehiculoPaisEmisor2daPlaca(
+    unidadDeArrestreVehiculoPaisEmisor2daPlaca: string
+  ) {
+    this.update((state) => ({
+      ...state,
+      unidadDeArrestreVehiculoPaisEmisor2daPlaca,
+    }));
   }
 }

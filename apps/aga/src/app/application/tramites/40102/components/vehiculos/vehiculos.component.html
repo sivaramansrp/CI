@@ -798,7 +798,7 @@
                         <div class="modal-body">
                           <form
                             [formGroup]="formVehiculo"
-                            (ngSubmit)="unidadesDearrastre()"
+                            (ngSubmit)="unidadDeArrastre()"
                           >
                             <div class="row">
                               <div class="col-md-12">
@@ -830,33 +830,20 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastreTipoVehiculo"
+                                    for="unidadDeArrestreTipoVehiculo"
                                     >Tipo de Vehículo de Arrastre</label
                                   >
                                   <span class="require">*</span>
                                 </div>
                                 <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastreTipoVehiculo"
+                                  <app-catalogo-select
+                                    name="unidadDeArrestreTipoVehiculo"
+                                    [placeholder]="'Seleccione un valor'"
                                     formControlName="tipoVehiculoArrastreAGA"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Complete las opciones dinámicamente en
-                                    TypeScript utilizando el catálogo
-                                    'tipoVehiculoArrastreAGA'. Ejemplo:
-                                    <option
-                                      *ngFor="
-                                        let tipo of tipoVehiculoArrastreAGA
-                                      "
-                                      [value]="tipo.clave"
+                                    [required]="true"
+                                    (change)="unidadDeArrestreTipoVehiculo()"
                                     >
-                                      {{ tipo.descripcion }}
-                                    </option>
-                                  </select>
+                                  </app-catalogo-select>
                                 </div>
                               </div>
 
@@ -864,7 +851,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastreIdDeVehiculo"
+                                    for="unidadDeArrestreIdDeVehiculo"
                                     >ID de Vehículo de Arrastre</label
                                   >
                                   <span class="require">*</span>
@@ -889,7 +876,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastreNumeroPlacas"
+                                    for="unidadDeArrestreNumeroPlacas"
                                     >Número de Placas</label
                                   >
                                   <span class="require">*</span>
@@ -909,7 +896,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastrePaisEmisor"
+                                    for="unidadDeArrestrePaisEmisor"
                                     >País Emisor</label
                                   >
                                   <span class="require">*</span>
@@ -920,7 +907,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label for="solicitudDomicilioEstado2"
-                                    >Estado</label
+                                    >Estado o Provincia</label
                                   >
                                   <span class="require">*</span>
                                 </div>
@@ -941,31 +928,20 @@
                             <div class="row">
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label for="solicitudVehiculoArrastreColor"
-                                    >Color</label
+                                  <label for="unidadDeArrestreVehiculoColor"
+                                    >Color de vehiculo de arrestre</label
                                   >
                                   <span class="require">*</span>
                                 </div>
                                 <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastreColor"
+                                  <app-catalogo-select
+                                    name="unidadDeArrestreVehiculoColor"
+                                    [placeholder]="'Seleccione un valor'"
                                     formControlName="colorAGA"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Complete las opciones dinámicamente en
-                                    TypeScript utilizando el catálogo
-                                    'colorAGA'. Ejemplo:
-                                    <option
-                                      *ngFor="let color of colorCatalogo"
-                                      [value]="color.clave"
+                                    [required]="true"
+                                    (change)="unidadDeArrestreVehiculoColor()"
                                     >
-                                      {{ color.descripcion }}
-                                    </option>
-                                  </select>
+                                  </app-catalogo-select>
                                 </div>
                               </div>
 
@@ -994,7 +970,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastreNumero2daPlaca"
+                                    for="unidadDeArrestreNumero2daPlaca"
                                     >Número 2da Placa</label
                                   >
                                 </div>
@@ -1013,8 +989,8 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastreEmisor2daPlaca"
-                                    >Emisor 2da Placa</label
+                                    for="unidadDeArrestreEmisor2daPlaca"
+                                    >Estado emisor de 2da Placa</label
                                   >
                                 </div>
                                 <div class="form-group">
@@ -1032,29 +1008,18 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="solicitudVehiculoArrastrePaisEmisor2daPlaca"
-                                    >País Emisor 2da Placa</label
+                                    for="unidadDeArrestreVehiculoPaisEmisor2daPlaca"
+                                    >País emisor de 2da Placa</label
                                   >
                                 </div>
                                 <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                  <app-catalogo-select
+                                    name="unidadDeArrestreVehiculoPaisEmisor2daPlaca"
                                     formControlName="paisEmisor2daPlaca"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Complete las opciones dinámicamente en TypeScript
-                                    utilizando el catálogo 'pais'. Ejemplo:
-                                    <option
-                                      *ngFor="let pais of paisCatalogo"
-                                      [value]="pais.clave"
-                                    >
-                                      {{ pais.descripcion }}
-                                    </option>
-                                  </select>
+                                    [placeholder]="'Seleccione un valor'"
+                                    [required]="true">
+                                  > 
+                                  </app-catalogo-select>
                                 </div>
                               </div>
                             </div>

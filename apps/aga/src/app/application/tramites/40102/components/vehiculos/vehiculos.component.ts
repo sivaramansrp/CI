@@ -94,14 +94,14 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     private tramite40102Service: Tramite40102Service,
     private tramite40102Query: Tramite40102Query
   ) {}
-  
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
-   * 
+   *
    * @remarks
    * Este método inicializa el formulario `formVehiculo` con varios controles y validadores.
    * También suscribe a varios observables para obtener listas de vehículos y unidades de arrastre.
-   * 
+   *
    * @returns {void}
    */
   ngOnInit(): void {
@@ -194,7 +194,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       });
     this.unidadesdearrastreList$ =
       this.tramite40102Query.getUnidadesdeArrastre$;
-    this.unidadesDearrastre();
+    this.unidadDeArrastre();
     this.tramite40102Query.getUnidadesdeArrastre$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((unidadesdearrastre: any) => {
@@ -269,7 +269,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     this.closeModal();
   }
 
-  unidadesDearrastre() {
+  unidadDeArrastre() {
     if (this.formVehiculo.valid) {
       const newUnidad = this.formVehiculo.value;
       const currentData = this.tramite40102Query.getunidadesdearrastre();
@@ -278,45 +278,54 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         this.tramite40102Query.getUnidadesdeArrastre$;
     }
     this.formVehiculo = this.fb.group({
-      solicitudVehiculoVin2:
-        this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
-      solicitudVehiculoTipoVehiculo:
-        this.formVehiculo.value.solicitudVehiculoTipoVehiculo?.trim(),
-      solicitudVehiculoNumeroEconomico:
-        this.formVehiculo.value.solicitudVehiculoNumeroEconomico?.trim(),
-      solicitudVehiculoNumeroPlacas:
-        this.formVehiculo.value.solicitudVehiculoNumeroPlacas?.trim(),
-      solicitudVehiculoPaisEmisor:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisor?.trim(),
+      unidadDeArrestreVin2:
+        this.formVehiculo.value.unidadDeArrestreVin2?.trim(),
+      unidadDeArrestreTipoVehiculo:
+        this.formVehiculo.value.unidadDeArrestreTipoVehiculo?.trim(),
+      unidadDeArrestreNumeroEconomico:
+        this.formVehiculo.value.unidadDeArrestreNumeroEconomico?.trim(),
+      unidadDeArrestreNumeroPlacas:
+        this.formVehiculo.value.unidadDeArrestreNumeroPlacas?.trim(),
+      unidadDeArrestrePaisEmisor:
+        this.formVehiculo.value.unidadDeArrestrePaisEmisor?.trim(),
       solicitudDomicilioEstado:
         this.formVehiculo.value.solicitudDomicilioEstado?.trim(),
-      solicitudVehiculoMarca:
-        this.formVehiculo.value.solicitudVehiculoMarca?.trim(),
-      solicitudVehiculoModelo:
-        this.formVehiculo.value.solicitudVehiculoModelo?.trim(),
+      unidadDeArrestreMarca:
+        this.formVehiculo.value.unidadDeArrestreMarca?.trim(),
+      unidadDeArrestreModelo:
+        this.formVehiculo.value.unidadDeArrestreModelo?.trim(),
       anioVehiculoVEH: this.formVehiculo.value.anioVehiculoVEH?.trim(),
-      solicitudVehiculoTransponder:
-        this.formVehiculo.value.solicitudVehiculoTransponder?.trim(),
-      solicitudVehiculoColor:
-        this.formVehiculo.value.solicitudVehiculoColor?.trim(),
-      solicitudVehiculoNumero2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
-      solicitudVehiculoEmisor2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
-      solicitudVehiculoPaisEmisor2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisor2daPlaca?.trim(),
-      solicitudVehiculoDesc:
-        this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
+      unidadDeArrestreTransponder:
+        this.formVehiculo.value.unidadDeArrestreTransponder?.trim(),
+      unidadDeArrestreColor:
+        this.formVehiculo.value.unidadDeArrestreColor?.trim(),
+      unidadDeArrestreNumero2daPlaca:
+        this.formVehiculo.value.unidadDeArrestreNumero2daPlaca?.trim(),
+      unidadDeArrestreEmisor2daPlaca:
+        this.formVehiculo.value.unidadDeArrestreEmisor2daPlaca?.trim(),
+      unidadDeArrestrePaisEmisor2daPlaca:
+        this.formVehiculo.value.unidadDeArrestrePaisEmisor2daPlaca?.trim(),
+      unidadDeArrestreDesc:
+        this.formVehiculo.value.unidadDeArrestreDesc?.trim(),
       vin2: ['', [Validators.required, Validators.maxLength(17)]],
-      tipoVehiculoArrastreAGA: ['', Validators.required],
-      idDeVehiculo: [{ value: '2', disabled: true }, Validators.required],
-      numeroPlacas: ['', [Validators.required, Validators.maxLength(8)]],
-      paisEmisor: ['', Validators.required],
-      estado2: ['', [Validators.required, Validators.maxLength(20)]],
-      colorAGA: ['', Validators.required],
-      numeroEconomico: ['', [Validators.required, Validators.maxLength(17)]],
-      numero2daPlaca: ['', Validators.maxLength(8)],
-      emisor2daPlaca: ['', Validators.maxLength(20)],
+      arrestreTipoVehiculoArrastre: ['', Validators.required],
+      arrestreIdDeVehiculo: [
+        { value: '2', disabled: true },
+        Validators.required,
+      ],
+      arrestrenumeroPlacas: [
+        '',
+        [Validators.required, Validators.maxLength(8)],
+      ],
+      arrestrePaisEmisor: ['', Validators.required],
+      arrestreEstado2: ['', [Validators.required, Validators.maxLength(20)]],
+      arrestreColorAGA: ['', Validators.required],
+      arrestreNumeroEconomico: [
+        '',
+        [Validators.required, Validators.maxLength(17)],
+      ],
+      arrestreNumero2daPlaca: ['', Validators.maxLength(8)],
+      arrestreEmisor2daPlaca: ['', Validators.maxLength(20)],
       paisEmisor2daPlaca: [''],
       desc: ['', [Validators.maxLength(200)]],
     });
@@ -353,20 +362,14 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Método que maneja la lógica para obtener y establecer el tipo de vehículo de arrastre.
-   * 
+   *
    * Obtiene el valor del tipo de vehículo de arrastre desde el formulario y lo establece en el store.
    * Luego, realiza una solicitud al servicio para obtener la clasificación del régimen y actualiza
    * la propiedad `vehiculoArrastr` con los datos obtenidos.
-   * 
+   *
    * @returns {void}
    */
   conVehiculoArrastre() {
-    const solicitudVehiculoTipoVehiculo = this.formVehiculo.get(
-      'solicitudVehiculoTipoVehiculo'
-    )?.value;
-    this.tramite40102Store.setsolicitudVehiculoTipoVehiculo(
-      solicitudVehiculoTipoVehiculo
-    );
     this.tramite40102Service
       .getClasifiRegimen()
       .pipe(takeUntil(this.destroyed$))
@@ -399,12 +402,12 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Método para solicitar el color del vehículo.
-   * 
+   *
    * Este método obtiene el valor del color del vehículo desde el formulario
    * y lo envía al store. Luego, realiza una solicitud al servicio para obtener
    * los colores de los vehículos y actualiza la propiedad `VehiculoColors` con
    * los datos obtenidos.
-   * 
+   *
    * @returns {void}
    */
   solicitudVehiculoColor() {
@@ -425,12 +428,12 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Método que maneja la solicitud del país emisor de la segunda placa del vehículo.
-   * 
+   *
    * Este método obtiene el valor del formulario de vehículo y lo envía al store para
-   * actualizar el país emisor de la segunda placa. Luego, realiza una solicitud al 
-   * servicio para obtener los datos del país emisor de la segunda placa y los asigna 
+   * actualizar el país emisor de la segunda placa. Luego, realiza una solicitud al
+   * servicio para obtener los datos del país emisor de la segunda placa y los asigna
    * a la propiedad `PaisEmisor2daPlaca`.
-   * 
+   *
    * @returns {void}
    */
   solicitudVehiculoPaisEmisor2daPlaca() {
@@ -447,7 +450,13 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  fetchTipoVehiculoArrastreAGA() {
+  unidadDeArrestreTipoVehiculo() {
+    const unidadDeArrestreTipoVehiculo = this.formVehiculo.get(
+      'unidadDeArrestreTipoVehiculo'
+    )?.value;
+    this.tramite40102Store.setUnidadDeArrestreTipoVehiculo(
+      unidadDeArrestreTipoVehiculo
+    );
     this.tramite40102Service
       .getTipoVehiculoArrastre()
       .pipe(takeUntil(this.destroyed$))
@@ -459,7 +468,31 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  fetchColorCatalogo() {
+  unidadDeArrestrePaisEmisor() {
+    const unidadDeArrestrePaisEmisor = this.formVehiculo.get(
+      'unidadDeArrestrePaisEmisor'
+    )?.value;
+    this.tramite40102Store.setUnidadDeArrestrePaisEmisor(
+      unidadDeArrestrePaisEmisor
+    );
+    this.tramite40102Service
+      .getPaisCatalogo()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: PaisCatalogo[]) => {
+          this.paisCatalogo = data;
+        },
+        error: (error) => this.toastr.error('Error al obtener datos:', error),
+      });
+  }
+
+  unidadDeArrestreVehiculoColor() {
+    const unidadDeArrestreVehiculoColor = this.formVehiculo.get(
+      'unidadDeArrestreVehiculoColor'
+    )?.value;
+    this.tramite40102Store.setUnidadDeArrestreVehiculoColor(
+      unidadDeArrestreVehiculoColor
+    );
     this.tramite40102Service
       .getColorCatalogo()
       .pipe(takeUntil(this.destroyed$))
@@ -471,13 +504,19 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  fecthPaisCatalogo() {
+  unidadDeArrestrePaisEmisor2daPlaca() {
+    const unidadDeArrestreVehiculoPaisEmisor2daPlaca = this.formVehiculo.get(
+      'unidadDeArrestreVehiculoPaisEmisor2daPlaca'
+    )?.value;
+    this.tramite40102Store.setUnidadDeArrestreVehiculoPaisEmisor2daPlaca(
+      unidadDeArrestreVehiculoPaisEmisor2daPlaca
+    );
     this.tramite40102Service
-      .getPaisCatalogo()
+      .getPaisEmisor2daPlaca()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
-        next: (data: PaisCatalogo[]) => {
-          this.paisCatalogo = data;
+        next: (data: Emisor2daPlaca[]) => {
+          this.PaisEmisor2daPlaca = data;
         },
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
