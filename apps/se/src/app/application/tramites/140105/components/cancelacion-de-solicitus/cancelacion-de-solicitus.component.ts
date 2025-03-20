@@ -61,6 +61,7 @@ export class CancelacionDeSolicitusComponent implements OnInit {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
   public eliminarRegistro(event: any): void {
+    this.cuerpoTabla = [];
   }
 
 
