@@ -12,8 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { TerritorioNacionalSolicitudeComponent } from './pages/territorio-nacional-solicitude/territorio-nacional-solicitude.component';
 
 import { DatosTerritorioComponent } from './pages/datos-territorio.component/datos-territorio.component';
+import { PropietarioComponent } from '../../shared/components/propietario/propietario.component';
 
-import { DatosDelSolicitudeComponent } from './components/datos-del-solicitude/datos-del-solicitude.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,7 @@ import { DatosDelSolicitudeComponent } from './components/datos-del-solicitude/d
     CommonModule,
     FormsModule,
     TerritorioNacionalSolicitudeRoutingModule,
-    DatosDelSolicitudeComponent
+    PropietarioComponent
   ],
 })
 export class TerritorioNacionalSolicitudeModule {}

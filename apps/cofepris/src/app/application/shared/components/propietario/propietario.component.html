@@ -1,0 +1,18 @@
+<div class="container">
+  <ng-titulo titulo="Propietario"></ng-titulo>
+  <label> Propietario<span>*</span>: </label>
+  <app-tabla-dinamica
+    [configuracionTabla]="configuracionTabla"
+    [datos]="propietarioData"
+    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+  ></app-tabla-dinamica>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button name="agregarServicio" class="btn btn-primary mx-2">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
