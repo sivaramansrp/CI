@@ -50,4 +50,8 @@ export class DatosTramiteService {
     return this.http.get<RespuestaAduanas>(`assets/json/11201/${catalogo}.json`);
   }
 
+  getDatosTableData(): Observable<any[]> {
+    return this.http.get<any[]>(`assets/json/11201/datosTabla.json`);
+  }
+
 }

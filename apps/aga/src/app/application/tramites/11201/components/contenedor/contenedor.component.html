@@ -186,7 +186,7 @@
                                     <tr>
                                         <th></th>
                                         <th><input type="checkbox" formControlName="commonCheckbox"
-                                                (change)="toggleAllCheckboxes($event)" /></th>
+                                                (change)="alternarTodosLosCheckboxes($event)" /></th>
                                         <th>Iniciales del equipo</th>
                                         <th>Número de equipo</th>
                                         <th>Dígito Verificador</th>
@@ -268,7 +268,7 @@
                             <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
                                 Archivo</button>
                         </div>
-                        <div *ngIf="showArchivoSeleccionadoTable">
+                        <div *ngIf="showArchivoSeleccionadoTable" class="table-container ">
                             <table class="table table-bordered" align="center">
                                 <thead>
                                     <tr>
@@ -316,8 +316,8 @@
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
                             <button type="button" class="btn btn-default" (click)="Archivo()">Enviar</button>
                         </div>
-                        <div *ngIf="showCargarArchivoTable">
-                            <table class="table table-bordered" align="center">
+                        <div *ngIf="showCargarArchivoTable" class="table-container">
+                            <table class="table table-bordered " align="center">
                                 <thead>
                                     <tr>
                                         <th></th>

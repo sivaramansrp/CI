@@ -15,6 +15,7 @@ import { FormArray } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -151,23 +152,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla = [
-    {
-      inicialesEquipo: 'BBZM',
-      numeroEquipo: 1098765,
-      digitoVerificador: 4,
-      tipoEquipo: 'AC',
-      aduana: 430,
-      fechaIngreso: '2024-03-13',
-      vigencia: '2025-03-13',
-      estadoConstancia: 'Válido',
-      existeEnVUCEM: 'Sí',
-      idConstancia: 'CONST12345',
-      numeroManifiesto: 'MANI67890',
-      idSolicitud: 'SOLICITUD001',
-      fechaInicio: '2024-03-01',
-    },
-  ];
+  datosTabla: any[] = [];
 
   /**
    * Obtener el valor de la instrucción e inicializar la variable.
@@ -274,6 +259,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.tabSeleccionado();
     this.fetchgetTransporteList();
     this.fetchAduanaList();
+    this.loadDatosTablaData();
   }
 
   /**
@@ -320,7 +306,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     this.solicitudForm
       .get('inicialesContenedor')
-      ?.valueChanges.subscribe((value) => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((value) => {
         if (value) {
           const SANITIZED = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
           this.solicitudForm
@@ -336,7 +322,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
     this.solicitudForm
       .get('numeroContenedor')
-      ?.valueChanges.subscribe((value) => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((value) => {
         if (value) {
           const SANITIZED = value.replace(/[^a-zA-Z0-9]/g, '');
           this.solicitudForm
@@ -347,7 +333,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
     this.solicitudForm
       .get('digitoDeControl')
-      ?.valueChanges.subscribe((value) => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((value) => {
         if (value) {
           const SANITIZED = value.replace(/[^0-9]/g, '');
           this.solicitudForm
@@ -357,13 +343,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         }
       });
     // Escuchar cambios en tipoBusqueda para mostrar secciones
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
+    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
       this.mostrarCampos();
     });
 
     // Escuchar cambios en tipoTransporte
-    this.solicitudForm.get('aduana')?.valueChanges.subscribe(() => {
+    this.solicitudForm.get('aduana')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       this.setValoresStore(this.solicitudForm, 'aduana', 'setAduana');
       this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
@@ -375,6 +361,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   get individualCheckbox(): FormArray {
     return this.solicitudForm.get('individualCheckbox') as FormArray;
+  }
+
+  loadDatosTablaData(): void {
+    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      this.datosTabla = data;
+    });
   }
 
   /**
@@ -397,7 +389,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   cargarCatalogos(): void {
     // Cargar catálogo de contenedores
-    this.datosTramiteService.getContenedores().subscribe(
+    this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
         this.contenedores = data.data;
       },
@@ -514,19 +506,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   parseCSV(csv: string): void {
-    const LINES = csv.split('\n');
+    const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
     const DATA = LINES.slice(1).map((line) => {
-      const VALUES = line.split(',');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const OBJ: any = {};
-      HEADERS.forEach((header, index) => {
-        OBJ[header.trim()] = VALUES[index]?.trim() || '';
-      });
-      return OBJ;
-    });
+        const VALUES = line.split(',');
+        const OBJ: any = {};
+        HEADERS.forEach((header, index) => {
+            OBJ[header.trim()] = VALUES[index]?.trim() || '';
+        });
+        return OBJ;
+    }).filter(item => Object.values(item).some(value => value));
     this.datosTabla = DATA;
-  }
+}
 
   enviarManifiesto(): void {
     this.solicitudForm.markAllAsTouched();
@@ -541,7 +532,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   esPago(): void {
     if (this.solicitudForm.valid) {
       // Implementar lógica de pago y envío del formulario
-      this.datosTramiteService.submitSolicitud().subscribe(
+      this.datosTramiteService.submitSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
         () => {
           // Manejar envío exitoso
         }
@@ -565,8 +556,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   agregarSolicitud(): void {
-    // const SOLICITUDDATA = this.solicitudForm.value;
-    this.datosTramiteService.agregarSolicitud().subscribe(
+    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (response) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (response?.success) {
@@ -591,7 +581,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public fetchgetTransporteList(): void {
     this.datosTramiteService
       .getTransporteList('transporteList')
-      .subscribe((response) => {
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         this.catalogoList = response.data;
       });
   }
@@ -599,7 +589,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public fetchAduanaList(): void {
     this.datosTramiteService
       .getAduanaList('aduanaList')
-      .subscribe((response) => {
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
         this.aduanaList = response.data;
       });
   }
@@ -625,7 +615,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Alternar el estado de todos los checkboxes basados en el estado del checkbox "Seleccionar todo"
    * @param event Evento de cambio del checkbox "Seleccionar todo"
    */
-  toggleAllCheckboxes(event: Event): void {
+  alternarTodosLosCheckboxes(event: Event): void {
     const CHECKED = (event.target as HTMLInputElement).checked;
     this.individualCheckbox.controls.forEach((control) =>
       control.setValue(CHECKED)
