@@ -44,17 +44,17 @@ describe('DatosDeLaSolicitudeComponent', () => {
 
   it('should initialize the form with default values from solicitudState', () => {
     expect(component.formulario).toBeTruthy();
-    expect(component.formulario.get('Solicitud')?.value).toBe('');
-    expect(component.formulario.get('Régimen')?.value).toBe('some-regimen');
-    expect(component.formulario.get('Clasificación')?.value).toBe('some-classification');
-    expect(component.formulario.get('SolitudDescripcion')?.value).toBe('some-description');
+    expect(component.formulario.get('solicitud')?.value).toBe('');
+    expect(component.formulario.get('régimen')?.value).toBe('some-regimen');
+    expect(component.formulario.get('clasificación')?.value).toBe('some-classification');
+    expect(component.formulario.get('solitudDescripcion')?.value).toBe('some-description');
   });
 
   it('should have required validators for form controls', () => {
-    const solicitudControl = component.formulario.get('Solicitud');
-    const regimenControl = component.formulario.get('Régimen');
-    const clasificacionControl = component.formulario.get('Clasificación');
-    const descripcionControl = component.formulario.get('SolitudDescripcion');
+    const solicitudControl = component.formulario.get('solicitud');
+    const regimenControl = component.formulario.get('régimen');
+    const clasificacionControl = component.formulario.get('clasificación');
+    const descripcionControl = component.formulario.get('solitudDescripcion');
 
     expect(solicitudControl?.hasError('required')).toBeTruthy();
     expect(regimenControl?.hasError('required')).toBeTruthy();

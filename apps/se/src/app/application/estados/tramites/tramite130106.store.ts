@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-
+   
 export interface Solicitud130106State {
 
     régimen: string;
@@ -20,6 +20,8 @@ export interface Solicitud130106State {
     entidad: string;
     representacion: string;
     bloque: string;
+    disponible:string;
+    seleccionado:string;
 
 }
 
@@ -40,7 +42,9 @@ export function createInitialState(): Solicitud130106State {
         Observaciones: '',
         entidad: '',
         representacion: '',
-        bloque: ''
+        bloque: '',
+        disponible:'',
+        seleccionado:'',
     };
 }
 @Injectable({
@@ -151,6 +155,18 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
         this.update((state) => ({
             ...state,
             solitudDescripcion,
+        }));
+    }
+    public setDisponible(disponible: string) {
+        this.update((state) => ({
+            ...state,
+            disponible,
+        }));
+    }
+    public setSeleccionado(seleccionado: string) {
+        this.update((state) => ({
+            ...state,
+            seleccionado,
         }));
     }
 

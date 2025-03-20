@@ -29,7 +29,10 @@ describe('FraccionComponent', () => {
     bloque: 'Block 1',
     régimen: '',
     clasificación: '',
-    solitudDescripcion: ''
+    solitudDescripcion: '',
+    disponible:'',
+    seleccionado:'',
+    
   };
 
   beforeEach(async () => {

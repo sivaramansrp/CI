@@ -1,12 +1,14 @@
 import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
+import { AVISO } from '../../constants/fraccion.enum';
 import { Partidas } from '@libs/shared/data-access-user/src/core/models/130106/partidas.model';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
+
 
 /**
  * Componente que maneja el formulario de fracción, incluyendo la inicialización y la gestión de fechas seleccionadas.
@@ -14,7 +16,7 @@ import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
 @Component({
   selector: 'app-fraccion', // Selector del componente en el DOM
   standalone: true,
-  imports: [CatalogoSelectComponent, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, CrosslistComponent], // Importa los módulos necesarios para el funcionamiento del componente
+  imports: [CatalogoSelectComponent, FormsModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, CrosslistComponent,AlertComponent], // Importa los módulos necesarios para el funcionamiento del componente
   templateUrl: './fraccion.component.html', // Define la plantilla HTML del componente
   styleUrl: './fraccion.component.scss' // Define los estilos CSS del componente
 })
@@ -23,7 +25,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para manejar los datos de la fracción.
    */
-  FraccionForm!: FormGroup;
+  fraccionForm!: FormGroup;
 
   /**
    * Lista de fracciones obtenidas del archivo JSON.
@@ -90,6 +92,8 @@ export class FraccionComponent implements OnInit, OnDestroy {
   ];
 
   TablaSeleccion = TablaSeleccion;
+
+  public TEXTOS = AVISO;
 
   /**
    * Lista de rangos de días seleccionados por el usuario.
@@ -204,7 +208,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
       .subscribe(); // Realiza la suscripción para actualizar el estado
 
     // Crea el formulario con los valores predeterminados
-    this.FraccionForm = this.fb.group({
+    this.fraccionForm = this.fb.group({
       fraccion: [this.solicitudState.fraccion, Validators.required],
       cantidad: [this.solicitudState.cantidad, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
       factura: [this.solicitudState.factura, [Validators.required, Validators.pattern(/^[0-9]*$/)]],
@@ -220,6 +224,12 @@ export class FraccionComponent implements OnInit, OnDestroy {
       entidad: [this.solicitudState.entidad, Validators.required],
       representacion: [this.solicitudState.representacion, Validators.required],
       bloque: [this.solicitudState.bloque, Validators.required],
+      disponible: [this.solicitudState.disponible,],
+      seleccionado: [this.solicitudState.seleccionado, Validators.required],
+    });
+    this.fraccionForm.get('bloque')?.valueChanges.subscribe(() => {
+      this.selectRangoDias =["ESTADOS UNIDOS DE AMERICA CANADA"]
+      
     });
     this.updateformfied();
   }
@@ -227,15 +237,15 @@ export class FraccionComponent implements OnInit, OnDestroy {
   
 
     // Deshabilita los campos para que no se puedan editar
-    this.FraccionForm.get('cantidadTotal')?.disable();
-    this.FraccionForm.get('valorTotal')?.disable();
+    this.fraccionForm.get('cantidadTotal')?.disable();
+    this.fraccionForm.get('valorTotal')?.disable();
   }
 
   /**
    * Convierte los datos del formulario en una nueva partida y la agrega a la lista de partidas.
    */
   paridasData(): void {
-    const FORMDATA = this.FraccionForm.value; // Obtiene los datos del formulario
+    const FORMDATA = this.fraccionForm.value; // Obtiene los datos del formulario
     const NEWPARTIDA: Partidas = {
       cantidad: FORMDATA.cantidad, // Asigna la cantidad
       unidad: fraccions.UMT.find(item => item.id === Number(FORMDATA.umt))?.descripcion, // Asigna la unidad
@@ -245,7 +255,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
       total: FORMDATA.cantidad // Total calculado con la cantidad
     };
     this.partidas.push(NEWPARTIDA);
-    this.FraccionForm.patchValue({
+    this.fraccionForm.patchValue({
       cantidadTotal: FORMDATA.cantidad,
       valorTotal:FORMDATA.cantidad
     }); // Agrega la nueva partida a la lista
