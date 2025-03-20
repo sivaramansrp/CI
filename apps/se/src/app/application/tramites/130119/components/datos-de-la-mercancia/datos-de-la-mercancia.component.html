@@ -27,7 +27,8 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="umt" class="form-label">UMT :</label>
+                    <label for="umt" class="form-label">UMT : <i class="bi bi-question-circle-fill"></i></label>
+                    
                     <input type="text" id="umt" formControlName="umt" class="form-control">
                 </div>
             </div>
@@ -51,7 +52,8 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="valorFacturaUSD" class="form-label">Valor factura USD *:</label>
+                    <label for="valorFacturaUSD" class="form-label">Valor factura USD *: <i class="bi bi-question-circle-fill"></i></label>
+                    
                     <input type="text" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'valorFacturaUSD','setValorFacturaUSD')">
                     <div
