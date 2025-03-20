@@ -16,7 +16,9 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
-
+/**
+ * Componente RepresentacionFederalComponent.
+ */
 @Component({
   selector: 'app-representacion-federal',
   standalone: true,

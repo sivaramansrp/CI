@@ -99,7 +99,7 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  }, 
+  },
   {
     path: 'cancelacion-de',
     loadChildren: () =>
@@ -165,6 +165,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
+      ),
+  },
+  {
+    path: 'aviso-importacion-maquinas',
+    loadChildren: () =>
+      import('./tramites/130119/aviso-importacion-maquinas.module').then(
+        (m) => m.AvisoImportacionMaquinasModule
       ),
   }
 ];
