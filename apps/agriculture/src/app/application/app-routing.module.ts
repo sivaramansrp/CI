@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const routes: Routes = [
@@ -55,6 +55,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./tramites/220402/pantallas-captura.module').then(
         (m) => m.PantallasCapturaModule
+      )
+  },
+  {
+    path: 'desistimiento',
+    loadChildren: () =>
+      import('./tramites/220404/desistimiento.module').then(
+        (m) => m.DesistimientoModule
       )
   }
 ];
