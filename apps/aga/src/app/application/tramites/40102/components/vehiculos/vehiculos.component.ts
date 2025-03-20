@@ -414,6 +414,7 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
   }
+
   fetchColorCatalogo() {
     this.tramite40102Service
       .getColorCatalogo()
@@ -425,13 +426,14 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
   }
+
   fecthPaisCatalogo() {
     this.tramite40102Service
       .getPaisCatalogo()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data: PaisCatalogo[]) => {
-          this.colorCatalogo = data;
+          this.paisCatalogo = data;
         },
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
