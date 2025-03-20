@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
  */
 
 export interface Solicitud11201State {
-  dropdown: string;
+  menúDesplegable: string;
   rfc: string;
   denominacion: string;
   actividadEconomica: string;
@@ -20,11 +20,11 @@ export interface Solicitud11201State {
   numeroContenedor: string;
   digitoDeControl: string;
   contenedores: string;
-  aduanaDropdown: string;
-  individualCheckbox: boolean[];
+  aduanaMenúDesplegable: string;
+  individualCaja: boolean[];
   numManifiesto: number;
   fechaDeIngreso: string;
-  commonCheckbox: boolean;
+  commonCaja: boolean;
   archivoSeleccionado: string;
     /**
    * linea
@@ -44,7 +44,7 @@ export interface Solicitud11201State {
 
 export function createInitialState(): Solicitud11201State {
   return {
-    dropdown: '',
+    menúDesplegable: '',
     rfc: 'AAL0409235E6',
     denominacion: 'AGRICOLA ALPE S DE RL DE CV',
     actividadEconomica: 'Siembra, cultivo y cosecha de papa',
@@ -57,11 +57,11 @@ export function createInitialState(): Solicitud11201State {
     digitoDeControl: '',
     contenedores: '',
     fechaIngreso: '',
-    aduanaDropdown: '',
-    individualCheckbox: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    aduanaMenúDesplegable: '',
+    individualCaja: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
     numManifiesto: 0,
     fechaDeIngreso: '',
-    commonCheckbox: false,
+    commonCaja: false,
     archivoSeleccionado: '',
     linea: '',
     lineaCheckbox: '',
@@ -82,12 +82,12 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
   /**
    * Guarda el tipo de solicitud en el estado.
    *
-   * @param individualCheckbox - El tipo de solicitud que se va a guardar.
+   * @param individualCaja - El tipo de solicitud que se va a guardar.
    */
-  public setIndividualCheckbox(individualCheckbox: []): void {
+  public setIndividualCaja(individualCaja: []): void {
     this.update((state) => ({
       ...state,
-      individualCheckbox,
+      individualCaja,
     }));
   }
 
@@ -98,17 +98,17 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setDropdown(dropdown: string): void {
+  public setMenúDesplegable(menúDesplegable: string): void {
     this.update((state) => ({
       ...state,
-      dropdown,
+      menúDesplegable,
     }));
   }
 
-  public setAduanaDropdown(aduanaDropdown: string): void {
+  public setAduanaMenúDesplegable(aduanaMenúDesplegable: string): void {
     this.update((state) => ({
       ...state,
-      aduanaDropdown,
+      aduanaMenúDesplegable,
     }));
   }
 
@@ -119,10 +119,10 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setCommonCheckbox(commonCheckbox: boolean): void {
+  public setCommonCaja(commonCaja: boolean): void {
     this.update((state) => ({
       ...state,
-      commonCheckbox,
+      commonCaja,
     }));
   }
 

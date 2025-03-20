@@ -178,20 +178,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
-    { encabezado: '', clave: (item) => item.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (item) => item.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (item) => item.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito Verificador', clave: (item) => item.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (item) => item.tipoEquipo, orden: 4 },
-    { encabezado: 'Aduana', clave: (item) => item.aduana, orden: 5 },
-    { encabezado: 'Fecha Ingreso', clave: (item) => item.fechaIngreso, orden: 6 },
-    { encabezado: 'Vigencia', clave: (item) => item.vigencia, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (item) => item.estadoConstancia, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (item) => item.existeEnVUCEM, orden: 9 },
-    { encabezado: 'Id constancia', clave: (item) => item.idConstancia, orden: 10 },
-    { encabezado: 'Número manifiesto', clave: (item) => item.numeroManifiesto, orden: 11 },
-    { encabezado: 'Id solicitud', clave: (item) => item.idSolicitud, orden: 12 },
-    { encabezado: 'Fecha inicio', clave: (item) => item.fechaInicio, orden: 13 }
+    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
+    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
+    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
+    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
+    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
+    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
+    { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
+    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
+    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
+    { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
+    { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
+    { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
 
   /**
@@ -283,25 +283,25 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       digitoDeControl: [this.solicitud11201State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
       contenedores: [this.solicitud11201State?.contenedores, Validators.required],
       tipoTransporte: ['', Validators.required],
-      dropdown: [this.solicitud11201State.dropdown, Validators.required],
+      menúDesplegable: [this.solicitud11201State.menúDesplegable, Validators.required],
       numManifiesto: [
         this.solicitud11201State.numManifiesto,
         [Validators.required, Validators.maxLength(50)],
       ],
-      aduanaDropdown: [
-        this.solicitud11201State.aduanaDropdown,
+      aduanaMenúDesplegable: [
+        this.solicitud11201State.aduanaMenúDesplegable,
         Validators.required,
       ],
       archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
-      individualCheckbox: this.fb.array(
-        this.solicitud11201State?.individualCheckbox
+      individualCaja: this.fb.array(
+        this.solicitud11201State?.individualCaja
       ),
       amount: [this.amount, Validators.required],
       fechaDeIngreso: [
         this.solicitud11201State?.fechaDeIngreso,
         Validators.required,
       ],
-      commonCheckbox: [this.solicitud11201State?.commonCheckbox],
+      commonCaja: [this.solicitud11201State?.commonCaja],
     });
     this.mostrarCampos();
     this.solicitudForm
@@ -359,8 +359,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Obtener el array de checkboxes individuales.
    */
-  get individualCheckbox(): FormArray {
-    return this.solicitudForm.get('individualCheckbox') as FormArray;
+  get individualCaja(): FormArray {
+    return this.solicitudForm.get('individualCaja') as FormArray;
   }
 
   loadDatosTablaData(): void {
@@ -531,7 +531,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             OBJ[key] = VALUES[index]?.trim();
         });
         return OBJ;
-    }).filter(item => Object.values(item).some(value => value));
+    }).filter(artículo => Object.values(artículo).some(value => value));
     this.datosTabla = DATA;
 }
 
@@ -539,7 +539,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm.markAllAsTouched();
     if (
       this.solicitudForm.get('numManifiesto')?.valid &&
-      this.solicitudForm.get('dropdown')?.valid
+      this.solicitudForm.get('menúDesplegable')?.valid
     ) {
       this.mostrarMensaje = true;
     }
@@ -573,11 +573,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   agregarSolicitud(): void {
     this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (response) => {
+      (respuesta) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
-        if (response?.success) {
-          response.datos.id = this.datosDelContenedor.length + 1;
-          this.datosDelContenedor.push(response.datos);
+        if (respuesta?.success) {
+          respuesta.datos.id = this.datosDelContenedor.length + 1;
+          this.datosDelContenedor.push(respuesta.datos);
           (this.tramite11201Store.setDelContenedor as (value: DatosDelContenedor[]) => void)(this.datosDelContenedor);
           this.solicitudForm.patchValue({
             aduana: '',
@@ -597,16 +597,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public fetchgetTransporteList(): void {
     this.datosTramiteService
       .getTransporteList('transporteList')
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-        this.catalogoList = response.data;
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        this.catalogoList = respuesta.data;
       });
   }
 
   public fetchAduanaList(): void {
     this.datosTramiteService
       .getAduanaList('aduanaList')
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-        this.aduanaList = response.data;
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        this.aduanaList = respuesta.data;
       });
   }
 
@@ -618,12 +618,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   onCheckboxChange(event: Event, index: number): void {
     const TARGET = event.target as HTMLInputElement;
     if (TARGET) {
-      this.individualCheckbox.controls[index].setValue(TARGET.checked);
+      this.individualCaja.controls[index].setValue(TARGET.checked);
     }
     this.setValoresStore(
       this.solicitudForm,
-      'individualCheckbox',
-      'setIndividualCheckbox'
+      'individualCaja',
+      'setIndividualCaja'
     );
   }
 
@@ -633,13 +633,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   alternarTodosLosCheckboxes(event: Event): void {
     const CHECKED = (event.target as HTMLInputElement).checked;
-    this.individualCheckbox.controls.forEach((control) =>
+    this.individualCaja.controls.forEach((control) =>
       control.setValue(CHECKED)
     );
     this.setValoresStore(
       this.solicitudForm,
-      'commonCheckbox',
-      'setCommonCheckbox'
+      'commonCaja',
+      'setCommonCaja'
     );
   }
 

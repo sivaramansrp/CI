@@ -153,8 +153,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
-                            [placeholder]="transporteList.primerOpcion" formControlName="dropdown"
-                            (change)="setValoresStore(solicitudForm,'dropdown', 'setDropdown')" [required]="true"
+                            [placeholder]="transporteList.primerOpcion" formControlName="menúDesplegable"
+                            (change)="setValoresStore(solicitudForm,'menúDesplegable', 'setMenúDesplegable')" [required]="true"
                             [ngClass]="isValid('numManifiesto') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
@@ -185,7 +185,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th><input type="checkbox" formControlName="commonCheckbox"
+                                        <th><input type="checkbox" formControlName="commonCaja"
                                                 (change)="alternarTodosLosCheckboxes($event)" /></th>
                                         <th>Iniciales del equipo</th>
                                         <th>Número de equipo</th>
@@ -203,23 +203,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of datosTabla; let i = index">
+                                    <tr *ngFor="let articulo of datosTabla; let i = index">
                                         <td class="grey-column">{{ i + 1 }}</td>
-                                        <td><input type="checkbox" [checked]="individualCheckbox.value[i]"
+                                        <td><input type="checkbox" [checked]="individualCaja.value[i]"
                                                 (change)="onCheckboxChange($event, i)" /></td>
-                                        <td>{{ item.inicialesEquipo }}</td>
-                                        <td>{{ item.numeroEquipo }}</td>
-                                        <td>{{ item.digitoVerificador }}</td>
-                                        <td>{{ item.tipoEquipo }}</td>
-                                        <td>{{ item.aduana }}</td>
-                                        <td>{{ item.fechaIngreso }}</td>
-                                        <td>{{ item.vigencia }}</td>
-                                        <td>{{ item.estadoConstancia }}</td>
-                                        <td>{{ item.existeEnVUCEM }}</td>
-                                        <td>{{ item.idConstancia }}</td>
-                                        <td>{{ item.numeroManifiesto }}</td>
-                                        <td>{{ item.idSolicitud }}</td>
-                                        <td>{{ item.fechaInicio }}</td>
+                                        <td>{{ articulo.inicialesEquipo }}</td>
+                                        <td>{{ articulo.numeroEquipo }}</td>
+                                        <td>{{ articulo.digitoVerificador }}</td>
+                                        <td>{{ articulo.tipoEquipo }}</td>
+                                        <td>{{ articulo.aduana }}</td>
+                                        <td>{{ articulo.fechaIngreso }}</td>
+                                        <td>{{ articulo.vigencia }}</td>
+                                        <td>{{ articulo.estadoConstancia }}</td>
+                                        <td>{{ articulo.existeEnVUCEM }}</td>
+                                        <td>{{ articulo.idConstancia }}</td>
+                                        <td>{{ articulo.numeroManifiesto }}</td>
+                                        <td>{{ articulo.idSolicitud }}</td>
+                                        <td>{{ articulo.fechaInicio }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -248,8 +248,8 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaDropdown"
-                                (change)="setValoresStore(solicitudForm,'aduanaDropdown', 'setAduanaDropdown')"></app-catalogo-select>
+                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaMenúDesplegable"
+                                (change)="setValoresStore(solicitudForm,'aduanaMenúDesplegable', 'setAduanaMenúDesplegable')"></app-catalogo-select>
                             <label for="fechaDeIngreso" class="form-label">Fecha de ingreso*:</label>
                             <input class="form-control" type="date" name="fechaDeIngreso" id="fechaDeIngreso"
                                 formControlName="fechaDeIngreso"
@@ -289,21 +289,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of datosTabla; let i = index">
+                                    <tr *ngFor="let articulo of datosTabla; let i = index">
                                         <td class="grey-column">{{ i + 1 }}</td>
-                                        <td>{{ item.inicialesEquipo }}</td>
-                                        <td>{{ item.numeroEquipo }}</td>
-                                        <td>{{ item.digitoVerificador }}</td>
-                                        <td>{{ item.tipoEquipo }}</td>
-                                        <td>{{ item.aduana }}</td>
-                                        <td>{{ item.fechaIngreso }}</td>
-                                        <td>{{ item.vigencia }}</td>
-                                        <td>{{ item.estadoConstancia }}</td>
-                                        <td>{{ item.existeEnVUCEM }}</td>
-                                        <td>{{ item.idConstancia }}</td>
-                                        <td>{{ item.numeroManifiesto }}</td>
-                                        <td>{{ item.idSolicitud }}</td>
-                                        <td>{{ item.fechaInicio }}</td>
+                                        <td>{{ articulo.inicialesEquipo }}</td>
+                                        <td>{{ articulo.numeroEquipo }}</td>
+                                        <td>{{ articulo.digitoVerificador }}</td>
+                                        <td>{{ articulo.tipoEquipo }}</td>
+                                        <td>{{ articulo.aduana }}</td>
+                                        <td>{{ articulo.fechaIngreso }}</td>
+                                        <td>{{ articulo.vigencia }}</td>
+                                        <td>{{ articulo.estadoConstancia }}</td>
+                                        <td>{{ articulo.existeEnVUCEM }}</td>
+                                        <td>{{ articulo.idConstancia }}</td>
+                                        <td>{{ articulo.numeroManifiesto }}</td>
+                                        <td>{{ articulo.idSolicitud }}</td>
+                                        <td>{{ articulo.fechaInicio }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -337,21 +337,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of datosTabla; let i = index">
+                                    <tr *ngFor="let articulo of datosTabla; let i = index">
                                         <td class="grey-column">{{ i + 1 }}</td>
-                                        <td>{{ item.inicialesEquipo }}</td>
-                                        <td>{{ item.numeroEquipo }}</td>
-                                        <td>{{ item.digitoVerificador }}</td>
-                                        <td>{{ item.tipoEquipo }}</td>
-                                        <td>{{ item.aduana }}</td>
-                                        <td>{{ item.fechaIngreso }}</td>
-                                        <td>{{ item.vigencia }}</td>
-                                        <td>{{ item.estadoConstancia }}</td>
-                                        <td>{{ item.existeEnVUCEM }}</td>
-                                        <td>{{ item.idConstancia }}</td>
-                                        <td>{{ item.numeroManifiesto }}</td>
-                                        <td>{{ item.idSolicitud }}</td>
-                                        <td>{{ item.fechaInicio }}</td>
+                                        <td>{{ articulo.inicialesEquipo }}</td>
+                                        <td>{{ articulo.numeroEquipo }}</td>
+                                        <td>{{ articulo.digitoVerificador }}</td>
+                                        <td>{{ articulo.tipoEquipo }}</td>
+                                        <td>{{ articulo.aduana }}</td>
+                                        <td>{{ articulo.fechaIngreso }}</td>
+                                        <td>{{ articulo.vigencia }}</td>
+                                        <td>{{ articulo.estadoConstancia }}</td>
+                                        <td>{{ articulo.existeEnVUCEM }}</td>
+                                        <td>{{ articulo.idConstancia }}</td>
+                                        <td>{{ articulo.numeroManifiesto }}</td>
+                                        <td>{{ articulo.idSolicitud }}</td>
+                                        <td>{{ articulo.fechaInicio }}</td>
                                     </tr>
                                 </tbody>
                             </table>
