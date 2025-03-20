@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 import { ContenedorComponent } from './contenedor.component';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
@@ -18,6 +19,7 @@ describe('ContenedorComponent', () => {
       getAduanas: jest.fn(),
       getContenedores: jest.fn(),
       submitSolicitud: jest.fn(),
+      getDatosTableData: jest.fn(),
     };
 
     const contenedorStoreMock = {
@@ -30,8 +32,9 @@ describe('ContenedorComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [ContenedorComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, HttpClientModule],
       providers: [
+        FormBuilder,
         { provide: DatosTramiteService, useValue: datosTramiteServiceMock },
         { provide: Contenedor11202Store, useValue: contenedorStoreMock },
         { provide: Contenedor11202Query, useValue: contenedorQueryMock },
@@ -46,6 +49,7 @@ describe('ContenedorComponent', () => {
 
     datosTramiteService.getAduanas.mockReturnValue(of([]));
     datosTramiteService.getContenedores.mockReturnValue(of([]));
+    datosTramiteService.getDatosTableData.mockReturnValue(of([]));
   });
 
   /**
@@ -129,5 +133,41 @@ describe('ContenedorComponent', () => {
     component.ngOnInit();
     component.solicitudForm.get('tipoBusqueda')?.setValue('Archivo CSV');
     expect(component.setValoresStore).toHaveBeenCalledWith(component.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
+  });
+
+  /**
+   * Prueba para verificar que se llama a cargarCatalogAduanas y cargarCatalogContenedores en ngOnInit.
+   */
+  it('should call cargarCatalogAduanas and cargarCatalogContenedores on ngOnInit', () => {
+    jest.spyOn(component, 'cargarCatalogAduanas');
+    jest.spyOn(component, 'cargarCatalogContenedores');
+    component.ngOnInit();
+    expect(component.cargarCatalogAduanas).toHaveBeenCalled();
+    expect(component.cargarCatalogContenedores).toHaveBeenCalled();
+  });
+
+  /**
+   * Prueba para verificar que se llama a loadDatosTablaData en ngOnInit.
+   */
+  it('should call loadDatosTablaData on ngOnInit', () => {
+    jest.spyOn(component, 'loadDatosTablaData');
+    component.ngOnInit();
+    expect(component.loadDatosTablaData).toHaveBeenCalled();
+  });
+
+  /**
+   * Prueba para verificar que loadDatosTablaData obtiene los datos de la tabla.
+   */
+  it('should get table data in loadDatosTablaData', () => {
+    const mockData = [
+      { id: 1, descripcion: 'Dato 1' },
+      { id: 2, descripcion: 'Dato 2' },
+    ];
+    datosTramiteService.getDatosTableData.mockReturnValue(of(mockData));
+
+    component.loadDatosTablaData();
+
+    expect(datosTramiteService.getDatosTableData).toHaveBeenCalled();
+    expect(component.datosTabla).toEqual(mockData);
   });
 });

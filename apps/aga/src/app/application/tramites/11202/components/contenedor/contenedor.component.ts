@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
-import {
-  Contenedor11202State,
-  Contenedor11202Store,
-} from '../../../../estados/tramites/contenedor11202.store';
-import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
-import { TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
-import { Subject, map, takeUntil } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json';
+
+import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
+import { Contenedor11202State} from '../../../../estados/tramites/contenedor11202.store';
+import {Contenedor11202Store} from '../../../../estados/tramites/contenedor11202.store';
+import {TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 
 @Component({
   selector: 'app-contenedor',
@@ -25,10 +25,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   options!: Catalogo[];
 
-  /**
-   * Define los datos que se mostrarán en la tabla dinámica.
-   */
-
+  
    /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
@@ -47,8 +44,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   seccionContenedor: boolean = false;
   agregarTipoContenedorVisible: boolean = false;
   seccionExcelVisible: boolean = false;
-  catalogAduanas: any[] = [];
-  catalogContenedores: any[] = [];
+  catalogAduanas: Catalogo[] = [];
+  catalogContenedores: string[] = [];
   contenedores: any[] = [];
   archivoSeleccionado: string = '';
   cargarArchivoVisible: boolean = false;
@@ -104,7 +101,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getAduanas()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: any): void => {
+      .subscribe((data: Catalogo[]): void => {
         this.options = data as Catalogo[];
       });
   }
@@ -116,7 +113,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getContenedores()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: any) => {
+      .subscribe((data: Catalogo[]) => {
         this.options = data as Catalogo[];
       });
   }
@@ -227,7 +224,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   parseCSV(csv: string): void {
     const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
-    const headerMap: { [key: string]: string } = {
+    const HEADER_MAP: { [key: string]: string } = {
       Aduana: 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo': 'tipoEquipo',
@@ -247,8 +244,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         const VALUES = line.split(',');
         const OBJ: any = {};
         HEADERS.forEach((header, index) => {
-          const key = headerMap[header.trim()] || header.trim();
-          OBJ[key] = VALUES[index]?.trim();
+          const KEY = HEADER_MAP[header.trim()] || header.trim();
+          OBJ[KEY] = VALUES[index]?.trim();
         });
         return OBJ;
       })
@@ -288,11 +285,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Selecciona la pestaña activa basada en el índice almacenado en localStorage.
    */
   tabSeleccionado(): void {
-    const currentIdx = localStorage.getItem('currentIdx');
-    if (currentIdx !== null) {
-      this.currentIdx = +currentIdx;
-      // Implementar lógica para establecer la pestaña activa basada en currentIdx
-      // Si se usa una librería de pestañas, establecer el índice activo según corresponda
+    const CURRENT_IDX = localStorage.getItem('currentIdx');
+    if (CURRENT_IDX !== null) {
+      this.currentIdx = +CURRENT_IDX;
     }
   }
 
@@ -331,8 +326,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
 
     this.mostrarCampos();
-    // Escuchar cambios en tipoBusqueda para mostrar secciones
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe((value) => {
+       this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe((value) => {
       this.setValoresStore(
         this.solicitudForm,
         'tipoBusqueda',
