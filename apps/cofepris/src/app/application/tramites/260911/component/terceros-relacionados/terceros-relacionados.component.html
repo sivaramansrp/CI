@@ -13,27 +13,10 @@
           <span class="require">*</span>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-md-12">
-            <table class="table table-responsive">
-              <thead>
-                <tr>
-                 
-                  <th>Nombre/denominación o razón social</th>
-                  <th>R.F.C.</th>
-                  <th>CURP</th>
-                  <th>Teléfono</th>
-                  <th>Correo electrónico</th>
-                  <th>Calle</th>
-                </tr>
-              </thead>
+ <div class="col-md-12">
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="datosTabla" ></app-tabla-dinamica>
         
-           
-            </table>
-            
-          </div>
-    </div>
-
-    </div>
+      </div>
+   
+</div>
 </div>

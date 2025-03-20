@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 // eslint-disable-next-line sort-imports
 
 import { SanitaryPermitComponent } from './pages/sanitary-permit/sanitary-permit.component';
-import { TercerosRelacionadosComponent } from './component/terceros-relacionados/terceros-relacionados.component';
 
 const ROUTES: Routes = [
   {
