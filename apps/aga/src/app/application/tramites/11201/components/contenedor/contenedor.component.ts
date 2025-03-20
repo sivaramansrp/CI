@@ -254,7 +254,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.initializeForm();
+    this.inicializarFormulario();
     this.cargarCatalogos();
     this.tabSeleccionado();
     this.fetchgetTransporteList();
@@ -273,7 +273,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el formulario reactivo.
    */
-  initializeForm(): void {
+  inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
       tipoBusqueda: [this.solicitud11201State?.tipoBusqueda, Validators.required],
       aduana: [this.solicitud11201State?.aduana, Validators.required],
@@ -508,11 +508,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   parseCSV(csv: string): void {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
+    const headerMap: { [key: string]: string } = {
+      'Aduana': 'aduana',
+      'Iniciales del equipo': 'inicialesEquipo',
+      'Tipo de equipo':'tipoEquipo',
+      'N�mero de equipo':'numeroEquipo',
+      'D�gito Verificador':'digitoVerificador',
+      'Fecha Ingreso':'fechaIngreso',
+      'Vigencia':'vigencia',
+      'Estado de constancia':'estadoConstancia',
+      'Existe en VUCEM':'existeEnVUCEM',
+      'Id constancia':'idConstancia',
+      'N�mero manifiesto':'numeroManifiesto',
+      'Id solicitud':'idSolicitud',
+      'Fecha inicio':'fechaInicio'
+    };
     const DATA = LINES.slice(1).map((line) => {
         const VALUES = line.split(',');
         const OBJ: any = {};
         HEADERS.forEach((header, index) => {
-            OBJ[header.trim()] = VALUES[index]?.trim() || '';
+            const key = headerMap[header.trim()] || header.trim();
+            OBJ[key] = VALUES[index]?.trim();
         });
         return OBJ;
     }).filter(item => Object.values(item).some(value => value));
