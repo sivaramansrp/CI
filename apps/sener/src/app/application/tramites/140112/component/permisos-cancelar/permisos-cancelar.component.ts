@@ -38,7 +38,7 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
   public TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /** Configuración para las columnas de la tabla */
-  configuracionTabla: ConfiguracionColumna<any>[] = [
+  configuracionTabla: ConfiguracionColumna<PermisosCancelar>[] = [
     { encabezado: '', clave: (item: PermisosCancelar) => item.id, orden: 1 },
     { encabezado: 'Folio trámite ', clave: (item: PermisosCancelar) => item.folioTtrámite, orden: 2 },
     { encabezado: 'Tipo solicitud ', clave: (item: PermisosCancelar) => item.tipoSolicitud, orden: 3 },
