@@ -46,28 +46,50 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                     <div class="col-md-12">
-                      <label class="form-label" for="tipoPersona">Terceros Naciolalidad:</label>
+                      <label class="form-label" for="tipoPersona">Terceros Nacionalidad:</label>
                     </div>
                     
                     <div class="col-md-12">
-                      <input type="radio" id="fisica" name="nacional" formControlName="nacional" value="nacional" >
-                      <label for="fisica"  >Nacional</label>
-                    </div>
+                     
+                      <input
+                      type="radio"
+                      id="nacional"
+                      name="nacionalidad"
+                      formControlName="nacionalidad"
+                      value="nacional">
+                    <label for="nacional">Nacional</label>
+                  </div>
                     <div class="col-md-12">
-                      <input type="radio" id="moral" name="nacional" formControlName="extranjero">
+                     <input
+                        type="radio"
+                        id="extranjero"
+                        name="nacionalidad"
+                        formControlName="nacionalidad"
+                        value="extranjero">
                       <label for="moral">Extranjero</label>
                     </div>
                   </div>
               <div class="col-md-6">
                     <div class="col-md-12">
-                      <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+                      <label class="form-label" for="tipoPersona">Tipo Persona*:</label>
                     </div>
                     <div class="col-md-12">
-                      <input type="radio" id="fisica" name="nacional1" formControlName="fisica" >
-                      <label for="fisica">Física</label>
+                     <input
+                      type="radio"
+                      id="fisica"
+                      name="tipoPersona"
+                      formControlName="tipoPersona"
+                      value="fisica">
+
+                      <label for="fisica">Física </label>
                     </div>
                     <div class="col-md-12">
-                      <input type="radio" id="moral" name="nacional1" formControlName="moral" value="moral"  >
+                      <input
+                      type="radio"
+                      id="moral"
+                      name="tipoPersona"
+                      formControlName="tipoPersona"
+                      value="moral">
                       <label for="moral">Moral</label>
                     </div>
                   </div>
@@ -208,8 +230,6 @@
               </div>
 </form>
 </div>
-
-
 <div class="modal-footer custom-footer ">
     <button type="button" class="btn btn-primary">Cancelar</button>
     <button
@@ -282,11 +302,24 @@
                           <label class="form-label" for="tipoPersona">Tipo persona*:</label>
                         </div>
                         <div class="col-md-12">
-                          <input type="radio" id="fisica" name="nacional1" formControlName="profisica" >
-                          <label for="fisica">Física</label>
+                         
+                          <input
+                          type="radio"
+                          id="fisica"
+                          name="tipoPersona"
+                          formControlName="tipoPersona"
+                          value="fisica">
+                       <label for="fisica">Física</label>
                         </div>
                         <div class="col-md-12">
-                          <input type="radio" id="moral" name="nacional1" formControlName="moral"  >
+                         <input
+                          type="radio"
+                          id="moral"
+                          name="tipoPersona"
+                          formControlName="tipoPersona"
+                          value="moral">
+                        <label for="moral">Moral</label>
+    
                           <label for="moral">Moral</label>
                         </div>
                       </div>
@@ -327,9 +360,7 @@
                         <label class="form-label" for="localidad">Estado*:</label>
                         <input type="text" class="form-control" id="localidad" formControlName="numeroEstado"
                         (change)="setValoresStore(requeridaForm,'tiponumeroEstado', 'setnumeroEstado')">
-                        
-                      
-                      </div>
+                        </div>
                       <div class="col-md-4">
                         <label class="form-label" for="municipio">Codigo postal o equivalente</label>
                         <input type="text" class="form-control" id="numeropostal" formControlName="numeropostal"

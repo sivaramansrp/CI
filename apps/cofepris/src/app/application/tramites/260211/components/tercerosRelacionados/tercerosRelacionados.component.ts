@@ -245,10 +245,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   getRegistroForm(): void {
     this.proveedorForm = this.fb.group({
-      nacional: ['nacional', Validators.required],
-      extranjero: [false],
-      fisica: [false],
-      moral: ['moral', Validators.required],
+      nacionalidad: ['nacional', Validators.required], // Matches the formControlName in the HTML
+      tipoPersona: ['moral', Validators.required], // Matches the formControlName in the HTML
       rfc: [{ value: '', disabled: true }, Validators.required],
       denominacion: [this.solicitudState?.denominacion, Validators.required],
       pail: ['', Validators.required],
