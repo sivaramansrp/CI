@@ -2,7 +2,7 @@ import { ToastrModule, provideToastr } from 'ngx-toastr';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { BreadcrumbComponent } from '@ng-mf/data-access-user';
+import { BreadcrumbComponent, CatalogosService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DocumentoService } from '@ng-mf/data-access-user';
 import { FooterComponent } from '@ng-mf/data-access-user';
@@ -45,7 +45,8 @@ import { provideHttpClient } from '@angular/common/http';
     ToastrService,
     DocumentoService,
     InicioSesionService,
-    SubirDocumentoService
+    SubirDocumentoService,
+    CatalogosService 
   ],
   bootstrap: [AppComponent],
 })
