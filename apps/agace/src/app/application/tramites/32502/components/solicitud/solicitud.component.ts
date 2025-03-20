@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
-import { map, merge } from 'rxjs';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 
 
 import { AvisoService } from '../../services/aviso.service';
@@ -48,6 +48,7 @@ export class SolicitudComponent implements OnInit {
    * @property {string} declaracionDeResponsabilidadSolidaria - Mensaje mostrado declaración de responsabilidad solidaria.
    */
   declaracionDeResponsabilidadSolidaria : string = TEXTOS.DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA;
+  private destroy$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -78,10 +79,12 @@ export class SolicitudComponent implements OnInit {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-    this.tramite32502Query.select().subscribe(state => {
-      this.solicitudState = state;
-      this.crearFormSolicitud();
-    });
+    this.tramite32502Query.select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        this.solicitudState = state;
+        this.crearFormSolicitud();
+      });
   }
 
   /**
