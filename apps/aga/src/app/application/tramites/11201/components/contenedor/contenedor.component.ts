@@ -182,7 +182,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Sujeto para notificar la destrucción del componente.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Monto de la solicitud.
@@ -588,7 +588,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     );
   }
 
-  private fetchgetTransporteList(): void {
+  public fetchgetTransporteList(): void {
     this.datosTramiteService
       .getTransporteList('transporteList')
       .subscribe((response) => {
@@ -596,7 +596,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
   }
 
-  private fetchAduanaList(): void {
+  public fetchAduanaList(): void {
     this.datosTramiteService
       .getAduanaList('aduanaList')
       .subscribe((response) => {
