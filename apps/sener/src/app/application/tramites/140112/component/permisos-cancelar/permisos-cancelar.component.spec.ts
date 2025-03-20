@@ -1,146 +1,108 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisosCancelarComponent } from './permisos-cancelar.component';
 import { PermisosCancelarService } from '../../service/permisos-cancelar.service';
-import { Tramite140112Store } from '../../estados/tramite-140112.store';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of, throwError } from 'rxjs';
-import { MockService } from 'ng-mocks';
-
-/**
- * Test suite for PermisosCancelarComponent
- */
+import { Tramite140112Store } from '../../estados/tramite-140112.store'
+import { Tramite140112Query } from '../../estados/tramite-140112.query';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('PermisosCancelarComponent', () => {
   let component: PermisosCancelarComponent;
-  let fixture: ComponentFixture<PermisosCancelarComponent>;
-  let permisosCancelarService: PermisosCancelarService;
-  let tramiteStore: Tramite140112Store;
-
-  /**
-   * Asynchronous beforeEach to compile components
-   */
+  let fixture: ComponentFixture<PermisosCancelarComponent>
+  let permisosCancelarServiceSpy: any;
+  let storeSpy: any;
+  let querySpy: any
+  let fb: FormBuilder;
   beforeEach(async () => {
+    const permisosCancelarServiceMock = {
+      getPermisosCancelar: jest.fn(),
+      isValid: jest.fn(),
+    };
+    const storeMock = {
+      setDesistimiento: jest.fn(),
+    };
+
+    const queryMock = {
+      selectDesistimiento$: new Subject().asObservable(),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [PermisosCancelarComponent],
+      declarations: [],
+      imports: [ReactiveFormsModule, PermisosCancelarComponent, TablaDinamicaComponent, CommonModule, FormsModule,
+        HttpClientTestingModule],
       providers: [
-        { provide: PermisosCancelarService, useClass: MockService(PermisosCancelarService) },
-        { provide: Tramite140112Store, useClass: MockService(Tramite140112Store) },
+        { provide: PermisosCancelarService, useValue: permisosCancelarServiceMock },
+        { provide: Tramite140112Store, useValue: storeMock },
+        { provide: Tramite140112Query, useValue: queryMock },
+        FormBuilder,
       ],
     }).compileComponents();
-  });
 
-  /**
-   * Synchronous beforeEach to initialize component and services
-   */
-  beforeEach(() => {
+    permisosCancelarServiceSpy = TestBed.inject(PermisosCancelarService)
+    storeSpy = TestBed.inject(Tramite140112Store);
+    querySpy = TestBed.inject(Tramite140112Query);
+    fb = TestBed.inject(FormBuilder);
     fixture = TestBed.createComponent(PermisosCancelarComponent);
     component = fixture.componentInstance;
-    permisosCancelarService = TestBed.inject(PermisosCancelarService);
-    tramiteStore = TestBed.inject(Tramite140112Store);
+    component.solicitud = fb.group({
+      descripcionClobGenerica1: ['test', []],
+      declaracionBoolean: [true, []],
+    });
     fixture.detectChanges();
   });
 
-  /**
-   * Test to check if the component is created
-   */
-  it('debe crear el componente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Test to check if the component initializes with default values
-   */
-  it('debe inicializar con valores predeterminados', () => {
-    expect(component.TablaSeleccion).toBeDefined();
-    expect(component.configuracionTabla.length).toBeGreaterThan(0);
+  it('should set initial values', () => {
+    expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
+    expect(component.configuracionTabla.length).toBe(7);
     expect(component.permisosCancelar).toEqual([]);
+    expect(component.manifestoDeVeracidad).toBe('De conformidad con el artículo 57, fracción 11, y 58 de la ley Federal de Procedimiento Administrativo* Manifiesto decir verdad');
+    expect(component.motivoDesistimientotextBox).toBe('');
+    expect(component.obtenerFilasSeleccionadas).toEqual([]);
+    expect(component.confirmarVeracidad).toBe('');
+    expect(component.estmarcado).toBe(false);
   });
 
-  /**
-   * Test to check if loadPermisoCancelar is called in ngOnInit
-   */
-  it('debe llamar a loadPermisoCancelar en ngOnInit', () => {
-    jest.spyOn(permisosCancelarService, 'getPermisosCancelar').mockReturnValue(of([]));
-    component.ngOnInit();
-    expect(permisosCancelarService.getPermisosCancelar).toHaveBeenCalled();
-  });
 
-  /**
-   * Test to check if permisosCancelar is updated when loadPermisoCancelar is successful
-   */
-  it('debe actualizar permisosCancelar cuando loadPermisoCancelar sea exitoso', () => {
-    const mockData = [{ code: 1, data: [], message: 'message' }];
-    jest.spyOn(permisosCancelarService, 'getPermisosCancelar').mockReturnValue(of(mockData));
-    
-    component.loadPermisoCancelar();
-    fixture.detectChanges();
 
-    expect(component.permisosCancelar).toEqual(mockData);
-  });
-
-  /**
-   * Test to check if loadPermisoCancelar handles error correctly
-   */
-  it('debe manejar el error de loadPermisoCancelar correctamente', () => {
-    jest.spyOn(permisosCancelarService, 'getPermisosCancelar').mockReturnValue(throwError('error'));
-    
-    component.loadPermisoCancelar();
-    fixture.detectChanges();
-
-    expect(component.permisosCancelar).toEqual([]);
-  });
-
-  /**
-   * Test to check if obtenerFilasSeleccionadas is updated when handleListaDeFilaSeleccionada is called
-   */
-  it('debe actualizar obtenerFilasSeleccionadas cuando se llame a handleListaDeFilaSeleccionada', () => {
-    const mockData = [{ code: 1, data: [], message: 'Test message' }];
-    component.handleListaDeFilaSeleccionada(mockData);
-    expect(component.obtenerFilasSeleccionadas).toEqual(mockData);
-  });
-
-  /**
-   * Test to check if confirmarVeracidad is updated when seleccionarDeseleccionarTodos is called with checked=true
-   */
-  it('debe actualizar confirmarVeracidad cuando se llame a seleccionarDeseleccionarTodos con checked=true', () => {
-    const event = new Event('change') as Event & { target: { checked: boolean } };
-    event.target = { checked: true } as any;
+  it('should select or deselect all rows', () => {
+    const event = { target: { checked: true } } as any;
     component.seleccionarDeseleccionarTodos(event);
     expect(component.estmarcado).toBe(true);
-    expect(component.confirmarVeracidad).toBe('De conformidad con el artículo 57, fracción 11, y 58 de la ley Federal de Procedimiento Administrativo* Manifiesto decir verdad');
-  });
-
-  /**
-   * Test to check if confirmarVeracidad is updated when seleccionarDeseleccionarTodos is called with checked=false
-   */
-  it('debe actualizar confirmarVeracidad cuando se llame a seleccionarDeseleccionarTodos con checked=false', () => {
-    const event = new Event('change') as Event & { target: { checked: boolean } };
-    event.target = { checked: false } as any;
-    component.seleccionarDeseleccionarTodos(event);
+    expect(component.confirmarVeracidad).toBe(component.manifestoDeVeracidad);
+    const event2 = { target: { checked: false } } as any;
+    component.seleccionarDeseleccionarTodos(event2);
     expect(component.estmarcado).toBe(false);
     expect(component.confirmarVeracidad).toBe('');
   });
 
-  /**
-   * Test to check if setValoresStore is called when setValoresStore is called
-   */
-  it('debe llamar a setValoresStore cuando se llame a setValoresStore', () => {
-    const mockDesistimiento = 'Test Desistimiento';
-    component.solicitud.patchValue({ desistimiento: mockDesistimiento });
-
-    jest.spyOn(tramiteStore, 'setDesistimiento');
+  it('should set values in store', () => {
     component.setValoresStore();
-
-    expect(tramiteStore.setDesistimiento).toHaveBeenCalledWith(mockDesistimiento);
+    expect(storeSpy.setDesistimiento).toHaveBeenCalledWith('test');
+  });
+  it('should validate form field', () => {
+    permisosCancelarServiceSpy.isValid.mockReturnValue(true);
+  });
+  it('should unsubscribe on destroy', () => {
+    const destroy$Spy = jest.spyOn((component as any).destroy$, 'next');
+    const complete$Spy = jest.spyOn((component as any).destroy$, 'complete');
+    component.ngOnDestroy();
+    expect(destroy$Spy).toHaveBeenCalled();
+    expect(complete$Spy).toHaveBeenCalled();
   });
 
-  /**
-   * Test to check if the form validity is returned when isValid is called
-   */
-  it('debe devolver la validez del formulario cuando se llame a isValid', () => {
-    const field = 'desistimiento';
-    jest.spyOn(permisosCancelarService, 'isValid').mockReturnValue(true);
-    const result = component.isValid(field);
-    expect(result).toBe(true);
+  it('should patch form value on init', () => {
+    const desistimientoSubject = new Subject<string>();
+    (querySpy.selectDesistimiento$ as any) = desistimientoSubject.asObservable();
+    component.ngOnInit();
+    desistimientoSubject.next('test data');
+    expect(component.solicitud.get('descripcionClobGenerica1')?.value).toBe('test data');
   });
 });

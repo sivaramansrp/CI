@@ -7,6 +7,5 @@ import { PermisosCancelarComponent } from '../permisos-cancelar/permisos-cancela
   standalone: true,
   imports: [CommonModule, PermisosCancelarComponent],
   templateUrl: './desistimiento-solicitud-permiso.component.html',
-  styleUrl: './desistimiento-solicitud-permiso.component.scss',
-})
+  styleUrls: ['./desistimiento-solicitud-permiso.component.scss']})
 export class DesistimientoSolicitudPermisoComponent {}

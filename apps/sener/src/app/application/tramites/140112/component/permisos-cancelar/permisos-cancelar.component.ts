@@ -1,4 +1,3 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -27,7 +26,6 @@ import { Validators } from '@angular/forms';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserModule,
     TablaDinamicaComponent,
   ],
   providers: [PermisosCancelarService],
@@ -96,10 +94,8 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
    * Gancho de ciclo de vida OnInit
    */
   ngOnInit(): void {
-    this.query.selectDesistimiento$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe((data) => {
-      this.solicitud.patchValue({
+    this.query.selectDesistimiento$?.subscribe((data) => {
+      this.solicitud?.patchValue({
         descripcionClobGenerica1: data
       });
     });
@@ -117,13 +113,13 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Manejar datos de filas seleccionadas
-   * @param data Datos de filas seleccionadas
-   */
-  handleListaDeFilaSeleccionada(data: PermisosCancelarData[]): void {
-    this.obtenerFilasSeleccionadas = data;
-  }
+  // /**
+  //  * Manejar datos de filas seleccionadas
+  //  * @param data Datos de filas seleccionadas
+  //  */
+  // handleListaDeFilaSeleccionada(data: PermisosCancelar): void {
+  //   this.obtenerFilasSeleccionadas = data;
+  // }
 
   /**
    * Seleccionar o deseleccionar todas las filas
