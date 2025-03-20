@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { DatosDelTramite, PagoDeDerechos, PagoDeDerechosRevision, ResponsableInspección } from '../modelos/acuicola.model';
+
+import { ApiResponseDos,CertificadosResponse ,DestinoInfoDatos,ExportadorInfoDatos,InspeccionApiResponse,MercanciaDatosDos, PagoDeDerechosApiResponse,PagoDeDerechosRevisionResponse} from '../modelos/acuicola.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -34,10 +34,42 @@ export class FitosanitarioService {
    * 
    * @returns Un `Observable` que emite un objeto de tipo `DatosDelTramite`.
    */
-  obtenerDatosCertificados(): Observable<DatosDelTramite> {
-    return this.http.get<DatosDelTramite>(`${this.apiUrl}datos-certificados.json`).pipe(
-      map((res: any) => {
-        return res.data;
+  obtenerDatosCertificados(): Observable<CertificadosResponse> {
+    return this.http.get<CertificadosResponse>(`${this.apiUrl}datos-certificados.json`).pipe(
+      map((res) => {
+        return res;
+      })
+    );
+  }
+
+  getDatosMercania(): Observable<MercanciaDatosDos> {
+    return this.http.get<MercanciaDatosDos>(`${this.apiUrl}mercania-servico.json`).pipe(
+      map((res) => {
+        return res;
+      })
+    );
+  }
+
+  getDatosDeLaMercancia(): Observable<ApiResponseDos> {
+    return this.http.get<ApiResponseDos>(`${this.apiUrl}datos-de-la-mercancia.json`).pipe(
+      map((res) => {
+        return res;
+      })
+    );
+  }
+
+  getDatosExportador(): Observable<ExportadorInfoDatos> {
+    return this.http.get<ExportadorInfoDatos>(`${this.apiUrl}exportador.json`).pipe(
+      map((res) => {
+        return res;
+      })
+    );
+  }
+
+  getDatosDestinatarioInfo(): Observable<DestinoInfoDatos> {
+    return this.http.get<DestinoInfoDatos>(`${this.apiUrl}destino-datos.json`).pipe(
+      map((res) => {
+        return res;
       })
     );
   }
@@ -99,10 +131,10 @@ export class FitosanitarioService {
    * 
    * @returns Un `Observable` que emite un objeto de tipo `ResponsableInspección`.
    */
-  obtenerResponsableDatos(): Observable<ResponsableInspección> {
-    return this.http.get<ResponsableInspección>(`${this.apiUrl}responsable-inspeccion.json`).pipe(
-      map((res: any) => {
-        return res.data;
+  obtenerResponsableDatos(): Observable<InspeccionApiResponse> {
+    return this.http.get<InspeccionApiResponse>(`${this.apiUrl}responsable-inspeccion.json`).pipe(
+      map((res) => {
+        return res;
       })
     );
   }
@@ -151,10 +183,10 @@ export class FitosanitarioService {
    * 
    * @returns Un `Observable` que emite un objeto de tipo `PagoDeDerechos`.
    */
-  pagoDeCargarDatos(): Observable<PagoDeDerechos> {
-    return this.http.get<PagoDeDerechos>(`${this.apiUrl}pago-de-derechos.json`).pipe(
-      map((res: any) => {
-        return res.data;
+  pagoDeCargarDatos(): Observable<PagoDeDerechosApiResponse> {
+    return this.http.get<PagoDeDerechosApiResponse>(`${this.apiUrl}pago-de-derechos.json`).pipe(
+      map(res => {
+        return res;
       })
     );
   }
@@ -164,10 +196,10 @@ export class FitosanitarioService {
    * 
    * @returns Un `Observable` que emite un objeto de tipo `PagoDeDerechosRevision`.
    */
-  getPagoDerechosRevision(): Observable<PagoDeDerechosRevision> {
-    return this.http.get<PagoDeDerechosRevision>(`${this.apiUrl}pago-de-derechos-revision.json`).pipe(
-      map((res: any) => {
-        return res.data;
+  getPagoDerechosRevision(): Observable<PagoDeDerechosRevisionResponse> {
+    return this.http.get<PagoDeDerechosRevisionResponse>(`${this.apiUrl}pago-de-derechos-revision.json`).pipe(
+      map((res) => {
+        return res;
       })
     );
   }

@@ -171,45 +171,45 @@ export interface MercanciaInfo {
   TABLA_Columna_17: string;
   TABLA_Columna_18: string;
   TABLA_Columna_19: string;
-  estatus: boolean;
+  
 }
 
 export const EXPORTADOR_SERVICIO = [
   {
     encabezado: 'Nombre/denominacaió o razón social',
-    clave: (ele: ExportadorInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: ExportadorInfo): string => ele.Nombre,
     orden: 1,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: ExportadorInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: ExportadorInfo): string => ele.Telefono,
     orden: 2,
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (ele: ExportadorInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: ExportadorInfo): string => ele.correo,
     orden: 3,
   },
   {
     encabezado: 'Domicilio',
-    clave: (ele: ExportadorInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: ExportadorInfo): string => ele.Domicilio,
     orden: 4,
   },
   {
     encabezado: 'País',
-    clave: (ele: ExportadorInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: ExportadorInfo): string => ele.Pais,
     orden: 5,
   },
 ];
 
 
 export interface ExportadorInfo {
-  TABLA_Columna_1: string;
-  TABLA_Columna_2: string;
-  TABLA_Columna_3: string;
-  TABLA_Columna_4: string;
-  TABLA_Columna_5: string;
-  estatus: boolean;
+  Nombre: string;
+  Telefono: string;
+  correo: string;
+  Domicilio: string;
+  Pais: string;
+ 
 }
 
 export const DESTINO_SERVICIO = [
@@ -283,51 +283,51 @@ export interface DestinoInfo {
   TABLA_Columna_9: string;
   TABLA_Columna_10: string;
   TABLA_Columna_11: string;
-  estatus: boolean;
+  
 }
 
 export const MEDIO_SERVICIO = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: MedioInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: MedioInfo): string => ele.Fracciónarancelaria,
     orden: 1,
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: MedioInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: MedioInfo): string => ele.Descripcióndelafracción,
     orden: 2,
   },
   {
     encabezado: 'Nico',
-    clave: (ele: MedioInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: MedioInfo): string => ele.Nico,
     orden: 3,
   },
   {
     encabezado: 'Descripción Nico',
-    clave: (ele: MedioInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: MedioInfo): string => ele.DescripciónNico,
     orden: 4,
   },
   {
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: MedioInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: MedioInfo): string => ele.UnidaddemedidadetarifaUMT,
     orden: 5,
   },
   {
     encabezado: 'Cantidad total UMT',
-    clave: (ele: MedioInfo): string => ele.TABLA_Columna_6,
+    clave: (ele: MedioInfo): string => ele.CantidadtotalUMT,
     orden: 6,
   },
 ];
 
 
 export interface MedioInfo {
-  TABLA_Columna_1: string;
-  TABLA_Columna_2: string;
-  TABLA_Columna_3: string;
-  TABLA_Columna_4: string;
-  TABLA_Columna_5: string;
-  TABLA_Columna_6: string;
-  estatus: boolean;
+  Fracciónarancelaria: string;
+  Descripcióndelafracción:string;
+  Nico: string;
+  DescripciónNico: string;
+  UnidaddemedidadetarifaUMT: string;
+  CantidadtotalUMT: string;
+  
 }
 
 export const SECCIONES_TRAMITE_220702 = {

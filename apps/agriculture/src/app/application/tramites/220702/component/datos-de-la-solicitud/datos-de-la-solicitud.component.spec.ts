@@ -67,6 +67,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.getTipoContenedor = jest.fn();
     component.obtenerResponsableDatos = jest.fn();
     component.getMedioDeTransporte = jest.fn();
+    component.getDatos = jest.fn();
     component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
     component.datosDeLaSolicitudForm.patchValue = jest.fn();
     component.datosDeLaSolicitudForm.statusChanges = observableOf({});
@@ -83,6 +84,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
     expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
     expect(component.getTipoContenedor).toHaveBeenCalled();
+    expect(component.getDatos).toHaveBeenCalled();
 
 
   });
@@ -168,6 +170,16 @@ describe('DatosDeLaSolicitudComponent', () => {
     }));
     component.getMedioDeTransporte();
     expect(component.fitosanitarioService.getMedioDeTransporte).toHaveBeenCalled();
+  });
+
+  it('should run #getDatos()', async () => {
+    component.fitosanitarioService = component.fitosanitarioService || {};
+    component.fitosanitarioService.getDatosDeLaMercancia = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.getDatos();
+    expect(component.fitosanitarioService.getDatosDeLaMercancia).toHaveBeenCalled();
   });
 
   it('should run #obtenerResponsableDatos()', async () => {

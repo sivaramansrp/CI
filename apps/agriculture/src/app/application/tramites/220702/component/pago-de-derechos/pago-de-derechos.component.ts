@@ -1,7 +1,7 @@
 import { CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PagoDeDerechos, PagoDeDerechosRevision } from '../../modelos/acuicola.model';
+import { PagoDeDerechosApiResponse,PagoDeDerechosRevisionResponse} from '../../modelos/acuicola.model';
 import { Subject, takeUntil } from 'rxjs';
 import { FECHA_DE_PAGO } from '../../constantes/acuicola.enum';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
@@ -86,8 +86,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.fitosanitarioService
       .pagoDeCargarDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: PagoDeDerechos) => {
-        this.pagosDeDerechosForm.patchValue(data);
+      .subscribe((data: PagoDeDerechosApiResponse) => {
+        this.pagosDeDerechosForm.patchValue(data.data);
       })
   }
 
@@ -115,8 +115,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.fitosanitarioService
       .getPagoDerechosRevision()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: PagoDeDerechosRevision) => {
-        this.pagosDeDerechosForm.patchValue(data);
+      .subscribe((data: PagoDeDerechosRevisionResponse) => {
+        this.pagosDeDerechosForm.patchValue(data.data);
       })
   }
 

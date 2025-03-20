@@ -1,0 +1,22 @@
+{
+    "code": 200,
+    "data": [
+        {
+            "Nombre": "Ana López",
+            "Telefono": "+34 912 345 678",
+            "correo": "ana.lopez@example.com",
+            "Domicilio": "Calle Gran Vía 45, Madrid",
+            "Pais": "España"
+          },
+         {
+            "Nombre": "Juan Pérez",
+            "Telefono": "+34 912 345 678",
+            "correo": "calle",
+            "Domicilio": "Calle Gran Vía 45, Madrid",
+            "Pais": "España"
+         } 
+            
+          
+    ],
+    "message": "Exportador"
+}

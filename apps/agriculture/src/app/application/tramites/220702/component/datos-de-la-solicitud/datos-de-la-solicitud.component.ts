@@ -1,9 +1,11 @@
+import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MedioInfo } from '../../constantes/acuicola.enum';
+
 import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitudInt, DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
-import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MedioInfo } from '../../constantes/acuicola.enum';
+import { DatosDeLaSolicitudInt, InspeccionApiResponse} from '../../modelos/acuicola.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil, tap } from 'rxjs';
+import{CertificadosResponse} from '../../modelos/acuicola.model';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../modelos/configuracio-columna.model';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
@@ -185,6 +187,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
+    this.getDatos();
 
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
@@ -260,8 +263,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.fitosanitarioService
       .obtenerDatosCertificados()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: DatosDelTramite) => {
-        this.datosDeLaSolicitudForm.patchValue(data);
+      .subscribe((data: CertificadosResponse) => {
+        this.datosDeLaSolicitudForm.patchValue(data.data);
       })
   }
 
@@ -299,6 +302,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
         };
+      }
+    });
+  }
+
+  getDatos(): void {
+    this.fitosanitarioService.getDatosDeLaMercancia().subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.mercanciaDatos = RESPONSE;
       }
     });
   }
@@ -388,8 +400,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.fitosanitarioService
       .obtenerResponsableDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: ResponsableInspección) => {
-        this.datosDeLaSolicitudForm.patchValue(data);
+      .subscribe((data: InspeccionApiResponse) => {
+        this.datosDeLaSolicitudForm.patchValue(data.data);
       })
   }
 

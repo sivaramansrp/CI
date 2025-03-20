@@ -5,10 +5,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
+import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { Component } from '@angular/core';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 
+@Injectable()
+class MockFitosanitarioService { }
 describe('TercerosRelacionadosComponent', () => {
   let fixture;
   let component;
@@ -20,6 +22,7 @@ describe('TercerosRelacionadosComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
+        { provide: FitosanitarioService, useClass: MockFitosanitarioService },
 
       ]
     }).overrideComponent(TercerosRelacionadosComponent, {
@@ -32,5 +35,16 @@ describe('TercerosRelacionadosComponent', () => {
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+     component.getDatos = jest.fn();
+    component.getDatosDestinatario = jest.fn();
+    component.ngOnInit();
+     expect(component.getDatos).toHaveBeenCalled();
+     expect(component.getDatosDestinatario).toHaveBeenCalled();
+
+   
+  });
+
 
 });

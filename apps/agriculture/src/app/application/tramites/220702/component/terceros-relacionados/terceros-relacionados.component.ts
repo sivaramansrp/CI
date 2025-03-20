@@ -3,7 +3,9 @@ import { DESTINO_SERVICIO, DestinoInfo, ExportadorInfo } from '../../constantes/
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EXPORTADOR_SERVICIO } from '../../constantes/acuicola.enum';
+import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { MANDATORY_INSTRUCTION } from '../../constantes/acuicola.enum';
+import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 
@@ -20,7 +22,7 @@ import { Subject } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit {
 
   /**
     * Instrucción que se muestra al usuario para indicar que debe hacer doble clic en un elemento
@@ -57,5 +59,35 @@ export class TercerosRelacionadosComponent {
    * Subject utilizado para notificar la destrucción del componente y limpiar suscripciones.
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(private fitosanitarioService: FitosanitarioService) { 
+    // No se necesita lógica de inicialización adicional
+  }
+
+   ngOnInit(): void {
+      
+  
+      
+      this.getDatos();
+     this.getDatosDestinatario();
+
+      
+    }
+    getDatos(): void {
+      this.fitosanitarioService.getDatosExportador().subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.exportadorTableDatos = RESPONSE;
+        }
+      });
+    }
+    getDatosDestinatario(): void {
+      this.fitosanitarioService.getDatosDestinatarioInfo().subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.destinoTableDatos = RESPONSE;
+        }
+      });
+    }
 
 }

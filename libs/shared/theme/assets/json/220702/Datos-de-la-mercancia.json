@@ -1,0 +1,25 @@
+{
+    "code": 200,
+    "data": [
+      {
+        "Fracciónarancelaria": "Actualización",
+        "Descripcióndelafracción": "Mantenimiento",
+        "Nico": "Reparación",
+        "DescripciónNico": "Instalación",
+        "UnidaddemedidadetarifaUMT": "Revisión",
+        "CantidadtotalUMT": "Asesoría"
+        
+      },
+      {
+        "Fracciónarancelaria": "Diagnóstico",
+        "Descripcióndelafracción": "Soporte",
+        "Nico": "Configuración",
+        "DescripciónNico": "Optimización",
+        "UnidaddemedidadetarifaUMT": "Personalización",
+        "CantidadtotalUMT": "Migración"
+        
+      }
+    ],
+    "message": "Mercanía Servicio"
+  }
+  

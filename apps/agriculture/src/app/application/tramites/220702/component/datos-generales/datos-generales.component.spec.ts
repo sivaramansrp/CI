@@ -66,6 +66,7 @@ describe('DatosGeneralesComponent', () => {
     component.getRegimenAlQue = jest.fn();
     component.getPuntoDeVerificacion = jest.fn();
     component.getDatosParaMovilizacion = jest.fn();
+    component.getDatos = jest.fn();
     component.datosGeneralesForm = component.datosGeneralesForm || {};
     component.datosGeneralesForm.patchValue = jest.fn();
     component.datosGeneralesForm.statusChanges = observableOf({});
@@ -81,6 +82,7 @@ describe('DatosGeneralesComponent', () => {
     expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
     expect(component.getRegimenAlQue).toHaveBeenCalled();
     expect(component.getPuntoDeVerificacion).toHaveBeenCalled();
+    expect(component.getDatos).toHaveBeenCalled();
 
    
   });

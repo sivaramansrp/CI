@@ -180,6 +180,7 @@ export class DatosGeneralesComponent implements OnInit {
     this.getRegimenAlQue();
     this.getPuntoDeVerificacion();
     this.getDatosParaMovilizacion();
+    this.getDatos();
 
     this.tramiteStoreQuery.selectSolicitudTramite$
     .pipe(
@@ -249,6 +250,14 @@ export class DatosGeneralesComponent implements OnInit {
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
         };
+      }
+    });
+  }
+  getDatos(): void {
+    this.fitosanitarioService.getDatosMercania().subscribe((resp) => {
+      if (resp.code === 200) {
+        const RESPONSE = resp.data;
+        this.immexTableDatos = RESPONSE;
       }
     });
   }
