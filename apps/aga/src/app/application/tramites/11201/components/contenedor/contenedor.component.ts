@@ -508,7 +508,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   parseCSV(csv: string): void {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
-    const headerMap: { [key: string]: string } = {
+    const HEADER_MAP: { [key: string]: string } = {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo':'tipoEquipo',
@@ -525,10 +525,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     const DATA = LINES.slice(1).map((line) => {
         const VALUES = line.split(',');
-        const OBJ: any = {};
+        const OBJ: { [key: string]: string } = {};
         HEADERS.forEach((header, index) => {
-            const key = headerMap[header.trim()] || header.trim();
-            OBJ[key] = VALUES[index]?.trim();
+            const KEY = HEADER_MAP[header.trim()] || header.trim();
+            OBJ[KEY] = VALUES[index]?.trim();
         });
         return OBJ;
     }).filter(artículo => Object.values(artículo).some(value => value));

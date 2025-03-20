@@ -9,7 +9,6 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
 import { TemporalContenedoresRoutingModule } from './temporal-contenedores-routing.module';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -23,8 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
     PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
-    WizardComponent,
-    HttpClientModule
+    WizardComponent
   ],
   exports: [],
   providers: [
