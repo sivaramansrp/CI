@@ -40,7 +40,7 @@ export class CancelacionDeSolicitusComponent implements OnInit {
     });
   }
   public busqueda(event: any): void{
-    this.servicioDeMensajesService.sendMessage(true);
+    this.servicioDeMensajesService.enviarMensaje(true);
   }
   public eliminarRegistro(event: any): void{
       }

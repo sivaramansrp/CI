@@ -60,12 +60,12 @@ export class PasoUnoComponent {
     this.indice = i;
   }
   ngOnInit() {
-    this.servicioDeMensajesService.message$.subscribe((message) => {
-      this.mostrarBusqueda = message;
+    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
+      this.mostrarBusqueda = mensaje;
     });
   }
   ngOnDestroy(){
-  this.servicioDeMensajesService.sendMessage(false);
+  this.servicioDeMensajesService.enviarMensaje(false);
   }
   
 }

@@ -7,10 +7,10 @@ import { Subject } from 'rxjs';
 export class ServicioDeMensajesService {
 
   constructor() { }
-  private messageSource = new Subject<boolean>();
-  message$ = this.messageSource.asObservable();
+  private fuenteDelMensaje = new Subject<boolean>();
+  mensaje$ = this.fuenteDelMensaje.asObservable();
 
-  sendMessage(message: boolean) {
-    this.messageSource.next(message);
+  enviarMensaje(mensaje: boolean) {
+    this.fuenteDelMensaje.next(mensaje);
   }
 }

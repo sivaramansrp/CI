@@ -8,6 +8,10 @@
                 <div class="col-md-8">
                     <label class="form-label" for="tramite">Folio tramite*:</label>
                     <input type="text" class="form-control" id="tramite" formControlName="tramite">
+                    <div *ngIf="busquedaForm.controls['tramite'].invalid && busquedaForm.controls['tramite'].touched">
+                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['required']">*El campo no puede estar vacío.</small>
+                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['pattern']">*Solo se permiten números.</small>
+                      </div>
                 </div>
             </div>
         </form>
@@ -34,87 +38,87 @@
                     <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Tipo de solicitud:
+                    <label class="form-label" for="tipoDeSolicitud">Tipo de solicitud:
                     </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                    <input type="text" class="form-control" id="tipoDeSolicitud" formControlName="tipoDeSolicitud">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Regimen:
+                    <label class="form-label" for="regimen">Regimen:
                     </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Condicion de la mercancia:
-                    </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Unidad de medida de la tarifa (UMT):
-                    </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Cantidad:
-                    </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                    <input type="text" class="form-control" id="regimen" formControlName="regimen">
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Clasificacion del regimen:
+                    <label class="form-label" for="condicionDeLaMercancia">Condicion de la mercancia:
                     </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                    <input type="text" class="form-control" id="condicionDeLaMercancia" formControlName="condicionDeLaMercancia">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label" for="folioTramite">Valor de factura USD:
+                    <label class="form-label" for="umt">Unidad de medida de la tarifa (UMT):
                     </label>
-                    <input type="text" class="form-control" id="folioTramite" formControlName="folioTramite">
+                    <input type="text" class="form-control" id="umt" formControlName="umt">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="cantidad">Cantidad:
+                    </label>
+                    <input type="text" class="form-control" id="cantidad" formControlName="cantidad">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="cdr">Clasificacion del regimen:
+                    </label>
+                    <input type="text" class="form-control" id="cdr" formControlName="cdr">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="usd">Valor de factura USD:
+                    </label>
+                    <input type="text" class="form-control" id="usd" formControlName="usd">
                 </div>
             </div>
 
 
             <div class="row">
                 <div class="col-md-6">
-                    <label class="form-label" for="folioTramite">Fraccion arancelaria:
+                    <label class="form-label" for="fraccionArancelaria">Fraccion arancelaria:
                     </label>
-                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="fraccionArancelaria" formControlName="fraccionArancelaria"></textarea>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label" for="folioTramite">Descripcion de la mercancia:
+                    <label class="form-label" for="descripcionDeLaMercancia">Descripcion de la mercancia:
                     </label>
-                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="descripcionDeLaMercancia" formControlName="descripcionDeLaMercancia"></textarea>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <label class="form-label" for="folioTramite">pais(es) procedencia:
+                    <label class="form-label" for="procedencia">pais(es) procedencia:
                     </label>
-                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="procedencia" formControlName="procedencia"></textarea>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label" for="folioTramite">Uso(s) especifico(s) de la mercancia:
+                    <label class="form-label" for="mercancia">Uso(s) especifico(s) de la mercancia:
                     </label>
-                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="mercancia" formControlName="mercancia"></textarea>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-10">
-                    <label class="form-label" for="folioTramite">Justificacion de la importacion o exportacion y el beneficio que se obtiene:
+                    <label class="form-label" for="beneficioQueSeObtiene">Justificacion de la importacion o exportacion y el beneficio que se obtiene:
                     </label>
-                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="beneficioQueSeObtiene" formControlName="beneficioQueSeObtiene"></textarea>
                 </div>
 
             </div>
             <div class="row">
                 <div class="col-md-10">
-                    <label class="form-label" for="folioTramite">Observaciones:
+                    <label class="form-label" for="observaciones">Observaciones:
                     </label>
-                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="folioTramite" formControlName="folioTramite"></textarea>
+                    <textarea rows="3" style="height: 80px" readonly class="form-control" id="observaciones" formControlName="observaciones"></textarea>
                 </div>
 
             </div>

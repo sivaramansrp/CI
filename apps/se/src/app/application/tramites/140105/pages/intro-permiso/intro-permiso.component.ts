@@ -79,8 +79,8 @@ export class IntroPermisoComponent {
   constructor(private servicioDeMensajesService: ServicioDeMensajesService){}
 
   ngOnInit() {
-    this.servicioDeMensajesService.message$.subscribe((message) => {
-      this.mostrarBusqueda = message;
+    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
+      this.mostrarBusqueda = mensaje;
     });
   }
   ngOnDestroy() {
