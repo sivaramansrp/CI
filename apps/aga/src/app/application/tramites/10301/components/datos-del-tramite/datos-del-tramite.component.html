@@ -1,0 +1,465 @@
+<div class="container">
+  <form
+    [formGroup]="tramiteForm"
+    (ngSubmit)="validarDestinatarioFormulario()"
+    class="row mt-5"
+  >
+    <div class="col-md-12">
+      <ng-container formGroupName="importadorExportador">
+        <label>Datos Requeridos*:</label>
+        <div class="alert alert-info">
+          <label style="font-weight: normal">
+            <input
+              type="checkbox"
+              style="margin-left: -245px"
+              formControlName="manifesto"
+              id="manifesto"
+              (change)="
+                setValoresStore(
+                  importadorExportador,
+                  'manifesto',
+                  'setManifesto'
+                )
+              "
+            />
+            *Manifesto bajo protesta de decir verdad que el donante de la
+            mercancía es extranjero
+          </label>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="aduana.catalogos"
+              [label]="aduana.labelNombre"
+              [placeholder]="aduana.primerOpcion"
+              [required]="true"
+              id="aduana"
+              formControlName="aduana"
+              (change)="
+                setValoresStore(importadorExportador, 'aduana', 'setAduana')
+              "
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+      </ng-container>
+      <ng-titulo titulo="Mercancía" />
+      <div class="row">
+        <div class="col-md-6">
+          <label for="mercancia">Mercancías*:</label>
+        </div>
+        <div class="table-container">
+          <ng-table [commonTableHeader]="encabezadosTabla"> </ng-table>
+        </div>
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+          <button type="button" class="btn btn-default">Modificar</button>
+          <button type="button" class="btn btn-default ms-3">Eliminar</button>
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            (click)="nextTabla()"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <ng-container *ngIf="!showTabla && isPopupClose">
+        <div class="row mt-5">
+          <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
+        </div>
+        <ng-titulo titulo="Datos de la mercancía" />
+        <crosslist
+          [fechas]="selectRangoDias"
+          [showSearchInput1]="true"
+          [showSearchInput2]="true"
+          [botonField]="botonField"
+        ></crosslist>
+        <ng-container formGroupName="importadorExportador">
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <label>Tipo de mercancía*:</label>
+            <input
+              type="text"
+              width:140
+              required="true"
+              class="form-control"
+              id="tipoMercancia"
+              formControlName="tipoMercancia"
+              [ngClass]="
+                isValid(importadorExportador, 'tipoMercancia') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  importadorExportador,
+                  'tipoMercancia',
+                  'setTipoMercancia'
+                )
+              "
+            />
+          </div>
+        </div>
+        </ng-container>
+        <ng-container formGroupName="importadorExportador">
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <label>Uso específico de la mercancía*:</label>
+              <input
+                type="text"
+                required="true"
+                class="form-control"
+                id="usoEspecifico"
+                formControlName="usoEspecifico"
+                [ngClass]="
+                  isValid(importadorExportador, 'usoEspecifico')
+                    ? 'required'
+                    : ''
+                "
+                (change)="
+                  setValoresStore(
+                    importadorExportador,
+                    'usoEspecifico',
+                    'setUsoEspecifico'
+                  )
+                "
+              />
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select
+                [catalogo]="condicion.catalogos"
+                [label]="condicion.labelNombre"
+                [placeholder]="condicion.primerOpcion"
+                [required]="true"
+                id="condicion"
+                formControlName="condicion"
+                (change)="
+                  setValoresStore(
+                    importadorExportador,
+                    'condicion',
+                    'setCondicion'
+                  )
+                "
+              ></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <label>Marca:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="marca"
+                formControlName="marca"
+                [ngClass]="
+                  isValid(importadorExportador, 'marca') ? 'required' : ''
+                "
+                (change)="
+                  setValoresStore(importadorExportador, 'marca', 'setMarca')
+                "
+              />
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <app-catalogo-select
+                [catalogo]="ano.catalogos"
+                [label]="ano.labelNombre"
+                [placeholder]="ano.primerOpcion"
+                [required]="false"
+                id="ano"
+                formControlName="ano"
+                (change)="
+                  setValoresStore(importadorExportador, 'ano', 'setAno')
+                "
+              ></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <label>Modelo:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="modelo"
+                formControlName="modelo"
+                [ngClass]="
+                  isValid(importadorExportador, 'modelo') ? 'required' : ''
+                "
+                (change)="
+                  setValoresStore(importadorExportador, 'modelo', 'setModelo')
+                "
+              />
+            </div>
+            <div class="col-md-4">
+              <label>Número de serie:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="serie"
+                formControlName="serie"
+                [ngClass]="
+                  isValid(importadorExportador, 'serie') ? 'required' : ''
+                "
+                (change)="
+                  setValoresStore(importadorExportador, 'serie', 'setSerie')
+                "
+              />
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="col-md-12 mt-5 d-flex justify-content-end">
+          <button type="button" class="btn btn-default">Limpiar</button>
+          <button type="button" class="btn btn-default ms-3">Cancelar</button>
+          <button
+            type="button"
+            class="btn btn-primary ms-3"
+            (click)="openPopup()"
+          >
+            Agregar
+          </button>
+        </div>
+        <div
+          class="modal"
+          tabindex="-1"
+          role="dialog"
+          [ngClass]="{ show: isPopupOpen }"
+          [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
+        >
+          <div class="modal-dialog" role="document">
+            <div
+              class="modal-content"
+              style="width: fit-content; margin-left: 115px"
+            >
+              <div style="background-color: black; height: 55px"></div>
+              <div class="modal-body">
+                <p>La mercancía fue <br />agregada correctamente.</p>
+              </div>
+              <div class="modal-footer" style="justify-content: center">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="closePopup()"
+                >
+                  Acceptar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
+      </ng-container>
+
+      <ng-titulo titulo="Datos del donante extrajero" />
+      <ng-container formGroupName="importadorExportador">
+        <div class="row">
+          <div class="col-md-8">
+            <label>Nombre*:</label>
+            <input
+              type="text"
+              required="true"
+              class="form-control"
+              id="nombre"
+              formControlName="nombre"
+              [ngClass]="
+                isValid(importadorExportador, 'nombre') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(importadorExportador, 'nombre', 'setNombre')
+              "
+            />
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-8">
+            <label>Calle*:</label>
+            <input
+              type="text"
+              required="true"
+              class="form-control"
+              maxlength="100"
+              id="calle"
+              formControlName="calle"
+              [ngClass]="
+                isValid(importadorExportador, 'calle') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(importadorExportador, 'calle', 'setCalle')
+              "
+            />
+          </div>
+          <div class="col-md-4">
+            <label>Número exterior*:</label>
+            <input
+              type="number"
+              required="true"
+              maxlength="55"
+              class="form-control"
+              id="numeroExterior"
+              formControlName="numeroExterior"
+              [ngClass]="
+                isValid(importadorExportador, 'numeroExterior')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  importadorExportador,
+                  'numeroExterior',
+                  'setNumeroExterior'
+                )
+              "
+            />
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label>Número interior:</label>
+            <input
+              type="number"
+              class="form-control"
+              maxlength="55"
+              id="numeroInterior"
+              formControlName="numeroInterior"
+              [ngClass]="
+                isValid(importadorExportador, 'numeroInterior')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  importadorExportador,
+                  'numeroInterior',
+                  'setNumeroInterior'
+                )
+              "
+            />
+          </div>
+
+          <div class="col-md-4">
+            <label>Teléfono:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="telefono"
+              formControlName="telefono"
+              maxlength="30"
+              [ngClass]="
+                isValid(importadorExportador, 'telefono') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(importadorExportador, 'telefono', 'setTelefono')
+              "
+            />
+          </div>
+          <div class="col-md-4">
+            <label>Correo electrónico:</label>
+            <input
+              type="email"
+              class="form-control"
+              maxlength="50"
+              id="correoElectronico"
+              formControlName="correoElectronico"
+              [ngClass]="
+                isValid(importadorExportador, 'correoElectronico')
+                  ? 'required'
+                  : ''
+              "
+              (change)="
+                setValoresStore(
+                  importadorExportador,
+                  'correoElectronico',
+                  'setCorreoElectronico'
+                )
+              "
+            />
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="pais.catalogos"
+              [label]="pais.labelNombre"
+              [placeholder]="pais.primerOpcion"
+              [required]="true"
+              id="pais"
+              formControlName="pais"
+              (change)="
+                setValoresStore(importadorExportador, 'pais', 'setPais')
+              "
+            ></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <label>Código postal*:</label>
+            <input
+              type="number"
+              required="true"
+              class="form-control"
+              id="codigoPostal"
+              formControlName="codigoPostal"
+              [ngClass]="
+                isValid(importadorExportador, 'codigoPostal') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(
+                  importadorExportador,
+                  'codigoPostal',
+                  'setCodigoPostal'
+                )
+              "
+            />
+          </div>
+          <div class="col-md-4">
+            <label>Estado*:</label>
+            <input
+              type="number"
+              required="true"
+              class="form-control"
+              id="estado"
+              formControlName="estado"
+              [ngClass]="
+                isValid(importadorExportador, 'estado') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(importadorExportador, 'estado', 'setEstado')
+              "
+            />
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label>Colonia*:</label>
+            <input
+              type="number"
+              required="true"
+              class="form-control"
+              id="colonia"
+              formControlName="colonia"
+              [ngClass]="
+                isValid(importadorExportador, 'colonia') ? 'required' : ''
+              "
+              (change)="
+                setValoresStore(importadorExportador, 'colonia', 'setColonia')
+              "
+            />
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <label required="true"
+            >Señale si la mercancía formará parte del patrimonio de su
+            representada*:</label
+          >
+          <app-input-radio
+            [radioOptions]="radioOpcions"
+            [selectedValue]="valorSeleccionado"
+            (valueChange)="cambiarRadio($event)"
+            id="opcion"
+            formControlName="opcion"
+            (change)="
+              setValoresStore(importadorExportador, 'opcion', 'setOpcion')
+            "
+          >
+          </app-input-radio>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+</div>

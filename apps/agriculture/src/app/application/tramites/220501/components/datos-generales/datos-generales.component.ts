@@ -1,12 +1,20 @@
+import { CapturaOpcionesDeBotonDeRadio } from '../../enums/sagarpa.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { RevisionService } from '@ng-mf/data-access-user';
+import { RevisionService } from '../../services/revision.service';
+import { Solicitud220501Query } from '../../estados/tramites220501.query';
+import { Solicitud220501State } from '../../estados/tramites220501.store';
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
+import { Subject } from 'rxjs';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 /**
  * Interfaz para definir la estructura de las filas.
  */
@@ -28,7 +36,7 @@ interface Row {
   templateUrl: './datos-generales.component.html',
   styleUrls: ['./datos-generales.component.scss'],
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal.
    * @type {FormGroup}
@@ -54,12 +62,6 @@ export class DatosGeneralesComponent implements OnInit {
   datosDelaSolicitud!: FormGroup;
 
   /**
-   * Formulario de movilización.
-   * @type {FormGroup}
-   */
-  movilizacionForm: FormGroup;
-
-  /**
    * Dirección actual de rotación.
    * @type {number | null}
    */
@@ -75,49 +77,49 @@ export class DatosGeneralesComponent implements OnInit {
    * Selección de aduana de ingreso.
    * @type {CatalogosSelect}
    */
-  aduanaIngreso!: CatalogosSelect;
+  aduanaIngreso: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de oficina de inspección.
    * @type {CatalogosSelect}
    */
-  oficianaInspeccion!: CatalogosSelect;
+  oficianaInspeccion: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de punto de inspección.
    * @type {CatalogosSelect}
    */
-  puntoInspeccion!: CatalogosSelect;
+  puntoInspeccion: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de establecimiento.
    * @type {CatalogosSelect}
    */
-  establecimiento!: CatalogosSelect;
+  establecimiento: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de régimen al que se destinarán.
    * @type {CatalogosSelect}
    */
-  regimenDestinaran!: CatalogosSelect;
+  regimenDestinaran: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de movilización nacional.
    * @type {CatalogosSelect}
    */
-  movilizacionNacional!: CatalogosSelect;
+  movilizacionNacional: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de punto de verificación.
    * @type {CatalogosSelect}
    */
-  puntoVerificacion!: CatalogosSelect;
+  puntoVerificacion: CatalogosSelect = {} as CatalogosSelect;
 
   /**
    * Selección de empresa transportista.
    * @type {CatalogosSelect}
    */
-  empresaTransportista!: CatalogosSelect;
+  empresaTransportista: CatalogosSelect = {} as CatalogosSelect;
   /**
    * Aduana de ingreso seleccionada.
    * @type {Catalogo}
@@ -166,34 +168,79 @@ export class DatosGeneralesComponent implements OnInit {
    */
   empresadeTransportista!: Catalogo;
 
+  solicitud220501State : Solicitud220501State = {} as Solicitud220501State;
+
+  /**
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
+  private destroyed$ = new Subject<void>();
+
+  /** 
+   * Variable para almacenar el valor de la opción seleccionada en el botón de radio. 
+   */
+  esSolicitudFerrosValor!: string;
+
+  /** 
+   * Variable que almacena las opciones disponibles para el botón de radio. 
+   */
+  opcionDeBotonDeRadio = CapturaOpcionesDeBotonDeRadio;
+
+
   constructor(
     private readonly fb: FormBuilder,
     private revisionService: RevisionService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    public solicitud220501Store: Solicitud220501Store,
+    public solicitud220501Query: Solicitud220501Query
   ) {
-    this.crearFormulario();
-    this.initActionFormBuild();
-    this.movilizacionForm = this.fb.group({
-      coordenadas: [{ value: '', disabled: true }],
-      nombre: ['', Validators.required],
-      medio: ['Aereo', Validators.required],
-      transporte: [{ value: '020202', disabled: true }],
-      punto: ['', [Validators.required]],
-    });
+  //
   }
 
   ngOnInit(): void {
-    this.datosDelaSolicitud = this.fb.group({
-      aduanaIngreso: ['', Validators.required],
-      oficinaInspeccion: ['', Validators.required],
-      puntoInspeccion: ['', Validators.required],
-      claveUCON: [{ value: '', disabled: true }],
-      establecimientoTIF: ['', Validators.required],
-      regimen: ['', Validators.required],
-      foliodel: [{ value: '1502200200120240301000015', disabled: true }],
+    this.forma = this.fb.group({
+      foliodel: [{ value: this.solicitud220501State.fetchapago, disabled: true }],
+      aduanaIngreso: [this.solicitud220501State.aduanaIngreso, Validators.required],
+      oficinaInspeccion: [this.solicitud220501State.oficinaInspeccion, Validators.required],
+      puntoInspeccion: [this.solicitud220501State.puntoInspeccion, Validators.required],
+      claveUCON: [{ value: this.solicitud220501State.claveUCON, disabled: true }],
+      establecimientoTIF: [this.solicitud220501State.establecimientoTIF, Validators.required],
+      nombre: [this.solicitud220501State.nombre, Validators.required],
+      numeroguia:[{value:this.solicitud220501State.numeroguia, disabled: true},Validators.required],
+      regimen:[this.solicitud220501State.regimen,Validators.required],
+      capturaDatosMercancia: [this.solicitud220501State.capturaDatosMercancia],
+      coordenadas: [{ value: this.solicitud220501State.coordenadas, disabled: true }],
+      movilizacion: [this.solicitud220501State.movilizacion, Validators.required],
+      transporte: [{ value: this.solicitud220501State.transporte, disabled: true }],
+      punto: [this.solicitud220501State.punto, [Validators.required]],
+      nombreEmpresa: [this.solicitud220501State.nombreEmpresa, Validators.required],
     });
 
-    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
+    this.solicitud220501Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((data: Solicitud220501State) => {
+          this.solicitud220501State = data;
+          this.forma.patchValue({
+            foliodel: this.solicitud220501State.foliodel,
+            aduanaIngreso: this.solicitud220501State.aduanaIngreso,
+            oficinaInspeccion: this.solicitud220501State.oficinaInspeccion,
+            puntoInspeccion: this.solicitud220501State.puntoInspeccion,
+            claveUCON: this.solicitud220501State.claveUCON,
+            establecimientoTIF: this.solicitud220501State.establecimientoTIF,
+            nombre: this.solicitud220501State.nombre,
+            numeroguia: this.solicitud220501State.numeroguia,
+            regimen: this.solicitud220501State.regimen,
+            capturaDatosMercancia: this.solicitud220501State.capturaDatosMercancia,
+            coordenadas: this.solicitud220501State.coordenadas,
+            movilizacion: this.solicitud220501State.movilizacion,
+            transporte: this.solicitud220501State.transporte,
+            punto: this.solicitud220501State.punto,
+            nombreEmpresa: this.solicitud220501State.nombreEmpresa,
+          });
+        })
+      )
+      .subscribe();
 
     this.getAduanaIngreso();
     this.getOficianaInspeccion();
@@ -203,6 +250,27 @@ export class DatosGeneralesComponent implements OnInit {
     this.getMovilizacionNacional();
     this.getPuntoVerificacion();
     this.getEmpresaTransportista();
+    this.actualizarDatosDelaSolicitud();
+  }
+
+  /**
+   * Método para actualizar los datos de la solicitud.
+   * Realiza una llamada al servicio `getDatosDelaSolicitud()` para obtener los datos
+   * y luego actualiza el store con la respuesta recibida.
+   */
+  actualizarDatosDelaSolicitud(): void {
+    this.revisionService.getDatosDelaSolicitud().subscribe({
+      next: (resp:Solicitud220501State) => {
+        this.solicitud220501Store.setFoliodel(resp.foliodel);
+        this.solicitud220501Store.setClaveUCON(resp.claveUCON);
+        this.solicitud220501Store.setEstablecimientoTIF(resp.establecimientoTIF);
+        this.solicitud220501Store.setNombre(resp.nombre);
+        this.solicitud220501Store.setNumeroguia(resp.numeroguia);
+        this.solicitud220501Store.setCoordenadas(resp.coordenadas);
+        this.solicitud220501Store.setTransporte(resp.transporte);
+        this.solicitud220501Store.setNombreEmpresa(resp.nombreEmpresa);
+      }
+    });
   }
 
   /**
@@ -239,50 +307,6 @@ export class DatosGeneralesComponent implements OnInit {
     },
   ];
 
-  /**
-   * Inicializa el grupo de formularios para el componente.
-   *
-   * Este método crea un grupo de formularios utilizando el servicio FormBuilder de Angular.
-   * El grupo de formularios contiene un grupo anidado llamado `datosDelaSolicitud`.
-   *
-   * @returns {void}
-   */
-  crearFormulario(): void {
-    this.forma = this.fb.group({
-      datosDelaSolicitud: this.fb.group({}),
-    });
-  }
-  /**
-   * Inicializa el grupo de formularios para "datosDelaSolicitud" con varios controles de formulario y sus respectivos validadores.
-   *
-   * Los controles de formulario incluyen:
-   * - `aduanaIngreso`: Un campo requerido para la entrada de aduana.
-   * - `oficinaInspeccion`: Un campo requerido para la oficina de inspección.
-   * - `puntoInspeccion`: Un campo requerido para el punto de inspección.
-   * - `claveUCON`: Un campo requerido para la clave UCON.
-   * - `establecimientoTIF`: Un campo requerido para el establecimiento TIF.
-   * - `nombreVeterinario`: Un campo requerido para el nombre del veterinario.
-   * - `numeroGuia`: Un campo opcional para el número de guía.
-   * - `certficacion`: Un campo opcional para la certificación.
-   * - `regimen`: Un campo requerido para el régimen.
-   *
-   * Después de inicializar el grupo de formularios, establece el control 'datosDelaSolicitud' en el formulario principal.
-   *
-   * @returns {void}
-   */
-  initActionFormBuild(): void {
-    this.datosDelaSolicitud = this.fb.group({
-      aduanaIngreso: ['', Validators.required],
-      oficinaInspeccion: ['', Validators.required],
-      puntoInspeccion: ['', Validators.required],
-      claveUCON: ['', [Validators.required]],
-      establecimientoTIF: ['', Validators.required],
-      regimen: ['', Validators.required],
-      foliodel: [{ value: '1502200200120240301000015', disabled: true }],
-    });
-
-    this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
-  }
 
   /**
    * Muestra u oculta el contenido colapsable.
@@ -474,5 +498,78 @@ export class DatosGeneralesComponent implements OnInit {
         };
       }
     });
+  }
+  /**
+   * Selecciona una aduana de ingreso y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la aduana seleccionada.
+   */
+  seleccionarAduanaIngreso(event: Catalogo): void {
+    this.solicitud220501Store.setAduanaIngreso(event.id);
+  }
+
+  /**
+   * Selecciona una oficina de inspección y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la oficina seleccionada.
+   */
+  seleccionarOficianaInspeccion(event: Catalogo): void {
+    this.solicitud220501Store.setOficinaInspeccion(event.id);
+  }
+
+  /**
+   * Selecciona un punto de inspección y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información del punto seleccionado.
+   */
+  seleccionarPuntoInspeccion(event: Catalogo): void {
+    this.solicitud220501Store.setPuntoInspeccion(event.id);
+  }
+
+  /** 
+   * Método para seleccionar el régimen de la solicitud. 
+   * Actualiza el estado con el ID del régimen seleccionado.
+   * 
+   * @param event - Objeto de tipo Catalogo que contiene la información del régimen seleccionado.
+   */
+  seleccionarRegimen(event: Catalogo): void {
+    this.solicitud220501Store.setRegimen(event.id);
+  }
+
+
+  /**
+   * Selecciona una movilización nacional y actualiza el store con la descripción correspondiente.
+   * @param event Objeto de tipo Catalogo que contiene la información de la movilización seleccionada.
+   */
+  seleccionarMovilizacionNacional(event: Catalogo): void {
+    this.solicitud220501Store.setMovilizacion(event.id);
+  }
+
+  /** 
+   * Método para establecer el valor de captura de datos de mercancía. 
+   * Actualiza el estado con el valor proporcionado.
+   * 
+   * @param value - Valor de tipo string o number que representa la captura de datos de la mercancía.
+   */
+  setCapturaDatosMercancia(value: string | number): void {
+    this.solicitud220501Store.setCapturaDatosMercancia(value);
+  }
+
+  /** 
+   * Método para seleccionar el punto de verificación. 
+   * Actualiza el estado con el ID del punto seleccionado.
+   * 
+   * @param event - Objeto de tipo Catalogo que contiene la información del punto de verificación seleccionado.
+   */
+  seleccionarPuntoVerificacion(event: Catalogo): void {
+    this.solicitud220501Store.setPunto(event.id);
+  }
+
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Desuscribe el componente de todos los observables.
+   * @returns {void}
+   * */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
