@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-
+import * as formData from '../../constants/datos-del-formulario.json';
 @Component({
   selector: 'app-cancelacion-de-solicitus',
   templateUrl: './cancelacion-de-solicitus.component.html',
@@ -13,17 +13,18 @@ export class CancelacionDeSolicitusComponent implements OnInit {
   solicitudForm?: FormGroup;
   configuracionColumnasoli: ConfiguracionColumna<Cancelacion>[] = [
     { encabezado: 'Folio trámite', clave: (fila) => fila.folioTramite, orden: 1 },
-    { encabezado: 'Tipo solicitud', clave: (fila) => fila.tipoSolicitud, orden: 2 },
+    { encabezado: 'Tipo solicitud', clave: (fila) => fila.tipoDeSolicitud, orden: 2 },
     { encabezado: 'Régimen', clave: (fila) => fila.regimen, orden: 3 },
-    { encabezado: 'Clasificación régimen', clave: (fila) => fila.clasificacionRegimen, orden: 4 },
-    { encabezado: 'Condición de la mercancía', clave: (fila) => fila.condicionMercancia, orden: 5 },
+    { encabezado: 'Clasificación régimen', clave: (fila) => fila.cdr, orden: 4 },
+    { encabezado: 'Condición de la mercancía', clave: (fila) => fila.condicionDeLaMercancia, orden: 5 },
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 6 },
-    { encabezado: 'Unidad de medida', clave: (fila) => fila.unidadMedida, orden: 7 },
-    { encabezado: 'Cantidad solicitada', clave: (fila) => fila.cantidadSolicitada, orden: 8 },
-    { encabezado: 'Valor solicitado', clave: (fila) => fila.valorSolicitado, orden: 9 },
+    { encabezado: 'Unidad de medida', clave: (fila) => fila.umt, orden: 7 },
+    { encabezado: 'Cantidad solicitada', clave: (fila) => fila.cantidad, orden: 8 },
+    { encabezado: 'Valor solicitado', clave: (fila) => fila.usd, orden: 9 },
   ];
   tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
   cuerpoTabla: Cancelacion[] = [];
+  public datosDePermiso: boolean = false;
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
   ngOnInit(): void {
@@ -38,12 +39,24 @@ export class CancelacionDeSolicitusComponent implements OnInit {
       cantidadSolicitada: ['', [Validators.required]],
       valorSolicitado: ['', [Validators.required]],
     });
+    this.servicioDeMensajesService.datos$.subscribe((datos) => {
+      this.datosDePermiso = datos;
+      if(this.datosDePermiso){
+        this.cuerpoTabla = [formData as Cancelacion];
+      }
+    });
+    
   }
-  public busqueda(event: any): void{
+
+  ngOnDestroy(){
+  this.servicioDeMensajesService.establecerDatosDePermiso(false);
+  }
+
+  public busqueda(event: any): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
-  public eliminarRegistro(event: any): void{
-      }
-  
+  public eliminarRegistro(event: any): void {
+  }
+
 
 }

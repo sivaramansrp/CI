@@ -1,11 +1,11 @@
 export interface Cancelacion {
     folioTramite: string;
-    tipoSolicitud: string;
+    tipoDeSolicitud: string;
     regimen: string;
-    clasificacionRegimen: string;
-    condicionMercancia: string;
+    cdr: string;
+    condicionDeLaMercancia: string;
     fraccionArancelaria: string;
-    unidadMedida: string;
-    cantidadSolicitada: string;
-    valorSolicitado: string;
+    umt: string;
+    cantidad: string;
+    usd: string;
 }
