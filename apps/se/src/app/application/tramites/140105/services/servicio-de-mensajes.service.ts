@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
-import { Cancelacion } from '../models/cancelacion-de-solicitus.model';
+import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-solicitus.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 
 
@@ -26,7 +26,11 @@ export class ServicioDeMensajesService {
     this.datosDePermiso.next(valor);
   }
 
-  setDatos(valor: Cancelacion[]) {
-    this.desistimientoStore.setDatos(valor as Cancelacion[]);
+  actualizarDatosForma(valor: Cancelacion[]) {
+    this.desistimientoStore.actualizarDatosForma(valor as Cancelacion[]);
+  }
+
+  public obtenerDatos(): Observable<PermisosDatos> {
+    return this.desistimientoStore._select(state => state); // Devuelve el estado completo
   }
 }

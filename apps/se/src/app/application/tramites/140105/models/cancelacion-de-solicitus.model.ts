@@ -14,6 +14,6 @@ export interface PermisosDatos {
 }
 export function createDatosState(params: Partial<PermisosDatos> = {}): PermisosDatos {
     return {
-        datos: params.datos ?? []
-    };
+        datos: params as Cancelacion[]
+    }
 }

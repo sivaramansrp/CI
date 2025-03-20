@@ -9,6 +9,7 @@ import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-cancelacion-de-solicitus',
   templateUrl: './cancelacion-de-solicitus.component.html',
@@ -16,6 +17,7 @@ import { Validators } from '@angular/forms';
 })
 export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
   solicitudForm?: FormGroup;
+  private destroyNotifier$ = new Subject<void>();
   public cancelacionForm!: FormGroup;
   configuracionColumnasoli: ConfiguracionColumna<Cancelacion>[] = [
     { encabezado: 'Folio trámite', clave: (fila) => fila.folioTramite, orden: 1 },
@@ -53,9 +55,19 @@ export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
       this.datosDePermiso = datos;
       if (this.datosDePermiso) {
         this.cuerpoTabla = [formData as Cancelacion];
-        this.servicioDeMensajesService.setDatos(this.cuerpoTabla as Cancelacion[]);
+        this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTabla as Cancelacion[]);
       }
     });
+    this.servicioDeMensajesService.obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(data => {
+        if (Array.isArray(data?.datos)) {
+          this.cuerpoTabla = data.datos as Cancelacion[];
+        } else {
+          console.error("Expected an array but received:", data?.datos);
+          this.cuerpoTabla = [];
+        }
+      });
 
   }
 
@@ -68,7 +80,7 @@ export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
   }
   public eliminarRegistro(event: Event): void {
     this.cuerpoTabla = [];
-    this.servicioDeMensajesService.setDatos(this.cuerpoTabla as Cancelacion[]);
+    this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTabla as Cancelacion[]);
   }
 
 
