@@ -1,5 +1,5 @@
 import { ADUANAS_DISPONIBLES } from '../../constantes/disponibles-constante.enum';
-import { CargarDatosIniciales } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales } from '../../models/pantallas-captura.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DETALLE } from '../../constantes/disponibles-constante.enum';
@@ -13,7 +13,7 @@ import { MediodetransporteService } from '../../services/medio-de-transporte.ser
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { Solicitud } from '@ng-mf/data-access-user';
+import { Solicitud } from '../../models/pantallas-captura.model';
 import { Solicitud230101Query } from '../../estados/queries/tramites230101.query';
 import { Solicitud230101State } from '../../estados/tramites/tramites230101.store';
 import { Solicitud230101Store } from '../../estados/tramites/tramites230101.store';

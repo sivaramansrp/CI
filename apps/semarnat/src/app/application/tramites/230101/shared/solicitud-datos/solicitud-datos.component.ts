@@ -1,7 +1,7 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
-import { Solicitud } from '@ng-mf/data-access-user';
+import { Solicitud } from '../../models/pantallas-captura.model';
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 

@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SolicitudPantallasService } from './solicitud-pantallas.service';
-import { CargarDatosIniciales, CatalogosSelect, DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales, DatosDelTramiteRealizar } from '../models/pantallas-captura.model';
 
 describe('SolicitudPantallasService', () => {
   let service: SolicitudPantallasService;

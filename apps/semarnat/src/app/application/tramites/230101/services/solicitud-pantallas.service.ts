@@ -1,6 +1,6 @@
-import { CargarDatosIniciales } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales } from '../models/pantallas-captura.model';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
+import { DatosDelTramiteRealizar } from '../models/pantallas-captura.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
