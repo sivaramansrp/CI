@@ -1,6 +1,13 @@
+
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 
+/**
+ * Componente DatosTerritorioComponent
+ * 
+ * Este componente es responsable de manejar los datos del territorio en la solicitud.
+ * Permite la navegación entre los pasos de la solicitud y la actualización del índice del paso actual.
+ */
 @Component({
   selector: 'app-datos-territorio',
   templateUrl: './datos-territorio.component.html',
