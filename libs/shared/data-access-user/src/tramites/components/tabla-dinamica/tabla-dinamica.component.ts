@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfiguracionColumna, MercanciaTablaData } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tabla-dinamica',
   templateUrl: './tabla-dinamica.component.html',
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
-  imports: [CommonModule, FormsModule,CatalogoSelectComponent],
+  imports: [CommonModule, FormsModule],
   host: {},
 })
 export class TablaDinamicaComponent<T> {
@@ -23,9 +22,6 @@ export class TablaDinamicaComponent<T> {
   @Output() filaClic = new EventEmitter<T>();
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
-  @Input() disponiblesDocumentos!: any;
-  @Output() disponiblesDocumentosChange: EventEmitter<any> = new EventEmitter<any>();
-
 /*
    * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
    *
@@ -160,21 +156,6 @@ export class TablaDinamicaComponent<T> {
       this.listaDeFilaSeleccionada.emit([]);
     }
   }
-<<<<<<< HEAD
-   enDocumentSelect(_index: number,event:any): void {
-    console.log('test',_index,event);
-    this.disponiblesDocumentosChange.emit({index:_index,data:event,eventName:'enDocumentSelect'});
-   }
-   verDocument(index: number): void {
-    this.disponiblesDocumentosChange.emit({index:index,eventName:'verDocument'});
-   }
-   cambioArchivo(_index: number,event:any): void {
-    console.log('test',_index,event);
-    this.disponiblesDocumentosChange.emit({index:_index,data:event,eventName:'cambioArchivo'});
-   }
-   
-
-=======
 
   /**
    * Maneja el evento de clic en una fila de la tabla.
@@ -184,5 +165,4 @@ export class TablaDinamicaComponent<T> {
   onFilaClic(data: T): void {    
     this.filaClic.emit(data);
   }
->>>>>>> 15a47b92d3237140256953f4d9ab993204d45644
 }
