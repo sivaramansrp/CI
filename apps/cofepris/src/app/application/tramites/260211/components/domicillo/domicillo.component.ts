@@ -29,13 +29,13 @@ import {
   MercanciasInfo,
   NICO_TABLA,
   NicoInfo,
-} from '../../modelos/domicilo.model';
+} from '@libs/shared/data-access-user/src/core/models/260211/domicilo.model';
 import {
   Solicitud260211State,
   Tramite260211Store,
 } from '../../../../estados/tramites/tramite260211.store';
 import { Subject,map, takeUntil } from 'rxjs';
-import { CROSLISTA_DE_PAISES } from '../../enum/domicilo.enum';
+import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260211/domicilo.enum';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
