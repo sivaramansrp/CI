@@ -5,6 +5,16 @@ import {
   ServicioInmex,
 } from '../models/nuevo-programa-industrial.model';
 
+/**
+ * @const PASOS
+ * @description Representa los pasos de un proceso en una solicitud.
+ * Cada paso contiene información sobre su índice, título, estado de actividad y si ha sido completado.
+ * 
+ * @property {number} indice - El índice del paso dentro del proceso.
+ * @property {string} titulo - El título descriptivo del paso.
+ * @property {boolean} activo - Indica si el paso está activo actualmente.
+ * @property {boolean} completado - Indica si el paso ha sido completado.
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -25,11 +35,50 @@ export const PASOS = [
     completado: false,
   },
 ];
+
+/**
+ * Constante que representa el título del mensaje utilizado para el registro
+ * de una solicitud de modificación del programa IMMEX. Este mensaje describe
+ * específicamente la modificación de alta a domicilio de una planta, bodega o almacén.
+ */
 export const TITULOMENSAJE =
   'Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)';
+
+/**
+ * Texto informativo que se muestra al usuario al registrar una solicitud.
+ * Indica que la solicitud ha sido registrada con un número temporal, 
+ * el cual no tiene validez legal y sirve únicamente para identificar 
+ * la solicitud. También informa que un folio oficial será asignado 
+ * cuando la solicitud sea firmada.
+ */
 export const TEXTOS_REQUISITOSS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
+/**
+ * CONFIGURACION_DOMICILIOS
+ * 
+ * Esta constante define una configuración para la representación de domicilios
+ * en una tabla o lista. Cada objeto dentro del arreglo representa una columna
+ * con las siguientes propiedades:
+ * 
+ * - `encabezado`: El título o encabezado de la columna.
+ * - `clave`: Una función que toma un objeto de tipo `ServicioInmex` y devuelve
+ *   el valor correspondiente para esa columna. Si no se encuentra el valor, 
+ *   devuelve `undefined`.
+ * - `orden`: Un número que indica el orden en el que se debe mostrar la columna.
+ * 
+ * Propiedades específicas de las columnas:
+ * 
+ * 1. **Servicio**: Representa el servicio asociado.
+ * 2. **Registro federal de contribuyentes**: Muestra el registro federal de 
+ *    contribuyentes.
+ * 3. **Denominación o razón social**: Indica la denominación o razón social.
+ * 4. **Número del programa IMMEX**: Contiene el número del programa IMMEX.
+ * 5. **Año del programa IMMEX**: Representa el año del programa IMMEX.
+ * 
+ * Esta configuración es útil para estructurar y mostrar datos relacionados con
+ * los domicilios en el contexto de un programa IMMEX.
+ */
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
@@ -58,6 +107,21 @@ export const CONFIGURACION_DOMICILIOS = [
     orden: 5,
   },
 ];
+
+/**
+ * CONFIGURACION_SERVICIO_IMMEX es una constante que define la configuración
+ * para un servicio IMMEX. Contiene un arreglo de objetos que especifican
+ * los encabezados, claves y el orden de los campos que se utilizarán
+ * para describir y categorizar los servicios.
+ *
+ * Cada objeto en el arreglo tiene las siguientes propiedades:
+ * - `encabezado`: Una cadena que representa el título o encabezado del campo.
+ * - `clave`: Una función que toma un objeto de tipo `Servicio` y devuelve
+ *   un valor de tipo `string` o `undefined`, correspondiente a la clave
+ *   específica del servicio.
+ * - `orden`: Un número que indica el orden en el que se deben mostrar
+ *   los campos.
+ */
 export const CONFIGURACION_SERVICIO_IMMEX = [
   {
     encabezado: 'Descripión del servicio',
@@ -71,6 +135,25 @@ export const CONFIGURACION_SERVICIO_IMMEX = [
   },
 ];
 
+/**
+ * Configuración para la representación de datos de una empresa extranjera.
+ * 
+ * Este arreglo contiene objetos que definen la estructura y las propiedades
+ * necesarias para mostrar información relacionada con una empresa extranjera.
+ * Cada objeto incluye un encabezado, una clave que es una función para acceder
+ * a un valor específico de la empresa, y un orden que determina la prioridad
+ * de visualización.
+ * 
+ * Propiedades de cada objeto:
+ * - `encabezado`: El título que se mostrará en la interfaz para el campo correspondiente.
+ * - `clave`: Una función que toma un objeto de tipo `DatosEmpresaExtranjera` y devuelve
+ *   el valor asociado al campo correspondiente.
+ * - `orden`: Un número que indica el orden de prioridad para la visualización del campo.
+ * 
+ * Ejemplo de uso:
+ * Este arreglo puede ser utilizado para generar dinámicamente tablas o formularios
+ * que muestren información de empresas extranjeras.
+ */
 export const CONFIGURACION_EMPRESA_ECTRANJERA = [
   {
     encabezado: 'Tax ID',

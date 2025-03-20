@@ -17,6 +17,11 @@ export class ComplementarFraccionVistaComponent {
   public catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
   public complimentarFraccionDatos: ComplimentarFraccion = COMPLEMENTAR_FRACCION_DATOS;
 
+  /**
+   * Método para asignar los datos recibidos al atributo `complimentarDatos`.
+   * 
+   * @param event - Objeto de tipo `ComplimentarFraccionResoponse` que contiene los datos a complementar.
+   */
   getDatos(event: ComplimentarFraccionResoponse): void {
     this.complimentarDatos = event;
   }

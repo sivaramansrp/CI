@@ -35,10 +35,23 @@ export class AggregarComplimentosComponent {
       });
   }
 
+  /**
+   * Modifica los datos de los cumplimientos y los almacena en el estado.
+   * 
+   * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
+   * @returns void
+   */
   modifierComplimentos(complimentos: DatosComplimentos): void {
     this.store.setDatosComplimentos(complimentos);
   }
 
+  /**
+   * Agrega datos de accionistas a la tabla correspondiente según el tipo de RFC.
+   * 
+   * @param datos - Objeto de tipo `SociaoAccionistas` que contiene la información del accionista.
+   *                Si el objeto incluye un RFC válido, se agrega a la tabla de datos nacionales.
+   *                De lo contrario, se agrega a la tabla de datos extranjeros.
+   */
   accionistasAgregados(datos: SociaoAccionistas): void {
     if (datos.rfc) {
       this.store.aggregarTablaDatosComplimentos(datos);
@@ -47,10 +60,24 @@ export class AggregarComplimentosComponent {
     }
   }
 
+  /**
+   * Elimina los datos de los accionistas proporcionados de la tabla de complementos.
+   *
+   * @param datos - Una lista de objetos de tipo `SociaoAccionistas` que representan los accionistas a eliminar.
+   * 
+   * Este método utiliza el servicio `store` para realizar la eliminación de los datos
+   * correspondientes en la tabla de complementos.
+   */
   accionistasEliminados(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentos(datos);
   }
 
+  /**
+   * Elimina los datos de los accionistas extranjeros de la tabla de complementos.
+   * 
+   * @param datos - Una lista de objetos de tipo `SociaoAccionistas` que representan
+   * los accionistas extranjeros a eliminar.
+   */
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }

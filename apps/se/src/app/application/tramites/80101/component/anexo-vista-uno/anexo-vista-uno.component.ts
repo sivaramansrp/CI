@@ -97,6 +97,19 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
 
+  /**
+   * Navega a una ruta específica basada en el evento proporcionado.
+   * 
+   * @param event - Objeto de tipo `RutaNombre` que contiene la información necesaria para la navegación.
+   *   - `catagoria`: Categoría de la ruta a la que se desea navegar.
+   *   - `id`: Identificador único que se utiliza para establecer la sección activa.
+   *   - `datos`: Datos adicionales necesarios para la navegación.
+   * 
+   * Este método realiza las siguientes acciones:
+   * 1. Establece la sección activa en el store utilizando el `id` del evento.
+   * 2. Configura los datos necesarios para la navegación en el store.
+   * 3. Navega a la ruta relativa basada en la categoría proporcionada.
+   */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void {
     if (event && event.catagoria && event.id && event.datos) {
       this.store.setAnnexoUnoSeccionActiva(event.id);

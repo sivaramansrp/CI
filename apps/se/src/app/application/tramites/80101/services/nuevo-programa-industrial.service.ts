@@ -63,6 +63,11 @@ export class NuevoProgramaIndustrialService {
     );
   }
 
+  /**
+   * Obtiene los datos de complementos desde un archivo JSON local.
+   * 
+   * @returns Un observable que emite los datos de tipo `DatosComplimentos`.
+   */
   obtenerComplimentos(): Observable<DatosComplimentos> {
     return this.http
     .get<DatosComplimentos>("assets/json/80102/datos-complimentos.json")

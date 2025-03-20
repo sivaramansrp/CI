@@ -83,6 +83,12 @@ export class FederatariosYPlantasVistaComponent {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
   }
 
+  /**
+   * Establece los datos de los federatarios en el almacén.
+   * 
+   * @param datos - Objeto de tipo `FederatariosEncabezado` que contiene la información
+   *                de los federatarios a ser almacenada.
+   */
   setFormaDatos(datos: FederatariosEncabezado): void {
     this.store.setFederatarios(datos);
   }

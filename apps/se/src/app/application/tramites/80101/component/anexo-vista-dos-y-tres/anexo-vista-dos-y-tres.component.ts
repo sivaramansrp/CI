@@ -61,7 +61,6 @@ export class AnexoVistaDosYTresComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.query.anexoDosTableLista$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoDosTablaLista) => {

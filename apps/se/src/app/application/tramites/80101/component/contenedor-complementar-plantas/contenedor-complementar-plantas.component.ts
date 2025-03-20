@@ -5,8 +5,6 @@ import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../../../../shared/components/detalles-plantas/detalles-plantas.component';
 import { PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
 import { Tramite80101Query} from '../../estados/tramite80101.query';
-
-
 @Component({
   selector: 'app-contenedor-complementar-plantas',
   standalone: true,
@@ -42,10 +40,14 @@ export class ContenedorComplementarPlantasComponent implements OnInit, OnDestroy
       });
   }
 
+  /**
+   * Navega a la ruta de la solicitud relativa al contexto actual.
+   * Utiliza el enrutador para redirigir al usuario a la página de solicitud.
+   */
   regressarPlantas():void{
-    this.router.navigate(['../solicitud'], { relativeTo: this.activatedRoute });
-    
+    this.router.navigate(['../solicitud'], { relativeTo: this.activatedRoute }); 
   }
+
    /**
      * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
      * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
