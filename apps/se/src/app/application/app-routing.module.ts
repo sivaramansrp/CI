@@ -166,6 +166,13 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
+  },
+  {
+    path: 'validar-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110208/validar-inicalmente.module').then(
+        (m) => m.ValidarInicalmenteModule
+      ),
   }
 ];
 

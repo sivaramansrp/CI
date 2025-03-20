@@ -3,16 +3,23 @@ import { CommonModule } from '@angular/common';
 
 import { ValidarInicalmenteRoutingModule } from './validar-inicalmente-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 
 @NgModule({
-  declarations: [SolicitudPageComponent],
+  declarations: [
+    SolicitudPageComponent,
+    PasoUnoComponent
+  ],
   imports: [
     CommonModule, 
     ValidarInicalmenteRoutingModule,
     BtnContinuarComponent,
-    PasoUnoComponent
+    WizardComponent,
+    SolicitanteComponent,
+    CertificadoOrigenComponent
+    
   ],
 })
 export class ValidarInicalmenteModule {}
