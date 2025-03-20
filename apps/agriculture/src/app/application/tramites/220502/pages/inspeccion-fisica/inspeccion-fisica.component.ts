@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { InspeccionFisicaPasos } from '@ng-mf/data-access-user';
+import { InspeccionFisicaPasos } from '../../enums/solicitud-pantallas.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
