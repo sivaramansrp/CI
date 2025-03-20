@@ -11,6 +11,7 @@ import * as formData from '../../constants/datos-del-formulario.json';
 })
 export class CancelacionDeSolicitusComponent implements OnInit {
   solicitudForm?: FormGroup;
+  public cancelacionForm!: FormGroup;
   configuracionColumnasoli: ConfiguracionColumna<Cancelacion>[] = [
     { encabezado: 'Folio trámite', clave: (fila) => fila.folioTramite, orden: 1 },
     { encabezado: 'Tipo solicitud', clave: (fila) => fila.tipoDeSolicitud, orden: 2 },
@@ -39,17 +40,21 @@ export class CancelacionDeSolicitusComponent implements OnInit {
       cantidadSolicitada: ['', [Validators.required]],
       valorSolicitado: ['', [Validators.required]],
     });
+    this.cancelacionForm = this.fb.group({
+      motivoCancelacion: ['', Validators.required],
+    });
+
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
-      if(this.datosDePermiso){
+      if (this.datosDePermiso) {
         this.cuerpoTabla = [formData as Cancelacion];
       }
     });
-    
+
   }
 
-  ngOnDestroy(){
-  this.servicioDeMensajesService.establecerDatosDePermiso(false);
+  ngOnDestroy() {
+    this.servicioDeMensajesService.establecerDatosDePermiso(false);
   }
 
   public busqueda(event: any): void {
