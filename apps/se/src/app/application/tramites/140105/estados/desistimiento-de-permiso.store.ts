@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
-import { Cancelacion, createDatosState, PermisosDatos } from '../models/cancelacion-de-solicitus.model';
+import {
+    Cancelacion,
+
+    PermisosDatos,
+
+    createDatosState,
+} from '../models/cancelacion-de-solicitus.model';
 
 
 
