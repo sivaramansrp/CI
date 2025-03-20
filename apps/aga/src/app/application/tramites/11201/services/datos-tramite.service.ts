@@ -23,14 +23,14 @@ export class DatosTramiteService {
     return this.http.get<RespuestaContenedores>(`assets/json/11201/tipoLista.json`);
   }
   /**
-  * Simulate file upload
+  * Simular la carga de archivos
   */
   uploadArchivo(): Observable<RespuestaApi> {
     return this.http.get<RespuestaApi>(`assets/json/11201/contenedorLista.json`);
   }
 
   /**
-  * Simulate a successful form submission
+  * Simular un envío exitoso de formulario
   */
   submitSolicitud(): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(`assets/json/11201/aduanaList.json`);
