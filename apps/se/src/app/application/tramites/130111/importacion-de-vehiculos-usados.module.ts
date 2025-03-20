@@ -12,10 +12,13 @@ import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.compone
 import { BtnContinuarComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
+import { PartidasDeLaComponent } from '../../shared/components/partidas-de-la/partidas-de-la.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
+
 @NgModule({
   declarations: [
     ImportacionDeVehiculosUsadosComponent,
-    PasoUnoComponent
+    PasoUnoComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +29,8 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
     BtnContinuarComponent,
     TituloComponent,
     SolicitanteComponent,
+    PartidasDeLaComponent,
+    SolicitudComponent
   ]
 })
 export class ImportacionDeVehiculosUsadosModule { }

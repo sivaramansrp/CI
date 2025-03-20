@@ -1,0 +1,11 @@
+<app-partidas-de-la
+  [form]="form"
+  [formForTotalCount]="formForTotalCount"
+  [tableHeaderData]="tableHeaderData"
+  [tableBodyData]="tableBodyData"
+  [mostrarTabla]="mostrarTabla"
+  (filaSeleccionadaChange)="handleFilaSeleccionada($event)"
+  (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
+  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
+  (setValoresStoreEvent)="setValoresStore($event)"
+></app-partidas-de-la>
