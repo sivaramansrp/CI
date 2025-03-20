@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CargarDatosIniciales } from '@ng-mf/data-access-user';
-import { CarrosDeFerrocarril } from '@ng-mf/data-access-user';
-import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
-import { Solicitud } from '@ng-mf/data-access-user';
-import { SolicitudPantallasService } from '@ng-mf/data-access-user';
-import { TEXTOS_220501 } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';
+import { CarrosDeFerrocarril } from '../../../220502/models/solicitud-pantallas.model';
+import { HistorialInspeccionFisica } from '../../../220502/models/solicitud-pantallas.model';
+import { Solicitud } from '../../../220502/models/solicitud-pantallas.model'
+import { SolicitudPantallasService } from '../../../220502/services/solicitud-pantallas.service';
+import { TEXTOS } from '../../constantes/texto-enum';
 /**
  * Componente para gestionar los datos de la solicitud.
  */
@@ -18,7 +18,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Constantes de texto.
    */
-  TEXTOS = TEXTOS_220501;
+  TEXTOS = TEXTOS;
 
   /**
    * Formulario para los datos de la solicitud.
