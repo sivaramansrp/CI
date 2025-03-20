@@ -49,7 +49,7 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
   ];
 
   /** Array para almacenar la respuesta de permisos cancelar */
-  permisosCancelar: PermisosCancelarData[] = [];
+  permisosCancelar: PermisosCancelar[] = [];
 
   /** Subject para notificar la destrucción del componente */
   private destroy$ = new Subject<void>();

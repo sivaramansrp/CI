@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { PermisosCancelarData } from '../models/permisos-cancelar.model';
+import { PermisosCancelar } from '../models/permisos-cancelar.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class PermisosCancelarService {
   constructor(private http: HttpClient,
   ) { }
   getPermisosCancelar() {
-    return this.http.get<PermisosCancelarData[]>('assets/json/140112/permisos-cancelar.json');
+    return this.http.get<PermisosCancelar[]>('assets/json/140112/permisos-cancelar.json');
   }
 
 
