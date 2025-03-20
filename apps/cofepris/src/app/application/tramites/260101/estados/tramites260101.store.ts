@@ -1,5 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { Mercancia } from '../models/mercancia.model';
+import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 
 export interface Solicitud260101State {
   razonSocial: string;
@@ -22,6 +24,7 @@ export interface Solicitud260101State {
   legalRazonSocial: string;
   apellidoPaterno: string;
   apellidoMeterno: string;
+  mercanciasDatos: Mercancia[];
   //
   clasificaionProductos: string;
   especificarProducto: number;
@@ -36,7 +39,8 @@ export interface Solicitud260101State {
   umc: number;
   claveDeLosLotes: string;
   fechaFabricacion: string;
-  fechaCaducidad: string; 
+  fechaCaducidad: string;
+  clavesDeLotes: ClavesDeLotes[];
   //
   tipoPersona: string | number;
   modificarRFC: string;
@@ -78,12 +82,13 @@ export function createInitialState(): Solicitud260101State {
     licenciaSanitaria: '',
     liveFreshFrozen: '',
     regimen: 0,
-    aduana:0,
+    aduana: 0,
     hacerlos: '',
     rfc: '',
     legalRazonSocial: '',
     apellidoPaterno: '',
     apellidoMeterno: '',
+    mercanciasDatos: [],
     //
     clasificaionProductos: '',
     especificarProducto: 0,
@@ -99,6 +104,7 @@ export function createInitialState(): Solicitud260101State {
     claveDeLosLotes: '',
     fechaFabricacion: '',
     fechaCaducidad: '',
+    clavesDeLotes: [],
     //
     tipoPersona: '',
     modificarRFC: '',
@@ -274,6 +280,20 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     }));
   }
 
+  public setMercanciasDatos(mercanciasDatos: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciasDatos,
+    }));
+  }
+
+  public addMercanciasDatos(newMercancia: Mercancia): void {
+    this.update((state) => ({
+      ...state,
+      mercanciasDatos: [...state.mercanciasDatos, newMercancia],
+    }));
+  }
+
   // Repeat for the remaining variables following the same pattern
 
   public setClasificacionProductos(clasificaionProductos: string): void {
@@ -373,6 +393,37 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     this.update((state) => ({
       ...state,
       fechaCaducidad,
+    }));
+  }
+
+  public setClavesDeLotes(clavesDeLotes: ClavesDeLotes[]): void {
+    this.update((state) => ({
+      ...state,
+      clavesDeLotes,
+    }));
+  }
+
+  public addClaveDeLote(newClaveDeLote: ClavesDeLotes): void {
+    this.update((state) => {
+      const isExisting = state.clavesDeLotes.some(
+        (lote) => lote.lotes === newClaveDeLote.lotes
+      );
+
+      return {
+        ...state,
+        clavesDeLotes: isExisting
+          ? state.clavesDeLotes
+          : [...state.clavesDeLotes, newClaveDeLote],
+      };
+    });
+  }
+
+  public removeClaveDeLote(claveToRemove: { lotes: string }): void {
+    this.update((state) => ({
+      ...state,
+      clavesDeLotes: state.clavesDeLotes.filter(
+        (clave) => clave.lotes !== claveToRemove.lotes
+      ),
     }));
   }
 

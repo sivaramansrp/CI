@@ -1,0 +1,34 @@
+[
+    {
+        "clasificaionProductos": "Electronics",
+        "especificarProducto": 1,
+        "nombreProductoEspecifico": "Smartphone",
+        "marca": "TechCorp",
+        "tipoProducto": 101,
+        "fraccionArancelaria": "851712",
+        "descripcionFraccionArancelaria": "Mobile phones for cellular networks",
+        "cantidadUMT": "500",
+        "umt": "Units",
+        "cantidadUMC": "500",
+        "umc": 500,
+        "paisDeOrigen": "China",
+        "paisDeProcedencia": "China",
+        "usoEspecifico": "Personal communication devices"
+    },
+    {
+        "clasificaionProductos": "Food",
+        "especificarProducto": 2,
+        "nombreProductoEspecifico": "Organic Honey",
+        "marca": "NatureBee",
+        "tipoProducto": 202,
+        "fraccionArancelaria": "040900",
+        "descripcionFraccionArancelaria": "Natural honey",
+        "cantidadUMT": "1000",
+        "umt": "Kilograms",
+        "cantidadUMC": "100",
+        "umc": 100,
+        "paisDeOrigen": "India",
+        "paisDeProcedencia": "India",
+        "usoEspecifico": "Health supplements and sweeteners"
+    }
+]

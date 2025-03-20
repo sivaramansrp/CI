@@ -271,13 +271,15 @@
 
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">mercancías*:</label>
-      <ng-table
-        [commonTableHeader]="tableDataMercancias.tableHeader"
-        [commonTableBody]="tableDataMercancias.tableBody"
-      ></ng-table>
+      <app-tabla-dinamica
+      [tipoSeleccionTabla]="mercanciasSeleccionTabla"
+      [datos]="mercanciasDatos"
+      [configuracionTabla]="mercanciasConfiguracionTabla">
+
+      </app-tabla-dinamica>
     </div>
 
-    <div class="col-md-12 d-flex justify-content-end align-items-end">
+    <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
       <div class="btn-group">
         <button
           type="button"
@@ -300,6 +302,8 @@
           type="button"
           class="btn btn-primary ms-3"
           data-bs-toggle="modal"
+          data-bs-target="#modalAgregarMercancias"
+          (click)="openAgregarMercancias()"
         >
           Agregar
         </button>

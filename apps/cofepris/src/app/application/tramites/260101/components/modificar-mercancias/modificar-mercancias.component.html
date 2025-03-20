@@ -78,7 +78,7 @@
     </div>
     <div class="col-md-8 mt-3">
       <label class="form-label" for="descripcionFraccionArancelaria"
-        >Descripcion de la fraccion arancelaria*:</label
+        >Descripción de la fracción arancelaria*:</label
       >
       <input
         class="form-control"
@@ -229,6 +229,7 @@
       <app-tabla-dinamica
         [tipoSeleccionTabla]="tipoSeleccionTabla"
         [configuracionTabla]="configuracionTabla"
+        (listaDeFilaSeleccionada)="getListaClavesDeLotes($event)"
         [datos]="tipos"
       >
       </app-tabla-dinamica>
@@ -237,14 +238,24 @@
 
     <div class="col-md-12 d-flex justify-content-end align-items-end">
       <div class="btn-group">
-        <button type="button" class="btn btn-default btn-space">
+        <button
+          type="button"
+          class="btn btn-default btn-space"
+          (click)="modificarClavesDeLotes()"
+        >
           Modificar
         </button>
-        <button class="btn btn-default ms-3" type="button">Eliminar</button>
+        <button
+          class="btn btn-default ms-3"
+          type="button"
+          (click)="eliminarClavesDeLotes()"
+        >
+          Eliminar
+        </button>
         <button
           type="button"
           class="btn btn-primary ms-3"
-          data-bs-toggle="modal"
+          (click)="agregarClavesDeLotes()"
         >
           Agregar
         </button>
@@ -286,7 +297,8 @@
         <button
           type="button"
           class="btn btn-primary ms-3"
-          data-bs-toggle="modal"
+          data-bs-dismiss="modal"
+          (click)="agregarMercanias()"
         >
           Agregar
         </button>

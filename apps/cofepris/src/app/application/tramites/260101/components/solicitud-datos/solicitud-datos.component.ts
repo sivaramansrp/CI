@@ -15,7 +15,9 @@ import { map, Subject, takeUntil } from 'rxjs';
 import {
   Catalogo,
   CatalogosSelect,
+  ConfiguracionColumna,
   REGEX_CORREO_ELECTRONICO,
+  TablaSeleccion,
   TableData,
 } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
@@ -25,6 +27,7 @@ import {
   Solicitud260101Store,
 } from '../../estados/tramites260101.store';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
+import { Mercancia } from '../../models/mercancia.model';
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -90,7 +93,24 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   ];
   hacerlosPublicos = 1;
   solicitud260101State: Solicitud260101State = {} as Solicitud260101State;
-
+  mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
+  mercanciasConfiguracionTabla: ConfiguracionColumna<any>[] = [
+    { encabezado: 'CerClasificación del producto', clave: (item: any) => item.clasificaionProductos, orden: 1 },
+    { encabezado: 'Especificar Clasificación del product', clave: (item: any) => item.especificarProducto, orden: 2 },
+    { encabezado: 'Denominación específico del product', clave: (item: any) => item.nombreProductoEspecifico, orden: 3 },
+    { encabezado: 'Marca', clave: (item: any) => item.marca, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (item: any) => item.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción arancelaria', clave: (item: any) => item.descripcionFraccionArancelaria, orden: 6 },
+    { encabezado: 'Unidad de medida de comercializacion (UMC)', clave: (item: any) => item.umc, orden: 7 },
+    { encabezado: 'Cantidad UMC', clave: (item: any) => item.cantidadUMC, orden: 8 },
+    { encabezado: 'Unidad de medida de tarifa(UMT)', clave: (item: any) => item.umt, orden: 9 },
+    { encabezado: 'Cantidad UMT', clave: (item: any) => item.cantidadUMT, orden: 10 },
+    { encabezado: 'Pais de origen', clave: (item: any) => item.paisDeOrigen, orden: 11 },
+    { encabezado: 'Pais de procedencia', clave: (item: any) => item.paisDeProcedencia, orden: 12 },
+    { encabezado: 'Tipo de producto', clave: (item: any) => item.tipoProducto, orden: 13 },
+    { encabezado: 'Uso especifico', clave: (item: any) => item.usoEspecifico, orden: 14 },
+  ];
+  mercanciasDatos: Mercancia[] = [];
   constructor(
     public solicitudDatosService: SolicitudDatosService,
     public solicitud260101Store: Solicitud260101Store,
@@ -179,6 +199,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           apellidoPaterno: this.solicitud260101State.apellidoPaterno,
           apellidoMeterno: this.solicitud260101State.apellidoMeterno,
         });
+        this.mercanciasDatos = this.solicitud260101State.mercanciasDatos;
       })
     ).subscribe();
 
@@ -186,6 +207,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.obtenerDatosDeAplicacion();
     this.obtenerRegimenDestinaraListo();
     this.obtenerAduanaListo();
+    this.obtenerMercanciaListo();
   }
 
   mostrarColapsable(): void {
@@ -210,13 +232,22 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
           typeof res.tablaFilaDatos[0] === 'object'
             ? res.tablaFilaDatos[0]?.SCIANLista || ({} as TableData)
             : ({} as TableData);
-        this.tableDataMercancias =
-          Array.isArray(res.tablaFilaDatos) &&
-          typeof res.tablaFilaDatos[0] === 'object'
-            ? res.tablaFilaDatos[0]?.mercancias || ({} as TableData)
-            : ({} as TableData);
+        // this.tableDataMercancias =
+        //   Array.isArray(res.tablaFilaDatos) &&
+        //   typeof res.tablaFilaDatos[0] === 'object'
+        //     ? res.tablaFilaDatos[0]?.mercancias || ({} as TableData)
+        //     : ({} as TableData);
       },
     });
+  }
+
+  obtenerMercanciaListo(){
+    this.solicitudDatosService.obtenerMercanciaListo().subscribe({
+      next:((res: Mercancia[])=>{
+        // this.mercanciasDatos = res;
+        this.solicitud260101Store.setMercanciasDatos(res);
+      })
+    })
   }
 
   obtenerRegimenDestinaraListo() {
@@ -240,6 +271,13 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   openModificarMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  openAgregarMercancias(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
