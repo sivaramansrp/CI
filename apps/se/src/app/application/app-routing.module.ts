@@ -173,7 +173,13 @@ const ROUTES: Routes = [
     path: 'certificado-validacion',
     loadChildren: () =>
       import('./tramites/110202/certificado-validacion.module').then(
-        (m) => m.CertificadoValidacionModule
+        (m) => m.CertificadoValidacionModule),
+      },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   }
 
