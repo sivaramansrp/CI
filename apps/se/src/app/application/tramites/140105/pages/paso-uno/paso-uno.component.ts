@@ -1,6 +1,8 @@
 
 import { Component } from '@angular/core';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -27,6 +29,7 @@ export class PasoUnoComponent {
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Cancelación de solicitud de permisos', component: 'cancelacion-de-solicitus' },
   ];
+  public mostrarBusqueda: boolean = false;
 
 
   /**
@@ -36,13 +39,13 @@ export class PasoUnoComponent {
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
    */
-  constructor(private readonly seccionStore: SeccionLibStore) {
+  constructor(private readonly seccionStore: SeccionLibStore, private servicioDeMensajesService: ServicioDeMensajesService) {
     // Establece el estado de la forma como no válida al inicio.
     this.seccionStore.establecerFormaValida([false]);
     // Establece la primera sección como activa.
     this.seccionStore.establecerSeccion([false]);
   }
-
+  
   /**
    * @description 
    * Método que se ejecuta al seleccionar una pestaña/paso del formulario.
@@ -56,5 +59,13 @@ export class PasoUnoComponent {
   seleccionaPestana(i: number): void {
     this.indice = i;
   }
-
+  ngOnInit() {
+    this.servicioDeMensajesService.message$.subscribe((message) => {
+      this.mostrarBusqueda = message;
+    });
+  }
+  ngOnDestroy(){
+  this.servicioDeMensajesService.sendMessage(false);
+  }
+  
 }

@@ -83,6 +83,9 @@ export class IntroPermisoComponent {
       this.mostrarBusqueda = message;
     });
   }
+  ngOnDestroy() {
+      this.mostrarBusqueda = false;
+  }
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

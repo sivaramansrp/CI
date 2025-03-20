@@ -1,6 +1,6 @@
   <div class="container">
     <div class="row">
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-tabs" [class.hide]="mostrarBusqueda">
         <ul class="nav nav-tabs">
           <li
             *ngFor="let tab of seccionesDeLaSolicitud"
@@ -20,7 +20,8 @@
         @switch (indice) { @case (1) {
         <solicitante></solicitante>
         } @case (2) {
-        <app-cancelacion-de-solicitus></app-cancelacion-de-solicitus>
+          <app-busqueda-folio *ngIf="mostrarBusqueda"></app-busqueda-folio>
+        <app-cancelacion-de-solicitus [class.hide]="mostrarBusqueda"></app-cancelacion-de-solicitus>
         } }
       </ng-container>
     </div>
