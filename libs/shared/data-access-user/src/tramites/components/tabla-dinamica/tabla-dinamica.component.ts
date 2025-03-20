@@ -83,11 +83,11 @@ export class TablaDinamicaComponent<T> {
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
    * @returns {ConfiguracionColumna<T>[]} La configuración de las columnas ordenada.
+   * 
    */
   obtenerConfiguracionOrdenada(): ConfiguracionColumna<T>[] {
     return this.configuracionTabla.sort((a, b) => a.orden - b.orden);
   }
-
   /**
    * Maneja la selección de una fila.
    * Actualiza el valor de `idFilaSeleccionada` con el ID de la fila seleccionada y emite el evento con la fila completa seleccionada.
