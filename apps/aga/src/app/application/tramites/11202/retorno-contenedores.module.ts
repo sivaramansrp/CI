@@ -37,13 +37,12 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     ContenedorComponent,
     PasoUnoComponent,
     SolicitantePageComponent,
-    PasoDosComponent,
+  PasoDosComponent,
     
     
     
   ],
   imports: [
-    PasoTresComponent,
     CommonModule,
     RetornoContenedoresRoutingModule,
     SharedModule,
@@ -56,7 +55,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     FirmaElectronicaComponent,
     AlertComponent,
     FirmaElectronicaComponent,
-  
+    AnexarDocumentosComponent,
     SelectCatalogosComponent,
     InputFechaComponent,
     InputCheckComponent,
@@ -67,7 +66,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
     FirmaElectronicaComponent,
  CatalogoSelectComponent,
  InputRadioComponent,
-    
+ PasoTresComponent,
     
   ],
   exports: [SolicitanteComponent, ContenedorComponent, PasoUnoComponent],

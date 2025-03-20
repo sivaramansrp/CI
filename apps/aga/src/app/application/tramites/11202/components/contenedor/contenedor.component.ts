@@ -23,6 +23,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
  options!: Catalogo[];
 
+  /**
+   * Define los datos que se mostrarán en la tabla dinámica.
+   */
+  datosTabla = [
+    {
+      inicialesEquipo: 'BBZM',
+      numeroEquipo: 1098765,
+      digitoVerificador: 4,
+      tipoEquipo: 'AC',
+      aduana: 430,
+      fechaIngreso: '2024-03-13',
+      vigencia: '2025-03-13',
+      estadoConstancia: 'Válido',
+      existeEnVUCEM: 'Sí',
+      idConstancia: 'CONST12345',
+      numeroManifiesto: 'MANI67890',
+      idSolicitud: 'SOLICITUD001',
+      fechaInicio: '2024-03-01',
+    },
+  ];
+
  radioOptions = preOperativo;
   private subscription: Subscription = new Subscription();
   private destroyNotifier$: Subject<void> = new Subject();
@@ -45,6 +66,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   cargarArchivo: boolean = false;
   currentIdx: number = 0;
 
+  showCargarArchivoTable: boolean = false;
+  showArchivoSeleccionadoTable: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -189,10 +212,58 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Muestra el campo para adjuntar archivo.
    */
+  /**
+   * Adjuntar archivo CSV y parsear su contenido.
+   */
   adjuntarArchivo(): void {
-    this.cargarArchivoVisible = true;
+    const FILE_INPUT = document.getElementById(
+      'archivoSeleccionado'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      const READER = new FileReader();
+      READER.onload = (e): void => {
+        const TEXT = e.target?.result as string;
+        this.parseCSV(TEXT);
+        this.showArchivoSeleccionadoTable = true;
+      };
+      READER.readAsText(FILE);
+    }
   }
 
+  parseCSV(csv: string): void {
+    const LINES = csv.split('\n');
+    const HEADERS = LINES[0].split(',');
+    const DATA = LINES.slice(1).map((line) => {
+      const VALUES = line.split(',');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const OBJ: any = {};
+      HEADERS.forEach((header, index) => {
+        OBJ[header.trim()] = VALUES[index]?.trim() || '';
+      });
+      return OBJ;
+    });
+    this.datosTabla = DATA;
+  }
+
+    /**
+   * Cargar archivo CSV y parsear su contenido.
+   */
+    Archivo(): void {
+      const FILE_INPUT = document.getElementById(
+        'cargarArchivo'
+      ) as HTMLInputElement;
+      const FILE = FILE_INPUT.files?.[0];
+      if (FILE) {
+        const READER = new FileReader();
+        READER.onload = (e): void => {
+          const TEXT = e.target?.result as string;
+          this.parseCSV(TEXT);
+          this.showCargarArchivoTable = true;
+        };
+        READER.readAsText(FILE);
+      }
+    }
   /**
    * Abre el modal para cancelar el trámite.
    */

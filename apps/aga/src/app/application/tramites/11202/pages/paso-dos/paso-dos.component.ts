@@ -1,61 +1,55 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
-/**
- * Componente para mostrar el subtítulo del asistente.
- * @component PasoDosComponent
- * @selector app-paso-dos
- * @templateUrl ./paso-dos.component.html
- * @styleUrls ./paso-dos.component.scss
- */
+import { CatalogosService } from '@ng-mf/data-access-user';
+
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss']
+  styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent {
-  items: any[] = [];
+export class PasoDosComponent implements OnInit {
+  TEXTOS = TEXTOS;
 
-  archivoSeleccionadoCSV(evento: any): void {
-    const archivo = evento.target.files[0];
- 
-    if (archivo && archivo.name.endsWith('.csv')) {
-      const lector = new FileReader();
- 
-      lector.onload = (e: any) => {
-        const datosCSV = e.target.result;
-        const datosProcesados = this.procesarCSV(datosCSV);
-        console.log('Datos CSV procesados:', datosProcesados);
-      };
- 
-      lector.readAsText(archivo);
-    } else {
-     // alert('Por favor, sube un archivo CSV válido');
-    }
-  }
- 
-  procesarCSV(datosCSV: string): any[] {
-    const lineas = datosCSV.split('\n'); // Separar el archivo en líneas
-    const resultado: any[] = [];
-    const encabezados = lineas[0].split(','); // Suponemos que la primera línea es el encabezado
- 
-    // Recorrer cada línea a partir de la segunda línea
-    for (let i = 1; i < lineas.length; i++) {
-      const lineaActual = lineas[i].trim();
-      if (lineaActual) {
-        const valores = lineaActual.split(','); // Separar por coma
-        const objeto: any = {};
- 
-        // Combinar los encabezados con los valores en un objeto
-        for (let j = 0; j < encabezados.length; j++) {
-          objeto[encabezados[j].trim()] = valores[j] ? valores[j].trim() : '';
-        }
- 
-        resultado.push(objeto);
+  tiposDocumentos: Catalogo[] = [];
+  infoAlert = 'alert-info';
+  catalogoDocumentos: Catalogo[] = [];
+  documentosSeleccionados: Catalogo[] = [];
+
+  constructor(
+    private catalogosServices: CatalogosService,
+  ) { }
+
+  ngOnInit(): void {
+    this.getTiposDocumentos();
+    this.documentosSeleccionados = [
+      {
+        id: 1,
+        descripcion: 'Documentos que ampare el valor de la mercancía'
+      },
+      {
+        id: 2,
+        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
       }
-    }
- 
-    return resultado;
-  }
- 
+    ]
 
+  }
+
+  /**
+ * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+ */
+  getTiposDocumentos(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .subscribe({
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.catalogoDocumentos = resp;
+          }
+        },
+        error: (_error): void => { },
+      });
+  }
 }

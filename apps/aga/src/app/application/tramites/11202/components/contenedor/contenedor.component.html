@@ -183,38 +183,111 @@
   </div>
 
   <div id="seccionExcel" *ngIf="seccionExcelVisible">
-    <div class="row">
-      <div class="col-md-12">
-        <h3>Adjuntar archivo</h3>
-        <hr class="red" />
-      </div>
-    </div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col-md-4">
-        <div class="pull-left">
-          <label>Archivo seleccionado</label>
-          <span class="require">*</span>
-          <label>:</label>
-        </div>
+          <ng-titulo titulo="Adjuntar archivo" />
+          <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
+          <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado"
+              required>
+      </div>
+      <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+          <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
+              Archivo</button>
+      </div>
+      <div *ngIf="showArchivoSeleccionadoTable">
+          <table class="table table-bordered" align="center">
+              <thead>
+                  <tr>
+                      <th></th>
+                      <th>Iniciales del equipo</th>
+                      <th>Número de equipo</th>
+                      <th>Dígito Verificador</th>
+                      <th>Tipo de equipo</th>
+                      <th>Aduana</th>
+                      <th>Fecha Ingreso</th>
+                      <th>Vigencia</th>
+                      <th>Estado de constancia</th>
+                      <th>Existe en VUCEM</th>
+                      <th>Id constancia</th>
+                      <th>Número manifiesto</th>
+                      <th>Id solicitud</th>
+                      <th>Fecha inicio</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of datosTabla; let i = index">
+                      <td class="grey-column">{{ i + 1 }}</td>
+                      <td>{{ item.inicialesEquipo }}</td>
+                      <td>{{ item.numeroEquipo }}</td>
+                      <td>{{ item.digitoVerificador }}</td>
+                      <td>{{ item.tipoEquipo }}</td>
+                      <td>{{ item.aduana }}</td>
+                      <td>{{ item.fechaIngreso }}</td>
+                      <td>{{ item.vigencia }}</td>
+                      <td>{{ item.estadoConstancia }}</td>
+                      <td>{{ item.existeEnVUCEM }}</td>
+                      <td>{{ item.idConstancia }}</td>
+                      <td>{{ item.numeroManifiesto }}</td>
+                      <td>{{ item.idSolicitud }}</td>
+                      <td>{{ item.fechaInicio }}</td>
+                  </tr>
+              </tbody>
+          </table>
       </div>
       <div class="col-md-4">
-        <input type="text" name="archivoSeleccionado" id="archivoSeleccionado" class="form-control" readonly
-          [value]="archivoSeleccionado" />
+          <ng-titulo titulo="Cargar Archivo" />
+          <label for="cargarArchivo" class="form-label">Archivo Seleccionado*:</label>
+          <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required>
       </div>
-
-    </div>
-    <div class="row" style="margin-bottom: 30px">
-      <div class="col-md-12">
-        <div class="pull-right">
-          <button type="button" name="Cargar Archivo" class="btn btn-default" (click)="adjuntarArchivo()">
-            Cargar Archivo
-          </button>
-        </div>
+      <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
+          <button type="button" class="btn btn-default" (click)="Archivo()">Enviar</button>
       </div>
-    </div>
+      <div *ngIf="showCargarArchivoTable">
+          <table class="table table-bordered" align="center">
+              <thead>
+                  <tr>
+                      <th></th>
+                      <th>Iniciales del equipo</th>
+                      <th>Número de equipo</th>
+                      <th>Dígito Verificador</th>
+                      <th>Tipo de equipo</th>
+                      <th>Aduana</th>
+                      <th>Fecha Ingreso</th>
+                      <th>Vigencia</th>
+                      <th>Estado de constancia</th>
+                      <th>Existe en VUCEM</th>
+                      <th>Id constancia</th>
+                      <th>Número manifiesto</th>
+                      <th>Id solicitud</th>
+                      <th>Fecha inicio</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let item of datosTabla; let i = index">
+                      <td class="grey-column">{{ i + 1 }}</td>
+                      <td>{{ item.inicialesEquipo }}</td>
+                      <td>{{ item.numeroEquipo }}</td>
+                      <td>{{ item.digitoVerificador }}</td>
+                      <td>{{ item.tipoEquipo }}</td>
+                      <td>{{ item.aduana }}</td>
+                      <td>{{ item.fechaIngreso }}</td>
+                      <td>{{ item.vigencia }}</td>
+                      <td>{{ item.estadoConstancia }}</td>
+                      <td>{{ item.existeEnVUCEM }}</td>
+                      <td>{{ item.idConstancia }}</td>
+                      <td>{{ item.numeroManifiesto }}</td>
+                      <td>{{ item.idSolicitud }}</td>
+                      <td>{{ item.fechaInicio }}</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
   </div>
+</div>
 
-  <div id="cargarArchivos" *ngIf="cargarArchivoVisible">
+
+
+  <!-- <div id="cargarArchivos" *ngIf="cargarArchivoVisible">
 
     <ng-titulo titulo="Cargar Archivos" />
     <ng-container formGroupName="datosContenedor">
@@ -228,9 +301,9 @@
       </div>
     </ng-container>
 
-  </div>
+  </div> -->
   <!-- Table to Display Excel Data -->
-
+<!-- 
   <div id="seccionContenedor" *ngIf="cargarArchivo">
     <div class="row">
       <div class="col-md-12">
@@ -239,5 +312,5 @@
       </div>
     </div>
     <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
-  </div>
+  </div> -->
 </form>

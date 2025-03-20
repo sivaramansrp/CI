@@ -1,24 +1,8 @@
-<div id="requisitosObligatorios">
-    <div class="row">
-        <div class="col-md-12">
-            <h3>
-                Requisitos obligatorios</h3>
-            <hr class="red" />
-        </div>
-    </div>
-    <div class="container">
-        <ul>
-            <ul>The certificate </ul>
-        </ul>
-    </div>
-
-    <div class="upload-container">
-        <input
-          type="file"
-          #fileInput
-          accept=".csv"
-          (change)="archivoSeleccionadoCSV($event)" />
-        <p>Selecciona un archivo CSV para cargar.</p>
-      </div>
-
-</div>
+<div class="container">
+    <ng-titulo titulo="Requisitos opcionales" />
+  
+    <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert>
+  
+    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+  </div>
+  
