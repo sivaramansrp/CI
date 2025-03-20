@@ -78,10 +78,11 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
 
     // Inicializa el formulario con los valores del estado de la solicitud
     this.formulario = this.fb.group({
-      solicitud: ['', Validators.required], // Campo de solicitud, requerido
+      solicitud: [this.solicitudState.solicitud, Validators.required], // Campo de solicitud, requerido
       régimen: [this.solicitudState.régimen, Validators.required], // Campo de régimen, requerido
       clasificación: [this.solicitudState.clasificación, Validators.required], // Campo de clasificación, requerido
       solitudDescripcion: [this.solicitudState.solitudDescripcion, Validators.required], // Campo de descripción de la solicitud, requerido
+      producto: [this.solicitudState.producto, Validators.required], // Campo de solicitud, requerido
     });
   }
 

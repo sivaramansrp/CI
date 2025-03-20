@@ -6,7 +6,7 @@
                 <label for="solicitud" class="form-label">Solicitud*:</label>
                 <div>
                     <input type="radio" id="solicitudInicial" formControlName="solicitud" name="solicitud"
-                        value="inicial" checked> Inicial
+                        value="inicial" checked (change)="setValoresStore(formulario,'solicitud', 'setSolicitud')"> Inicial
                 </div>
             </div>
             <div class="col-md-6">
@@ -26,7 +26,8 @@
             <div class="col-md-4">
                 <label for="producto" class="form-label">Producto*:</label>
                 <app-input-radio [radioOptions]="radioOptions" [isRequired]="true"
-                     [layout]="'vertical'"></app-input-radio>
+                     [layout]="'vertical'" formControlName="producto"
+                     (change)="setValoresStore(formulario, 'producto', 'setProducto')" ></app-input-radio>
             </div>
             <div class="col-md-6">
                 <label for="descripcion">Descripción de la mercancía*:</label>

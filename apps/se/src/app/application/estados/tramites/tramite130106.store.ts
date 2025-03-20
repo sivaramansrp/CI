@@ -22,6 +22,8 @@ export interface Solicitud130106State {
     bloque: string;
     disponible:string;
     seleccionado:string;
+    solicitud:string;
+    producto:string;
 
 }
 
@@ -45,6 +47,8 @@ export function createInitialState(): Solicitud130106State {
         bloque: '',
         disponible:'',
         seleccionado:'',
+        solicitud:'',
+        producto:'',
     };
 }
 @Injectable({
@@ -167,6 +171,19 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
         this.update((state) => ({
             ...state,
             seleccionado,
+        }));
+    }
+    
+    public setSolicitud(solicitud: string) {
+        this.update((state) => ({
+            ...state,
+            solicitud,
+        }));
+    }
+    public setProducto(producto: string) {
+        this.update((state) => ({
+            ...state,
+            producto,
         }));
     }
 

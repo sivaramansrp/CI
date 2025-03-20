@@ -32,6 +32,8 @@ describe('FraccionComponent', () => {
     solitudDescripcion: '',
     disponible:'',
     seleccionado:'',
+    solicitud:'',
+    producto:'',
     
   };
 
@@ -96,42 +98,42 @@ describe('FraccionComponent', () => {
 
   // Add test cases for your component logic
   it('should initialize the form with mock state data', () => {
-    expect(component.FraccionForm.value.fraccion).toBe(mockState.fraccion);
-    expect(component.FraccionForm.value.cantidad).toBe(mockState.cantidad);
-    expect(component.FraccionForm.value.factura).toBe(mockState.factura);
-    expect(component.FraccionForm.value.umt).toBe(mockState.umt);
-    expect(component.FraccionForm.value.mercanciaCantidad).toBe(mockState.mercanciaCantidad);
+    expect(component.fraccionForm.value.fraccion).toBe(mockState.fraccion);
+    expect(component.fraccionForm.value.cantidad).toBe(mockState.cantidad);
+    expect(component.fraccionForm.value.factura).toBe(mockState.factura);
+    expect(component.fraccionForm.value.umt).toBe(mockState.umt);
+    expect(component.fraccionForm.value.mercanciaCantidad).toBe(mockState.mercanciaCantidad);
   });
   it('should set values in store when setValoresStore() is called', () => {
     const mockForm = { fraccion: '001', cantidad: '10' };
     const setValuesSpy = jest.spyOn(component.tramite130106Store, 'setFraccion');
     
-    component.setValoresStore(component.FraccionForm, 'fraccion', 'setFraccion');
+    component.setValoresStore(component.fraccionForm, 'fraccion', 'setFraccion');
     
     expect(setValuesSpy).toHaveBeenCalledWith('001');
   });
 
   it('should initialize formulario correctly on ngOnInit()', () => {
     // Make sure the form is initialized correctly
-    expect(component.FraccionForm).toBeDefined();
-    expect(component.FraccionForm.controls['fraccion']).toBeTruthy();
-    expect(component.FraccionForm.controls['cantidad']).toBeTruthy();
+    expect(component.fraccionForm).toBeDefined();
+    expect(component.fraccionForm.controls['fraccion']).toBeTruthy();
+    expect(component.fraccionForm.controls['cantidad']).toBeTruthy();
   });
 
   it('should handle form invalid when required fields are missing', () => {
-    component.FraccionForm.controls['fraccion'].setValue('');
-    component.FraccionForm.controls['cantidad'].setValue('');
+    component.fraccionForm.controls['fraccion'].setValue('');
+    component.fraccionForm.controls['cantidad'].setValue('');
 
-    expect(component.FraccionForm.valid).toBeFalsy();
+    expect(component.fraccionForm.valid).toBeFalsy();
   });
 
   it('should handle form valid when all fields are filled correctly', () => {
-    component.FraccionForm.controls['fraccion'].setValue('001');
-    component.FraccionForm.controls['cantidad'].setValue('10');
-    component.FraccionForm.controls['factura'].setValue('12345');
-    component.FraccionForm.controls['umt'].setValue('kg');
+    component.fraccionForm.controls['fraccion'].setValue('001');
+    component.fraccionForm.controls['cantidad'].setValue('10');
+    component.fraccionForm.controls['factura'].setValue('12345');
+    component.fraccionForm.controls['umt'].setValue('kg');
 
-    expect(component.FraccionForm.valid).toBeTruthy();
+    expect(component.fraccionForm.valid).toBeTruthy();
   });
 
   it('should call the destroyNotifier when ngOnDestroy is called', () => {
