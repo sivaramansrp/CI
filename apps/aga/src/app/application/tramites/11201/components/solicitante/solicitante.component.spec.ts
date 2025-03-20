@@ -1,15 +1,4 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Pipe,
-  PipeTransform,
-  Injectable,
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Directive,
-  Input,
-  Output,
-} from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -17,11 +6,8 @@ import {
   FormGroup,
   FormControl,
 } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 
 describe('SolicitanteComponent', () => {
@@ -49,7 +35,7 @@ describe('SolicitanteComponent', () => {
 
   afterEach(() => {
     if (component) {
-      component.ngOnDestroy = function () {};
+      component.ngOnDestroy = function () { };
     }
     if (fixture) {
       fixture.destroy();

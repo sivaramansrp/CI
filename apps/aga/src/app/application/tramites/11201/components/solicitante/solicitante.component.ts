@@ -22,7 +22,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Constructor para inyectar las dependencias necesarias.
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
-  constructor(private fb: FormBuilder,
+  constructor(public fb: FormBuilder,
     public tramite11201Store: Tramite11201Store,
     // eslint-disable-next-line no-empty-function
     private tramite11201Query: Tramite11201Query) {

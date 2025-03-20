@@ -33,7 +33,7 @@ describe('PasoDosComponent', () => {
         ReactiveFormsModule,
         FormsModule,
         CommonModule,
-        PasoDosComponent, // Importing the standalone component
+        PasoDosComponent,
       ],
       providers: [
         { provide: Tramite11201Store, useValue: tramite11201StoreMock },
