@@ -159,7 +159,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -613,6 +612,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState.monto, [Validators.required]],
       })
     });
+    debugger
+    this.mostrarRangoFechas = this.solicitudState?.rangoFechas;
+    this.selectRangoDias = this.solicitudState?.selectRangoDias;
+
   }
 
   /**
@@ -742,12 +745,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   obtenerRangoFechas(): void {
     const F_INICIO = this.datosServicio.get('fechaInicio')?.value;
     const F_FINAL = this.datosServicio.get('fechaFinal')?.value;
-
     this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
       F_INICIO,
       F_FINAL
     );
-
+    this.tramite5701Store.setRangoDias(this.selectRangoDias);
     this.colapsable = true;
   }
 
@@ -898,17 +900,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
-
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = MSJ_ERROR_FECHA;
-
       this.abrirModal();
       return;
     }
 
     if (!this.individual()) {
       this.mostrarRangoFechas = true;
+      (this.tramite5701Store['setRangoFechas'] as (value: boolean) => void)(this.mostrarRangoFechas);
       this.obtenerRangoFechas();
     }
   }

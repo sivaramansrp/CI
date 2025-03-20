@@ -81,6 +81,17 @@ export interface Solicitud5701State {
   montoPagar: string;
   lineaCaptura: string;
   monto: string;
+
+  rangoFechas: boolean;
+  selectRangoDias: string[];
+}
+
+export interface Tercero5701State {
+  nombreTercero: string;
+  correoTercero: string;
+}
+export interface Terceros5701State {
+  terceros: Tercero5701State[];
 }
 
 export function createInitialState(): Solicitud5701State {
@@ -141,6 +152,8 @@ export function createInitialState(): Solicitud5701State {
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
+    rangoFechas: false,
+    selectRangoDias: [],
   };
 }
 
@@ -151,6 +164,20 @@ export function createInitialState(): Solicitud5701State {
 export class Tramite5701Store extends Store<Solicitud5701State> {
   constructor() {
     super(createInitialState());
+  }
+
+  public setRangoFechas(rangoFechas: boolean): void {
+    this.update((state) => ({
+      ...state,
+      rangoFechas,
+    }));
+  }
+
+  public setRangoDias(selectRangoDias: string[]): void {
+    this.update((state) => ({
+      ...state,
+      selectRangoDias,
+    }));
   }
 
   /**
