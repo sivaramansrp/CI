@@ -1,5 +1,5 @@
-import { Catalogo } from "../shared/catalogos.model";
-import { CatalogosSelect } from "../shared/components.model";
+import { Catalogo } from "@ng-mf/data-access-user";
+import { CatalogosSelect } from "@ng-mf/data-access-user";
 
 /** 
  * Interfaz que representa los detalles de la mercancía.
@@ -150,3 +150,11 @@ export interface DatosDelTramiteRealizar {
   /** Oficina de inspección de Sanidad Agropecuaria */
   puntoInspeccion: Catalogo[];
 }
+/**
+ * Interfaz que representa un tipo de contenedor dentro del sistema.
+ * Contiene un catálogo de opciones disponibles para la selección.
+ */
+export interface TipoContenedor {
+  tipoContenedor: CatalogosSelect;
+}
+

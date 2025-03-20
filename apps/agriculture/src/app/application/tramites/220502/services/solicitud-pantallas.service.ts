@@ -1,6 +1,5 @@
-import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { CargarDatosIniciales } from '@ng-mf/data-access-user';
-import { DatosDelTramiteRealizar } from '@ng-mf/data-access-user';
+import { CargarDatosIniciales, TipoContenedor } from '../models/solicitud-pantallas.model';
+import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -36,13 +35,11 @@ export class SolicitudPantallasService {
   }
 
   /** Método para obtener los datos de la solicitud
-   * @returns Observable<CatalogosSelect>
+   * @returns Observable<TipoContenedor>
    */
-  getDataResponsableInspeccion(): Observable<{
-    tipoContenedor: CatalogosSelect;
-  }> {
+  getDataResponsableInspeccion(): Observable<TipoContenedor> {
     return this.http
-      .get<{ tipoContenedor: CatalogosSelect }>(this.dataUrl)
+      .get<TipoContenedor>(this.dataUrl)
       .pipe();
   }
 }

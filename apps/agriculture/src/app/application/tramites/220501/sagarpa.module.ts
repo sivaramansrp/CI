@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AgregarMercanciaComponent } from './components/agregar-mercancia/agregar-mercancia.component';
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, InputRadioComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user'
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from '../220502/shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
@@ -30,6 +30,8 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
@@ -67,8 +69,13 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CarrosDeFerrocarrilComponent,
     HistorialInspeccionFisicaComponent,
     CatalogoSelectComponent,
-    TableComponent
+    TableComponent,
+    InputRadioComponent,
+    ToastrModule.forRoot()
   ],
   exports: [SolicitudComponent, SolicitudPageComponent],
+  providers:[
+    ToastrService,
+  ]
 })
 export class SagarpaModule {}

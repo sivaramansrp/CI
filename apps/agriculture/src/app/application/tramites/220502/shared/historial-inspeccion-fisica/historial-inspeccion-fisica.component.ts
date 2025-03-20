@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HistorialInspeccionFisica } from '@ng-mf/data-access-user';
+import { HistorialInspeccionFisica } from '../../models/solicitud-pantallas.model';
 import { Input } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
