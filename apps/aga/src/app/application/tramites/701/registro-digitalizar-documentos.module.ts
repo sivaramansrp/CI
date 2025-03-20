@@ -1,5 +1,4 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable sort-imports */
+
 import { AlertComponent, CatalogosService } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
