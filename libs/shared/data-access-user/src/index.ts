@@ -106,6 +106,8 @@ export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tab
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export * from './core/models/shared/configuracion-columna.model'
+
+
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
