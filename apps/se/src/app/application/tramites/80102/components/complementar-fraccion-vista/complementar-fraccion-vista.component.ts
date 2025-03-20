@@ -17,6 +17,9 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   templateUrl: './complementar-fraccion-vista.component.html',
   styleUrl: './complementar-fraccion-vista.component.scss',
 })
+/**
+ * Componente para la vista de complementar fracción.
+ */
 export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
   /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -26,14 +29,39 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  
+  /**
+   * Datos de la fracción complementaria.
+   * @type {ComplimentarFraccionResoponse}
+   */
+
   public complimentarDatos!: ComplimentarFraccionResoponse;
+
+  /**
+   * Datos del catálogo de categorías seleccionadas.
+   * @type {Catalogo[]}
+   */
   public catagoriaSeleccionDatos: Catalogo[] = COMPLEMENTAR_FRACCION_CATALOGO_DATOS;
+
+   /**
+   * Datos para complementar la fracción.
+   * @type {ComplimentarFraccion}
+   */
   public complimentarFraccionDatos: ComplimentarFraccion = COMPLEMENTAR_FRACCION_DATOS;
 
+  /**
+   * Constructor de la clase ComplementarFraccionVistaComponent.
+   * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
+   */
   constructor(private query: Tramite80102Query) {
-    //constructor vacío
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
+    /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los datos de navegación y actualiza la descripción de la fracción complementaria.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.query.selectDatosParaNavegar$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -43,6 +71,12 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
       });
   }
 
+  
+  /**
+   * Obtiene los datos del evento emitido por el componente de complementar fracción.
+   * @param {ComplimentarFraccionResoponse} event - Datos de la fracción complementaria.
+   * @returns {void}
+   */
   getDatos(event: ComplimentarFraccionResoponse): void {
     this.complimentarDatos = event;
   }

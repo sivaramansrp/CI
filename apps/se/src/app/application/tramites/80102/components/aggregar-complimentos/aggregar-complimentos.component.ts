@@ -1,12 +1,11 @@
+import { Component, OnDestroy } from '@angular/core';
 import {
   DatosComplimentos,
   SociaoAccionistas,
 } from '../../../../shared/models/complimentos.model';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
-import { Component } from '@angular/core';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
@@ -17,16 +16,42 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
-export class AggregarComplimentosComponent {
+/**
+ * Componente para agregar complementos.
+ */
+export class AggregarComplimentosComponent implements OnDestroy {
+  /**
+   * Datos de los complementos.
+   * @type {DatosComplimentos}
+   */
   datosComplimentos!: DatosComplimentos;
+
+  /**
+   * Notificador para destruir las suscripciones.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Observable para los datos de la tabla de complementos.
+   * @type {Observable<SociaoAccionistas[]>}
+   */
   tablaDatosComplimentos$: Observable<SociaoAccionistas[]>;
+
+  /**
+   * Observable para los datos de la tabla de complementos extranjeros.
+   * @type {Observable<SociaoAccionistas[]>}
+   */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
 
+  /**
+   * Constructor de la clase AggregarComplimentosComponent.
+   * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
+   * @param {Tramite80102Query} tramiteQuery - Servicio para consultar el estado del trámite.
+   */
   constructor(
     private store: Tramite80102Store,
-    private tramiteQuery: Tramite80102Query,
-    private autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService
+    private tramiteQuery: Tramite80102Query
   ) {
     this.tablaDatosComplimentos$ =
       this.tramiteQuery.selectTablaDatosComplimentos$;
@@ -40,10 +65,20 @@ export class AggregarComplimentosComponent {
       });
   }
 
+  /**
+   * Modifica los datos de los complementos.
+   * @param {DatosComplimentos} complimentos - Datos de los complementos.
+   * @returns {void}
+   */
   modifierComplimentos(complimentos: DatosComplimentos): void {
     this.store.setDatosComplimentos(complimentos);
   }
 
+  /**
+   * Agrega un nuevo accionista a la tabla de complementos.
+   * @param {SociaoAccionistas} datos - Datos del accionista.
+   * @returns {void}
+   */
   accionistasAgregados(datos: SociaoAccionistas): void {
     if (datos.rfc) {
       this.store.aggregarTablaDatosComplimentos(datos);
@@ -52,15 +87,40 @@ export class AggregarComplimentosComponent {
     }
   }
 
+  /**
+   * Elimina los accionistas seleccionados de la tabla de complementos.
+   * @param {SociaoAccionistas[]} datos - Lista de accionistas a eliminar.
+   * @returns {void}
+   */
   accionistasEliminados(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentos(datos);
   }
 
+  /**
+   * Elimina los accionistas extranjeros seleccionados de la tabla de complementos.
+   * @param {SociaoAccionistas[]} datos - Lista de accionistas extranjeros a eliminar.
+   * @returns {void}
+   */
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }
 
+  /**
+   * Establece si el formulario de complementos es válido.
+   * @param {boolean} valida - Indica si el formulario es válido.
+   * @returns {void}
+   */
   setFormValida(valida: boolean): void {
-    this.store.setFormValida({ complimentos: valida});
+    this.store.setFormValida({ complimentos: valida });
+  }
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -16,8 +16,21 @@ import { Tramite80102Query } from '../../estados/tramite80102.query';
   templateUrl: './contenedor-proveedor-cliente.component.html',
   styleUrl: './contenedor-proveedor-cliente.component.scss',
 })
+
+/**
+ * Componente contenedor de proveedor cliente.
+ */
 export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
+  /**
+   * Datos de la tabla de fracciones.
+   * @type {AnexoUnoEncabezado | AnexoDosEncabezado}
+   */
   fraccionTablaDatos!: AnexoUnoEncabezado | AnexoDosEncabezado;
+  
+  /**
+   * Datos del proveedor.
+   * @type {ProveedorClienteTabla[]}
+   */
   datosDelProveedor: ProveedorClienteTabla[] = [];
 
   /**
@@ -28,10 +41,19 @@ export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor de la clase ContenedorProveedorClienteComponent.
+   * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
+   */
   constructor(private query: Tramite80102Query) {
-    //constructor vacío
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
+/**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al observable de datos para navegar.
+   * @method ngOnInit
+*/
   ngOnInit(): void {
     this.query.selectDatosParaNavegar$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -40,11 +62,15 @@ export class ContenedorProveedorClienteComponent implements OnDestroy, OnInit {
       });
   }
 
+/**
+ * Actualiza los datos del proveedor y cliente.
+ * @param {ProveedorClienteTabla[]} $event - Evento que contiene la lista de proveedores y clientes actualizados.
+ * @returns {void}
+ */
   public datosActualizadosProveedorCliente(
     $event: ProveedorClienteTabla[]
   ): void {
     this.datosDelProveedor = $event;
-    //Datos del proveedor
   }
 
   /**

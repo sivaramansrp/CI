@@ -73,12 +73,23 @@ export class FederatariosYPlantasVistaComponent {
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
 
-
-  constructor(private store: Tramite80102Store, private query: Tramite80102Query) {
-
+  /**
+   * Constructor de la clase FederatariosYPlantasVistaComponent.
+   * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
+   * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
+   */
+  constructor(
+    private store: Tramite80102Store,
+    private query: Tramite80102Query
+  ) {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
   }
 
+  /**
+   * Establece los datos del formulario de federatarios.
+   * @param {FederatariosEncabezado} datos - Datos del encabezado de federatarios.
+   * @returns {void}
+   */
   setFormaDatos(datos: FederatariosEncabezado): void {
     this.store.setFederatarios(datos);
   }

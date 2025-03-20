@@ -36,7 +36,7 @@ describe('ProveedorPorArchivoVistaComponent', () => {
   });
 
   it('should call Location.back when regrssarAnnexoI is called', () => {
-    component.regrssarAnnexoI();
+    component.regrsarAnnexoI();
     expect(mockLocation.back).toHaveBeenCalled();
   });
 });

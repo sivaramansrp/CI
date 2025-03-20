@@ -31,7 +31,7 @@ import {
   ServicioInmex,
   Servicios,
 } from '../../models/autorizacion-programa-nuevo.model';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject,takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
@@ -65,12 +65,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @property {number} tabindex
    */
   @Input() tabindex!: number;
-
-  /**
-   * Suscripción privada.
-   * @type {Subscription}
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Formulario reactivo.
@@ -219,6 +213,14 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   datosEmpresaExtranjera$!: Observable<DatosEmpresaExtranjera[]>;
 
+   /**
+     * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+     * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+     *
+     * @property {Subject<void>} destroyNotifier$
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente.
    * @constructor
@@ -282,9 +284,9 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getCatalogoPaises(): void {
-    this.subscription.add(
       this.catalogosServices
         .getCatalogoPaises(CATALOGOS_ID.CAT_PAISES)
+        .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((datos) => {
           const INDICE = this.camposFormulario.findIndex(
             (ele) => ele.campo === ENTIDADFEDERATIVA
@@ -292,7 +294,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
           this.camposFormulario[INDICE].opciones = datos;
           this.Tramite80102Store.setPaisesOrigen(datos);
         })
-    );
   }
 
   /**
@@ -322,11 +323,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @method getDatos
    */
   suscribirseADatos(): void {
-    this.subscription.add(
-      this.Tramite80102Query.selectDatos$.subscribe((datos) => {
+      this.Tramite80102Query.selectDatos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
         this.datos = datos; // Update local `datos` array when store data changes
       })
-    );
   }
 
   /**
@@ -334,17 +335,17 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   suscribirseAFields(): void {
-    this.subscription.add(
       this.Tramite80102Query.select((state) => ({
         rfcEmpresa: state.rfcEmpresa,
         numeroPrograma: state.numeroPrograma,
         tiempoPrograma: state.tiempoPrograma,
-      })).subscribe((fields) => {
+      }))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((fields) => {
         this.rfcEmpresa = fields.rfcEmpresa;
         this.numeroPrograma = fields.numeroPrograma;
         this.tiempoPrograma = fields.tiempoPrograma;
       })
-    );
   }
 
   /**
@@ -352,14 +353,15 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getDatos(): void {
-    this.subscription.add(
-      this.autorizacionProgrmaNuevoService.getDatos().subscribe((respuesta) => {
+    
+      this.autorizacionProgrmaNuevoService.getDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         if (respuesta) {
-          // Store the response data in the store
           this.Tramite80102Store.setInfoRegistro(respuesta);
         }
       })
-    );
+    
   }
 
   /**
@@ -379,9 +381,9 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   obtenerIngresoSelectList(): void {
     // Fetch AduanaDeIngreso list using the service and store it in the Akita store
-    this.subscription.add(
       this.autorizacionProgrmaNuevoService
         .obtenerIngresoSelectList()
+        .pipe(takeUntil(this.destroyNotifier$))
         .subscribe((data) => {
           const DATOS = data as Catalogo[];
 
@@ -395,7 +397,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
             }
           );
         })
-    );
   }
 
   /**
@@ -470,15 +471,6 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones.
-   * @method ngOnDestroy
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  /**
    * Maneja los datos recibidos del componente hijo.
    * @method procesarDatosDelHijo
    * @param {any} data - Datos recibidos.
@@ -529,4 +521,16 @@ export class ServiciosComponent implements OnInit, OnDestroy {
       this.formularioEmpresaExtranjera.value
     );
   }
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
+
+  
 }

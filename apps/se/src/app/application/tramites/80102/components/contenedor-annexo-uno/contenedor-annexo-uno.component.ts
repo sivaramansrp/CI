@@ -17,10 +17,23 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
   styleUrl: './contenedor-annexo-uno.component.scss',
 })
 export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
+/**
+   * Configuración del anexo Uno.
+   * @type {Object}
+   * @property {TablaSeleccion} anexoUnoTablaSeleccionRadio - Selección de tabla del anexo Uno.
+   * @property {ANEXO_I_SERVICIO} anexoUnoEncabezadoDeTabla - Encabezado de tabla del anexo Uno.
+   */
   public anexoUnoConfig = {
     anexoUnoTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoUnoEncabezadoDeTabla: ANEXO_I_SERVICIO,
   }
+
+    /**
+   * Configuración del anexo de importación.
+   * @type {Object}
+   * @property {TablaSeleccion} anexoDosTablaSeleccionRadio - Selección de tabla del anexo Dos.
+   * @property {ANEXO_IMPORTACION_SERVICIO} anexoDosEncabezadoDeTabla - Encabezado de tabla del anexo Dos.
+   */
   public anexoImportacionConfig = {
     anexoDosTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoDosEncabezadoDeTabla: ANEXO_IMPORTACION_SERVICIO,
@@ -46,14 +59,25 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-
+ /**
+   * Constructor de la clase ContenedorAnnexoUnoComponent.
+   * @param {Router} router - Servicio de Angular para la navegación.
+   * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
+   * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
+   * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
+   */
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private store:Tramite80102Store,
     private query:Tramite80102Query) 
   {
-    // do nothing
+    // El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los datos de las tablas de importación y exportación y actualiza las listas correspondientes.
+   * @returns {void}
+   */
   ngOnInit():void{
     this.query.selectImportarTablsDatos$
         .pipe(takeUntil(this.destroyNotifier$))
@@ -92,6 +116,11 @@ export class ContenedorAnnexoUnoComponent implements OnInit, OnDestroy {
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
 
+   /**
+   * Método para manejar la navegación a la fracción de complemento.
+   * @param {RutaNombre} event - Evento que contiene la información de la ruta.
+   * @returns {void}
+   */
   public rutaLaFraccionDeComplemento(event: RutaNombre): void{
     if(event && event.catagoria && event.id && (event.datos || event.catagoria ==='proveedor-por-archivo')){
       this.store.setAnnexoUnoSeccionActiva(event.id);

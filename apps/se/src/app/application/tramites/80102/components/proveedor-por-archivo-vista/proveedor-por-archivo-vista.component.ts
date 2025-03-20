@@ -10,13 +10,23 @@ import { Location } from '@angular/common';
   templateUrl: './proveedor-por-archivo-vista.component.html',
   styleUrl: './proveedor-por-archivo-vista.component.scss',
 })
+/**
+ * Componente para la vista de proveedor por archivo.
+ */
 export class ProveedorPorArchivoVistaComponent {
 
+  /**
+   * Constructor del componente.
+   * @param ubicaccion Servicio de ubicación para navegación.
+   */
   constructor( private ubicaccion: Location){
-    //Constructor vacío
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
-  regrssarAnnexoI(): void {
+  /**
+   * Método para regresar al anexo I.
+   */
+  regrsarAnnexoI(): void {
     this.ubicaccion.back();
   }
 }

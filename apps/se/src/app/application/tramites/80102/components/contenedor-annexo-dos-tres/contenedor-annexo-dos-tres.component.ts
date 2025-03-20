@@ -1,4 +1,4 @@
-import { Component,OnDestroy,OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
@@ -52,14 +52,24 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private query: Tramite80102Query,
+  /**
+   * Constructor de la clase ContenedorAnnexoDosTresComponent.
+   * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
+   * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
+   */
+  constructor(
+    private query: Tramite80102Query,
     private store: Tramite80102Store
   ) {
-    //constructor vacío
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los datos de las tablas de anexos dos y tres y actualiza las listas correspondientes.
+   * @returns {void}
+   */
   ngOnInit(): void {
-
     this.query.anexoDosTableLista$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoDosTablaLista) => {
@@ -68,7 +78,7 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.query.anexoTresTablaLista$
+    this.query.anexoTresTablaLista$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((anexoTresTablaLista) => {
         if (anexoTresTablaLista.length > 0) {
@@ -97,13 +107,13 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
     this.store.setAnnexoTresTableLista(this.anexoTresTablaLista);
   }
 
-    /**
-     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-     * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-     * @method ngOnDestroy
-     */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
