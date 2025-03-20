@@ -1,0 +1,40 @@
+.modal-dialog {
+    max-width: 600px !important;
+}
+
+.modal-body {
+    margin: 10px 15px 0px 15px;
+}
+
+.scian {
+    margin: 3em 0 1em 0;
+}
+
+#modalAgregarMercancia .modal-dialog {
+    max-width: 1000px !important;
+}
+
+#modalAlerta .modal-footer {
+    justify-content: center;
+}
+
+#modalAlerta .modal-header {
+    height: 50px;
+}
+
+#modalAlerta .modal-dialog {
+    max-width: 315px !important;
+}
+
+.manifiestoDescripcion {
+    text-align: justify;
+    margin: -25px 0px 0px 25px !important;
+}
+
+.alert {
+    text-align: left !important;
+}
+
+.alert label {
+    font-weight: normal;
+}
