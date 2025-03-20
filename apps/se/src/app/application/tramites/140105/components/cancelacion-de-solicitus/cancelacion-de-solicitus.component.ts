@@ -2,13 +2,13 @@ import * as formData from '../../constants/datos-del-formulario.json';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FormBuilder} from '@angular/forms';
-import { FormGroup} from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators} from '@angular/forms';
+import { Validators } from '@angular/forms';
 @Component({
   selector: 'app-cancelacion-de-solicitus',
   templateUrl: './cancelacion-de-solicitus.component.html',
@@ -53,6 +53,7 @@ export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
       this.datosDePermiso = datos;
       if (this.datosDePermiso) {
         this.cuerpoTabla = [formData as Cancelacion];
+        this.servicioDeMensajesService.setDatos(this.cuerpoTabla as Cancelacion[]);
       }
     });
 
