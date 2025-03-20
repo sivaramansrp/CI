@@ -18,7 +18,7 @@ export class PasoTresComponent {
    * Constructor del componente.
    * 
    * @param router Servicio de enrutamiento.
-   * @param serviciosExtraordinariosServices Servicio para gestionar los servicios extraordinarios.
+   * @param tramiteFolioService Servicio para gestionar los servicios extraordinarios.
    * @param tramiteStore Almacén para gestionar el estado del trámite.
    */
   constructor(
