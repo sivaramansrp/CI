@@ -29,6 +29,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      )
+    },
+    {
     path: 'registro-como-empresa',
     loadChildren: () =>
       import('./tramites/120601/registro-como-empresa.module').then(
