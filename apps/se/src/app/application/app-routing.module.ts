@@ -147,7 +147,16 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+
+  {
+    path: 'certificado-validacion',
+    loadChildren: () =>
+      import('./tramites/110202/certificado-validacion.module').then(
+        (m) => m.CertificadoValidacionModule
+      ),
   }
+
 ];
 
 @NgModule({
