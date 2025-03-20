@@ -53,10 +53,11 @@
         </div>
 
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
+            (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
         </div>
         <div class="col-md-4 form-field">
-            <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
         </div>
 
         <div class="row w-100">

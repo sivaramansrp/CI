@@ -73,6 +73,8 @@ export const INITIAL_STATE: TramiteState = {
     nombreComercialForm: '',
     registroProductoForm: '',
     fracciónArancelariaForm: '',
+    fechaInicioInput:'',
+    fechaFinalInput:'',
   },
   formDatosCertificado: {
     observacionesDates: '',

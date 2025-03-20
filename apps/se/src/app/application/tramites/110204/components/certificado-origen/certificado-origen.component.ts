@@ -185,6 +185,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       fracciónArancelariaForm: [''],
       registroProductoForm: [''],
       nombreComercialForm: [''],
+      fechaFinal: ['',[Validators.required]],
+      fechaInicio: ['',[Validators.required]],
     });
 
     /**
@@ -194,7 +196,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
       if (!this.actualizandoFormulario && estado) {
-        this.actualizandoFormulario = true;
+        this.actualizandoFormulario = true;        
         this.formCertificado.patchValue(estado);
         this.actualizandoFormulario = false;
       }
@@ -247,7 +249,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
   ngOnInit(): void {
     this.cargarEstados();
     this.cargarBloque();
-    this.formCertificado.valueChanges.subscribe(value => {
+    this.formCertificado.valueChanges.subscribe(value => {      
       if (!this.actualizandoFormulario) {
       this.store.setFormCertificado(value);
       this.validarFormulario();

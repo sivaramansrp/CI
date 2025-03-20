@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
@@ -103,7 +103,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       umc: [''],
       valorMercancia: [''],
       complementoClasificacion: [''],
-      fechaFinalInput: [''],
+      fechaFinalInput: ['',[Validators.required]],
       numeroFactura: [''],
       tipoFactura: ['']
     });
@@ -174,6 +174,16 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         }
       );
   }
+    /**
+   * Cambia el valor de la fecha final en el formulario.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
+    public cambioFechaFinal(nuevo_valor: string): void {
+
+      this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
+      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+    }
+  
 
   /**
    * Carga las UMC desde el servicio y las establece en el store.

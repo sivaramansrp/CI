@@ -59,7 +59,7 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-3">
-              <input-fecha [datos]="fechaFinalInput"></input-fecha>
+              <input-fecha [datos]="fechaFinalInput" [setFecha]="mercanciaForm.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
             </div>
             <div class="col-md-4">
               <label for="numeroFactura">N° factura:</label>
