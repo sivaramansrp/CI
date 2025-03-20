@@ -2,7 +2,7 @@
 /* eslint-disable sort-imports */
 import { AlertComponent, CatalogosService } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { AnexarPageComponent } from './components/anexar-page/anexar-page.component';
+// import { AnexarPageComponent } from './components/anexar-page/anexar-page.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +28,7 @@ import { RegistroDigitalizarDocumentosService } from './services/registro-digita
     
    ],
   imports: [
-    AnexarPageComponent,
+    // AnexarPageComponent,
     AlertComponent,
     AnexarDocumentosComponent,
     BtnContinuarComponent,

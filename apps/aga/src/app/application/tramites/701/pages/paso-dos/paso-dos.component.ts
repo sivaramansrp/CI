@@ -13,10 +13,10 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AnexarPageComponent } from '../../components/anexar-page/anexar-page.component';
+// import { AnexarPageComponent } from '../../components/anexar-page/anexar-page.component';
 import { FiltrarArchivosDigitalizacionComponent } from '../../components/filtrar-archivos-digitalizacion/filtrar-archivos-digitalizacion.component';
 import { ReplaySubject, takeUntil } from 'rxjs';
-
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para el paso dos del wizard.
@@ -31,7 +31,8 @@ import { ReplaySubject, takeUntil } from 'rxjs';
     FormsModule,
     ReactiveFormsModule,
     CommonModule,
-    AnexarPageComponent,
+    // AnexarPageComponent,
+    AnexarDocumentosComponent,
     FiltrarArchivosDigitalizacionComponent,
   ],
 })
