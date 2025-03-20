@@ -153,11 +153,18 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-    this.formMercancia?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((cambios) => {
-      if (this.formMercancia.valid) {
-        // Se pueden realizar acciones cuando el formulario es válido
-      }
-    })
+    this.datosMercanciaService.obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(data => {
+        if (Array.isArray(data?.datos)) {
+          this.cuerpoTabla = data.datos as MercanciaForm[];
+        } else {
+          console.error("Expected an array but received:", data?.datos);
+          this.cuerpoTabla = [];
+        }
+      });
+
+
   }
 
   /**
@@ -359,8 +366,14 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     if (ID !== undefined) {
       const INDICE = this.cuerpoTabla.findIndex(item => item.id === ID);
       if (INDICE !== -1) {
-        this.datosMercanciaService.eliminarDatoPorId(ID);
         this.cuerpoTabla.splice(INDICE, 1);
+        this.datosMercanciaService.actualizarFormularioMovilizacion(this.cuerpoTabla);
+        if (this.cuerpoTabla.length === 0) {
+          this.datosMercanciaService.botonDesactivarCampos(false)
+        }
+        else {
+          this.datosMercanciaService.botonDesactivarCampos(true);
+        }
       }
     }
   }
