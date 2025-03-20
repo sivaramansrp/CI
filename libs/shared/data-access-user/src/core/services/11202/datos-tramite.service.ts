@@ -45,4 +45,8 @@ Obtenga una lista ficticia de Contenedores
   submitSolicitud(solicitudData: any): Observable<any> {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
+
+  getDatosTableData(): Observable<any[]> {
+    return this.http.get<any[]>(`assets/json/11202/datosTabla.json`);
+  }
 }

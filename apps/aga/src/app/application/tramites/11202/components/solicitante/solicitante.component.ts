@@ -32,7 +32,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line no-empty-function
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private solicitudStore: Solicitud11202Store,
     private solicitudQuery: Solicitud11202Query
   ) {}

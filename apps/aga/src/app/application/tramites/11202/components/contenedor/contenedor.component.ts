@@ -28,23 +28,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla = [
-    {
-      inicialesEquipo: 'BBZM',
-      numeroEquipo: 1098765,
-      digitoVerificador: 4,
-      tipoEquipo: 'AC',
-      aduana: 430,
-      fechaIngreso: '2024-03-13',
-      vigencia: '2025-03-13',
-      estadoConstancia: 'Válido',
-      existeEnVUCEM: 'Sí',
-      idConstancia: 'CONST12345',
-      numeroManifiesto: 'MANI67890',
-      idSolicitud: 'SOLICITUD001',
-      fechaInicio: '2024-03-01',
-    },
-  ];
+
+   /**
+   * Define los datos que se mostrarán en la tabla dinámica.
+   */
+   datosTabla: any[] = [];
+  
+
 
   radioOptions = preOperativo;
   private subscription: Subscription = new Subscription();
@@ -104,6 +94,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.crearFormSolicitud();
     this.cargarCatalogContenedores();
     this.tabSeleccionado();
+    this.loadDatosTablaData();
   }
 
   /**
@@ -348,6 +339,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         'setTipoBusqueda'
       );
       this.mostrarCampos();
+    });
+  }
+
+  
+  loadDatosTablaData(): void {
+    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+      this.datosTabla = data;
     });
   }
 
