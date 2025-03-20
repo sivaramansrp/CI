@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
 import { ACCIONBOTON, DatosPasos, LISTAPASOWIZARD } from '../../models/acuicola.module';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { PASOS } from '../../constants/acuicola.module';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-acuicola',

@@ -1,4 +1,6 @@
 import { AlertComponent, TercerosComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { AcuicolaComponent } from './pages/acuicola/acuicola.component';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -10,8 +12,10 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@ng-mf/data-access-user";
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -22,12 +26,10 @@ import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { TransporteComponent } from './components/transporte/transporte.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { AcuicolaComponent } from './pages/acuicola/acuicola.component';
-import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 
 
 
@@ -64,8 +66,10 @@ import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-d
     SelectPaisesComponent,
     CatalogoSelectComponent,
     TercerosComponent,
-    ToastrModule.forRoot()
-  ],
+    ToastrModule.forRoot(),
+    InputRadioComponent,
+    TablaDinamicaComponent
+],
   providers:[ToastrService],
 })
 
