@@ -19,6 +19,9 @@ import { CommonModule } from '@angular/common';
 import { MENSAJE_DE_ALERTA } from '../../enum/permiso.enum';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
+/**
+ * Componente principal para gestionar el formulario de manifiestos.
+ */
 @Component({
   selector: 'app-manifiestos',
   standalone: true,

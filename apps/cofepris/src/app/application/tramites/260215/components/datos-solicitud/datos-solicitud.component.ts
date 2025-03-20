@@ -22,6 +22,10 @@ import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-d
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
+/**
+ * Componente responsable de gestionar y mostrar los datos principales del formulario,
+ * incluyendo domicilio, manifiestos y representante legal.
+ */
 @Component({
   selector: 'app-datos-de-la',
   standalone: true,

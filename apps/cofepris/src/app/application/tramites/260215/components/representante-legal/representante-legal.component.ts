@@ -15,6 +15,9 @@ import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
+/**
+ * Componente principal para gestionar el formulario de representante.
+ */
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
