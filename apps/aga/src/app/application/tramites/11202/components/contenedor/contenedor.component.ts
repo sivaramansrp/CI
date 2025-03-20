@@ -232,19 +232,35 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   parseCSV(csv: string): void {
-    const LINES = csv.split('\n');
+    const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
+    const headerMap: { [key: string]: string } = {
+      'Aduana': 'aduana',
+      'Iniciales del equipo': 'inicialesEquipo',
+      'Tipo de equipo':'tipoEquipo',
+      'N�mero de equipo':'numeroEquipo',
+      'D�gito Verificador':'digitoVerificador',
+      'Fecha Ingreso':'fechaIngreso',
+      'Vigencia':'vigencia',
+      'Estado de constancia':'estadoConstancia',
+      'Existe en VUCEM':'existeEnVUCEM',
+      'Id constancia':'idConstancia',
+      'N�mero manifiesto':'numeroManifiesto',
+      'Id solicitud':'idSolicitud',
+      'Fecha inicio':'fechaInicio'
+    };
     const DATA = LINES.slice(1).map((line) => {
-      const VALUES = line.split(',');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const OBJ: any = {};
-      HEADERS.forEach((header, index) => {
-        OBJ[header.trim()] = VALUES[index]?.trim() || '';
-      });
-      return OBJ;
-    });
+        const VALUES = line.split(',');
+        const OBJ: any = {};
+        HEADERS.forEach((header, index) => {
+            const key = headerMap[header.trim()] || header.trim();
+            OBJ[key] = VALUES[index]?.trim();
+        });
+        return OBJ;
+    }).filter(artículo => Object.values(artículo).some(value => value));
     this.datosTabla = DATA;
-  }
+}
+
 
     /**
    * Cargar archivo CSV y parsear su contenido.
