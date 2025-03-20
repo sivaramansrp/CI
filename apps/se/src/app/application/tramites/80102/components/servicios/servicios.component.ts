@@ -406,8 +406,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   eliminarServiciosGrid(): void {
     const INDICE = this.datosImmex.findIndex(
       (item: Servicio) =>
-        item.descripiónDelServicio ===
-        this.domiciliosSeleccionados[0]?.['descripiónDelServicio']
+        item.descripionDelServicio ===
+        this.domiciliosSeleccionados[0]?.descripionDelServicio
     );
     if (INDICE !== -1) {
       const DATOS_IMMEX_ACTUALIZADOS = [...this.datosImmex];
@@ -422,7 +422,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   agregarServiciosAmpliacion(): void {
     const CUERPODATOS = {
-      descripiónDelServicio: this.recibioDatos[0].descripcion,
+      descripionDelServicio: this.recibioDatos[0].descripcion,
       tipode: this.recibioDatos[0].tipode,
     };
     this.Tramite80102Store.setDatosImmex([...this.datosImmex, CUERPODATOS]);
@@ -435,8 +435,8 @@ export class ServiciosComponent implements OnInit, OnDestroy {
   eliminarEmpresasNacionales(): void {
     const INDICE = this.datos.findIndex(
       (item: ServicioInmex) =>
-        item.RegistroContribuyentes ===
-        this.empresasSeleccionados[0]?.RegistroContribuyentes
+        item.registroContribuyentes ===
+        this.empresasSeleccionados[0]?.registroContribuyentes
     );
     if (INDICE !== -1) {
       const DATOSACTUALIZADOS = [...this.datos];
@@ -451,11 +451,11 @@ export class ServiciosComponent implements OnInit, OnDestroy {
    */
   actualizaGridEmpresasNacionales(): void {
     const CUERPODATOS = {
-      Servicio: 'Auditoría de sistemas de seguridad',
-      RegistroContribuyentes: this.rfcEmpresa,
-      DenominaciónSocial: 'AAL970927390',
-      NumeroIMMEX: this.numeroPrograma,
-      AñoIMMEX: this.tiempoPrograma,
+      servicio: 'Auditoría de sistemas de seguridad',
+      registroContribuyentes: this.rfcEmpresa,
+      denominacionSocial: 'AAL970927390',
+      numeroIMMEX: this.numeroPrograma,
+      anoIMMEX: this.tiempoPrograma,
     };
 
     const DATOSACTUALIZADOS = [...this.datos, CUERPODATOS];

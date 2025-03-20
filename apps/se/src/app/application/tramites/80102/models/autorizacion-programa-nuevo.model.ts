@@ -2,14 +2,14 @@ import { AnexoDosEncabezado,AnexoEncabezado,AnexoUnoEncabezado } from "../../../
 import { Catalogo, CatalogoPaises } from "@ng-mf/data-access-user";
 
 export interface ServicioInmex {
-  Servicio?: string;
-  RegistroContribuyentes?: string;
-  DenominaciónSocial?: string;
-  NumeroIMMEX?: string;
-  AñoIMMEX?: string;
+  servicio?: string;
+  registroContribuyentes?: string;
+  denominacionSocial?: string;
+  numeroIMMEX?: string;
+  anoIMMEX?: string;
 }
 export interface Servicio {
-  descripiónDelServicio?: string;
+  descripionDelServicio?: string;
   descripcion?: string;
   tipode?: string;
 }

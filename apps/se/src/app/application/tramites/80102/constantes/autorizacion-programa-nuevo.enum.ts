@@ -33,35 +33,35 @@ export const TEXTOS_REQUISITOS =
 export const CONFIGURACION_DOMICILIOS = [
   {
     encabezado: 'Servicio',
-    clave: (ele: ServicioInmex): string | undefined => ele.Servicio,
+    clave: (ele: ServicioInmex): string | undefined => ele.servicio,
     orden: 1,
   },
   {
     encabezado: 'Registro federal de contribuyentes',
     clave: (ele: ServicioInmex): string | undefined =>
-      ele.RegistroContribuyentes,
+      ele.registroContribuyentes,
     orden: 2,
   },
   {
     encabezado: 'Denominación o razón socialNúmero Interior',
-    clave: (ele: ServicioInmex): string | undefined => ele.DenominaciónSocial,
+    clave: (ele: ServicioInmex): string | undefined => ele.denominacionSocial,
     orden: 3,
   },
   {
     encabezado: 'Numero del programa IMMEX',
-    clave: (ele: ServicioInmex): string | undefined => ele.NumeroIMMEX,
+    clave: (ele: ServicioInmex): string | undefined => ele.numeroIMMEX,
     orden: 4,
   },
   {
     encabezado: 'Año del programa IMMEXad',
-    clave: (ele: ServicioInmex): string | undefined => ele.AñoIMMEX,
+    clave: (ele: ServicioInmex): string | undefined => ele.anoIMMEX,
     orden: 5,
   },
 ];
 export const CONFIGURACION_SERVICIO_IMMEX = [
   {
     encabezado: 'Descripión del servicio',
-    clave: (ele: Servicio): string | undefined => ele.descripiónDelServicio,
+    clave: (ele: Servicio): string | undefined => ele.descripionDelServicio,
     orden: 1,
   },
   {
