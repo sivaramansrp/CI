@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'aviso-exportacion',
+    loadChildren: () =>
+      import('./tramites/260604/aviso-exportacion.module').then(
+        (m) => m.AvisoExportacionModule
+      ),
+  },
 ];
 
 @NgModule({
