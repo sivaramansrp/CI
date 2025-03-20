@@ -1,5 +1,4 @@
 import {
-  Personas,
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
 
@@ -46,7 +45,7 @@ export interface Solicitud5701State {
   autorizacionLDA: string;
   dd: boolean;
   autorizacionDDEX: string;
-  
+
   ddexAutorizacion: string;
   idAduanaDespacho: string;
   aduanaDespacho: string;
@@ -82,16 +81,6 @@ export interface Solicitud5701State {
   montoPagar: string;
   lineaCaptura: string;
   monto: string;
-
-  tercerosRelacionados: Personas[];
-}
-
-export interface Tercero5701State {
-  nombreTercero: string;
-  correoTercero: string;
-}
-export interface Terceros5701State {
-  terceros: Tercero5701State[];
 }
 
 export function createInitialState(): Solicitud5701State {
@@ -152,7 +141,6 @@ export function createInitialState(): Solicitud5701State {
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
-    tercerosRelacionados: [],
   };
 }
 
@@ -204,7 +192,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
       programa,
     }));
   }
-  
+
   public setDesProgramaFomento(desProgramaFomento: string): void {
     this.update((state) => ({
       ...state,
@@ -557,12 +545,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTercerosRelacionados(tercerosRelacionados: Personas[]): void {
-    this.update((state) => ({
-      ...state,
-      tercerosRelacionados,
-    }));
-  }
+
 
   /**
    * Limpia los datos de la solicitud

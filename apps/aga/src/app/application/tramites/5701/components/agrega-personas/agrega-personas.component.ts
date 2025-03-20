@@ -11,7 +11,7 @@ import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/t
 import { Subject, map, takeUntil } from 'rxjs';
 import { UppercaseDirective, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Persona, ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
+import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
@@ -174,9 +174,7 @@ export class AgregaPersonasComponent implements OnInit {
 
     if (responsable !== null) {
       this.personas.push(responsable);
-      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
-      console.log(this.solicitudState);
-      
+      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);      
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -231,9 +229,7 @@ export class AgregaPersonasComponent implements OnInit {
      */
     setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
       const VALOR = form.get(campo)?.value;
-      (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
-      console.log(this.solicitudState);
-  
+      (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);  
     }
 
 

@@ -155,3 +155,6 @@ export * from './core/enums/tabla-seleccion.enum';
 
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
+
+export * from './core/estados/terceros.store';
+export * from './core/queries/terceros.query';
