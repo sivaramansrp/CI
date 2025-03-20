@@ -6,8 +6,9 @@ import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { PermisosCancelar } from '@libs/shared/data-access-user/src/core/models/140112/permisos-cancelar.model';
-import { PermisosCancelarData } from '@libs/shared/data-access-user/src/core/models/140112/permisos-cancelar.model';
+import { PermisosCancelar } from '../../models/permisos-cancelar.model';
+import { PermisosCancelarData } from '../../models/permisos-cancelar.model';
+
 import { PermisosCancelarService } from '../../service/permisos-cancelar.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -38,13 +39,13 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
 
   /** Configuración para las columnas de la tabla */
   configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: '', clave: (item: PermisosCancelar) => item.Id, orden: 1 },
-    { encabezado: 'Folio trámite ', clave: (item: PermisosCancelar) => item.FolioTtrámite, orden: 2 },
-    { encabezado: 'Tipo solicitud ', clave: (item: PermisosCancelar) => item.TipoSolicitud, orden: 3 },
-    { encabezado: 'Régimen ', clave: (item: PermisosCancelar) => item.Régimen, orden: 4 },
-    { encabezado: 'Clasificación régimen ', clave: (item: PermisosCancelar) => item.ClasificaciónRégimen, orden: 5 },
-    { encabezado: 'Condición de la mercancía', clave: (item: PermisosCancelar) => item.CondiciónDeLaMercancía, orden: 6 },
-    { encabezado: 'Fracción arancelaria ', clave: (item: PermisosCancelar) => item.FracciónArancelaria, orden: 7 },
+    { encabezado: '', clave: (item: PermisosCancelar) => item.id, orden: 1 },
+    { encabezado: 'Folio trámite ', clave: (item: PermisosCancelar) => item.folioTtrámite, orden: 2 },
+    { encabezado: 'Tipo solicitud ', clave: (item: PermisosCancelar) => item.tipoSolicitud, orden: 3 },
+    { encabezado: 'Régimen ', clave: (item: PermisosCancelar) => item.régimen, orden: 4 },
+    { encabezado: 'Clasificación régimen ', clave: (item: PermisosCancelar) => item.clasificaciónRégimen, orden: 5 },
+    { encabezado: 'Condición de la mercancía', clave: (item: PermisosCancelar) => item.condiciónDeLaMercancía, orden: 6 },
+    { encabezado: 'Fracción arancelaria ', clave: (item: PermisosCancelar) => item.fracciónArancelaria, orden: 7 },
   ];
 
   /** Array para almacenar la respuesta de permisos cancelar */
@@ -112,14 +113,6 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
         this.permisosCancelar = response;
       });
   }
-
-  // /**
-  //  * Manejar datos de filas seleccionadas
-  //  * @param data Datos de filas seleccionadas
-  //  */
-  // handleListaDeFilaSeleccionada(data: PermisosCancelar): void {
-  //   this.obtenerFilasSeleccionadas = data;
-  // }
 
   /**
    * Seleccionar o deseleccionar todas las filas

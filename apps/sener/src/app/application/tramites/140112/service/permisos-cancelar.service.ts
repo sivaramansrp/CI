@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AbstractControl, FormGroup } from '@angular/forms';
-import { PermisosCancelarData } from '@libs/shared/data-access-user/src/core/models/140112/permisos-cancelar.model';
+import { PermisosCancelarData } from '../models/permisos-cancelar.model';
 
 @Injectable({
   providedIn: 'root'

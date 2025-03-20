@@ -1,20 +1,20 @@
 [
     {
-          "Id":1,
-          "FolioTtrámite" : 17013001008 ,
-          "TipoSolicitud" : "Inicial",
-          "Régimen" : "Definitivos",
-          "ClasificaciónRégimen" : "De importación",
-          "CondiciónDeLaMercancía" : "Nuevo",
-          "FracciónArancelaria" : "27090099 Los demás"
+          "id":1,
+          "folioTtrámite" : 17013001008 ,
+          "tipoSolicitud" : "Inicial",
+          "régimen" : "Definitivos",
+          "clasificaciónRégimen" : "De importación",
+          "condiciónDeLaMercancía" : "Nuevo",
+          "fracciónArancelaria" : "27090099 Los demás"
       },
       {
-          "Id":2,
-          "FolioTtrámite" : 170130 ,
-          "TipoSolicitud" : "Inicial",
-          "Régimen" : "Definitivos",
-          "ClasificaciónRégimen" : "De importación",
-          "CondiciónDeLaMercancía" : "Nuevo",
-          "FracciónArancelaria" : "27090099 Los demás"
+          "id":2,
+          "folioTtrámite" : 17013001008 ,
+          "tipoSolicitud" : "Inicial",
+          "régimen" : "Definitivos",
+          "clasificaciónRégimen" : "De importación",
+          "condiciónDeLaMercancía" : "Nuevo",
+          "fracciónArancelaria" : "27090099 Los demás"
       }
   ]

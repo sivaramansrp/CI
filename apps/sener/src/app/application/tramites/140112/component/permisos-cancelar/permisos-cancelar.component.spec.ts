@@ -18,15 +18,15 @@ describe('PermisosCancelarComponent', () => {
   let querySpy: any
   let fb: FormBuilder;
   beforeEach(async () => {
-    const permisosCancelarServiceMock = {
+    const PERMISOSCANCELARSERVICEMOCK  = {
       getPermisosCancelar: jest.fn(),
       isValid: jest.fn(),
     };
-    const storeMock = {
+    const STOREMOCK  = {
       setDesistimiento: jest.fn(),
     };
 
-    const queryMock = {
+    const QUERYMOCK  = {
       selectDesistimiento$: new Subject().asObservable(),
     };
 
@@ -35,9 +35,9 @@ describe('PermisosCancelarComponent', () => {
       imports: [ReactiveFormsModule, PermisosCancelarComponent, TablaDinamicaComponent, CommonModule, FormsModule,
         HttpClientTestingModule],
       providers: [
-        { provide: PermisosCancelarService, useValue: permisosCancelarServiceMock },
-        { provide: Tramite140112Store, useValue: storeMock },
-        { provide: Tramite140112Query, useValue: queryMock },
+        { provide: PermisosCancelarService, useValue: PERMISOSCANCELARSERVICEMOCK  },
+        { provide: Tramite140112Store, useValue: STOREMOCK  },
+        { provide: Tramite140112Query, useValue: QUERYMOCK  },
         FormBuilder,
       ],
     }).compileComponents();
@@ -73,12 +73,12 @@ describe('PermisosCancelarComponent', () => {
 
 
   it('should select or deselect all rows', () => {
-    const event = { target: { checked: true } } as any;
-    component.seleccionarDeseleccionarTodos(event);
+    const EVENT = { target: { checked: true } } as any;
+    component.seleccionarDeseleccionarTodos(EVENT);
     expect(component.estmarcado).toBe(true);
     expect(component.confirmarVeracidad).toBe(component.manifestoDeVeracidad);
-    const event2 = { target: { checked: false } } as any;
-    component.seleccionarDeseleccionarTodos(event2);
+    const EVENT2 = { target: { checked: false } } as any;
+    component.seleccionarDeseleccionarTodos(EVENT2);
     expect(component.estmarcado).toBe(false);
     expect(component.confirmarVeracidad).toBe('');
   });
@@ -91,18 +91,18 @@ describe('PermisosCancelarComponent', () => {
     permisosCancelarServiceSpy.isValid.mockReturnValue(true);
   });
   it('should unsubscribe on destroy', () => {
-    const destroy$Spy = jest.spyOn((component as any).destroy$, 'next');
-    const complete$Spy = jest.spyOn((component as any).destroy$, 'complete');
+    const DESTROY$SPY = jest.spyOn((component as any).destroy$, 'next');
+    const COMPLETE$SPY = jest.spyOn((component as any).destroy$, 'complete');
     component.ngOnDestroy();
-    expect(destroy$Spy).toHaveBeenCalled();
-    expect(complete$Spy).toHaveBeenCalled();
+    expect(DESTROY$SPY).toHaveBeenCalled();
+    expect(COMPLETE$SPY).toHaveBeenCalled();
   });
 
   it('should patch form value on init', () => {
-    const desistimientoSubject = new Subject<string>();
-    (querySpy.selectDesistimiento$ as any) = desistimientoSubject.asObservable();
+    const DESISTIMIENTOSUBJECT  = new Subject<string>();
+    (querySpy.selectDesistimiento$ as any) = DESISTIMIENTOSUBJECT .asObservable();
     component.ngOnInit();
-    desistimientoSubject.next('test data');
+    DESISTIMIENTOSUBJECT .next('test data');
     expect(component.solicitud.get('descripcionClobGenerica1')?.value).toBe('test data');
   });
 });
