@@ -40,7 +40,7 @@ Obtenga una lista ficticia de Contenedores
   }
 
   /**
-   * Simulate a successful form submission
+   * Simular un envío exitoso de formulario
    */
   submitSolicitud(solicitudData: any): Observable<any> {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
