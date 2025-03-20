@@ -58,6 +58,9 @@ export const LABEL_DESPACHO_DD = 'Autorizacion DDEX';
 export const ID_NAME_DD = 'autorizacionDDEX';
 export const ID_NAME_LDA = 'autorizacionLDA';
 
+export const FUNCION_STORE_LDA = 'setAutorizacionLDA';
+export const FUNCION_STORE_DD = 'setAutorizacionDDEX';
+
 export const VEHICULO = [
   'Carretero',
   'Ferroviario',

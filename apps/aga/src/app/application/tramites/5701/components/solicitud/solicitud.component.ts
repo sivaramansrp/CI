@@ -3,6 +3,8 @@ import {
   DESPACHO_DD, DESPACHO_LDA,
   FECHA_FINAL,
   FECHA_INICIO,
+  FUNCION_STORE_DD,
+  FUNCION_STORE_LDA,
   HORA_FINAL,
   HORA_INICIO,
   ID_NAME_DD,
@@ -52,6 +54,7 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Modal } from 'bootstrap';
+import { solicitud } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 
 
 @Component({
@@ -122,6 +125,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   labelTipoDespacho!: string;
 
   idNameAutorizacion!: string;
+  funcionStoreAutorizacion!: keyof Tramite5701Store;
+
   idTipoDespacho!: string;
 
   private destroyNotifier$: Subject<void> = new Subject();
@@ -206,12 +211,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
 
 
-    const SOCIO_COMERCIAL = this.datosImportadorExportador.get('socioComercial')?.value;
+    // Verifica que si los campos con check e input estan seleccionados y tienen valor.
+    this.verificaDatosCheckInput('socioComercial', 'idSocioComercial', this.datosImportadorExportador);
+    this.verificaDatosCheckInput('lda', 'despachoSeleccion', this.despachoSeleccion);
+    this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
 
-    if (SOCIO_COMERCIAL) {
-      this.datosImportadorExportador.get('idSocioComercial')?.enable();
-      this.datosImportadorExportador.get('idSocioComercial')?.setValue(this.solicitudState?.idSocioComercial);
-    }
+
+    // const SOCIO_COMERCIAL = this.datosImportadorExportador.get('socioComercial')?.value;
+
+
+    // if (SOCIO_COMERCIAL) {
+    //   this.datosImportadorExportador.get('idSocioComercial')?.enable();
+    //   this.datosImportadorExportador.get('idSocioComercial')?.setValue(this.solicitudState?.idSocioComercial);
+    // }
   }
 
   /**
@@ -617,7 +629,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const FECHA_FINAL = new Date(this.datosServicio.get('fechaFinal')?.value);
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
-    const INTERVALO_DIAS = this.getIntervaloDias(this.tipoSolicitudSeleccionada);
+    const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(this.tipoSolicitudSeleccionada);
     if (
       FECHA_INICIO &&
       FECHA_FINAL &&
@@ -676,8 +688,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {number} intervalo - El tipo de intervalo, que puede ser uno de los valores definidos en TIPO_SOLICITUD.
    * @returns {number | null} El número de días correspondiente al intervalo proporcionado, o null si el intervalo no es válido.
    */
-  // eslint-disable-next-line class-methods-use-this
-  getIntervaloDias(intervalo: number): number | null {
+  static getIntervaloDias(intervalo: number): number | null {
     switch (intervalo) {
       case TIPO_SOLICITUD.INDIVIDUAL:
         return 1;
@@ -857,6 +868,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+    console.log(this.solicitudState);
+
   }
 
   /**
@@ -912,8 +925,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 * Abre el modal para eliminar un documento.
 * @param {number} i - El índice del documento.
 */
-  abrirModal() {
-    // this.modal = 'show';
+  abrirModal(): void {
     const MODAL_AVISO = new Modal(this.modalAviso.nativeElement);
     MODAL_AVISO.show();
   }
@@ -965,6 +977,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (ADUANA !== '' || DESPACHO !== '' || RECINTO !== '') {
       this.tituloModal = TITULO_MODAL_ERROR;
       this.mensajeModal = ADV_LIMPIA_CAMPOS;
+      this.setValoresStore(this.despachoSeleccion, this.idNameAutorizacion, this.funcionStoreAutorizacion);
       this.abrirModal();
     }
 
@@ -973,7 +986,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (!this.tipoDespacho) {
       this.despachoSeleccion.get('lda')?.enable();
       this.despachoSeleccion.get('dd')?.enable();
+
       this.despachoSeleccion.get(this.idNameAutorizacion)?.clearValidators();
+      this.despachoSeleccion.get(this.idNameAutorizacion)?.updateValueAndValidity();
+      this.despachoSeleccion.get(this.idNameAutorizacion)?.reset();
+      if (this.funcionStoreAutorizacion) {
+        this.setValoresStore(this.despachoSeleccion, this.idNameAutorizacion, this.funcionStoreAutorizacion);
+      }
+
       this.idNameAutorizacion = '';
       this.labelTipoDespacho = '';
     }
@@ -981,16 +1001,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (tipo === 'lda' && this.tipoDespacho) {
       this.labelTipoDespacho = LABEL_DESPACHO_LDA;
       this.idNameAutorizacion = ID_NAME_LDA
+      this.funcionStoreAutorizacion = FUNCION_STORE_LDA;
 
+      this.despachoSeleccion.get('dd')?.reset();
       this.despachoSeleccion.get('dd')?.disable();
-      this.setValoresStore(this.despacho, 'lda', 'setLDA');
+      this.setValoresStore(this.despachoSeleccion, 'dd', 'setDD');
+      this.setValoresStore(this.despachoSeleccion, 'lda', 'setLDA');
       this.selectCatalogoDespacho = this.despachoLdaCatalogo;
     } else if (tipo === 'dd' && this.tipoDespacho) {
       this.labelTipoDespacho = LABEL_DESPACHO_DD;
       this.idNameAutorizacion = ID_NAME_DD;
+      this.funcionStoreAutorizacion = FUNCION_STORE_DD;
 
+      this.despachoSeleccion.get('lda')?.reset();
       this.despachoSeleccion.get('lda')?.disable();
-      this.setValoresStore(this.despacho, 'dd', 'setDD');
+      this.setValoresStore(this.despachoSeleccion, 'lda', 'setLDA');
+      this.setValoresStore(this.despachoSeleccion, 'dd', 'setDD');
       this.selectCatalogoDespacho = this.despachoDDCatalogo;
       this.activarCatalogoDespacho = true;
 
@@ -1104,12 +1130,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.datosImportadorExportador, 'industriaAutomotriz', 'setIndustriaAutomotriz');
   }
 
-  obtenerFechasServicio(): void {
+  static obtenerFechasServicio(): void {
     console.log('Se hace una peticion POST a la api para obtener las fechas del servicio');
-
   }
 
+  verificaDatosCheckInput(campoId: string, campoDescripcion: string, form: FormGroup): void {
+    const VALOR = form.get(campoId)?.value;
+    const LDA_DD = campoId.includes('lda') || campoId.includes('dd');
 
+    if (VALOR) {
+      form.get(campoDescripcion)?.enable();
+      form.get(campoDescripcion)?.setValue(this.solicitudState?.[campoDescripcion as keyof Solicitud5701State]);
 
+      if (LDA_DD) {
+        this.tipoDespacho = true;
+        this.idNameAutorizacion = campoId === 'dd' ? ID_NAME_DD : ID_NAME_LDA;
+        this.labelTipoDespacho = campoId === 'dd' ? LABEL_DESPACHO_DD : LABEL_DESPACHO_LDA;
+
+        if (campoId === 'dd') {
+          this.despachoSeleccion.get('lda')?.disable();
+        } else if (campoId === 'lda') {
+          this.despachoSeleccion.get('dd')?.disable();
+        }
+      }
+    }
+  }
 
 }

@@ -189,6 +189,12 @@
     </div>
     <div class="col-md-6">
       <div class="form-group">
+        <label class="form-label" for="empTransportista">Empresa transportista:</label>
+        <input class="form-control" id="empTransportista" placeholder="" type="text" formControlName="empTransportista">
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-group">
         <label class="form-label" for="nombreTransportista">Nombre transportista:</label>
         <input class="form-control" id="nombreTransportista" placeholder="" type="text" formControlName="nombreTransportista">
       </div>
@@ -202,9 +208,21 @@
   </div>
 </ng-template>
 
-<ng-template #maritimo></ng-template>
+<ng-template #maritimo>
 
-<ng-template #aereo></ng-template>
+</ng-template>
+
+<ng-template #aereo>
+  <div class="row" [formGroup]="aereoForma">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="empTransportista">Empresa transportista:</label>
+        <input class="form-control" id="empTransportista" placeholder="" type="text" formControlName="empTransportista">
+      </div>
+    </div>
+
+  </div>
+</ng-template>
 
 <ng-template #otro>
   <div class="row" [formGroup]="otroForma">
