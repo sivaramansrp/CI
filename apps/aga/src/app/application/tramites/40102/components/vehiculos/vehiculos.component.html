@@ -830,20 +830,19 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="unidadDeArrestreTipoVehiculo"
+                                    for="solicitudVehiculoArrastreTipoVehiculo"
                                     >Tipo de Vehículo de Arrastre</label
                                   >
                                   <span class="require">*</span>
                                 </div>
                                 <div class="form-group">
                                   <app-catalogo-select
-                                    name="unidadDeArrestreTipoVehiculo"
-                                    [placeholder]="'Seleccione un valor'"
-                                    formControlName="tipoVehiculoArrastreAGA"
-                                    [required]="true"
-                                    (change)="unidadDeArrestreTipoVehiculo()"
-                                    >
-                                  </app-catalogo-select>
+                                      [catalogo]="vehiculoArrastr"
+                                      formControlName="solicitudVehiculoArrastreTipoVehiculo"
+                                      [required]="true"
+                                      name="solicitudVehiculoArrastreTipoVehiculo"
+                                      (change)="conVehiculoArrastre()"
+                                    ></app-catalogo-select>
                                 </div>
                               </div>
 
@@ -851,7 +850,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="unidadDeArrestreIdDeVehiculo"
+                                    for="solicitudVehiculoArrastreIdDeVehiculo"
                                     >ID de Vehículo de Arrastre</label
                                   >
                                   <span class="require">*</span>
@@ -876,7 +875,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="unidadDeArrestreNumeroPlacas"
+                                    for="solicitudVehiculoArrastreNumeroPlacas"
                                     >Número de Placas</label
                                   >
                                   <span class="require">*</span>
@@ -893,15 +892,25 @@
                                 </div>
                               </div>
 
+                              <!-- País Emisor Select -->
                               <div class="col-md-4">
-                                <div class="form-group">
-                                  <label
-                                    for="unidadDeArrestrePaisEmisor"
-                                    >País Emisor</label
-                                  >
+                                <div>
+                                  <label for="solicitudVehiculoPaisEmisor">{{
+                                    labelSolicitudVehiculoPaisEmisor
+                                  }}</label>
                                   <span class="require">*</span>
                                 </div>
-                                <div class="form-group"></div>
+                                <div class="anioVehiculoVEH">
+                                  <app-catalogo-select
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoPaisEmisor"
+                                    [required]="true"
+                                    name="solicitudVehiculoPaisEmisor"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
+                                </div>
                               </div>
 
                               <div class="col-md-4">
@@ -928,20 +937,19 @@
                             <div class="row">
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label for="unidadDeArrestreVehiculoColor"
+                                  <label for="solicitudVehiculoColor"
                                     >Color de vehiculo de arrestre</label
                                   >
                                   <span class="require">*</span>
                                 </div>
                                 <div class="form-group">
                                   <app-catalogo-select
-                                    name="unidadDeArrestreVehiculoColor"
-                                    [placeholder]="'Seleccione un valor'"
-                                    formControlName="colorCatalogo"
-                                    [required]="true"
-                                    (change)="unidadDeArrestreVehiculoColor()"
-                                    >
-                                  </app-catalogo-select>
+                                      [catalogo]="VehiculoColors"
+                                      formControlName="solicitudVehiculoColor"
+                                      [required]="true"
+                                      name="solicitudVehiculoColor"
+                                      (change)="solicitudVehiculoColor()"
+                                    ></app-catalogo-select>
                                 </div>
                               </div>
 
@@ -970,7 +978,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="unidadDeArrestreNumero2daPlaca"
+                                    for="solicitudVehiculoArrastreNumero2daPlaca"
                                     >Número 2da Placa</label
                                   >
                                 </div>
@@ -989,7 +997,7 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="unidadDeArrestreEmisor2daPlaca"
+                                    for="solicitudVehiculoArrastreEmisor2daPlaca"
                                     >Estado emisor de 2da Placa</label
                                   >
                                 </div>
@@ -1008,18 +1016,20 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <label
-                                    for="unidadDeArrestreVehiculoPaisEmisor2daPlaca"
+                                    for="solicitudVehiculoArrastrePaisEmisor2daPlaca"
                                     >País emisor de 2da Placa</label
                                   >
                                 </div>
                                 <div class="form-group">
                                   <app-catalogo-select
-                                    name="unidadDeArrestreVehiculoPaisEmisor2daPlaca"
-                                    formControlName="paisEmisor2daPlaca"
-                                    [placeholder]="'Seleccione un valor'"
-                                    [required]="true">
-                                  > 
-                                  </app-catalogo-select>
+                                    [catalogo]="PaisEmisor2daPlaca"
+                                    formControlName="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                    [required]="true"
+                                    name="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                    (change)="
+                                      solicitudVehiculoPaisEmisor2daPlaca()
+                                    "
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
                             </div>

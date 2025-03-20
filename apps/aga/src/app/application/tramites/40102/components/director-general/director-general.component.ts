@@ -21,10 +21,10 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Constructor para inyectar las dependencias necesarias.
-   * @param fb - Servicio FormBuilder para crear formularios reactivos.
-   * @param chofer40102Query - Servicio para consultar el estado de choferes.
-   * @param chofer40102Store - Servicio para gestionar el estado de choferes.
+   * Constructor del componente.
+   * @param fb - Inyección del servicio FormBuilder.
+   * @param tramite40102Query - Inyección del servicio Tramite40102Query.
+   * @param tramite40102Store - Inyección del servicio Tramite40102Store.
    */
   constructor(
     private fb: FormBuilder,

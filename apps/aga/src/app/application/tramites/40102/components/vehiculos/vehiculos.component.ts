@@ -3,8 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
-  OnDestroy,
-  ViewChild,
+  ViewChild,OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Tramite40102Query } from '../../estados/tramite40102.query';
@@ -14,23 +13,22 @@ import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
 import { ReplaySubject, takeUntil } from 'rxjs';
+
 import {
   DatosDelVehículo,
   DatosDelVehículoPaisEmisor,
   Emisor2daPlaca,
+  PaisCatalogo,
   VehiculoColor,
   VehiculoVEHs,
-  TipoVehicleTerrestra,
-  ColorCatalogo,
-  PaisCatalogo,
 } from 'libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
-
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss',
 })
 export class VehiculosComponent implements AfterViewInit, OnDestroy {
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
@@ -74,10 +72,6 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
   botonLimpiar: string = 'Limpiar';
   botonCancelar: string = 'Cancelar';
   botonGuardar: string = 'Guardar';
-  tipoVehiculoArrastreAGA: any[] = [];
-  colorCatalogo: any[] = [];
-  paisCatalogo: any[] = [];
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
@@ -87,6 +81,14 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
     this.activeTab = tabName;
   }
+  /**
+   * Constructor para inyectar las dependencias necesarias.
+   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   * @param toastr - Servicio Toastr para mostrar mensajes emergentes.
+   * @param tramite40102Store - Servicio para gestionar el estado de tramite40102.
+   * @param tramite40102Service - Servicio para obtener datos de tramite40102.
+   * @param tramite40102Query - Servicio para consultar el estado de tramite40102.
+   */
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -94,15 +96,10 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     private tramite40102Service: Tramite40102Service,
     private tramite40102Query: Tramite40102Query
   ) {}
+  
 
   /**
-   * Método de ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
-   *
-   * @remarks
-   * Este método inicializa el formulario `formVehiculo` con varios controles y validadores.
-   * También suscribe a varios observables para obtener listas de vehículos y unidades de arrastre.
-   *
-   * @returns {void}
+   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
    */
   ngOnInit(): void {
     this.formVehiculo = this.fb.group({
@@ -187,19 +184,17 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     });
 
     this.vehiculosList$ = this.tramite40102Query.getvehiculos$;
-    this.tramite40102Query.getvehiculos$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((vehiculos: any) => {
-        this.vehiculos = vehiculos;
-      });
+    this.tramite40102Query.getvehiculos$.subscribe((vehiculos: any) => {
+      this.vehiculos = vehiculos;
+    });
     this.unidadesdearrastreList$ =
       this.tramite40102Query.getUnidadesdeArrastre$;
     this.unidadDeArrastre();
-    this.tramite40102Query.getUnidadesdeArrastre$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((unidadesdearrastre: any) => {
+    this.tramite40102Query.getUnidadesdeArrastre$.subscribe(
+      (unidadesdearrastre: any) => {
         this.unidadesdearrastre = unidadesdearrastre;
-      });
+      }
+    );
     this.conVehiculoArrastre();
     this.anioVehiculoveh();
     this.solicitudVehiculoColor();
@@ -278,54 +273,45 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         this.tramite40102Query.getUnidadesdeArrastre$;
     }
     this.formVehiculo = this.fb.group({
-      unidadDeArrestreVin2:
-        this.formVehiculo.value.unidadDeArrestreVin2?.trim(),
-      unidadDeArrestreTipoVehiculo:
-        this.formVehiculo.value.unidadDeArrestreTipoVehiculo?.trim(),
-      unidadDeArrestreNumeroEconomico:
-        this.formVehiculo.value.unidadDeArrestreNumeroEconomico?.trim(),
-      unidadDeArrestreNumeroPlacas:
-        this.formVehiculo.value.unidadDeArrestreNumeroPlacas?.trim(),
-      unidadDeArrestrePaisEmisor:
-        this.formVehiculo.value.unidadDeArrestrePaisEmisor?.trim(),
+      solicitudVehiculoVin2:
+        this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
+      solicitudVehiculoTipoVehiculo:
+        this.formVehiculo.value.solicitudVehiculoTipoVehiculo?.trim(),
+      solicitudVehiculoNumeroEconomico:
+        this.formVehiculo.value.solicitudVehiculoNumeroEconomico?.trim(),
+      solicitudVehiculoNumeroPlacas:
+        this.formVehiculo.value.solicitudVehiculoNumeroPlacas?.trim(),
+      solicitudVehiculoPaisEmisor:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisor?.trim(),
       solicitudDomicilioEstado:
         this.formVehiculo.value.solicitudDomicilioEstado?.trim(),
-      unidadDeArrestreMarca:
-        this.formVehiculo.value.unidadDeArrestreMarca?.trim(),
-      unidadDeArrestreModelo:
-        this.formVehiculo.value.unidadDeArrestreModelo?.trim(),
+      solicitudVehiculoMarca:
+        this.formVehiculo.value.solicitudVehiculoMarca?.trim(),
+      solicitudVehiculoModelo:
+        this.formVehiculo.value.solicitudVehiculoModelo?.trim(),
       anioVehiculoVEH: this.formVehiculo.value.anioVehiculoVEH?.trim(),
-      unidadDeArrestreTransponder:
-        this.formVehiculo.value.unidadDeArrestreTransponder?.trim(),
-      unidadDeArrestreColor:
-        this.formVehiculo.value.unidadDeArrestreColor?.trim(),
-      unidadDeArrestreNumero2daPlaca:
-        this.formVehiculo.value.unidadDeArrestreNumero2daPlaca?.trim(),
-      unidadDeArrestreEmisor2daPlaca:
-        this.formVehiculo.value.unidadDeArrestreEmisor2daPlaca?.trim(),
-      unidadDeArrestrePaisEmisor2daPlaca:
-        this.formVehiculo.value.unidadDeArrestrePaisEmisor2daPlaca?.trim(),
-      unidadDeArrestreDesc:
-        this.formVehiculo.value.unidadDeArrestreDesc?.trim(),
+      solicitudVehiculoTransponder:
+        this.formVehiculo.value.solicitudVehiculoTransponder?.trim(),
+      solicitudVehiculoColor:
+        this.formVehiculo.value.solicitudVehiculoColor?.trim(),
+      solicitudVehiculoNumero2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
+      solicitudVehiculoEmisor2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
+      solicitudVehiculoPaisEmisor2daPlaca:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisor2daPlaca?.trim(),
+      solicitudVehiculoDesc:
+        this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
       vin2: ['', [Validators.required, Validators.maxLength(17)]],
-      arrestreTipoVehiculoArrastre: ['', Validators.required],
-      arrestreIdDeVehiculo: [
-        { value: '2', disabled: true },
-        Validators.required,
-      ],
-      arrestrenumeroPlacas: [
-        '',
-        [Validators.required, Validators.maxLength(8)],
-      ],
-      arrestrePaisEmisor: ['', Validators.required],
-      arrestreEstado2: ['', [Validators.required, Validators.maxLength(20)]],
-      arrestreColorAGA: ['', Validators.required],
-      arrestreNumeroEconomico: [
-        '',
-        [Validators.required, Validators.maxLength(17)],
-      ],
-      arrestreNumero2daPlaca: ['', Validators.maxLength(8)],
-      arrestreEmisor2daPlaca: ['', Validators.maxLength(20)],
+      tipoVehiculoArrastreAGA: ['', Validators.required],
+      idDeVehiculo: [{ value: '2', disabled: true }, Validators.required],
+      numeroPlacas: ['', [Validators.required, Validators.maxLength(8)]],
+      paisEmisor: ['', Validators.required],
+      estado2: ['', [Validators.required, Validators.maxLength(20)]],
+      colorAGA: ['', Validators.required],
+      numeroEconomico: ['', [Validators.required, Validators.maxLength(17)]],
+      numero2daPlaca: ['', Validators.maxLength(8)],
+      emisor2daPlaca: ['', Validators.maxLength(20)],
       paisEmisor2daPlaca: [''],
       desc: ['', [Validators.maxLength(200)]],
     });
@@ -361,12 +347,13 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Método que maneja la lógica para obtener y establecer el tipo de vehículo de arrastre.
-   *
-   * Obtiene el valor del tipo de vehículo de arrastre desde el formulario y lo establece en el store.
-   * Luego, realiza una solicitud al servicio para obtener la clasificación del régimen y actualiza
-   * la propiedad `vehiculoArrastr` con los datos obtenidos.
-   *
+   * Método que obtiene la clasificación del régimen de vehículos de arrastre.
+   * 
+   * Este método realiza una solicitud al servicio `tramite40102Service` para obtener
+   * los datos de clasificación del régimen de vehículos de arrastre. Los datos obtenidos
+   * se asignan a la propiedad `vehiculoArrastr`. En caso de error, se muestra un mensaje
+   * de error utilizando `toastr`.
+   * 
    * @returns {void}
    */
   conVehiculoArrastre() {
@@ -380,11 +367,13 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
   }
-
+  
   /**
    * Método que obtiene el año del vehículo desde el formulario y lo establece en el store.
    * Luego, realiza una solicitud al servicio para obtener los datos del vehículo y los asigna a la propiedad `VehiculoVEH`.
    * En caso de error, muestra un mensaje de error utilizando Toastr.
+   *
+   * @returns {void}
    */
   anioVehiculoveh() {
     const anioVehiculoVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
@@ -402,12 +391,10 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Método para solicitar el color del vehículo.
-   *
-   * Este método obtiene el valor del color del vehículo desde el formulario
-   * y lo envía al store. Luego, realiza una solicitud al servicio para obtener
-   * los colores de los vehículos y actualiza la propiedad `VehiculoColors` con
-   * los datos obtenidos.
-   *
+   * 
+   * Este método obtiene el valor del color del vehículo desde el formulario y lo envía al store.
+   * Luego, realiza una solicitud al servicio para obtener los colores de vehículos disponibles.
+   * 
    * @returns {void}
    */
   solicitudVehiculoColor() {
@@ -428,89 +415,17 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Método que maneja la solicitud del país emisor de la segunda placa del vehículo.
-   *
+   * 
    * Este método obtiene el valor del formulario de vehículo y lo envía al store para
-   * actualizar el país emisor de la segunda placa. Luego, realiza una solicitud al
-   * servicio para obtener los datos del país emisor de la segunda placa y los asigna
+   * actualizar el país emisor de la segunda placa. Luego, realiza una solicitud al 
+   * servicio para obtener los datos del país emisor de la segunda placa y los asigna 
    * a la propiedad `PaisEmisor2daPlaca`.
-   *
+   * 
    * @returns {void}
    */
   solicitudVehiculoPaisEmisor2daPlaca() {
     const solicitudVehiculo = this.formVehiculo.get('solicitudVehiculo')?.value;
     this.tramite40102Store.VehiculoPaisEmisor2daPlaca(solicitudVehiculo);
-    this.tramite40102Service
-      .getPaisEmisor2daPlaca()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data: Emisor2daPlaca[]) => {
-          this.PaisEmisor2daPlaca = data;
-        },
-        error: (error) => this.toastr.error('Error al obtener datos:', error),
-      });
-  }
-
-  unidadDeArrestreTipoVehiculo() {
-    const unidadDeArrestreTipoVehiculo = this.formVehiculo.get(
-      'unidadDeArrestreTipoVehiculo'
-    )?.value;
-    this.tramite40102Store.setUnidadDeArrestreTipoVehiculo(
-      unidadDeArrestreTipoVehiculo
-    );
-    this.tramite40102Service
-      .getTipoVehiculoArrastre()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data: TipoVehicleTerrestra[]) => {
-          this.tipoVehiculoArrastreAGA = data;
-        },
-        error: (error) => this.toastr.error('Error al obtener datos:', error),
-      });
-  }
-
-  unidadDeArrestrePaisEmisor() {
-    const unidadDeArrestrePaisEmisor = this.formVehiculo.get(
-      'unidadDeArrestrePaisEmisor'
-    )?.value;
-    this.tramite40102Store.setUnidadDeArrestrePaisEmisor(
-      unidadDeArrestrePaisEmisor
-    );
-    this.tramite40102Service
-      .getPaisCatalogo()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data: PaisCatalogo[]) => {
-          this.paisCatalogo = data;
-        },
-        error: (error) => this.toastr.error('Error al obtener datos:', error),
-      });
-  }
-
-  unidadDeArrestreVehiculoColor() {
-    const unidadDeArrestreVehiculoColor = this.formVehiculo.get(
-      'unidadDeArrestreVehiculoColor'
-    )?.value;
-    this.tramite40102Store.setUnidadDeArrestreVehiculoColor(
-      unidadDeArrestreVehiculoColor
-    );
-    this.tramite40102Service
-      .getColorCatalogo()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe({
-        next: (data: ColorCatalogo[]) => {
-          this.colorCatalogo = data;
-        },
-        error: (error) => this.toastr.error('Error al obtener datos:', error),
-      });
-  }
-
-  unidadDeArrestrePaisEmisor2daPlaca() {
-    const unidadDeArrestreVehiculoPaisEmisor2daPlaca = this.formVehiculo.get(
-      'unidadDeArrestreVehiculoPaisEmisor2daPlaca'
-    )?.value;
-    this.tramite40102Store.setUnidadDeArrestreVehiculoPaisEmisor2daPlaca(
-      unidadDeArrestreVehiculoPaisEmisor2daPlaca
-    );
     this.tramite40102Service
       .getPaisEmisor2daPlaca()
       .pipe(takeUntil(this.destroyed$))
@@ -541,6 +456,13 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
    */
   toggleAll(event: any) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Aquí se emiten señales para completar y limpiar cualquier suscripción o recurso que el componente
+   * haya estado utilizando, evitando posibles fugas de memoria.
+   *
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

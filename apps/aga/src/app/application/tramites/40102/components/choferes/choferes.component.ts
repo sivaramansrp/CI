@@ -427,6 +427,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
+  /**
+   * Carga los municipios correspondientes a un estado dado.
+   *
+   * @param {string} claveEstado - La clave del estado para el cual se desean cargar los municipios.
+   * @returns {void}
+   *
+   * @remarks
+   * Este método utiliza el servicio `tramite40102Service` para obtener los municipios
+   * correspondientes a la clave del estado proporcionada. Los resultados se asignan a la
+   * propiedad `municipios` del componente. En caso de error, se muestra un mensaje de error
+   * utilizando `toastr`.
+   */
   loadMunicipios(claveEstado: string): void {
     if (!claveEstado) return;
     this.tramite40102Service
@@ -442,6 +454,20 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       );
   }
 
+  /**
+   * Carga las colonias correspondientes a un municipio dado.
+   * 
+   * @param {string} claveMunicipio - La clave del municipio para el cual se desean cargar las colonias.
+   * @returns {void}
+   * 
+   * @example
+   * this.loadColonias('12345');
+   * 
+   * @remarks
+   * Si la clave del municipio no es proporcionada, la función no realizará ninguna acción.
+   * 
+   * @throws {Error} Si ocurre un error al cargar las colonias, se mostrará un mensaje de error mediante Toastr.
+   */
   loadColonias(claveMunicipio: string): void {
     if (!claveMunicipio) return;
 
@@ -457,6 +483,13 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         }
       );
   }
+
+
+  /**
+   * Maneja el evento de cambio de país.
+   * 
+   * @param {Event} event - El evento de cambio.
+   */
   onPaisChange(event: Event): void {
     const pais = (event.target as HTMLSelectElement).value;
     if (pais) {
@@ -464,6 +497,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
+  /**
+   * Maneja el cambio de estado cuando se selecciona una opción en el elemento HTML.
+   * 
+   * @param {Event} event - El evento que se dispara cuando se selecciona una opción.
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando se maneja el cambio de estado.
+   */
   onEstadoChange(event: Event): Promise<void> {
     return new Promise((resolve) => {
       const selectedEstado = (event.target as HTMLSelectElement).value;
@@ -471,6 +510,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
+  /**
+   * Maneja el evento de cambio de municipio.
+   * 
+   * @param {Event} event - El evento de cambio que contiene el municipio seleccionado.
+   * @returns {Promise<void>} Una promesa que se resuelve cuando el cambio de municipio ha sido manejado.
+   */
   onMunicipioChange(event: Event): Promise<void> {
     return new Promise((resolve) => {
       const selectedMunicipio = (event.target as HTMLSelectElement).value;
@@ -489,6 +534,10 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   toggleAll(event: any) {
     this.selectedAll = event.target.checked;
   }
+
+  /**
+   * Selecciona el estado actual del formulario y lo establece en el store.
+   */
   estadoSeleccion(): void {
     const estado = this.formChoferes.get('estado')?.value;
     this.tramite40102Store.setEstado(estado);
