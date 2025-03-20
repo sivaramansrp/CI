@@ -84,8 +84,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
 
   getFacturator(): void {
     this.facturatorForm = this.fb.group({
-      facturatorfisica: ['', Validators.required],
-      facturatormoral: ['', Validators.required],
+      tipoPersona: ['fisica', Validators.required], // Default to "fisica"
       nombres: ['', Validators.required],
       facturatorapellido: ['', Validators.required],
       facturatorsapellido: [''],
@@ -101,9 +100,33 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
       facturatortelefono: [''],
       facturatorElectronico: ['', [Validators.required, Validators.email]],
     });
+  
+
+// Listen for changes to "tipoPersona" and update field visibility
+this.facturatorForm.get('tipoPersona')?.valueChanges.subscribe((value) => {
+  if (value === 'fisica') {
+    // Show all fields except "destinatariodenominacion"
+    this.facturatorForm.get('nombres')?.setValidators(Validators.required);
+    this.facturatorForm.get('facturatorapellido')?.setValidators(Validators.required);
+    this.facturatorForm.get('facturatorsapellido')?.setValidators(null);
+    this.facturatorForm.get('destinatariodenominacion')?.clearValidators();
+  } else if (value === 'moral') {
+    // Show "destinatariodenominacion" and hide "nombres", "facturatorapellido", "facturatorsapellido"
+    this.facturatorForm.get('nombres')?.clearValidators();
+    this.facturatorForm.get('facturatorapellido')?.clearValidators();
+    this.facturatorForm.get('facturatorsapellido')?.clearValidators();
+    this.facturatorForm.get('destinatariodenominacion')?.setValidators(Validators.required);
   }
 
-  isValid(form: FormGroup, field: string): boolean {
+  // Update the validity of the fields
+  this.facturatorForm.get('nombres')?.updateValueAndValidity();
+  this.facturatorForm.get('facturatorapellido')?.updateValueAndValidity();
+  this.facturatorForm.get('facturatorsapellido')?.updateValueAndValidity();
+  this.facturatorForm.get('destinatariodenominacion')?.updateValueAndValidity();
+});
+}
+
+isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
 

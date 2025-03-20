@@ -10,9 +10,6 @@
 [datos]="tercerosProd"
 [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
 </app-tabla-dinamica>
-<!-- </div>
-</div>
-</div> -->
 
 <div  style="text-align: right">
     <button style="text-align: right"
@@ -52,12 +49,10 @@
                         </div>
                         
                         <div class="col-md-12">
-                          <!-- <input type="radio" id="fisica" name="nacional" formControlName="nacional" value="nacional" >
-                          <label for="fisica"  >Nacional</label> -->
+                         
                         </div>
                         <div class="col-md-12">
-                          <!-- <input type="radio" id="moral" name="nacional" formControlName="extranjero">
-                          <label for="moral">Extranjero</label> -->
+                          
                         </div>
                       </div>
                   <div class="col-md-6">
@@ -65,15 +60,30 @@
                           <label class="form-label" for="tipoPersona">Tipo persona*:</label>
                         </div>
                         <div class="col-md-12">
-                          <input type="radio" id="facturatorfisica" name="nacional1" formControlName="facturatorfisica" >
+                            <input
+                            type="radio"
+                            id="fisica"
+                            formControlName="tipoPersona"
+                            value="fisica"
+                          />
                           <label for="fisica">Física</label>
+  
                         </div>
                         <div class="col-md-12">
-                          <input type="radio" id="facturatorfisica" name="nacional1" formControlName="facturatormoral" value="moral"  >
+                            <input
+                            type="radio"
+                            id="moral"
+                            formControlName="tipoPersona"
+                            value="moral"
+                          />
                           <label for="moral">Moral</label>
+  
                         </div>
                       </div>
                       </div>
+                       <!-- Show these fields only when "fisica" is selected -->
+                  <div *ngIf="facturatorForm.get('tipoPersona')?.value === 'fisica'">
+
                       <div class="row">
                         <h6>Datos Personales</h6>
                         <div class="col-md-4">
@@ -93,6 +103,9 @@
                         </div>
 
                       </div>
+                      </div>
+                       <!-- Show this field only when "moral" is selected -->
+                  <div *ngIf="facturatorForm.get('tipoPersona')?.value === 'moral'">
                       <div class="row">
                         <div class="col-md-8 mb-3">
                           <label class="form-label" for="denominacion">Denominación/razón social*:</label>
@@ -100,8 +113,8 @@
                          
                         </div>
                       </div>
-
-                     
+</div>
+     <!-- Common fields for both "fisica" and "moral" -->                 
                     <ng-titulo titulo="Domicilio" />
                   
                     <div class="row">
@@ -120,33 +133,23 @@
                         <label class="form-label" for="rfc">Estado*:</label>
                         <input type="text" class="form-control" id="facturatorestado" formControlName="facturatorestado"
                         >
-                       
-                     
-                      
-                      </div>
+                       </div>
                       <div class="col-md-4 mb-3">
-                        
                         <label class="form-label" for="rfc">Codigo Postal o equivalente</label>
                           <input type="text" class="form-control" id="facturatorcp" formControlName="facturatorcp"
                          >
                       </div>
                     </div>
-                  
-                    <div class="row">
+                  <div class="row">
                       <div class="col-md-4 ">
                         <label class="form-label" for="rfc">Colonia o equivalente</label>
                         <input type="text" class="form-control" id="facturatorequivalente" formControlName="facturatorequivalente"  [ngClass]="isValid(facturatorForm, 'nombres') ? 'required' : ''"
                         >
-                        
-                      </div>
+                        </div>
                       <div class="col-md-4 mb-3">
-                       
-                      
-                      </div>
+                       </div>
                       <div class="col-md-4 ">
-                       
-                        
-                      </div>
+                       </div>
                     </div>
                     
                     <div class="row">
@@ -186,11 +189,10 @@
                         </div>
                     </div>
                   </div>
-    </form>
+            </form>
     </div>
     
-    
-    <div class="modal-footer custom-footer justify-content-center">
+    <div class="modal-footer custom-footer">
         <button type="button" class="btn btn-primary">Cancelar</button>
         <button
           type="button"
