@@ -18,6 +18,8 @@ export interface Tramite130119State {
   numeroFactura: string;
   fechaExpedicionFactura: string;
   observaciones: string;
+  estado: string,
+  representacionFederal: string
 }
 
 /**
@@ -37,7 +39,9 @@ export function createInitialState(): Tramite130119State {
     paisExportador: '',
     numeroFactura: '',
     fechaExpedicionFactura: '',
-    observaciones: ''
+    observaciones: '',
+    estado: '',
+    representacionFederal: ''
   };
 }
 /**
@@ -186,4 +190,25 @@ export class Tramite130119Store extends Store<Tramite130119State> {
       observaciones,
     }));
   }
+ /**
+ * Establece el estado en el estado actual del objeto.
+ * @param {string} estado - El nuevo estado que se va a asignar.
+ */
+public setEstado(estado: string): void {
+  this.update((state) => ({
+    ...state,
+    estado
+  }));
+}
+
+/**
+ * Establece la representación federal en el estado actual del objeto.
+ * @param {string} representacionFederal - La nueva representación federal que se va a asignar.
+ */
+public setRepresentacionFederal(representacionFederal: string): void {
+  this.update((state) => ({
+    ...state,
+    representacionFederal
+  }));
+}
 }

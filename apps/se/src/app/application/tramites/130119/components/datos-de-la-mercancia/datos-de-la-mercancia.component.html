@@ -34,7 +34,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="cantidad" class="form-label">Cantidad *:</label>
-                    <input type="number" id="cantidad" formControlName="cantidad" class="form-control"
+                    <input type="text" id="cantidad" formControlName="cantidad" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'cantidad','setCantidad')">
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('cantidad')?.touched && datosDeLaMercanciaForm.get('cantidad')?.invalid">
@@ -52,7 +52,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="valorFacturaUSD" class="form-label">Valor factura USD *:</label>
-                    <input type="number" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
+                    <input type="text" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'valorFacturaUSD','setValorFacturaUSD')">
                     <div
                         *ngIf="datosDeLaMercanciaForm.get('valorFacturaUSD')?.touched && datosDeLaMercanciaForm.get('valorFacturaUSD')?.invalid">
