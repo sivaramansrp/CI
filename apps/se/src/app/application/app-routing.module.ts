@@ -14,12 +14,32 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+   {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule)
+      },
 
   {
     path: 'exportador-autorizado',
     loadChildren: () =>
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
+      ),
+  },
+  {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      )
+    },
+    {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
       ),
   },
   {
@@ -60,6 +80,11 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
         (m) => m.ExpansionDeProductoresModule),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -133,6 +158,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   }
 ];
