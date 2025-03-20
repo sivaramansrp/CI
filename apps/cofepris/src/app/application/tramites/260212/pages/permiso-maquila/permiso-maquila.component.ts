@@ -30,9 +30,9 @@ export class PermisoMaquilaComponent {
    */
   indice = 1;
 
-  pasos: ListaPasosWizard[] = PASOS;
+
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length,
+    nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
