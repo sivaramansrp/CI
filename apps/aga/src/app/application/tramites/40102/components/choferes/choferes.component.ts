@@ -373,6 +373,17 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
+  /**
+   * Actualiza los dropdowns de municipios y colonias basados en los datos del chofer.
+   *
+   * @param choferData - Datos del chofer que contienen la información general.
+   * @param choferData.datosGenerales - Información general del chofer.
+   * @param choferData.datosGenerales.estados - Clave del estado del chofer.
+   * @param choferData.datosGenerales.municipio - Clave del municipio del chofer.
+   *
+   * Si la clave del estado está presente, carga los municipios correspondientes.
+   * Si la clave del municipio está presente, carga las colonias correspondientes.
+   */
   updateDropdowns(choferData: any) {
     const estadoClave = choferData.datosGenerales.estados;
     const municipioClave = choferData.datosGenerales.municipio;
@@ -386,6 +397,13 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
+  /**
+   * Método que se ejecuta cuando hay cambios en el formulario de choferes.
+   * Se suscribe a los cambios de valor de los campos 'entidadFederativaCHN' y 'delegacionCHN'
+   * del formulario 'formChoferes' y ejecuta las acciones correspondientes.
+   * 
+   * @returns {void}
+   */
   onChanges(): void {
     this.formChoferes
       .get('formChoferes.entidadFederativaCHN')
@@ -397,6 +415,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       ?.valueChanges.pipe(takeUntil(this.destroyed$))
       .subscribe((valor) => {});
   }
+
+  /**
+   * Carga los estados.
+   * 
+   * @returns {Promise<void>} Una promesa que se resuelve cuando la carga de estados se completa.
+   */
   loadEstados(): Promise<void> {
     return new Promise((resolve) => {
       resolve();

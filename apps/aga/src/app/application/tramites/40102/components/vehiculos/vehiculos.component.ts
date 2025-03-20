@@ -94,8 +94,15 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
     private tramite40102Service: Tramite40102Service,
     private tramite40102Query: Tramite40102Query
   ) {}
+  
   /**
-   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   * Método de ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
+   * 
+   * @remarks
+   * Este método inicializa el formulario `formVehiculo` con varios controles y validadores.
+   * También suscribe a varios observables para obtener listas de vehículos y unidades de arrastre.
+   * 
+   * @returns {void}
    */
   ngOnInit(): void {
     this.formVehiculo = this.fb.group({
@@ -343,6 +350,16 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       this.modalInstance.show();
     }
   }
+
+  /**
+   * Método que maneja la lógica para obtener y establecer el tipo de vehículo de arrastre.
+   * 
+   * Obtiene el valor del tipo de vehículo de arrastre desde el formulario y lo establece en el store.
+   * Luego, realiza una solicitud al servicio para obtener la clasificación del régimen y actualiza
+   * la propiedad `vehiculoArrastr` con los datos obtenidos.
+   * 
+   * @returns {void}
+   */
   conVehiculoArrastre() {
     const solicitudVehiculoTipoVehiculo = this.formVehiculo.get(
       'solicitudVehiculoTipoVehiculo'
@@ -360,6 +377,12 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
   }
+
+  /**
+   * Método que obtiene el año del vehículo desde el formulario y lo establece en el store.
+   * Luego, realiza una solicitud al servicio para obtener los datos del vehículo y los asigna a la propiedad `VehiculoVEH`.
+   * En caso de error, muestra un mensaje de error utilizando Toastr.
+   */
   anioVehiculoveh() {
     const anioVehiculoVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
     this.tramite40102Store.setanioVehiculoVEH(anioVehiculoVEH);
@@ -374,6 +397,16 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
       });
   }
 
+  /**
+   * Método para solicitar el color del vehículo.
+   * 
+   * Este método obtiene el valor del color del vehículo desde el formulario
+   * y lo envía al store. Luego, realiza una solicitud al servicio para obtener
+   * los colores de los vehículos y actualiza la propiedad `VehiculoColors` con
+   * los datos obtenidos.
+   * 
+   * @returns {void}
+   */
   solicitudVehiculoColor() {
     const solicitudVehiculoColor = this.formVehiculo.get(
       'solicitudVehiculoColor'
@@ -389,6 +422,17 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
         error: (error) => this.toastr.error('Error al obtener datos:', error),
       });
   }
+
+  /**
+   * Método que maneja la solicitud del país emisor de la segunda placa del vehículo.
+   * 
+   * Este método obtiene el valor del formulario de vehículo y lo envía al store para
+   * actualizar el país emisor de la segunda placa. Luego, realiza una solicitud al 
+   * servicio para obtener los datos del país emisor de la segunda placa y los asigna 
+   * a la propiedad `PaisEmisor2daPlaca`.
+   * 
+   * @returns {void}
+   */
   solicitudVehiculoPaisEmisor2daPlaca() {
     const solicitudVehiculo = this.formVehiculo.get('solicitudVehiculo')?.value;
     this.tramite40102Store.VehiculoPaisEmisor2daPlaca(solicitudVehiculo);
