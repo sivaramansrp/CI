@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
+import { ConfiguracionColumna, MercanciaTablaData } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
@@ -20,6 +20,7 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
+  @Output() filaClic = new EventEmitter<T>();
 
   @Input() tipoSeleccionTabla!: TablaSeleccion;
   @Input() disponiblesDocumentos!: any;
@@ -159,6 +160,7 @@ export class TablaDinamicaComponent<T> {
       this.listaDeFilaSeleccionada.emit([]);
     }
   }
+<<<<<<< HEAD
    enDocumentSelect(_index: number,event:any): void {
     console.log('test',_index,event);
     this.disponiblesDocumentosChange.emit({index:_index,data:event,eventName:'enDocumentSelect'});
@@ -172,4 +174,15 @@ export class TablaDinamicaComponent<T> {
    }
    
 
+=======
+
+  /**
+   * Maneja el evento de clic en una fila de la tabla.
+   * 
+   * @param data - Los datos de la fila que fue clickeada.
+   */
+  onFilaClic(data: T): void {    
+    this.filaClic.emit(data);
+  }
+>>>>>>> 15a47b92d3237140256953f4d9ab993204d45644
 }

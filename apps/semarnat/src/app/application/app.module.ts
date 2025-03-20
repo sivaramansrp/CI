@@ -1,5 +1,4 @@
 import { ToastrModule, provideToastr } from 'ngx-toastr';
-
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
