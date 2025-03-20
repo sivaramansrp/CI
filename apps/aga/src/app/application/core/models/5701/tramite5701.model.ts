@@ -80,7 +80,7 @@ export interface DatosMercancia {
 }
 
 export interface ResponsablesDespacho {
-    gafete: string;
+    gafeteRespoDespacho: string;
     nombre: string;
     primerApellido: string;
     segundoApellido: string;
@@ -102,7 +102,7 @@ export interface Personas {
 // Pedimento
 export interface DatosComponentePedimento {
     patente: number;
-    idAduana: number;
+    idAduanaDespacho: number;
 }
 
 export interface Persona {

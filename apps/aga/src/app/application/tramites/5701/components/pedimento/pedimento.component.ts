@@ -1,11 +1,14 @@
 import { BooleanoSiNoPipe, SoloNumerosDirective, } from '@ng-mf/data-access-user';
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { Modal } from 'bootstrap';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
   selector: 'c-pedimento',
@@ -14,12 +17,15 @@ import { Modal } from 'bootstrap';
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
 })
-export class PedimentoComponent implements OnChanges {
+export class PedimentoComponent implements OnInit, OnChanges {
   @Input({ required: true }) validacion!: boolean;
   @Input({ required: true }) datosNroPedimento!: DatosComponentePedimento;
 
   @ViewChild('aviso') AvisoModal!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
+
+  public solicitudState!: Solicitud5701State;
+  private destroyNotifier$: Subject<void> = new Subject();
 
   validaCampos = output<void>();
 
@@ -42,7 +48,23 @@ export class PedimentoComponent implements OnChanges {
   tituloModal!: string;
   mensajeModal!: string;
 
-  constructor() { }
+
+  constructor(
+    private tramite5701Query: Tramite5701Query,
+    private tramite5701Store: Tramite5701Store
+  ) { }
+
+  ngOnInit(): void {
+    this.tramite5701Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((solicitudState) => {
+          this.solicitudState = solicitudState;
+        })
+      ).subscribe();
+  }
+
+
 
   /**
    * Verifica si el formulario de pedimento es válido.
@@ -101,16 +123,20 @@ export class PedimentoComponent implements OnChanges {
    * @returns {void}
    */
   acciones(): void {
+    console.log(this.validacion);
+    
     if (this.validacion) {
       const NUMERO_PEDIMENTO = this.pedimentoForm.value
         ? parseInt(this.pedimentoForm.value, 10)
         : 0;
 
+        
+
       if (NUMERO_PEDIMENTO !== 0) {
         const PEDIMENTO = {
           patente: this.datosNroPedimento.patente,
           pedimento: NUMERO_PEDIMENTO,
-          aduana: this.datosNroPedimento.idAduana,
+          aduana: this.datosNroPedimento.idAduanaDespacho,
           idTipoPedimento: 0,
           descTipoPedimento: 'Por evaluar',
           numero: '',
@@ -123,7 +149,8 @@ export class PedimentoComponent implements OnChanges {
         this.mensajeModal = ERR_VALIDACION_PEDIMENTO;
         this.abrirModal();
         this.pedimentos.push(PEDIMENTO);
-      } else {        
+        // this.setStore
+      } else {
         this.tituloModal = 'Aviso';
         this.mensajeModal = MSG_NRO_PEDIMENTO;
         this.abrirModal();
@@ -170,4 +197,11 @@ export class PedimentoComponent implements OnChanges {
     this.tituloModal = '';
     this.mensajeModal = '';
   }
+
+   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+      const VALOR = form.get(campo)?.value;
+      (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+      console.log(this.solicitudState);
+  
+    }
 }

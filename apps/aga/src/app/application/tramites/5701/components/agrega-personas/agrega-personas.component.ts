@@ -1,4 +1,5 @@
 import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSG_ELIMINA_ELEMENTO, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -6,10 +7,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Solicitud5701State, Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { UppercaseDirective, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Persona } from '../../../../core/models/5701/tramite5701.model';
+import { Persona, ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 @Component({
   selector: 'agrega-personas',
@@ -18,7 +21,7 @@ import { Persona } from '../../../../core/models/5701/tramite5701.model';
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
-export class AgregaPersonasComponent {
+export class AgregaPersonasComponent implements OnInit {
   gafeteRespoDespacho: FormControl = new FormControl('', [Validators.maxLength(25)]);
 
   personaForm: FormGroup = this.fb.group({
@@ -27,15 +30,38 @@ export class AgregaPersonasComponent {
     maternoRespoDespacho: [{ value: '', disabled: true }],
   });
 
-  persona!: Persona;
+  persona!: ResponsablesDespacho;
 
-  personas: Persona[] = [];
+  personas: ResponsablesDespacho[] = [];
 
   modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
 
-  constructor(private fb: FormBuilder, private validacionesService: ValidacionesFormularioService) { }
+  public solicitudState!: Solicitud5701State;
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(
+    private fb: FormBuilder,
+    private validacionesService: ValidacionesFormularioService,
+    private tramite5701Query: Tramite5701Query,
+    private tramite5701Store: Tramite5701Store
+  ) { }
+
+  ngOnInit(): void {
+    this.tramite5701Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.solicitudState = state;
+        })
+      )
+      .subscribe();
+
+    if (this.solicitudState.personasResponsablesDespacho.length > 0) {
+      this.personas = this.solicitudState.personasResponsablesDespacho;
+    }
+  }
 
   /**
    * Verifica si un campo específico en el formulario de persona es válido.
@@ -139,7 +165,7 @@ export class AgregaPersonasComponent {
       return;
     }
 
-    let responsable: Persona | null = {
+    let responsable: ResponsablesDespacho | null = {
       gafeteRespoDespacho: this.gafeteRespoDespacho.value,
       nombre: this.personaForm.get('nombreRespoDespacho')?.value,
       primerApellido: this.personaForm.get('paternoRespoDespacho')?.value,
@@ -148,6 +174,9 @@ export class AgregaPersonasComponent {
 
     if (responsable !== null) {
       this.personas.push(responsable);
+      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
+      console.log(this.solicitudState);
+      
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -170,6 +199,7 @@ export class AgregaPersonasComponent {
     this.personas.splice(i, 1);
     this.tituloModal = TITULO_MODAL;
     this.mensajeModal = MSG_ELIMINA_ELEMENTO;
+    this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
     this.abrirModal();
   }
 
@@ -190,4 +220,21 @@ export class AgregaPersonasComponent {
     this.tituloModal = '';
     this.mensajeModal = '';
   }
+
+    /**
+     * Establece los valores en el store de tramite5701.
+     *
+     * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+     * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+     * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+     * @returns {void}
+     */
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+      const VALOR = form.get(campo)?.value;
+      (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+      console.log(this.solicitudState);
+  
+    }
+
+
 }

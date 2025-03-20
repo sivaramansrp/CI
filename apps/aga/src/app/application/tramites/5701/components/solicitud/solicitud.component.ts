@@ -767,7 +767,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   aduanaSeleccion(aduana: Catalogo): void {
-    this.darValorCampoFormulario(this.despacho, 'idAduana', aduana.id);
+    this.darValorCampoFormulario(this.despacho, 'idAduanaDespacho', aduana.id);
     this.darValorCampoFormulario(
       this.despacho,
       'descripcionAduana',
@@ -781,12 +781,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     const ID_ADUANA = this.formulariosService.convertirValorANumero(
       this.despacho,
-      'idAduana'
+      'idAduanaDespacho'
     );
+
+
+    console.log(PATENTE, ID_ADUANA);
+    console.log(typeof ID_ADUANA);
+    
+    
 
     this.datosPedimentoComponente = {
       patente: PATENTE,
-      idAduana: ID_ADUANA,
+      idAduanaDespacho: ID_ADUANA,
     };
   }
 
