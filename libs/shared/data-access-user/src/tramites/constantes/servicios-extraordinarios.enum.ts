@@ -265,6 +265,15 @@ export const Todospasos = {
   efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`
 };
 
+export const MANIFIESTOS = {
+  Importante: `<div class="form-check d-flex">
+   <input class="form-check-input" type="checkbox" id="manifiestos">* 
+  <label class="form-check-label" for="manifiestos">
+    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
+  </label>
+  </div>`
+};
+
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 

@@ -45,4 +45,28 @@ export class CertificadosLicenciasPermisosService {
       })
     );
   }
+
+  public getMercanciasDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/mercancias-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getTipoDeProductoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/tipo-de-producto-catalog.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getPaisDeProcedenciaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/pais-de-procedencia-catalog.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }
