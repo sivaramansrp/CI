@@ -1,3 +1,8 @@
+/**
+ * Lista de PASOS para selección.
+ * @constant
+ * @type {string[]}
+ */
 export const PASOS = [
   {
     indice: 1,
@@ -18,6 +23,13 @@ export const PASOS = [
     completado: false,
   }
 ];
+
+/**
+ * Lista de TEXTOS_REQUISITOS para selección.
+ * @constant
+ * @type {string[]}
+ */
+
 export const TEXTOS_REQUISITOS = {
   INSTRUCCIONES: `<h6>Instrucciones</h6>
     <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
@@ -25,6 +37,12 @@ export const TEXTOS_REQUISITOS = {
     <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos"</p>`,
 };
+
+/**
+ * Lista de TEXTOS para selección.
+ * @constant
+ * @type {string[]}
+ */
 
 export const TEXTOS = {
   TEXTOS_SOLICITUD: 'Al dar doble-clic en una Solicitud, se copiar&aacute;n sus datos en esta Solicitud.',

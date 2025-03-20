@@ -14,7 +14,7 @@ export class PasoUnoComponent {
   /**
    * @property {number} indice - Índice actual del paso.
    */
-  indice: number = 2;
+  indice: number = 1;
 
   /**
    * @method seleccionaTab

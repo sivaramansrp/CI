@@ -1,12 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/pantallas-captura.model';
-import { map, Subject, takeUntil } from 'rxjs';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SeccionQuery } from'../../../../estados/queries/seccion.query';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
+import { SeccionQuery } from '../../../../estados/queries/seccion.query';
+import { SeccionState } from '../../../../estados/seccion.store';
+import { SeccionStore } from '../../../../estados/seccion.store';
+import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  *
@@ -85,7 +88,9 @@ export class SolicitudPageComponent implements OnInit{
   constructor(
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore
-  ) {}
+  ) {
+    // no hacer nada
+  }
 
   /**
    * @ignore
@@ -139,8 +144,8 @@ export class SolicitudPageComponent implements OnInit{
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_220402.PASO_1);
     const FORM_VALIDA: boolean[] = [];
-    for (const lLAVESECCIONE in SECCIONES_TRAMITE_220402.PASO_1) {
-      if(lLAVESECCIONE) {
+    for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_220402.PASO_1) {
+      if(LLAVE_SECCIONE) {
         FORM_VALIDA.push(false);
       }
     }

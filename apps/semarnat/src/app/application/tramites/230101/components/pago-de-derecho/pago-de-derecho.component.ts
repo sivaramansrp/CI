@@ -1,20 +1,30 @@
-import { Component, OnInit } from '@angular/core';
 import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MediodetransporteService } from '../../services//medio-de-transporte.service';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { Solicitud230101State, Solicitud230101Store } from '../../estados/tramites/tramites230101.store';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReplaySubject } from 'rxjs';
 import { Solicitud230101Query } from '../../estados/queries/tramites230101.query';
+import { Solicitud230101State } from '../../estados/tramites/tramites230101.store';
+import { Solicitud230101Store } from '../../estados/tramites/tramites230101.store';
+import { Subject } from 'rxjs';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-pago-de-derecho',
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechoComponent implements OnInit {
+export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   /**
      * Estado de la transporte.
@@ -26,8 +36,6 @@ export class PagoDeDerechoComponent implements OnInit {
   FormSolicitud!: FormGroup;
 
   respuesta: string = '';
-
-  public mercanciaCatalogo!: CatalogosSelect;
 
   bancoSeleccionado!: Catalogo;
 
@@ -49,10 +57,20 @@ export class PagoDeDerechoComponent implements OnInit {
     this.fetchBancoData();
   }
 
-  actualizarBanco(e: Catalogo): void {
-    this.bancoSeleccionado = e;
-  }
-
+  /**
+   * @method fetchBancoData
+   * @description Obtiene los datos del catálogo de bancos desde el servicio de medio de transporte
+   * y los asigna al catálogo de bancos en el componente.
+   * 
+   * @returns {void}
+   * 
+   * @example
+   * this.fetchBancoData();
+   * 
+   * @remarks
+   * Este método utiliza el servicio `mediodetransporteService` para obtener los datos
+   * y se asegura de limpiar las suscripciones utilizando el operador `takeUntil` con `destroyed$`.
+   */
   fetchBancoData(): void {
     this.mediodetransporteService
       .getMedioDeTransporte()
@@ -70,8 +88,6 @@ export class PagoDeDerechoComponent implements OnInit {
    */
 
   ngOnInit(): void {
-    this.getMercancia();
-
     this.solicitud230101Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -83,107 +99,15 @@ export class PagoDeDerechoComponent implements OnInit {
 
     this.FormSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        exentoDePago: [this.derechoState?.exentoDePago, Validators.required],
-        justificacion: [this.derechoState?.justificacion, Validators.required],
         claveDeReferencia: [this.derechoState?.claveDeReferencia, Validators.required],
-        cadenaDependencia: [this.derechoState?.cadenaDependencia, Validators.required],
+        cadenaDependencia: [{ value: this.derechoState?.cadenaDependencia, disabled: true }, Validators.required],
         banco: [this.derechoState?.banco, Validators.required],
         llaveDePago: [this.derechoState?.llaveDePago, Validators.required],
         fechaPago: [this.derechoState?.fechaPago, Validators.required],
         importePago: [this.derechoState?.importePago, Validators.required],
       }),
     });
-    // Activa la lógica cuando el formulario se ha inicializado
 
-    this.actualizarCamposDeFormularioBasadosEnExentoDePago('No');
-
-    // Escuchar los cambios en el campo 'exentoDePago'
-    this.FormSolicitud.get(
-      'datosImportadorExportador.exentoDePago'
-    )?.valueChanges.subscribe((value) => {
-      this.actualizarCamposDeFormularioBasadosEnExentoDePago(value);
-    });
-  }
-
-  /**
-   * Actualiza los campos del formulario en función del valor de 'exentoDePago'.
-   *
-   * Si el valor es 'No', establece valores específicos en los campos del formulario y los desactiva.
-   * De lo contrario, restablece y desactiva los campos del formulario.
-   *
-   * @param value - El valor de 'exentoDePago' para determinar las actualizaciones de los campos del formulario.
-   */
-
-  actualizarCamposDeFormularioBasadosEnExentoDePago(value: string): void {
-    if (value === 'No') {
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.setValue('454000554');
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.setValue(
-        '594.0'
-      );
-
-      this.FormSolicitud.get(
-        'datosImportadorExportador.justificacion'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.importePago'
-      )?.disable();
-    } else {
-      this.FormSolicitud.get(
-        'datosImportadorExportador.justificacion'
-      )?.reset();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.cadenaDependencia'
-      )?.reset();
-      this.FormSolicitud.get('datosImportadorExportador.importePago')?.reset();
-
-      this.FormSolicitud.get(
-        'datosImportadorExportador.claveDeReferencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.cadenaDependencia'
-      )?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.importePago'
-      )?.disable();
-      this.FormSolicitud.get('datosImportadorExportador.fechaPago')?.disable();
-      this.FormSolicitud.get(
-        'datosImportadorExportador.llaveDePago'
-      )?.disable();
-    }
-  }
-  /**
-   * Inicializa el objeto `mercancia` con propiedades y valores predefinidos.
-   *
-   * El objeto `mercancia` contiene las siguientes propiedades:
-   * - `labelNombre`: Una cadena de texto que se establece en 'Mercancía', utilizada como etiqueta o título.
-   * - `required`: Un valor booleano que se establece en `true`, indicando que este campo es obligatorio.
-   * - `primerOpcion`: Una cadena de texto que se establece en 'Seleccione un valor', utilizada como opción predeterminada o de marcador de posición en un menú desplegable.
-   * - `catalogos`: Un arreglo de objetos que representan las opciones en el catálogo. Cada objeto tiene:
-   *   - `id`: Un identificador único para la opción.
-   *   - `descripcion`: Una cadena de texto que describe la opción. Actualmente, ambas opciones tienen la misma descripción 'Opción 1'.
-   */
-
-  public getMercancia(): void {
-    this.mercanciaCatalogo = {
-      labelNombre: 'Mercancía',
-      required: true,
-      primerOpcion: 'Selecciona un valor',
-      catalogos: [
-        {
-          id: 1,
-          descripcion: 'Opción 1',
-        },
-        {
-          id: 2,
-          descripcion: 'Opción 1',
-        },
-      ],
-    };
   }
 
   /**
@@ -192,8 +116,8 @@ export class PagoDeDerechoComponent implements OnInit {
    * @param field: campo del formulario
    * @returns Validaciones del formulario
    */
-  isValid(form: FormGroup, field: string) {
-    return this.validacionesService.isValid(form, field);
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 
   /**
@@ -206,7 +130,7 @@ export class PagoDeDerechoComponent implements OnInit {
        */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud230101Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud230101Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud230101Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**
@@ -216,6 +140,13 @@ export class PagoDeDerechoComponent implements OnInit {
 */
   get datosImportadorExportador(): FormGroup {
     return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

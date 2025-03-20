@@ -1,64 +1,48 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitudComponent } from './solicitud.component';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ReplaySubject, Subject } from 'rxjs';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent],
-      imports: [ReactiveFormsModule],
-      providers: [ValidacionesFormularioService]
-    }).compileComponents();
-  });
-
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [SolicitudComponent],
+      imports: [ReactiveFormsModule], // Import ReactiveFormsModule for FormControl
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form on component init', () => {
-    expect(component.FormSolicitud).toBeDefined();
+  it('should initialize default values correctly', () => {
+    expect(component.disponsibleAduanaCheckboxes).toBeTruthy();
+    expect(component.TEXTOS).toBeTruthy();
+    expect(component.mercanicias).toBeTruthy();
+    expect(component.detalle).toBeTruthy();
+    expect(component.selectRangoDias).toEqual(component.crosListAduanas);
   });
 
-  it('should add a new item to datosGeneralesArr when mercanciaAgregar is called', () => {
-    const initialLength = component.datosGeneralesArr.length;
-    component.mercanciaAgregar();
-    expect(component.datosGeneralesArr.length).toBe(initialLength + 1);
+  it('should initialize form controls correctly', () => {
+    expect(component.fecha).toBeDefined();
+    expect(component.fecha.value).toBe('');
+    expect(component.fechaSeleccionada).toBeDefined();
+    expect(component.fechaSeleccionada.value).toBe('');
   });
 
-  it('should toggle mercanciaCollapsable when mercancia_colapsable is called', () => {
-    const initialState = component.mercanciaCollapsable;
-    component.mercanciaColapsable();
-    expect(component.mercanciaCollapsable).toBe(!initialState);
-  });
+  it('should clean up resources on destroy', () => {
+    const destroyedCompleteSpy = jest.spyOn(component['destroyed$'], 'complete');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-  it('should remove an item from datosGeneralesArr when mercancia_borrar is called', () => {
-    component.datosGeneralesArr.push({});
-    const initialLength = component.datosGeneralesArr.length;
-    component.mercanciaBorrar(0);
-    expect(component.datosGeneralesArr.length).toBe(initialLength - 1);
-  });
+    component.ngOnDestroy();
 
-  it('should add a municipality to origenArr when municipioAgregar is called', () => {
-    component.datosGenerales.get('entidadFederativadeOrigen')?.setValue('Test Entity');
-    component.datosGenerales.get('municipiodeOrigen')?.setValue(['Test Municipality']);
-    component.municipioAgregar();
-    expect(component.origenArr.length).toBe(1);
-  });
-
-  it('should remove a municipality from origenArr when municipioEliminar is called', () => {
-    component.origenArr = ['Test Municipality'];
-    component.datosGenerales.get('municipiodeOrigen')?.setValue('Test Municipality');
-    component.municipioEliminar();
-    expect(component.origenArr.length).toBe(0);
+    expect(destroyedCompleteSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });

@@ -1,54 +1,49 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
+  let mockCatalogosService: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent]
+  beforeEach(() => {
+    mockCatalogosService = {
+      getCatalogo: jest.fn(), // Mocked function for the service
+    };
+
+    TestBed.configureTestingModule({
+      declarations: [PasoDosComponent],
+      providers: [{ provide: CatalogosService, useValue: mockCatalogosService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have TEXTOS defined', () => {
-    expect(component.TEXTOS).toBeDefined(); // Check if TEXTOS is defined
-    expect(Object.keys(component.TEXTOS).length).toBeGreaterThan(0); // Check if TEXTOS is not empty
+  it('should initialize and call getTiposDocumentos on ngOnInit', () => {
+    const mockResponse = [{ id: 1, nombre: 'Tipo A' }, { id: 2, nombre: 'Tipo B' }];
+    mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
+
+    // Call ngOnInit
+    component.ngOnInit();
+
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith('CAT_TIPO_DOCUMENTO');
+    expect(component.catalogoDocumentos).toEqual(mockResponse);
   });
 
-  it('should render the content correctly', () => {
-    const compiled = fixture.nativeElement;
+  it('should complete ReplaySubject on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
 
-    // Check if some text from TEXTOS_REQUISITOS is present in the template
-    const someKey = Object.keys(component.TEXTOS)[0]; // Get an arbitrary key
-    // const expectedText = component.TEXTOS[someKey];
+    // Call ngOnDestroy
+    component.ngOnDestroy();
 
-    // This checks if the expected text is present in the rendered HTML.
-    // Adjust the selector as needed based on how you are using TEXTOS in your template.
-    const elementWithText = compiled.querySelector(`*[data-testid="${someKey}"]`); // Example using data-testid
-    if (elementWithText) {
-      // expect(elementWithText.textContent).toContain(expectedText);
-    } else {
-      // If the element isn't found, it's possible that the test is running before the view is initialized.
-      // You can try to force change detection:
-      fixture.detectChanges();
-      const elementWithTextAfterCD = compiled.querySelector(`*[data-testid="${someKey}"]`);
-      if (elementWithTextAfterCD) {
-        // expect(elementWithTextAfterCD.textContent).toContain(expectedText);
-      } else {
-        //If it still doesn't find the element, the test probably needs to be fixed.
-        console.warn(`Element with data-testid="${someKey}" not found in the template.  Check your template and test.`);
-      }
-    }
-
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

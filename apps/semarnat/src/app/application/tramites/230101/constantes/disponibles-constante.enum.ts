@@ -1,25 +1,36 @@
+/**
+ * Lista de aduanas disponibles para selección.
+ * @constant
+ * @type {string[]}
+ */
 export const ADUANAS_DISPONIBLES: string[] = [
-    "AFGANISTÁN (EMIRATO ISLÁMICO)",
-    "ALBANIA (REPÚBLICA DE)",
-    "ALEMANIA (REPÚBLICA FEDERAL DE)",
-    "ANDORRA (PRINCIPADO DE)",
-    "ANGOLA (REPÚBLICA DE)",
-    "ANGUILLA",
-    "ANTIGUA Y BARBUDA",
-    "ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)",
-    "ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)",
-    "ARGENTINA (REPÚBLICA)",
-    "AUSTRALIA (COMMONWEALTH OF)",
-    "AUSTRIA (REPUBLIC OF)",
-    "BAHAMAS (COMMONWEALTH OF THE)",
-    "BAHRAIN (KINGDOM OF)",
-    "BANGLADESH (PEOPLE'S REPUBLIC OF)",
-    "BARBADOS",
-    "BELGIUM (KINGDOM OF)",
-    "BELIZE",
-    "BENIN (REPUBLIC OF)",
-    "BHUTAN (KINGDOM OF)"
-  ];
+  "AFGANISTÁN (EMIRATO ISLÁMICO)",
+  "ALBANIA (REPÚBLICA DE)",
+  "ALEMANIA (REPÚBLICA FEDERAL DE)",
+  "ANDORRA (PRINCIPADO DE)",
+  "ANGOLA (REPÚBLICA DE)",
+  "ANGUILLA",
+  "ANTIGUA Y BARBUDA",
+  "ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)",
+  "ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)",
+  "ARGENTINA (REPÚBLICA)",
+  "AUSTRALIA (COMMONWEALTH OF)",
+  "AUSTRIA (REPUBLIC OF)",
+  "BAHAMAS (COMMONWEALTH OF THE)",
+  "BAHRAIN (KINGDOM OF)",
+  "BANGLADESH (PEOPLE'S REPUBLIC OF)",
+  "BARBADOS",
+  "BELGIUM (KINGDOM OF)",
+  "BELIZE",
+  "BENIN (REPUBLIC OF)",
+  "BHUTAN (KINGDOM OF)"
+];
+
+/**
+ * Lista de textos requisitos para selección.
+ * @constant
+ * @type {string[]}
+ */
 
 export const TEXTOS_REQUISITOS = {
   INSTRUCCIONES: `<h6>Instrucciones</h6>
@@ -40,22 +51,28 @@ export interface AccionBoton {
   valor: number;
 }
 
-  export const LISTA_DE_ENTRADA_PERSONALIZADA: string[] = [
-    "ACAPULCO, PUERTO Y AEROPUERTO",
-    "ADUANA DE PANTACO",
-    "AEROPUERTO INT. DE LA CD DE MEXICO",
-    "AEROPUERTO INTERNACIONAL FELIPE ANGELES",
-    "AGUA PRIETA",
-    "AGUASCALIENTES, AGS.",
-    "ALTAMIRA",
-    "CANCUN, AEROPUERTO",
-    "CD. CAMARGO, TAMPS.",
-    "CD. DEL CARMEN, CAMP.",
-    "CD. JUAREZ, CHIHUAHUA, CHIH."
-  ];
+/**
+ * Lista de LISTA_DE_ENTRADA_PERSONALIZADA para selección.
+ * @constant
+ * @type {string[]}
+ */
+
+export const LISTA_DE_ENTRADA_PERSONALIZADA: string[] = [
+  "ACAPULCO, PUERTO Y AEROPUERTO",
+  "ADUANA DE PANTACO",
+  "AEROPUERTO INT. DE LA CD DE MEXICO",
+  "AEROPUERTO INTERNACIONAL FELIPE ANGELES",
+  "AGUA PRIETA",
+  "AGUASCALIENTES, AGS.",
+  "ALTAMIRA",
+  "CANCUN, AEROPUERTO",
+  "CD. CAMARGO, TAMPS.",
+  "CD. DEL CARMEN, CAMP.",
+  "CD. JUAREZ, CHIHUAHUA, CHIH."
+];
 
 /** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
-  export const CONTINUAR: string = "t";
+export const CONTINUAR: string = "t";
 
 /**
 * Secciones a mostrar dentro de cada Paso de acuerdo al trámite
@@ -74,8 +91,55 @@ export const SECCIONES_TRAMITE_230401 = {
   },
 };
 
+/**
+ * Lista de DISPONSIBLE_ADUANA_CHECKBOXES para selección.
+ * @constant
+ * @type {string[]}
+ */
 export const DISPONSIBLE_ADUANA_CHECKBOXES = [
   { id: 1, name: 'Región fronteriza', checked: false },
   { id: 2, name: 'Franja fronteriza', checked: false },
   { id: 3, name: 'Todo el territorio', checked: false }
+];
+
+/**
+ * Lista de MERCANCIAS para selección.
+ * @constant
+ * @type {string[]}
+ */
+
+export const MERCANCIAS = {
+  "tableHeader": ["Fracción aranceleria", "Cantidad", "Cantidad(letra)"],
+  "tableBody": [
+    {
+      "tbodyData": ["06042099", "1.00", "UNO"]
+    }
+  ]
+};
+
+/**
+ * Lista de DETALLE para selección.
+ * @constant
+ * @type {string[]}
+ */
+
+export const DETALLE = {
+  "tableHeader": ["Nombre científico", "Nombre común"],
+  "tableBody": [
+    {
+      "tbodyData": ["Ananas comosus", "P&iacute;na"]
+    }
+  ]
+};
+
+/**
+ * Lista de test cross list para selección.
+ * @constant
+ * @type {string[]}
+ */
+
+export const TEST_CROSS_LIST: string[] = [
+  'test 1',
+  'test 2',
+  'test 3'
 ];
