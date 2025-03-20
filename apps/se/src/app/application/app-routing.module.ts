@@ -161,11 +161,11 @@ const ROUTES: Routes = [
       ),
   },
   {
-          path: 'aviso-importacion-maquinas',
-          loadChildren: () =>
-            import('./tramites/130119/aviso-importacion-maquinas.module').then(
-              (m) => m.AvisoImportacionMaquinasModule
-            ),
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
   }
 ];
 
