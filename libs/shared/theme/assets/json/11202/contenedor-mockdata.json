@@ -1,5 +1,11 @@
-{
-      "inicialesContenedor": "AGRICOLA ALPE S DE RL DE CV",
-    "numeroContenedor": "AAL0409235E6"
-      
-  }
+
+[
+  { "id": 1, "descripcion": "Aduana de México" },
+  { "id": 2, "descripcion": "Aduana de Argentina" },
+  { "id": 3, "descripcion": "Aduana de España" },
+  { "id": 4, "descripcion": "Aduana de España" },
+  { "id": 5, "descripcion": "Aduana de España" }
+]
+   
+ 
+   
