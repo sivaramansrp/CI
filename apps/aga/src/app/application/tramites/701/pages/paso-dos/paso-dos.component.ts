@@ -4,9 +4,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { AlertComponent } from '@ng-mf/data-access-user';
+
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
