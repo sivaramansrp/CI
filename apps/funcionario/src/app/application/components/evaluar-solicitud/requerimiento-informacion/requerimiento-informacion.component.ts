@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { FuncionarioService } from '@libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-requerimiento-informacion',
@@ -15,15 +16,28 @@ export class RequerimientoInformacionComponent {
   /**
      * Índice de la pestaña seleccionada
      */
-  indice: number = 1;
+  indiceDictamen: number = 1;
+  contContinuar: boolean = false;
+  constructor(
+    private router: Router
+  ) {}
 
-  constructor() {
+  ngOnInit(): void {
   }
+
   /**
     * Método para seleccionar la pestaña
     * @param i indica el número de la pestaña seleccionada
     */
   seleccionaTab(i: number): void {
-    this.indice = i;
+    this.indiceDictamen = i;
+  }
+
+  continuar(): void {
+    if (this.indiceDictamen === 2) {
+      this.router.navigate(['funcionario/firma-electronica']);
+    } else {
+      this.indiceDictamen = 2;
+    }
   }
 }

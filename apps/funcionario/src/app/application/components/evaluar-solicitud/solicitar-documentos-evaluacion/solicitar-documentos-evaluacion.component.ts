@@ -6,7 +6,6 @@ import data from '../../../../../../../../libs/shared/theme/assets/json/funciona
 import { DocumentosStates, SolicitudDocumentosState } from '../../../estados/evaluacion-solicitud/documentos.store';
 import { SolicitudDocumentosQuery } from '../../../estados/queries/documentos.query';
 import { map, Subject, takeUntil } from 'rxjs';
-import { FuncionarioService } from '../../../../../../../../libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 
 @Component({
   selector: 'app-solicitar-documentos',
@@ -16,7 +15,7 @@ import { FuncionarioService } from '../../../../../../../../libs/shared/data-acc
   styleUrl: './solicitar-documentos-evaluacion.component.scss',
 })
 export class SolicitarDocumentosEvaluacionComponent {
-  formSolicitudDocumentos! : FormGroup;
+  formSolicitudDocumentos!: FormGroup;
   catTipoDocumento!: Catalogo[];
   documentosSeleccionados: string[] = [];
   documentoSeleccionado: string = '';
@@ -25,13 +24,13 @@ export class SolicitarDocumentosEvaluacionComponent {
 
   constructor(private fb: FormBuilder,
     private documentosStates: DocumentosStates,
-    private solicitudRequerimientoQuery: SolicitudDocumentosQuery,
-    private estadoService: FuncionarioService,
+    private solicitudRequerimientoQuery: SolicitudDocumentosQuery
   ) { }
 
   ngOnInit(): void {
+
     this.catTipoDocumento = data;
-    
+
     this.solicitudRequerimientoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -40,25 +39,27 @@ export class SolicitarDocumentosEvaluacionComponent {
         })
       )
       .subscribe();
-     
-      this.crearFormDocumentos();
+    this.crearFormDocumentos();
   }
 
-  crearFormDocumentos(): void{
+  crearFormDocumentos(): void {
     this.formSolicitudDocumentos = this.fb.group({
       tipoDocumento: ['', [Validators.required]],
     });
+    this.documentosSeleccionados = this.solicitudDocumentosState.documentosSeleccionados;
   }
 
   agregarDocumento() {
+    if (this.documentosSeleccionados.length == 0) {
+      this.documentosSeleccionados=[];
+    }
     const tipoDocumentoId = this.formSolicitudDocumentos.get('tipoDocumento')?.value;
-
     const selectedOption = this.catTipoDocumento.find(option => option.id === +tipoDocumentoId);
     const description = selectedOption ? selectedOption.descripcion : 'No description found';
     if (description && !this.documentosSeleccionados.includes(description)) {
       this.documentosSeleccionados.push(description.toString());
     }
-    this.setValoresStore(this.formSolicitudDocumentos, 'documentosSeleccionados', 'setSolicitudDocumentos');
+    this.documentosStates.setSolicitudDocumentos(this.documentosSeleccionados);
   }
 
   eliminarDocumento(index: number) {
@@ -69,6 +70,4 @@ export class SolicitarDocumentosEvaluacionComponent {
     const valor = form.get(campo)?.value;
     (this.documentosStates[metodoNombre] as (value: any) => void)(valor);
   }
-
-
 }

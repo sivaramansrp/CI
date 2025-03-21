@@ -24,8 +24,8 @@ export class RequerimientosStates extends Store<SolicitudRequerimientosState>{
         this.reset();
     }
 
-    settipoRequerimientoValue( tipoRequerimiento : number){
-        this.update(state => ({... state, tipoRequerimiento}));
+    settipoRequerimientoValue( idTipoRequerimiento : number){
+        this.update(state => ({... state, idTipoRequerimiento}));
     }
 
     setjustificacionRequerimientoValue( justificacionRequerimiento : string){

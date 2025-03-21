@@ -47,6 +47,7 @@ export class CapturarRequerimientoComponent {
     
   }
   crearFormRequerimiento(): void {
+    debugger
     this.formRequerimiento = this.fb.group({
       tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
       justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required]]
@@ -57,24 +58,23 @@ export class CapturarRequerimientoComponent {
    * Método para establecer el tipo de requerimiento seleccionado
    */
   tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates) {
+    this.setValoresStore(form, campo, metodoNombre);
+
     const tipoRequerimientoId = this.formRequerimiento.get('tipoRequerimiento')?.value;
+
     switch (tipoRequerimientoId) {
       case "1":
         this.documentacion = true;
-        this.estadoService.setFirmar(false);
         break;
       case "2":
         this.documentacion = true;
-        this.estadoService.setFirmar(false);
         break;
       case "3":
         this.documentacion = false;
-        this.estadoService.setFirmar(true);
         break;
       default:
         break;
     }
-    this.setValoresStore(form, campo, metodoNombre);
   }
 
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates): void {

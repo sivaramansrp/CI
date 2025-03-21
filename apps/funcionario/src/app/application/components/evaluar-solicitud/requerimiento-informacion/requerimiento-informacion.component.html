@@ -2,17 +2,17 @@
     <div class="row margin-top">
         <br>
         <ul class="nav nav-tabs">
-            <li [ngClass]="indice === 1 ? 'active' : ''">
+            <li [ngClass]="indiceDictamen === 1 ? 'active' : ''">
                 <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
                 (keydown.space)="seleccionaTab(1)" role="button" tabindex="0">Capturar requerimiento</a>
             </li>
-            <li [ngClass]="indice === 2 ? 'active' : ''">
+            <li [ngClass]="indiceDictamen === 2 ? 'active' : ''">
                 <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
                 (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Solicitar documentos</a>
             </li>
         </ul>
         <ng-container>
-            @switch (indice) {
+            @switch (indiceDictamen) {
             @case (1) {
              <app-capturar-requerimiento></app-capturar-requerimiento>
             }
@@ -22,4 +22,9 @@
             }
           </ng-container>
     </div>
+    <div class="d-flex justify-content-lg-end">
+        <button type="button" class="btn btn-default ms-2">Cancelar</button>
+        <button class="btn  btn-primary ms-2" type="button" (click)="continuar()">Continuar</button>
+    </div>
+   
 </div>
