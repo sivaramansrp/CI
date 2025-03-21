@@ -279,15 +279,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     })
   }
 
-  /**
-   * @method abrirDatosPara
-   * @description Método para cambiar el estado de visibilidad del formulario de datos.
-   * Invierte el valor de la variable `estadoChecker`.
-   * @returns {void}
-   */
-  abrirDatosPara() {
-    this.estadoChecker = !this.estadoChecker;
-  }
+
 
   /**
    * @method establecerValoresStore

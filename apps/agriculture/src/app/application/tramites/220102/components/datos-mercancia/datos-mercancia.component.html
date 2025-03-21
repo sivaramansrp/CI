@@ -155,10 +155,10 @@
     </button>
   </div>
   <div *ngIf="!estadoChecker">
-    <button type="button" class="btn btn-default btn-space me-2"  *ngIf="cuerpoTabla.length !==  0" [disabled]="!(selectedTableList.length === 1)" (click)="seleccionarParaModificacion()">
+    <button type="button" class="btn btn-default btn-space me-2"  *ngIf="cuerpoTabla.length !==  0" [disabled]="!(listaDeTablasSeleccionadas.length === 1)" (click)="seleccionarParaModificacion()">
       Modificar
     </button>
-    <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0 " [disabled]="!(selectedTableList.length === 1)" (click)="eliminarElementoSeleccionado()">
+    <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0 " [disabled]="!(listaDeTablasSeleccionadas.length === 1)" (click)="eliminarElementoSeleccionado()">
       Eliminar
     </button>
     <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')" >
