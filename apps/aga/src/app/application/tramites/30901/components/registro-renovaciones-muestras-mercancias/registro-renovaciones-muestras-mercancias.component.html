@@ -7,7 +7,7 @@
       <div class="col-md-12 mt-3">
         <div class="form-group">
           <app-catalogo-select
-            [id]="'comboTramiteRealizado'"
+            formControlName="opcionDeImportador"
             [catalogo]="opcionDeImportador.catalogos"
             [label]="opcionDeImportador.labelNombre"
             [required]="opcionDeImportador.required"
@@ -26,6 +26,7 @@
       <div class="col-md-8">
         <div class="form-group text-left">
           <app-catalogo-select
+            formControlName="tomaMuestraDespacho"
             [id]="'comboMuestraDespacho'"
             [catalogo]="tomaMuestraDespacho.catalogos"
             [label]="tomaMuestraDespacho.labelNombre"
@@ -45,6 +46,7 @@
             id="textMotivoFaltaMuestra"
             class="form-control"
             [readonly]="true"
+            (change)="setDescMotivoFaltaMuestra()"
           />
         </div>
       </div>
@@ -57,6 +59,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <app-catalogo-select
+            formControlName="comboFraccionConcatenada"
             [id]="'fraccionArancelaria'"
             [catalogo]="fraccionArancelariaAga.catalogos"
             [label]="fraccionArancelariaAga.labelNombre"
@@ -78,17 +81,20 @@
             formControlName="fracciondescripcion"
             style="height: 80px"
             readonly
+            (change)="setFracciondescripcion()"
           ></textarea>
         </div>
       </div>
       <div class="col-md-4 mt-4">
         <div class="form-group">
           <app-catalogo-select
+            formControlName="comboNicos"
             [id]="'comboNicos'"
             [catalogo]="nico.catalogos"
             [label]="nico.labelNombre"
             [required]="nico.required"
             name="comboNicos"
+            (selectionChange)="setNino($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -100,6 +106,7 @@
             rows="3"
             id="descNico"
             formControlName="nicoDescripcion"
+            (change)="setNicoDescripcion()"
           ></textarea>
         </div>
       </div>
@@ -115,6 +122,7 @@
             formControlName="nombreQuimico"
             readonly
             style="height: 80px"
+            (change)="setNombreQuimico()"
           ></textarea>
         </div>
       </div>
@@ -145,6 +153,7 @@
             formControlName="numeroCAS"
             style="height: 80px"
             readonly
+            (change)="setNombreComercial()"
           ></textarea>
         </div>
       </div>
@@ -155,6 +164,7 @@
             [label]="ideGenerica.labelNombre"
             [required]="ideGenerica.required"
             name="ideGenerica1"
+            formControlName="ideGenerica"
             [isDisabled]="true"
           ></app-catalogo-select>
         </div>
