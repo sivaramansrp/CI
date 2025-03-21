@@ -1,1 +1,102 @@
-<p>destinatario works!</p>
+<div class="container">
+  <form>
+    <div class="row mt-5">
+      <ng-titulo titulo="Datos del destinatario" />
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="nombres">Nombre(s):</label>
+        <input type="text" id="nombres" class="form-control" />
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="primerApellido">Primer apellido:</label>
+        <input type="text" id="primerApellido" class="form-control" />
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="segundoApellido"
+          >Segundo apellido:</label
+        >
+        <input type="text" id="segundoApellido" class="form-control" />
+      </div>
+
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="numeroDeRegistroFiscal"
+          >Numero de registro fiscal:</label
+        >
+        <input type="text" id="numeroDeRegistroFiscal" class="form-control" />
+      </div>
+
+      <div class="col-md-8 form-group">
+        <label class="form-label" for="razonSocial">Razon social:</label>
+        <input type="text" id="razonSocial" class="form-control" />
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <ng-titulo titulo="Domicilio del destinatario" />
+      <div class="col-md-8 form-group">
+        <label class="form-label" for="ciudad"
+          >Ciudad (poblacion, estado o provincia):</label
+        >
+        <input type="text" id="ciudad" class="form-control" />
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="Celle">Celle*:</label>
+          <input type="text" id="Celle" class="form-control" />
+        </div>
+
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="numeroLetra">Numero y/o letra:</label>
+          <input type="text" id="numeroLetra" class="form-control" />
+        </div>
+
+        <div class="col-md-1 form-group">
+          <label class="form-label" for="lada">Lada:</label>
+          <input type="text" id="lada" class="form-control" />
+        </div>
+
+        <div class="col-md-3 form-group">
+          <label class="form-label" for="telefono">Telefono:</label>
+          <input type="text" id="telefono" class="form-control" />
+        </div>
+
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="fax">Fax:</label>
+          <input type="text" id="fax" class="form-control" />
+        </div>
+
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="correoElectronico"
+            >Correo electronico*:</label
+          >
+          <input type="text" id="correoElectronico" class="form-control" />
+        </div>
+
+        <div class="col-md-8 form-group">
+          <app-catalogo-select
+            [label]="'Pais destino*:'"
+            [required]="true"
+            name="MedioDeTransporte"
+            [catalogo]="medioDeTransporte"
+          >
+          </app-catalogo-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <ng-titulo titulo="Detalles del transporte" />
+      <div class="col-md-8 form-group">
+        <app-catalogo-select
+          [label]="'Medio de transporte'"
+          [required]="true"
+          name="MedioDeTransporte"
+          [catalogo]="medioDeTransporte"
+        >
+        </app-catalogo-select>
+      </div>
+    </div>
+  </form>
+</div>

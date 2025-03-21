@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AlertComponent, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { DaosCertificadoComponent } from '../../components/daos-certificado/daos-certificado.component';
@@ -14,7 +14,8 @@ import { DestinatarioComponent } from '../../components/destinatario/destinatari
     SolicitanteComponent,
     CertificadoDeOrigenComponent,
     DestinatarioComponent,
-    DaosCertificadoComponent
+    DaosCertificadoComponent,
+    AlertComponent
 
   ],
   templateUrl: './paso-uno.component.html',
@@ -37,6 +38,18 @@ export class PasoUnoComponent implements AfterViewInit {
 
   // Índice para manejar la pestaña seleccionada
   indice: number = 1;
+
+  /**
+   * Clase CSS utilizada para mostrar alertas informativas.
+   * Esta clase se aplica a los mensajes de información que se muestran en el componente.
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * Una constante que contiene el valor del objeto 'PAGO_DE_DERECHOS'.
+   * Esta constante se usa para almacenar textos y valores relacionados con el pago de derechos.
+   */
+  TEXTOS = PAGO_DE_DERECHOS;
 
   constructor(private cdr: ChangeDetectorRef) {
     // Constructor no realiza ninguna acción en este caso
