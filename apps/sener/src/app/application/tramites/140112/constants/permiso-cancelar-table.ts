@@ -6,7 +6,7 @@ interface PersmisoCalender {
     condicionDeLaMercancia: string;
     fraccionArancelaria: string;
   }
-  export const Persmiso_Calender_Table = [
+  export const PERSMISO_CALENDER_TABLE = [
     {
       encabezado: 'Folio tramite',
       clave: (ele: PersmisoCalender) => ele.folioTramite,
