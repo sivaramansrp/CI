@@ -19,3 +19,4 @@ export const SECCIONES_TRAMITE = {
         VALIDACION_SECCION: false,
     }
 };
+
