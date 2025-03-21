@@ -130,7 +130,7 @@ export class ProyectoImmexComponent implements OnInit {
         encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
         encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
         estatus: this.seleccionList[0].estatus,
-        encabezadoFraccion: this.seleccionList[0].encabezadoFraccion
+        encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria
       }
       const OBJECTO_INDICE = this.proyectoImmexTablaLista.findIndex((idx) => {
         return idx.encabezadoRfc === OBJECTO_IDX.encabezadoRfc;
@@ -150,7 +150,7 @@ export class ProyectoImmexComponent implements OnInit {
       encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
       encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
       estatus: false,
-      encabezadoFraccion: ''
+      encabezadoFraccion:this.proyectoImmexDatos?.fraccionArancelaria
     }
     this.proyectoImmexTablaLista.push(OBJECTO_IDX);
     this.obtenerProyectoTablaDevolverLaLlamada.emit(this.proyectoImmexTablaLista);

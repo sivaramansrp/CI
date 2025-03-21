@@ -158,7 +158,7 @@ export class ProveedorClienteComponent implements OnChanges {
    */
   aggregar(): void {
     const PROVEEDOR_CLIENTE: ProveedorClienteTabla = {
-      fraccion: 2,
+      fraccion:this.fraccionTablaDatos?.encabezadoFraccion,
       paisDestino: this.obtenerValorPaisDeDestino(
         this.formularioProveedorCliente.get('paisDestino')?.value
       ),

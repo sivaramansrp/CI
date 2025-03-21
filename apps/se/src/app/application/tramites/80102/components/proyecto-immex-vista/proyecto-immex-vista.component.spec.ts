@@ -22,7 +22,7 @@ describe('ProyectoImmexVistaComponent', () => {
 
   it('should have default proyectoImmexDatos', () => {
     expect(component.proyectoImmexDatos).toEqual({
-      fraccionArancelaria: '6465469',
+      fraccionArancelaria: '',
       anexoDos: 'NO SENSIBLE',
       tipo: 'EXPORTACCION',
       umt: 'KILOGRAM',

@@ -90,7 +90,7 @@ export const ANEXO_IMPORTACION_SERVICIO = [
 export const PROVEEDOR_CLIENTE_TABLA_CONFIG=[
   {
     encabezado: 'Fracción',
-    clave: (ele: ProveedorClienteTabla):number => ele.fraccion,
+    clave: (ele: ProveedorClienteTabla):string | undefined=> ele.fraccion,
     orden: 1
   },
   {

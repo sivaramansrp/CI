@@ -108,7 +108,7 @@ export interface RutaNombre {
 }
 
 export interface ProveedorClienteTabla {
-  fraccion: number;
+  fraccion?: string;
   paisDeOrigin?: number;
   proveedor?: string;
   razonSocialProveedor?: string;

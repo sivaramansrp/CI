@@ -80,6 +80,7 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
       .subscribe((datosParaNavegar) => {
         this.proyectoImmexDatos.descripcion =
           datosParaNavegar.encabezadoDescripcionComercial;
+          this.proyectoImmexDatos.fraccionArancelaria=datosParaNavegar.encabezadoFraccion
       });
   }
 
