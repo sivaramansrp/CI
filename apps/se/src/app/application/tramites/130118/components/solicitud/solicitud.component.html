@@ -7,8 +7,9 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="regimenMercancia" formControlName="regimenMercancia"
-                            [label]="'Régimen al que se destinará la mercancía'" [required]="true"
-                            name="regimenMercancia" (change)="regimenMercanciaSeleccion()"></app-catalogo-select>
+                            [label]="'Régimen al que se destinará la mercancía'" [tooltipQuestionCircle]="true"
+                            [required]="true" name="regimenMercancia"
+                            (change)="regimenMercanciaSeleccion()"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -29,6 +30,7 @@
                     <div class="form-group">
                         <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
                         <textarea class="form-control" cols="60" rows="10" id="valueTA" formControlName="valueTA"
+                            (change)="setValoresStore(datosMercancia,'valueTA', 'setValueTA')"
                             [ngClass]="isValid(datosMercancia, 'valueTA') ? 'required' : ''"></textarea>
                         <input type="hidden" id="valueHidden" name="descripcionMerc" />
                         @if (FormSolicitud.get('datosMercancia.valueTA')?.hasError('maxlength')){
@@ -55,8 +57,8 @@
             <div class="row mb-3">
                 <div class="col-md-8">
                     <app-catalogo-select [catalogo]="unidadMedidaTarifaria" formControlName="unidadMedidaTarifaria"
-                        [label]="'Unidad de medida de la tarifa (UMT)'" [required]="true" name="unidadMedidaTarifaria"
-                        (change)="unidadMedidaTarifariaSeleccion()"></app-catalogo-select>
+                        [label]="'Unidad de medida de la tarifa (UMT)'" [tooltipQuestionCircle]="true" [required]="true"
+                        name="unidadMedidaTarifaria" (change)="unidadMedidaTarifariaSeleccion()"></app-catalogo-select>
                 </div>
             </div>
             <div class="row mb-3">
@@ -64,8 +66,9 @@
                     <label for="cantidadTarifaria" class="form-label">Cantidad*:</label>
                     <input class="form-control onceEnterosDosdecimals"
                         [ngClass]="isValid(datosMercancia, 'cantidadTarifaria') ? 'required' : ''" type="number"
-                        formControlName="cantidadTarifaria" name="cantidadTarifaria" id="cantidadTarifaria"
-                        (change)="calcularUmtPrecioUnitario()" />
+                        formControlName="cantidadTarifaria" maxlength="17" min="0" max="99999999999999.99"
+                        (change)="setValoresStore(datosMercancia,'cantidadTarifaria', 'setCantidadTarifaria')"
+                        name="cantidadTarifaria" id="cantidadTarifaria" (change)="calcularUmtPrecioUnitario()" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -75,8 +78,9 @@
                         title="En caso de no contar con valor factura proporciona el valor estimado"
                         data-bs-toggle="tooltip"></span>
                     <input class="form-control" [ngClass]="isValid(datosMercancia, 'valorFacturaUSD') ? 'required' : ''"
-                        type="number" formControlName="valorFacturaUSD" name="valorFacturaUSD" id="valorFacturaUSD"
-                        (change)="calcularUmtPrecioUnitario()" />
+                        type="number" formControlName="valorFacturaUSD" maxlength="17" min="0" max="99999999999999.99"
+                        (change)="setValoresStore(datosMercancia,'valorFacturaUSD', 'setValorFacturaUSD')"
+                        name="valorFacturaUSD" id="valorFacturaUSD" (change)="calcularUmtPrecioUnitario()" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -84,7 +88,9 @@
                     <label for="precioUnitarioUSD" class="form-label">Precio unitario en USD*:</label>
                     <input class="form-control"
                         [ngClass]="isValid(datosMercancia, 'precioUnitarioUSD') ? 'required' : ''" type="text"
-                        formControlName="precioUnitarioUSD" name="precioUnitarioUSD" id="precioUnitarioUSD" />
+                        formControlName="precioUnitarioUSD"
+                        (change)="setValoresStore(datosMercancia,'precioUnitarioUSD', 'setPrecioUnitarioUSD')"
+                        name="precioUnitarioUSD" id="precioUnitarioUSD" />
                 </div>
             </div>
             <div class="row mb-3">
@@ -107,11 +113,13 @@
                         <span class="bi bi-question-circle-fill" title="Número de certificado de molino o de calidad"
                             data-bs-toggle="tooltip"></span></label>
                     <input type="text" [ngClass]="isValid(datosMercancia, 'lote') ? 'required' : ''"
-                        class="form-control" id="lote" formControlName="lote" />
+                        class="form-control" id="lote" formControlName="lote" maxlength="60"
+                        (change)="setValoresStore(datosMercancia,'lote', 'setLote')" />
                 </div>
                 <div class="col-md-4">
                     <div class="input-group">
-                        <input-fecha [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+                        <input-fecha [setFecha]="datosMercancia.get('fechaSalida')?.value" [datos]="fechaFinalInput"
+                            (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
                     </div>
                 </div>
             </div>
@@ -120,9 +128,11 @@
                     <div class="form-group">
                         <label for="observaciones" class="form-label">Observaciones:</label>
                         <textarea cols="60" rows="5" class="form-control" formControlName="observaciones"
-                            id="valueTAObs"></textarea>
+                            (change)="setValoresStore(datosMercancia,'observaciones', 'setObservaciones')"
+                            id="valueTAObs" maxlength="250"></textarea>
                         <input type="hidden" id="valueHiddenObsv" name="observacionMerc"
                             formControlName="observacionMerc"
+                            (change)="setValoresStore(datosMercancia,'observacionMerc', 'setObservacionMerc')"
                             [value]="escapeHtmlQuotes(FormSolicitud.get('datosMercancia.observaciones')?.value)">
                     </div>
                 </div>
@@ -138,12 +148,14 @@
                         <label for="tipoPersona" class="form-label">Tipo de persona*:</label>
                         <div class="form-check">
                             <input type="radio" value="pfisica" id="pfisica" class="form-check-input"
-                                formControlName="tipoPersona" (change)="personaFisica()">
+                                formControlName="tipoPersona"
+                                (change)="setValoresStore(datosProducto,'tipoPersona', 'setTipoPersona');personaFisica()">
                             <label for="pfisica" class="form-check-label">Física</label>
                         </div>
                         <div class="form-check">
                             <input type="radio" value="pmoral" id="pmoral" class="form-check-input"
-                                formControlName="tipoPersona" (change)="personaMoral()">
+                                formControlName="tipoPersona"
+                                (change)="setValoresStore(datosProducto,'tipoPersona', 'setTipoPersona');personaMoral()">
                             <label for="pmoral" class="form-check-label">Moral</label>
                         </div>
                         <div class="row">
@@ -165,7 +177,8 @@
                     <div class="form-group">
                         <label for="nombre" class="form-label">Nombre(s)*:</label>
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'nombre') ? 'required' : ''"
-                            type="text" name="nombre" id="nombre" formControlName="nombre" />
+                            type="text" name="nombre" id="nombre" formControlName="nombre" maxlength="200"
+                            (change)="setValoresStore(datosProducto,'nombre', 'setNombre')" />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -173,14 +186,17 @@
                         <label for="apellidoPaterno" class="form-label">Primer apellido*:</label>
                         <input class="form-control"
                             [ngClass]="isValid(datosProducto, 'apellidoPaterno') ? 'required' : ''" type="text"
-                            name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno" />
+                            name="apellidoPaterno" id="apellidoPaterno" formControlName="apellidoPaterno"
+                            maxlength="200"
+                            (change)="setValoresStore(datosProducto,'apellidoPaterno', 'setApellidoPaterno')" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="apellidoMaterno" class="form-label">Segundo apellido:</label>
                         <input class="form-control" type="text" name="apellidoMaterno" id="apellidoMaterno"
-                            formControlName="apellidoMaterno" />
+                            formControlName="apellidoMaterno" maxlength="200"
+                            (change)="setValoresStore(datosProducto,'apellidoMaterno', 'setApellidoMaterno')" />
                     </div>
                 </div>
             </div>
@@ -192,7 +208,8 @@
                     <div class="form-group">
                         <label for="razonSocial" class="form-label">Razón social*:</label>
                         <input class="form-control" [ngClass]="isValid(datosProducto, 'razonSocial') ? 'required' : ''"
-                            type="text" name="razonSocial" id="razonSocial" formControlName="razonSocial" />
+                            type="text" name="razonSocial" id="razonSocial" formControlName="razonSocial"
+                            maxlength="250" (change)="setValoresStore(datosProducto,'razonSocial', 'setRazonSocial')" />
                     </div>
                 </div>
             </div>
@@ -215,7 +232,9 @@
                     <div class="form-group">
                         <label for="domicilio" class="form-label">Domicilio*:</label>
                         <textarea class="form-control" [ngClass]="isValid(datosProducto, 'domicilio') ? 'required' : ''"
-                            id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio"></textarea>
+                            id="domicilio" name="domicilio" cols="50" rows="7" formControlName="domicilio"
+                            maxlength="1000"
+                            (change)="setValoresStore(datosProducto,'domicilio', 'setDomicilio')"></textarea>
                     </div>
                 </div>
             </div>

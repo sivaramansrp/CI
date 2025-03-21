@@ -4,12 +4,12 @@
         <div class="col-md-4">
             <app-catalogo-select id="transporteIdMedio" [catalogo]="medioDeTransporte" formControlName="medioDeTransporte"
                 [label]="'Medio de transporte'" [required]="true"
-                name="medioDeTransporte" (change)="medioDeTransporteSeleccion()"></app-catalogo-select>
+                name="medioDeTransporte" (selectionChange)="medioDeTransporteSeleccion($event)"></app-catalogo-select>
         </div>
         <div class="col-md-4">
             <label for="identificacionTransporte" class="form-label">Identificación del transporte:</label>
             <input class="form-control" type="text" size="30" formControlName="identificacionTransporte"
-                id="identificacionTransporte" />
+                id="identificacionTransporte" (input)="getIdentificacionTransporte()" />
         </div>
     </div>
     <div class="row mt-5">
@@ -17,28 +17,18 @@
             <label for="esSolicitudFerros">¿La solicitud de Inspección Física es para trámites que arriban
                 por
                 Ferrocarril o por Partes II?*:</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="esSolicitudFerros" id="SiSolicitudFerros" value="1"
-                    (click)="estableceSeleccionSolicitudFerro($event)">
-                <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="esSolicitudFerros" id="NoSolicitudFerros" value="0"
-                    (click)="estableceSeleccionSolicitudFerro($event)">
-                <label class="form-check-label" for="NoSolicitudFerros">No</label>
-            </div>
-        </div>
-    </div>
 
-    @if (esSolicitudFerrosValor === 1) {
+                <app-input-radio
+                [radioOptions]="opcionDeBotonDeRadio"
+                [isRequired]="true"
+                [selectedValue]="esSolicitudFerrosValor"
+                [layout]="'vertical'"
+                formControlName="esSolicitudFerros"
+                (valueChange)="estableceSeleccionSolicitudFerro($event)"
+              ></app-input-radio>
+        </div>
+    </div>
+    @if (esSolicitudFerrosValor === '1') {
     <ng-alert [CONTENIDO]="TEXTOS.SECCION_LEYENDA_CONFIRMAR_TEXTOS"></ng-alert>
     }
 
@@ -46,7 +36,7 @@
 
     <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
 
-    @if (esSolicitudFerrosValor === 1) {
+    @if (esSolicitudFerrosValor === '1') {
     <div class="row">
         <div class="text-end">
             <button name="modificarSaldoMercancia" id="btnSaldoMercancia" class="btn btn-primary"
@@ -60,12 +50,12 @@
     }
     }
 
-    @if(esSolicitudFerrosValor !== 1) {
+    @if(esSolicitudFerrosValor !== '1') {
     <div class="row">
         <div class="col-md-4">
             <label for="totalGuia" class="form-label">Total de guías amparadas:<span class="bi bi-question-circle-fill"
                     title="" data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" type="text" formControlName="totalGuias" id="totalGuia" />
+            <input class="form-control" type="text" formControlName="totalGuias" id="totalGuia" (input)="getTotalGuiasAmparadas()" />
         </div>
     </div>
     }
