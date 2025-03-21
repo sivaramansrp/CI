@@ -132,9 +132,18 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
     { encabezado: 'RFC', clave: (item: PermisoModel) => item.RFC, orden: 2 },
     { encabezado: 'CURP', clave: (item: PermisoModel) => item.CURP, orden: 3 },
-    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 3 },
-    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 4 },
-    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 5 },
+    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 4 },
+    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 5 },
+    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 6 },
+    { encabezado: 'numeroExterior', clave: (item: PermisoModel) => item.numeroExterior, orden: 7 },
+    { encabezado: 'numeroInterior', clave: (item: PermisoModel) => item.numeroInterior, orden: 8 },
+    { encabezado: 'pais', clave: (item: PermisoModel) => item.calle, orden: 9 },
+    { encabezado: 'colonia', clave: (item: PermisoModel) => item.colonia, orden: 10 },
+    { encabezado: 'municipio', clave: (item: PermisoModel) => item.municipio, orden: 11 },
+    { encabezado: 'localidad', clave: (item: PermisoModel) => item.localidad, orden: 12 },
+    { encabezado: 'entidadFederativa', clave: (item: PermisoModel) => item.entidadFederativa, orden: 13 },
+    { encabezado: 'estadoLocalidad', clave: (item: PermisoModel) => item.estadoLocalidad, orden: 14 },
+    { encabezado: 'codigoPostal', clave: (item: PermisoModel) => item.codigoPostal, orden: 15 },
   ];
 
   /**
@@ -153,6 +162,100 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     this.loadMercancias();
     this.getDestinatario();
     this.loadLocalidad();
+  }
+/**
+   * method getDestinatario
+   * description Inicializa el formulario de destinatarios.
+   */
+  getDestinatario(): void {
+    this.destinatarioForm = this.fb.group({
+      tipoPersona: ['fisica', Validators.required], // Default to "fisica"
+      destinatariorfc: [this.solicitudState?.destinatariorfc, Validators.required],
+      destinatariocurp:[''],
+      destinatarionombres:[''],
+      primerapellido:[''],
+      segundosapellido:[''],
+      destinatariodenominacion: [this.solicitudState?.destinatariodenominacion, Validators.required],
+      destinatariopail: ['', Validators.required],
+      destinatariomunicipio: ['', Validators.required],
+      destinatariolocalidad: ['', Validators.required],
+      destinatarioApellido: ['', Validators.required],
+      destinatarioequivalente: ['', Validators.required],
+      destinatario: [''],
+      destinatarionumeroCalle: [this.solicitudState?.destinatarionumeroCalle, Validators.required],
+      destinatarioexperior: [this.solicitudState?.destinatarioexperior, Validators.required],
+      destinatariointerior: [this.solicitudState?.destinatariointerior, Validators.required],
+      destinatariolada: [this.solicitudState?.destinatariolada],
+      destinatarionumerotelefono: [this.solicitudState?.destinatarionumerotelefono],
+      destinatariocorreoElectronico: [this.solicitudState?.destinatariocorreoElectronico, [Validators.required, Validators.email]],
+    });
+    this.handleTipoPersonaChange();
+  }
+
+  handleTipoPersonaChange(): void {
+    this.destinatarioForm.get('tipoPersona')?.valueChanges.subscribe((tipoPersona) => {
+      if (tipoPersona === 'fisica') {
+        this.showFisicaFields();
+      } else if (tipoPersona === 'moral') {
+        this.showMoralFields();
+      }
+    });
+  }
+
+  showFisicaFields(): void {
+    this.destinatarioForm.get('destinatariorfc')?.setValidators(Validators.required);
+    this.destinatarioForm.get('destinatariocurp')?.setValidators(Validators.required);
+    this.destinatarioForm.get('destinatarionombres')?.setValidators(Validators.required);
+    this.destinatarioForm.get('primerapellido')?.setValidators(Validators.required);
+    this.destinatarioForm.get('segundosapellido')?.setValidators(Validators.required);
+
+    this.destinatarioForm.get('destinatariodenominacion')?.clearValidators();
+
+    this.destinatarioForm.updateValueAndValidity();
+  }
+
+  showMoralFields(): void {
+    this.destinatarioForm.get('destinatariorfc')?.setValidators(Validators.required);
+    this.destinatarioForm.get('destinatariodenominacion')?.setValidators(Validators.required);
+
+    this.destinatarioForm.get('destinatariocurp')?.clearValidators();
+    this.destinatarioForm.get('destinatarionombres')?.clearValidators();
+    this.destinatarioForm.get('primerapellido')?.clearValidators();
+    this.destinatarioForm.get('segundosapellido')?.clearValidators();
+
+    this.destinatarioForm.updateValueAndValidity();
+  }
+
+  /**
+   * method isValid
+   * description Verifica si un campo del formulario es válido.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} field - El nombre del campo a verificar.
+   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
+   */
+  isValid(form: FormGroup, field: string): boolean {
+    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+  }
+
+   /**
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} campo - El nombre del campo.
+   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
+   */
+   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
+    const valor = form.get(campo)?.value;
+    (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+/**
+   * method abrirModaldestinatario
+   * description Abre el modal para agregar destinatarios.
+   */
+  abrirModaldestinatario(): void {
+    this.modal = 'show';
+    this.getDestinatario();
   }
 
   /**
@@ -179,64 +282,7 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * method abrirModaldestinatario
-   * description Abre el modal para agregar destinatarios.
-   */
-  abrirModaldestinatario(): void {
-    this.modal = 'show';
-    this.getDestinatario();
-  }
-
-  /**
-   * method getDestinatario
-   * description Inicializa el formulario de destinatarios.
-   */
-  getDestinatario(): void {
-    this.destinatarioForm = this.fb.group({
-      rediofisica: ["", Validators.required],
-      rediomoral: ["", Validators.required],
-      destinatariorfc: [this.solicitudState?.destinatariorfc, Validators.required],
-      destinatariodenominacion: [this.solicitudState?.destinatariodenominacion, Validators.required],
-      destinatariopail: ['', Validators.required],
-      destinatariomunicipio: ['', Validators.required],
-      destinatariolocalidad: ['', Validators.required],
-      destinatarioApellido: ['', Validators.required],
-      destinatarioequivalente: ['', Validators.required],
-      destinatario: [''],
-      destinatarionumeroCalle: [this.solicitudState?.destinatarionumeroCalle, Validators.required],
-      destinatarioexperior: [this.solicitudState?.destinatarioexperior, Validators.required],
-      destinatariointerior: [this.solicitudState?.destinatariointerior, Validators.required],
-      destinatariolada: [this.solicitudState?.destinatariolada],
-      destinatarionumerotelefono: [this.solicitudState?.destinatarionumerotelefono],
-      destinatariocorreoElectronico: [this.solicitudState?.destinatariocorreoElectronico, [Validators.required, Validators.email]],
-    });
-  }
-
-  /**
-   * method isValid
-   * description Verifica si un campo del formulario es válido.
-   * param {FormGroup} form - El formulario reactivo.
-   * param {string} field - El nombre del campo a verificar.
-   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
-   */
-  isValid(form: FormGroup, field: string): boolean {
-    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
-  }
-
-  /**
-   * method setValoresStore
-   * description Actualiza el valor de un campo en el almacén de estado.
-   * param {FormGroup} form - El formulario reactivo.
-   * param {string} campo - El nombre del campo.
-   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
-    const valor = form.get(campo)?.value;
-    (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor);
-  }
-
-  /**
+/**
    * method ngOnDestroy
    * description Método de limpieza al destruir el componente.
    */
@@ -246,4 +292,5 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
 }

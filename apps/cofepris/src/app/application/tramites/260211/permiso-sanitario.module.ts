@@ -30,6 +30,7 @@ import { PermisoSanitarioRoutingModule } from './permiso-sanitario-routing.modul
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -44,7 +45,7 @@ import { provideHttpClient } from '@angular/common/http';
     HttpClientModule,
     PermisoSanitarioRoutingModule, 
     CommonModule,
-   
+    ReactiveFormsModule,
     WizardComponent,
     SolicitanteComponent,
     BtnContinuarComponent,

@@ -123,6 +123,21 @@ export class DerechosComponent implements OnInit, OnDestroy {
     this.loadComboUnidadMedida(); // Call the method to load the initial data.
   }
 
+ /**
+   * compodoc
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * Este método se utiliza para sincronizar los valores del formulario con el estado global de la aplicación.
+   * param {FormGroup} form - El formulario reactivo que contiene los datos.
+   * param {string} campo - El nombre del campo que se desea actualizar.
+   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén que se invocará para actualizar el valor.
+   * returns {void}
+   */
+ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
+  const valor = form.get(campo)?.value; // Get the value of the specified field from the form.
+  (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor); // Update the store with the new value.
+}
+
   /**
    * compodoc
    * method loadComboUnidadMedida
@@ -138,22 +153,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * compodoc
-   * method setValoresStore
-   * description Actualiza el valor de un campo en el almacén de estado.
-   * Este método se utiliza para sincronizar los valores del formulario con el estado global de la aplicación.
-   * param {FormGroup} form - El formulario reactivo que contiene los datos.
-   * param {string} campo - El nombre del campo que se desea actualizar.
-   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén que se invocará para actualizar el valor.
-   * returns {void}
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
-    const valor = form.get(campo)?.value; // Get the value of the specified field from the form.
-    (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor); // Update the store with the new value.
-  }
-
-  /**
+ /**
    * compodoc
    * method ngOnDestroy
    * description Método de limpieza al destruir el componente.

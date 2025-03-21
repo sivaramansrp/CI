@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, ConfiguracionColumna, TableComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -65,7 +65,7 @@ import { Permiso260211Query } from '../../../../estados/queries/permiso260211.qu
   templateUrl: './tercerosRelacionados.component.html',
   styleUrls: ['./tercerosRelacionados.component.css'],
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * property {FormGroup} proveedorForm
    * description Formulario reactivo para capturar los datos del proveedor.
@@ -187,9 +187,18 @@ export class TercerosRelacionadosComponent implements OnInit {
     { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
     { encabezado: 'RFC', clave: (item: PermisoModel) => item.RFC, orden: 2 },
     { encabezado: 'CURP', clave: (item: PermisoModel) => item.CURP, orden: 3 },
-    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 3 },
-    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 4 },
-    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 5 },
+    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 4 },
+    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 5 },
+    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 6 },
+    { encabezado: 'numeroExterior', clave: (item: PermisoModel) => item.numeroExterior, orden: 7 },
+    { encabezado: 'numeroInterior', clave: (item: PermisoModel) => item.numeroInterior, orden: 8 },
+    { encabezado: 'pais', clave: (item: PermisoModel) => item.calle, orden: 9 },
+    { encabezado: 'colonia', clave: (item: PermisoModel) => item.colonia, orden: 10 },
+    { encabezado: 'municipio', clave: (item: PermisoModel) => item.municipio, orden: 11 },
+    { encabezado: 'localidad', clave: (item: PermisoModel) => item.localidad, orden: 12 },
+    { encabezado: 'entidadFederativa', clave: (item: PermisoModel) => item.entidadFederativa, orden: 13 },
+    { encabezado: 'estadoLocalidad', clave: (item: PermisoModel) => item.estadoLocalidad, orden: 14 },
+    { encabezado: 'codigoPostal', clave: (item: PermisoModel) => item.codigoPostal, orden: 15 },
   ];
 
   /**
@@ -209,41 +218,11 @@ export class TercerosRelacionadosComponent implements OnInit {
     this.getRegistroForm();
   }
 
-  /**
-   * method loadMercancias
-   * description Carga los datos de mercancías relacionadas.
-   */
-  loadMercancias(): void {
-    this.service.getTable()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        this.tercerosProd = resp;
-      });
-  }
-
-  /**
-   * method abrirModal
-   * description Abre el modal para agregar un proveedor.
-   */
-  public abrirModal(): void {
-    this.modal = 'show';
-    this.getRegistroForm();
-  }
-
-  /**
-   * method abrirModalrequerida
-   * description Abre el modal para agregar datos requeridos.
-   */
-  abrirModalrequerida(): void {
-    this.modal = 'show';
-    this.getFormrequerida();
-  }
-
-  /**
+   /**
    * method getRegistroForm
    * description Inicializa el formulario de proveedores.
    */
-  getRegistroForm(): void {
+   getRegistroForm(): void {
     this.proveedorForm = this.fb.group({
       nacionalidad: ['nacional', Validators.required], // Matches the formControlName in the HTML
       tipoPersona: ['moral', Validators.required], // Matches the formControlName in the HTML
@@ -288,9 +267,63 @@ export class TercerosRelacionadosComponent implements OnInit {
       numerostelefono: [{ value: '', disabled: true }],
       tipocorreoElectronico: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
     });
+    this.loadComboUnidad();
+    this.loadLocalidad();
+  }
+
+ /**
+   * method isValid
+   * description Verifica si un campo del formulario es válido.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} field - El nombre del campo a verificar.
+   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
+   */
+ isValid(form: FormGroup, field: string): boolean {
+  return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
+}
+
+ /**
+   * method setValoresStore
+   * description Actualiza el valor de un campo en el almacén de estado.
+   * param {FormGroup} form - El formulario reactivo.
+   * param {string} campo - El nombre del campo.
+   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
+   */
+ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
+  const valor = form.get(campo)?.value;
+  (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor);
+}
+
+/**
+   * method abrirModalrequerida
+   * description Abre el modal para agregar datos requeridos.
+   */
+ abrirModalrequerida(): void {
+  this.modal = 'show';
+  this.getFormrequerida();
+}
+  /**
+   * method loadMercancias
+   * description Carga los datos de mercancías relacionadas.
+   */
+  loadMercancias(): void {
+    this.service.getTable()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.tercerosProd = resp;
+      });
   }
 
   /**
+   * method abrirModal
+   * description Abre el modal para agregar un proveedor.
+   */
+  public abrirModal(): void {
+    this.modal = 'show';
+    this.getRegistroForm();
+  }
+
+ /**
    * method loadComboUnidad
    * description Carga la lista de proveedores disponibles.
    */
@@ -318,38 +351,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    * method guardarProveedor
    * description Guarda los datos del proveedor si el formulario es válido.
    */
-  guardarProveedor(): void {
-    if (this.proveedorForm.valid) {
-      // Lógica para guardar proveedor
-    } else {
-      // Lógica para manejar errores
-    }
-  }
-
-  /**
-   * method isValid
-   * description Verifica si un campo del formulario es válido.
-   * param {FormGroup} form - El formulario reactivo.
-   * param {string} field - El nombre del campo a verificar.
-   * returns {boolean} - `true` si el campo es inválido y ha sido tocado o modificado.
-   */
-  isValid(form: FormGroup, field: string): boolean {
-    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
-  }
-
-  /**
-   * method setValoresStore
-   * description Actualiza el valor de un campo en el almacén de estado.
-   * param {FormGroup} form - El formulario reactivo.
-   * param {string} campo - El nombre del campo.
-   * param {keyof Sanitario260211Store} metodoNombre - El método del almacén a invocar.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
-    const valor = form.get(campo)?.value;
-    (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor);
-  }
-
-  /**
+  
+/**
    * method ngOnDestroy
    * description Método de limpieza al destruir el componente.
    */

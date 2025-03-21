@@ -24,7 +24,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <ng-titulo titulo="Agregar Proveedor"></ng-titulo>
+          <ng-titulo titulo="Destinatario (destino final)"></ng-titulo>
         </div>
         <div class="modal-body">
           <form [formGroup]="destinatarioForm">
@@ -41,31 +41,63 @@
                   <label class="form-label" for="tipoPersona">Tipo persona*:</label>
                   
                   <div class="col-md-12">
-                    <input type="radio" id="rediofisica"  name="nacional1" formControlName="rediofisica">
+                    <input type="radio" id="fisica" formControlName="tipoPersona" value="fisica" />
                     <label for="fisica">Física</label>
+    
                   </div>
                   <div class="col-md-12">
-                    <input type="radio" id="rediomoral" name="nacional1" formControlName="rediomoral">
+                    <input type="radio" id="moral" formControlName="tipoPersona" value="moral" />
                     <label for="moral">Moral</label>
+    
                   </div>
                 </div>
               </div>
-
+ <!-- Fields for "Física" -->
+ <div *ngIf="destinatarioForm.get('tipoPersona')?.value === 'fisica'">
           <div class="row">
               <div class="col-md-6">
                 <label class="form-label" for="rfc">R.F.C*:</label>
                 <input type="text" class="form-control" id="destinatariorfc" formControlName="destinatariorfc"[ngClass]="isValid(destinatarioForm, 'destinatariorfc') ? 'required' : ''"
                 (change)="setValoresStore(destinatarioForm,'destinatariorfc', 'setdestinatariorfc')">
               </div>
+              <div class="col-md-6">
+                <label for="destinatariocurp">C.U.R.P.*</label>
+                <input type="text" id="destinatariocurp" formControlName="destinatariocurp" class="form-control" />
+              </div>
             </div>
-            </div>
+
             <div class="row">
-              <div class="col-md-8 mb-3">
+              <div class="col-md-4">
+                <label for="destinatarionombres">Nombre(s)*</label>
+                <input type="text" id="destinatarionombres" formControlName="destinatarionombres" class="form-control" />
+              </div>
+              <div class="col-md-4">
+                <label for="primerapellido">Primer Apellido*</label>
+                <input type="text" id="primerapellido" formControlName="primerapellido" class="form-control" />
+              </div>
+              <div class="col-md-4">
+                <label for="segundosapellido">Segundo Apellido*</label>
+                <input type="text" id="segundosapellido" formControlName="segundosapellido" class="form-control" />
+              </div>
+            </div>
+         </div>
+            </div>
+             <!-- Fields for "Moral" -->
+             <div *ngIf="destinatarioForm.get('tipoPersona')?.value === 'moral'">
+            <div class="row">
+              <div class="col-md-6">
+                  <label class="form-label" for="rfc">R.F.C*:</label>
+                  <input type="text" class="form-control" id="destinatariorfc" formControlName="destinatariorfc"[ngClass]="isValid(destinatarioForm, 'destinatariorfc') ? 'required' : ''"
+                  (change)="setValoresStore(destinatarioForm,'destinatariorfc', 'setdestinatariorfc')">
+                </div>
+            <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominacion">Denominación/razón social*:</label>
                 <input type="text" class="form-control" id="destinatariodenominacion" formControlName="destinatariodenominacion" [ngClass]="isValid(destinatarioForm, 'destinatariodenominacion') ? 'required' : ''"
                 (change)="setValoresStore(destinatarioForm,'destinatariodenominacion', 'setdestinatariodenominacion')">
               </div>
             </div>
+            </div>
+             <!-- Common Fields -->
             <ng-titulo titulo="Domicilio"></ng-titulo>
             <div class="row">
               <div class="col-md-4">

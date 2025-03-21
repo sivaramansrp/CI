@@ -129,9 +129,18 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
     { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel) => item.Nombre, orden: 1 },
     { encabezado: 'RFC', clave: (item: PermisoModel) => item.RFC, orden: 2 },
     { encabezado: 'CURP', clave: (item: PermisoModel) => item.CURP, orden: 3 },
-    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 3 },
-    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 4 },
-    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 5 },
+    { encabezado: 'Telefono', clave: (item: PermisoModel) => item.Teléfono, orden: 4 },
+    { encabezado: 'Correo electronico', clave: (item: PermisoModel) => item.CorreoElectrónico, orden: 5 },
+    { encabezado: 'Calle', clave: (item: PermisoModel) => item.calle, orden: 6 },
+    { encabezado: 'numeroExterior', clave: (item: PermisoModel) => item.numeroExterior, orden: 7 },
+    { encabezado: 'numeroInterior', clave: (item: PermisoModel) => item.numeroInterior, orden: 8 },
+    { encabezado: 'pais', clave: (item: PermisoModel) => item.calle, orden: 9 },
+    { encabezado: 'colonia', clave: (item: PermisoModel) => item.colonia, orden: 10 },
+    { encabezado: 'municipio', clave: (item: PermisoModel) => item.municipio, orden: 11 },
+    { encabezado: 'localidad', clave: (item: PermisoModel) => item.localidad, orden: 12 },
+    { encabezado: 'entidadFederativa', clave: (item: PermisoModel) => item.entidadFederativa, orden: 13 },
+    { encabezado: 'estadoLocalidad', clave: (item: PermisoModel) => item.estadoLocalidad, orden: 14 },
+    { encabezado: 'codigoPostal', clave: (item: PermisoModel) => item.codigoPostal, orden: 15 },
   ];
 
   /**
@@ -147,52 +156,17 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe();
-    this.loadMercancias();
     this.getFacturator();
     this.loadLocalidad();
+    this.loadMercancias();
   }
-
-  /**
-   * method loadMercancias
-   * description Carga los datos de mercancías relacionadas.
-   */
-  loadMercancias(): void {
-    this.service.getTable()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((resp) => {
-        this.tercerosProd = resp;
-      });
-  }
-
-  /**
-   * method loadLocalidad
-   * description Carga las localidades disponibles.
-   */
-  loadLocalidad(): void {
-    this.service.getLocalidaddata()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data): void => {
-        this.localidadList = data as Catalogo[];
-      });
-  }
-
-  /**
-   * method abrirModalfacurator
-   * description Abre el modal para agregar facturadores.
-   */
-  abrirModalfacurator(): void {
-    this.modal = 'show';
-    this.getFacturator();
-  }
-
-  /**
+/**
    * method getFacturator
    * description Inicializa el formulario de facturadores.
    */
   getFacturator(): void {
     this.facturatorForm = this.fb.group({
-      facturatorfisica: ['', Validators.required],
-      facturatormoral: ['', Validators.required],
+      tipoPersona: ['moral', Validators.required], // Default to "fisica"
       nombres: [this.solicitudState?.nombres, Validators.required],
       facturatorapellido: [this.solicitudState?.facturatorapellido, Validators.required],
       facturatorsapellido: [this.solicitudState?.facturatorsapellido],
@@ -208,8 +182,7 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
       facturatorElectronico: [this.solicitudState?.facturatorElectronico, [Validators.required, Validators.email]],
     });
   }
-
-  /**
+/**
    * method isValid
    * description Verifica si un campo del formulario es válido.
    * param {FormGroup} form - El formulario reactivo.
@@ -230,6 +203,40 @@ export class AgregarFacturatorComponent implements OnDestroy, OnInit {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
     const valor = form.get(campo)?.value;
     (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+
+  /**
+   * method loadMercancias
+   * description Carga los datos de mercancías relacionadas.
+   */
+
+  /**
+   * method abrirModalfacurator
+   * description Abre el modal para agregar facturadores.
+   */
+  abrirModalfacurator(): void {
+    this.modal = 'show';
+    this.getFacturator();
+  }
+  loadMercancias(): void {
+    this.service.getTable()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.tercerosProd = resp;
+      });
+  }
+
+  /**
+   * method loadLocalidad
+   * description Carga las localidades disponibles.
+   */
+  loadLocalidad(): void {
+    this.service.getLocalidaddata()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data): void => {
+        this.localidadList = data as Catalogo[];
+      });
   }
 
   /**
