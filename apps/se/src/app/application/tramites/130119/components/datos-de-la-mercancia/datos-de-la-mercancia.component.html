@@ -27,7 +27,8 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="umt" class="form-label">UMT : <i class="bi bi-question-circle-fill"></i></label>
+                    <label for="umt" class="form-label">UMT : <span class="bi bi-question-circle-fill" title="UMT"
+                        data-bs-toggle="tooltip"></span></label>
                     
                     <input type="text" id="umt" formControlName="umt" class="form-control">
                 </div>
@@ -52,7 +53,8 @@
         <div class="row mt-4">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="valorFacturaUSD" class="form-label">Valor factura USD *: <i class="bi bi-question-circle-fill"></i></label>
+                    <label for="valorFacturaUSD" class="form-label">Valor factura USD *: <span class="bi bi-question-circle-fill" title="Valor factura USD"
+                        data-bs-toggle="tooltip"></span></label>
                     
                     <input type="text" id="valorFacturaUSD" formControlName="valorFacturaUSD" class="form-control"
                         (change)="setValoresStore(datosDeLaMercanciaForm,'valorFacturaUSD','setValorFacturaUSD')">
@@ -98,15 +100,8 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="fechaExpedicionFactura" class="form-label">Fecha de expedición de factura *:</label>
-                    <input type="date" id="fechaExpedicionFactura" formControlName="fechaExpedicionFactura"
-                        class="form-control"
-                        (change)="setValoresStore(datosDeLaMercanciaForm,'fechaExpedicionFactura','setFechaExpedicionFactura')">
-                    <div
-                        *ngIf="datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.touched && datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.invalid">
-                        <small *ngIf="datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.errors?.['required']"
-                            class="text-danger">Este campo es obligatorio.</small>
-                    </div>
+                            <input-fecha [setFecha]="datosDeLaMercanciaForm.get('fechaExpedicionFactura')?.value" [datos]="fechaFinalInput"
+                                (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
                 </div>
             </div>
         </div>

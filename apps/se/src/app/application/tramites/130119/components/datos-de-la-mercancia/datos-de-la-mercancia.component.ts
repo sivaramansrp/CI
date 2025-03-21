@@ -7,18 +7,21 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent } from "@ng-mf/data-access-user";
+import { Catalogo, CatalogoSelectComponent, InputFecha } from "@ng-mf/data-access-user";
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
+import { FECHA } from '../../constants/aviso-importacion-maquinas.enum';
+import { InputFechaComponent } from "@ng-mf/data-access-user";
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
+
 /**
  * Componente encargado de gestionar los datos de la mercancía.
  */
 @Component({
   selector: 'app-datos-de-la-mercancia',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputFechaComponent],
   templateUrl: './datos-de-la-mercancia.component.html',
   styleUrl: './datos-de-la-mercancia.component.scss',
 })
@@ -26,6 +29,11 @@ import { Tramite130119Store } from '../../estados/store/tramite130119.store';
  * Componente encargado de gestionar los datos de la mercancía.
  */
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
+
+  /**
+   * Fecha final de entrada.
+   */
+  fechaFinalInput: InputFecha = FECHA;
 
   /**
    * Formulario para los datos de la mercancía.
@@ -154,6 +162,16 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+ /**
+   * Método para cambiar la fecha final.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.datosDeLaMercanciaForm.patchValue({
+      fechaExpedicionFactura: nuevo_valor,
+    });
+  this.setValoresStore(this.datosDeLaMercanciaForm,'fechaExpedicionFactura','setFechaExpedicionFactura');
+  }
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
    * Completa el subject destroyed$ para desuscribirse de todos los observables.

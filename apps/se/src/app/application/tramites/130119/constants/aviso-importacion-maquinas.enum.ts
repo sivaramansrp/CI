@@ -28,3 +28,9 @@ export const PASOS = [
     }
 
 ];
+
+export const FECHA = {
+    labelNombre:'Fecha de expedición de factura',
+    required: true,
+    habilitado: true,
+  }
