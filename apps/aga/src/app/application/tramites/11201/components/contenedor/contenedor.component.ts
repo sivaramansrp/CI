@@ -1,5 +1,5 @@
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
-import { AlertComponent, FECHA_INGRESO, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -10,11 +10,13 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { EventEmitter } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { FECHA_INGRESO, } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { Input } from '@angular/core';
+import { InputFecha, } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent, } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
@@ -25,6 +27,7 @@ import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.s
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TemplateRef } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
@@ -187,11 +190,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Monto de la solicitud.
-   */
-  amount: number = 328.5;
-
-  /**
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
@@ -210,7 +208,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
     { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
-  
+
   /**
    * Referencia a la clase o enumeración `TablaSeleccion`.
    * 
@@ -328,7 +326,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
-      amount: [this.amount, Validators.required],
       fechaDeIngreso: [
         this.solicitud11201State?.fechaDeIngreso,
         Validators.required,
@@ -713,6 +710,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
   }
 
+  /**
+   * Emite un evento para continuar.
+   *
+   * Este método emite un evento para indicar que se debe continuar con el siguiente paso.
+   * @returns {void}
+   */
   continuar(): void {
     this.continuarEvento.emit('');
   }
@@ -722,7 +725,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    *
    * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
    */
-  public cambioFechaDeIngreso(nuevo_valor: string) {
+  public cambioFechaDeIngreso(nuevo_valor: string): void {
     this.solicitudForm.get('fechaDeIngreso')?.setValue(nuevo_valor);
     this.solicitudForm.get('fechaDeIngreso')?.markAsUntouched();
   }
@@ -732,7 +735,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    *
    * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
    */
-  public cambioFechaIngreso(nuevo_valor: string) {
+  public cambioFechaIngreso(nuevo_valor: string): void {
     this.solicitudForm.get('fechaIngreso')?.setValue(nuevo_valor);
     this.solicitudForm.get('fechaIngreso')?.markAsUntouched();
   }
