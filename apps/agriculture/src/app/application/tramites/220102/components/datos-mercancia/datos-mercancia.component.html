@@ -6,7 +6,7 @@
     </div>
     <div class="row" >
 <div class="col-md-12">
-    <ng-alert [CONTENIDO]="IMPORTANTES"></ng-alert>
+    <ng-alert [CONTENIDO]="importante"></ng-alert>
 </div>        
     </div>
     <div class="row">
@@ -15,8 +15,8 @@
       </div>
       <div class="col-md-12">
         <app-tabla-dinamica
-        [tipoSeleccionTabla]="tipoSeleccionsoli"
-        [configuracionTabla]="configuracionColumnasoli"
+        [tipoSeleccionTabla]="tipoSeleccionarParaTabla"
+        [configuracionTabla]="configuracionParaEncabezadoDeTabla"
         [datos]="cuerpoTabla"
         (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
       >

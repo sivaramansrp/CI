@@ -29,16 +29,16 @@ import { DatosMercanciaService } from '../../services/datos-mercancia/datos-merc
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
-    * @property {TablaSeleccion} tipoSeleccionsoli
+    * @property {TablaSeleccion} tipoSeleccionarParaTabla
     * @description Tipo de selección para la tabla de solicitudes.
     */
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionarParaTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * @property {ConfiguracionColumna<MercanciaForm>[]} configuracionColumnasoli
+   * @property {ConfiguracionColumna<MercanciaForm>[]} configuracionParaEncabezadoDeTabla
    * @description Configuración de columnas para la tabla principal de mercancías.
    */
-  configuracionColumnasoli: ConfiguracionColumna<MercanciaForm>[] = [
+  configuracionParaEncabezadoDeTabla: ConfiguracionColumna<MercanciaForm>[] = [
     { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 1 },
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccionArancelaria, orden: 2 },
     { encabezado: 'Descripción de la mercancía', clave: (fila) => fila.descripcion, orden: 3 },
@@ -55,10 +55,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   ];
 
   /**
-   * @property {string} IMPORTANTES
+   * @property {string} importante
    * @description Constante que representa la etiqueta de "Importante".
    */
-  IMPORTANTES: string = IMPORTANTE.Importante;
+  importante: string = IMPORTANTE.Importante;
 
   /**
    * @property {MercanciaForm[]} cuerpoTabla

@@ -9,13 +9,13 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 const ROUTES_FITOSANITARO: Routes = [
   {
-    path: 'invocarModulo',
+    path: 'invocar-modulo',
     component: SolicitudPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'invocarModulo',
+    redirectTo: 'invocar-modulo',
   },
 ];
 
