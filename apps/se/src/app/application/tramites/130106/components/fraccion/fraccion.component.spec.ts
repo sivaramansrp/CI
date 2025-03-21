@@ -23,18 +23,18 @@ describe('FraccionComponent', () => {
     descripcion: 'Sample description',
     especifico: 'Specific info',
     justificacion: 'Justification text',
-    Observaciones: 'Observations text',
+    observaciones: 'Observations text',
     entidad: 'Entity 1',
     representacion: 'Rep 1',
     bloque: 'Block 1',
-    régimen: '',
+    regimen: '',
     clasificación: '',
-    solitudDescripcion: '',
-    disponible:'',
-    seleccionado:'',
-    solicitud:'',
-    producto:'',
-    
+    solicitudDescripcion: '',
+    disponible: '',
+    seleccionado: '',
+    solicitud: '',
+    producto: '',
+    selectRangoDias: []
   };
 
   beforeEach(async () => {
@@ -53,6 +53,7 @@ describe('FraccionComponent', () => {
       setEntidad: jest.fn(),
       setRepresentacion: jest.fn(),
       setBloque: jest.fn(),
+      selectRangoDias:jest.fn(),
       destroy: jest.fn(),
       setLoading: jest.fn(),
       setHasCache: jest.fn(),

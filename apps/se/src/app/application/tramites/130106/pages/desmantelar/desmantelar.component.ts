@@ -31,12 +31,12 @@ export class DesmantelarComponent {
     txtBtnSig: 'Continuar',
   };
  
-  /**
-   * Updates the `indice` property based on the value of the provided `AccionBoton` object.
-   * If the `valor` property of `AccionBoton` is between 1 and 4 (inclusive), it sets `indice` to `valor`.
-   * Depending on the `accion` property of `AccionBoton`, it either moves the wizard component forward or backward.
+ /**
+   * Actualiza la propiedad `indice` según el valor del objeto `AccionBoton` proporcionado.
+   * Si la propiedad `valor` de `AccionBoton` está entre 1 y 4 (inclusive), establece `indice` en `valor`.
+   * Dependiendo de la propiedad `accion` de `AccionBoton`, mueve el componente del asistente hacia adelante o hacia atrás.
    *
-   * @param {AccionBoton} e - The action button object containing `valor` and `accion` properties.
+   * @param {AccionBoton} e - El objeto del botón de acción que contiene las propiedades `valor` y `accion`.
    * @returns {void}
    */
   getValorIndice(e: AccionBoton): void {

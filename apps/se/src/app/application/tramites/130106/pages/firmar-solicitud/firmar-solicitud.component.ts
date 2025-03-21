@@ -9,7 +9,11 @@ export class FirmarSolicitudComponent {
   constructor(private router: Router) {
     // Constructor
   }
-
+/**
+ * Obtiene la firma proporcionada y, si es válida, redirige a la página de acuse.
+ * 
+ * @param ev - Cadena de texto que representa la firma obtenida.
+ */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {

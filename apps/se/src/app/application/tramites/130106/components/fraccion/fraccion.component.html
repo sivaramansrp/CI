@@ -66,7 +66,7 @@
             <div>
                 
                 <button type="button" class="btn btn-default me-2 btn-space">Cargar archivo</button>
-                <button type="button" class="btn btn-primary btn-space" (click)="paridasData()">Agregar</button>
+                <button type="button" class="btn btn-primary btn-space" (click)="generarPartidas()">Agregar</button>
                 
             </div>
         </div>
@@ -177,7 +177,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <label class="form-label" for="Observaciones"> Observaciones:</label>
-                              <textarea class="form-control" id="Observaciones" formControlName="Observaciones" style="height: 90px;" (change)="setValoresStore(fraccionForm,'Observaciones', 'setObservaciones')">
+                              <textarea class="form-control" id="observaciones" formControlName="observaciones" style="height: 90px;" (change)="setValoresStore(fraccionForm,'observaciones', 'setObservaciones')">
         
                               </textarea>
                         </div>

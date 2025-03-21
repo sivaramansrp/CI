@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
    
 export interface Solicitud130106State {
 
-    régimen: string;
+    regimen: string;
     clasificación: string;
-    solitudDescripcion: string
+    solicitudDescripcion: string
     fraccion: string
     cantidad: string;
     factura: string;
@@ -16,7 +16,7 @@ export interface Solicitud130106State {
     descripcion: string;
     especifico: string;
     justificacion: string;
-    Observaciones: string;
+    observaciones: string;
     entidad: string;
     representacion: string;
     bloque: string;
@@ -24,14 +24,15 @@ export interface Solicitud130106State {
     seleccionado:string;
     solicitud:string;
     producto:string;
+    selectRangoDias: string[]
 
 }
 
 export function createInitialState(): Solicitud130106State {
     return {
-        régimen: '',
+        regimen: '',
         clasificación: '',
-        solitudDescripcion: '',
+        solicitudDescripcion: '',
         fraccion: '',
         cantidad: '',
         factura: '',
@@ -41,7 +42,7 @@ export function createInitialState(): Solicitud130106State {
         descripcion: '',
         especifico: '',
         justificacion: '',
-        Observaciones: '',
+        observaciones: '',
         entidad: '',
         representacion: '',
         bloque: '',
@@ -49,6 +50,7 @@ export function createInitialState(): Solicitud130106State {
         seleccionado:'',
         solicitud:'',
         producto:'',
+        selectRangoDias:['']
     };
 }
 @Injectable({
@@ -116,10 +118,10 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
             justificacion,
         }));
     }
-    public setObservaciones(Observaciones: string) {
+    public setObservaciones(observaciones: string) {
         this.update((state) => ({
             ...state,
-            Observaciones,
+            observaciones,
         }));
     }
     public setEntidad(entidad: string) {
@@ -141,10 +143,10 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
         }));
     }
 
-    public setRégimen(régimen: string) {
+    public setRegimen(regimen: string) {
         this.update((state) => ({
             ...state,
-            régimen,
+            regimen,
         }));
     }
 
@@ -155,10 +157,10 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
         }));
     }
 
-    public setSolitudeDescripcion(solitudDescripcion: string) {
+    public setSolicitudDescripcion(solicitudDescripcion: string) {
         this.update((state) => ({
             ...state,
-            solitudDescripcion,
+            solicitudDescripcion,
         }));
     }
     public setDisponible(disponible: string) {
@@ -186,6 +188,10 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
             producto,
         }));
     }
+    updateSelectRangoDias(selectRangoDias: string[]) {
+        this.update({ selectRangoDias });
+      }
+  
 
 }
 

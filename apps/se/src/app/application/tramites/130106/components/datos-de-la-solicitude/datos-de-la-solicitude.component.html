@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-titulo titulo="Datos del tramite a realizer" />
+    <ng-titulo titulo="Datos del trámite a realizer" />
     <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
@@ -10,9 +10,9 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="régimen"
+                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen"
                     [label]="'Régimen al que se destinará la mercancía'" [required]="true"
-                    name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'régimen', 'setRégimen')"></app-catalogo-select>
+                    name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'regimen', 'setRegimen')"></app-catalogo-select>
                 <br>
                 <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificación"
                     [label]="'Clasificación del régimen'" [required]="true"
@@ -32,7 +32,7 @@
             <div class="col-md-6">
                 <label for="descripcion">Descripción de la mercancía*:</label>
                 <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
-                    formControlName="solitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'solitudDescripcion', 'setSolitudeDescripcion')"></textarea>
+                    formControlName="solicitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'solicitudDescripcion', 'setSolicitudDescripcion')"></textarea>
             </div>
         </div>
     </form>

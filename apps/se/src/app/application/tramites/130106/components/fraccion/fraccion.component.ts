@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
-import { AVISO } from '../../constants/fraccion.enum';
+import { AVISO } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/constantes/130106/fraccion.enum'
 import { Partidas } from '@libs/shared/data-access-user/src/core/models/130106/partidas.model';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
@@ -181,6 +181,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarFormulario(); // Inicializa el formulario con los valores predeterminados
+    this.selectRangoDias = this.solicitudState.selectRangoDias;
   }
 
   /**
@@ -220,7 +221,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
       valorTotal: [this.solicitudState.umt, Validators.required],
       especifico: [this.solicitudState.especifico, Validators.required],
       justificacion: [this.solicitudState.justificacion, Validators.required],
-      Observaciones: [this.solicitudState.Observaciones],
+      observaciones: [this.solicitudState.observaciones],
       entidad: [this.solicitudState.entidad, Validators.required],
       representacion: [this.solicitudState.representacion, Validators.required],
       bloque: [this.solicitudState.bloque, Validators.required],
@@ -228,7 +229,8 @@ export class FraccionComponent implements OnInit, OnDestroy {
       seleccionado: [this.solicitudState.seleccionado, Validators.required],
     });
     this.fraccionForm.get('bloque')?.valueChanges.subscribe(() => {
-      this.selectRangoDias =["ESTADOS UNIDOS DE AMERICA CANADA"]
+      this.selectRangoDias =["ESTADOS UNIDOS DE AMERICA CANADA"];
+      this.tramite130106Store.updateSelectRangoDias(this.selectRangoDias)
       
     });
     this.updateformfied();
@@ -244,7 +246,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
   /**
    * Convierte los datos del formulario en una nueva partida y la agrega a la lista de partidas.
    */
-  paridasData(): void {
+  generarPartidas(): void {
     const FORMDATA = this.fraccionForm.value; // Obtiene los datos del formulario
     const NEWPARTIDA: Partidas = {
       cantidad: FORMDATA.cantidad, // Asigna la cantidad
