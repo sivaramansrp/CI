@@ -11,11 +11,11 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
-  selector: 'app-cancelacion-de-solicitus',
-  templateUrl: './cancelacion-de-solicitus.component.html',
-  styleUrl: './cancelacion-de-solicitus.component.scss',
+  selector: 'app-cancelacion-de-solicitud',
+  templateUrl: './cancelacion-de-solicitud.component.html',
+  styleUrl: './cancelacion-de-solicitud.component.scss',
 })
-export class CancelacionDeSolicitusComponent implements OnInit, OnDestroy {
+export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
   solicitudForm?: FormGroup;
   private destroyNotifier$ = new Subject<void>();
   public cancelacionForm!: FormGroup;

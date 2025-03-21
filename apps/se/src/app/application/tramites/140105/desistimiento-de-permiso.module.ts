@@ -1,6 +1,6 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SelectCatalogosComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { BusquedaFolioComponent } from './pages/busqueda-folio/busqueda-folio.component';
-import { CancelacionDeSolicitusComponent } from './components/cancelacion-de-solicitus/cancelacion-de-solicitus.component';
+import { CancelacionDeSolicitudComponent } from './components/cancelacion-de-solicitud/cancelacion-de-solicitud.component';
 import { CommonModule } from '@angular/common';
 import { DesistimientoDePermisoRoutingModule } from './desistimiento-de-permiso-routing.module';
 import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
@@ -18,7 +18,7 @@ import { ToastrService } from 'ngx-toastr';
     PasoTresComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    CancelacionDeSolicitusComponent,
+    CancelacionDeSolicitudComponent,
     BusquedaFolioComponent
   ],
   imports: [
