@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, TituloComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
@@ -12,7 +12,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
   standalone: true,
-  imports: [AnexarDocumentosComponent,TituloComponent,AlertComponent]
+  imports: [TituloComponent,AlertComponent, AnexarDocumentosComponent],
 })
 export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS;
