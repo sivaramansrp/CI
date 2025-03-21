@@ -1,5 +1,5 @@
 import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -24,13 +24,15 @@ import { InputHoraComponent } from '../input-hora/input-hora.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    InputHoraComponent,    
+    InputHoraComponent,
   ],
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
 })
 export class AgregarTransporteComponent implements OnInit, OnChanges {
   @Input() tipo!: string;
+  @Input() tablaTransporte!: any[];
+  @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<(TransporteAereo | TransporteCarretero | TransporteFerroviario | TransporteMaritimo | TransporteOtro | TransportePeatonal)[]>();
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
   @ViewChild('btnCerrarModal') btnCerrarModal!: ElementRef;
 
@@ -52,7 +54,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   camposFormulario!: CampoForm[];
   headerTabla!: ItemTransporte[];
 
-  bodyTabla: any[] = []
+  bodyTabla: any[] = [];
 
   carreteroForma!: FormGroup;
   ferroviarioForma!: FormGroup;
@@ -83,6 +85,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     if (changes['tipo'] && changes['tipo'].currentValue) {
       this.headerTabla = this.tipoTabla();
 
+    }
+
+    if (changes['tablaTransporte'] && changes['tablaTransporte'].currentValue) {
+      this.bodyTabla = this.tablaTransporte;
     }
   }
 
@@ -224,7 +230,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
         this.bodyTabla.push(TRANSPORTE);
         break;
       }
-    
+
       case 3: {
         const TRANSPORTE: TransporteAereo = this.aereoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
@@ -253,9 +259,9 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
         this.bodyTabla.push(TRANSPORTE);
         break;
       }
-
     }
-
+    
+    this.enviarTransporteTabla()
     this.cerrarModal();
   }
 
@@ -272,5 +278,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     }
     return ANIOS;
   }
+
+  enviarTransporteTabla(): void {
+    this.datosTabla.emit(this.bodyTabla);
+  }
+
 
 }

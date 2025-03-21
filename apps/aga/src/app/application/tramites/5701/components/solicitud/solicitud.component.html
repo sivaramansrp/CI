@@ -337,7 +337,7 @@
               @if(colapsable){
               <div class="panel-collapse collapse in" id="panel-01">
                 <div class="panel-body">
-                  <crosslist [fechas]="selectRangoDias"></crosslist>
+                  <crosslist [fechas]="selectRangoDias" [fechasSeleccionadas]="solicitudState.fechasSeleccionadas" (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
                 </div>
               </div>
               }
@@ -511,7 +511,7 @@
       </div>
       @if (vehiculo.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"></lib-agregar-transporte>
+        <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value" (datosTabla)="changeAgregarVehiculo($event)" [tablaTransporte]="itemsVehiculo.value" ></lib-agregar-transporte>
       </div>
       }
     </div>

@@ -301,6 +301,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('transporteArriboSalida') as FormGroup;
   }
 
+  get itemsVehiculo(): FormArray {
+    return this.vehiculo.get('vehiculoDatos') as FormArray;
+  }
+
 
   /**
    * Verifica si la solicitud seleccionada es de tipo individual.
@@ -622,7 +626,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState.monto, [Validators.required]],
       })
     });
-    debugger
+    // debugger
     this.mostrarRangoFechas = this.solicitudState?.rangoFechas;
     this.selectRangoDias = this.solicitudState?.selectRangoDias;
 
@@ -1168,6 +1172,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  changeAgregarVehiculo(event: any): void {
+    console.log(event);
+    
+  }
+
+  changeCrosslist(fechas: string[]) {
+    fechas.forEach((fecha) => {
+      const existe = this.fechasSeleccionadas.controls.find((control) => control.value === fecha);
+      if (!existe) {
+        this.fechasSeleccionadas.push(new FormControl(fecha));
+      }
+    });
+
+    //Aqui el this.setValorStore al crosslist
+
+    this.setValoresStore(this.despacho, 'fechasSeleccionadas', 'setFechasSeleccionadas');
   }
 
 }
