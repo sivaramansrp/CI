@@ -9,12 +9,36 @@ import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
   providedIn: 'root'
 })
 export class ServicioDeMensajesService {
+  /**
+   * @description Subject that acts as the source of boolean messages.
+   * It is used to communicate state changes or signals across the application.
+   * @type {Subject<boolean>}
+   */
   private fuenteDelMensaje = new Subject<boolean>();
+  /**
+   * @description Observable that emits messages to subscribers.
+   * Components can subscribe to this observable to react to state changes.
+   * @type {Observable<boolean>}
+   */
   mensaje$ = this.fuenteDelMensaje.asObservable();
-
+/**
+   * @description Subject that manages permission data updates.
+   * Used to notify subscribers about changes in permission data state.
+   * @type {Subject<boolean>}
+   */
   private datosDePermiso = new Subject<boolean>();
-  datos$ = this.datosDePermiso.asObservable();
 
+  /**
+   * @description Observable that emits permission data status to subscribers.
+   * @type {Observable<boolean>}
+   */
+  datos$ = this.datosDePermiso.asObservable();
+/**
+   * @description Service constructor.
+   * Initializes the service and provides access to the DesistimientoStore.
+   * 
+   * @param {DesistimientoStore} desistimientoStore - Store responsible for managing form data.
+   */
   constructor(private readonly desistimientoStore: DesistimientoStore) {
 
   }

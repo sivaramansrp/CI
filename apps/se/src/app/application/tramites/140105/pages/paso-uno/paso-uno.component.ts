@@ -29,6 +29,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Cancelación de solicitud de permisos', component: 'cancelacion-de-solicitus' },
   ];
+  /**
+   * @description Flag indicating whether the search section should be displayed.
+   * This value is controlled based on messages received from the service.
+   * @type {boolean}
+   * @default false
+   */
   public mostrarBusqueda: boolean = false;
 
 
