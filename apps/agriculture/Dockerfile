@@ -7,13 +7,13 @@ WORKDIR /app
 # Install dependencies
 COPY . .
 # RUN pwd && ls
-RUN npm ci
+# RUN npm ci
 
 # Install Nx CLI globally
 RUN npm install -g nx
 
 # Build the app using Nx.
-# RUN npm install --force --no-audit
+RUN npm install --force --no-audit
 RUN npx nx build agriculture --configuration=development
 #RUN pwd && ls -a /app/dist/apps/agriculture
 
