@@ -15,7 +15,13 @@ export interface Tramite260212State {
   setCorreoElectronico:string,
   setMunicipio:string,
   setLocalidad:string,
-  setColonia:string
+  setColonia:string,
+  setCaller:string,
+  setLada:string,
+  setTelefono:string,
+  setCodigoPostal:string,
+  setRegimen:catalogoResponse|null,
+  setEntradas:catalogoResponse|null,
 }
 
 export function createInitialState(): Tramite260212State {
@@ -30,7 +36,13 @@ export function createInitialState(): Tramite260212State {
     setCorreoElectronico:'',
     setMunicipio:'',
     setLocalidad:'',
-    setColonia:''
+    setColonia:'',
+    setCaller:'',
+    setLada:'',
+    setTelefono:'',
+    setCodigoPostal:'',
+    setRegimen:null,
+    setEntradas:null
   };
 }
 @Injectable({
@@ -116,6 +128,48 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     this.update((state) => ({
       ...state,
       setColonia,
+    }));
+  }
+
+  public setCaller(setCaller: string):void {
+    this.update((state) => ({
+      ...state,
+      setCaller,
+    }));
+  }
+
+  public setLada(setLada: string):void {
+    this.update((state) => ({
+      ...state,
+      setLada,
+    }));
+  }
+
+  public setTelefono(setTelefono: string):void {
+    this.update((state) => ({
+      ...state,
+      setTelefono,
+    }));
+  }
+
+  public setCodigoPostal(setCodigoPostal: string):void {
+    this.update((state) => ({
+      ...state,
+      setCodigoPostal,
+    }));
+  }
+
+  public setRegimen(setRegimen: catalogoResponse):void {
+    this.update((state) => ({
+      ...state,
+      setRegimen,
+    }));
+  }
+
+  public setEntradas(setEntradas: catalogoResponse):void {
+    this.update((state) => ({
+      ...state,
+      setEntradas,
     }));
   }
 }

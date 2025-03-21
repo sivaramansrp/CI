@@ -18,6 +18,12 @@ export class Tramite260212Query extends Query<Tramite260212State> {
   selectedMunicipio$ = this.select((state) => state.setMunicipio);
   selectedLocalidad$ =this.select((state) => state.setLocalidad);
   selectedColonia$ =this.select((state) => state.setColonia);
+  selectedCaller$ =this.select((state) => state.setCaller);
+  selectedLada$ =this.select((state) => state.setLada);
+  SelectedTelefono$=this.select((state) => state.setTelefono);
+  SelectedCodigoPostal$=this.select((state) => state.setCodigoPostal)
+  selectedRegimen$=this.select((state) => state.setRegimen);
+  selectedEntradas$=this.select((state) => state.setEntradas);
   selecteDespecificarClasificacion$ = this.select((state) => state.setDespecificarClasificacion);
   constructor(private tramiteStore: Tramite260212Store) {
     super(tramiteStore);

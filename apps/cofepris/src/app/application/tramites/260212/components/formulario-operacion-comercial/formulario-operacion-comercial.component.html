@@ -20,13 +20,13 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="clave" [label]="'Régimen*:'" [required]="true" name="régimen"
-                        formControlName="regimen">
+                        formControlName="regimen" (change)="updateRegimen()">
                     </app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-8 left-align">
                 <app-catalogo-select [catalogo]="clave" [label]="'Aduanas de entradas'" [required]="false" name="clave"
-                    formControlName="entradas">
+                    formControlName="entradas" (change)="updateEntradas()">
                 </app-catalogo-select>
             </div>
         </div>

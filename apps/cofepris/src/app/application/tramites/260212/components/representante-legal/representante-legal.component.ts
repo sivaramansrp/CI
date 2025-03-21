@@ -63,6 +63,8 @@ export class RepresentanteLegalComponent implements OnInit {
       primerApellido: [{ value: '', disabled: true }],
       segundoApellido: [{ value: '', disabled: true }],
     });
+
+
   }
 
   /**

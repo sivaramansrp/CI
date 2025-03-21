@@ -63,6 +63,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   municipio$ = this.tramite260212Query.selectedMunicipio$
   localidad$ = this.tramite260212Query.selectedLocalidad$
   colonia$ = this.tramite260212Query.selectedColonia$
+  caller$ = this.tramite260212Query.selectedCaller$
+  lada$ = this.tramite260212Query.selectedLada$
+  telefono$ =this.tramite260212Query.SelectedTelefono$
+  codigoPostal$=this.tramite260212Query.SelectedCodigoPostal$
 
   /** Formulario principal de datos del establecimiento */
   datosEstablecimientoForm!: FormGroup;
@@ -194,6 +198,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosEstablecimientoForm.get('colonia')?.setValue(colonia);
       }
     });
+    this.caller$.pipe(takeUntil(this.destroy$)).subscribe((caller) => {
+      if (caller) {
+        this.datosEstablecimientoForm.get('caller')?.setValue(caller);
+      }
+    });
+
+    this.lada$.pipe(takeUntil(this.destroy$)).subscribe((lada) => {
+      if (lada) {
+        this.datosEstablecimientoForm.get('lada')?.setValue(lada);
+      }
+    });
+    this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
+      if (telefono) {
+        this.datosEstablecimientoForm.get('telefono')?.setValue(telefono);
+      }
+    });
+    this.codigoPostal$.pipe(takeUntil(this.destroy$)).subscribe((codigoPostal) => {
+      if (codigoPostal) {
+        this.datosEstablecimientoForm.get('codigoPostal')?.setValue(codigoPostal);
+      }
+    });
   }
 
   /**
@@ -301,11 +326,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el estado seleccionado del formulario y lo guarda en el store
    */
-  getMunicipios(): void {
+  getEstado(): void {
     const SELECTED_ESTADO = this.datosEstablecimientoForm.get('estado')?.value;
     this.tramite260212Store.setSelectedEstado(SELECTED_ESTADO);
   }
-
+  getMunicipios(): void {
+    const SELECTED_MUNICIPIO = this.datosEstablecimientoForm.get('municipio')?.value;
+    this.tramite260212Store.setSelectedEstado(SELECTED_MUNICIPIO);
+  }
   /**
    * Obtiene el rfcDelResponsableSanitario seleccionado del formulario y lo guarda en el store
    */
@@ -349,6 +377,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260212Store.setColonia(COLONIA);
   }
 
+  updateCaller(): void {
+    const CALLER = this.datosEstablecimientoForm.get('caller')?.value;
+    this.tramite260212Store.setCaller(CALLER);
+  }
+
+  updateLada(): void {
+    const LADA = this.datosEstablecimientoForm.get('lada')?.value;
+    this.tramite260212Store.setLada(LADA);
+  }
+
+  updateTelefono():void{
+    const TELEFONO = this.datosEstablecimientoForm.get('telefono')?.value;
+    this.tramite260212Store.setTelefono(TELEFONO);
+  }
+
+  updateCodigoPostal():void{
+    const CODIGO_POSTAL = this.datosEstablecimientoForm.get('codigoPostal')?.value;
+    this.tramite260212Store.setCodigoPostal(CODIGO_POSTAL);
+  }
   /*
   * Método del ciclo de vida de Angular - destruye el componente
 */
