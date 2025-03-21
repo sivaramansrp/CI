@@ -136,32 +136,61 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
 
-
+  /**
+   * Configuración para la selección de filas en la tabla de solicitudes.
+   * Actualmente está desactivada (sin selección definida).
+   */
   solicitudSeleccionTabla = TablaSeleccion.UNDEFINED;
+
+  /**
+   * Configuración de las columnas de la tabla de solicitudes.
+   * Define los encabezados, claves y orden para mostrar los datos de solicitudes.
+   */
   solicitudConfiguracionTabla: ConfiguracionColumna<SolicitudDatos>[] = [
     {
-      encabezado: 'Fecha creacion',
+      /**
+       * Columna para mostrar la fecha de creación de la solicitud.
+       * Utiliza la propiedad 'fechaCreacion' del modelo 'SolicitudDatos'.
+       */
+      encabezado: 'Fecha creación',
       clave: (item: SolicitudDatos) => item.fechaCreacion,
       orden: 1,
     },
     {
-      encabezado: 'Mercancia',
+      /**
+       * Columna para mostrar la mercancía asociada a la solicitud.
+       * Utiliza la propiedad 'mercancia' del modelo 'SolicitudDatos'.
+       */
+      encabezado: 'Mercancía',
       clave: (item: SolicitudDatos) => item.mercancia,
       orden: 2,
     },
     {
+      /**
+       * Columna para mostrar la cantidad asociada a la solicitud.
+       * Utiliza la propiedad 'cantidad' del modelo 'SolicitudDatos'.
+       */
       encabezado: 'Cantidad',
       clave: (item: SolicitudDatos) => item.cantidad,
       orden: 3,
     },
     {
+      /**
+       * Columna para mostrar el proveedor asociado a la solicitud.
+       * Utiliza la propiedad 'proovedor' del modelo 'SolicitudDatos'.
+       */
       encabezado: 'Proveedor',
       clave: (item: SolicitudDatos) => item.proovedor,
       orden: 4,
-    }
+    },
   ];
 
+  /**
+   * Datos de las solicitudes.
+   * Inicialmente, es un arreglo vacío que se llenará con datos dinámicos.
+   */
   solicitudDatos: SolicitudDatos[] = [];
+
   /**
    * Configuración de las columnas de la tabla de mercancías.
    * Define las columnas y cómo se obtienen los datos de cada mercancía.
@@ -407,7 +436,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.solicitudDatosService.obtenerSolicitud().subscribe({
       next: (respuesta: Solicitud) => {
         this.solicitud260101Store.setRazonSocial(respuesta.razonSocial);
-        this.solicitud260101Store.setCorreoElectronico(respuesta.correoElectronico);
+        this.solicitud260101Store.setCorreoElectronico(
+          respuesta.correoElectronico
+        );
         this.solicitud260101Store.setCodigoPostal(respuesta.codigoPostal);
         this.solicitud260101Store.setMunicipio(respuesta.municipio);
         this.solicitud260101Store.setLocalidad(respuesta.localidad);
@@ -415,7 +446,9 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
         this.solicitud260101Store.setCalle(respuesta.calle);
         this.solicitud260101Store.setLada(respuesta.lada);
         this.solicitud260101Store.setTelefono(respuesta.telefono);
-        this.solicitud260101Store.setLegalRazonSocial(respuesta.legalRazonSocial);
+        this.solicitud260101Store.setLegalRazonSocial(
+          respuesta.legalRazonSocial
+        );
         this.solicitud260101Store.setApellidoPaterno(respuesta.apellidoPaterno);
         this.solicitud260101Store.setApellidoMeterno(respuesta.apellidoMeterno);
       },
@@ -480,7 +513,6 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       },
     });
   }
-
 
   /**
    * Abre el modal para modificar mercancías.
