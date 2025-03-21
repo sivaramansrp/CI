@@ -1,4 +1,4 @@
-export const PASOSACUICULTURA = [
+export const PASOS = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',
@@ -7,7 +7,7 @@ export const PASOSACUICULTURA = [
     },
     {
         indice: 2,
-        titulo: 'Anexar necesarios',
+        titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
     },
@@ -16,7 +16,7 @@ export const PASOSACUICULTURA = [
         titulo: 'Firmar solicitud',
         activo: false,
         completado: false,
-    },
+    }
 ];
 
 export const IMPORTANTE = {

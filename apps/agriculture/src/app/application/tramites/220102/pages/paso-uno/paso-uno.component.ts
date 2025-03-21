@@ -17,7 +17,7 @@ export class PasoUnoComponent {
    * @property {number} indice - El índice de la pestaña seleccionada.
    * @default 1
    */
-  indice: number = 2;
+  indice: number = 1;
 
   /**
    * Lista de las secciones del formulario, cada sección tiene su índice, título y componente asociado.

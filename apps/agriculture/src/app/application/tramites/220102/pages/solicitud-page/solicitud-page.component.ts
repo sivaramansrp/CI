@@ -15,8 +15,9 @@ import {
 
   WizardComponent
 } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constantes/fitosanitario.enum';
 
-import { PASOSACUICULTURA } from '../../constantes/fitosanitario.enum';
+
 /**
  * Componente principal de la página de solicitud, que gestiona la navegación de pasos dentro de un formulario tipo wizard.
  * 
@@ -33,7 +34,7 @@ export class SolicitudPageComponent {
    * Lista de los pasos definidos en el formulario para el wizard de solicitud.
    * Esta lista está obtenida de la constante `PASOSACUICULTURA`.
    */
-  pasos: ListaPasosWizard[] = PASOSACUICULTURA;
+  pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * Índice actual del paso en el formulario. Comienza en 1.
