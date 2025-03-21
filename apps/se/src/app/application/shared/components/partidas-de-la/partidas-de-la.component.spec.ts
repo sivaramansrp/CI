@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { PartidasDeLaComponent } from './partidas-de-la.component';
-import { EventEmitter } from '@angular/core';
 
 describe('PartidasDeLaComponent', () => {
   let component: PartidasDeLaComponent;
@@ -16,12 +15,14 @@ describe('PartidasDeLaComponent', () => {
     fixture = TestBed.createComponent(PartidasDeLaComponent);
     component = fixture.componentInstance;
 
-  
+    // Initialize inputs
     component.form = new FormBuilder().group({
-      testField: [''],
+      cantidad: [''],
+      descripcion: [''],
     });
     component.formForTotalCount = new FormBuilder().group({
-      totalField: [''],
+      cantidadTotal: [{ value: '', disabled: true }],
+      valorTotalUSD: [{ value: '', disabled: true }],
     });
     component.tableHeaderData = [];
     component.tableBodyData = [];
@@ -61,10 +62,10 @@ describe('PartidasDeLaComponent', () => {
 
   it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
     const form = new FormBuilder().group({
-      field: ['value'],
+      cantidad: ['10'],
     });
-    const campo = 'field';
-    const metodoNombre = 'testMethod';
+    const campo = 'cantidad';
+    const metodoNombre = 'setCantidad';
     jest.spyOn(component.setValoresStoreEvent, 'emit');
 
     component.setValoresStore(form, campo, metodoNombre);
@@ -77,16 +78,16 @@ describe('PartidasDeLaComponent', () => {
   });
 
   it('should return true if form control is invalid in esInvalido', () => {
-    component.form.get('testField')?.setValidators(() => ({ invalid: true }));
-    component.form.get('testField')?.markAsTouched();
+    component.form.get('cantidad')?.setValidators(() => ({ invalid: true }));
+    component.form.get('cantidad')?.markAsTouched();
 
-    expect(component.esInvalido('testField')).toBe(true);
+    expect(component.esInvalido('cantidad')).toBe(true);
   });
 
   it('should return false if form control is valid in esInvalido', () => {
-    component.form.get('testField')?.setValidators(() => null);
-    component.form.get('testField')?.markAsTouched();
+    component.form.get('cantidad')?.setValidators(() => null);
+    component.form.get('cantidad')?.markAsTouched();
 
-    expect(component.esInvalido('testField')).toBe(false);
+    expect(component.esInvalido('cantidad')).toBe(false);
   });
 });
