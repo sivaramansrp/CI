@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DatosDeSolicitud, Solicitud } from '../models/solicitud-datos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Mercancia, MercanciaCatalogos, MercanciaCrossList } from '../models/mercancia.model';
+import { DestinatarioImitar, Mercancia, MercanciaCatalogos, MercanciaCrossList } from '../models/mercancia.model';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { Destinatario, DestinatarioCatalogos } from '../models/destinatario.model';
 import { Fabricante } from '../models/fabricante.model';
@@ -66,4 +66,14 @@ export class SolicitudDatosService {
   obtenerCrosslisto():Observable<MercanciaCrossList>{
     return this.http.get<MercanciaCrossList>('../../../assets/json/260101/mercancia-cross-list.json').pipe();
   }
+
+  obtenerPagoDerechos():Observable<CatalogosSelect>{
+    return this.http.get<CatalogosSelect>('../../../assets/json/260101/pago-derechos.json').pipe();
+  }
+
+  obtenerDestinatarioImitar(): Observable<DestinatarioImitar>{
+    return this.http.get<DestinatarioImitar>('../../../assets/json/260101/destinatario-mock.json').pipe();
+  }
+  
+  
 }

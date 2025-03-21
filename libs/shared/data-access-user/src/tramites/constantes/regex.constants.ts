@@ -71,4 +71,6 @@ export const REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
  */
 export const REGEX_FECHA_VALIDA = /^\d{2}\/\d{2}\/\d{4}$/;
 
-export const REGEX_CORREO_ELECTRONICO = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
+export const REGEX_CORREO_ELECTRONICO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
+
+export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;

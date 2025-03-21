@@ -5,9 +5,13 @@ import {
   CatalogosSelect,
   InputFecha,
 } from '@libs/shared/data-access-user/src';
-import { Solicitud260101State, Solicitud260101Store } from '../../estados/tramites260101.store';
+import {
+  Solicitud260101State,
+  Solicitud260101Store,
+} from '../../estados/tramites260101.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
+import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 
 @Component({
   selector: 'app-pago-derechos',
@@ -16,25 +20,7 @@ import { Solicitud260101Query } from '../../estados/tramites260101.query';
 })
 export class PagoDerechosComponent implements OnInit, OnDestroy {
   pagoDeDerechosForm!: FormGroup;
-  bancoCatalogo: CatalogosSelect = {
-    labelNombre: 'Banco',
-    required: false,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'TECATE',
-      },
-      {
-        id: 2,
-        descripcion: 'TIJUANA',
-      },
-      {
-        id: 3,
-        descripcion: 'TUXPAN,VER,',
-      },
-    ],
-  };
+  bancoCatalogo: CatalogosSelect = {} as CatalogosSelect;
 
   fechaPago: InputFecha = {
     labelNombre: 'Fecha de pago',
@@ -45,10 +31,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   constructor(
     public fb: FormBuilder,
+    public solicitudDatosService: SolicitudDatosService,
     public solicitud260101Store: Solicitud260101Store,
     public solicitud260101Query: Solicitud260101Query
   ) {
     //
+    this.obtenerPagoDerechos();
   }
 
   ngOnInit() {
@@ -61,20 +49,30 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
       importeDePago: [this.solicitud260101State.importeDePago],
     });
 
-    this.solicitud260101Query.seleccionarSolicitud$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((res:Solicitud260101State)=>{
-        this.solicitud260101State = res;
-        this.pagoDeDerechosForm.patchValue({
-          claveDeReferencia: this.solicitud260101State.claveDeReferencia,
-          cadenaDeDependencia: this.solicitud260101State.cadenaDeDependencia,
-          banco: this.solicitud260101State.banco,
-          liaveDePago: this.solicitud260101State.liaveDePago,
-          fechaDePago: this.solicitud260101State.fechaDePago,
-          importeDePago: this.solicitud260101State.importeDePago,
-        });
+    this.solicitud260101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((res: Solicitud260101State) => {
+          this.solicitud260101State = res;
+          this.pagoDeDerechosForm.patchValue({
+            claveDeReferencia: this.solicitud260101State.claveDeReferencia,
+            cadenaDeDependencia: this.solicitud260101State.cadenaDeDependencia,
+            banco: this.solicitud260101State.banco,
+            liaveDePago: this.solicitud260101State.liaveDePago,
+            fechaDePago: this.solicitud260101State.fechaDePago,
+            importeDePago: this.solicitud260101State.importeDePago,
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  obtenerPagoDerechos() {
+    this.solicitudDatosService.obtenerPagoDerechos().subscribe({
+      next:((res:CatalogosSelect)=>{
+        this.bancoCatalogo = res;
       })
-    ).subscribe();
+    });
   }
 
   setClaveDeReferencia(event: Event) {

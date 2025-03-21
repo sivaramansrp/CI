@@ -4,6 +4,7 @@ import {
   Catalogo,
   CatalogosSelect,
   REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO,
 } from '@libs/shared/data-access-user/src';
 import {
   Solicitud260101State,
@@ -13,6 +14,7 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { DestinatarioCatalogos } from '../../models/destinatario.model';
+import { DestinatarioImitar } from '../../models/mercancia.model';
 
 @Component({
   selector: 'app-modificar-destinatario',
@@ -41,6 +43,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
   ) {
     this.obtenerDestinatarioCatalogos();
     this.obtenerDestinatarioRadio();
+    this.obtenerDestinatarioImitar();
   }
 
   ngOnInit(): void {
@@ -51,11 +54,11 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
       ],
       modificarRFC: [
         this.solicitud260101State.modificarRFC,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(13)],
       ],
       denominacion: [
         this.solicitud260101State.denominacion,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(30)],
       ],
       domicilioPais: [
         { value: this.solicitud260101State.domicilioPais, disabled: true },
@@ -75,54 +78,61 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
       ],
       domicilioCodigo: [
         this.solicitud260101State.domicilioCodigo,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(10)],
       ],
       domicilioColonia: [this.solicitud260101State.domicilioColonia],
       domiciliCalle: [
         this.solicitud260101State.domiciliCalle,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(68)],
       ],
       domiciliNumeroExterior: [
         this.solicitud260101State.domiciliNumeroExterior,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(10)],
       ],
       domiciliNumeroInterior: [
         this.solicitud260101State.domiciliNumeroInterior,
+        [Validators.maxLength(10)],
       ],
       domiciliLada: [this.solicitud260101State.domiciliLada],
-      domiciliTelefono: [this.solicitud260101State.domiciliTelefono],
+      domiciliTelefono: [
+        this.solicitud260101State.domiciliTelefono,
+        [Validators.maxLength(10), Validators.pattern(REGEX_TELEFONO)],
+      ],
       domiciliCorreoElectronioco: [
         this.solicitud260101State.domiciliCorreoElectronioco,
-        [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
+        [Validators.pattern(REGEX_CORREO_ELECTRONICO),Validators.maxLength(30)],
       ],
     });
 
-    this.solicitud260101Query.seleccionarSolicitud$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((res: Solicitud260101State) => {
-        this.solicitud260101State = res;
-        this.modificarDestinatarioForm.patchValue({
-          tipoPersona: this.solicitud260101State.tipoPersona,
-          modificarRFC: this.solicitud260101State.modificarRFC,
-          denominacion: this.solicitud260101State.denominacion,
-          domicilioPais: this.solicitud260101State.domicilioPais,
-          domicilioEstado: this.solicitud260101State.domicilioEstado,
-          domicilioMunicipio: this.solicitud260101State.domicilioMunicipio,
-          domicilioLocalidad: this.solicitud260101State.domicilioLocalidad,
-          domicilioCodigo: this.solicitud260101State.domicilioCodigo,
-          domicilioColonia: this.solicitud260101State.domicilioColonia,
-          domiciliCalle: this.solicitud260101State.domiciliCalle,
-          domiciliNumeroExterior:
-            this.solicitud260101State.domiciliNumeroExterior,
-          domiciliNumeroInterior:
-            this.solicitud260101State.domiciliNumeroInterior,
-          domiciliLada: this.solicitud260101State.domiciliLada,
-          domiciliTelefono: this.solicitud260101State.domiciliTelefono,
-          domiciliCorreoElectronioco:
-            this.solicitud260101State.domiciliCorreoElectronioco,
-        });
-      })
-    );
+    this.solicitud260101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((res: Solicitud260101State) => {
+          console.log(res);
+          this.solicitud260101State = res;
+          this.modificarDestinatarioForm.patchValue({
+            tipoPersona: this.solicitud260101State.tipoPersona,
+            modificarRFC: this.solicitud260101State.modificarRFC,
+            denominacion: this.solicitud260101State.denominacion,
+            domicilioPais: this.solicitud260101State.domicilioPais,
+            domicilioEstado: this.solicitud260101State.domicilioEstado,
+            domicilioMunicipio: this.solicitud260101State.domicilioMunicipio,
+            domicilioLocalidad: this.solicitud260101State.domicilioLocalidad,
+            domicilioCodigo: this.solicitud260101State.domicilioCodigo,
+            domicilioColonia: this.solicitud260101State.domicilioColonia,
+            domiciliCalle: this.solicitud260101State.domiciliCalle,
+            domiciliNumeroExterior:
+              this.solicitud260101State.domiciliNumeroExterior,
+            domiciliNumeroInterior:
+              this.solicitud260101State.domiciliNumeroInterior,
+            domiciliLada: this.solicitud260101State.domiciliLada,
+            domiciliTelefono: this.solicitud260101State.domiciliTelefono,
+            domiciliCorreoElectronioco:
+              this.solicitud260101State.domiciliCorreoElectronioco,
+          });
+        })
+      )
+      .subscribe();
   }
 
   obtenerDestinatarioCatalogos() {
@@ -142,6 +152,14 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
     this.solicitudDatosService.obtenerDestinatarioRadio().subscribe({
       next: (res: { label: string; value: string | number }[]) => {
         this.tipoPersonaRadioOptions = res;
+      },
+    });
+  }
+
+  obtenerDestinatarioImitar() {
+    this.solicitudDatosService.obtenerDestinatarioImitar().subscribe({
+      next: (res: DestinatarioImitar) => {
+        this.solicitud260101Store.setDomicilioPais(res.domicilioPais);
       },
     });
   }

@@ -9,9 +9,15 @@ export interface SolicitudDatos {
   mercancias?: TableData;
 }
 
+export interface RadioOptions {
+  label: string;
+  value: string | number;
+}
+
 export interface DatosDeSolicitud {
   tablaHeadData: string[];
   tablaFilaDatos: SolicitudDatos[];
+  hacerlosRadioOptions: RadioOptions[];
 }
 
 export interface Solicitud {

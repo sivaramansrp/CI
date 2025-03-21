@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ModificarDestinatarioComponent } from './modificar-destinatario.component';
 
 describe('ModificarDestinatarioComponent', () => {
@@ -8,16 +7,19 @@ describe('ModificarDestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ModificarDestinatarioComponent]
-    })
-    .compileComponents();
-    
+      declarations: [ModificarDestinatarioComponent],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ModificarDestinatarioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have a defined instance', () => {
+    expect(component).toBeDefined();
   });
 });

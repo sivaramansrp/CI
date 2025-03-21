@@ -17,6 +17,7 @@ import { ClavesDeLotes } from '../../models/claves-de-lotes.model';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import {
   CrossList,
+  Mercancia,
   MercanciaCatalogos,
   MercanciaCrossList,
 } from '../../models/mercancia.model';
@@ -86,6 +87,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     this.obtenerClavesDeLotesListo();
     this.obtenerMercanciaCatalogos();
     this.obtenerCrosslisto();
+    this.obtenerMercanciaListo();
   }
 
   ngOnInit() {
@@ -96,7 +98,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
       ],
       especificarProducto: [
         this.solicitud260101State.especificarProducto,
-        [Validators.required],
+        [Validators.required, Validators.maxLength(30)],
       ],
       nombreProductoEspecifico: [
         this.solicitud260101State.nombreProductoEspecifico,
@@ -187,10 +189,21 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     });
   }
 
+  obtenerMercanciaListo() {
+    this.solicitudDatosService.obtenerMercanciaListo().subscribe({
+      next: (res: Mercancia[]) => {
+        this.solicitud260101Store.setDescripcionFraccionArancelaria(
+          res[0].descripcionFraccionArancelaria
+        );
+        this.solicitud260101Store.setUmt(res[0].umt);
+      },
+    });
+  }
+
   obtenerCrosslisto() {
     this.solicitudDatosService.obtenerCrosslisto().subscribe({
       next: (res: MercanciaCrossList) => {
-        console.log(res)
+        console.log(res);
         this.paisOrigenCrossList = res.paisOrigenCrossList;
         this.paisProcedencisCrossList = res.paisProcedencisCrossList;
         this.usoEspecificoCrossList = res.usoEspecificoCrossList;

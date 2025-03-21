@@ -202,7 +202,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     public solicitud260101Store: Solicitud260101Store,
     public solicitud260101Query: Solicitud260101Query
   ) {
-    //
     this.obtenerDestinatarioListo();
     this.obtenerFabricanteListo();
   }

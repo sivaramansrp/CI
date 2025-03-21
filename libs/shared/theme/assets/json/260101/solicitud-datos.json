@@ -12,21 +12,44 @@
             "cantidad": "10000",
             "proovedor": "AGRICOLA ALPE S DE RL DE CV",
             "SCIANLista": {
-                "tableHeader": ["Clave S.C.I.A.N", "Descripción del S.C.I.A.N."],
+                "tableHeader": [
+                    "Clave S.C.I.A.N",
+                    "Descripción del S.C.I.A.N."
+                ],
                 "tableBody": [
                     {
-                        "tbodyData" : ["311321","Deshidratación  de productos agrícolas alimecticios."]
+                        "tbodyData": [
+                            "311321",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
                     },
                     {
-                        "tbodyData" : ["614074","Deshidratación  de productos agrícolas alimecticios."]
+                        "tbodyData": [
+                            "614074",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
                     }
                 ]
             },
             "mercancias": {
-                "tableHeader": ["CerClasificación del producto", "Especificar Clasificación del product","Denominación específico del product", "Marca","Fracción arancelaria","Descripción de la frac"],
+                "tableHeader": [
+                    "CerClasificación del producto",
+                    "Especificar Clasificación del product",
+                    "Denominación específico del product",
+                    "Marca",
+                    "Fracción arancelaria",
+                    "Descripción de la frac"
+                ],
                 "tableBody": [
                     {
-                        "tbodyData" : ["ALIMENTOS","Pastas, granos y semillas", "test22", "test", "044509001","Grasa butirica desc"]
+                        "tbodyData": [
+                            "ALIMENTOS",
+                            "Pastas, granos y semillas",
+                            "test22",
+                            "test",
+                            "044509001",
+                            "Grasa butirica desc"
+                        ]
                     }
                 ]
             }
@@ -37,21 +60,44 @@
             "cantidad": "10000",
             "proovedor": "AGRICOLA ALPE S DE RL DE CV",
             "SCIANLista": {
-                "tableHeader": ["Clave S.C.I.A.N", "Descripción del S.C.I.A.N."],
+                "tableHeader": [
+                    "Clave S.C.I.A.N",
+                    "Descripción del S.C.I.A.N."
+                ],
                 "tableBody": [
                     {
-                        "tbodyData" : ["311321","Deshidratación  de productos agrícolas alimecticios."]
+                        "tbodyData": [
+                            "311321",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
                     },
                     {
-                        "tbodyData" : ["614074","Deshidratación  de productos agrícolas alimecticios."]
+                        "tbodyData": [
+                            "614074",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
                     }
                 ]
             },
             "mercancias": {
-                "tableHeader": ["CerClasificación del producto", "Especificar Clasificación del product","Denominación específico del product", "Marca","Fracción arancelaria","Descripción de la frac"],
+                "tableHeader": [
+                    "CerClasificación del producto",
+                    "Especificar Clasificación del product",
+                    "Denominación específico del product",
+                    "Marca",
+                    "Fracción arancelaria",
+                    "Descripción de la frac"
+                ],
                 "tableBody": [
                     {
-                        "tbodyData" : ["ALIMENTOS","Pastas, granos y semillas", "test22", "test", "044509001","Grasa butirica desc"]
+                        "tbodyData": [
+                            "ALIMENTOS",
+                            "Pastas, granos y semillas",
+                            "test22",
+                            "test",
+                            "044509001",
+                            "Grasa butirica desc"
+                        ]
                     }
                 ]
             }
@@ -62,25 +108,57 @@
             "cantidad": "10000",
             "proovedor": "AGRICOLA ALPE S DE RL DE CV",
             "SCIANLista": {
-                "tableHeader": ["Clave S.C.I.A.N", "Descripción del S.C.I.A.N."],
+                "tableHeader": [
+                    "Clave S.C.I.A.N",
+                    "Descripción del S.C.I.A.N."
+                ],
                 "tableBody": [
                     {
-                        "tbodyData" : ["311321","Deshidratación  de productos agrícolas alimecticios."]
+                        "tbodyData": [
+                            "311321",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
                     },
                     {
-                        "tbodyData" : ["614074","Deshidratación  de productos agrícolas alimecticios."]
+                        "tbodyData": [
+                            "614074",
+                            "Deshidratación  de productos agrícolas alimecticios."
+                        ]
                     }
                 ]
             },
             "mercancias": {
-                "tableHeader": ["CerClasificación del producto", "Especificar Clasificación del product","Denominación específico del product", "Marca","Fracción arancelaria","Descripción de la frac"],
+                "tableHeader": [
+                    "CerClasificación del producto",
+                    "Especificar Clasificación del product",
+                    "Denominación específico del product",
+                    "Marca",
+                    "Fracción arancelaria",
+                    "Descripción de la frac"
+                ],
                 "tableBody": [
                     {
-                        "tbodyData" : ["ALIMENTOS","Pastas, granos y semillas", "test22", "test", "044509001","Grasa butirica desc"]
+                        "tbodyData": [
+                            "ALIMENTOS",
+                            "Pastas, granos y semillas",
+                            "test22",
+                            "test",
+                            "044509001",
+                            "Grasa butirica desc"
+                        ]
                     }
                 ]
             }
         }
+    ],
+    "hacerlosRadioOptions": [
+        {
+            "label": "No",
+            "value": 1
+        },
+        {
+            "label": "Sí",
+            "value": 2
+        }
     ]
 }
-

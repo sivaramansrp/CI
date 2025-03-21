@@ -8,6 +8,7 @@ import {
 import { TEXTOS } from '../../constantes/constantes';
 import {
   DatosDeSolicitud,
+  RadioOptions,
   Solicitud,
   SolicitudDatos,
 } from '../../models/solicitud-datos.model';
@@ -18,6 +19,7 @@ import {
   CatalogosSelect,
   ConfiguracionColumna,
   REGEX_CORREO_ELECTRONICO,
+  REGEX_TELEFONO,
   TablaSeleccion,
   TableData,
 } from '@libs/shared/data-access-user/src';
@@ -54,12 +56,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$: Subject<void> = new Subject();
 
-  tablaHeadData: string[] = [
-    'Fecha creacion',
-    'Mercancia',
-    'Cantidad',
-    'Proveedor',
-  ];
+  tablaHeadData: string[] = [];
 
   tablaFilaDatos: SolicitudDatos[] = [];
 
@@ -83,16 +80,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
-  hacerlosRadioOptions = [
-    {
-      label: 'No',
-      value: 1,
-    },
-    {
-      label: 'Sí',
-      value: 2,
-    },
-  ];
+  hacerlosRadioOptions: RadioOptions[] = [];
   hacerlosPublicos = 0;
   solicitud260101State: Solicitud260101State = {} as Solicitud260101State;
   mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
@@ -178,7 +166,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       razonSocial: [
         { value: this.solicitud260101State.razonSocial, disabled: true },
-        [Validators.required],
+        [Validators.required,Validators.maxLength(30)],
       ],
       correoElectronico: [
         { value: this.solicitud260101State.correoElectronico, disabled: true },
@@ -186,7 +174,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       ],
       codigoPostal: [
         { value: this.solicitud260101State.codigoPostal, disabled: true },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(10)],
       ],
       estado: [this.solicitud260101State.estado, [Validators.required]],
       municipio: [
@@ -199,12 +187,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       colonia: [{ value: this.solicitud260101State.colonia, disabled: true }],
       calle: [
         { value: this.solicitud260101State.calle, disabled: true },
-        [Validators.required],
+        [Validators.required,Validators.maxLength(68)],
       ],
       lada: [{ value: this.solicitud260101State.lada, disabled: true }],
       telefono: [
         { value: this.solicitud260101State.telefono, disabled: true },
-        [Validators.required],
+        [Validators.required,Validators.maxLength(10), Validators.pattern(REGEX_TELEFONO)],
       ],
       avisoDeFuncionamiento: [this.solicitud260101State.avisoDeFuncionamiento],
       licenciaSanitaria: [this.solicitud260101State.licenciaSanitaria],
@@ -212,26 +200,27 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       regimen: [this.solicitud260101State.regimen, [Validators.required]],
       aduana: [this.solicitud260101State.aduana, [Validators.required]],
       hacerlos: [this.solicitud260101State.hacerlos, [Validators.required]],
-      rfc: [this.solicitud260101State.rfc, [Validators.required]],
+      rfc: [this.solicitud260101State.rfc, [Validators.required,Validators.maxLength(13)]],
       legalRazonSocial: [
         { value: this.solicitud260101State.legalRazonSocial, disabled: true },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(30)],
       ],
       apellidoPaterno: [
         { value: this.solicitud260101State.apellidoPaterno, disabled: true },
-        [Validators.required],
+        [Validators.required, Validators.maxLength(30)],
       ],
       apellidoMeterno: [
         { value: this.solicitud260101State.apellidoMeterno, disabled: true },
+        [Validators.maxLength(30)]
       ],
-      manifesto:[this.solicitud260101State.manifesto]
+      manifesto: [this.solicitud260101State.manifesto],
     });
 
     this.solicitud260101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((res: Solicitud260101State) => {
-          console.log(res)
+          console.log(res);
           this.solicitud260101State = res;
           this.solicitudForm.patchValue({
             razonSocial: this.solicitud260101State.razonSocial,
@@ -255,7 +244,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
             legalRazonSocial: this.solicitud260101State.legalRazonSocial,
             apellidoPaterno: this.solicitud260101State.apellidoPaterno,
             apellidoMeterno: this.solicitud260101State.apellidoMeterno,
-            manifesto: this.solicitud260101State.manifesto
+            manifesto: this.solicitud260101State.manifesto,
           });
           this.mercanciasDatos = this.solicitud260101State.mercanciasDatos;
         })
@@ -274,7 +263,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.colapsable = !this.colapsable;
   }
 
-  obtenerSolicitud(){
+  obtenerSolicitud() {
     this.solicitudDatosService.obtenerSolicitud().subscribe({
       next: (res: Solicitud) => {
         this.solicitud260101Store.setRazonSocial(res.razonSocial);
@@ -306,19 +295,19 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       next: (res: DatosDeSolicitud) => {
         this.tablaHeadData = res.tablaHeadData;
         this.tablaFilaDatos = res.tablaFilaDatos;
+        this.hacerlosRadioOptions = res.hacerlosRadioOptions;
         this.tableDataSCIAN =
           Array.isArray(res.tablaFilaDatos) &&
           typeof res.tablaFilaDatos[0] === 'object'
             ? res.tablaFilaDatos[0]?.SCIANLista || ({} as TableData)
             : ({} as TableData);
-      }
+      },
     });
   }
 
   obtenerMercanciaListo() {
     this.solicitudDatosService.obtenerMercanciaListo().subscribe({
       next: (res: Mercancia[]) => {
-        // this.mercanciasDatos = res;
         this.solicitud260101Store.setMercanciasDatos(res);
       },
     });
@@ -396,17 +385,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     }
   }
 
-  setLiveFreshFrozen(event: Event){
+  setLiveFreshFrozen(event: Event) {
     const VALUE = (event.target as HTMLInputElement).checked;
     this.solicitud260101Store.setLiveFreshFrozen(VALUE);
   }
 
-  setAvisoDeFuncionamiento(event: Event){
+  setAvisoDeFuncionamiento(event: Event) {
     const VALUE = (event.target as HTMLInputElement).checked;
     this.solicitud260101Store.setAvisoDeFuncionamiento(VALUE);
   }
 
-  setManifesto(event: Event){
+  setManifesto(event: Event) {
     const VALUE = (event.target as HTMLInputElement).checked;
     this.solicitud260101Store.setManifesto(VALUE);
   }

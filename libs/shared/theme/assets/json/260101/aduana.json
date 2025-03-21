@@ -5,15 +5,15 @@
     "catalogos": [
         {
             "id": 1,
-            "descripcion": "TECATE"
+            "descripcion": "Aduana 1"
         },
         {
             "id": 2,
-            "descripcion": "TIJUANA"
+            "descripcion": "Aduana 2"
         },
         {
             "id": 3,
-            "descripcion": "TUXPAN,VER,"
+            "descripcion": "Aduana 3"
         }
     ]
 }

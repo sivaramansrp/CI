@@ -38,3 +38,21 @@ export interface MercanciaCrossList {
   paisProcedencisCrossList: CrossList;
   usoEspecificoCrossList: CrossList;
 }
+export interface DestinatarioImitar {
+  tipoPersona: string;
+  modificarRFC: string;
+  denominacion: string;
+  domicilioPais: number;
+  domicilioEstado: string;
+  domicilioMunicipio: string;
+  domicilioLocalidad: string;
+  domicilioCodigo: string;
+  domicilioColonia: string;
+  domiciliCalle: string;
+  domiciliNumeroExterior: string;
+  domiciliNumeroInterior: string;
+  domiciliLada: string;
+  domiciliTelefono: string;
+  domiciliCorreoElectronioco: string;
+}
+
