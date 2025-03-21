@@ -47,7 +47,7 @@ describe('SolicitantePageComponent', () => {
   it('should update pasos on ngOnInit', () => {
     component.ngOnInit();
     const updatedPaso = component.pasos.find(paso => paso.indice === 2);
-    expect(updatedPaso?.titulo).toBe('Requsitors necesarios');
+    expect(updatedPaso?.titulo).toBe('Anexar requisitos');
   });
 
   it('should set indice on seleccionaTab', () => {
