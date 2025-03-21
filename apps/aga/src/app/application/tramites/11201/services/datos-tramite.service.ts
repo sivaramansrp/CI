@@ -16,45 +16,78 @@ export class DatosTramiteService {
     // eslint-disable-next-line no-empty-function
   ) {
   }
+
   /**
-   * Get a lista of Contenedores
+   * Obtener una lista de Contenedores
+   * 
+   * @returns {Observable<RespuestaContenedores>} Un observable con la respuesta de contenedores.
    */
   getContenedores(): Observable<RespuestaContenedores> {
     return this.http.get<RespuestaContenedores>(`assets/json/11201/tipoLista.json`);
   }
+
   /**
-  * Simular la carga de archivos
-  */
+   * Simular la carga de archivos
+   * 
+   * @returns {Observable<RespuestaApi>} Un observable con la respuesta de la simulación de carga de archivos.
+   */
   uploadArchivo(): Observable<RespuestaApi> {
     return this.http.get<RespuestaApi>(`assets/json/11201/contenedorLista.json`);
   }
 
   /**
-  * Simular un envío exitoso de formulario
-  */
+   * Simular un envío exitoso de formulario
+   * 
+   * @returns {Observable<RespuestaAduanas>} Un observable con la respuesta de la simulación de envío de formulario.
+   */
   submitSolicitud(): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(`assets/json/11201/aduanaList.json`);
   }
 
+  /**
+   * Agregar una solicitud
+   * 
+   * @returns {Observable<RespuestaContenedor>} Un observable con la respuesta de agregar una solicitud.
+   */
   agregarSolicitud(): Observable<RespuestaContenedor> {
     return this.http.get<RespuestaContenedor>(`assets/json/11201/contenedorLista.json`);
   }
 
+  /**
+   * Obtener una lista de Transporte
+   * 
+   * @param {string} catalogo - El nombre del catálogo a obtener.
+   * @returns {Observable<RespuestaCatalogos>} Un observable con la respuesta del catálogo de transporte.
+   */
   getTransporteList(catalogo: string): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11201/${catalogo}.json`);
   }
+
   /**
-  * Get a lista of Aduanas
-  */
+   * Obtener una lista de Aduanas
+   * 
+   * @param {string} catalogo - El nombre del catálogo a obtener.
+   * @returns {Observable<RespuestaAduanas>} Un observable con la respuesta del catálogo de aduanas.
+   */
   getAduanaList(catalogo: string): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(`assets/json/11201/${catalogo}.json`);
   }
 
+  /**
+   * Obtener datos de la tabla
+   * 
+   * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos de la tabla.
+   */
   getDatosTableData(): Observable<RespuestaCatalogos[]> {
     return this.http.get<RespuestaCatalogos[]>(`assets/json/11201/datosTabla.json`);
   }
+
+  /**
+   * Obtener datos del solicitante
+   * 
+   * @returns {Observable<RespuestaCatalogos[]>} Un observable con la respuesta de los datos del solicitante.
+   */
   getDatosSolicitante(): Observable<RespuestaCatalogos[]> {
     return this.http.get<RespuestaCatalogos[]>(`assets/json/11201/datosSolicitante.json`);
   }
-  
 }

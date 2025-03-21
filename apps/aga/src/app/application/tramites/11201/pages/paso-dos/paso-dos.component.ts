@@ -29,7 +29,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    *
    * @type {FormGroup}
    */
-  FormSolicitud!: FormGroup;
+  formSolicitud!: FormGroup;
 
   /**
    * Suscripción a los cambios en el formulario reactivo.
@@ -64,7 +64,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida `ngOnInit()`.
    * Este método se ejecuta cuando el componente se inicializa y realiza las siguientes acciones:
    * - Inicializa el formulario reactivo `FormSolicitud` con dos campos: `linea` y `monto`.
-   * - Llama al método `updateformfied()` para configurar el campo 'monto', deshabilitándolo y estableciendo un valor predeterminado.
+   * - Llama al método `campoDeDormularioDeActualización()` para configurar el campo 'monto', deshabilitándolo y estableciendo un valor predeterminado.
    *
    * @memberof PagoDeDerechosComponent
    */
@@ -81,8 +81,8 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         .subscribe()
     );
 
-    this.FormSolicitud = this.fb.group({
-      pagodederechos: this.fb.group({
+    this.formSolicitud = this.fb.group({
+      pagoDeDerechos: this.fb.group({
         linea: [this.solicitudState?.linea, Validators.required],
         monto: ['', Validators.required],
         montoPagar: [this.solicitudState?.monto],
@@ -91,21 +91,21 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     });
 
     // Llama al método para actualizar el campo 'monto'
-    this.updateformfied();
+    this.campoDeDormularioDeActualización();
   }
 
   /**
-   * Método `updateformfied()`.
+   * Método `campoDeDormularioDeActualización()`.
    * Este método se encarga de actualizar el campo 'monto' dentro del formulario:
    * - Deshabilita el campo 'monto'.
    * - Establece el valor predeterminado de 'monto' a '352'.
    *
    * @memberof PagoDeDerechosComponent
    */
-  updateformfied(): void {
+  campoDeDormularioDeActualización(): void {
     // Deshabilita el campo 'monto' y asigna el valor '352'
-    this.FormSolicitud.get('pagodederechos.montoPagar')?.disable();
-    this.FormSolicitud.get('pagodederechos.montoPagar')?.setValue('352');
+    this.formSolicitud.get('pagoDeDerechos.montoPagar')?.disable();
+    this.formSolicitud.get('pagoDeDerechos.montoPagar')?.setValue('352');
   }
 
   /**

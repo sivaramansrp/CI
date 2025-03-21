@@ -1,7 +1,7 @@
 <div class="container">
   <ng-titulo titulo="Ingresar pago de contenedores:" />
-  <form [formGroup]="FormSolicitud">
-    <div formGroupName="pagodederechos">
+  <form [formGroup]="formSolicitud">
+    <div formGroupName="pagoDeDerechos">
       <div class="row" style="padding-bottom: 20px">
         <div class="form-group d-flex align-items-end">
           <label class="form-label " for="linea">Monto a pagar:</label>
@@ -11,14 +11,14 @@
                 padding-right: 30px;
                 padding-top: 20px;
                 padding-bottom: 5px;">
-          <p><b>Una vez realizado el pago se deberá ingresar la información correspondiente de la linea de captura del
+          <p><b>Una vez realizado el pago se deberá ingresar la información correspondiente de la línea de captura del
               pago para que sea validada</b></p>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="linea"> Linea de captura*:</label>
+            <label class="form-label" for="linea"> Línea de captura*:</label>
             <input class="form-control" id="linea" formControlName="linea" type="text" (change)="
-                                        setValoresStore(FormSolicitud, 'pagodederechos.linea', 'setLinea')" />
+                                        setValoresStore(formSolicitud, 'pagoDeDerechos.linea', 'setLinea')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -43,8 +43,8 @@
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="lineaCheckbox" formControlName="lineaCheckbox" (change)="
                   setValoresStore(
-                    FormSolicitud,
-                    'pagodederechos.lineaCheckbox',
+                    formSolicitud,
+                    'pagoDeDerechos.lineaCheckbox',
                     'setLineaCheckbox'
                   )
                 " />

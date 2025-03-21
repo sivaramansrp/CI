@@ -123,7 +123,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Índice actual.
    */
-  currentIdx: number = 0;
+  corrienteIdx: number = 0;
 
   /**
    * Lista de catálogos.
@@ -282,7 +282,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       digitoDeControl: [this.solicitud11201State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
       contenedores: [this.solicitud11201State?.contenedores, Validators.required],
       tipoTransporte: ['', Validators.required],
-      menúDesplegable: [this.solicitud11201State.menúDesplegable, Validators.required],
+      menuDesplegable: [this.solicitud11201State.menuDesplegable, Validators.required],
       numManifiesto: [
         this.solicitud11201State.numManifiesto,
         [Validators.required, Validators.maxLength(50)],
@@ -478,7 +478,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       const READER = new FileReader();
       READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
+        this.analizarGramaticalmenteCSV(TEXT);
         this.showArchivoSeleccionadoTable = true;
       };
       READER.readAsText(FILE);
@@ -488,7 +488,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Cargar archivo CSV y parsear su contenido.
    */
-  Archivo(): void {
+  archivo(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
     ) as HTMLInputElement;
@@ -497,48 +497,60 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       const READER = new FileReader();
       READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
+        this.analizarGramaticalmenteCSV(TEXT);
         this.showCargarArchivoTable = true;
       };
       READER.readAsText(FILE);
     }
   }
-
-  parseCSV(csv: string): void {
+  /**
+   * Método para analizar una cadena CSV y convertirla en una lista de objetos.
+   * 
+   * Este método toma una cadena CSV, la divide en líneas y luego en columnas, mapea los encabezados
+   * a los nombres de las propiedades del objeto y finalmente asigna los valores correspondientes
+   * a cada objeto. Los objetos resultantes se almacenan en `datosTabla`.
+   * 
+   * @param {string} csv - La cadena CSV a analizar.
+   * 
+   * @example
+   * // Llamar al método para analizar una cadena CSV
+   * this.analizarGramaticalmenteCSV('Aduana,Iniciales del equipo,Tipo de equipo,...\nValor1,Valor2,Valor3,...');
+   */
+  analizarGramaticalmenteCSV(csv: string): void {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
     const HEADER_MAP: { [key: string]: string } = {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
-      'Tipo de equipo':'tipoEquipo',
-      'N�mero de equipo':'numeroEquipo',
-      'D�gito Verificador':'digitoVerificador',
-      'Fecha Ingreso':'fechaIngreso',
-      'Vigencia':'vigencia',
-      'Estado de constancia':'estadoConstancia',
-      'Existe en VUCEM':'existeEnVUCEM',
-      'Id constancia':'idConstancia',
-      'N�mero manifiesto':'numeroManifiesto',
-      'Id solicitud':'idSolicitud',
-      'Fecha inicio':'fechaInicio'
+      'Tipo de equipo': 'tipoEquipo',
+      'N�mero de equipo': 'numeroEquipo',
+      'D�gito Verificador': 'digitoVerificador',
+      'Fecha Ingreso': 'fechaIngreso',
+      'Vigencia': 'vigencia',
+      'Estado de constancia': 'estadoConstancia',
+      'Existe en VUCEM': 'existeEnVUCEM',
+      'Id constancia': 'idConstancia',
+      'N�mero manifiesto': 'numeroManifiesto',
+      'Id solicitud': 'idSolicitud',
+      'Fecha inicio': 'fechaInicio'
     };
     const DATA = LINES.slice(1).map((line) => {
-        const VALUES = line.split(',');
-        const OBJ: { [key: string]: string } = {};
-        HEADERS.forEach((header, index) => {
-            const KEY = HEADER_MAP[header.trim()] || header.trim();
-            OBJ[KEY] = VALUES[index]?.trim();
-        });
-        return OBJ;
+      const VALUES = line.split(',');
+      const OBJ: { [key: string]: string } = {};
+      HEADERS.forEach((header, index) => {
+        const KEY = HEADER_MAP[header.trim()] || header.trim();
+        OBJ[KEY] = VALUES[index]?.trim();
+      });
+      return OBJ;
     }).filter(artículo => Object.values(artículo).some(valor => valor));
     this.datosTabla = DATA;
-}
+  }
 
   enviarManifiesto(): void {
     this.solicitudForm.markAllAsTouched();
     if (
       this.solicitudForm.get('numManifiesto')?.valid &&
-      this.solicitudForm.get('menúDesplegable')?.valid
+      this.solicitudForm.get('menuDesplegable')?.valid
     ) {
       this.mostrarMensaje = true;
     }
@@ -558,9 +570,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   tabSeleccionado(): void {
-    const CURRENT_IDX = localStorage.getItem('currentIdx');
+    const CURRENT_IDX = localStorage.getItem('corrienteIdx');
     if (CURRENT_IDX !== null) {
-      this.currentIdx = Number(CURRENT_IDX);
+      this.corrienteIdx = Number(CURRENT_IDX);
     }
   }
 

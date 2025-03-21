@@ -153,8 +153,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
-                            [placeholder]="transporteList.primerOpcion" formControlName="menúDesplegable"
-                            (change)="setValoresStore(solicitudForm,'menúDesplegable', 'setMenúDesplegable')" [required]="true"
+                            [placeholder]="transporteList.primerOpcion" formControlName="menuDesplegable"
+                            (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')" [required]="true"
                             [ngClass]="isValid('numManifiesto') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
@@ -307,7 +307,7 @@
                             <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="Archivo()">Enviar</button>
+                            <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
                         </div>
                         <div *ngIf="showCargarArchivoTable" class="table-container">
                             <table class="table table-bordered " align="center">
@@ -406,7 +406,7 @@
                 <ng-container *ngSwitchCase="'generarerror'"> No se puede generar la constancia, porque ya cuenta con
                     una</ng-container>
                 <ng-container *ngSwitchCase="'verificadorerror'">
-                    Digito verificador incorrecto</ng-container>
+                    Dígito verificador incorrecto</ng-container>
                 <ng-container **ngSwitchDefault></ng-container>
             </ng-container>
         </div>

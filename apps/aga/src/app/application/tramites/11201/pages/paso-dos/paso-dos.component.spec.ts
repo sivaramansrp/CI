@@ -52,16 +52,16 @@ describe('PasoDosComponent', () => {
 
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.FormSolicitud).toBeDefined();
-    expect(component.FormSolicitud.get('pagodederechos.linea')?.value).toBe('123456');
-    expect(component.FormSolicitud.get('pagodederechos.monto')?.value).toBe('');
-    expect(component.FormSolicitud.get('pagodederechos.montoPagar')?.value).toBe('352');
-    expect(component.FormSolicitud.get('pagodederechos.lineaCheckbox')?.value).toBe(true);
+    expect(component.formSolicitud).toBeDefined();
+    expect(component.formSolicitud.get('pagoDeDerechos.linea')?.value).toBe('123456');
+    expect(component.formSolicitud.get('pagoDeDerechos.monto')?.value).toBe('');
+    expect(component.formSolicitud.get('pagoDeDerechos.montoPagar')?.value).toBe('352');
+    expect(component.formSolicitud.get('pagoDeDerechos.lineaCheckbox')?.value).toBe(true);
   });
 
   it('should disable and set value of montoPagar on updateformfied', () => {
     component.updateformfied();
-    const montoPagarControl = component.FormSolicitud.get('pagodederechos.montoPagar');
+    const montoPagarControl = component.formSolicitud.get('pagoDeDerechos.montoPagar');
     expect(montoPagarControl?.disabled).toBe(true);
     expect(montoPagarControl?.value).toBe('352');
   });
@@ -72,7 +72,7 @@ describe('PasoDosComponent', () => {
     lineaInput.value = '654321';
     lineaInput.dispatchEvent(new Event('change'));
     fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.FormSolicitud, 'pagodederechos.linea', 'setLinea');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formSolicitud, 'pagodederechos.linea', 'setLinea');
   });
 
   it('should call setValoresStore when lineaCheckbox changes', () => {
@@ -81,7 +81,7 @@ describe('PasoDosComponent', () => {
     lineaCheckbox.checked = false;
     lineaCheckbox.dispatchEvent(new Event('change'));
     fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.FormSolicitud, 'pagodederechos.lineaCheckbox', 'setLineaCheckbox');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formSolicitud, 'pagodederechos.lineaCheckbox', 'setLineaCheckbox');
   });
 
   it('should unsubscribe from subscription on ngOnDestroy', () => {

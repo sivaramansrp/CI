@@ -9,7 +9,7 @@ import { StoreConfig } from '@datorama/akita'
  */
 
 export interface Solicitud11201State {
-  menúDesplegable: string;
+  menuDesplegable: string;
   datosSolicitante: DatosSolicitante
   datosDelContenedor: [];
   tipoBusqueda: string;
@@ -43,7 +43,7 @@ export interface Solicitud11201State {
 
 export function createInitialState(): Solicitud11201State {
   return {
-    menúDesplegable: '',
+    menuDesplegable: '',
     datosSolicitante: {
       rfc: "",
       denominacion: "",
@@ -99,10 +99,10 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setMenúDesplegable(menúDesplegable: string): void {
+  public setMenuDesplegable(menuDesplegable: string): void {
     this.update((state) => ({
       ...state,
-      menúDesplegable,
+      menuDesplegable,
     }));
   }
 
