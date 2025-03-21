@@ -1,7 +1,7 @@
 import { BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDeLaSolicitudeComponent } from './components/datos-de-la-solicitude/datos-de-la-solicitude.component';
+import { DatosDeLaSolicitudeComponent } from './components/datos-de-la-solicitude/datos-de-la-solicitud.component';
 import { DesmantelarComponent } from './pages/desmantelar/desmantelar.component';
 import { DesmantelarRoutingModule } from './desmantelar-routing.module';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';

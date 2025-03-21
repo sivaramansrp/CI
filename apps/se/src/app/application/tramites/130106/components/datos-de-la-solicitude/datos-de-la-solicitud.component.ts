@@ -14,8 +14,8 @@ import { Tramite130106Store } from '../../../../estados/tramites/tramite130106.s
   selector: 'app-datos-de-la-solicitude',
   standalone: true,
   imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputRadioComponent],
-  templateUrl: './datos-de-la-solicitude.component.html',
-  styleUrl: './datos-de-la-solicitude.component.scss'
+  templateUrl: './datos-de-la-solicitud.component.html',
+  styleUrl: './datos-de-la-solicitud.component.scss'
 })
 export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
 

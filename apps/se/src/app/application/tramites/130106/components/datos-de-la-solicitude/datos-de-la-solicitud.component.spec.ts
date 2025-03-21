@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { DatosDeLaSolicitudeComponent } from './datos-de-la-solicitude.component';
+import { DatosDeLaSolicitudeComponent } from './datos-de-la-solicitud.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
