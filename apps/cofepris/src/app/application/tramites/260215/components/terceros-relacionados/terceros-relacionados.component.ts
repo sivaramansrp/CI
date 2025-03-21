@@ -1,16 +1,6 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-} from '@libs/shared/data-access-user/src';
-
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { TableComponent } from '@ng-mf/data-access-user';
 import {
   AbstractControl,
   FormBuilder,
@@ -18,10 +8,9 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
-  
 } from '@angular/forms';
-
 import {
   CODIGOPOSTALSELECTDATA,
   COLONIASELECTDATA,
@@ -30,12 +19,19 @@ import {
   PAISSELECTDATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
-import { ModalComponent } from '../modal/modal.component';
 import {
-  tableData,
-} from '../../models/permiso-sanitario.model';
-import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
+  Catalogo,
+  CatalogoSelectComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, OnInit } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { ModalComponent } from '../modal/modal.component';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
+import { TablaDatos } from '../../models/permiso-sanitario.model';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Texto de alerta para los terceros relacionados.
@@ -239,7 +235,9 @@ export class TercerosRelacionadosComponent implements OnInit {
     private fb: FormBuilder,
     private sanitario260215Store: Sanitario260215Store,
     private service: ServiciosPermisoSanitarioService
-  ) {}
+  ) {
+    // Inicializa el store del trámite 260215.
+  }
 
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
@@ -285,12 +283,18 @@ export class TercerosRelacionadosComponent implements OnInit {
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [Validators.required, this.rfcValidator]),
+      rfc: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.rfcValidator,
+      ]),
       /**
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [Validators.required, this.curpValidator]),
+      curp: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.curpValidator,
+      ]),
       /**
        * Control del formulario para el nombre del usuario.
        * Este campo es obligatorio.
@@ -316,7 +320,7 @@ export class TercerosRelacionadosComponent implements OnInit {
        */
       pais: new FormControl('', [
         Validators.required,
-        this.requiredPaisValidator,
+        TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado o localidad del tercero.
@@ -366,7 +370,9 @@ export class TercerosRelacionadosComponent implements OnInit {
        * Teléfono del tercero.
        * Requiere validación adicional mediante `telefonoValidator`.
        */
-      telefono: new FormControl('', [this.telefonoValidator]),
+      telefono: new FormControl('', [
+        TercerosRelacionadosComponent.telefonoValidator,
+      ]),
       /**
        * Correo electrónico del tercero.
        */
@@ -467,7 +473,9 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * Teléfono del destinatario.
        */
-      telefono: new FormControl('', [this.telefonoValidator]),
+      telefono: new FormControl('', [
+        TercerosRelacionadosComponent.telefonoValidator,
+      ]),
       /**
        * Correo electrónico del destinatario.
        */
@@ -556,7 +564,9 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * Teléfono del proveedor (opcional).
        */
-      telefono: new FormControl('', [this.telefonoValidator]),
+      telefono: new FormControl('', [
+        TercerosRelacionadosComponent.telefonoValidator,
+      ]),
       /**
        * Correo electrónico del proveedor (opcional).
        */
@@ -616,7 +626,7 @@ export class TercerosRelacionadosComponent implements OnInit {
        */
       pais: new FormControl('', [
         Validators.required,
-        this.requiredPaisValidator,
+        TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
        * Estado del facturador.
@@ -649,7 +659,9 @@ export class TercerosRelacionadosComponent implements OnInit {
       /**
        * Teléfono del facturador (opcional).
        */
-      telefono: new FormControl('', [this.telefonoValidator]),
+      telefono: new FormControl('', [
+        TercerosRelacionadosComponent.telefonoValidator,
+      ]),
       /**
        * Correo electrónico del facturador (opcional).
        */
@@ -733,7 +745,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteRowData: tableData[] = [];
+  fabricanteRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de destinatarios.
@@ -741,7 +753,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
    */
-  destinatarioRowData: tableData[] = [];
+  destinatarioRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -749,7 +761,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
-  proveedorRowData: tableData[] = [];
+  proveedorRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de facturadores.
@@ -757,7 +769,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    *
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
    */
-  facturadorRowData: tableData[] = [];
+  facturadorRowData: TablaDatos[] = [];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -845,34 +857,34 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
-    const localidadValue = this.localidadDropdownData.find(
+    const LOCALIDAD_VALOR = this.localidadDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarFabricanteFormGroup.value.localidad
+        item.id === this.agregarFabricanteFormGroup.value.localidad
     )?.descripcion;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
      */
-    const municipioValue = this.municipioDropdownData.find(
+    const MUNICIPIO_VALOR = this.municipioDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarFabricanteFormGroup.value.municipioAlcaldia
+        item.id === this.agregarFabricanteFormGroup.value.municipioAlcaldia
     )?.descripcion;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
      */
-    const codigoPostalValue = this.codigoPostalDropdownData.find(
+    const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
       (item: Catalogo) =>
-        item.id ==
+        item.id ===
         this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente
     )?.descripcion;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
      */
-    const coloniaValue = this.coloniaDropdownData.find(
+    const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarFabricanteFormGroup.value.colonia
+        item.id === this.agregarFabricanteFormGroup.value.colonia
     )?.descripcion;
 
     /**
@@ -881,7 +893,7 @@ export class TercerosRelacionadosComponent implements OnInit {
      *
      * @description Esta fila se agrega a la lista de filas del fabricante.
      */
-    const fabricanteRow = {
+    const FABRICANTE_FILA = {
       /**
        * Datos de la fila que se mostrarán en la tabla.
        * Cada elemento del arreglo corresponde a una columna de la tabla.
@@ -937,17 +949,17 @@ export class TercerosRelacionadosComponent implements OnInit {
         /**
          * Colonia del fabricante.
          */
-        coloniaValue,
+        COLONIA_VALOR,
 
         /**
          * Municipio del fabricante.
          */
-        municipioValue,
+        MUNICIPIO_VALOR,
 
         /**
          * Localidad del fabricante.
          */
-        localidadValue,
+        LOCALIDAD_VALOR,
 
         /**
          * Entidad federativa del fabricante.
@@ -962,7 +974,7 @@ export class TercerosRelacionadosComponent implements OnInit {
         /**
          * Código postal del fabricante.
          */
-        codigoPostalValue,
+        CODIGO_POSTAL_VALOR,
 
         /**
          * Colonia equivalente del fabricante.
@@ -974,7 +986,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Agrega la nueva fila a la lista de filas del fabricante.
      */
-    this.fabricanteRowData.push(fabricanteRow);
+    this.fabricanteRowData.push(FABRICANTE_FILA);
 
     /**
      * Actualiza el estado del store con los nuevos datos del fabricante.
@@ -998,34 +1010,34 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
-    const localidadValue = this.localidadDropdownData.find(
+    const LOCALIDAD_VALOR = this.localidadDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarDestinatarioFormGroup.value.localidad
+        item.id === this.agregarDestinatarioFormGroup.value.localidad
     )?.descripcion;
 
     /**
      * Obtiene el valor del municipio seleccionado en el formulario.
      */
-    const municipioValue = this.municipioDropdownData.find(
+    const MUNICIPIO_VALOR = this.municipioDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarDestinatarioFormGroup.value.municipioAlcaldia
+        item.id === this.agregarDestinatarioFormGroup.value.municipioAlcaldia
     )?.descripcion;
 
     /**
      * Obtiene el valor del código postal seleccionado en el formulario.
      */
-    const codigoPostalValue = this.codigoPostalDropdownData.find(
+    const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
       (item: Catalogo) =>
-        item.id ==
+        item.id ===
         this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente
     )?.descripcion;
 
     /**
      * Obtiene el valor de la colonia seleccionada en el formulario.
      */
-    const coloniaValue = this.coloniaDropdownData.find(
+    const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
-        item.id == this.agregarDestinatarioFormGroup.value.colonia
+        item.id === this.agregarDestinatarioFormGroup.value.colonia
     )?.descripcion;
 
     /**
@@ -1034,7 +1046,7 @@ export class TercerosRelacionadosComponent implements OnInit {
      *
      * @description Esta fila se agrega a la lista de filas del destinatario.
      */
-    const destinatarioRow = {
+    const DESTINATARIO_FILA = {
       /**
        * Datos de la fila que se mostrarán en la tabla.
        * Cada elemento del arreglo corresponde a una columna de la tabla.
@@ -1090,17 +1102,17 @@ export class TercerosRelacionadosComponent implements OnInit {
         /**
          * Colonia del destinatario.
          */
-        coloniaValue,
+        COLONIA_VALOR,
 
         /**
          * Municipio del destinatario.
          */
-        municipioValue,
+        MUNICIPIO_VALOR,
 
         /**
          * Localidad del destinatario.
          */
-        localidadValue,
+        LOCALIDAD_VALOR,
 
         /**
          * Entidad federativa del destinatario.
@@ -1115,7 +1127,7 @@ export class TercerosRelacionadosComponent implements OnInit {
         /**
          * Código postal del destinatario.
          */
-        codigoPostalValue,
+        CODIGO_POSTAL_VALOR,
 
         /**
          * Colonia equivalente del destinatario.
@@ -1127,7 +1139,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Agrega la nueva fila a la lista de filas del destinatario.
      */
-    this.destinatarioRowData.push(destinatarioRow);
+    this.destinatarioRowData.push(DESTINATARIO_FILA);
 
     /**
      * Actualiza el estado del store con los nuevos datos del destinatario.
@@ -1151,7 +1163,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
-    const proveedorRow = {
+    const PROVEEDOR_FILA = {
       tbodyData: [
         this.agregarProveedorFormGroup.value.denominacionRazonSocial,
         this.agregarProveedorFormGroup.value.rfc,
@@ -1177,7 +1189,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Agrega la nueva fila a la lista de filas del proveedor.
      */
-    this.proveedorRowData.push(proveedorRow);
+    this.proveedorRowData.push(PROVEEDOR_FILA);
 
     /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
@@ -1201,7 +1213,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
-    const facturadorRow = {
+    const FACTURADOR_FILA = {
       tbodyData: [
         this.agregarFacturadorFormGroup.value.denominacionRazonSocial,
         this.agregarFacturadorFormGroup.value.rfc,
@@ -1227,7 +1239,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     /**
      * Agrega la nueva fila a la lista de filas del facturador.
      */
-    this.facturadorRowData.push(facturadorRow);
+    this.facturadorRowData.push(FACTURADOR_FILA);
 
     /**
      * Actualiza el estado del store con los nuevos datos del facturador.
@@ -1247,7 +1259,9 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param control Control del formulario a validar.
    * @returns Nulo si el valor es válido, de lo contrario devuelve un objeto con la propiedad `requiredPais`.
    */
-  requiredPaisValidator(control: AbstractControl) {
+  static requiredPaisValidator(
+    control: AbstractControl
+  ): ValidationErrors | null {
     return control.value !== '' && control.value !== '-1'
       ? null
       : { requiredPais: true };
@@ -1260,10 +1274,10 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param control Control del formulario a validar.
    * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
    */
-  rfcValidator(control: AbstractControl) {
-    const rfcFisica = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
-    const rfcMoral = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
-    return rfcFisica.test(control.value) || rfcMoral.test(control.value)
+  static rfcValidator(control: AbstractControl): ValidationErrors | null {
+    const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
+    const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
+    return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
       ? null
       : { invalidRFC: true };
   }
@@ -1275,9 +1289,9 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param control Control del formulario a validar.
    * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
    */
-  curpValidator(control: AbstractControl) {
-    const pattern = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
-    return pattern.test(control.value) ? null : { invalidCURP: true };
+  static curpValidator(control: AbstractControl): ValidationErrors | null {
+    const PATTERN = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+    return PATTERN.test(control.value) ? null : { invalidCURP: true };
   }
 
   /**
@@ -1287,8 +1301,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param control Control del formulario a validar.
    * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
    */
-  telefonoValidator(control: AbstractControl) {
-    const pattern = /^([0-9A-Za-z\-() ])*$/;
-    return pattern.test(control.value) ? null : { invalidTelefono: true };
+  static telefonoValidator(control: AbstractControl): ValidationErrors | null {
+    const PATTERN = /^([0-9A-Za-z\-() ])*$/;
+    return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }
 }
