@@ -1,0 +1,82 @@
+<div class="container">
+    <form>
+        <div class="tipo-dropdown-container mt-5">
+            <div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <app-catalogo-select [label]="'Tipo de operacíon'" [required]="true"></app-catalogo-select>
+                    </div>
+                </div>
+                <div class="col-md-4 ms-5">
+                    <div class="form-group">
+                        <app-catalogo-select [label]="'Tipo de movimiento'" [required]="true"></app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+            <div class="obra-De-Arte-table mt-5">
+                <label class="form-label" for="ciudad">Informacion obra de arte*:</label>
+                <div class="table-responsive">
+                    <ng-table [commonTableHeader]="obraDeArteHeader" [commonTableBody]=""></ng-table>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-primary ms-3">Agregar</button>
+            </div>
+        </div>
+
+        <div class="motivo-importacion">
+            <ng-titulo titulo="Motivo de la importación" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [label]="'Motivo'" [required]="true"></app-catalogo-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="procedencia-container mt-4">
+            <ng-titulo titulo="Procedencia" />
+            <div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <app-catalogo-select [label]="'País'" [required]="true"></app-catalogo-select>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label" for="ciudad">Ciudad:</label>
+                    <input type="text" class="form-control" id="ciudad" [required]="true">
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <app-catalogo-select [label]="'Medio de transporte'" [required]="true"></app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="aduana-container mt-4">
+            <ng-titulo titulo="Aduana" />
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [label]="'Aduana de entrada'" [required]="true"></app-catalogo-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="manifiesto-container mt-4">
+            <ng-titulo titulo="Manifiesto" />
+            <ng-alert [CONTENIDO]="TEXTO_MANIFIESTO_ALERT"></ng-alert>
+        </div>
+    </form>
+</div>
