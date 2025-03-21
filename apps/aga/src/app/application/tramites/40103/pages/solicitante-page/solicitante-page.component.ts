@@ -2,7 +2,7 @@ import {
   Chofer40103Store,
   Choferesnacionales40103State,
 } from '../../estados/chofer40103.store';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
@@ -21,7 +21,7 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent {
+export class SolicitantePageComponent implements OnInit{
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
   public seccion!: Choferesnacionales40103State;
@@ -38,7 +38,7 @@ export class SolicitantePageComponent {
     private chofer40103Store: Chofer40103Store
   ) {}
 
-  ngOnInit() {
+  ngOnInit():void {
     this.pasos = PASOS.slice(0, 2);
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
