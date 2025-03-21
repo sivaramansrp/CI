@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule} from '@angular/router';
+import { Routes } from '@angular/router';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 const ROUTES_CONTENEDOR: Routes = [
   {

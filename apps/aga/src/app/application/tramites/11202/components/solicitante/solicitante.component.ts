@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { ReplaySubject, map, Subject, takeUntil } from "rxjs";
 import { Solicitud11202Query } from "../../../../estados/queries/solicitud11202.query";
-import { Solicitud11202State, Solicitud11202Store } from "../../../../estados/tramites/solicitud11202.store";
-import { ReplaySubject,map, takeUntil,Subject } from "rxjs";
-
+import { Solicitud11202State} from "../../../../estados/tramites/solicitud11202.store";
+import { Solicitud11202Store } from "../../../../estados/tramites/solicitud11202.store";
 /**
  * Componente para gestionar el formulario del solicitante.
  */
