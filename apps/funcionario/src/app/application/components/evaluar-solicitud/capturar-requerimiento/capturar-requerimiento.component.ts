@@ -29,10 +29,8 @@ export class CapturarRequerimientoComponent {
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
-     private estadoService: FuncionarioService,
-  ) {
-
-  }
+    private estadoService: FuncionarioService,
+  ) {  }
   ngOnInit(): void {
     this.catTipoRequerimiento = data;
     this.solicitudRequerimientoQuery.selectSolicitud$
@@ -47,7 +45,6 @@ export class CapturarRequerimientoComponent {
     
   }
   crearFormRequerimiento(): void {
-    debugger
     this.formRequerimiento = this.fb.group({
       tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
       justificacionRequerimiento: [this.solicitudRequerimientosState?.justificacionRequerimiento, [Validators.required]]
@@ -59,18 +56,17 @@ export class CapturarRequerimientoComponent {
    */
   tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates) {
     this.setValoresStore(form, campo, metodoNombre);
-
     const tipoRequerimientoId = this.formRequerimiento.get('tipoRequerimiento')?.value;
 
     switch (tipoRequerimientoId) {
       case "1":
-        this.documentacion = true;
+        this.estadoService.setTabIndex(true);
         break;
       case "2":
-        this.documentacion = true;
+        this.estadoService.setTabIndex(true);
         break;
       case "3":
-        this.documentacion = false;
+        this.estadoService.setTabIndex(false);
         break;
       default:
         break;

@@ -5,10 +5,10 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class FuncionarioService {
-  private firmarSubject = new BehaviorSubject<boolean>(true);
-  firmarFuncionario = this.firmarSubject.asObservable();
+  private tabIndexSource = new BehaviorSubject<boolean>(true);
+  tabIndex$ = this.tabIndexSource.asObservable();
 
-  setFirmar(valor: boolean) {
-    this.firmarSubject.next(valor);
+  setTabIndex(index: boolean) {
+    this.tabIndexSource.next(index);
   }
 }

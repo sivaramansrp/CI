@@ -17,10 +17,13 @@ export class RequerimientoInformacionComponent {
      * Índice de la pestaña seleccionada
      */
   indiceDictamen: number = 1;
-  contContinuar: boolean = false;
+  documentacion: boolean = false;
   constructor(
-    private router: Router
-  ) {}
+    private router: Router,
+    private estadoService: FuncionarioService,
+  ) {
+    this.estadoService.tabIndex$.subscribe(valor => this.documentacion = valor);
+  }
 
   ngOnInit(): void {
   }
@@ -34,7 +37,8 @@ export class RequerimientoInformacionComponent {
   }
 
   continuar(): void {
-    if (this.indiceDictamen === 2) {
+    debugger
+    if (this.indiceDictamen === 2 || this.documentacion === false) {
       this.router.navigate(['funcionario/firma-electronica']);
     } else {
       this.indiceDictamen = 2;
