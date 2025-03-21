@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputCheckComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })

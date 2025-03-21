@@ -1,6 +1,7 @@
-import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { DatosSolicitante } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { Injectable } from '@angular/core';
+import { Store, } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 11201
@@ -27,16 +28,16 @@ export interface Solicitud11201State {
   numeroManifiesta: number;
   fechaDeIngreso: string;
   archivoSeleccionado: string;
-    /**
-   * linea
-   * @type {string}
-   */
-    linea: string;
+  /**
+ * linea
+ * @type {string}
+ */
+  linea: string;
 
-      /**
-   * linea checkbox
-   * @type {string}
-   */
+  /**
+* linea checkbox
+* @type {string}
+*/
   lineaCheckbox: string;
 
   monto: string;
