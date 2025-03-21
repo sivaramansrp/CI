@@ -19,6 +19,10 @@ import { PermisoSanitarioImportacionRoutingModule } from './permiso-sanitario-im
 import { SanitarioComponent } from './pages/sanitario/sanitario.component';
 import { ServiciosPermisoSanitarioService } from './services/servicios-permiso-sanitario.service';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { provideHttpClient } from '@angular/common/http';
+import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 
 
 
@@ -43,6 +47,12 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
     TituloComponent,
     DatosDeLaComponent,
   ],
-  providers: [ServiciosPermisoSanitarioService, ToastrService],
+  providers: [ServiciosPermisoSanitarioService,
+     ToastrService,
+      CatalogosService,
+       InicioSesionService,
+        provideHttpClient(),
+         SubirDocumentoService,
+        ],
 })
 export class PermisoSanitarioImportacionModule {}

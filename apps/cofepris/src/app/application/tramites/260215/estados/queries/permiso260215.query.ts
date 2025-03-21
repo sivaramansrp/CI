@@ -1,29 +1,22 @@
-
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { Sanitario260215State, Sanitario260215Store } from '../tramites/sanitario260215.store';
 
-import { Sanitario260215Store, Solicitud260215State } from '../tramites/sanitario260215.store';
-
-/**
- * Service to query the state of Solicitud260215.
- */
 @Injectable({ providedIn: 'root' })
-export class Permiso260215Query extends Query<Solicitud260215State> {
-
+export class Permiso260215Query extends Query<Sanitario260215State> {
+  selectedEstado$ = this.select((state) => state.selectedEstado);
+  selectedClave$ = this.select((state) => state.setClave);
+  selectedDescripcion$ = this.select((state) => state.setDescripcion);
+  selecteDespecificarClasificacion$ = this.select((state) => state.setDespecificarClasificacion);
+  
   /**
-   * Observable to select the complete state of the solicitud.
-   * @returns {Observable<Solicitud260215State>} The complete state of the solicitud.
+   * Observable que selecciona todos los terceros relacionados del estado.
+   * Devuelve el estado completo.
    */
-  selectSolicitud$ = this.select((state) => {
+  selectTereceros$ = this.select((state) => {
     return state;
   });
-
-  /**
-   * Constructor for Permiso260215Query.
-   * @param {Tramite260215Store} store - The store that holds the state of Solicitud260215.
-   */
-  constructor(
-    protected override store: Sanitario260215Store) {
-    super(store);
+  constructor(private sanitarioStore: Sanitario260215Store) {
+    super(sanitarioStore);
   }
 }

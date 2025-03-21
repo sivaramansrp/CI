@@ -41,4 +41,14 @@ getLocalidaddata(): Observable<unknown> {
 getTable(): Observable<PermisoModel []> {
   return this.http.get<PermisoModel []>('assets/json/260215/terceros.json');
 }
+
+/**
+   * Obtiene los datos de terceros relacionados desde un archivo JSON local.
+   * 
+   * @returns Observable que emite un arreglo de objetos Catalogo.
+   */
+getData(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/260215/terceros-relacionados.json');
+}
+
 }
