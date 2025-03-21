@@ -29,6 +29,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      )
+    },
+    {
     path: 'registro-como-empresa',
     loadChildren: () =>
       import('./tramites/120601/registro-como-empresa.module').then(
@@ -73,6 +80,11 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
         (m) => m.ExpansionDeProductoresModule),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -153,6 +165,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/130111/importacion-de-vehiculos-usados.module').then(
         (m) => m.ImportacionDeVehiculosUsadosModule
+      ),
+  },   
+  {      
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   }
 ];
