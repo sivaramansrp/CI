@@ -9,7 +9,7 @@
  * @templateUrl ./partidas-de-la.component.html
  * @styleUrl ./partidas-de-la.component.scss
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -17,8 +17,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130109/partidas-de-la.json';
@@ -26,28 +24,24 @@ import { Router } from '@angular/router';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
 import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
 import { UppercaseDirective } from '@ng-mf/data-access-user';
 @Component({
-  selector: 'app-partidas-de-la',
+  selector: 'app-partidas-de-la-mercancia',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
     UppercaseDirective,
-    AlertComponent,
-    TableComponent,
-    CatalogoSelectComponent,
     TablaDinamicaComponent,
   ],
-  templateUrl: './partidas-de-la.component.html',
-  styleUrl: './partidas-de-la.component.scss',
+  templateUrl: './partidas-de-la-mercancia.component.html',
+  styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaComponent implements OnInit {
+export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * @property {any} filaSeleccionada
    * @description Fila seleccionada de la tabla.
@@ -71,10 +65,10 @@ export class PartidasDeLaComponent implements OnInit {
   form!: FormGroup;
 
   /**
-   * @property {FormGroup} formForTotalCount
+   * @property {FormGroup} formularioParaConteoTotal
    * @description Formulario reactivo utilizado para gestionar los totales de cantidad y valor en USD.
    */
-  formForTotalCount!: FormGroup;
+  formularioParaConteoTotal!: FormGroup;
 
   /**
    * @property {any} TEXTOS
@@ -134,10 +128,10 @@ export class PartidasDeLaComponent implements OnInit {
     this.calculateTotals();
 
     this.tramite130109Query.mostrarTabla$
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((mostrarTabla) => {
-      this.mostrarTabla = mostrarTabla;
-    });
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((mostrarTabla) => {
+        this.mostrarTabla = mostrarTabla;
+      });
     this.tramite130109Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -195,9 +189,13 @@ export class PartidasDeLaComponent implements OnInit {
       0
     );
     // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
+    this.formularioParaConteoTotal.controls['cantidadTotal'].setValue(
+      CANTIDAD_TOTAL
+    );
     // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
+    this.formularioParaConteoTotal.controls['valorTotalUSD'].setValue(
+      VALOR_TOTAL_USD
+    );
   }
 
   /**
@@ -205,7 +203,7 @@ export class PartidasDeLaComponent implements OnInit {
    * @description Crea el formulario reactivo para gestionar los totales.
    */
   formularioTotalCount(): void {
-    this.formForTotalCount = this.fb.group({
+    this.formularioParaConteoTotal = this.fb.group({
       cantidadTotal: [{ value: '', disabled: true }],
       valorTotalUSD: [{ value: '', disabled: true }],
     });
@@ -246,13 +244,7 @@ export class PartidasDeLaComponent implements OnInit {
   validarYEnviarFormulario(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      /*eslint-disable-next-line no-console*/
-      console.log(
-        'El formulario tiene errores. Corríjalos antes de continuar.'
-      );
     } else {
-      /*eslint-disable-next-line no-console*/
-      console.log('Formulario enviado con éxito', this.form.value);
       this.mostrarTabla = true;
     }
   }
@@ -272,7 +264,7 @@ export class PartidasDeLaComponent implements OnInit {
   /**
    * Navega a la página de carga de archivo.
    */
-  navigateToCargarArchivo(): void {
+  navegarACargarArchivo(): void {
     this.router.navigate(['/pago/importacion/carger-archivo']);
   }
 
@@ -283,19 +275,37 @@ export class PartidasDeLaComponent implements OnInit {
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
       this.tramite130109Store.setMostrarTabla(true);
-    this.tramite130109Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130109Store.storeTableValues(this.filaSeleccionada);
       this.router.navigate(['/pago/importacion/modificar-partida'], {
         state: { filaSeleccionada: this.filaSeleccionada },
       });
     }
   }
-
+  /**
+   * @nombre setValoresStore
+   * @descripción Este método establece los valores en el store de Tramite130109.
+   * @param {FormGroup} form - El formulario del cual se obtendrá el valor.
+   * @param {string} campo - El nombre del campo del formulario.
+   * @param {keyof Tramite130109Store} metodoNombre - El nombre del método en el store que se llamará.
+   * @returns {void}
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite130109Store
   ): void {
     const VALOR = form.get(campo)?.value;
+    /* eslint-disable no-console */
+    console.log(VALOR);
     (this.tramite130109Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Este método emite un valor a `destroyed$` y completa el observable para evitar fugas de memoria.
+   * @method
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

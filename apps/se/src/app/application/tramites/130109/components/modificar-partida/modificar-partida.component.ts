@@ -9,7 +9,7 @@
  * @styleUrl ./modificar-partida.component.scss
  */
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -19,6 +19,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Partida } from '../../models/partida.model';
+import { REG_X } from '@ng-mf/data-access-user';
 import { Subscription } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
@@ -30,7 +31,7 @@ import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
   templateUrl: './modificar-partida.component.html',
   styleUrl: './modificar-partida.component.scss',
 })
-export class ModificarPartidaComponent implements OnInit {
+export class ModificarPartidaComponent implements OnInit, OnDestroy {
   /**
    * @property {FormGroup} form
    * @description Formulario reactivo para la modificación de partida.
@@ -83,7 +84,7 @@ export class ModificarPartidaComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern(/^\d+$/),
+          Validators.pattern(REG_X.SOLO_DIGITOS),
           Validators.maxLength(18),
         ],
       ],
@@ -136,5 +137,13 @@ export class ModificarPartidaComponent implements OnInit {
     this.router.navigate(['/pago/importacion/vehiculos-usados-adaptados'], {
       queryParams: { indice: 2 },
     });
+  }
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Este método emite un valor a `destroyed$` y completa el observable para evitar fugas de memoria.
+   * @method
+   */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

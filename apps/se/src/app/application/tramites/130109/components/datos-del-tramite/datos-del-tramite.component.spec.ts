@@ -1,23 +1,23 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DetosDelTramiteComponent } from './detos-del-tramite.component';
+import { DatosDelTramiteComponent } from './datos-del-tramite.component';
 
-describe('DetosDelTramiteComponent', () => {
-  let component: DetosDelTramiteComponent;
-  let fixture: ComponentFixture<DetosDelTramiteComponent>;
+describe('DatosDelTramiteComponent', () => {
+  let component: DatosDelTramiteComponent;
+  let fixture: ComponentFixture<DatosDelTramiteComponent>;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        DetosDelTramiteComponent, 
+        DatosDelTramiteComponent, 
         HttpClientTestingModule,
         ReactiveFormsModule,
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DetosDelTramiteComponent);
+    fixture = TestBed.createComponent(DatosDelTramiteComponent);
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
 
@@ -59,13 +59,13 @@ describe('DetosDelTramiteComponent', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse); 
 
-    expect(component.solicitude).toEqual(mockResponse.options);
-    expect(component.defaultSelect).toBe(mockResponse.defaultSelect);
+    expect(component.opcionDeSolicitud).toEqual(mockResponse.options);
+    expect(component.predeterminadoSeleccionar).toBe(mockResponse.defaultSelect);
   });
 
-  it('debe actualizar el valor seleccionado en "onValueChange"', () => {
+  it('debe actualizar el valor seleccionado en "sobreLaSeleccionDeLaolSicitud"', () => {
     const newValue = 'Nuevo Valor';
-    component.onValueChange(newValue);
+    component.sobreLaSeleccionDeLaolSicitud(newValue);
     expect(component.selectedValue).toBe(newValue);
   });
 

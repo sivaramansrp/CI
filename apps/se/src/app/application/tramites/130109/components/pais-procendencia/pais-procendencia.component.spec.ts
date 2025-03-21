@@ -56,22 +56,22 @@ describe('PaisProcendenciaComponent', () => {
 
   it('should fetchPaisesPorBloque when bloque is selected', () => {
     component.paisForm.controls['bloque'].setValue(1);
-    component.fetchPaisProc();
+    component.listaDePaisesDisponibles();
     const req = httpMock.expectOne('/assets/json/130109/paises-por-bloque.json');
     expect(req.request.method).toBe('GET');
     req.flush([{ id: 1, descripcion: 'Country 1' }]);
     expect(component.paisesPorBloque.length).toBeGreaterThan(0);
   });
 
-  it('should call agregar method of crosslistComponent when botonField funcion is called', () => {
+  it('should call agregar method of crosslistComponent when campoDeBotones funcion is called', () => {
     spyOn(component.crosslistComponent, 'agregar');
-    component.botonField[0].funcion();
+    component.campoDeBotones[0].funcion();
     expect(component.crosslistComponent.agregar).toHaveBeenCalledWith('t');
   });
 
-  it('should call quitar method of crosslistComponent when botonField funcion is called', () => {
+  it('should call quitar method of crosslistComponent when campoDeBotones funcion is called', () => {
     spyOn(component.crosslistComponent, 'quitar');
-    component.botonField[3].funcion();
+    component.campoDeBotones[3].funcion();
     expect(component.crosslistComponent.quitar).toHaveBeenCalledWith('t');
   });
 

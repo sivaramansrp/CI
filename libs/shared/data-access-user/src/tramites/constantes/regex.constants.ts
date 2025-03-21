@@ -1,6 +1,7 @@
 export const REG_X = {
   SOLO_NUMEROS: /^[0-9]+$/, // Permite solo números enteros
   DECIMALES_DOS_LUGARES: /^[0-9]+(\.[0-9]{1,2})?$/, // Permite números con hasta dos decimales
+  SOLO_DIGITOS: /^\d+$/, // Permite solo dígitos
 };
 
 // Expresión regular para verificar si la entrada comienza con espacios

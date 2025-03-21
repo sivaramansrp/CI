@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { CargerArchivoComponent } from './carger-archivo.component';
+import { CargarArchivoComponent } from './cargar-archivo.component';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('CargerArchivoComponent', () => {
-  let component: CargerArchivoComponent;
+describe('CargarArchivoComponent', () => {
+  let component: CargarArchivoComponent;
   let location: Location;
   let router: Router;
 
@@ -19,7 +19,7 @@ describe('CargerArchivoComponent', () => {
 
     location = TestBed.inject(Location);
     router = TestBed.inject(Router);
-    component = new CargerArchivoComponent(location, router);
+    component = new CargarArchivoComponent(location, router);
   });
 
   it('debe crear el componente', () => {

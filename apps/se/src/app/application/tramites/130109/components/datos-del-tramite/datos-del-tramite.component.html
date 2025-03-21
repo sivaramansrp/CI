@@ -1,0 +1,51 @@
+<div class="container">
+  <form [formGroup]="formDelTramite">
+    <ng-titulo titulo="Datos del tramite a realizar"> </ng-titulo>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="solicitude">Solicitude*:</label>
+          <app-input-radio
+            [radioOptions]="opcionDeSolicitud"
+            [selectedValue]="predeterminadoSeleccionar"
+            [isRequired]="true"
+            (valueChange)="sobreLaSeleccionDeLaolSicitud($event)"
+            [layout]="'vertical'"
+          ></app-input-radio>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <app-catalogo-select
+          [catalogo]="listaDeRegimenDestinoMercancia"
+          (change)="fetchListaDeRegimenDestinoMercancia()"
+          [label]="'Régimen al que se destinará la mercancía'"
+          [required]="true"
+          [placeholder]="'Seleccione un documento'"
+          formControlName="regimenDestinoMercancia"
+          (change)="setValoresStore(formDelTramite, 'regimenDestinoMercancia', 'setRegimenDestinoMercancia')"
+        ></app-catalogo-select>
+        </div> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <app-catalogo-select
+          [catalogo]="listaClasificacionDelRegimen"
+          (change)="fetchClasificacionDelRegimen()"
+          [label]="'Clasificación del régimen'"
+          [required]="true"
+          [placeholder]="'Seleccione un documento'"
+          formControlName="clasificacionDelRegimen"
+          (change)="setValoresStore(formDelTramite, 'clasificacionDelRegimen', 'setClasificacionDelRegimen')"
+        ></app-catalogo-select>
+        </div> 
+      </div>
+    </div>
+  </form>
+</div>

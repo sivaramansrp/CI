@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
-  selector: 'app-carger-archivo',
+  selector: 'app-cargar-archivo',
   standalone: true,
   imports: [CommonModule, TituloComponent],
-  templateUrl: './carger-archivo.component.html',
-  styleUrl: './carger-archivo.component.scss',
+  templateUrl: './cargar-archivo.component.html',
+  styleUrl: './cargar-archivo.component.scss',
 })
-export class CargerArchivoComponent {
+export class CargarArchivoComponent {
   /**
    * @constructor
    * @param {Location} location - Servicio de ubicación para gestionar la navegación del historial.

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PartidasDeLaComponent } from './partidas-de-la.component';
+import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
@@ -7,9 +7,9 @@ import { Tramite130109Store } from '../../estados/tramites/tramites130109.store'
 import { of, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-describe('PartidasDeLaComponent', () => {
-  let component: PartidasDeLaComponent;
-  let fixture: ComponentFixture<PartidasDeLaComponent>;
+describe('PartidasDeLaMercanciaComponent', () => {
+  let component: PartidasDeLaMercanciaComponent;
+  let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
   let mockRouter: any;
   let mockTramite130109Query: any;
   let mockTramite130109Store: any;
@@ -28,7 +28,7 @@ describe('PartidasDeLaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, CommonModule, PartidasDeLaComponent],
+      imports: [ReactiveFormsModule, CommonModule, PartidasDeLaMercanciaComponent],
       providers: [
         FormBuilder,
         { provide: Router, useValue: mockRouter },
@@ -37,7 +37,7 @@ describe('PartidasDeLaComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PartidasDeLaComponent);
+    fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
 
     component.getEstablecimientoTableData = {
@@ -59,13 +59,13 @@ describe('PartidasDeLaComponent', () => {
 
   it('Debería inicializar los formularios correctamente', () => {
     expect(component.form).toBeDefined();
-    expect(component.formForTotalCount).toBeDefined();
+    expect(component.formularioParaConteoTotal).toBeDefined();
   });
 
   it('Debería calcular los totales correctamente', () => {
     component.calculateTotals();
-    expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(30);
-    expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(300);
+    expect(component.formularioParaConteoTotal.get('cantidadTotal')?.value).toBe(30);
+    expect(component.formularioParaConteoTotal.get('valorTotalUSD')?.value).toBe(300);
   });
 
   it('debe navegar para modificar la página con la fila seleccionada cuando se llama navegarParaModificarPartida', () => {

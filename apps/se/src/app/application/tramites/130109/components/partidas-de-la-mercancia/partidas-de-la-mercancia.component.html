@@ -86,12 +86,6 @@
           </div>
         </div>
       </div>
-      <div class="row mt-5">
-        <div class="col-md-4"></div>
-        <div class="col-md-8">
-          <hr />
-        </div>
-      </div>
       <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
@@ -99,7 +93,7 @@
             <button
               class="btn btn-primary me-2"
               type="button"
-              (click)="navigateToCargarArchivo()"
+              (click)="navegarACargarArchivo()"
             >
               Cargar archivo
             </button>
@@ -129,7 +123,7 @@
         </app-tabla-dinamica>
       </div>
 
-      <form [formGroup]="formForTotalCount">
+      <form [formGroup]="formularioParaConteoTotal">
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
@@ -180,7 +174,7 @@
                 type="button"
                 (click)="navegarParaModificarPartida()"
               >
-                Mofificar partida
+                Mofificar
               </button>
             </div>
           </div>

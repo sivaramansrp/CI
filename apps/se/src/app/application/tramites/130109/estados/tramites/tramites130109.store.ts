@@ -3,6 +3,9 @@ import { Injectable } from '@angular/core';
 
 
 export interface Tramite130109State {
+  regimenDestinoMercancia: string;
+  clasificacionDelRegimen:string;
+  opcion:string;
   filaSeleccionada: null;
   cantidad: string;
   valorPartidaUSD: number;
@@ -21,6 +24,9 @@ export interface Tramite130109State {
 
 export function createInitialState(): Tramite130109State {
   return {
+    regimenDestinoMercancia:'',
+    clasificacionDelRegimen:'',
+    opcion:'',
     filaSeleccionada: null,
     cantidad: '',
     valorPartidaUSD: 0,
@@ -39,12 +45,29 @@ export function createInitialState(): Tramite130109State {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite130109' })
+@StoreConfig({ name: 'tramite130109', resettable: true })
 export class Tramite130109Store extends Store<Tramite130109State> {
   constructor() {
     super(createInitialState());
   }
-
+  public setRegimenDestinoMercancia(regimenDestinoMercancia: string): void { 
+    this.update((state) => ({
+      ...state,
+      regimenDestinoMercancia,
+    }));
+  }
+  public setClasificacionDelRegimen(clasificacionDelRegimen: string): void { 
+    this.update((state) => ({
+      ...state,
+      clasificacionDelRegimen,
+    }));
+  }
+  public setOpcion(opcion: string): void { 
+    this.update((state) => ({
+      ...state,
+      opcion,
+    }));
+  }
   public setCantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,

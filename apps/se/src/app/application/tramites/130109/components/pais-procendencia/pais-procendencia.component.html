@@ -8,7 +8,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="paisProc"
-          (change)="fetchPaisProc()"
+          (change)="listaDePaisesDisponibles()"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"
@@ -26,7 +26,7 @@
       [fechas]="selectRangoDias"
       [showSearchInput1]="true"
       [showSearchInput2]="true"
-      [botonField]="botonField"
+      [botonField]="campoDeBotones"
     ></crosslist>
   </div>
 
@@ -34,13 +34,13 @@
     <div class="col-md-8">
       <div class="form-group">
         <label for="descripcion" class="form-label"
-          >Uso(s) especffico(s) de la mercancia*:</label
+          >Uso(s) especÍfico(s) de la mercancÍa*:</label
         >
         <textarea
           class="form-control"
           rows="2"
           id="usoEspecifico"
-          placeholder="Uso(s) especffico(s) de la mercancia*:"
+          placeholder="Uso(s) especÍfico(s) de la mercancÍa*:"
           formControlName="usoEspecifico"
           (change)="setValoresStore(paisForm, 'usoEspecifico', 'setUsoEspecifico')"
         ></textarea>
@@ -81,7 +81,7 @@
         class="text-danger"
       >
         <small *ngIf="paisForm.controls['justificacionImportacionExportacion'].errors?.['required']"
-          >La justificacion es obligatoria.</small
+          >La justificación es obligatoria.</small
         >
         </div>
       </div>

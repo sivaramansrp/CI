@@ -5,10 +5,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { DatosDeLaMercanciaComponent } from './components/datos-de-la-mercancia/datos-de-la-mercancia.component';
-import { DetosDelTramiteComponent } from './components/detos-del-tramite/detos-del-tramite.component';
+import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
 import { PaisProcendenciaComponent } from './components/pais-procendencia/pais-procendencia.component';
-import { PartidasDeLaComponent } from './components/partidas-de-la/partidas-de-la.component';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PartidasDeLaMercanciaComponent } from './components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RepresentacionComponent } from './components/representacion/representacion.component';
@@ -43,12 +42,11 @@ import { VehiculosUsadosAdaptadosRoutingModule } from './vehiculos-usados-adapta
     FirmaElectronicaComponent,
     AnexarDocumentosComponent,
     AlertComponent,
-    PasoDosComponent,
     CatalogoSelectComponent,
     DatosDeLaMercanciaComponent,
-    DetosDelTramiteComponent,
+    DatosDelTramiteComponent,
     PaisProcendenciaComponent,
-    PartidasDeLaComponent,
+    PartidasDeLaMercanciaComponent,
     RepresentacionComponent
   ],
   exports: [

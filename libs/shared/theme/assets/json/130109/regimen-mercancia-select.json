@@ -1,4 +1,3 @@
-[
   [
     { "id": 1, "descripcion": "Definitivos" },
     { "id": 2, "descripcion": "Temporales" },
@@ -13,9 +12,4 @@
     { "id": 11, "descripcion": "Deposito fiscal de vehiculos" },
     { "id": 12, "descripcion": "Deposito de importation" },
     {"id": 12, "descripcion": "Temporales de importacien para retornar al extranjero en el mismo estado" }
-  ],
-  [
-    { "id": 1, "descripcion": "De importacion" },
-    { "id": 2, "descripcion": "De exportacion" }
   ]
-]

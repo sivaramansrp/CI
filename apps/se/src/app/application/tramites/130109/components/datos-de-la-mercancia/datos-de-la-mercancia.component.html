@@ -1,42 +1,45 @@
 <div class="container">
-  <form [formGroup]="formDelLa">
-    <ng-titulo titulo="Datos del la mercancia"> </ng-titulo>
+  <form [formGroup]="formularioDatosMercancia">
+    <ng-titulo titulo="Datos de la mercancía"> </ng-titulo>
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label for="producto">Producto*:</label>
+          <label for="opcionesProducto">Producto*:</label>
           <app-input-radio
-            [radioOptions]="producto"
-            [selectedValue]="defaultSelect"
+            [radioOptions]="opcionesProducto"
+            [selectedValue]="predeterminadoSeleccionar"
             [isRequired]="true"
-            (valueChange)="onValueChange($event)"
             [layout]="'vertical'"
+            formControlName="opcion"
+            (change)="
+            setValoresStore(formularioDatosMercancia, 'opcion', 'setOpcion')
+          "
           ></app-input-radio>
         </div>
       </div>
       <div class="col-md-8">
         <label for="message" class="form-label"
-          >Descripcion de la mercancia* :</label
+          >Descripción de la mercancía* :</label
         >
         <textarea
           id="message"
           class="form-control mb-5"
-          placeholder="Descripcion de la mercancia"
+          placeholder="Descripción de la mercancía"
           rows="8"
           formControlName="descripcion"
-          (change)="setValoresStore(formDelLa, 'descripcion', 'setDescripcion')"
+          (change)="setValoresStore(formularioDatosMercancia, 'descripcion', 'setDescripcion')"
         ></textarea>
         <div
           *ngIf="
-            formDelLa.controls['descripcion'].invalid &&
-            formDelLa.controls['descripcion'].touched
+            formularioDatosMercancia.controls['descripcion'].invalid &&
+            formularioDatosMercancia.controls['descripcion'].touched
           "
           class="text-danger"
         >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['required']"
+          <small *ngIf="formularioDatosMercancia.controls['descripcion'].errors?.['required']"
             >La descripción es obligatoria.</small
           >
-          <small *ngIf="formDelLa.controls['descripcion'].errors?.['maxlength']"
+          <small *ngIf="formularioDatosMercancia.controls['descripcion'].errors?.['maxlength']"
             >No puede exceder 254 caracteres.</small
           >
         </div>
@@ -53,15 +56,15 @@
           (change)="fetchFraccion()"
           [placeholder]="'Seleccione un documento'"
           formControlName="fraccion"
-          (change)="setValoresStore(formDelLa, 'fraccion', 'setFraccion')"
+          (change)="setValoresStore(formularioDatosMercancia, 'fraccion', 'setFraccion')"
         ></app-catalogo-select>
         <div
           *ngIf="
-            formDelLa.controls['fraccion'].invalid && formDelLa.controls['fraccion'].touched
+            formularioDatosMercancia.controls['fraccion'].invalid && formularioDatosMercancia.controls['fraccion'].touched
           "
           class="text-danger"
         >
-          <small *ngIf="formDelLa.controls['fraccion'].errors?.['required']"
+          <small *ngIf="formularioDatosMercancia.controls['fraccion'].errors?.['required']"
             >Debe seleccionar un valor.</small
           >
         </div>
@@ -80,22 +83,22 @@
           placeholder=""
           type="text"
           formControlName="cantidad"
-          (change)="setValoresStore(formDelLa, 'cantidad', 'setCantidad')"
+          (change)="setValoresStore(formularioDatosMercancia, 'cantidad', 'setCantidad')"
         />
         <div
           *ngIf="
-            formDelLa.controls['cantidad'].invalid &&
-            formDelLa.controls['cantidad'].touched
+            formularioDatosMercancia.controls['cantidad'].invalid &&
+            formularioDatosMercancia.controls['cantidad'].touched
           "
           class="text-danger"
         >
-          <small *ngIf="formDelLa.controls['cantidad'].errors?.['required']"
+          <small *ngIf="formularioDatosMercancia.controls['cantidad'].errors?.['required']"
             >Este campo es obligatorio.</small
           >
-          <small *ngIf="formDelLa.controls['cantidad'].errors?.['pattern']"
+          <small *ngIf="formularioDatosMercancia.controls['cantidad'].errors?.['pattern']"
             >Solo se permiten números.</small
           >
-          <small *ngIf="formDelLa.controls['cantidad'].errors?.['min']"
+          <small *ngIf="formularioDatosMercancia.controls['cantidad'].errors?.['min']"
             >Debe ser mayor que 0.</small
           >
         </div>
@@ -114,22 +117,22 @@
           placeholder=""
           type="text"
           formControlName="valorFacturaUSD"
-          (change)="setValoresStore(formDelLa, 'valorFacturaUSD', 'setvalorPartidaUSD')"
+          (change)="setValoresStore(formularioDatosMercancia, 'valorFacturaUSD', 'setValorFacturaUSD')"
         />
         <div
           *ngIf="
-            formDelLa.controls['valorFacturaUSD'].invalid &&
-            formDelLa.controls['valorFacturaUSD'].touched
+            formularioDatosMercancia.controls['valorFacturaUSD'].invalid &&
+            formularioDatosMercancia.controls['valorFacturaUSD'].touched
           "
           class="text-danger"
         >
-          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['required']"
+          <small *ngIf="formularioDatosMercancia.controls['valorFacturaUSD'].errors?.['required']"
             >Este campo es obligatorio.</small
           >
-          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['pattern']"
+          <small *ngIf="formularioDatosMercancia.controls['valorFacturaUSD'].errors?.['pattern']"
             >Ingrese un valor numérico válido (ej. 100.50).</small
           >
-          <small *ngIf="formDelLa.controls['valorFacturaUSD'].errors?.['min']"
+          <small *ngIf="formularioDatosMercancia.controls['valorFacturaUSD'].errors?.['min']"
             >Debe ser mayor que 0.</small
           >
         </div>
@@ -137,22 +140,21 @@
       <div class="col-md-4 form-group">
         <app-catalogo-select
           [tooltipQuestionCircle]="true"
-          [catalogo]="Unidad"
+          [catalogo]="unidad"
           [label]="'UMT'"
           [required]="true"
-          (change)="fetchUnidad()"
           [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
-          (change)="setValoresStore(formDelLa, 'unidadMedida', 'setUnidadMedida')"
+          (change)="fetchFraccion(); setValoresStore(formularioDatosMercancia, 'unidadMedida', 'setUnidadMedida')"
         ></app-catalogo-select>
         <div
           *ngIf="
-            formDelLa.controls['unidadMedida'].invalid &&
-            formDelLa.controls['unidadMedida'].touched
+            formularioDatosMercancia.controls['unidadMedida'].invalid &&
+            formularioDatosMercancia.controls['unidadMedida'].touched
           "
           class="text-danger"
         >
-          <small *ngIf="formDelLa.controls['unidadMedida'].errors?.['required']"
+          <small *ngIf="formularioDatosMercancia.controls['unidadMedida'].errors?.['required']"
             >Debe seleccionar una unidad de medida.</small
           >
         </div>

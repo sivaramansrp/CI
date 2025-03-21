@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import {AccionBoton} from '../../enum/vehiculos-adaptados.enum';
 
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/vehiculos-usados-adaptados.enums';
+import { PASOS } from '../../constantes/pasos.enum';
 
 
 @Component({

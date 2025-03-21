@@ -3,7 +3,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -14,16 +14,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
+import { map, takeUntil } from 'rxjs';
 import { Pais } from '../../enum/vehiculos-adaptados.enum';
 
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
- import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
- import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
-import paisProcJson from '@libs/shared/theme/assets/json/130109/pais-procenia.json';
+import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
+import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
 
 /**
  * Componente para la gestión de la selección de países de procedencia.
@@ -41,13 +42,18 @@ import paisProcJson from '@libs/shared/theme/assets/json/130109/pais-procenia.js
   templateUrl: './pais-procendencia.component.html',
   styleUrl: './pais-procendencia.component.scss',
 })
-export class PaisProcendenciaComponent implements OnInit {
+export class PaisProcendenciaComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @property {CrosslistComponent} crosslistComponent - Referencia al componente Crosslist.
    */
   @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
-
+  /**
+   * Observable utilizado para gestionar la destrucción del componente y evitar fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  private destroyed$: Subject<void> = new Subject();
   /**
    * compo doc
    * @property {FormGroup} paisForm - Estructura del formulario reactivo.
@@ -88,18 +94,18 @@ export class PaisProcendenciaComponent implements OnInit {
    * compo doc
    * @property {Catalogo[]} paisProc - Catálogo de países de procedencia.
    */
-  paisProc: Catalogo[] = paisProcJson;
+  public paisProc!: Catalogo[];
 
   /**
    * compo doc
-   * @property {Pais[]} paisesPorBloque - Lista de países por bloque.
+   * @property {Catalogo[]} paisesPorBloque - Lista de países por bloque.
    */
-  paisesPorBloque: Pais[] = [];
+  public paisesPorBloque!: Catalogo[];
   /**
    * compo doc
-   * @property {Array<{ btnNombre: string; class: string; funcion: Function }>} botonField - Configuración de botones.
+   * @property {Array<{ btnNombre: string; class: string; funcion: Function }>} campoDeBotones - Configuración de botones.
    */
-  botonField = [
+  campoDeBotones = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
@@ -144,8 +150,14 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Cliente HTTP para solicitudes.
    * @param {FormBuilder} fb - Constructor de formularios reactivos.
    */
-  constructor(private http: HttpClient, private fb: FormBuilder,private tramite130109Store: Tramite130109Store,
-    private tramite130109Query: Tramite130109Query) {
+
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private tramite130109Store: Tramite130109Store,
+    private tramite130109Query: Tramite130109Query,
+    private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService
+  ) {
     // Constructor del componente
   }
 
@@ -161,7 +173,22 @@ export class PaisProcendenciaComponent implements OnInit {
       justificacionImportacionExportacion: ['', [Validators.required]],
       observaciones: [''],
     });
-    this.fetchPaisProc();
+    this.listaDePaisesDisponibles();
+    // this.fetchPaisesPorBloque(0);
+    this.tramite130109Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.paisForm.patchValue({
+            bloque: seccionState.bloque,
+            usoEspecifico: seccionState.usoEspecifico,
+            justificacionImportacionExportacion:
+              seccionState.justificacionImportacionExportacion,
+            observaciones: seccionState.observaciones,
+          });
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -169,9 +196,9 @@ export class PaisProcendenciaComponent implements OnInit {
    * @method fetchPaisProc
    * @description Carga las opciones de países de procedencia desde el JSON.
    */
-  fetchPaisProc(): void {
-    this.http
-      .get<Catalogo[]>('/assets/json/130109/pais-procenia.json')
+  listaDePaisesDisponibles(): void {
+    this.vehiculosUsadosAdaptadosService
+      .getListaDePaisesDisponibles()
       .subscribe((data) => {
         this.paisProc = data;
       });
@@ -188,9 +215,9 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {number} bloqueId - ID del bloque seleccionado.
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
-    this.http
-      .get<Pais[]>('/assets/json/130109/paises-por-bloque.json')
-      .subscribe((data: Pais[]) => {
+    this.vehiculosUsadosAdaptadosService
+      .getPaisesPorBloque(_bloqueId)
+      .subscribe((data) => {
         this.paisesPorBloque = data;
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Pais) => pais.descripcion
@@ -214,5 +241,14 @@ export class PaisProcendenciaComponent implements OnInit {
     (this.tramite130109Store[metodoNombre] as (value: string | number) => void)(
       VALOR
     );
+  }
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Este método emite un valor a `destroyed$` y completa el observable para evitar fugas de memoria.
+   * @method
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

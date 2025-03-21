@@ -5,7 +5,7 @@ import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
 import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import productoOptions from 'libs/shared/theme/assets/json/130109/producto-otions.json';
 import unidadOptions from 'libs/shared/theme/assets/json/130109/unidad_da.json';
-import fractionValues from 'libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
+import fraccionArancelariaOpciones from 'libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
  
 describe('DatosDeLaMercanciaComponent', () => {
   let component: DatosDeLaMercanciaComponent;
@@ -34,13 +34,13 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
  
-  it('should initialize formDelLa with default values', () => {
-    expect(component.formDelLa).toBeDefined();
-    expect(component.formDelLa.get('descripcion')?.value).toBe('');
-    expect(component.formDelLa.get('fraccion')?.value).toBe('');
-    expect(component.formDelLa.get('unidadMedida')?.value).toBe('');
-    expect(component.formDelLa.get('cantidad')?.value).toBe('');
-    expect(component.formDelLa.get('valorFacturaUSD')?.value).toBe('');
+  it('should initialize formularioDatosMercancia with default values', () => {
+    expect(component.formularioDatosMercancia).toBeDefined();
+    expect(component.formularioDatosMercancia.get('descripcion')?.value).toBe('');
+    expect(component.formularioDatosMercancia.get('fraccion')?.value).toBe('');
+    expect(component.formularioDatosMercancia.get('unidadMedida')?.value).toBe('');
+    expect(component.formularioDatosMercancia.get('cantidad')?.value).toBe('');
+    expect(component.formularioDatosMercancia.get('valorFacturaUSD')?.value).toBe('');
   });
  
   it('should call fetchProductoOptions on ngOnInit', () => {
@@ -49,29 +49,29 @@ describe('DatosDeLaMercanciaComponent', () => {
     expect(component.fetchProductoOptions).toHaveBeenCalled();
   });
  
-  it('should update selectedValue when onValueChange is called', () => {
+  it('should update valorSeleccionado when onValueChange is called', () => {
     component.onValueChange('testValue');
-    expect(component.selectedValue).toBe('testValue');
+    expect(component.valorSeleccionado).toBe('testValue');
   });
  
-  it('should set producto options and defaultSelect on fetchProductoOptions', () => {
+  it('should set producto options and predeterminadoSeleccionar on fetchProductoOptions', () => {
     component.fetchProductoOptions();
-    expect(component.producto).toEqual(productoOptions.options);
-    expect(component.defaultSelect).toBe(productoOptions.defaultSelect);
+    expect(component.opcionesProducto).toEqual(productoOptions.opciones);
+    expect(component.predeterminadoSeleccionar).toBe(productoOptions.predeterminadoSeleccionar);
   });
  
   it('should set unidadMedida to first Unidad id on fetchFraccion', () => {
     component.fetchFraccion();
-    expect(component.formDelLa.get('unidadMedida')?.value).toBe(component.Unidad[0].id);
+    expect(component.formularioDatosMercancia.get('unidadMedida')?.value).toBe(component.unidad[0].id);
   });
  
-  it('should reset selectedValue to Nuevo on fetchUnidad', () => {
+  it('should reset valorSeleccionado to Nuevo on fetchUnidad', () => {
     component.fetchUnidad();
-    expect(component.selectedValue).toBe('Nuevo');
+    expect(component.valorSeleccionado).toBe('Nuevo');
   });
  
   it('should validate descripcion field correctly', () => {
-    const descripcion = component.formDelLa.get('descripcion');
+    const descripcion = component.formularioDatosMercancia.get('descripcion');
     descripcion?.setValue('');
     expect(descripcion?.valid).toBeFalsy();
     descripcion?.setValue('short');
@@ -81,7 +81,7 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
  
   it('should validate cantidad field correctly', () => {
-    const cantidad = component.formDelLa.get('cantidad');
+    const cantidad = component.formularioDatosMercancia.get('cantidad');
     cantidad?.setValue('');
     expect(cantidad?.valid).toBeFalsy();
     cantidad?.setValue('invalid');
@@ -93,7 +93,7 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
  
   it('should validate valorFacturaUSD field correctly', () => {
-    const valorFacturaUSD = component.formDelLa.get('valorFacturaUSD');
+    const valorFacturaUSD = component.formularioDatosMercancia.get('valorFacturaUSD');
     valorFacturaUSD?.setValue('');
     expect(valorFacturaUSD?.valid).toBeFalsy();
     valorFacturaUSD?.setValue('invalid');
@@ -105,7 +105,7 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
  
   it('should validate fraccion field correctly', () => {
-    const fraccion = component.formDelLa.get('fraccion');
+    const fraccion = component.formularioDatosMercancia.get('fraccion');
     fraccion?.setValue('');
     expect(fraccion?.valid).toBeFalsy();
     fraccion?.setValue('validFraccion');
@@ -113,7 +113,7 @@ describe('DatosDeLaMercanciaComponent', () => {
   });
  
   it('should validate unidadMedida field correctly', () => {
-    const unidadMedida = component.formDelLa.get('unidadMedida');
+    const unidadMedida = component.formularioDatosMercancia.get('unidadMedida');
     unidadMedida?.setValue('');
     expect(unidadMedida?.valid).toBeFalsy();
     unidadMedida?.setValue('validUnidad');
@@ -122,18 +122,18 @@ describe('DatosDeLaMercanciaComponent', () => {
  
   it('should fetch product options correctly', () => {
     component.fetchProductoOptions();
-    expect(component.producto).toEqual(productoOptions.options);
-    expect(component.defaultSelect).toBe(productoOptions.defaultSelect);
+    expect(component.opcionesProducto).toEqual(productoOptions.opciones);
+    expect(component.predeterminadoSeleccionar).toBe(productoOptions.predeterminadoSeleccionar);
   });
  
   it('should fetch fraccion correctly', () => {
     component.fetchFraccion();
-    expect(component.selectedValue).toBe('Nuevo');
-    expect(component.formDelLa.get('unidadMedida')?.value).toBe(unidadOptions[0].id);
+    expect(component.valorSeleccionado).toBe('Nuevo');
+    expect(component.formularioDatosMercancia.get('unidadMedida')?.value).toBe(unidadOptions[0].id);
   });
  
   it('should fetch unidad correctly', () => {
     component.fetchUnidad();
-    expect(component.selectedValue).toBe('Nuevo');
+    expect(component.valorSeleccionado).toBe('Nuevo');
   });
 });
