@@ -1,7 +1,6 @@
-import { DatosSolicitante } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Store } from '@datorama/akita';
-import { StoreConfig } from '@datorama/akita'
+import { DatosSolicitante } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 11201
@@ -11,6 +10,10 @@ import { StoreConfig } from '@datorama/akita'
 export interface Solicitud11201State {
   menuDesplegable: string;
   datosSolicitante: DatosSolicitante
+  rfc: string;
+  denominacion: string;
+  actividadEconomica: string;
+  correoElectronico: string;
   datosDelContenedor: [];
   tipoBusqueda: string;
   aduana: string;
@@ -20,21 +23,20 @@ export interface Solicitud11201State {
   digitoDeControl: string;
   contenedores: string;
   aduanaMenuDesplegable: string;
-  individualCaja: boolean[];
-  numManifiesto: number;
+  casillaDeVerificacionindividual: boolean[];
+  numeroManifiesta: number;
   fechaDeIngreso: string;
-  commonCaja: boolean;
   archivoSeleccionado: string;
-  /**
- * linea
- * @type {string}
- */
-  linea: string;
+    /**
+   * linea
+   * @type {string}
+   */
+    linea: string;
 
-  /**
-* linea checkbox
-* @type {string}
-*/
+      /**
+   * linea checkbox
+   * @type {string}
+   */
   lineaCheckbox: string;
 
   monto: string;
@@ -50,6 +52,10 @@ export function createInitialState(): Solicitud11201State {
       actividadEconomica: "",
       correoElectronico: ""
     },
+    rfc: 'AAL0409235E6',
+    denominacion: 'AGRICOLA ALPE S DE RL DE CV',
+    actividadEconomica: 'Siembra, cultivo y cosecha de papa',
+    correoElectronico: 'vucem2.5@hotmail.com',
     datosDelContenedor: [],
     tipoBusqueda: '',
     aduana: '',
@@ -59,10 +65,9 @@ export function createInitialState(): Solicitud11201State {
     contenedores: '',
     fechaIngreso: '',
     aduanaMenuDesplegable: '',
-    individualCaja: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-    numManifiesto: 0,
+    casillaDeVerificacionindividual: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
+    numeroManifiesta: 0,
     fechaDeIngreso: '',
-    commonCaja: false,
     archivoSeleccionado: '',
     linea: '',
     lineaCheckbox: '',
@@ -83,19 +88,19 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
   /**
    * Guarda el tipo de solicitud en el estado.
    *
-   * @param individualCaja - El tipo de solicitud que se va a guardar.
+   * @param casillaDeVerificacionindividual - El tipo de solicitud que se va a guardar.
    */
-  public setIndividualCaja(individualCaja: []): void {
+  public setCasillaDeVerificacionindividual(casillaDeVerificacionindividual: []): void {
     this.update((state) => ({
       ...state,
-      individualCaja,
+      casillaDeVerificacionindividual,
     }));
   }
 
-  public setNumManifiesto(numManifiesto: number): void {
+  public setNumeroManifiesta(numeroManifiesta: number): void {
     this.update((state) => ({
       ...state,
-      numManifiesto,
+      numeroManifiesta,
     }));
   }
 
@@ -120,10 +125,23 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setCommonCaja(commonCaja: boolean): void {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
-      commonCaja,
+      rfc
+    }));
+  }
+  public setDenominacion(denominacion: string): void {
+    this.update((state) => ({
+      ...state,
+      denominacion
+    }));
+  }
+
+  public setActividadEconomica(actividadEconomica: string): void {
+    this.update((state) => ({
+      ...state,
+      actividadEconomica
     }));
   }
 
@@ -134,6 +152,12 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
+  public setCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      correoElectronico
+    }));
+  }
   public setDelContenedor(datosDelContenedor: []): void {
     this.update((state) => ({
       ...state,

@@ -130,6 +130,12 @@ export const FECHA_INICIO = {
   habilitado: true,
 };
 
+export const FECHA_INGRESO = {
+  labelNombre: 'Fecha de ingreso',
+  required: true,
+  habilitado: true,
+};
+
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: true,

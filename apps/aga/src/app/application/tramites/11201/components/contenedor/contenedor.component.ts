@@ -1,5 +1,5 @@
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, FECHA_INGRESO, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -52,11 +52,13 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    InputFechaComponent
   ],
   providers: [BsModalService]
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
+  public fechaInicioInput: InputFecha = FECHA_INGRESO;
   /**
    * Formulario principal de la solicitud.
    */
@@ -202,6 +204,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
     { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
+  
+  TablaSeleccion = TablaSeleccion;
 
   /**
    * Datos del contenedor.
@@ -303,8 +307,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       contenedores: [this.solicitud11201State?.contenedores, Validators.required],
       tipoTransporte: ['', Validators.required],
       menuDesplegable: [this.solicitud11201State.menuDesplegable, Validators.required],
-      numManifiesto: [
-        this.solicitud11201State.numManifiesto,
+      numeroManifiesta: [
+        this.solicitud11201State.numeroManifiesta,
         [Validators.required, Validators.maxLength(50)],
       ],
       aduanaMenuDesplegable: [
@@ -312,15 +316,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
-      individualCaja: this.fb.array(
-        this.solicitud11201State?.individualCaja
-      ),
       amount: [this.amount, Validators.required],
       fechaDeIngreso: [
         this.solicitud11201State?.fechaDeIngreso,
         Validators.required,
       ],
-      commonCaja: [this.solicitud11201State?.commonCaja],
     });
     this.mostrarCampos();
     this.solicitudForm
@@ -373,13 +373,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
     });
-  }
-
-  /**
-   * Obtener el array de checkboxes individuales.
-   */
-  get individualCaja(): FormArray {
-    return this.solicitudForm.get('individualCaja') as FormArray;
   }
 
   loadDatosTablaData(): void {
@@ -540,6 +533,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
     const HEADER_MAP: { [key: string]: string } = {
+      'Id': 'id',
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo': 'tipoEquipo',
@@ -569,7 +563,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   enviarManifiesto(): void {
     this.solicitudForm.markAllAsTouched();
     if (
-      this.solicitudForm.get('numManifiesto')?.valid &&
+      this.solicitudForm.get('numeroManifiesta')?.valid &&
       this.solicitudForm.get('menuDesplegable')?.valid
     ) {
       this.mostrarMensaje = true;
@@ -641,39 +635,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Manejar el cambio de estado de un checkbox individual
-   * @param event Evento de cambio del checkbox
-   * @param index Índice del checkbox
-   */
-  onCheckboxChange(event: Event, index: number): void {
-    const TARGET = event.target as HTMLInputElement;
-    if (TARGET) {
-      this.individualCaja.controls[index].setValue(TARGET.checked);
-    }
-    this.setValoresStore(
-      this.solicitudForm,
-      'individualCaja',
-      'setIndividualCaja'
-    );
-  }
-
-  /**
-   * Alternar el estado de todos los checkboxes basados en el estado del checkbox "Seleccionar todo"
-   * @param event Evento de cambio del checkbox "Seleccionar todo"
-   */
-  alternarTodosLosCheckboxes(event: Event): void {
-    const CHECKED = (event.target as HTMLInputElement).checked;
-    this.individualCaja.controls.forEach((control) =>
-      control.setValue(CHECKED)
-    );
-    this.setValoresStore(
-      this.solicitudForm,
-      'commonCaja',
-      'setCommonCaja'
-    );
-  }
-
   abiertoModelo(datos: string): void {
     this.abiertoModeloDatos = datos;
     this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
@@ -681,6 +642,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   continuar(): void {
     this.continuarEvento.emit('');
+  }
+
+  public cambioFechaDeIngreso(nuevo_valor: string) {
+    this.solicitudForm.get('fechaDeIngreso')?.setValue(nuevo_valor);
+    this.solicitudForm.get('fechaDeIngreso')?.markAsUntouched();
+  }
+
+  public cambioFechaIngreso(nuevo_valor: string) {
+    this.solicitudForm.get('fechaIngreso')?.setValue(nuevo_valor);
+    this.solicitudForm.get('fechaIngreso')?.markAsUntouched();
   }
 
 }

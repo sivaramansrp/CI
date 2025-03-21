@@ -58,10 +58,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <label for="fechaIngreso">Fecha de ingreso</label>
-                            <span class="require">*</span>
-                            <input class="form-control disabled " type="date" name="fechaIngreso" id="fechaIngreso"
-                                formControlName="fechaIngreso" [ngClass]="isValid('fechaIngreso') ? 'required' : ''">
+                            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
                         </div>
                     </div>
                 </div>
@@ -139,16 +136,16 @@
                             [placeholder]="transporteList.primerOpcion" formControlName="menuDesplegable"
                             (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')"
                             [required]="true"
-                            [ngClass]="isValid('numManifiesto') ? 'required' : ''"></app-catalogo-select>
+                            [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numManifiesto" class="mt-2">No. Manifiesto</label>
+                            <label for="numeroManifiesta" class="mt-2">No. Manifiesto</label>
                             <span class="require">*</span>
-                            <input type="text" formControlName="numManifiesto" id="numManifiesto" maxlength="50"
-                                class="form-control" [ngClass]="isValid('numManifiesto') ? 'required' : ''"
-                                (change)="setValoresStore(solicitudForm,'numManifiesto', 'setNumManifiesto')">
+                            <input type="text" formControlName="numeroManifiesta" id="numeroManifiesta" maxlength="50"
+                                class="form-control" [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"
+                                (change)="setValoresStore(solicitudForm,'numeroManifiesta', 'setNumeroManifiesta')">
                         </div>
                     </div>
                 </div>
@@ -165,48 +162,8 @@
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
-                            <table class="table table-bordered" align="center">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th><input type="checkbox" formControlName="commonCaja"
-                                                (change)="alternarTodosLosCheckboxes($event)" /></th>
-                                        <th>Iniciales del equipo</th>
-                                        <th>Número de equipo</th>
-                                        <th>Dígito Verificador</th>
-                                        <th>Tipo de equipo</th>
-                                        <th>Aduana</th>
-                                        <th>Fecha Ingreso</th>
-                                        <th>Vigencia</th>
-                                        <th>Estado de constancia</th>
-                                        <th>Existe en VUCEM</th>
-                                        <th>Id constancia</th>
-                                        <th>Número manifiesto</th>
-                                        <th>Id solicitud</th>
-                                        <th>Fecha inicio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let articulo of datosTabla; let i = index">
-                                        <td class="grey-column">{{ i + 1 }}</td>
-                                        <td><input type="checkbox" [checked]="individualCaja.value[i]"
-                                                (change)="onCheckboxChange($event, i)" /></td>
-                                        <td>{{ articulo.inicialesEquipo }}</td>
-                                        <td>{{ articulo.numeroEquipo }}</td>
-                                        <td>{{ articulo.digitoVerificador }}</td>
-                                        <td>{{ articulo.tipoEquipo }}</td>
-                                        <td>{{ articulo.aduana }}</td>
-                                        <td>{{ articulo.fechaIngreso }}</td>
-                                        <td>{{ articulo.vigencia }}</td>
-                                        <td>{{ articulo.estadoConstancia }}</td>
-                                        <td>{{ articulo.existeEnVUCEM }}</td>
-                                        <td>{{ articulo.idConstancia }}</td>
-                                        <td>{{ articulo.numeroManifiesto }}</td>
-                                        <td>{{ articulo.idSolicitud }}</td>
-                                        <td>{{ articulo.fechaInicio }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="encabezadoDeTabla"
+                        [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                     <div align="center" id="paginGridContenedoresITC">
@@ -225,14 +182,15 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true"
-                                formControlName="aduanaMenuDesplegable"
+                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaMenuDesplegable"
                                 (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
-                            <label for="fechaDeIngreso" class="form-label">Fecha de ingreso*:</label>
-                            <input class="form-control" type="date" name="fechaDeIngreso" id="fechaDeIngreso"
-                                formControlName="fechaDeIngreso"
-                                (change)="setValoresStore(solicitudForm,'fechaDeIngreso', 'setFechaDeIngreso')"
-                                required>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group datepicker-group">
+                                <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"></input-fecha>
+                            </div>    
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -247,44 +205,8 @@
                                 Archivo</button>
                         </div>
                         <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
-                            <table class="table table-bordered" align="center">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Iniciales del equipo</th>
-                                        <th>Número de equipo</th>
-                                        <th>Dígito Verificador</th>
-                                        <th>Tipo de equipo</th>
-                                        <th>Aduana</th>
-                                        <th>Fecha Ingreso</th>
-                                        <th>Vigencia</th>
-                                        <th>Estado de constancia</th>
-                                        <th>Existe en VUCEM</th>
-                                        <th>Id constancia</th>
-                                        <th>Número manifiesto</th>
-                                        <th>Id solicitud</th>
-                                        <th>Fecha inicio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let articulo of datosTabla; let i = index">
-                                        <td class="grey-column">{{ i + 1 }}</td>
-                                        <td>{{ articulo.inicialesEquipo }}</td>
-                                        <td>{{ articulo.numeroEquipo }}</td>
-                                        <td>{{ articulo.digitoVerificador }}</td>
-                                        <td>{{ articulo.tipoEquipo }}</td>
-                                        <td>{{ articulo.aduana }}</td>
-                                        <td>{{ articulo.fechaIngreso }}</td>
-                                        <td>{{ articulo.vigencia }}</td>
-                                        <td>{{ articulo.estadoConstancia }}</td>
-                                        <td>{{ articulo.existeEnVUCEM }}</td>
-                                        <td>{{ articulo.idConstancia }}</td>
-                                        <td>{{ articulo.numeroManifiesto }}</td>
-                                        <td>{{ articulo.idSolicitud }}</td>
-                                        <td>{{ articulo.fechaInicio }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                        [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                         <div class="col-md-4">
                             <ng-titulo titulo="Cargar Archivo" />
@@ -295,44 +217,8 @@
                             <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
                         </div>
                         <div *ngIf="mostrarCargarArchivoTable" class="table-container">
-                            <table class="table table-bordered " align="center">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Iniciales del equipo</th>
-                                        <th>Número de equipo</th>
-                                        <th>Dígito Verificador</th>
-                                        <th>Tipo de equipo</th>
-                                        <th>Aduana</th>
-                                        <th>Fecha Ingreso</th>
-                                        <th>Vigencia</th>
-                                        <th>Estado de constancia</th>
-                                        <th>Existe en VUCEM</th>
-                                        <th>Id constancia</th>
-                                        <th>Número manifiesto</th>
-                                        <th>Id solicitud</th>
-                                        <th>Fecha inicio</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let articulo of datosTabla; let i = index">
-                                        <td class="grey-column">{{ i + 1 }}</td>
-                                        <td>{{ articulo.inicialesEquipo }}</td>
-                                        <td>{{ articulo.numeroEquipo }}</td>
-                                        <td>{{ articulo.digitoVerificador }}</td>
-                                        <td>{{ articulo.tipoEquipo }}</td>
-                                        <td>{{ articulo.aduana }}</td>
-                                        <td>{{ articulo.fechaIngreso }}</td>
-                                        <td>{{ articulo.vigencia }}</td>
-                                        <td>{{ articulo.estadoConstancia }}</td>
-                                        <td>{{ articulo.existeEnVUCEM }}</td>
-                                        <td>{{ articulo.idConstancia }}</td>
-                                        <td>{{ articulo.numeroManifiesto }}</td>
-                                        <td>{{ articulo.idSolicitud }}</td>
-                                        <td>{{ articulo.fechaInicio }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                        [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                 </div>
