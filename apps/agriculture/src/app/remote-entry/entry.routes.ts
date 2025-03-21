@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { RemoteEntryComponent } from './entry.component';
+
 
 export const remoteRoutes: Route[] = [
   { path: '', redirectTo: 'pago', pathMatch: 'full' },
@@ -7,4 +7,3 @@ export const remoteRoutes: Route[] = [
     path: 'pago', loadChildren: () => import('./../application/app.module').then(module => module.AppAgriculturaModule)
   }
 ];
- 

@@ -1,3 +1,6 @@
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
@@ -36,12 +39,19 @@ export class PasoDosComponent implements OnInit {
   };
 
   /**
+  * Array to store catalog documents.
+  * Each document is of type `Catalogo`, representing an item in the catalog.
+  */
+  catalogoDocumentos: Catalogo[] = [];
+
+  /**
    * Constructor de la clase PasoDosComponent.
    * 
    * @param renovacionesService - Servicio para manejar las renovaciones de muestras de mercancías.
    */
   constructor(
-    public renovacionesService: RenovacionesMuestrasMercanciasService
+    public renovacionesService: RenovacionesMuestrasMercanciasService,
+    private catalogosServices: CatalogosService,
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -54,6 +64,7 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.obtenerDatosIniciales();
+    this.getTiposDocumentos();
   }
 
   /**
@@ -66,4 +77,19 @@ export class PasoDosComponent implements OnInit {
       },
     });
   }
+
+  /**
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   */
+    getTiposDocumentos(): void {
+      this.catalogosServices
+        .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+        .subscribe({
+          next: (resp): void => {
+            if (resp.length > 0) {
+              this.catalogoDocumentos = resp;
+            }
+          },
+        });
+    }
 }

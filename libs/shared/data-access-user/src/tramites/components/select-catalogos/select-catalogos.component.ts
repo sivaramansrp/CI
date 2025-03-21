@@ -21,7 +21,7 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './select-catalogos.component.html',
   styleUrl: './select-catalogos.component.scss',
-  host: { 'hostID': crypto.randomUUID().toString() }
+  host: {}
 })
 export class SelectCatalogosComponent {
   @Input() catalogosDatos!: CatalogosSelect;
@@ -30,7 +30,7 @@ export class SelectCatalogosComponent {
 
   itemSeleccionado: FormControl = new FormControl(0);
 
-  constructor(private validacionesService: ValidacionesFormularioService) {}
+  constructor(private validacionesService: ValidacionesFormularioService) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['catalogosDatos'].currentValue) {
@@ -55,7 +55,7 @@ export class SelectCatalogosComponent {
     let seleccion: Catalogo;
 
     this.catalogosDatos.catalogos.forEach((el: Catalogo) => {
-      el.id = (typeof(el.id) === 'string') ? parseInt(el.id) : el.id;
+      el.id = (typeof (el.id) === 'string') ? parseInt(el.id) : el.id;
       if (el.id === opcionSeleccionada) {
         seleccion = el;
         this.valorSeleccion.emit(seleccion);
