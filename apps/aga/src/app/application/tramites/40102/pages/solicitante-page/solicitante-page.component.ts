@@ -6,7 +6,7 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
@@ -67,7 +67,9 @@ export class SolicitantePageComponent {
    */
   constructor(
     private tramite40102Query: Tramite40102Query,
-    private tramite40102Store: Tramite40102Store
+    private tramite40102Store: Tramite40102Store,
+    private seccionStore: SeccionLibStore
+    
   ) {}
 
   /**
@@ -127,7 +129,7 @@ export class SolicitantePageComponent {
       secciones.push(SECCIONES_TRAMITE_40102.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }
-    this.tramite40102Store.establecerSeccion(secciones);
-    this.tramite40102Store.establecerFormaValida(formaValida);
+    this.seccionStore.establecerSeccion(secciones);
+    this.seccionStore.establecerFormaValida(formaValida);
   }
 }

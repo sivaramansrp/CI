@@ -11,12 +11,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { Chofer40102Store } from '../../estados/tramite40102.store';
-import { Chofer40102Query } from '../../estados/tramite40102.query';
+import { Tramite40102Store } from '../../estados/tramite40102.store';
+import { Tramite40102Query } from '../../estados/tramite40102.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockChofer40102Store {
+class MockTramite40102Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
@@ -48,17 +48,17 @@ class SafeHtmlPipe implements PipeTransform {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let Chofer40102QueryMock: jest.Mocked<Chofer40102Query>;
-  let chofer40102StoreMock: MockChofer40102Store;
+  let Tramite40102QueryMock: jest.Mocked<Tramite40102Query>;
+  let tramite40102StoreMock: MockTramite40102Store;
 
   beforeEach(async () => {
-    Chofer40102QueryMock = {
+    Tramite40102QueryMock = {
       selectSeccionState$: observableOf({
         pasos: [],
         currentStep: 1,
       }),
-    } as unknown as jest.Mocked<Chofer40102Query>;
-    chofer40102StoreMock = new MockChofer40102Store();
+    } as unknown as jest.Mocked<Tramite40102Query>;
+    tramite40102StoreMock = new MockTramite40102Store();
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -70,8 +70,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: Chofer40102Query, useValue: Chofer40102QueryMock },
-        { provide: Chofer40102Store, useValue: chofer40102StoreMock },
+        { provide: Tramite40102Query, useValue: Tramite40102QueryMock },
+        { provide: Tramite40102Store, useValue: tramite40102StoreMock },
       ],
     }).compileComponents();
 
@@ -119,7 +119,7 @@ describe('SolicitantePageComponent', () => {
 
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
-    expect(chofer40102StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(chofer40102StoreMock.establecerFormaValida).toHaveBeenCalled();
+    expect(tramite40102StoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(tramite40102StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

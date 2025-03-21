@@ -93,28 +93,7 @@ export class Tramite40102Store extends Store<Tramite40102State> {
       estado,
     }));
   }
-
-  /**
-   * Guarda un elemento por cada sección que se encuentre
-   * @param seccion validacion
-   */
-  public establecerSeccion(seccion: boolean[]) {
-    this.update((state) => ({
-      ...state,
-      seccion,
-    }));
-  }
-
-  /**
-   * Agrega elementos por cada seccion indicando si el formulario es válido o no
-   * @param formaValida
-   */
-  public establecerFormaValida(formaValida: boolean[]) {
-    this.update((state) => ({
-      ...state,
-      formaValida,
-    }));
-  }
+  
   public clearChoferes() {
     this.reset();
   }
