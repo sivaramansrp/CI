@@ -1,17 +1,18 @@
+/* eslint-disable no-empty-function */
 import {
   Chofer40103Store,
   Choferesnacionales40103State,
 } from '../../estados/chofer40103.store';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40103 } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -74,15 +75,17 @@ export class SolicitantePageComponent implements OnInit{
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones() {
-    const secciOnes: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_40103.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_40103.PASO_1[llaveSeccion]);
-      formaValida.push(false);
+  private asignarSecciones():void {
+    const SECCIONES: boolean[] = [];
+    const FORMA_VALIDA: boolean[] = [];
+    for (const LLAVE_SECCION in SECCIONES_TRAMITE_40103.PASO_1) {
+      if (Object.prototype.hasOwnProperty.call(SECCIONES_TRAMITE_40103.PASO_1, LLAVE_SECCION)) {
+        // @ts-expect-error - fix this
+        secciones.push(SECCIONES_TRAMITE_40103.PASO_1[LLAVE_SECCION]);
+        FORMA_VALIDA.push(false);
+      }
     }
-    this.chofer40103Store.establecerSeccion(secciOnes);
-    this.chofer40103Store.establecerFormaValida(formaValida);
+    this.chofer40103Store.establecerSeccion(SECCIONES);
+    this.chofer40103Store.establecerFormaValida(FORMA_VALIDA);
   }
 }

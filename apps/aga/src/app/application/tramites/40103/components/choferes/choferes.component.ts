@@ -17,7 +17,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
@@ -45,7 +44,6 @@ import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockd
     ReactiveFormsModule,
     CommonModule,
     SharedModule,
-    CatalogoSelectComponent,
     FormsModule,
   ],
 })
