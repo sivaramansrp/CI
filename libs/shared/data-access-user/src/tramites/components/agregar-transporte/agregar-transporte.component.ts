@@ -8,6 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { HEADER_TABLA_FERROVIARIO, HEADER_TABLA_CARRETERO, HEADER_TABLA_PEATONAL, HEADER_TABLA_OTRO } from '../../../core/enums/transporte-componente.enums';
+import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../core/models/shared/agregar-trasnporte.model';
+
 import { CampoForm } from '../../../core/models/shared/forms-model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
@@ -16,7 +18,7 @@ import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
 import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
-import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../core/models/shared/agregar-trasnporte.model';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
@@ -65,9 +67,13 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   public observaciones: FormControl = new FormControl('');
   anios!: number[];
 
+  private destroyNotifier$: Subject<void> = new Subject();
+  
+
   constructor(
     private fb: FormBuilder,
-    private catalogosServices: CatalogosService
+    private catalogosServices: CatalogosService,
+
   ) { }
 
   ngOnInit(): void {
