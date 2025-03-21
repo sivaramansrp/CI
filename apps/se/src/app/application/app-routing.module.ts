@@ -140,6 +140,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'validate-certificate',
+    loadChildren: () =>
+      import('./tramites/110221/validate-certificate-panama.module').then(
+        (m) => m.ValidateCertificatePanamaModule
+      ),
   }
 ];
 
