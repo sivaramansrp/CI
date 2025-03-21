@@ -1,1 +1,129 @@
-<p>datos-de-la-solicitud works!</p>
+<div class="container">
+    <form [formGroup]="datosSolicitudForma">
+        <ng-titulo titulo="Productor"></ng-titulo>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label for="certficacion_a">Exento de pago*</label>
+                    </div>
+                    <div class="col-md-4">
+                        <app-input-radio [radioOptions]="radioOptions" formControlName="exentoDePago"
+                            [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
+                    </div>
+                    <!-- <div class="col-md-4">
+                        <app-catalogo-select
+                          [catalogo]="aduanaDeIngreso"
+                          formControlName="aduanaIngreso"
+                          [label]="'Aduana de ingreso'"
+                          [required]="true"
+                          name="aduanaIngreso"
+                        ></app-catalogo-select>
+                      </div> -->
+                </div>
+            </div>
+        </div>
+        <ng-titulo titulo="Productores de café"></ng-titulo>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label" for="claveControlUnico">Clave del padrón*:</label>
+                        <input formControlName="claveDelPadron" class="form-control" id="claveDelPadron" placeholder=""
+                            type="text" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-titulo titulo="Regiones de compra"></ng-titulo>
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="table-container">
+                    <app-tabla-dinamica *ngIf="regionesTableDatos.length > 0"
+                        [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="regionesTabla"
+                        [datos]="regionesTableDatos"></app-tabla-dinamica>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5">
+                <div class="d-flex justify-content-end">
+                  <div class="btn-group">
+                    <button class="btn btn-danger me-2" type="button">
+                        Borrar
+                      </button>
+                    <button class="btn btn-primary me-2" type="submit">
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+        </div>
+        
+        <ng-titulo titulo="Beneficios"></ng-titulo>
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="table-container">
+                    <app-tabla-dinamica *ngIf="beneficiosTableDatos.length > 0"
+                        [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="beneficiosTabla"
+                        [datos]="beneficiosTableDatos"></app-tabla-dinamica>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5">
+                <div class="d-flex justify-content-end">
+                  <div class="btn-group">
+                    <button class="btn btn-danger me-2" type="button">
+                        Borrar
+                      </button>
+                    <button class="btn btn-primary me-2" type="submit">
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+        </div>
+            
+        <ng-titulo titulo="Bodegas"></ng-titulo>
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="table-container">
+                    <app-tabla-dinamica *ngIf="bodegasTableDatos.length > 0"
+                        [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="bodegasTabla"
+                        [datos]="bodegasTableDatos"></app-tabla-dinamica>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5">
+                <div class="d-flex justify-content-end">
+                  <div class="btn-group">
+                    <button class="btn btn-danger me-2" type="button">
+                        Borrar
+                      </button>
+                    <button class="btn btn-primary me-2" type="submit">
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <ng-titulo titulo="Café de exportación"></ng-titulo>
+        <div class="row">
+            <div class="col-md-12 mt-5">
+                <div class="table-container">
+                    <app-tabla-dinamica *ngIf="cafeExporacionTableDatos.length > 0"
+                        [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="cafeExporacionTabla"
+                        [datos]="cafeExporacionTableDatos"></app-tabla-dinamica>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5">
+                <div class="d-flex justify-content-end">
+                  <div class="btn-group">
+                    <button class="btn btn-danger me-2" type="button">
+                        Borrar
+                      </button>
+                    <button class="btn btn-primary me-2" type="submit">
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </form>
+</div>

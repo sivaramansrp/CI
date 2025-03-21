@@ -1,11 +1,11 @@
 /**
- * Modelo de datos para los pasos del asistente de IMMEX
+ * Modelo de datos para los pasos del asistente de IMMEX.
  * @export
  * @interface ListaPasosWizard
- * @property {number} indice - Posición del paso en el asistente
- * @property {string} titulo - Título del paso
- * @property {boolean} activo - Indica si el paso está activo actualmente
- * @property {boolean} completado - Indica si el paso está completado
+ * @property {number} indice - Posición del paso en el asistente.
+ * @property {string} titulo - Título del paso.
+ * @property {boolean} activo - Indica si el paso está activo actualmente.
+ * @property {boolean} completado - Indica si el paso está completado.
  */
 export interface ListaPasosWizard {
   indice: number;
@@ -15,22 +15,41 @@ export interface ListaPasosWizard {
 }
 
 /**
- * Modelo de datos del formulario para ampliación de sensibles IMMEX
+ * Modelo de datos del formulario para ampliación de sensibles IMMEX.
  * @export
  * @interface ImmexAmplicationSensibleDatosDelFormulario
- * @property {Array} solicitante - Arreglo que contiene los datos de la solicitud
- * @property {Array} anexouno - Arreglo que contiene los datos de los anexos
+ * @property {Array} solicitante - Arreglo que contiene los datos del solicitante.
+ * @property {Array} anexouno - Arreglo que contiene los datos de los anexos.
  */
 export interface ImmexAmplicationSensibleDatosDelFormulario {
   solicitante: [];
   anexouno: [];
 }
 
+/**
+ * Modelo de datos para un anexo.
+ * @export
+ * @interface Anexo
+ * @property {number} id - Identificador único del anexo.
+ * @property {string} description - Descripción del anexo.
+ */
 export interface Anexo {
   id: number;
   description: string;
 }
 
+/**
+ * Modelo de datos para la tabla de fracciones arancelarias.
+ * @export
+ * @interface TablaFraccionArancelaria
+ * @property {string} no - Número de la fracción.
+ * @property {string} fraccionArancelaria - Fracción arancelaria.
+ * @property {string} descripcion - Descripción de la fracción.
+ * @property {string} CantidadAnual - Cantidad anual.
+ * @property {string} CapacidadInstaladaPorPeriodo - Capacidad instalada por periodo.
+ * @property {string} umt - Unidad de medida.
+ * @property {string} encabezado - Encabezado de la tabla.
+ */
 export interface TablaFraccionArancelaria {
   no: string;
   fraccionArancelaria: string;
@@ -40,6 +59,18 @@ export interface TablaFraccionArancelaria {
   umt: string;
   encabezado: string;
 }
+
+/**
+ * Modelo de datos para la tabla de fracciones de importación.
+ * @export
+ * @interface TablaFraccionDeImportacion
+ * @property {string} no - Número de la fracción.
+ * @property {string} fracciondeImportacion - Fracción de importación.
+ * @property {string} fracciondeExportacion - Fracción de exportación.
+ * @property {string} umt - Unidad de medida.
+ * @property {string} descripcionComercial - Descripción comercial.
+ * @property {string} descripcion - Descripción general.
+ */
 export interface TablaFraccionDeImportacion {
   no: string;
   fracciondeImportacion: string;
@@ -47,4 +78,300 @@ export interface TablaFraccionDeImportacion {
   umt: string;
   descripcionComercial: string;
   descripcion: string;
+}
+
+/**
+ * Modelo de datos para las opciones de un radio button.
+ * @export
+ * @interface RadioOpcion
+ * @property {string} label - Etiqueta de la opción.
+ * @property {string} value - Valor de la opción.
+ */
+export interface RadioOpcion {
+  label: string;
+  value: string;
+}
+
+/**
+ * Modelo de datos para un catálogo.
+ * @export
+ * @interface Catalogo
+ * @property {number} id - Identificador único del catálogo.
+ * @property {string} descripcion - Descripción del catálogo.
+ * @property {string} [clave] - Clave opcional del catálogo.
+ * @property {string} [tam] - Tamaño opcional del catálogo.
+ * @property {string} [dpi] - DPI opcional del catálogo.
+ */
+export interface Catalogo {
+  id: number;
+  descripcion: string;
+  clave?: string;
+  tam?: string;
+  dpi?: string;
+}
+
+/**
+ * Configuración de las columnas de la tabla para el servicio REGIONES.
+ * @constant
+ * @type {Array}
+ */
+export const REGIONES_SERVICIO = [
+  {
+    encabezado: 'Estado',
+    clave: (ele: regionesInfo) => ele.TABLA_Columna_1,
+    orden: 1
+  },
+  {
+    encabezado: 'Café Compra',
+    clave: (ele: regionesInfo) => ele.TABLA_Columna_2,
+    orden: 2
+  },
+  {
+    encabezado: 'Región',
+    clave: (ele: regionesInfo) => ele.TABLA_Columna_3,
+    orden: 3
+  },
+  {
+    encabezado: 'Tipo de Café',
+    clave: (ele: regionesInfo) => ele.TABLA_Columna_4,
+    orden: 4
+  },
+  {
+    encabezado: 'Volúmen',
+    clave: (ele: regionesInfo) => ele.TABLA_Columna_5,
+    orden: 5
+  }
+]
+
+/**
+ * Interfaz para la información de REGIONES.
+ * @export
+ * @interface regionesInfo
+ * @property {string} TABLA_Columna_1 - Información de la columna 1.
+ * @property {string} TABLA_Columna_2 - Información de la columna 2.
+ * @property {string} TABLA_Columna_3 - Información de la columna 3.
+ * @property {string} TABLA_Columna_4 - Información de la columna 4.
+ * @property {string} TABLA_Columna_5 - Información de la columna 5.
+ * @property {boolean} estatus - Estado de la región.
+ */
+export interface regionesInfo {
+  TABLA_Columna_1: string;
+  TABLA_Columna_2: string;
+  TABLA_Columna_3: string;
+  TABLA_Columna_4: string;
+  TABLA_Columna_5: string;
+  estatus: boolean;
+}
+
+/**
+ * Configuración de las columnas de la tabla para el servicio BENEFICIOS.
+ * @constant
+ * @type {Array}
+ */
+export const BENEFICIOS_SERVICIO = [
+  {
+    encabezado: 'Nombre',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_1,
+    orden: 1
+  },
+  {
+    encabezado: 'Calle',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_2,
+    orden: 2
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_3,
+    orden: 3
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_4,
+    orden: 4
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_5,
+    orden: 5
+  }
+  ,
+  {
+    encabezado: 'Estado',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_6,
+    orden: 6
+  }
+  ,
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_7,
+    orden: 7
+  }
+  ,
+  {
+    encabezado: 'Propia o Aliquilada',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_8,
+    orden: 8
+  }
+  ,
+  {
+    encabezado: 'Capacidad (Kg)',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_9,
+    orden: 9
+  }
+  ,
+  {
+    encabezado: 'Volúmen (Kg)',
+    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_10,
+    orden: 10
+  }
+]
+
+/**
+ * Interfaz para la información de BENEFICIOS.
+ * @export
+ * @interface beneficiosInfo
+ * @property {string} TABLA_Columna_1 - Información de la columna 1.
+ * @property {string} TABLA_Columna_2 - Información de la columna 2.
+ * @property {string} TABLA_Columna_3 - Información de la columna 3.
+ * @property {string} TABLA_Columna_4 - Información de la columna 4.
+ * @property {string} TABLA_Columna_5 - Información de la columna 5.
+ * @property {string} TABLA_Columna_6 - Información de la columna 6.
+ * @property {string} TABLA_Columna_7 - Información de la columna 7.
+ * @property {string} TABLA_Columna_8 - Información de la columna 8.
+ * @property {string} TABLA_Columna_9 - Información de la columna 9.
+ * @property {string} TABLA_Columna_10 - Información de la columna 10.
+ * @property {boolean} estatus - Estado del beneficio.
+ */
+export interface beneficiosInfo {
+  TABLA_Columna_1: string;
+  TABLA_Columna_2: string;
+  TABLA_Columna_3: string;
+  TABLA_Columna_4: string;
+  TABLA_Columna_5: string;
+  TABLA_Columna_6: string;
+  TABLA_Columna_7: string;
+  TABLA_Columna_8: string;
+  TABLA_Columna_9: string;
+  TABLA_Columna_10: string;
+  estatus: boolean;
+}
+
+/**
+ * Configuración de las columnas de la tabla para el servicio BODEGAS.
+ * @constant
+ * @type {Array}
+ */
+export const BODEGAS_SERVICIO = [
+  {
+    encabezado: 'Nombre',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_1,
+    orden: 1
+  },
+  {
+    encabezado: 'Calle',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_2,
+    orden: 2
+  },
+  {
+    encabezado: 'Número Exterior',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_3,
+    orden: 3
+  },
+  {
+    encabezado: 'Número Interior',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_4,
+    orden: 4
+  },
+  {
+    encabezado: 'Colonia',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_5,
+    orden: 5
+  },
+  {
+    encabezado: 'Estado',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_6,
+    orden: 6
+  },
+  {
+    encabezado: 'Código Postal',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_7,
+    orden: 7
+  },
+  {
+    encabezado: 'Propia o Aliquilada',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_8,
+    orden: 8
+  },
+  {
+    encabezado: 'Capacidad (Kg)',
+    clave: (ele: bodegasInfo) => ele.TABLA_Columna_9,
+    orden: 9
+  }
+]
+
+/**
+ * Interfaz para la información de BODEGAS.
+ * @export
+ * @interface bodegasInfo
+ * @property {string} TABLA_Columna_1 - Información de la columna 1.
+ * @property {string} TABLA_Columna_2 - Información de la columna 2.
+ * @property {string} TABLA_Columna_3 - Información de la columna 3.
+ * @property {string} TABLA_Columna_4 - Información de la columna 4.
+ * @property {string} TABLA_Columna_5 - Información de la columna 5.
+ * @property {string} TABLA_Columna_6 - Información de la columna 6.
+ * @property {string} TABLA_Columna_7 - Información de la columna 7.
+ * @property {string} TABLA_Columna_8 - Información de la columna 8.
+ * @property {string} TABLA_Columna_9 - Información de la columna 9.
+ * @property {boolean} estatus - Estado de la bodega.
+ */
+export interface bodegasInfo {
+  TABLA_Columna_1: string;
+  TABLA_Columna_2: string;
+  TABLA_Columna_3: string;
+  TABLA_Columna_4: string;
+  TABLA_Columna_5: string;
+  TABLA_Columna_6: string;
+  TABLA_Columna_7: string;
+  TABLA_Columna_8: string;
+  TABLA_Columna_9: string;
+  estatus: boolean;
+}
+
+/**
+ * Configuración de las columnas de la tabla para el servicio CAFÉ DE EXPORTACIÓN.
+ * @constant
+ * @type {Array}
+ */
+export const CAFE_EXPORTADORES = [
+  {
+    encabezado: 'Marca Comercial',
+    clave: (ele: cafeExporacionInfo) => ele.TABLA_Columna_1,
+    orden: 1
+  },
+  {
+    encabezado: 'Clasificación',
+    clave: (ele: cafeExporacionInfo) => ele.TABLA_Columna_2,
+    orden: 2
+  },
+  {
+    encabezado: 'Volúmen (Kg)',
+    clave: (ele: cafeExporacionInfo) => ele.TABLA_Columna_3,
+    orden: 3
+  },
+]
+
+/**
+ * Interfaz para la información de CAFÉ DE EXPORTACIÓN.
+ * @export
+ * @interface cafeExporacionInfo
+ * @property {string} TABLA_Columna_1 - Información de la columna 1.
+ * @property {string} TABLA_Columna_2 - Información de la columna 2.
+ * @property {string} TABLA_Columna_3 - Información de la columna 3.
+ * @property {boolean} estatus - Estado del café de exportación.
+ */
+export interface cafeExporacionInfo {
+  TABLA_Columna_1: string;
+  TABLA_Columna_2: string;
+  TABLA_Columna_3: string;
+  estatus: boolean;
 }

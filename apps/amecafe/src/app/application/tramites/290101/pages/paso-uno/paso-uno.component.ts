@@ -31,7 +31,7 @@ export class PasoUnoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.asignarSecciones();
+    // this.asignarSecciones();
   }
 
   /**
@@ -61,18 +61,18 @@ export class PasoUnoComponent implements OnInit {
     this.tabChanged.emit(i);
   }
 
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-    const PREDETERMINADO = SECCIONES_TRAMITE_290101
-    for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-        // @ts-expect-error - fix this
-        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-        FORMA_VALIDA.push(false);
-      }
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
-  }
+  // private asignarSecciones(): void {
+  //   const SECCIONES: boolean[] = [];
+  //   const FORMA_VALIDA: boolean[] = [];
+  //   const PREDETERMINADO = SECCIONES_TRAMITE_290101
+  //   for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
+  //     if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
+  //       // @ts-expect-error - fix this
+  //       SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
+  //       FORMA_VALIDA.push(false);
+  //     }
+  //   }
+  //   this.seccionStore.establecerSeccion(SECCIONES);
+  //   this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  // }
 }

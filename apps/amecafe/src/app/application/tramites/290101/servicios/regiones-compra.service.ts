@@ -11,11 +11,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class RegionesCompraService {
+export class ProductoTablaServicios {
   /**
    * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del permiso IMMEX.
    */
-  private jsonUrl = '/assets/json/290101/regiones-compra.json';
+  private jsonUrl = '/assets/json/290101/producto-tabla-datos.json';
   /**
    * @constructor
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
@@ -28,7 +28,7 @@ export class RegionesCompraService {
    * @returns {Observable<any[]>} Observable con los datos del permiso IMMEX.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getDatos(): Observable<any> {
+  obtenerDatos(): Observable<any> {
     return this.httpClient.get<any[]>(this.jsonUrl).pipe(
     );
   }  
