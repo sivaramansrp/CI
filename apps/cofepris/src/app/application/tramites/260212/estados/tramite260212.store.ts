@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Store, StoreConfig } from '@datorama/akita';
+
 import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
 
 export interface Tramite260212State {
@@ -8,6 +9,8 @@ export interface Tramite260212State {
   setClave: catalogoResponse | null,
   setDescripcion: catalogoResponse | null,
   setDespecificarClasificacion:Catalogo |null
+  setBanco:catalogoResponse|null,
+  
 }
 
 export function createInitialState(): Tramite260212State {
@@ -15,7 +18,9 @@ export function createInitialState(): Tramite260212State {
     selectedEstado: null,
     setClave: null,
     setDescripcion: null,
-    setDespecificarClasificacion:null
+    setDespecificarClasificacion:null,
+    setBanco:null,
+   
   };
 }
 @Injectable({
@@ -54,4 +59,12 @@ export class Tramite260212Store extends Store<Tramite260212State> {
       selectedDespecificarClasificacion,
     }));
   }
+
+  public setBanco(setBanco: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      setBanco,
+    }));
+  }
+
 }
