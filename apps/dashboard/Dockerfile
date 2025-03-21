@@ -6,16 +6,16 @@ WORKDIR /app
 
 # Install dependencies
 COPY . .
+# RUN pwd && ls
 # RUN npm ci
-RUN npm install --force
-RUN npm i webpack@5.91.0
 
 # Install Nx CLI globally
-RUN npm install -g @nrwl/cli
+RUN npm install -g nx
 
 # Build the app using Nx.
-RUN npx nx build dashboard --configuration=production
-#RUN pwd && ls
+RUN npm install --force --no-audit
+RUN npx nx build dashboard --configuration=development
+# RUN pwd && ls -a /app/dist/apps/dashboard
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine-slim
