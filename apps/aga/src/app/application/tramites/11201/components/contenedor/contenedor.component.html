@@ -38,7 +38,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="showSeccionAduanaaFecha">
+        <ng-container *ngIf="mostrarSeccionAduanaaFecha">
             <div id="seccionAduanaaFecha">
                 <div class="row">
                     <div class="col-md-12">
@@ -68,7 +68,7 @@
                 <br><br>
             </div>
         </ng-container>
-        <ng-container *ngIf="showSeccionContenedor">
+        <ng-container *ngIf="mostrarSeccionContenedor">
             <div id="seccionContenedor">
                 <div class="row">
                     <div class="col-md-12">
@@ -125,7 +125,7 @@
                 </div>
             </div>
         </ng-container>
-        <ng-container *ngIf="showSeccionNoManifiesto">
+        <ng-container *ngIf="mostrarSeccionNoManifiesto">
             <div id="seccionNoManifiesto">
                 <div class="row">
                     <div class="col-md-12">
@@ -218,7 +218,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="showAdjuntarArchivo">
+        <ng-container *ngIf="mostrarAdjuntarArchivo">
             <div id="tabs">
                 <div id="adjuntarArchivo">
                     <div class="row mb-3">
@@ -246,7 +246,7 @@
                             <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
                                 Archivo</button>
                         </div>
-                        <div *ngIf="showArchivoSeleccionadoTable" class="table-container ">
+                        <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
                             <table class="table table-bordered" align="center">
                                 <thead>
                                     <tr>
@@ -294,7 +294,7 @@
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
                             <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
                         </div>
-                        <div *ngIf="showCargarArchivoTable" class="table-container">
+                        <div *ngIf="mostrarCargarArchivoTable" class="table-container">
                             <table class="table table-bordered " align="center">
                                 <thead>
                                     <tr>

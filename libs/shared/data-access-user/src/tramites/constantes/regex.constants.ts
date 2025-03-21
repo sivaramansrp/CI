@@ -71,3 +71,15 @@ export const REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
  */
 export const REGEX_FECHA_VALIDA = /^\d{2}\/\d{2}\/\d{4}$/;
 export const REGEX_NUMEROS_DECIMALES = /^[0-9]+(\.[0-9]{1,6})?$/;
+/**
+ * Expresión regular para encontrar caracteres que no sean números.
+ * 
+ * Esta expresión regular se utiliza para identificar y encontrar cualquier carácter
+ * que no sea un dígito numérico (0-9) en una cadena.
+ * 
+ * @example
+ * // Uso de la expresión regular para eliminar caracteres no numéricos de una cadena
+ * const cadena = "abc123def456";
+ * const soloNumeros = cadena.replace(REGEX_NUMEROS, ''); // Resultado: "123456"
+ */
+export const REGEX_NUMEROS = /[^0-9]/g;

@@ -7,7 +7,6 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Contenedores } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { EventEmitter } from '@angular/core';
@@ -19,6 +18,8 @@ import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
+import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
 import { Subject } from 'rxjs';
@@ -34,6 +35,7 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -63,37 +65,37 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar la sección de adjuntar archivo.
    */
-  showAdjuntarArchivo: boolean = false;
+  mostrarAdjuntarArchivo: boolean = false;
 
   /**
    * Bandera para mostrar la sección de aduana y fecha.
    */
-  showSeccionAduanaaFecha: boolean = false;
+  mostrarSeccionAduanaaFecha: boolean = false;
 
   /**
    * Bandera para mostrar la sección de contenedor.
    */
-  showSeccionContenedor: boolean = false;
+  mostrarSeccionContenedor: boolean = false;
 
   /**
    * Bandera para mostrar la sección de número de manifiesto.
    */
-  showSeccionNoManifiesto: boolean = false;
+  mostrarSeccionNoManifiesto: boolean = false;
 
   /**
    * Bandera para mostrar la tabla de cargar archivo.
    */
-  showCargarArchivoTable: boolean = false;
+  mostrarCargarArchivoTable: boolean = false;
 
   /**
    * Bandera para mostrar la tabla de archivo seleccionado.
    */
-  showArchivoSeleccionadoTable: boolean = false;
+  mostrarArchivoSeleccionadoTable: boolean = false;
 
   /**
    * Bandera para mostrar la sección de Excel.
    */
-  showSeccionExcel: boolean = false;
+  mostrarSeccionExcel: boolean = false;
 
   /**
    * Bandera para mostrar el mensaje.
@@ -325,7 +327,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('inicialesContenedor')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+          const SANITIZED = valor.replace(REGEX_REEMPLAZAR, '').toUpperCase();
           this.solicitudForm
             .get('inicialesContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -341,7 +343,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('numeroContenedor')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(/[^a-zA-Z0-9]/g, '');
+          const SANITIZED = valor.replace(REGEX_REEMPLAZAR, '');
           this.solicitudForm
             .get('numeroContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -352,7 +354,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('digitoDeControl')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(/[^0-9]/g, '');
+          const SANITIZED = valor.replace(REGEX_NUMEROS, '');
           this.solicitudForm
             .get('digitoDeControl')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -418,22 +420,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    this.showAdjuntarArchivo = false;
-    this.showSeccionAduanaaFecha = false;
-    this.showSeccionContenedor = false;
-    this.showSeccionNoManifiesto = false;
-    this.showSeccionExcel = false;
+    this.mostrarAdjuntarArchivo = false;
+    this.mostrarSeccionAduanaaFecha = false;
+    this.mostrarSeccionContenedor = false;
+    this.mostrarSeccionNoManifiesto = false;
+    this.mostrarSeccionExcel = false;
 
     switch (TIPO_BUSQUEDA) {
       case 'Contenedor':
-        this.showSeccionContenedor = true;
-        this.showSeccionAduanaaFecha = true;
+        this.mostrarSeccionContenedor = true;
+        this.mostrarSeccionAduanaaFecha = true;
         break;
       case 'No. de Manifiesto':
-        this.showSeccionNoManifiesto = true;
+        this.mostrarSeccionNoManifiesto = true;
         break;
       case 'Archivo CSV':
-        this.showAdjuntarArchivo = true;
+        this.mostrarAdjuntarArchivo = true;
         break;
       default:
         break;
@@ -446,11 +448,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   limpiarCampos(): void {
     this.solicitudForm.reset();
     // Resetear banderas y estados adicionales
-    this.showAdjuntarArchivo = false;
-    this.showSeccionAduanaaFecha = false;
-    this.showSeccionContenedor = false;
-    this.showSeccionNoManifiesto = false;
-    this.showSeccionExcel = false;
+    this.mostrarAdjuntarArchivo = false;
+    this.mostrarSeccionAduanaaFecha = false;
+    this.mostrarSeccionContenedor = false;
+    this.mostrarSeccionNoManifiesto = false;
+    this.mostrarSeccionExcel = false;
     this.mostrarMensaje = false;
     // Deshabilitar controles específicos si es necesario
     this.solicitudForm.get('archivoSeleccionado')?.disable();
@@ -497,7 +499,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
         this.analizarGramaticalmenteCSV(TEXT);
-        this.showArchivoSeleccionadoTable = true;
+        this.mostrarArchivoSeleccionadoTable = true;
       };
       READER.readAsText(FILE);
     }
@@ -516,7 +518,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
         this.analizarGramaticalmenteCSV(TEXT);
-        this.showCargarArchivoTable = true;
+        this.mostrarCargarArchivoTable = true;
       };
       READER.readAsText(FILE);
     }
