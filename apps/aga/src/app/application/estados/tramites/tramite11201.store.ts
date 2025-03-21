@@ -10,11 +10,7 @@ import { StoreConfig } from '@datorama/akita';
 
 export interface Solicitud11201State {
   menuDesplegable: string;
-  datosSolicitante: DatosSolicitante
-  rfc: string;
-  denominacion: string;
-  actividadEconomica: string;
-  correoElectronico: string;
+  datosSolicitante: DatosSolicitante  
   datosDelContenedor: [];
   tipoBusqueda: string;
   aduana: string;
@@ -52,11 +48,7 @@ export function createInitialState(): Solicitud11201State {
       denominacion: "",
       actividadEconomica: "",
       correoElectronico: ""
-    },
-    rfc: 'AAL0409235E6',
-    denominacion: 'AGRICOLA ALPE S DE RL DE CV',
-    actividadEconomica: 'Siembra, cultivo y cosecha de papa',
-    correoElectronico: 'vucem2.5@hotmail.com',
+    },    
     datosDelContenedor: [],
     tipoBusqueda: '',
     aduana: '',
@@ -126,25 +118,6 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setRfc(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      rfc
-    }));
-  }
-  public setDenominacion(denominacion: string): void {
-    this.update((state) => ({
-      ...state,
-      denominacion
-    }));
-  }
-
-  public setActividadEconomica(actividadEconomica: string): void {
-    this.update((state) => ({
-      ...state,
-      actividadEconomica
-    }));
-  }
 
   public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
     this.update((state) => ({
@@ -152,13 +125,7 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
       datosSolicitante
     }));
   }
-
-  public setCorreoElectronico(correoElectronico: string): void {
-    this.update((state) => ({
-      ...state,
-      correoElectronico
-    }));
-  }
+  
   public setDelContenedor(datosDelContenedor: []): void {
     this.update((state) => ({
       ...state,
