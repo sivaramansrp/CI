@@ -288,7 +288,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     public solicitud260101Query: Solicitud260101Query,
     public fb: FormBuilder
   ) {
-    //
+    // Constructor vacío, no requiere inicialización adicional.
   }
 
   /**

@@ -26,7 +26,7 @@ export class SolicitudDatosService {
    * @param http - Cliente HTTP para realizar solicitudes al servidor.
    */
   constructor(public http: HttpClient) {
-    //
+    // Constructor vacío, no requiere inicialización adicional.
   }
 
   /**

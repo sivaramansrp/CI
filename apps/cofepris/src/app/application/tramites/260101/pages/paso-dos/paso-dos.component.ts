@@ -85,7 +85,6 @@ export class PasoDosComponent implements OnInit {
             this.catalogoDocumentos = respuesta;
           }
         },
-        // error: (_error): void => { },
       });
   }
 }

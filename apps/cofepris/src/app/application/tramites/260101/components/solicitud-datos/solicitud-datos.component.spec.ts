@@ -18,6 +18,7 @@ describe('SolicitudDatosComponent', () => {
   let solicitud260101Query: jest.Mocked<Solicitud260101Query>;
 
   beforeEach(async () => {
+    // Implementaciones de servicios simulados
     const solicitudDatosServiceMock = {
       obtenerSolicitud: jest.fn(),
       obtenerEstadoCatalogo: jest.fn(),
