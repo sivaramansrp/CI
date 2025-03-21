@@ -377,6 +377,18 @@ export class TercerosRelacionadosComponent implements OnInit {
        * Correo electrónico del tercero.
        */
       correoElectronico: new FormControl(''),
+      /**
+       * Código del extranjero.
+       */
+      extranjeroCodigo: new FormControl('', [Validators.required]),
+      /**
+       * Estado del extranjero.
+       */
+      extranjeroEstado: new FormControl('', [Validators.required]),
+      /**
+       * Colonia del extranjero.
+       */
+      extranjeroColonia: new FormControl('', [Validators.required]),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
