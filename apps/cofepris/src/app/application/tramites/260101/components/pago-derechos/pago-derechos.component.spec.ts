@@ -99,14 +99,14 @@ describe('PagoDerechosComponent', () => {
   });
 
   it('should update store on setClaveDeReferencia', () => {
-    const event = { target: { value: 'test' } } as unknown as Event;
-    component.setClaveDeReferencia(event);
+    const evento = { target: { value: 'test' } } as unknown as Event;
+    component.setClaveDeReferencia(evento);
     expect(solicitud260101Store.setClaveDeReferencia).toHaveBeenCalledWith('test');
   });
 
   it('should update store on setCadenaDeDependencia', () => {
-    const event = { target: { value: 'test' } } as unknown as Event;
-    component.setCadenaDeDependencia(event);
+    const evento = { target: { value: 'test' } } as unknown as Event;
+    component.setCadenaDeDependencia(evento);
     expect(solicitud260101Store.setCadenaDeDependencia).toHaveBeenCalledWith('test');
   });
 
@@ -119,8 +119,8 @@ describe('PagoDerechosComponent', () => {
   });
 
   it('should update store on setLiaveDePago', () => {
-    const event = { target: { value: 'test' } } as unknown as Event;
-    component.setLiaveDePago(event);
+    const evento = { target: { value: 'test' } } as unknown as Event;
+    component.setLiaveDePago(evento);
     expect(solicitud260101Store.setLiaveDePago).toHaveBeenCalledWith('test');
   });
 
@@ -130,8 +130,8 @@ describe('PagoDerechosComponent', () => {
   });
 
   it('should update store on setImporteDePago', () => {
-    const event = { target: { value: '100' } } as unknown as Event;
-    component.setImporteDePago(event);
+    const evento = { target: { value: '100' } } as unknown as Event;
+    component.setImporteDePago(evento);
     expect(solicitud260101Store.setImporteDePago).toHaveBeenCalledWith('100');
   });
 

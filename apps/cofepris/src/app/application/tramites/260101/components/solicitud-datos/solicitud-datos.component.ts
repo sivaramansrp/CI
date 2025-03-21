@@ -59,17 +59,6 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Encabezados de las columnas de la tabla.
-   * Representados como un arreglo de cadenas de texto.
-   */
-  tablaHeadData: string[] = [];
-
-  /**
-   * Filas de datos de la tabla, basadas en la estructura de SolicitudDatos.
-   */
-  tablaFilaDatos: SolicitudDatos[] = [];
-
-  /**
    * Configuración de la tabla SCIAN.
    * Contiene encabezados y cuerpo de datos vacíos al inicio.
    */
@@ -147,6 +136,32 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+
+  solicitudSeleccionTabla = TablaSeleccion.UNDEFINED;
+  solicitudConfiguracionTabla: ConfiguracionColumna<SolicitudDatos>[] = [
+    {
+      encabezado: 'Fecha creacion',
+      clave: (item: SolicitudDatos) => item.fechaCreacion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Mercancia',
+      clave: (item: SolicitudDatos) => item.mercancia,
+      orden: 2,
+    },
+    {
+      encabezado: 'Cantidad',
+      clave: (item: SolicitudDatos) => item.cantidad,
+      orden: 3,
+    },
+    {
+      encabezado: 'Proveedor',
+      clave: (item: SolicitudDatos) => item.proovedor,
+      orden: 4,
+    }
+  ];
+
+  solicitudDatos: SolicitudDatos[] = [];
   /**
    * Configuración de las columnas de la tabla de mercancías.
    * Define las columnas y cómo se obtienen los datos de cada mercancía.
@@ -337,8 +352,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.solicitud260101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((res: Solicitud260101State) => {
-          this.solicitud260101State = res;
+        map((respuesta: Solicitud260101State) => {
+          this.solicitud260101State = respuesta;
           this.solicitudForm.patchValue({
             razonSocial: this.solicitud260101State.razonSocial,
             correoElectronico: this.solicitud260101State.correoElectronico,
@@ -390,19 +405,19 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   obtenerSolicitud(): void {
     this.solicitudDatosService.obtenerSolicitud().subscribe({
-      next: (res: Solicitud) => {
-        this.solicitud260101Store.setRazonSocial(res.razonSocial);
-        this.solicitud260101Store.setCorreoElectronico(res.correoElectronico);
-        this.solicitud260101Store.setCodigoPostal(res.codigoPostal);
-        this.solicitud260101Store.setMunicipio(res.municipio);
-        this.solicitud260101Store.setLocalidad(res.localidad);
-        this.solicitud260101Store.setColonia(res.colonia);
-        this.solicitud260101Store.setCalle(res.calle);
-        this.solicitud260101Store.setLada(res.lada);
-        this.solicitud260101Store.setTelefono(res.telefono);
-        this.solicitud260101Store.setLegalRazonSocial(res.legalRazonSocial);
-        this.solicitud260101Store.setApellidoPaterno(res.apellidoPaterno);
-        this.solicitud260101Store.setApellidoMeterno(res.apellidoMeterno);
+      next: (respuesta: Solicitud) => {
+        this.solicitud260101Store.setRazonSocial(respuesta.razonSocial);
+        this.solicitud260101Store.setCorreoElectronico(respuesta.correoElectronico);
+        this.solicitud260101Store.setCodigoPostal(respuesta.codigoPostal);
+        this.solicitud260101Store.setMunicipio(respuesta.municipio);
+        this.solicitud260101Store.setLocalidad(respuesta.localidad);
+        this.solicitud260101Store.setColonia(respuesta.colonia);
+        this.solicitud260101Store.setCalle(respuesta.calle);
+        this.solicitud260101Store.setLada(respuesta.lada);
+        this.solicitud260101Store.setTelefono(respuesta.telefono);
+        this.solicitud260101Store.setLegalRazonSocial(respuesta.legalRazonSocial);
+        this.solicitud260101Store.setApellidoPaterno(respuesta.apellidoPaterno);
+        this.solicitud260101Store.setApellidoMeterno(respuesta.apellidoMeterno);
       },
     });
   }
@@ -412,8 +427,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   obtenerEstadoCatalogo(): void {
     this.solicitudDatosService.obtenerEstadoCatalogo().subscribe({
-      next: (res: CatalogosSelect) => {
-        this.estadoCatalogo = res;
+      next: (respuesta: CatalogosSelect) => {
+        this.estadoCatalogo = respuesta;
       },
     });
   }
@@ -425,15 +440,10 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   obtenerDatosDeAplicacion(): void {
     this.solicitudDatosService.obtenerDatosDeSolicitud().subscribe({
-      next: (res: DatosDeSolicitud) => {
-        this.tablaHeadData = res.tablaHeadData;
-        this.tablaFilaDatos = res.tablaFilaDatos;
-        this.hacerlosRadioOptions = res.hacerlosRadioOptions;
-        this.tableDataSCIAN =
-          Array.isArray(res.tablaFilaDatos) &&
-          typeof res.tablaFilaDatos[0] === 'object'
-            ? res.tablaFilaDatos[0]?.SCIANLista || ({} as TableData)
-            : ({} as TableData);
+      next: (respuesta: DatosDeSolicitud) => {
+        this.solicitudDatos = respuesta.tablaFilaDatos;
+        this.hacerlosRadioOptions = respuesta.hacerlosRadioOptions;
+        this.tableDataSCIAN = respuesta.tablaFilaDatos[0]?.SCIANLista;
       },
     });
   }
@@ -454,8 +464,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   obtenerRegimenDestinaraListo(): void {
     this.solicitudDatosService.obtenerRegimenDestinaraListo().subscribe({
-      next: (res: CatalogosSelect) => {
-        this.regimenCatalogo = res;
+      next: (respuesta: CatalogosSelect) => {
+        this.regimenCatalogo = respuesta;
       },
     });
   }
@@ -465,20 +475,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   obtenerAduanaListo(): void {
     this.solicitudDatosService.obtenerAduanaListo().subscribe({
-      next: (res: CatalogosSelect) => {
-        this.aduanaCatalogo = res;
+      next: (respuesta: CatalogosSelect) => {
+        this.aduanaCatalogo = respuesta;
       },
     });
   }
 
-  /**
-   * Actualiza los datos de la tabla SCIAN según el índice proporcionado.
-   * @param tablaFilaDatos - Filas de datos de la tabla.
-   * @param index - Índice de la fila seleccionada.
-   */
-  updateSCIANData(tablaFilaDatos: SolicitudDatos[], index: number): void {
-    this.tableDataSCIAN = tablaFilaDatos[index].SCIANLista;
-  }
 
   /**
    * Abre el modal para modificar mercancías.
@@ -504,60 +506,60 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el estado seleccionado en el Store.
-   * @param event - Objeto del catálogo que contiene el estado seleccionado.
+   * @param evento - Objeto del catálogo que contiene el estado seleccionado.
    */
-  setEstado(event: Catalogo): void {
-    this.solicitud260101Store.setEstado(event.id);
+  setEstado(evento: Catalogo): void {
+    this.solicitud260101Store.setEstado(evento.id);
   }
 
   /**
    * Actualiza la licencia sanitaria en el Store.
-   * @param event - Evento que contiene el valor de la licencia sanitaria.
+   * @param evento - Evento que contiene el valor de la licencia sanitaria.
    */
-  setLicenciaSanitaria(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setLicenciaSanitaria(VALUE);
+  setLicenciaSanitaria(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setLicenciaSanitaria(VALOR);
   }
 
   /**
    * Actualiza el régimen seleccionado en el Store.
-   * @param event - Objeto del catálogo que contiene el régimen seleccionado.
+   * @param evento - Objeto del catálogo que contiene el régimen seleccionado.
    */
-  setRegimen(event: Catalogo): void {
-    this.solicitud260101Store.setRegimen(event.id);
+  setRegimen(evento: Catalogo): void {
+    this.solicitud260101Store.setRegimen(evento.id);
   }
 
   /**
    * Actualiza la aduana seleccionada en el Store.
-   * @param event - Objeto del catálogo que contiene la aduana seleccionada.
+   * @param evento - Objeto del catálogo que contiene la aduana seleccionada.
    */
-  setAduana(event: Catalogo): void {
-    this.solicitud260101Store.setAduana(event.id);
+  setAduana(evento: Catalogo): void {
+    this.solicitud260101Store.setAduana(evento.id);
   }
 
   /**
    * Actualiza el valor de "hacerlos" en el Store.
-   * @param event - Valor seleccionado para la propiedad "hacerlos".
+   * @param evento - Valor seleccionado para la propiedad "hacerlos".
    */
-  setHacerlos(event: number | string): void {
-    this.solicitud260101Store.setHacerlos(event);
+  setHacerlos(evento: number | string): void {
+    this.solicitud260101Store.setHacerlos(evento);
   }
 
   /**
    * Actualiza el RFC en el Store.
-   * @param event - Evento que contiene el valor del RFC.
+   * @param evento - Evento que contiene el valor del RFC.
    */
-  setRFC(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setRfc(VALUE);
+  setRFC(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setRfc(VALOR);
   }
 
   /**
-   * Obtiene los datos seleccionados de mercancías desde el evento.
-   * @param event - Lista de mercancías seleccionadas.
+   * Obtiene los datos seleccionados de mercancías desde el eventoo.
+   * @param evento - Lista de mercancías seleccionadas.
    */
-  getMercanciasDatos(event: Mercancia[]): void {
-    this.selectedMercanciasDatos = event;
+  getMercanciasDatos(evento: Mercancia[]): void {
+    this.selectedMercanciasDatos = evento;
   }
 
   /**
@@ -573,29 +575,29 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el estado del producto como fresco, congelado o vivo en el Store.
-   * @param event - Evento que contiene el estado seleccionado.
+   * @param evento - Evento que contiene el estado seleccionado.
    */
-  setLiveFreshFrozen(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).checked;
-    this.solicitud260101Store.setLiveFreshFrozen(VALUE);
+  setLiveFreshFrozen(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.solicitud260101Store.setLiveFreshFrozen(VALOR);
   }
 
   /**
    * Actualiza el indicador de aviso de funcionamiento en el Store.
-   * @param event - Evento que contiene el valor del indicador.
+   * @param evento - Evento que contiene el valor del indicador.
    */
-  setAvisoDeFuncionamiento(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).checked;
-    this.solicitud260101Store.setAvisoDeFuncionamiento(VALUE);
+  setAvisoDeFuncionamiento(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.solicitud260101Store.setAvisoDeFuncionamiento(VALOR);
   }
 
   /**
    * Actualiza el indicador de manifiesto en el Store.
-   * @param event - Evento que contiene el valor del indicador.
+   * @param evento - Evento que contiene el valor del indicador.
    */
-  setManifesto(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).checked;
-    this.solicitud260101Store.setManifesto(VALUE);
+  setManifesto(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).checked;
+    this.solicitud260101Store.setManifesto(VALOR);
   }
 
   /**

@@ -260,8 +260,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.solicitud260101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((res: Solicitud260101State) => {
-          this.solicitud260101State = res;
+        map((respuesta: Solicitud260101State) => {
+          this.solicitud260101State = respuesta;
           this.destinatarioDatos = this.solicitud260101State.destinatarioDatos;
         })
       )
@@ -274,9 +274,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioListo(): void {
     this.solicitudDatosService.obtenerDestinatarioListo().subscribe({
-      next: (res: Destinatario[]) => {
-        this.destinatarioDatos = res;
-        this.solicitud260101Store.setDestinatarioDatos(res);
+      next: (respuesta: Destinatario[]) => {
+        this.destinatarioDatos = respuesta;
+        this.solicitud260101Store.setDestinatarioDatos(respuesta);
       },
     });
   }
@@ -287,8 +287,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   obtenerFabricanteListo(): void {
     this.solicitudDatosService.obtenerFabricanteListo().subscribe({
-      next: (res: Fabricante[]) => {
-        this.fabricanteDatos = res;
+      next: (respuesta: Fabricante[]) => {
+        this.fabricanteDatos = respuesta;
       },
     });
   }
@@ -315,10 +315,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene los datos seleccionados de destinatarios desde el evento emitido.
-   * @param event - Lista de fabricantes seleccionados.
+   * @param evento - Lista de fabricantes seleccionados.
    */
-  getDestinatarioDatos(event: Fabricante[]): void {
-    this.selectedDestinatario = event;
+  getDestinatarioDatos(evento: Fabricante[]): void {
+    this.selectedDestinatario = evento;
   }
 
   /**

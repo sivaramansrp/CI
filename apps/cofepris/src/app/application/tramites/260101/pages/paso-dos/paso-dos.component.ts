@@ -80,9 +80,9 @@ export class PasoDosComponent implements OnInit {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
+        next: (respuesta): void => {
+          if (respuesta.length > 0) {
+            this.catalogoDocumentos = respuesta;
           }
         },
         // error: (_error): void => { },

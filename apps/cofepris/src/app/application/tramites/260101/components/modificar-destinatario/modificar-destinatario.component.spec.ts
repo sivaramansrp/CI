@@ -14,7 +14,6 @@ describe('ModificarDestinatarioComponent', () => {
   let solicitud260101Query: jest.Mocked<Solicitud260101Query>;
 
   beforeEach(async () => {
-    // Mock implementations of the services
     const solicitudDatosServiceMock = {
       obtenerDestinatarioCatalogos: jest.fn(),
       obtenerDestinatarioRadio: jest.fn(),
@@ -217,15 +216,15 @@ describe('ModificarDestinatarioComponent', () => {
   });
 
   it('should update store on setModificarRFC', () => {
-    const event = { target: { value: 'RFC123456' } } as unknown as Event;
-    component.setModificarRFC(event);
+    const evento = { target: { VALOR: 'RFC123456' } } as unknown as Event;
+    component.setModificarRFC(evento);
     expect(solicitud260101Store.setModificarRFC).toHaveBeenCalledWith('RFC123456');
   });
   
 
   it('should update store on setDenominacion', () => {
-    const event = { target: { value: 'Denominacion' } } as unknown as Event;
-    component.setDenominacion(event);
+    const evento = { target: { VALOR: 'Denominacion' } } as unknown as Event;
+    component.setDenominacion(evento);
     expect(solicitud260101Store.setDenominacion).toHaveBeenCalledWith('Denominacion');
   });
   

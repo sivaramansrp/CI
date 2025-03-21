@@ -12,7 +12,7 @@
             <h6 class="panel-title">
              
               <h6> <a aria-label="Repeat"
-                ><i class="bi bi-repeat" aria-hidden="true"></i
+                ><i class="bi bi-clipboard2-fill" aria-hidden="true"></i
               ></a> Opciones de pre-llenado de Solicitud</h6>
             </h6>
             <button
@@ -29,27 +29,12 @@
                 <label for="solicitud">Solicitud</label>
               </div>
               <div class="col-md-12">
-                <table class="table table-responsive table-striped">
-                  <thead>
-                    <tr>
-                      @for (item of tablaHeadData; track $index) {
-                      <th>{{ item }}</th>
-                      }
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (item of tablaFilaDatos; let i = $index; track i) {
-                    <tr>
-                      <td>{{ item.fechaCreacion }}</td>
-                      <td (click)="updateSCIANData(tablaFilaDatos, i)">
-                        {{ item.mercancia }}
-                      </td>
-                      <td>{{ item.cantidad }}</td>
-                      <td>{{ item.proovedor }}</td>
-                    </tr>
-                    }
-                  </tbody>
-                </table>
+                <app-tabla-dinamica
+                  [tipoSeleccionTabla]="solicitudSeleccionTabla"
+                  [datos]="solicitudDatos"
+                  [configuracionTabla]="solicitudConfiguracionTabla"
+                >
+                </app-tabla-dinamica>
               </div>
             </div>
           </div>
@@ -317,8 +302,6 @@
 
     <div class="col-md-12 mt-4">
       <ng-titulo titulo="Manifiestos y declaraciones" />
-
-      <!-- <ng-alert [CONTENIDO]="TEXTOS.TEXTOS_MANIFIESTOS"></ng-alert> -->
       <div class="alert alert-info">
         <label style="font-weight: normal">
           <div class="col-md-1 mt-5">

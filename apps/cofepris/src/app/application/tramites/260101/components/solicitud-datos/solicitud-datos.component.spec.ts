@@ -1,17 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { SolicitudDatosComponent } from './solicitud-datos.component';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Solicitud260101Store } from '../../estados/tramites260101.store';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
 import { Solicitud260101State } from '../../estados/tramites260101.store';
-import {
-  DatosDeSolicitud,
-  Solicitud,
-  SolicitudDatos,
-} from '../../models/solicitud-datos.model';
-import { Mercancia } from '../../models/mercancia.model';
+import { Solicitud } from '../../models/solicitud-datos.model';
 import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 
@@ -23,7 +18,6 @@ describe('SolicitudDatosComponent', () => {
   let solicitud260101Query: jest.Mocked<Solicitud260101Query>;
 
   beforeEach(async () => {
-    // Mock service implementations
     const solicitudDatosServiceMock = {
       obtenerSolicitud: jest.fn(),
       obtenerEstadoCatalogo: jest.fn(),
@@ -87,7 +81,7 @@ describe('SolicitudDatosComponent', () => {
       Solicitud260101Query
     ) as jest.Mocked<Solicitud260101Query>;
 
-    fixture.detectChanges(); // Trigger component lifecycle
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -121,37 +115,11 @@ describe('SolicitudDatosComponent', () => {
     expect(solicitudDatosService.obtenerEstadoCatalogo).toHaveBeenCalled();
   });
 
-  it('should update SCIAN data', () => {
-    const mockData: SolicitudDatos[] = [
-      {
-        SCIANLista: {
-          tableHeader: ['Clave S.C.I.A.N', 'Descripción del S.C.I.A.N.'],
-          tableBody: [
-            {
-              tbodyData: [
-                '311321',
-                'Deshidratación  de productos agrícolas alimecticios.',
-              ],
-            },
-            {
-              tbodyData: [
-                '614074',
-                'Deshidratación  de productos agrícolas alimecticios.',
-              ],
-            },
-          ],
-        },
-      } as SolicitudDatos,
-    ];
-    component.updateSCIANData(mockData, 0);
-    expect(component.tableDataSCIAN).toEqual(mockData[0].SCIANLista);
-  });
-
   it('should open modal for modifying mercancías', () => {
     const modalSpy = jest.spyOn(Modal.prototype, 'show');
     component.modalElement = {
       nativeElement: document.createElement('div'),
-    } as any; // Mock DOM element
+    } as any;
     component.openModificarMercancias();
     expect(modalSpy).toHaveBeenCalled();
   });
@@ -168,16 +136,16 @@ describe('SolicitudDatosComponent', () => {
   });
 
   it('should set licencia sanitaria in store', () => {
-    const event = { target: { value: 'Licencia' } } as unknown as Event;
-    component.setLicenciaSanitaria(event);
+    const evento = { target: { value: 'Licencia' } } as unknown as Event;
+    component.setLicenciaSanitaria(evento);
     expect(solicitud260101Store.setLicenciaSanitaria).toHaveBeenCalledWith(
       'Licencia'
     );
   });
 
   it('should set RFC in store', () => {
-    const event = { target: { value: 'RFC' } } as unknown as Event;
-    component.setRFC(event);
+    const evento = { target: { value: 'RFC' } } as unknown as Event;
+    component.setRFC(evento);
     expect(solicitud260101Store.setRfc).toHaveBeenCalledWith('RFC');
   });
 

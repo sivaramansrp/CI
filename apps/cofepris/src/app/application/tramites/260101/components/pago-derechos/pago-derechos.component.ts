@@ -94,8 +94,8 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
     this.solicitud260101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((res: Solicitud260101State) => {
-          this.solicitud260101State = res;
+        map((respuesta: Solicitud260101State) => {
+          this.solicitud260101State = respuesta;
           this.pagoDeDerechosForm.patchValue({
             claveDeReferencia: this.solicitud260101State.claveDeReferencia,
             cadenaDeDependencia: this.solicitud260101State.cadenaDeDependencia,
@@ -114,62 +114,62 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   obtenerPagoDerechos(): void {
     this.solicitudDatosService.obtenerPagoDerechos().subscribe({
-      next: (res: CatalogosSelect) => {
-        this.bancoCatalogo = res;
+      next: (respuesta: CatalogosSelect) => {
+        this.bancoCatalogo = respuesta;
       },
     });
   }
 
   /**
    * Actualiza la clave de referencia del pago en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setClaveDeReferencia(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setClaveDeReferencia(VALUE);
+  setClaveDeReferencia(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setClaveDeReferencia(VALOR);
   }
 
   /**
    * Actualiza la cadena de dependencia en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setCadenaDeDependencia(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setCadenaDeDependencia(VALUE);
+  setCadenaDeDependencia(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setCadenaDeDependencia(VALOR);
   }
 
   /**
    * Actualiza el banco seleccionado en el Store.
-   * @param event - Objeto que contiene el banco seleccionado.
+   * @param evento - Objeto que contiene el banco seleccionado.
    */
-  setBanco(event: Catalogo): void {
-    this.solicitud260101Store.setBanco(event.id);
+  setBanco(evento: Catalogo): void {
+    this.solicitud260101Store.setBanco(evento.id);
   }
 
   /**
    * Actualiza la llave de pago en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setLiaveDePago(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setLiaveDePago(VALUE);
+  setLiaveDePago(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setLiaveDePago(VALOR);
   }
 
   /**
    * Actualiza la fecha de pago seleccionada en el Store.
-   * @param event - Cadena con la fecha seleccionada.
+   * @param evento - Cadena con la fecha seleccionada.
    */
-  seleccionarFechaInicio(event: string): void {
-    this.solicitud260101Store.setFechaDePago(event);
+  seleccionarFechaInicio(evento: string): void {
+    this.solicitud260101Store.setFechaDePago(evento);
   }
 
   /**
    * Actualiza el importe del pago en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setImporteDePago(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setImporteDePago(VALUE);
+  setImporteDePago(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setImporteDePago(VALOR);
   }
 
   /**

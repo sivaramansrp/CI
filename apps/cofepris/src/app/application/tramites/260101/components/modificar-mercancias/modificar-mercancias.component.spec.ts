@@ -83,9 +83,9 @@ describe('ModificarMercanciasComponent', () => {
   });
 
   it('should toggle paisOrigenColapsable', () => {
-    component.paisOrigen_colapsable();
+    component.usoEspecificoColapsable();
     expect(component.paisOrigenColapsable).toBe(true);
-    component.paisOrigen_colapsable();
+    component.usoEspecificoColapsable();
     expect(component.paisOrigenColapsable).toBe(false);
   });
 
@@ -97,9 +97,9 @@ describe('ModificarMercanciasComponent', () => {
   });
 
   it('should toggle usoEspecificoColapsable', () => {
-    component.usoEspecifico_colapsable();
+    component.usoEspecificoColapsable();
     expect(component.usoEspecificoColapsable).toBe(true);
-    component.usoEspecifico_colapsable();
+    component.usoEspecificoColapsable();
     expect(component.usoEspecificoColapsable).toBe(false);
   });
 

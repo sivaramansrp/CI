@@ -194,8 +194,8 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
     this.solicitud260101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((res: Solicitud260101State) => {
-          this.solicitud260101State = res;
+        map((respuesta: Solicitud260101State) => {
+          this.solicitud260101State = respuesta;
           this.modificarDestinatarioForm.patchValue({
             tipoPersona: this.solicitud260101State.tipoPersona,
             modificarRFC: this.solicitud260101State.modificarRFC,
@@ -227,13 +227,13 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioCatalogos(): void {
     this.solicitudDatosService.obtenerDestinatarioCatalogos().subscribe({
-      next: (res: DestinatarioCatalogos) => {
-        this.paisCatalogo = res.paisCatalogo;
-        this.estadoCatalogo = res.estadoCatalogo;
-        this.municipioCatalogo = res.municipioCatalogo;
-        this.localidadCatalogo = res.localidadCatalogo;
-        this.codigoCatalogo = res.codigoCatalogo;
-        this.coloniaCatalogo = res.codigoCatalogo;
+      next: (respuesta: DestinatarioCatalogos) => {
+        this.paisCatalogo = respuesta.paisCatalogo;
+        this.estadoCatalogo = respuesta.estadoCatalogo;
+        this.municipioCatalogo = respuesta.municipioCatalogo;
+        this.localidadCatalogo = respuesta.localidadCatalogo;
+        this.codigoCatalogo = respuesta.codigoCatalogo;
+        this.coloniaCatalogo = respuesta.codigoCatalogo;
       },
     });
   }
@@ -243,8 +243,8 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioRadio(): void {
     this.solicitudDatosService.obtenerDestinatarioRadio().subscribe({
-      next: (res: { label: string; value: string | number }[]) => {
-        this.tipoPersonaRadioOptions = res;
+      next: (respuesta: { label: string; value: string | number }[]) => {
+        this.tipoPersonaRadioOptions = respuesta;
       },
     });
   }
@@ -254,138 +254,138 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerDestinatarioImitar(): void {
     this.solicitudDatosService.obtenerDestinatarioImitar().subscribe({
-      next: (res: DestinatarioImitar) => {
-        this.solicitud260101Store.setDomicilioPais(res.domicilioPais);
+      next: (respuesta: DestinatarioImitar) => {
+        this.solicitud260101Store.setDomicilioPais(respuesta.domicilioPais);
       },
     });
   }
 
   /**
    * Actualiza el tipo de persona seleccionado en el Store.
-   * @param event - Valor del tipo de persona seleccionado (puede ser cadena o número).
+   * @param evento - Valor del tipo de persona seleccionado (puede ser cadena o número).
    */
-  setTipoPersona(event: string | number): void {
-    this.solicitud260101Store.setTipoPersona(event);
+  setTipoPersona(evento: string | number): void {
+    this.solicitud260101Store.setTipoPersona(evento);
   }
 
   /**
    * Actualiza el RFC del destinatario en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setModificarRFC(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setModificarRFC(VALUE);
+  setModificarRFC(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setModificarRFC(VALOR);
   }
 
   /**
    * Actualiza la denominación del destinatario en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDenominacion(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDenominacion(VALUE);
+  setDenominacion(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDenominacion(VALOR);
   }
 
   /**
    * Selecciona el país del domicilio y lo actualiza en el Store.
-   * @param event - Objeto del catálogo que contiene el país seleccionado.
+   * @param evento - Objeto del catálogo que contiene el país seleccionado.
    */
-  seleccionaPais(event: Catalogo): void {
-    this.solicitud260101Store.setDomicilioPais(event.id);
+  seleccionaPais(evento: Catalogo): void {
+    this.solicitud260101Store.setDomicilioPais(evento.id);
   }
 
   /**
    * Selecciona el estado del domicilio y lo actualiza en el Store.
-   * @param event - Objeto del catálogo que contiene el estado seleccionado.
+   * @param evento - Objeto del catálogo que contiene el estado seleccionado.
    */
-  seleccionaEstado(event: Catalogo): void {
-    this.solicitud260101Store.setDomicilioEstado(event.id);
+  seleccionaEstado(evento: Catalogo): void {
+    this.solicitud260101Store.setDomicilioEstado(evento.id);
   }
 
   /**
    * Selecciona el municipio del domicilio y lo actualiza en el Store.
-   * @param event - Objeto del catálogo que contiene el municipio seleccionado.
+   * @param evento - Objeto del catálogo que contiene el municipio seleccionado.
    */
-  seleccionaMunicipio(event: Catalogo): void {
-    this.solicitud260101Store.setDomicilioMunicipio(event.id);
+  seleccionaMunicipio(evento: Catalogo): void {
+    this.solicitud260101Store.setDomicilioMunicipio(evento.id);
   }
 
   /**
    * Selecciona la localidad del domicilio y la actualiza en el Store.
-   * @param event - Objeto del catálogo que contiene la localidad seleccionada.
+   * @param evento - Objeto del catálogo que contiene la localidad seleccionada.
    */
-  seleccionaLocalidad(event: Catalogo): void {
-    this.solicitud260101Store.setDomicilioLocalidad(event.id);
+  seleccionaLocalidad(evento: Catalogo): void {
+    this.solicitud260101Store.setDomicilioLocalidad(evento.id);
   }
 
   /**
    * Selecciona el código postal del domicilio y lo actualiza en el Store.
-   * @param event - Objeto del catálogo que contiene el código postal seleccionado.
+   * @param evento - Objeto del catálogo que contiene el código postal seleccionado.
    */
-  seleccionaCodigo(event: Catalogo): void {
-    this.solicitud260101Store.setDomicilioCodigo(event.id);
+  seleccionaCodigo(evento: Catalogo): void {
+    this.solicitud260101Store.setDomicilioCodigo(evento.id);
   }
 
   /**
    * Selecciona la colonia del domicilio y la actualiza en el Store.
-   * @param event - Objeto del catálogo que contiene la colonia seleccionada.
+   * @param evento - Objeto del catálogo que contiene la colonia seleccionada.
    */
-  seleccionaColonia(event: Catalogo): void {
-    this.solicitud260101Store.setDomicilioColonia(event.id);
+  seleccionaColonia(evento: Catalogo): void {
+    this.solicitud260101Store.setDomicilioColonia(evento.id);
   }
 
   /**
    * Actualiza la calle del domicilio en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliCalle(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioCalle(VALUE);
+  setDomiciliCalle(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDomicilioCalle(VALOR);
   }
 
   /**
    * Actualiza el número exterior del domicilio en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliNumeroExterior(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioNumeroExterior(VALUE);
+  setDomiciliNumeroExterior(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDomicilioNumeroExterior(VALOR);
   }
 
   /**
    * Actualiza el número interior del domicilio en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliNumeroInterior(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioNumeroInterior(VALUE);
+  setDomiciliNumeroInterior(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDomicilioNumeroInterior(VALOR);
   }
 
   /**
    * Actualiza el código LADA del domicilio en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliLada(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioLada(VALUE);
+  setDomiciliLada(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDomicilioLada(VALOR);
   }
 
   /**
    * Actualiza el número telefónico del domicilio en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliTelefono(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioTelefono(VALUE);
+  setDomiciliTelefono(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDomicilioTelefono(VALOR);
   }
 
   /**
    * Actualiza el correo electrónico del domicilio en el Store.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * @param evento - Evento que contiene el valor ingresado por el usuario.
    */
-  setDomiciliCorreoElectronioco(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDomicilioCorreoElectronico(VALUE);
+  setDomiciliCorreoElectronioco(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setDomicilioCorreoElectronico(VALOR);
   }
 
   /**
@@ -403,7 +403,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
     if (this.modificarDestinatarioForm.invalid) {
       return;
     }
-    const JSON_OBJECT = {
+    const OBJETO_JSON = {
       nombre: this.modificarDestinatarioForm.get('denominacion')?.value,
       rfc: this.modificarDestinatarioForm.get('modificarRFC')?.value,
       curp: '--',
@@ -428,7 +428,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
       estado2: '--',
       codigo: this.modificarDestinatarioForm.get('domicilioCodigo')?.value,
     };
-    this.solicitud260101Store.addDestinatarioDato(JSON_OBJECT);
+    this.solicitud260101Store.addDestinatarioDato(OBJETO_JSON);
   }
 
   /**

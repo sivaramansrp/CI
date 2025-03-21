@@ -59,7 +59,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * Controla la visibilidad del panel colapsable para el país de origen.
    * Valor inicial: `false` (panel oculto).
    */
-  paisOrigenColapsable = false;
+  paisOrigen = false;
 
   /**
    * Lista cruzada de países de origen.
@@ -83,7 +83,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * Controla la visibilidad del panel colapsable para el uso específico.
    * Valor inicial: `false` (panel oculto).
    */
-  usoEspecificoColapsable = false;
+  usoEspecifico = false;
 
   /**
    * Lista cruzada de usos específicos.
@@ -273,8 +273,8 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     this.solicitud260101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((res: Solicitud260101State) => {
-          this.solicitud260101State = res;
+        map((respuesta: Solicitud260101State) => {
+          this.solicitud260101State = respuesta;
           this.datosMercanciaForm.patchValue({
             clasificaionProductos:
               this.solicitud260101State.clasificaionProductos,
@@ -305,9 +305,9 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerClavesDeLotesListo(): void {
     this.solicitudDatosService.obtenerClavesDeLotesListo().subscribe({
-      next: (res: ClavesDeLotes[]) => {
-        this.tipos = res;
-        this.solicitud260101Store.setClavesDeLotes(res);
+      next: (respuesta: ClavesDeLotes[]) => {
+        this.tipos = respuesta;
+        this.solicitud260101Store.setClavesDeLotes(respuesta);
       },
     });
   }
@@ -318,11 +318,11 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerMercanciaListo(): void {
     this.solicitudDatosService.obtenerMercanciaListo().subscribe({
-      next: (res: Mercancia[]) => {
+      next: (respuesta: Mercancia[]) => {
         this.solicitud260101Store.setDescripcionFraccionArancelaria(
-          res[0].descripcionFraccionArancelaria
+          respuesta[0].descripcionFraccionArancelaria
         );
-        this.solicitud260101Store.setUmt(res[0].umt);
+        this.solicitud260101Store.setUmt(respuesta[0].umt);
       },
     });
   }
@@ -333,10 +333,10 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerCrosslisto(): void {
     this.solicitudDatosService.obtenerCrosslisto().subscribe({
-      next: (res: MercanciaCrossList) => {
-        this.paisOrigenCrossList = res.paisOrigenCrossList;
-        this.paisProcedencisCrossList = res.paisProcedencisCrossList;
-        this.usoEspecificoCrossList = res.usoEspecificoCrossList;
+      next: (respuesta: MercanciaCrossList) => {
+        this.paisOrigenCrossList = respuesta.paisOrigenCrossList;
+        this.paisProcedencisCrossList = respuesta.paisProcedencisCrossList;
+        this.usoEspecificoCrossList = respuesta.usoEspecificoCrossList;
       },
     });
   }
@@ -347,19 +347,19 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerMercanciaCatalogos(): void {
     this.solicitudDatosService.obtenerMercanciaCatalogos().subscribe({
-      next: (res: MercanciaCatalogos) => {
-        this.productosCatalogo = res.productosCatalogo;
-        this.especificarCatalogo = res.especificarCatalogo;
-        this.tipoProductoCatalogo = res.tipoProductoCatalogo;
-        this.umcCatalogo = res.umcCatalogo;
+      next: (respuesta: MercanciaCatalogos) => {
+        this.productosCatalogo = respuesta.productosCatalogo;
+        this.especificarCatalogo = respuesta.especificarCatalogo;
+        this.tipoProductoCatalogo = respuesta.tipoProductoCatalogo;
+        this.umcCatalogo = respuesta.umcCatalogo;
       },
     });
   }
   /**
    * Alterna la visibilidad del panel colapsable para el país de origen.
    */
-  paisOrigen_colapsable(): void {
-    this.paisOrigenColapsable = !this.paisOrigenColapsable;
+  paisOrigenColapsable(): void {
+    this.paisOrigen = !this.paisOrigen;
   }
 
   /**
@@ -372,117 +372,117 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
   /**
    * Alterna la visibilidad del panel colapsable para el uso específico.
    */
-  usoEspecifico_colapsable(): void {
-    this.usoEspecificoColapsable = !this.usoEspecificoColapsable;
+  usoEspecificoColapsable(): void {
+    this.usoEspecifico = !this.usoEspecifico;
   }
 
   /**
    * Selecciona un producto del catálogo y actualiza la cadena de dependencia en el Store.
-   * @param event - Objeto del producto seleccionado.
+   * @param evento - Objeto del producto seleccionado.
    */
-  seleccionaProductos(event: Catalogo): void {
-    this.solicitud260101Store.setCadenaDeDependencia(event.descripcion);
+  seleccionaProductos(evento: Catalogo): void {
+    this.solicitud260101Store.setCadenaDeDependencia(evento.descripcion);
   }
 
   /**
    * Selecciona una opción del catálogo para especificar el producto y actualiza el estado.
-   * @param event - Objeto del catálogo seleccionado.
+   * @param evento - Objeto del catálogo seleccionado.
    */
-  seleccionaEspecificar(event: Catalogo): void {
-    this.solicitud260101Store.setEspecificarProducto(event.id);
+  seleccionaEspecificar(evento: Catalogo): void {
+    this.solicitud260101Store.setEspecificarProducto(evento.id);
   }
 
   /**
    * Selecciona un tipo de producto del catálogo y actualiza el estado.
-   * @param event - Objeto del catálogo seleccionado.
+   * @param evento - Objeto del catálogo seleccionado.
    */
-  seleccionaTipoProducto(event: Catalogo): void {
-    this.solicitud260101Store.setTipoProducto(event.id);
+  seleccionaTipoProducto(evento: Catalogo): void {
+    this.solicitud260101Store.setTipoProducto(evento.id);
   }
 
   /**
    * Selecciona la fecha de fabricación del producto y actualiza el estado.
-   * @param event - Cadena con la fecha seleccionada.
+   * @param evento - Cadena con la fecha seleccionada.
    */
-  seleccionarFechaFabricacion(event: string): void {
-    this.solicitud260101Store.setFechaFabricacion(event);
+  seleccionarFechaFabricacion(evento: string): void {
+    this.solicitud260101Store.setFechaFabricacion(evento);
   }
 
   /**
    * Selecciona la fecha de caducidad del producto y actualiza el estado.
-   * @param event - Cadena con la fecha seleccionada.
+   * @param evento - Cadena con la fecha seleccionada.
    */
-  seleccionarFechaCaducidad(event: string): void {
-    this.solicitud260101Store.setFechaCaducidad(event);
+  seleccionarFechaCaducidad(evento: string): void {
+    this.solicitud260101Store.setFechaCaducidad(evento);
   }
 
   /**
    * Actualiza el nombre específico del producto en el Store.
-   * @param event - Evento que contiene el valor ingresado.
+   * @param evento - Evento que contiene el valor ingresado.
    */
-  setNombreProductoEspecifico(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setNombreProductoEspecifico(VALUE);
+  setNombreProductoEspecifico(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setNombreProductoEspecifico(VALOR);
   }
 
   /**
    * Actualiza la marca del producto en el Store.
-   * @param event - Evento que contiene el valor ingresado.
+   * @param evento - Evento que contiene el valor ingresado.
    */
-  setMarca(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setMarca(VALUE);
+  setMarca(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setMarca(VALOR);
   }
 
   /**
    * Actualiza la fracción arancelaria en el Store.
-   * @param event - Evento que contiene el valor ingresado.
+   * @param evento - Evento que contiene el valor ingresado.
    */
-  setFraccionArancelaria(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setFraccionArancelaria(VALUE);
+  setFraccionArancelaria(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setFraccionArancelaria(VALOR);
   }
 
   /**
    * Actualiza la cantidad UMT (Unidad de Medida de Tarifa) en el Store.
-   * @param event - Evento que contiene el valor ingresado.
+   * @param evento - Evento que contiene el valor ingresado.
    */
-  setCantidadUMT(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setCantidadUMT(VALUE);
+  setCantidadUMT(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setCantidadUMT(VALOR);
   }
 
   /**
    * Actualiza la cantidad UMC (Unidad de Medida de Comercialización) en el Store.
-   * @param event - Evento que contiene el valor ingresado.
+   * @param evento - Evento que contiene el valor ingresado.
    */
-  setCantidadUMC(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setCantidadUMC(VALUE);
+  setCantidadUMC(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setCantidadUMC(VALOR);
   }
 
   /**
    * Selecciona la UMC del catálogo y actualiza el estado.
-   * @param event - Objeto del catálogo seleccionado.
+   * @param evento - Objeto del catálogo seleccionado.
    */
-  setUMC(event: Catalogo): void {
-    this.solicitud260101Store.setUmc(event.id);
+  setUMC(evento: Catalogo): void {
+    this.solicitud260101Store.setUmc(evento.id);
   }
 
   /**
    * Actualiza la clave de los lotes en el Store.
-   * @param event - Evento que contiene el valor ingresado.
+   * @param evento - Evento que contiene el valor ingresado.
    */
-  setClaveDeDeLosLotes(event: Event): void {
-    const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setClaveDeLosLotes(VALUE);
+  setClaveDeDeLosLotes(evento: Event): void {
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud260101Store.setClaveDeLosLotes(VALOR);
   }
 
   /**
    * Agrega una mercancía al estado utilizando los datos del formulario.
    */
   agregarMercanias(): void {
-    const JSON_OBJECT = {
+    const OBJETO_JSON = {
       clasificaionProductos: this.datosMercanciaForm.get(
         'clasificaionProductos'
       )?.value,
@@ -507,7 +507,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
       usoEspecifico: 'usoEspecifico',
     };
 
-    this.solicitud260101Store.addMercanciasDatos(JSON_OBJECT);
+    this.solicitud260101Store.addMercanciasDatos(OBJETO_JSON);
   }
 
   /**
@@ -515,27 +515,27 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * Solo se agrega si no hay valores vacíos.
    */
   agregarClavesDeLotes(): void {
-    const JSON_OBJECT = {
+    const OBJETO_JSON = {
       lotes: this.datosMercanciaForm.get('claveDeLosLotes')?.value,
       fabricacion: this.datosMercanciaForm.get('fechaFabricacion')?.value,
       caducidad: this.datosMercanciaForm.get('fechaCaducidad')?.value,
     };
 
-    const IS_EMPTY = Object.values(JSON_OBJECT).some(
+    const ESTA_VACIO = Object.values(OBJETO_JSON).some(
       (value) => value === null || value === undefined || value === ''
     );
 
-    if (!IS_EMPTY) {
-      this.solicitud260101Store.addClaveDeLote(JSON_OBJECT);
+    if (!ESTA_VACIO) {
+      this.solicitud260101Store.addClaveDeLote(OBJETO_JSON);
     }
   }
 
   /**
    * Actualiza la lista de claves de lotes seleccionadas.
-   * @param event - Lista de claves de lotes seleccionadas.
+   * @param evento - Lista de claves de lotes seleccionadas.
    */
-  getListaClavesDeLotes(event: ClavesDeLotes[]): void {
-    this.selectedClavesDeLotes = event;
+  getListaClavesDeLotes(evento: ClavesDeLotes[]): void {
+    this.selectedClavesDeLotes = evento;
   }
 
   /**
