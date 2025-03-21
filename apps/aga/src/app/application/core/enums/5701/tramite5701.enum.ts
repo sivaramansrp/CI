@@ -67,3 +67,11 @@ export const VEHICULO = [
   'Peatonal',
   'Otro'
 ]
+
+export const TRANSPORTE = [
+  'Carretero',
+  'Ferroviario',
+  'Aéreo',
+  'Marítimo',
+  'Otro'
+]

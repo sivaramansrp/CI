@@ -500,30 +500,38 @@
     @if (individual()) {
     <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
 
-    <div formGroupName="transporte">
+    <div formGroupName="vehiculo">
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="tipoVehiculo" formControlName="tipoTransporte" [label]="'Tipo de transporte'"
             [required]="true" (change)="
-              setValoresStore(transporte, 'tipoTransporte', 'setTipoTransporte')
+              setValoresStore(vehiculo, 'tipoTransporte', 'setTipoTransporte')
             "></app-catalogo-select>
         </div>
       </div>
-      @if (transporte.get('tipoTransporte')?.value) {
+      @if (vehiculo.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="transporte.get('tipoTransporte')?.value"></lib-agregar-transporte>
+        <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"></lib-agregar-transporte>
       </div>
       }
-
-      <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
-      
     </div>
 
-
-
-
-
-
+    <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
+    <div formGroupName="transporteArriboSalida">
+      <div class="row">
+        <div class="col-md-4">
+          <app-catalogo-select [catalogo]="tipoTransporte" formControlName="tipoTransporte"
+            [label]="'Tipo de transporte'" [required]="true" (change)="
+            setValoresStore(transporteArriboSalida, 'tipoTransporte', 'setTipoTransporteArriboSalida')
+          "></app-catalogo-select>
+        </div>
+      </div>
+      @if (transporteArriboSalida.get('tipoTransporte')?.value) {
+      <div class="row">
+        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"></lib-agregar-transporte>
+      </div>
+      }
+    </div>
     }
 
     <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />

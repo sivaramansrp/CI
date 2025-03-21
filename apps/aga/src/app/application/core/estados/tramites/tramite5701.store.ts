@@ -5,6 +5,7 @@ import {
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
+import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/agregar-trasnporte.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
@@ -76,7 +77,10 @@ export interface Solicitud5701State {
   personasResponsablesDespacho: ResponsablesDespacho[];
 
   tipoTransporte: string;
-  transporte: string[];
+  transporte: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[];
+
+  tipoTransporteArriboSalida: string;
+  transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[];
 
   montoPagar: string;
   lineaCaptura: string;
@@ -149,6 +153,8 @@ export function createInitialState(): Solicitud5701State {
     personasResponsablesDespacho: [],
     tipoTransporte: '',
     transporte: [],
+    tipoTransporteArriboSalida: '',
+    transporteArriboDatos: [],
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
@@ -544,10 +550,24 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     }));
   }
 
-  public setTransporte(transporte: string[]): void {
+  public setTransporte(transporte: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[]): void {
     this.update((state) => ({
       ...state,
-      transporte,
+      transporte: Array.isArray(transporte) ? transporte : [transporte],
+    }));
+  }
+
+  public setTipoTransporteArriboSalida(tipoTransporteArriboSalida: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoTransporteArriboSalida,
+    }));
+  }
+
+  public setTransporteArriboDatos(transporteArriboDatos: TransporteAereo[] | TransporteCarretero[] | TransporteFerroviario[] | TransporteMaritimo[] | TransporteOtro[] | TransportePeatonal[]): void {
+    this.update((state) => ({
+      ...state,
+      transporteArriboDatos: Array.isArray(transporteArriboDatos) ? transporteArriboDatos : [transporteArriboDatos],
     }));
   }
 

@@ -12,6 +12,7 @@ import {
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSJ_ERROR_FECHA, TITULO_MODAL_ERROR,
+  TRANSPORTE,
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -215,15 +216,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.verificaDatosCheckInput('socioComercial', 'idSocioComercial', this.datosImportadorExportador);
     this.verificaDatosCheckInput('lda', 'despachoSeleccion', this.despachoSeleccion);
     this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
-
-
-    // const SOCIO_COMERCIAL = this.datosImportadorExportador.get('socioComercial')?.value;
-
-
-    // if (SOCIO_COMERCIAL) {
-    //   this.datosImportadorExportador.get('idSocioComercial')?.enable();
-    //   this.datosImportadorExportador.get('idSocioComercial')?.setValue(this.solicitudState?.idSocioComercial);
-    // }
   }
 
   /**
@@ -294,12 +286,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('pagoCaptura') as FormGroup;
   }
 
-  /**
- * Obtiene el grupo de formulario 'transporte' del formulario principal 'FormSolicitud'.
+  /**vehiculo
+ * Obtiene el grupo de formulario 'vehiculo' del formulario principal 'FormSolicitud'.
  */
-  get transporte(): FormGroup {
-    return this.FormSolicitud.get('transporte') as FormGroup;
+  get vehiculo(): FormGroup {
+    return this.FormSolicitud.get('vehiculo') as FormGroup;
   }
+
+  
+  /**
+ * Obtiene el grupo de formulario 'transporteArriboSalida' del formulario principal 'FormSolicitud'.
+ */
+  get transporteArriboSalida(): FormGroup {
+    return this.FormSolicitud.get('transporteArriboSalida') as FormGroup;
+  }
+
 
   /**
    * Verifica si la solicitud seleccionada es de tipo individual.
@@ -417,10 +418,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         map((resp) => {
           const CATALOGO_TRANSPORTE = JSON.parse(resp.data);
+          
           const TIPO_VEHICULO = VEHICULO;
           this.tipoVehiculo = CATALOGO_TRANSPORTE.filter((elemento: Catalogo) => TIPO_VEHICULO.includes(elemento.descripcion));
 
-          this.tipoTransporte = JSON.parse(resp.data);
+          const TIPO_TRANSPORTE = TRANSPORTE;
+          this.tipoTransporte = CATALOGO_TRANSPORTE.filter((elemento: Catalogo) => TIPO_TRANSPORTE.includes(elemento.descripcion));
         })
       );
 
@@ -596,10 +599,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       personasResponsablesDespacho: this.fb.array([]),
 
 
-      transporte: this.fb.group({
+      vehiculo: this.fb.group({
         tipoTransporte: [this.solicitudState?.tipoTransporte],
+        vehiculoDatos: this.fb.array([]),
 
       }),
+
+      transporteArriboSalida: this.fb.group({
+        tipoTransporte: [this.solicitudState?.tipoTransporteArriboSalida],
+        transporteArriboDatos: this.fb.array([]),
+      }),
+
 
       pagoCaptura: this.fb.group({
         montoAPagar: [
@@ -1117,8 +1127,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.setValoresStore(
       this.datosImportadorExportador, 'checkIMMEX', 'setCheckIMMEX')
   }
-
-
 
   checkAutomotriz(): void {
     const AUTOMOTRIZ = this.datosImportadorExportador.get('industriaAutomotriz')?.value;

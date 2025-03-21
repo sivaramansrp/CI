@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HEADER_TABLA_FERROVIARIO, HEADER_TABLA_CARRETERO, HEADER_TABLA_PEATONAL, HEADER_TABLA_OTRO } from '../../../core/enums/transporte-componente.enums';
+import { HEADER_TABLA_AEREO, HEADER_TABLA_CARRETERO, HEADER_TABLA_FERROVIARIO, HEADER_TABLA_MARITIMO, HEADER_TABLA_OTRO, HEADER_TABLA_PEATONAL, LABEL_HORA_ARRIBO, } from '../../../core/enums/transporte-componente.enums';
 import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../core/models/shared/agregar-trasnporte.model';
 
 import { CampoForm } from '../../../core/models/shared/forms-model';
@@ -15,18 +15,16 @@ import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
-import { InputFechaComponent } from '../input-fecha/input-fecha.component';
 import { Modal } from 'bootstrap';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
 import { Subject } from 'rxjs';
+import { InputHoraComponent } from '../input-hora/input-hora.component';
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    SelectCatalogosComponent,
-    InputFechaComponent,
+    InputHoraComponent,    
   ],
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
@@ -40,8 +38,9 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   readonly HEADER_TABLA_CARRETERO: ItemTransporte[] = HEADER_TABLA_CARRETERO;
   readonly HEADER_TABLA_PEATONAL: ItemTransporte[] = HEADER_TABLA_PEATONAL
   readonly HEADER_TABLA_OTRO: ItemTransporte[] = HEADER_TABLA_OTRO;
-
-
+  readonly HEADER_TABLA_AEREO: ItemTransporte[] = HEADER_TABLA_AEREO;
+  readonly HEADER_TABLA_MARITIMO: ItemTransporte[] = HEADER_TABLA_MARITIMO;
+  readonly LABEL_HORA_ARRIBO: string = LABEL_HORA_ARRIBO;
 
   tituloModal!: string;
   mensajeModal!: string;
@@ -64,11 +63,11 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
   formaSeleccionada!: string;
 
-  public observaciones: FormControl = new FormControl('');
+  public observaciones: FormControl = new FormControl('', [Validators.maxLength(500)]);
   anios!: number[];
 
   private destroyNotifier$: Subject<void> = new Subject();
-  
+
 
   constructor(
     private fb: FormBuilder,
@@ -82,7 +81,6 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tipo'] && changes['tipo'].currentValue) {
-      console.log('Tipo de transporte', this.tipo);
       this.headerTabla = this.tipoTabla();
 
     }
@@ -145,7 +143,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
       guiaBLMaritimo: ['', [Validators.maxLength(15)]],
       guiaHouseMaritimo: ['', [Validators.maxLength(15)]],
       nombreBuqueMaritimo: ['', [Validators.maxLength(70)]],
-      contenedorMaritimo: [''],
+      contenedorMaritimo: ['', Validators.maxLength(600)],
     });
   }
 
@@ -164,6 +162,14 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
       case 2:
         this.crearFerroviarioForm();
         return this.HEADER_TABLA_FERROVIARIO;
+      case 3:
+        this.crearAereoForm();
+        return this.HEADER_TABLA_AEREO;
+        break;
+      case 4:
+        this.crearMaritimoForm();
+        return this.HEADER_TABLA_MARITIMO;
+        break;
       case 5:
         this.crearPeatonalForm();
         return this.HEADER_TABLA_PEATONAL;
@@ -174,25 +180,6 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     }
   }
 
-
-
-
-
-
-
-  agregarCamposAlForm(campos: CampoForm[]) {
-    campos.forEach((campo: CampoForm) => {
-      this.FormTransporte.addControl(campo.campo, this.fb.control(''));
-    });
-
-    // Tipo de trasporte
-    // 1 - Carretero
-    // 2 - Ferroviario
-    // 3 - Aereo
-    // 4 - Maritimo
-    // 5 - Peatonal
-    // 6 - Otro
-  }
 
   /**
 * Abre el modal para eliminar un documento.
@@ -233,6 +220,20 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
       case 2: {
         const TRANSPORTE: TransporteFerroviario = this.ferroviarioForma.value;
+        TRANSPORTE.observaciones = this.observaciones.value;
+        this.bodyTabla.push(TRANSPORTE);
+        break;
+      }
+    
+      case 3: {
+        const TRANSPORTE: TransporteAereo = this.aereoForma.value;
+        TRANSPORTE.observaciones = this.observaciones.value;
+        this.bodyTabla.push(TRANSPORTE);
+        break;
+      }
+
+      case 4: {
+        const TRANSPORTE: TransporteMaritimo = this.maritimoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         this.bodyTabla.push(TRANSPORTE);
         break;

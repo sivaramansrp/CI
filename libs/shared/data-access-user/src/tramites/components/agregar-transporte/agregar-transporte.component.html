@@ -62,10 +62,10 @@
             <ng-container *ngTemplateOutlet="ferroviario"></ng-container>
             }
             @case ('3') {
-            <ng-container *ngTemplateOutlet="maritimo"></ng-container>
+            <ng-container *ngTemplateOutlet="aereo"></ng-container>
             }
             @case ('4') {
-            <ng-container *ngTemplateOutlet="aereo"></ng-container>
+            <ng-container *ngTemplateOutlet="maritimo"></ng-container>
             }
             @case ('5') {
             <ng-container *ngTemplateOutlet="peatonal"></ng-container>
@@ -76,9 +76,8 @@
             }
 
             <div class="form-group">
-              <label class="form-label" for="idPedimento">Observaciones</label>
-              <textarea class="form-control h-25" id="exampleFormControlTextarea1" rows="3"
-                [formControl]="observaciones" id="observaciones"></textarea>
+              <label class="form-label" for="observaciones">Observaciones</label>
+              <textarea class="form-control h-25" rows="3" [formControl]="observaciones" id="observaciones"></textarea>
             </div>
           </div>
         </div>
@@ -196,7 +195,8 @@
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="nombreTransportista">Nombre transportista:</label>
-        <input class="form-control" id="nombreTransportista" placeholder="" type="text" formControlName="nombreTransportista">
+        <input class="form-control" id="nombreTransportista" placeholder="" type="text"
+          formControlName="nombreTransportista">
       </div>
     </div>
     <div class="col-md-6">
@@ -209,18 +209,86 @@
 </ng-template>
 
 <ng-template #maritimo>
+  <div class="row" [formGroup]="maritimoForma">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="guiaBLMaritimo">Guía-BL:</label>
+        <input class="form-control" id="guiaBLMaritimo" placeholder="" type="text" formControlName="guiaBLMaritimo">
+      </div>
+    </div>
 
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="guiaHouseMaritimo">Guía house:</label>
+        <input class="form-control" id="guiaHouseMaritimo" placeholder="" type="text"
+          formControlName="guiaHouseMaritimo">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="nombreBuqueMaritimo">Nombre del buque:</label>
+        <input class="form-control" id="nombreBuqueMaritimo" placeholder="" type="text"
+          formControlName="nombreBuqueMaritimo">
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="form-group">
+        <label class="form-label" for="contenedorMaritimo">Contenedor(es):</label>
+        <textarea class="form-control h-25" id="contenedorMaritimo" rows="3" formControlName="observaciones"
+          id="contenedorMaritimo"></textarea>
+      </div>
+    </div>
+
+  </div>
 </ng-template>
 
 <ng-template #aereo>
   <div class="row" [formGroup]="aereoForma">
-    <div class="col-md-6">
-      <div class="form-group">
-        <label class="form-label" for="empTransportista">Empresa transportista:</label>
-        <input class="form-control" id="empTransportista" placeholder="" type="text" formControlName="empTransportista">
+    <div class="col-md-6 d-flex align-items-end">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="arriboPendienteAereo"
+          formControlName="arriboPendienteAereo">
+        <label class="form-check-label" for="arriboPendienteAereo">
+          Pendiente de arribar
+        </label>
       </div>
     </div>
 
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="guiaMasterAereo">Guía master:</label>
+        <input class="form-control" id="guiaMasterAereo" placeholder="" type="text" formControlName="guiaMasterAereo">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label class="form-label" for="guiaHouseAereo">Guía house:</label>
+        <input class="form-control" id="guiaHouseAereo" placeholder="" type="text" formControlName="guiaHouseAereo">
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <label for="fechaArriboAereo" class="form-label">Fecha carta porte:</label>
+      <input class="form-control" type="date" name="fechaArriboAereo" id="fechaArriboAereo"
+        formControlName="fechaArriboAereo" />
+    </div>
+
+    <div class="col-md-6">
+      <input-hora formControlName="horaArriboAereo" [label]="LABEL_HORA_ARRIBO" [required]="true"
+        [inputId]="'horaArriboAereo'"></input-hora>
+    </div>
+
+    <div class="col-md-6 d-flex align-items-end">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="guiaValida" formControlName="guiaValida">
+        <label class="form-check-label" for="guiaValida">
+          Pendiente de arribar
+        </label>
+      </div>
+    </div>
   </div>
 </ng-template>
 
@@ -229,7 +297,8 @@
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="tipoTransporteDes">Tipo de transporte:</label>
-        <input class="form-control" id="tipoTransporteDes" placeholder="" type="text" formControlName="tipoTransporteDes">
+        <input class="form-control" id="tipoTransporteDes" placeholder="" type="text"
+          formControlName="tipoTransporteDes">
       </div>
     </div>
     <div class="col-md-6">

@@ -1,60 +1,5 @@
 import { ItemTransporte } from "../models/shared/agregar-trasnporte.model";
 
-// export const HEADER_TABLA_FERROVIARIO = [
-//     'Número BL',
-//     'Tipo de Equipo',
-//     'Iniciales Equipo',
-//     'Número de Equipo',
-//     'Observaciones'
-// ];
-
-// export const HEADER_TABLA_CARRETERO = [
-//     'Empresa transportista',
-//     'Número carta porte',
-//     'Fecha carta porte',
-//     'Marca',
-//     'Modelo',
-//     'Placas',
-//     'Contenedor(es)',
-//     'Observaciones'
-// ];
-
-
-// export const HEADER_TABLA_PEATONAL = [
-//     'Empresa transportista',
-//     'RFC empresa responsable',
-//     'Nombre transportista',
-//     'ID de gafete',
-//     'Observaciones'
-// ]
-
-// export const HEADER_TABLA_OTRO = [
-//     'Empresa transportista',
-//     'Tipo de transporte',
-//     'Datos de transporte',
-//     'Observaciones'
-// ]
-
-export const HEADER_TABLA_MARITIMO = [
-    'Guía BL',
-    'Guía house',
-    'Nombre del buque',
-    'Contenesor(es)',
-    'Observaciones'
-]
-
-export const HEADER_TABLA_AEREO = [
-    'Arribo pendiente',
-    'Guía master',
-    'Guía house',
-    'Fecha de arribo',
-    'Hora de arribo',
-    'Guía válida',
-    'Observaciones'
-]
-
-
-
 export const HEADER_TABLA_CARRETERO: ItemTransporte[] = [
     {
         llave: 'empTransportista',
@@ -150,3 +95,59 @@ export const HEADER_TABLA_OTRO: ItemTransporte[] = [
         valor: 'Observaciones'
     }
 ]
+
+export const HEADER_TABLA_MARITIMO: ItemTransporte[] = [
+    {
+        llave: 'guiaBLMaritimo',
+        valor: 'Guía BL'
+    },
+    {
+        llave: 'guiaHouseMaritimo',
+        valor: 'Guía house'
+    },
+    {
+        llave: 'nombreBuqueMaritimo',
+        valor: 'Nombre del buque'
+    },
+    {
+        llave: 'contenedorMaritimo',
+        valor: 'Contenedor(es)'
+    },
+    {
+        llave: 'observaciones',
+        valor: 'Observaciones'
+    }
+]
+
+export const HEADER_TABLA_AEREO: ItemTransporte[] = [
+    {
+        llave: 'arriboPendienteAereo',
+        valor: 'Arribo pendiente'
+    },
+    {
+        llave: 'guiaMasterAereo',
+        valor: 'Guía master'
+    },
+    {
+        llave: 'guiaHouseAereo',
+        valor: 'Guía house'
+    },
+    {
+        llave: 'fechaArriboAereo',
+        valor: 'Fecha de arribo'
+    },
+    {
+        llave: 'horaArriboAereo',
+        valor: 'Hora de arribo'
+    },
+    {
+        llave: 'guiaValida',
+        valor: 'Guía válida'
+    },
+    {
+        llave: 'observaciones',
+        valor: 'Observaciones'
+    }
+]
+
+export const LABEL_HORA_ARRIBO = 'Hora llegada (aprox)';
