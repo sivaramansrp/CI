@@ -75,6 +75,17 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.obtenerTratadoAcuerdo();
   }
 
+  /**
+ * @descripcion
+ * Método que obtiene los datos de los países o bloques desde el servicio
+ * y los asigna a la propiedad `paisBloque`.
+ *
+ * Este método utiliza un observable para suscribirse a los datos proporcionados
+ * por el servicio `BuscarCertificadoDeOrigenService` y se asegura de desuscribirse
+ * automáticamente cuando el componente se destruye, utilizando el operador `takeUntil`.
+ *
+ * @returns {void}
+ */
   obtenerPaisBloque(): void {
     this.service.getPaisBloque().pipe(
       takeUntil(this.destroyed$)
@@ -85,6 +96,17 @@ export class BuscarCertificadoDeOrigenComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+ * @descripcion
+ * Método que obtiene los datos de los países o bloques desde el servicio
+ * y los asigna a la propiedad `tratadoAcuerdo`.
+ *
+ * Este método utiliza un observable para suscribirse a los datos proporcionados
+ * por el servicio `BuscarCertificadoDeOrigenService` y se asegura de desuscribirse
+ * automáticamente cuando el componente se destruye, utilizando el operador `takeUntil`.
+ *
+ * @returns {void}
+ */
   obtenerTratadoAcuerdo(): void {
     this.service.getTratadoAcuerdo().pipe(
       takeUntil(this.destroyed$)
