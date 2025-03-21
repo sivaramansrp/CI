@@ -19,7 +19,7 @@ export class MediodetransporteService {
    * URL del archivo JSON que contiene los datos de medios de transporte.
    * @type {string}
    */
-  private readonly url = './assets/json/220402/mediodetransporte.json';
+  private readonly url = './assets/json/230101/mediodetransporte.json';
 
   /**
    * Constructor del servicio MediodetransporteService.

@@ -10,7 +10,7 @@ describe('SolicitudPantallasService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // Import HttpClientTestingModule for mock HTTP interactions
+      imports: [HttpClientTestingModule],
       providers: [SolicitudPantallasService],
     });
 
@@ -19,57 +19,28 @@ describe('SolicitudPantallasService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no outstanding HTTP requests remain
+    httpMock.verify(); 
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should fetch data for getData', () => {
-  //   const mockResponse: CargarDatosIniciales = {
-  //     /* Mocked data structure */
-  //   };
-
-  //   service.getData().subscribe((response) => {
-  //     expect(response).toEqual(mockResponse); // Validate that the response matches the mock data
-  //   });
-
-  //   const req = httpMock.expectOne('../../../assets/json/220502/solicitud-pantallas-mock-data.json');
-  //   expect(req.request.method).toBe('GET');
-  //   req.flush(mockResponse); // Simulate the server response with mock data
-  // });
-
-  // it('should fetch data for getDataDatosDelTramite', () => {
-  //   const mockResponse: DatosDelTramiteRealizar = {
-  //     /* Mocked data structure */
-  //   };
-
-  //   service.getDataDatosDelTramite().subscribe((response) => {
-  //     expect(response).toEqual(mockResponse); // Validate that the response matches the mock data
-  //   });
-
-  //   const req = httpMock.expectOne('../../../assets/json/220502/solicitud-pantallas-mock-data.json');
-  //   expect(req.request.method).toBe('GET');
-  //   req.flush(mockResponse); // Simulate the server response with mock data
-  // });
-
   it('should fetch data for getDataResponsableInspeccion', () => {
     const mockResponse = {
       tipoContenedor: {
         labelNombre: 'Contenedor A',
         required: true,
-        primerOpcion: 'Seleccione un contenedor',
-        // catalogos: [{ id: 1, nombre: 'Contenedor A' }],
+        primerOpcion: 'Seleccione un contenedor'
       } as CatalogosSelect,
     };
 
     service.getDataResponsableInspeccion().subscribe((response) => {
-      expect(response).toEqual(mockResponse); // Validate that the response matches the mock data
+      expect(response).toEqual(mockResponse);
     });
 
     const req = httpMock.expectOne('../../../assets/json/220502/solicitud-pantallas-mock-data.json');
     expect(req.request.method).toBe('GET');
-    req.flush(mockResponse); // Simulate the server response with mock data
+    req.flush(mockResponse);
   });
 });

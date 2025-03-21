@@ -9,7 +9,7 @@ describe('CapturaSolicitudeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], // Import HttpClientTestingModule for mock HTTP interactions
+      imports: [HttpClientTestingModule],
       providers: [CapturaSolicitudeService],
     });
 
@@ -18,25 +18,10 @@ describe('CapturaSolicitudeService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no outstanding HTTP requests
+    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-  // it('should fetch the catalog of banks', () => {
-  //   const mockResponse: RespuestaCatalogos = {
-  //     catalogos: [{ id: 1, nombre: 'Banco A' }, { id: 2, nombre: 'Banco B' }],
-  //   };
-
-  //   service.getBanco().subscribe((response) => {
-  //     expect(response).toEqual(mockResponse); // Validate that the response matches the mock data
-  //   });
-
-  //   // Expect that the HTTP GET request matches the specified URL
-  //   const req = httpMock.expectOne('assets/json/220402/banco.json');
-  //   expect(req.request.method).toBe('GET');
-  //   req.flush(mockResponse); // Respond with mock data
-  // });
 });

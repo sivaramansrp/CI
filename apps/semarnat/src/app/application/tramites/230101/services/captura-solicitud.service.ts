@@ -28,6 +28,6 @@ export class CapturaSolicitudeService {
    * @returns Un observable que emite los datos del catálogo de bancos.
    */
   getBanco(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/220402/banco.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/230101/banco.json');
   }
 }

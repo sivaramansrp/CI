@@ -52,8 +52,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   public solicitudState!: Solicitud230401State;
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas disponibles',
-    derecha: 'Aduanas seleccionadas',
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionados',
   };
   public paisDelProductoLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País donde se elabora el producto',
