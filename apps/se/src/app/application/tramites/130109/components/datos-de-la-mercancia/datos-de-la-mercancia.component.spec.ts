@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
 import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
-import productoOptions from 'libs/shared/theme/assets/json/130109/producto-otions.json';
+import productoOptions from 'libs/shared/theme/assets/json/130109/producto-opciones.json';
 import unidadOptions from 'libs/shared/theme/assets/json/130109/unidad_da.json';
 import fraccionArancelariaOpciones from 'libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
  

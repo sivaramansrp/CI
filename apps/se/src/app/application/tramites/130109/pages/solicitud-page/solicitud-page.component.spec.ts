@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/vehiculos-usados-adaptados.enums';
+import { PASOS } from '../../constantes/pasos.enum';
 
 
 describe('SolicitudPageComponent', () => {

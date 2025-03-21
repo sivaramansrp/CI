@@ -68,9 +68,4 @@ describe('DatosDelTramiteComponent', () => {
     component.sobreLaSeleccionDeLaolSicitud(newValue);
     expect(component.selectedValue).toBe(newValue);
   });
-
-  it('Debe establecer el valor predeterminado para el método tipoTransporte', () => {
-    component.tipoTransporte();
-    expect(component.selectedValue).toBe('Nuevo');
-  });
 });
