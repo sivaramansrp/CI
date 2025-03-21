@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { Chofer40102Store, Choferesnacionales40102State } from '../../estados/tramite40102.store';
-import { Chofer40102Query } from '../../estados/tramite40102.query';
+import { Tramite40102State,Tramite40102Store } from '../../estados/tramite40102.store';
+import { Tramite40102Query } from '../../estados/tramite40102.query';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { SECCIONES_TRAMITE_40102 } from '../../constants/solicitud.enums';
+import { SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
@@ -38,7 +38,7 @@ export class SolicitantePageComponent {
   /**
    * Estado de la sección de choferes nacionales.
    */
-  public seccion!: Choferesnacionales40102State;
+  public seccion!: Tramite40102State;
 
   /**
    * Notificador para destruir las suscripciones.
@@ -66,8 +66,10 @@ export class SolicitantePageComponent {
    * @param chofer40102Store - Servicio para gestionar el estado de choferes.
    */
   constructor(
-    private chofer40102Query: Chofer40102Query,
-    private chofer40102Store: Chofer40102Store
+    private tramite40102Query: Tramite40102Query,
+    private tramite40102Store: Tramite40102Store,
+    private seccionStore: SeccionLibStore
+    
   ) {}
 
   /**
@@ -81,7 +83,7 @@ export class SolicitantePageComponent {
       }
       return paso;
     });
-    this.chofer40102Query.selectSeccionState$
+    this.tramite40102Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -122,12 +124,12 @@ export class SolicitantePageComponent {
   private asignarSecciones() {
     const secciones: boolean[] = [];
     const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
+    for (const llaveSeccion in SECCIONES_TRAMITE_40102.PASO_1) {
       // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
+      secciones.push(SECCIONES_TRAMITE_40102.PASO_1[llaveSeccion]);
       formaValida.push(false);
     }
-    this.chofer40102Store.establecerSeccion(secciones);
-    this.chofer40102Store.establecerFormaValida(formaValida);
+    this.seccionStore.establecerSeccion(secciones);
+    this.seccionStore.establecerFormaValida(formaValida);
   }
 }

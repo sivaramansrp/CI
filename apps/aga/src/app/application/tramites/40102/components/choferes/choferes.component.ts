@@ -1,4 +1,11 @@
-import { Component, ElementRef, ViewChild, OnInit, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {
   ReactiveFormsModule,
   Validators,
@@ -8,21 +15,20 @@ import {
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Nacional } from 'libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import {
-  extranjero,
+  Extranjero,
   Catalogo,
 } from 'libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { StoreService } from 'libs/shared/data-access-user/src/core/services/40102/store/store.service';
 import { ChangeDetectorRef } from '@angular/core';
 import {
-  Chofer40102Store,
-  Choferesnacionales40102State,
+  Tramite40102State,Tramite40102Store
 } from '../../estados/tramite40102.store';
-import { Chofer40102Query } from '../../estados/tramite40102.query';
-import { Chofer40102Service } from '../../estados/tramite40102.service';
+import { Tramite40102Query } from '../../estados/tramite40102.query';
+import { Tramite40102Service } from '../../estados/tramite40102.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
@@ -38,7 +44,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
   ],
 })
-export class ChoferesComponent implements OnInit {
+export class ChoferesComponent implements OnInit, OnDestroy {
   solicitudTituloChoferExtranjero: string = 'Datos del chofer extranjero';
   labelSolicitudPersonaNombre: string = 'Nombre';
   labelSolicitudPersonaPrimerApellido: string = 'Primer Apellido ';
@@ -71,7 +77,7 @@ export class ChoferesComponent implements OnInit {
   selectedAll: boolean = false;
   modal: string = 'modal';
   nacional: Array<Nacional> = [];
-  extranjero: Array<extranjero> = [];
+  extranjero: Array<Extranjero> = [];
   activeTab: string = 'nacional';
   Choferesextranjeros: string = 'Choferes extranjeros';
   // estados: any[] = [];
@@ -86,6 +92,7 @@ export class ChoferesComponent implements OnInit {
   formChoferes!: FormGroup;
   choferesList$: Observable<any[]> = new Observable();
   choferesextranjerosList$: Observable<any[]> = new Observable();
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   @Input() catalogo: Catalogo[] = [];
   /**
@@ -100,9 +107,9 @@ export class ChoferesComponent implements OnInit {
     private toastr: ToastrService,
     private http: HttpClient,
     private storeService: StoreService,
-    private chofer40102Store: Chofer40102Store,
-    private chofer40102Service: Chofer40102Service,
-    private chofer40102Query: Chofer40102Query,
+    private tramite40102Store: Tramite40102Store,
+    private tramite40102Service: Tramite40102Service,
+    private tramite40102Query: Tramite40102Query,
     private cdRef: ChangeDetectorRef,
     private catalogosService: CatalogosService
   ) {}
@@ -170,18 +177,20 @@ export class ChoferesComponent implements OnInit {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
-    this.choferesList$ = this.chofer40102Query.getChoferes$;
+    this.choferesList$ = this.tramite40102Query.getChoferes$;
     this.choferesextranjerosList$ =
-      this.chofer40102Query.getchoferesextranjero$;
+      this.tramite40102Query.getchoferesextranjero$;
 
     // Comprobar si la tienda tiene datos sincrónicamente
     this.chofernacionalForm();
     this.loadStoredData();
     this.fetchChoferes();
-    this.storeService.nacionalData$.subscribe((data) => {
-      this.nacional = data;
-    });
-    this.estado$ = this.chofer40102Store._select((state) => state.estado);
+    this.storeService.nacionalData$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.nacional = data;
+      });
+    this.estado$ = this.tramite40102Store._select((state) => state.estado);
 
     this.loadEstados();
     this.estadoSeleccion();
@@ -224,7 +233,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       return;
     }
     // Utilice el servicio para agregar el nuevo registro a la lista de extranjeros
-    this.chofer40102Service.addChofer(nuevoMiembro, true);
+    this.tramite40102Service.addChofer(nuevoMiembro, true);
 
     //Restablecer el formulario
     this.formChoferes.reset();
@@ -234,7 +243,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
     // Obtener una lista actualizada para garantizar que la tabla se actualice
     this.choferesextranjerosList$ =
-      this.chofer40102Query.getchoferesextranjero$;
+      this.tramite40102Query.getchoferesextranjero$;
   }
 
   /**
@@ -253,7 +262,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
 
     // Llamar al método de servicio para agregar el nuevo miembro
-    this.chofer40102Service.addChofer(nuevoMiembro);
+    this.tramite40102Service.addChofer(nuevoMiembro);
     this.toastr.success(
       'Datos de formularios del Chofer Nacional agregados exitosamente'
     );
@@ -271,7 +280,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
-  agregarMiembro() {}
   /**
    * Carga datos almacenados desde el almacenamiento de la sesión.
    */
@@ -280,23 +288,24 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     let storedData = sessionStorage.getItem('nacionalData');
     this.nacional = storedData ? JSON.parse(storedData) : [];
   }
-  closeDialogoCaptura() {}
-  agregarChoferNacional() {}
   /**
    * Obtiene datos de los choferes del servicio.
    */
   fetchChoferes(): void {
-    this.chofer40102Service.getChoferNacionalData().subscribe(
-      (response) => {
-        this.choferes = response;
-        this.municipios = response;
-        this.colonias = response;
-        this.paises = response;
-      },
-      (error) => {
-        this.toastr.error('Error al obtener datos:', error);
-      }
-    );
+    this.tramite40102Service
+      .getChoferNacionalData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (response) => {
+          this.choferes = response;
+          this.municipios = response;
+          this.colonias = response;
+          this.paises = response;
+        },
+        (error) => {
+          this.toastr.error('Error al obtener datos:', error);
+        }
+      );
   }
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
@@ -364,6 +373,17 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
+  /**
+   * Actualiza los dropdowns de municipios y colonias basados en los datos del chofer.
+   *
+   * @param choferData - Datos del chofer que contienen la información general.
+   * @param choferData.datosGenerales - Información general del chofer.
+   * @param choferData.datosGenerales.estados - Clave del estado del chofer.
+   * @param choferData.datosGenerales.municipio - Clave del municipio del chofer.
+   *
+   * Si la clave del estado está presente, carga los municipios correspondientes.
+   * Si la clave del municipio está presente, carga las colonias correspondientes.
+   */
   updateDropdowns(choferData: any) {
     const estadoClave = choferData.datosGenerales.estados;
     const municipioClave = choferData.datosGenerales.municipio;
@@ -377,45 +397,99 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
+  /**
+   * Método que se ejecuta cuando hay cambios en el formulario de choferes.
+   * Se suscribe a los cambios de valor de los campos 'entidadFederativaCHN' y 'delegacionCHN'
+   * del formulario 'formChoferes' y ejecuta las acciones correspondientes.
+   * 
+   * @returns {void}
+   */
   onChanges(): void {
     this.formChoferes
       .get('formChoferes.entidadFederativaCHN')
-      ?.valueChanges.subscribe((valor) => {});
+      ?.valueChanges.pipe(takeUntil(this.destroyed$))
+      .subscribe((valor) => {});
 
     this.formChoferes
       .get('formChoferes.delegacionCHN')
-      ?.valueChanges.subscribe((valor) => {});
+      ?.valueChanges.pipe(takeUntil(this.destroyed$))
+      .subscribe((valor) => {});
   }
+
+  /**
+   * Carga los estados.
+   * 
+   * @returns {Promise<void>} Una promesa que se resuelve cuando la carga de estados se completa.
+   */
   loadEstados(): Promise<void> {
     return new Promise((resolve) => {
       resolve();
     });
   }
 
+  /**
+   * Carga los municipios correspondientes a un estado dado.
+   *
+   * @param {string} claveEstado - La clave del estado para el cual se desean cargar los municipios.
+   * @returns {void}
+   *
+   * @remarks
+   * Este método utiliza el servicio `tramite40102Service` para obtener los municipios
+   * correspondientes a la clave del estado proporcionada. Los resultados se asignan a la
+   * propiedad `municipios` del componente. En caso de error, se muestra un mensaje de error
+   * utilizando `toastr`.
+   */
   loadMunicipios(claveEstado: string): void {
     if (!claveEstado) return;
-    this.chofer40102Service.getMunicipios(claveEstado).subscribe(
-      (data) => {
-        this.municipios = data;
-      },
-      (error) => {
-        this.toastr.error('Error loading municipalities:', error);
-      }
-    );
+    this.tramite40102Service
+      .getMunicipios(claveEstado)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (data) => {
+          this.municipios = data;
+        },
+        (error) => {
+          this.toastr.error('Error al cargar municipios:', error);
+        }
+      );
   }
 
+  /**
+   * Carga las colonias correspondientes a un municipio dado.
+   * 
+   * @param {string} claveMunicipio - La clave del municipio para el cual se desean cargar las colonias.
+   * @returns {void}
+   * 
+   * @example
+   * this.loadColonias('12345');
+   * 
+   * @remarks
+   * Si la clave del municipio no es proporcionada, la función no realizará ninguna acción.
+   * 
+   * @throws {Error} Si ocurre un error al cargar las colonias, se mostrará un mensaje de error mediante Toastr.
+   */
   loadColonias(claveMunicipio: string): void {
     if (!claveMunicipio) return;
 
-    this.chofer40102Service.getColonias(claveMunicipio).subscribe(
-      (data) => {
-        this.colonias = data;
-      },
-      (error) => {
-        this.toastr.error('Error al cargar colonias:', error);
-      }
-    );
+    this.tramite40102Service
+      .getColonias(claveMunicipio)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        (data) => {
+          this.colonias = data;
+        },
+        (error) => {
+          this.toastr.error('Error al cargar colonias:', error);
+        }
+      );
   }
+
+
+  /**
+   * Maneja el evento de cambio de país.
+   * 
+   * @param {Event} event - El evento de cambio.
+   */
   onPaisChange(event: Event): void {
     const pais = (event.target as HTMLSelectElement).value;
     if (pais) {
@@ -423,6 +497,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
+  /**
+   * Maneja el cambio de estado cuando se selecciona una opción en el elemento HTML.
+   * 
+   * @param {Event} event - El evento que se dispara cuando se selecciona una opción.
+   * @returns {Promise<void>} - Una promesa que se resuelve cuando se maneja el cambio de estado.
+   */
   onEstadoChange(event: Event): Promise<void> {
     return new Promise((resolve) => {
       const selectedEstado = (event.target as HTMLSelectElement).value;
@@ -430,6 +510,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
+  /**
+   * Maneja el evento de cambio de municipio.
+   * 
+   * @param {Event} event - El evento de cambio que contiene el municipio seleccionado.
+   * @returns {Promise<void>} Una promesa que se resuelve cuando el cambio de municipio ha sido manejado.
+   */
   onMunicipioChange(event: Event): Promise<void> {
     return new Promise((resolve) => {
       const selectedMunicipio = (event.target as HTMLSelectElement).value;
@@ -448,8 +534,19 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   toggleAll(event: any) {
     this.selectedAll = event.target.checked;
   }
+
+  /**
+   * Selecciona el estado actual del formulario y lo establece en el store.
+   */
   estadoSeleccion(): void {
     const estado = this.formChoferes.get('estado')?.value;
-    this.chofer40102Store.setEstado(estado);
+    this.tramite40102Store.setEstado(estado);
+  }
+
+  agregarMiembro() {}
+
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

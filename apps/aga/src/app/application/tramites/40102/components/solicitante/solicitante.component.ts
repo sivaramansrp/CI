@@ -35,7 +35,7 @@ export class SolicitanteComponent implements OnInit {
       actividadEconomica: [''],
       correoElectronico: [''],
       pais: [''],
-      codigoPortal: [''],
+      codigoPostal: [''],
       estado: [''],
       municipioOAlcadia: [''],
       localidad: [''],
@@ -68,7 +68,7 @@ export class SolicitanteComponent implements OnInit {
     this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
     this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
     this.solicitudForm.get('pais')?.setValue(mockData.rfc);
-    this.solicitudForm.get('codigoPortal')?.setValue(mockData.denominacion);
+    this.solicitudForm.get('codigoPostal')?.setValue(mockData.denominacion);
     this.solicitudForm.get('estado')?.setValue(mockData.actividadEconomica);
     this.solicitudForm.get('municipioOAlcadia')?.setValue(mockData.correoElectronico);
     this.solicitudForm.get('localidad')?.setValue(mockData.rfc);

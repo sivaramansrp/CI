@@ -30,7 +30,7 @@ import { SolicitanteComponent } from './components/solicitante/solicitante.compo
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { DirectorGeneralComponent } from './components/director-general/director-general.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { Chofer40102Service } from './estados/tramite40102.service';
+import { Tramite40102Service } from './estados/tramite40102.service';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 @NgModule({
@@ -70,6 +70,6 @@ import {SubirDocumentoService} from '@libs/shared/data-access-user/src/core/serv
     PasoTresComponent,
     BtnContinuarComponent,
   ],
-  providers: [ToastrService, CatalogosService, Chofer40102Service, InicioSesionService, SubirDocumentoService],
+  providers: [ToastrService, CatalogosService, Tramite40102Service, InicioSesionService, SubirDocumentoService],
 })
 export class TransportistaTerrestreModule {}

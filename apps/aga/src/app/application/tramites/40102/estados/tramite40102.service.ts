@@ -1,42 +1,49 @@
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Chofer40102Store } from './tramite40102.store';
+import { Tramite40102Store } from './tramite40102.store';
 import { Injectable } from '@angular/core';
 import {
   DatosDelVehículo,
   DatosDelVehículoPaisEmisor,
-  VehiculoVEHs, VehiculoColor,
-  Emisor2daPlaca
+  VehiculoVEHs,
+  VehiculoColor,
+  Emisor2daPlaca,
+  TipoVehicleTerrestra,
+  ColorCatalogo,
+  PaisCatalogo,
+  ClasifiRegimen,
 } from 'libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Chofer40102Service {
+export class Tramite40102Service {
   private urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
   private choferesListSubject = new BehaviorSubject<any[]>([]);
   choferesList$ = this.choferesListSubject.asObservable();
 
   constructor(
-    private chofer40102Store: Chofer40102Store,
+    private tramite40102Store: Tramite40102Store,
     private http: HttpClient
   ) {
-    const storedData = localStorage.getItem('choferesList');
-    if (storedData) {
-      this.choferesListSubject.next(JSON.parse(storedData));
+    const STORED_DATA = localStorage.getItem('choferesList');
+    if (STORED_DATA) {
+      this.choferesListSubject.next(JSON.parse(STORED_DATA));
     }
   }
 
   addChofer(nuevoMiembro: any, isExtranjero: boolean = false) {
     if (!nuevoMiembro) return;
-    let storageKey = isExtranjero ? 'choferesextranjeroList' : 'choferesList';
-    let storedData = localStorage.getItem(storageKey);
-    let choferArray: any[] = storedData ? JSON.parse(storedData) : [];
+    const ALMACENAMIENTO_KEY = isExtranjero
+      ? 'choferesextranjeroList'
+      : 'choferesList';
+    const STORED_DATA = localStorage.getItem(ALMACENAMIENTO_KEY);
+    let choferArray: any[] = STORED_DATA ? JSON.parse(STORED_DATA) : [];
     choferArray.push(nuevoMiembro);
-    localStorage.setItem(storageKey, JSON.stringify(choferArray));
+    localStorage.setItem(ALMACENAMIENTO_KEY, JSON.stringify(choferArray));
 
     // Actualizar tienda Akita
-    this.chofer40102Store.update((state) => ({
+    this.tramite40102Store.update((state) => ({
       ...state,
       choferesextranjero: isExtranjero ? choferArray : state.choferesextranjero,
       choferes: !isExtranjero ? choferArray : state.choferes,
@@ -46,35 +53,40 @@ export class Chofer40102Service {
       this.choferesListSubject.next(choferArray);
     }
   }
-  getClasifiRegimen(): Observable<DatosDelVehículo[]> {
-    return of([
-      { clave: '1', descripcion: 'Automóvil' },
-      { clave: '2', descripcion: 'Camioneta' },
-      { clave: '3', descripcion: 'Motocicleta' },
-    ]);
+  getClasifiRegimen(): Observable<ClasifiRegimen[]> {
+    return this.http.get<DatosDelVehículo[]>(
+      './assets/json/40102/clasifi-regimen.json'
+    );
   }
   getVehiculoColor(): Observable<VehiculoColor[]> {
-    return of([
-      { clave: '1', descripcion: 'BLANCO' },
-      { clave: '2', descripcion: 'NEGRO' },
-      { clave: '3', descripcion: 'AZUL' },
-    ]);
+    return this.http.get<VehiculoColor[]>(
+      './assets/json/40102/vehiculo-colorjson'
+    );
   }
   getVehiculoVEH(): Observable<VehiculoVEHs[]> {
-    return of([
-      { clave: '1', descripcion: '2023' },
-      { clave: '2', descripcion: '2024' },
-      { clave: '3', descripcion: '2025' },
-    ]);
+    return this.http.get<VehiculoVEHs[]>(
+      './assets/json/40102/vehiculo-veh.json'
+    );
   }
   getPaisEmisor2daPlaca(): Observable<Emisor2daPlaca[]> {
-    return of([
-      { clave: '1', descripcion: 'México3434' },
-      { clave: '2', descripcion: 'Estados Unidos33' },
-      { clave: '3', descripcion: 'Canadá' },
-    ]);
+    return this.http.get<Emisor2daPlaca[]>(
+      './assets/json/40102/pais-emisor-2da-placa.json'
+    );
   }
-  
+
+  getTipoVehiculoArrastre(): Observable<TipoVehicleTerrestra[]> {
+    return this.http.get<TipoVehicleTerrestra[]>(
+      './assets/json/40102/tipo-vehiculo-arrestre.json'
+    );
+  }
+
+  getColorCatalogo(): Observable<ColorCatalogo[]> {
+    return this.http.get<ColorCatalogo[]>('./assets/json/40102/color-catalogo.json');
+  }
+
+  getPaisCatalogo(): Observable<PaisCatalogo[]> {
+    return this.http.get<PaisCatalogo[]>('./assets/json/40102/pais-catalogo.json');
+  }
 
   getChoferNacionalData(): Observable<any> {
     return this.http.get<any>(this.urlServer);

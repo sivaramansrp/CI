@@ -20,7 +20,7 @@ export interface Nacional {
   paisOrigenCHN: string;
   ciudad: string;
 }
-export interface extranjero {
+export interface Extranjero {
   curp: string;
   nombre: string;
   calle: string;
@@ -44,15 +44,15 @@ export interface DatosDelVehículoPaisEmisor {
   clave1: number;
   descripcion2: string;
 }
-export interface VehiculoVEHs{
+export interface VehiculoVEHs {
   clave: string;
   descripcion: string;
 }
-export interface VehiculoColor{
+export interface VehiculoColor {
   clave: string;
   descripcion: string;
 }
-export interface Emisor2daPlaca{
+export interface Emisor2daPlaca {
   clave: string;
   descripcion: string;
 }
@@ -62,4 +62,22 @@ export interface Catalogo {
   clave?: string;
   tam?: string;
   dpi?: string;
+}
+
+export interface ClasifiRegimen {
+  clave: string;
+  descripcion: string;
+}
+
+export interface TipoVehicleTerrestra {
+  clave: string;
+  descripcion: string;
+}
+export interface ColorCatalogo {
+  clave: string;
+  descripcion: string;
+}
+export interface PaisCatalogo {
+  clave: string;
+  descripcion: string;
 }
