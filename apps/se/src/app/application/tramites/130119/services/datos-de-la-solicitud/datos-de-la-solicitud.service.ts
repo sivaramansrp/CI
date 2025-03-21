@@ -61,10 +61,17 @@ export class DatosDeLaSolicitudService {
   getPais(): Observable<any> {
     return this.http.get('./assets/json/130119/pais.json');
   }
-
+ /**
+  * 
+  * estado opciones
+  */
   getEstado(): Observable<any> {
     return this.http.get('./assets/json/130119/estado.json');
   }
+  /**
+   * 
+   * representacionfederal opciones
+   */
   getRepresentacionfederal(): Observable<any> {
     return this.http.get('./assets/json/130119/representacion-federal.json');
   }
