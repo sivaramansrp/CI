@@ -78,9 +78,11 @@ export class ProyectoImmexVistaComponent implements OnInit, OnDestroy {
     this.query.selectDatosParaNavegar$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datosParaNavegar) => {
-        this.proyectoImmexDatos.descripcion =
-          datosParaNavegar.encabezadoDescripcionComercial;
-          this.proyectoImmexDatos.fraccionArancelaria=datosParaNavegar.encabezadoFraccion
+        this.proyectoImmexDatos=
+        {...this.proyectoImmexDatos,
+          descripcion: datosParaNavegar.encabezadoDescripcionComercial,
+          fraccionArancelaria: datosParaNavegar.encabezadoFraccion
+        }
       });
   }
 

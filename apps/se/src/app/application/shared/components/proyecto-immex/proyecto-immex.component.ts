@@ -111,6 +111,11 @@ export class ProyectoImmexComponent implements OnInit {
    */
   setProyectpLista(event: ProyectoImmexEncabezado[]): void {
     const LISTA_SELECCIONADA = event ? event : [];
+    this.seleccionList = LISTA_SELECCIONADA;
+    this.seleccionList.map((ele) => {
+      ele.estatus = true
+      return ele;
+    });
     this.obtenerProyectoTablaDevolverLaLlamada.emit(LISTA_SELECCIONADA);
     this.esTablaeleccionada = true;
   }
@@ -184,8 +189,8 @@ export class ProyectoImmexComponent implements OnInit {
       return idx.estatus;
     });
     this.proyectoForm.patchValue({
-      descripcion: this.seleccionList[0].encabezadoDescripcionOtro,
-      tipoDeDocumente: this.seleccionList[0].encabezadoTipoDocument,
+      descripcion: this.seleccionList[0]?.encabezadoDescripcionOtro,
+      tipoDeDocumente: this.seleccionList[0]?.encabezadoTipoDocument,
       fechaDeFirma: this.seleccionList[0].encabezadoFechaFirma,
       fechaDeVigencia: this.seleccionList[0].encabezadoFechaVigencia,
       rfcTaxId: this.seleccionList[0].encabezadoRfc,
