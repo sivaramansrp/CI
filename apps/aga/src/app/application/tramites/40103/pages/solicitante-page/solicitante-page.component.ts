@@ -1,30 +1,27 @@
-/* eslint-disable guard-for-in */
 import {
   Chofer40103Store,
   Choferesnacionales40103State,
 } from '../../estados/chofer40103.store';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import { SECCIONES_TRAMITE_40103 } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
 interface AccionBoton {
   accion: string;
   valor: number;
 }
-
 @Component({
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent implements OnInit {
+export class SolicitantePageComponent {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
   public seccion!: Choferesnacionales40103State;
@@ -36,17 +33,12 @@ export class SolicitantePageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
   constructor(
     private chofer40103Query: Chofer40103Query,
-    private chofer40103Store: Chofer40103Store // eslint-disable-next-line no-empty-function
+    private chofer40103Store: Chofer40103Store
   ) {}
 
-  /**
-   * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
-   * Inicializa los pasos del asistente y asigna las secciones.
-   */
-  ngOnInit(): void {
+  ngOnInit() {
     this.pasos = PASOS.slice(0, 2);
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
@@ -66,18 +58,9 @@ export class SolicitantePageComponent implements OnInit {
     this.asignarSecciones();
   }
 
-  /**
-   * Selecciona una pestaña específica.
-   * @param i El índice de la pestaña a seleccionar.
-   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
-  /**
-   * Obtiene el valor del índice y realiza la acción correspondiente.
-   * @param e El evento que contiene la acción y el valor del índice.
-   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
@@ -88,20 +71,18 @@ export class SolicitantePageComponent implements OnInit {
       }
     }
   }
-
   /**
-   * Método para asignar las secciones existentes al store.
+   * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones(): void {
-    const SESSION: boolean[] = [];
-    const FORMAVALIDA: boolean[] = [];
-    for (const LLAVESESSION in SECCIONES_TRAMITE_5701.PASO_1) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const key = LLAVESESSION as keyof typeof SECCIONES_TRAMITE_5701.PASO_1;
-      SESSION.push(SECCIONES_TRAMITE_5701.PASO_1[key]);
-      FORMAVALIDA.push(false);
+  private asignarSecciones() {
+    const secciOnes: boolean[] = [];
+    const formaValida: boolean[] = [];
+    for (const llaveSeccion in SECCIONES_TRAMITE_40103.PASO_1) {
+      // @ts-ignore - fix this
+      secciones.push(SECCIONES_TRAMITE_40103.PASO_1[llaveSeccion]);
+      formaValida.push(false);
     }
-    this.chofer40103Store.establecerSeccion(SESSION);
-    this.chofer40103Store.establecerFormaValida(FORMAVALIDA);
+    this.chofer40103Store.establecerSeccion(secciOnes);
+    this.chofer40103Store.establecerFormaValida(formaValida);
   }
 }

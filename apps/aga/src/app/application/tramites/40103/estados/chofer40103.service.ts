@@ -9,6 +9,7 @@ import {
   VehiculoColor,
   VehiculoVEHs,
 } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -64,54 +65,6 @@ export class Chofer40103Service {
   }
 
   /**
-   * Obtiene la clasificación del régimen de vehículos.
-   * @returns Un observable con la lista de clasificaciones de vehículos.
-   */
-  static getClasifiRegimen(): Observable<DatosDelVehículo[]> {
-    return of([
-      { clave: '1', descripcion: 'Automóvil' },
-      { clave: '2', descripcion: 'Camioneta' },
-      { clave: '3', descripcion: 'Motocicleta' },
-    ]);
-  }
-
-  /**
-   * Obtiene los colores de vehículos.
-   * @returns Un observable con la lista de colores de vehículos.
-   */
-  static getVehiculoColor(): Observable<VehiculoColor[]> {
-    return of([
-      { clave: '1', descripcion: 'BLANCO' },
-      { clave: '2', descripcion: 'NEGRO' },
-      { clave: '3', descripcion: 'AZUL' },
-    ]);
-  }
-
-  /**
-   * Obtiene los años de los vehículos.
-   * @returns Un observable con la lista de años de vehículos.
-   */
-  static getVehiculoVEH(): Observable<VehiculoVEHs[]> {
-    return of([
-      { clave: '1', descripcion: '2023' },
-      { clave: '2', descripcion: '2024' },
-      { clave: '3', descripcion: '2025' },
-    ]);
-  }
-
-  /**
-   * Obtiene los países emisores de la segunda placa.
-   * @returns Un observable con la lista de países emisores de la segunda placa.
-   */
-  static getPaisEmisor2daPlaca(): Observable<Emisor2daPlaca[]> {
-    return of([
-      { clave: '1', descripcion: 'México3434' },
-      { clave: '2', descripcion: 'Estados Unidos33' },
-      { clave: '3', descripcion: 'Canadá' },
-    ]);
-  }
-
-  /**
    * Obtiene los datos de choferes nacionales.
    * @returns Un observable con la lista de datos de choferes nacionales.
    */
@@ -153,5 +106,25 @@ export class Chofer40103Service {
     return this.http.get<{ clave: string; descripcion: string }[]>(
       `${this.urlServer}/colonias?municipio=${claveMunicipio}`
     );
+  }
+
+  getTipoVehiculoArrastreAGA(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      '/assets/json/40103/tipo-vehiculo-arrastre.json'
+    );
+  }
+  getPaisEmisor(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/40103/pais-catalogo.json');
+  }
+  getcolorAGA(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/40103/color-catalogo.json');
+  }
+  getpaisEmisor2DaPlacaData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      '/assets/json/40103/pais-emisor-2da-placa.json'
+    );
+  }
+  getsolicitudVehiculoColor(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/40103/vehiculo-color.json');
   }
 }

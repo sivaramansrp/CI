@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -19,20 +20,28 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
 import { VehiculoColor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { VehiculoVEHs } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { Subscription } from 'rxjs';
+import { Catalogo } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
   styleUrl: './vehiculos.component.scss',
 })
-export class VehiculosComponent implements AfterViewInit, OnInit {
+export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
+  public tipoVehiculoArrastreAGA!: Catalogo[];
+  public paisEmisor!: Catalogo[];
+  public colorAGA!: Catalogo[];
+  public paisEmisor2daPlaca!: Catalogo[];
+  public solicitudVehiculoColor!: Catalogo[];
   private modalInstance!: Modal;
   formVehiculo!: FormGroup;
   vehiculos: any[] = [];
   vehiculosList$: Observable<any[]> = new Observable();
+  private subscriptions: Subscription = new Subscription();
   unidadesdearrastre: any[] = [];
   unidadesdearrastreList$: Observable<any[]> = new Observable();
   selectedTab: string = 'Parque vehicular';
@@ -69,15 +78,17 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
   botonLimpiar: string = 'Limpiar';
   botonCancelar: string = 'Cancelar';
   botonGuardar: string = 'Guardar';
+
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
    */
-  selectTab(tabName: string) {
+  selectTab(tabName: string): void {
     this.selectedTab =
       tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
     this.activeTab = tabName;
   }
+
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
@@ -85,11 +96,11 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     private chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query
   ) {}
+
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
    */
   ngOnInit(): void {
-    //  localStorage.removeItem('vehiculoData');
     this.formVehiculo = this.fb.group({
       solicitudVehiculoVin2: [
         '',
@@ -131,7 +142,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
         [
           Validators.required,
           Validators.maxLength(10),
-          Validators.pattern('^[a-zA-Z0-9]*$'),
+          Validators.pattern('^[a-zA-Z0-9]*$')
         ],
       ],
       solicitudVehiculoColor: ['', Validators.required],
@@ -172,29 +183,35 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     });
 
     this.vehiculosList$ = this.chofer40103Query.getvehiculos$;
-    this.chofer40103Query.getvehiculos$.subscribe((vehiculos: any) => {
-      this.vehiculos = vehiculos;
-    });
+    this.subscriptions.add(
+      this.chofer40103Query.getvehiculos$.subscribe((vehiculos: any) => {
+        this.vehiculos = vehiculos;
+      })
+    );
     this.unidadesdearrastreList$ = this.chofer40103Query.getUnidadesdeArrastre$;
     this.UnidadesDearrastre();
-    this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
-      (unidadesdearrastre: any) => {
-        this.unidadesdearrastre = unidadesdearrastre;
-      }
+    this.subscriptions.add(
+      this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
+        (unidadesdearrastre: any) => {
+          this.unidadesdearrastre = unidadesdearrastre;
+        }
+      )
     );
     this.conVehiculoArrastre();
     this.anioVehiculoveh();
-    this.solicitudVehiculoColor();
-    this.solicitudVehiculoPaisEmisor2daPlaca();
+    this.tipoVehiculoArrastreAGAData();
+    this.paisEmisorData();
+    this.colorAGAData();
+    this.paisEmisor2DaPlacaData();
+    this.solicitudVehiculoColorData();
   }
+
   /**
    * Maneja el envío del formulario.
    */
   onSubmit(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
-    } else {
-      console.error('Modal instance is not initialized!');
     }
     const NEW_VEHICULO = {
       id: (this.vehiculos?.length || 0) + 1,
@@ -252,6 +269,9 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     this.closeModal();
   }
 
+  /**
+   * Maneja la lógica para agregar unidades de arrastre.
+   */
   UnidadesDearrastre(): void {
     if (this.formVehiculo.valid) {
       const NEW_UNIDAD = this.formVehiculo.value;
@@ -308,7 +328,10 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     });
   }
 
-  get f() {
+  /**
+   * Obtiene los valores del formulario.
+   */
+  get GETFORM_VALUES() {
     return this.formVehiculo.controls;
   }
 
@@ -320,6 +343,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
       this.modalInstance = new Modal(this.modalElement.nativeElement);
     }
   }
+
   /**
    * Abre el diálogo de captura para validación de persona física.
    */
@@ -328,6 +352,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
       this.modalInstance.show();
     }
   }
+
   /**
    * Abre el diálogo de captura para validación de persona moral.
    */
@@ -336,6 +361,10 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
       this.modalInstance.show();
     }
   }
+
+  /**
+   * Maneja la lógica para vehículos con arrastre.
+   */
   conVehiculoArrastre(): void {
     const SOLICITUD_VEHICULOTIPOVEHICULO = this.formVehiculo.get(
       'solicitudVehiculoTipoVehiculo'
@@ -343,79 +372,61 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
     this.chofer40103Store.setsolicitudVehiculoTipoVehiculo(
       SOLICITUD_VEHICULOTIPOVEHICULO
     );
-    Chofer40103Service.getClasifiRegimen().subscribe({
-      next: (data: DatosDelVehículo[]) => {
-        this.vehiculoArrastr = data;
-      },
-    });
   }
+
+  /**
+   * Maneja la lógica para el año del vehículo.
+   */
   anioVehiculoveh(): void {
     const ANIO_VEHICULOVEH = this.formVehiculo.get('anioVehiculoVEH')?.value;
     this.chofer40103Store.setanioVehiculoVEH(ANIO_VEHICULOVEH);
-    Chofer40103Service.getVehiculoVEH().subscribe({
-      next: (data: VehiculoVEHs[]) => {
-        this.VehiculoVEH = data;
-      },
+  }
+
+  /**
+   * Carga los datos del catálogo de tipo de vehículo de arrastre.
+   */
+  tipoVehiculoArrastreAGAData(): void {
+    this.chofer40103Service.getTipoVehiculoArrastreAGA().subscribe((data) => {
+      this.tipoVehiculoArrastreAGA = data;
     });
   }
 
-  solicitudVehiculoColor(): void {
-    const SOLICITUD_VEHICULOTIPOVEHICULOCOLOR: string = this.formVehiculo.get(
-      'SOLICITUD_VEHICULOTIPOVEHICULOCOLOR'
-    )?.value;
-    this.chofer40103Store.solicitudVehiculoColor(
-      SOLICITUD_VEHICULOTIPOVEHICULOCOLOR
-    );
-    Chofer40103Service.getVehiculoColor().subscribe({
-      next: (data: VehiculoColor[]) => {
-        this.VehiculoColors = data;
-      },
-    });
-  }
-  solicitudVehiculoPaisEmisor2daPlaca(): void {
-    const SOLICITUD_VEHICULOTIPOVEHICULO =
-      this.formVehiculo.get('solicitudVehiculo')?.value;
-    this.chofer40103Store.VehiculoPaisEmisor2daPlaca(
-      SOLICITUD_VEHICULOTIPOVEHICULO
-    );
-    Chofer40103Service.getPaisEmisor2daPlaca().subscribe({
-      next: (data: Emisor2daPlaca[]) => {
-        this.PaisEmisor2daPlaca = data;
-      },
+  /**
+   * Carga los datos del catálogo de país emisor.
+   */
+  paisEmisorData(): void {
+    this.chofer40103Service.getPaisEmisor().subscribe((data) => {
+      this.paisEmisor = data;
     });
   }
 
-  tipoVehiculoArrastreAGA = [
-    { clave: 'TR1', descripcion: 'Trailer' },
-    { clave: 'SR2', descripcion: 'Semi-Trailer' },
-    { clave: 'FL3', descripcion: 'Flatbed' },
-    { clave: 'CN4', descripcion: 'Container Carrier' },
-    { clave: 'TN5', descripcion: 'Tanker' },
-    { clave: 'DB6', descripcion: 'Double Trailer' },
-    { clave: 'FR7', descripcion: 'Fridge Trailer' },
-  ];
-  colorCatalogo = [
-    { clave: 'BL', descripcion: 'Blanco' },
-    { clave: 'NG', descripcion: 'Negro' },
-    { clave: 'AZ', descripcion: 'Azul' },
-    { clave: 'RO', descripcion: 'Rojo' },
-    { clave: 'VD', descripcion: 'Verde' },
-    { clave: 'GR', descripcion: 'Gris' },
-    { clave: 'AM', descripcion: 'Amarillo' },
-    { clave: 'MR', descripcion: 'Marrón' },
-    { clave: 'PL', descripcion: 'Plateado' },
-  ];
-  paisCatalogo = [
-    { clave: 'MX', descripcion: 'México' },
-    { clave: 'US', descripcion: 'Estados Unidos' },
-    { clave: 'CA', descripcion: 'Canadá' },
-    { clave: 'ES', descripcion: 'España' },
-    { clave: 'AR', descripcion: 'Argentina' },
-    { clave: 'BR', descripcion: 'Brasil' },
-    { clave: 'CO', descripcion: 'Colombia' },
-    { clave: 'FR', descripcion: 'Francia' },
-    { clave: 'DE', descripcion: 'Alemania' },
-  ];
+  /**
+   * Carga los datos del catálogo de color del vehículo.
+   */
+  colorAGAData(): void {
+    this.chofer40103Service.getcolorAGA().subscribe((data) => {
+      this.colorAGA = data;
+    });
+  }
+
+  /**
+   * Carga los datos del catálogo de país emisor de la segunda placa.
+   */
+  paisEmisor2DaPlacaData(): void {
+    this.chofer40103Service.getpaisEmisor2DaPlacaData().subscribe((data) => {
+      this.paisEmisor2daPlaca = data;
+    });
+  }
+
+  /**
+   * Carga los datos del catálogo de color del vehículo para la solicitud.
+   */
+  solicitudVehiculoColorData(): void {
+    this.chofer40103Service.getsolicitudVehiculoColor().subscribe((data) => {
+      this.solicitudVehiculoColor = data;
+    });
+  }
+
   /**
    * Cierra el modal.
    */
@@ -424,13 +435,19 @@ export class VehiculosComponent implements AfterViewInit, OnInit {
       this.modalInstance.hide();
     }
   }
+
   /**
    * Limpia los datos del formulario de vehículos.
    */
   limpiarDatosVEHARR(): void {
     this.formVehiculo.reset();
   }
+
   /**
-   * Limpia los datos del formulario de vehículos.
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Libera las suscripciones.
    */
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
 }

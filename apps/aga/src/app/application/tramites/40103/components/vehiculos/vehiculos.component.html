@@ -41,7 +41,7 @@
                 <thead>
                   <tr>
                     <th>
-                      <input type="checkbox"  />
+                      <input type="checkbox" />
                     </th>
                     <th>ID</th>
                     <th>Número de identificación vehicular</th>
@@ -118,7 +118,6 @@
                     style="float: right"
                     class="btn btn-default me-2"
                     type="button"
-                   
                   >
                     Modificar
                   </button>
@@ -174,18 +173,18 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoVin2'].invalid &&
-                                    (f['solicitudVehiculoVin2'].dirty ||
-                                      f['solicitudVehiculoVin2'].touched)
+                                    GETFORM_VALUES['solicitudVehiculoVin2'].invalid &&
+                                    (GETFORM_VALUES['solicitudVehiculoVin2'].dirty ||
+                                    GETFORM_VALUES['solicitudVehiculoVin2'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoVin2'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoVin2'].errors?.['required']"
                                     >El campo es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoVin2'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoVin2'].errors?.['pattern']"
                                     >Solo se permiten números (máx. 17
                                     dígitos).</small
                                   >
@@ -195,17 +194,14 @@
                               <!-- Tipo de Vehículo Select -->
                               <div class="col-md-4">
                                 <div>
-                                  <label for="solicitudVehiculoTipoVehiculo">{{
-                                    labelSolicitudVehiculoTipoVehiculo
-                                  }}</label>
-                                  <span class="require">*</span>
-                                  <div class="anioVehiculoVEH">
+                                  <div class="tipoVehiculoArrastreAGA">
                                     <app-catalogo-select
-                                      [catalogo]="vehiculoArrastr"
-                                      formControlName="solicitudVehiculoTipoVehiculo"
+                                      class="tipoVehiculoArrastreAGA"
+                                      [catalogo]="tipoVehiculoArrastreAGA"
+                                      formControlName="tipoVehiculoArrastreAGA"
                                       [required]="true"
-                                      name="solicitudVehiculoTipoVehiculo"
-                                      (change)="conVehiculoArrastre()"
+                                      name="tipoVehiculoArrastreAGA"
+                                      label="Tipo de Vehículo"
                                     ></app-catalogo-select>
                                   </div>
                                 </div>
@@ -254,20 +250,20 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoNumeroPlacas']
+                                    GETFORM_VALUES['solicitudVehiculoNumeroPlacas']
                                       .invalid &&
-                                    (f['solicitudVehiculoNumeroPlacas'].dirty ||
-                                      f['solicitudVehiculoNumeroPlacas']
+                                    (GETFORM_VALUES['solicitudVehiculoNumeroPlacas'].dirty ||
+                                    GETFORM_VALUES['solicitudVehiculoNumeroPlacas']
                                         .touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoNumeroPlacas'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroPlacas'].errors?.['required']"
                                     >Número de Placas es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoNumeroPlacas'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroPlacas'].errors?.['pattern']"
                                     >Solo se permiten letras y números (máx. 8
                                     caracteres).</small
                                   >
@@ -276,21 +272,14 @@
 
                               <!-- País Emisor Select -->
                               <div class="col-md-4">
-                                <div>
-                                  <label for="solicitudVehiculoPaisEmisor">{{
-                                    labelSolicitudVehiculoPaisEmisor
-                                  }}</label>
-                                  <span class="require">*</span>
-                                </div>
-                                <div class="anioVehiculoVEH">
+                                <div class="paisEmisor">
                                   <app-catalogo-select
-                                    [catalogo]="PaisEmisor2daPlaca"
-                                    formControlName="solicitudVehiculoPaisEmisor"
+                                    class="paisEmisor"
+                                    [catalogo]="paisEmisor"
+                                    formControlName="paisEmisor"
                                     [required]="true"
-                                    name="solicitudVehiculoPaisEmisor"
-                                    (change)="
-                                      solicitudVehiculoPaisEmisor2daPlaca()
-                                    "
+                                    label="País Emisor"
+                                    name="paisEmisor"
                                   ></app-catalogo-select>
                                 </div>
                               </div>
@@ -315,23 +304,23 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudDomicilioEstado'].invalid &&
-                                    (f['solicitudDomicilioEstado'].dirty ||
-                                      f['solicitudDomicilioEstado'].touched)
+                                    GETFORM_VALUES['solicitudDomicilioEstado'].invalid &&
+                                    (GETFORM_VALUES['solicitudDomicilioEstado'].dirty ||
+                                    GETFORM_VALUES['solicitudDomicilioEstado'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudDomicilioEstado'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudDomicilioEstado'].errors?.['required']"
                                     >Estado es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudDomicilioEstado'].errors?.['maxlength']"
+                                    *ngIf="GETFORM_VALUES['solicitudDomicilioEstado'].errors?.['maxlength']"
                                     >Estado no puede exceder 20
                                     caracteres.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudDomicilioEstado'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudDomicilioEstado'].errors?.['pattern']"
                                     >Solo se permiten letras y espacios.</small
                                   >
                                 </div>
@@ -359,23 +348,23 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoMarca'].invalid &&
-                                    (f['solicitudVehiculoMarca'].dirty ||
-                                      f['solicitudVehiculoMarca'].touched)
+                                    GETFORM_VALUES['solicitudVehiculoMarca'].invalid &&
+                                    (GETFORM_VALUES['solicitudVehiculoMarca'].dirty ||
+                                    GETFORM_VALUES['solicitudVehiculoMarca'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoMarca'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoMarca'].errors?.['required']"
                                     >La marca del vehículo es
                                     obligatoria.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoMarca'].errors?.['maxlength']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoMarca'].errors?.['maxlength']"
                                     >No puede exceder 100 caracteres.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoMarca'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoMarca'].errors?.['pattern']"
                                     >Solo se permiten letras, números, espacios
                                     y guiones.</small
                                   >
@@ -402,23 +391,23 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoModelo'].invalid &&
-                                    (f['solicitudVehiculoModelo'].dirty ||
-                                      f['solicitudVehiculoModelo'].touched)
+                                    GETFORM_VALUES['solicitudVehiculoModelo'].invalid &&
+                                    (GETFORM_VALUES['solicitudVehiculoModelo'].dirty ||
+                                    GETFORM_VALUES['solicitudVehiculoModelo'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoModelo'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoModelo'].errors?.['required']"
                                     >La marca del vehículo es
                                     obligatoria.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoModelo'].errors?.['maxlength']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoModelo'].errors?.['maxlength']"
                                     >No puede exceder 20 caracteres.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoModelo'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoModelo'].errors?.['pattern']"
                                     >Solo se permiten letras, números, espacios
                                     y guiones.</small
                                   >
@@ -467,22 +456,22 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoTransponder'].invalid &&
-                                    (f['solicitudVehiculoTransponder'].dirty ||
-                                      f['solicitudVehiculoTransponder'].touched)
+                                    GETFORM_VALUES['solicitudVehiculoTransponder'].invalid &&
+                                    (GETFORM_VALUES['solicitudVehiculoTransponder'].dirty ||
+                                    GETFORM_VALUES['solicitudVehiculoTransponder'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoTransponder'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoTransponder'].errors?.['required']"
                                     >El transponder es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoTransponder'].errors?.['maxlength']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoTransponder'].errors?.['maxlength']"
                                     >Máximo 50 caracteres permitidos.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoTransponder'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoTransponder'].errors?.['pattern']"
                                     >Solo se permiten letras y números.</small
                                   >
                                 </div>
@@ -490,20 +479,13 @@
 
                               <!-- Color Select -->
                               <div class="col-md-4">
-                                <div>
-                                  <label for="solicitudVehiculoColor">{{
-                                    labelSolicitudVehiculoColor
-                                  }}</label>
-                                  <span class="require">*</span>
-                                </div>
-
-                                <div class="anioVehiculoVEH">
+                                <div class="solicitudVehiculoColor">
                                   <app-catalogo-select
-                                    [catalogo]="VehiculoColors"
+                                    [catalogo]="solicitudVehiculoColor"
                                     formControlName="solicitudVehiculoColor"
                                     [required]="true"
                                     name="solicitudVehiculoColor"
-                                    (change)="solicitudVehiculoColor()"
+                                    label="Color de vehiculo"
                                   ></app-catalogo-select>
                                 </div>
                               </div>
@@ -528,26 +510,26 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoNumeroEconomico']
+                                    GETFORM_VALUES['solicitudVehiculoNumeroEconomico']
                                       .invalid &&
-                                    (f['solicitudVehiculoNumeroEconomico']
+                                    (GETFORM_VALUES['solicitudVehiculoNumeroEconomico']
                                       .dirty ||
-                                      f['solicitudVehiculoNumeroEconomico']
+                                      GETFORM_VALUES['solicitudVehiculoNumeroEconomico']
                                         .touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoNumeroEconomico'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroEconomico'].errors?.['required']"
                                     >Número Económico es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoNumeroEconomico'].errors?.['maxLength']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroEconomico'].errors?.['maxLength']"
                                     >Número Económico no debe exceder los 17
                                     caracteres.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoNumeroEconomico'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroEconomico'].errors?.['pattern']"
                                     >Solo se permiten letras y números.</small
                                   >
                                 </div>
@@ -598,26 +580,26 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    f['solicitudVehiculoEmisor2daPlaca']
+                                    GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca']
                                       .invalid &&
-                                    (f['solicitudVehiculoEmisor2daPlaca']
+                                    (GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca']
                                       .dirty ||
-                                      f['solicitudVehiculoEmisor2daPlaca']
+                                      GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca']
                                         .touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="f['solicitudVehiculoEmisor2daPlaca'].errors?.['required']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca'].errors?.['required']"
                                     >Emisor de la 2da Placa es
                                     obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoEmisor2daPlaca'].errors?.['maxLength']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca'].errors?.['maxLength']"
                                     >No debe exceder los 20 caracteres.</small
                                   >
                                   <small
-                                    *ngIf="f['solicitudVehiculoEmisor2daPlaca'].errors?.['pattern']"
+                                    *ngIf="GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca'].errors?.['pattern']"
                                     >Solo se permiten letras y números.</small
                                   >
                                 </div>
@@ -625,29 +607,16 @@
 
                               <!-- País Emisor 2da Placa Select -->
                               <div class="col-md-4">
-                                <div>
-                                  <label
-                                    for="solicitudVehiculoPaisEmisor2daPlaca"
-                                    >{{
-                                      labelSolicitudVehiculoPaisEmisor2daPlaca
-                                    }}</label
-                                  >
-                                  <span
-                                    id="solicitudVehiculoPaisEmisor2daPlacaReq"
-                                    class="require"
-                                    >*</span
-                                  >
-                                </div>
-
-                                <div class="anioVehiculoVEH">
+                                <div
+                                  class="solicitudVehiculoPaisEmisor2daPlaca"
+                                >
                                   <app-catalogo-select
-                                    [catalogo]="PaisEmisor2daPlaca"
+                                    class="solicitudVehiculoPaisEmisor2daPlaca"
+                                    [catalogo]="paisEmisor2daPlaca"
                                     formControlName="solicitudVehiculoPaisEmisor2daPlaca"
                                     [required]="true"
-                                    name="solicitudVehiculoPaisEmisor2daPlaca"
-                                    (change)="
-                                      solicitudVehiculoPaisEmisor2daPlaca()
-                                    "
+                                    label="País Emisor 2da Placa"
+                                    name="paisEmisor2daPlaca"
                                   ></app-catalogo-select>
                                 </div>
                               </div>
@@ -730,7 +699,7 @@
                 <thead>
                   <tr>
                     <th>
-                      <input type="checkbox"  />
+                      <input type="checkbox" />
                     </th>
                     <th>ID</th>
                     <th>VIN del vehículo</th>
@@ -779,12 +748,10 @@
                   <button
                     name="EliminarSPMoral"
                     class="btn btn-danger me-2 btn-Agregar"
-                    
                   >
                     Eliminar
                   </button>
 
-                  <!-- Modal -->
                   <div
                     class="modal fade"
                     id="exampleModal"
@@ -795,7 +762,6 @@
                     <div class="modal-dialog modal-fullscreen">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <!-- <h5 class="modal-title">Agregar Vehículo</h5> -->
                           <button
                             type="button"
                             class="btn-close"
@@ -835,36 +801,16 @@
                               </div>
 
                               <!-- Tipo Vehículo de Arrastre -->
-                              <div class="col-md-4">
+                              <div class="col-md-4 mb-4">
                                 <div class="form-group">
-                                  <label
-                                    for="solicitudVehiculoArrastreTipoVehiculo"
-                                    >Tipo de Vehículo de Arrastre</label
-                                  >
-                                  <span class="require">*</span>
-                                </div>
-                                <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastreTipoVehiculo"
+                                  <app-catalogo-select
+                                    class="tipoVehiculoArrastreAGA"
+                                    [catalogo]="tipoVehiculoArrastreAGA"
                                     formControlName="tipoVehiculoArrastreAGA"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Populate options dynamically in TypeScript
-                                    using the 'tipoVehiculoArrastreAGA' catalog.
-                                    Example:
-                                    <option
-                                      *ngFor="
-                                        let tipo of tipoVehiculoArrastreAGA
-                                      "
-                                      [value]="tipo.clave"
-                                    >
-                                      {{ tipo.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    name="tipoVehiculoArrastreAGA"
+                                    label="Tipo de Vehículo de Arrastre"
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
 
@@ -916,13 +862,15 @@
 
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label
-                                    for="solicitudVehiculoArrastrePaisEmisor"
-                                    >País Emisor</label
-                                  >
-                                  <span class="require">*</span>
+                                  <app-catalogo-select
+                                    class="paisEmisor"
+                                    [catalogo]="paisEmisor"
+                                    formControlName="paisEmisor"
+                                    [required]="true"
+                                    label="País Emisor"
+                                    name="paisEmisor"
+                                  ></app-catalogo-select>
                                 </div>
-                                <div class="form-group"></div>
                               </div>
 
                               <div class="col-md-4">
@@ -949,30 +897,14 @@
                             <div class="row">
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label for="solicitudVehiculoArrastreColor"
-                                    >Color</label
-                                  >
-                                  <span class="require">*</span>
-                                </div>
-                                <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastreColor"
+                                  <app-catalogo-select
+                                    class="colorAGA"
+                                    [catalogo]="colorAGA"
                                     formControlName="colorAGA"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Populate options dynamically in TypeScript
-                                    using the 'colorAGA' catalog. Example:
-                                    <option
-                                      *ngFor="let color of colorCatalogo"
-                                      [value]="color.clave"
-                                    >
-                                      {{ color.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    label="Color"
+                                    name="paisEmisor"
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
 
@@ -1038,30 +970,14 @@
 
                               <div class="col-md-4">
                                 <div class="form-group">
-                                  <label
-                                    for="solicitudVehiculoArrastrePaisEmisor2daPlaca"
-                                    >País Emisor 2da Placa</label
-                                  >
-                                </div>
-                                <div class="form-group">
-                                  <select
-                                    id="solicitudVehiculoArrastrePaisEmisor2daPlaca"
+                                  <app-catalogo-select
+                                    class="paisEmisor2daPlaca"
+                                    [catalogo]="paisEmisor2daPlaca"
                                     formControlName="paisEmisor2daPlaca"
-                                    class="form-control"
-                                  >
-                                    <option value="">
-                                      Seleccione un valor
-                                    </option>
-
-                                    Populate options dynamically in TypeScript
-                                    using the 'pais' catalog. Example:
-                                    <option
-                                      *ngFor="let pais of paisCatalogo"
-                                      [value]="pais.clave"
-                                    >
-                                      {{ pais.descripcion }}
-                                    </option>
-                                  </select>
+                                    [required]="true"
+                                    label="País Emisor 2da Placa"
+                                    name="paisEmisor2daPlaca"
+                                  ></app-catalogo-select>
                                 </div>
                               </div>
                             </div>

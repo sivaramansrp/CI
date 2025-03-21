@@ -1,39 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import mockData from '@libs/shared/theme/assets/json/40103/solicitante-mockdata.json';
-
 /**
  * Componente para gestionar el formulario del solicitante.
  */
-
 @Component({
   selector: 'app-solicitante',
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
-
 })
 export class SolicitanteComponent implements OnInit {
-  /**
-   * Constructor para inyectar las dependencias necesarias.
-   * @param fb - Servicio FormBuilder para crear formularios reactivos.
-   */
-  // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) { } 
-
   /**
    * Grupo de formulario para el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
 
- /**
- * Datos simulados que representan a un solicitante con varios atributos.
- * 
- * @property {string} rfc - El RFC (Registro Federal de Contribuyentes) del solicitante.
- * @property {string} denominacion - El nombre o denominación del negocio del solicitante.
- * @property {string} actividadEconomica - La actividad económica o sector empresarial del solicitante.
- * @property {string} correoElectronico - La dirección de correo electrónico del solicitante.
- */
- 
+  /**
+   * Constructor para inyectar las dependencias necesarias.
+   * @param fb - Servicio FormBuilder para crear formularios reactivos.
+   */
+  // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder) { }
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Inicializa el formulario `solicitudForm` con los campos necesarios.
@@ -44,30 +33,49 @@ export class SolicitanteComponent implements OnInit {
       rfc: [''],
       denominacion: [''],
       actividadEconomica: [''],
-      correoElectronico: ['']
+      correoElectronico: [''],
+      pais: [''],
+      codigoPostal: [''],
+      estado: [''],
+      municipioOAlcadia: [''],
+      localidad: [''],
+      colonia: [''],
+      calle: [''],
+      numeroExterior: [''],
+      numeroInterior: [''],
+      lada: [''],
+      telefono: [''],
     });
-    this.setFormValues()
+    this.setFormValues();
   }
 
   /**
- * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
- * 
- * Este método llena los siguientes campos en el formulario:
- * - rfc: El RFC (Registro Federal de Contribuyentes).
- * - denominacion: La denominación o razón social.
- * - actividadEconomica: La actividad económica.
- * - correoElectronico: La dirección de correo electrónico.
- * 
- * @remarks
- * Este método asume que `mockData` contiene los campos necesarios
- * y que `solicitudForm` está correctamente inicializado.
- */
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  setFormValues(){
+   * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
+   * 
+   * Este método llena los siguientes campos en el formulario:
+   * - rfc: El RFC (Registro Federal de Contribuyentes).
+   * - denominacion: La denominación o razón social.
+   * - actividadEconomica: La actividad económica.
+   * - correoElectronico: La dirección de correo electrónico.
+   * 
+   * @remarks
+   * Este método asume que `mockData` contiene los campos necesarios
+   * y que `solicitudForm` está correctamente inicializado.
+   */
+  setFormValues(): void {
     this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
     this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
     this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
     this.solicitudForm.get('correoElectronico')?.setValue(mockData.correoElectronico);
+    this.solicitudForm.get('pais')?.setValue(mockData.rfc);
+    this.solicitudForm.get('codigoPostal')?.setValue(mockData.denominacion);
+    this.solicitudForm.get('estado')?.setValue(mockData.actividadEconomica);
+    this.solicitudForm.get('municipioOAlcadia')?.setValue(mockData.correoElectronico);
+    this.solicitudForm.get('localidad')?.setValue(mockData.rfc);
+    this.solicitudForm.get('colonia')?.setValue(mockData.denominacion);
+    this.solicitudForm.get('calle')?.setValue(mockData.actividadEconomica);
+    this.solicitudForm.get('numeroExterior')?.setValue(mockData.correoElectronico);
+    this.solicitudForm.get('numeroInterior')?.setValue(mockData.rfc);
+    this.solicitudForm.get('telefono')?.setValue(mockData.denominacion);
   }
 }

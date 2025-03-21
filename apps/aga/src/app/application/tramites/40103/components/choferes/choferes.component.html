@@ -258,14 +258,14 @@
                 </div>
                 <div
                   *ngIf="
-                    f['curp'].invalid && (f['curp'].dirty || f['curp'].touched)
+                    GETFORM_VALUES['curp'].invalid && (GETFORM_VALUES['curp'].dirty || GETFORM_VALUES['curp'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="f['curp'].errors?.['required']"
+                  <small *ngIf="GETFORM_VALUES['curp'].errors?.['required']"
                     >CURP es obligatorio.</small
                   >
-                  <small *ngIf="f['curp'].errors?.['maxLength']"
+                  <small *ngIf="GETFORM_VALUES['curp'].errors?.['maxLength']"
                     >CURP debe tener exactamente 18 caracteres.</small
                   >
                 </div>
@@ -320,15 +320,15 @@
                 </div>
                 <div
                   *ngIf="
-                    f['nombre'].invalid &&
-                    (f['nombre'].dirty || f['nombre'].touched)
+                    GETFORM_VALUES['nombre'].invalid &&
+                    (GETFORM_VALUES['nombre'].dirty || GETFORM_VALUES['nombre'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="f['nombre'].errors?.['required']"
+                  <small *ngIf="GETFORM_VALUES['nombre'].errors?.['required']"
                     >El nombre es obligatorio.</small
                   >
-                  <small *ngIf="f['nombre'].errors?.['maxLength']"
+                  <small *ngIf="GETFORM_VALUES['nombre'].errors?.['maxLength']"
                     >El nombre no puede tener más de 20 caracteres.</small
                   >
                 </div>
@@ -348,15 +348,15 @@
                 </div>
                 <div
                   *ngIf="
-                    f['apellidoPaterno'].invalid &&
-                    (f['apellidoPaterno'].dirty || f['apellidoPaterno'].touched)
+                    GETFORM_VALUES['apellidoPaterno'].invalid &&
+                    (GETFORM_VALUES['apellidoPaterno'].dirty || GETFORM_VALUES['apellidoPaterno'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="f['apellidoPaterno'].errors?.['required']"
+                  <small *ngIf="GETFORM_VALUES['apellidoPaterno'].errors?.['required']"
                     >El nombre es obligatorio.</small
                   >
-                  <small *ngIf="f['apellidoPaterno'].errors?.['maxLength']"
+                  <small *ngIf="GETFORM_VALUES['apellidoPaterno'].errors?.['maxLength']"
                     >El nombre no puede tener más de 20 caracteres.</small
                   >
                 </div>
@@ -375,16 +375,16 @@
                 </div>
                 <div
                   *ngIf="
-                    f['apellidoMaternoCHN'].invalid &&
-                    (f['apellidoMaternoCHN'].dirty ||
-                      f['apellidoMaternoCHN'].touched)
+                    GETFORM_VALUES['apellidoMaternoCHN'].invalid &&
+                    (GETFORM_VALUES['apellidoMaternoCHN'].dirty ||
+                    GETFORM_VALUES['apellidoMaternoCHN'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="f['apellidoMaternoCHN'].errors?.['required']"
+                  <small *ngIf="GETFORM_VALUES['apellidoMaternoCHN'].errors?.['required']"
                     >El nombre es obligatorio.</small
                   >
-                  <small *ngIf="f['apellidoMaternoCHN'].errors?.['maxLength']"
+                  <small *ngIf="GETFORM_VALUES['apellidoMaternoCHN'].errors?.['maxLength']"
                     >El nombre no puede tener más de 20 caracteres.</small
                   >
                 </div>
@@ -405,15 +405,15 @@
                 </div>
                 <div
                   *ngIf="
-                    f['gafete'].invalid &&
-                    (f['gafete'].dirty || f['gafete'].touched)
+                    GETFORM_VALUES['gafete'].invalid &&
+                    (GETFORM_VALUES['gafete'].dirty || GETFORM_VALUES['gafete'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="f['gafete'].errors?.['required']"
+                  <small *ngIf="GETFORM_VALUES['gafete'].errors?.['required']"
                     >El gafete es obligatorio.</small
                   >
-                  <small *ngIf="f['gafete'].errors?.['maxLength']"
+                  <small *ngIf="GETFORM_VALUES['gafete'].errors?.['maxLength']"
                     >El gafete no puede tener más de 10 caracteres.</small
                   >
                 </div>
@@ -433,15 +433,15 @@
                 </div>
                 <div
                   *ngIf="
-                    f['vigenciagafete'].invalid &&
-                    (f['vigenciagafete'].dirty || f['vigenciagafete'].touched)
+                    GETFORM_VALUES['vigenciagafete'].invalid &&
+                    (GETFORM_VALUES['vigenciagafete'].dirty || GETFORM_VALUES['vigenciagafete'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="f['vigenciagafete'].errors?.['required']"
+                  <small *ngIf="GETFORM_VALUES['vigenciagafete'].errors?.['required']"
                     >El vigenciagafete es obligatorio.</small
                   >
-                  <small *ngIf="f['vigenciagafete'].errors?.['maxLength']"
+                  <small *ngIf="GETFORM_VALUES['vigenciagafete'].errors?.['maxLength']"
                     >El vigenciagafete no puede tener más de 10
                     caracteres.</small
                   >
@@ -473,15 +473,15 @@
                   </div>
                   <div
                     *ngIf="
-                      f['calle'].invalid &&
-                      (f['calle'].dirty || f['calle'].touched)
+                      GETFORM_VALUES['calle'].invalid &&
+                      (GETFORM_VALUES['calle'].dirty || GETFORM_VALUES['calle'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="f['calle'].errors?.['required']"
+                    <small *ngIf="GETFORM_VALUES['calle'].errors?.['required']"
                       >calle es obligatorio.</small
                     >
-                    <small *ngIf="f['calle'].errors?.['maxLength']"
+                    <small *ngIf="GETFORM_VALUES['calle'].errors?.['maxLength']"
                       >calle no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -500,15 +500,15 @@
                   </div>
                   <div
                     *ngIf="
-                      f['numeroExterior'].invalid &&
-                      (f['numeroExterior'].dirty || f['numeroExterior'].touched)
+                      GETFORM_VALUES['numeroExterior'].invalid &&
+                      (GETFORM_VALUES['numeroExterior'].dirty || GETFORM_VALUES['numeroExterior'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="f['numeroExterior'].errors?.['required']"
+                    <small *ngIf="GETFORM_VALUES['numeroExterior'].errors?.['required']"
                       >Numero Exterior es obligatorio.</small
                     >
-                    <small *ngIf="f['numeroExterior'].errors?.['maxLength']"
+                    <small *ngIf="GETFORM_VALUES['numeroExterior'].errors?.['maxLength']"
                       >Numero Exterior no puede tener más de 10
                       caracteres.</small
                     >
@@ -659,15 +659,15 @@
                   </div>
                   <div
                     *ngIf="
-                      f['ciudad'].invalid &&
-                      (f['ciudad'].dirty || f['ciudad'].touched)
+                      GETFORM_VALUES['ciudad'].invalid &&
+                      (GETFORM_VALUES['ciudad'].dirty || GETFORM_VALUES['ciudad'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="f['ciudad'].errors?.['required']"
+                    <small *ngIf="GETFORM_VALUES['ciudad'].errors?.['required']"
                       >ciudad es obligatorio.</small
                     >
-                    <small *ngIf="f['ciudad'].errors?.['maxLength']"
+                    <small *ngIf="GETFORM_VALUES['ciudad'].errors?.['maxLength']"
                       >ciudad no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -689,15 +689,15 @@
                   </div>
                   <div
                     *ngIf="
-                      f['localidad'].invalid &&
-                      (f['localidad'].dirty || f['localidad'].touched)
+                      GETFORM_VALUES['localidad'].invalid &&
+                      (GETFORM_VALUES['localidad'].dirty || GETFORM_VALUES['localidad'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="f['localidad'].errors?.['required']"
+                    <small *ngIf="GETFORM_VALUES['localidad'].errors?.['required']"
                       >localidad es obligatorio.</small
                     >
-                    <small *ngIf="f['localidad'].errors?.['maxLength']"
+                    <small *ngIf="GETFORM_VALUES['localidad'].errors?.['maxLength']"
                       >localidad no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -716,15 +716,15 @@
                   </div>
                   <div
                     *ngIf="
-                      f['codigoPostal'].invalid &&
-                      (f['codigoPostal'].dirty || f['codigoPostal'].touched)
+                      GETFORM_VALUES['codigoPostal'].invalid &&
+                      (GETFORM_VALUES['codigoPostal'].dirty || GETFORM_VALUES['codigoPostal'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="f['codigoPostal'].errors?.['required']"
+                    <small *ngIf="GETFORM_VALUES['codigoPostal'].errors?.['required']"
                       >codigoPostal es obligatorio.</small
                     >
-                    <small *ngIf="f['codigoPostal'].errors?.['maxLength']"
+                    <small *ngIf="GETFORM_VALUES['codigoPostal'].errors?.['maxLength']"
                       >codigoPostal no puede tener más de 10 caracteres.</small
                     >
                   </div>
