@@ -537,14 +537,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo': 'tipoEquipo',
-      'N�mero de equipo': 'numeroEquipo',
-      'D�gito Verificador': 'digitoVerificador',
+      'Número de equipo': 'numeroEquipo',
+      'Dígito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
       'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
       'Existe en VUCEM': 'existeEnVUCEM',
       'Id constancia': 'idConstancia',
-      'N�mero manifiesto': 'numeroManifiesto',
+      'Número manifiesto': 'numeroManifiesto',
       'Id solicitud': 'idSolicitud',
       'Fecha inicio': 'fechaInicio'
     };
