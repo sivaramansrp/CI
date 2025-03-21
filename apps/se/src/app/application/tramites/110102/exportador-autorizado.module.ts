@@ -7,11 +7,15 @@ import { DatosTratadosAcuerdosComponent } from "./components/datos-tratados-acue
 import { DatosMercanciaComponent } from "./pages/datos-mercancia/datos-mercancia.component";
 import { ExportadorautorizadoRoutingModule } from './exportador-autorizado-routing.module';
 import { NgModule } from '@angular/core';
+import { PasoDosComponent } from "../110102/components/paso-dos/paso-dos.component";
+import { PasoTresComponent } from "../110102/components/paso-tres/paso-tres.component";
 import { RegistroExportadorAutorizadoComponent } from "./components/registro-exportador-autorizado/registro-exportador-autorizado.component";
 import { RegistroMercanciaComercializadorComponent } from "./components/registro-mercancia-comercializador/registro-mercancia-comercializador.component";
 import { RepresentacionFederalComponent } from "./components/representacion-federal/representacion-federal.component";
 import { SolicitanteComponent } from "@ng-mf/data-access-user";
 import { TablaDinamicaComponent } from "@ng-mf/data-access-user";
+import { WizardComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/wizard/wizard.component";
+
 
 
 
@@ -30,7 +34,10 @@ import { TablaDinamicaComponent } from "@ng-mf/data-access-user";
     RegistroExportadorAutorizadoComponent,
     RepresentacionFederalComponent,
     BtnContinuarComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    WizardComponent,
+    PasoDosComponent,
+    PasoTresComponent
 ]
 })
 export class ExportadorautorizadoModule { }
