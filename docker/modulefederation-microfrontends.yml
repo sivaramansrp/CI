@@ -139,7 +139,7 @@ services:
       - modulefederation-network
 
 #----------------------------------------------------------------
-modulefederation-amecafe-microfront:
+  modulefederation-amecafe-microfront:
     image: modulefederation-amecafe-microfront:1.0.0
     build: 
       context: ./../
