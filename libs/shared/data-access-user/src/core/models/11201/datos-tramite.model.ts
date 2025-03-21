@@ -42,3 +42,10 @@ export interface RespuestaAduanas {
   data: Aduanas[]
   message: string;
 }
+
+export interface DatosSolicitante {
+  rfc: string;
+  denominacion: string;
+  actividadEconomica: string;
+  correoElectronico: string;
+}

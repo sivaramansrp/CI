@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
@@ -24,6 +25,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   constructor(public fb: FormBuilder,
     public tramite11201Store: Tramite11201Store,
+    private datosTramiteService: DatosTramiteService,
     // eslint-disable-next-line no-empty-function
     private tramite11201Query: Tramite11201Query) {
 
@@ -60,13 +62,14 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.loadDatosSolicitante();
     this.solicitudForm = this.fb.group({
       rfc: [''],
       denominacion: [''],
       actividadEconomica: [''],
       correoElectronico: [''],
     });
-    this.setFormValues();
+
   }
 
   /**
@@ -82,21 +85,29 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Este método asume que `mockData` contiene los campos necesarios
    * y que `solicitudForm` está correctamente inicializado.
    */
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  setFormValues() {
-    this.solicitudForm.get('rfc')?.setValue(this.derechoState.rfc);
-    this.solicitudForm.get('denominacion')?.setValue(this.derechoState.denominacion);
+  setFormValues(): void {
+    this.solicitudForm.get('rfc')?.setValue(this.derechoState.datosSolicitante.rfc);
+    this.solicitudForm.get('denominacion')?.setValue(this.derechoState.datosSolicitante.denominacion);
     this.solicitudForm
       .get('actividadEconomica')
-      ?.setValue(this.derechoState.actividadEconomica);
+      ?.setValue(this.derechoState.datosSolicitante.actividadEconomica);
     this.solicitudForm
       .get('correoElectronico')
-      ?.setValue(this.derechoState.correoElectronico);
+      ?.setValue(this.derechoState.datosSolicitante.correoElectronico);
   }
+
+  loadDatosSolicitante(): void {
+    this.datosTramiteService.getDatosSolicitante().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((datos) => {
+        (this.tramite11201Store.setDatosSolicitante as (valor: unknown) => void)(datos);
+        this.setFormValues();
+      });
+  }
+
   continuar(): void {
     this.continuarEvento.emit('');
   }
+
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -1,5 +1,7 @@
-import { Store, StoreConfig } from '@datorama/akita';
+import { DatosSolicitante } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { Injectable } from '@angular/core';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita'
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 11201
@@ -8,10 +10,7 @@ import { Injectable } from '@angular/core';
 
 export interface Solicitud11201State {
   menúDesplegable: string;
-  rfc: string;
-  denominacion: string;
-  actividadEconomica: string;
-  correoElectronico: string;
+  datosSolicitante: DatosSolicitante
   datosDelContenedor: [];
   tipoBusqueda: string;
   aduana: string;
@@ -26,16 +25,16 @@ export interface Solicitud11201State {
   fechaDeIngreso: string;
   commonCaja: boolean;
   archivoSeleccionado: string;
-    /**
-   * linea
-   * @type {string}
-   */
-    linea: string;
+  /**
+ * linea
+ * @type {string}
+ */
+  linea: string;
 
-      /**
-   * linea checkbox
-   * @type {string}
-   */
+  /**
+* linea checkbox
+* @type {string}
+*/
   lineaCheckbox: string;
 
   monto: string;
@@ -45,10 +44,12 @@ export interface Solicitud11201State {
 export function createInitialState(): Solicitud11201State {
   return {
     menúDesplegable: '',
-    rfc: 'AAL0409235E6',
-    denominacion: 'AGRICOLA ALPE S DE RL DE CV',
-    actividadEconomica: 'Siembra, cultivo y cosecha de papa',
-    correoElectronico: 'vucem2.5@hotmail.com',
+    datosSolicitante: {
+      rfc: "",
+      denominacion: "",
+      actividadEconomica: "",
+      correoElectronico: ""
+    },
     datosDelContenedor: [],
     tipoBusqueda: '',
     aduana: '',
@@ -126,32 +127,13 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setRfc(rfc: string): void {
+  public setDatosSolicitante(datosSolicitante: DatosSolicitante): void {
     this.update((state) => ({
       ...state,
-      rfc
-    }));
-  }
-  public setDenominacion(denominacion: string): void {
-    this.update((state) => ({
-      ...state,
-      denominacion
+      datosSolicitante
     }));
   }
 
-  public setActividadEconomica(actividadEconomica: string): void {
-    this.update((state) => ({
-      ...state,
-      actividadEconomica
-    }));
-  }
-
-  public setCorreoElectronico(correoElectronico: string): void {
-    this.update((state) => ({
-      ...state,
-      correoElectronico
-    }));
-  }
   public setDelContenedor(datosDelContenedor: []): void {
     this.update((state) => ({
       ...state,
@@ -207,7 +189,7 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setLinea(linea: string) {
+  public setLinea(linea: string): void {
     this.update((state) => ({
       ...state,
       linea,
@@ -215,18 +197,18 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
   }
 
 
-  public setLineaCheckbox(lineaCheckbox: string) {
+  public setLineaCheckbox(lineaCheckbox: string): void {
     this.update((state) => ({
       ...state,
       lineaCheckbox,
     }));
   }
 
-    public setMonto(monto: string) {
-      this.update((state) => ({
-        ...state,
-        monto,
-      }));
+  public setMonto(monto: string): void {
+    this.update((state) => ({
+      ...state,
+      monto,
+    }));
   }
 
   /**
