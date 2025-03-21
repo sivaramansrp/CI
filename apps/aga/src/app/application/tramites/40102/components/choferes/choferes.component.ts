@@ -449,7 +449,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
           this.municipios = data;
         },
         (error) => {
-          this.toastr.error('Error loading municipalities:', error);
+          this.toastr.error('Error al cargar municipios:', error);
         }
       );
   }

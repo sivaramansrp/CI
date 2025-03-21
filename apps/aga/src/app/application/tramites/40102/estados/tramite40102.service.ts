@@ -13,7 +13,6 @@ import {
   ClasifiRegimen,
 } from 'libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
-//import { Catalogo } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'root',
@@ -35,13 +34,13 @@ export class Tramite40102Service {
 
   addChofer(nuevoMiembro: any, isExtranjero: boolean = false) {
     if (!nuevoMiembro) return;
-    const STORAGE_KEY = isExtranjero
+    const ALMACENAMIENTO_KEY = isExtranjero
       ? 'choferesextranjeroList'
       : 'choferesList';
-    const STORED_DATA = localStorage.getItem(STORAGE_KEY);
+    const STORED_DATA = localStorage.getItem(ALMACENAMIENTO_KEY);
     let choferArray: any[] = STORED_DATA ? JSON.parse(STORED_DATA) : [];
     choferArray.push(nuevoMiembro);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(choferArray));
+    localStorage.setItem(ALMACENAMIENTO_KEY, JSON.stringify(choferArray));
 
     // Actualizar tienda Akita
     this.tramite40102Store.update((state) => ({
