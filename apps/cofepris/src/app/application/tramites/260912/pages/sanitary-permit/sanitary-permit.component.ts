@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
+import { AVISO_DE_PRIVACIDAD } from '../../enums/aviso-de-privacidad-simplificado.enum';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
 /**
  * Interfaz que representa la acción de un botón.
  */
@@ -55,6 +55,9 @@ export class SanitaryPermitComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  // contiene el aviso de privacidad y lo asigna al valor correspondiente
+  AVISO_DE_PRIVACIDAD = AVISO_DE_PRIVACIDAD.aviso;
 
   /**
    * Actualiza el valor del índice según el evento del botón de acción.
