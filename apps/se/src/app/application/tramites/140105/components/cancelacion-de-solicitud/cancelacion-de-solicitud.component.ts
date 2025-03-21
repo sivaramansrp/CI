@@ -1,4 +1,4 @@
-import * as formData from '../../constants/datos-del-formulario.json';
+import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';

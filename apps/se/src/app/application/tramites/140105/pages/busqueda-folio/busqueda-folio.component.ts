@@ -1,4 +1,4 @@
-import * as formData from '../../constants/datos-del-formulario.json';
+import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
