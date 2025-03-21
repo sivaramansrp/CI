@@ -109,6 +109,8 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
+    this.destroyNotificationSubject$.next();
+    this.destroyNotificationSubject$.complete();
   }
 
   /**
