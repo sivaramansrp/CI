@@ -1,10 +1,11 @@
+/* eslint-disable no-empty-function */
 import { Component,OnDestroy, OnInit, } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -65,7 +66,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    * Actualiza la tienda con los datos del formulario actualizados.
    * @param updatedData Los datos actualizados del formulario.
    */
-  updateStore(updatedData: any): void {
+  updateStore(updatedData: unknown): void {
     const EXISTINGDATA = this.chofer40103Query.getValue().choferes;
     // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
   }

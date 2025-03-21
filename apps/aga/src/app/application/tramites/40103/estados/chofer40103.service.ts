@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Chofer40103Store } from './chofer40103.store';
 import { Injectable } from '@angular/core';

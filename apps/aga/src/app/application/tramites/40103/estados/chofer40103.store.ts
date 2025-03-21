@@ -76,7 +76,6 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
    * @param solicitudVehiculo El tipo de vehículo de la solicitud.
    */
   public setsolicitudVehiculoTipoVehiculo(solicitudVehiculo: string) {
-    console.log('Updating Store:', solicitudVehiculo);
     this.update((state) => ({
       ...state,
       solicitudVehiculo,
@@ -88,7 +87,6 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
    * @param solicitudVehiculo El país emisor del vehículo de la solicitud.
    */
   public setsolicitudVehiculoPaisEmisor(solicitudVehiculo: string) {
-    console.log('Updating Store:', solicitudVehiculo);
     this.update((state) => ({
       ...state,
       solicitudVehiculo,
@@ -100,7 +98,6 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
    * @param vehiculoColor El color del vehículo de la solicitud.
    */
   public solicitudVehiculoColor(vehiculoColor: string) {
-    console.log('Updating Store:', vehiculoColor);
     this.update((state) => ({
       ...state,
       vehiculoColor,
@@ -112,7 +109,6 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
    * @param PaisEmisor2daPlaca El país emisor de la segunda placa del vehículo.
    */
   public VehiculoPaisEmisor2daPlaca(PaisEmisor2daPlaca: string) {
-    console.log('Updating Store:', PaisEmisor2daPlaca);
     this.update((state) => ({
       ...state,
       PaisEmisor2daPlaca,
@@ -124,7 +120,6 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
    * @param VehiculoVEH El año del vehículo.
    */
   public setanioVehiculoVEH(VehiculoVEH: string) {
-    console.log('Updating Store:', VehiculoVEH);
     this.update((state) => ({
       ...state,
       VehiculoVEH,
@@ -167,7 +162,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Limpia la lista de choferes.
    */
-  public clearChoferes() {
+  public clearChoferes():void {
     this.reset();
   }
 }
