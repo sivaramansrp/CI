@@ -210,7 +210,7 @@
               <button
                 type="submit"
                 class="btn btn-primary"
-                (click)="giveError()"
+                (click)="darError()"
               >
                 Enviar
               </button>
@@ -299,7 +299,7 @@
 
 <div class="container" *ngIf="!isMercancia && esFormulario">
   <ng-titulo titulo="Datos de la mercancía" />
-  <form [formGroup]="mercanciaForm" (ngSubmit)="validarmercanciaForm()">
+  <form [formGroup]="mercanciaForm" (ngSubmit)="validarMercanciaForm()">
     <ng-container formGroupName="validacionMercanciaForm">
       <div class="row">
         <div class="col-md-4">

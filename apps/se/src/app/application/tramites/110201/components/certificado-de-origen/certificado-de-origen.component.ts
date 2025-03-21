@@ -205,12 +205,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Tratado seleccionado.
    */
-  selectTratado: string | null = null;
-
-  /**
-   * Valor de la fracción arancelaria.
-   */
-  fraccionArancelariaValue!: string;
+  seleccioneTratado: string | null = null;
 
   /**
    * Nombre del archivo seleccionado.
@@ -340,7 +335,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Valida el formulario de mercancías.
    * Marca todos los campos como tocados si el formulario es inválido.
    */
-  validarmercanciaForm(): void {
+  validarMercanciaForm(): void {
     if (this.mercanciaForm.invalid) {
       this.mercanciaForm.markAllAsTouched();
     }
@@ -369,7 +364,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
 
     this.subscriptions.push(
-      this.query.selectTratado$.subscribe((tratado) => {
+      this.query.seleccioneTratado$.subscribe((tratado) => {
         this.tratado = {
           labelNombre: 'Tratado/Acuerdo',
           required: true,
@@ -492,7 +487,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   cargaArchivo() {
     this.cargarArchivo = true;
   }
-  giveError() {
+  darError() {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
@@ -643,18 +638,18 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanArancelaria: ['123456789', [Validators.required]],
+        fraccionMercanArancelaria: ['', [Validators.required]],
         nombretecnico: [
-          'Poli(butadieno-estireno), con un contenido reaccionado de butadieno superior o',
+          '',
           [Validators.required],
         ],
         nombrecomercialdelamercancia: [
-          'Patitos de hule',
+          '',
           [Validators.required],
         ],
 
-        criterioparaconferir: ['SIN_CRIT', [Validators.required]],
-        nombreEnIngles: ['rubber ducklings', [Validators.required]],
+        criterioparaconferir: ['', [Validators.required]],
+        nombreEnIngles: ['', [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
         cantidad: [
           this.solicitudState?.cantidad,

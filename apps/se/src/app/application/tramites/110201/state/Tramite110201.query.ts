@@ -29,7 +29,7 @@ export class Tramite110201Query extends Query<Solicitud110201State> {
   /**
    * Selecciona el catálogo de tratados.
    */
-  selectTratado$ = this.select((state) => state.tratado);
+  seleccioneTratado$ = this.select((state) => state.tratado);
 
   /**
    * Selecciona el catálogo de países.
