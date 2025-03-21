@@ -383,7 +383,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
     });
   }
-
+  /**
+     * Cargar datos de la tabla.
+     * 
+     * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
+     * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
+     * cuando el componente se destruye, evitando fugas de memoria.
+     * 
+     * @example
+     * // Llamar al método para cargar los datos de la tabla
+     * this.loadDatosTablaData();
+     */
   loadDatosTablaData(): void {
     this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.datosTabla = data;

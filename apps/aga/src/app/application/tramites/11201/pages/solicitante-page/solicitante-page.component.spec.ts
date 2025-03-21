@@ -7,6 +7,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { provideToastr, ToastrService } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
@@ -16,7 +17,9 @@ describe('SolicitantePageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonModule, WizardComponent, PasoUnoComponent, PasoDosComponent, BtnContinuarComponent, PasoTresComponent],
       declarations: [SolicitantePageComponent],
-      providers: [ToastrService,
+      providers: [
+        provideHttpClient(),
+        ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',
         })]
@@ -32,14 +35,12 @@ describe('SolicitantePageComponent', () => {
   });
 
   it('should initialize pasos and datosPasos on ngOnInit', () => {
-    component.ngOnInit();
     expect(component.pasos.length).toBe(3);
     expect(component.datosPasos.nroPasos).toBe(3);
     expect(component.datosPasos.indice).toBe(1);
   });
 
   it('should update paso title on ngOnInit', () => {
-    component.ngOnInit();
     const paso = component.pasos.find(p => p.indice === 2);
     expect(paso?.titulo).toBe('Cargar pago');
   });

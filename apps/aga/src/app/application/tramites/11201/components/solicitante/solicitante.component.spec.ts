@@ -1,55 +1,86 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormControl,
-} from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 import { SolicitanteComponent } from './solicitante.component';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-
+import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
+import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SolicitanteComponent', () => {
-  let fixture: ComponentFixture<SolicitanteComponent>;
   let component: SolicitanteComponent;
+  let fixture: ComponentFixture<SolicitanteComponent>;
+  let datosTramiteServiceMock: any;
+  let tramite11201QueryMock: any;
+  let tramite11201StoreMock: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [SolicitanteComponent, FormsModule, ReactiveFormsModule],
-      declarations: [
+  beforeEach(async () => {
+    datosTramiteServiceMock = {
+      getDatosSolicitante: jest.fn().mockReturnValue(of({
+        rfc: 'RFC123456',
+        denominacion: 'Denominación Ejemplo',
+        actividadEconomica: 'Actividad Económica Ejemplo',
+        correoElectronico: 'correo@ejemplo.com'
+      }))
+    };
+
+    tramite11201QueryMock = {
+      selectSolicitud$: of({
+        datosSolicitante: {
+          rfc: 'RFC123456',
+          denominacion: 'Denominación Ejemplo',
+          actividadEconomica: 'Actividad Económica Ejemplo',
+          correoElectronico: 'correo@ejemplo.com'
+        }
+      })
+    };
+
+    tramite11201StoreMock = {
+      setDatosSolicitante: jest.fn()
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        TituloComponent,
+        SolicitanteComponent
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [FormBuilder],
+      providers: [
+        provideHttpClient(),
+        FormBuilder,
+        { provide: DatosTramiteService, useValue: datosTramiteServiceMock },
+        { provide: Tramite11201Query, useValue: tramite11201QueryMock },
+        { provide: Tramite11201Store, useValue: tramite11201StoreMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
-    component.solicitudForm = new FormGroup({
-      rfc: new FormControl(''),
-      denominacion: new FormControl(''),
-      actividadEconomica: new FormControl(''),
-      correoElectronico: new FormControl(''),
-    });
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = function () { };
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.setFormValues = jest.fn();
+  it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
+    expect(component.solicitudForm).toBeDefined();
+  });
+
+  it('should emit continuarEvento on continuar', () => {
+    const continuarEventoSpy = jest.spyOn(component.continuarEvento, 'emit');
+    component.continuar();
+    expect(continuarEventoSpy).toHaveBeenCalledWith('');
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

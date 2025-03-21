@@ -59,8 +59,8 @@ describe('PasoDosComponent', () => {
     expect(component.formSolicitud.get('pagoDeDerechos.lineaCheckbox')?.value).toBe(true);
   });
 
-  it('should disable and set value of montoPagar on updateformfied', () => {
-    component.updateformfied();
+  it('should disable and set value of montoPagar on campoDeDormularioDeActualizacion', () => {
+    component.campoDeDormularioDeActualizacion();
     const montoPagarControl = component.formSolicitud.get('pagoDeDerechos.montoPagar');
     expect(montoPagarControl?.disabled).toBe(true);
     expect(montoPagarControl?.value).toBe('352');
@@ -72,7 +72,7 @@ describe('PasoDosComponent', () => {
     lineaInput.value = '654321';
     lineaInput.dispatchEvent(new Event('change'));
     fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formSolicitud, 'pagodederechos.linea', 'setLinea');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formSolicitud, 'pagoDeDerechos.linea', 'setLinea');
   });
 
   it('should call setValoresStore when lineaCheckbox changes', () => {
@@ -81,12 +81,14 @@ describe('PasoDosComponent', () => {
     lineaCheckbox.checked = false;
     lineaCheckbox.dispatchEvent(new Event('change'));
     fixture.detectChanges();
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formSolicitud, 'pagodederechos.lineaCheckbox', 'setLineaCheckbox');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formSolicitud, 'pagoDeDerechos.lineaCheckbox', 'setLineaCheckbox');
   });
 
-  it('should unsubscribe from subscription on ngOnDestroy', () => {
-    const unsubscribeSpy = jest.spyOn(component.subscription, 'unsubscribe');
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(unsubscribeSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

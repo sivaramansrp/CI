@@ -39,7 +39,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   /**
    * Subject para notificar la destrucción del componente.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor del componente `PagoDeDerechosComponent`.

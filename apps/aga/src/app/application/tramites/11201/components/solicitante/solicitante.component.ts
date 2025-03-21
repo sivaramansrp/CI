@@ -35,7 +35,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * Grupo de formulario para el formulario de solicitud.
    */
   solicitudForm!: FormGroup;
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
   public derechoState: Solicitud11201State = {} as Solicitud11201State;
   @Output() continuarEvento = new EventEmitter<string>();
 
