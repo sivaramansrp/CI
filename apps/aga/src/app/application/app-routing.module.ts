@@ -92,6 +92,13 @@ const ROUTES: Routes = [
       (m) => m.RegistroDigitalizarDocumentosModule
     ),
 },
+{
+  path: 'registro-digitalizar-documentos',
+  loadChildren: () =>
+    import('./tramites/11204/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
+},
 ];
 
 @NgModule({
