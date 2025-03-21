@@ -27,6 +27,11 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
  * @type {ListaPasosWizard[]}
  */
   pasos: ListaPasosWizard[] = PASOS;
+  /**
+   * @description Indicates whether the search section should be displayed.
+   * Controlled based on service messages.
+   * @type {boolean}
+   */
   mostrarBusqueda: boolean = false;
   /**
    * @description Referencia al componente Wizard.
@@ -77,17 +82,41 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * 
    * @returns {void}
    */
-
+/**
+   * @description Service for managing and receiving messages.
+   * Used to handle communication between components.
+   * @param {ServicioDeMensajesService} servicioDeMensajesService
+   */
   constructor(private servicioDeMensajesService: ServicioDeMensajesService){}
-
+/**
+   * @description Lifecycle method executed when the component initializes.
+   * Subscribes to the message service to update the search display state.
+   */
   ngOnInit() {
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
     });
   }
+  /**
+   * @description Lifecycle method executed when the component is destroyed.
+   * Resets the search display state to false.
+   */
   ngOnDestroy() {
       this.mostrarBusqueda = false;
   }
+  /**
+   * @description Handles the button action and determines navigation (next or previous).
+   * Called when the user clicks on one of the form navigation buttons.
+   *
+   * Receives an `AccionBoton` object containing the action to perform (`cont` or `atras`)
+   * and the index value of the step to navigate to.
+   *
+   * @param {AccionBoton} e - Object containing the action and the index value.
+   *   `valor` represents the step index. `accion` indicates whether to proceed (`cont`)
+   *   or go back (`atras`).
+   *
+   * @returns {void}
+   */
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
