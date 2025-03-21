@@ -48,18 +48,10 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="aduanas">Aduana/sección aduanera</label>
-                            <span class="require">*</span>
-                            <select formControlName="aduana" id="aduana" class="form-control"
-                                [ngClass]="isValid('aduana') ? 'required' : ''">
-                                <option value="" disabled selected>Selecciona un valor</option>
-                                <option *ngFor="let aduana of aduanaList" [value]="aduana.id">
-                                    {{ aduana.descripcion }}
-                                </option>
-                            </select>
-                        </div>
+                    <div class="col-md-4 menu-desplegable">
+                        <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
+                            [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
+                            (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"></app-catalogo-select>
                     </div>
                 </div>
 
@@ -115,19 +107,10 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label for="contenedores">Tipo de equipo</label>
-                            <span class="require">*</span>
-                            <select formControlName="contenedores" id="contenedores" class="form-control"
-                                [ngClass]="isValid('contenedores') ? 'required' : ''"
-                                (change)="setValoresStore(solicitudForm, 'contenedores','setContenedores' )">
-                                <option value="" disabled selected>Selecciona un valor</option>
-                                <option *ngFor="let contenedor of contenedores" [value]="contenedor.id">
-                                    {{ contenedor.tipo }}
-                                </option>
-                            </select>
-                        </div>
+                    <div class="col-md-4 menu-desplegable">
+                        <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
+                            [placeholder]="aduana.primerOpcion" [required]="true" formControlName="contenedores"
+                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"></app-catalogo-select>
                     </div>
                 </div>
 
@@ -154,7 +137,8 @@
                     <div class="col-md-6">
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
                             [placeholder]="transporteList.primerOpcion" formControlName="menuDesplegable"
-                            (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')" [required]="true"
+                            (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')"
+                            [required]="true"
                             [ngClass]="isValid('numManifiesto') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
@@ -241,8 +225,9 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaMenúDesplegable"
-                                (change)="setValoresStore(solicitudForm,'aduanaMenúDesplegable', 'setAduanaMenúDesplegable')"></app-catalogo-select>
+                                [placeholder]="aduana.primerOpcion" [required]="true"
+                                formControlName="aduanaMenuDesplegable"
+                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
                             <label for="fechaDeIngreso" class="form-label">Fecha de ingreso*:</label>
                             <input class="form-control" type="date" name="fechaDeIngreso" id="fechaDeIngreso"
                                 formControlName="fechaDeIngreso"

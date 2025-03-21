@@ -108,12 +108,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Lista de aduanas.
    */
-  aduanaList: Aduanas[] = [];
+  aduanaList: {
+    catalogos: Aduanas[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
 
   /**
    * Lista de contenedores.
    */
-  contenedores: Contenedores[] = [];
+  contenedores: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
 
   /**
    * Bandera para requerir guardado parcial.
@@ -236,6 +244,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       labelNombre: 'Aduana/sección aduanera',
       primerOpcion: 'Seleccione un valor',
     };
+    this.aduanaList = {
+      catalogos: [],
+      labelNombre: 'Aduana/sección aduanera',
+      primerOpcion: 'Seleccione un valor',
+    };
+    this.contenedores = {
+      catalogos: [],
+      labelNombre: 'Aduana/sección aduanera',
+      primerOpcion: 'Seleccione un valor',
+    };
   }
 
   /**
@@ -287,8 +305,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.solicitud11201State.numManifiesto,
         [Validators.required, Validators.maxLength(50)],
       ],
-      aduanaMenúDesplegable: [
-        this.solicitud11201State.aduanaMenúDesplegable,
+      aduanaMenuDesplegable: [
+        this.solicitud11201State.aduanaMenuDesplegable,
         Validators.required,
       ],
       archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
@@ -390,7 +408,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     // Cargar catálogo de contenedores
     this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
-        this.contenedores = data.data;
+        this.contenedores.catalogos = data.data;
       },
     );
   }
@@ -617,7 +635,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
       .getAduanaList('aduanaList')
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
-        this.aduanaList = respuesta.data;
+        this.aduanaList.catalogos = respuesta.data;
       });
   }
 

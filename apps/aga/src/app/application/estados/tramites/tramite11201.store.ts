@@ -19,7 +19,7 @@ export interface Solicitud11201State {
   numeroContenedor: string;
   digitoDeControl: string;
   contenedores: string;
-  aduanaMenúDesplegable: string;
+  aduanaMenuDesplegable: string;
   individualCaja: boolean[];
   numManifiesto: number;
   fechaDeIngreso: string;
@@ -58,7 +58,7 @@ export function createInitialState(): Solicitud11201State {
     digitoDeControl: '',
     contenedores: '',
     fechaIngreso: '',
-    aduanaMenúDesplegable: '',
+    aduanaMenuDesplegable: '',
     individualCaja: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
     numManifiesto: 0,
     fechaDeIngreso: '',
@@ -106,10 +106,10 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setAduanaMenúDesplegable(aduanaMenúDesplegable: string): void {
+  public setAduanaMenuDesplegable(aduanaMenuDesplegable: string): void {
     this.update((state) => ({
       ...state,
-      aduanaMenúDesplegable,
+      aduanaMenuDesplegable,
     }));
   }
 

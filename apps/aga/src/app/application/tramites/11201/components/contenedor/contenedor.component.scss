@@ -42,7 +42,8 @@ select {
     border-collapse: collapse;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     padding: 8px;
     text-align: left;
     border: 1px solid #ddd;
@@ -50,4 +51,8 @@ select {
 
 .table th {
     background-color: #f2f2f2;
+}
+
+.menu-desplegable {
+    margin: 0px 15px;
 }
