@@ -27,24 +27,21 @@
           <ng-titulo titulo="Destinatario (destino final)"></ng-titulo>
         </div>
         <div class="modal-body">
-          <form [formGroup]="destinatarioForm">
+          <!-- Use *ngIf to ensure the form is initialized before rendering -->
+          <form *ngIf="destinatarioForm" [formGroup]="destinatarioForm">
             <h6>Datos generales</h6>
             <div class="row mb-3">
               <div class="col-md-6">
                 <div class="col-md-12">
-                 
-               </div> 
-               
-              </div>
+                 </div> 
+               </div>
               <div class="col-md-6">
                 <div class="col-md-12">
                   <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-                  
                   <div class="col-md-12">
                     <input type="radio" id="fisica" formControlName="tipoPersona" value="fisica" />
                     <label for="fisica">Física</label>
-    
-                  </div>
+    </div>
                   <div class="col-md-12">
                     <input type="radio" id="moral" formControlName="tipoPersona" value="moral" />
                     <label for="moral">Moral</label>

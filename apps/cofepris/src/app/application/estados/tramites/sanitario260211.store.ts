@@ -276,6 +276,7 @@ export interface Solicitud260211State {
      * @description Correo electrónico del facturador.
      */
     facturatorElectronico: string;
+    numeropostal:string;
   }
 
 /**
@@ -556,7 +557,8 @@ export function createInitialState(): Solicitud260211State {
          * @property {string} facturatorElectronico
          * @description Correo electrónico del facturador.
          */
-        facturatorElectronico: ''
+        facturatorElectronico: '',
+        numeropostal:''
     };
 }
 
@@ -874,6 +876,13 @@ public setfacturatorElectronico(facturatorElectronico: string) {
     this.update((state) => ({
         ...state,
         facturatorElectronico,
+    }));
+}
+
+public setnumeropostal(numeropostal: string) {
+    this.update((state) => ({
+        ...state,
+        numeropostal,
     }));
 }
         

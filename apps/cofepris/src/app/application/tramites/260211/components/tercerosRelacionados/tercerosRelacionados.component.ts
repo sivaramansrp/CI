@@ -216,6 +216,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .subscribe();
     this.loadMercancias();
     this.getRegistroForm();
+    this.initializeProveedorForm();
+    this.initializeRequeridaForm();
   }
 
    /**
@@ -260,6 +262,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       tipodenominacion: [this.solicitudState?.tipodenominacion, Validators.required],
       tipopail: [{ value: '', disabled: true }, Validators.required],
       numeroEstado: [this.solicitudState?.numeroEstado, Validators.required],
+      tipopostal:[''],
+      nombreequivalente:[''],
       numerosCalle: [{ value: '', disabled: true }, Validators.required],
       numbroexperior: [{ value: '', disabled: true }, Validators.required],
       numbrointerior: [this.solicitudState?.numbrointerior],
@@ -361,5 +365,44 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  initializeProveedorForm(): void {
+    this.proveedorForm = this.fb.group({
+      nacionalidad: ['nacional', Validators.required],
+      tipoPersona: ['moral', Validators.required],
+      rfc: ['', Validators.required],
+      denominacion: ['', Validators.required],
+      pail: ['', Validators.required],
+      localidad: ['', Validators.required],
+      municipio: ['', Validators.required],
+      nombrelocalidad: ['', Validators.required],
+      primerApellido: [''],
+      segundoApellido: [''],
+      equivalente: [''],
+      numeroCalle: ['', Validators.required],
+      experior: ['', Validators.required],
+      interior: [''],
+      lada: [''],
+      numerotelefono: [''],
+      correoElectronico: ['', [Validators.required, Validators.email]],
+    });
+  }
+
+  initializeRequeridaForm(): void {
+    this.requeridaForm = this.fb.group({
+      tipoPersona: ['fisica', Validators.required],
+      tiporfc: ['', Validators.required],
+      tipocurp: ['', Validators.required],
+      tipodenominacion: ['', Validators.required],
+      tipopail: ['', Validators.required],
+      numeroEstado: ['', Validators.required],
+      numerosCalle: ['', Validators.required],
+      numbroexperior: ['', Validators.required],
+      numbrointerior: [''],
+      numbrolada: [''],
+      numerostelefono: [''],
+      tipocorreoElectronico: ['', [Validators.required, Validators.email]],
+    });
   }
 }

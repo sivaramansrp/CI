@@ -184,7 +184,7 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
       destinatario: [''],
       destinatarionumeroCalle: [this.solicitudState?.destinatarionumeroCalle, Validators.required],
       destinatarioexperior: [this.solicitudState?.destinatarioexperior, Validators.required],
-      destinatariointerior: [this.solicitudState?.destinatariointerior, Validators.required],
+      destinatariointerior: [this.solicitudState?.destinatariointerior],
       destinatariolada: [this.solicitudState?.destinatariolada],
       destinatarionumerotelefono: [this.solicitudState?.destinatarionumerotelefono],
       destinatariocorreoElectronico: [this.solicitudState?.destinatariocorreoElectronico, [Validators.required, Validators.email]],
