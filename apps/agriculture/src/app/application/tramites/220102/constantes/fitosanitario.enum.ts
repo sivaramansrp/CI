@@ -31,3 +31,9 @@ export const TEXTOS_REQUISITOS = {
 };
 
 export const URL = '../../../../../assets/json/220102/';
+
+export const EDITAR = "editar"
+
+export const AGREGAR = "agregar"
+
+export const NUEVA = "nueva"

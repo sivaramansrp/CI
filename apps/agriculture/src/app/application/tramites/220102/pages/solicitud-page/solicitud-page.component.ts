@@ -48,7 +48,8 @@ export class SolicitudPageComponent {
    * - `txtBtnAnt`: Texto para el botón "Anterior".
    * - `txtBtnSig`: Texto para el botón "Siguiente".
    */
-  datosPasos: DatosPasos = {
+
+  valorDelBoton: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Guardar',

@@ -150,7 +150,7 @@
     <button type="button" class="btn btn-default btn-space me-2" (click)="almacenarDatoEnTabla('close')">
       Cancelar
     </button>
-    <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla(formMercancia.value.id !== null ? 'edit':'add')">
+    <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla(formMercancia.value.id !== null ? 'editar':'agregar')">
       Agregar
     </button>
   </div>
@@ -161,7 +161,7 @@
     <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0 " [disabled]="!(listaDeTablasSeleccionadas.length === 1)" (click)="eliminarElementoSeleccionado()">
       Eliminar
     </button>
-    <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')" >
+    <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('nueva')" >
       Agregar
     </button>
   </div>

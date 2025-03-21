@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { IMPORTANTE } from '../../constantes/fitosanitario.enum';
+import { AGREGAR, EDITAR, IMPORTANTE } from '../../constantes/fitosanitario.enum';
 
 import { MercanciaForm } from '../../models/fitosanitario.model';
 
@@ -309,7 +309,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   almacenarDatoEnTabla(nombre: string) {
     this.estadoChecker = !this.estadoChecker;
-    if (nombre === 'add') {
+    if (nombre === AGREGAR) {
       this.formMercancia.patchValue({
         id: Math.floor(Math.random() * 90) + 10
       })
@@ -317,7 +317,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       this.datosMercanciaService.actualizarFormularioMovilizacion(this.cuerpoTabla as MercanciaForm[]);
       this.datosMercanciaService.botonDesactivarCampos(this.cuerpoTabla.length > 0 ? true : false)
     }
-    else if (nombre === 'edit') {
+    else if (nombre === EDITAR) {
       const ARTICULOACTUALIZADO = this.formMercancia.value as MercanciaForm;
       const IDACTUALIZADO = ARTICULOACTUALIZADO.id;
       this.cuerpoTabla = this.cuerpoTabla.map(item =>
