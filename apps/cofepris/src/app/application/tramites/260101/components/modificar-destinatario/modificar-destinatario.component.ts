@@ -1,14 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EnvFunction } from '@babel/core';
 import {
   Catalogo,
   CatalogosSelect,
   REGEX_CORREO_ELECTRONICO,
 } from '@libs/shared/data-access-user/src';
-import { Solicitud260101State, Solicitud260101Store } from '../../estados/tramites260101.store';
+import {
+  Solicitud260101State,
+  Solicitud260101Store,
+} from '../../estados/tramites260101.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
+import { SolicitudDatosService } from '../../services/solicitud-datos.service';
+import { DestinatarioCatalogos } from '../../models/destinatario.model';
 
 @Component({
   selector: 'app-modificar-destinatario',
@@ -17,117 +21,26 @@ import { Solicitud260101Query } from '../../estados/tramites260101.query';
 })
 export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
   modificarDestinatarioForm!: FormGroup;
-  tipoRadioOptions = [
-    {
-      label: 'Fisica',
-      value: 'fisica',
-    },
-    {
-      label: 'Moral',
-      value: 'moral',
-    },
-  ];
+  tipoPersonaRadioOptions: { label: string; value: string | number }[] = [];
   tipoPublicos = 'moral';
 
-  paisCatalogo: CatalogosSelect = {
-    labelNombre: 'Pais',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-  estadoCatalogo: CatalogosSelect = {
-    labelNombre: 'Estado/localidad',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-  municipioCatalogo: CatalogosSelect = {
-    labelNombre: 'Municipio/alcaldia',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-  localidadCatalogo: CatalogosSelect = {
-    labelNombre: 'Localidad',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-  codigoCatalogo: CatalogosSelect = {
-    labelNombre: 'Codigo postal o equivalente',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-  coloniaCatalogo: CatalogosSelect = {
-    labelNombre: 'Colonia',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-
+  paisCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  estadoCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  municipioCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  localidadCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  codigoCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  coloniaCatalogo: CatalogosSelect = {} as CatalogosSelect;
   solicitud260101State: Solicitud260101State = {} as Solicitud260101State;
   private destroyNotifier$: Subject<void> = new Subject();
+
   constructor(
     public fb: FormBuilder,
+    public solicitudDatosService: SolicitudDatosService,
     public solicitud260101Store: Solicitud260101Store,
     public solicitud260101Query: Solicitud260101Query
   ) {
-    //
+    this.obtenerDestinatarioCatalogos();
+    this.obtenerDestinatarioRadio();
   }
 
   ngOnInit(): void {
@@ -186,7 +99,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
 
     this.solicitud260101Query.seleccionarSolicitud$.pipe(
       takeUntil(this.destroyNotifier$),
-      map((res: Solicitud260101State)=>{
+      map((res: Solicitud260101State) => {
         this.solicitud260101State = res;
         this.modificarDestinatarioForm.patchValue({
           tipoPersona: this.solicitud260101State.tipoPersona,
@@ -199,36 +112,38 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
           domicilioCodigo: this.solicitud260101State.domicilioCodigo,
           domicilioColonia: this.solicitud260101State.domicilioColonia,
           domiciliCalle: this.solicitud260101State.domiciliCalle,
-          domiciliNumeroExterior: this.solicitud260101State.domiciliNumeroExterior,
-          domiciliNumeroInterior: this.solicitud260101State.domiciliNumeroInterior,
+          domiciliNumeroExterior:
+            this.solicitud260101State.domiciliNumeroExterior,
+          domiciliNumeroInterior:
+            this.solicitud260101State.domiciliNumeroInterior,
           domiciliLada: this.solicitud260101State.domiciliLada,
           domiciliTelefono: this.solicitud260101State.domiciliTelefono,
           domiciliCorreoElectronioco:
             this.solicitud260101State.domiciliCorreoElectronioco,
         });
       })
-    )
+    );
+  }
 
-    // this.modificarDestinatarioForm = this.fb.group({
-    //   tipoPersona: [this.solicitud260101State.tipoPersona, [Validators.required]],
-    //   modificarRFC: ['', [Validators.required]],
-    //   denominacion: ['', [Validators.required]],
-    //   domicilioPais: [{ value: 1, disabled: true }, [Validators.required]],
-    //   domicilioEstado: ['', [Validators.required]],
-    //   domicilioMunicipio: ['', [Validators.required]],
-    //   domicilioLocalidad: ['', [Validators.required]],
-    //   domicilioCodigo: ['', [Validators.required]],
-    //   domicilioColonia: [''],
-    //   domiciliCalle: ['', [Validators.required]],
-    //   domiciliNumeroExterior: [0, [Validators.required]],
-    //   domiciliNumeroInterior: [0],
-    //   domiciliLada: [],
-    //   domiciliTelefono: [23434],
-    //   domiciliCorreoElectronioco: [
-    //     '',
-    //     [Validators.pattern(REGEX_CORREO_ELECTRONICO)],
-    //   ],
-    // });
+  obtenerDestinatarioCatalogos() {
+    this.solicitudDatosService.obtenerDestinatarioCatalogos().subscribe({
+      next: (res: DestinatarioCatalogos) => {
+        this.paisCatalogo = res.paisCatalogo;
+        this.estadoCatalogo = res.estadoCatalogo;
+        this.municipioCatalogo = res.municipioCatalogo;
+        this.localidadCatalogo = res.localidadCatalogo;
+        this.codigoCatalogo = res.codigoCatalogo;
+        this.coloniaCatalogo = res.codigoCatalogo;
+      },
+    });
+  }
+
+  obtenerDestinatarioRadio() {
+    this.solicitudDatosService.obtenerDestinatarioRadio().subscribe({
+      next: (res: { label: string; value: string | number }[]) => {
+        this.tipoPersonaRadioOptions = res;
+      },
+    });
   }
 
   setTipoPersona(event: string | number) {
@@ -237,12 +152,12 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
 
   setModificarRFC(event: Event) {
     const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setModificarRFC(VALUE)
+    this.solicitud260101Store.setModificarRFC(VALUE);
   }
 
   setDenominacion(event: Event) {
     const VALUE = (event.target as HTMLInputElement).value;
-    this.solicitud260101Store.setDenominacion(VALUE)
+    this.solicitud260101Store.setDenominacion(VALUE);
   }
 
   seleccionaPais(event: Catalogo): void {
@@ -297,6 +212,42 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
   setDomiciliCorreoElectronioco(event: Event) {
     const VALUE = (event.target as HTMLInputElement).value;
     this.solicitud260101Store.setDomicilioCorreoElectronico(VALUE);
+  }
+
+  limpiarDestinatario() {
+    this.modificarDestinatarioForm.reset();
+  }
+
+  guardarDestinatario() {
+    if (this.modificarDestinatarioForm.invalid) {
+      return;
+    }
+    const JSON_OBJECT = {
+      nombre: this.modificarDestinatarioForm.get('denominacion')?.value,
+      rfc: this.modificarDestinatarioForm.get('modificarRFC')?.value,
+      curp: '--',
+      telefono: this.modificarDestinatarioForm.get('domiciliTelefono')?.value,
+      correoElectronico: this.modificarDestinatarioForm.get(
+        'domiciliCorreoElectronioco'
+      )?.value,
+      calle: this.modificarDestinatarioForm.get('domiciliCalle')?.value,
+      numeroExterior: this.modificarDestinatarioForm.get(
+        'domiciliNumeroExterior'
+      )?.value,
+      numeroInterior: this.modificarDestinatarioForm.get(
+        'domiciliNumeroInterior'
+      )?.value,
+      pais: this.modificarDestinatarioForm.get('domicilioPais')?.value,
+      colonia: this.modificarDestinatarioForm.get('domicilioColonia')?.value,
+      municipio:
+        this.modificarDestinatarioForm.get('domicilioMunicipio')?.value,
+      localidad:
+        this.modificarDestinatarioForm.get('domicilioLocalidad')?.value,
+      estado: this.modificarDestinatarioForm.get('domicilioEstado')?.value,
+      estado2: '--',
+      codigo: this.modificarDestinatarioForm.get('domicilioCodigo')?.value,
+    };
+    this.solicitud260101Store.addDestinatarioDato(JSON_OBJECT);
   }
 
   ngOnDestroy(): void {

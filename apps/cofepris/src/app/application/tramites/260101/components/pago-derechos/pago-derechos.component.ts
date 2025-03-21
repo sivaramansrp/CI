@@ -38,7 +38,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
 
   fechaPago: InputFecha = {
     labelNombre: 'Fecha de pago',
-    required: true,
+    required: false,
     habilitado: true,
   };
   solicitud260101State: Solicitud260101State = {} as Solicitud260101State;

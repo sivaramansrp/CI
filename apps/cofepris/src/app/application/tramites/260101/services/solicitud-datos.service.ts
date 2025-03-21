@@ -1,34 +1,34 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DatosDeSolicitud } from '../models/solicitud-datos.model';
+import { DatosDeSolicitud, Solicitud } from '../models/solicitud-datos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Mercancia } from '../models/mercancia.model';
+import { Mercancia, MercanciaCatalogos, MercanciaCrossList } from '../models/mercancia.model';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
+import { Destinatario, DestinatarioCatalogos } from '../models/destinatario.model';
+import { Fabricante } from '../models/fabricante.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SolicitudDatosService {
-  private datosDeSolicitudUrl =
-    '../../../assets/json/260101/solicitud-datos.json';
-  private datosRegimenDestinaraUrl =
-    '../../../assets/json/260101/regimen-destinaran.json';
-  private datosAduanaUrl =
-    '../../../assets/json/260101/aduana.json';
 
   constructor(public http: HttpClient) {}
 
   obtenerDatosDeSolicitud(): Observable<DatosDeSolicitud> {
-    return this.http.get<DatosDeSolicitud>(this.datosDeSolicitudUrl).pipe();
+    return this.http.get<DatosDeSolicitud>('../../../assets/json/260101/solicitud-datos.json').pipe();
+  }
+
+  obtenerSolicitud(): Observable<Solicitud> {
+    return this.http.get<Solicitud>('../../../assets/json/260101/solicitud.json').pipe();
   }
 
   obtenerRegimenDestinaraListo() {
-    return this.http.get<CatalogosSelect>(this.datosRegimenDestinaraUrl).pipe();
+    return this.http.get<CatalogosSelect>('../../../assets/json/260101/regimen-destinaran.json').pipe();
   }
 
   obtenerAduanaListo() {
-    return this.http.get<CatalogosSelect>(this.datosAduanaUrl).pipe();
+    return this.http.get<CatalogosSelect>('../../../assets/json/260101/aduana.json').pipe();
   }
 
   obtenerEstadoCatalogo() {
@@ -43,5 +43,27 @@ export class SolicitudDatosService {
     return this.http.get<ClavesDeLotes[]>('../../../assets/json/260101/claves-de-lotes.json').pipe();
   }
 
-  
+  obtenerDestinatarioListo():Observable<Destinatario[]>{
+    return this.http.get<Destinatario[]>('../../../assets/json/260101/destinatario.json').pipe();
+  }
+
+  obtenerFabricanteListo():Observable<Fabricante[]>{
+    return this.http.get<Fabricante[]>('../../../assets/json/260101/fabricante.json').pipe();
+  }
+
+  obtenerDestinatarioCatalogos():Observable<DestinatarioCatalogos>{
+    return this.http.get<DestinatarioCatalogos>('../../../assets/json/260101/destinatario-catalogos.json').pipe();
+  }
+
+  obtenerDestinatarioRadio():Observable<{ label: string; value: string | number }[]>{
+    return this.http.get<{ label: string; value: string | number }[]>('../../../assets/json/260101/destinatario-radio.json').pipe();
+  }
+
+  obtenerMercanciaCatalogos():Observable<MercanciaCatalogos>{
+    return this.http.get<MercanciaCatalogos>('../../../assets/json/260101/mercancia-catalogos.json').pipe();
+  }
+
+  obtenerCrosslisto():Observable<MercanciaCrossList>{
+    return this.http.get<MercanciaCrossList>('../../../assets/json/260101/mercancia-cross-list.json').pipe();
+  }
 }

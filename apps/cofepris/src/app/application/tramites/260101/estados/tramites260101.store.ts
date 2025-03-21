@@ -2,6 +2,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
+import { Destinatario } from '../models/destinatario.model';
 
 export interface Solicitud260101State {
   razonSocial: string;
@@ -14,9 +15,9 @@ export interface Solicitud260101State {
   calle: string;
   lada: number;
   telefono: number;
-  avisoDeFuncionamiento: string;
+  avisoDeFuncionamiento: boolean;
   licenciaSanitaria: string;
-  liveFreshFrozen: string;
+  liveFreshFrozen: boolean;
   regimen: number;
   aduana: number;
   hacerlos: string | number;
@@ -25,6 +26,7 @@ export interface Solicitud260101State {
   apellidoPaterno: string;
   apellidoMeterno: string;
   mercanciasDatos: Mercancia[];
+  manifesto: boolean;
   //
   clasificaionProductos: string;
   especificarProducto: number;
@@ -57,6 +59,7 @@ export interface Solicitud260101State {
   domiciliLada: string;
   domiciliTelefono: string;
   domiciliCorreoElectronioco: string;
+  destinatarioDatos: Destinatario[];
   //
   claveDeReferencia: string;
   cadenaDeDependencia: string;
@@ -78,9 +81,9 @@ export function createInitialState(): Solicitud260101State {
     calle: '',
     lada: 0,
     telefono: 0,
-    avisoDeFuncionamiento: '',
+    avisoDeFuncionamiento: false,
     licenciaSanitaria: '',
-    liveFreshFrozen: '',
+    liveFreshFrozen: false,
     regimen: 0,
     aduana: 0,
     hacerlos: '',
@@ -89,6 +92,7 @@ export function createInitialState(): Solicitud260101State {
     apellidoPaterno: '',
     apellidoMeterno: '',
     mercanciasDatos: [],
+    manifesto: false,
     //
     clasificaionProductos: '',
     especificarProducto: 0,
@@ -121,6 +125,7 @@ export function createInitialState(): Solicitud260101State {
     domiciliLada: '',
     domiciliTelefono: '',
     domiciliCorreoElectronioco: '',
+    destinatarioDatos:[],
     //
     claveDeReferencia: '',
     cadenaDeDependencia: '',
@@ -210,7 +215,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     }));
   }
 
-  public setAvisoDeFuncionamiento(avisoDeFuncionamiento: string): void {
+  public setAvisoDeFuncionamiento(avisoDeFuncionamiento: boolean): void {
     this.update((state) => ({
       ...state,
       avisoDeFuncionamiento,
@@ -224,7 +229,7 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     }));
   }
 
-  public setLiveFreshFrozen(liveFreshFrozen: string): void {
+  public setLiveFreshFrozen(liveFreshFrozen: boolean): void {
     this.update((state) => ({
       ...state,
       liveFreshFrozen,
@@ -293,6 +298,17 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
       mercanciasDatos: [...state.mercanciasDatos, newMercancia],
     }));
   }
+
+  public removeMercanciaDatos(mercanciaToRemove: Mercancia): void {
+    this.update((state) => ({
+      ...state,
+      mercanciasDatos: state.mercanciasDatos.filter(
+        (mercancia) =>
+          mercancia.nombreProductoEspecifico !== mercanciaToRemove.nombreProductoEspecifico
+      ),
+    }));
+  }
+  
 
   // Repeat for the remaining variables following the same pattern
 
@@ -534,6 +550,31 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
     }));
   }
 
+  public setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioDatos,
+    }));
+  }
+
+  public removeDestinatarioDato(destinatarioToRemove: Destinatario): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioDatos: state.destinatarioDatos.filter(
+        (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc // Compare based on 'rfc' or another unique property
+      ),
+    }));
+  }
+
+  public addDestinatarioDato(newDestinatario: Destinatario): void {
+    this.update((state) => ({
+      ...state,
+      destinatarioDatos: [...state.destinatarioDatos, newDestinatario], // Add the new object to the array
+    }));
+  }
+  
+  
+
   public setClaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
@@ -575,6 +616,15 @@ export class Solicitud260101Store extends Store<Solicitud260101State> {
       importeDePago,
     }));
   }
+
+  public setManifesto(manifesto: boolean): void {
+    this.update((state) => ({
+      ...state,
+      manifesto,
+    }));
+  }
+
+  
 
   public limpiarSeccion() {
     this.reset();

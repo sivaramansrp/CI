@@ -1,34 +1,18 @@
 [
     {
-        "clasificaionProductos": "Electronics",
-        "especificarProducto": 1,
-        "nombreProductoEspecifico": "Smartphone",
-        "marca": "TechCorp",
-        "tipoProducto": 101,
-        "fraccionArancelaria": "851712",
-        "descripcionFraccionArancelaria": "Mobile phones for cellular networks",
-        "cantidadUMT": "500",
-        "umt": "Units",
-        "cantidadUMC": "500",
+        "clasificaionProductos": "ALIMENTOS",
+        "especificarProducto": "Pastas, granos y semillas",
+        "nombreProductoEspecifico": "test22",
+        "marca": "test",
+        "tipoProducto": "Producto terminado",
+        "fraccionArancelaria": "04059001",
+        "descripcionFraccionArancelaria": "Grasa butirica deshidratada.",
+        "cantidadUMT": "10,000.00",
+        "umt": "Kilogramo",
+        "cantidadUMC": "12.00",
         "umc": 500,
-        "paisDeOrigen": "China",
-        "paisDeProcedencia": "China",
-        "usoEspecifico": "Personal communication devices"
-    },
-    {
-        "clasificaionProductos": "Food",
-        "especificarProducto": 2,
-        "nombreProductoEspecifico": "Organic Honey",
-        "marca": "NatureBee",
-        "tipoProducto": 202,
-        "fraccionArancelaria": "040900",
-        "descripcionFraccionArancelaria": "Natural honey",
-        "cantidadUMT": "1000",
-        "umt": "Kilograms",
-        "cantidadUMC": "100",
-        "umc": 100,
-        "paisDeOrigen": "India",
-        "paisDeProcedencia": "India",
-        "usoEspecifico": "Health supplements and sweeteners"
+        "paisDeOrigen": "ANGUIA, ANTARTIDA",
+        "paisDeProcedencia": "ANGUILA, AUSTRIA",
+        "usoEspecifico": "Donaciones, Envasad..."
     }
 ]

@@ -11,7 +11,7 @@
     <div class="col-md-6">
       <label class="form-label" for="">Tipo persona*:</label>
       <app-input-radio
-        [radioOptions]="tipoRadioOptions"
+        [radioOptions]="tipoPersonaRadioOptions"
         [selectedValue]="tipoPublicos"
         [isRequired]="true"
         formControlName="tipoPersona"
@@ -22,7 +22,8 @@
     </div>
 
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="rfc">R.F.C.*:</label>
+      <label class="form-label" for="rfc">R.F.C.*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      </label>
       <input
         class="form-control"
         id="rfc"
@@ -35,7 +36,7 @@
     <div class="col-md-8"></div>
     <div class="col-md-8 mt-4">
       <label class="form-label" for="denominacion"
-        >Denominacion/razon social*:</label
+        >Denominación/razón social*:</label
       >
       <input
         class="form-control"
@@ -57,6 +58,7 @@
         [label]="paisCatalogo.labelNombre"
         [placeholder]="paisCatalogo.primerOpcion"
         [required]="paisCatalogo.required"
+        [isDisabled]="true"
         formControlName="domicilioPais"
         (selectionChange)="seleccionaPais($event)"
       >
@@ -134,7 +136,7 @@
       />
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="numeroExterior">Numero exterior*:</label>
+      <label class="form-label" for="numeroExterior">Número exterior*:</label>
       <input
         class="form-control"
         id="numeroExterior"
@@ -145,7 +147,7 @@
       />
     </div>
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="numeroInterior">Numero interior*:</label>
+      <label class="form-label" for="numeroInterior">Número interior*:</label>
       <input
         class="form-control"
         id="numeroInterior"
@@ -169,7 +171,7 @@
     </div>
 
     <div class="col-md-3 mt-4">
-      <label class="form-label" for="telefono">Telefono:</label>
+      <label class="form-label" for="telefono">Teléfono:</label>
       <input
         class="form-control"
         id="telefono"
@@ -181,7 +183,9 @@
     </div>
 
     <div class="col-md-4 mt-4">
-      <label class="form-label" for="correoElectronioco">Correo electronioco:</label>
+      <label class="form-label" for="correoElectronioco"
+        >Correo electrónico:</label
+      >
       <input
         class="form-control"
         id="correoElectronioco"
@@ -190,6 +194,33 @@
         fomrControlName="domiciliCorreoElectronioco"
         (change)="setDomiciliCorreoElectronioco($event)"
       />
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default btn-space"
+        data-bs-dismiss="modal"
+      >
+        Cancelar
+      </button>
+      <button
+        class="btn btn-default ms-3"
+        type="button"
+        (click)="limpiarDestinatario()"
+      >
+        Limpiar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        data-bs-dismiss="modal"
+        (click)="guardarDestinatario()"
+      >
+        Guardar
+      </button>
     </div>
   </div>
 </form>

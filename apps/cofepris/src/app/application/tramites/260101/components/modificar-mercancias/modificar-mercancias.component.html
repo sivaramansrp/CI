@@ -1,7 +1,7 @@
 <form [formGroup]="datosMercanciaForm">
   <div class="row mt-5">
     <div class="col-md-12">
-      <ng-titulo titulo="Datos mercancia" />
+      <ng-titulo titulo="Datos mercancía" />
     </div>
     <div class="col-md-8 mt-3">
       <app-catalogo-select
@@ -29,7 +29,7 @@
     </div>
     <div class="col-md-8 mt-3">
       <label class="form-label" for="denominacionProducto"
-        >Denominacion especifica del producto*:</label
+        >Denominación especifica del producto*:</label
       >
       <input
         class="form-control"
@@ -65,7 +65,8 @@
     </div>
     <div class="col-md-8 mt-3">
       <label class="form-label" for="fraccionArancelaria"
-        >Fraccion arancelaria*:</label
+        >Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+        </label
       >
       <input
         class="form-control"
@@ -101,7 +102,8 @@
       />
     </div>
     <div class="col-md-4 mt-3">
-      <label class="form-label" for="umt">UMT*:</label>
+      <label class="form-label" for="umt">UMT*: <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+      </label>
       <input
         class="form-control"
         id="umt"
@@ -144,16 +146,15 @@
             (click)="paisOrigen_colapsable()"
             tabindex="0"
           >
-            <h4 class="panel-title">Pais de origen</h4>
+            <h4 class="panel-title">País de origen</h4>
             <button type="button" class="collpase-button collapsed"></button>
           </div>
           @if(paisOrigenColapsable){
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
               <crosslist
-                [label]="paisOrigenCrossList.paisOrigen"
-                [fechas]="paisOrigenCrossList.selectRangoDias"
-                [botones]="paisOrigenCrossList.botones"
+                [label]="paisOrigenCrossList.label"
+                [fechas]="paisOrigenCrossList.fechas"
               ></crosslist>
             </div>
           </div>
@@ -170,16 +171,15 @@
             (click)="paisProcedencis_colapsable()"
             tabindex="0"
           >
-            <h4 class="panel-title">Pais de procedencis</h4>
+            <h4 class="panel-title">País de procedencia</h4>
             <button type="button" class="collpase-button collapsed"></button>
           </div>
           @if(paisProcedencisColapsable){
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
               <crosslist
-                [label]="paisProcedencisCrossList.paisOrigen"
-                [fechas]="paisProcedencisCrossList.selectRangoDias"
-                [botones]="paisProcedencisCrossList.botones"
+                [label]="paisProcedencisCrossList.label"
+                [fechas]="paisProcedencisCrossList.fechas"
               ></crosslist>
             </div>
           </div>
@@ -277,10 +277,10 @@
           <div class="panel-collapse collapse in" id="panel-01">
             <div class="panel-body">
               <crosslist
-                [label]="usoEspecificoCrossList.paisOrigen"
-                [fechas]="usoEspecificoCrossList.selectRangoDias"
-                [botones]="usoEspecificoCrossList.botones"
-              ></crosslist>
+                [fechas]="usoEspecificoCrossList.fechas"
+                [label]="usoEspecificoCrossList.label"
+              >
+              </crosslist>
             </div>
           </div>
           }

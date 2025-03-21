@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EnvFunction } from '@babel/core';
 import {
   Catalogo,
   CatalogosSelect,
@@ -16,6 +15,11 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud260101Query } from '../../estados/tramites260101.query';
 import { ClavesDeLotes } from '../../models/claves-de-lotes.model';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
+import {
+  CrossList,
+  MercanciaCatalogos,
+  MercanciaCrossList,
+} from '../../models/mercancia.model';
 
 @Component({
   selector: 'app-modificar-mercancias',
@@ -23,177 +27,22 @@ import { SolicitudDatosService } from '../../services/solicitud-datos.service';
   styleUrl: './modificar-mercancias.component.scss',
 })
 export class ModificarMercanciasComponent implements OnInit, OnDestroy {
-  productosCatalogo: CatalogosSelect = {
-    labelNombre: 'Clasificacion del producto',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-
-  especificarCatalogo: CatalogosSelect = {
-    labelNombre: 'Especificar Clasificacion del producto',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
-
-  tipoProductoCatalogo: CatalogosSelect = {
-    labelNombre: 'Tipo de producto',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
+  productosCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  especificarCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  tipoProductoCatalogo: CatalogosSelect = {} as CatalogosSelect;
+  umcCatalogo: CatalogosSelect = {} as CatalogosSelect;
 
   paisOrigenColapsable = false;
-  paisOrigenCrossList = {
-    paisOrigen: {
-      tituluDeLaIzquierda: 'Pais de origen',
-      derecha: 'Pais(es) seleccionado(s)',
-    },
-    selectRangoDias: [
-      'ANGUILA',
-      'ANTARTIDA',
-      'ALBANIA (REPUBLICA DE)',
-      'ALEMANIA ',
-      'ANDORRA(PRINCIPADO DE)',
-      'ANGOLA (REPUBLICA DE)',
-      'ANTIGUA Y BARBUDDA',
-    ],
-    botones: [
-      {
-        btnNombre: 'Agregar todos',
-        class: 'btn-primary w-100',
-      },
-      {
-        btnNombre: 'Agregar seleccion',
-        class: 'btn-default w-100',
-      },
-      {
-        btnNombre: 'Restar seleccion',
-        class: 'btn-danger w-100',
-      },
-      {
-        btnNombre: 'Restar todos',
-        class: 'btn-default w-100',
-      },
-    ],
-  };
-
-  umcCatalogo: CatalogosSelect = {
-    labelNombre: 'UMC',
-    required: true,
-    primerOpcion: 'Selecciona un valor',
-    catalogos: [
-      {
-        id: 1,
-        descripcion: 'ALIMENTOS',
-      },
-      {
-        id: 2,
-        descripcion: 'ALIMENTOS-TEST',
-      },
-    ],
-  };
+  paisOrigenCrossList: CrossList = {} as CrossList;
 
   paisProcedencisColapsable = false;
-  paisProcedencisCrossList = {
-    paisOrigen: {
-      tituluDeLaIzquierda: 'Pais de origen',
-      derecha: 'Pais(es) seleccionado(s)',
-    },
-    selectRangoDias: [
-      'ANGUILA',
-      'ANTARTIDA',
-      'ALBANIA (REPUBLICA DE)',
-      'ALEMANIA ',
-      'ANDORRA(PRINCIPADO DE)',
-      'ANGOLA (REPUBLICA DE)',
-      'ANTIGUA Y BARBUDDA',
-    ],
-    botones: [
-      {
-        btnNombre: 'Agregar todos',
-        class: 'btn-primary w-100',
-      },
-      {
-        btnNombre: 'Agregar seleccion',
-        class: 'btn-default w-100',
-      },
-      {
-        btnNombre: 'Restar seleccion',
-        class: 'btn-danger w-100',
-      },
-      {
-        btnNombre: 'Restar todos',
-        class: 'btn-default w-100',
-      },
-    ],
-  };
+  paisProcedencisCrossList: CrossList = {} as CrossList;
 
   usoEspecificoColapsable = false;
-  usoEspecificoCrossList = {
-    paisOrigen: {
-      tituluDeLaIzquierda: 'Uso especifico:',
-      derecha: 'Uso especifico seleccionado*:',
-    },
-    selectRangoDias: [
-      'ANGUILA',
-      'ANTARTIDA',
-      'ALBANIA (REPUBLICA DE)',
-      'ALEMANIA ',
-      'ANDORRA(PRINCIPADO DE)',
-      'ANGOLA (REPUBLICA DE)',
-      'ANTIGUA Y BARBUDDA',
-    ],
-    botones: [
-      {
-        btnNombre: 'Agregar todos',
-        class: 'btn-primary w-100',
-      },
-      {
-        btnNombre: 'Agregar seleccion',
-        class: 'btn-default w-100',
-      },
-      {
-        btnNombre: 'Restar seleccion',
-        class: 'btn-danger w-100',
-      },
-      {
-        btnNombre: 'Restar todos',
-        class: 'btn-default w-100',
-      },
-    ],
-  };
+  usoEspecificoCrossList: CrossList = {} as CrossList;
 
   fechaFabricacionDatos: InputFecha = {
-    labelNombre: 'Fecha de fabricacion',
+    labelNombre: 'Fecha de fabricación',
     required: false,
     habilitado: true,
   };
@@ -211,7 +60,7 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
       orden: 1,
     },
     {
-      encabezado: 'Fecha de fabricacion',
+      encabezado: 'Fecha de fabricación',
       clave: (item: any) => item.fabricacion,
       orden: 2,
     },
@@ -234,8 +83,9 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     public solicitud260101Store: Solicitud260101Store,
     public solicitud260101Query: Solicitud260101Query
   ) {
-    //
     this.obtenerClavesDeLotesListo();
+    this.obtenerMercanciaCatalogos();
+    this.obtenerCrosslisto();
   }
 
   ngOnInit() {
@@ -337,6 +187,28 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     });
   }
 
+  obtenerCrosslisto() {
+    this.solicitudDatosService.obtenerCrosslisto().subscribe({
+      next: (res: MercanciaCrossList) => {
+        console.log(res)
+        this.paisOrigenCrossList = res.paisOrigenCrossList;
+        this.paisProcedencisCrossList = res.paisProcedencisCrossList;
+        this.usoEspecificoCrossList = res.usoEspecificoCrossList;
+      },
+    });
+  }
+
+  obtenerMercanciaCatalogos() {
+    this.solicitudDatosService.obtenerMercanciaCatalogos().subscribe({
+      next: (res: MercanciaCatalogos) => {
+        this.productosCatalogo = res.productosCatalogo;
+        this.especificarCatalogo = res.especificarCatalogo;
+        this.tipoProductoCatalogo = res.tipoProductoCatalogo;
+        this.umcCatalogo = res.umcCatalogo;
+      },
+    });
+  }
+
   paisOrigen_colapsable() {
     this.paisOrigenColapsable = !this.paisOrigenColapsable;
   }
@@ -404,10 +276,6 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
   }
 
   agregarMercanias() {
-    // if (this.datosMercanciaForm.invalid) {
-    //   return;
-    // }
-
     const JSON_OBJECT = {
       clasificaionProductos: this.datosMercanciaForm.get(
         'clasificaionProductos'
@@ -466,9 +334,11 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
     }
   }
 
-  eliminarClavesDeLotes(){
+  eliminarClavesDeLotes() {
     if (this.selectedClavesDeLotes.length > 0) {
-      this.solicitud260101Store.removeClaveDeLote(this.selectedClavesDeLotes[0]);
+      this.solicitud260101Store.removeClaveDeLote(
+        this.selectedClavesDeLotes[0]
+      );
     }
   }
 

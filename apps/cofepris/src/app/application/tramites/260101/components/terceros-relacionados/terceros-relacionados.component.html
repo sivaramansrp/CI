@@ -11,13 +11,21 @@
       [tipoSeleccionTabla]="destinatarioSeleccionTabla"
       [configuracionTabla]="destinatarioConfiguracionTabla"
       [datos]="destinatarioDatos"
+      (listaDeFilaSeleccionada)="getDestinatarioDatos($event)"
     >
     </app-tabla-dinamica>
   </div>
 
-  <div class="col-md-12 d-flex justify-content-end align-items-end">
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      <button class="btn btn-default 3" type="button">Eliminar</button>
+      @if (selectedDestinatario.length > 0) {
+      <button
+        class="btn btn-default 3"
+        type="button"
+        (click)="eliminarMercancias()"
+      >
+        Eliminar
+      </button>
       <button
         type="button"
         data-bs-toggle="modal"
@@ -27,7 +35,14 @@
       >
         Modificar
       </button>
-      <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
+      }
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias"
+        (click)="agregarMercancias()"
+      >
         Agregar
       </button>
     </div>

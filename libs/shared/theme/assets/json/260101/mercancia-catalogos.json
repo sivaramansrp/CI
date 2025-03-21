@@ -1,0 +1,63 @@
+{
+    "productosCatalogo": {
+      "labelNombre": "Clasificación del producto",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "especificarCatalogo": {
+      "labelNombre": "Especificar Clasificación del producto",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "tipoProductoCatalogo": {
+      "labelNombre": "Tipo de producto",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "umcCatalogo": {
+      "labelNombre": "UMC",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 2,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    }
+  }
+  

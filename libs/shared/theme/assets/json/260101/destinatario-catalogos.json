@@ -1,0 +1,93 @@
+{
+    "paisCatalogo": {
+      "labelNombre": "País",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "estadoCatalogo": {
+      "labelNombre": "Estado/localidad",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "municipioCatalogo": {
+      "labelNombre": "Municipio/alcaldía",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "localidadCatalogo": {
+      "labelNombre": "Localidad",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "codigoCatalogo": {
+      "labelNombre": "Código postal o equivalente",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    },
+    "coloniaCatalogo": {
+      "labelNombre": "Colonia",
+      "required": true,
+      "primerOpcion": "Selecciona un valor",
+      "catalogos": [
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS"
+        },
+        {
+          "id": 1,
+          "descripcion": "ALIMENTOS-TEST"
+        }
+      ]
+    }
+  }
+  
