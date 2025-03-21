@@ -9,10 +9,169 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button name="agregarServicio" class="btn btn-primary mx-2">
+        <button
+          name="agregarServicio"
+          class="btn btn-primary mx-2"
+          (click)="openPropietarioModal()"
+        >
           Agregar
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  #propietarioModal
+  tabindex="-1"
+  aria-labelledby="modifyModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form [formGroup]="formTercerosDatos">
+        <div class="modal-body p-4">
+          <ng-titulo titulo="Agregar propietario"></ng-titulo>
+          <label>Datos generales</label>
+          <div class="row">
+            <div class="col-md-6">
+              <!-- <label class="mt-1 mb-3"> Terceros nacionalidad*: </label> -->
+              <div class="campos">
+                <div id="contenidoEtiquetaOpcionNacionalidad">
+                  <label for="tercerosNacionalidad"
+                    >Terceros nacionalidad
+                    <span class="require">* : </span></label
+                  >
+                </div>
+              </div>
+              <app-input-radio
+                [radioOptions]="propietarioRadioData"
+                [isRequired]="true"
+                [layout]="'vertical'"
+                [gap]="'50px'"
+                formControlName="terceros.nacionalidad"
+              ></app-input-radio>
+            </div>
+            <div class="col-md-6">
+              <label class="mt-1 mb-3" for="terceros.tipoPersona">
+                Tipo persona*:
+              </label>
+              <div
+                *ngFor="let option of propietarioTipoPersonaData; let i = index"
+                class="vertical"
+              >
+                <input
+                  type="radio"
+                  [value]="option.value"
+                  [checked]="selectedValue === option.value"
+                  (change)="onSelectionChange(option.value)"
+                  formControlName="terceros.tipoPersona"
+                />
+                <span class="radio-label">
+                  {{ option.label }}
+                  <ng-container *ngIf="i < 2">
+                    <i
+                      class="bi bi-question-circle-fill"
+                      title="Title"
+                      data-bs-toggle="tooltip"
+                    ></i>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="mt-1 mb-3" for="terceros.rfc"
+                >RFC <span class="require">*</span>:</label
+              >
+
+              <div class="d-flex flex-column">
+                <input
+                  type="text"
+                  id="terceros.rfc"
+                  formControlName="terceros.rfc"
+                  class="form-control"
+                  maxlength="254"
+                  [disabled]="true"
+                />
+                <div class="mt-auto">
+                  <button type="button" class="btn btn-secondary mt-2">
+                    Button Below RFC
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="mt-1 mb-3" for="terceros.curp">
+                CURP<span class="require">*</span>:</label
+              >
+              <div>
+                <input
+                  type="text"
+                  id="terceros.curp"
+                  formControlName="terceros.curp"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+          <div class="row">
+            <div id="contenidoRazonSocial" class="col-md-8 mb-3">
+              <label for="terceros.denominacionRazonSocial"
+                >Denominación/razón social
+                <span class="require">*</span>:</label
+              >
+
+              <div>
+                <input
+                  type="text"
+                  id="terceros_rSocial"
+                  formControlName="terceros.denominacionRazonSocial"
+                  class="form-control"
+                  maxlength="254"
+                  [disabled]="true"
+                />
+              </div>
+            </div>
+          </div>
+          <label >Domicillio
+
+          </label>
+          <div class="row">
+<div class="col-md-6">
+  <label for="terceros.denominacionRazonSocial"
+                >Denominación/razón social
+                <span class="require">*</span>:</label
+              >
+
+              <div>
+                <input
+                  type="text"
+                  id="terceros_rSocial"
+                  formControlName="terceros.denominacionRazonSocial"
+                  class="form-control"
+                  maxlength="254"
+                  [disabled]="true"
+                />
+</div>
+<div class="col-md-6">
+
+</div>
+<div class="col-md-6">
+
+</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Aceptar
+          </button>
+          <button type="button" class="btn btn-primary">Cancelar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

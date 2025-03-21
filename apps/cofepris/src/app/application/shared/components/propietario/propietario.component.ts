@@ -1,23 +1,55 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
-import { ConfiguracionColumna, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfiguracionColumna, InputRadioComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
+
+import  propietarioJson  from 'libs/shared/theme/assets/json/260401/propietario.json';
+
+import propietarioTipoPersonaJson from 'libs/shared/theme/assets/json/260401/propietarioTipoPersona.json';
+import { Modal } from 'bootstrap';
+
 @Component({
   selector: 'app-propietario',
   standalone: true,
-  imports: [CommonModule, TituloComponent ,TablaDinamicaComponent, ReactiveFormsModule,FormsModule ],
+  imports: [CommonModule, TituloComponent,InputRadioComponent ,TablaDinamicaComponent, ReactiveFormsModule,FormsModule ],
   templateUrl: './propietario.component.html',
   styleUrl: './propietario.component.scss',
 })
-export class PropietarioComponent {
-  propietarioData: PropietarioModel [] = [];
+export class PropietarioComponent implements AfterViewInit {
+
+  @ViewChild('propietarioModal', { static: false }) propietarioModal!: ElementRef;
+  formTercerosDatos!: FormGroup;
+  propietarioTipoPersonaData = propietarioTipoPersonaJson;
+  propietarioRadioData = propietarioJson;
+modalInstance!: Modal;  
+propietarioData: PropietarioModel [] = [];
+selectedValue: string = '';
+constructor(private fb: FormBuilder) { }
+
+
+ngAfterViewInit():void {
+  if (this.propietarioModal) {
+    this.modalInstance = new Modal(this.propietarioModal.nativeElement);
+  }
+}
     /** Enum para la selección de tabla */
     TablaSeleccion = TablaSeleccion;
+    ngOnInit():void{
+      this.formTercerosDatos = this.fb.group({
+        'terceros.nacionalidad': [{ value: null, disabled: false }, Validators.required],
+        'terceros.tipoPersona': [{ value: null, disabled: true }, Validators.required],
+        'terceros.rfc': [{ value: null, disabled: true }, Validators.required],
+        'terceros.curp': [{ value: null, disabled: true }, Validators.required , Validators.maxLength(254)],
+        'terceros.denominacionRazonSocial': [{ value: null, disabled: true }, Validators.required , Validators.maxLength(254)],
+      });
+    }
+    
+    
     /**
    * Configuración de columnas de la tabla
    * @type {ConfiguracionColumna<any>[]}
@@ -39,4 +71,19 @@ export class PropietarioComponent {
       { encabezado: 'Estado/localidad', clave: (item: PropietarioModel ) => item.estadoLocalidad, orden: 14 },
       { encabezado: 'Código postal', clave: (item: PropietarioModel ) => item.codigoPostal, orden: 15 }
     ];
+
+    openPropietarioModal() :void{
+      if (this.propietarioModal) {
+        this.modalInstance.show();
+      }
+    }
+    closePropietarioModal() :void{
+      if (this.propietarioModal) {
+        this.modalInstance.hide();
+    }
+}
+onSelectionChange(value: string): void {
+  this.selectedValue = value;
+  //this.FormInputRadio.get('seleccion')?.setValue(value);
+}
 }
