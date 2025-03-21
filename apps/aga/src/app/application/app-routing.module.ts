@@ -25,6 +25,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
+  },
+  {
     path: 'registro-cuentas-bancarias',
     loadChildren: () =>
       import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
