@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoUnoComponent } from './paso-uno.component';
 
 describe('PasoUnoComponent', () => {
@@ -8,9 +7,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent]
-    })
-    .compileComponents();
+      declarations: [PasoUnoComponent] 
+    }).compileComponents();
     
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;

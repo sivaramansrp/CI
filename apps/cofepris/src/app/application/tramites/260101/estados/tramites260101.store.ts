@@ -1,8 +1,9 @@
-import { Store, StoreConfig } from '@datorama/akita';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { Destinatario } from '../models/destinatario.model';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
 
 /**
  * Interfaz que representa el estado de la solicitud 260101.

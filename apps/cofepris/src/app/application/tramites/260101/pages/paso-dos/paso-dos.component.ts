@@ -51,6 +51,7 @@ export class PasoDosComponent implements OnInit {
     private catalogosServices: CatalogosService,
   ) {
     // Inicialización del componente
+    this.getTiposDocumentos();
   }
 
   /**
@@ -59,7 +60,6 @@ export class PasoDosComponent implements OnInit {
    * Obtiene los tipos de documentos y establece documentos preseleccionados.
    */
   ngOnInit(): void {
-    this.getTiposDocumentos();
     this.documentosSeleccionados = [
       {
         id: 1,
