@@ -77,3 +77,46 @@ export const USO_ESPECIFICO: string[] = [
   "FABRICACIÓN",
   "FORMULACIÓN"
 ];
+
+export const FABRICANTE_TABLA = [
+    { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
+    { encabezado: 'R.F.C', clave: 'rfc' },
+    { encabezado: 'CURP', clave: 'curp' },
+    { encabezado: 'Teléfono', clave: 'telefono' },
+    { encabezado: 'Correo electrónico', clave: 'correoElectronico' },
+    { encabezado: 'Calle', clave: 'calle' },
+    { encabezado: 'Número exterior', clave: 'numeroExterior' },
+    { encabezado: 'Número interior', clave: 'numeroInterior' },
+    { encabezado: 'País', clave: 'pais' },
+    { encabezado: 'Colonia', clave: 'colonia' },
+    { encabezado: 'Municipio o alcaldia', clave: 'municipio' },
+    { encabezado: 'Localidad', clave: 'localidad' },
+    { encabezado: 'Entidad federativa', clave: 'entidadFederativa' },
+    { encabezado: 'Estado/Localidad', clave: 'estado' },
+    { encabezado: 'Código postal.', clave: 'cp' },
+  ];
+
+
+export const OTROS_TABLA = [
+  { encabezado: 'Tercero nombre descripción', clave: 'tercero' },
+  { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
+  { encabezado: 'R.F.C', clave: 'rfc' },
+  { encabezado: 'CURP', clave: 'curp' },
+  { encabezado: 'Teléfono', clave: 'telefono' },
+  { encabezado: 'Correo electrónico', clave: 'correoElectronico' },
+  { encabezado: 'Calle', clave: 'calle' },
+  { encabezado: 'Número exterior', clave: 'numeroExterior' },
+  { encabezado: 'Número interior', clave: 'numeroInterior' },
+  { encabezado: 'País', clave: 'pais' },
+  { encabezado: 'Colonia', clave: 'colonia' },
+  { encabezado: 'Municipio o alcaldia', clave: 'municipio' },
+  { encabezado: 'Localidad', clave: 'localidad' },
+  { encabezado: 'Entidad federativa', clave: 'entidadFederativa' },
+  { encabezado: 'Estado/Localidad', clave: 'estado' },
+  { encabezado: 'Código postal.', clave: 'cp' },
+];
+
+export const PASO_ONE = 'Solicitud Importación de Medicamentos que sean o contengan Estupefacientes O Psicotrópicos';
+export const PASO_TWO = 'Cargar archivos';
+export const PASO_THREE = 'Cargar archivos';
+export const PASO_FOUR = 'Firmar';

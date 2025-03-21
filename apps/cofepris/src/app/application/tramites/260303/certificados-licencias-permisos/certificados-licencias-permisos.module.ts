@@ -13,6 +13,7 @@ import { TercerosRelacionadosComponent } from '../components/terceros-relacionad
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { provideHttpClient } from '@angular/common/http';
 import { CertificadosLicenciasPermisosService } from '../services/certificados-licencias-permisos.service';
+import { FabricanteModalComponent } from '../components/fabricante-modal/fabricante-modal.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { CertificadosLicenciasPermisosService } from '../services/certificados-l
     DatosDeLaSolicitudComponent,
     PagoDeDerechosComponent,
     TercerosRelacionadosComponent,
-    AlertComponent
+    AlertComponent,
+    FabricanteModalComponent
 ],
 providers: [
   BsModalService,

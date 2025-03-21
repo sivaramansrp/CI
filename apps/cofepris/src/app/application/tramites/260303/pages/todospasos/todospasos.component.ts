@@ -1,7 +1,7 @@
 /* eslint-disable sort-imports */
 import { Component, ViewChild } from '@angular/core';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/forma-render.model';
-import { PANTA_PASOS } from '../../services/certificados-licencias-permisos.enum';
+import { PANTA_PASOS, PASO_FOUR, PASO_ONE, PASO_THREE, PASO_TWO } from '../../services/certificados-licencias-permisos.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
@@ -20,6 +20,8 @@ export class TodospasosComponent {
   * Esta variable se utiliza para almacenar el índice del paso.
   */
  indice: number = 1;
+
+ titulo: string = PASO_ONE;
 
 
    /**
@@ -56,12 +58,34 @@ export class TodospasosComponent {
    * Este método se utiliza para inicializar el componente.
    */
    public getValorIndice(e: AccionBoton) {
+    this.getHeaderDatos();
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
+      }
+    }
+  }
+
+  public getHeaderDatos() {
+    switch (this.indice) {
+      case 1: {
+        this.titulo = PASO_TWO;
+        break;
+      }
+      case 2: {
+        this.titulo = PASO_THREE;
+        break;
+      }
+      case 3: {
+        this.titulo = PASO_FOUR;
+        break;
+      }
+      default: {
+        this.titulo = PASO_ONE;
+        break;
       }
     }
   }

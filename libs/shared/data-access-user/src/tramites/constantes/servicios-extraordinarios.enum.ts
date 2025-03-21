@@ -275,6 +275,11 @@ export const MANIFIESTOS = {
 };
 
 
+export const LASTABLA = {
+  Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+};
+
+
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 
 export const PASOS_REQUERIMIENTOS = [

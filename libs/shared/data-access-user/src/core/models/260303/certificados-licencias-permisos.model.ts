@@ -30,3 +30,40 @@ export interface MercanciasDatos {
   numeroDeReg: string,
   presentacion: string,
 }
+
+export interface Fabricante {
+  nombre: string,
+  rfc: string,
+  curp: string,
+  telefono: string,
+  correoElectronico: string,
+  calle: string,
+  numeroExterior: string,
+  numeroInterior: string,
+  pais: string,
+  colonia: string,
+  municipio: string,
+  localidad: string,
+  entidadFederativa: string,
+  estado: string,
+  cp: string,
+}
+
+export interface Otros {
+  tercero: string,
+  nombre: string,
+  rfc: string,
+  curp: string,
+  telefono: string,
+  correoElectronico: string,
+  calle: string,
+  numeroExterior: string,
+  numeroInterior: string,
+  pais: string,
+  colonia: string,
+  municipio: string,
+  localidad: string,
+  entidadFederativa: string,
+  estado: string,
+  cp: string,
+}

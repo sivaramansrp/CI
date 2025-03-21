@@ -69,4 +69,52 @@ export class CertificadosLicenciasPermisosService {
       })
     );
   }
+
+  public getFabricanteDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/fabricante-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getFacturadorDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/facturador-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getProveedorDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/proveedor-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getCertificadoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/certificado-analitico-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getOtrosDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/otros-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  public getBancoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/banco-catalog.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }
