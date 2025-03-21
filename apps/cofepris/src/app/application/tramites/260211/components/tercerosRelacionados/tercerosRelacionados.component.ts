@@ -397,6 +397,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       tipodenominacion: ['', Validators.required],
       tipopail: ['', Validators.required],
       numeroEstado: ['', Validators.required],
+      numeropostal: ['', Validators.required], // Added this control
+      nombreequivalente: ['', Validators.required], // Added this control
       numerosCalle: ['', Validators.required],
       numbroexperior: ['', Validators.required],
       numbrointerior: [''],
