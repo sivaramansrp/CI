@@ -2,12 +2,12 @@
     <ng-titulo titulo="Datos mercancía" />
     <form [formGroup]="datosMercanciaForm">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-8 ml">
                 <app-catalogo-select [catalogo]="clasificacionProducto" [label]="'Clasificación del producto*:'" [required]="true"
                     name="clasificacionProducto" formControlName="clasificacion">
                 </app-catalogo-select>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 ml">
                 <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto*:'"
                     [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getMunicipios()">
                 </app-catalogo-select>
@@ -38,7 +38,7 @@
                     <input class="form-control" type="text" id="tipoDeProducto" formControlName="tipoDeProducto">
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8 ml">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico*:'" [required]="true"
                     name="estadoFisico" formControlName="estadoFisico">

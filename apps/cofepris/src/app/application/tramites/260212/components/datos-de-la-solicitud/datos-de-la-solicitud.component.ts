@@ -19,7 +19,7 @@ import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancia
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 // eslint-disable-next-line sort-imports
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 // eslint-disable-next-line sort-imports
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -54,6 +54,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   selectedEstado$: Observable<catalogoResponse | null> =
     this.tramite260212Query.selectedEstado$;
   /** Catálogo de estados cargado desde un archivo JSON */
+
+  rfcDelResponsableSanitario$ = this.tramite260212Query.selectedRfcDelResponsableSanitario$;
+
+  denominacionRazonSocial$ = this.tramite260212Query.selectedDenominacionRazonSocial$
+
+  correoElectronico$ = this.tramite260212Query.selectedCorreoElectronico$
+  municipio$ = this.tramite260212Query.selectedMunicipio$
+  localidad$ = this.tramite260212Query.selectedLocalidad$
+  colonia$ = this.tramite260212Query.selectedColonia$
 
   /** Formulario principal de datos del establecimiento */
   datosEstablecimientoForm!: FormGroup;
@@ -130,7 +139,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(private solicitudService: SolicitudService, private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query
-  // eslint-disable-next-line no-empty-function
+    // eslint-disable-next-line no-empty-function
   ) { }
 
   /**
@@ -155,7 +164,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosEstablecimientoForm.get('estado')?.setValue(selectedEstado);
       }
     });
-
+    this.rfcDelResponsableSanitario$.pipe(takeUntil(this.destroy$)).subscribe((rfcDelResponsableSanitario) => {
+      if (rfcDelResponsableSanitario) {
+        this.datosEstablecimientoForm.get('rfcDelResponsableSanitario')?.setValue(rfcDelResponsableSanitario);
+      }
+    });
+    this.denominacionRazonSocial$.pipe(takeUntil(this.destroy$)).subscribe((denominacionRazonSocial) => {
+      if (denominacionRazonSocial) {
+        this.datosEstablecimientoForm.get('denominacionRazonSocial')?.setValue(denominacionRazonSocial);
+      }
+    });
+    this.correoElectronico$.pipe(takeUntil(this.destroy$)).subscribe((correoElectronico) => {
+      if (correoElectronico) {
+        this.datosEstablecimientoForm.get('correoElectronico')?.setValue(correoElectronico);
+      }
+    });
+    this.municipio$.pipe(takeUntil(this.destroy$)).subscribe((municipio) => {
+      if (municipio) {
+        this.datosEstablecimientoForm.get('municipio')?.setValue(municipio);
+      }
+    });
+    this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
+      if (localidad) {
+        this.datosEstablecimientoForm.get('localidad')?.setValue(localidad);
+      }
+    });
+    this.colonia$.pipe(takeUntil(this.destroy$)).subscribe((colonia) => {
+      if (colonia) {
+        this.datosEstablecimientoForm.get('colonia')?.setValue(colonia);
+      }
+    });
   }
 
   /**
@@ -266,6 +304,49 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   getMunicipios(): void {
     const SELECTED_ESTADO = this.datosEstablecimientoForm.get('estado')?.value;
     this.tramite260212Store.setSelectedEstado(SELECTED_ESTADO);
+  }
+
+  /**
+   * Obtiene el rfcDelResponsableSanitario seleccionado del formulario y lo guarda en el store
+   */
+  updateRfcDelResponsableSanitario(): void {
+    const RFC = this.datosEstablecimientoForm.get('rfcDelResponsableSanitario')?.value;
+    this.tramite260212Store.setRfcDelResponsableSanitario(RFC);
+  }
+  /**
+    * Obtiene el denominacionRazonSocial seleccionado del formulario y lo guarda en el store
+    */
+  updateDenominacionRazonSocial(): void {
+    const RFC = this.datosEstablecimientoForm.get('denominacionRazonSocial')?.value;
+    this.tramite260212Store.setDenominacionRazonSocial(RFC);
+  }
+  /**
+     * Obtiene el correoElectronico seleccionado del formulario y lo guarda en el store
+     */
+  updateCorreoElectronico(): void {
+    const CORREO= this.datosEstablecimientoForm.get('correoElectronico')?.value;
+    this.tramite260212Store.setCorreoElectronico(CORREO);
+  }
+  /**
+     * Obtiene el municipio seleccionado del formulario y lo guarda en el store
+     */
+  updateMunicipio(): void {
+    const MUNICIPIO = this.datosEstablecimientoForm.get('municipio')?.value;
+    this.tramite260212Store.setMunicipio(MUNICIPIO);
+  }
+  /**
+     * Obtiene el localidad seleccionado del formulario y lo guarda en el store
+     */
+  updateLocalidad(): void {
+    const LOCALIDAD = this.datosEstablecimientoForm.get('localidad')?.value;
+    this.tramite260212Store.setLocalidad(LOCALIDAD);
+  }
+  /**
+     * Obtiene el colonia seleccionado del formulario y lo guarda en el store
+     */
+  updateColonia(): void {
+    const COLONIA = this.datosEstablecimientoForm.get('colonia')?.value;
+    this.tramite260212Store.setColonia(COLONIA);
   }
 
   /*

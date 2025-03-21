@@ -6,6 +6,8 @@ import { CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user
 
 import { FormControl } from '@angular/forms';
 
+import Procedencia from 'libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
+
 @Component({
   selector: 'app-pais-de-origin',
   standalone: true,
@@ -19,15 +21,15 @@ export class PaisDeOriginComponent {
   /**
  * Arreglo para almacenar el rango de días seleccionables.
  */
-  selectRangoDias: string[] = [];
+  selectRangoDias = Procedencia;
   /**
  * Arreglo para almacenar las fechas seleccionadas por el usuario.
  */
-  fechasSeleccionadas: string[] = [];
+  fechasSeleccionadas: string[] = Procedencia;
   /**
    * Arreglo para almacenar los datos relacionados con las fechas.
    */
-  fechasDatos: string[] = [];
+  fechasDatos: string[] = Procedencia;
 
   /**
    * Constructor de la clase PaisDeOriginComponent.
@@ -106,7 +108,7 @@ export class PaisDeOriginComponent {
     } else {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       const fechaValor = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
+      this.fechasSeleccionadas?.push(this.fechasDatos[fechaValor]);
       this.fechasDatos.splice(fechaValor, 1);
     }
   }
@@ -121,9 +123,9 @@ export class PaisDeOriginComponent {
       this.fechasSeleccionadas = [];
     } else {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const fechaValor = this.fechaSeleccionada.value.map(Number);
+      const fechaValor = this.fechaSeleccionada?.value.map(Number);
       this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas.splice(fechaValor, 1);
+      this.fechasSeleccionadas?.splice(fechaValor, 1);
     }
   }
 

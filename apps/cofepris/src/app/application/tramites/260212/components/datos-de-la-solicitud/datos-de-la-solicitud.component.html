@@ -36,14 +36,14 @@
             <div class="form-group">
               <label class="form-label" for="rfcDelResponsableSanitario">RFC del responsable sanitario:</label>
               <input class="form-control" type="text" id="rfcDelResponsableSanitario"
-                formControlName="rfcDelResponsableSanitario">
+                formControlName="rfcDelResponsableSanitario" (input)="updateRfcDelResponsableSanitario()">
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
               <input class="form-control" type="text" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial">
+                formControlName="denominacionRazonSocial" (input)="updateDenominacionRazonSocial()">
             </div>
           </div>
           <div class="col-md-4">
@@ -51,7 +51,7 @@
               <label class="form-label" for="correoElectronico">Correo electrónico*:
                 <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" data-bs-toggle="tooltip"></span>
               </label>
-              <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico">
+              <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"(input)="updateCorreoElectronico()">
             </div>
           </div>
         </div>
@@ -76,21 +76,21 @@
             <div class="form-group">
               <label class="form-label" for="municipioAlcaldía">Municipio o alcaldía*:
               </label>
-              <input type="text" class="form-control" id="municipioAlcaldía" formContolName="municipio">
+              <input type="text" class="form-control" id="municipioAlcaldía" formContolName="municipio" (input)="updateMunicipio()">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="localidad">Localidad:
               </label>
-              <input type="text" class="form-control" id="localidad" formControlName="localidad">
+              <input type="text" class="form-control" id="localidad" formControlName="localidad" (input)="updateLocalidad()">
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label" for="colonia">Colonia:
               </label>
-              <input type="text" class="form-control" id="colonia" formControlName="colonia">
+              <input type="text" class="form-control" id="colonia" formControlName="colonia" (input)="updateColonia()">
             </div>
           </div>
           <div class="col-md-8">
