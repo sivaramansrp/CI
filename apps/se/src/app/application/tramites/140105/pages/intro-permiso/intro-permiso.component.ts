@@ -64,7 +64,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
-    txtBtnAnt: 'Guardar',
+    txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
 
