@@ -14,9 +14,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-check">
-            <input class="form-check-input me-2" type="radio" name="clave" formControlName="clave"
+            <input class="form-check-input me-2" type="radio" name="regimen" formControlName="regimen"
               value="definitivos" id="definitivos"
-              (change)="setValoresStore(tipoRegimen,'clave', 'setClave')" />
+              (change)="setValoresStore(tipoRegimen,'regimen', 'setRegimen')" />
             <label class="form-check-label" for="definitivos">Definitivos</label>
           </div>
         </div>
@@ -24,9 +24,9 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-check">
-            <input class="form-check-input me-2" type="radio" name="clave" formControlName="clave"
+            <input class="form-check-input me-2" type="radio" name="regimen" formControlName="regimen"
               value="temporales" id="temporales"
-              (change)="setValoresStore(tipoRegimen,'clave', 'setClave')" />
+              (change)="setValoresStore(tipoRegimen,'regimen', 'setRegimen')" />
             <label class="form-check-label" for="temporales">Reexportación</label>
           </div>
         </div>
@@ -34,7 +34,7 @@
     </ng-container>
 
     <ng-titulo titulo="Aduana" />
-    <ng-container formGroupName="aduanaForm">
+    <ng-container formGroupName="aduanasSalida">
       <div class="row">
         <div class="col-md-12">
           <label class="form-label">Aduanas de entradas (M&aacute;ximo 3 aduanas)</label>
@@ -44,9 +44,9 @@
       </div>
       <div class="row mt-5">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="tipoDeProducto" [label]="'Tipo de producto'"
+          <app-catalogo-select [catalogo]="options" formControlName="tipoProducto" [label]="'Tipo de producto'"
             [required]="true"
-            (change)="setValoresStore(aduanaForm,'tipoDeProducto', 'setTipoDeProducto');"></app-catalogo-select>
+            (change)="setValoresStore(aduanasSalida,'tipoProducto', 'setTipoProducto');"></app-catalogo-select>
         </div>
       </div>
 
@@ -60,9 +60,9 @@
 
       <div class="row mt-5">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="paisDeProcedencia"
+          <app-catalogo-select [catalogo]="options" formControlName="paisProcedencia"
             [label]="'Pa&iacute;s de procedencia'" [required]="true"
-            (change)="setValoresStore(aduanaForm,'paisDeProcedencia', 'setPaisDeProcedencia');"></app-catalogo-select>
+            (change)="setValoresStore(aduanasSalida,'paisProcedencia', 'setPaisProcedencia');"></app-catalogo-select>
         </div>
       </div>
 
@@ -77,7 +77,7 @@
       <div class="row mt-5">
         <div class="col-md-12" *ngFor="let option of disponsibleAduanaCheckboxes; let i = index">
           <label>
-            <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="onCheckboxChange($event, i)" />
+            <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="onCheckboxChange($event, i)" [disabled]="option.disabled" />
             {{ option.name }}
           </label>
         </div>
@@ -85,9 +85,9 @@
 
       <div class="row mt-5">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="clasificacionMercancias"
+          <app-catalogo-select [catalogo]="options" formControlName="clasificacionMercancia"
             [label]="'Clasificaci&oacute;n mercanc&iacute;as'" [required]="true"
-            (change)="setValoresStore(aduanaForm,'clasificacionMercancias', 'setClasificacionMercancias');"></app-catalogo-select>
+            (change)="setValoresStore(aduanasSalida,'clasificacionMercancia', 'setClasificacionMercancia');"></app-catalogo-select>
         </div>
       </div>
 
@@ -100,20 +100,20 @@
     </ng-container>
 
     <ng-titulo titulo="Mercancía" />
-    <ng-container formGroupName="mercanciaForm">
+    <ng-container formGroupName="mercancia">
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="fraccionArancelaria"
             [label]="'Fracción arancelaria'" [required]="true"
-            (change)="setValoresStore(mercanciaForm,'fraccionArancelaria', 'setFraccionArancelaria')"></app-catalogo-select>
+            (change)="setValoresStore(mercancia,'fraccionArancelaria', 'setFraccionArancelaria')"></app-catalogo-select>
         </div>
         <div class="col-md-5">
           <div class="form-group">
             <label class="form-label" for="descFraccionArancelaria">Decripción de la fracción arancelaria*:</label>
             <input class="form-control" id="descFraccionArancelaria" placeholder="Decripción Fraccion Arancelaria"
               type="text" formControlName="descFraccionArancelaria"
-              [ngClass]="isValid(mercanciaForm,'descFraccionArancelaria') ? 'required' : ''"
-              (change)="setValoresStore(mercanciaForm,'descFraccionArancelaria', 'setDescFraccionArancelaria')" />
+              [ngClass]="isValid(mercancia,'descFraccionArancelaria') ? 'required' : ''"
+              (change)="setValoresStore(mercancia,'descFraccionArancelaria', 'setDescFraccionArancelaria')" />
           </div>
         </div>
 
@@ -121,8 +121,8 @@
           <div class="form-group">
             <label class="form-label" for="cantidad">Cantidad*:</label>
             <input class="form-control" id="cantidad" placeholder="Cantidad" type="text" formControlName="cantidad"
-              [ngClass]="isValid(mercanciaForm,'cantidad') ? 'required' : ''"
-              (change)="setValoresStore(mercanciaForm,'cantidad', 'setCantidad')" />
+              [ngClass]="isValid(mercancia,'cantidad') ? 'required' : ''"
+              (change)="setValoresStore(mercancia,'cantidad', 'setCantidad')" />
           </div>
         </div>
 
@@ -133,8 +133,8 @@
           <div class="form-group">
             <label class="form-label" for="cantidadLetra">Cantidad(letra):</label>
             <input class="form-control" id="cantidadLetra" placeholder="Cantidad Letra" type="text"
-              formControlName="cantidadLetra" [ngClass]="isValid(mercanciaForm,'cantidadLetra') ? 'required' : ''"
-              (change)="setValoresStore(mercanciaForm,'cantidadLetra', 'setCantidadLetra')" />
+              formControlName="cantidadLetra" [ngClass]="isValid(mercancia,'cantidadLetra') ? 'required' : ''"
+              (change)="setValoresStore(mercancia,'cantidadLetra', 'setCantidadLetra')" />
           </div>
         </div>
       </div>
@@ -142,20 +142,20 @@
     </ng-container>
 
     <ng-titulo titulo="Detalle" />
-    <ng-container formGroupName="detalleForm">
+    <ng-container formGroupName="detelle">
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="genero" [label]="'Gen&eacute;ro'" [required]="true"
-            (change)="setValoresStore(detalleForm,'genero', 'setGenero')"></app-catalogo-select>
+            (change)="setValoresStore(detelle,'genero', 'setGenero')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="especie" [label]="'Especie'" [required]="true"
-            (change)="setValoresStore(detalleForm,'especie', 'setEspecie')"></app-catalogo-select>
+            (change)="setValoresStore(detelle,'especie', 'setEspecie')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="nombreComun" [label]="'Nombre com&uacute;n'"
             [required]="true"
-            (change)="setValoresStore(detalleForm,'nombreComun', 'setNombreComun')"></app-catalogo-select>
+            (change)="setValoresStore(detelle,'nombreComun', 'setNombreComun')"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5">
@@ -219,12 +219,12 @@
 
       <div class="row">
         <div class="col-md-8">
-          <app-catalogo-select [catalogo]="options" formControlName="descDelProducto" [label]="'Descripción del producto'" [required]="true"
-            (change)="setValoresStore(detalleForm,'descDelProducto', 'setDescDelProducto')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="options" formControlName="descripcionProducto" [label]="'Descripción del producto'" [required]="true"
+            (change)="setValoresStore(detelle,'descripcionProducto', 'setDescripcionProducto')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="options" formControlName="unidadDeMedida" [label]="'Unidad de medida'" [required]="true"
-            (change)="setValoresStore(detalleForm,'unidadDeMedida', 'setUnidadDeMedida')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="options" formControlName="cantidadUMC" [label]="'Unidad de medida'" [required]="true"
+            (change)="setValoresStore(detelle,'cantidadUMC', 'setCantidadUMC')"></app-catalogo-select>
         </div>
       </div>
     </ng-container>

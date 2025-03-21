@@ -189,12 +189,12 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   }
 
   /**
-  * Obtiene el grupo de formulario 'aduanaForm' del formulario principal 'FormSolicitud'.
+  * Obtiene el grupo de formulario 'aduanasSalida' del formulario principal 'FormSolicitud'.
   *
-  * @returns {FormGroup} El grupo de formulario 'aduanaForm'.
+  * @returns {FormGroup} El grupo de formulario 'aduanasSalida'.
   */
-  get aduanaForm(): FormGroup {
-    return this.FormSolicitud.get('aduanaForm') as FormGroup;
+  get aduanasSalida(): FormGroup {
+    return this.FormSolicitud.get('aduanasSalida') as FormGroup;
   }
 
   /**
@@ -203,43 +203,25 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   * @returns {FormGroup} El grupo de formulario 'selectedOptions'.
   */
   get selectedOptions(): FormArray {
-    return this.aduanaForm.get('selectedOptions') as FormArray;
+    return this.aduanasSalida.get('selectedOptions') as FormArray;
   }
 
   /**
-  * Obtiene el grupo de formulario 'fechasDatos' del formulario principal 'FormSolicitud'.
+  * Obtiene el grupo de formulario 'mercancia' del formulario principal 'FormSolicitud'.
   *
-  * @returns {FormGroup} El grupo de formulario 'fechasDatos'.
+  * @returns {FormGroup} El grupo de formulario 'mercancia'.
   */
-  get fechasDatos(): FormArray {
-    return this.aduanaForm.get('fechasDatos') as FormArray;
+  get mercancia(): FormGroup {
+    return this.FormSolicitud.get('mercancia') as FormGroup;
   }
 
   /**
-  * Obtiene el grupo de formulario 'fechasSeleccionadas' del formulario principal 'FormSolicitud'.
+  * Obtiene el grupo de formulario 'detelle' del formulario principal 'FormSolicitud'.
   *
-  * @returns {FormGroup} El grupo de formulario 'fechasSeleccionadas'.
+  * @returns {FormGroup} El grupo de formulario 'detelle'.
   */
-  get fechasSeleccionadas(): FormArray {
-    return this.aduanaForm.get('fechasSeleccionadas') as FormArray;
-  }
-
-  /**
-  * Obtiene el grupo de formulario 'mercanciaForm' del formulario principal 'FormSolicitud'.
-  *
-  * @returns {FormGroup} El grupo de formulario 'mercanciaForm'.
-  */
-  get mercanciaForm(): FormGroup {
-    return this.FormSolicitud.get('mercanciaForm') as FormGroup;
-  }
-
-  /**
-  * Obtiene el grupo de formulario 'detalleForm' del formulario principal 'FormSolicitud'.
-  *
-  * @returns {FormGroup} El grupo de formulario 'detalleForm'.
-  */
-  get detalleForm(): FormGroup {
-    return this.FormSolicitud.get('detalleForm') as FormGroup;
+  get detelle(): FormGroup {
+    return this.FormSolicitud.get('detelle') as FormGroup;
   }
 
   /**
@@ -257,28 +239,26 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   crearFormulario(): void {
     this.FormSolicitud = this.fb.group({
       tipoRegimen: this.fb.group({
-        clave: [this.solicitudState?.clave, Validators.required]
+        regimen: [this.solicitudState?.regimen, Validators.required]
       }),
-      aduanaForm: this.fb.group({
-        tipoDeProducto: [this.solicitudState?.tipoDeProducto, Validators.required],
-        paisDeProcedencia: [this.solicitudState?.paisDeProcedencia, Validators.required],
+      aduanasSalida: this.fb.group({
+        tipoProducto: [this.solicitudState?.tipoProducto, Validators.required],
+        paisProcedencia: [this.solicitudState?.paisProcedencia, Validators.required],
         selectedOptions: this.fb.array(this.solicitudState?.selectedOptions),
-        clasificacionMercancias: [this.solicitudState?.clasificacionMercancias, Validators.required],
-        fechasDatos: this.fb.array(this.solicitudState?.fechasDatos),
-        fechasSeleccionadas: this.fb.array(this.solicitudState?.fechasSeleccionadas)
+        clasificacionMercancia: [this.solicitudState?.clasificacionMercancia, Validators.required]
       }),
-      mercanciaForm: this.fb.group({
+      mercancia: this.fb.group({
         fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
         descFraccionArancelaria: [{ value: this.solicitudState?.descFraccionArancelaria, disabled: true }, Validators.required],
-        cantidad: [this.solicitudState?.cantidad, Validators.required],
+        cantidad: [this.solicitudState?.cantidad, [Validators.required, Validators.maxLength(16)]],
         cantidadLetra: [{ value: this.solicitudState?.cantidadLetra, disabled: true }]
       }),
-      detalleForm: this.fb.group({
+      detelle: this.fb.group({
         genero: [this.solicitudState?.genero, Validators.required],
         especie: [this.solicitudState?.especie, Validators.required],
         nombreComun: [this.solicitudState?.nombreComun, Validators.required],
-        descDelProducto:[this.solicitudState?.descDelProducto, Validators.required],
-        unidadDeMedida: [this.solicitudState?.unidadDeMedida, Validators.required]
+        descripcionProducto:[this.solicitudState?.descripcionProducto, Validators.required],
+        cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required]
       }),
       manifiestosForm: this.fb.group({
         manifiestosYdesc: [this.solicitudState?.manifiestosYdesc, Validators.required]
@@ -289,7 +269,7 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   onCheckboxChange(event: Event, index: number): void {
     const INPUT_ELEMENT = event.target as HTMLInputElement;
     this.selectedOptions.controls[index].setValue(INPUT_ELEMENT.checked);
-    this.setValoresStore(this.aduanaForm, 'selectedOptions', 'setSelectedOptions');
+    this.setValoresStore(this.aduanasSalida, 'selectedOptions', 'setSelectedOptions');
   }
 
 

@@ -2,22 +2,22 @@
   <ng-titulo titulo="Pago de derechos" />
   <div>
     <form [formGroup]="FormSolicitud">
-      <ng-container formGroupName="datosImportadorExportador">
+      <ng-container formGroupName="pagodeDerechos">
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="claveDeReferencia">Clave de referencia:</label>
+              <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
               <input class="form-control" id="claveDeReferencia" formControlName="claveDeReferencia" type="text"
-                [ngClass]="isValid(datosImportadorExportador,'claveDeReferencia') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'claveDeReferencia', 'setClaveDeReferencia')" />
+                [ngClass]="isValid(pagodeDerechos,'claveDeReferencia') ? 'required' : ''"
+                (change)="setValoresStore(pagodeDerechos,'claveDeReferencia', 'setClaveDeReferencia')" />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="cadenaDependencia">Cadena de la dependencia*:</label>
-              <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia" type="text"
-                [ngClass]="isValid(datosImportadorExportador,'cadenaDependencia') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'cadenaDependencia', 'setCadenaDependencia')"
+              <label class="form-label" for="cadenaPagoDependencia">Cadena de la dependencia*:</label>
+              <input class="form-control" id="cadenaPagoDependencia" formControlName="cadenaPagoDependencia" type="text"
+                [ngClass]="isValid(pagodeDerechos,'cadenaPagoDependencia') ? 'required' : ''"
+                (change)="setValoresStore(pagodeDerechos,'cadenaPagoDependencia', 'setCadenaPagoDependencia')"
                 appUppercase />
             </div>
           </div>
@@ -26,7 +26,7 @@
               <div class="form-group">
                 <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" formControlName="banco" [label]="'Banco'"
                   [required]="true"
-                  (change)="setValoresStore(datosImportadorExportador,'banco', 'setBanco');"></app-catalogo-select>
+                  (change)="setValoresStore(pagodeDerechos,'banco', 'setBanco');"></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -37,26 +37,26 @@
             <div class="form-group">
               <label class="form-label" for="llaveDePago">Llave de pago*:</label>
               <input class="form-control" id="llaveDePago" formControlName="llaveDePago" type="text"
-                [ngClass]="isValid(datosImportadorExportador,'llaveDePago') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'llaveDePago', 'setllaveDePago')" />
+                [ngClass]="isValid(pagodeDerechos,'llaveDePago') ? 'required' : ''"
+                (change)="setValoresStore(pagodeDerechos,'llaveDePago', 'setllaveDePago')" />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="fechaPago">Fecha de pago*:</label>
-              <input class="form-control" id="fechaPago" formControlName="fechaPago" type="date"
-                [ngClass]="isValid(datosImportadorExportador,'fechaPago') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'fechaPago', 'setFechaPago')" />
+              <label class="form-label" for="fecPago">Fecha de pago*:</label>
+              <input class="form-control" id="fecPago" formControlName="fecPago" type="date"
+                [ngClass]="isValid(pagodeDerechos,'fecPago') ? 'required' : ''"
+                (change)="setValoresStore(pagodeDerechos,'fecPago', 'setFecPago')" />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="importePago">Importe de pago*:</label>
-              <input class="form-control" id="importePago" formControlName="importePago" type="text"
-                [ngClass]="isValid(datosImportadorExportador,'importePago') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'importePago', 'setImportePago')" appUppercase />
+              <label class="form-label" for="impPago">Importe de pago*:</label>
+              <input class="form-control" id="impPago" formControlName="impPago" type="text"
+                [ngClass]="isValid(pagodeDerechos,'impPago') ? 'required' : ''"
+                (change)="setValoresStore(pagodeDerechos,'impPago', 'setImpPago')" appUppercase />
             </div>
           </div>
         </div>

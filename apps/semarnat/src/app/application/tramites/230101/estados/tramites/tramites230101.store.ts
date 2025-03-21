@@ -6,30 +6,21 @@ import { Injectable } from '@angular/core';
  * Interfaz que define el estado del trámite 230101.
  */
 export interface Solicitud230101State {
-  /**
-   * Lista de fechas disponibles para los datos.
-   */
-  fechasDatos: string[];
-
-  /**
-   * Lista de fechas seleccionadas.
-   */
-  fechasSeleccionadas: string[];
 
   /**
    * Valor clave del trámite.
    */
-  clave: string;
+  regimen: string;
 
   /**
    * Tipo de producto relacionado con el trámite.
    */
-  tipoDeProducto: string;
+  tipoProducto: string;
 
   /**
    * País de procedencia del producto.
    */
-  paisDeProcedencia: string;
+  paisProcedencia: string;
 
   /**
    * Opciones seleccionadas en el trámite.
@@ -39,7 +30,7 @@ export interface Solicitud230101State {
   /**
    * Clasificación de las mercancías.
    */
-  clasificacionMercancias: string;
+  clasificacionMercancia: string;
 
   /**
    * Fracción arancelaria del producto.
@@ -79,27 +70,18 @@ export interface Solicitud230101State {
   /**
    * Descripción del producto.
    */
-  descDelProducto: string;
+  descripcionProducto: string;
 
   /**
    * Unidad de medida del producto.
    */
-  unidadDeMedida: string;
+  cantidadUMC: string;
 
   /**
    * Indica si hay manifiestos y descripción.
    */
   manifiestosYdesc: boolean;
 
-  /**
-   * Indica si el trámite está exento de pago.
-   */
-  exentoDePago: string;
-
-  /**
-   * Justificación del trámite.
-   */
-  justificacion: string;
 
   /**
    * Clave de referencia del trámite.
@@ -109,7 +91,7 @@ export interface Solicitud230101State {
   /**
    * Cadena de dependencia asociada al trámite.
    */
-  cadenaDependencia: string;
+  cadenaPagoDependencia: string;
 
   /**
    * Banco relacionado con el trámite.
@@ -124,12 +106,12 @@ export interface Solicitud230101State {
   /**
    * Fecha de pago del trámite.
    */
-  fechaPago: string;
+  fecPago: string;
 
   /**
    * Importe del pago realizado.
    */
-  importePago: string;
+  impPago: string;
 }
 
 /**
@@ -138,13 +120,11 @@ export interface Solicitud230101State {
  */
 export function createInitialSolicitudState(): Solicitud230101State {
   return {
-    fechasDatos: ['test 1', 'test 2'],
-    fechasSeleccionadas: ['test 3'],
-    clave: 'definitivos',
-    tipoDeProducto: '',
-    paisDeProcedencia: '',
+    regimen: 'definitivos',
+    tipoProducto: '',
+    paisProcedencia: '',
     selectedOptions: [false, false, false],
-    clasificacionMercancias: '',
+    clasificacionMercancia: '',
     fraccionArancelaria: '',
     descFraccionArancelaria: '',
     cantidad: '',
@@ -152,17 +132,15 @@ export function createInitialSolicitudState(): Solicitud230101State {
     genero: '',
     especie: '',
     nombreComun: '',
-    descDelProducto: '',
-    unidadDeMedida: '',
+    descripcionProducto: '',
+    cantidadUMC: '',
     manifiestosYdesc: false,
-    exentoDePago: 'No',
-    justificacion: '',
-    claveDeReferencia: '',
-    cadenaDependencia: '',
+    claveDeReferencia: '084001061',
+    cadenaPagoDependencia: '084001061342',
     banco: '',
     llaveDePago: '',
-    fechaPago: '',
-    importePago: ''
+    fecPago: '',
+    impPago: '1866'
   };
 }
 
@@ -182,32 +160,32 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
    * Actualiza el valor de la propiedad clave.
    * @param {string} clave - Nuevo valor para clave.
    */
-  public setClave(clave: string): void {
+  public setRegimen(regimen: string): void {
     this.update((state) => ({
       ...state,
-      clave
+      regimen
     }));
   }
 
   /**
    * Actualiza el valor del tipo de producto.
-   * @param {string} tipoDeProducto - Nuevo valor para tipo de producto.
+   * @param {string} tipoProducto - Nuevo valor para tipo de producto.
    */
-  public setTipoDeProducto(tipoDeProducto: string): void {
+  public setTipoProducto(tipoProducto: string): void {
     this.update((state) => ({
       ...state,
-      tipoDeProducto
+      tipoProducto
     }));
   }
 
   /**
    * Actualiza el país de procedencia.
-   * @param {string} paisDeProcedencia - Nuevo valor para país de procedencia.
+   * @param {string} paisProcedencia - Nuevo valor para país de procedencia.
    */
-  public setPaisDeProcedencia(paisDeProcedencia: string): void {
+  public setPaisProcedencia(paisProcedencia: string): void {
     this.update((state) => ({
       ...state,
-      paisDeProcedencia
+      paisProcedencia
     }));
   }
 
@@ -224,12 +202,12 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
 
   /**
    * Actualiza la clasificación de mercancías.
-   * @param {string} clasificacionMercancias - Nueva clasificación de mercancías.
+   * @param {string} clasificacionMercancia - Nueva clasificación de mercancías.
    */
-  public setClasificacionMercancias(clasificacionMercancias: string): void {
+  public setClasificacionMercancia(clasificacionMercancia: string): void {
     this.update((state) => ({
       ...state,
-      clasificacionMercancias
+      clasificacionMercancia
     }));
   }
 
@@ -312,12 +290,12 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
 
   /**
    * Actualiza la descripción del producto.
-   * @param {string} descDelProducto - Nueva descripción del producto.
+   * @param {string} descripcionProducto - Nueva descripción del producto.
    */
-  public setDescDelProducto(descDelProducto: string): void {
+  public setDescripcionProducto(descripcionProducto: string): void {
     this.update((state) => ({
       ...state,
-      descDelProducto
+      descripcionProducto
     }));
   }
 
@@ -325,10 +303,10 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
    * Actualiza la unidad de medida.
    * @param {string} unidadDeMedida - Nueva unidad de medida.
    */
-  public setUnidadDeMedida(unidadDeMedida: string): void {
+  public setCantidadUMC(cantidadUMC: string): void {
     this.update((state) => ({
       ...state,
-      unidadDeMedida
+      cantidadUMC
     }));
   }
 
@@ -340,28 +318,6 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
     this.update((state) => ({
       ...state,
       manifiestosYdesc
-    }));
-  }
-
-  /**
-   * Actualiza si está exento de pago.
-   * @param {string} exentoDePago - Nuevo valor para exento de pago.
-   */
-  public setExentoDePago(exentoDePago: string): void {
-    this.update((state) => ({
-      ...state,
-      exentoDePago
-    }));
-  }
-
-  /**
-   * Actualiza la justificación.
-   * @param {string} justificacion - Nueva justificación.
-   */
-  public setJustificacion(justificacion: string): void {
-    this.update((state) => ({
-      ...state,
-      justificacion
     }));
   }
 
@@ -378,12 +334,12 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
 
   /**
    * Actualiza la cadena de dependencia.
-   * @param {string} cadenaDependencia - Nueva cadena de dependencia.
+   * @param {string} cadenaPagoDependencia - Nueva cadena de dependencia.
    */
-  public setCadenaDependencia(cadenaDependencia: string): void {
+  public setCadenaPagoDependencia(cadenaPagoDependencia: string): void {
     this.update((state) => ({
       ...state,
-      cadenaDependencia
+      cadenaPagoDependencia
     }));
   }
 
@@ -411,23 +367,23 @@ export class Solicitud230101Store extends Store<Solicitud230101State> {
 
   /**
    * Actualiza la fecha de pago.
-   * @param {string} fechaPago - Nueva fecha de pago.
+   * @param {string} fecPago - Nueva fecha de pago.
    */
-  public setFechaPago(fechaPago: string): void {
+  public setFecPago(fecPago: string): void {
     this.update((state) => ({
       ...state,
-      fechaPago
+      fecPago
     }));
   }
 
   /**
    * Actualiza el importe de pago.
-   * @param {string} importePago - Nuevo importe de pago.
+   * @param {string} impPago - Nuevo importe de pago.
    */
-  public setImportePago(importePago: string): void {
+  public setImpPago(impPago: string): void {
     this.update((state) => ({
       ...state,
-      importePago
+      impPago
     }));
   }
 }

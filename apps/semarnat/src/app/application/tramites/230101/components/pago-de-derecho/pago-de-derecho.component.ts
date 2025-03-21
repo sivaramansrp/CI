@@ -98,13 +98,13 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.FormSolicitud = this.fb.group({
-      datosImportadorExportador: this.fb.group({
-        claveDeReferencia: [this.derechoState?.claveDeReferencia, Validators.required],
-        cadenaDependencia: [{ value: this.derechoState?.cadenaDependencia, disabled: true }, Validators.required],
+      pagodeDerechos: this.fb.group({
+        claveDeReferencia: [{ value: this.derechoState?.claveDeReferencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
+        cadenaPagoDependencia: [{ value: this.derechoState?.cadenaPagoDependencia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         banco: [this.derechoState?.banco, Validators.required],
-        llaveDePago: [this.derechoState?.llaveDePago, Validators.required],
-        fechaPago: [this.derechoState?.fechaPago, Validators.required],
-        importePago: [this.derechoState?.importePago, Validators.required],
+        llaveDePago: [this.derechoState?.llaveDePago, [Validators.required, Validators.maxLength(10)]],
+        fecPago: [this.derechoState?.fecPago, Validators.required],
+        impPago: [{ value: this.derechoState?.impPago, disabled: true}, [Validators.required, Validators.maxLength(16)]]
       }),
     });
 
@@ -134,12 +134,12 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   }
 
   /**
-* Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
+* Obtiene el grupo de formulario 'pagodeDerechos' del formulario principal 'FormSolicitud'.
 *
-* @returns {FormGroup} El grupo de formulario 'datosImportadorExportador'.
+* @returns {FormGroup} El grupo de formulario 'pagodeDerechos'.
 */
-  get datosImportadorExportador(): FormGroup {
-    return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+  get pagodeDerechos(): FormGroup {
+    return this.FormSolicitud.get('pagodeDerechos') as FormGroup;
   }
 
   ngOnDestroy(): void {
