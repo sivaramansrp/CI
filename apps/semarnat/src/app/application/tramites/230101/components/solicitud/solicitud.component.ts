@@ -97,8 +97,8 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   
 
   public aduanaLabel = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'Aduanas disponibles',
+    derecha: 'Aduanas seleccionados',
   };
 
   public paisLabel = {
