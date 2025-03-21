@@ -96,6 +96,17 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       ?.setValue(this.derechoState.datosSolicitante.correoElectronico);
   }
 
+  /**
+   * Cargar datos del solicitante.
+   * 
+   * Este método obtiene los datos del solicitante desde el servicio `datosTramiteService`
+   * y los almacena en el store `tramite11201Store`. Luego, establece los valores del formulario.
+   * 
+   * @example
+   * // Llamar al método para cargar los datos del solicitante
+   * this.loadDatosSolicitante();
+   */
+
   loadDatosSolicitante(): void {
     this.datosTramiteService.getDatosSolicitante().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((datos) => {
@@ -103,11 +114,29 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
         this.setFormValues();
       });
   }
-
+  /**
+     * Método para emitir un evento de continuar.
+     * 
+     * Este método emite un evento `continuarEvento` con una cadena vacía como valor.
+     * Se utiliza para indicar que se debe continuar al siguiente paso en el proceso.
+     * 
+     * @example
+     * // Llamar al método para emitir el evento de continuar
+     * this.continuar();
+     */
   continuar(): void {
     this.continuarEvento.emit('');
   }
-
+  /**
+     * Método para limpiar los recursos al destruir el componente.
+     * 
+     * Este método emite un valor `next` y completa el `destroyNotifier$` para limpiar
+     * los recursos y evitar fugas de memoria cuando el componente se destruye.
+     * 
+     * @example
+     * // Llamar al método automáticamente al destruir el componente
+     * this.ngOnDestroy();
+     */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup, } from '@angular/forms';
+import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule, } from '@angular/forms';
 import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
 import { Subject, } from 'rxjs';
-import { Subscription } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
 import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputCheckComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
@@ -30,11 +30,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   formSolicitud!: FormGroup;
-
-  /**
-   * Suscripción a los cambios en el formulario reactivo.
-   */
-  public subscription: Subscription = new Subscription();
 
   /**
    * Estado de la solicitud de la sección 301.
@@ -70,16 +65,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Inicializa el formulario con validaciones requeridas
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
 
     this.formSolicitud = this.fb.group({
       pagoDeDerechos: this.fb.group({
@@ -91,18 +84,18 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     });
 
     // Llama al método para actualizar el campo 'monto'
-    this.campoDeDormularioDeActualización();
+    this.campoDeDormularioDeActualizacion();
   }
 
   /**
-   * Método `campoDeDormularioDeActualización()`.
+   * Método `campoDeDormularioDeActualizacion()`.
    * Este método se encarga de actualizar el campo 'monto' dentro del formulario:
    * - Deshabilita el campo 'monto'.
    * - Establece el valor predeterminado de 'monto' a '352'.
    *
    * @memberof PagoDeDerechosComponent
    */
-  campoDeDormularioDeActualización(): void {
+  campoDeDormularioDeActualizacion(): void {
     // Deshabilita el campo 'monto' y asigna el valor '352'
     this.formSolicitud.get('pagoDeDerechos.montoPagar')?.disable();
     this.formSolicitud.get('pagoDeDerechos.montoPagar')?.setValue('352');
@@ -134,6 +127,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @memberof PagoDeDerechosComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete()
   }
 }

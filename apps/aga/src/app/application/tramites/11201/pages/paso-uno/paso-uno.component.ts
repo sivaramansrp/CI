@@ -17,14 +17,60 @@ import { ViewChild } from '@angular/core';
   imports: [SolicitanteComponent, CommonModule, ContenedorComponent]
 })
 export class PasoUnoComponent implements AfterViewInit {
+  /**
+    * Referencia al componente `SolicitanteComponent`.
+    * 
+    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `SolicitanteComponent`.
+    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * Tipo de persona.
+   * 
+   * Esta propiedad almacena el tipo de persona como un número.
+   */
   tipoPersona!: number;
+
+  /**
+   * Lista de formularios dinámicos para la persona.
+   * 
+   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos de la persona.
+   */
   persona: FormularioDinamico[] = [];
+
+  /**
+   * Lista de formularios dinámicos para el domicilio fiscal.
+   * 
+   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos del domicilio fiscal.
+   */
   domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Índice del paso actual en el wizard.
+   * 
+   * Esta propiedad indica el índice del paso actual en el wizard, comenzando desde 1.
+   */
   indice: number = 1;
+
+  /**
+   * Evento de continuar.
+   * 
+   * Esta propiedad utiliza `@Output` para emitir un evento `continuarEvento` con una cadena como valor.
+   */
   @Output() continuarEvento = new EventEmitter<string>();
+
+  /**
+   * Indicador de validación.
+   * 
+   * Esta propiedad indica si la validación es verdadera o falsa.
+   */
   validacion: boolean = false;
-  // @Input() validacion!: boolean;
+
+  /**
+   * Datos del número de pedimento.
+   * 
+   * Esta propiedad utiliza `@Input` para recibir datos del número de pedimento de tipo desconocido.
+   */
   @Input() datosNroPedimento!: unknown;
   /**
 * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
@@ -40,6 +86,17 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+ * Método para emitir un evento de continuar.
+ * 
+ * Este método emite un evento `continuarEvento` con una cadena vacía como valor.
+ * Se utiliza para indicar que se debe continuar al siguiente paso en el proceso.
+ * 
+ * @example
+ * // Llamar al método para emitir el evento de continuar
+ * this.continuar();
+ */
   continuar(): void {
     this.continuarEvento.emit('');
   }
