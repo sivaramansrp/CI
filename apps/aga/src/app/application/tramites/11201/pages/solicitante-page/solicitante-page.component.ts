@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11201/pasos.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;
@@ -13,10 +12,34 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent implements OnInit {
+export class SolicitantePageComponent {
+  /**
+   * Lista de pasos del wizard.
+   * 
+   * Esta propiedad contiene un array de objetos `ListaPasosWizard` que representan los pasos del wizard.
+   */
   pasos: Array<ListaPasosWizard> = PASOS;
+
+  /**
+   * Índice del paso actual en el wizard.
+   * 
+   * Esta propiedad indica el índice del paso actual en el wizard, comenzando desde 1.
+   */
   indice: number = 1;
+
+  /**
+   * Referencia al componente del wizard.
+   * 
+   * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `WizardComponent`.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Datos de los pasos del wizard.
+   * 
+   * Esta propiedad contiene un objeto `DatosPasos` que almacena información sobre el número de pasos,
+   * el índice actual, y los textos de los botones "Anterior" y "Continuar".
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -24,18 +47,20 @@ export class SolicitantePageComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
-  ngOnInit(): void {
-    this.pasos = this.pasos.map((paso) => {
-      if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
-        return { ...paso, titulo: 'Cargar pago' };
-      }
-      return paso;
-    });
-  }
 
+  /**
+  * Método para seleccionar una pestaña específica en el wizard.
+  * 
+  * @param {number} i - El índice de la pestaña a seleccionar.
+  */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+  /**
+   * Método para obtener el valor del índice y actualizar el wizard.
+   * 
+   * @param {AccionBoton} e - El objeto que contiene la acción y el valor del índice.
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
@@ -47,6 +72,10 @@ export class SolicitantePageComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * Método para continuar al siguiente paso en el wizard.
+   */
   continuar(): void {
     this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
   }
