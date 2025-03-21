@@ -1,1 +1,47 @@
-<p>certificado-origen works!</p>
+<div>
+    <form [formGroup]="formCertificado">
+        <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
+        <ng-titulo titulo="Tratado y país o bloque" />
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estado" [label]="'Tratado / Acuerdo'"
+                    [required]="true" name="estado" formControlName="entidadFederativa"
+                    ></app-catalogo-select>
+            </div>
+
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estado" [label]="'País / Bloque'" [required]="true"
+                    name="estado" formControlName="bloque"
+                    ></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria:</label>
+                <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
+                    id="fraccionArancelaria">
+            </div>
+
+            <div class="col-md-4">
+                <label for="registroProducto" class="form-label"># Registro producto:</label>
+                <input type="text" class="form-control" formControlName="registroProductoForm" id="registroProducto">
+            </div>
+            <div class="col-md-4">
+                <label for="nombreComercial" class="form-label">Nombre comercial:</label>
+                <input type="text" class="form-control" formControlName="nombreComercialForm" id="nombreComercial">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12  text-center">
+                <label for="fracciónArancelaria" class="form-label">Periodo</label>
+            </div>
+        </div>
+
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
+            (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        </div>
+
+    </form>
+</div>
