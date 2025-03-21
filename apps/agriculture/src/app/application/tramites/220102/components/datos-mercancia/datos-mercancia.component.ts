@@ -127,8 +127,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * @description Catálogo para el select de unidad de medida de comercialización (UMC).
   */
   catalogoUmc: Catalogo[] = [];
-
-  selectedTableList: MercanciaForm[] = [];
+  /**
+  * @property {MercanciaForm[]} listaDeTablasSeleccionadas
+  * @description es una propiedad de tipo array que almacena una lista de objetos de tipo.
+  */
+  listaDeTablasSeleccionadas: MercanciaForm[] = [];
   /**
    * @constructor
    * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
@@ -347,22 +350,22 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * @method onListaDeFilaSeleccionada
-   * @description Método que recibe las filas seleccionadas de la tabla y las almacena en la propiedad `selectedTableList`.
+   * @description Método que recibe las filas seleccionadas de la tabla y las almacena en la propiedad `listaDeTablasSeleccionadas`.
    * @param {MercanciaForm[]} filasSeleccionadas - Lista de las filas seleccionadas en la tabla.
    * @returns {void}
    */
   onListaDeFilaSeleccionada(filasSeleccionadas: MercanciaForm[]): void {
-    this.selectedTableList = filasSeleccionadas;
+    this.listaDeTablasSeleccionadas = filasSeleccionadas;
   }
 
   /**
    * @method eliminarElementoSeleccionado
    * @description Método que elimina el elemento seleccionado de la tabla basado en el ID del mismo. 
-   * Si el ID del elemento está presente en `selectedTableList`, se realiza la eliminación tanto en la lista como en el servicio correspondiente.
+   * Si el ID del elemento está presente en `listaDeTablasSeleccionadas`, se realiza la eliminación tanto en la lista como en el servicio correspondiente.
    * @returns {void}
    */
   eliminarElementoSeleccionado(): void {
-    const ID = this.selectedTableList[0]?.id;
+    const ID = this.listaDeTablasSeleccionadas[0]?.id;
     if (ID !== undefined) {
       const INDICE = this.cuerpoTabla.findIndex(item => item.id === ID);
       if (INDICE !== -1) {
@@ -386,7 +389,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   seleccionarParaModificacion(): void {
     this.estadoChecker = true;
-    const ID = this.selectedTableList[0]?.id;
+    const ID = this.listaDeTablasSeleccionadas[0]?.id;
     if (ID !== undefined) {
       const VALOR = this.cuerpoTabla.filter(item => item.id === ID);
       this.formMercancia.patchValue(VALOR[0]);
