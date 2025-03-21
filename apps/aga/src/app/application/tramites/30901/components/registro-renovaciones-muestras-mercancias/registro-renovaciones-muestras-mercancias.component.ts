@@ -5,12 +5,16 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Importante } from '@ng-mf/data-access-user';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
-import { MuestrasMercanciasStore } from '../../models/registro-muestras-mercancias.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { RenovacionesMuestrasMercanciasQuery } from '../../estados/renovaciones-muestras-mercancias.query';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
-import { RenovacionesMuestrasMercanciasStore } from '../../estados/renovaciones-muestras-mercancias.store';
+import { Solicitud30901Query } from '../../estados/tramites30901.query';
+import {
+  Solicitud30901State,
+} from '../../estados/tramites30901.store';
+import {
+  Solicitud30901Store,
+} from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Validators } from '@angular/forms';
@@ -18,10 +22,10 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
  * Componente para el registro de renovaciones de muestras de mercancías.
- * 
+ *
  * Este componente permite gestionar el formulario reactivo para el registro de muestras de mercancías,
  * incluyendo la obtención de opciones desplegables y la manipulación de varios controles de formulario.
- * 
+ *
  * @class
  * @implements {OnInit}
  */
@@ -30,7 +34,9 @@ import { takeUntil } from 'rxjs';
   templateUrl: './registro-renovaciones-muestras-mercancias.component.html',
   styleUrl: './registro-renovaciones-muestras-mercancias.component.scss',
 })
-export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, OnDestroy {
+export class RegistroRenovacionesMuestrasMercanciasComponent
+  implements OnInit, OnDestroy
+{
   /**
    * Formulario reactivo para el registro de muestras de mercancías.
    */
@@ -42,45 +48,45 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
   /**
    * Variable que contiene las opciones del importador.
    */
-  opcionDeImportador!: CatalogosSelect;
+  opcionDeImportador: CatalogosSelect = {} as CatalogosSelect;
   /**
    * Variable que contiene las opciones de fracción arancelaria AGA.
    */
-  fraccionArancelariaAga!: CatalogosSelect;
+  fraccionArancelariaAga: CatalogosSelect = {} as CatalogosSelect;
   /**
    * Propiedad que representa un catálogo de selección.
-   * 
+   *
    * @type {CatalogosSelect}
    */
-  nico!: CatalogosSelect;
+  nico: CatalogosSelect = {} as CatalogosSelect;
   /**
    * Propiedad que representa un catálogo de selección genérico.
-   * 
+   *
    * @type {CatalogosSelect}
    */
-  ideGenerica!: CatalogosSelect;
+  ideGenerica: CatalogosSelect = {} as CatalogosSelect;
   /**
    * Representa la selección de catálogo para la toma de muestra de despacho.
-   * 
+   *
    * @type {CatalogosSelect}
    */
-  tomaMuestraDespacho!: CatalogosSelect;
+  tomaMuestraDespacho: CatalogosSelect = {} as CatalogosSelect;
   /**
    * Indica si el panel de despacho o mercancía está activo.
-   * 
+   *
    * @type {boolean}
    */
   panelDespachoOrMercancia: boolean = false;
 
   /**
- * Administra el ciclo de vida de la suscripción `darseDeBaja`.
- * 
- * - La variable `darseDeBaja` almacena la suscripción activa,
- *   la cual puede ser `null` si no hay suscripción.
- * - El método `ngOnDestroy` se asegura de que la suscripción
- *   se cancele correctamente cuando el componente se destruya,
- *   evitando fugas de memoria.
- */
+   * Administra el ciclo de vida de la suscripción `darseDeBaja`.
+   *
+   * - La variable `darseDeBaja` almacena la suscripción activa,
+   *   la cual puede ser `null` si no hay suscripción.
+   * - El método `ngOnDestroy` se asegura de que la suscripción
+   *   se cancele correctamente cuando el componente se destruya,
+   *   evitando fugas de memoria.
+   */
   darseDeBaja: Subscription | null = null;
 
   /**
@@ -90,113 +96,152 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
   private destroyed$ = new Subject<void>();
 
   /**
+   * Estado actual de la solicitud 30901.
+   * Se inicializa como un objeto vacío con la estructura de `Solicitud30901State`.
+   */
+  solicitud30901State: Solicitud30901State = {} as Solicitud30901State;
+
+
+  /**
    * Constructor de RegistroRenovacionesMuestrasMercanciasComponent.
-   * 
+   *
    * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
    * @param renovacionesService - Servicio para manejar las operaciones relacionadas con renovaciones de muestras de mercancías.
    */
   constructor(
     public fb: FormBuilder,
     public renovacionesService: RenovacionesMuestrasMercanciasService,
-    public renovacionesMuestrasMercanciasStore: RenovacionesMuestrasMercanciasStore,
-    public renovacionesMuestrasMercanciasQuery: RenovacionesMuestrasMercanciasQuery
+    public solicitud30901Store: Solicitud30901Store,
+    public solicitud30901Query: Solicitud30901Query
   ) {
-     // Si es necesario, se puede agregar aquí la lógica de inicialización
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
-   * 
-   * En este método se inicializa el formulario `formRegistroMuestras` con varios controles de formulario,
-   * algunos de los cuales están deshabilitados y tienen valores predeterminados.
-   * 
-   * También se llama al método `getOpcionImportador` para obtener las opciones del importador.
-   * 
-   * @returns {void}
-   */
-  ngOnInit(): void {
-    this.formRegistroMuestras = this.fb.group({
-      opcionDeImportador: [''],
-      tomaMuestraDespacho: [''],
-      descMotivoFaltaMuestra: [{ value: '', disabled: true }],
-      comboFraccionConcatenada: [''],
-      fraccionConcatenada: [''],
-      fracciondescripcion: [{ value: '', disabled: true }],
-      comboNicos: [''],
-      nicoDescripcion: [{ value: '', disabled: true }],
-      nombreQuimico: [
-        { value: '', disabled: true },
-        [Validators.maxLength(256)],
-      ],
-      nombreComercial: [
-        { value: '', disabled: true },
-        [Validators.maxLength(256)],
-      ],
-      numeroCAS: [
-        { value: '', disabled: true },
-        [Validators.maxLength(120)],
-      ],
-      ideGenerica: [{ value: '', disabled: true }],
-      descClobGenerica: [{ value: '', disabled: true }],
-    });
-
-    // Se suscribe al observable para obtener el registro de muestras de la tienda.
-    this.renovacionesMuestrasMercanciasQuery.selectRenovacionesDeRegistro$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((response: MuestrasMercanciasStore) => {
-          this.opcionDeImportador = response.importadorExportadorPrevio;
-          this.fraccionArancelariaAga = response.fraccionArancelariaAga;
-          this.nico = response.nico;
-          this.ideGenerica = response.ideGenerica;
-          this.tomaMuestraDespacho = response.tomaMuestraDespacho;
-          this.formRegistroMuestras.patchValue({
-            opcionDeImportador: response.renovacionesDeRegistro.opcionDeImportador,
-            tomaMuestraDespacho: response.renovacionesDeRegistro.tomaMuestraDespacho,
-            descMotivoFaltaMuestra: response.renovacionesDeRegistro.descMotivoFaltaMuestra,
-            comboFraccionConcatenada: response.renovacionesDeRegistro.comboFraccionConcatenada,
-            fraccionConcatenada: response.renovacionesDeRegistro.fraccionConcatenada,
-            fracciondescripcion: response.renovacionesDeRegistro.fracciondescripcion,
-            comboNicos: response.renovacionesDeRegistro.comboNicos,
-            nicoDescripcion: response.renovacionesDeRegistro.nicoDescripcion,
-            nombreQuimico: response.renovacionesDeRegistro.nombreQuimico,
-            nombreComercial: response.renovacionesDeRegistro.nombreComercial,
-            numeroCAS: response.renovacionesDeRegistro.numeroCAS,
-            ideGenerica: response.renovacionesDeRegistro.ideGenerica,
-            descClobGenerica: response.renovacionesDeRegistro.descClobGenerica,
-          });
-        })
-      )
-      .subscribe();
+    // Si es necesario, se puede agregar aquí la lógica de inicialización
     this.getOpcionImportador();
   }
 
   /**
+   * Método del ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
+   *
+   * En este método se inicializa el formulario `formRegistroMuestras` con varios controles de formulario,
+   * algunos de los cuales están deshabilitados y tienen valores predeterminados.
+   *
+   * También se llama al método `getOpcionImportador` para obtener las opciones del importador.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.formRegistroMuestras = this.fb.group({
+      opcionDeImportador: [this.solicitud30901State.opcionDeImportador],
+      tomaMuestraDespacho: [this.solicitud30901State.tomaMuestraDespacho],
+      descMotivoFaltaMuestra: [
+        {
+          value: this.solicitud30901State.descMotivoFaltaMuestra,
+          disabled: true,
+        },
+      ],
+      comboFraccionConcatenada: [
+        this.solicitud30901State.comboFraccionConcatenada,
+      ],
+      fraccionConcatenada: [this.solicitud30901State.fraccionConcatenada],
+      fracciondescripcion: [
+        { value: this.solicitud30901State.fracciondescripcion, disabled: true },
+      ],
+      comboNicos: [this.solicitud30901State.comboNicos],
+      nicoDescripcion: [
+        { value: this.solicitud30901State.nicoDescripcion, disabled: true },
+      ],
+      nombreQuimico: [
+        { value: this.solicitud30901State.nombreQuimico, disabled: true },
+        [Validators.maxLength(256)],
+      ],
+      nombreComercial: [
+        { value: this.solicitud30901State.nombreComercial, disabled: true },
+        [Validators.maxLength(256)],
+      ],
+      numeroCAS: [
+        { value: this.solicitud30901State.numeroCAS, disabled: true },
+        [Validators.maxLength(120)],
+      ],
+      ideGenerica: [
+        { value: this.solicitud30901State.ideGenerica, disabled: true },
+      ],
+      descClobGenerica: [
+        { value: this.solicitud30901State.descClobGenerica, disabled: true },
+      ],
+    });
+
+    // Se suscribe al observable para obtener el registro de muestras de la tienda.
+    this.solicitud30901Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((response: Solicitud30901State) => {
+          this.solicitud30901State = response;
+
+          this.formRegistroMuestras.patchValue({
+            opcionDeImportador: this.solicitud30901State.opcionDeImportador,
+            tomaMuestraDespacho: this.solicitud30901State.tomaMuestraDespacho,
+            descMotivoFaltaMuestra: this.solicitud30901State.descMotivoFaltaMuestra,
+            comboFraccionConcatenada: this.solicitud30901State.comboFraccionConcatenada,
+            fraccionConcatenada: this.solicitud30901State.fraccionConcatenada,
+            fracciondescripcion: this.solicitud30901State.fracciondescripcion,
+            comboNicos: this.solicitud30901State.comboNicos,
+            nicoDescripcion: this.solicitud30901State.nicoDescripcion,
+            nombreQuimico: this.solicitud30901State.nombreQuimico,
+            nombreComercial: this.solicitud30901State.nombreComercial,
+            numeroCAS: this.solicitud30901State.numeroCAS,
+            ideGenerica: this.solicitud30901State.ideGenerica,
+            descClobGenerica: this.solicitud30901State.descClobGenerica,
+          });
+        })
+      )
+      .subscribe();
+  }
+
+  /**
    * Obtiene las opciones desplegables del importador y las asigna a las propiedades correspondientes.
-   * 
+   *
    * Este método realiza una solicitud al servicio `renovacionesService` para obtener las opciones
    * desplegables relacionadas con el importador y las asigna a las propiedades de la clase.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   getOpcionImportador(): void {
-    this.darseDeBaja = this.renovacionesService.obtenerOpcionesDesplegables().subscribe({
-      next: (res: ImportanteCatalogoSeleccion) => {
-        this.renovacionesMuestrasMercanciasStore.actualizarImportadorExportador(res.importadorExportadorPrevio)
-        this.renovacionesMuestrasMercanciasStore.actualizacionFraccionTarifaAga(res.fraccionArancelariaAga)
-        this.renovacionesMuestrasMercanciasStore.actualizarDatosUnicos(res.nico)
-        this.renovacionesMuestrasMercanciasStore.actualizacionDeIdeGenerica(res.ideGenerica)
-        this.renovacionesMuestrasMercanciasStore.actualizarTakeSampleOffice(res.tomaMuestraDespacho)
-        this.renovacionesMuestrasMercanciasStore.actualizarRegistro(res.registroMuestrasDatos)
-      },
-    });
+    this.darseDeBaja = this.renovacionesService
+      .obtenerOpcionesDesplegables()
+      .subscribe({
+        next: (res: ImportanteCatalogoSeleccion) => {
+          this.opcionDeImportador = res.importadorExportadorPrevio;
+          this.tomaMuestraDespacho = res.tomaMuestraDespacho;
+          this.fraccionArancelariaAga = res.fraccionArancelariaAga;
+          this.nico = res.nico;
+          this.ideGenerica = res.ideGenerica;
+          this.solicitud30901Store.setFraccionDescripcion(
+            res.registroMuestrasDatos.fracciondescripcion
+          );
+          this.solicitud30901Store.setNicoDescripcion(
+            res.registroMuestrasDatos.nicoDescripcion
+          );
+          this.solicitud30901Store.setNombreQuimico(
+            res.registroMuestrasDatos.nombreQuimico
+          );
+          this.solicitud30901Store.setNombreComercial(
+            res.registroMuestrasDatos.nombreComercial
+          );
+          this.solicitud30901Store.setNumeroCAS(
+            res.registroMuestrasDatos.numeroCAS
+          );
+          this.solicitud30901Store.setIdeGenerica(res.registroMuestrasDatos.ideGenerica);
+          this.solicitud30901Store.setDescClobGenerica(
+            res.registroMuestrasDatos.descClobGenerica
+          );
+        },
+      });
   }
 
   /**
    * Muestra la descripción de la fracción arancelaria.
-   * 
+   *
    * @param {Catalogo} valor - El objeto de catálogo que contiene la descripción de la fracción arancelaria.
-   * 
+   *
    * Actualiza el campo oculto y el control de descripción en el formulario con la descripción de la fracción arancelaria.
    * Si la descripción contiene un guion (' - '), se toma la parte después del guion como la descripción.
    */
@@ -212,6 +257,10 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
       fraccionConcatenada: valor.descripcion,
       fracciondescripcion: descripcion,
     });
+
+    this.solicitud30901Store.setComboFraccionConcatenada(valor.id);
+    this.solicitud30901Store.setFraccionConcatenada(valor.descripcion);
+    this.solicitud30901Store.setFraccionDescripcion(descripcion);
   }
 
   /**
@@ -222,11 +271,12 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
    */
   mostrarOcultarPanelTramite(event: Catalogo): void {
     const VALOR = event.id;
-    if (VALOR === 1) {
+    if (VALOR === 2) {
       this.panelDespachoOrMercancia = true;
     } else {
       this.panelDespachoOrMercancia = false;
     }
+    this.solicitud30901Store.setOpcionDeImportador(event.id);
   }
 
   /**
@@ -234,7 +284,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
    * basado en el valor del evento recibido.
    *
    * @param {Catalogo} event - El evento que contiene el id para determinar el estado del campo.
-   * 
+   *
    * - Si el id del evento es 1, habilita el campo 'descMotivoFaltaMuestra'.
    * - Si el id del evento es 0, deshabilita el campo 'descMotivoFaltaMuestra' y limpia su valor.
    * - Para cualquier otro valor del id, deshabilita el campo 'descMotivoFaltaMuestra'.
@@ -249,13 +299,63 @@ export class RegistroRenovacionesMuestrasMercanciasComponent implements OnInit, 
     } else {
       this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.disable();
     }
+    this.solicitud30901Store.setTomaMuestraDespacho(event.descripcion);
   }
-   /**
-     * Hook del ciclo de vida que se invoca cuando se destruye el componente.
-     * - Verifica si la suscripción `darseDeBaja` está activa.
-     * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.
-     * - Establece `darseDeBaja` a `null` como parte del proceso de limpieza.
-     */
+  /**
+   * Actualiza la descripción del motivo de falta de muestra en el estado.
+   */
+  setDescMotivoFaltaMuestra(): void {
+    const VALUE = this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.value;
+    this.solicitud30901Store.setDescMotivoFaltaMuestra(VALUE);
+  }
+
+  /**
+   * Actualiza la descripción de la fracción en el estado.
+   */
+  setFracciondescripcion(): void {
+    const VALUE = this.formRegistroMuestras.get('fracciondescripcion')?.value;
+    this.solicitud30901Store.setFraccionDescripcion(VALUE);
+  }
+
+  /**
+   * Actualiza el valor del combo de Nicos en el estado.
+   * @param event - Evento que contiene el ID del Nico seleccionado.
+   */
+  setNino(event: Catalogo): void {
+    this.solicitud30901Store.setComboNicos(event.id);
+  }
+
+  /**
+   * Actualiza la descripción del Nico en el estado.
+   */
+  setNicoDescripcion(): void {
+    const VALUE = this.formRegistroMuestras.get('nicoDescripcion')?.value;
+    this.solicitud30901Store.setNicoDescripcion(VALUE);
+  }
+
+  /**
+   * Actualiza el nombre químico en el estado.
+   */
+  setNombreQuimico(): void {
+    const VALUE = this.formRegistroMuestras.get('nombreQuimico')?.value;
+    this.solicitud30901Store.setNombreQuimico(VALUE);
+  }
+
+  /**
+   * Actualiza el nombre comercial en el estado.
+   */
+  setNombreComercial(): void {
+    const VALUE = this.formRegistroMuestras.get('nombreComercial')?.value;
+    this.solicitud30901Store.setNombreComercial(VALUE); // Corregido aquí
+  }
+
+
+  /**
+   * Hook del ciclo de vida que se invoca cuando se destruye el componente.
+   * - Verifica si la suscripción `darseDeBaja` está activa.
+   * - Si existe, se da de baja (unsubscribe) del observable para liberar recursos.
+   * - Establece `darseDeBaja` a `null` como parte del proceso de limpieza.
+   */
   ngOnDestroy(): void {
     if (this.darseDeBaja) {
       this.darseDeBaja.unsubscribe();

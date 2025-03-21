@@ -101,7 +101,7 @@ export const PROTESTA = {
 export const FECHA_SALIDA = {
   labelNombre: 'Fecha de expedición de certificado de Molino o de calidad',
   required: true,
-  habilitado: false,
+  habilitado: true,
 }
 
 export const TXT_ALERTA_ACUSE = (folio: string) => {
