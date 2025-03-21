@@ -58,6 +58,12 @@ import { takeUntil } from 'rxjs';
   providers: [BsModalService]
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
+  /**
+   * Representa la fecha de inicio ingresada por el usuario.
+   * 
+   * @type {InputFecha}
+   * @default FECHA_INGRESO
+   */
   public fechaInicioInput: InputFecha = FECHA_INGRESO;
   /**
    * Formulario principal de la solicitud.
@@ -205,6 +211,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
   
+  /**
+   * Referencia a la clase o enumeración `TablaSeleccion`.
+   * 
+   * Esta propiedad se utiliza para acceder a las funcionalidades
+   * o valores definidos en `TablaSeleccion` dentro del componente.
+   */
   TablaSeleccion = TablaSeleccion;
 
   /**
@@ -560,6 +572,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTabla = DATA;
   }
 
+  /**
+   * Envía el manifiesto después de validar el formulario de solicitud.
+   * 
+   * Este método marca todos los campos del formulario como tocados y verifica
+   * si los campos 'numeroManifiesta' y 'menuDesplegable' son válidos. Si ambos
+   * campos son válidos, se muestra un mensaje.
+   * 
+   * @returns {void}
+   */
   enviarManifiesto(): void {
     this.solicitudForm.markAllAsTouched();
     if (
@@ -570,6 +591,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Verifica si el formulario de solicitud es válido y, si es así, 
+   * implementa la lógica de pago y envía el formulario. 
+   * Si el formulario no es válido, muestra un mensaje de error.
+   * 
+   * @returns {void}
+   */
   esPago(): void {
     if (this.solicitudForm.valid) {
       // Implementar lógica de pago y envío del formulario
@@ -583,6 +611,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Método que selecciona la pestaña actual basada en el índice almacenado en el localStorage.
+   * Si el índice existe en el localStorage, lo convierte a número y lo asigna a la propiedad `corrienteIdx`.
+   */
   tabSeleccionado(): void {
     const CURRENT_IDX = localStorage.getItem('corrienteIdx');
     if (CURRENT_IDX !== null) {
@@ -590,12 +622,30 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Restablece los botones de radio y los campos relacionados en el formulario de solicitud.
+   * 
+   * Este método se utiliza para limpiar el valor del campo 'tipoBusqueda' y 
+   * llamar a la función `limpiarCampos` para restablecer otros campos relacionados.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   cancelarRadioButton(): void {
     // Resetear botones de radio y campos relacionados
     this.solicitudForm.get('tipoBusqueda')?.setValue('');
     this.limpiarCampos();
   }
 
+  /**
+   * Agrega una nueva solicitud utilizando el servicio `datosTramiteService`.
+   * La solicitud se agrega a la lista `datosDelContenedor` y se actualiza el estado en `tramite11201Store`.
+   * 
+   * @remarks
+   * Este método se suscribe al observable devuelto por `agregarSolicitud` y maneja la respuesta.
+   * Si la solicitud es exitosa, se actualiza el formulario `solicitudForm` para limpiar los campos y marcarlo como no modificado.
+   * 
+   * @returns {void}
+   */
   agregarSolicitud(): void {
     this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
@@ -619,6 +669,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Método para obtener la lista de transporte.
+   * 
+   * Este método llama al servicio `datosTramiteService` para obtener la lista de transporte
+   * y suscribe a los resultados hasta que el componente sea destruido. Los datos obtenidos
+   * se asignan a la propiedad `catalogoList`.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   public fetchgetTransporteList(): void {
     this.datosTramiteService
       .getTransporteList('transporteList')
@@ -627,6 +686,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Método para obtener la lista de aduanas.
+   * 
+   * Este método realiza una solicitud al servicio `datosTramiteService` para obtener la lista de aduanas.
+   * La respuesta se almacena en la propiedad `aduanaList.catalogos`.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   public fetchAduanaList(): void {
     this.datosTramiteService
       .getAduanaList('aduanaList')
@@ -635,6 +702,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Abre un modelo modal con los datos proporcionados.
+   *
+   * @param datos - Los datos que se pasarán al modelo modal.
+   * @returns void
+   */
   abiertoModelo(datos: string): void {
     this.abiertoModeloDatos = datos;
     this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
@@ -644,11 +717,21 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.continuarEvento.emit('');
   }
 
+  /**
+   * Actualiza la fecha de ingreso en el formulario de solicitud.
+   *
+   * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
+   */
   public cambioFechaDeIngreso(nuevo_valor: string) {
     this.solicitudForm.get('fechaDeIngreso')?.setValue(nuevo_valor);
     this.solicitudForm.get('fechaDeIngreso')?.markAsUntouched();
   }
 
+  /**
+   * Cambia la fecha de ingreso en el formulario de solicitud.
+   *
+   * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
+   */
   public cambioFechaIngreso(nuevo_valor: string) {
     this.solicitudForm.get('fechaIngreso')?.setValue(nuevo_valor);
     this.solicitudForm.get('fechaIngreso')?.markAsUntouched();
