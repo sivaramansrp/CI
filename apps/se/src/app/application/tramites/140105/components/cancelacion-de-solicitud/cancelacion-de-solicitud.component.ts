@@ -16,9 +16,21 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './cancelacion-de-solicitud.component.scss',
 })
 export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario para capturar los datos de la solicitud.
+   */
   solicitudForm?: FormGroup;
+  /**
+   * Sujeto para gestionar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyNotificationSubject$ = new Subject<void>();
+  /**
+   * Formulario para capturar el motivo de cancelación.
+   */
   public cancelacionForm!: FormGroup;
+  /**
+   * Configuración de las columnas de la tabla de solicitudes de cancelación.
+   */
   configuracionColumnasSolicitud: ConfiguracionColumna<Cancelacion>[] = [
     { encabezado: 'Folio trámite', clave: (fila) => fila.folioTramite, orden: 1 },
     { encabezado: 'Tipo solicitud', clave: (fila) => fila.tipoDeSolicitud, orden: 2 },
@@ -30,8 +42,17 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Cantidad solicitada', clave: (fila) => fila.cantidad, orden: 8 },
     { encabezado: 'Valor solicitado', clave: (fila) => fila.usd, orden: 9 },
   ];
+   /**
+   * Configuración para la selección de filas en la tabla.
+   */
   tipoSeleccionSolicitud: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /**
+   * Almacena los registros de cancelación para mostrar en la tabla.
+   */
   cuerpoTablaCancelacion: Cancelacion[] = [];
+  /**
+   * Indica si el usuario tiene permiso para realizar ciertas acciones.
+   */
   public datosDePermiso: boolean = false;
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
