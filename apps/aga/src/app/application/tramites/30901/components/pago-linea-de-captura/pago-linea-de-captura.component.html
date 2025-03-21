@@ -12,6 +12,7 @@
           class="form-control"
           formControlName="lineaCaptura"
           (keyup)="validarLineaCaptura()"
+          (change)="setLineaCaptura()"
         />
       </div>
     </div>
@@ -45,10 +46,12 @@
   <div class="row mt-5">
     <div class="col-md-4"></div>
     <div class="col-md-4">
-      <ng-table
-        [commonTableHeader]="tableData.tableHeader"
-        [commonTableBody]="tableData.tableBody"
-      ></ng-table>
+      <app-tabla-dinamica
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+      [configuracionTabla]="configuracionColumnas"
+      [datos]="pagoDerechosLista"
+      >
+      </app-tabla-dinamica>
     </div>
     <div class="col-md-4"></div>
   </div>
