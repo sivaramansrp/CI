@@ -148,7 +148,7 @@
       Limpiar
     </button>
     <button type="button" class="btn btn-default btn-space me-2" (click)="almacenarDatoEnTabla('close')">
-      Cancelars
+      Cancelar
     </button>
     <button type="button" class="btn btn-primary btn-space " [disabled]="!formMercancia.valid" (click)="almacenarDatoEnTabla(formMercancia.value.id !== null ? 'edit':'add')">
       Agregar
@@ -159,7 +159,7 @@
       Modificar
     </button>
     <button type="button" class="btn btn-default btn-space me-2" *ngIf="cuerpoTabla.length !== 0 " [disabled]="!(selectedTableList.length === 1)" (click)="eliminarElementoSeleccionado()">
-      Eliminarss
+      Eliminar
     </button>
     <button type="button" class="btn btn-primary btn-space " (click)="almacenarDatoEnTabla('new')" >
       Agregar
