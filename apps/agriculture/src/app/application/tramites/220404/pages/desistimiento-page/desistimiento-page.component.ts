@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_570101, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_220404, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DESISTIMIENTO_PASOS } from '../../enum/desistimiento.enum';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -29,8 +29,8 @@ export class DesistimientoPageComponent implements OnInit {
   @ViewChild(PasoUnoComponent) pasoUnoComponent!: PasoUnoComponent
 
   constructor(
-    private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    public seccionQuery: SeccionLibQuery,
+    public seccionStore: SeccionLibStore
   ) {
     // El constructor está intencionalmente vacío para la inyección de dependencias 
    }
@@ -56,10 +56,10 @@ export class DesistimientoPageComponent implements OnInit {
   /**
   * Método para asignar las secciones existentes al stored
   */
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_570101.PASO_1);
+  public asignarSecciones(): void {
+    const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_220404.PASO_1);
     const FORM_VALIDA: boolean[] = [];
-    for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_570101.PASO_1) {
+    for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_220404.PASO_1) {
       if(LLAVE_SECCIONE) {
         FORM_VALIDA.push(false);
       }

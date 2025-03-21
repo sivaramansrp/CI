@@ -1,13 +1,11 @@
-import { FechasService, SeccionLibQuery, SeccionLibState, SeccionLibStore, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FechasService, SeccionLibQuery, SeccionLibState, SeccionLibStore, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil, tap } from 'rxjs';
-import { DesistimientoStore } from '../../estados/tramite220404.store';
-import { DesistimientoService } from '../../services/desistimiento.service';
 import { DesistimientoForm } from '../../modelos/desistimiento.model';
 import { DesistimientoQuery } from '../../estados/tramite220404.query';
-
-
+import { DesistimientoService } from '../../services/desistimiento.service';
+import { DesistimientoStore } from '../../estados/tramite220404.store';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',

@@ -4,7 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { InjectionToken } from '@angular/core';
-import { TramiteStore } from '../../../../estados/tramite.store';
+import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -14,7 +14,7 @@ describe('PasoDosComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoDosComponent],
       imports: [HttpClientTestingModule, FirmaElectronicaComponent, ToastrModule.forRoot()],
-      providers: [ToastrService,ServiciosExtraordinariosService, TramiteStore,
+      providers: [ToastrService,ServiciosExtraordinariosService,TramiteStore,
         { provide: new InjectionToken('ToastConfig'), useValue: {} }
       ]
     })
