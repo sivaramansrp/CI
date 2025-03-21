@@ -12,7 +12,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { TercerosRelaciondosComponent } from './components/terceros-relaciondos/terceros-relaciondos.component';
 import { provideHttpClient } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
+import { DatosService } from './services/datos.service';
 
 @NgModule({
   declarations: [SolicitudeComponent, DatosPageComponent],
@@ -25,6 +25,6 @@ import { ToastrService } from 'ngx-toastr';
     DatosDeLaSolicitudComponent,
     TercerosRelaciondosComponent
   ],
-  providers: [provideHttpClient(),ToastrService],
+  providers: [provideHttpClient(),DatosService],
 })
 export class AvisoDeImportacionModule {}
