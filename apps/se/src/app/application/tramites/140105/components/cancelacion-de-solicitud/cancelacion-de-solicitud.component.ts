@@ -17,9 +17,9 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
   solicitudForm?: FormGroup;
-  private destroyNotifier$ = new Subject<void>();
+  private destroyNotificationSubject$ = new Subject<void>();
   public cancelacionForm!: FormGroup;
-  configuracionColumnasoli: ConfiguracionColumna<Cancelacion>[] = [
+  configuracionColumnasSolicitud: ConfiguracionColumna<Cancelacion>[] = [
     { encabezado: 'Folio trámite', clave: (fila) => fila.folioTramite, orden: 1 },
     { encabezado: 'Tipo solicitud', clave: (fila) => fila.tipoDeSolicitud, orden: 2 },
     { encabezado: 'Régimen', clave: (fila) => fila.regimen, orden: 3 },
@@ -30,8 +30,8 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     { encabezado: 'Cantidad solicitada', clave: (fila) => fila.cantidad, orden: 8 },
     { encabezado: 'Valor solicitado', clave: (fila) => fila.usd, orden: 9 },
   ];
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
-  cuerpoTabla: Cancelacion[] = [];
+  tipoSeleccionSolicitud: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  cuerpoTablaCancelacion: Cancelacion[] = [];
   public datosDePermiso: boolean = false;
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
@@ -61,20 +61,20 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
       if (this.datosDePermiso) {
-        this.cuerpoTabla = [formData as Cancelacion];
-        this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTabla as Cancelacion[]);
+        this.cuerpoTablaCancelacion = [formData as Cancelacion];
+        this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
       }
     });
 
      // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyNotificationSubject$))
       .subscribe(data => {
         if (Array.isArray(data?.datos)) {
-          this.cuerpoTabla = data.datos as Cancelacion[];
+          this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
         } else {
           console.error("Expected an array but received:", data?.datos);
-          this.cuerpoTabla = [];
+          this.cuerpoTablaCancelacion = [];
         }
       });
 
@@ -108,8 +108,8 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * @param event Evento que desencadena la eliminación.
    */
   public eliminarRegistro(event: Event): void {
-    this.cuerpoTabla = [];
-    this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTabla as Cancelacion[]);
+    this.cuerpoTablaCancelacion = [];
+    this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
   }
 
 
