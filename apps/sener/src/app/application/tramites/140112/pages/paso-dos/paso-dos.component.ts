@@ -2,7 +2,7 @@ import { AlertComponent } from "libs/shared/data-access-user/src/tramites/compon
 import { AnexarDocumentosComponent } from "libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component";
 import { Component } from '@angular/core';
 import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { TEXTOS_REQUISITOS } from "../../enum/pantallas-constante.enum";
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-dos',
@@ -16,6 +16,7 @@ export class PasoDosComponent {
    * Objeto con los textos de los requisitos.
    * @property {object} TEXTOS_REQUISITOS
    */
-  TEXTOS = TEXTOS_REQUISITOS;
+  TEXTOS = TEXTOS;
+  
 
 }

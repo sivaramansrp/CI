@@ -9,7 +9,7 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
-    path: 'hidrocarburos-de-petróleo',
+    path: 'hidrocarburos-de-petroleo',
     loadChildren: () =>
       import('./tramites/140112/retiro-importacion-exportacion-permiso.module').then(
         (m) => m.RetiroImportacionExportacionPermisoModule

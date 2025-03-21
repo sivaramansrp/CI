@@ -1,40 +1,40 @@
-interface PERSMISOCALENDER {
-    FolioTtrámite: string;
-    TipoSolicitud: string;
-    Régimen: string;
-    ClasificaciónRégimen: string;
-    CondiciónDeLaMercancía: string;
-    FracciónArancelaria: string;
+interface PersmisoCalender {
+    folioTramite: string;
+    tipoSolicitud: string;
+    regimen: string;
+    clasificacionRegimen: string;
+    condicionDeLaMercancia: string;
+    fraccionArancelaria: string;
   }
-  export const PERSMISOCALENDERTABLE = [
+  export const Persmiso_Calender_Table = [
     {
-      encabezado: 'Folio trámite',
-      clave: (ele: PERSMISOCALENDER) => ele.FolioTtrámite,
+      encabezado: 'Folio tramite',
+      clave: (ele: PersmisoCalender) => ele.folioTramite,
       orden: 1
     },
     {
       encabezado: 'Tipo solicitud',
-      clave: (ele: PERSMISOCALENDER) => ele.TipoSolicitud,
+      clave: (ele: PersmisoCalender) => ele.tipoSolicitud,
       orden: 2
     },
     {
-      encabezado: 'Régimen',
-      clave: (ele: PERSMISOCALENDER) => ele.Régimen,
+      encabezado: 'Regimen',
+      clave: (ele: PersmisoCalender) => ele.regimen,
       orden: 3
     },
     {
-      encabezado: 'Clasificación régimen',
-      clave: (ele: PERSMISOCALENDER) => ele.ClasificaciónRégimen,
+      encabezado: 'Clasificacion regimen',
+      clave: (ele: PersmisoCalender) => ele.clasificacionRegimen,
       orden: 4
     },
     {
-      encabezado: 'Condición de la mercancía',
-      clave: (ele: PERSMISOCALENDER) => ele.CondiciónDeLaMercancía,
+      encabezado: 'Condicion de la mercancia',
+      clave: (ele: PersmisoCalender) => ele.condicionDeLaMercancia,
       orden: 5
     },
     {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: PERSMISOCALENDER) => ele.FracciónArancelaria,
+      encabezado: 'Fraccion arancelaria',
+      clave: (ele: PersmisoCalender) => ele.fraccionArancelaria,
       orden: 6
     }
   ]

@@ -6,10 +6,10 @@
 
   export interface PermisosCancelar {
     id:number
-    folioTtrámite : number;
+    folioTramite : number;
     tipoSolicitud : string;
-    régimen : string;
-    clasificaciónRégimen : string;
-    condiciónDeLaMercancía : string;
-    fracciónArancelaria : string;
+    regimen : string;
+    clasificacionRegimen : string;
+    condicionDeLaMercancia : string;
+    fraccionArancelaria : string;
   }

@@ -40,12 +40,12 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
   /** Configuración para las columnas de la tabla */
   configuracionTabla: ConfiguracionColumna<PermisosCancelar>[] = [
     { encabezado: '', clave: (item: PermisosCancelar) => item.id, orden: 1 },
-    { encabezado: 'Folio trámite ', clave: (item: PermisosCancelar) => item.folioTtrámite, orden: 2 },
+    { encabezado: 'Folio trámite ', clave: (item: PermisosCancelar) => item.folioTramite, orden: 2 },
     { encabezado: 'Tipo solicitud ', clave: (item: PermisosCancelar) => item.tipoSolicitud, orden: 3 },
-    { encabezado: 'Régimen ', clave: (item: PermisosCancelar) => item.régimen, orden: 4 },
-    { encabezado: 'Clasificación régimen ', clave: (item: PermisosCancelar) => item.clasificaciónRégimen, orden: 5 },
-    { encabezado: 'Condición de la mercancía', clave: (item: PermisosCancelar) => item.condiciónDeLaMercancía, orden: 6 },
-    { encabezado: 'Fracción arancelaria ', clave: (item: PermisosCancelar) => item.fracciónArancelaria, orden: 7 },
+    { encabezado: 'Régimen ', clave: (item: PermisosCancelar) => item.regimen, orden: 4 },
+    { encabezado: 'Clasificación régimen ', clave: (item: PermisosCancelar) => item.clasificacionRegimen, orden: 5 },
+    { encabezado: 'Condición de la mercancía', clave: (item: PermisosCancelar) => item.condicionDeLaMercancia, orden: 6 },
+    { encabezado: 'Fracción arancelaria ', clave: (item: PermisosCancelar) => item.fraccionArancelaria, orden: 7 },
   ];
 
   /** Array para almacenar la respuesta de permisos cancelar */
@@ -68,6 +68,8 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
 
   /** Booleano para verificar si la casilla está marcada */
   public estmarcado = false;
+
+  private destroyed$ = new Subject<void>();
 
   /** Grupo de formulario para motivo desistimiento */
   solicitud: FormGroup = this.fb.group({
@@ -95,7 +97,8 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
    * Gancho de ciclo de vida OnInit
    */
   ngOnInit(): void {
-    this.query.selectDesistimiento$?.subscribe((data) => {
+    this.query.selectDesistimiento$?.pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
       this.solicitud?.patchValue({
         descripcionClobGenerica1: data
       });
