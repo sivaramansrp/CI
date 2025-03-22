@@ -93,6 +93,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
+  
+{
+  path: 'registro-digitalizar-documentos',
+  loadChildren: () =>
+    import('./tramites/701/registro-digitalizar-documentos.module').then(
+      (m) => m.RegistroDigitalizarDocumentosModule
+    ),
+},
 ];
 
 @NgModule({
