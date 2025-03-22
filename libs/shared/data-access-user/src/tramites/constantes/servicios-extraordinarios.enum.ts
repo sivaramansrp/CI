@@ -134,6 +134,12 @@ export const FECHA_INICIO = {
   habilitado: true,
 };
 
+export const FECHA_APROXIMADA_IMPORTACION = {
+  labelNombre: 'Fecha aproximada importación',
+  required: true,
+  habilitado: true,
+}
+
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: true,

@@ -5,7 +5,7 @@ import { map, merge, Subject, takeUntil } from 'rxjs';
 
 
 import { AvisoService } from '../../services/aviso.service';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, FECHA_APROXIMADA_IMPORTACION, InputFecha } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
@@ -21,6 +21,13 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
   styleUrl:'./solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit {
+    /**
+   * Representa la fecha de inicio ingresada por el usuario.
+   * 
+   * @type {InputFecha}
+   * @default FECHA_INGRESO
+   */
+    public fechaInicioInput: InputFecha = FECHA_APROXIMADA_IMPORTACION;
 
   /**
    * Lista de catálogos de fracción arancelaria.
@@ -378,5 +385,20 @@ export class SolicitudComponent implements OnInit {
     if (this.FormSolicitud.invalid) {
       this.FormSolicitud.markAllAsTouched();
     }
+  }
+
+  /**
+   * Cambia la fecha de ingreso a un nuevo valor.
+   *
+   * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
+   * 
+   * Este método actualiza el valor de 'fechaInicio' en el formulario 'mercanciaST',
+   * marca el campo como no tocado y también actualiza la fecha de inicio en el 
+   * store 'tramite32502Store'.
+   */
+  public cambioFechaDeIngreso(nuevo_valor: string): void {
+    this.mercanciaST.get('fechaInicio')?.setValue(nuevo_valor);
+    this.mercanciaST.get('fechaInicio')?.markAsUntouched();
+    this.tramite32502Store.setFechaInicio(nuevo_valor);
   }
 }

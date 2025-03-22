@@ -76,11 +76,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label for="fechaInicio" class="form-label">Fecha aproximada importaci&oacute;n*:</label>
-                    <input class="form-control" type="date" name="fechaInicio" id="fechaInicio"
-                        formControlName="fechaInicio" [ngClass]="isValid(mercanciaST,'fechaInicio') ? 'required' : ''"
-                        (change)="setValoresStore(mercanciaST,'fechaInicio', 'setFechaInicio')">
-
+                    <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event) " [setFecha]="this.solicitudState.fechaInicio"></input-fecha>
                     @if (isValid(mercanciaST,'fechaInicio')) {
                     <div class="mensaje-error">
                         Fecha no válida, elija otro día
