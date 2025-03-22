@@ -3,12 +3,15 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { OnInit } from '@angular/core';
-import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
-import { RenovacionesMuestrasMercanciasQuery } from '../../estados/renovaciones-muestras-mercancias.query';
+import { PagoDerechosLista } from '../../models/registro-muestras-mercancias.model';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
-import { RenovacionesMuestrasMercanciasStore } from '../../estados/renovaciones-muestras-mercancias.store';
+import { Solicitud30901Query } from '../../estados/tramites30901.query';
+import { Solicitud30901State } from '../../estados/tramites30901.store';
+import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
@@ -35,24 +38,59 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    * Datos de la tabla utilizados en el componente Pago LC.
    * @type {TableData}
    */
-  tableData!: TableData;
+  tableData: TableData = {} as TableData;
 
-/**
- * Administra el ciclo de vida de la suscripción `darseDeBaja`.
- * 
- * - La variable `darseDeBaja` almacena la suscripción activa,
- *   la cual puede ser `null` si no hay suscripción.
- * - El método `ngOnDestroy` se asegura de que la suscripción
- *   se cancele correctamente cuando el componente se destruya,
- *   evitando fugas de memoria.
- */
+  /**
+   * Administra el ciclo de vida de la suscripción `darseDeBaja`.
+   *
+   * - La variable `darseDeBaja` almacena la suscripción activa,
+   *   la cual puede ser `null` si no hay suscripción.
+   * - El método `ngOnDestroy` se asegura de que la suscripción
+   *   se cancele correctamente cuando el componente se destruya,
+   *   evitando fugas de memoria.
+   */
   darseDeBaja: Subscription | null = null;
 
   /**
    * Subject para desuscribirse de los observables.
    * @type {Subject<void>}
-   */ 
+   */
   private destroyed$ = new Subject<void>();
+  /**
+   * Estado actual de la solicitud 30901.
+   * Se inicializa como un objeto vacío con la estructura de `Solicitud30901State`.
+   */
+  solicitud30901State: Solicitud30901State = {} as Solicitud30901State;
+
+  /**
+   * Tipo de selección de la tabla.
+   * En este caso, se utiliza un checkbox para la selección de elementos.
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración de las columnas de la tabla.
+   * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
+   */
+  configuracionColumnas = [
+    {
+      encabezado: 'Línea de captura', // Título de la columna
+      clave: (item: PagoDerechosLista) => item.linea, // Accede a la propiedad 'linea'
+      orden: 1, // Orden en la tabla
+    },
+    {
+      encabezado: 'Monto', // Título de la columna
+      clave: (item: PagoDerechosLista) => item.monto, // Accede a la propiedad 'monto'
+      orden: 2, // Orden en la tabla
+    },
+  ];
+
+
+  /**
+   * Lista de pagos de derechos asociados a la solicitud.
+   * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
+   */
+  pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
 
   /**
    * Constructor de la clase PagoLcComponent.
@@ -63,8 +101,8 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     private renovacionesService: RenovacionesMuestrasMercanciasService,
-    public renovacionesMuestrasMercanciasStore: RenovacionesMuestrasMercanciasStore,
-    public renovacionesMuestrasMercanciasQuery: RenovacionesMuestrasMercanciasQuery
+    public solicitud30901Store: Solicitud30901Store,
+    public solicitud30901Query: Solicitud30901Query
   ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
@@ -80,25 +118,38 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.formPagoLC = this.fb.group({
-      lineaCaptura: ['', [Validators.maxLength(20)]],
+      lineaCaptura: [
+        this.solicitud30901State.lineaCaptura,
+        [Validators.maxLength(20)],
+      ],
       valorPago: [
-        { value: '4845', disabled: true },
+        { value: this.solicitud30901State.valorPago, disabled: true },
         [Validators.maxLength(20)],
       ],
     });
 
-    /**
-     * Observable que obtiene los pagos de tarifas de la tienda.
-     */
-    this.renovacionesMuestrasMercanciasQuery.selectPagoDeDerechos$
+    this.solicitud30901Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState: TableData) => {
-          this.tableData = seccionState;
+        map((response: Solicitud30901State) => {
+          this.solicitud30901State = response;
+          this.pagoDerechosLista = response.pagoDerechosLista;
+          this.formPagoLC.patchValue({
+            lineaCaptura: this.solicitud30901State.lineaCaptura,
+            valorPago: this.solicitud30901State.valorPago,
+          });
         })
       )
       .subscribe();
     this.obtenerDatosIniciales();
+  }
+
+  /**
+   * Actualiza el valor de la línea de captura en el estado.
+   */
+  setLineaCaptura(): void {
+    const VALUE = this.formPagoLC.get('lineaCaptura')?.value;
+    this.solicitud30901Store.setLineaCaptura(VALUE);
   }
 
   /**
@@ -113,7 +164,12 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
       .obtenerOpcionesDesplegables()
       .subscribe({
         next: (res: ImportanteCatalogoSeleccion) => {
-          this.renovacionesMuestrasMercanciasStore.actualizarPagoDeTarifas(res.tablaDeTarifasDePago)
+          const PAGO_DERECHOS_LISTA = [
+            ...this.solicitud30901State.pagoDerechosLista,
+            ...res.pagoDerechosLista,
+          ];
+          this.solicitud30901Store.setPagoDerechosLista(PAGO_DERECHOS_LISTA);
+          this.solicitud30901Store.setValorPago(res.pagoDerechosLista[0].monto);
         },
       });
   }
@@ -155,10 +211,13 @@ export class PagoLineaDeCapturaComponent implements OnInit, OnDestroy {
     if (!LINEA_CAPTURA || !VALOR_PAGO) {
       return;
     }
-    this.renovacionesMuestrasMercanciasStore.agregarPagoDeTarifas(
-      LINEA_CAPTURA,
-      VALOR_PAGO
-    );
+    const JSON_OBJECT = [
+      {
+        linea: LINEA_CAPTURA,
+        monto: VALOR_PAGO,
+      },
+    ];
+    this.solicitud30901Store.setPagoDerechosLista(JSON_OBJECT);
   }
 
   /**

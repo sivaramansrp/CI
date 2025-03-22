@@ -233,7 +233,7 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
         this.municipioCatalogo = respuesta.municipioCatalogo;
         this.localidadCatalogo = respuesta.localidadCatalogo;
         this.codigoCatalogo = respuesta.codigoCatalogo;
-        this.coloniaCatalogo = respuesta.codigoCatalogo;
+        this.coloniaCatalogo = respuesta.coloniaCatalogo;
       },
     });
   }
