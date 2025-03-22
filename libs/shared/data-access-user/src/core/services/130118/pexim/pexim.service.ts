@@ -50,4 +50,8 @@ export class PeximService {
   getRepresentacionFederal(catalogo: string) {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/representacion-federal.json');
   }
+
+  obtenerDocumentosSeleccionados() {
+    return this.http.get<RespuestaCatalogos>('assets/json/130118/documentos-seleccionados.json');
+  }
 }
