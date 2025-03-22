@@ -274,6 +274,23 @@ export const MANIFIESTOS = {
   </div>`
 };
 
+export const REQUISITOS = {
+  Importante: `<p>La solicitud ha quedado registrada con el número temporal 202767918. Éste no tiene validez legal y sirve solamente para
+efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`
+};
+
+export const REQUISITOS_OPCIONALES = {
+  INSTRUCCIONES: `<h6>Instrucciones</h6>
+  <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+  <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
+  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+};
+
+export const ANEXAR = {
+  Importante: `<p>
+Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos".</p>`
+};
+
 
 export const LASTABLA = {
   Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`

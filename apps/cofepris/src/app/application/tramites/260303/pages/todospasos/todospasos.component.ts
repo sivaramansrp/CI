@@ -5,6 +5,10 @@ import { PANTA_PASOS, PASO_FOUR, PASO_ONE, PASO_THREE, PASO_TWO } from '../../se
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
+import { ANEXAR, REQUISITOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
 @Component({
   selector: 'app-todospasos',
@@ -54,6 +58,20 @@ export class TodospasosComponent {
      txtBtnSig: 'Continuar',
    };
 
+   public TEXTOS = REQUISITOS;
+
+   public TEXTOS2 = ANEXAR;
+/**
+ * Un array de objetos Catalogo que representa el catálogo de documentos.
+ * Este array está inicialmente vacío y puede ser poblado con instancias de Catalogo.
+ */
+  public catalogoDocumentos: Catalogo[] = [];
+
+  constructor(private catalogosServices: CatalogosService) {
+//
+  }
+
+
    /**
    * Este método se utiliza para inicializar el componente.
    */
@@ -88,6 +106,28 @@ export class TodospasosComponent {
         break;
       }
     }
+  }
+
+   /**
+   * Obtiene el catálogo de tipos de documentos del servicio de catálogos.
+   * 
+   * Este método recupera el catálogo de tipos de documentos identificado por 
+   * `CATALOGOS_ID.CAT_TIPO_DOCUMENTO` del `catalogosServices`. 
+   * Si la respuesta contiene algún elemento, los asigna a `catalogoDocumentos`.
+   * 
+   * @returns {void}
+   */
+   public getTiposDocumentos(): void {
+    this.catalogosServices
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .subscribe({
+        next: (resp): void => {
+          if (resp.length > 0) {
+            this.catalogoDocumentos = resp;
+          }
+        },
+        error: (_error): void => { },
+      });
   }
 
 }

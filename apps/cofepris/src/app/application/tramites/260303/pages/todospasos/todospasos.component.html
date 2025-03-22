@@ -3,6 +3,9 @@
         <div class="row">
             <div class="col-md-12">
                 <h1>{{titulo}}</h1>
+                @if(indice === 2) {
+                    <ng-alert [CONTENIDO]="TEXTOS.Importante"></ng-alert>
+                }
             </div>
             <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
         </div>
@@ -12,7 +15,14 @@
                     <app-paso-uno></app-paso-uno>
                 }
                 @case (2) {
-
+                    <app-paso-dos></app-paso-dos>
+                }
+                @case (3) {
+                    <ng-alert [CONTENIDO]="TEXTOS2.Importante"></ng-alert>
+                    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+                }
+                @case (4) {
+                    <app-paso-cuatro></app-paso-cuatro>
                 }
             }
             <btn-continuar 

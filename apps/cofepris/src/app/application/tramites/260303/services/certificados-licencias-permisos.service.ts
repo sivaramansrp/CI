@@ -117,4 +117,12 @@ export class CertificadosLicenciasPermisosService {
       })
     );
   }
+
+  public getTipoDeDocumentoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/tipo-de-documento.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
 }

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { CertificadosLicenciasPermisosRoutingModule } from './certificados-licencias-permisos-routing.module';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { AlertComponent, BtnContinuarComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -14,10 +14,16 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { provideHttpClient } from '@angular/common/http';
 import { CertificadosLicenciasPermisosService } from '../services/certificados-licencias-permisos.service';
 import { FabricanteModalComponent } from '../components/fabricante-modal/fabricante-modal.component';
+import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
+import { RequisitosNecesariosComponent } from '../components/requisitos-necesarios/requisitos-necesarios.component';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
+import { PasoCuatroComponent } from '../pages/paso-cuatro/paso-cuatro.component';
 
 
 @NgModule({
-  declarations: [TodospasosComponent,PasoUnoComponent],
+  declarations: [TodospasosComponent,PasoUnoComponent,PasoDosComponent,PasoCuatroComponent],
   imports: [
     CommonModule,
     CertificadosLicenciasPermisosRoutingModule,
@@ -28,12 +34,20 @@ import { FabricanteModalComponent } from '../components/fabricante-modal/fabrica
     PagoDeDerechosComponent,
     TercerosRelacionadosComponent,
     AlertComponent,
-    FabricanteModalComponent
+    FabricanteModalComponent,
+    RequisitosNecesariosComponent,
+    AnexarDocumentosComponent,
+    ToastrModule.forRoot(),
+    FirmaElectronicaComponent
 ],
 providers: [
   BsModalService,
   provideHttpClient(),
-  CertificadosLicenciasPermisosService
+  CertificadosLicenciasPermisosService,
+  CatalogosService,
+  ToastrService,
+  InicioSesionService,
+  SubirDocumentoService
 ]
 }) 
 export class CertificadosLicenciasPermisosModule { }
