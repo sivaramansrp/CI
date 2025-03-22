@@ -45,6 +45,7 @@
           id="justificación"
           class="form-control"
           formControlName="justificacion"
+          (change)="cambioJustificacion($event)"
           style="height: 100%; resize: none;"
         ></textarea>
       </div>
@@ -64,11 +65,15 @@
             formControlName="certificadosAutorizados"
           />
         </div>
-        <div class="col-md-4">
-          <input-fecha
-            [datos]="fechaInicioInput"
-            formControlName="fechaInicio"
-          ></input-fecha>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="fechaInicio">Fecha de inspección *:</label>
+          <input
+            type="date"
+            id="fechaInicio"
+            class="form-control"
+            formControlName="fechaInicioUno"
+            (change)="cambioFechaInicio($event)"
+          />
         </div>
         <div class="col-md-4">
           <div class="form-group">
@@ -89,6 +94,7 @@
               [placeholder]="aduanaDeIngreso.primerOpcion"
               formControlName="aduanaDeIngreso"
               [isDisabled]="false"
+              (selectionChange)="cambioAduanaDeIngreso($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -121,12 +127,12 @@
       <div class="row">
         <ng-titulo titulo="Responsable inspección en punto" />
         <div class="col-md-4 form-group">
-          <label for="nombreInsp" class="form-label">Nombre(s):</label>
+          <label for="nombreInspector" class="form-label">Nombre(s):</label>
           <input
             class="form-control"
             type="text"
-            id="nombreInsp"
-            formControlName="nombreInsp"
+            id="nombreInspector"
+            formControlName="nombreInspector"
           />
         </div>
         <div class="col-md-4 form-group">
@@ -173,6 +179,7 @@
             [label]="tipoContenedor.labelNombre"
             [placeholder]="tipoContenedor.primerOpcion"
             formControlName="tipoContenedor"
+            (selectionChange)="cambioTipoContenedor($event)"
             [isDisabled]="false"
           ></app-catalogo-select>
         </div>
@@ -201,6 +208,7 @@
             size="30"
             id="identificacionTransporte"
             formControlName="identificacionTransporte"
+            (change)="cambioIdentificacionTransporte($event)"
           />
         </div>
 

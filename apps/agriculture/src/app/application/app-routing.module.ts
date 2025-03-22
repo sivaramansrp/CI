@@ -59,9 +59,9 @@ const routes: Routes = [
   },
   {
 
-    path: 'inspeccionfitosanitario',
+    path: 'inspeccion-fitosanitario',
     loadChildren: () =>
-      import('./tramites/220702/inspeccionfitosanitario.module').then(
+      import('./tramites/220702/inspeccion-fitosanitario.module').then(
         (m) => m.InspeccionFitosanitarioModule
       ),
   },

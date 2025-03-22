@@ -3,7 +3,7 @@ export interface DatosDelTramite {
 }
 
 export interface ResponsableInspección {
-    nombreInsp: string;
+    nombreInspector: string;
     primerApellido: string;
     segundoApellido: string;
     cantidadContenedores: number;
@@ -38,7 +38,7 @@ export interface PagoDeDerechosRevision {
 }
 
 export interface DatosGenerales {
-    foliodel: string;
+  folioDelTramite: string;
     aduanaDeIngreso: string;
     oficinaDeInspeccion: string;
     puntoDeInspeccion: string;
@@ -58,7 +58,7 @@ export interface DatosDeLaSolicitudInt {
     aduanaDeIngreso: string;
     sanidadAgropecuaria: string;
     puntoDeInspeccion: string;
-    nombreInsp: string;
+    nombreInspector: string;
     primerApellido: string;
     segundoApellido: string;
     cantidadContenedores: string;
@@ -71,7 +71,7 @@ export interface DatosDeLaSolicitudInt {
 }
 
 export interface InternaDatosGeneralesInt {
-    foliodel: number;
+  folioDelTramite: number;
     aduanaIngreso: string;
     oficinaInspeccion: string;
     puntoInspeccion: string;
@@ -119,10 +119,10 @@ export interface ServiceDatos {
     message: string;
   }
   export interface ServiceDatosDeMercancia {
-    Fracciónarancelaria: string;
-    Descripcióndelafracción: string;
+    Fraccionarancelaria: string;
+    Descripciondelafraccion: string;
     Nico: string;
-    DescripciónNico: string;
+    DescripcionNico: string;
     UnidaddemedidadetarifaUMT: string;
     CantidadtotalUMT: string;
     estatus: boolean;
@@ -168,7 +168,7 @@ export interface DestinoInfo {
   }
   export interface DatosInfo {
     id: number;
-    nombreInsp: string;
+    nombreInspector: string;
     primerApellido: string;
     segundoApellido: string;
     cantidadContenedores: number;
@@ -190,6 +190,20 @@ export interface DestinoInfo {
   export interface PagoDeDerechosApiResponse {
     data: RevisionData;
   }
+
+  export interface RevisionDataPageDeDerechos {
+    claveDeReferencia: string;
+    cadenaDependencia: string;
+    banco: number;
+    llaveDePago: string;
+    fechaInicio: string;
+    importeDePago: string;
+  }
+  
+  export interface PagoDeDerechosResponseDos {
+    data: RevisionDataPageDeDerechos;
+  }
+  
   
   export interface DataInfo {
     certificadosAutorizados: string;

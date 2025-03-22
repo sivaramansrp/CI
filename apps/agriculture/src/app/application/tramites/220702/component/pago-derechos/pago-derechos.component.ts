@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
-import { PagoDeDerechosApiResponse } from '../../modelos/acuicola.model';
+import {PagoDeDerechosResponseDos } from '../../modelos/acuicola.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
@@ -73,7 +73,7 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
     this.fitosanitarioService
       .pagoDeCargarDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: PagoDeDerechosApiResponse) => {
+      .subscribe((data: PagoDeDerechosResponseDos) => {
         this.pagosDerechosForm.patchValue(data.data);
       })
   }

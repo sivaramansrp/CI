@@ -7,6 +7,7 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PASOS, SECCIONES_TRAMITE_220702 } from '../../constantes/acuicola.enum';
 import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { map, takeUntil } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
@@ -31,7 +32,7 @@ interface AccionBoton {
   templateUrl: './acuicola-page.component.html',
   
 })
-export class AcuicolaPageComponent implements OnInit {
+export class AcuicolaPageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del asistente.
    */
@@ -131,4 +132,10 @@ export class AcuicolaPageComponent implements OnInit {
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMAVALIDA);
   }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.unsubscribe();
+  }
+
+   
 }

@@ -7,7 +7,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
@@ -37,7 +37,7 @@ export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
 export const INSTRUCCION_DOBLE_CLIC =
-  'Al dar clic en el boton "Cargar" se creara una nueva solicitud con los mismos datos de la solcitud 202766288 ';
+  'Al dar clic en el botón "Cargar" se creará una nueva solicitud con los mismos datos de la solcitud 202766288 ';
 
 export const MANDATORY_INSTRUCTION =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
@@ -176,7 +176,7 @@ export interface MercanciaInfo {
 
 export const EXPORTADOR_SERVICIO = [
   {
-    encabezado: 'Nombre/denominacaió o razón social',
+    encabezado: 'Nombre/ denominación o razón social',
     clave: (ele: ExportadorInfo): string => ele.Nombre,
     orden: 1,
   },
@@ -214,7 +214,7 @@ export interface ExportadorInfo {
 
 export const DESTINO_SERVICIO = [
   {
-    encabezado: 'Nombre/denominacaió o razón social',
+    encabezado: 'Nombre/denominación o razón social',
     clave: (ele: DestinoInfo): string => ele.TABLA_Columna_1,
     orden: 1,
   },
@@ -289,42 +289,42 @@ export interface DestinoInfo {
 export const MEDIO_SERVICIO = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: MedioInfo): string => ele.Fracciónarancelaria,
+    clave: (ele: MercanciaDatosInfo): string => ele.Fraccionarancelaria,
     orden: 1,
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: MedioInfo): string => ele.Descripcióndelafracción,
+    clave: (ele: MercanciaDatosInfo): string => ele.Descripciondelafraccion,
     orden: 2,
   },
   {
     encabezado: 'Nico',
-    clave: (ele: MedioInfo): string => ele.Nico,
+    clave: (ele: MercanciaDatosInfo): string => ele.Nico,
     orden: 3,
   },
   {
     encabezado: 'Descripción Nico',
-    clave: (ele: MedioInfo): string => ele.DescripciónNico,
+    clave: (ele: MercanciaDatosInfo): string => ele.DescripcionNico,
     orden: 4,
   },
   {
     encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: MedioInfo): string => ele.UnidaddemedidadetarifaUMT,
+    clave: (ele: MercanciaDatosInfo): string => ele.UnidaddemedidadetarifaUMT,
     orden: 5,
   },
   {
     encabezado: 'Cantidad total UMT',
-    clave: (ele: MedioInfo): string => ele.CantidadtotalUMT,
+    clave: (ele: MercanciaDatosInfo): string => ele.CantidadtotalUMT,
     orden: 6,
   },
 ];
 
 
-export interface MedioInfo {
-  Fracciónarancelaria: string;
-  Descripcióndelafracción:string;
+export interface MercanciaDatosInfo {
+  Fraccionarancelaria: string;
+  Descripciondelafraccion:string;
   Nico: string;
-  DescripciónNico: string;
+  DescripcionNico: string;
   UnidaddemedidadetarifaUMT: string;
   CantidadtotalUMT: string;
   

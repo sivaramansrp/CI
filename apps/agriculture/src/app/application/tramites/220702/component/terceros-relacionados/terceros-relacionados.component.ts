@@ -5,9 +5,11 @@ import { Component } from '@angular/core';
 import { EXPORTADOR_SERVICIO } from '../../constantes/acuicola.enum';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { MANDATORY_INSTRUCTION } from '../../constantes/acuicola.enum';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-terceros-relacionados',
@@ -22,7 +24,7 @@ import { Subject } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
     * Instrucción que se muestra al usuario para indicar que debe hacer doble clic en un elemento
@@ -74,7 +76,9 @@ export class TercerosRelacionadosComponent implements OnInit {
       
     }
     getDatos(): void {
-      this.fitosanitarioService.getDatosExportador().subscribe((resp) => {
+      this.fitosanitarioService.getDatosExportador()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.exportadorTableDatos = RESPONSE;
@@ -82,12 +86,19 @@ export class TercerosRelacionadosComponent implements OnInit {
       });
     }
     getDatosDestinatario(): void {
-      this.fitosanitarioService.getDatosDestinatarioInfo().subscribe((resp) => {
+      this.fitosanitarioService.getDatosDestinatarioInfo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.destinoTableDatos = RESPONSE;
         }
       });
+    }
+
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.unsubscribe();
     }
 
 }

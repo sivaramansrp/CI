@@ -1,3 +1,8 @@
+/**
+ * @module DatosGeneralesComponent
+ * @description
+ * Componente para capturar los datos generales de la solicitud.
+ */
 
 import { CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
@@ -6,6 +11,7 @@ import { MERCANCIA_SERVICIO, MercanciaInfo } from '../../constantes/acuicola.enu
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudInt } from '../../modelos/acuicola.model';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
+import { OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TramiteStore } from '../../estados/tramite220702.store';
 import { TramiteStoreQuery } from '../../estados/tramite220702.query';
@@ -25,9 +31,8 @@ import { tap } from 'rxjs';
     TablaDinamicaComponent,
   ],
   templateUrl: './datos-generales.component.html',
-  
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Formulario reactivo para capturar los datos generales de la solicitud.
@@ -117,13 +122,7 @@ export class DatosGeneralesComponent implements OnInit {
    * Estado actual de la solicitud.
    * @type {DatosDeLaSolicitudInt}
    */
-  SolicitudState!: DatosDeLaSolicitudInt;
-
-  /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
-   */
-  private unsubscribe$ = new Subject<void>();
+  solicitudState!: DatosDeLaSolicitudInt;
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -154,7 +153,6 @@ export class DatosGeneralesComponent implements OnInit {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  
   ) { 
     // No se necesita lógica de inicialización adicional.
   }
@@ -169,7 +167,7 @@ export class DatosGeneralesComponent implements OnInit {
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-        this.SolicitudState = seccionState.SolicitudState;
+        this.solicitudState = seccionState.SolicitudState;
       })
     ).subscribe();
 
@@ -187,8 +185,8 @@ export class DatosGeneralesComponent implements OnInit {
       takeUntil(this.destroyNotifier$),
       map((seccionState: { SolicitudState: DatosDeLaSolicitudInt }) => {
         if (seccionState) {
-          this.SolicitudState = seccionState.SolicitudState;
-          this.datosGeneralesForm.patchValue(this.SolicitudState);
+          this.solicitudState = seccionState.SolicitudState;
+          this.datosGeneralesForm.patchValue(this.solicitudState);
         }
       })
     ).subscribe();
@@ -221,7 +219,7 @@ export class DatosGeneralesComponent implements OnInit {
    */
   iniciarFormulario(): void {
     this.datosGeneralesForm = this.fb.group({
-      foliodel: [{ value: '62340024220100001', disabled: true }, Validators.required],
+      folioDelTramite: [{ value: '62340024220100001', disabled: true }, Validators.required],
       aduanaDeIngreso: ['', Validators.required],
       oficinaDeInspeccion: ['', Validators.required],
       puntoDeInspeccion: ['', Validators.required],
@@ -241,7 +239,9 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getAduanaDeIngreso(): void {
-    this.fitosanitarioService.getAduanaDeIngreso().subscribe((resp) => {
+    this.fitosanitarioService.getAduanaDeIngreso()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.aduanaDeIngreso = {
@@ -253,8 +253,16 @@ export class DatosGeneralesComponent implements OnInit {
       }
     });
   }
+
+  /**
+   * Obtiene los datos de la mercancía desde el servicio.
+   * @method getDatos
+   * @returns {void}
+   */
   getDatos(): void {
-    this.fitosanitarioService.getDatosMercania().subscribe((resp) => {
+    this.fitosanitarioService.getDatosMercania()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.immexTableDatos = RESPONSE;
@@ -268,7 +276,9 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getOficinaDeInspeccion(): void {
-    this.fitosanitarioService.getOficinaDeInspeccion().subscribe((resp) => {
+    this.fitosanitarioService.getOficinaDeInspeccion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.oficinaDeInspeccion = {
@@ -287,7 +297,9 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getPuntoDeInspeccion(): void {
-    this.fitosanitarioService.getPuntoDeInspeccion().subscribe((resp) => {
+    this.fitosanitarioService.getPuntoDeInspeccion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.puntoDeInspeccion = {
@@ -306,11 +318,13 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getRegimenAlQue(): void {
-    this.fitosanitarioService.getRegimenAlQue().subscribe((resp) => {
+    this.fitosanitarioService.getRegimenAlQue()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.regimenAlQueDestina = {
-          labelNombre: 'Regimen al que se destinara la mercancia',
+          labelNombre: 'Régimen al que se destinara la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: RESPONSE,
@@ -325,7 +339,9 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getDatosParaMovilizacion(): void {
-    this.fitosanitarioService.getDatosParaMovilizacion().subscribe((resp) => {
+    this.fitosanitarioService.getDatosParaMovilizacion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.datosParaMovilizacion = {
@@ -344,7 +360,9 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void}
    */
   getPuntoDeVerificacion(): void {
-    this.fitosanitarioService.getPuntoDeVerificacion().subscribe((resp) => {
+    this.fitosanitarioService.getPuntoDeVerificacion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.puntoDeVerificacion = {
@@ -355,6 +373,17 @@ export class DatosGeneralesComponent implements OnInit {
         };
       }
     });
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Aquí se notifica la destrucción del componente para cancelar suscripciones.
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.unsubscribe();
   }
 
 }

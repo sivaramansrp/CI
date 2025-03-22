@@ -1,21 +1,21 @@
-import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MedioInfo } from '../../constantes/acuicola.enum';
+import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
 
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeLaSolicitudInt, InspeccionApiResponse} from '../../modelos/acuicola.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, takeUntil, tap } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import{CertificadosResponse} from '../../modelos/acuicola.model';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../modelos/configuracio-columna.model';
+import { ConfiguracionColumna } from '../../modelos/configuracion-columna.model';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { TEXTOS_220702 } from '../../constantes/acuicola.enum';
+import { TramiteState } from '../../estados/tramite220702.store';
 import { TramiteStore } from '../../estados/tramite220702.store';
 import { TramiteStoreQuery } from '../../estados/tramite220702.query';
-import { delay } from 'rxjs';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -44,7 +44,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud.
    * @type {DatosDeLaSolicitudInt}
    */
-  SolicitudState!: DatosDeLaSolicitudInt;
+  solicitudState!: DatosDeLaSolicitudInt;
 
   /**
    * Indica si la sección colapsable está abierta o cerrada.
@@ -68,37 +68,67 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Catálogo de horas de inspección.
    * @type {CatalogosSelect}
    */
-  horaDeInspeccion!: CatalogosSelect;
+  horaDeInspeccion: CatalogosSelect={
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de aduanas de ingreso.
    * @type {CatalogosSelect}
    */
-  aduanaDeIngreso!: CatalogosSelect;
+  aduanaDeIngreso: CatalogosSelect={
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de oficinas de inspección.
    * @type {CatalogosSelect}
    */
-  oficinaDeInspeccion!: CatalogosSelect;
+  oficinaDeInspeccion: CatalogosSelect={
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de puntos de inspección.
    * @type {CatalogosSelect}
    */
-  puntoDeInspeccion!: CatalogosSelect;
+  puntoDeInspeccion:CatalogosSelect={
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de tipos de contenedores.
    * @type {CatalogosSelect}
    */
-  tipoContenedor!: CatalogosSelect;
+  tipoContenedor: CatalogosSelect={
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de medios de transporte.
    * @type {CatalogosSelect}
    */
-  medioDeTransporte!: CatalogosSelect;
+  medioDeTransporte: CatalogosSelect={
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Textos estáticos utilizados en el componente.
@@ -106,17 +136,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   TEXTOS = TEXTOS_220702;
 
+  tramiteState: TramiteState={} as TramiteState;
+
   /**
    * Configuración de columnas para la tabla de medios de servicio.
-   * @type {ConfiguracionColumna<MedioInfo>[]}
+   * @type {ConfiguracionColumna<MercanciaDatosInfo>[]}
    */
-  exportadorTabla: ConfiguracionColumna<MedioInfo>[] = MEDIO_SERVICIO;
+  exportadorTabla: ConfiguracionColumna<MercanciaDatosInfo>[] = MEDIO_SERVICIO;
 
   /**
    * Datos de la mercancía para la tabla.
-   * @type {MedioInfo[]}
+   * @type {MercanciaDatosInfo[]}
    */
-  mercanciaDatos: MedioInfo[] = [];
+  mercanciaDatos: MercanciaDatosInfo[] = [];
 
   /**
    * Configuración del campo de fecha de inicio.
@@ -124,12 +156,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
-  /**
-   * Subject para manejar la desuscripción de observables.
-   * @type {Subject<void>}
-   */
-  private unsubscribe$ = new Subject<void>();
-
+  
   /**
    * Subject para notificar la destrucción del componente.
    * @type {Subject<void>}
@@ -171,12 +198,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.SolicitudState = seccionState.SolicitudState;
-      })
-    ).subscribe();
 
     this.iniciarFormulario();
     this.getHoraDeInspeccion();
@@ -189,37 +210,34 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getMedioDeTransporte();
     this.getDatos();
 
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState: { SolicitudState: DatosDeLaSolicitudInt }) => {
-          if (seccionState) {
-            this.SolicitudState = seccionState.SolicitudState;
-            this.datosDeLaSolicitudForm.patchValue(this.SolicitudState);
-          }
-        })
-      ).subscribe();
-    this.datosDeLaSolicitudForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
-          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
+     
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((datos: TramiteState) => {
+        this.tramiteState = datos;
+        this.datosDeLaSolicitudForm.patchValue({
+          justificacion: datos.justificacion,
+          certificadosAutorizados: datos.certificadosAutorizados,
+          fechaInicioUno: datos.fechaInicio,
+          horaDeInspeccion: datos.horaDeInspeccion,
+          aduanaDeIngreso: datos.aduanaDeIngreso,
+          oficinaDeInspeccion: datos.oficinaDeInspeccion,
+          puntoDeInspeccion: datos.puntoDeInspeccion,
+          nombreInspector: datos.nombreInspector,
+          primerApellido: datos.primerApellido,
+          segundoApellido: datos.segundoApellido,
+          cantidadContenedores: datos.cantidadContenedores,
+          tipoContenedor: datos.tipoContenedor,
+          medioDeTransporte: datos.medioDeTransporte,
+          identificacionTransporte: datos.identificacionTransporte,
+          esSolicitudFerros: datos.esSolicitudFerros
+          
+        });
+      })
+    )
+    .subscribe();
 
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
   }
-
   /**
    * Inicializa el formulario reactivo con los controles necesarios.
    * @method iniciarFormulario
@@ -227,21 +245,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   iniciarFormulario(): void {
     this.datosDeLaSolicitudForm = this.fb.group({
-      justificacion: ['', Validators.required],
-      certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
-      fechaInicio: ['', Validators.required],
-      horaDeInspeccion: ['', Validators.required],
-      aduanaDeIngreso: ['', Validators.required],
-      oficinaDeInspeccion: ['', Validators.required],
-      puntoDeInspeccion: ['', Validators.required],
-      nombreInsp: [{ value: '', disabled: true }, Validators.required],
-      primerApellido: [{ value: '', disabled: true }, Validators.required],
-      segundoApellido: [{ value: '', disabled: true }, Validators.required],
-      cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
-      tipoContenedor: ['', Validators.required],
-      medioDeTransporte: ['', Validators.required],
-      identificacionTransporte: ['', Validators.required],
-      esSolicitudFerros: ['', Validators.required]
+      justificacion: [{value:this.tramiteState.justificacion}, Validators.required],
+      certificadosAutorizados: [{ value:this.tramiteState.certificadosAutorizados, disabled: true }, Validators.required],
+      fechaInicioUno: [{value:this.tramiteState.fechaInicioUno}, Validators.required],
+      horaDeInspeccion: [{value:this.tramiteState.horaDeInspeccion}, Validators.required],
+      aduanaDeIngreso: [{value:this.tramiteState.aduanaDeIngreso}, Validators.required],
+      oficinaDeInspeccion: [{value:this.tramiteState.oficinaDeInspeccion}, Validators.required],
+      puntoDeInspeccion: [{value:this.tramiteState.puntoDeInspeccion}, Validators.required],
+      nombreInspector: [{value:this.tramiteState.nombreInspector, disabled: true }, Validators.required],
+      primerApellido: [{ value:this.tramiteState.primerApellido, disabled: true }, Validators.required],
+      segundoApellido: [{ value: this.tramiteState.segundoApellido, disabled: true }, Validators.required],
+      cantidadContenedores: [{ value: this.tramiteState.cantidadContenedores, disabled: true }, Validators.required],
+      tipoContenedor: [{value:this.tramiteState.tipoContenedor}, Validators.required],
+      medioDeTransporte: [{value:this.tramiteState.medioDeTransporte}, Validators.required],
+      identificacionTransporte: [{value:this.tramiteState.identificacionTransporte}, Validators.required],
+      esSolicitudFerros: [{value:this.tramiteState.esSolicitudFerros}, Validators.required]
     });
   }
 
@@ -264,7 +282,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .obtenerDatosCertificados()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: CertificadosResponse) => {
-        this.datosDeLaSolicitudForm.patchValue(data.data);
+      this.tramiteStore.setCertificadosAutorizados(data.data.certificadosAutorizados);
       })
   }
 
@@ -274,7 +292,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getHoraDeInspeccion(): void {
-    this.fitosanitarioService.getHoraDeInspeccion().subscribe((resp) => {
+    this.fitosanitarioService.getHoraDeInspeccion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.horaDeInspeccion = {
@@ -293,7 +313,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaDeIngreso(): void {
-    this.fitosanitarioService.getAduanaDeIngreso().subscribe((resp) => {
+    this.fitosanitarioService.getAduanaDeIngreso()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.aduanaDeIngreso = {
@@ -306,8 +328,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Obtiene los datos de la mercancía desde el servicio.
+   * @method getDatos
+   * @returns {void}
+   */
+
   getDatos(): void {
-    this.fitosanitarioService.getDatosDeLaMercancia().subscribe((resp) => {
+    this.fitosanitarioService.getDatosDeLaMercancia()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.mercanciaDatos = RESPONSE;
@@ -321,7 +351,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficinaDeInspeccion(): void {
-    this.fitosanitarioService.getOficinaDeInspeccion().subscribe((resp) => {
+    this.fitosanitarioService.getOficinaDeInspeccion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.oficinaDeInspeccion = {
@@ -340,7 +372,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoDeInspeccion(): void {
-    this.fitosanitarioService.getPuntoDeInspeccion().subscribe((resp) => {
+    this.fitosanitarioService.getPuntoDeInspeccion()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.puntoDeInspeccion = {
@@ -359,7 +393,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getTipoContenedor(): void {
-    this.fitosanitarioService.getTipoContenedor().subscribe((resp) => {
+    this.fitosanitarioService.getTipoContenedor()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.tipoContenedor = {
@@ -378,7 +414,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMedioDeTransporte(): void {
-    this.fitosanitarioService.getMedioDeTransporte().subscribe((resp) => {
+    this.fitosanitarioService.getMedioDeTransporte()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.medioDeTransporte = {
@@ -401,8 +439,66 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .obtenerResponsableDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: InspeccionApiResponse) => {
-        this.datosDeLaSolicitudForm.patchValue(data.data);
+        this.tramiteStore.setNombreInspector(data.data.nombreInspector);
+        this.tramiteStore.setPrimerApellido(data.data.primerApellido);
+        this.tramiteStore.setSegundoApellido(data.data.segundoApellido);
+        this.tramiteStore.setCantidadContenedores(data.data.cantidadContenedores);
       })
+  }
+
+  /**
+   * Maneja el cambio en la identificación del transporte.
+   * @method cambioIdentificacionTransporte
+   * @param {Event} event - Evento de cambio.
+   * @returns {void}
+   */
+  cambioIdentificacionTransporte(event:Event):void{
+    const IDENTIFICACION = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setIdentificacionTransporte(IDENTIFICACION);
+  }
+   
+  /**
+   * Maneja el cambio en el tipo de contenedor.
+   * @method cambioTipoContenedor
+   * @param {Catalogo} event - Evento de cambio.
+   * @returns {void}
+   */
+
+  cambioTipoContenedor(event:Catalogo):void{
+    this.tramiteStore.setTipoContenedor(event.id);
+  }
+
+  /**
+   * Maneja el cambio en la justificación.
+   * @method cambioJustificacion
+   * @param {Event} event - Evento de cambio.
+   * @returns {void}
+   */
+  cambioJustificacion(event:Event):void{
+    const JUSTIFICACION = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setJustificacion(JUSTIFICACION);
+  }
+
+   /**
+   * Maneja el cambio en la fecha de inicio.
+   * @method cambioFechaInicio
+   * @param {Event} event - Evento de cambio.
+   * @returns {void}
+   */
+
+  cambioFechaInicio(event:Event):void{
+    const FECHA = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setFechaInicio(FECHA);
+  }
+   
+  /**
+   * Maneja el cambio en la aduana de ingreso.
+   * @method cambioAduanaDeIngreso
+   * @param {Catalogo} event - Evento de cambio.
+   * @returns {void}
+   */
+  cambioAduanaDeIngreso(event:Catalogo):void{
+    this.tramiteStore.setAduanaDeIngreso(event.id);
   }
 
   /**
