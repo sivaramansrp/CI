@@ -34,9 +34,12 @@ export class SolicitudPageComponent implements OnInit {
   };
 
   constructor(
-    private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
-  ) { }
+              private seccionQuery: SeccionLibQuery,
+              private seccionStore: SeccionLibStore,) 
+  // eslint-disable-next-line no-empty-function
+  {
+
+  }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.

@@ -38,7 +38,12 @@ export class PedimentoComponent implements OnChanges {
   tituloModal!: string;
   mensajeModal!: string;
 
-  constructor(private validacionesService: ValidacionesFormularioService) { }
+  constructor(
+              private validacionesService: ValidacionesFormularioService) 
+  // eslint-disable-next-line no-empty-function
+  {
+
+  }
 
   /**
    * Verifica si el formulario de pedimento es válido.
@@ -60,12 +65,12 @@ export class PedimentoComponent implements OnChanges {
    * - `datosNroPedimento`: Si esta propiedad cambia, se actualiza el valor de `this.datosNroPedimento` con el valor actual.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['validacion']) {
-      this.validacion = changes['validacion'].currentValue;
+    if (changes.validacion) {
+      this.validacion = changes.validacion.currentValue;
     }
 
-    if (changes['datosNroPedimento']) {
-      this.datosNroPedimento = changes['datosNroPedimento'].currentValue;
+    if (changes.datosNroPedimento) {
+      this.datosNroPedimento = changes.datosNroPedimento.currentValue;
     }
   }
 
