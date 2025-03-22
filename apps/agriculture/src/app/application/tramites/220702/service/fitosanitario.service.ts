@@ -70,7 +70,7 @@ export class FitosanitarioService {
    * @returns Un `Observable` que emite un objeto de tipo `ApiResponseDos`.
    */
   getDatosDeLaMercancia(): Observable<ApiResponseDos> {
-    return this.http.get<ApiResponseDos>(`${this.apiUrl}datos-de-la-mercancia.json`).pipe(
+    return this.http.get<ApiResponseDos>(`${this.apiUrl}mercancia-datos.json`).pipe(
       map((res) => res)
     );
   }
