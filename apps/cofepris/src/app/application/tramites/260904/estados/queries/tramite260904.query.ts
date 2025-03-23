@@ -26,6 +26,9 @@ export class Tramite260904Query extends Query<Tramite260904State> {
   acuerdoPublico$ = this.select((state) => state.acuerdoPublico);
   rfc$ = this.select((state) => state.rfc);
 
+  selectTramite260904$= this.select((state) => {
+    return state;
+  });
   constructor(private tramiteStore: Tramite260904Store) {
     super(tramiteStore);
   }

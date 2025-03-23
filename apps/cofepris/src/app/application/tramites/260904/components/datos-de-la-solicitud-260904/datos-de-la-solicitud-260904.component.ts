@@ -14,6 +14,21 @@ import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
 import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
 import { Validators } from '@angular/forms';
 
+/**
+ * Componente para gestionar los datos de la solicitud 260904.
+ * 
+ * @selector app-datos-de-la-solicitud-260904
+ * @standalone true
+ * @imports [
+ *   CommonModule,
+ *   AlertComponent,
+ *   InputRadioComponent,
+ *   ReactiveFormsModule,
+ *   TituloComponent
+ * ]
+ * @templateUrl ./datos-de-la-solicitud-260904.component.html
+ * @styleUrl ./datos-de-la-solicitud-260904.component.scss
+ */
 @Component({
   selector: 'app-datos-de-la-solicitud-260904',
   standalone: true,
@@ -28,25 +43,66 @@ import { Validators } from '@angular/forms';
   styleUrl: './datos-de-la-solicitud-260904.component.scss',
 })
 export class DatosDeLaSolicitud260904Component implements OnInit {
+  /**
+   * Indica si el formulario es colapsable.
+   */
   colapsable: boolean = true;
+
+  /**
+   * Textos de alerta.
+   */
   TEXTOS = ALERT;
+
+  /**
+   * Opciones de botón de radio.
+   */
   btonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
+
+  /**
+   * Formulario principal.
+   */
   form!: FormGroup;
+
+  /**
+   * Formulario de datos del establecimiento.
+   */
   datosDelEstablecimiento!: FormGroup;
 
+  /**
+   * Observable para el botón de radio.
+   */
   btonDeRadio$: Observable<string | null> =
     this.tramite260904Query.btonDeRadio$;
 
+  /**
+   * Observable para la justificación.
+   */
   justificación$: Observable<string | null> =
     this.tramite260904Query.justificación$;
 
+  /**
+   * Observable para el RFC del establecimiento.
+   */
   rfcDel$: Observable<string | null> = this.tramite260904Query.rfcDel$;
 
+  /**
+   * Observable para la denominación del establecimiento.
+   */
   denominacion$: Observable<string | null> =
     this.tramite260904Query.denominacion$;
 
+  /**
+   * Observable para el correo del establecimiento.
+   */
   correo$: Observable<string | null> = this.tramite260904Query.correo$;
 
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb FormBuilder para crear formularios.
+   * @param tramite260904Query Consulta de datos del trámite.
+   * @param tramite260904Store Almacenamiento de datos del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite260904Query: Tramite260904Query,
@@ -55,6 +111,9 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
     // Constructor
   }
 
+  /**
+   * Método de inicialización del componente.
+   */
   ngOnInit(): void {
     this.crearFormulario();
 
@@ -91,10 +150,16 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
     });
   }
 
+  /**
+   * Método para mostrar u ocultar el formulario colapsable.
+   */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
+  /**
+   * Método para crear el formulario.
+   */
   crearFormulario(): void {
     this.form = this.fb.group({
       btonDeRadio: ['', [Validators.required]],
@@ -108,6 +173,9 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
     });
   }
 
+  /**
+   * Método para habilitar los controles del formulario.
+   */
   toggleFormControls(): void {
     Object.keys(this.datosDelEstablecimiento.controls).forEach(
       (controlName) => {
@@ -119,27 +187,42 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
     );
   }
 
+  /**
+   * Método para obtener el valor del botón de radio.
+   */
   getBtonDeRadio(): void {
     const BTON_DE_RADIO = this.form.get('btonDeRadio')?.value;
     this.tramite260904Store.setBtonDeRadio(BTON_DE_RADIO);
   }
 
+  /**
+   * Método para obtener el valor de la justificación.
+   */
   getJustificacion(): void {
     const JUSTIFICACION = this.form.get('justificación')?.value;
     this.tramite260904Store.setJustificación(JUSTIFICACION);
   }
 
+  /**
+   * Método para obtener el valor del RFC del establecimiento.
+   */
   getRfcDel(): void {
     const RFC_DEL = this.datosDelEstablecimiento.get('rfcDel')?.value;
     this.tramite260904Store.setRfcDel(RFC_DEL);
   }
 
+  /**
+   * Método para obtener el valor de la denominación del establecimiento.
+   */
   getDenominacion(): void {
     const DENOMINACION =
       this.datosDelEstablecimiento.get('denominacion')?.value;
     this.tramite260904Store.setDenominacion(DENOMINACION);
   }
 
+  /**
+   * Método para obtener el valor del correo del establecimiento.
+   */
   getCorreo(): void {
     const CORREO = this.datosDelEstablecimiento.get('correo')?.value;
     this.tramite260904Store.setCorreo(CORREO);

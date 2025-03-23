@@ -25,6 +25,13 @@ export interface Tramite260904State {
   manifests: string;
   acuerdoPublico: string;
   rfc: string;
+
+  claveDeReferencia: string;
+  cadenaPagoDependencia: string;
+  clave: string;
+  llaveDePago: string;
+  fecPago: string;
+  impPago: string;
 }
 
 
@@ -50,7 +57,14 @@ export function createInitialState(): Tramite260904State {
     aifaCheckbox: '',
     manifests: '',
     acuerdoPublico: '',
-    rfc: ''
+    rfc: '',
+
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
+    clave: '',
+    llaveDePago: '',
+    fecPago: '',
+    impPago: '',
   };
 }
 
@@ -200,6 +214,48 @@ export class Tramite260904Store extends Store<Tramite260904State> {
     this.update((state) => ({
       ...state,
       rfc,
+    }));
+  }
+
+  public setClaveDeReferencia(claveDeReferencia: string): void {
+    this.update((state) => ({
+      ...state,
+      claveDeReferencia,
+    }));
+  }
+
+  public setCadenaPagoDependencia(cadenaPagoDependencia: string): void {
+    this.update((state) => ({
+      ...state,
+      cadenaPagoDependencia,
+    }));
+  }
+
+  public setClave(clave: string): void {
+    this.update((state) => ({
+      ...state,
+      clave,
+    }));
+  }
+
+  public setLlaveDePago(llaveDePago: string): void {
+    this.update((state) => ({
+      ...state,
+      llaveDePago,
+    }));
+  }
+
+  public setFecPago(fecPago: string): void {
+    this.update((state) => ({
+      ...state,
+      fecPago,
+    }));
+  }
+
+  public setImpPago(impPago: string): void {
+    this.update((state) => ({
+      ...state,
+      impPago,
     }));
   }
 }

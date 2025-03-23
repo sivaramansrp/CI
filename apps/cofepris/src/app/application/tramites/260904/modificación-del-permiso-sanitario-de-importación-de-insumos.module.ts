@@ -5,12 +5,14 @@ import { DomicilioDelEstablecimiento260904Component } from './components/domicil
 import { ModPermisoSanitarioImportacion260904Component } from './pages/mod-permiso-sanitario-importacion-260904/mod-permiso-sanitario-importacion-260904.component';
 import { ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosRoutingModule } from './modificación-del-permiso-sanitario-de-importación-de-insumos-routing.module';
 import { NgModule } from '@angular/core';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from '../260912/pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../260912/pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
+import { TramitesAsociadoComponent } from './components/tramites-asociado/tramites-asociado.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 @NgModule({
@@ -28,7 +30,9 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     ReactiveFormsModule,
     BtnContinuarComponent,
     DatosDeLaSolicitud260904Component,
-    DomicilioDelEstablecimiento260904Component
+    DomicilioDelEstablecimiento260904Component,
+    PagoDeDerechosComponent,
+    TramitesAsociadoComponent
   ],
   providers: [ToastrService],
 })
