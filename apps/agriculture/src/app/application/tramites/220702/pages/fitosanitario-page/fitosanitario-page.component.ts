@@ -20,7 +20,7 @@ interface AccionBoton {
 }
 
 @Component({
-  selector: 'app-acuicola-page',
+  selector: 'app-fitosanitario-page',
   standalone: true,
   imports: [
     PasoUnoComponent,
@@ -29,10 +29,10 @@ interface AccionBoton {
     BtnContinuarComponent,
     WizardComponent
   ],
-  templateUrl: './acuicola-page.component.html',
+  templateUrl: './fitosanitario-page.component.html',
   
 })
-export class AcuicolaPageComponent implements OnInit, OnDestroy {
+export class FitosanitarioPageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del asistente.
    */

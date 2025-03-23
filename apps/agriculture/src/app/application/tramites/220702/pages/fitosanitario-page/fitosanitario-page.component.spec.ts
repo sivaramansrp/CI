@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { AcuicolaPageComponent } from './acuicola-page.component';
+import { FitosanitarioPageComponent } from './fitosanitario-page.component';
 import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 import { SeccionStore } from '../../../../estados/seccion.store';
 
@@ -17,13 +17,13 @@ class MockSeccionQuery { }
 @Injectable()
 class MockSeccionStore { }
 
-describe('AcuicolaPageComponent', () => {
+describe('FitosanitarioPageComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, AcuicolaPageComponent],
+      imports: [FormsModule, ReactiveFormsModule, FitosanitarioPageComponent],
       declarations: [
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
@@ -31,10 +31,10 @@ describe('AcuicolaPageComponent', () => {
         { provide: SeccionQuery, useClass: MockSeccionQuery },
         { provide: SeccionStore, useClass: MockSeccionStore }
       ]
-    }).overrideComponent(AcuicolaPageComponent, {
+    }).overrideComponent(FitosanitarioPageComponent, {
 
     }).compileComponents();
-    fixture = TestBed.createComponent(AcuicolaPageComponent);
+    fixture = TestBed.createComponent(FitosanitarioPageComponent);
     component = fixture.debugElement.componentInstance;
   });
 

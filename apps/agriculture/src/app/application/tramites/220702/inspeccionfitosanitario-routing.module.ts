@@ -1,11 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcuicolaPageComponent } from './pages/acuicola-page/acuicola-page.component';
+import { FitosanitarioPageComponent } from './pages/fitosanitario-page/fitosanitario-page.component';
 import { NgModule } from '@angular/core';
 
 const ROUTES: Routes = [
   {
-    path: 'acuicola',
-    component: AcuicolaPageComponent,
+    path: 'fitosanitario',
+    component: FitosanitarioPageComponent,
   },
   {
     path: '',
