@@ -13,6 +13,7 @@
               formControlName="códigoPostal"
               appUppercase
               aria-labelledby="códigoPostal"
+              (change) = "getCodigoPostal()"
             />
             <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
               <small
@@ -30,6 +31,7 @@
               [label]="'Estado*'"
               name="estado"
               formControlName="estado"
+              (change) = "getEstado()"
             >
             </app-catalogo-select>
 
@@ -54,6 +56,7 @@
               formControlName="municipioOAlcaldía"
               appUppercase
               aria-labelledby="municipioOAlcaldía"
+              (change) = "getMunicipioOAlcaldia()"
             />
             <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
                 <small
@@ -83,6 +86,7 @@
               formControlName="localidad"
               appUppercase
               aria-labelledby="localidad"
+              (change) ="getLocalidad()"
             />
             <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
                 <small
@@ -103,6 +107,7 @@
               formControlName="colonias"
               appUppercase
               aria-labelledby="colonias"
+              (change) = "getColonias()"
             />
             <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
                 <small
@@ -125,6 +130,7 @@
               formControlName="calle"
               appUppercase
               aria-labelledby="calle"
+              (change) = "getCalle()"
             />
             <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
                   <small
@@ -147,6 +153,7 @@
               formControlName="lada"
               appUppercase
               aria-labelledby="lada"
+              (change) = "getLada()"
             />
           </div>
         </div>
@@ -160,6 +167,7 @@
               formControlName="telefono"
               appUppercase
               aria-labelledby="telefono"
+              (change) = "getTelefono()"
             />
             <!-- <div *ngIf="esInvalido('códigoPostal')" class="text-danger">
                   <small
@@ -202,6 +210,7 @@
             type="checkbox"
             id="avisoCheckbox"
             formControlName="avisoCheckbox"
+            (change) = "getAvisoCheckbox()"
           />
           <label class="form-check-label" for="avisoCheckbox">
             <span>Aviso de funcionamiento</span>
@@ -238,6 +247,7 @@
           [required]="true"
           name="regimen"
           [tooltipQuestionCircle]="true"
+          (change) = "getRegimen()"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -247,6 +257,7 @@
           [label]="'Aduanas de entradas'"
           [required]="true"
           name="aduanasEntradas"
+          (change) = "getAduanasEntradas()"
         ></app-catalogo-select>
       </div>
     </div>
@@ -258,10 +269,11 @@
           <input
             class="form-check-input"
             type="checkbox"
-            id="avisoCheckbox"
-            formControlName="avisoCheckbox"
+            id="aifaCheckbox"
+            formControlName="aifaCheckbox"
+            (change) = "getAifaCheckbox()"
           />
-          <label class="form-check-label" for="avisoCheckbox">
+          <label class="form-check-label" for="aifaCheckbox">
             <span
               >Aeropuerto Internacional Felipe Ángeles (AIFA).
               <span
@@ -310,6 +322,7 @@
               formControlName="manifests"
               type="checkbox"
               id="manifiesto"
+              (change) = "getManifests()"
             />
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
@@ -328,7 +341,8 @@
         <app-input-radio
           [radioOptions]="opcionDeBotonDeRadio"
           [layout]="'horizontal'"
-          formControlName="BtonDeRadio"
+          formControlName="acuerdoPublico"
+          (change) = "getAcuerdoPublico()"
         ></app-input-radio>
       </div>
       <ng-titulo titulo="Representante legal"></ng-titulo>
@@ -343,6 +357,7 @@
               formControlName="rfc"
               appUppercase
               aria-labelledby="rfc"
+              (change) ="getRfc()"
             />
           </div>
         </div>
