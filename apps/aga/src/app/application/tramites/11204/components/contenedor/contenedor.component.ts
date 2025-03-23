@@ -1,4 +1,4 @@
-import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { Aduanas } from '../../models/datos-tramite.model';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -7,8 +7,8 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Contenedores } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
-import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { Contenedores } from '../../models/datos-tramite.model';
+import { DatosDelContenedor } from '../../models/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { EventEmitter } from '@angular/core';
 import { FormArray } from '@angular/forms';
@@ -20,14 +20,14 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
+import { Solicitud11201State } from '../../estados/tramite11201.store';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TemplateRef } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
-import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { Tramite11201Query } from '../../estados/tramite11201.query';
+import { Tramite11201Store } from '../../estados/tramite11201.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
@@ -63,7 +63,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar la sección de adjuntar archivo.
    */
-  showAdjuntarArchivo: boolean = false;
+  showSeccionArchivoCsv: boolean = false;
 
   /**
    * Bandera para mostrar la sección de aduana y fecha.
@@ -125,6 +125,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   currentIdx: number = 0;
 
+  mostrarAgregarTipoContenedor: boolean = false;
+
+
   /**
    * Lista de catálogos.
    */
@@ -182,15 +185,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
     { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
     { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
-    { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-    { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
-    { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
-    { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
+    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 5 },
+    { encabezado: 'vigencia', clave: (artículo) => artículo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 7 }
+    // { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
+    // { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
+    // { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
+    // { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
+    // { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
+    // { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
 
   /**
@@ -207,6 +210,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Referencia al modal.
    */
   modalRef?: BsModalRef | null;
+
+  @ViewChild('modalAgregarConstanciaTransferencia') modalAgregarConstanciaTransferencia!: TemplateRef<any>;
+  // modalRef?: BsModalRef;
 
   /**
    * Plantilla del modal.
@@ -277,6 +283,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       tipoBusqueda: [this.solicitud11201State?.tipoBusqueda, Validators.required],
       aduana: [this.solicitud11201State?.aduana, Validators.required],
       fechaIngreso: [this.solicitud11201State?.fechaIngreso, Validators.required],
+      vigencia: [this.solicitud11201State?.Vigencia, Validators.required],
       inicialesContenedor: [this.solicitud11201State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern('^[a-zA-Z0-9]+$')]],
       numeroContenedor: [this.solicitud11201State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
       digitoDeControl: [this.solicitud11201State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
@@ -352,6 +359,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.setValoresStore(this.solicitudForm, 'aduana', 'setAduana');
       this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
+      this.solicitudForm.get('vigencia')?.setValue(moment().format('YYYY-MM-DD'));
+      this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
     });
   }
 
@@ -399,8 +408,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar campos según el tipo de búsqueda seleccionado.
    */
   mostrarCampos(): void {
+    
+  // this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
+  //   this.limpiarCampos();
+  // });
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    this.showAdjuntarArchivo = false;
+    this.showSeccionArchivoCsv = false;
     this.showSeccionAduanaaFecha = false;
     this.showSeccionContenedor = false;
     this.showSeccionNoManifiesto = false;
@@ -411,11 +424,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.showSeccionContenedor = true;
         this.showSeccionAduanaaFecha = true;
         break;
-      case 'No. de Manifiesto':
-        this.showSeccionNoManifiesto = true;
-        break;
+      // case 'No. de Manifiesto':
+      //   this.showSeccionNoManifiesto = true;
+      //   break;
       case 'Archivo CSV':
-        this.showAdjuntarArchivo = true;
+        this.showSeccionArchivoCsv = true;
+        this.showSeccionAduanaaFecha = true;
         break;
       default:
         break;
@@ -428,14 +442,24 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   limpiarCampos(): void {
     this.solicitudForm.reset();
     // Resetear banderas y estados adicionales
-    this.showAdjuntarArchivo = false;
+    this.showSeccionArchivoCsv = false;
     this.showSeccionAduanaaFecha = false;
     this.showSeccionContenedor = false;
     this.showSeccionNoManifiesto = false;
     this.showSeccionExcel = false;
     this.mostrarMensaje = false;
+    this.mostrarAgregarTipoContenedor = false;
     // Deshabilitar controles específicos si es necesario
     this.solicitudForm.get('archivoSeleccionado')?.disable();
+  }
+
+  // Mostrar tipo de contenedor
+  mostrarTipoContenedor(): void {
+    this.mostrarAgregarTipoContenedor = true;
+  }
+
+  datosCapturaModal(): void {
+    this.modalRef = this.modalService.show(this.modalAgregarConstanciaTransferencia);
   }
 
   /**
@@ -454,14 +478,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Validar el dígito verificador y agregar la solicitud.
    */
-  validarDigitoVerificador(): void {
+  datosCaptura(): void {
     this.solicitudForm.markAllAsTouched();
     const ADUANA = this.solicitudForm.value.aduana;
     const FECHAINGRESO = this.solicitudForm.value.fechaIngreso;
+    const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
-    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && CONTENEDORES && FECHAINGRESO) {
+    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
       this.agregarSolicitud();
     }
   }
@@ -510,29 +535,29 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const HEADER_MAP: { [key: string]: string } = {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
-      'Tipo de equipo':'tipoEquipo',
-      'N�mero de equipo':'numeroEquipo',
-      'D�gito Verificador':'digitoVerificador',
-      'Fecha Ingreso':'fechaIngreso',
-      'Vigencia':'vigencia',
-      'Estado de constancia':'estadoConstancia',
-      'Existe en VUCEM':'existeEnVUCEM',
-      'Id constancia':'idConstancia',
-      'N�mero manifiesto':'numeroManifiesto',
-      'Id solicitud':'idSolicitud',
-      'Fecha inicio':'fechaInicio'
+      'Tipo de equipo': 'tipoEquipo',
+      'N�mero de equipo': 'numeroEquipo',
+      'D�gito Verificador': 'digitoVerificador',
+      'Fecha Ingreso': 'fechaIngreso',
+      'Vigencia': 'vigencia',
+      'Estado de constancia': 'estadoConstancia',
+      'Existe en VUCEM': 'existeEnVUCEM',
+      'Id constancia': 'idConstancia',
+      'N�mero manifiesto': 'numeroManifiesto',
+      'Id solicitud': 'idSolicitud',
+      'Fecha inicio': 'fechaInicio'
     };
     const DATA = LINES.slice(1).map((line) => {
-        const VALUES = line.split(',');
-        const OBJ: { [key: string]: string } = {};
-        HEADERS.forEach((header, index) => {
-            const KEY = HEADER_MAP[header.trim()] || header.trim();
-            OBJ[KEY] = VALUES[index]?.trim();
-        });
-        return OBJ;
+      const VALUES = line.split(',');
+      const OBJ: { [key: string]: string } = {};
+      HEADERS.forEach((header, index) => {
+        const KEY = HEADER_MAP[header.trim()] || header.trim();
+        OBJ[KEY] = VALUES[index]?.trim();
+      });
+      return OBJ;
     }).filter(artículo => Object.values(artículo).some(valor => valor));
     this.datosTabla = DATA;
-}
+  }
 
   enviarManifiesto(): void {
     this.solicitudForm.markAllAsTouched();
@@ -573,7 +598,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   agregarSolicitud(): void {
     this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
-        // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
@@ -581,6 +605,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.patchValue({
             aduana: '',
             fechaIngreso: '',
+            vigencia: '',
             digitoDeControl: '',
             inicialesContenedor: '',
             numeroContenedor: '',

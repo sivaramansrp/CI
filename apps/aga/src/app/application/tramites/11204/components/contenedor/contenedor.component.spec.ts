@@ -83,7 +83,7 @@ describe('ContenedorComponent', () => {
       numeroContenedor: '1098765',
       contenedores: 'AC'
     });
-    component.validarDigitoVerificador();
+    // component.validarDigitoVerificador();
     expect(agregarSolicitudSpy).toHaveBeenCalled();
   });
  

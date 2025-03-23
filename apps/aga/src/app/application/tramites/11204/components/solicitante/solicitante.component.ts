@@ -1,10 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-// import { Solicitud11201State } from '../../../../estados/tramites/tramite11201.store';
 import { TituloComponent } from '@ng-mf/data-access-user';
-// import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
-// import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { Solicitud11201State, Tramite11201Store } from '../../estados/tramite11201.store';
+import { Tramite11201Query } from '../../estados/tramite11201.query';
 
 /**
  * Componente para gestionar el formulario del solicitante.

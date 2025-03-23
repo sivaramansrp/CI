@@ -3,18 +3,23 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { Input } from '@angular/core';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+// import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { ViewChild } from '@angular/core';
+
+interface AccionBoton {
+  accion: string;
+  valor: number;
+}
 
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [SolicitanteComponent, CommonModule, ContenedorComponent]
+  imports: [SolicitanteComponent, CommonModule, ContenedorComponent, BtnContinuarComponent]
 })
 export class PasoUnoComponent implements AfterViewInit {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
@@ -24,8 +29,15 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
   @Output() continuarEvento = new EventEmitter<string>();
   validacion: boolean = false;
-  // @Input() validacion!: boolean;
+  pasos: ListaPasosWizard[] = PASOS;
   @Input() datosNroPedimento!: unknown;
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  datosPasos: DatosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
   /**
 * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
 */
@@ -42,5 +54,16 @@ export class PasoUnoComponent implements AfterViewInit {
   }
   continuar(): void {
     this.continuarEvento.emit('');
+  }
+
+  getValorIndice(e: AccionBoton) {
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent.siguiente();
+      } else {
+        this.wizardComponent.atras();
+      }
+    }
   }
 }

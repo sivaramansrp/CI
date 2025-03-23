@@ -1,10 +1,10 @@
-import { RespuestaAduanas, RespuestaContenedores } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
+import { RespuestaAduanas, RespuestaContenedores } from "../models/datos-tramite.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { RespuestaApi } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
-import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
-import { RespuestaContenedor } from "@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model";
+import { RespuestaApi } from "../models/datos-tramite.model"
+;import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
+import { RespuestaContenedor } from "../models/datos-tramite.model";
 
 @Injectable({
   providedIn: 'any',
@@ -20,38 +20,38 @@ export class DatosTramiteService {
    * Get a lista of Contenedores
    */
   getContenedores(): Observable<RespuestaContenedores> {
-    return this.http.get<RespuestaContenedores>(`assets/json/11201/tipoLista.json`);
+    return this.http.get<RespuestaContenedores>(`assets/json/11204/tipoLista.json`);
   }
   /**
   * Simular la carga de archivos
   */
   uploadArchivo(): Observable<RespuestaApi> {
-    return this.http.get<RespuestaApi>(`assets/json/11201/contenedorLista.json`);
+    return this.http.get<RespuestaApi>(`assets/json/11204/contenedorLista.json`);
   }
 
   /**
   * Simular un envío exitoso de formulario
   */
   submitSolicitud(): Observable<RespuestaAduanas> {
-    return this.http.get<RespuestaAduanas>(`assets/json/11201/aduanaList.json`);
+    return this.http.get<RespuestaAduanas>(`assets/json/11204/aduanaList.json`);
   }
 
   agregarSolicitud(): Observable<RespuestaContenedor> {
-    return this.http.get<RespuestaContenedor>(`assets/json/11201/contenedorLista.json`);
+    return this.http.get<RespuestaContenedor>(`assets/json/11204/contenedorLista.json`);
   }
 
   getTransporteList(catalogo: string): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`assets/json/11201/${catalogo}.json`);
+    return this.http.get<RespuestaCatalogos>(`assets/json/11204/${catalogo}.json`);
   }
   /**
   * Get a lista of Aduanas
   */
   getAduanaList(catalogo: string): Observable<RespuestaAduanas> {
-    return this.http.get<RespuestaAduanas>(`assets/json/11201/${catalogo}.json`);
+    return this.http.get<RespuestaAduanas>(`assets/json/11204/${catalogo}.json`);
   }
 
   getDatosTableData(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(`assets/json/11201/datosTabla.json`);
+    return this.http.get<RespuestaCatalogos[]>(`assets/json/11204/datosTabla.json`);
   }
 
 }
