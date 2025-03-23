@@ -229,6 +229,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       nacionalidad: ['nacional', Validators.required], // Matches the formControlName in the HTML
       tipoPersona: ['moral', Validators.required], // Matches the formControlName in the HTML
       rfc: [{ value: '', disabled: true }, Validators.required],
+      curp:[''],
       denominacion: [this.solicitudState?.denominacion, Validators.required],
       pail: ['', Validators.required],
       localidad: ['', Validators.required],
@@ -372,6 +373,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       nacionalidad: ['nacional', Validators.required],
       tipoPersona: ['moral', Validators.required],
       rfc: ['', Validators.required],
+      curp:[''],
       denominacion: ['', Validators.required],
       pail: ['', Validators.required],
       localidad: ['', Validators.required],
@@ -387,7 +389,35 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       numerotelefono: [''],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+    this. handleFieldVisibility();
   }
+
+  handleFieldVisibility(): void {
+    this.proveedorForm.get('nacionalidad')?.valueChanges.subscribe((nacionalidad) => {
+      this.updateFieldVisibility(nacionalidad, this.proveedorForm.get('tipoPersona')?.value);
+    });
+
+    this.proveedorForm.get('tipoPersona')?.valueChanges.subscribe((tipoPersona) => {
+      this.updateFieldVisibility(this.proveedorForm.get('nacionalidad')?.value, tipoPersona);
+    });
+  }
+
+  updateFieldVisibility(nacionalidad: string, tipoPersona: string): void {
+    if (nacionalidad === 'nacional' && tipoPersona === 'moral') {
+      this.proveedorForm.get('curp')?.clearValidators();
+      this.proveedorForm.get('primerApellido')?.clearValidators();
+      this.proveedorForm.get('segundoApellido')?.clearValidators();
+    } else if (nacionalidad === 'extranjero' && tipoPersona === 'fisica') {
+      this.proveedorForm.get('curp')?.setValidators(Validators.required);
+      this.proveedorForm.get('primerApellido')?.setValidators(Validators.required);
+      this.proveedorForm.get('segundoApellido')?.setValidators(Validators.required);
+    }
+
+    this.proveedorForm.get('curp')?.updateValueAndValidity();
+    this.proveedorForm.get('primerApellido')?.updateValueAndValidity();
+    this.proveedorForm.get('segundoApellido')?.updateValueAndValidity();
+  }
+
 
   initializeRequeridaForm(): void {
     this.requeridaForm = this.fb.group({
