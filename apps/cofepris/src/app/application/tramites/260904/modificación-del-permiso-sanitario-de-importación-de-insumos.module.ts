@@ -11,6 +11,7 @@ import { PasoTresComponent } from '../260912/pages/paso-tres/paso-tres.component
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './components/tramites-asociado/tramites-asociado.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
@@ -32,7 +33,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     DatosDeLaSolicitud260904Component,
     DomicilioDelEstablecimiento260904Component,
     PagoDeDerechosComponent,
-    TramitesAsociadoComponent
+    TramitesAsociadoComponent,
+    TercerosRelacionadosComponent
   ],
   providers: [ToastrService],
 })
