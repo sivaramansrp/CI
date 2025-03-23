@@ -3,15 +3,15 @@
     "data": [
         {
             "id": 0,
-            "descripcion": "Aduana de México"
+            "descripcion": "Aduana 01"
+        },
+        {
+            "id": 1,
+            "descripcion": "Aduana 02"
         },
         {
             "id": 2,
-            "descripcion": "Aduana de Argentina"
-        },
-        {
-            "id": 2,
-            "descripcion": "Aduana de España"
+            "descripcion": "Aduana 03"
         }
     ],
     "message": "Seleccione un valor"
