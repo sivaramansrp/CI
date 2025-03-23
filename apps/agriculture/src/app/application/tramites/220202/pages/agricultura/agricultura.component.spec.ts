@@ -26,7 +26,7 @@ describe('AgriculturaComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy(); // Verifica que el componente se crea correctamente
+    expect(component).toBeTruthy();
   });
 
 })

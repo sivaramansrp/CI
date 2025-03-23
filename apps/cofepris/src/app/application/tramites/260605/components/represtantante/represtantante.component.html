@@ -1,8 +1,8 @@
 <div class="container form-container">
-  <ng-titulo titulo="Representante Legal" />
+  <ng-titulo titulo="Representante Legal"></ng-titulo>
   <div>
     <form [formGroup]="represtantante">
-      <ng-container >
+      <ng-container>
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
@@ -12,13 +12,14 @@
                 id="rfc"
                 formControlName="rfc"
                 type="text"
+                (change)="setValoresStore(represtantante,'rfc', 'setRfc')"
               />
             </div>
           </div>
 
           <div class="col-md-4 d-flex align-items-center">
             <div class="btn-group">
-              <button class="btn btn-default" type="button">Buscar</button>
+              <button class="btn btn-default" type="button" >Buscar</button>
             </div>
           </div>
         </div>
@@ -31,39 +32,36 @@
                 id="nombre"
                 formControlName="nombre"
                 type="text"
+                (change)="setValoresStore(represtantante,'nombre', 'setNombre')"
               />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="apellidoPaterno"
-                >Apellido Paterno</label
-              >
+              <label class="form-label" for="apellidoPaterno">Apellido Paterno</label>
               <input
                 class="form-control"
                 id="apellidoPaterno"
                 formControlName="apellidoPaterno"
                 type="text"
+                (change)="setValoresStore(represtantante,'apellidoPaterno', 'setApellidoPaterno')"
               />
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="apellidoMaterno"
-                >Apellido Materno</label
-              >
+              <label class="form-label" for="apellidoMaterno">Apellido Materno</label>
               <input
                 class="form-control"
                 id="apellidoMaterno"
                 formControlName="apellidoMaterno"
                 type="text"
+                (change)="setValoresStore(represtantante,'apellidoMaterno', 'setApellidoMaterno')"
               />
             </div>
           </div>
         </div>
-    
       </ng-container>
     </form>
   </div>
- 
 </div>

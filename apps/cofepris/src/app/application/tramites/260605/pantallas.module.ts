@@ -19,14 +19,18 @@ import { ReprestantanteComponent } from './components/represtantante/represtanta
 import { AduanerasInformacionesComponent } from './components/aduaneras-informaciones/aduaneras-informaciones.component';
 import { FaseDosComponent } from './pages/fase-dos/fase-dos.component';
 import { FaseTresComponent } from './pages/fase-tres/fase-tres.component';
+import { RegistroCuentasBancariasService } from './services/registro-cuentas-bancarias.service';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
+import { provideHttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 
 @NgModule({
   declarations: [
     DatosComponent,
     PantallasComponent,
-
-    // PasoDosComponent,
-    // PasoTresComponent,
     FaseDosComponent,
     FaseTresComponent,
   ],
@@ -35,10 +39,6 @@ import { FaseTresComponent } from './pages/fase-tres/fase-tres.component';
     PantallasRoutingModule,
     WizardComponent,
     NavComponent,
-    // PagoDeDerechosComponent,
-    // RegistroParaLaComponent,
-    // DeLaMuestraComponent,
-    // InformacionDeLaComponent,
     SolicitanteComponent,
     AnexarDocumentosComponent,
     TituloComponent,
@@ -48,5 +48,9 @@ import { FaseTresComponent } from './pages/fase-tres/fase-tres.component';
     ReprestantanteComponent,
     AduanerasInformacionesComponent,
   ],
+  providers: [RegistroCuentasBancariasService, provideHttpClient(),CatalogosService,ToastrService,
+    
+    InicioSesionService,SubirDocumentoService,ServiciosPantallaService ]
+
 })
 export class Pantallas260605Module {}

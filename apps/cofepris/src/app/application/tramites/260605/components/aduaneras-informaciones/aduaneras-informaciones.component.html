@@ -1,87 +1,81 @@
-<div class="container">
+<form [formGroup]="aduanerasInformacionesForm">
+  <div class="container">
     <div class="row w-100">
-    <div class="col-md-8">
-        <div class="form-group">
-          <label class="form-label" for="nombre">Número de permiso de importación de PLAFEST*</label>
-          <input
-            class="form-control"
-            id="nombre"
-            formControlName="nombre"
-            type="text"
-          />
-        </div>
-        </div>
-        <div class="col-md-4 m-top">
-            <div class="btn-group">
-              <button class="btn btn-default" type="button">Cargar Aduanas</button>
-            </div>
-          </div>
-    </div>
-</div>
-<ng-container >
-<div class="container">
-<div class="row w-100">
-    <!-- Available Items and Buttons -->
-    <div class="col-md-6">
-      <label>Aduanas actuales*:</label>
-      <div class="box-first" >
-          <ul class="list-first-box">
-              <li class="box-item-frst">ACAPULCO, PUERTO Y AEROPUERTO</li>
-              <li class="box-item-frst">ADUANA DE PANTACO</li>
-              <li class="box-item-frst">AGUASCALIENTES, AGS.</li>
-              <li class="box-item-frst">CD. CAMARGO, TAMPS.</li>
-
-          </ul>
-      </div>
-      
-    </div>
-    </div>
-</div>
-    
-<div class="container">
-  <div class="row">
-      <!-- Available Items and Buttons -->
-      <div class="col-md-5">
-        <label>Aduanas disponibles:</label>
-        <div class="box" id="availableItems">
-            <ul class="list-box">
-                <li class="box-item">ACAPULCO, PUERTO Y AEROPUERTO</li>
-                <li class="box-item">ADUANA DE PANTACO</li>
-                <li class="box-item">AGUASCALIENTES, AGS.</li>
-                <li class="box-item">CD. CAMARGO, TAMPS.</li>
-
-            </ul>
-        </div>
-        
-      </div>
-      <div class="col-md-3 btn-box">
-        <button class="btn" >Agregar todos</button>
-        <button class="btn" >Agregar selección</button>
-        <button class="btn" >Restar selección</button>
-        <button class="btn" >Restar todos</button>
-      </div>
-  
-      <!-- Selected Items -->
-      <div class="col-md-4">
-        <label>Aduanas seleccionadas*:</label>
-        <div class="box" id="selectedItems">
-          <div class="box-item">AEROPUERTO INT. DE LA CD DE MEXICO</div>
-          <div class="box-item">AGUA PRIETA</div>
-          <div class="box-item">TOLUCA, AEROPUERTO</div>
-          <div class="box-item">VERACRUZ</div>
-        </div>
-      </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="nombre">Justificación técnica para importar o exportar la cantidad solicitada*:</label>
-          <textarea
-            class="form-control cstm-ht"
-            id="nombre"
-            formControlName="nombre"
-          rows="3"
-          ></textarea>
+          <label class="form-label" for="importPermitNumber">Número de permiso de importación de PLAFEST*</label>
+          <input
+            class="form-control"
+            id="numeroDPmiso"
+            formControlName="numeroDPmiso"
+            type="text"
+            (change)="setValoresStore(aduanerasInformacionesForm,'numeroDPmiso', 'setNumeroDPmiso')"
+          />
         </div>
+      </div>
+      <div class="col-md-4 m-top">
+        <div class="btn-group">
+          <button class="btn btn-default" type="button" (click)="onSubmit()" >Cargar Aduanas</button>
         </div>
+      </div>
     </div>
   </div>
-</ng-container>
+
+  <ng-container *ngIf="validPlafet">
+    <div class="container">
+      <div class="row w-100">
+        <!-- Available Items and Buttons -->
+        <div class="col-md-6">
+          <label>Aduanas actuales*:</label>
+          <div class="box-first">
+            <ul class="list-first-box">
+              <li *ngFor="let item of aduanasDisponibles; let i = index" class="box-item-frst">{{ item.name }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <!-- Available Items and Buttons -->
+        <div class="col-md-5">
+          <label>Aduanas disponibles:</label>
+          <div class="box" id="availableItems">
+            <ul class="list-box">
+              <li *ngFor="let item of aduanasDisponibles; let i = index" class="box-item" [ngClass]="{'active': i === indiceSeleccionado}" (click)="setIndiceSeleccionado(i, 'add')">{{ item.name }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-3 btn-box">
+          <button class="btn" type="button" (click)="agregarTodasAduanas()">Agregar todos</button>
+          <button class="btn" type="button" (click)="agregarAduanasSeleccionadas([indiceSeleccionado])">Agregar selección</button>
+          <button class="btn" type="button" (click)="removerAduanasSeleccionadas([indiceRemover])">Restar selección</button>
+          <button class="btn" type="button" (click)="removerTodasAduanas()">Restar todos</button>
+        </div>
+
+        <!-- Selected Items -->
+        <div class="col-md-4">
+          <label>Aduanas seleccionadas*:</label>
+          <div class="box" id="selectedItems">
+            <ul class="list-box">
+              <li *ngFor="let item of aduanasSeleccionadas; let i = index" class="box-item" [ngClass]="{'active': i === indiceRemover}" (click)="setIndiceSeleccionado(i, 'remove')">{{ item.name }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="technicalJustification">Justificación técnica para importar o exportar la cantidad solicitada*:</label>
+            <textarea
+              class="form-control cstm-ht"
+              id="cstumbresAtuales"
+             formControlName="cstumbresAtuales"
+            (change)="setValoresStore(aduanerasInformacionesForm,'cstumbresAtuales', 'setCstumbresAtuales')"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</form>

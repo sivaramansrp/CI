@@ -1,191 +1,42 @@
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 301
  * @returns Solicitud301
  */
-export interface Solicitud301State {
-  /**
-   * linea
-   * @type {string}
-   */
-  linea: string;
-
-  /**
-   * linea checkbox
-   * @type {string}
-   */
-  lineaCheckbox: string;
-
-  /**
-   * Nombre quimico
-   * @type {string}
-   */
-  nombreQuimico: string;
-
-  /**
-   * Nombre comercial
-   * @type {string}
-   */
-  nombreComercial: string;
-
-  /**
-   * Numero CAS
-   * @type {string}
-   */
-  numeroCAS: string;
-
-  /**
-   * Acondicionamiento
-   * @type {string}
-   */
-  acondicionamiento: string;
-
-  /**
-   * Estado fisico
-   * @type {string}
-   */
-  estadoFisico: string;
-
-  /**
-   * Fraccion arancelaria
-   * @type {string}
-   */
-  fraccionArancelaria: string;
-
-  /**
-   * Descripcion fraccion
-   * @type {string}
-   */
-  descripcionFraccion: string;
-
-  /**
-   * Nico
-   * @type {string}
-   */
-  nico: string;
-
-  /**
-   * Descripcion nico
-   * @type {string}
-   */
-  descripcionNico: string;
-
-  /**
-   * Mercancia
-   * @type {string}
-   */
-  mercancia: string;
-
-  /**
-   * Folio
-   * @type {string}
-   */
-  folio: string;
-
-  /**
-   * Registro
-   * @type {string}
-   */
-  registro: string;
+export interface Solicitud260605State {
+  numeroDPmiso: string;
+  cstumbresAtuales: string;
+  rfc: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  aduanasDisponibles:[];
+  aduanasSeleccionadas:[];
+  cantidadSolicitada:string;
 }
 
-export function createInitialState(): Solicitud301State {
+export function createInitialState(): Solicitud260605State {
   return {
-    /**
-     * linea
-     * @type {string}
-     */
-    linea: '',
-
-    /**
-     * linea checkbox
-     * @type {string}
-     * */
-    lineaCheckbox: '',
-
-    /**
-     * Nombre quimico
-     * @type {string}
-     */
-    nombreQuimico: '',
-
-    /**
-     * Nombre comercial
-     * @type {string}
-     */
-    nombreComercial: '',
-
-    /**
-     * Numero CAS
-     * @type {string}
-     */
-    numeroCAS: '',
-
-    /**
-     * Acondicionamiento
-     * @type {string}
-     */
-    acondicionamiento: '',
-
-    /**
-     * Estado fisico
-     * @type {string}
-     */
-    estadoFisico: '',
-
-    /**
-     * Fraccion arancelaria
-     * @type {string}
-     */
-    fraccionArancelaria: '',
-
-    /**
-     * Descripcion fraccion
-     * @type {string}
-     */
-    descripcionFraccion: '',
-
-    /**
-     * Nico
-     * @type {string}
-     */
-    nico: '',
-
-    /**
-     * Descripcion nico
-     * @type {string}
-     * */
-    descripcionNico: '',
-
-    /**
-     * Mercancia
-     * @type {string}
-     */
-    mercancia: '',
-
-    /**
-     * Folio
-     * @type {string}
-     */
-    folio: '',
-
-    /**
-     * Registro
-     * @type {string}
-     */
-    registro: '',
+    numeroDPmiso: '',
+    cstumbresAtuales:'',
+    rfc: '',
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    aduanasDisponibles:[],
+    aduanasSeleccionadas:[],
+  cantidadSolicitada:''
   };
 }
 
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite301', resettable: true })
-export class Tramite301Store extends Store<Solicitud301State> {
+@StoreConfig({ name: 'tramite260605', resettable: true })
+export class Tramite260605Store extends Store<Solicitud260605State> {
   /**
    * Crea una instancia de Tramite301Store.
    * @constructor
@@ -194,159 +45,73 @@ export class Tramite301Store extends Store<Solicitud301State> {
     super(createInitialState());
   }
 
-  /**
-   * Guarda la línea en el estado.
-   * @param linea
-   */
-  public setLinea(linea: string) {
+  public setNumeroDPmiso(numeroDPmiso: string) {
     this.update((state) => ({
       ...state,
-      linea,
+      numeroDPmiso,
     }));
   }
 
-  /**
-   * Guarda el tipo de solicitud en el estado.
-   * @param lineaCheckbox
-   */
-  public setLineaCheckbox(lineaCheckbox: string) {
+  public setCstumbresAtuales(cstumbresAtuales: string) {
     this.update((state) => ({
       ...state,
-      lineaCheckbox,
+      cstumbresAtuales,
     }));
   }
 
-  /**
-   * Guarda el nombre químico en el estado.
-   * @param nombreQuimico
-   */
-  public setNombreQuimico(nombreQuimico: string) {
+  public setRfc(rfc: string) {
     this.update((state) => ({
       ...state,
-      nombreQuimico,
+      rfc,
     }));
   }
 
-  /**
-   * Guarda el nombre comercial en el estado.
-   * @param nombreComercial
-   */
-  public setNombreComercial(nombreComercial: string) {
+  public setNombre(nombre: string) {
     this.update((state) => ({
       ...state,
-      nombreComercial,
+      nombre,
     }));
   }
 
-  /**
-   * Guarda el número CAS en el estado.
-   * @param numeroCAS
-   */
-  public setNumeroCAS(numeroCAS: string) {
+  public setApellidoPaterno(apellidoPaterno: string) {
     this.update((state) => ({
       ...state,
-      numeroCAS,
+      apellidoPaterno,
     }));
   }
 
-  /**
-   * Guarda el acondicionamiento en el estado.
-   * @param acondicionamiento
-   */
-  public setAcondicionamiento(acondicionamiento: string) {
+  public setApellidoMaterno(apellidoMaterno: string) {
     this.update((state) => ({
       ...state,
-      acondicionamiento,
+      apellidoMaterno,
     }));
   }
 
-  /**
-   * Guarda el estado físico en el estado.
-   * @param estadoFisico
-   */
-  public setEstadoFisico(estadoFisico: string) {
+  public setAduanasDisponibles(aduanasDisponibles:[]) {
     this.update((state) => ({
       ...state,
-      estadoFisico,
+      aduanasDisponibles,
     }));
   }
 
-  /**
-   * Guarda la fracción arancelaria en el estado.
-   * @param fraccionArancelaria
-   */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setAduanasSeleccionadas(aduanasSeleccionadas:[]) {
     this.update((state) => ({
       ...state,
-      fraccionArancelaria,
+      aduanasSeleccionadas,
     }));
   }
 
-  /**
-   * Guarda la descripción de la fracción arancelaria en el estado.
-   * @param descripcionFraccion
-   */
-  public setNico(nico: string) {
+  public setCantidadSolicitada(cantidadSolicitada: string) {
     this.update((state) => ({
       ...state,
-      nico,
+      cantidadSolicitada,
     }));
   }
 
-  /**
-   * Guarda el nico en el estado.
-   * @param nico
-   */
-  public setMercancia(mercancia: string) {
-    this.update((state) => ({
-      ...state,
-      mercancia,
-    }));
-  }
 
-  /**
-   * Guarda la descripción del nico en el estado.
-   * @param descripcionNico
-   */
-  public setFolio(folio: string) {
-    this.update((state) => ({
-      ...state,
-      folio,
-    }));
-  }
 
-  /**
-   * Guarda el folio en el estado.
-   * @param folio
-   */
-  public setRegistro(registro: string) {
-    this.update((state) => ({
-      ...state,
-      registro,
-    }));
-  }
 
-  /**
-   * Guarda el registro en el estado.
-   * @param registro
-   */
-  public setDescripcionFraccion(descripcionFraccion: string) {
-    this.update((state) => ({
-      ...state,
-      descripcionFraccion,
-    }));
-  }
 
-  /**
-   * Guarda la descripción de la fracción arancelaria en el estado.
-   * @param descripcion
-   */
-  public setDescripcionNico(descripcionNico: string) {
-    this.update((state) => ({
-      ...state,
-      descripcionNico,
-    }));
-  }
 
   /**
    * Limpia los datos de la solicitud
