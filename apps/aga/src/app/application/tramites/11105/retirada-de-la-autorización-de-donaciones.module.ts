@@ -1,6 +1,6 @@
 import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
+import { TransportistaTerrestreRoutingModule } from './retirada-de-la-autorización-de-donacione-rounting.module';
 import { RouterModule } from '@angular/router';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { ChoferesComponent } from './components/choferes/choferes.component';
