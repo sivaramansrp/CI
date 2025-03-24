@@ -16,13 +16,13 @@
               (change)="setValoresStore(form, 'cantidad', 'setCantidad')"
             />
             <div *ngIf="esInvalido('cantidad')" class="text-danger">
-              <small *ngIf="form.controls['cantidad'].hasError('required')"
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('required')"
                 >Cantidad es obligatoria.</small
               >
-              <small *ngIf="form.controls['cantidad'].hasError('pattern')"
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('pattern')"
                 >Solo se permiten números.</small
               >
-              <small *ngIf="form.controls['cantidad'].hasError('maxlength')"
+              <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('maxlength')"
                 >Máximo 18 caracteres.</small
               >
             </div>
@@ -45,18 +45,18 @@
             />
             <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
               <small
-                *ngIf="form.controls['valorPartidaUSD'].hasError('required')"
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('required')"
                 >Este campo es obligatorio.</small
               >
               <small
-                *ngIf="form.controls['valorPartidaUSD'].hasError('pattern')"
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('pattern')"
                 >Ingrese un número válido.</small
               >
-              <small *ngIf="form.controls['valorPartidaUSD'].hasError('min')"
+              <small *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('min')"
                 >El valor debe ser mayor o igual a 0.</small
               >
               <small
-                *ngIf="form.controls['valorPartidaUSD'].hasError('maxlength')"
+                *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('maxlength')"
                 >Máximo 20 caracteres permitidos.</small
               >
             </div>
@@ -76,10 +76,10 @@
               (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"
             ></textarea>
             <div *ngIf="esInvalido('descripcion')" class="text-danger">
-              <small *ngIf="form.controls['descripcion'].hasError('required')"
+              <small *ngIf="partidasDelaMercanciaForm.controls['descripcion'].hasError('required')"
                 >Descripción es obligatoria.</small
               >
-              <small *ngIf="form.controls['descripcion'].hasError('maxlength')"
+              <small *ngIf="partidasDelaMercanciaForm.controls['descripcion'].hasError('maxlength')"
                 >Máximo 255 caracteres.</small
               >
             </div>
@@ -261,13 +261,13 @@
                             aria-labelledby="cantidad"
                           />
                           <div *ngIf="esInvalido('cantidad')" class="text-danger">
-                            <small *ngIf="form.controls['cantidad'].hasError('required')"
+                            <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('required')"
                               >Cantidad es obligatoria.</small
                             >
-                            <small *ngIf="form.controls['cantidad'].hasError('pattern')"
+                            <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('pattern')"
                               >Solo se permiten números.</small
                             >
-                            <small *ngIf="form.controls['cantidad'].hasError('maxlength')"
+                            <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('maxlength')"
                               >Máximo 18 caracteres.</small
                             >
                           </div>
@@ -287,18 +287,18 @@
                           />
                           <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
                             <small
-                              *ngIf="form.controls['valorPartidaUSD'].hasError('required')"
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('required')"
                               >Este campo es obligatorio.</small
                             >
                             <small
-                              *ngIf="form.controls['valorPartidaUSD'].hasError('pattern')"
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('pattern')"
                               >Ingrese un número válido.</small
                             >
-                            <small *ngIf="form.controls['valorPartidaUSD'].hasError('min')"
+                            <small *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('min')"
                               >El valor debe ser mayor o igual a 0.</small
                             >
                             <small
-                              *ngIf="form.controls['valorPartidaUSD'].hasError('maxlength')"
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSD'].hasError('maxlength')"
                               >Máximo 20 caracteres permitidos.</small
                             >
                           </div>
@@ -317,10 +317,10 @@
                             aria-labelledby="descripcion"
                           ></textarea>
                           <div *ngIf="esInvalido('descripcion')" class="text-danger">
-                            <small *ngIf="form.controls['descripcion'].hasError('required')"
+                            <small *ngIf="partidasDelaMercanciaForm.controls['descripcion'].hasError('required')"
                               >Descripción es obligatoria.</small
                             >
-                            <small *ngIf="form.controls['descripcion'].hasError('maxlength')"
+                            <small *ngIf="partidasDelaMercanciaForm.controls['descripcion'].hasError('maxlength')"
                               >Máximo 255 caracteres.</small
                             >
                           </div>
