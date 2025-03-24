@@ -14,7 +14,7 @@ export const SCIAN_DATA = [
     }
   ];
 
-  export const SCIAN_DATA_PRODUCTO = [
+  export const DATOS_PRODUCTO = [
     {
       encabezado: 'Clasificación del producto',
       clave: (item: DatosProducto) => item.clasificacionProducto,

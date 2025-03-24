@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable sort-imports */
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
@@ -15,19 +16,21 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { PreOperativo } from '../../models/datos-modificacion.model';
-// import { DATOS_PRODUCTO } from '../../constantes/datos-scian.enum';
-// import { DatosProducto } from '../../models/datos-modificacion.model';
+import { DATOS_PRODUCTO } from '../../constantes/datos-scian.enum';
+import { DatosProducto } from '../../models/datos-modificacion.model';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-domicilio-del-establecimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,CrosslistComponent],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   domicilioForm!: FormGroup;
   claveScianForm!: FormGroup;
+  DatosMercanciaForm!: FormGroup;
   estadoData:Catalogo[] = [];
   claveScian:Catalogo[] = [];
   radioOptions: PreOperativo[] = [];
@@ -36,9 +39,16 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /** Enum para la selección de tablas */
   TablaSeleccion = TablaSeleccion;
   configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
-
-  //configuracionTablaProducto: ConfiguracionColumna<DatosProducto>[] = DATOS_PRODUCTO;
   datosData: ScianData [] = [];
+  colapsable: boolean = false;
+  configuracionTablaProductoDatos: ConfiguracionColumna<DatosProducto>[] = DATOS_PRODUCTO.map(col => ({
+    ...col,
+    clave: (item: DatosProducto) => {
+      const VALUE = col.clave(item);
+      return VALUE instanceof Date ? VALUE.toISOString() : VALUE;
+    }
+  }));
+  datosProducto: DatosProducto[] = [];
    /**
    * Variable que controla la visibilidad del modal.
    */
@@ -74,11 +84,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
 
     this.cargarEstadoData();
-    this.cargardatostabla();
+    this.cargarDatosTabla();
+    this.cargarDatosProductoTabla();
     this.obtenerDatosClave();
     this.obtenerDatosDescripcion();
     this.obtenerDatosPreOperativo();
+
   } 
+  
 
   cargarEstadoData(): void {
     this.datosService.obtenerEstadoData()
@@ -88,7 +101,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
-  cargardatostabla(): void {
+  cargarDatosTabla(): void {
     this.datosService
       .obternerDatosData()
       .pipe(takeUntil(this.destroy$))
@@ -96,6 +109,17 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         this.datosData = resp;
       });
   }
+
+  cargarDatosProductoTabla(): void {
+    this.datosService
+      .obtenerDatosProducto()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp) => {
+        console.log('datosProducto',resp);
+        this.datosProducto = resp;
+      });
+  }
+  
   obtenerDatosClave(): void {
     this.datosService
       .obtenerClaveScian()
@@ -130,6 +154,30 @@ public mostrarModeloClave() {
   this.claveScianForm = this.fb.group({
     claveScian: ['', Validators.required],
     descripcionScian: ['', Validators.required],
+  });
+}
+
+public datosDelProducto()
+{
+  this.modal = 'show'; // Muestra el modal
+  this.DatosMercanciaForm = this.fb.group({
+    clasificacionProducto: ['', Validators.required],
+    especificarClasificacion: ['', Validators.required],
+    marcaComercial: ['', Validators.required],
+    denominacionGenerica: ['', Validators.required],
+    tipoProducto: ['', Validators.required],
+    estadoFisico: ['', Validators.required],
+    fraccionArancelaria: ['', Validators.required],
+    descripcionFraccionArancelaria: ['', Validators.required],
+    unidadMedidaComercializacion: ['', Validators.required],
+    umc: ['', Validators.required],
+    cantidadUMC: ['', Validators.required],
+    porcentajeConcentracion: ['', Validators.required],
+    valorComercial: ['', Validators.required],
+    fechaMovimiento: ['', Validators.required],
+    presentacionFarmaceutica: ['', Validators.required],
+    paisDestino: ['', Validators.required],
+    paisProcedencia: ['', Validators.required],
   });
 }
   /*

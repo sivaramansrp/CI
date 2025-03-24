@@ -117,15 +117,15 @@
         <div class="row" class="mt-5">
             <div class="form-group">
                 <label class="form-label" for="scian">Datos del producto*:</label>
-                <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
+                <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto"
                     [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
                 </app-tabla-dinamica>
             </div>
         </div>
 
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
-                (click)="mostrarModeloClave()">
+            <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#datosDelProducto"
+                (click)="datosDelProducto()">
                 Agregar
             </button>
         </div>
@@ -176,6 +176,170 @@
                                 </app-catalogo-select>
                             </div>
                         </div>
+                    </form>
+                </div>
+                <div class="modal-footer custom-footer justify-content-center">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                    <button type="button" class="btn btn-primary">Limpiar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="modal fade" id="datosDelProducto" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Datos mercancía</h5>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="DatosMercanciaForm">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="clasificacionProducto">Clasificación del producto*:</label>
+                                    <input class="form-control" id="clasificacionProducto" formControlName="clasificacionProducto" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="especificarClasificacion">Especificar clasificación del producto*:</label>
+                                    <input class="form-control" id="especificarClasificacion" formControlName="especificarClasificacion" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="marcaComercial">Marca comercial o denominación distintiva*:</label>
+                                    <input class="form-control" id="marcaComercial" formControlName="marcaComercial" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="denominacionGenerica">Denominación común internacional (DCI) o denominación genérica*:</label>
+                                    <input class="form-control" id="denominacionGenerica" formControlName="denominacionGenerica" type="text" />
+                                </div>
+                            </div>
+                            </div>
+                       
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="tipoProducto">Tipo de producto*:</label>
+                                    <input class="form-control" id="tipoProducto" formControlName="tipoProducto" type="text" />
+                                </div>
+                            </div>
+                            
+                            </div>
+                     
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="estadoFisico">Estado físico*:</label>
+                                    <select class="form-control" id="estadoFisico" formControlName="estadoFisico">
+                                        <option value="solido">Sólido</option>
+                                        <option value="liquido">Líquido</option>
+                                        <option value="gaseoso">Gaseoso</option>
+                                    </select>
+                                </div>
+                            </div>
+                         
+                            </div>
+                    
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="fraccionArancelaria">Fracción arancelaria*:</label>
+                                    <input class="form-control" id="fraccionArancelaria" formControlName="fraccionArancelaria" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="descripcionFraccionArancelaria">Descripción de la fracción arancelaria*:</label>
+                                    <input class="form-control" id="descripcionFraccionArancelaria" formControlName="descripcionFraccionArancelaria" type="text" />
+                                </div>
+                            </div>
+                        </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="umc">UMC*:</label>
+                                        <select class="form-control" id="umc" formControlName="umc">
+                                            <option value="caja">Caja</option>
+                                            <option value="pieza">Pieza</option>
+                                            <option value="litro">Litro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
+                                        <input class="form-control" id="cantidadUMC" formControlName="cantidadUMC" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="porcentajeConcentracion">Porcentaje de concentración*:</label>
+                                        <input class="form-control" id="porcentajeConcentracion" formControlName="porcentajeConcentracion" type="text" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="valorComercial">Valor comercial (dólares)*:</label>
+                                        <input class="form-control" id="valorComercial" formControlName="valorComercial" type="text" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12"></div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="fechaMovimiento">Fecha de movimiento en caso de importación o exportación*:</label>
+                                        <input class="form-control" id="fechaMovimiento" formControlName="fechaMovimiento" type="date" />
+                                    </div>
+                                </div>
+                         
+                            <div class="row">
+                                <div class="col-md-12"></div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="presentacionFarmaceutica">Presentación farmacéutica o tipo de envase*:</label>
+                                        <input class="form-control" id="presentacionFarmaceutica" formControlName="presentacionFarmaceutica" type="text" />
+                                    </div>
+                                </div>
+                           
+                            <div class="row">
+                                <div class="col-md-12"></div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="paisDestino">País de destino*:</label>
+                                        <select class="form-control" id="paisDestino" formControlName="paisDestino">
+                                            <option value="mexico">MEXICO (ESTADOS UNIDOS MEXICANOS)</option>
+                                            <!-- Add other options as needed -->
+                                        </select>
+                                    </div>
+                                </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12"></div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="paisProcedencia">País de procedencia*:</label>
+                                        <select class="form-control" id="paisProcedencia" formControlName="paisProcedencia">
+                                            <option value="">Selecciona un valor</option>
+                                            <!-- Add other options as needed -->
+                                        </select>
+                                    </div>
+                                </div>
+                            
                     </form>
                 </div>
                 <div class="modal-footer custom-footer justify-content-center">

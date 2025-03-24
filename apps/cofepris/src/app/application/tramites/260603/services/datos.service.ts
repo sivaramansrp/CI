@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ScianData } from '../models/datos-modificacion.model';
 import { PreOperativo } from '../models/datos-modificacion.model';
+import { DatosProducto } from '../models/datos-modificacion.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,10 @@ export class DatosService {
 
   obtenerPreOperativo(): Observable<PreOperativo[]> {
     return this.http.get<PreOperativo[]>('assets/json/260603/pre-operativo.json');
+  }
+  
+  obtenerDatosProducto(): Observable<DatosProducto[]> {
+    return this.http.get<DatosProducto[]>('assets/json/260603/datos-producto.json');
   }
 
 }
