@@ -33,6 +33,7 @@
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
             [isDisabled]="false"
+            (selectionChange)="cambioBanco($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -48,11 +49,14 @@
       </div>
 
       <div class="col-md-4">
-        <input-fecha
-          [datos]="fechaInicioInput"
-          [setFecha]="pagosDeDerechosForm.get('fechaInicioInput')?.value"
-          (valorCambiado)="cambioFechaFinal($event)"
-        ></input-fecha>
+        <label class="form-label" for="fechaInicio">Fecha de inspección *:</label>
+        <input
+          type="date"
+          id="fechaInicio"
+          class="form-control"
+          formControlName="fechaInicioInput"
+          (change)="cambioFechaFinal($event)"
+        />
       </div>
 
       <div class="col-md-4 form-group">
@@ -127,7 +131,7 @@
           >Fecha de pago:</label
         >
         <input
-          type="text"
+          type="date"
           id="fechaInicioRevision"
           class="form-control"
           formControlName="fechaInicioRevision"

@@ -2,12 +2,12 @@
 import { DatosDelTramite, PagoDeDerechos, PagoDeDerechosRevision, ResponsableInspección } from '../modelos/acuicola.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MercanciaDatosInfo } from '../constantes/acuicola.enum';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { destinoInfo } from '../constantes/acuicola.enum';
 import { exportadorInfo } from '../constantes/acuicola.enum';
 import { map } from 'rxjs';
-import { medioInfo } from '../constantes/acuicola.enum';
 import { mercanciaInfo } from '../constantes/acuicola.enum';
 
 @Injectable({
@@ -27,8 +27,9 @@ export class AcuicolaService {
    */
   constructor(
     private http: HttpClient,
-    // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Obtiene los datos de los certificados.
@@ -214,10 +215,10 @@ export class AcuicolaService {
 
   /**
    * Obtiene los datos de la mercancía desde un archivo JSON.
-   * @returns Un Observable que emite un array de objetos de tipo `medioInfo`.
+   * @returns Un Observable que emite un array de objetos de tipo `MercanciaDatosInfo`.
    */
-  getDatosMercancia(): Observable<medioInfo[]> {
-    return this.http.get<medioInfo[]>(`${this.apiUrl}datos-de-mercancia.json`).pipe(
+  getDatosMercancia(): Observable<MercanciaDatosInfo[]> {
+    return this.http.get<MercanciaDatosInfo[]>(`${this.apiUrl}datos-de-mercancia.json`).pipe(
       map(response => {
         return response;
       })

@@ -7,7 +7,7 @@ export const PASOS = [
   },
   {
     indice: 2,
-    titulo: 'Requisitos necesarios',
+    titulo: 'Anexar requisitos',
     activo: false,
     completado: false,
   },
@@ -37,7 +37,7 @@ export const TEXTOS_REQUISITOS =
   'La solicitud ha quedado registrada con el número temporal [202767640]. Este no tiene validez legal y sirve solamente para efectos de identificar tu Solicitud. Un folio oficial le será asignado a la solicitud al momento en que esta sea firmada.';
 
 export const INSTRUCCION_DOBLE_CLIC =
-  'Al dar clic en el boton "Cargar" se creara una nueva solicitud con los mismos datos de la solcitud 20276264';
+  'Al dar clic en el botón "Cargar" se creará una nueva solicitud con los mismos datos de la solcitud 202766288 ';
 
 export const MANDATORY_INSTRUCTION =
   'Se requieren las constantes que definen las tablas de instrucciones marcadas con un asterisco.';
@@ -181,7 +181,7 @@ export interface mercanciaInfo {
 
 export const EXPORTADOR_SERVICIO = [
   {
-    encabezado: 'Nombre/denominacaió o razón social',
+    encabezado: 'Nombre/ denominación o razón social',
     clave: (ele: exportadorInfo): string => ele.TABLA_Columna_1,
     orden: 1,
   },
@@ -219,7 +219,7 @@ export interface exportadorInfo {
 
 export const DESTINO_SERVICIO = [
   {
-    encabezado: 'Nombre/denominacaió o razón social',
+    encabezado: 'Nombre/ denominación o razón social',
     clave: (ele: destinoInfo): string => ele.TABLA_Columna_1,
     orden: 1,
   },
@@ -294,38 +294,36 @@ export interface destinoInfo {
 export const MEDIO_SERVICIO = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: medioInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_1,
     orden: 1,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: medioInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_2,
     orden: 2,
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (ele: medioInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_3,
     orden: 3,
   },
   {
     encabezado: 'Domicilio',
-    clave: (ele: medioInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_4,
     orden: 4,
   },
   {
     encabezado: 'País',
-    clave: (ele: medioInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_5,
     orden: 5,
   },
   {
     encabezado: 'País',
-    clave: (ele: medioInfo): string => ele.TABLA_Columna_6,
+    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_6,
     orden: 6,
   },
 ];
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface medioInfo {
+export interface MercanciaDatosInfo {
   TABLA_Columna_1: string;
   TABLA_Columna_2: string;
   TABLA_Columna_3: string;

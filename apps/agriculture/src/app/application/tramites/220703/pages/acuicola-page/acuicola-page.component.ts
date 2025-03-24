@@ -122,7 +122,6 @@ export class AcuicolaPageComponent implements OnInit {
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
     const FORMAVALIDA: boolean[] = [];
-    // eslint-disable-next-line guard-for-in
     for (const LLAVESECCION of Object.keys(SECCIONES_TRAMITE_220703.PASO_1) as Array<keyof typeof SECCIONES_TRAMITE_220703.PASO_1>) {
 
       SECCIONES.push(SECCIONES_TRAMITE_220703.PASO_1[LLAVESECCION]);

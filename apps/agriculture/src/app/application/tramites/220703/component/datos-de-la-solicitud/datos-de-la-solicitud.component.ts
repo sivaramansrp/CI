@@ -1,9 +1,9 @@
-import { AlertComponent, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDeLaSolicitudInt, DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
-import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, medioInfo } from '../../constantes/acuicola.enum';
+import { DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
+import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, takeUntil, tap } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../modelos/configuracio-columna.model';
@@ -11,9 +11,10 @@ import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { TEXTOS_220703 } from '../../constantes/acuicola.enum';
+import { TramiteState } from '../../estados/tramite220703.store';
 import { TramiteStore } from '../../estados/tramite220703.store';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
-import { delay } from 'rxjs';
+
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -22,7 +23,6 @@ import { delay } from 'rxjs';
     AlertComponent,
     TituloComponent,
     CatalogoSelectComponent,
-    InputFechaComponent,
     TablaDinamicaComponent,
     ReactiveFormsModule,
     CommonModule
@@ -37,12 +37,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   datosDeLaSolicitudForm!: FormGroup;
-
-  /**
-   * Estado actual de la solicitud.
-   * @type {DatosDeLaSolicitudInt}
-   */
-  solicitudState!: DatosDeLaSolicitudInt;
 
   /**
    * Indica si la sección colapsable está abierta o cerrada.
@@ -66,37 +60,67 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Catálogo de horas de inspección.
    * @type {CatalogosSelect}
    */
-  horaDeInspeccion!: CatalogosSelect;
+  horaDeInspeccion: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de aduanas de ingreso.
    * @type {CatalogosSelect}
    */
-  aduanaDeIngreso!: CatalogosSelect;
+  aduanaDeIngreso: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de oficinas de inspección.
    * @type {CatalogosSelect}
    */
-  oficinaDeInspeccion!: CatalogosSelect;
+  oficinaDeInspeccion: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de puntos de inspección.
    * @type {CatalogosSelect}
    */
-  puntoDeInspeccion!: CatalogosSelect;
+  puntoDeInspeccion: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de tipos de contenedores.
    * @type {CatalogosSelect}
    */
-  tipoContenedor!: CatalogosSelect;
+  tipoContenedor: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Catálogo de medios de transporte.
    * @type {CatalogosSelect}
    */
-  medioDeTransporte!: CatalogosSelect;
+  medioDeTransporte: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
 
   /**
    * Textos estáticos utilizados en el componente.
@@ -105,16 +129,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS_220703;
 
   /**
-   * Configuración de columnas para la tabla de medios de servicio.
-   * @type {ConfiguracionColumna<medioInfo>[]}
+   * @type {TramiteState}
+   * @description Variable que almacena el estado inicial de un trámite. Se inicializa como un objeto vacío y se fuerza su tipo a TramiteState.
    */
-  exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
+  tramiteState: TramiteState = {} as TramiteState;
+
+  /**
+   * Configuración de columnas para la tabla de medios de servicio.
+   * @type {ConfiguracionColumna<MercanciaDatosInfo>[]}
+   */
+  exportadorTabla: ConfiguracionColumna<MercanciaDatosInfo>[] = MEDIO_SERVICIO;
 
   /**
    * Datos de la mercancía para la tabla.
-   * @type {medioInfo[]}
+   * @type {MercanciaDatosInfo[]}
    */
-  mercanciaDatos: medioInfo[] = [];
+  mercanciaDatos: MercanciaDatosInfo[] = [];
 
   /**
    * Configuración del campo de fecha de inicio.
@@ -162,13 +192,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState.solicitudState;
-      })
-    ).subscribe();
-
     this.iniciarFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
@@ -180,35 +203,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getMedioDeTransporte();
     this.getMercanciaDatos();
 
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          if (seccionState) {
-            this.solicitudState = seccionState.solicitudState;
-            this.datosDeLaSolicitudForm.patchValue(this.solicitudState);
-          }
-        })
-      ).subscribe();
-
-    this.datosDeLaSolicitudForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
-          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
-
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((datos: TramiteState) => {
+        this.tramiteState = datos;
+        this.datosDeLaSolicitudForm.patchValue({
+          fechaInicioInput: datos.fechaInicioInput,
+          aduanaDeIngreso: datos.aduanaDeIngreso,
+          tipoContenedor: datos.tipoContenedor,
+          identificacionTransporte: datos.identificacionTransporte,
+          justificacion: datos.justificacion,
+          esSolicitudFerros: datos.esSolicitudFerros
+        });
+      })
+    )
       .subscribe();
   }
 
@@ -219,21 +227,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   iniciarFormulario(): void {
     this.datosDeLaSolicitudForm = this.fb.group({
-      justificacion: ['', Validators.required],
+      justificacion: [{ value: this.tramiteState.justificacion }, Validators.required],
       certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
-      fechaInicio: ['', Validators.required],
+      fechaInicioInput: [{ value: this.tramiteState.fechaInicioInput }, Validators.required],
       horaDeInspeccion: ['', Validators.required],
-      aduanaDeIngreso: ['', Validators.required],
+      aduanaDeIngreso: [{ value: this.tramiteState.aduanaDeIngreso }, Validators.required],
       oficinaDeInspeccion: ['', Validators.required],
       puntoDeInspeccion: ['', Validators.required],
-      nombreInsp: [{ value: '', disabled: true }, Validators.required],
+      nombreInspector: [{ value: '', disabled: true }, Validators.required],
       primerApellido: [{ value: '', disabled: true }, Validators.required],
       segundoApellido: [{ value: '', disabled: true }, Validators.required],
       cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
-      tipoContenedor: ['', Validators.required],
+      tipoContenedor: [{ value: this.tramiteState.tipoContenedor }, Validators.required],
       medioDeTransporte: ['', Validators.required],
-      identificacionTransporte: ['', Validators.required],
-      esSolicitudFerros: ['', Validators.required]
+      identificacionTransporte: [{ value: this.tramiteState.identificacionTransporte }, Validators.required],
+      esSolicitudFerros: [{ value: this.tramiteState.esSolicitudFerros }, Validators.required]
     });
   }
 
@@ -247,12 +255,61 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Cambia el valor de la fecha final en el formulario.
-  * @param nuevo_valor Nuevo valor de la fecha final.
-  */
-  cambioFechaFinal(nuevo_valor: string): void {
-    this.datosDeLaSolicitudForm.get('fechaInicioInput')?.setValue(nuevo_valor);
-    this.datosDeLaSolicitudForm.get('fechaInicioInput')?.markAsUntouched();
+   * Maneja el cambio de la fecha de inicio en el formulario.
+   * @param {Event} event - El evento de cambio generado por el input.
+   * @returns {void}
+   */
+  cambioFechaInicio(event: Event): void {
+    const FECHA = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setFechaInicio(FECHA);
+  }
+
+  /**
+   * Maneja el cambio de la aduana de ingreso seleccionada.
+   * @param {Catalogo} event - El objeto de tipo `Catalogo` que contiene el ID de la aduana.
+   * @returns {void}
+   */
+  cambioAduanaDeIngreso(event: Catalogo): void {
+    this.tramiteStore.setAduanaDeIngreso(event.id);
+  }
+
+  /**
+   * Maneja el cambio del tipo de contenedor seleccionado.
+   * @param {Catalogo} event - El objeto de tipo `Catalogo` que contiene el ID del tipo de contenedor.
+   * @returns {void}
+   */
+  cambioTipoContenedor(event: Catalogo): void {
+    this.tramiteStore.setTipoContenedor(event.id);
+  }
+
+  /**
+   * Maneja el cambio en la identificación del transporte.
+   * @param {Event} event - El evento de cambio generado por el input.
+   * @returns {void}
+   */
+  cambioIdentificacionTransporte(event: Event): void {
+    const IDENTIFICACION = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setIdentificacionTransporte(IDENTIFICACION);
+  }
+
+  /**
+   * Maneja el cambio en la justificación proporcionada.
+   * @param {Event} event - El evento de cambio generado por el input.
+   * @returns {void}
+   */
+  cambioJustificacion(event: Event): void {
+    const JUSTIFICACION = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setJustificacion(JUSTIFICACION);
+  }
+
+  /**
+   * Maneja el cambio en la selección de si es una solicitud Ferros.
+   * @param {Event} event - El evento de cambio generado por el input.
+   * @returns {void}
+   */
+  cambioEsSolicitudFerros(event: Event): void {
+    const ES_SOLICITUD_FERROS = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setEsSolicitudFerros(ES_SOLICITUD_FERROS);
   }
 
   /**

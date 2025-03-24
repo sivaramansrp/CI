@@ -17,19 +17,18 @@
               <div class="panel-body">
                 <div class="row">
                   <ng-alert [CONTENIDO]="instruccionDobleClic"></ng-alert>
+
+                  <div class="d-flex justify-content-end">
+                    <div class="btn-group m-4">
+                      <button class="btn btn-primary me-2" type="submit">
+                        Cargar
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             }
-            <div class="row">
-              <div class="d-flex justify-content-end">
-                <div class="btn-group m-4">
-                  <button class="btn btn-primary me-2" type="submit">
-                    Cargar
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -44,6 +43,7 @@
           id="justificación"
           class="form-control"
           formControlName="justificacion"
+          (change)="cambioJustificacion($event)"
           style="height: 100%; resize: vertical"
         ></textarea>
       </div>
@@ -64,11 +64,14 @@
           />
         </div>
         <div class="col-md-4">
-          <input-fecha
-            [datos]="fechaInicioInput"
-            [setFecha]="datosDeLaSolicitudForm.get('fechaInicioInput')?.value"
-            (valorCambiado)="cambioFechaFinal($event)"
-          ></input-fecha>
+          <label class="form-label" for="fechaInicio">Fecha de inspección *:</label>
+          <input
+            type="date"
+            id="fechaInicio"
+            class="form-control"
+            formControlName="fechaInicioInput"
+            (change)="cambioFechaInicio($event)"
+          />
         </div>
         <div class="col-md-4">
           <div class="form-group">
@@ -89,6 +92,7 @@
               [placeholder]="aduanaDeIngreso.primerOpcion"
               formControlName="aduanaDeIngreso"
               [isDisabled]="false"
+              (selectionChange)="cambioAduanaDeIngreso($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -121,12 +125,12 @@
       <div class="row">
         <ng-titulo titulo="Responsable inspección en punto" />
         <div class="col-md-4 form-group">
-          <label for="nombreInsp" class="form-label">Nombre(s):</label>
+          <label for="nombreInspector" class="form-label">Nombre(s):</label>
           <input
             class="form-control"
             type="text"
-            id="nombreInsp"
-            formControlName="nombreInsp"
+            id="nombreInspector"
+            formControlName="nombreInspector"
           />
         </div>
         <div class="col-md-4 form-group">
@@ -174,6 +178,7 @@
             [placeholder]="tipoContenedor.primerOpcion"
             formControlName="tipoContenedor"
             [isDisabled]="false"
+            (selectionChange)="cambioTipoContenedor($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -201,6 +206,7 @@
             size="30"
             id="identificacionTransporte"
             formControlName="identificacionTransporte"
+            (change)="cambioIdentificacionTransporte($event)"
           />
         </div>
 
@@ -220,11 +226,13 @@
               id="SiSolicitudFerros"
               value="1"
               formControlName="esSolicitudFerros"
+              (change)="cambioEsSolicitudFerros($event)"
             />
             <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
           </div>
         </div>
 
+        
         <div class="col-md-12 mb-4">
           <div class="form-check">
             <input

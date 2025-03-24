@@ -1,10 +1,14 @@
-import { CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PagoDeDerechos, PagoDeDerechosRevision } from '../../modelos/acuicola.model';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { FECHA_DE_PAGO } from '../../constantes/acuicola.enum';
+import { Subject } from 'rxjs';
+import { TramiteState } from '../../estados/tramite220703.store';
+import { TramiteStore } from '../../estados/tramite220703.store';
+import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 
 
 @Component({
@@ -13,7 +17,6 @@ import { FECHA_DE_PAGO } from '../../constantes/acuicola.enum';
   imports: [
     TituloComponent,
     CatalogoSelectComponent,
-    InputFechaComponent,
     ReactiveFormsModule
   ],
   templateUrl: './pago-de-derechos.component.html',
@@ -26,7 +29,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   pagosDeDerechosForm!: FormGroup;
 
   /** Catálogo de bancos para selección en el formulario. */
-  banco!: CatalogosSelect;
+  banco: CatalogosSelect = {
+    labelNombre: '',
+    required: false,
+    primerOpcion: '',
+    catalogos: [],
+  };
+
+  /**
+  * @type {TramiteState}
+  * @description Variable que almacena el estado inicial de un trámite. Se inicializa como un objeto vacío y se fuerza su tipo a TramiteState.
+  */
+  tramiteState: TramiteState = {} as TramiteState;
 
   /** Configuración de la fecha de inicio para el campo de fecha en el formulario. */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
@@ -38,10 +52,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @param fb Servicio para la creación de formularios reactivos.
    * @param acuicolaService Servicio para interactuar con la lógica de negocio relacionada con la acuicultura.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Query para acceder al estado del trámite.
+   * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
    */
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -55,6 +73,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.getBancoDatos();
     this.pagoDeCargarDatos();
     this.pagoDerechosRevision();
+
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((datos: TramiteState) => {
+        this.tramiteState = datos;
+        this.pagosDeDerechosForm.patchValue({
+          fechaInicioInput: datos.fechaInicioInput,
+          banco: datos.banco
+        });
+      })
+    )
+      .subscribe();
+
   }
 
   /**
@@ -64,9 +95,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagosDeDerechosForm = this.fb.group({
       claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
       cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
-      banco: ['', Validators.required],
-      llaveDePago: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
+      banco: [{ value: this.tramiteState.banco }, Validators.required],
+      llaveDePago: [{ value: '', disabled: true }, Validators.required],
+      fechaInicioInput: [{ value: this.tramiteState.fechaInicioInput }, Validators.required],
       importeDePago: [{ value: '', disabled: true }, Validators.required],
       claveDeReferenciaRevision: [{ value: '', disabled: true }, Validators.required],
       cadenaDependenciaRevision: [{ value: '', disabled: true }, Validators.required],
@@ -75,6 +106,25 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fechaInicioRevision: [{ value: '', disabled: true }, Validators.required],
       importeDePagoRevision: [{ value: '', disabled: true }, Validators.required],
     });
+  }
+
+  /**
+   * Maneja el cambio del banco seleccionado.
+   * @param {Catalogo} event - El objeto de tipo `Catalogo` que contiene el ID del banco.
+   * @returns {void}
+   */
+  cambioBanco(event: Catalogo): void {
+    this.tramiteStore.setBanco(event.id);
+  }
+
+  /**
+   * Maneja el cambio de la fecha final en el formulario.
+   * @param {Event} event - El evento de cambio generado por el input.
+   * @returns {void}
+   */
+  cambioFechaFinal(event: Event): void {
+    const FECHA = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setFechaInicio(FECHA);
   }
 
   /**
@@ -87,15 +137,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe((data: PagoDeDerechos) => {
         this.pagosDeDerechosForm.patchValue(data);
       })
-  }
-
-  /**
-    * Cambia el valor de la fecha final en el formulario.
-    * @param nuevo_valor Nuevo valor de la fecha final.
-    */
-  cambioFechaFinal(nuevo_valor: string): void {
-    this.pagosDeDerechosForm.get('fechaInicioInput')?.setValue(nuevo_valor);
-    this.pagosDeDerechosForm.get('fechaInicioInput')?.markAsUntouched();
   }
 
   /**

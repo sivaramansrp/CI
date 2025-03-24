@@ -5,11 +5,11 @@
       <div class="col-md-12 p-0">
         <div class="col-md-8 p-0">
           <div class="form-group">
-            <label for="foliodel">Folio del trámite:</label>
+            <label for="folioDelTramite">Folio del trámite:</label>
             <input
-              formControlName="foliodel"
+              formControlName="folioDelTramite"
               class="form-control"
-              id="foliodel"
+              id="folioDelTramite"
               type="text"
             />
           </div>
@@ -28,6 +28,7 @@
               [placeholder]="aduanaDeIngreso.primerOpcion"
               formControlName="aduanaDeIngreso"
               [isDisabled]="false"
+              (selectionChange)="cambioAduanaDeIngreso($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -39,6 +40,7 @@
               [placeholder]="oficinaDeInspeccion.primerOpcion"
               formControlName="oficinaDeInspeccion"
               [isDisabled]="false"
+              (selectionChange)="cambioOficinaDeInspeccion($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -53,9 +55,10 @@
               [placeholder]="puntoDeInspeccion.primerOpcion"
               formControlName="puntoDeInspeccion"
               [isDisabled]="false"
+              (selectionChange)="cambioPuntoDeInspeccion($event)"
             ></app-catalogo-select>
           </div>
-        </div>
+        </div>  
       </div>
 
       <div class="row">
@@ -78,6 +81,7 @@
               [placeholder]="regimenAlQueDestina.primerOpcion"
               formControlName="regimenAlQueDestina"
               [isDisabled]="false"
+              (selectionChange)="cambioRegimenAlQueDestina($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -108,6 +112,7 @@
             [placeholder]="datosParaMovilizacion.primerOpcion"
             formControlName="datosParaMovilizacion"
             [isDisabled]="false"
+            (selectionChange)="cambioDatosParaMovilizacion($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -132,6 +137,7 @@
             [placeholder]="puntoDeVerificacion.primerOpcion"
             formControlName="puntoDeVerificacion"
             [isDisabled]="false"
+            (selectionChange)="cambioPuntoDeVerificacion($event)"
           ></app-catalogo-select>
         </div>
       </div>

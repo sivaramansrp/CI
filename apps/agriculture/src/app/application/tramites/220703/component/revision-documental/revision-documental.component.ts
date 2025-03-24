@@ -17,7 +17,7 @@ import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros
   styleUrl: './revision-documental.component.scss'
 })
 export class RevisionDocumentalComponent {
-  
+
   /**
   * Índice del tab seleccionado.
   * @type {number}
@@ -34,7 +34,7 @@ export class RevisionDocumentalComponent {
   * Índice actual de la fila.
   * @type {number}
   */
-  currentIndex: number = 1;
+  índiceActual: number = 1;
 
   /**
   * Filas de datos.

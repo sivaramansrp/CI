@@ -1,7 +1,7 @@
 {
     "data": {
         "id": 1,
-        "nombreInsp": "QA",
+        "puntoDeInspeccion": "QA",
         "primerApellido": "QA",
         "segundoApellido": "QA",
         "cantidadContenedores": 123
