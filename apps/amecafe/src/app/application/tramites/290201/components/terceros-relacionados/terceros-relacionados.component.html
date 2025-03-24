@@ -1,0 +1,35 @@
+<div class="col-md-12">
+    <ng-titulo titulo="Destinatario (destino final)" />
+    <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
+</div>
+
+<div class="container">
+    <form [formGroup]="destinatarioForm" >
+        <ng-titulo titulo="Datos personales" />
+        <ng-container formGroupName="destinatarioForm">
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label class="form-label" for="tipoPersona">Tipo persona*:</label>
+              </div>
+              <div class="col-md-12">
+                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
+                  value="fisica" id="fisica"/>
+                <label for="fisica">Física</label>
+              </div>
+              <div class="col-md-12">
+                <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
+                value="moral" id="moral"/>
+                <label for="moral">Moral</label>
+              </div>
+            </div>
+          </ng-container>
+        
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label" for="denominación">Denominación/razón social*:</label>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"/>
+              </div>
+            </div>
+        
+    </form>
+</div>

@@ -1,31 +1,146 @@
 <div class="container">
   <form [formGroup]="informationCafeForm">
     <ng-titulo titulo="Informacion del Cafe" />
-    <div class="row-md-12">
-      <div class="col-md-12">
-        <label class="form-label" for="formasdelcafe">Formas del cafe*:</label>
-       <input type="">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="form-group">
+          <app-catalogo-select
+          id="formasdelcafeData"
+          formControlName="formasdelcafe"
+          [catalogo]="formasdelcafeData.catalogos"
+          [label]="'Formas Del Cafe'"
+          [placeholder]="formasdelcafeData.primerOpcion"
+          [required]="true"
+        ></app-catalogo-select>
+        </div>
       </div>
-      <div class="col-md-12">
-        <label class="form-label" for="tipos">Tipos:</label>
-        <input type="">
+      <div class="col-md-4 mb-3">
+        <div class="form-group">
+        <app-catalogo-select
+        id="tiposData"
+        formControlName="tipos"
+        [catalogo]="tiposData.catalogos"
+        [label]="'Tipos'"
+        [placeholder]="tiposData.primerOpcion"
+        [required]="true"
+       
+      ></app-catalogo-select>
+        </div>
       </div>
-      <div class="col-md-12">
-        <label class="form-label" for="calidad">Calidad:</label>
-       <input type="">
-      </div>
-      <div class="col-md-12">
-        <label class="form-label" for="Procesos">Procesos:</label>
-       <input type="">
-      </div>
-      <div class="col-md-12">
-        <label class="form-label" for="formasdelcafe">Formas del cafe*:</label>
-       <input type="">
-      </div>
-      <div class="col-md-12">
-        <label class="form-label" for="formasdelcafe">Certificaciones:</label>
-       <input type="">
+      <div class="col-md-4 mb-3">
+        <div class="form-group">
+        <app-catalogo-select
+        id="calidadData"
+        formControlName="calidad"
+        [catalogo]="calidadData.catalogos"
+        [label]="'Calidad'"
+        [placeholder]="calidadData.primerOpcion"
+        [required]="true"
+      ></app-catalogo-select>
+        </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="form-group">
+        <app-catalogo-select
+        id="procesosData"
+        formControlName="procesos"
+        [catalogo]="procesosData.catalogos"
+        [label]="'Procesos'"
+        [placeholder]="procesosData.primerOpcion"
+        [required]="true"
+      ></app-catalogo-select>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="form-group">
+        <app-catalogo-select
+        id="certificationsData"
+        formControlName="certifications"
+        [catalogo]="certificationsData.catalogos"
+        [label]="'Cerficaciones'"
+        [placeholder]="certificationsData.primerOpcion"
+        [required]="true"
+      ></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+    <ng-titulo titulo="Destino" />
+    <div class="col-md-4">
+      <div class="form-group">
+      <app-catalogo-select
+      id="adunadesalidaData"
+      formControlName="adunadesalida"
+      [catalogo]="adunadesalidaData.catalogos"
+      [label]="'Aduna de salida'"
+      [placeholder]="adunadesalidaData.primerOpcion"
+      [required]="true"
+    ></app-catalogo-select>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="form-group">
+      <app-catalogo-select
+      id="paisdestinoData"
+      formControlName="paisdestino"
+      [catalogo]="paisdestinoData.catalogos"
+      [label]="'Pais destino'"
+      [placeholder]="paisdestinoData.primerOpcion"
+      [required]="true"
+    ></app-catalogo-select>
+      </div>
+    </div>
+ 
+    <ng-titulo titulo="Procedencia" />
+    <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+      <app-catalogo-select
+      id="entidaddeprocedenciaData"
+      formControlName="entidaddeprocedencia"
+      [catalogo]="entidaddeprocedenciaData.catalogos"
+      [label]="'Entidad de procedencia'"
+      [placeholder]="entidaddeprocedenciaData.primerOpcion"
+      [required]="true"
+    ></app-catalogo-select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <ng-titulo titulo="Ciclo cafetalero" />
+    <div class="col-md-4">
+      <div class="form-group">
+      <app-catalogo-select
+      id="ciclocafetaleroData"
+      formControlName="ciclocafetalero"
+      [catalogo]="ciclocafetaleroData.catalogos"
+      [label]="'Ciclo cafetalero'"
+      [placeholder]="ciclocafetaleroData.primerOpcion"
+      [required]="true"
+    ></app-catalogo-select>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <ng-titulo titulo="Lotes" />
+    </div>
+    <div class="col-md-12">
+      <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
+    </div>
+    <div class="col-md-12 d-flex justify-content-end">
+      <div class="btn-group">
+        <button class="btn btn-danger"
+          type="button">Cancelar</button>
+          <button class="btn btn-primary me-2"
+          type="button">Agregar</button>
+        
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary me-2"
+        type="button">Continuar</button>
+      </div>
+  </div>
+    <app-datos-del-cafe></app-datos-del-cafe>
   </form>
 </div>

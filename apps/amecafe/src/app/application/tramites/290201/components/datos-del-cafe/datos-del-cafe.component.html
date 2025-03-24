@@ -1,0 +1,201 @@
+<div class="container">
+    <form [formGroup]="dataCafeForm">
+      <ng-titulo titulo="Informacion del Cafe" />
+      <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="envasadoenData"
+                formControlName="envasadoen"
+                [catalogo]="envasadoenData.catalogos"
+                [label]="'Envasado en'"
+                [placeholder]="envasadoenData.primerOpcion"
+                [required]="true"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <div class="col-md-8 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="utilizoCafeComoData"
+                formControlName="utilizoCafeComo"
+                [catalogo]="utilizoCafeComoData.catalogos"
+                [label]="'Utilizo cafe como materia prima importada para elaborar este producto?'"
+                [placeholder]="utilizoCafeComoData.primerOpcion"
+                [required]="true"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="form-group">
+               <label class="form-label" for="cantidadutilizada">Cantidad utilizada para elaborar este lote de importacion</label>
+               <input class="form-control"  placeholder="" type="text" formControlName="cantidadutilizada" id="cantidadutilizada">
+            </div>
+         </div>
+         <div class="col-md-6 mb-3">
+            <div class="form-group">
+               <label class="form-label" for="numerodepedimento">Numero de pedimento de importacion</label>
+               <input class="form-control"  placeholder="" type="text" formControlName="numerodepedimento" id="numerodepedimento">
+            </div>
+         </div>
+         <div class="col-md-8 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="paisdeimportacionData"
+                formControlName="paisdeimportacion"
+                [catalogo]="paisdeimportacionData.catalogos"
+                [label]="'Pais de importacion'"
+                [placeholder]="paisdeimportacionData.primerOpcion"
+                [required]="true"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <div class="col-md-4 mb-3">
+            <div class="form-group">
+                <app-catalogo-select
+                id="fraccionarancelariaData"
+                formControlName="fraccionarancelaria"
+                [catalogo]="fraccionarancelariaData.catalogos"
+                [label]="'Fraccion arancelaia'"
+                [placeholder]="fraccionarancelariaData.primerOpcion"
+                [required]="true"
+              ></app-catalogo-select>
+            </div>
+         </div>
+         <ng-titulo titulo="Factura y Cantidad" />
+         <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-group">
+                   <label class="form-label" for="cantidad">Cantidad</label>
+                   <input class="form-control" required="true" placeholder="" type="text" formControlName="cantidad" id="cantidad">
+                </div>
+             </div>
+             <div class="col-md-4 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="unidaddemedidaData"
+                    formControlName="unidaddemedida"
+                    [catalogo]="unidaddemedidaData.catalogos"
+                    [label]="'Unidad de medida'"
+                    [placeholder]="unidaddemedidaData.primerOpcion"
+                    [required]="true"
+                  ></app-catalogo-select>
+                </div>
+             </div>
+         </div>
+         <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-group">
+                   <label class="form-label" for="precioapplicable">Precio applicable</label>
+                   <input class="form-control" required="true" placeholder="" type="text" formControlName="precioapplicable" id="precioapplicable">
+                </div>
+             </div>
+             <div class="col-md-4 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="dolarData"
+                    formControlName="dolarData"
+                    [catalogo]="dolarData.catalogos"
+                    [label]="''"
+                    [placeholder]="dolarData.primerOpcion"
+                    [required]="true"
+                  ></app-catalogo-select>
+                </div>
+             </div>
+             <ng-titulo titulo="Marcas" />
+             <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="form-group">
+                       <label class="form-label" for="lote">Lote</label>
+                       <input class="form-control" required="true" placeholder="" type="text" formControlName="lote" id="lote">
+                    </div>
+                 </div>
+                 <div class="col-md-8 mb-3">
+                    <div class="form-group">
+                       <label class="form-label" for="otrasmarcas">Otras marcas</label>
+                       <input class="form-control" required="true" placeholder="" type="text" formControlName="otrasmarcas" id="otrasmarcas">
+                    </div>
+                 </div>
+            </div>
+            <ng-titulo titulo="Caracteristicas Especiales" />
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <app-catalogo-select
+                        id="elcafeData"
+                        formControlName="elcafe"
+                        [catalogo]="elcafeData.catalogos"
+                        [label]="'EI cafe tiene caracteristicas especiales?'"
+                        [placeholder]="elcafeData.primerOpcion"
+                        [required]="true"
+                      ></app-catalogo-select>
+                    </div>
+                 </div>
+                 </div>
+                 <div class="row">
+                     <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                              <label class="form-label" for="fechaexportacion">Fecha exportacion*:</label>
+                              <input class="form-control" id="fechaexportacion" formControlName="fechaexportacion" type="date"/>
+                            </div>
+                      </div>
+                 </div>
+                 <ng-titulo titulo="Transbordo" />
+                 <div class="row">
+                    <div class="col-md-4 ">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <app-catalogo-select
+                                id="paisdetransbordoData"
+                                formControlName="paisdetransbordo"
+                                [catalogo]="paisdetransbordoData.catalogos"
+                                [label]="'Pais de transbordo'"
+                                [placeholder]="paisdetransbordoData.primerOpcion"
+                                [required]="true"
+                              ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <app-catalogo-select
+                                id="mediodetransporteData"
+                                formControlName="mediodetransporteData"
+                                [catalogo]="mediodetransporteData.catalogos"
+                                [label]="'Medio de transporte'"
+                                [placeholder]="mediodetransporteData.primerOpcion"
+                                [required]="true"
+                              ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="form-label" for="Identificadordel">Identificador del medio de transporte:</label>
+                          <input class="form-control" id="Identificadordel" formControlName="Identificadordel"/>
+                        </div>
+                  </div>
+                 </div>
+                 <ng-titulo titulo="Observaciones" />
+                 <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label" for="observaciones">Observaciones</label>
+                      <textarea class="form-control" id="observaciones" rows="2" height="50"
+                      placeholder="" style="height: 100px" formControlName="observaciones"></textarea>
+                    </div>
+              </div>
+         </div>
+     </div>  
+     <div class="col-md-12 d-flex justify-content-end">
+       
+          <div class="btn-group">
+            <button class="btn btn-danger"
+              type="button">Cancelar</button>
+              <button class="btn btn-primary me-2"
+              type="button">Agregar</button>
+          </div>
+        
+      </div>
+    </form>
+ </div>

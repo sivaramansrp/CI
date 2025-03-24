@@ -15,16 +15,18 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosComponent } from '@libs/shared/data-access-user/src';
 import { DatosTramiteComponent } from '../components/datosTramite.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegistrarSolicitudService } from '../services/registrar-solicitud.service';
+import { TercerosRelacionadosComponent } from '../components/terceros-relacionados/terceros-relacionados.component';
 @NgModule({
   declarations: [
     PasoDosComponent,
     PasoUnoComponent,
     PasoTresComponent,
     SolicitudPageComponent,
-   
   ],
   imports: [
     TituloComponent,
+    TercerosRelacionadosComponent,
     DatosTramiteComponent,
     BtnContinuarComponent,
     CommonModule,
@@ -38,5 +40,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [RegistrarSolicitudService],
+
 })
 export class RegistrarSolicitudModule { }
