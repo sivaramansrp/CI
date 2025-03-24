@@ -6,16 +6,14 @@ WORKDIR /app
 
 # Install dependencies
 COPY . .
-# RUN pwd && ls
-# RUN npm ci
 
 # Install Nx CLI globally
 RUN npm install -g nx
 
-# Build the app using Nx.
+# Build the app using Nx
 RUN npm install --force --no-audit
-RUN npx nx build libs --configuration=development
-# RUN pwd && ls -a /app/dist/libs/shared
+# This change ensures the shared library is properly built and output to the expected directory
+RUN npx nx build shared --configuration=development
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine-slim
