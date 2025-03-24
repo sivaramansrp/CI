@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent],
+  imports: [CommonModule, SolicitanteComponent, ContenedorDeDatosSolicitudComponent],
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.css',
+  styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent {
-  indice: number = 1;
+  indice: number = 2;
 
   seleccionaTab(i: number): void {
     this.indice = i;

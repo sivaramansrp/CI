@@ -12,7 +12,6 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
