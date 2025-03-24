@@ -305,7 +305,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       claveControlUnico: ['', [Validators.required]],
       establecimientoTIF: ['', Validators.required],
       regimen: ['', Validators.required],
-      foliodel: [{ value: '1502200200120240301000015', disabled: true }],
+      folioControlUnico: [{ value: '1502200200120240301000015', disabled: true }],
     });
 
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
@@ -693,10 +693,10 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     /**
    * @method disableFormControls
    * @description Deshabilita controles específicos del formulario.
-   * - En este caso, deshabilita el control `foliodel` si existe en el formulario `forma`.
+   * - En este caso, deshabilita el control `folioControlUnico` si existe en el formulario `forma`.
    */
   disableFormControls(): void {
-    this.forma.get('foliodel')?.disable();
+    this.forma.get('folioControlUnico')?.disable();
   }
 
     /**

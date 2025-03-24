@@ -27,7 +27,7 @@ export interface DatosDeLaSolicitudInt {
  * @description Interfaz para el formulario de Datos Generales.
  */
 export interface InternaDatosGeneralesInt {
-  foliodel: number;
+  folioControlUnico: number;
   aduanaIngreso: string;
   oficinaInspeccion: string;
   puntoInspeccion: string;

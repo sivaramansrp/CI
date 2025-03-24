@@ -48,7 +48,7 @@ export function createInitialState(): TramiteState {
             esSolicitudFerros: ''
         },
         InternaDatosGeneralesState: {
-            foliodel: 0,
+            folioControlUnico: 0,
             aduanaIngreso: '',
             oficinaInspeccion: '',
             puntoInspeccion: '',

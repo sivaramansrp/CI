@@ -69,6 +69,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * @type {DatosDeLaSolicitudInt}
  */
   solicitudState!: DatosDeLaSolicitudInt;
+  
   /**
  * Indica si la sección del formulario es colapsable.
  * Permite mostrar u ocultar contenido adicional.
@@ -172,13 +173,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   private seccion!: SeccionLibState;
 
-  /**
-   * Subject para notificar la destrucción del componente.
-   * Utilizado para gestionar la limpieza de recursos.
-   * @type {Subject<void>}
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
   constructor(
    /**
    * @param {FormBuilder} fb - Servicio para la construcción y gestión de formularios reactivos.
@@ -212,7 +206,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.unsubscribe$),
       map((seccionState) => {
         this.solicitudState = seccionState.SolicitudState;
       })
@@ -235,7 +229,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  */
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.unsubscribe$),
         map((seccionState: TramiteState) => {
           if (seccionState) {
             this.solicitudState = seccionState?.SolicitudState;
@@ -249,7 +243,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
     this.datosDeLaSolicitudForm.statusChanges
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.unsubscribe$),
         delay(10),
         tap(() => {
           const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
@@ -271,7 +265,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
     this.seccionQuery.selectSeccionState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.unsubscribe$),
         map((seccionState) => {
           this.seccion = seccionState;
         })
@@ -284,7 +278,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * 
    * @description 
    * - Se suscribe a los cambios en el estado del formulario.
-   * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+   * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
    * - Aplica un retraso de 10ms antes de ejecutar la lógica.
    * - Obtiene el estado actual de la sección desde `seccionQuery`.
    * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
@@ -294,7 +288,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
     this.datosDeLaSolicitudForm.statusChanges
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.unsubscribe$),
         delay(10),
         tap(() => {
           const SECCION: number = 1;
@@ -326,7 +320,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduanaDeIngreso: ['', Validators.required],
       oficinaDeInspeccion: ['', Validators.required],
       puntoDeInspeccion: ['', Validators.required],
-      nombreInsp: [{ value: '', disabled: true }, Validators.required],
+      nombreInspector: [{ value: '', disabled: true }, Validators.required],
       primerApellido: [{ value: '', disabled: true }, Validators.required],
       segundoApellido: [{ value: '', disabled: true }, Validators.required],
       cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
@@ -390,7 +384,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   cargarDatos(): void {
     this.acuicolaService
       .obtenerDatosCertificados()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: DatosDelTramite) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       })
@@ -527,7 +521,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   obtenerResponsableDatos(): void {
     this.acuicolaService
       .obtenerResponsableDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: ResponsableInspección) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       })
@@ -540,8 +534,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }
