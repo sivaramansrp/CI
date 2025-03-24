@@ -40,7 +40,7 @@ export class PartidasDeLaComponent {
    * form
    * Formulario reactivo principal para capturar los datos de las partidas.
    */
-  @Input() form!: FormGroup;
+  @Input() partidasDelaMercanciaForm!: FormGroup;
 
   /**
    * formForTotalCount
@@ -112,7 +112,7 @@ export class PartidasDeLaComponent {
    * boolean Verdadero si el control es inválido, falso en caso contrario.
    */
   esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.form.get(nombreControl);
+    const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
     return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
 
