@@ -36,17 +36,13 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="fechaDeExpedicion">Fecha de expedición :</label>
-                    <input type="date" class="form-control" id="fechaDeExpedicion" formControlName="fechaDeExpedicion"
-                        readonly />
+                    <input-fecha [setFecha]="detallesDelTransporteForm.get('fechaDeExpedicion')?.value" [datos]="fechaDeExpedicionInput"></input-fecha>
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="fechaDeVencimiento">Fecha de vencimiento :</label>
-                    <input type="date" class="form-control" id="fechaDeVencimiento" formControlName="fechaDeVencimiento"
-                        readonly />
+                    <input-fecha [setFecha]="detallesDelTransporteForm.get('fechaDeVencimiento')?.value" [datos]="fechaDeVencimientoInput"></input-fecha>
                 </div>
             </div>
         </div>

@@ -5,11 +5,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-// Import external components/modules after the Angular core imports
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
-// Finally, import relative services
+
+import { InputFecha, TituloComponent } from '@ng-mf/data-access-user';
 import { DetallesDelTransporteService } from '../../services/detalls-de-transporte/detalles-del-transporte.service';
+import { InputFechaComponent } from "@ng-mf/data-access-user";
+
+import { FECHA_EXPEDICION, FECHA_VENCIMIENTO } from '../../constantes/certificado-sgp.enum';
 
 /**
  * Componente: DetallesDelTransporteComponent
@@ -18,7 +20,7 @@ import { DetallesDelTransporteService } from '../../services/detalls-de-transpor
 @Component({
   selector: 'app-detalles-del-transporte',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent],
   templateUrl: './detalles-del-transporte.component.html',
   styleUrl: './detalles-del-transporte.component.scss',
 })
@@ -30,7 +32,16 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    * @property {FormGroup} detallesDeltransportForm - El formulario del componente.
    */
   detallesDelTransporteForm!: FormGroup;
-
+  /**
+   * Fecha de expedición del certificado.
+   * @type {InputFecha}
+   */
+  fechaDeVencimientoInput: InputFecha = FECHA_VENCIMIENTO;
+  /**
+   * Fecha de vencimiento del certificado.
+   * @type {InputFecha}
+    */
+  fechaDeExpedicionInput: InputFecha = FECHA_EXPEDICION;
   /**
    * Subject que emite un evento cuando el componente es destruido,
    * permitiendo la desuscripción de observables.
@@ -50,8 +61,8 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
       paisOBloque: [{ value: '', disabled: true }],
       paisOOrigin: [{ value: '', disabled: true }],
       paisODestino: [{ value: '', disabled: true }],
-      fechaDeExpedicion: [{ value: '', disabled: true }],
-      fechaDeVencimiento: [{ value: '', disabled: true }]
+      fechaDeExpedicion: [{ value: ''}],
+      fechaDeVencimiento: [{ value: ''}]
     });
   }
 

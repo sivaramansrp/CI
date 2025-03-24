@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
+import { Catalogo, InputFecha, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 
@@ -17,13 +17,17 @@ import { Router } from '@angular/router';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
+import { InputFechaComponent } from "@ng-mf/data-access-user";
+
+import { FECHA_FACTURA } from '../../constantes/certificado-sgp.enum';
+
 /**
  * Este componente maneja el formulario de registro de mercancía.
  */
 @Component({
   selector: 'app-registro-de-mercancia',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent],
   templateUrl: './registro-de-mercancia.component.html',
   styleUrl: './registro-de-mercancia.component.scss',
 })
@@ -54,6 +58,8 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+
+  fechaDeLaFacturaInput: InputFecha = FECHA_FACTURA;
   /**
    * Evento que se emite cuando se modifica la mercancía.
    * @type {EventEmitter<boolean>}

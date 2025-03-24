@@ -70,3 +70,43 @@ export const CONFIGURACION_MERCANCIAS = [
     orden: 6
   }
 ];
+
+/**
+ * Constante que representa la configuración de la fecha de vencimiento.
+ * 
+ * @property {string} labelNombre - Etiqueta que describe el nombre del campo.
+ * @property {boolean} required - Indica si el campo es obligatorio.
+ * @property {boolean} habilitado - Indica si el campo está habilitado.
+ */
+export const FECHA_VENCIMIENTO = {
+  labelNombre: 'Fecha de vencimiento',
+  required: false,
+  habilitado: false,
+};
+/**
+ * Constant representing the "Fecha de expedición" (Date of issuance).
+ * 
+ * @property {string} labelNombre - The label name for the date of issuance.
+ * @property {boolean} required - Indicates whether the date of issuance is required.
+ * @property {boolean} habilitado - Indicates whether the date of issuance is enabled.
+ */
+export const FECHA_EXPEDICION = {
+  labelNombre: 'Fecha de expedición',
+  required: false,
+  habilitado: false,
+};
+/**
+ * Constant representing the invoice date field configuration.
+ * 
+ * @property {string} labelNombre - The label for the invoice date field.
+ * @property {boolean} required - Indicates if the invoice date field is required.
+ * @property {boolean} habilitado - Indicates if the invoice date field is enabled.
+ */
+export const FECHA_FACTURA = {
+  labelNombre: 'Fecha de la factura',
+  required: false,
+  habilitado: false,
+};
+
+
+
