@@ -1,10 +1,20 @@
   [
     {
-      "Nombre_denominación_o_razón_social": "Fabricante extranjeros",
-      "r_f_c": "---",
+      "Nombre_denominación_o_razón_social": "PPPPP",
+      "r_f_c": "AAL0409235E6",
       "curp": "---",
-      "teléfono": "---",
-      "correo_electrónico": "---",
-      "calle": "Calle VUCEM"
+      "teléfono": 3333333333,
+      "correo_electrónico": "D@GMAIL.COM",
+      "calle": "Ok",
+      "número_exterior": 23,
+      "número_interior": 33,
+      "País": "MEXICO(ESTADOS UNIDOS MEXICANOS)",
+      "Colonia": "OTRA NO ESPECIFICADA EN EL CATÁLOGO",
+      "Municipio_o_alcaldía": "ATLAUTLA",
+      "Localidad": "LAS DELICIAS",
+      "Entidad_federativa": "MÉXICO",
+      "Estado_localidad": "---",
+      "Código_postal": "56979",
+      "Colonia_o_equivalente": "---"
     }
   ]

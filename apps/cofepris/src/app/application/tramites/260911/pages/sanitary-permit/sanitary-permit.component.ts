@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
+import { FormGroup } from '@angular/forms';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -26,9 +27,18 @@ interface AccionBoton {
   templateUrl: './sanitary-permit.component.html',
 })
 export class SanitaryPermitComponent {
+  message:string | undefined;
+  errorMessage(errorMessage: string): void {
+    this.message = errorMessage;
+    throw new Error('Method not implemented.');
+  }
+  static onSubmit(): void {
+    throw new Error('Method not implemented.');
+  }
   /**
    * Lista de pasos en el asistente.
    */
+  form: FormGroup | undefined;
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
