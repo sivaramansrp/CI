@@ -161,10 +161,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'ref-procedure',
+    path: 'importacion-vehiculos-nuevos',
     loadChildren: () =>
-      import('./tramites/000000/ref-procedure.module').then(
-        (m) => m.RefProcedureModule
+      import('./tramites/130115/importacion-vehiculos-nuevos.module').then(
+        (m) => m.ImportacionVehiculosNuevosModule
       )
   },
   {

@@ -7,8 +7,11 @@ import { PageComponent } from './pages/page/page.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { RefProcedureRoutingModule } from './ref-procedure-routing.module';
+
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+
+import { ImportacionVehiculosNuevosRoutingModule } from './importacion-vehiculos-nuevos-routing.module';
+
 
 
 
@@ -16,7 +19,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
   declarations: [PageComponent, PasoUnoComponent],
   imports: [
     CommonModule, 
-    RefProcedureRoutingModule,
+    ImportacionVehiculosNuevosRoutingModule,
     WizardComponent,
     SolicitanteComponent,
     TituloComponent,
@@ -33,4 +36,4 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     ToastrService
   ]
 })
-export class RefProcedureModule {}
+export class ImportacionVehiculosNuevosModule {}

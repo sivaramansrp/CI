@@ -20,4 +20,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
-export class RefProcedureRoutingModule { }
+export class ImportacionVehiculosNuevosRoutingModule { }
