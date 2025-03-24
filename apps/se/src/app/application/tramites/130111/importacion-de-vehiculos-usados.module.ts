@@ -15,6 +15,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PartidasDeLaComponent } from '../../shared/components/partidas-de-la/partidas-de-la.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
+import { DetosDeLaMercanciaComponent } from '../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component';
+import { DetosDelTramiteComponent } from '../../shared/components/detos-de-tramite/detos-del-tramite.component';
+
 @NgModule({
   declarations: [
     ImportacionDeVehiculosUsadosComponent,
@@ -30,7 +33,9 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     TituloComponent,
     SolicitanteComponent,
     PartidasDeLaComponent,
-    SolicitudComponent
+    SolicitudComponent,
+    DetosDeLaMercanciaComponent,
+    DetosDelTramiteComponent
   ]
 })
 export class ImportacionDeVehiculosUsadosModule { }
