@@ -16,7 +16,9 @@ export interface Fabricante {
   entidadFederativa: string;
   estadoLocalidad: string;
   codigoPostal: string;
+  coloniaEquivalente: string;
 }
+
 export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] =
   [
     {
@@ -65,6 +67,11 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
       encabezado: 'Código Postal',
       clave: (fila) => fila.codigoPostal,
       orden: 15,
+    },
+    {
+      encabezado: 'Colonia o Equivalente',
+      clave: (fila) => fila.coloniaEquivalente,
+      orden: 16,
     },
   ];
 
