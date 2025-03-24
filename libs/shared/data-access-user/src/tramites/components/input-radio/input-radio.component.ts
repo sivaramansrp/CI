@@ -35,7 +35,7 @@ export class InputRadioComponent implements OnInit {
   /**
    * Array de opciones de radio, cada una con una etiqueta y un valor.
    */
-  @Input() radioOptions: { label: string; value: string | number }[] = [];
+  @Input() radioOptions: { label: string; value: string | number; hint?: string }[] = [];
   /**
    * El valor actualmente seleccionado.
    * @example 'option1'
@@ -51,6 +51,10 @@ export class InputRadioComponent implements OnInit {
    * @default 'vertical'
    */
   @Input() layout: 'vertical' | 'horizontal' = 'vertical';
+
+  
+  @Input() showTooltip: boolean = false;
+
   /**
    * Evento emitido cuando el valor seleccionado cambia.
    */

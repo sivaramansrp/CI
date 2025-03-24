@@ -11,8 +11,13 @@
             formControlName="seleccion" 
           />
           <span class="radio-label">{{ option.label }}</span>
-    
-      </div>
+          <span 
+        *ngIf="showTooltip" 
+        class="bi bi-question-circle-fill fs-4 m-1"
+        [title]="option.hint" 
+        ata-bs-toggle="tooltip">
+      </span>
+    </div>
       
 </form>
 </div>

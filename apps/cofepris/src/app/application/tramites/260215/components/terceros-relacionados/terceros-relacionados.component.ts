@@ -22,6 +22,8 @@ import {
 import {
   Catalogo,
   CatalogoSelectComponent,
+  InputRadioComponent,
+
 } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -32,7 +34,6 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
 import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -58,6 +59,8 @@ const TERCEROS_TEXTO_DE_ALERTA =
     ReactiveFormsModule,
     ModalComponent,
     CatalogoSelectComponent,
+    InputRadioComponent,
+    
   ],
 })
 
@@ -66,6 +69,27 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 export class TercerosRelacionadosComponent implements OnInit {
+
+  nacionalidadOptions = [
+    { label: 'Nacional', value: 'nacional' },
+    { label: 'Extranjero', value: 'extranjero' },
+  ];
+
+  tipoPersonaOptions = [
+    { label: 'Física', value: 'fisica', hint: 'fisica hint' },
+    { label: 'Moral', value: 'moral', hint: 'moral hint' },
+  ];
+  cambiarRadio(value: string | number) {
+    const valorSeleccionado = value as string;
+    this.tercerosInputChecked(valorSeleccionado);
+  }
+  
+
+  cambiarRadioF(value: string | number) {
+    const valorSeleccionado = value as string;
+    this.inputChecked(valorSeleccionado);
+  }
+  
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).

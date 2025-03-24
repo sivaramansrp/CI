@@ -105,16 +105,13 @@
           <div>
             <h6>Terceros nacionalidad*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="nacional"
-                formControlName="tercerosNacionalidad" id="nacional" [checked]="nacional"
-                (change)="tercerosInputChecked('nacional')" />
-              <label class="control-label" for="nacional">Nacional</label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="extranjero"
-                formControlName="tercerosNacionalidad" id="extranjero" [checked]="extranjero"
-                (change)="tercerosInputChecked('extranjero')" />
-              <label class="control-label" for="extranjero">Extranjero</label>
+              <app-input-radio
+              [radioOptions]="nacionalidadOptions"
+              [isRequired]="true"
+              formControlName="tercerosNacionalidad"
+              [layout]="'vertical'"
+              (valueChange)="cambiarRadio($event)"
+            ></app-input-radio>
             </div>
           </div>
         </div>
@@ -123,16 +120,14 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+                <app-input-radio 
+              [radioOptions]="tipoPersonaOptions"
+              [isRequired]="true"
+              formControlName="tipoPersona"
+              [layout]="'vertical'"
+              (valueChange)="cambiarRadioF($event)"
+              [showTooltip]="true"
+            ></app-input-radio>
             </div>
           </div>
         </div>
