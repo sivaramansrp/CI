@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-titulo titulo="Datos del trámite a realizer" />
+    <ng-titulo titulo="Datos del trámite a realizar" />
     <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
@@ -14,9 +14,9 @@
                     [label]="'Régimen al que se destinará la mercancía'" [required]="true"
                     name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'regimen', 'setRegimen')"></app-catalogo-select>
                 <br>
-                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificación"
+                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion"
                     [label]="'Clasificación del régimen'" [required]="true"
-                    name="Clasificación del régimen" (change)="setValoresStore(formulario,'clasificación', 'setClasificación')"></app-catalogo-select>
+                    name="Clasificación del régimen" (change)="setValoresStore(formulario,'clasificacion', 'setClasificacion')"></app-catalogo-select>
             </div>
         </div>
     </form>

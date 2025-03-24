@@ -17,7 +17,7 @@ import { Tramite130106Store } from '../../../../estados/tramites/tramite130106.s
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
-export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Representa el formulario del componente.
@@ -80,7 +80,7 @@ export class DatosDeLaSolicitudeComponent implements OnInit, OnDestroy {
     this.formulario = this.fb.group({
       solicitud: [this.solicitudState.solicitud, Validators.required], // Campo de solicitud, requerido
       regimen: [this.solicitudState.regimen, Validators.required], // Campo de régimen, requerido
-      clasificación: [this.solicitudState.clasificación, Validators.required], // Campo de clasificación, requerido
+      clasificacion: [this.solicitudState.clasificacion, Validators.required], // Campo de clasificación, requerido
       solicitudDescripcion: [this.solicitudState.solicitudDescripcion, Validators.required], // Campo de descripción de la solicitud, requerido
       producto: [this.solicitudState.producto, Validators.required], // Campo de solicitud, requerido
     });

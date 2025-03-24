@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 export interface Solicitud130106State {
 
     regimen: string;
-    clasificación: string;
+    clasificacion: string;
     solicitudDescripcion: string
     fraccion: string
     cantidad: string;
@@ -31,7 +31,7 @@ export interface Solicitud130106State {
 export function createInitialState(): Solicitud130106State {
     return {
         regimen: '',
-        clasificación: '',
+        clasificacion: '',
         solicitudDescripcion: '',
         fraccion: '',
         cantidad: '',
@@ -150,10 +150,10 @@ export class Tramite130106Store extends Store<Solicitud130106State> {
         }));
     }
 
-    public setClasificación(clasificación: string) {
+    public setClasificacion(clasificacion: string) {
         this.update((state) => ({
             ...state,
-            clasificación,
+            clasificacion,
         }));
     }
 
