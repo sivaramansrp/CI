@@ -14,8 +14,11 @@ export class PasoTresComponent {
   constructor(
     private router: Router,
     private tramiteFolioServices: TramiteFolioService,
-    private tramiteStore: TramiteFolioStore
-  ) { }
+    private tramiteStore: TramiteFolioStore,) 
+  // eslint-disable-next-line no-empty-function
+  {
+
+  }
 
   /**
   * Maneja el evento para obtener la firma y realiza acciones adicionales.
