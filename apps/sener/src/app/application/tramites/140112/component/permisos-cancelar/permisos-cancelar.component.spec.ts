@@ -67,7 +67,7 @@ describe('PermisosCancelarComponent', () => {
     expect(component.motivoDesistimientotextBox).toBe('');
     expect(component.obtenerFilasSeleccionadas).toEqual([]);
     expect(component.confirmarVeracidad).toBe('');
-    expect(component.estmarcado).toBe(false);
+    expect(component.declaracionEstaMarcado).toBe(false);
   });
 
 
@@ -75,11 +75,11 @@ describe('PermisosCancelarComponent', () => {
   it('should select or deselect all rows', () => {
     const EVENT = { target: { checked: true } } as any;
     component.seleccionarDeseleccionarTodos(EVENT);
-    expect(component.estmarcado).toBe(true);
+    expect(component.declaracionEstaMarcado).toBe(true);
     expect(component.confirmarVeracidad).toBe(component.manifestoDeVeracidad);
     const EVENT2 = { target: { checked: false } } as any;
     component.seleccionarDeseleccionarTodos(EVENT2);
-    expect(component.estmarcado).toBe(false);
+    expect(component.declaracionEstaMarcado).toBe(false);
     expect(component.confirmarVeracidad).toBe('');
   });
 
