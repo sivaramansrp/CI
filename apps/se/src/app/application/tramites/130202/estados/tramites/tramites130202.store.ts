@@ -15,11 +15,9 @@ export interface Tramite130202State {
   classification:string;
   filaSeleccionada: null;
   cantidadPartidasDeLaMercancia: string;
-   valorPartidaUSDPartidasDeLaMercancia: number;
-   descripcionPartidasDeLaMercancia: string;
-  // fraccion: string;
+  valorPartidaUSDPartidasDeLaMercancia: number;
+  descripcionPartidasDeLaMercancia: string;
   valorFacturaUSD: string;
-  // unidadMedida: string;
   bloque: string;
   usoEspecifico: string;
   justificacionImportacionExportacion: string;

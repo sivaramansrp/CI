@@ -3,7 +3,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule,

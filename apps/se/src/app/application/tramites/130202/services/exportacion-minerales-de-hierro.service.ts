@@ -63,7 +63,7 @@ export class ExportacionMineralesDeHierroService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/producto-options.json'
+      'assets/json/130202/producto-otions.json'
     );
   }
 }
