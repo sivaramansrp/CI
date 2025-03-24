@@ -7,13 +7,15 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { InputFecha, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { EXPEDICION, VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
+
 
 /**
  * TratadosComponent
@@ -23,7 +25,7 @@ import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/sr
 @Component({
   selector: 'app-tratados',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputFechaComponent],
   templateUrl: './tratados.component.html',
   styleUrl: './tratados.component.scss',
 })
@@ -59,8 +61,19 @@ export class TratadosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTabledatas();
+   
   }
+  
+  fechaFinalInput: InputFecha = EXPEDICION;
+  fechaFinalInputs: InputFecha = VENCIMIENTO;
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.detallesdeltransporte.patchValue({
+      fechaExpedicionFactura: nuevo_valor,
+    });
+  
 
+  }
+  
   /**
    * getTabledatas
    * Obtiene los datos de los tratados y actualiza el formulario.
