@@ -10,6 +10,7 @@
  * @styleUrl ./partidas-de-la.component.scss
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, REG_X } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +19,6 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130109/partidas-de-la.json';
 import { Router } from '@angular/router';
 import { TEXTOS } from '@ng-mf/data-access-user';
@@ -137,9 +137,9 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.form.patchValue({
-            cantidad: seccionState.cantidad,
-            valorPartidaUSD: seccionState.valorPartidaUSD,
-            descripcion: seccionState.descripcion,
+            cantidadMercancia: seccionState.cantidadMercancia,
+            valorPartidaUSDMercancia: seccionState.valorPartidaUSDMercancia,
+            descripcionMercancia: seccionState.descripcionMercancia,
           });
         })
       )
@@ -152,21 +152,21 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.form = this.fb.group({
-      cantidad: [
+      cantidadMercancia: [
         '',
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
           Validators.maxLength(18),
         ],
       ],
-      descripcion: ['', [Validators.required, Validators.maxLength(255)]],
-      valorPartidaUSD: [
+      descripcionMercancia: ['', [Validators.required, Validators.maxLength(255)]],
+      valorPartidaUSDMercancia: [
         '',
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
           Validators.maxLength(20),
         ],
       ],
@@ -295,8 +295,6 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite130109Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    /* eslint-disable no-console */
-    console.log(VALOR);
     (this.tramite130109Store[metodoNombre] as (value: any) => void)(VALOR);
   }
   /**

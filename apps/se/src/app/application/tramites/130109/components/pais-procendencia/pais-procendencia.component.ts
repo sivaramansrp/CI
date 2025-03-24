@@ -1,9 +1,15 @@
+
 /**
  * compo doc
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  CrosslistState,
+  CrosslistStore,
+} from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
+
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -20,11 +26,13 @@ import { Pais } from '../../enum/vehiculos-adaptados.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
 import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
 import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
+
 
 /**
  * Componente para la gestión de la selección de países de procedencia.
@@ -143,20 +151,30 @@ export class PaisProcendenciaComponent implements OnInit, OnDestroy {
       },
     },
   ];
-
   /**
-   * compo doc
-   * @constructor
-   * @param {HttpClient} http - Cliente HTTP para solicitudes.
-   * @param {FormBuilder} fb - Constructor de formularios reactivos.
+   * Lista de fechas.
+   * @type {string[]}
    */
+  fechas!: string[];
+  /**
+ * Constructor del componente
+ * @param http Cliente HTTP para realizar solicitudes
+ * @param fb FormBuilder para crear formularios reactivos
+ * @param tramite130109Store Almacén de datos para el trámite 130109
+ * @param tramite130109Query Consulta de datos para el trámite 130109
+ * @param vehiculosUsadosAdaptadosService Servicio para vehículos usados adaptados
+ * @param crosslistQuery Consulta de datos para la lista cruzada
+ * @param crosslistStore Almacén de datos para la lista cruzada
+ */
 
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
     private tramite130109Store: Tramite130109Store,
     private tramite130109Query: Tramite130109Query,
-    private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService
+    private vehiculosUsadosAdaptadosService: VehiculosUsadosAdaptadosService,
+    private crosslistQuery: CrosslistQuery,
+    private crosslistStore: CrosslistStore
   ) {
     // Constructor del componente
   }
@@ -173,8 +191,27 @@ export class PaisProcendenciaComponent implements OnInit, OnDestroy {
       justificacionImportacionExportacion: ['', [Validators.required]],
       observaciones: [''],
     });
+    /**
+     * Suscripción al estado del componente Crosslist.
+     * @type {Observable<CrosslistState>}
+     */
+    this.crosslistQuery.selectCrosslist$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
+        /**
+         * Actualiza la lista de fechas con el estado recibido.
+         * @type {string[]}
+         */
+        this.fechas = state.fechas || [];
+
+        /**
+         * Actualiza los datos de las fechas con el estado recibido o con la lista de fechas.
+         * @type {string[]}
+         */
+        this.fechasDatos = state.fechasDatos || this.fechas;
+      });
+
     this.listaDePaisesDisponibles();
-    // this.fetchPaisesPorBloque(0);
     this.tramite130109Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -193,7 +230,7 @@ export class PaisProcendenciaComponent implements OnInit, OnDestroy {
 
   /**
    * compo doc
-   * @method fetchPaisProc
+   * @method listaDePaisesDisponibles
    * @description Carga las opciones de países de procedencia desde el JSON.
    */
   listaDePaisesDisponibles(): void {
@@ -222,7 +259,9 @@ export class PaisProcendenciaComponent implements OnInit, OnDestroy {
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Pais) => pais.descripcion
         );
+        this.crosslistStore.establecerFechas(this.selectRangoDias);
       });
+      
   }
   /**
    * compo doc

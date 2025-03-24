@@ -12,6 +12,9 @@ export interface Tramite130109State {
   descripcion: string;
   fraccion: string;
   valorFacturaUSD: string;
+  cantidadMercancia: string;
+  valorPartidaUSDMercancia:string;
+  descripcionMercancia:string;
   unidadMedida: string;
   bloque: string;
   usoEspecifico: string;
@@ -33,6 +36,9 @@ export function createInitialState(): Tramite130109State {
     descripcion: '',
     fraccion:'',
     valorFacturaUSD:'',
+    cantidadMercancia:'',
+    valorPartidaUSDMercancia:'',
+    descripcionMercancia:'',
     unidadMedida:'',
     bloque:'',
     usoEspecifico:'',
@@ -96,6 +102,24 @@ export class Tramite130109Store extends Store<Tramite130109State> {
     this.update((state) => ({
       ...state,
       valorFacturaUSD,
+    }));
+  }
+  public setCantidadMercancia(cantidadMercancia: string): void { 
+    this.update((state) => ({
+      ...state,
+      cantidadMercancia,
+    }));
+  }
+  public setValorPartidaUSDMercancia(valorPartidaUSDMercancia: string): void { 
+    this.update((state) => ({
+      ...state,
+      valorPartidaUSDMercancia,
+    }));
+  }
+  public setDescripcionMercancia(descripcionMercancia: string): void { 
+    this.update((state) => ({
+      ...state,
+      descripcionMercancia,
     }));
   }
   public setUnidadMedida(unidadMedida: string): void { 

@@ -5,24 +5,24 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="cantidad">Cantidad*:</label>
+            <label class="form-label" for="cantidadMercancia">Cantidad*:</label>
             <input
               class="form-control"
               type="text"
-              id="cantidad"
-              formControlName="cantidad"
+              id="cantidadMercancia"
+              formControlName="cantidadMercancia"
               appUppercase
-              aria-labelledby="cantidad"
-              (change)="setValoresStore(form, 'cantidad', 'setCantidad')"
+              aria-labelledby="cantidadMercancia"
+              (change)="setValoresStore(form, 'cantidadMercancia', 'setCantidadMercancia')"
             />
-            <div *ngIf="esInvalido('cantidad')" class="text-danger">
-              <small *ngIf="form.controls['cantidad'].hasError('required')"
+            <div *ngIf="esInvalido('cantidadMercancia')" class="text-danger">
+              <small *ngIf="form.controls['cantidadMercancia'].hasError('required')"
                 >Cantidad es obligatoria.</small
               >
-              <small *ngIf="form.controls['cantidad'].hasError('pattern')"
+              <small *ngIf="form.controls['cantidadMercancia'].hasError('pattern')"
                 >Solo se permiten números.</small
               >
-              <small *ngIf="form.controls['cantidad'].hasError('maxlength')"
+              <small *ngIf="form.controls['cantidadMercancia'].hasError('maxlength')"
                 >Máximo 18 caracteres.</small
               >
             </div>
@@ -30,33 +30,33 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="valorPartidaUSD"
+            <label class="form-label" for="valorPartidaUSDMercancia"
               >Valor partida USD*:</label
             >
             <input
               class="form-control"
               type="number"
-              id="valorPartidaUSD"
-              formControlName="valorPartidaUSD"
-              aria-labelledby="valorPartidaUSD"
+              id="valorPartidaUSDMercancia"
+              formControlName="valorPartidaUSDMercancia"
+              aria-labelledby="valorPartidaUSDMercancia"
               (change)="
-                setValoresStore(form, 'valorPartidaUSD', 'setvalorPartidaUSD')
+                setValoresStore(form, 'valorPartidaUSDMercancia', 'setValorPartidaUSDMercancia')
               "
             />
-            <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
+            <div *ngIf="esInvalido('valorPartidaUSDMercancia')" class="text-danger">
               <small
-                *ngIf="form.controls['valorPartidaUSD'].hasError('required')"
+                *ngIf="form.controls['valorPartidaUSDMercancia'].hasError('required')"
                 >Este campo es obligatorio.</small
               >
               <small
-                *ngIf="form.controls['valorPartidaUSD'].hasError('pattern')"
+                *ngIf="form.controls['valorPartidaUSDMercancia'].hasError('pattern')"
                 >Ingrese un número válido.</small
               >
-              <small *ngIf="form.controls['valorPartidaUSD'].hasError('min')"
+              <small *ngIf="form.controls['valorPartidaUSDMercancia'].hasError('min')"
                 >El valor debe ser mayor o igual a 0.</small
               >
               <small
-                *ngIf="form.controls['valorPartidaUSD'].hasError('maxlength')"
+                *ngIf="form.controls['valorPartidaUSDMercancia'].hasError('maxlength')"
                 >Máximo 20 caracteres permitidos.</small
               >
             </div>
@@ -66,20 +66,20 @@
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="descripcion">Descripción*:</label>
+            <label class="form-label" for="descripcionMercancia">Descripción*:</label>
             <textarea
               class="form-control height"
               rows="3"
-              id="descripcion"
-              formControlName="descripcion"
-              aria-labelledby="descripcion"
-              (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"
+              id="descripcionMercancia"
+              formControlName="descripcionMercancia"
+              aria-labelledby="descripcionMercancia"
+              (change)="setValoresStore(form, 'descripcionMercancia', 'setDescripcionMercancia')"
             ></textarea>
-            <div *ngIf="esInvalido('descripcion')" class="text-danger">
-              <small *ngIf="form.controls['descripcion'].hasError('required')"
+            <div *ngIf="esInvalido('descripcionMercancia')" class="text-danger">
+              <small *ngIf="form.controls['descripcionMercancia'].hasError('required')"
                 >Descripción es obligatoria.</small
               >
-              <small *ngIf="form.controls['descripcion'].hasError('maxlength')"
+              <small *ngIf="form.controls['descripcionMercancia'].hasError('maxlength')"
                 >Máximo 255 caracteres.</small
               >
             </div>
@@ -174,7 +174,7 @@
                 type="button"
                 (click)="navegarParaModificarPartida()"
               >
-                Mofificar
+              Modificar
               </button>
             </div>
           </div>
