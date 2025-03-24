@@ -402,16 +402,41 @@ private obtenerListaBanco(): void {
 
     return `${DIA}/${MES}/${ANO}`;
   }
- 
+
   /**
+   * Observa los cambios en el estado del formulario y actualiza el estado en el store.
+   * También actualiza la validación de la sección correspondiente.
+   * @method observarCambiosFormulario
+   */
+  private observarCambiosFormulario(): void {
+    this.formularioPago.statusChanges
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.formularioPago.value };
+          this.tramiteStore.setInternaPagoDeDerechosTramite(ACTIVE_STATE);
+  
+          const SECCION: number = 1;
+          const SECCION_STATE = this.seccionQuery.getValue();
+          const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+          const CONTROL_PATH = 'formularioPago';
+          const CONTROL = this.formularioPago.get(CONTROL_PATH)?.status;
+  
+          FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid || CONTROL === 'VALID';
+          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        })
+      )
+      .subscribe();
+  }
+
+    /**
    * Maneja la limpieza de recursos antes de destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
    * @method ngOnDestroy
    */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+    ngOnDestroy(): void {
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
+    }
 }

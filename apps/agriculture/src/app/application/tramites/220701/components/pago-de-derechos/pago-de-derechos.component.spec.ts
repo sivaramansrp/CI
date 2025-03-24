@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
 import { of as observableOf } from 'rxjs';
 import { throwError } from 'rxjs';
 
-import { AuthGuardService } from './auth-guard.service';
+import { AuthGuardService } from '../../services/auth-guard.service';
 import { CookieService } from './cookie.service';
 import { ExampleComponent } from './example.component';
 import { Router } from '@angular/router';

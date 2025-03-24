@@ -261,7 +261,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  * @see {@link banco} para el almacenamiento de los datos del catálogo de bancos.
  */
   getBancoDatos(): void {
-    this.acuicolaService.getBancoDatos().subscribe((resp) => {
+    this.acuicolaService.getBancoDatos()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
         this.banco = {

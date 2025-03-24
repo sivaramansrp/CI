@@ -9,12 +9,13 @@ import { ExportadorDatosService } from '../../servicios/exportador-datos.service
 import { MANDATORY_INSTRUCTION } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { destinoInfo} from '../../modelos/datos-de-interfaz.model';
 import { exportadorInfo} from '../../modelos/datos-de-interfaz.model';
-
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'interna-terceros-relacionados',
@@ -87,6 +88,8 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
     destinoContenido: any[] = [];
 
+  private unsubscribe$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para gestionar datos de exportadores y detectar cambios en la vista.
@@ -116,6 +119,7 @@ export class InternaTercerosRelacionadosComponent implements OnInit {
  */
     obtenerDatos(): void {
       this.exportadorDatosService.getDatos()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (response: { exportadorContenido: exportadorInfo[]; destinoContenido: destinoInfo[] }) => {
           if (response && Array.isArray(response.exportadorContenido) &&

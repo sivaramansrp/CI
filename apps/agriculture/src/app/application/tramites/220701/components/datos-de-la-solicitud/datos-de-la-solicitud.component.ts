@@ -397,17 +397,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getHoraDeInspeccion(): void {
-    this.acuicolaService.getHoraDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.horaDeInspeccion = {
-          labelNombre: 'Hora de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getHoraDeInspeccion()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.horaDeInspeccion = {
+            labelNombre: 'Hora de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
 
@@ -418,17 +420,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getAduanaDeIngreso(): void {
-    this.acuicolaService.getAduanaDeIngreso().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.aduanaDeIngreso = {
-          labelNombre: 'Aduana de ingreso',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getAduanaDeIngreso()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.aduanaDeIngreso = {
+            labelNombre: 'Aduana de ingreso',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
   
@@ -439,17 +443,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getOficinaDeInspeccion(): void {
-    this.acuicolaService.getOficinaDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.oficinaDeInspeccion = {
-          labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getOficinaDeInspeccion()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.oficinaDeInspeccion = {
+            labelNombre: 'Oficina de inspección de Sanidad Agropecuaria',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
     /**
@@ -459,17 +465,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getPuntoDeInspeccion(): void {
-    this.acuicolaService.getPuntoDeInspeccion().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.puntoDeInspeccion = {
-          labelNombre: 'Punto de inspección',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getPuntoDeInspeccion()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.puntoDeInspeccion = {
+            labelNombre: 'Punto de inspección',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
     /**
@@ -479,17 +487,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getTipoContenedor(): void {
-    this.acuicolaService.getTipoContenedor().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.tipoContenedor = {
-          labelNombre: 'Tipo contenedor',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getTipoContenedor()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.tipoContenedor = {
+            labelNombre: 'Tipo contenedor',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
     /**
@@ -499,17 +509,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   getMedioDeTransporte(): void {
-    this.acuicolaService.getMedioDeTransporte().subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.medioDeTransporte = {
-          labelNombre: 'Medio de transporte*',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: RESPONSE,
-        };
-      }
-    });
+    this.acuicolaService.getMedioDeTransporte()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.medioDeTransporte = {
+            labelNombre: 'Medio de transporte*',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: RESPONSE,
+          };
+        }
+      });
   }
 
     /**
@@ -532,8 +544,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

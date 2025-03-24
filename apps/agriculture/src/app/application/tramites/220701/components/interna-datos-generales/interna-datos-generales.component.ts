@@ -470,7 +470,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method obtenerIngresoSelectList
    */
     obtenerIngresoSelectList(): void {
-      this.catalogosService.obtenerAduanaDeIngreso().subscribe((data): void => {
+      this.catalogosService.obtenerAduanaDeIngreso()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data): void => {
         const DATOS = data?.data;
         this.aduanaDeIngreso = DATOS;
       });
@@ -481,7 +483,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method obtenerSanidadAgropecuariaList
    */
   obtenerSanidadAgropecuariaList(): void {
-    this.catalogosService.obtenerSanidadAgropecuaria().subscribe((data): void => {
+    this.catalogosService.obtenerSanidadAgropecuaria()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data): void => {
       const DATOS = data?.data;
       this.sanidadAgropecuaria = DATOS;
     });
@@ -492,7 +496,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method obtenerPuntoInspeccionList
    */
   obtenerPuntoInspeccionList(): void {
-    this.catalogosService.obtenerPuntoInspeccion().subscribe((data): void => {
+    this.catalogosService.obtenerPuntoInspeccion()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoInspeccion = DATOS;
     });
@@ -503,7 +509,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method obtenerEstablecimientoList
    */
   obtenerEstablecimientoList(): void {
-    this.catalogosService.obtenerEstablecimiento().subscribe((data): void => {
+    this.catalogosService.obtenerEstablecimiento()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data): void => {
       const DATOS = data?.data;
       this.establecimientoTIF = DATOS;
     });
@@ -515,7 +523,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    */
 
   obtenerVeterinarioList(): void {
-    this.catalogosService.obtenerVeterinario().subscribe((data): void => {
+    this.catalogosService.obtenerVeterinario()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data): void => {
       const DATOS = data?.data;
       this.veterinario = DATOS;
     });
@@ -526,7 +536,9 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @method obtenerRegimenList
    */
   obtenerRegimenList(): void {
-    this.catalogosService.obtenerRegimen().subscribe((data): void => {
+    this.catalogosService.obtenerRegimen()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data): void => {
       const DATOS = data?.data;
       this.regimen = DATOS;
     });

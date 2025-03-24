@@ -26,7 +26,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos de la aduana de ingreso.
    */
-  getAduanaIngreso() {
+  getAduanaIngreso(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/aduana-ingreso.json');
   }
 
@@ -35,7 +35,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos de la oficina de inspección.
    */
-  getOficianaInspeccion() {
+  getOficianaInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/oficiana-de-inspeccion.json');
   }
 
@@ -44,7 +44,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos del punto de inspección.
    */
-  getPuntoInspeccion() {
+  getPuntoInspeccion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/punto-de-inspeccion.json');
   }
 
@@ -53,7 +53,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos del establecimiento.
    */
-  getEstablecimiento() {
+  getEstablecimiento(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/establecimiento.json');
   }
 
@@ -62,7 +62,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos del régimen.
    */
-  getRegimenDestinaran() {
+  getRegimenDestinaran(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/regimen-destinaran.json');
   }
 
@@ -71,7 +71,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos de la movilización nacional.
    */
-  getMovilizacionNacional() {
+  getMovilizacionNacional(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/movilizacion-nacional.json');
   }
 
@@ -80,7 +80,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos del punto de verificación.
    */
-  getPuntoVerificacion() {
+  getPuntoVerificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/punto-verificacion.json');
   }
 
@@ -89,7 +89,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos de la empresa transportista.
    */
-  getEmpresaTransportista() {
+  getEmpresaTransportista(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/empresa-transportista.json');
   }
 
@@ -98,7 +98,7 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos de la justificación.
    */
-  getJustificacion() {
+  getJustificacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/justificacion.json');
   }
 
@@ -107,23 +107,23 @@ export class RevisionService {
    * 
    * @returns {Observable<RespuestaCatalogos>} - Los datos del banco.
    */
-  getBanco() {
+  getBanco(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/220501/banco.json');
   }
 
   /** 
    * Servicio para obtener datos relacionados con la solicitud. 
+   * @returns {Observable<PagoDeDerechos>} - Los datos del pago de derechos.
    */
   getPagoDeDerechos(): Observable<PagoDeDerechos> {
-    /** Obtiene la información del pago de derechos desde un archivo JSON. */
     return this.http.get<PagoDeDerechos>('assets/json/220501/pago-de-derechos.json');
   }
 
   /** 
    * Servicio para obtener los datos de movilización. 
+   * @returns {Observable<Movilizacion>} - Los datos de la movilización.
    */
   getMovilizacion(): Observable<Movilizacion> {
-    /** Obtiene los datos de la movilización desde un archivo JSON. */
     return this.http.get<Movilizacion>('assets/json/220501/movilizacion.json');
   }
 }
