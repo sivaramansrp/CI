@@ -103,7 +103,7 @@
                 <div class="col-md-8">
                     <label for="idNomComercial" class="form-label">Nombre comercial:</label>
                     <input class="form-control" [ngClass]="isValid(direccionST, 'informacionExtra') ? 'required' : ''"
-                        type="number" formControlName="informacionExtra" maxlength="250" name="informacionExtra" id="informacionExtra" (change)="setValoresStore(direccionST, 'informacionExtra', 'setInformacionExtra')" />
+                        type="text" formControlName="informacionExtra" maxlength="250" name="informacionExtra" id="informacionExtra" (change)="setValoresStore(direccionST, 'informacionExtra', 'setInformacionExtra')" />
                 </div>
                 <div class="col-md-4">
                     <app-catalogo-select [catalogo]="fraccionArancelaria" formControlName="entidadFederativa"
