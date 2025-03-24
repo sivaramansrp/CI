@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados/terceros-relacionados.service';
  
- 
 /**
  * @component
  * @name TercerosRelacionadosComponent
@@ -112,17 +111,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       }
     );
   }
-  fabricanteTableColumns: ConfiguracionColumna<CapturarColumns>[] = FABRICANTE_TABLE_COLUMNS;
+
   /**
    * @property {ConfiguracionColumna<CapturarColumns>[]} fabricanteTableColumns
-   
    *  - Configuración para las columnas de la tabla de fabricantes.
   */
+  fabricanteTableColumns: ConfiguracionColumna<CapturarColumns>[] = FABRICANTE_TABLE_COLUMNS;
  
   /**
    * @property {ConfiguracionColumna<DestinatarioCapturarColumns>[]} destinatarioTableColumns - Configuración para las columnas de la tabla de destinatarios.
    */
   destinatarioTableColumns: ConfiguracionColumna<DestinatarioCapturarColumns>[] = DESTINATARIO_TABLE_COLUMNS;
+ 
   /**
    * @method ngOnDestroy
    * @description Hook del ciclo de vida que limpia las suscripciones para evitar fugas de memoria.

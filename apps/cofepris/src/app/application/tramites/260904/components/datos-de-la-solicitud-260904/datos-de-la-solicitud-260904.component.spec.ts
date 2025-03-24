@@ -29,8 +29,7 @@ describe('DatosDeLaSolicitud260904Component', () => {
     } as jest.Mocked<Partial<Tramite260904Store>>;
 
     await TestBed.configureTestingModule({
-      declarations: [DatosDeLaSolicitud260904Component],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, DatosDeLaSolicitud260904Component],
       providers: [
         FormBuilder,
         { provide: Tramite260904Query, useValue: queryMock },
