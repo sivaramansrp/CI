@@ -828,7 +828,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
+    console.log('valido campo pedimento');    
     const ADUANA_VALIDACION = this.isValid(this.despacho, 'aduanaDespacho');
+    console.log(ADUANA_VALIDACION);
+    
     if (ADUANA_VALIDACION === null) {
       this.validacionPedimento = true;
     }
