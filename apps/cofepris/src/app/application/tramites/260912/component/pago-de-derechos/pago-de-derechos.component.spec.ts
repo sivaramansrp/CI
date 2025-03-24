@@ -16,9 +16,6 @@ describe('PagoDeDerechosComponent', () => {
   let mockTramite260912Store: Partial<Tramite260912Store>;
 
   beforeEach(async () => {
-    // mockPagoDeDerechosService = {
-    //   onBancoList: jest.fn().mockReturnValue(of([])),
-    // };
     mockPagoDeDerechosService = {
       onBancoList: jest.fn().mockReturnValue(of([{ id: 1, name: 'Mock Banco' }] as BancoList[])),
     };
