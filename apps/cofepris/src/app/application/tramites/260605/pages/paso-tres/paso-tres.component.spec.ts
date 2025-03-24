@@ -38,11 +38,11 @@ describe('PasoTresComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to "servicios-extraordinarios/acuse" when a valid signature is provided', () => {
+  it('debería navegar a "servicios-extraordinarios/acuse" cuando se proporciona una firma válida', () => {
     const routerSpy = jest.spyOn(router, 'navigate');
     const validSignature = 'validSignature';
 
@@ -51,7 +51,7 @@ describe('PasoTresComponent', () => {
     expect(routerSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
   });
 
-  it('should not navigate when an invalid signature is provided', () => {
+  it('no debería navegar cuando se proporciona una firma inválida', () => {
     const routerSpy = jest.spyOn(router, 'navigate');
     const invalidSignature = '';
 

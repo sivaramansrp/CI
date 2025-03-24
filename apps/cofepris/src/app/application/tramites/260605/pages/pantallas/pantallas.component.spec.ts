@@ -10,7 +10,7 @@ describe('PantallasComponent', () => {
   let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
 
-  // Mock for WizardComponent
+  // Mock para WizardComponent
   const wizardComponentMock = {
     siguiente: jest.fn(),
     atras: jest.fn(),
@@ -19,27 +19,27 @@ describe('PantallasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PantallasComponent],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements in the template
+      schemas: [NO_ERRORS_SCHEMA], // Ignorar elementos desconocidos en la plantilla
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
 
-    // Manually assign the mock to the `wizardComponent` property
+    // Asignar manualmente el mock a la propiedad `wizardComponent`
     component.wizardComponent = wizardComponentMock as unknown as WizardComponent;
 
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pantallasPasos with PASOS', () => {
+  it('debería inicializar pantallasPasos con PASOS', () => {
     expect(component.pantallasPasos).toEqual(PASOS);
   });
 
-  it('should initialize datosPasos correctly', () => {
+  it('debería inicializar datosPasos correctamente', () => {
     const expectedDatosPasos: DatosPasos = {
       nroPasos: PASOS.length,
       indice: component.indice,
@@ -49,10 +49,10 @@ describe('PantallasComponent', () => {
     expect(component.datosPasos).toEqual(expectedDatosPasos);
   });
 
-  it('should set the index and call wizardComponent.siguiente() when accion is "cont" in getValorIndice', () => {
+  it('debería establecer el índice y llamar a wizardComponent.siguiente() cuando la acción es "cont" en getValorIndice', () => {
     const accion: AccionBoton = { valor: 2, accion: 'cont' };
 
-    // Spy on the mock methods
+    // Espiar los métodos mock
     const siguienteSpy = jest.spyOn(wizardComponentMock, 'siguiente');
     const atrasSpy = jest.spyOn(wizardComponentMock, 'atras');
 
@@ -63,10 +63,10 @@ describe('PantallasComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should set the index and call wizardComponent.atras() when accion is not "cont" in getValorIndice', () => {
+  it('debería establecer el índice y llamar a wizardComponent.atras() cuando la acción no es "cont" en getValorIndice', () => {
     const accion: AccionBoton = { valor: 1, accion: 'back' };
 
-    // Spy on the mock methods
+    // Espiar los métodos mock
     const siguienteSpy = jest.spyOn(wizardComponentMock, 'siguiente');
     const atrasSpy = jest.spyOn(wizardComponentMock, 'atras');
 
@@ -77,30 +77,30 @@ describe('PantallasComponent', () => {
     expect(siguienteSpy).not.toHaveBeenCalled();
   });
 
-  it('should not change the index or call wizardComponent when valor is out of bounds in getValorIndice', () => {
+  it('no debería cambiar el índice ni llamar a wizardComponent cuando el valor está fuera de los límites en getValorIndice', () => {
     const accion: AccionBoton = { valor: 0, accion: 'cont' };
 
-    // Spy on the mock methods
+    // Espiar los métodos mock
     const siguienteSpy = jest.spyOn(wizardComponentMock, 'siguiente');
     const atrasSpy = jest.spyOn(wizardComponentMock, 'atras');
 
     component.getValorIndice(accion);
 
-    expect(component.indice).toBe(1); // Index remains unchanged
+    expect(component.indice).toBe(1); // El índice permanece sin cambios
     expect(siguienteSpy).not.toHaveBeenCalled();
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should not call wizardComponent methods when valor is out of valid range', () => {
-    const invalidAccion: AccionBoton = { valor: 6, accion: 'cont' }; // Out of range (e.g., > length of PASOS)
+  it('no debería llamar a los métodos de wizardComponent cuando el valor está fuera del rango válido', () => {
+    const invalidAccion: AccionBoton = { valor: 6, accion: 'cont' }; // Fuera de rango (por ejemplo, > longitud de PASOS)
 
-    // Spy on the mock methods
+    // Espiar los métodos mock
     const siguienteSpy = jest.spyOn(wizardComponentMock, 'siguiente');
     const atrasSpy = jest.spyOn(wizardComponentMock, 'atras');
 
     component.getValorIndice(invalidAccion);
 
-    expect(component.indice).toBe(1); // Index remains unchanged
+    expect(component.indice).toBe(1); // El índice permanece sin cambios
     expect(siguienteSpy).not.toHaveBeenCalled();
     expect(atrasSpy).not.toHaveBeenCalled();
   });
