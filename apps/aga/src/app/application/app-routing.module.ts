@@ -84,6 +84,11 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
+  {
+    path: 'add-servicios-extraordinarios',
+    loadChildren: () =>
+      import('./tramites/40301/registro-caat-naviero.module').then((m) => m.RegistroCaatNavieroModule),
+  },
   
 {
   path: 'registro-digitalizar-documentos',
