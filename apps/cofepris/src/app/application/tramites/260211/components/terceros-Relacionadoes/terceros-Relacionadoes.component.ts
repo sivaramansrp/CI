@@ -1,18 +1,18 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { PAISSELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,CODIGOPOSTALSELECTDATA,COLONIASELECTDATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA
-} from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260211/permiso.enum';
+
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA,
+  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260211/permiso.enum';
 import { SanitarioService } from '../../services/sanitario.service';
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 
-// import { sanitari260211Store } from '../../../../estados/tramites/sanitario.store';
+
 import { Sanitario260215Store } from '../../../../estados/tramites/sanitari260211.store'
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -20,7 +20,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
-// import { ModalComponent } from '../model/modal.component';
 import { ModalComponent } from '../model/modal.component';
 
 
