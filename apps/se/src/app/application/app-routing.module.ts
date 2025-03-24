@@ -166,7 +166,14 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
-  }
+  },
+  {
+    path: 'inicialmente-certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110216/inicialmente-certificado-origen.module').then(
+        (m) => m.InicialmenteCertificadoOrigenModule
+      ),
+  },
 ];
 
 @NgModule({
