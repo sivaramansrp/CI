@@ -35,9 +35,12 @@ export class FechasService {
    * @param {string} fechaFinal, fecha final en formato string.
    * @returns {Array<string>} Array con las fechas comprendidas entre la fecha de inicio y la fecha final
    */
-  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string): string[] {  
-    const fechaPrincipio = new Date(fechaInicio);
-    const fechaFin = new Date(fechaFinal);
+  obtenerDiasEntreFechas(fechaInicio: string, fechaFinal: string, horaInicial: string, horaFinal: string): string[] {
+    const inicio = `${fechaInicio}T${horaInicial}`;
+    const fin = `${fechaFinal}T${horaFinal}`;
+    const fechaPrincipio = new Date(inicio);
+    const fechaFin = new Date(fin);    
+    
     const dias = [];
 
     while (fechaPrincipio <= new Date(fechaFin)) {
@@ -48,7 +51,7 @@ export class FechasService {
       const año = fechaPrincipio.getFullYear();
       dias.push(`${diaSemana}, ${dia}/${mes}/${año}`); // Incrementar la fecha en un día
       fechaPrincipio.setDate(fechaPrincipio.getDate() + 1);
-    }
+    }    
     return dias;
   }
 }

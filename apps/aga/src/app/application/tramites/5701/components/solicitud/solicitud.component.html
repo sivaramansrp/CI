@@ -164,6 +164,102 @@
 
         <div class="col-md-6">
           <div class="col">
+        <div class="row">
+          <div class="col-md-4">
+            <label for="fechaFinal" class="form-label">Fecha final*:</label>
+            <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
+              [ngClass]="isValid(datosServicio,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
+              (change)="changeFechaFinal()">
+
+            @if (isValid(datosServicio,'fechaFinal')) {
+            <div class="mensaje-error">
+              Fecha no válida, elija otro día
+            </div>
+            }
+
+            @if (intervaloFechaError()) {
+            <div class="mensaje-error">
+              Intervalo de fecha no válido
+            </div>
+            }
+          </div>
+
+          <div class="col-md-4">
+            <input-hora formControlName="horaFinal" [label]="'Hora Final'" [required]="true" [inputId]="'horaFinal'"
+              (change)="changeHoraFinal()"></input-hora>
+            @if (intervaloFechaError()) {
+            <div class="mensaje-error">
+              Intervalo de fecha no válido
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="row mt-5">
+          <div class="col-md-12">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading" (click)="mostrar_colapsable()">
+                  <h4 class="panel-title">
+                    <a>
+                      Especifique los días que se utilizarán dentro del periodo*:
+                    </a>
+                  </h4>
+                  <button type="button" class="collpase-button collapsed" ></button>
+                </div>
+                @if(colapsable){
+                <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist  (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
+
+      <div formGroupName="despacho">
+        <div class="row">
+          <div class="col-md-4">
+            <input-check [datos]="despachoLDA"></input-check>
+          </div>
+          <div class="col-md-4">
+            <input-check [datos]="despachoDD"></input-check>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="aduanas" formControlName="idAduana" [label]="'Aduana'" [required]="true"
+              (change)="setValoresStore(despacho,'idAduana', 'setIdAduana')"></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
+              [label]="'Sección aduanera'" [required]="true"
+              (change)="setValoresStore(despacho,'idSeccionAduanera', 'setIdSeccionAduanera')"></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto"
+              [label]="'Nombre del recinto'" [required]="false" [isDisabled]="true"></app-catalogo-select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4">
+            <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipo de operacion'"
+              [required]="true"
+              (change)="setValoresStore(despacho,'tipoOperacion', 'setTipoOperacion')"></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <label for="patente" class="form-label">Patente/Número de autorización:</label>
+            <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
+          </div>
+          <div class="col-md-4">
             <div class="form-check">
               <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacionA"
                 formControlName="tipoEmpresaCertificada" (change)="
