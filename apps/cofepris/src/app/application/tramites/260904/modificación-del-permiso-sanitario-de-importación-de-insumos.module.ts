@@ -16,6 +16,10 @@ import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './components/tramites-asociado/tramites-asociado.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
+
+
 @NgModule({
   declarations: [
     PasoUnoComponent,
@@ -34,8 +38,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     DomicilioDelEstablecimiento260904Component,
     PagoDeDerechosComponent,
     TramitesAsociadoComponent,
-    TercerosRelacionadosComponent
+    TercerosRelacionadosComponent,
   ],
-  providers: [ToastrService],
+  providers: [ToastrService, InicioSesionService, SubirDocumentoService],
 })
 export class ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule {}
