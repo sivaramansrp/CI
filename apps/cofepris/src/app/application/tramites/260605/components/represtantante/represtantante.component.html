@@ -19,7 +19,7 @@
 
           <div class="col-md-4 d-flex align-items-center">
             <div class="btn-group">
-              <button class="btn btn-default" type="button" >Buscar</button>
+              <button class="btn btn-default" type="button" (click)="onSubmit()" >Buscar</button>
             </div>
           </div>
         </div>
@@ -32,6 +32,7 @@
                 id="nombre"
                 formControlName="nombre"
                 type="text"
+                disabled
                 (change)="setValoresStore(represtantante,'nombre', 'setNombre')"
               />
             </div>
@@ -44,6 +45,7 @@
                 id="apellidoPaterno"
                 formControlName="apellidoPaterno"
                 type="text"
+                disabled
                 (change)="setValoresStore(represtantante,'apellidoPaterno', 'setApellidoPaterno')"
               />
             </div>
@@ -56,6 +58,7 @@
                 id="apellidoMaterno"
                 formControlName="apellidoMaterno"
                 type="text"
+                disabled
                 (change)="setValoresStore(represtantante,'apellidoMaterno', 'setApellidoMaterno')"
               />
             </div>

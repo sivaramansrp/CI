@@ -27,7 +27,7 @@ describe('AduanerasInformacionesComponent', () => {
     } as any;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, AduanerasInformacionesComponent], // Add the standalone component here
+      imports: [ReactiveFormsModule, FormsModule, AduanerasInformacionesComponent], // Agregar el componente independiente aquí
       providers: [
         FormBuilder,
         { provide: Tramite260605Store, useValue: store },
@@ -40,16 +40,16 @@ describe('AduanerasInformacionesComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with correct values', () => {
+  it('debería inicializar el formulario con los valores correctos', () => {
     expect(component.aduanerasInformacionesForm.get('numeroDPmiso')?.value).toBe('12345');
     expect(component.aduanerasInformacionesForm.get('cstumbresAtuales')?.value).toBe('Justificación técnica');
   });
 
-  it('should call setValoresStore with correct arguments', () => {
+  it('debería llamar a setValoresStore con los argumentos correctos', () => {
     component.aduanerasInformacionesForm.get('numeroDPmiso')?.setValue('67890');
     const spySetNumeroDPmiso = jest.spyOn(store, 'setNumeroDPmiso');
 
@@ -58,27 +58,27 @@ describe('AduanerasInformacionesComponent', () => {
     expect(spySetNumeroDPmiso).toHaveBeenCalledWith('67890');
   });
 
-  it('should add all available aduanas to selected aduanas', () => {
+  it('debería agregar todas las aduanas disponibles a las aduanas seleccionadas', () => {
     component.agregarTodasAduanas();
 
     expect(component.aduanasDisponibles.length).toBe(0);
-    expect(component.aduanasSeleccionadas.length).toBe(4); // Assuming there are 4 aduanas in aduanasDisponibles
+    expect(component.aduanasSeleccionadas.length).toBe(4); // Asumiendo que hay 4 aduanas en aduanasDisponibles
   });
 
-  it('should remove all selected aduanas and return them to available aduanas', () => {
+  it('debería remover todas las aduanas seleccionadas y devolverlas a las aduanas disponibles', () => {
     component.agregarTodasAduanas();
     component.removerTodasAduanas();
 
     expect(component.aduanasSeleccionadas.length).toBe(0);
-    expect(component.aduanasDisponibles.length).toBe(4); // Back to the original state
+    expect(component.aduanasDisponibles.length).toBe(4); // Volver al estado original
   });
 
-  it('should set validPlafet to true on form submission', () => {
+  it('debería establecer validPlafet en true al enviar el formulario', () => {
     component.onSubmit();
     expect(component.validPlafet).toBe(true);
   });
 
-  it('should destroy notifier on ngOnDestroy', () => {
+  it('debería destruir el notifier en ngOnDestroy', () => {
     const destroyNotifierNextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
@@ -88,7 +88,7 @@ describe('AduanerasInformacionesComponent', () => {
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 
-  it('should add specific aduanas based on indices', () => {
+  it('debería agregar aduanas específicas basadas en los índices', () => {
     const indicesToAdd = [0, 2];
     component.agregarAduanasSeleccionadas(indicesToAdd);
 
@@ -96,7 +96,7 @@ describe('AduanerasInformacionesComponent', () => {
     expect(component.aduanasDisponibles.length).toBe(2);
   });
 
-  it('should remove specific aduanas based on indices', () => {
+  it('debería remover aduanas específicas basadas en los índices', () => {
     const indicesToAdd = [0, 1];
     component.agregarAduanasSeleccionadas(indicesToAdd);
 
@@ -107,7 +107,7 @@ describe('AduanerasInformacionesComponent', () => {
     expect(component.aduanasDisponibles.length).toBe(3);
   });
 
-  it('should call setAduanasSeleccionadas with correct arguments', () => {
+  it('debería llamar a setAduanasSeleccionadas con los argumentos correctos', () => {
     component.agregarTodasAduanas();
     const spySetAduanasSeleccionadas = jest.spyOn(store, 'setAduanasSeleccionadas');
 
