@@ -1,29 +1,48 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-
-import { CargarArchivosComponent } from '../cargar-archivos/cargar-archivos.component';
-import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosEmpresaComponent } from './datos-empresa.component';
-import { DatosGeneralesSociosComponent } from '../datos-generales-socios/datos-generales-socios.component';
-import { DomicilioComponent } from '../domicilio/domicilio.component';
-import { RepresentacionFederalComponent } from '../representacion-federal/representacion-federal.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Tramite260912Query } from '../../estados/tramite-260912.query';
+import { Tramite260912Store } from '../../estados/tramite-260912.store';
+import { of } from 'rxjs';
 
 describe('DatosEmpresaComponent', () => {
   let component: DatosEmpresaComponent;
   let fixture: ComponentFixture<DatosEmpresaComponent>;
+  let tramite260912QueryMock: jest.Mocked<Tramite260912Query>;
+  let tramite260912StoreMock: jest.Mocked<Partial<Tramite260912Store>>;
 
   beforeEach(async () => {
+    const queryMock = {
+      btonDeRadio$: of('option1'),
+      justificación$: of('justification'),
+      rfcDel$: of('RFC123'),
+      denominacion$: of('Denomination'),
+      correo$: of('test@example.com'),
+    } as jest.Mocked<Tramite260912Query>;
+
+    const storeMock = {
+      setBtonDeRadio: jest.fn(),
+      setJustificación: jest.fn(),
+      setRfcDel: jest.fn(),
+      setDenominacion: jest.fn(),
+      setCorreo: jest.fn(),
+    } as jest.Mocked<Partial<Tramite260912Store>>;
+
     await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        RepresentacionFederalComponent,
-        DatosDeLaSolicitudComponent,
-        DomicilioComponent,
-        DatosGeneralesSociosComponent,
-        CargarArchivosComponent
+      imports: [ReactiveFormsModule, DatosEmpresaComponent],
+      providers: [
+        FormBuilder,
+        { provide: Tramite260912Query, useValue: queryMock },
+        { provide: Tramite260912Store, useValue: storeMock },
       ],
-      declarations: [DatosEmpresaComponent]
     }).compileComponents();
+
+    tramite260912QueryMock = TestBed.inject(
+      Tramite260912Query
+    ) as jest.Mocked<Tramite260912Query>;
+    tramite260912StoreMock = TestBed.inject(
+      Tramite260912Store
+    ) as jest.Mocked<Partial<Tramite260912Store>>;
   });
 
   beforeEach(() => {
@@ -32,16 +51,45 @@ describe('DatosEmpresaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should render child components', () => {
-    const COMPILED = fixture.nativeElement;
-    expect(COMPILED.querySelector('app-representacion-federal')).toBeTruthy();
-    expect(COMPILED.querySelector('app-datos-de-la-solicitud')).toBeTruthy();
-    expect(COMPILED.querySelector('app-domicilio')).toBeTruthy();
-    expect(COMPILED.querySelector('app-datos-generales-socios')).toBeTruthy();
-    expect(COMPILED.querySelector('app-cargar-archivos')).toBeTruthy();
+  it('should initialize form on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.form).toBeDefined();
+    expect(component.datosDelEstablecimiento).toBeDefined();
+  });
+
+  it('should toggle colapsable state', () => {
+    const initialState = component.colapsable;
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(!initialState);
+  });
+
+  it('should set form values from observables', () => {
+    component.ngOnInit();
+    expect(component.form.get('btonDeRadio')?.value).toBe('option1');
+    expect(component.form.get('justificación')?.value).toBe('justification');
+    expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFC123');
+    expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Denomination');
+    expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('test@example.com');
+  });
+
+  it('should call store methods on get methods', () => {
+    component.getBtonDeRadio();
+    expect(tramite260912StoreMock.setBtonDeRadio).toHaveBeenCalledWith('option1');
+
+    component.getJustificacion();
+    expect(tramite260912StoreMock.setJustificación).toHaveBeenCalledWith('justification');
+
+    component.getRfcDel();
+    expect(tramite260912StoreMock.setRfcDel).toHaveBeenCalledWith('RFC123');
+
+    component.getDenominacion();
+    expect(tramite260912StoreMock.setDenominacion).toHaveBeenCalledWith('Denomination');
+
+    component.getCorreo();
+    expect(tramite260912StoreMock.setCorreo).toHaveBeenCalledWith('test@example.com');
   });
 });
