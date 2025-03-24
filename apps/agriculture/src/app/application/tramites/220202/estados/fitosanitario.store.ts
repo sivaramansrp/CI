@@ -3,8 +3,6 @@ import {
 
     ListaDeDatosFinal,
 
-    Mercancia,
-
     Movilizacion,
 
     PagoForm,
@@ -20,7 +18,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 @Injectable({
     providedIn: 'root',
 })
-@StoreConfig({ name: 'seccion', resettable: true })
+@StoreConfig({ name: 'fitosanitariostore', resettable: true })
 export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     constructor() {
         super(createDatosState());
@@ -28,13 +26,14 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
 
     /**
      * Actualiza el estado con la información del formulario.
-     * @param datosForma Datos del formulario.
+     * @param datos Datos del formulario.
      */
-    public actualizarDatosForma(datosForma: DatosForma): void {
+    public actualizarDatosForma(datos: DatosForma): void {
         this.update(state => ({
             ...state,
-            datos: [datosForma], // Envuelve los datos en un array
+            datos, // Envuelve los datos en un array
         }));
+
     }
 
     /**
@@ -44,7 +43,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     public actualizarMovilizacion(movilizacion: Movilizacion): void {
         this.update(state => ({
             ...state,
-            movilizacion: [movilizacion], // Envuelve los datos en un array
+            movilizacion, // Envuelve los datos en un array
         }));
     }
 
@@ -55,23 +54,22 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
     public actualizarPago(pago: PagoForm): void {
         this.update(state => ({
             ...state,
-            pago: [pago], // Envuelve los datos en un array
+            pago, // Envuelve los datos en un array
         }));
     }
 
 
-    /**
-     * Actualiza las mercancías en el estado.
-     * @param mercancias Array de mercancías.
-     */
-    public actualizarMercancias(mercancias: Mercancia[]): void {
+
+
+    public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
         this.update(state => ({
             ...state,
-            datos: [{ ...state.datos[0], mercancias: mercancias }] // Actualiza las mercancías dentro de datos
+            finalEnviar: {
+                ...state.finalEnviar,
+                ...updatedFormaValida,
+            }
         }));
     }
-
-
     /**
      * Restablece el estado a su estado inicial.
      */

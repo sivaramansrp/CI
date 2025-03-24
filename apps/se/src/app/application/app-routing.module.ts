@@ -14,6 +14,13 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule
+      ),
+  },
 
   {
     path: 'exportador-autorizado',
@@ -23,11 +30,25 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      ),
+  },
+  {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+  {
     path: 'empresa-frontera',
     loadChildren: () =>
       import('./tramites/120602/empresa-frontera-solicitud.module').then(
         (m) => m.EmpresaFronteraSolicitudModule
-      )
+      ),
   },
   {
     path: 'prosec-modificacion',
@@ -58,8 +79,14 @@ const ROUTES: Routes = [
   {
     path: 'expansion-de-productores',
     loadChildren: () =>
-      import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
-        (m) => m.ExpansionDeProductoresModule),
+      import(
+        './tramites/90201/expansion-de-productores/expansion-de-productores.module'
+      ).then((m) => m.ExpansionDeProductoresModule),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -74,24 +101,27 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  }, 
+  },
   {
     path: 'cancelacion-de',
     loadChildren: () =>
       import('./tramites/140103/cancelacion-de.module').then(
-        (m) => m.CancelacionDeModule)
+        (m) => m.CancelacionDeModule
+      ),
   },
   {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
-        (m) => m.CertificadoRegistroModule)
+        (m) => m.CertificadoRegistroModule
+      ),
   },
   {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
-        (m) => m.CertificadoRegistroModule)
+        (m) => m.CertificadoRegistroModule
+      ),
   },
   {
     path: 'subfabricante-immex',
@@ -110,9 +140,9 @@ const ROUTES: Routes = [
   {
     path: 'immex-registro-solicitud-modality',
     loadChildren: () =>
-      import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
-        (m) => m.ImmexRegistroDeSolicitudModalityModule
-      )
+      import(
+        './tramites/80203/immex-registro-de-solicitud-modalidad.modulo'
+      ).then((m) => m.ImmexRegistroDeSolicitudModalityModule),
   },
   {
     path: 'modificacion',
@@ -141,11 +171,18 @@ const ROUTES: Routes = [
       import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
         (m) => m.ExportacionMineralesDeHierroModule
       ),
-  }
+  },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

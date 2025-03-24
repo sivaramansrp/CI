@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -11,7 +12,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosDeLaSolicitudComponent],
-      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, AlertComponent, TablaDinamicaComponent, TableComponent]
+      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, AlertComponent, TablaDinamicaComponent, TableComponent, ReactiveFormsModule]
     })
       .compileComponents();
 
