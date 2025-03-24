@@ -82,6 +82,11 @@ const ROUTES: Routes = [
         (m) => m.ExpansionDeProductoresModule),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
+  },
+  {
     path: 'elegibilidad-de-textiles',
     loadChildren: () =>
       import('./tramites/120301/elegibilidad-de-textiles.module').then(
@@ -160,6 +165,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/000000/ref-procedure.module').then(
         (m) => m.RefProcedureModule
+      )
+  },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   }
 ];

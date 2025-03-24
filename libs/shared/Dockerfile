@@ -6,13 +6,16 @@ WORKDIR /app
 
 # Install dependencies
 COPY . .
+# RUN pwd && ls
+# RUN npm ci
 
-# RUN npm install -g @nrwl/cli
-# RUN npm install --force
+# Install Nx CLI globally
+RUN npm install -g nx
 
 # Build the app using Nx.
-# RUN npx nx build frontend --configuration=production
-# RUN pwd && ls
+RUN npm install --force --no-audit
+RUN npx nx build libs --configuration=development
+# RUN pwd && ls -a /app/dist/libs/shared
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine-slim

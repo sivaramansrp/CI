@@ -25,6 +25,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
+  },
+  {
     path: 'registro-cuentas-bancarias',
     loadChildren: () =>
       import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
@@ -35,6 +42,13 @@ const ROUTES: Routes = [
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
   },
   {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10301/importador-exportador.module').then(
+        (m) => m.ImportadorExportadorModule
+      ),
+    },
+    {
     path: 'donaciones-extranjeras',
     loadChildren: () =>
       import('./tramites/10303/donaciones-extranjeras.module').then(
@@ -70,6 +84,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
+  
+{
+  path: 'registro-digitalizar-documentos',
+  loadChildren: () =>
+    import('./tramites/701/registro-digitalizar-documentos.module').then(
+      (m) => m.RegistroDigitalizarDocumentosModule
+    ),
+},
 ];
 
 @NgModule({

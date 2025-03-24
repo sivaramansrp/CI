@@ -1,11 +1,11 @@
+import { from } from 'rxjs';
+
 export * from './core/ambientes';
-export * from './core/enums/220502/solicitud-pantallas.enum';
 export * from './core/enums/forma-render.enum';
 export * from './core/enums/forma-validators.enum';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './core/enums/tipoPersona.enum';
 export * from './core/estados/seccion.store';
-export * from './core/models/220502/solicitud-pantallas.model';
 export * from './core/models/301/servicios-pantallas.model';
 export * from './core/models/303/secciones.model';
 export * from './core/models/5701/servicios-extraordinarios.model';
@@ -29,9 +29,6 @@ export * from './core/services/120602/empresa-frontera-solicitud.enum';
 export * from './core/services/130118/pexim/pexim.service';
 export {PANTAPASOS} from './core/services/220471/servicios-pantallas.enum';
 export * from './core/services/220471/servicios-pantallas.service';
-export * from './core/services/220501/revision.service';
-export * from './core/services/220501/sagarpa/sagarpa.service';
-export * from './core/services/220502/solicitud-pantallas.service';
 export * from './core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
 export * from './tramites/constantes/constantes';
 
@@ -99,16 +96,8 @@ export { TablaDinamicaComponent } from './tramites/components/tabla-dinamica/tab
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
 export * from './core/models/shared/configuracion-columna.model'
-export * from './core/services/220501/revision.service';
-export * from './core/services/220501/sagarpa/sagarpa.service';
-export * from './core/enums/220502/solicitud-pantallas.enum';
-export * from './core/services/220502/solicitud-pantallas.service';
-export * from './core/models/220502/solicitud-pantallas.model';
 
-export { TEXTOS as TEXTOS_220501 } from './tramites/constantes/220501/texto-enum';
 
-export { CATALOGOS_ID as CATALOGOS_ID_220501 } from './tramites/constantes/220501/constantes';
-export { FECHA_INSPECCION_INPUT as FECHA_INSPECCION_INPUT_220502 } from './tramites/constantes/220502/texto-enum';
 export * from './core/enums/tabla-seleccion.enum';
 export * from './tramites/constantes/110102/datos-tratados-acuerdos.enum';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
