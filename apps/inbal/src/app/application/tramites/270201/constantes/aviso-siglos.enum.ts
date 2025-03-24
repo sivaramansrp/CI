@@ -43,3 +43,15 @@ export const OBRA_DE_ARTE_HEADER_DATA = [
   'Fracción arancelaria',
   'Descripción de la fracción',
 ];
+
+
+export const OPCIONES_DE_BOTON_DE_RADIO = [
+  {
+      label: 'Con marco',
+      value: '1',
+  },
+  {
+      label: 'Sin marco',
+      value: '0',
+  }
+];

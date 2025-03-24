@@ -21,6 +21,7 @@ import { DatosDeLaSolicitudComponent } from './components/datos-de-la-solicitud/
 import { Datos270201Component } from './pages/datos-270201/datos-270201.component';
 
 import { AvisoSiglosRoutingModule } from './aviso-siglos-routing.module';
+import { SolicitudService } from './services/solicitud.service';
 
 @NgModule({
   declarations: [AvisoSiglosComponent, Datos270201Component],
@@ -35,6 +36,7 @@ import { AvisoSiglosRoutingModule } from './aviso-siglos-routing.module';
   ],
   providers: [
     provideHttpClient(),
+    SolicitudService,
     ToastrService,
     InicioSesionService,
     SubirDocumentoService,
