@@ -18,15 +18,15 @@
               <label class="form-label" for="rfcImportExport">RFC*:</label>
               <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"
                 formControlName="rfcImportExport"
-                [ngClass]="isValid(datosImportadorExportador,'rfcImportExport') ? 'required' : ''" appUppercase
-                (blur)="busqueda_rfc()">
+                [ngClass]="isValid(datosImportadorExportador,'rfcImportExport') ? 'required' : ''" libUppercase
+                (blur)="busqueda_rfc()" libUppercase>
             </div>
           </div>
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="nombreImportExport">Nombre:</label>
               <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
-                placeholder="Nombre" type="text" appUppercase>
+                placeholder="Nombre" type="text" libUppercase>
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@
                       Especifique los días que se utilizarán dentro del periodo*:
                     </a>
                   </h4>
-                  <button type="button" title="Colapsable" class="collpase-button collapsed" ></button>
+                  <button type="button" title="Mostrar" class="collpase-button collapsed"></button>
                 </div>
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
