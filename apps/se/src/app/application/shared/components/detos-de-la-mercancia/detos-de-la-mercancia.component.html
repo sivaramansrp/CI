@@ -44,6 +44,7 @@
         [required]="true"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccion"
+        (change)="fetchFraccion()"
         (valueChange)="setValoresStore(form, 'fraccion', 'setFraccion')"
       ></app-catalogo-select>
       <div *ngIf="esInvalido('fraccion')" class="text-danger">
@@ -104,6 +105,7 @@
           [required]="true"
           [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
+          (change)="fetchFraccion()"
           (valueChange)="setValoresStore(form, 'unidadMedida', 'setUnidadMedida')"
         ></app-catalogo-select>
         <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
