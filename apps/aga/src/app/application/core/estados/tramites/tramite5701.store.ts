@@ -1,3 +1,4 @@
+import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '@ng-mf/data-access-user';
 import {
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
@@ -5,7 +6,6 @@ import {
 import { Store, StoreConfig } from '@datorama/akita';
 
 import { Injectable } from '@angular/core';
-import { TransporteAereo, TransporteCarretero, TransporteFerroviario, TransporteMaritimo, TransporteOtro, TransportePeatonal } from '../../../../../../../../libs/shared/data-access-user/src/core/models/shared/agregar-trasnporte.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
@@ -39,6 +39,7 @@ export interface Solicitud5701State {
   horaInicio: string;
   fechaFinal: string;
   horaFinal: string;
+  colapsable: boolean;
   fechasSeleccionadas: string[];
 
   despacho: string;
@@ -120,6 +121,7 @@ export function createInitialState(): Solicitud5701State {
     horaInicio: '',
     fechaFinal: '',
     horaFinal: '',
+    colapsable: false,
     fechasSeleccionadas: [],
     despacho: '',
     lda: false,
@@ -321,6 +323,13 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       horaFinal,
+    }));
+  }
+
+  public setColapsable(colapsable: boolean): void {
+    this.update((state) => ({
+      ...state,
+      colapsable,
     }));
   }
 

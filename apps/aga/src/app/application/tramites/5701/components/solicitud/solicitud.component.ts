@@ -53,8 +53,8 @@ import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
 
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { Modal } from 'bootstrap';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 import { CrosslistState, CrosslistStore } from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
 import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';

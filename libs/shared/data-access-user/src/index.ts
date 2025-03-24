@@ -158,3 +158,4 @@ export * from './core/services/231001/administrar-residuos.service';
 
 export * from './core/estados/terceros.store';
 export * from './core/queries/terceros.query';
+export * from './core/models/shared/agregar-trasnporte.model'
