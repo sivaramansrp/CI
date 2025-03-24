@@ -3,7 +3,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, EventEmitter, Input, Output, SimpleChange, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule,
@@ -171,24 +171,12 @@ campoDeBotones = [
 constructor() {
   // Constructor del componente
 }
-
-ngOnChanges(simpleChange: SimpleChange){
-console.log(simpleChange);
-//@ts-ignore
-  if(simpleChange && simpleChange?.selectRangoDias.currentValue !== simpleChange?.selectRangoDias.previousValue){
-   //@ts-ignore
-    this.selectRangoDias = simpleChange?.selectRangoDias.currentValue;
-    console.log(this.selectRangoDias);
-  }
-
-}
 /**
  * Maneja el cambio de bloque seleccionado.
  * @param {Event} event - El evento de cambio.
  */
 enCambioDeBloque(event: Event): void {
   const SELECTED_BLOQUE = Number((event.target as HTMLInputElement).value);
-  console.log(SELECTED_BLOQUE);
   this.bloqueCambiar.emit(SELECTED_BLOQUE);
 }
 

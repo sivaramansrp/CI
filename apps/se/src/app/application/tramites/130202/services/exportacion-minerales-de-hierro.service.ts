@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 
 @Injectable({
@@ -48,6 +49,13 @@ export class ExportacionMineralesDeHierroService {
     return this.http.get<Catalogo[]>(
       '/assets/json/130202/representacion-federal.json'
     );
+  }
+  getSolicitudeOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>('assets/json/130202/solicitude-options.json');
+  }
+
+  getProductoOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>('assets/json/130202/producto-options.json');
   }
 }
 
