@@ -42,9 +42,8 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '../../enum/permiso.enum';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
-
 
 export interface RespuestaTabla {
   code: number;
@@ -94,15 +93,15 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param fb
-   * @param httpServicios
    * @param tramite260215Store
    * @param tramite260215Query
+   * @param service
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
     private tramite260215Store: Tramite260215Store,
-    private tramite260215Query: Tramite260215Query
+    private tramite260215Query: Tramite260215Query,
+    private service: ServiciosPermisoSanitarioService
   ) {
     // constructor
   }
@@ -285,7 +284,7 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
-  paisDeProcedenciaBotons = [
+  readonly paisDeProcedenciaBotones = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
@@ -315,7 +314,7 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
-  paisDeProcedenciaBotonsDuos = [
+  readonly paisDeProcedenciaBotonesDuos = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
@@ -345,7 +344,7 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
-  paisDeProcedenciaBotonsTres = [
+  readonly paisDeProcedenciaBotonesTres = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
@@ -376,23 +375,22 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
    * Método para obtener el valor de la fecha seleccionada.
    * @param event
    */
-  obtenerEstadoList() {
-    this.httpServicios
-      .get<RespuestaCatalogos>(
-        '../../../../../assets/json/260215/seleccion.json'
-      )
+  obtenerEstadoList(): void {
+    this.service
+      .getObtenerEstadoList()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.estado = DATOS;
+        this.estado = data?.data;
       });
   }
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
-  obtenerTablaDatos() {
-    this.httpServicios
-      .get<RespuestaTabla>('../../../../../assets/json/260215/tablaDatos.json')
+  obtenerTablaDatos(): void {
+    this.service
+      .getObtenerTablaDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.nicoTablaDatos = data?.data;
       });
@@ -401,11 +399,10 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
-  obtenerMercanciasDatos() {
-    this.httpServicios
-      .get<MercanciasTabla>(
-        '../../../../../assets/json/260215/mercanciasDatos.json'
-      )
+  obtenerMercanciasDatos(): void {
+    this.service
+      .getObtenerMercanciasDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.mercanciasTablaDatos = data?.data;
       });

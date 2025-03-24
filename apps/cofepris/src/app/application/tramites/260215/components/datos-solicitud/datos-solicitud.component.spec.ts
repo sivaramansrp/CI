@@ -9,7 +9,11 @@ describe('DatosDeLaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosDeLaComponent, HttpClientTestingModule, ReactiveFormsModule],
+      imports: [
+        DatosDeLaComponent,
+        HttpClientTestingModule,
+        ReactiveFormsModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaComponent);
@@ -23,9 +27,15 @@ describe('DatosDeLaComponent', () => {
 
   it('should initialize the form with default values', () => {
     expect(component.forma).toBeDefined();
-    expect(component.forma.get('rfcDel')?.value).toBe(component.solicitudState?.rfcDel);
-    expect(component.forma.get('denominacion')?.value).toBe(component.solicitudState?.denominacion);
-    expect(component.forma.get('correo')?.value).toBe(component.solicitudState?.correo);
+    expect(component.forma.get('rfcDel')?.value).toBe(
+      component.solicitudState?.rfcDel
+    );
+    expect(component.forma.get('denominacion')?.value).toBe(
+      component.solicitudState?.denominacion
+    );
+    expect(component.forma.get('correo')?.value).toBe(
+      component.solicitudState?.correo
+    );
   });
 
   it('should toggle colapsable state', () => {
@@ -34,9 +44,9 @@ describe('DatosDeLaComponent', () => {
     expect(component.colapsable).toBe(!initialState);
   });
 
-  it('should enable all form controls when toggleFormControls is called', () => {
+  it('should enable all form controls when alternarControlesDeFormulario is called', () => {
     component.forma.disable();
-    component.toggleFormControls();
+    component.alternarControlesDeFormulario();
     Object.keys(component.forma.controls).forEach((controlName) => {
       expect(component.forma.get(controlName)?.enabled).toBe(true);
     });

@@ -6,7 +6,7 @@ import {
   Solicitud260215State,
   Tramite260215Store,
 } from '../../estados/tramites/tramite260215.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
@@ -32,15 +32,9 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
-   * Formulario reactivo para la sección 301.
-   * @type {FormGroup}
+   * Formulario de la solicitud.
    */
-  FormSolicitud!: FormGroup;
-
-  /**
-   * Suscripción a los cambios en el formulario reactivo.
-   */
-  private subscription: Subscription = new Subscription();
+  formSolicitud!: FormGroup;
 
   /**
    * Estado de la solicitud de la sección 301.
@@ -80,18 +74,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
-    this.FormSolicitud = this.fb.group({
+    this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         claveDeReferencia: [this.solicitudState?.claveDeReferencia],
         cadenaDependencia: [this.solicitudState?.cadenaDependencia],
@@ -134,7 +126,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -144,6 +135,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   get datosImportadorExportador(): FormGroup {
-    return this.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+    return this.formSolicitud.get('datosImportadorExportador') as FormGroup;
   }
 }

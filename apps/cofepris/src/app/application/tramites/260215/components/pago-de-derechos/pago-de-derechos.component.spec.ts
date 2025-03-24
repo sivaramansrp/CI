@@ -60,10 +60,10 @@ describe('PagoDeDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize FormSolicitud', () => {
-    expect(component.FormSolicitud).toBeDefined();
+  it('should initialize formSolicitud', () => {
+    expect(component.formSolicitud).toBeDefined();
     expect(
-      component.FormSolicitud.get('datosImportadorExportador')
+      component.formSolicitud.get('datosImportadorExportador')
     ).toBeDefined();
   });
 
@@ -73,7 +73,7 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('should set valores in store', () => {
-    const form = component.FormSolicitud;
+    const form = component.formSolicitud;
     form
       .get('datosImportadorExportador')
       ?.get('claveDeReferencia')
@@ -92,13 +92,11 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   it('should unsubscribe on destroy', () => {
-    jest.spyOn(component['subscription'], 'unsubscribe');
     jest.spyOn(component['destroyNotifier$'], 'next');
     jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(component['subscription'].unsubscribe).toHaveBeenCalled();
     expect(component['destroyNotifier$'].next).toHaveBeenCalled();
     expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
   });
@@ -106,7 +104,7 @@ describe('PagoDeDerechosComponent', () => {
   it('should get datosImportadorExportador form group', () => {
     const formGroup = component.datosImportadorExportador;
     expect(formGroup).toBe(
-      component.FormSolicitud.get('datosImportadorExportador')
+      component.formSolicitud.get('datosImportadorExportador')
     );
   });
 
@@ -141,7 +139,7 @@ describe('PagoDeDerechosComponent', () => {
   it('should handle null solicitudState gracefully', () => {
     component.solicitudState = null as any;
     component.ngOnInit();
-    expect(component.FormSolicitud).toBeDefined();
+    expect(component.formSolicitud).toBeDefined();
   });
 
   it('should handle destroyNotifier$ being called multiple times', () => {

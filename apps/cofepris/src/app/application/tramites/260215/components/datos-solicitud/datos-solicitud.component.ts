@@ -122,7 +122,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Método que se llama cuando se envía el formulario.
    */
-  toggleFormControls() {
+  alternarControlesDeFormulario() {
     Object.keys(this.forma.controls).forEach((controlName) => {
       const CONTROL = this.forma.get(controlName);
       if (CONTROL?.disabled) {

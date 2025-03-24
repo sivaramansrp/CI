@@ -40,7 +40,11 @@ describe('DomicilioComponent', () => {
     } as unknown as jest.Mocked<Tramite260215Query>;
 
     await TestBed.configureTestingModule({
-      imports: [DomicilioComponent, ReactiveFormsModule, HttpClientTestingModule], // Fixed: Moved DomicilioComponent to imports
+      imports: [
+        DomicilioComponent,
+        ReactiveFormsModule,
+        HttpClientTestingModule,
+      ], // Fixed: Moved DomicilioComponent to imports
       providers: [
         { provide: Tramite260215Store, useValue: tramite260215Store },
         { provide: Tramite260215Query, useValue: tramite260215Query },
@@ -107,47 +111,56 @@ describe('DomicilioComponent', () => {
   });
 
   it('should call setValoresStore with correct arguments', () => {
-    component.setValoresStore(component.domicilio, 'codigoPostal', 'setCodigoPostal');
+    component.setValoresStore(
+      component.domicilio,
+      'codigoPostal',
+      'setCodigoPostal'
+    );
     expect(tramite260215Store.setCodigoPostal).toHaveBeenCalledWith('12345');
   });
 
   it('should fetch estado list on obtenerEstadoList', () => {
-    jest.spyOn(component['httpServicios'], 'get').mockReturnValue(
-      of({ data: [{ id: 1, nombre: 'Estado1' }] })
-    );
+    jest
+      .spyOn(component['httpServicios'], 'get')
+      .mockReturnValue(of({ data: [{ id: 1, nombre: 'Estado1' }] }));
     component.obtenerEstadoList();
     expect(component.estado).toEqual([{ id: 1, nombre: 'Estado1' }]);
   });
 
   it('should fetch nicoTablaDatos on obtenerTablaDatos', () => {
-    jest.spyOn(component['httpServicios'], 'get').mockReturnValue(
-      of({ data: [{ id: 1, nombre: 'Nico1' }] })
-    );
+    jest
+      .spyOn(component['httpServicios'], 'get')
+      .mockReturnValue(of({ data: [{ id: 1, nombre: 'Nico1' }] }));
     component.obtenerTablaDatos();
     expect(component.nicoTablaDatos).toEqual([{ id: 1, nombre: 'Nico1' }]);
   });
 
   it('should fetch mercanciasTablaDatos on obtenerMercanciasDatos', () => {
-    jest.spyOn(component['httpServicios'], 'get').mockReturnValue(
-      of({ data: [{ id: 1, nombre: 'Mercancia1' }] })
-    );
+    jest
+      .spyOn(component['httpServicios'], 'get')
+      .mockReturnValue(of({ data: [{ id: 1, nombre: 'Mercancia1' }] }));
     component.obtenerMercanciasDatos();
-    expect(component.mercanciasTablaDatos).toEqual([{ id: 1, nombre: 'Mercancia1' }]);
+    expect(component.mercanciasTablaDatos).toEqual([
+      { id: 1, nombre: 'Mercancia1' },
+    ]);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const destroyNotifierSpy = jest.spyOn(
+      component['destroyNotifier$'],
+      'complete'
+    );
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
   });
 
-  it('should call agregar method of CrosslistComponent on paisDeProcedenciaBotons[0].funcion', () => {
+  it('should call agregar method of CrosslistComponent on paisDeProcedenciaBotones[0].funcion', () => {
     const crossListSpy = {
       agregar: jest.fn(),
     } as unknown as CrosslistComponent;
     component.crossList = new QueryList<CrosslistComponent>();
     component.crossList.reset([crossListSpy]);
-    component.paisDeProcedenciaBotons[0].funcion();
+    component.paisDeProcedenciaBotones[0].funcion();
     expect(crossListSpy.agregar).toHaveBeenCalledWith('t');
   });
 });
