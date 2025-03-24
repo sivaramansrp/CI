@@ -1,4 +1,4 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import {
   DESPACHO_DD,
@@ -42,6 +42,8 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CrosslistState, CrosslistStore } from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
+import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
 import { Tramite5701Query } from '../../../../estados/queries/tramite5701.query';
 
 @Component({
@@ -85,8 +87,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
   public solicitudState!: Solicitud5701State;
+  public crosslistState!: CrosslistState;
 
   constructor(
+    private crosslistQuery: CrosslistQuery,
+    private crosslistStore: CrosslistStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite5701Store: Tramite5701Store,
@@ -110,6 +115,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+    this.crosslistQuery.selectCrosslist$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.crosslistState = state;
+        })
+      )
 
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -159,6 +172,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
+    this.colapsable = this.solicitudState.colapsable;
+
+
   }
 
   /**
@@ -219,6 +235,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   get pagoCaptura(): FormGroup {
     return this.FormSolicitud.get('pagoCaptura') as FormGroup;
   }
+
+  get fechasSeleccionadas(): FormArray {
+    return this.datosServicio.get('fechasSeleccionadas') as FormArray;
+  }
+
 
   /**
    * Verifica si la solicitud seleccionada es de tipo individual.
@@ -374,6 +395,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
+        colapsable: [this.solicitudState?.colapsable],
         fechasSeleccionadas: this.fb.array([]),
       }),
 
@@ -546,24 +568,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tramite5701Store.setTipoSolicitud(tipoSolicitud);
   }
 
-  rango_fechas(): void {
-    const fechaInicial = this.datosServicio.get('fechaInicio')?.value;
-    const fechaFinal = this.datosServicio.get('fechaFinal')?.value;
-
-    const formatoFechaInicial =
-      this.fechaService.formatoFechaGuion(fechaInicial);
-    const formatoFechaFinal = this.fechaService.formatoFechaGuion(fechaFinal);
-
-    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
-      formatoFechaInicial,
-      formatoFechaFinal
-    );
-
-    this.colapsable = true;
-  }
 
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
+    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
   aduanaSeleccion(aduana: Catalogo): void {
@@ -661,7 +669,42 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+
+    if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
+      this.rangoFechas();
+    }
   }
+
+  /**
+   * Calculates the range of dates and times based on the input values from the service,
+   * updates the selected range of days, and sets the collapsible state for the UI.
+   *
+   * @remarks
+   * This method retrieves the start and end dates (`fechaInicio` and `fechaFinal`) 
+   * as well as the start and end times (`horaInicio` and `horaFinal`) from the 
+   * `datosServicio` form group. It then calculates the range of days using the 
+   * `fechaService.obtenerDiasEntreFechas` method and updates the state in the 
+   * `crosslistStore` and `tramite5701Store`.
+   *
+   * @returns {void} This method does not return a value.
+   */
+  rangoFechas(): void {
+    const FECHA_INICIAL = this.datosServicio.get('fechaInicio')?.value;
+    const FECHA_FINAL = this.datosServicio.get('fechaFinal')?.value;
+    const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
+    const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
+
+    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+      FECHA_INICIAL,
+      FECHA_FINAL,
+      HORA_INICIO,
+      HORA_FINAL
+    );
+    this.crosslistStore.establecerFechas(this.selectRangoDias);
+    this.colapsable = true;
+    this.tramite5701Store.setColapsable(this.colapsable);
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
@@ -675,4 +718,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Actualiza la lista de fechas seleccionadas y sincroniza el estado en el store.
+   *
+   * @param fechas - Un arreglo de cadenas que representan las fechas seleccionadas.
+   * 
+   * Este método recorre el arreglo de fechas proporcionado, crea una nueva instancia
+   * de `FormControl` para cada fecha y la agrega a la lista `fechasSeleccionadas`.
+   * Posteriormente, actualiza el estado de las fechas seleccionadas en el store
+   * `tramite5701Store` llamando al método `setFechasSeleccionadas`.
+   */
+  changeCrosslist(fechas: string[]): void {    
+    fechas.forEach((fecha) => {
+      this.fechasSeleccionadas.push(new FormControl(fecha));
+    });
+    this.tramite5701Store.setFechasSeleccionadas(fechas);
+  }
+
 }
