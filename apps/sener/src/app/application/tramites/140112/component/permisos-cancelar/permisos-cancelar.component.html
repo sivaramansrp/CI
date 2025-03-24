@@ -8,7 +8,7 @@
     <div class="alert alert-info">
         <label for="filaSeleccion">
             <input  formControlName="declaracionBoolean" id="filaSeleccion" class="cursor-pointer" type="checkbox" aria-label="Seleccionar"
-                (change)="seleccionarDeseleccionarTodos($event)" [checked]="estmarcado" />{{manifestoDeVeracidad}}
+                (change)="seleccionarDeseleccionarTodos($event)" [checked]="declaracionEstaMarcado" />{{manifestoDeVeracidad}}
         </label>
         <div *ngIf="solicitud?.get('declaracionBoolean')?.invalid && solicitud?.get('declaracionBoolean')?.touched" class="text-danger">
             Favor de seleccionar el Manifiesto.

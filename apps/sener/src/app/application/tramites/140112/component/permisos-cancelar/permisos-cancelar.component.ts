@@ -66,8 +66,8 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
   /** Texto de confirmación de veracidad */
   public confirmarVeracidad = '';
 
-  /** Booleano para verificar si la casilla está marcada */
-  public estmarcado = false;
+  /** Booleano para verificar si la casilla declaracionEstaMarcado */
+  public declaracionEstaMarcado = false;
 
   private destroyed$ = new Subject<void>();
 
@@ -123,8 +123,8 @@ export class PermisosCancelarComponent implements OnInit, OnDestroy {
    */
   seleccionarDeseleccionarTodos(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    this.estmarcado = INPUT.checked;
-    if (this.estmarcado) {
+    this.declaracionEstaMarcado = INPUT.checked;
+    if (this.declaracionEstaMarcado) {
       this.confirmarVeracidad = 'De conformidad con el artículo 57, fracción 11, y 58 de la ley Federal de Procedimiento Administrativo* Manifiesto decir verdad';
       this.solicitud.patchValue({
         declaracionBoolean: this.confirmarVeracidad
