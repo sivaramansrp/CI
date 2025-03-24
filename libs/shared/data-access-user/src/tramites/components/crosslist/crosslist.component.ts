@@ -46,7 +46,9 @@ export class CrosslistComponent implements OnInit {
   constructor(
     private crosslistQuery: CrosslistQuery,
     private crosslistStore: CrosslistStore
-  ) { }
+  ) { 
+        // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

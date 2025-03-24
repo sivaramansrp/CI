@@ -38,7 +38,6 @@ export class PedimentoComponent implements OnChanges {
   tituloModal!: string;
   mensajeModal!: string;
 
-  constructor(private validacionesService: ValidacionesFormularioService) { }
 
   /**
    * Verifica si el formulario de pedimento es válido.
