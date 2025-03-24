@@ -9,13 +9,6 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
-    path: 'mod-permiso-importacion',
-    loadChildren: () =>
-      import('./tramites/260912/mod-permiso-importacion.module').then(
-        (m)=> m.ModPermisoImportacionModule
-      )
-  },
-  {
     path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
     loadChildren: () =>
       import('./tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module').then(

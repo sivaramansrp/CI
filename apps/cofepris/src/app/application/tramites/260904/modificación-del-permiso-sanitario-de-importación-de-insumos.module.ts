@@ -6,8 +6,8 @@ import { ModPermisoSanitarioImportacion260904Component } from './pages/mod-permi
 import { ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosRoutingModule } from './modificación-del-permiso-sanitario-de-importación-de-insumos-routing.module';
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
-import { PasoDosComponent } from '../260912/pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../260912/pages/paso-tres/paso-tres.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';

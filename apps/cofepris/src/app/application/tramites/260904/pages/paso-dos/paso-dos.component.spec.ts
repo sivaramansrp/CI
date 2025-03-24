@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoTresComponent } from './paso-tres.component';
+import { PasoDosComponent } from './paso-dos.component';
 
-describe('PasoTresComponent', () => {
-  let component: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
+describe('PasoDosComponent', () => {
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent],
+      imports: [PasoDosComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoTresComponent);
+    fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
