@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { DatosDeLaSolicitudeComponent } from './datos-de-la-solicitud.component';
+import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
@@ -10,13 +10,13 @@ import SolicitudeDropdown from 'libs/shared/theme/assets/json/130106/datos-de-la
 import { of } from 'rxjs';
 
 describe('DatosDeLaSolicitudeComponent', () => {
-  let component: DatosDeLaSolicitudeComponent;
-  let fixture: ComponentFixture<DatosDeLaSolicitudeComponent>;
+  let component: DatosDeLaSolicitudComponent;
+  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
   let fb: FormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputRadioComponent,DatosDeLaSolicitudeComponent],
+      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, InputRadioComponent,DatosDeLaSolicitudComponent],
       declarations: [],
       providers: [
         FormBuilder
@@ -24,13 +24,13 @@ describe('DatosDeLaSolicitudeComponent', () => {
     }).compileComponents();
 
     fb = TestBed.inject(FormBuilder);
-    fixture = TestBed.createComponent(DatosDeLaSolicitudeComponent);
+    fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
 
     // Mock Solicitud130106State
     component.solicitudState = {
       regimen: 'some-regimen',
-      clasificación: 'some-classification',
+      clasificacion: 'some-classification',
       solicitudDescripcion: 'some-description'
     } as Solicitud130106State;
 
@@ -46,14 +46,14 @@ describe('DatosDeLaSolicitudeComponent', () => {
     expect(component.formulario).toBeTruthy();
     expect(component.formulario.get('solicitud')?.value).toBe('');
     expect(component.formulario.get('regimen')?.value).toBe('some-regimen');
-    expect(component.formulario.get('clasificación')?.value).toBe('some-classification');
+    expect(component.formulario.get('clasificacion')?.value).toBe('some-classification');
     expect(component.formulario.get('solicitudDescripcion')?.value).toBe('some-description');
   });
 
   it('should have required validators for form controls', () => {
     const solicitudControl = component.formulario.get('solicitud');
     const regimenControl = component.formulario.get('regimen');
-    const clasificacionControl = component.formulario.get('clasificación');
+    const clasificacionControl = component.formulario.get('clasificacion');
     const descripcionControl = component.formulario.get('solicitudDescripcion');
 
     expect(solicitudControl?.hasError('required')).toBeTruthy();

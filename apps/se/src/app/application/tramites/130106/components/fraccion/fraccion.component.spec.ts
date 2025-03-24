@@ -28,7 +28,7 @@ describe('FraccionComponent', () => {
     representacion: 'Rep 1',
     bloque: 'Block 1',
     regimen: '',
-    clasificación: '',
+    clasificacion: '',
     solicitudDescripcion: '',
     disponible: '',
     seleccionado: '',
