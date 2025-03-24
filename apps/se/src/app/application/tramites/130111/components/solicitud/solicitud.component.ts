@@ -9,12 +9,12 @@ import { Router } from '@angular/router';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130111/partidas-de-la.json';
-
 import { PartidasDeLaComponent } from '../../../../shared/components/partidas-de-la/partidas-de-la.component';
 import { Tramite130111Store } from '../../estados/tramites/tramites130111.store';
 
 import { Tramite130111Query } from '../../estados/queries/tramite130111.query';
+
+import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
 
 /**
  * SolicitudComponent
@@ -82,7 +82,7 @@ export class SolicitudComponent implements OnInit {
    * getEstablecimientoTableData
    * Datos de configuración de la tabla obtenidos de un archivo JSON.
    */
-  public getEstablecimientoTableData = PartidasdelaTable;
+  getEstablecimientoTableData:any;
 
   /**
    * 
@@ -92,7 +92,8 @@ export class SolicitudComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private tramite130111Store: Tramite130111Store,
-    private tramite130111Query: Tramite130111Query
+    private tramite130111Query: Tramite130111Query,
+    private service:ImportacionDeVehiculosService
   ) {
     //Constructor para inicializar el componente e inyectar dependencias.
   }
@@ -105,8 +106,10 @@ export class SolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
     this.formularioTotalCount();
-    this.getEstablecimiento();
+    this.getTabledatas();
+    // this.getEstablecimiento();
     this.calculateTotals();
+   
 
     this.tramite130111Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
@@ -155,14 +158,14 @@ export class SolicitudComponent implements OnInit {
    * getEstablecimiento
    * Configura los datos de la tabla dinámica a partir de un archivo JSON.
    */
-  getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map((header, index) => ({
-      encabezado: header,
-      clave: (fila: any): string => fila.tbodyData[index],
-      orden: index,
-    }));
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
+  // getEstablecimiento(): void {
+  //   this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map((header, index) => ({
+  //     encabezado: header,
+  //     clave: (fila: any): string => fila.tbodyData[index],
+  //     orden: index,
+  //   }));
+  //   this.tableBodyData = this.getEstablecimientoTableData.tableBody;
+  // }
 
   /**
    * calculateTotals
@@ -224,5 +227,19 @@ export class SolicitudComponent implements OnInit {
     } else {
       console.error(`Método ${METODO_NOMBRE} no existe en Tramite130111Store`);
     }
+  }
+
+  getTabledatas(): void {
+    this.service.getPartidasdelaTable().subscribe(
+        (data: any) => {
+            this.getEstablecimientoTableData = data;
+            this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map((header: any, index: string | number) => ({
+              encabezado: header,
+              clave: (fila: any): string => fila.tbodyData[index],
+              orden: index,
+            }));
+            this.tableBodyData = this.getEstablecimientoTableData.tableBody;
+        }
+    );
   }
 }
