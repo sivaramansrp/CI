@@ -2,8 +2,8 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Solicitud11201State, Tramite11201Store } from '../../estados/tramite11201.store';
-import { Tramite11201Query } from '../../estados/tramite11201.query';
+import { Solicitud11204State, Tramite11204Store } from '../../estados/tramite11204.store';
+import { Tramite11204Query } from '../../estados/tramite11204.query';
 
 /**
  * Componente para gestionar el formulario del solicitante.
@@ -22,9 +22,9 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
   constructor(public fb: FormBuilder,
-    public tramite11201Store: Tramite11201Store,
+    public tramite11204Store: Tramite11204Store,
     // eslint-disable-next-line no-empty-function
-    private tramite11201Query: Tramite11201Query) {
+    private tramite11204Query: Tramite11204Query) {
 
   }
 
@@ -33,7 +33,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   solicitudForm!: FormGroup;
   private destroyNotifier$: Subject<void> = new Subject();
-  public derechoState: Solicitud11201State = {} as Solicitud11201State;
+  public derechoState: Solicitud11204State = {} as Solicitud11204State;
   @Output() continuarEvento = new EventEmitter<string>();
 
   /**
@@ -51,11 +51,11 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramite11201Query.selectSolicitud$
+    this.tramite11204Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.derechoState = seccionState;
+          this.derechoState = seccionState as Solicitud11204State;
         })
       )
       .subscribe();

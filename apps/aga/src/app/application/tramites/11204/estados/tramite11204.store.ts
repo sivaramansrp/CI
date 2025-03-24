@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud11201
  */
 
-export interface Solicitud11201State {
+export interface Solicitud11204State {
   menúDesplegable: string;
   rfc: string;
   denominacion: string;
@@ -43,7 +43,7 @@ export interface Solicitud11201State {
 
 }
 
-export function createInitialState(): Solicitud11201State {
+export function createInitialState(): Solicitud11204State {
   return {
     menúDesplegable: '',
     rfc: 'AAL0409235E6',
@@ -76,7 +76,7 @@ export function createInitialState(): Solicitud11201State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite11201', resettable: true })
-export class Tramite11201Store extends Store<Solicitud11201State> {
+export class Tramite11204Store extends Store<Solicitud11204State> {
   constructor() {
     super(createInitialState());
   }

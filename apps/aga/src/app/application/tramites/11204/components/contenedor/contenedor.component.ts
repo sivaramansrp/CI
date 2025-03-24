@@ -5,7 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component, } from '@angular/core';
+import { Component, ElementRef, } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Contenedores } from '../../models/datos-tramite.model';
 import { DatosDelContenedor } from '../../models/datos-tramite.model';
@@ -20,20 +20,21 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud11201State } from '../../estados/tramite11201.store';
+import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TemplateRef } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite11201Query } from '../../estados/tramite11201.query';
-import { Tramite11201Store } from '../../estados/tramite11201.store';
+import { Tramite11204Query } from '../../estados/tramite11204.query';
+import { Tramite11204Store } from '../../estados/tramite11204.store';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
+import { Modal } from 'bootstrap';
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -126,7 +127,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   currentIdx: number = 0;
 
   mostrarAgregarTipoContenedor: boolean = false;
-
+  showButtons: boolean = true;
 
   /**
    * Lista de catálogos.
@@ -164,7 +165,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */
-  public solicitud11201State!: Solicitud11201State;
+  public solicitud11204State!: Solicitud11204State;
 
   /**
    * Sujeto para notificar la destrucción del componente.
@@ -211,8 +212,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   modalRef?: BsModalRef | null;
 
-  @ViewChild('modalAgregarConstanciaTransferencia') modalAgregarConstanciaTransferencia!: TemplateRef<any>;
-  // modalRef?: BsModalRef;
+  @ViewChild('modalAgregarConstanciaTransferencia') modalElement!: ElementRef;  // modalRef?: BsModalRef;
 
   /**
    * Plantilla del modal.
@@ -228,8 +228,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
     private validacionesService: ValidacionesFormularioService,
-    public tramite11201Store: Tramite11201Store,
-    private tramite11201Query: Tramite11201Query,
+    public Tramite11204Store: Tramite11204Store,
+    private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
   ) {
     this.transporteList = {
@@ -248,14 +248,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.tramite11201Query.selectSolicitud$
+    this.Tramite11204Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitud11201State = {
-            ...this.solicitud11201State,
-            ...seccionState,
-          };
+          if (typeof seccionState === 'object' && seccionState !== null) {
+            this.solicitud11204State = {
+              ...this.solicitud11204State,
+              ...seccionState,
+            };
+          }
         })
       )
       .subscribe();
@@ -280,34 +282,34 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
-      tipoBusqueda: [this.solicitud11201State?.tipoBusqueda, Validators.required],
-      aduana: [this.solicitud11201State?.aduana, Validators.required],
-      fechaIngreso: [this.solicitud11201State?.fechaIngreso, Validators.required],
-      vigencia: [this.solicitud11201State?.Vigencia, Validators.required],
-      inicialesContenedor: [this.solicitud11201State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern('^[a-zA-Z0-9]+$')]],
-      numeroContenedor: [this.solicitud11201State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
-      digitoDeControl: [this.solicitud11201State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
-      contenedores: [this.solicitud11201State?.contenedores, Validators.required],
+      tipoBusqueda: [this.solicitud11204State?.tipoBusqueda, Validators.required],
+      aduana: [this.solicitud11204State?.aduana, Validators.required],
+      fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
+      vigencia: [this.solicitud11204State?.Vigencia, Validators.required],
+      inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern('^[a-zA-Z0-9]+$')]],
+      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
+      digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
+      contenedores: [this.solicitud11204State?.contenedores, Validators.required],
       tipoTransporte: ['', Validators.required],
-      menúDesplegable: [this.solicitud11201State.menúDesplegable, Validators.required],
+      menúDesplegable: [this.solicitud11204State.menúDesplegable, Validators.required],
       numManifiesto: [
-        this.solicitud11201State.numManifiesto,
+        this.solicitud11204State.numManifiesto,
         [Validators.required, Validators.maxLength(50)],
       ],
       aduanaMenúDesplegable: [
-        this.solicitud11201State.aduanaMenúDesplegable,
+        this.solicitud11204State.aduanaMenúDesplegable,
         Validators.required,
       ],
-      archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
+      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required],
       individualCaja: this.fb.array(
-        this.solicitud11201State?.individualCaja
+        this.solicitud11204State?.individualCaja
       ),
       amount: [this.amount, Validators.required],
       fechaDeIngreso: [
-        this.solicitud11201State?.fechaDeIngreso,
+        this.solicitud11204State?.fechaDeIngreso,
         Validators.required,
       ],
-      commonCaja: [this.solicitud11201State?.commonCaja],
+      commonCaja: [this.solicitud11204State?.commonCaja],
     });
     this.mostrarCampos();
     this.solicitudForm
@@ -386,10 +388,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite11201Store
+    metodoNombre: keyof Tramite11204Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite11201Store[metodoNombre] as (valor: unknown) => void)(VALOR);
+    (this.Tramite11204Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 
   /**
@@ -408,10 +410,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Mostrar campos según el tipo de búsqueda seleccionado.
    */
   mostrarCampos(): void {
-    
-  // this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-  //   this.limpiarCampos();
-  // });
+
+    // this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
+    //   this.limpiarCampos();
+    // });
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
     this.showSeccionArchivoCsv = false;
     this.showSeccionAduanaaFecha = false;
@@ -459,7 +461,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   datosCapturaModal(): void {
-    this.modalRef = this.modalService.show(this.modalAgregarConstanciaTransferencia);
+    this.solicitudForm.markAllAsTouched();
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+    this.showButtons = false;
   }
 
   /**
@@ -480,15 +487,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   datosCaptura(): void {
     this.solicitudForm.markAllAsTouched();
+    const TIPO_BUSQUEDA = this.solicitudForm.value.tipoBusqueda;
     const ADUANA = this.solicitudForm.value.aduana;
     const FECHAINGRESO = this.solicitudForm.value.fechaIngreso;
     const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
-    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
-      this.agregarSolicitud();
-    }
+    if (TIPO_BUSQUEDA === 'Contenedor') {
+      if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
+        this.agregarSolicitud();
+      }
+    } else if (TIPO_BUSQUEDA === 'Archivo CSV') {
+      if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA) {
+        this.agregarSolicitud();
+      }
+    } else { }
   }
 
   /**
@@ -569,18 +583,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  esPago(): void {
-    if (this.solicitudForm.valid) {
-      // Implementar lógica de pago y envío del formulario
-      this.datosTramiteService.submitSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-        () => {
-          // Manejar envío exitoso
-        }
-      );
-    } else {
-      this.mostrarMensaje = true;
-    }
-  }
+  // esPago(): void {
+  //   if (this.solicitudForm.valid) {
+  //     // Implementar lógica de pago y envío del formulario
+  //     this.datosTramiteService.submitSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+  //       () => {
+  //         // Manejar envío exitoso
+  //       }
+  //     );
+  //   } else {
+  //     this.mostrarMensaje = true;
+  //   }
+  // }
 
   tabSeleccionado(): void {
     const CURRENT_IDX = localStorage.getItem('currentIdx');
@@ -601,7 +615,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
-          (this.tramite11201Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
+          (this.Tramite11204Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
           this.solicitudForm.patchValue({
             aduana: '',
             fechaIngreso: '',
