@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export interface CompliMentaria {
-  númerodeOrden: string;
-  fracciónArancelaria: string;
-  nombreTécnico: string;
+  numerodeOrden: string;
+  fraccionArancelaria: string;
+  nombreTecnico: string;
   nombreComercial: string;
   nombreIngles: string;
   númerodeRegistro: string;
@@ -11,17 +11,17 @@ export interface CompliMentaria {
 export const CERTIFICADO_TABLA = [
   {
     encabezado: 'Número de orden',
-    clave: (ele: CompliMentaria) => ele.númerodeOrden,
+    clave: (ele: CompliMentaria) => ele.numerodeOrden,
     orden: 1
   },
   {
     encabezado: 'Fracción arancelaria*',
-    clave: (ele: CompliMentaria) => ele.fracciónArancelaria,
+    clave: (ele: CompliMentaria) => ele.fraccionArancelaria,
     orden: 2
   },
   {
     encabezado: 'Nombre técnico',
-    clave: (ele: CompliMentaria) => ele.nombreTécnico,
+    clave: (ele: CompliMentaria) => ele.nombreTecnico,
     orden: 3
   },
   {

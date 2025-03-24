@@ -41,19 +41,19 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    * 
    */
-  datosdelcertificado: FormGroup;
+  datosDelCertificado: FormGroup;
   /**
    * Configuración para la tabla de datos del certificado.
    * DatosCertificadoComponent
    * 
    */
-  configTableArray = CERTIFICADO_TABLA;
+  arregloConfiguracionTabla = CERTIFICADO_TABLA;
   /**
    * Tipo de selección de la tabla (radio).
    * DatosCertificadoComponent
    * 
    */
-  tableradio = TablaSeleccion.RADIO;
+  radioDeMesa = TablaSeleccion.RADIO;
   /**
    * Datos para la tabla.
    * DatosCertificadoComponent
@@ -65,13 +65,13 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    *
    */
-  selectedRow: any;
+  filaSeleccionada: any;
   /**
    * Lista de filas seleccionadas en la tabla.
    * DatosCertificadoComponent
    *
    */
-  selectedRows: any[] = [];
+  filasSeleccionadas: any[] = [];
   /**
    * Observable para el lugar del certificado.
    * DatosCertificadoComponent
@@ -112,7 +112,7 @@ export class DatosCertificadoComponent implements OnInit {
   /**
  * Índice utilizado para propósitos internos del componente.
  */
-  indice: number=5;
+  indice: number = 5;
 
   /**
  * Evento de salida que emite un valor booleano cuando se modifica el certificado.
@@ -133,33 +133,35 @@ export class DatosCertificadoComponent implements OnInit {
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query
   ) {
-    this.datosdelcertificado = this.fb.group({
+    this.datosDelCertificado = this.crearFormularioDatosDelCertificado();
+  }
+  private crearFormularioDatosDelCertificado(): FormGroup {
+    return this.fb.group({
       lugar: ['', Validators.required],
       observaciones: ['', Validators.required]
     });
   }
-  
   /**
    * Método de inicialización del componente.
    * DatosCertificadoComponent
    */
   ngOnInit(): void {
     this.getTabledatas();
-    this.subscribeToStoreChanges();
+    this.suscribirseACambiosEnLaTienda();
 
-    this.tramite110218Query.tableDataDatos$.subscribe((data)=>{
+    this.tramite110218Query.tableDataDatos$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.selectedTableFromStore = data;
     }
     )
 
-    
+
   }
   /**
    * Obtiene los datos de la tabla desde el servicio.
    * DatosCertificadoComponent
    */
   getTabledatas(): void {
-    this.service.getDatosCertificado().subscribe((data: any) => {
+    this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
       this.datos = data;
     });
   }
@@ -169,22 +171,22 @@ export class DatosCertificadoComponent implements OnInit {
    * Fila seleccionada.
    */
   handleFilaSeleccionada(fila: CompliMentaria): void {
-    this.selectedRow = fila;
+    this.filaSeleccionada = fila;
   }
   /**
    * Navega a la sección de mercancías seleccionadas del formulario.
    * DatosCertificadoComponent
    */
   onModifyForm(): void {
-    this.tramite110218Store.storeTableValues(this.selectedRow);
+    this.tramite110218Store.storeTableValues(this.filaSeleccionada);
     this.modificarEventCertificado.emit(false);
-    
+
   }
   /**
    * Suscribe a los cambios en el store y actualiza el formulario.
    * DatosCertificadoComponent
    */
-  subscribeToStoreChanges(): void {
+  suscribirseACambiosEnLaTienda(): void {
     const OBSERVABLES = {
       lugar: this.lugar$,
       observaciones: this.observaciones$,
@@ -192,7 +194,7 @@ export class DatosCertificadoComponent implements OnInit {
     Object.entries(OBSERVABLES).forEach(([controlName, OBSERVABLES$]) => {
       OBSERVABLES$.pipe(takeUntil(this.destroyed$)).subscribe((value) => {
         if (value) {
-          this.datosdelcertificado.get(controlName)?.setValue(value);
+          this.datosDelCertificado.get(controlName)?.setValue(value);
         }
       });
     });
@@ -201,7 +203,7 @@ export class DatosCertificadoComponent implements OnInit {
    * Método de destrucción del componente.
    * DatosCertificadoComponent
    */
-  // eslint-disable-next-line @angular-eslint/use-lifecycle-interface
+
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
@@ -213,7 +215,7 @@ export class DatosCertificadoComponent implements OnInit {
       * Nombre del control del formulario.
       */
   onDatosdelcertificadoChange(controlName: string): void {
-    const VALUE = this.datosdelcertificado.get(controlName)?.value;
+    const VALUE = this.datosDelCertificado.get(controlName)?.value;
 
     switch (controlName) {
       case 'lugar':
@@ -224,10 +226,10 @@ export class DatosCertificadoComponent implements OnInit {
         break;
 
       default:
-          break;
-  }
+        break;
+    }
 
- }
+  }
 
 
 }

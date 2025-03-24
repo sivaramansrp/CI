@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { REG_X, REGEX_DESCRIPCION_ESPECIALES, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -81,15 +81,18 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     private tramite110218Query: Tramite110218Query,
     private service: CertificadoTecnicoJaponService
   ) {
-    this.datosdelexportador = this.fb.group({
-      nombredelRepresentante: ['', [Validators.required, Validators.pattern(/^[A-Za-zÁÉÍÓÚÑáéíóúñ ]+$/)]], // Campo obligatorio, solo letras y espacios
+    this.datosdelexportador = this.crearFormularioDatosDelExportador();
+  }
+
+  private crearFormularioDatosDelExportador(): FormGroup {
+    return this.fb.group({
+      nombredelRepresentante: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
       empresa: [{ value: '', disabled: true }], // Campo de solo lectura, sin validación necesaria
       cargo: ['', Validators.required], // Campo obligatorio
-      telefonos: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
-      faxs: ['', [Validators.required, Validators.pattern(/^\d+$/)]], // Campo obligatorio, solo números permitidos
+      telefonos: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
+      faxs: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
       correoElectronicos: ['', [Validators.required, Validators.email]] // Campo obligatorio, debe ser un correo válido
     });
-
   }
 
   /**

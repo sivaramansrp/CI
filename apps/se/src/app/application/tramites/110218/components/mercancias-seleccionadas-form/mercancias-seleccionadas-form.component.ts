@@ -5,10 +5,10 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, REG_X, REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
 import { Router } from '@angular/router';
@@ -66,37 +66,37 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
  * Observable que proporciona las opciones para la unidad de medida de comercialización.
  * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
  */
-unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
+  unidaddeMedidadeComercializacion$: Observable<Catalogo | null> = this.tramite110218Query.unidaddeMedidadeComercializacion$;
 
-/**
- * Observable que proporciona las opciones para el tipo de factura.
- * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
- */
-tipodeFactura$: Observable<Catalogo | null> = this.tramite110218Query.tipodeFactura$;
+  /**
+   * Observable que proporciona las opciones para el tipo de factura.
+   * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+   */
+  tipodeFactura$: Observable<Catalogo | null> = this.tramite110218Query.tipodeFactura$;
 
-/**
- * Observable que proporciona el complemento de la descripción.
- * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
- */
-complementoDelaDescripcion$: Observable<string | null> = this.tramite110218Query.complementoDelaDescripcion$;
+  /**
+   * Observable que proporciona el complemento de la descripción.
+   * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+   */
+  complementoDelaDescripcion$: Observable<string | null> = this.tramite110218Query.complementoDelaDescripcion$;
 
-/**
- * Observable que proporciona la marca de la mercancía.
- * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
- */
-marca$: Observable<string | null> = this.tramite110218Query.marca$;
+  /**
+   * Observable que proporciona la marca de la mercancía.
+   * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+   */
+  marca$: Observable<string | null> = this.tramite110218Query.marca$;
 
-/**
- * Observable que proporciona el valor de la mercancía.
- * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
- */
-valorMercancia$: Observable<string | null> = this.tramite110218Query.valorMercancia$;
+  /**
+   * Observable que proporciona el valor de la mercancía.
+   * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+   */
+  valorMercancia$: Observable<string | null> = this.tramite110218Query.valorMercancia$;
 
-/**
- * Observable que proporciona el número de la factura.
- * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
- */
-numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFactura$;
+  /**
+   * Observable que proporciona el número de la factura.
+   * Este observable se suscribe a los datos provenientes de la consulta `tramite110218Query`.
+   */
+  numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFactura$;
 
   /**
    * Evento que se emite cuando la modificación se realiza con éxito.
@@ -116,20 +116,22 @@ numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFac
     private tramite110218Store: Tramite110218Store,
     private router: Router
   ) {
-    this.modifydatosdelcertificado = this.fb.group({
+    this.modifydatosdelcertificado = this.crearFormularioModificarDatosDelCertificado();
+  }
+
+  private crearFormularioModificarDatosDelCertificado(): FormGroup {
+    return this.fb.group({
       nombreComercial: [{ value: '', disabled: true }], // Campo de solo lectura
       nombreIngles: [{ value: '', disabled: true }], // Campo de solo lectura
       complementoDelaDescripcion: ['', [Validators.required]], // Campo obligatorio
       marca: ['', [Validators.required]], // Campo obligatorio
-      valorMercancia: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,4})?$/)]], // Campo obligatorio, solo números con hasta 4 decimales
+      valorMercancia: ['', [Validators.required, Validators.pattern(REGEX_NUMEROS_DECIMALES)]], // Campo obligatorio, solo números con hasta 4 decimales
       cantidad: [{ value: '', disabled: true }], // Campo de solo lectura
       unidaddeMedidadeComercializacion: ['', Validators.required], // Campo obligatorio, selección de lista desplegable
-      numerodeFactura: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]+$/)]], // Campo obligatorio, solo alfanumérico
+      numerodeFactura: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo alfanumérico
       tipodeFactura: ['', Validators.required], // Campo obligatorio, selección de lista desplegable
       fechadelaFactura: [{ value: '', disabled: true }] // Campo de solo lectura
     });
-    
-    
   }
 
   /**
@@ -140,46 +142,47 @@ numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFac
     this.unidadMedidaData();
     this.tipoDeFactura();
 
-    this.tramite110218Query.tableDataDatos$.subscribe((data) => {
+    this.tramite110218Query.tableDataDatos$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.receivedData = data;
     });
 
     this.tableDataValues();
 
-    this.unidaddeMedidadeComercializacion$.subscribe((unidaddeMedidadeComercializacion) => {
+    this.unidaddeMedidadeComercializacion$.pipe(takeUntil(this.destroyed$)).subscribe((unidaddeMedidadeComercializacion) => {
       if (unidaddeMedidadeComercializacion) {
         this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.setValue(unidaddeMedidadeComercializacion);
       }
     });
 
-    this.tipodeFactura$.subscribe((tipodeFactura) => {
+    this.tipodeFactura$.pipe(takeUntil(this.destroyed$)).subscribe((tipodeFactura) => {
       if (tipodeFactura) {
         this.modifydatosdelcertificado.get('tipodeFactura')?.setValue(tipodeFactura);
       }
     });
-    this.complementoDelaDescripcion$.subscribe((complementoDelaDescripcion) => {
+
+    this.complementoDelaDescripcion$.pipe(takeUntil(this.destroyed$)).subscribe((complementoDelaDescripcion) => {
       if (complementoDelaDescripcion) {
         this.modifydatosdelcertificado.get('complementoDelaDescripcion')?.setValue(complementoDelaDescripcion);
       }
     });
 
-    this.marca$.subscribe((marca) => {
+    this.marca$.pipe(takeUntil(this.destroyed$)).subscribe((marca) => {
       if (marca) {
         this.modifydatosdelcertificado.get('marca')?.setValue(marca);
       }
-    })
-    this.valorMercancia$.subscribe((valorMercancia) => {
+    });
+
+    this.valorMercancia$.pipe(takeUntil(this.destroyed$)).subscribe((valorMercancia) => {
       if (valorMercancia) {
         this.modifydatosdelcertificado.get('valorMercancia')?.setValue(valorMercancia);
       }
-    })
+    });
 
-    this.numerodeFactura.subscribe((numerodeFactura) => {
+    this.numerodeFactura.pipe(takeUntil(this.destroyed$)).subscribe((numerodeFactura) => {
       if (numerodeFactura) {
         this.modifydatosdelcertificado.get('numerodeFactura')?.setValue(numerodeFactura);
       }
-    })
- 
+    });
   }
 
   /**
@@ -187,7 +190,7 @@ numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFac
    * MercanciasSeleccionadasFormComponent
    */
   unidadMedidaData(): void {
-    this.service.getUnidadMedida().subscribe((data: any) => {
+    this.service.getUnidadMedida().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
       this.unidaddeMedidadeComercializacionOptions = data;
     });
   }
@@ -197,9 +200,11 @@ numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFac
    * MercanciasSeleccionadasFormComponent
    */
   tipoDeFactura(): void {
-    this.service.getTipodeFctura().subscribe((data: any) => {
-      this.tipodeFacturaOptions = data;
-    });
+    this.service.getTipodeFctura()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: any) => {
+        this.tipodeFacturaOptions = data;
+      });
   }
 
   /**
@@ -226,17 +231,17 @@ numerodeFactura: Observable<string | null> = this.tramite110218Query.numerodeFac
     this.destroyed$.complete();
   }
 
-/**
- * Redirige al usuario a la pantalla de validación del certificado técnico de Japón.
- * 
- * Este método se ejecuta cuando la modificación del formulario se completa exitosamente.
- * Utiliza el servicio de enrutamiento (`Router`) para navegar a la página correspondiente.
- */
+  /**
+   * Redirige al usuario a la pantalla de validación del certificado técnico de Japón.
+   * 
+   * Este método se ejecuta cuando la modificación del formulario se completa exitosamente.
+   * Utiliza el servicio de enrutamiento (`Router`) para navegar a la página correspondiente.
+   */
 
-modificarSuccess() :void{
-  this.modificarSuccessBtn.emit(true); 
+  modificarSuccess(): void {
+    this.modificarSuccessBtn.emit(true);
 
-}
+  }
 
   /**
    * Maneja el cambio en la unidad de medida y actualiza el store.
@@ -254,11 +259,11 @@ modificarSuccess() :void{
     this.tramite110218Store.setTipodeFactura(TIPODE_FACTURA);
   }
 
-    /**
-   * Maneja cambios en los valores de ciertos campos del formulario y los actualiza en el store.
-   * Nombre del campo que ha cambiado.
-   */
-  onMercanciaSeleccionadasChange(controlName: string): void { 
+  /**
+ * Maneja cambios en los valores de ciertos campos del formulario y los actualiza en el store.
+ * Nombre del campo que ha cambiado.
+ */
+  onMercanciaSeleccionadasChange(controlName: string): void {
     const VALUE = this.modifydatosdelcertificado.get(controlName)?.value;
     switch (controlName) {
       case 'complementoDelaDescripcion':
@@ -270,11 +275,11 @@ modificarSuccess() :void{
       case 'valorMercancia':
         this.tramite110218Store.setValorMercancia(VALUE);
         break;
-      case 'numerodeFactura': 
+      case 'numerodeFactura':
         this.tramite110218Store.setNumerodeFactura(VALUE);
-        break; 
-        default:
-          break; 
+        break;
+      default:
+        break;
     }
   }
 }

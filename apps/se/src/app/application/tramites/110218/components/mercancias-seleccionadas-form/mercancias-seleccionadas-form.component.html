@@ -54,7 +54,7 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="unidaddeMedidadeComercializacionOptions"
                     formControlName="unidaddeMedidadeComercializacion" name="unidaddeMedidadeComercializacion"
-                    [label]="'Unidad de medida de comercialización'" class="Unidadformlabel"
+                    [label]="'Unidad de medida de comercialización'"
                     (change)="onChangeUnidadMedida()"></app-catalogo-select>
                 <div *ngIf="modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.touched &&
                              modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.invalid">

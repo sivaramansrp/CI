@@ -40,7 +40,10 @@ export class TratadosComponent implements OnInit {
    * {CertificadoTecnicoJaponService} service - Servicio para obtener datos de tratados.
    */
   constructor(private fb: FormBuilder, private service: CertificadoTecnicoJaponService) {
-    this.detallesdeltransporte = this.fb.group({
+    this.detallesdeltransporte = this.crearFormularioDetallesDelTransporte();
+  }
+  private crearFormularioDetallesDelTransporte(): FormGroup {
+    return this.fb.group({
       tratadoAcuerdo: [{ value: '', disabled: true }],
       paisBloque: [{ value: '', disabled: true }],
       paisdeOrigen: [{ value: '', disabled: true }],

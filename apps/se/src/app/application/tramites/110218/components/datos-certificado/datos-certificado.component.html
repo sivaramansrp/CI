@@ -1,14 +1,14 @@
 <div class="container">
     <div>
         <ng-titulo titulo="Datos del certificado"></ng-titulo>
-        <form [formGroup]="datosdelcertificado" novalidate>
+        <form [formGroup]="datosDelCertificado" novalidate>
             <div class="row">
 
                 <div class="col-md-12">
                     <label class="form-label" for="lugar">Lugar *:</label>
                     <input type="text" class="form-control bg-white" id="lugar" placeholder="Tamaulipas 15 cl: centro"
                         formControlName="lugar"
-                        [class.is-invalid]="datosdelcertificado.get('lugar')?.touched && datosdelcertificado.get('lugar')?.invalid"
+                        [class.is-invalid]="datosDelCertificado.get('lugar')?.touched && datosDelCertificado.get('lugar')?.invalid"
                         (change)="onDatosdelcertificadoChange('lugar')">
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
@@ -17,7 +17,7 @@
                     <label class="form-label" for="observaciones">Observaciones:</label>
                     <textarea class="form-control custom-textarea bg-white" id="observaciones"
                         placeholder="OTRAS OBSERVACIONES" formControlName="observaciones"
-                        [class.is-invalid]="datosdelcertificado.get('observaciones')?.touched && datosdelcertificado.get('observaciones')?.invalid"
+                        [class.is-invalid]="datosDelCertificado.get('observaciones')?.touched && datosDelCertificado.get('observaciones')?.invalid"
                         (change)="onDatosdelcertificadoChange('observaciones')">
                 </textarea>
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
@@ -28,7 +28,7 @@
 
     </div>
     <h6>Mercancías seleccionadas</h6>
-    <app-tabla-dinamica [configuracionTabla]="configTableArray" [datos]="datos" [tipoSeleccionTabla]="tableradio"
+    <app-tabla-dinamica [configuracionTabla]="arregloConfiguracionTabla" [datos]="datos" [tipoSeleccionTabla]="radioDeMesa"
         (filaSeleccionada)="handleFilaSeleccionada($event)">
     </app-tabla-dinamica>
     <div class="col-md-12">

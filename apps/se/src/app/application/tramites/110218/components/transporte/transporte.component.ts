@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { REG_X, REGEX_DESCRIPCION_ESPECIALES, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -76,12 +76,16 @@ export class TransporteComponent implements OnInit, OnDestroy {
     private tramite110218Store: Tramite110218Store,
     private tramite110218Query: Tramite110218Query
   ) {
-    this.detallestransporte = this.fb.group({
-      puertodeEmbarque: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
-      puertodeDesembarque: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
-      puertodeTransito: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
-      nombredelaEmbarcación: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]+$')]], // Campo obligatorio, solo letras y espacios
-      numerodeVuelo: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Campo obligatorio, solo números permitidos
+    this.detallestransporte = this.crearFormularioDetallesTransporte();
+  }
+
+  private crearFormularioDetallesTransporte(): FormGroup {
+    return this.fb.group({
+      puertodeEmbarque: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
+      puertodeDesembarque: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
+      puertodeTransito: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
+      nombredelaEmbarcación: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
+      numerodeVuelo: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
     });
   }
 
