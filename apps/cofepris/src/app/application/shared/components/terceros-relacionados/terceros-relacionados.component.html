@@ -1,0 +1,35 @@
+<div class="container">
+  <ng-titulo titulo="Terceros relacionados"></ng-titulo>
+
+  <div class="row mt-5">
+    <h6>Fabricante :</h6>
+  </div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5"><h6>Destinatario (destino final) :</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5"><h6>Proveedor :</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5"><h6>Facturador :</h6></div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaFabricante"
+      [datos]="fabricanteTablaDatos"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5"></div>
+</div>

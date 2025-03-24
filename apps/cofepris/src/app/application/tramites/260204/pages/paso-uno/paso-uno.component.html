@@ -47,14 +47,13 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) {
-       @case (1) {
+      @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
-      }
-       @case (2) {
+      } @case (2) {
       <app-contenedor-de-datos-solicitud></app-contenedor-de-datos-solicitud>
-       }
-      }
+      } @case (3) {
+      <app-terceros-relacionados-vista></app-terceros-relacionados-vista>
+      } }
     </ng-container>
   </div>
 </div>
