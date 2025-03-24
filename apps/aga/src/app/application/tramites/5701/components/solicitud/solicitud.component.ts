@@ -172,9 +172,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
-    this.colapsable = this.solicitudState.colapsable;
 
-
+    this.colapsable = this.solicitudState.fechasSeleccionadas.length > 0 ? true : false;
   }
 
   /**
@@ -395,7 +394,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        colapsable: [this.solicitudState?.colapsable],
         fechasSeleccionadas: this.fb.array([]),
       }),
 
@@ -571,7 +569,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
-    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
   aduanaSeleccion(aduana: Catalogo): void {
@@ -702,7 +699,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     this.crosslistStore.establecerFechas(this.selectRangoDias);
     this.colapsable = true;
-    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
 
