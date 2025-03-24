@@ -123,7 +123,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <div class="form-check-custome">
-              <label class="form-check-label" for="checkIMMEX">Immex (Número/aaaa):</label>
+              <label class="form-label" for="checkIMMEX">Immex (Número/aaaa):</label>
               <input class="form-check-input check-ms" type="checkbox" id="checkIMMEX" formControlName="checkIMMEX"
                 (change)="checkImmex()" />
 
@@ -161,208 +161,38 @@
         <div class="col-md-12">
           <label for="tipoEmpresa">Tipo de empresa certificada</label>
         </div>
-
-        <div class="col-md-6">
-          <div class="col">
-        <div class="row">
-          <div class="col-md-4">
-            <label for="fechaFinal" class="form-label">Fecha final*:</label>
-            <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
-              [ngClass]="isValid(datosServicio,'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
-              (change)="changeFechaFinal()">
-
-            @if (isValid(datosServicio,'fechaFinal')) {
-            <div class="mensaje-error">
-              Fecha no válida, elija otro día
-            </div>
-            }
-
-            @if (intervaloFechaError()) {
-            <div class="mensaje-error">
-              Intervalo de fecha no válido
-            </div>
-            }
-          </div>
-
-          <div class="col-md-4">
-            <input-hora formControlName="horaFinal" [label]="'Hora Final'" [required]="true" [inputId]="'horaFinal'"
-              (change)="changeHoraFinal()"></input-hora>
-            @if (intervaloFechaError()) {
-            <div class="mensaje-error">
-              Intervalo de fecha no válido
-            </div>
-            }
-          </div>
-        </div>
-
-        <div class="row mt-5">
-          <div class="col-md-12">
-            <div class="panel-group ficha-collapse" id="accordion">
-              <div class="panel panel-default">
-                <div class="panel-heading" (click)="mostrar_colapsable()">
-                  <h4 class="panel-title">
-                    <a>
-                      Especifique los días que se utilizarán dentro del periodo*:
-                    </a>
-                  </h4>
-                  <button type="button" title="Colapsable" class="collpase-button collapsed" ></button>
-                </div>
-                @if(colapsable){
-                <div class="panel-collapse collapse in" id="panel-01">
-                  <div class="panel-body">
-                    <crosslist [fechas]="selectRangoDias" [fechasSeleccionadas]="this.solicitudState.fechasSeleccionadas"  (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
-                  </div>
-                </div>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
-
-      <div formGroupName="despacho">
-        <div class="row">
-          <div class="col-md-4">
-            <input-check [datos]="despachoLDA"></input-check>
-          </div>
-          <div class="col-md-4">
-            <input-check [datos]="despachoDD"></input-check>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="aduanas" formControlName="idAduana" [label]="'Aduana'" [required]="true"
-              (change)="setValoresStore(despacho,'idAduana', 'setIdAduana')"></app-catalogo-select>
-          </div>
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
-              [label]="'Sección aduanera'" [required]="true"
-              (change)="setValoresStore(despacho,'idSeccionAduanera', 'setIdSeccionAduanera')"></app-catalogo-select>
-          </div>
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto"
-              [label]="'Nombre del recinto'" [required]="false" [isDisabled]="true"></app-catalogo-select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-4">
-            <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipo de operacion'"
-              [required]="true"
-              (change)="setValoresStore(despacho,'tipoOperacion', 'setTipoOperacion')"></app-catalogo-select>
-          </div>
-          <div class="col-md-4">
-            <label for="patente" class="form-label">Patente/Número de autorización:</label>
-            <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
-          </div>
-          <div class="col-md-4">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacionA"
-                formControlName="tipoEmpresaCertificada" (change)="
-                  setValoresStore(
-                    datosImportadorExportador,
-                    'tipoEmpresaCertificada',
-                    'setTipoEmpresaCertificada'
-                  )
-                " />
-              <label class="form-check-label" for="certificacionA">I.V.A e I.E.P.S Certificación A:</label>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa" id="certificacionAA"
-                formControlName="tipoEmpresaCertificada" (change)="
-                  setValoresStore(
-                    datosImportadorExportador,
-                    'tipoEmpresaCertificada',
-                    'setTipoEmpresaCertificada'
-                  )
-                " />
-              <label class="form-check-label" for="certificacionAA">I.V.A e I.E.P.S Certificación AA:</label>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aaa"
-                id="certificacionAAA" formControlName="tipoEmpresaCertificada" (change)="
-                  setValoresStore(
-                    datosImportadorExportador,
-                    'tipoEmpresaCertificada',
-                    'setTipoEmpresaCertificada'
-                  )
-                " />
-              <label class="form-check-label" for="certificacionAAA">I.V.A e I.E.P.S Certificación AAA:</label>
-            </div>
-          </div>
-        </div>
-
         <div class="col-md-6">
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="socioComercial"
-                formControlName="socioComercial" (change)="checkIdSocioComercial()" />
-              <label class="form-check-label" for="socioComercial">Socio comercial</label>
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacion_a"
+                formControlName="tipoEmpresaCertificada"
+                (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
+              <label class="form-check-label" for="certificacion_a">I.V.A e I.E.P.S Certificación A:</label>
             </div>
           </div>
-
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="certificacionOEA"
-                formControlName="certificacionOEA" (change)="
-                  setValoresStore(
-                    datosImportadorExportador,
-                    'certificacionOEA',
-                    'setCertificacionOEA'
-                  )
-                " />
-              <label class="form-check-label" for="certificacionOEA">Operador económico autorizado</label>
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa"
+                id="certificacion_aa" formControlName="tipoEmpresaCertificada"
+                (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
+              <label class="form-check-label" for="certificacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
             </div>
           </div>
-
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="revision" formControlName="revision"
-                (change)="
-                  setValoresStore(
-                    datosImportadorExportador,
-                    'revision',
-                    'setRevision'
-                  )
-                " />
-              <label class="form-check-label" for="revision">Revisión en origen</label>
+              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="oea"
+                id="certificacion_oea" formControlName="tipoEmpresaCertificada"
+                (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
+              <label class="form-check-label" for="certificacion_oea">I.V.A e I.E.P.S Certificación AAA:</label>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row mt-3">
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="idSocioComercial">ID Socio comercial @if(isRequired()) {*}:
-            </label>
-            <input class="form-control" id="idSocioComercial" placeholder="" type="text"
-              formControlName="idSocioComercial" [ngClass]="
-                isValid(datosImportadorExportador, 'idSocioComercial')
-                  ? 'required'
-                  : ''
-              " (change)="
-                setValoresStore(
-                  datosImportadorExportador,
-                  'idSocioComercial',
-                  'setIdSocioComercial'
-                )
-              " />
-            @if(isValid(datosImportadorExportador,'idSocioComercial')) {
-            <div class="mensaje-error">Campo requerido</div>
-            }
-          </div>
-        </div>
-      </div>
     </div>
+
+
+
 
     <ng-titulo titulo="Datos del servicio" />
     <div formGroupName="datosServicio">
@@ -433,7 +263,8 @@
               @if(colapsable){
               <div class="panel-collapse collapse in" id="panel-01">
                 <div class="panel-body">
-                  <crosslist [fechas]="selectRangoDias" [fechasSeleccionadas]="solicitudState.fechasSeleccionadas" (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
+                  <crosslist [fechas]="selectRangoDias" [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+                    (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
                 </div>
               </div>
               }
@@ -607,7 +438,8 @@
       </div>
       @if (vehiculo.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value" (datosTabla)="changeAgregarVehiculo($event)" [tablaTransporte]="itemsVehiculo.value" ></lib-agregar-transporte>
+        <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"
+          (datosTabla)="changeAgregarVehiculo($event)" [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
       </div>
       }
     </div>
