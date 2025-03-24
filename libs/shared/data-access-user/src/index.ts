@@ -121,6 +121,7 @@ export * from './tramites/pages/firma-page/firma-page.component';
 export * from './tramites/components/encabezado-requerimiento/encabezado-requerimiento.component';
 export * from './tramites/components/requerimiento-informacion/requerimiento-informacion.component';
 export * from './tramites/components/acuse/acuse.component';
+export * from './tramites/components/bandeja/bandeja.component';
 
 export * from './core/models/shared/configuracion-columna.model';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';

@@ -7,6 +7,7 @@ import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendien
 import { AutorizarDictamenComponent } from './autorizar-dictamen/autorizar-dictamen.component';
 import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
 import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
+import { ConsultaComponent } from './consulta/consulta.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'autorizar-dictamen',
     component: AutorizarDictamenComponent,
+  },
+  {
+    path: 'consulta',
+    component: ConsultaComponent,
   },
 
 ];

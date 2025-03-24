@@ -1,0 +1,28 @@
+<div class="row mt-5">
+    <div class="col-md-12">
+        <table class="table table-responsive">
+        <thead>
+            <tr>
+            <th>Nombre de la tarea</th>
+            <th>Nombre del usuario al que se le asignó la tarea</th>
+            <th>Clave de usuario al que se le asignó la tarea</th>
+            <th>Fecha de asignación</th>
+            <th>Fecha de atención</th>        
+            </tr>
+        </thead>
+        <tbody>
+            @for (item of documentosCargados; track item.nombreTarea; let i = $index) {
+            <tr>
+            <!-- <td> {{i+1}} </td> -->
+            <td>{{ item.nombreTarea}}</td>
+            <td>{{ item.nombreUsuarioAsignado}}</td>
+            <td>{{ item.claveUsuarioAsignado}}</td>
+            <td>{{ item.fechaAsignacion}}</td>
+            <td>{{ item.fechaAtencion}}</td>
+            <!-- <td> <i class="bi bi-check-circle bi-c"></i></td> --> 
+            </tr>
+            }
+        </tbody>
+        </table>    
+    </div>
+</div>
