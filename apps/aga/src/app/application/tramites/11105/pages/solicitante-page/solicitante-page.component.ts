@@ -1,11 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { Chofer40102Store, Choferesnacionales40102State } from '../../estados/tramite40102.store';
-import { Chofer40102Query } from '../../estados/tramite40102.query';
-import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
+import { Subject} from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -36,11 +33,6 @@ export class SolicitantePageComponent {
   indice: number = 1;
 
   /**
-   * Estado de la sección de choferes nacionales.
-   */
-  public seccion!: Choferesnacionales40102State;
-
-  /**
    * Notificador para destruir las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -65,10 +57,7 @@ export class SolicitantePageComponent {
    * @param chofer40102Query - Servicio para consultar el estado de choferes.
    * @param chofer40102Store - Servicio para gestionar el estado de choferes.
    */
-  constructor(
-    private chofer40102Query: Chofer40102Query,
-    private chofer40102Store: Chofer40102Store
-  ) {}
+  constructor() {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -81,16 +70,6 @@ export class SolicitantePageComponent {
       }
       return paso;
     });
-    this.chofer40102Query.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.asignarSecciones();
   }
 
   /**
@@ -114,20 +93,5 @@ export class SolicitantePageComponent {
         this.wizardComponent.atras();
       }
     }
-  }
-
-  /**
-   * Método para asignar las secciones existentes al store.
-   */
-  private asignarSecciones() {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
-      formaValida.push(false);
-    }
-    this.chofer40102Store.establecerSeccion(secciones);
-    this.chofer40102Store.establecerFormaValida(formaValida);
   }
 }

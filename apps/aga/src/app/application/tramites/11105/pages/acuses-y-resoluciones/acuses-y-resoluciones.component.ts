@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 
 
 export const FECHA_INICIO = {
@@ -23,16 +23,16 @@ export const FECHA_FINAL = {
   templateUrl: './acuses-y-resoluciones.component.html',
   styleUrl: './acuses-y-resoluciones.component.scss',
 })
-export class BandejaPendientesComponent {
+export class AcusesYResolucionesComponent {
 
-   public FormBusqueda!: FormGroup;
+   public acusesYResolucionesFormGroup!: FormGroup;
     public fechaInicioInput: InputFecha = FECHA_INICIO;
     public fechaFinalInput: InputFecha = FECHA_FINAL;
   
     public constructor(
       protected readonly formBuilder: FormBuilder,
     ) {
-      this.FormBusqueda = this.inicializaFormulario();
+      this.acusesYResolucionesFormGroup = this.inicializaFormulario();
     }
   
     /**
@@ -49,13 +49,13 @@ export class BandejaPendientesComponent {
     }
   
     public cambioFechaInicio(nuevo_valor: string) {
-      this.FormBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
-      this.FormBusqueda.get('fechaInicio')?.markAsUntouched();
+      this.acusesYResolucionesFormGroup.get('fechaInicio')?.setValue(nuevo_valor);
+      this.acusesYResolucionesFormGroup.get('fechaInicio')?.markAsUntouched();
     }
   
     public cambioFechaFinal(nuevo_valor: string) {
-      this.FormBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
-      this.FormBusqueda.get('fechaFinal')?.markAsUntouched();
+      this.acusesYResolucionesFormGroup.get('fechaFinal')?.setValue(nuevo_valor);
+      this.acusesYResolucionesFormGroup.get('fechaFinal')?.markAsUntouched();
     }
 
 }

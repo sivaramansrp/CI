@@ -1,16 +1,11 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 
 export const ROUTES_TERRESTRE: Routes = [
   {
-    path: 'solicitante',
+    path: 'retirada-de-la-autorización-de-donacione',
     component: SolicitantePageComponent,
-  },
-  {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'solicitante',
   },
 ];
 
