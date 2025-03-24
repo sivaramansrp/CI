@@ -26,7 +26,9 @@ export class Tramite130202Query extends Query<Tramite130202State> {
   usoEspecifico$=this.select(state=>state.usoEspecifico)
   justificacionImportacionExportacion$=this.select(state=>state.justificacionImportacionExportacion)
   observaciones$=this.select(state=>state.observaciones)
-
+  entidad$=this.select(state=>state.entidad)
+  representacion$=this.select(state=>state.representacion)
+  
   mercanciaState$ = this.select(state => ({
     producto: state.producto,
     descripcion: state.descripcion,

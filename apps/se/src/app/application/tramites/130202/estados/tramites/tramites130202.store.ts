@@ -154,42 +154,24 @@ public setValorPartidaUSDPartidasDeLaMercancia(valorPartidaUSDPartidasDeLaMercan
     valorPartidaUSDPartidasDeLaMercancia,
   }));
 }
-public setBloque(bloque: string): void { 
-  this.update((state) => ({
-    ...state,
-    bloque,
-  }));
-}
-public setUsoEspecifico(usoEspecifico: string): void { 
-  this.update((state) => ({
-    ...state,
-    usoEspecifico,
-  }));
-}
-public setJustificacionImportacionExportacion(justificacionImportacionExportacion: string): void { 
-  this.update((state) => ({
-    ...state,
-    justificacionImportacionExportacion,
-  }));
-}
-public setObservaciones(observaciones: string): void { 
-  this.update((state) => ({
-    ...state,
-    observaciones,
-  }));
-}
-public setEntidad(entidad: string): void { 
-  this.update((state) => ({
-    ...state,
-    entidad,
-  }));
-}
-public setRepresentacion(representacion: string): void { 
-  this.update((state) => ({
-    ...state,
-    representacion,
-  }));
-}
+setBloque(bloque:string):void{
+  this.update({bloque})
+ }
+ setUsoEspecifico(usoEspecifico:string):void{
+  this.update({usoEspecifico})
+ }
+ setJustificacionImportacionExportacion(justificacionImportacionExportacion:string):void{
+  this.update({justificacionImportacionExportacion})
+ }
+ setObservaciones(observaciones:string):void{
+  this.update({observaciones})
+ }
+public setEntidad(entidad:string): void{
+  this.update({entidad})
+ }
+ public setRepresentacion(representacion:string): void{
+  this.update({representacion})
+ }
 storeTableValues(fila: null): void {
   this.update({
     filaSeleccionada: fila,
