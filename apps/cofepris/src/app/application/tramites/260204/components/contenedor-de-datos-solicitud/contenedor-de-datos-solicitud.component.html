@@ -1,1 +1,4 @@
-<app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+<app-datos-de-la-solicitud [scianConfig]="scianConfig"
+[tablaMercanciasConfig]="tablaMercanciasConfig" (scianSeleccionado)="scianSeleccionado($event)"
+(mercanciasSeleccionado)="mercanciasSeleccionado($event)"
+(datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"></app-datos-de-la-solicitud>

@@ -34,8 +34,52 @@ export interface ScianConfig<T> {
     datos: T[];
 }
 
+export interface TablaMercanciasConfig<T> {
+    tipoSeleccionTabla: TablaSeleccion;
+    configuracionTabla: ConfiguracionColumna<T>[];
+    datos: T[];
+}
+
 export enum TablaSeleccion {
     CHECKBOX = 'CHECKBOX',
     RADIO = 'RADIO',
     UNDEFINED = 'undefined',
+  }
+
+  export interface TablaMercanciasDatos {
+    clasificacionProducto: string;
+    especificarClasificacionProducto: string;
+    denominacionEspecificaProducto: string;
+    denominacionDistintiva: string;
+    denominacionComun: string;
+    formaFarmaceutica: string;
+    estadoFisico: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    unidadMedidaComercializacion: string;
+    cantidadUMC: string;
+    unidadMedidaTarifa: string;
+    cantidadUMT: string;
+    presentacion: string;
+    numeroRegistroSanitario: string;
+    paisOrigen: string;
+    paisProcedencia: string;
+    tipoProducto: string;
+    usoEspecifico: string;
+  }
+
+  export interface DatosDeTablaSeleccionados {
+    scianSeleccionados: TablaScianConfig[];
+    mercanciasSeleccionados: TablaMercanciasDatos[];
+  }
+
+  /**
+ * Interfaz que representa las etiquetas de la lista cruzada.
+ * 
+ * @property {string} tituluDeLaIzquierda - El título de la izquierda.
+ * @property {string} derecha - El valor de la derecha.
+ */
+export interface CrossListLable {
+    tituluDeLaIzquierda: string;
+    derecha: string;
   }

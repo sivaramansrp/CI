@@ -1,4 +1,4 @@
-import { TablaScianConfig } from "../models/datos-solicitud.model";
+import { TablaMercanciasDatos, TablaScianConfig } from "../models/datos-solicitud.model";
 
 export const SCIAN_TABLA = [
     {
@@ -30,4 +30,137 @@ export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row">
 </div>`;
 
 
+/**
+ * Represents a constant array `PRODUCTO_TABLA` that defines the structure of a product table.
+ * Each object in the array contains the following properties:
+ * 
+ * - `encabezado`: A string representing the header of the column.
+ * - `clave`: A function that takes an object of type `TablaMercanciasDatos` and returns the value of the corresponding key.
+ * - `orden`: A number representing the order of the column in the table.
+ * 
+ * @constant
+ * @type {Array<{ encabezado: string; clave: (ele: TablaMercanciasDatos) => any; orden: number }>}
+ */
+export const PRODUCTO_TABLA = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.clasificacionProducto, // Reemplaza 'ele.clasificacionProducto' con la clave correcta
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar clasificación del producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.especificarClasificacionProducto, // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específica del producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    orden: 3,
+  },
+  {
+    encabezado: 'Denominación distintiva',
+    clave: (ele: TablaMercanciasDatos): string => ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
+    orden: 4,
+  },
+  {
+    encabezado: 'Denominación común, nombre común o nombre científico',
+    clave: (ele: TablaMercanciasDatos): string => ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
+    orden: 5,
+  },
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado físico',
+    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
+    orden: 7,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: TablaMercanciasDatos): string => ele.fraccionArancelaria, // Reemplaza 'ele.fraccionArancelaria' con la clave correcta
+    orden: 8,
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (ele: TablaMercanciasDatos): string => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    orden: 9,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+    orden: 10,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
+    orden: 11,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    orden: 12,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    orden: 13,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.presentacion' con la clave correcta
+    orden: 14,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
+    orden: 15,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisOrigen, // Reemplaza 'ele.paisOrigen' con la clave correcta
+    orden: 16,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (ele: TablaMercanciasDatos): string => ele.paisProcedencia, // Reemplaza 'ele.paisProcedencia' con la clave correcta
+    orden: 17,
+  },
+  {
+    encabezado: 'Tipo producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    orden: 18,
+  },
+  {
+    encabezado: 'Uso especifico',
+    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
+    orden: 19,
+  },
+];
 
+/** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
+export const CONTINUAR: string = "t";
+
+export const CROSLISTA_DE_PAISES: string[] = [
+  "AFGANISTÁN (EMIRATO ISLÁMICO)",
+  "ALBANIA (REPÚBLICA DE)",
+  "ALEMANIA (REPÚBLICA FEDERAL DE)",
+  "ANDORRA (PRINCIPADO DE)",
+  "ANGOLA (REPÚBLICA DE)",
+  "ANGUILLA",
+  "ANTIGUA Y BARBUDA",
+  "ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)",
+  "ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)",
+  "ARGENTINA (REPÚBLICA)",
+  "AUSTRALIA (COMMONWEALTH OF)",
+  "AUSTRIA (REPUBLIC OF)",
+  "BAHAMAS (COMMONWEALTH OF THE)",
+  "BAHRAIN (KINGDOM OF)",
+  "BANGLADESH (PEOPLE'S REPUBLIC OF)",
+  "BARBADOS",
+  "BELGIUM (KINGDOM OF)",
+  "BELIZE",
+  "BENIN (REPUBLIC OF)",
+  "BHUTAN (KINGDOM OF)"
+];

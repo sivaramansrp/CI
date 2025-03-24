@@ -1,12 +1,13 @@
 
+import { ActivatedRoute, Router } from '@angular/router';
+import { Catalogo, DatosDeTablaSeleccionados, TablaMercanciasConfig, TablaMercanciasDatos } from '../../models/datos-solicitud.model';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ALERTA_DE_MANIFESTO_Y_DECLARACIONES } from '../../constantes/datos-solicitud.enum';
 import { AbstractControl } from '@angular/forms';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '../../models/datos-solicitud.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ScianConfig } from '../../models/datos-solicitud.model';
@@ -25,6 +26,11 @@ import { tap } from 'rxjs';
 export class DatosDeLaSolicitudComponent implements OnInit {
 
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
+  @Input() public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
+  
+  @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> = new EventEmitter<TablaScianConfig[]>();
+  @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> = new EventEmitter<TablaMercanciasDatos[]>();
+  @Output() datosDeTablaSeleccionados: EventEmitter<DatosDeTablaSeleccionados> = new EventEmitter<DatosDeTablaSeleccionados>();
 
   public datosSolicitudForm!: FormGroup;
   public estadoDatos: Catalogo[] = [];
@@ -38,9 +44,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   public infoAlert = 'alert-info';
   public manifiestosCasillaDeVerificacion = false;
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES
+  public tablaMercanciasLista: TablaMercanciasDatos[] = [];
+  public scianLista: TablaScianConfig[] = [];
 
-
-  constructor(public fb:FormBuilder) { }
+  constructor(public fb:FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.datosSolicitudForm = this.fb.group({
@@ -106,6 +113,58 @@ export class DatosDeLaSolicitudComponent implements OnInit {
           apellidoMaterno: 'PINAL'
         });
       }
+  }
+
+  eliminarScian(): void {
+    this.scianConfig.datos = this.scianConfig.datos.filter((idx: TablaScianConfig) =>{
+      return !this.scianLista.some((idx2: TablaScianConfig) => idx2.clave === idx.clave);
+    });
+    if(this.scianSeleccionado){
+      this.scianSeleccionado.emit(this.scianConfig.datos);
+    }
+  }
+
+  eliminarMercancias(): void {
+    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) =>{
+      return !this.tablaMercanciasLista.some((idx2: TablaMercanciasDatos) => idx2.clasificacionProducto === idx.clasificacionProducto);
+    });
+    if(this.mercanciasSeleccionado){
+      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+    }  
+  }
+
+  
+  /**
+   * Navega a la ruta de acciones
+   * @param accionesPath
+   */
+  navigateToAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
+  }
+
+  agregarScian(): void {
+    this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
+    if(this.scianSeleccionado){
+      this.scianSeleccionado.emit(this.scianConfig.datos);
+    }
+    this.navigateToAcciones('../scian-selecion');
+  }
+
+  agregarMercancias(): void {
+    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(this.tablaMercanciasLista);
+    if(this.mercanciasSeleccionado){
+      this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
+    }
+    this.navigateToAcciones('../mercancia-datos');
+  }
+
+  modificarDatos(): void {
+  this.datosDeTablaSeleccionados.emit({
+    scianSeleccionados: this.scianLista,
+    mercanciasSeleccionados: this.tablaMercanciasLista
+  });
   }
   
 }
