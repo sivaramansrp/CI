@@ -22,12 +22,12 @@ export class TercerosRelacionadosService {
   /**
    * @property {string} dataTableLink - Path to the JSON file containing manufacturer table data.
    */
-  dataTableLink = 'assets/json/260911/datos-de-tabla.json'; // Updated path
+  dataTableLink = 'assets/json/260904/datos-de-tabla.json'; // Updated path
 
   /**
    * @property {string} destinatarioTableLink - Path to the JSON file containing recipient table data.
    */
-  destinatarioTableLink = 'assets/json/260911/destinatario-de-tabla.json'; // Updated path
+  destinatarioTableLink = 'assets/json/260904/destinatario-de-tabla.json'; // Updated path
 
   /**
    * @constructor

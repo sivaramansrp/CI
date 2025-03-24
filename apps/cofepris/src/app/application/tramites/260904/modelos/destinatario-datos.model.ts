@@ -1,5 +1,5 @@
 export interface DestinatarioCapturarColumns {
-
+ 
     Nombre_denominación_o_razón_social: string;
     r_f_c: string;
     curp: string;
@@ -17,3 +17,87 @@ export interface DestinatarioCapturarColumns {
     Código_postal: string;
     Colonia_o_equivalente: string;
 }
+ 
+export const DESTINATARIO_TABLE_COLUMNS =
+[
+    {
+      encabezado: 'Nombre/denominación o razón social',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Nombre_denominación_o_razón_social,
+      orden: 1
+    },
+    {
+      encabezado: 'R.F.C.',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.r_f_c,
+      orden: 2,
+    },
+    {
+      encabezado: 'CURP',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.curp,
+      orden: 3,
+    },
+    {
+      encabezado: 'Teléfono',
+      clave: (fila:DestinatarioCapturarColumns): number => fila.teléfono,
+      orden: 4,
+    },
+    {
+      encabezado: 'Correo electrónico',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.correo_electrónico,
+      orden: 5,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.calle,
+      orden: 6,
+    },
+    {
+      encabezado: 'Número exterior',
+      clave: (fila:DestinatarioCapturarColumns): number => fila.número_exterior,
+      orden: 7,
+    },
+    {
+      encabezado: 'Número interior',
+      clave: (fila:DestinatarioCapturarColumns): number => fila.número_interior,
+      orden: 8,
+    },
+    {
+      encabezado: 'País',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.País,
+      orden: 9,
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Colonia,
+      orden: 10,
+    },
+    {
+      encabezado: 'Municipio o alcaldía',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Municipio_o_alcaldía,
+      orden: 11,
+    },
+    {
+      encabezado: 'Localidad',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Localidad,
+      orden: 12,
+    },
+    {
+      encabezado: 'Entidad federativa',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Entidad_federativa,
+      orden: 13,
+    },
+    {
+      encabezado: 'Estado/localidad',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Estado_localidad,
+      orden: 14,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Código_postal,
+      orden: 15,
+    },
+    {
+      encabezado: 'Colonia o equivalente',
+      clave: (fila:DestinatarioCapturarColumns):string => fila.Colonia_o_equivalente,
+      orden: 16,
+    },
+  ];
