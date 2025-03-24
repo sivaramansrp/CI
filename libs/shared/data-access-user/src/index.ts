@@ -1,5 +1,3 @@
-import { from } from 'rxjs';
-
 export * from './core/ambientes';
 export * from './core/enums/forma-render.enum';
 export * from './core/enums/forma-validators.enum';

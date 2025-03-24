@@ -213,7 +213,7 @@
                 @if(colapsable){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
-                    <crosslist [fechas]="selectRangoDias"></crosslist>
+                    <crosslist  (fechasSeleccionadasChange)="changeCrosslist($event)"></crosslist>
                   </div>
                 </div>
                 }
