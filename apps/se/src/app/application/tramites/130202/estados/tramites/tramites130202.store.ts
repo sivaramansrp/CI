@@ -12,11 +12,27 @@ export interface Tramite130202State {
   defaultSelect: string;
   defaultProducto: string;
   regimen:string;
-  classification:string
+  classification:string;
+  filaSeleccionada: null;
+  cantidadPartidasDeLaMercancia: string;
+   valorPartidaUSDPartidasDeLaMercancia: number;
+   descripcionPartidasDeLaMercancia: string;
+  // fraccion: string;
+  valorFacturaUSD: string;
+  // unidadMedida: string;
+  bloque: string;
+  usoEspecifico: string;
+  justificacionImportacionExportacion: string;
+  observaciones: string;
+  entidad: string;
+  representacion: string;
+  mostrarTabla: boolean;
 }
 
 export function createInitialState(): Tramite130202State {
   return {
+    filaSeleccionada: null,
+    mostrarTabla: false,
     solicitud: '', 
     fraccion: '',
     defaultSelect: 'Inicial',
@@ -27,7 +43,17 @@ export function createInitialState(): Tramite130202State {
     unidadMedida:'',
     defaultProducto: 'Nuevo',
     regimen: '',
-    classification: ''
+    classification: '',
+    cantidadPartidasDeLaMercancia: '',
+     valorPartidaUSDPartidasDeLaMercancia: 0,
+     descripcionPartidasDeLaMercancia: '',
+    valorFacturaUSD:'',
+    bloque:'',
+    usoEspecifico:'',
+    justificacionImportacionExportacion:'',
+    observaciones:'',
+    entidad:'',
+    representacion:'',
   };
 }
 
@@ -95,4 +121,78 @@ updateDefaultProducto(defaultProducto: string): void {
  setclasificacion(classification:string):void{
   this.update({classification})
  }
+ setMostrarTabla(mostrar: boolean): void {
+  this.update({ mostrarTabla: mostrar });
+}
+public setValorFacturaUSD(valorFacturaUSD: string): void { 
+  this.update((state) => ({
+    ...state,
+    valorFacturaUSD,
+  }));
+}public setDescripcionPartidasDeLaMercancia(descripcionPartidasDeLaMercancia: string) : void {
+  this.update((state) => ({
+    ...state,
+    descripcionPartidasDeLaMercancia,
+  }));
+}
+
+public setCantidadPartidasDeLaMercancia(cantidadPartidasDeLaMercancia: string): void {
+  this.update((state) => ({
+    ...state,
+    cantidadPartidasDeLaMercancia,
+  }));
+}
+public setvalorPartidaUSD(valorPartidaUSD: number) : void {
+  this.update((state) => ({
+    ...state,
+    valorPartidaUSD,
+  }));
+}
+public setValorPartidaUSDPartidasDeLaMercancia(valorPartidaUSDPartidasDeLaMercancia: number): void { 
+  this.update((state) => ({
+    ...state,
+    valorPartidaUSDPartidasDeLaMercancia,
+  }));
+}
+public setBloque(bloque: string): void { 
+  this.update((state) => ({
+    ...state,
+    bloque,
+  }));
+}
+public setUsoEspecifico(usoEspecifico: string): void { 
+  this.update((state) => ({
+    ...state,
+    usoEspecifico,
+  }));
+}
+public setJustificacionImportacionExportacion(justificacionImportacionExportacion: string): void { 
+  this.update((state) => ({
+    ...state,
+    justificacionImportacionExportacion,
+  }));
+}
+public setObservaciones(observaciones: string): void { 
+  this.update((state) => ({
+    ...state,
+    observaciones,
+  }));
+}
+public setEntidad(entidad: string): void { 
+  this.update((state) => ({
+    ...state,
+    entidad,
+  }));
+}
+public setRepresentacion(representacion: string): void { 
+  this.update((state) => ({
+    ...state,
+    representacion,
+  }));
+}
+storeTableValues(fila: null): void {
+  this.update({
+    filaSeleccionada: fila,
+  });
+}
 }

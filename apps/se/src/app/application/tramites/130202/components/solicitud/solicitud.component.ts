@@ -5,9 +5,9 @@ import {
   ProductoResponse,
 } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 import { Tramite130202Query } from '../../estados/queries/tramite130202.query';
@@ -15,7 +15,12 @@ import { Tramite130202Store } from '../../estados/tramites/tramites130202.store'
 import fractionValues from '@libs/shared/theme/assets/json/130202/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130202/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
-
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
+import { PartidasDeLaComponent } from '../../../../shared/components/partidas-de-la/partidas-de-la.component';
+import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
+import { TEXTOS } from '../../../130202/enums/representacion-federal.enum';
 /**
  * @description Componente para gestionar la solicitud de mercancías.
  * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
@@ -26,6 +31,14 @@ import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json'
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+
+    /**
+   * form
+   * Formulario reactivo principal para capturar los datos de la solicitud.
+   */
+    partidasDelaMercanciaForm!: FormGroup;
+
   /**
    * @description Formulario reactivo para los datos del trámite.
    */
@@ -35,6 +48,52 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Formulario reactivo para los detalles de la mercancía.
    */
   mercanciaForm!: FormGroup;
+   
+
+  /**
+   * formForTotalCount
+   * Formulario reactivo para capturar los totales de las partidas.
+   */
+  formForTotalCount!: FormGroup;
+  // Add compodoc
+  paisForm!:FormGroup;
+  frmRepresentacionForm!:FormGroup;
+
+  /**
+   * tableHeaderData
+   * Configuración de las columnas de la tabla dinámica.
+   */
+  tableHeaderData: ConfiguracionColumna<any>[] = [];
+
+  /**
+   * tableBodyData
+   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   */
+  tableBodyData: any[] = [];
+
+  /**
+   * mostrarTabla
+   * Bandera para mostrar u ocultar la tabla dinámica.
+   */
+  mostrarTabla = false;
+
+  /**
+   * CHECKBOX
+   * Tipo de selección de la tabla dinámica (checkbox).
+   */
+  CHECKBOX = TablaSeleccion.CHECKBOX;
+
+  /**
+   * getEstablecimientoTableData
+   * Datos de configuración de la tabla obtenidos de un archivo JSON.
+   */
+  public getEstablecimientoTableData = PartidasdelaTable;
+
+  /**
+   * filaSeleccionada
+   * Fila seleccionada en la tabla dinámica.
+   */
+  filaSeleccionada: any = null;
 
   /**
    * @description Opciones para el campo "producto".
@@ -52,6 +111,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Campos de entrada configurables para detalles adicionales.
    */
+  
   detosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
@@ -79,7 +139,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Sujeto para gestionar la destrucción de suscripciones.
    */
   private destroyed$ = new Subject<void>();
-
+  // add compodoc 
+  paisProc: Catalogo[] = [];
+  paisesPorBloque: Catalogo[] = [];
+  entidadFederativa: Catalogo[] = [];
+  representacionFederal: Catalogo[] = [];
+  selectRangoDias: string[] = [];
+  TEXTOS = TEXTOS; 
+// **************************************************
   /**
    * @description Constructor que inyecta dependencias necesarias.
    * @param fb Constructor para formularios reactivos.
@@ -91,7 +158,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private http: HttpClient,
     private tramite130202Store: Tramite130202Store,
-    private tramite130202Query: Tramite130202Query
+    private tramite130202Query: Tramite130202Query,
+    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService,
   ) {
     //constructor
   }
@@ -102,6 +170,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.initializeForms();
     this.setupFormSubscriptions();
     this.fetchOptions();
+    this.formularioTotalCount();
+    this.getEstablecimiento();
+    this.calculateTotals();
+    this.fetchEntidadFederativa();
+    this.fetchRepresentacionFederal();
+    this.listaDePaisesDisponibles();
+
+
+    this.tramite130202Query.mostrarTabla$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((mostrarTabla) => {
+      this.mostrarTabla = mostrarTabla;
+    });
+
+    this.tramite130202Query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.partidasDelaMercanciaForm.patchValue({
+          cantidadPartidasDeLaMercancia: seccionState.cantidadPartidasDeLaMercancia,
+          valorPartidaUSDPartidasDeLaMercancia: seccionState.valorPartidaUSDPartidasDeLaMercancia,
+          descripcionPartidasDeLaMercancia: seccionState.descripcionPartidasDeLaMercancia,
+        });
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -125,20 +219,50 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       fraccion: ['', Validators.required],
+      // cantidad: [
+      //   '',
+      //   [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)],
+      // ],
+      // valorFacturaUSD: [
+      //   '',
+      //   [
+      //     Validators.required,
+      //     Validators.pattern(/^\d+(\.\d{1,2})?$/),
+      //     Validators.min(0.01),
+      //   ],
+      // ],
       cantidad: [
         '',
-        [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)],
-      ],
-      valorFacturaUSD: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^\d+(\.\d{1,2})?$/),
-          Validators.min(0.01),
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),
+         Validators.min(1)
         ],
       ],
+ 
+      valorFacturaUSD: [
+        '',
+        [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.min(0.01)]
+      ],
+ 
       unidadMedida: ['', Validators.required],
     });
+    this.partidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.maxLength(18)]],
+      descripcionPartidasDeLaMercancia: ['', [Validators.required, Validators.maxLength(255)]],
+      valorPartidaUSDPartidasDeLaMercancia: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'), Validators.maxLength(20)]],
+    });
+
+    this.paisForm = this.fb.group({
+      bloque: [''],
+      usoEspecifico: ['', Validators.required],
+      justificacionImportacionExportacion: ['', [Validators.required]],
+      observaciones: [''],
+    });
+    this.frmRepresentacionForm = this.fb.group({
+      entidad: ['', Validators.required],
+      representacion: ['', Validators.required],
+    });
+
   }
   /**
    * @description Configura las suscripciones para actualizar formularios y almacenar estados.
@@ -182,6 +306,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         );
       });
 
+      this.tramite130202Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.paisForm.patchValue({
+            bloque: seccionState.bloque,
+            usoEspecifico: seccionState.usoEspecifico,
+            justificacionImportacionExportacion:
+              seccionState.justificacionImportacionExportacion,
+            observaciones: seccionState.observaciones,
+          });
+        })
+      )
+      .subscribe();
+      this.tramite130202Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.frmRepresentacionForm.patchValue({
+            entidad: seccionState.entidad,
+            representacion: seccionState.representacion,
+          });
+        })
+      )
+      .subscribe(); 
+
+
     this.formDelTramite.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe((value) => {
@@ -205,6 +356,41 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         });
       });
   }
+ /**
+   * formularioTotalCount
+   * Crea el formulario reactivo para capturar los totales de las partidas.
+   */
+ formularioTotalCount(): void {
+  this.formForTotalCount = this.fb.group({
+    cantidadTotal: [{ value: '', disabled: true }],
+    valorTotalUSD: [{ value: '', disabled: true }],
+  });
+}
+
+
+  /**
+   * getEstablecimiento
+   * Configura los datos de la tabla dinámica a partir de un archivo JSON.
+   */
+  getEstablecimiento(): void {
+    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map((header, index) => ({
+      encabezado: header,
+      clave: (fila: any): string => fila.tbodyData[index],
+      orden: index,
+    }));
+    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
+  }
+
+ /**
+   * calculateTotals
+   * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
+   */
+ calculateTotals(): void {
+  const CANTITAD_TOTAL = this.tableBodyData.reduce((sum: number, item: { tbodyData: string[] }) => sum + parseFloat(item.tbodyData[0]), 0);
+  const VALOR_TOTALUSD = this.tableBodyData.reduce((sum: number, item: { tbodyData: string[] }) => sum + parseFloat(item.tbodyData[5]), 0);
+  this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
+  this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
+}
 
   /**
    * @description Solicita opciones configurables para los formularios desde archivos JSON.
@@ -237,6 +423,79 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+    /**
+   * handleFilaSeleccionada
+   * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
+   * Lista de filas seleccionadas.
+   */
+    handleFilaSeleccionada(filasSeleccionadas: any[]): void {
+      this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas[0] : null;
+      if (this.filaSeleccionada) {
+        this.tramite130202Store.storeTableValues(this.filaSeleccionada);
+      }
+    }
+
+     /**
+   * validarYEnviarFormulario
+   * Valida el formulario y muestra la tabla dinámica si es válido.
+   */
+  validarYEnviarFormulario(): void {
+    this.mostrarTabla = true;
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    } else {
+      this.mostrarTabla = true;
+    }
+  }
+
+   /**
+   * navegarParaModificarPartida
+   * Navega para modificar una partida específica y actualiza el estado global.
+   */
+   navegarParaModificarPartida(): void {
+    if (this.filaSeleccionada) {
+      this.tramite130202Store.setMostrarTabla(true);
+      this.tramite130202Store.storeTableValues(this.filaSeleccionada);
+    }
+  }
+
+  fetchEntidadFederativa(): void {
+    this.exportacionMineralesDeHierroService
+    .getEntidadFederativa()
+    .subscribe((data) => {
+      this.entidadFederativa = data;
+    });
+  }
+
+  fetchRepresentacionFederal(): void {
+    this.exportacionMineralesDeHierroService
+    .getRepresentacionFederal()
+    .subscribe((data) => {
+      this.representacionFederal = data;
+    });
+  }
+  listaDePaisesDisponibles(): void {
+    this.exportacionMineralesDeHierroService
+      .getListaDePaisesDisponibles()
+      .subscribe((data) => {
+        this.paisProc = data;
+      });
+  }
+  fetchPaisesPorBloque(_bloqueId: number): void {
+    this.exportacionMineralesDeHierroService
+      .getPaisesPorBloque(_bloqueId)
+      .subscribe((data) => {
+        this.paisesPorBloque = data;
+        console.log(this.paisesPorBloque);
+        this.selectRangoDias = this.paisesPorBloque.map(
+          (pais: Catalogo) => pais.descripcion
+        );
+      });
+  }
+  enCambioDeBloque(bloqueId: number): void {
+    this.fetchPaisesPorBloque(bloqueId);
+  }
+
   /**
    * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
    * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
@@ -247,11 +506,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     metodoNombre: string;
   }): void {
     const VALOR = event.form.get(event.campo)?.value;
+    // if (event.metodoNombre in this.tramite130202Store) {
+    //   const METODO_NOMBRE = event.metodoNombre as keyof Tramite130202Store;
+    //   (this.tramite130202Store[METODO_NOMBRE] as (value: any) => void)(VALOR);
+    // }else{
     switch (event.metodoNombre) {
       case 'updateSolicitud':
         this.tramite130202Store.updateSolicitud(VALOR);
         break;
-      case 'setregimen':
+      case 'setDescripcionPartidasDeLaMercancia':
+        this.tramite130202Store.setDescripcionPartidasDeLaMercancia(VALOR)
+        break;
+
+        case 'setCantidadPartidasDeLaMercancia':
+          this.tramite130202Store.setCantidadPartidasDeLaMercancia(VALOR)
+          break;
+          case 'setValorPartidaUSDPartidasDeLaMercancia':
+            this.tramite130202Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR)
+            break;
+          case 'setregimen':
         this.tramite130202Store.setregimen(VALOR);
         break;
       case 'setclasificacion':
@@ -279,7 +552,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         );
     }
   }
-
+  
   /**
    * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */

@@ -4,17 +4,28 @@ import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
 export class Tramite130202Query extends Query<Tramite130202State> {
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+  mostrarTabla$ = this.select((state) => state.mostrarTabla);
+  filaSeleccionada$ = this.select(state => state.filaSeleccionada);
   solicitud$ = this.select(state => state.solicitud);
   fraccion$ = this.select(state => state.fraccion);
   producto$ = this.select(state => state.producto);
-  descripcion$ = this.select(state => state.descripcion);
-  cantidad$ = this.select(state => state.cantidad);
-  valorPartidaUSD$ = this.select(state => state.valorPartidaUSD);
+  // descripcion$ = this.select(state => state.descripcion);
+  descripcionPartidasDeLaMercancia$ = this.select(state => state.descripcionPartidasDeLaMercancia);
+  cantidadPartidasDeLaMercancia$ = this.select(state => state. cantidadPartidasDeLaMercancia);
+  valorPartidaUSDPartidasDeLaMercancia$ = this.select(state => state.valorPartidaUSDPartidasDeLaMercancia);
+  // cantidad$ = this.select(state => state.cantidad);
   unidadMedida$ = this.select(state => state.unidadMedida);
   defaultSelect$ = this.select(state => state.defaultSelect);
   defaultProducto$ = this.select(state => state.defaultProducto);
   classification$ =this.select(state =>state.classification)
   regimen$=this.select(state=>state.regimen)
+  bloque$=this.select(state=>state.bloque)
+  usoEspecifico$=this.select(state=>state.usoEspecifico)
+  justificacionImportacionExportacion$=this.select(state=>state.justificacionImportacionExportacion)
+  observaciones$=this.select(state=>state.observaciones)
 
   mercanciaState$ = this.select(state => ({
     producto: state.producto,

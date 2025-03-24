@@ -3,7 +3,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule,
@@ -74,7 +74,7 @@ export class PaisProcendenciaComponent {
 @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
 /**
  * Configuración de los botones para la gestión de la selección de países.
- * @type {Array<{ btnNombre: string; class: string; funcion: () => void }>}
+ * 
  */
 campoDeBotones = [
   {
@@ -90,7 +90,7 @@ campoDeBotones = [
     class: 'btn-primary',
     /**
      * Función para agregar todos los elementos.
-     * @type {() => void}
+     *
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -111,7 +111,7 @@ campoDeBotones = [
     class: 'btn-default',
     /**
      * Función para agregar la selección actual.
-     * @type {() => void}
+     * 
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -132,8 +132,11 @@ campoDeBotones = [
     class: 'btn-danger',
     /**
      * Función para restar la selección actual.
-     * @type {() => void}
+     *
      */
+
+  
+
     funcion: (): void => {
       if (this.crosslistComponent) {
         this.crosslistComponent.quitar('');
@@ -153,7 +156,7 @@ campoDeBotones = [
     class: 'btn-default',
     /**
      * Función para restar todos los elementos.
-     * @type {() => void}
+     * 
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -169,12 +172,23 @@ constructor() {
   // Constructor del componente
 }
 
+ngOnChanges(simpleChange: SimpleChange){
+console.log(simpleChange);
+//@ts-ignore
+  if(simpleChange && simpleChange?.selectRangoDias.currentValue !== simpleChange?.selectRangoDias.previousValue){
+   //@ts-ignore
+    this.selectRangoDias = simpleChange?.selectRangoDias.currentValue;
+    console.log(this.selectRangoDias);
+  }
+
+}
 /**
  * Maneja el cambio de bloque seleccionado.
  * @param {Event} event - El evento de cambio.
  */
 enCambioDeBloque(event: Event): void {
   const SELECTED_BLOQUE = Number((event.target as HTMLInputElement).value);
+  console.log(SELECTED_BLOQUE);
   this.bloqueCambiar.emit(SELECTED_BLOQUE);
 }
 

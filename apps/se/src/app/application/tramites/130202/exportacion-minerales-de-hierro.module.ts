@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, InputRadioComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DetosDeLaMercanciaComponent } from '../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component';
 import { DetosDelTramiteComponent } from '../../shared/components/detos-de-tramite/detos-del-tramite.component';
@@ -13,7 +13,11 @@ import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.comp
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
+import { PartidasDeLaComponent } from '../../shared/components/partidas-de-la/partidas-de-la.component';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
+import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
 @NgModule({
   declarations: [
     ExportacionMineralesDeHierroComponent,
@@ -28,10 +32,16 @@ import { NgModule } from '@angular/core';
     TituloComponent,
     InputRadioComponent,
     SolicitanteComponent,
+    ReactiveFormsModule,
     PasoTresComponent,
     PasoDosComponent,
     DetosDelTramiteComponent,
-    DetosDeLaMercanciaComponent
+    DetosDeLaMercanciaComponent,
+    PartidasDeLaComponent,
+    TablaDinamicaComponent,
+    PaisProcendenciaComponent,
+    RepresentacionComponent,
+    CrosslistComponent
   ]
 })
 export class ExportacionMineralesDeHierroModule { }

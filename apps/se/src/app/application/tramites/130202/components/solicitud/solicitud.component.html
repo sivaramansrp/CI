@@ -13,3 +13,34 @@
   [unidadCatalog]="unidadCatalog"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-detos-de-la-mercancia>
+
+
+<app-partidas-de-la
+  [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
+  [formForTotalCount]="formForTotalCount"
+  [tableHeaderData]="tableHeaderData"
+  [tableBodyData]="tableBodyData"
+  [mostrarTabla]="mostrarTabla"
+  (filaSeleccionadaChange)="handleFilaSeleccionada($event)"
+  (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
+  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
+  (setValoresStoreEvent)="setValoresStore($event)"
+></app-partidas-de-la>
+
+
+<app-pais-procendencia
+[paisForm]="paisForm"
+[paisProc]="paisProc"
+[paisesPorBloque]="paisesPorBloque"
+[selectRangoDias]="selectRangoDias"
+(bloqueCambiar)="enCambioDeBloque($event)"
+(setValoresStoreEvent)="setValoresStore($event)"
+></app-pais-procendencia>
+
+<app-representacion 
+[frmRepresentacionForm]="frmRepresentacionForm"
+[entidadFederativa]="entidadFederativa"
+[representacionFederal]="representacionFederal"
+[TEXTOS]="TEXTOS"
+(setValoresStoreEvent)="setValoresStore($event)">
+</app-representacion>
