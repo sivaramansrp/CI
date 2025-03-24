@@ -16,27 +16,24 @@ export interface DatosDelContenedor {
   aduana: number;
   fechaIngreso: string;
   vigencia: string;
-  estadoConstancia: string;
-  existeEnVUCEM: string;
-  idConstancia: string;
-  numeroManifiesto: string;
-  idSolicitud: string;
-  fechaInicio: string;
 }
 export interface RespuestaContenedor {
   success: boolean;
   datos: DatosDelContenedor
   message: string;
 }
+
 export interface RespuestaApi {
   success: boolean;
   message: string;
 }
+
 export interface RespuestaContenedores {
   code: number;
   data: Contenedores[]
   message: string;
 }
+
 export interface RespuestaAduanas {
   code: number;
   data: Aduanas[]

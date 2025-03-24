@@ -76,39 +76,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   showSeccionContenedor: boolean = false;
 
-  /**
-   * Bandera para mostrar la sección de número de manifiesto.
-   */
-  showSeccionNoManifiesto: boolean = false;
-
-  /**
-   * Bandera para mostrar la tabla de cargar archivo.
-   */
-  showCargarArchivoTable: boolean = false;
-
-  /**
-   * Bandera para mostrar la tabla de archivo seleccionado.
-   */
+  
   showArchivoSeleccionadoTable: boolean = false;
 
-  /**
-   * Bandera para mostrar la sección de Excel.
-   */
+  
   showSeccionExcel: boolean = false;
 
-  /**
-   * Bandera para mostrar el mensaje.
-   */
-  mostrarMensaje: boolean = false;
-
-  /**
-   * Mensaje de campos obligatorios.
-   */
-  mensajeCamposObligatorios: string = '* Campos obligatorios';
-
-  /**
-   * Lista de aduanas.
-   */
+  
   aduanaList: Aduanas[] = [];
 
   /**
@@ -116,16 +90,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   contenedores: Contenedores[] = [];
 
-  /**
-   * Bandera para requerir guardado parcial.
-   */
-  requiereGuardadoParcial: boolean = false;
-
-  /**
-   * Índice actual.
-   */
   currentIdx: number = 0;
-
   mostrarAgregarTipoContenedor: boolean = false;
   showButtons: boolean = true;
 
@@ -133,15 +98,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Lista de catálogos.
    */
   @Input() catalogoList: Catalogo[] = [];
-
-  /**
-   * Lista de transporte.
-   */
-  transporteList: {
-    catalogos: Catalogo[];
-    labelNombre: string;
-    primerOpcion: string;
-  };
 
   /**
    * Lista de aduanas.
@@ -189,12 +145,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 5 },
     { encabezado: 'vigencia', clave: (artículo) => artículo.vigencia, orden: 6 },
     { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 7 }
-    // { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-    // { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-    // { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-    // { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
-    // { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
-    // { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
 
   /**
@@ -232,11 +182,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
   ) {
-    this.transporteList = {
-      catalogos: [],
-      labelNombre: 'Tipo de transporte',
-      primerOpcion: 'Seleccione un valor',
-    };
+    
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
@@ -262,16 +208,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.inicializarFormulario();
-    this.cargarCatalogos();
     this.tabSeleccionado();
-    this.fetchgetTransporteList();
-    this.fetchAduanaList();
+    this.fetchgetaduanaLista();
     this.loadDatosTablaData();
   }
 
-  /**
-   * Método de destrucción del componente.
-   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
@@ -290,26 +231,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
-      tipoTransporte: ['', Validators.required],
-      menúDesplegable: [this.solicitud11204State.menúDesplegable, Validators.required],
-      numManifiesto: [
-        this.solicitud11204State.numManifiesto,
-        [Validators.required, Validators.maxLength(50)],
-      ],
       aduanaMenúDesplegable: [
         this.solicitud11204State.aduanaMenúDesplegable,
         Validators.required,
       ],
-      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required],
-      individualCaja: this.fb.array(
-        this.solicitud11204State?.individualCaja
-      ),
-      amount: [this.amount, Validators.required],
-      fechaDeIngreso: [
-        this.solicitud11204State?.fechaDeIngreso,
-        Validators.required,
-      ],
-      commonCaja: [this.solicitud11204State?.commonCaja],
+      archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
+     
     });
     this.mostrarCampos();
     this.solicitudForm
@@ -366,13 +293,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Obtener el array de checkboxes individuales.
-   */
-  get individualCaja(): FormArray {
-    return this.solicitudForm.get('individualCaja') as FormArray;
-  }
-
   loadDatosTablaData(): void {
     this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.datosTabla = data;
@@ -395,30 +315,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cargar catálogos de datos.
-   */
-  cargarCatalogos(): void {
-    // Cargar catálogo de contenedores
-    this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (data) => {
-        this.contenedores = data.data;
-      },
-    );
-  }
-
-  /**
    * Mostrar campos según el tipo de búsqueda seleccionado.
    */
   mostrarCampos(): void {
-
-    // this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-    //   this.limpiarCampos();
-    // });
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
     this.showSeccionArchivoCsv = false;
     this.showSeccionAduanaaFecha = false;
     this.showSeccionContenedor = false;
-    this.showSeccionNoManifiesto = false;
     this.showSeccionExcel = false;
 
     switch (TIPO_BUSQUEDA) {
@@ -426,12 +329,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.showSeccionContenedor = true;
         this.showSeccionAduanaaFecha = true;
         break;
-      // case 'No. de Manifiesto':
-      //   this.showSeccionNoManifiesto = true;
-      //   break;
       case 'Archivo CSV':
         this.showSeccionArchivoCsv = true;
-        this.showSeccionAduanaaFecha = true;
         break;
       default:
         break;
@@ -443,15 +342,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
-    // Resetear banderas y estados adicionales
     this.showSeccionArchivoCsv = false;
     this.showSeccionAduanaaFecha = false;
     this.showSeccionContenedor = false;
-    this.showSeccionNoManifiesto = false;
     this.showSeccionExcel = false;
-    this.mostrarMensaje = false;
     this.mostrarAgregarTipoContenedor = false;
-    // Deshabilitar controles específicos si es necesario
     this.solicitudForm.get('archivoSeleccionado')?.disable();
   }
 
@@ -487,22 +382,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   datosCaptura(): void {
     this.solicitudForm.markAllAsTouched();
-    const TIPO_BUSQUEDA = this.solicitudForm.value.tipoBusqueda;
     const ADUANA = this.solicitudForm.value.aduana;
     const FECHAINGRESO = this.solicitudForm.value.fechaIngreso;
     const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
-    if (TIPO_BUSQUEDA === 'Contenedor') {
-      if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA) {
-        this.agregarSolicitud();
-      }
-    } else if (TIPO_BUSQUEDA === 'Archivo CSV') {
-      if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA) {
-        this.agregarSolicitud();
-      }
-    } else { }
+    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
+      this.agregarSolicitud();
+    }
   }
 
   /**
@@ -524,25 +412,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Cargar archivo CSV y parsear su contenido.
-   */
-  Archivo(): void {
-    const FILE_INPUT = document.getElementById(
-      'cargarArchivo'
-    ) as HTMLInputElement;
-    const FILE = FILE_INPUT.files?.[0];
-    if (FILE) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.parseCSV(TEXT);
-        this.showCargarArchivoTable = true;
-      };
-      READER.readAsText(FILE);
-    }
-  }
-
   parseCSV(csv: string): void {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
@@ -553,13 +422,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'N�mero de equipo': 'numeroEquipo',
       'D�gito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
-      'Vigencia': 'vigencia',
-      'Estado de constancia': 'estadoConstancia',
-      'Existe en VUCEM': 'existeEnVUCEM',
-      'Id constancia': 'idConstancia',
-      'N�mero manifiesto': 'numeroManifiesto',
-      'Id solicitud': 'idSolicitud',
-      'Fecha inicio': 'fechaInicio'
+      'Vigencia': 'vigencia'
     };
     const DATA = LINES.slice(1).map((line) => {
       const VALUES = line.split(',');
@@ -573,40 +436,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTabla = DATA;
   }
 
-  enviarManifiesto(): void {
-    this.solicitudForm.markAllAsTouched();
-    if (
-      this.solicitudForm.get('numManifiesto')?.valid &&
-      this.solicitudForm.get('menúDesplegable')?.valid
-    ) {
-      this.mostrarMensaje = true;
-    }
-  }
-
-  // esPago(): void {
-  //   if (this.solicitudForm.valid) {
-  //     // Implementar lógica de pago y envío del formulario
-  //     this.datosTramiteService.submitSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-  //       () => {
-  //         // Manejar envío exitoso
-  //       }
-  //     );
-  //   } else {
-  //     this.mostrarMensaje = true;
-  //   }
-  // }
-
   tabSeleccionado(): void {
     const CURRENT_IDX = localStorage.getItem('currentIdx');
     if (CURRENT_IDX !== null) {
       this.currentIdx = Number(CURRENT_IDX);
     }
-  }
-
-  cancelarRadioButton(): void {
-    // Resetear botones de radio y campos relacionados
-    this.solicitudForm.get('tipoBusqueda')?.setValue('');
-    this.limpiarCampos();
   }
 
   agregarSolicitud(): void {
@@ -623,7 +457,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
             digitoDeControl: '',
             inicialesContenedor: '',
             numeroContenedor: '',
-            contenedores: '',
+            contenedores: ''
           });
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
@@ -632,58 +466,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     );
   }
 
-  public fetchgetTransporteList(): void {
+  public fetchgetaduanaLista(): void {
     this.datosTramiteService
-      .getTransporteList('transporteList')
+      .getAduanaLista('aduanaLista')
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
         this.catalogoList = respuesta.data;
       });
-  }
-
-  public fetchAduanaList(): void {
-    this.datosTramiteService
-      .getAduanaList('aduanaList')
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
-        this.aduanaList = respuesta.data;
-      });
-  }
-
-  /**
-   * Manejar el cambio de estado de un checkbox individual
-   * @param event Evento de cambio del checkbox
-   * @param index Índice del checkbox
-   */
-  onCheckboxChange(event: Event, index: number): void {
-    const TARGET = event.target as HTMLInputElement;
-    if (TARGET) {
-      this.individualCaja.controls[index].setValue(TARGET.checked);
-    }
-    this.setValoresStore(
-      this.solicitudForm,
-      'individualCaja',
-      'setIndividualCaja'
-    );
-  }
-
-  /**
-   * Alternar el estado de todos los checkboxes basados en el estado del checkbox "Seleccionar todo"
-   * @param event Evento de cambio del checkbox "Seleccionar todo"
-   */
-  alternarTodosLosCheckboxes(event: Event): void {
-    const CHECKED = (event.target as HTMLInputElement).checked;
-    this.individualCaja.controls.forEach((control) =>
-      control.setValue(CHECKED)
-    );
-    this.setValoresStore(
-      this.solicitudForm,
-      'commonCaja',
-      'setCommonCaja'
-    );
-  }
-
-  abiertoModelo(datos: string): void {
-    this.abiertoModeloDatos = datos;
-    this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
   }
 
   continuar(): void {

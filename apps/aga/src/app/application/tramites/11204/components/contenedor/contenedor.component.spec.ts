@@ -50,21 +50,9 @@ describe('ContenedorComponent', () => {
     expect(continuarEventoSpy).toHaveBeenCalledWith('');
   });
  
-  it('should call limpiarCampos when cancelarRadioButton is called', () => {
-    const limpiarCamposSpy = jest.spyOn(component, 'limpiarCampos');
-    component.cancelarRadioButton();
-    expect(limpiarCamposSpy).toHaveBeenCalled();
-  });
- 
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.solicitudForm).toBeDefined();
-  });
- 
-  it('should call cargarCatalogos on ngOnInit', () => {
-    const cargarCatalogosSpy = jest.spyOn(component, 'cargarCatalogos');
-    component.ngOnInit();
-    expect(cargarCatalogosSpy).toHaveBeenCalled();
   });
  
   it('should call setValoresStore when tipoBusqueda changes', () => {
@@ -85,18 +73,6 @@ describe('ContenedorComponent', () => {
     });
     // component.validarDigitoVerificador();
     expect(agregarSolicitudSpy).toHaveBeenCalled();
-  });
- 
-  it('should call datosTramiteService.getAduanaList with "aduanaList" when fetchAduanaList is called', async () => {
-    datosTramiteServiceMock.getAduanaList('aduanaList');
-    await component.fetchAduanaList();
-    expect(datosTramiteServiceMock.getAduanaList).toHaveBeenCalledWith('aduanaList');
-  });
- 
-  it('should call datosTramiteService.getTransporteList when fetchgetTransporteList is called', () => {
-    datosTramiteServiceMock.getTransporteList('transporteList');
-    component.fetchgetTransporteList();
-    expect(datosTramiteServiceMock.getTransporteList).toHaveBeenCalled();
   });
  
 });
