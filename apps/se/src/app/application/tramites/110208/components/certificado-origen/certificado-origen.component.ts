@@ -1,10 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, RespuestaCatalogos, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, RespuestaCatalogos, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { takeUntil } from 'rxjs';
 import {FECHA_FINAL_110208,FECHA_INICIO_110208} from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum'
+import {
+  NICO_TABLA,
+  NicoInfo,
+} from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
+import { CargaDeMercanciasComponent } from '../cargaDeMercancias/cargaDeMercancias.component';
+
+export interface RespuestaTabla {
+  /**
+   * Código de respuesta.
+   */
+  code: number;
+  /**
+   * Datos de la tabla NICO.
+   */
+  data: NicoInfo[];
+  /**
+   * Mensaje de la respuesta.
+   */
+  message: string;
+}
 
 @Component({
   selector: 'app-certificado-origen',
@@ -15,7 +35,8 @@ import {FECHA_FINAL_110208,FECHA_INICIO_110208} from '@libs/shared/data-access-u
     ReactiveFormsModule,
     CatalogoSelectComponent,
     InputFechaComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    CargaDeMercanciasComponent
   ],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.css',
@@ -25,6 +46,13 @@ export class CertificadoOrigenComponent implements OnInit {
   mostrarTercerOperador:boolean = false;
 
   formCertificado!: FormGroup
+
+  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+
+  /**
+   * Datos cargados para la tabla NICO.
+   */
+  nicoTablaDatos: NicoInfo[] = [];
 
   /**
    * Constructor del componente.
@@ -41,6 +69,7 @@ export class CertificadoOrigenComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerEstadoList()
+    this.obtenerTablaDatos()
     this.formCertificado = this.fb.group({
       entidadFederativa: ['',Validators.required],
       bloque:['',Validators.required],
@@ -75,6 +104,14 @@ export class CertificadoOrigenComponent implements OnInit {
       .subscribe((data): void => {
         const DATOS = data?.data;
         this.estado = DATOS;
+      });
+  }
+
+  obtenerTablaDatos(): void {
+    this.httpServicios
+      .get<RespuestaTabla>('../../../../../assets/json/110208/certificado-tabla.json')
+      .subscribe((data): void => {
+        this.nicoTablaDatos = data?.data;
       });
   }
   /**

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ValidarInicalmenteRoutingModule } from './validar-inicalmente-routing.module';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 
@@ -18,7 +18,8 @@ import { CertificadoOrigenComponent } from './components/certificado-origen/cert
     BtnContinuarComponent,
     WizardComponent,
     SolicitanteComponent,
-    CertificadoOrigenComponent
+    CertificadoOrigenComponent,
+    AlertComponent
     
   ],
 })

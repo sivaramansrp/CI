@@ -1,0 +1,79 @@
+<ng-titulo titulo="Carga de mercancías por archivo" />
+<div class="row w-100">
+    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-primary">Carga por archivo</button>
+    </div>
+</div>
+<div class="row mt-5">
+    <ng-alert [CONTENIDO]="alerta.inst"></ng-alert>
+</div>
+<h6 class="mt-5">Mercancías seleccionadas</h6>
+<app-tabla-dinamica [configuracionTabla]="mercanciasTabla"
+[datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+<ul class="pagination d-flex justify-content-center">
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+</ul>
+<div class="row w-100">
+    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()">Modificar</button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Datos de la mercancía</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="formMercancia">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="fraccionArancelaria">Fracción arancelaria:</label>
+                                <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control">
+                              </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombreComercial">Nombre comercial de la mercancía (igual que en la factura):</label>
+                                <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control">
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombreTecnio">Nombre técnico:</label>
+                                <input type="text" id="nombreTecnio" formControlName="nombreTecnio" class="form-control">
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombreEnIngles">Nombre en inglés:</label>
+                                <input type="text" id="nombreEnIngles" formControlName="nombreEnIngles" class="form-control">
+                              </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="criterioPara">Criterio para conferir origen:</label>
+                                <input type="text" id="criterioPara" formControlName="criterioPara" class="form-control">
+                              </div>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+            <div class="modal-footer custom-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Limpiar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

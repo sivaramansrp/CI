@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modificacion.enum";
+import {ALERTA_COM} from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum'
 
 @Component({
   selector: 'app-solicitud-page',
@@ -8,6 +9,8 @@ import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modif
 })
 export class SolicitudPageComponent {
     indice: number = 1;
+
+    alerta = ALERTA_COM
   
     /**
      * Referencia al componente del asistente (wizard).
