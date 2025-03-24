@@ -39,7 +39,6 @@ export interface Solicitud5701State {
   horaInicio: string;
   fechaFinal: string;
   horaFinal: string;
-  colapsable: boolean;
   fechasSeleccionadas: string[];
 
   despacho: string;
@@ -121,7 +120,6 @@ export function createInitialState(): Solicitud5701State {
     horaInicio: '',
     fechaFinal: '',
     horaFinal: '',
-    colapsable: false,
     fechasSeleccionadas: [],
     despacho: '',
     lda: false,
@@ -323,13 +321,6 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       horaFinal,
-    }));
-  }
-
-  public setColapsable(colapsable: boolean): void {
-    this.update((state) => ({
-      ...state,
-      colapsable,
     }));
   }
 
