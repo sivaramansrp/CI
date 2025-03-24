@@ -11,15 +11,6 @@
                         <app-input-radio [radioOptions]="radioOptions" formControlName="exentoDePago"
                             [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
                     </div>
-                    <!-- <div class="col-md-4">
-                        <app-catalogo-select
-                          [catalogo]="aduanaDeIngreso"
-                          formControlName="aduanaIngreso"
-                          [label]="'Aduana de ingreso'"
-                          [required]="true"
-                          name="aduanaIngreso"
-                        ></app-catalogo-select>
-                      </div> -->
                 </div>
             </div>
         </div>
@@ -125,5 +116,56 @@
                 </div>
               </div>
         </div>
+          <!-- Nota Informativa -->
+  <div class="row" style="margin-top: 30px;">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <label style="font-weight: normal; text-align: justify;">
+          Nota: Para este trámite es indispensable enviar a la AMECAFE el catálogo de productos de exportación. Para mayor referencia consulta la guía disponible en: <a href="http://www.amecafe.org.mx" target="_blank">www.amecafe.org.mx</a>
+        </label>			
+      </div>
+    </div>
+  </div>
+
+  <!-- Observaciones -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label for="observaciones">Observaciones</label>
+        <span class="require">*</span>
+        <textarea formControlName="observaciones" cols="60" rows="3" class="form-control required" id="valueTA"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requiere Inspección Inmediata -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" formControlName="requiereInspeccionInmediata" id="requiereInspeccionInmediata" />
+          <label class="form-check-label" for="requiereInspeccionInmediata">Autorizo que mi información pueda ser utilizada para promoción en publicaciones de carácter público</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Declaraciones bajo protesta de decir verdad -->
+  <div class="row">
+    <div class="col-md-12">
+      <h3>Declaraciones bajo protesta de decir verdad</h3>
+      <hr class="red" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-info">
+        <div class="form-check text-left">
+          <input type="checkbox" class="form-check-input pull-left" formControlName="informacionConfidencial" id="informacionConfidencial" />
+          <label class="form-check-label" for="informacionConfidencial" style="margin-left: 10px; font-weight: normal;">Protesto decir verdad</label>
+        </div>
+      </div>
+    </div>
+  </div>
     </form>
 </div>

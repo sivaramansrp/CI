@@ -26,6 +26,18 @@ import { regionesInfo } from '../../modelos/cafe-exportadores.model';
 
 import { ProductoTablaServicios } from '../../servicios/regiones-compra.service';
 
+import { DatosSolicitudFormaInt } from '../../modelos/datos-de-interfaz.model';
+import { TramiteState, TramiteStore } from '../../estados/tramite290101.store';
+import { TramiteStoreQuery } from '../../estados/tramite290101.query';
+import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibState } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -46,6 +58,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   datosSolicitudForma!: FormGroup;
+
+  /**
+* Estado actual de la solicitud basado en el modelo `DatosSolicitudFormaInt`.
+* Contiene la información manejada dentro del componente.
+* @type {DatosSolicitudFormaInt}
+*/
+  solicitudState!: DatosSolicitudFormaInt;
 
   /**
    * Opciones para el radio button de exención de pago.
@@ -147,6 +166,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   /**
+ * Subject para manejar la desuscripción de observables.
+ * Utilizado para evitar fugas de memoria.
+ * @type {Subject<void>}
+ */
+  private unsubscribe$ = new Subject<void>();
+
+  /**
+   * Estado de la sección actual.
+   * Contiene información sobre el estado de la sección.
+   * @type {SeccionLibState}
+   */
+  private seccion!: SeccionLibState;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   * Utilizado para gestionar la limpieza de recursos.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {ProductoTablaServicios} productoTablaServicios - Servicio para obtener los datos de las tablas.
@@ -154,7 +194,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private productoTablaServicios: ProductoTablaServicios,
-    private router: Router
+    private router: Router,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
   ) { }
 
 
@@ -166,22 +210,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.router.navigate(['/pago/cafe-exportadores/cafe-de-exportadores']);
   }
 
-  navigateToBeneficios(){
+  navigateToBeneficios() {
     this.router.navigate(['/pago/cafe-exportadores/beneficios']);
   }
 
-  navigateToRegions(){
+  navigateToRegions() {
     this.router.navigate(['/pago/cafe-exportadores/regiones']);
   }
-  
+
   /**
    * Método de inicialización del componente.
    * Configura el formulario reactivo y carga los datos iniciales.
    */
   ngOnInit(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState.SolicitudState;
+      })
+    ).subscribe();
+
     this.datosSolicitudForma = this.fb.group({
       claveDelPadron: [{ value: '', disabled: this.valorSeleccionado === 'no' }],
-      exentoDePago: [this.valorSeleccionado]
+      exentoDePago: [this.valorSeleccionado],
+      observaciones: [''],
+      requiereInspeccionInmediata: [false],
+      informacionConfidencial: [''],
     });
 
     const exentoDePagoSubscription = this.datosSolicitudForma.get('exentoDePago')?.valueChanges.subscribe((value) => {
@@ -196,8 +250,55 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.subscriptions.push(exentoDePagoSubscription);
     }
 
+    /**
+    * Se suscribe a los cambios en el estado de la solicitud de trámite.
+    * Actualiza el formulario con los datos obtenidos del estado.
+    */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: TramiteState) => {
+        if (seccionState) {
+          this.solicitudState = seccionState?.SolicitudState;
+          this.datosSolicitudForma.patchValue(this.solicitudState);
+        }
+      })
+    ).subscribe();
+    /**
+     * Se suscribe a los cambios en el estado del formulario.
+     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     */
+    this.datosSolicitudForma.statusChanges
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap(() => {
+        const ACTIVE_STATE = { ...this.datosSolicitudForma.value };
+        this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+      })
+    )
+    .subscribe();
+
+    /**
+     * Obtiene los datos iniciales requeridos para el componente.
+     */
     this.buscarDatos();
-  }
+
+    /**
+     * Se suscribe a los cambios en el estado de la sección.
+     * Almacena la información de la sección en la propiedad `seccion`.
+     * Para el botón de validación Continuar
+     */
+
+    this.seccionQuery.selectSeccionState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.seccion = seccionState;
+          })
+        )
+        .subscribe();
+    }
 
   /**
    * Método para buscar y cargar los datos de las tablas.

@@ -1,19 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CafeExportacionService } from '../../servicios/cafe-exportacion.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect,CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CafeExportacionService } from '../../servicios/cafe-exportacion.service';
+import { CafExportFormaInt} from '../../modelos/datos-de-interfaz.model';
+import { TramiteState, TramiteStore } from '../../estados/tramite290101.store';
+import { TramiteStoreQuery } from '../../estados/tramite290101.query';
+import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
+import { SeccionLibState} from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-bodegas',
   templateUrl: './cafe-de-exportadores.component.html',
 })
 export class CafeDeExportadoresComponent implements OnInit {
-  cafexportForm!: FormGroup;
+  cafeExportForm!: FormGroup;
+  cafeExportFormState!: CafExportFormaInt;
+
   clasificacion: CatalogosSelect = {
     labelNombre: '',
     required: false,
@@ -27,22 +37,89 @@ export class CafeDeExportadoresComponent implements OnInit {
     catalogos: [],
   };
 
+  /**
+   * Estado de la sección actual.
+   * Contiene información sobre el estado de la sección.
+   * @type {SeccionLibState}
+   */
+  private seccion!: SeccionLibState;
 
+  /**
+   * Subject para notificar la destrucción del componente.
+   * Utilizado para gestionar la limpieza de recursos.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(private router: Router,
     private location: Location,
     private fb: FormBuilder,
     private cafeExportacionService:CafeExportacionService,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
   ) {}
   
   ngOnInit(): void {
+
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.cafeExportFormState = seccionState.CafeExportFormState;
+      })
+    ).subscribe();
+
     this.iniciarFormulario();
-    
     this.cargarClasificacion();
-    
+
+    /**
+    * Se suscribe a los cambios en el estado de la solicitud de trámite.
+    * Actualiza el formulario con los datos obtenidos del estado.
+    */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: TramiteState) => {
+        if (seccionState) {
+          this.cafeExportFormState = seccionState?.CafeExportFormState;
+          this.cafeExportForm.patchValue(this.cafeExportFormState);
+        }
+      })
+    ).subscribe();
+    /**
+     * Se suscribe a los cambios en el estado del formulario.
+     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     */
+    this.cafeExportForm.statusChanges
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap(() => {
+        const ACTIVE_STATE = { ...this.cafeExportForm.value };
+        this.tramiteStore.setCafExportTramite(ACTIVE_STATE);
+      })
+    )
+    .subscribe();
+
+    /**
+     * Se suscribe a los cambios en el estado de la sección.
+     * Almacena la información de la sección en la propiedad `seccion`.
+     * Para el botón de validación Continuar
+     */
+
+    this.seccionQuery.selectSeccionState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccion = seccionState;
+      })
+    )
+    .subscribe();
+
   }
   iniciarFormulario() : void {
-     this.cafexportForm = this.fb.group({
+     this.cafeExportForm = this.fb.group({
       descripcionMercancia: ['', [Validators.required, Validators.maxLength(15)]],
       catalogoDClave: ['', Validators.required],
       clasificacion: [''],
@@ -68,7 +145,7 @@ export class CafeDeExportadoresComponent implements OnInit {
 
   
   cancelarBodega(): void {
-    this.cafexportForm.reset();
+    this.cafeExportForm.reset();
     
   }
 

@@ -6,8 +6,8 @@
  * Este servicio administra el estado de `TramiteState` utilizando Akita.
  */
 import { Store, StoreConfig } from '@datorama/akita';
-import { DatosDeLaSolicitudInt, FormularioPagoInt, PagosDeDerechosFormInt } from '../modelos/datos-de-interfaz.model';
-import { InternaDatosGeneralesInt } from '../modelos/datos-de-interfaz.model'
+import { DatosSolicitudFormaInt, BeneficiosFormaInt, BodegasFormaInt, CafExportFormaInt } from '../modelos/datos-de-interfaz.model';
+import { RegionFormaInt } from '../modelos/datos-de-interfaz.model'
 import { Injectable } from '@angular/core';
 
 /**
@@ -16,10 +16,11 @@ import { Injectable } from '@angular/core';
  * Representa el estado de la modalidad de cambio.
  */
 export interface TramiteState {
-    SolicitudState: DatosDeLaSolicitudInt;
-    InternaDatosGeneralesState: InternaDatosGeneralesInt;
-    FormularioPagoState: FormularioPagoInt;
-    PagosDeDerechosState: PagosDeDerechosFormInt;
+    SolicitudState: DatosSolicitudFormaInt;
+    RegionFormatState: RegionFormaInt;
+    BeneficiosFormaState: BeneficiosFormaInt;
+    BodegasFormaState: BodegasFormaInt;
+    CafeExportFormState: CafExportFormaInt;
 }
 
 /**
@@ -31,62 +32,45 @@ export interface TramiteState {
 export function createInitialState(): TramiteState {
     return {
         SolicitudState: {
-            justificacion: '',
-            certificadosAutorizados: '',
-            fechaInicio: '',
-            horaDeInspeccion: '',
-            aduanaDeIngreso: '',
-            sanidadAgropecuaria: '',
-            puntoDeInspeccion: '',
-            nombreInsp: '',
-            primerApellido: '',
-            segundoApellido: '',
-            cantidadContenedores: '',
-            tipoContenedor: '',
-            medioDeTransporte: '',
-            identificacionTransporte: '',
-            esSolicitudFerros: ''
+            claveDelPadron: '',
+            observaciones: '',
+            requiereInspeccionInmediata: '',
+            informacionConfidencial: 0
         },
-        InternaDatosGeneralesState: {
-            foliodel: 0,
-            aduanaIngreso: '',
-            oficinaInspeccion: '',
-            puntoInspeccion: '',
-            claveUCON: '',
-            establecimientoTIFs: '',
-            nombreVeterinario: '',
-            numeroGuia: '',
-            regimen: '',
-            capturaMercancia: '',
-            animalesVivos: '',
-            coordenadas: '',
-            movilizacionNacional: '',
-            identTransporte: '',
-            puntoVerificacion: '',
-            empresaTransportista: ''
+        RegionFormatState: {
+            estado: '',
+            productoCafe: '',
+            descRegionCompra: '',
+            descripTipoCafe: '',
+            volumen: 0
         },
-        FormularioPagoState: {
-            exentoPago: '',
-            justificacion: '',
-            claveReferencia: '',
-            cadenaDependencia: '',
-            banco: '',
-            llavePago: '',
-            fechaFactura: '',
-            importePago: ''
+        BeneficiosFormaState: {
+            razonSocial: '',
+            propAlquil: '',
+            calle: '',
+            numeroExterior: 0,
+            numeroInterior: 0,
+            colonia: '',
+            estado: 0,
+            codigoPostal: 0,
+            capacidadAlmacenaje: 0,
+            volumenAlmacenaje: 0
         },
-        PagosDeDerechosState: {
-            claveDeReferencia: '',
-            cadenaDependencia: '',
-            banco: '',
-            llaveDePago: '',
-            fechaInicio: '',
-            importeDePago: '',
-            claveDeReferenciaRevision: '',
-            bancoRevision: '',
-            llaveDePagoRevision: '',
-            fechaInicioRevision: '',
-            importeDePagoRevision: ''
+        BodegasFormaState: {
+            razonSocial: '',
+            propAlquil: '',
+            calle: '',
+            numeroExterior: 0,
+            numeroInterior: 0,
+            colonia: '',
+            estado: 0,
+            codigoPostal: 0,
+            capacidadAlmacenaje: 0
+        },
+        CafeExportFormState: {
+            descripcionMercancia: '',
+            clasificacion: '',
+            porcentajeConcentracion: 0
         }
     };
 }
@@ -107,9 +91,9 @@ export class TramiteStore extends Store<TramiteState> {
      * @method setSolicitudTramite
      * @description
      * Actualiza el estado de `SolicitudState` con nuevos valores.
-     * @param {DatosDeLaSolicitudInt} SolicitudState - Datos del formulario de cambio de modalidad.
+     * @param {DatosSolicitudFormaInt} SolicitudState - Datos del formulario de cambio de modalidad.
      */
-    public setSolicitudTramite(SolicitudState: DatosDeLaSolicitudInt): void {
+    public setSolicitudTramite(SolicitudState: DatosSolicitudFormaInt): void {
         this.update((state) => ({
             ...state,
             SolicitudState,
@@ -117,41 +101,55 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
- * @method setSolicitudTramite
+ * @method RegionFormatState
  * @description
- * Actualiza el estado de `InternaDatosGeneralesInt` con nuevos valores.
- * @param {InternaDatosGeneralesInt} InternaDatosGeneralesState - Datos del formulario de cambio de modalidad.
+ * Actualiza el estado de `RegionFormaInt` con nuevos valores.
+ * @param {RegionFormaInt} RegionFormatState - Datos del formulario de cambio de modalidad.
  */
-    public setInternaDatosGeneralesTramite(InternaDatosGeneralesState: InternaDatosGeneralesInt): void {
+    public setRegionTramite(RegionFormatState: RegionFormaInt): void {
         this.update((state) => ({
             ...state,
-            InternaDatosGeneralesState,
+            RegionFormatState,
         }));
     }
 
     /**
-    * @method setInternaPagoDeDerechosTramite
+    * @method BeneficiosFormaState
     * @description
-    * Actualiza el estado de `FormularioPagoInt` con nuevos valores.
-    * @param {FormularioPagoInt} FormularioPagoState - Datos del formulario de cambio de modalidad.
+    * Actualiza el estado de `BeneficiosFormaInt` con nuevos valores.
+    * @param {BeneficiosFormaInt} BeneficiosFormaState - Datos del formulario de cambio de modalidad.
     */
-    public setInternaPagoDeDerechosTramite(FormularioPagoState: FormularioPagoInt): void {
+    public setBeneficiosTramite(BeneficiosFormaState: BeneficiosFormaInt): void {
         this.update((state) => ({
             ...state,
-            FormularioPagoState,
+            BeneficiosFormaState,
         }));
     }
 
     /**
-     * @method setPagoDeDerechosTramite
+     * @method setBodegasTramite
      * @description
-     * Actualiza el estado de `PagosDeDerechosFormInt` con nuevos valores.
-     * @param {PagosDeDerechosFormInt} PagosDeDerechosState - Datos del formulario de cambio de modalidad.
+     * Actualiza el estado de `BodegaFormaInt` con nuevos valores.
+     * @param {BodegaFormaInt} BodegasFormaState - Datos del formulario de cambio de modalidad.
      */
-    public setPagoDeDerechosTramite(PagosDeDerechosState: PagosDeDerechosFormInt): void {
+    public setBodegasTramite(BodegasFormaState: BodegasFormaInt): void {
         this.update((state) => ({
             ...state,
-            PagosDeDerechosState,
+            BodegasFormaState,
+        }));
+    }
+
+
+    /**
+     * @method setCafExportTramite
+     * @description
+     * Actualiza el estado de `CafExportFormaInt` con nuevos valores.
+     * @param {CafExportFormaInt} CafeExportFormState - Datos del formulario de cambio de modalidad.
+     */
+    public setCafExportTramite(CafeExportFormState: CafExportFormaInt): void {
+        this.update((state) => ({
+            ...state,
+            CafeExportFormState,
         }));
     }
 }

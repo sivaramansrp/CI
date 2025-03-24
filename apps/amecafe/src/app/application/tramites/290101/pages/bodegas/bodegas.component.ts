@@ -1,11 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import { BodegasService } from '../../servicios/bodegas.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect,CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { BodegasService } from '../../servicios/bodegas.service';
+import { BodegasFormaInt} from '../../modelos/datos-de-interfaz.model';
+import { TramiteState, TramiteStore } from '../../estados/tramite290101.store';
+import { TramiteStoreQuery } from '../../estados/tramite290101.query';
+import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
+import { SeccionLibState} from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -14,6 +23,8 @@ import { Location } from '@angular/common';
 })
 export class BodegasComponent implements OnInit {
   bodegaForm!: FormGroup;
+  bodegasFormaState!: BodegasFormaInt;
+
   propAlquil: CatalogosSelect = {
     labelNombre: '',
     required: false,
@@ -27,23 +38,93 @@ export class BodegasComponent implements OnInit {
     catalogos: [],
   };
 
+  /**
+   * Estado de la sección actual.
+   * Contiene información sobre el estado de la sección.
+   * @type {SeccionLibState}
+   */
+  private seccion!: SeccionLibState;
 
+  /**
+   * Subject para notificar la destrucción del componente.
+   * Utilizado para gestionar la limpieza de recursos.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   constructor(private router: Router,
     private location: Location,
     private fb: FormBuilder,
     private bodegasService:BodegasService,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private seccionStore: SeccionLibStore,
   ) {}
   navigateToCafeExportadores() {
     this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores']);
     
   }
   ngOnInit(): void {
+
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.bodegasFormaState = seccionState.BodegasFormaState;
+      })
+    ).subscribe();
+
     this.iniciarFormulario();
     this.cargarEstadoCatalog();
     this.cargarBodegaPropiaAlquilad();
-    
+
+
+    /**
+    * Se suscribe a los cambios en el estado de la solicitud de trámite.
+    * Actualiza el formulario con los datos obtenidos del estado.
+    */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: TramiteState) => {
+        if (seccionState) {
+          this.bodegasFormaState = seccionState?.BodegasFormaState;
+          this.bodegaForm.patchValue(this.bodegasFormaState);
+        }
+      })
+    ).subscribe();
+    /**
+     * Se suscribe a los cambios en el estado del formulario.
+     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     */
+    this.bodegaForm.statusChanges
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap(() => {
+        const ACTIVE_STATE = { ...this.bodegaForm.value };
+        this.tramiteStore.setBodegasTramite(ACTIVE_STATE);
+      })
+    )
+    .subscribe();
+
+    /**
+     * Se suscribe a los cambios en el estado de la sección.
+     * Almacena la información de la sección en la propiedad `seccion`.
+     * Para el botón de validación Continuar
+     */
+
+    this.seccionQuery.selectSeccionState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccion = seccionState;
+      })
+    )
+    .subscribe();
   }
+
+
   iniciarFormulario() : void {
     this.bodegaForm = this.fb.group({
       razonSocial: ['', [Validators.required, Validators.maxLength(200)]],
@@ -95,8 +176,5 @@ export class BodegasComponent implements OnInit {
   cancelarBodega(): void {
     this.bodegaForm.reset();
     
-  }
-
-
-  
+  }  
 }
