@@ -107,6 +107,18 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule)
   },
   {
+    path: 'desmantelar',
+    loadChildren: () =>
+      import('./tramites/130106/desmantelar.module').then(
+        (m) => m.DesmantelarModule)
+  },
+  {
+    path: 'desistimiento-de-permiso',
+    loadChildren: () =>
+      import('./tramites/140105/desistimiento-de-permiso.module').then(
+        (m) => m.DesistimientoDePermisoModule)
+  },
+  {
     path: 'certificado-registro',
     loadChildren: () =>
       import('./tramites/80205/certificado-registro.module').then(
