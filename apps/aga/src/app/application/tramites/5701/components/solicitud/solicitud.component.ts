@@ -694,7 +694,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
-    // this.crosslistStore.establecerFechas(this.selectRangoDias);
     this.colapsable = true;
   }
 
