@@ -23,17 +23,20 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
-
 } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
+import NacionalidadRadioOptions from 'libs/shared/theme/assets/json/260215/nacionalidad-options.json';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TableComponent } from '@ng-mf/data-access-user';
+import TipoPersonaRadioOptions from 'libs/shared/theme/assets/json/260215/tipo-persona-options.json';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -60,7 +63,6 @@ const TERCEROS_TEXTO_DE_ALERTA =
     ModalComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    
   ],
 })
 
@@ -68,28 +70,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
-export class TercerosRelacionadosComponent implements OnInit {
-
-  nacionalidadOptions = [
-    { label: 'Nacional', value: 'nacional' },
-    { label: 'Extranjero', value: 'extranjero' },
-  ];
-
-  tipoPersonaOptions = [
-    { label: 'Física', value: 'fisica', hint: 'fisica hint' },
-    { label: 'Moral', value: 'moral', hint: 'moral hint' },
-  ];
-  cambiarRadio(value: string | number) {
-    const valorSeleccionado = value as string;
-    this.tercerosInputChecked(valorSeleccionado);
-  }
-  
-
-  cambiarRadioF(value: string | number) {
-    const valorSeleccionado = value as string;
-    this.inputChecked(valorSeleccionado);
-  }
-  
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -248,6 +229,22 @@ export class TercerosRelacionadosComponent implements OnInit {
   agregarFacturadorFormGroup!: FormGroup;
 
   /**
+   * Opciones para el radio de nacionalidad.
+   * Utiliza los datos predefinidos en `NacionalidadRadioOptions`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de nacionalidad.
+   */
+  nacionalidadOptions = NacionalidadRadioOptions;
+
+  /**
+   * Opciones para el radio de tipo de persona.
+   * Utiliza los datos predefinidos en `TipoPersonaRadioOptions`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de tipo de persona.
+   */
+  tipoPersonaOptions = TipoPersonaRadioOptions;
+
+  /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
    *
@@ -264,6 +261,11 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
@@ -272,9 +274,12 @@ export class TercerosRelacionadosComponent implements OnInit {
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
      */
-    this.service.getData().subscribe((data) => {
-      this.dropdownData = data;
-    });
+    this.service
+      .getData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.dropdownData = data;
+      });
 
     /**
      * Inicializa los formularios reactivos para agregar terceros.
@@ -423,7 +428,8 @@ export class TercerosRelacionadosComponent implements OnInit {
     // Habilita campos al cambiar el tipo de persona
     this.agregarFabricanteFormGroup
       .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
         this.agregarFabricanteFormGroup.get('rfc')?.enable();
         this.agregarFabricanteFormGroup.get('curp')?.enable();
         this.agregarFabricanteFormGroup
@@ -526,7 +532,8 @@ export class TercerosRelacionadosComponent implements OnInit {
     // Habilita campos al cambiar el tipo de persona
     this.agregarDestinatarioFormGroup
       .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
         this.agregarDestinatarioFormGroup.get('rfc')?.enable();
         this.agregarDestinatarioFormGroup.get('curp')?.enable();
         this.agregarDestinatarioFormGroup
@@ -618,7 +625,8 @@ export class TercerosRelacionadosComponent implements OnInit {
     // Habilita campos al cambiar el tipo de persona
     this.agregarProveedorFormGroup
       .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
         this.agregarProveedorFormGroup.get('nombre')?.enable();
         this.agregarProveedorFormGroup.get('primerApellido')?.enable();
         this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
@@ -713,7 +721,8 @@ export class TercerosRelacionadosComponent implements OnInit {
     // Habilita campos al cambiar el tipo de persona
     this.agregarFacturadorFormGroup
       .get('tipoPersona')
-      ?.valueChanges.subscribe(() => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
         this.agregarFacturadorFormGroup.get('nombre')?.enable();
         this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
         this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
@@ -1340,5 +1349,34 @@ export class TercerosRelacionadosComponent implements OnInit {
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
+  }
+
+  /**
+   * Cambia el valor del radio button seleccionado.
+   *
+   * @param value Valor seleccionado del radio button.
+   */
+  cambiarRadio(value: string | number) {
+    const VALOR_SELECCIONADO = value as string;
+    this.tercerosInputChecked(VALOR_SELECCIONADO);
+  }
+
+  /**
+   * Cambia el valor del radio button seleccionado.
+   *
+   * @param value Valor seleccionado del radio button.
+   */
+  cambiarRadioFisica(value: string | number) {
+    const VALOR_SELECCIONADO = value as string;
+    this.inputChecked(VALOR_SELECCIONADO);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -10,8 +10,10 @@
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"
-          ></ng-table>
+        <ng-table
+          [commonTableHeader]="fabricanteHeaderData"
+          [commonTableBody]="fabricanteRowData"
+        ></ng-table>
       </div>
       <br />
 
@@ -20,7 +22,11 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="toggleDivFabricante()"
+        >
           Agregar
         </button>
       </div>
@@ -30,7 +36,9 @@
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData"
+        <ng-table
+          [commonTableHeader]="destinatarioHeaderData"
+          [commonTableBody]="destinatarioRowData"
         >
         </ng-table>
       </div>
@@ -41,7 +49,11 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="toggleDivDestinatario()"
+        >
           Agregar
         </button>
       </div>
@@ -51,8 +63,10 @@
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"
-          ></ng-table>
+        <ng-table
+          [commonTableHeader]="proveedorHeaderData"
+          [commonTableBody]="proveedorRowData"
+        ></ng-table>
       </div>
       <br />
 
@@ -61,7 +75,11 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="toggleDivProveedor()"
+        >
           Agregar
         </button>
       </div>
@@ -71,8 +89,10 @@
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"
-          ></ng-table>
+        <ng-table
+          [commonTableHeader]="facturadorHeaderData"
+          [commonTableBody]="facturadorRowData"
+        ></ng-table>
       </div>
       <br />
 
@@ -81,14 +101,17 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="toggleDivFacturador()"
+        >
           Agregar
         </button>
       </div>
     </div>
 
     <br />
-  
   </div>
 </div>
 
@@ -106,12 +129,12 @@
             <h6>Terceros nacionalidad*:</h6>
             <div class="mt-2">
               <app-input-radio
-              [radioOptions]="nacionalidadOptions"
-              [isRequired]="true"
-              formControlName="tercerosNacionalidad"
-              [layout]="'vertical'"
-              (valueChange)="cambiarRadio($event)"
-            ></app-input-radio>
+                [radioOptions]="nacionalidadOptions"
+                [isRequired]="true"
+                formControlName="tercerosNacionalidad"
+                [layout]="'vertical'"
+                (valueChange)="cambiarRadio($event)"
+              ></app-input-radio>
             </div>
           </div>
         </div>
@@ -120,14 +143,14 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-                <app-input-radio 
-              [radioOptions]="tipoPersonaOptions"
-              [isRequired]="true"
-              formControlName="tipoPersona"
-              [layout]="'vertical'"
-              (valueChange)="cambiarRadioF($event)"
-              [showTooltip]="true"
-            ></app-input-radio>
+              <app-input-radio
+                [radioOptions]="tipoPersonaOptions"
+                [isRequired]="true"
+                formControlName="tipoPersona"
+                [layout]="'vertical'"
+                (valueChange)="cambiarRadioFisica($event)"
+                [showTooltip]="true"
+              ></app-input-radio>
             </div>
           </div>
         </div>
@@ -141,50 +164,88 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                  ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label"
+                >R.F.C*:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input
+                type="text"
+                id="rfc"
+                formControlName="rfc"
+                class="form-control"
+                name="rfc"
+              />
             </div>
           </div>
         </div>
-        <hr>
-        <hr>
+        <hr />
+        <hr />
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input
+                type="text"
+                id="nombre"
+                formControlName="nombre"
+                name="nombre"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+              <label class="form-label" for="primerApellido"
+                >Primer apellido*:</label
+              >
+              <input
+                type="text"
+                id="primerApellido"
+                formControlName="primerApellido"
+                name="primerApellido"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+              <label class="form-label" for="segundoApellido"
+                >Segundo apellido*:</label
+              >
+              <input
+                type="text"
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                name="segundoApellido"
+                class="form-control"
+              />
             </div>
           </div>
         </div>
-        }
-
-        @if (nacional && moral){
+        } @if (nacional && moral){
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="curp" class="form-label"
+                >R.F.C*:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span>
               </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input
+                type="text"
+                id="curp"
+                formControlName="curp"
+                class="form-control"
+                name="curp"
+              />
             </div>
           </div>
         </div>
@@ -192,146 +253,228 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-              <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+              <label class="form-label" for="denominacionRazonSocial"
+                >Denominación/razón social*:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="denominacionRazonSocial"
+                formControlName="denominacionRazonSocial"
+                name="denominacionRazonSocial"
+              />
             </div>
           </div>
         </div>
-        }
-
-        @if (extranjero && moral || (!fisica && !moral)){
+        } @if (extranjero && moral || (!fisica && !moral)){
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-              <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+              <label class="form-label" for="denominacionRazonSocial"
+                >Denominación/razón social*:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="denominacionRazonSocial"
+                formControlName="denominacionRazonSocial"
+                name="denominacionRazonSocial"
+              />
             </div>
           </div>
         </div>
-        }
-
-        @if (extranjero && fisica){
+        } @if (extranjero && fisica){
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input
+                type="text"
+                id="nombre"
+                formControlName="nombre"
+                name="nombre"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+              <label class="form-label" for="primerApellido"
+                >Primer apellido*:</label
+              >
+              <input
+                type="text"
+                id="primerApellido"
+                formControlName="primerApellido"
+                name="primerApellido"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+              <label class="form-label" for="segundoApellido"
+                >Segundo apellido*:</label
+              >
+              <input
+                type="text"
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                name="segundoApellido"
+                class="form-control"
+              />
             </div>
           </div>
         </div>
         }
 
-
-
-        <hr>
-        <hr>
+        <hr />
+        <hr />
 
         <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
-
           @if(nacional){
           <div>
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
-                  for="pais" id="pais"
-                  formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="paisDropdownData"
+                  [label]="'Pais'"
+                  [required]="true"
+                  for="pais"
+                  id="pais"
+                  formControlName="pais"
+                ></app-catalogo-select>
               </div>
             </div>
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
-                  for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="dropdownData"
+                  [label]="'Estado/localidad'"
+                  [required]="true"
+                  for="estadoLocalidad"
+                  id="estadoLocalidad"
+                  formControlName="estadoLocalidad"
+                ></app-catalogo-select>
               </div>
             </div>
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia'" [required]="true"
-                  for="municipioAlcaldia" id="municipioAlcaldia"
-                  formControlName="municipioAlcaldia"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="municipioDropdownData"
+                  [label]="'Municipio/alcaldia'"
+                  [required]="true"
+                  for="municipioAlcaldia"
+                  id="municipioAlcaldia"
+                  formControlName="municipioAlcaldia"
+                ></app-catalogo-select>
               </div>
             </div>
             <hr />
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                  for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="localidadDropdownData"
+                  [label]="'Localidad'"
+                  [required]="false"
+                  for="localidad"
+                  id="localidad"
+                  formControlName="localidad"
+                ></app-catalogo-select>
               </div>
             </div>
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
-                  [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                  formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="codigoPostalDropdownData"
+                  [label]="'Código postal o equivalente'"
+                  [required]="true"
+                  for="codigoPostaloEquivalente"
+                  id="codigoPostaloEquivalente"
+                  formControlName="codigoPostaloEquivalente"
+                ></app-catalogo-select>
               </div>
             </div>
 
             <div class="col-md-4 mt-2">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
-                  formControlName="colonia"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="coloniaDropdownData"
+                  [label]="'Colonia'"
+                  for="colonia"
+                  id="colonia"
+                  formControlName="colonia"
+                ></app-catalogo-select>
               </div>
             </div>
           </div>
-          }
-
-          @if(extranjero){
+          } @if(extranjero){
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
-                  for="pais" id="pais"
-                  formControlName="pais"></app-catalogo-select>
+                <app-catalogo-select
+                  [catalogo]="paisDropdownData"
+                  [label]="'Pais'"
+                  [required]="true"
+                  for="pais"
+                  id="pais"
+                  formControlName="pais"
+                ></app-catalogo-select>
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-group">
-                <label for="extranjeroEstado" class="form-label">Estado*: </label>
-                <input type="text" id="extranjeroEstado" formControlName="extranjeroEstado" name="extranjeroEstado"
-                  class="form-control" />
+                <label for="extranjeroEstado" class="form-label"
+                  >Estado*:
+                </label>
+                <input
+                  type="text"
+                  id="extranjeroEstado"
+                  formControlName="extranjeroEstado"
+                  name="extranjeroEstado"
+                  class="form-control"
+                />
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
-                <input type="text" id="extranjeroCodigo" formControlName="extranjeroCodigo" name="extranjeroCodigo"
-                  class="form-control" />
+                <label class="form-label" for="extranjeroCodigo"
+                  >Código postal o equivalente:</label
+                >
+                <input
+                  type="text"
+                  id="extranjeroCodigo"
+                  formControlName="extranjeroCodigo"
+                  name="extranjeroCodigo"
+                  class="form-control"
+                />
               </div>
             </div>
-
           </div>
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
-                <input class="form-control" type="text" id="extranjeroColonia" formControlName="extranjeroColonia"
-                  name="extranjeroColonia" />
+                <label class="form-label" for="extranjeroColonia"
+                  >Colonia o equivalente:</label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  id="extranjeroColonia"
+                  formControlName="extranjeroColonia"
+                  name="extranjeroColonia"
+                />
               </div>
             </div>
           </div>
@@ -340,51 +483,96 @@
           <div class="mt-5 p-0">
             <div class="col-md-8">
               <div class="form-group">
-                <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-                <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+                <label class="form-label" for="calle"
+                  >Calle*:<span
+                    class="bi bi-question-circle-fill fs-4 m-1"
+                    title="Title"
+                    ata-bs-toggle="tooltip"
+                  ></span
+                ></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="calle"
+                  formControlName="calle"
+                  name="calle"
+                />
               </div>
             </div>
 
             <div class="col-md-4">
               <div class="form-group">
-                <label for="numeroExterior" class="form-label">Número exterior*:
+                <label for="numeroExterior" class="form-label"
+                  >Número exterior*:
                 </label>
-                <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                  name="numeroExterior" />
+                <input
+                  type="text"
+                  id="numeroExterior"
+                  formControlName="numeroExterior"
+                  class="form-control"
+                  name="numeroExterior"
+                />
               </div>
             </div>
           </div>
 
-
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="numeroInterior">Número interior:</label>
-              <input class="form-control" type="text" id="numeroInterior" formControlName="numeroInterior"
-                name="numeroInterior" />
+              <label class="form-label" for="numeroInterior"
+                >Número interior:</label
+              >
+              <input
+                class="form-control"
+                type="text"
+                id="numeroInterior"
+                formControlName="numeroInterior"
+                name="numeroInterior"
+              />
             </div>
           </div>
 
           <div class="col-md-1 mt-5">
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
-              <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
+              <input
+                class="form-control"
+                type="text"
+                id="lada"
+                formControlName="lada"
+                name="lada"
+              />
             </div>
           </div>
 
           <div class="col-md-3 mt-5">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
+              <input
+                class="form-control"
+                type="text"
+                id="telefono"
+                formControlName="telefono"
+                name="telefono"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
-                name="correoElectronico" />
+              <label class="form-label" for="correoElectronico"
+                >Correo electrónico:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span
+              ></label>
+              <input
+                class="form-control"
+                type="text"
+                id="correoElectronico"
+                formControlName="correoElectronico"
+                name="correoElectronico"
+              />
             </div>
           </div>
           <hr />
@@ -397,13 +585,19 @@
           <!-- last three buttons -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger"  (click)="toggleDivFabricante()">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="toggleDivFabricante()"
+              >
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">
-                Limpiar
-              </button>
-              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()">
+              <button type="button" class="btn btn-default">Limpiar</button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="submitFabricanteForm()"
+              >
                 Guardar
               </button>
             </div>
@@ -427,31 +621,38 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio
+                [radioOptions]="tipoPersonaOptions"
+                [isRequired]="true"
+                formControlName="tipoPersona"
+                [layout]="'vertical'"
+                (valueChange)="cambiarRadioFisica($event)"
+                [showTooltip]="true"
+              ></app-input-radio>
             </div>
           </div>
         </div>
       </div>
       <hr />
 
-
       <div class="row">
         <div>
           <div class="col-md-4">
             <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                  ata-bs-toggle="tooltip"></span>
+              <label for="rfc" class="form-label"
+                >R.F.C*:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span>
               </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
+              <input
+                type="text"
+                id="rfc"
+                formControlName="rfc"
+                class="form-control"
+                name="rfc"
+              />
             </div>
           </div>
         </div>
@@ -460,22 +661,37 @@
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
-              <label for="curp" class="form-label">C.U.R.P*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span>
+              <label for="curp" class="form-label"
+                >C.U.R.P*:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span>
               </label>
-              <input type="text" id="curp" formControlName="curp" class="form-control" name="curp" />
+              <input
+                type="text"
+                id="curp"
+                formControlName="curp"
+                class="form-control"
+                name="curp"
+              />
             </div>
           </div>
         </div>
-        }
-
-        @if (moral || (!fisica && !moral)){
+        } @if (moral || (!fisica && !moral)){
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-              <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+              <label class="form-label" for="denominacionRazonSocial"
+                >Denominación/razón social*:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="denominacionRazonSocial"
+                formControlName="denominacionRazonSocial"
+                name="denominacionRazonSocial"
+              />
             </div>
           </div>
         </div>
@@ -489,46 +705,77 @@
         <div class="row d-flex domicilio-form-container">
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
-                  for="pais" id="pais"
-                  formControlName="pais"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="paisDropdownData"
+                [label]="'Pais'"
+                [required]="true"
+                for="pais"
+                id="pais"
+                formControlName="pais"
+              ></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad*'" [required]="true"
-                for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="dropdownData"
+                [label]="'Estado/localidad*'"
+                [required]="true"
+                for="estadoLocalidad"
+                id="estadoLocalidad"
+                formControlName="estadoLocalidad"
+              ></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia:'" [required]="true"
-                for="municipioAlcaldia" id="municipioAlcaldia"
-                formControlName="municipioAlcaldia"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="municipioDropdownData"
+                [label]="'Municipio/alcaldia:'"
+                [required]="true"
+                for="municipioAlcaldia"
+                id="municipioAlcaldia"
+                formControlName="municipioAlcaldia"
+              ></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="localidadDropdownData"
+                [label]="'Localidad'"
+                [required]="false"
+                for="localidad"
+                id="localidad"
+                formControlName="localidad"
+              ></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente*:'"
-                for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="codigoPostalDropdownData"
+                [label]="'Código postal o equivalente*:'"
+                for="codigoPostaloEquivalente"
+                id="codigoPostaloEquivalente"
+                formControlName="codigoPostaloEquivalente"
+              ></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia:'" for="colonia" id="colonia"
-                formControlName="colonia"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="coloniaDropdownData"
+                [label]="'Colonia:'"
+                for="colonia"
+                id="colonia"
+                formControlName="colonia"
+              ></app-catalogo-select>
             </div>
           </div>
 
@@ -537,49 +784,95 @@
 
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input type="text" id="calle" formControlName="calle" class="form-control" name="calle" />
+              <label class="form-label" for="calle"
+                >Calle*:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span
+              ></label>
+              <input
+                type="text"
+                id="calle"
+                formControlName="calle"
+                class="form-control"
+                name="calle"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label for="numeroExterior" class="form-label">Número exterior*:
+              <label for="numeroExterior" class="form-label"
+                >Número exterior*:
               </label>
-              <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control"
-                name="numeroExterior" />
+              <input
+                type="text"
+                id="numeroExterior"
+                formControlName="numeroExterior"
+                class="form-control"
+                name="numeroExterior"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="numeroInterior">Número interior:</label>
-              <input type="text" id="numeroInterior" formControlName="numeroInterior" class="form-control"
-                name="numeroInterior" />
+              <label class="form-label" for="numeroInterior"
+                >Número interior:</label
+              >
+              <input
+                type="text"
+                id="numeroInterior"
+                formControlName="numeroInterior"
+                class="form-control"
+                name="numeroInterior"
+              />
             </div>
           </div>
 
           <div class="col-md-1 mt-5">
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
-              <input type="text" id="lada" formControlName="lada" class="form-control" name="lada" />
+              <input
+                type="text"
+                id="lada"
+                formControlName="lada"
+                class="form-control"
+                name="lada"
+              />
             </div>
           </div>
 
           <div class="col-md-3 mt-5">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input type="text" id="telefono" formControlName="telefono" class="form-control" name="telefono" />
+              <input
+                type="text"
+                id="telefono"
+                formControlName="telefono"
+                class="form-control"
+                name="telefono"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control"
-                name="correoElectronico" />
+              <label class="form-label" for="correoElectronico"
+                >Correo electrónico:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span
+              ></label>
+              <input
+                type="text"
+                id="correoElectronico"
+                formControlName="correoElectronico"
+                class="form-control"
+                name="correoElectronico"
+              />
             </div>
           </div>
           <hr />
@@ -592,13 +885,19 @@
           <!-- last three buttons -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger"  (click)="toggleDivDestinatario()">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="toggleDivDestinatario()"
+              >
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">
-                Limpiar
-              </button>
-              <button type="button" class="btn btn-primary" (click)="submitDestinatarioForm()">
+              <button type="button" class="btn btn-default">Limpiar</button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="submitDestinatarioForm()"
+              >
                 Guardar
               </button>
             </div>
@@ -613,7 +912,7 @@
 <app-modal [active]="showProveedor">
   <div class="agregar-proveedor-container">
     <ng-titulo titulo="Agregar proveedor" />
-    <h5>Datos generales </h5>
+    <h5>Datos generales</h5>
 
     <form [formGroup]="agregarProveedorFormGroup">
       <div class="row">
@@ -621,16 +920,14 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                id="fisica" value="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                id="moral" value="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio
+                [radioOptions]="tipoPersonaOptions"
+                [isRequired]="true"
+                formControlName="tipoPersona"
+                [layout]="'vertical'"
+                (valueChange)="cambiarRadioFisica($event)"
+                [showTooltip]="true"
+              ></app-input-radio>
             </div>
           </div>
         </div>
@@ -643,35 +940,60 @@
         <div class="col-md-4">
           <div class="form-group">
             <label for="nombre" class="form-label">Nombre(s)*: </label>
-            <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+            <input
+              type="text"
+              id="nombre"
+              formControlName="nombre"
+              name="nombre"
+              class="form-control"
+            />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="primerApellido">Primer apellido*:</label>
-            <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-              class="form-control" />
+            <label class="form-label" for="primerApellido"
+              >Primer apellido*:</label
+            >
+            <input
+              type="text"
+              id="primerApellido"
+              formControlName="primerApellido"
+              name="primerApellido"
+              class="form-control"
+            />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-            <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-              class="form-control" />
+            <label class="form-label" for="segundoApellido"
+              >Segundo apellido*:</label
+            >
+            <input
+              type="text"
+              id="segundoApellido"
+              formControlName="segundoApellido"
+              name="segundoApellido"
+              class="form-control"
+            />
           </div>
         </div>
       </div>
-      }
-
-      @if (moral || (!fisica && !moral)) {
+      } @if (moral || (!fisica && !moral)) {
       <div class="row">
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-            <input type="text" class="form-control" id="denominacionRazonSocial"
-              formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+            <label class="form-label" for="denominacionRazonSocial"
+              >Denominación/razón social*:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="denominacionRazonSocial"
+              formControlName="denominacionRazonSocial"
+              name="denominacionRazonSocial"
+            />
           </div>
         </div>
       </div>
@@ -684,32 +1006,57 @@
       <div class="row d-flex domicilio-form-container">
         <div class="col-md-4 mt-5">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
-                  for="pais" id="pais"
-                  formControlName="pais"></app-catalogo-select>
+            <app-catalogo-select
+              [catalogo]="paisDropdownData"
+              [label]="'Pais'"
+              [required]="true"
+              for="pais"
+              id="pais"
+              formControlName="pais"
+            ></app-catalogo-select>
           </div>
         </div>
 
         <div class="col-md-4 mt-5">
           <div class="form-group">
             <label class="form-label" for="estado">Estado*:</label>
-            <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+            <input
+              class="form-control"
+              type="text"
+              id="estado"
+              formControlName="estado"
+              name="estado"
+            />
           </div>
         </div>
 
         <div class="col-md-4 mt-5">
           <div class="form-group">
-            <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
-            <input class="form-control" type="text" id="codigoPostaloEquivalente"
-              formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" />
+            <label class="form-label" for="codigoPostaloEquivalente"
+              >Código postal o equivalente*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="codigoPostaloEquivalente"
+              formControlName="codigoPostaloEquivalente"
+              name="codigoPostaloEquivalente"
+            />
           </div>
         </div>
 
         <div class="col-md-4 mt-5">
           <div class="form-group">
-            <label class="form-label" for="coloniaoEquivalente">Colonia o equivalente:</label>
-            <input class="form-control" type="text" id="coloniaoEquivalente" formControlName="coloniaoEquivalente"
-              name="coloniaoEquivalente" />
+            <label class="form-label" for="coloniaoEquivalente"
+              >Colonia o equivalente:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="coloniaoEquivalente"
+              formControlName="coloniaoEquivalente"
+              name="coloniaoEquivalente"
+            />
           </div>
         </div>
 
@@ -718,49 +1065,95 @@
 
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                ata-bs-toggle="tooltip"></span></label>
-            <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+            <label class="form-label" for="calle"
+              >Calle*:<span
+                class="bi bi-question-circle-fill fs-4 m-1"
+                title="Title"
+                ata-bs-toggle="tooltip"
+              ></span
+            ></label>
+            <input
+              type="text"
+              class="form-control"
+              id="calle"
+              formControlName="calle"
+              name="calle"
+            />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label for="numeroExterior" class="form-label">Número exterior*:
+            <label for="numeroExterior" class="form-label"
+              >Número exterior*:
             </label>
-            <input type="text" class="form-control" id="numeroExterior" formControlName="numeroExterior"
-              name="numeroExterior" />
+            <input
+              type="text"
+              class="form-control"
+              id="numeroExterior"
+              formControlName="numeroExterior"
+              name="numeroExterior"
+            />
           </div>
         </div>
 
         <div class="col-md-4 mt-5">
           <div class="form-group">
-            <label class="form-label" for="numeroInterior">Número interior:</label>
-            <input type="text" class="form-control" id="numeroInterior" formControlName="numeroInterior"
-              name="numeroInterior" />
+            <label class="form-label" for="numeroInterior"
+              >Número interior:</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="numeroInterior"
+              formControlName="numeroInterior"
+              name="numeroInterior"
+            />
           </div>
         </div>
 
         <div class="col-md-1 mt-5">
           <div class="form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input type="text" class="form-control" id="lada" formControlName="lada" name="lada" />
+            <input
+              type="text"
+              class="form-control"
+              id="lada"
+              formControlName="lada"
+              name="lada"
+            />
           </div>
         </div>
 
         <div class="col-md-3 mt-5">
           <div class="form-group">
             <label class="form-label" for="telefono">Teléfono:</label>
-            <input type="text" class="form-control" id="telefono" formControlName="telefono" name="telefono" />
+            <input
+              type="text"
+              class="form-control"
+              id="telefono"
+              formControlName="telefono"
+              name="telefono"
+            />
           </div>
         </div>
 
         <div class="col-md-4 mt-5">
           <div class="form-group">
-            <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-            <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
-              name="correoElectronico" />
+            <label class="form-label" for="correoElectronico"
+              >Correo electrónico:<span
+                class="bi bi-question-circle-fill fs-4 m-1"
+                title="Title"
+                ata-bs-toggle="tooltip"
+              ></span
+            ></label>
+            <input
+              type="text"
+              class="form-control"
+              id="correoElectronico"
+              formControlName="correoElectronico"
+              name="correoElectronico"
+            />
           </div>
         </div>
         <hr />
@@ -771,13 +1164,19 @@
 
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-danger"  (click)="toggleDivProveedor()">
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="toggleDivProveedor()"
+            >
               Cancelar
             </button>
-            <button type="button" class="btn btn-default">
-              Limpiar
-            </button>
-            <button type="button" class="btn btn-primary" (click)="submitProveedorForm()">
+            <button type="button" class="btn btn-default">Limpiar</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="submitProveedorForm()"
+            >
               Guardar
             </button>
           </div>
@@ -799,16 +1198,14 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio
+                [radioOptions]="tipoPersonaOptions"
+                [isRequired]="true"
+                formControlName="tipoPersona"
+                [layout]="'vertical'"
+                (valueChange)="cambiarRadioFisica($event)"
+                [showTooltip]="true"
+              ></app-input-radio>
             </div>
           </div>
         </div>
@@ -822,72 +1219,122 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="nombre" class="form-label">Nombre(s)*: </label>
-              <input type="text" id="nombre" formControlName="nombre" name="nombre" class="form-control" />
+              <input
+                type="text"
+                id="nombre"
+                formControlName="nombre"
+                name="nombre"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="primerApellido">Primer apellido*:</label>
-              <input type="text" id="primerApellido" formControlName="primerApellido" name="primerApellido"
-                class="form-control" />
+              <label class="form-label" for="primerApellido"
+                >Primer apellido*:</label
+              >
+              <input
+                type="text"
+                id="primerApellido"
+                formControlName="primerApellido"
+                name="primerApellido"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" id="segundoApellido" formControlName="segundoApellido" name="segundoApellido"
-                class="form-control" />
+              <label class="form-label" for="segundoApellido"
+                >Segundo apellido*:</label
+              >
+              <input
+                type="text"
+                id="segundoApellido"
+                formControlName="segundoApellido"
+                name="segundoApellido"
+                class="form-control"
+              />
             </div>
           </div>
         </div>
-        }
-
-        @if (moral || (!fisica && !moral)) {
+        } @if (moral || (!fisica && !moral)) {
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-              <input type="text" class="form-control" id="denominacionRazonSocial"
-                formControlName="denominacionRazonSocial" name="denominacionRazonSocial" />
+              <label class="form-label" for="denominacionRazonSocial"
+                >Denominación/razón social*:</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="denominacionRazonSocial"
+                formControlName="denominacionRazonSocial"
+                name="denominacionRazonSocial"
+              />
             </div>
           </div>
         </div>
         }
-        <hr>
-        <hr>
+        <hr />
+        <hr />
 
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
-                  for="pais" id="pais"
-                  formControlName="pais"></app-catalogo-select>
+              <app-catalogo-select
+                [catalogo]="paisDropdownData"
+                [label]="'Pais'"
+                [required]="true"
+                for="pais"
+                id="pais"
+                formControlName="pais"
+              ></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <label class="form-label" for="estado">Estado*:</label>
-              <input class="form-control" type="text" id="estado" formControlName="estado" name="estado" />
+              <input
+                class="form-control"
+                type="text"
+                id="estado"
+                formControlName="estado"
+                name="estado"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="codigoPostaloEquivalente">Código postal o equivalente*:</label>
-              <input class="form-control" type="text" id="codigoPostaloEquivalente"
-                formControlName="codigoPostaloEquivalente" name="codigoPostaloEquivalente" />
+              <label class="form-label" for="codigoPostaloEquivalente"
+                >Código postal o equivalente*:</label
+              >
+              <input
+                class="form-control"
+                type="text"
+                id="codigoPostaloEquivalente"
+                formControlName="codigoPostaloEquivalente"
+                name="codigoPostaloEquivalente"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="coloniaoEquivalente">Colonia o equivalente:</label>
-              <input class="form-control" type="text" id="coloniaoEquivalente" formControlName="coloniaoEquivalente"
-                name="coloniaoEquivalente" />
+              <label class="form-label" for="coloniaoEquivalente"
+                >Colonia o equivalente:</label
+              >
+              <input
+                class="form-control"
+                type="text"
+                id="coloniaoEquivalente"
+                formControlName="coloniaoEquivalente"
+                name="coloniaoEquivalente"
+              />
             </div>
           </div>
 
@@ -896,49 +1343,95 @@
 
           <div class="col-md-8">
             <div class="form-group">
-              <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input type="text" class="form-control" id="calle" formControlName="calle" name="calle" />
+              <label class="form-label" for="calle"
+                >Calle*:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span
+              ></label>
+              <input
+                type="text"
+                class="form-control"
+                id="calle"
+                formControlName="calle"
+                name="calle"
+              />
             </div>
           </div>
 
           <div class="col-md-4">
             <div class="form-group">
-              <label for="numeroExterior" class="form-label">Número exterior*:
+              <label for="numeroExterior" class="form-label"
+                >Número exterior*:
               </label>
-              <input type="text" id="numeroExterior" formControlName="numeroExterior" name="numeroExterior"
-                class="form-control" />
+              <input
+                type="text"
+                id="numeroExterior"
+                formControlName="numeroExterior"
+                name="numeroExterior"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="numeroInterior">Número interior:</label>
-              <input type="text" id="numeroInterior" formControlName="numeroInterior" name="numeroInterior"
-                class="form-control" />
+              <label class="form-label" for="numeroInterior"
+                >Número interior:</label
+              >
+              <input
+                type="text"
+                id="numeroInterior"
+                formControlName="numeroInterior"
+                name="numeroInterior"
+                class="form-control"
+              />
             </div>
           </div>
 
           <div class="col-md-1 mt-5">
             <div class="form-group">
               <label class="form-label" for="lada">Lada:</label>
-              <input class="form-control" type="text" id="lada" formControlName="lada" name="lada" />
+              <input
+                class="form-control"
+                type="text"
+                id="lada"
+                formControlName="lada"
+                name="lada"
+              />
             </div>
           </div>
 
           <div class="col-md-3 mt-5">
             <div class="form-group">
               <label class="form-label" for="telefono">Teléfono:</label>
-              <input class="form-control" type="text" id="telefono" formControlName="telefono" name="telefono" />
+              <input
+                class="form-control"
+                type="text"
+                id="telefono"
+                formControlName="telefono"
+                name="telefono"
+              />
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="correoElectronico">Correo electrónico:<span
-                  class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-              <input class="form-control" type="text" id="correoElectronico" formControlName="correoElectronico"
-                name="correoElectronico" />
+              <label class="form-label" for="correoElectronico"
+                >Correo electrónico:<span
+                  class="bi bi-question-circle-fill fs-4 m-1"
+                  title="Title"
+                  ata-bs-toggle="tooltip"
+                ></span
+              ></label>
+              <input
+                class="form-control"
+                type="text"
+                id="correoElectronico"
+                formControlName="correoElectronico"
+                name="correoElectronico"
+              />
             </div>
           </div>
           <hr />
@@ -949,13 +1442,19 @@
 
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger"  (click)="toggleDivFacturador()">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="toggleDivFacturador()"
+              >
                 Cancelar
               </button>
-              <button type="button" class="btn btn-default">
-                Limpiar
-              </button>
-              <button type="button" class="btn btn-primary" (click)="submitFacturadorForm()">
+              <button type="button" class="btn btn-default">Limpiar</button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="submitFacturadorForm()"
+              >
                 Guardar
               </button>
             </div>
@@ -963,6 +1462,5 @@
         </div>
       </div>
     </form>
-
   </div>
 </app-modal>

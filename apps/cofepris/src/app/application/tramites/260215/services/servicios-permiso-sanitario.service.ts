@@ -1,15 +1,15 @@
-import { Observable, catchError, throwError } from 'rxjs';
 import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { PermisoModel } from '../models/permiso-sanitario.model';
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
+import { Observable, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { PermisoModel } from '../models/permiso-sanitario.model';
 
 @Injectable({
   providedIn: 'root',

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -25,7 +25,7 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.css',
 })
-export class RepresentanteLegalComponent implements OnInit {
+export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */
@@ -100,5 +100,13 @@ export class RepresentanteLegalComponent implements OnInit {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Limpia los campos del formulario.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
