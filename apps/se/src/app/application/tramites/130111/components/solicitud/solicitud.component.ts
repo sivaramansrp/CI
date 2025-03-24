@@ -34,7 +34,7 @@ export class SolicitudComponent implements OnInit {
    * form
    * Formulario reactivo principal para capturar los datos de la solicitud.
    */
-  form!: FormGroup;
+  partidasDelaMercanciaForm!: FormGroup;
 
   /**
    * formForTotalCount
@@ -118,7 +118,7 @@ export class SolicitudComponent implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.form.patchValue({
+          this.partidasDelaMercanciaForm.patchValue({
             cantidad: seccionState.cantidad,
             valorPartidaUSD: seccionState.valorPartidaUSD,
             descripcion: seccionState.descripcion,
@@ -133,7 +133,7 @@ export class SolicitudComponent implements OnInit {
    * Crea el formulario reactivo principal para capturar los datos de la solicitud.
    */
   crearFormulario(): void {
-    this.form = this.fb.group({
+    this.partidasDelaMercanciaForm = this.fb.group({
       cantidad: ['', [Validators.required, Validators.pattern('^[0-9]+$'), Validators.maxLength(18)]],
       descripcion: ['', [Validators.required, Validators.maxLength(255)]],
       valorPartidaUSD: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'), Validators.maxLength(20)]],
@@ -193,8 +193,8 @@ export class SolicitudComponent implements OnInit {
    */
   validarYEnviarFormulario(): void {
     this.mostrarTabla = true;
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
     }
