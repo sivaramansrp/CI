@@ -225,6 +225,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.solicitudState.horaInicio,
         this.solicitudState.horaFinal
       );
+      this.mostrarRangoFechas = true;
     }
 
     this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0) ? true : false;
@@ -642,10 +643,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         monto: [this.solicitudState.monto, [Validators.required]],
       })
     });
-    // debugger
-    this.mostrarRangoFechas = this.solicitudState?.rangoFechas;
-    this.selectRangoDias = this.solicitudState?.selectRangoDias;
-
   }
 
   /**
@@ -762,13 +759,28 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
+    const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
+
+    if (this.solicitudState.tipoSolicitud && (TIPO_SOLICITUD !== this.solicitudState.tipoSolicitud)) {
+      //Abre el modal de aviso
+      alert('Tipo de solicitud seleccionado: ');
+      this.tramite5701Store.limpiarSolicitud();
+      this.FormSolicitud.reset(
+        {
+          tipoSolicitud: TIPO_SOLICITUD
+        }
+      );
+      this.setValoresStore(this.FormSolicitud, 'tipoSolicitud', 'setTipoSolicitud');      
+    }
+
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
 
-    const TIPO_SOLICITUD = this.FormSolicitud.get('tipoSolicitud')?.value;
     this.tramite5701Store.setTipoSolicitud(TIPO_SOLICITUD);
+
+
   }
 
   /**
@@ -790,7 +802,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.darValorCampoFormulario(this.despacho, 'idAduanaDespacho', aduana.id);
     this.darValorCampoFormulario(
       this.despacho,
-      'descripcionAduana',
+      'aduanaDespacho',
       aduana.descripcion
     );
     this.validacionPedimento = true;
@@ -804,12 +816,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       'idAduanaDespacho'
     );
 
-
-    console.log(PATENTE, ID_ADUANA);
-    console.log(typeof ID_ADUANA);
-
-
-
     this.datosPedimentoComponente = {
       patente: PATENTE,
       idAduanaDespacho: ID_ADUANA,
@@ -822,7 +828,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.isValid(this.despacho, 'descripcionAduana');
+    const ADUANA_VALIDACION = this.isValid(this.despacho, 'aduanaDespacho');
     if (ADUANA_VALIDACION === null) {
       this.validacionPedimento = true;
     }
@@ -892,8 +898,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
-    console.log(this.solicitudState);
-
   }
 
   /**
@@ -928,6 +932,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
       this.rangoFechas();
+      this.mostrarRangoFechas = true;
     }
   }
 

@@ -103,8 +103,8 @@ export class PedimentoComponent implements OnInit, OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   agregaPedimento(): void {
-    this.validaCampos.emit();
     this.acciones();
+    this.validaCampos.emit();
   }
 
   /**
@@ -123,15 +123,11 @@ export class PedimentoComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   acciones(): void {
-    console.log(this.validacion);
-    
+
     if (this.validacion) {
       const NUMERO_PEDIMENTO = this.pedimentoForm.value
         ? parseInt(this.pedimentoForm.value, 10)
         : 0;
-
-        
-
       if (NUMERO_PEDIMENTO !== 0) {
         const PEDIMENTO = {
           patente: this.datosNroPedimento.patente,
@@ -198,10 +194,8 @@ export class PedimentoComponent implements OnInit, OnChanges {
     this.mensajeModal = '';
   }
 
-   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
-      const VALOR = form.get(campo)?.value;
-      (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
-      console.log(this.solicitudState);
-  
-    }
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
 }
