@@ -8,7 +8,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RefProcedureRoutingModule } from './ref-procedure-routing.module';
-
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 
 
@@ -26,7 +26,11 @@ import { RefProcedureRoutingModule } from './ref-procedure-routing.module';
     TablaDinamicaComponent,
     PasoDosComponent,
     PasoTresComponent,
-    AlertComponent
+    AlertComponent,
+    ToastrModule.forRoot()
   ],
+  providers: [
+    ToastrService
+  ]
 })
 export class RefProcedureModule {}
