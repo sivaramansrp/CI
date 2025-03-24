@@ -1,25 +1,22 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
-
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExportacionMineralesDeHierroService {
-
   constructor(private http: HttpClient) {
-    // 
-   }
+    //
+  }
   /**
    * Obtiene la lista de países disponibles desde un archivo JSON.
    * @returns {Observable<Catalogo[]>}
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      '/assets/json/130202/pais-procenia.json'
-    );
+    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
   }
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
@@ -49,5 +46,24 @@ export class ExportacionMineralesDeHierroService {
       '/assets/json/130202/representacion-federal.json'
     );
   }
-}
 
+  /**
+   * Obtiene las opciones de solicitud desde un archivo JSON.
+   * @returns {Observable<ProductoResponse>}
+   */
+  getSolicitudeOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(
+      'assets/json/130202/solicitude-options.json'
+    );
+  }
+
+  /**
+   * Obtiene las opciones de producto desde un archivo JSON.
+   * @returns {Observable<ProductoResponse>}
+   */
+  getProductoOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(
+      'assets/json/130202/producto-options.json'
+    );
+  }
+}

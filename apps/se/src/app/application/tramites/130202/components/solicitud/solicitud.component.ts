@@ -1,40 +1,19 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  CrosslistState,
-  CrosslistStore,
-} from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  ProductoOption,
-  ProductoResponse,
-} from '../../../../shared/constantes/vehiculos-adaptados.enum';
-
-import { map, Subject, takeUntil } from 'rxjs';
-
 import { Catalogo, REG_X } from '@ng-mf/data-access-user';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
 import { HttpClient } from '@angular/common/http';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
+import { ProductoOption } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+import { TEXTOS } from '../../../130202/enums/representacion-federal.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130202Query } from '../../estados/queries/tramite130202.query';
 import { Tramite130202Store } from '../../estados/tramites/tramites130202.store';
 import fractionValues from '@libs/shared/theme/assets/json/130202/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130202/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-
-import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
-import { PartidasDeLaComponent } from '../../../../shared/components/partidas-de-la/partidas-de-la.component';
-import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
-import { TEXTOS } from '../../../130202/enums/representacion-federal.enum';
-import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
 /**
  * @description Componente para gestionar la solicitud de mercancías.
  * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
@@ -66,28 +45,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para capturar los totales de las partidas.
    */
   formForTotalCount!: FormGroup;
-  /**
-   * Formulario reactivo para la selección de países.
-   * @type {FormGroup}
-   */
+  // Add compodoc
   paisForm!: FormGroup;
+  frmRepresentacionForm!: FormGroup;
 
   /**
    * Formulario reactivo para la representación.
    * @type {FormGroup}
    */
-  frmRepresentacionForm!: FormGroup;
   /**
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<any>[] = [];
+  tableHeaderData: ConfiguracionColumna<string>[] = [];
 
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
-  tableBodyData: any[] = [];
+  tableBodyData: { tbodyData: string[] }[] = [];
 
   /**
    * mostrarTabla
@@ -157,6 +133,37 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Sujeto para gestionar la destrucción de suscripciones.
    */
   private destroyed$ = new Subject<void>();
+  /**
+   * @description Arreglo que almacena un catálogo de países.
+   * @type {Catalogo[]}
+   */
+  paisProc: Catalogo[] = [];
+  /**
+   * @description Arreglo que contiene un catálogo de países organizados por bloque.
+   * @type {Catalogo[]}
+   */
+  paisesPorBloque: Catalogo[] = [];
+  /**
+   * @description Arreglo que guarda un catálogo de entidades federativas.
+   * @type {Catalogo[]}
+   */
+  entidadFederativa: Catalogo[] = [];
+  /**
+   * @description Arreglo que almacena un catálogo de representaciones federales.
+   * @type {Catalogo[]}
+   */
+  representacionFederal: Catalogo[] = [];
+  /**
+   * @description Arreglo de cadenas que representa las opciones seleccionables de rangos de días.
+   * @type {string[]}
+   */
+  selectRangoDias: string[] = [];
+  /**
+   * @description Objeto o constante que contiene los textos utilizados en la aplicación.
+   * @type {any}
+   */
+  TEXTOS = TEXTOS;
+
   /**
    * Lista de países de procedencia.
    * @type {Catalogo[]}
@@ -231,10 +238,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private tramite130202Store: Tramite130202Store,
     private tramite130202Query: Tramite130202Query,
-    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private crosslistQuery: CrosslistQuery,
-    private crosslistStore: CrosslistStore
+    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService
   ) {
     //constructor
   }
@@ -251,26 +255,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
-
-    /**
-     * Suscripción al estado del componente Crosslist.
-     * @type {Observable<CrosslistState>}
-     */
-    this.crosslistQuery.selectCrosslist$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        /**
-         * Actualiza la lista de fechas con el estado recibido.
-         * @type {string[]}
-         */
-        this.fechas = state.fechas || [];
-
-        /**
-         * Actualiza los datos de las fechas con el estado recibido o con la lista de fechas.
-         * @type {string[]}
-         */
-        this.fechasDatos = state.fechasDatos || this.fechas;
-      });
 
     this.tramite130202Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
@@ -316,18 +300,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       fraccion: ['', Validators.required],
-      // cantidad: [
-      //   '',
-      //   [Validators.required, Validators.pattern(/^\d+$/), Validators.min(1)],
-      // ],
-      // valorFacturaUSD: [
-      //   '',
-      //   [
-      //     Validators.required,
-      //     Validators.pattern(/^\d+(\.\d{1,2})?$/),
-      //     Validators.min(0.01),
-      //   ],
-      // ],
       cantidad: [
         '',
         [
@@ -372,25 +344,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ],
     });
 
-/**
- * Inicializa el formulario reactivo para la selección de países.
- * @type {FormGroup}
- */
-this.paisForm = this.fb.group({
-  bloque: [''],
-  usoEspecifico: ['', Validators.required],
-  justificacionImportacionExportacion: ['', [Validators.required]],
-  observaciones: [''],
-});
-
-/**
- * Inicializa el formulario reactivo para la representación.
- * @type {FormGroup}
- */
-this.frmRepresentacionForm = this.fb.group({
-  entidad: ['', Validators.required],
-  representacion: ['', Validators.required],
-});
+    this.paisForm = this.fb.group({
+      bloque: [''],
+      usoEspecifico: ['', Validators.required],
+      justificacionImportacionExportacion: ['', [Validators.required]],
+      observaciones: [''],
+    });
+    this.frmRepresentacionForm = this.fb.group({
+      entidad: ['', Validators.required],
+      representacion: ['', Validators.required],
+    });
   }
   /**
    * @description Configura las suscripciones para actualizar formularios y almacenar estados.
@@ -524,7 +487,9 @@ this.frmRepresentacionForm = this.fb.group({
         sum + parseFloat(item.tbodyData[5]),
       0
     );
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
+    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
   }
 
@@ -532,8 +497,8 @@ this.frmRepresentacionForm = this.fb.group({
    * @description Solicita opciones configurables para los formularios desde archivos JSON.
    */
   fetchOptions(): void {
-    this.http
-      .get<ProductoResponse>('assets/json/130202/solicitude-options.json')
+    this.exportacionMineralesDeHierroService
+      .getSolicitudeOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
@@ -543,10 +508,12 @@ this.frmRepresentacionForm = this.fb.group({
             defaultSelect: data.defaultSelect || 'Inicial',
           });
         },
+        error: (error) =>
+          console.error('Error loading solicitude options:', error),
       });
 
-    this.http
-      .get<ProductoResponse>('/assets/json/130202/producto-otions.json')
+    this.exportacionMineralesDeHierroService
+      .getProductoOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
@@ -556,9 +523,10 @@ this.frmRepresentacionForm = this.fb.group({
             defaultProducto: data.options[0]?.value || 'Nuevo',
           });
         },
+        error: (error) =>
+          console.error('Error loading producto options:', error),
       });
   }
-
   /**
    * handleFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
@@ -660,10 +628,6 @@ this.frmRepresentacionForm = this.fb.group({
     metodoNombre: string;
   }): void {
     const VALOR = event.form.get(event.campo)?.value;
-    // if (event.metodoNombre in this.tramite130202Store) {
-    //   const METODO_NOMBRE = event.metodoNombre as keyof Tramite130202Store;
-    //   (this.tramite130202Store[METODO_NOMBRE] as (value: any) => void)(VALOR);
-    // }else{
     switch (event.metodoNombre) {
       case 'updateSolicitud':
         this.tramite130202Store.updateSolicitud(VALOR);
@@ -671,7 +635,6 @@ this.frmRepresentacionForm = this.fb.group({
       case 'setDescripcionPartidasDeLaMercancia':
         this.tramite130202Store.setDescripcionPartidasDeLaMercancia(VALOR);
         break;
-
       case 'setCantidadPartidasDeLaMercancia':
         this.tramite130202Store.setCantidadPartidasDeLaMercancia(VALOR);
         break;

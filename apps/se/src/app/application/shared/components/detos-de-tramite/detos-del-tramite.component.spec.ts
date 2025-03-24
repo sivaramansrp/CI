@@ -18,9 +18,10 @@ describe('DetosDelTramiteComponent', () => {
     fixture = TestBed.createComponent(DetosDelTramiteComponent);
     component = fixture.componentInstance;
     component.form = new FormBuilder().group({
+      regimen: ['', Validators.required],
       solicitud: ['', Validators.required], 
       controlName: ['', Validators.required], 
-      fraccion: ['', Validators.required], 
+      classification:['',Validators.required]
     });
   
     component.inputFields = [
