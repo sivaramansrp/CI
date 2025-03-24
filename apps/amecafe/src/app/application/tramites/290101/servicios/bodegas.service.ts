@@ -4,9 +4,12 @@
  * @@Injectable
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
+
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +18,12 @@ export class BodegasService {
   /**
    * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del permiso IMMEX.
    */
-  private jsonUrl = '/assets/json/290101/bodegas.json';
+  private jsonUrl = '/assets/json/290101/';
   /**
    * @constructor
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
   /**
    * @method getDatos
@@ -29,7 +32,19 @@ export class BodegasService {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getDatos(): Observable<any> {
-    return this.httpClient.get<any[]>(this.jsonUrl).pipe(
+    return this.http.get<any[]>(this.jsonUrl).pipe(
     );
   }  
+  cargarBodegaPropiaAlquilad(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`${this.jsonUrl}propia-alquilada.json`).pipe(
+      map((response) => response)
+    );
+  }
+
+  cargarEstadoCatalog(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`${this.jsonUrl}estado.json`).pipe(
+      map((response) => response)
+    );
+  }
+
 }

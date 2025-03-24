@@ -16,6 +16,7 @@ import { BENEFICIOS_SERVICIO } from '../../modelos/cafe-exportadores.model';
 import { BODEGAS_SERVICIO } from '../../modelos/cafe-exportadores.model';
 import { CAFE_EXPORTADORES } from '../../modelos/cafe-exportadores.model';
 import { REGIONES_SERVICIO } from '../../modelos/cafe-exportadores.model';
+import { Router } from '@angular/router';
 
 import { beneficiosInfo } from '../../modelos/cafe-exportadores.model';
 import { bodegasInfo } from '../../modelos/cafe-exportadores.model';
@@ -152,9 +153,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private productoTablaServicios: ProductoTablaServicios
+    private productoTablaServicios: ProductoTablaServicios,
+    private router: Router
   ) { }
 
+
+  navigateToBodegas() {
+    this.router.navigate(['/pago/cafe-exportadores/bodegas']);
+  }
+
+  navigateToCafeExportadores() {
+    this.router.navigate(['/pago/cafe-exportadores/cafe-de-exportadores']);
+  }
+
+  navigateToBeneficios(){
+    this.router.navigate(['/pago/cafe-exportadores/beneficios']);
+  }
+
+  navigateToRegions(){
+    this.router.navigate(['/pago/cafe-exportadores/regiones']);
+  }
+  
   /**
    * Método de inicialización del componente.
    * Configura el formulario reactivo y carga los datos iniciales.
