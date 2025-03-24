@@ -56,8 +56,7 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { Modal } from 'bootstrap';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
-import { CrosslistState, CrosslistStore } from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
-import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
+
 
 @Component({
   selector: 'app-solicitud',
@@ -100,7 +99,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   fechaInicioInput: InputFecha = FECHA_INICIO;
   fechaFinalInput: InputFecha = FECHA_FINAL;
-
   FormSolicitud!: FormGroup;
 
   colapsable: boolean = false;
@@ -134,12 +132,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
   public solicitudState!: Solicitud5701State;
-  public crosslistState!: CrosslistState;
 
 
   constructor(
-    private crosslistQuery: CrosslistQuery,
-    private crosslistStore: CrosslistStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite5701Store: Tramite5701Store,
@@ -164,14 +159,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crosslistQuery.selectCrosslist$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.crosslistState = state;
-        })
-      )
 
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -229,9 +216,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.verificaDatosCheckInput('socioComercial', 'idSocioComercial', this.datosImportadorExportador);
     this.verificaDatosCheckInput('lda', 'despachoSeleccion', this.despachoSeleccion);
     this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
-    this.colapsable = this.solicitudState.colapsable;
 
 
+    if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
+      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+        this.solicitudState.fechaInicio,
+        this.solicitudState.fechaFinal,
+        this.solicitudState.horaInicio,
+        this.solicitudState.horaFinal
+      );
+    }
+
+    this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0) ? true : false;
   }
 
   /**
@@ -309,7 +305,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('vehiculo') as FormGroup;
   }
 
-  
+
   /**
  * Obtiene el grupo de formulario 'transporteArriboSalida' del formulario principal 'FormSolicitud'.
  */
@@ -320,7 +316,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   get itemsVehiculo(): FormArray {
     return this.vehiculo.get('vehiculoDatos') as FormArray;
   }
-  
+
   get fechasSeleccionadas(): FormArray {
     return this.datosServicio.get('fechasSeleccionadas') as FormArray;
   }
@@ -442,7 +438,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         map((resp) => {
           const CATALOGO_TRANSPORTE = JSON.parse(resp.data);
-          
+
           const TIPO_VEHICULO = VEHICULO;
           this.tipoVehiculo = CATALOGO_TRANSPORTE.filter((elemento: Catalogo) => TIPO_VEHICULO.includes(elemento.descripcion));
 
@@ -567,7 +563,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        colapsable: [this.solicitudState?.colapsable],
         fechasSeleccionadas: this.fb.array([]),
       }),
 
@@ -783,7 +778,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
-    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
   /**
@@ -813,8 +807,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     console.log(PATENTE, ID_ADUANA);
     console.log(typeof ID_ADUANA);
-    
-    
+
+
 
     this.datosPedimentoComponente = {
       patente: PATENTE,
@@ -962,9 +956,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
-    this.crosslistStore.establecerFechas(this.selectRangoDias);
+    // this.crosslistStore.establecerFechas(this.selectRangoDias);
     this.colapsable = true;
-    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
 
@@ -1216,23 +1209,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   changeAgregarVehiculo(event: any): void {
     console.log(event);
-    
+
   }
 
-    /**
-   * Actualiza la lista de fechas seleccionadas y sincroniza el estado en el store.
-   *
-   * @param fechas - Un arreglo de cadenas que representan las fechas seleccionadas.
-   * 
-   * Este método recorre el arreglo de fechas proporcionado, crea una nueva instancia
-   * de `FormControl` para cada fecha y la agrega a la lista `fechasSeleccionadas`.
-   * Posteriormente, actualiza el estado de las fechas seleccionadas en el store
-   * `tramite5701Store` llamando al método `setFechasSeleccionadas`.
-   */
-    changeCrosslist(fechas: string[]): void {    
-      fechas.forEach((fecha) => {
-        this.fechasSeleccionadas.push(new FormControl(fecha));
-      });
-      this.tramite5701Store.setFechasSeleccionadas(fechas);
-    }
+  /**
+ * Actualiza la lista de fechas seleccionadas y sincroniza el estado en el store.
+ *
+ * @param fechas - Un arreglo de cadenas que representan las fechas seleccionadas.
+ * 
+ * Este método recorre el arreglo de fechas proporcionado, crea una nueva instancia
+ * de `FormControl` para cada fecha y la agrega a la lista `fechasSeleccionadas`.
+ * Posteriormente, actualiza el estado de las fechas seleccionadas en el store
+ * `tramite5701Store` llamando al método `setFechasSeleccionadas`.
+ */
+  changeCrosslist(fechas: string[]): void {
+    fechas.forEach((fecha) => {
+      this.fechasSeleccionadas.push(new FormControl(fecha));
+    });
+    this.tramite5701Store.setFechasSeleccionadas(fechas);
+  }
+
 }
