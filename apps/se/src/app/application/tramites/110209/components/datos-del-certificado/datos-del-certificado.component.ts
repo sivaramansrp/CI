@@ -17,6 +17,8 @@ import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
+import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL } from '@ng-mf/data-access-user';
+
 
 /**
  * Este componente maneja el formulario de datos del certificado.
@@ -87,7 +89,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     private tramite110209Store: Tramite110209Store, 
     private tramite110209Query: Tramite110209Query ,private router: Router) {
     this.datosDelCertificadoForm = this.fb.group({
-      observaciones: ['',Validators.pattern(/^(?!\s)(.*\S)?$/)]
+      observaciones: ['',Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)]
     });
   }
 
@@ -161,7 +163,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   navegar(): void {  
     this.tramite110209Store.setMercanciasSeleccionadas(this.mercanciasSeleccionadas);
-    //this.router.navigate(['/se/certificado-sgp/registro-de-mercancia']);
     this.modificarEventCertificado.emit(true);
   }
 

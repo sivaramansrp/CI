@@ -29,7 +29,7 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    *
    * @property {FormGroup} detallesDeltransportForm - El formulario del componente.
    */
-  detallesDeltransportForm!: FormGroup;
+  detallesDelTransporteForm!: FormGroup;
 
   /**
    * Subject que emite un evento cuando el componente es destruido,
@@ -45,13 +45,13 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
    * @param {DetallesDelTransporteService} service - El servicio para obtener los detalles del transporte.
    */
   constructor(private fb: FormBuilder, private service: DetallesDelTransporteService) {
-    this.detallesDeltransportForm = this.fb.group({
+    this.detallesDelTransporteForm = this.fb.group({
       tratado: [{ value: '', disabled: true }],
       paisOBloque: [{ value: '', disabled: true }],
       paisOOrigin: [{ value: '', disabled: true }],
       paisODestino: [{ value: '', disabled: true }],
-      fetchaDeExpedicion: [{ value: '', disabled: true }],
-      fetchaDeVencimiento: [{ value: '', disabled: true }]
+      fechaDeExpedicion: [{ value: '', disabled: true }],
+      fechaDeVencimiento: [{ value: '', disabled: true }]
     });
   }
 
@@ -71,13 +71,13 @@ export class DetallesDelTransporteComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe(
       (data) => {
-        this.detallesDeltransportForm.patchValue({
+        this.detallesDelTransporteForm.patchValue({
           tratado: data.tratado,
           paisOBloque: data.paisOBloque,
           paisOOrigin: data.paisOOrigin,
           paisODestino: data.paisODestino,
-          fetchaDeExpedicion: data.fetchaDeExpedicion,
-          fetchaDeVencimiento: data.fetchaDeVencimiento
+          fechaDeExpedicion: data.fetchaDeExpedicion,
+          fechaDeVencimiento: data.fetchaDeVencimiento
         });
       }
     );

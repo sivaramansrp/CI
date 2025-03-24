@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
+import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 /**
  * Componente para gestionar el formulario de "Domicilio del Destinatario".
  * 
@@ -51,12 +52,12 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.domicilioDelDestinatarioForm = this.fb.group({
-      calle: ['', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(100)]],
-      numeroLetra: [ '', [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(30)]],
-      ciudad: ['' , [Validators.required, Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(50)]],
+      calle: ['', [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(100)]],
+      numeroLetra: [ '', [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(30)]],
+      ciudad: ['' , [Validators.required, Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(50)]],
       correoElectronico: ['', [Validators.required, Validators.email,Validators.maxLength(70)]],
-      fax: ['',[Validators.pattern(/^\d+$/),Validators.maxLength(30)]],
-      telefono: ['' , [Validators.pattern(/^\d+$/),Validators.maxLength(30)]],
+      fax: ['',[Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
+      telefono: ['' , [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
     });
   }
 

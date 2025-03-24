@@ -1,18 +1,18 @@
 <div class="container">
     <ng-titulo [titulo]="'Datos del destinatario'"></ng-titulo>
-    <form [formGroup]="detosDelDestinatarioForm">
+    <form [formGroup]="datosDelDestinatarioForm">
         <div class="row">
 
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label width-unset" for="nombre">Nombre(s) :</label>
-                    <input type="text" (change)="setValoresStore(detosDelDestinatarioForm,'nombre','setNombre')"
+                    <input type="text" (change)="setValoresStore(datosDelDestinatarioForm,'nombre','setNombre')"
                         class="form-control" id="nombre" formControlName="nombre" placeholder="Juan" />
                     <div
-                        *ngIf="detosDelDestinatarioForm.get('nombre')?.touched && detosDelDestinatarioForm.get('nombre')?.invalid">
-                        <small *ngIf="detosDelDestinatarioForm.get('nombre')?.errors?.['pattern']"
+                        *ngIf="datosDelDestinatarioForm.get('nombre')?.touched && datosDelDestinatarioForm.get('nombre')?.invalid">
+                        <small *ngIf="datosDelDestinatarioForm.get('nombre')?.errors?.['pattern']"
                             class="text-danger"> Por favor, corrija el nombre de la persona.</small>
-                        <small *ngIf="detosDelDestinatarioForm.get('nombre')?.errors?.['maxlength']"
+                        <small *ngIf="datosDelDestinatarioForm.get('nombre')?.errors?.['maxlength']"
                             class="text-danger"> Por favor, no escriba más de 25 caracteres.</small>
                     </div>
                 </div>
@@ -22,12 +22,12 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="primerApellido">Primer apellido :</label>
                     <input type="text"
-                        (change)="setValoresStore(detosDelDestinatarioForm,'primerApellido','setPrimerApellido')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'primerApellido','setPrimerApellido')"
                         class="form-control" id="primerApellido" formControlName="primerApellido" placeholder="Perez" />
-                    <div *ngIf="detosDelDestinatarioForm.get('primerApellido')?.invalid">
-                        <small *ngIf="detosDelDestinatarioForm.get('primerApellido')?.errors?.['pattern']"
+                    <div *ngIf="datosDelDestinatarioForm.get('primerApellido')?.invalid">
+                        <small *ngIf="datosDelDestinatarioForm.get('primerApellido')?.errors?.['pattern']"
                             class="text-danger"> Por favor, corrija el nombre de la persona.</small>
-                            <small *ngIf="detosDelDestinatarioForm.get('primerApellido')?.errors?.['maxlength']"
+                            <small *ngIf="datosDelDestinatarioForm.get('primerApellido')?.errors?.['maxlength']"
                             class="text-danger"> Por favor, no escriba más de 20 caracteres.</small>
                     </div>
                 </div>
@@ -37,13 +37,13 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="segundoApellido">Segundo apellido :</label>
                     <input type="text"
-                        (change)="setValoresStore(detosDelDestinatarioForm,'segundoApellido','setSegundoApellido')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'segundoApellido','setSegundoApellido')"
                         class="form-control" id="segundoApellido" formControlName="segundoApellido"
                         placeholder="Perez" />
-                    <div *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.invalid">
-                        <small *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.errors?.['pattern']"
+                    <div *ngIf="datosDelDestinatarioForm.get('segundoApellido')?.invalid">
+                        <small *ngIf="datosDelDestinatarioForm.get('segundoApellido')?.errors?.['pattern']"
                             class="text-danger">  Por favor, corrija el nombre de la persona.</small>
-                            <small *ngIf="detosDelDestinatarioForm.get('segundoApellido')?.errors?.['maxlength']"
+                            <small *ngIf="datosDelDestinatarioForm.get('segundoApellido')?.errors?.['maxlength']"
                             class="text-danger"> Por favor, no escriba más de 20 caracteres.</small>
                     </div>
                 </div>
@@ -57,18 +57,18 @@
                     <label class="form-label width-unset" for="numeroDeRegistroFiscal">Número de registro
                         fiscal *:</label>
                     <input type="text"
-                        (change)="setValoresStore(detosDelDestinatarioForm,'numeroDeRegistroFiscal','setNumeroDeRegistroFiscal')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'numeroDeRegistroFiscal','setNumeroDeRegistroFiscal')"
                         class="form-control" id="numeroDeRegistroFiscal" formControlName="numeroDeRegistroFiscal"
                         placeholder="3243254532" />
                     <div
-                        *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.touched && detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.invalid">
-                        <small *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['pattern']"
+                        *ngIf="datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.touched && datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.invalid">
+                        <small *ngIf="datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['pattern']"
                             class="text-danger">
                             Por favor, sólo escriba dígitos.</small>
-                        <small *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['required']"
+                        <small *ngIf="datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['required']"
                             class="text-danger">
                             Este campo es obligatorio.</small>
-                            <small *ngIf="detosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['maxlength']"
+                            <small *ngIf="datosDelDestinatarioForm.get('numeroDeRegistroFiscal')?.errors?.['maxlength']"
                             class="text-danger"> Por favor, no escriba más de 30 caracteres.</small>
                     </div>
                 </div>
@@ -78,12 +78,12 @@
                 <div class="form-group">
                     <label class="form-label width-unset" for="razonSocial">Razón social :</label>
                     <input type="text"
-                        (change)="setValoresStore(detosDelDestinatarioForm,'razonSocial','setRazonSocial')"
+                        (change)="setValoresStore(datosDelDestinatarioForm,'razonSocial','setRazonSocial')"
                         class="form-control" id="razonSocial" formControlName="razonSocial"/>
-                        <div *ngIf="detosDelDestinatarioForm.get('razonSocial')?.invalid">
-                            <small *ngIf="detosDelDestinatarioForm.get('razonSocial')?.errors?.['pattern']"
-                                class="text-danger">  Por favor, corrija el nombre de la persona.</small>
-                                <small *ngIf="detosDelDestinatarioForm.get('razonSocial')?.errors?.['maxlength']"
+                        <div *ngIf="datosDelDestinatarioForm.get('razonSocial')?.invalid">
+                            <small *ngIf="datosDelDestinatarioForm.get('razonSocial')?.errors?.['pattern']"
+                                class="text-danger"> Por favor, corrija la razón social.</small>
+                                <small *ngIf="datosDelDestinatarioForm.get('razonSocial')?.errors?.['maxlength']"
                             class="text-danger"> Por favor, no escriba más de 70 caracteres.</small>
                         </div>
                 </div>

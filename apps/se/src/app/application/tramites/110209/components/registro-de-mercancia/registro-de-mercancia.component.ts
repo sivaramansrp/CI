@@ -6,14 +6,17 @@ import { CommonModule } from '@angular/common';
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+
+import { Catalogo, REGEX_PATRON_ALFANUMERICO, REGEX_PATRON_DECIMAL_15_4 } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from "@ng-mf/data-access-user";
 import { MercanciasService } from '../../services/mercancias/mercancias.service';
 
 import { Subject, takeUntil } from 'rxjs';
+import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL} from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
+
 /**
  * Este componente maneja el formulario de registro de mercancía.
  */
@@ -69,12 +72,12 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
     this.mercanciaFrom = this.fb.group({
       nombreComercial: [{ value: '', disabled: true }],
       nombreIngles: [{ value: '', disabled: true }],
-      descripcion: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
-      marca: ['', Validators.pattern(/^(?!\s)(.*\S)?$/)],
-      valorMercancia: ['', Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
-      cantidad: [{ value: '', disabled: true }, Validators.pattern(/^\d{0,15}(\.\d{1,4})?$/)],
+      descripcion: ['', Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
+      marca: ['', Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL)],
+      valorMercancia: ['', Validators.pattern(REGEX_PATRON_DECIMAL_15_4)],
+      cantidad: [{ value: '', disabled: true }, Validators.pattern(REGEX_PATRON_DECIMAL_15_4)],
       unidadMedida: [''],
-      numeroFactura: ['', Validators.pattern(/^[A-Za-z0-9Ññ]+$/)],
+      numeroFactura: ['', Validators.pattern(REGEX_PATRON_ALFANUMERICO)],
       tipoFactura: [''],
       fechaFactura: [{ value: '', disabled: true }]
     });
@@ -142,11 +145,11 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
 
 
     /**
-     * Sets the value in the Tramite110209Store if the specified form field is valid.
+     * Establece el valor en Tramite110209Store si el campo especificado del formulario es válido.
      *
-     * @param {FormGroup} form - The form group containing the field.
-     * @param {string} campo - The name of the field to check and retrieve the value from.
-     * @param {keyof Tramite110209Store} metodoNombre - The name of the method in Tramite110209Store to call with the field's value.
+     * @param {FormGroup} form - El grupo de formularios que contiene el campo.
+     * @param {string} campo - El nombre del campo a verificar y del cual obtener el valor.
+     * @param {keyof Tramite110209Store} metodoNombre - El nombre del método en Tramite110209Store a llamar con el valor del campo.
      * @returns {void}
      */
     setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110209Store): void {
@@ -161,7 +164,6 @@ export class RegistroDeMercanciaComponent implements OnInit, OnDestroy {
    * Navega a la página anterior y emite un evento de modificación de mercancía.
    */
   regresar(): void {
-    //this.router.navigate(['/se/certificado-sgp/solicitud']);
     this.modificarEventMercancia.emit(false);
   }
 

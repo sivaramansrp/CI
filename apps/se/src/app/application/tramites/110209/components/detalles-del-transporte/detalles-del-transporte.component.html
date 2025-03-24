@@ -1,6 +1,6 @@
 <div class="container">
     <ng-titulo [titulo]="'Detalles del transporte'"></ng-titulo>
-    <form [formGroup]="detallesDeltransportForm">
+    <form [formGroup]="detallesDelTransporteForm">
         <div class="row">
 
             <div class="col-md-4">
@@ -12,14 +12,14 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="paisOBloque">Pais o bloque :</label>
+                    <label class="form-label width-unset" for="paisOBloque">País / Bloque :</label>
                     <input type="text" class="form-control" id="paisOBloque" formControlName="paisOBloque" readonly />
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="paisOOrigin">Pais o origin :</label>
+                    <label class="form-label width-unset" for="paisOOrigin">País de origen :</label>
                     <input type="text" class="form-control" id="paisOOrigin" formControlName="paisOOrigin" readonly />
                 </div>
             </div>
@@ -29,23 +29,23 @@
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="tratado">Pais o destino :</label>
+                    <label class="form-label width-unset" for="tratado">País destino :</label>
                     <input type="text" class="form-control" id="tratado" formControlName="paisODestino" readonly />
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="paisOBloque">Fetcha de expedicion :</label>
-                    <input type="date" class="form-control" id="paisOBloque" formControlName="fetchaDeExpedicion"
+                    <label class="form-label width-unset" for="fechaDeExpedicion">Fecha de expedición :</label>
+                    <input type="date" class="form-control" id="fechaDeExpedicion" formControlName="fechaDeExpedicion"
                         readonly />
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label width-unset" for="paisOOrigin">Fetcha de vencimiento :</label>
-                    <input type="date" class="form-control" id="paisOOrigin" formControlName="fetchaDeVencimiento"
+                    <label class="form-label width-unset" for="fechaDeVencimiento">Fecha de vencimiento :</label>
+                    <input type="date" class="form-control" id="fechaDeVencimiento" formControlName="fechaDeVencimiento"
                         readonly />
                 </div>
             </div>

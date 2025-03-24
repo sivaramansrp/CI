@@ -8,7 +8,10 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110209Query } from '../../estados/queries/tramite110209.query';
 import { Tramite110209Store } from '../../estados/stores/tramite110209.store';
 
+import { REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+
+
 /**
  * Componente encargado de gestionar los datos del destinatario.
  */
@@ -27,9 +30,9 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Representa el formulario del componente.
    * Se espera que esta propiedad sea de tipo 'FormGroup'.
    *
-   * @property {FormGroup} detosDelDestinatarioForm - El formulario del componente.
+   * @property {FormGroup} datosDelDestinatarioForm - El formulario del componente.
    */
-  detosDelDestinatarioForm!: FormGroup;
+  datosDelDestinatarioForm!: FormGroup;
 
   /**
    * Subject que emite un evento cuando el componente es destruido,
@@ -56,12 +59,12 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Crea el formulario del componente.
    */
   crearFormulario(): void {
-    this.detosDelDestinatarioForm = this.fb.group({
-      nombre: ['' , [Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(25)]],
-      primerApellido: ['', [Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(20)]],
-      segundoApellido: ['', [Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(20)]],
-      numeroDeRegistroFiscal: ['' , [Validators.required, Validators.pattern(/^\d+$/), Validators.maxLength(30)]],
-      razonSocial: ['', [Validators.pattern(/^(?!\s)(.*\S)?$/),Validators.maxLength(70)]],
+    this.datosDelDestinatarioForm = this.fb.group({
+      nombre: ['' , [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(25)]],
+      primerApellido: ['', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(20)]],
+      segundoApellido: ['', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(20)]],
+      numeroDeRegistroFiscal: ['' , [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS), Validators.maxLength(30)]],
+      razonSocial: ['', [Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),Validators.maxLength(70)]],
     });
   }
 
@@ -82,7 +85,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.detosDelDestinatarioForm.patchValue({
+          this.datosDelDestinatarioForm.patchValue({
             nombre: seccionState.nombre,
             primerApellido: seccionState.primerApellido,
             segundoApellido: seccionState.segundoApellido,
