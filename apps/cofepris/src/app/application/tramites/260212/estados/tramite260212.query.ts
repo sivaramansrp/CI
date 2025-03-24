@@ -6,6 +6,7 @@ import { Tramite260212State, Tramite260212Store } from './tramite260212.store';
 
 
 
+
 @Injectable({ providedIn: 'root' })
 export class Tramite260212Query extends Query<Tramite260212State> {
   selectedEstado$ = this.select((state) => state.selectedEstado);
@@ -25,6 +26,11 @@ export class Tramite260212Query extends Query<Tramite260212State> {
   selectedRegimen$=this.select((state) => state.setRegimen);
   selectedEntradas$=this.select((state) => state.setEntradas);
   selecteDespecificarClasificacion$ = this.select((state) => state.setDespecificarClasificacion);
+  selectedClaveDeReferncia$ = this.select((state)=>state.setClaveDeReferncia)
+  selectedCadenaDeLaDependencia$ = this.select((state)=>state.setCadenaDeLaDependencia)
+  selectedLlaveDePago$=this.select((state)=>state.setLlaveDePago)
+  selectedFechaDePago$=this.select((state)=>state.setFechaDePago)
+  selectedImporteDePago$ = this.select((state)=>state.setImporteDePago)
   constructor(private tramiteStore: Tramite260212Store) {
     super(tramiteStore);
   }

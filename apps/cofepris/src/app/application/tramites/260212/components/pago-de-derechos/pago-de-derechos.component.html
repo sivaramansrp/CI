@@ -8,14 +8,14 @@
       <div class="col-md-4 mt-5">
         <div class="form-group">
           <label class="form-label" for="claveDeReferncia">Clave de referencia:</label>
-          <input class="form-control" type="text" id="claveDeReferncia" formControlName="claveDeReferncia" />
+          <input class="form-control" type="text" id="claveDeReferncia" formControlName="claveDeReferncia"  (input)="updateClaveDeReferncia()"/>
         </div>
       </div>
 
       <div class="col-md-4 mt-5">
         <div class="form-group">
           <label class="form-label" for="cadenaDeLaDependencia">Cadena de la dependencia:</label>
-          <input class="form-control" type="text" id="cadenaDeLaDependencia" formControlName="cadenaDeLaDependencia" />
+          <input class="form-control" type="text" id="cadenaDeLaDependencia" formControlName="cadenaDeLaDependencia"  (input)="updateCadenaDeLaDependencia()"/>
         </div>
       </div>
 
@@ -32,21 +32,21 @@
       <div class="col-md-4 mt-5">
         <div class="form-group">
           <label class="form-label" for="llaveDePago">Llave de pago:</label>
-          <input class="form-control" type="text" id="llaveDePago" formControlName="llaveDePago" />
+          <input class="form-control" type="text" id="llaveDePago" formControlName="llaveDePago" (input)="updateLlaveDePago()"/>
         </div>
       </div>
 
       <div class="col-md-4 mt-5">
         <div class="form-group">
           <label class="form-label" for="fechaDePago">Fecha de pago:</label>
-          <input class="form-control" type="date" id="fechaDePago" formControlName="fechaDePago" />
+          <input class="form-control" type="date" id="fechaDePago" formControlName="fechaDePago" (input)="updateFechaDePago()"/>
         </div>
       </div>
 
       <div class="col-md-4 mt-5">
         <div class="form-group">
           <label class="form-label" for="importeDePago">Importe de pago:</label>
-          <input class="form-control" type="text" id="importeDePago" formControlName="importeDePago" />
+          <input class="form-control" type="text" id="importeDePago" formControlName="importeDePago" (input)="updateImporteDePago()"/>
         </div>
       </div>
     </div>
