@@ -34,9 +34,5 @@ export class CafeExportacionService {
     return this.http.get<any[]>(this.jsonUrl).pipe(
     );
   } 
-  cargarClasificacion(): Observable<RespuestaCatalogos> {
-      return this.http.get<RespuestaCatalogos>(`${this.jsonUrl}propia-alquilada.json`).pipe(
-        map((response) => response)
-      );
-    } 
+  
 }

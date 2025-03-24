@@ -35,10 +35,6 @@ export class ProductoTablaServicios {
     );
   } 
 
-  cargarTipoDeCafe(): Observable<RespuestaCatalogos> {
-      return this.http.get<RespuestaCatalogos>(`/assets/json/290101/tipo-de-cafe.json`).pipe(
-        map((response) => response)
-      );
-    }
+  
    
 }

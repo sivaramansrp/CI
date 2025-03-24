@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
-import { BodegasService } from '../../servicios/bodegas.service';
+import { CatalogosService } from '../../servicios/catalogos.service';
 import { BodegasFormaInt} from '../../modelos/datos-de-interfaz.model';
 import { TramiteState, TramiteStore } from '../../estados/tramite290101.store';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
@@ -55,7 +55,8 @@ export class BodegasComponent implements OnInit {
   constructor(private router: Router,
     private location: Location,
     private fb: FormBuilder,
-    private bodegasService:BodegasService,
+    
+    private catalogosService:CatalogosService,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
@@ -142,7 +143,7 @@ export class BodegasComponent implements OnInit {
   }
 
   cargarBodegaPropiaAlquilad(): void {
-    this.bodegasService.cargarBodegaPropiaAlquilad()
+    this.catalogosService.cargarBodegaPropiaAlquilad()
      // .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -158,7 +159,7 @@ export class BodegasComponent implements OnInit {
   }
 
   cargarEstadoCatalog(): void {
-    this.bodegasService.cargarEstadoCatalog()
+    this.catalogosService.cargarEstadoCatalog()
      // .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {

@@ -35,16 +35,6 @@ export class BodegasService {
     return this.http.get<any[]>(this.jsonUrl).pipe(
     );
   }  
-  cargarBodegaPropiaAlquilad(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`${this.jsonUrl}propia-alquilada.json`).pipe(
-      map((response) => response)
-    );
-  }
-
-  cargarEstadoCatalog(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(`${this.jsonUrl}estado.json`).pipe(
-      map((response) => response)
-    );
-  }
+  
 
 }
