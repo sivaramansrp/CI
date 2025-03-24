@@ -37,7 +37,7 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import TipoPersonaRadioOptions from 'libs/shared/theme/assets/json/260215/tipo-persona-options.json';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-/**
+/** 
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
  */
