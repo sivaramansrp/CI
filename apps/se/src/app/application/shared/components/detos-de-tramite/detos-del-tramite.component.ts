@@ -1,18 +1,17 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-// import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 import {
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
+/**
+ * @description Componente para manejar los detalles del trámite.
+ * Proporciona entradas dinámicas para configurar un formulario y opciones relacionadas con los catálogos y solicitudes.
+ */
 @Component({
   selector: 'app-detos-del-tramite',
   standalone: true,
@@ -27,67 +26,68 @@ import {
   styleUrl: './detos-del-tramite.component.scss',
 })
 export class DetosDelTramiteComponent {
+  /**
+   * @description El grupo de formulario reactivo que contiene los datos del trámite.
+   */
+
+  @Input() form!: FormGroup;
+
+  /**
+   * @description Campos dinámicos configurados para el formulario.
+   * Cada campo tiene una etiqueta, un marcador de posición y una propiedad requerida.
+   */
+
   @Input() inputFields: {
     label: string;
     placeholder: string;
     required: boolean;
+    controlName:string
   }[] = [];
+
+  /**
+   * @description Matriz de catálogos que contienen opciones adicionales para el formulario.
+   */
+
   @Input() catalogosArray: Catalogo[][] = [];
-  @Input() solicitudeOptions: any[] = [];
-  @Input() detosData: { defaultSelect: string; solicitud: string; fraccion: string } | null = {
-    defaultSelect: 'Inicial',
-    solicitud: '',
-    fraccion: '',
-  };
-  @Output() valueChange = new EventEmitter<string | number>();
-  @Output() formValueChange = new EventEmitter<{
-    solicitud: string;
-    fraccion: string;
+
+  /**
+   * @description Opciones de solicitud configuradas para el formulario.
+   */
+
+  @Input() solicitudeOptions: ProductoOption[] = [];
+
+  /**
+   * @description Emisor de eventos para comunicar cambios de valores al componente padre.
+   * @event setValoresStoreEvent
+   */
+
+  @Output() setValoresStoreEvent = new EventEmitter<{
+    form: FormGroup;
+    campo: string;
+    metodoNombre: string;
   }>();
 
-  formDelTramite!: FormGroup;
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control que se desea verificar.
+   * @returns Devuelve true si el control es inválido y está marcado como tocado o modificado; de lo contrario, devuelve false.
+   */
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.initializeForm();
-    this.updateFormValues();
-
-    this.formDelTramite.valueChanges.subscribe((values) => {
-      this.formValueChange.emit({
-        solicitud: values.solicitud || '',
-        fraccion: values.fraccion || '',
-      });
-    });
+  esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.form.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 
-  ngOnChanges(): void {
-    if (this.formDelTramite) {
-      this.updateFormValues();
-    }
-  }
-
-  initializeForm(): void {
-    const defaultSelect = this.detosData?.defaultSelect || 'Inicial';
-    this.formDelTramite = this.fb.group({
-      solicitud: [defaultSelect],
-      fraccion: [
-        '',
-        this.inputFields.some((field) => field.required) ? [Validators.required] : [],
-      ],
-    });
-  }
-
-  private updateFormValues(): void {
-    if (this.detosData) {
-      this.formDelTramite.patchValue({
-        solicitud: this.detosData.solicitud || this.detosData.defaultSelect || 'Inicial',
-        fraccion: this.detosData.fraccion || '',
-      });
-    }
-  }
-
-  onValueChange(value: string | number): void {
-    this.valueChange.emit(value);
+  /**
+   * @description Emite un evento para actualizar valores en el almacén.
+   * @param form El grupo de formulario que contiene los datos.
+   * @param campo El campo específico que se está modificando.
+   * @param metodoNombre Nombre del método relacionado con el cambio.
+   */
+  
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
   }
 }
