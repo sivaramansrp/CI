@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable,throwError } from 'rxjs';
 
 import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
  
 /**
@@ -46,6 +47,10 @@ getLocalidaddata(): Observable<unknown> {
 getTable(): Observable<PermisoModel []> {
   return this.http.get<PermisoModel []>('assets/json/260211/terceros.json');
 } 
+
+getData(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/260211/terceros-relacionadoes.json');
+}
 }
 
   
