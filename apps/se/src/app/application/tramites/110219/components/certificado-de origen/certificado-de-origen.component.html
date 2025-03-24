@@ -1,1 +1,231 @@
-<p>certificado-de-origen works!</p>
+<form
+  [formGroup]="cancelacionForm"
+  (ngSubmit)="validarDestinatarioFormulario()"
+>
+  <ng-container>
+    <ng-titulo titulo="Motivo de cancelación del certificado de origen" />
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label
+          >Motivo de cancelación<span
+            [ngClass]="{
+              'error-star': cancelacionForm.get('motivoCancelacion')?.invalid
+            }"
+            >*</span
+          >:</label
+        >
+        <div class="col-md-12 align-text-area">
+          <textarea
+            cols="60"
+            rows="5"
+            formControlName="motivoCancelacion"
+            required
+            [ngClass]="{
+              'error-border': cancelacionForm.get('motivoCancelacion')?.invalid
+            }"
+          ></textarea>
+        </div>
+        <div
+          *ngIf="cancelacionForm.get('motivoCancelacion')?.invalid"
+          class="error-msg"
+        >
+          Este campo es obligatorio.
+        </div>
+      </div>
+    </div>
+    <ng-titulo titulo="Datos del certificado" />
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label>Número de certificado de origen:</label>
+        <input
+          type="number"
+          required="true"
+          class="form-control grisColor"
+          readonly
+          value="25402500186701"
+        />
+      </div>
+      <div class="col-md-4">
+        <label>Fecha de expedición:</label>
+        <input
+          type="text"
+          required="true"
+          class="form-control grisColor"
+          readonly
+          value="18/02/2025"
+        />
+      </div>
+      <div class="col-md-4">
+        <label>Fecha de vencimiento:</label>
+        <input
+          type="text"
+          required="true"
+          class="form-control grisColor"
+          readonly
+          value="18/02/2026"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label>País / Bloque:</label>
+        <input
+          type="text"
+          required="true"
+          class="form-control grisColor"
+          readonly
+          value="ISLANDIA (REPUBLICA DE)"
+        />
+      </div>
+      <div class="col-md-6">
+        <label>Tratado/Acuerdo:</label>
+        <input
+          type="text"
+          required="true"
+          class="form-control grisColor"
+          readonly
+          value="Tratado de Libre Comercio México-Asociación Europea de Libre Comercio"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <label>Observaciones:</label>
+        <div class="row">
+          <textarea
+            rows="5"
+            class="grisColor"
+            readonly
+            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin rhoncus,lorem consequat cursus elementum, turpis felis fermentum est, ut commodo sapien  massa eu dolor. Cras a rhoncus odio,Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin rhoncus,lorem consequat cursus elementum, turpis felis fermentum est, ut commodo sapien  massa eu dolor. Cras a rhoncus odio,"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <ng-titulo titulo="Datos del destinatario" />
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Nombre(s):</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="Pedro"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Primer apellido:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="Perez"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Segundo apellido:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="Hernández"
+        />
+      </div>
+      <div class="col-md-6 mb-3">
+        <label>Número de registro fiscal:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="123"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 mb-3">
+        <label>Razón social:</label>
+        <input type="text" class="form-control grisColor" readonly value="" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Calle:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="Sinaloa"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Número y/o letra:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="140"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Telefono:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="2-554466778899"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Ciudad (población, estado o provincia):</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="Mex"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Fax:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="554466778899"
+        />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Correo electrónico:</label>
+        <input
+          type="text"
+          class="form-control grisColor"
+          readonly
+          value="PRUEBA@correo.com"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_MERCANCIAS"></ng-alert>
+    </div>
+    <div class="table-container mt-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+        [configuracionTabla]="encabezadosMercancias"
+        [datos]="mercanciaCertificadoTablaDatos"
+        formControlName="mercanciaCertificado"
+      ></app-tabla-dinamica>
+    </div>
+    <div class="row mt-5">
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_PRODUCTORES"></ng-alert>
+    </div>
+    <div class="table-container mt-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+        [configuracionTabla]="encabezadosProductores"
+        formControlName="productoresAsociados"
+      ></app-tabla-dinamica>
+    </div>
+  </ng-container>
+</form>

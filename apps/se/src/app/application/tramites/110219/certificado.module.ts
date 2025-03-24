@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { CertificadoRoutingModule } from './certificado-routing.module';
+import { AlertComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 
 
 
@@ -8,7 +9,9 @@ import { CertificadoRoutingModule } from './certificado-routing.module';
   declarations: [],
   imports: [
     CommonModule,
-    CertificadoRoutingModule
+    CertificadoRoutingModule,
+    AlertComponent,
+    TablaDinamicaComponent
     
   ]
 })

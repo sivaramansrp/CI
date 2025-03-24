@@ -1,8 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { CommonModule } from '@angular/common';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -12,7 +18,7 @@ interface AccionBoton {
    * La acción que se realizará.
    */
   accion: string;
-  
+
   /**
    * El valor asociado a la acción.
    */
@@ -25,12 +31,27 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone:true,
-  imports:[
-    WizardComponent,BtnContinuarComponent,PasoUnoComponent,PasoDosComponent,PasoTresComponent
-  ]
+  standalone: true,
+  imports: [
+    WizardComponent,
+    BtnContinuarComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+    CommonModule,
+  ],
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
+
+
+  ngOnInit(): void {
+    this.pasos = this.pasos.filter(step => step.indice !== 2)
+  
+  .map(step => step.indice === 3 ? { ...step, indice: 2 } : step);
+
+
+  }
+  nombre!: number;
+
   /**
    * Lista de pasos del asistente.
    */
@@ -40,6 +61,10 @@ export class SolicitudPageComponent {
    * Índice del paso actual.
    */
   indice: number = 1;
+  /**
+   * Controla la visibilidad del mensaje de bienvenida.
+   */
+  showWelcomeAlert: boolean = false;
 
   /**
    * Referencia al componente del asistente.
@@ -61,7 +86,10 @@ export class SolicitudPageComponent {
    * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
+    
     this.indice = i;
+    
+   
   }
 
   /**
@@ -77,5 +105,10 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  onChildEvent(event: number) {
+    console.log(this.pasos)
+    this.nombre = event;
   }
 }

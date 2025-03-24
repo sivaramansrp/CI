@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { CancelacionDeCertificadoComponent } from '../../components/cancelacion-de-certificado/cancelacion-de-certificado.component';
@@ -16,6 +16,8 @@ import { CertificadoDeOrigenComponent } from '../../components/certificado-de or
   imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
 })
 export class PasoUnoComponent implements AfterViewInit {
+
+  @Output() myEvent: EventEmitter<number> = new EventEmitter<number>();
 
   /** 
    * Referencia al componente SolicitanteComponent 
@@ -73,6 +75,7 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.myEvent.emit(this.indice)
   }
 
 }
