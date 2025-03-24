@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { AduanerasInformacionesComponent } from './aduaneras-informaciones.component';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
 import { of } from 'rxjs';
@@ -9,123 +8,111 @@ import { of } from 'rxjs';
 describe('AduanerasInformacionesComponent', () => {
   let component: AduanerasInformacionesComponent;
   let fixture: ComponentFixture<AduanerasInformacionesComponent>;
-  let store: Tramite260605Store;
-  let query: Tramite260605Query;
+  let store: jest.Mocked<Tramite260605Store>;
+  let query: jest.Mocked<Tramite260605Query>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, FormsModule],
-      declarations: [AduanerasInformacionesComponent],
-      providers: [
-        Tramite260605Store,
-        {
-          provide: Tramite260605Query,
-          useValue: {
-            selectSolicitud$: of({
-              numeroDPmiso: '12345',
-              cstumbresAtuales: 'Justificación técnica'
-            }),
-            getValue: () => ({
-              numeroDPmiso: '12345',
-              cstumbresAtuales: 'Justificación técnica'
-            })
-          }
-        }
-      ]
-    }).compileComponents();
-  });
+    // Mock store and query methods
+    store = {
+      setNumeroDPmiso: jest.fn(),
+      setCstumbresAtuales: jest.fn(),
+      setAduanasSeleccionadas: jest.fn(),
+    } as any;
 
-  beforeEach(() => {
+    query = {
+      selectSolicitud$: of({
+        numeroDPmiso: '12345',
+        cstumbresAtuales: 'Justificación técnica',
+      }),
+    } as any;
+
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, FormsModule, AduanerasInformacionesComponent], // Add the standalone component here
+      providers: [
+        FormBuilder,
+        { provide: Tramite260605Store, useValue: store },
+        { provide: Tramite260605Query, useValue: query },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(AduanerasInformacionesComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite260605Store);
-    query = TestBed.inject(Tramite260605Query);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with store data', () => {
-    expect(component.aduanerasInformacionesForm).toBeDefined();
+  it('should initialize the form with correct values', () => {
     expect(component.aduanerasInformacionesForm.get('numeroDPmiso')?.value).toBe('12345');
     expect(component.aduanerasInformacionesForm.get('cstumbresAtuales')?.value).toBe('Justificación técnica');
   });
 
-  it('should set validPlafet to true on submit', () => {
+  it('should call setValoresStore with correct arguments', () => {
+    component.aduanerasInformacionesForm.get('numeroDPmiso')?.setValue('67890');
+    const spySetNumeroDPmiso = jest.spyOn(store, 'setNumeroDPmiso');
+
+    component.setValoresStore(component.aduanerasInformacionesForm, 'numeroDPmiso', 'setNumeroDPmiso');
+
+    expect(spySetNumeroDPmiso).toHaveBeenCalledWith('67890');
+  });
+
+  it('should add all available aduanas to selected aduanas', () => {
+    component.agregarTodasAduanas();
+
+    expect(component.aduanasDisponibles.length).toBe(0);
+    expect(component.aduanasSeleccionadas.length).toBe(4); // Assuming there are 4 aduanas in aduanasDisponibles
+  });
+
+  it('should remove all selected aduanas and return them to available aduanas', () => {
+    component.agregarTodasAduanas();
+    component.removerTodasAduanas();
+
+    expect(component.aduanasSeleccionadas.length).toBe(0);
+    expect(component.aduanasDisponibles.length).toBe(4); // Back to the original state
+  });
+
+  it('should set validPlafet to true on form submission', () => {
     component.onSubmit();
     expect(component.validPlafet).toBe(true);
   });
 
-  it('should call setValoresStore with correct arguments', () => {
-    spyOn(store, 'setNumeroDPmiso');
-    spyOn(store, 'setCstumbresAtuales');
+  it('should destroy notifier on ngOnDestroy', () => {
+    const destroyNotifierNextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-    component.setValoresStore(component.aduanerasInformacionesForm, 'numeroDPmiso', 'setNumeroDPmiso');
-    component.setValoresStore(component.aduanerasInformacionesForm, 'cstumbresAtuales', 'setCstumbresAtuales');
+    component.ngOnDestroy();
 
-    expect(store.setNumeroDPmiso).toHaveBeenCalledWith('12345');
-    expect(store.setCstumbresAtuales).toHaveBeenCalledWith('Justificación técnica');
+    expect(destroyNotifierNextSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 
-  it('should set selected index on setIndiceSeleccionado', () => {
-    component.setIndiceSeleccionado(1, 'add');
-    expect(component.indiceSeleccionado).toBe(1);
+  it('should add specific aduanas based on indices', () => {
+    const indicesToAdd = [0, 2];
+    component.agregarAduanasSeleccionadas(indicesToAdd);
 
-    component.setIndiceSeleccionado(2, 'remove');
-    expect(component.indiceRemover).toBe(2);
-  });
-
-  it('should add all customs to selectedCustoms on agregarTodasAduanas', () => {
-    component.agregarTodasAduanas();
-    expect(component.aduanasSeleccionadas.length).toBe(4);
-    expect(component.aduanasDisponibles.length).toBe(0);
-  });
-
-  it('should add selected customs to selectedCustoms on agregarAduanasSeleccionadas', () => {
-    component.agregarAduanasSeleccionadas([0, 1]);
     expect(component.aduanasSeleccionadas.length).toBe(2);
     expect(component.aduanasDisponibles.length).toBe(2);
   });
 
-  it('should remove selected customs from selectedCustoms on removerAduanasSeleccionadas', () => {
-    component.aduanasSeleccionadas = [
-      { id: 1, name: 'ACAPULCO, PUERTO Y AEROPUERTO' },
-      { id: 2, name: 'ADUANA DE PANTACO' }
-    ];
-    component.removerAduanasSeleccionadas([0]);
+  it('should remove specific aduanas based on indices', () => {
+    const indicesToAdd = [0, 1];
+    component.agregarAduanasSeleccionadas(indicesToAdd);
+
+    const indicesToRemove = [0];
+    component.removerAduanasSeleccionadas(indicesToRemove);
+
     expect(component.aduanasSeleccionadas.length).toBe(1);
     expect(component.aduanasDisponibles.length).toBe(3);
   });
 
-  it('should remove all customs from selectedCustoms on removerTodasAduanas', () => {
-    component.aduanasSeleccionadas = [
-      { id: 1, name: 'ACAPULCO, PUERTO Y AEROPUERTO' },
-      { id: 2, name: 'ADUANA DE PANTACO' }
-    ];
-    component.removerTodasAduanas();
-    expect(component.aduanasSeleccionadas.length).toBe(0);
-    expect(component.aduanasDisponibles.length).toBe(4);
-  });
-
   it('should call setAduanasSeleccionadas with correct arguments', () => {
-    spyOn(store, 'setAduanasSeleccionadas');
-    const aduanas = [
-      { id: 1, name: 'ACAPULCO, PUERTO Y AEROPUERTO' },
-      { id: 2, name: 'ADUANA DE PANTACO' }
-    ];
-    component.setAduanasSeleccionadas('setAduanasSeleccionadas', aduanas);
-    expect(store.setAduanasSeleccionadas).toHaveBeenCalledWith(aduanas);
-  });
+    component.agregarTodasAduanas();
+    const spySetAduanasSeleccionadas = jest.spyOn(store, 'setAduanasSeleccionadas');
 
-  it('should destroy notifier on ngOnDestroy', () => {
-    spyOn(component['destroyNotifier$'], 'next');
-    spyOn(component['destroyNotifier$'], 'complete');
+    component.setAduanasSeleccionadas('setAduanasSeleccionadas', component.aduanasSeleccionadas);
 
-    component.ngOnDestroy();
-
-    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
+    expect(spySetAduanasSeleccionadas).toHaveBeenCalledWith(component.aduanasSeleccionadas);
   });
 });

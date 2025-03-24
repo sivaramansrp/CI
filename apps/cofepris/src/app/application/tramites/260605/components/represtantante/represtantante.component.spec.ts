@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { ReprestantanteComponent } from './represtantante.component';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -11,49 +11,58 @@ import { of } from 'rxjs';
 describe('ReprestantanteComponent', () => {
   let component: ReprestantanteComponent;
   let fixture: ComponentFixture<ReprestantanteComponent>;
-  let store: Tramite260605Store;
-  let query: Tramite260605Query;
+  let store: jest.Mocked<Tramite260605Store>;
+  let query: jest.Mocked<Tramite260605Query>;
 
   beforeEach(async () => {
+    store = {
+      setRfc: jest.fn(),
+      setNombre: jest.fn(),
+      setApellidoPaterno: jest.fn(),
+      setApellidoMaterno: jest.fn(),
+    } as unknown as jest.Mocked<Tramite260605Store>;
+
+    query = {
+      selectSolicitud$: of({
+        rfc: 'RFC123',
+        nombre: 'John',
+        apellidoPaterno: 'Doe',
+        apellidoMaterno: 'Smith'
+      }),
+      getValue: jest.fn().mockReturnValue({
+        rfc: 'RFC123',
+        nombre: 'John',
+        apellidoPaterno: 'Doe',
+        apellidoMaterno: 'Smith'
+      })
+    } as unknown as jest.Mocked<Tramite260605Query>;
+
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, FormsModule],
-      declarations: [ReprestantanteComponent, TituloComponent, AlertComponent],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        ReprestantanteComponent, // Importar el componente independiente
+        TituloComponent,
+        AlertComponent
+      ],
       providers: [
-        Tramite260605Store,
-        {
-          provide: Tramite260605Query,
-          useValue: {
-            selectSolicitud$: of({
-              rfc: 'RFC123',
-              nombre: 'John',
-              apellidoPaterno: 'Doe',
-              apellidoMaterno: 'Smith'
-            }),
-            getValue: () => ({
-              rfc: 'RFC123',
-              nombre: 'John',
-              apellidoPaterno: 'Doe',
-              apellidoMaterno: 'Smith'
-            })
-          }
-        }
+        FormBuilder,
+        { provide: Tramite260605Store, useValue: store },
+        { provide: Tramite260605Query, useValue: query }
       ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ReprestantanteComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite260605Store);
-    query = TestBed.inject(Tramite260605Query);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with store data', () => {
+  it('debería inicializar el formulario con datos del store', () => {
     expect(component.represtantante).toBeDefined();
     expect(component.represtantante.get('rfc')?.value).toBe('RFC123');
     expect(component.represtantante.get('nombre')?.value).toBe('John');
@@ -61,12 +70,7 @@ describe('ReprestantanteComponent', () => {
     expect(component.represtantante.get('apellidoMaterno')?.value).toBe('Smith');
   });
 
-  it('should call setValoresStore with correct arguments', () => {
-    spyOn(store, 'setRfc');
-    spyOn(store, 'setNombre');
-    spyOn(store, 'setApellidoPaterno');
-    spyOn(store, 'setApellidoMaterno');
-
+  it('debería llamar a setValoresStore con los argumentos correctos', () => {
     component.setValoresStore(component.represtantante, 'rfc', 'setRfc');
     component.setValoresStore(component.represtantante, 'nombre', 'setNombre');
     component.setValoresStore(component.represtantante, 'apellidoPaterno', 'setApellidoPaterno');
@@ -78,13 +82,13 @@ describe('ReprestantanteComponent', () => {
     expect(store.setApellidoMaterno).toHaveBeenCalledWith('Smith');
   });
 
-  it('should destroy notifier on ngOnDestroy', () => {
-    spyOn(component['destroyNotifier$'], 'next');
-    spyOn(component['destroyNotifier$'], 'complete');
+  it('debería destruir el notifier en ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
-    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

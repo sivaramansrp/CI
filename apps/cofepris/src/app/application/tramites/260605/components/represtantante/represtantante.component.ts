@@ -1,26 +1,16 @@
-/* eslint-disable sort-imports */
-/* eslint-disable no-empty-function */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AlertComponent,Aviso,TituloComponent} from '@ng-mf/data-access-user';
+import { Component, OnDestroy,OnInit } from '@angular/core';
+import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
+import {Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { Tramite260605Store, Solicitud260605State } from '../../../../estados/tramites/tramite260605.store';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
-
-import { Subject, Subscription } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import {
-  Aviso
-} from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-
 @Component({
   selector: 'app-represtantante', // Selector del componente en la plantilla HTML
   templateUrl: './represtantante.component.html', // Ruta a la plantilla HTML
   styleUrl: './represtantante.component.scss', // Ruta al archivo de estilos SCSS
   standalone: true, // Define que el componente puede funcionar de forma independiente (sin módulo específico)
-  imports: [CommonModule, TituloComponent,ReactiveFormsModule, FormsModule,AlertComponent], // Módulos y componentes necesarios
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, FormsModule, AlertComponent], // Módulos y componentes necesarios
 })
 /**
  * Componente para gestionar el formulario reactivo de los datos del representante.
@@ -33,34 +23,67 @@ import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/compo
 export class ReprestantanteComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para los datos del representante.
+   * 
+   * @type {FormGroup}
+   * @memberof ReprestantanteComponent
    */
   represtantante!: FormGroup;
 
+  /**
+   * Estado de la solicitud.
+   * 
+   * @type {Solicitud260605State}
+   * @memberof ReprestantanteComponent
+   */
   public solicitudState!: Solicitud260605State;
+
   /**
    * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
-   *
+   * 
    * @type {Aviso}
+   * @memberof ReprestantanteComponent
    */
   public ADVERTENCIA = Aviso;
-  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
-   * Suscripción a los cambios en el formulario react
+   * Sujeto para notificar la destrucción del componente.
+   * 
+   * @private
+   * @type {Subject<void>}
+   * @memberof ReprestantanteComponent
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Suscripción a los cambios en el formulario reactivo.
+   * 
+   * @private
+   * @type {Subscription}
+   * @memberof ReprestantanteComponent
    */
   private subscription: Subscription = new Subscription();
+
   /**
    * Constructor del componente.
+   * 
    * @param {FormBuilder} fb - Instancia de FormBuilder para la creación de formularios.
    * @param {Tramite260605Store} tramite260605Store - Store para gestionar el estado del trámite.
    * @param {Tramite260605Query} tramite260605Query - Query para obtener el estado del trámite.
+   * @memberof ReprestantanteComponent
    */
   constructor(
     private fb: FormBuilder,
     private tramite260605Store: Tramite260605Store,
     private tramite260605Query: Tramite260605Query
-  ) {}
+  ) {
+    // Initialization logic if needed
+  }
 
-
+  /**
+   * Método que se ejecuta al iniciar el componente.
+   * 
+   * @memberof ReprestantanteComponent
+   */
   ngOnInit(): void {
     this.subscription.add(
       this.tramite260605Query.selectSolicitud$
@@ -80,15 +103,28 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Establece valores en el store.
+   * 
+   * @param {FormGroup} form - El grupo de formularios.
+   * @param {string} campo - El nombre del campo.
+   * @param {keyof Tramite260605Store} metodoNombre - El nombre del método del store.
+   * @memberof ReprestantanteComponent
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
     metodoNombre: keyof Tramite260605Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260605Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260605Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * 
+   * @memberof ReprestantanteComponent
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
