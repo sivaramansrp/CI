@@ -13,7 +13,7 @@
               formControlName="cantidad"
               appUppercase
               aria-labelledby="cantidad"
-              (change)="setValoresStore(form, 'cantidad', 'setCantidad')"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidad', 'setCantidad')"
             />
             <div *ngIf="esInvalido('cantidad')" class="text-danger">
               <small *ngIf="partidasDelaMercanciaForm.controls['cantidad'].hasError('required')"
@@ -40,7 +40,7 @@
               formControlName="valorPartidaUSD"
               aria-labelledby="valorPartidaUSD"
               (change)="
-                setValoresStore(form, 'valorPartidaUSD', 'setvalorPartidaUSD')
+                setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSD', 'setvalorPartidaUSD')
               "
             />
             <div *ngIf="esInvalido('valorPartidaUSD')" class="text-danger">
@@ -73,7 +73,7 @@
               id="descripcion"
               formControlName="descripcion"
               aria-labelledby="descripcion"
-              (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"
+              (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcion', 'setDescripcion')"
             ></textarea>
             <div *ngIf="esInvalido('descripcion')" class="text-danger">
               <small *ngIf="partidasDelaMercanciaForm.controls['descripcion'].hasError('required')"
