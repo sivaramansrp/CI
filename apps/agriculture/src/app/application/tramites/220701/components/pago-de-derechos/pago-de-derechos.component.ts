@@ -83,12 +83,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private seccion!: SeccionLibState;
 
   /**
- * @property {Subject<void>} destroyNotifier$
- * @description Subject utilizado para manejar la destrucción del componente y la limpieza de recursos.
- */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
  * @constructor
  * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
  * @param {AcuicolaService} acuicolaService - Servicio para manejar datos relacionados con acuicultura.
@@ -116,7 +110,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Suscripción a los cambios en el estado del trámite para obtener los datos de pago de derechos.
    */
       this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.unsubscribe$),
       map((seccionState) => {
         this.PagosDeDerechosState = seccionState.PagosDeDerechosState;
       })
@@ -132,7 +126,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  */
     this.tramiteStoreQuery.selectSolicitudTramite$
     .pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.unsubscribe$),
       map((seccionState: { PagosDeDerechosState: PagosDeDerechosFormInt }) => {
         if (seccionState) {
           this.PagosDeDerechosState = seccionState.PagosDeDerechosState;
@@ -147,11 +141,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  * - Se suscribe a los cambios de estado del formulario `pagosDeDerechosForm`.
  * - Aplica un retraso de 10ms antes de ejecutar la lógica.
  * - Obtiene el estado actual del formulario y lo almacena en la tienda Akita.
- * - Finaliza la suscripción cuando `destroyNotifier$` emite un valor para evitar fugas de memoria.
+ * - Finaliza la suscripción cuando `unsubscribe$` emite un valor para evitar fugas de memoria.
  */
     this.pagosDeDerechosForm.statusChanges
     .pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.unsubscribe$),
       delay(10),
       tap(() => {
         const ACTIVE_STATE = { ...this.pagosDeDerechosForm.value };
@@ -166,11 +160,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  * 
  * - Se suscribe a `selectSeccionState$` para obtener cambios en el estado de la sección.
  * - Al recibir un nuevo estado, se asigna a la variable `seccion`.
- * - La suscripción se finaliza automáticamente cuando `destroyNotifier$` emite un valor para evitar fugas de memoria.
+ * - La suscripción se finaliza automáticamente cuando `unsubscribe$` emite un valor para evitar fugas de memoria.
  */
   this.seccionQuery.selectSeccionState$
     .pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.unsubscribe$),
       map((seccionState) => {
         this.seccion = seccionState;
       })
@@ -183,7 +177,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @description 
    * - Se suscribe a los cambios en el estado del formulario.
-   * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
+   * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
    * - Aplica un retraso de 10ms antes de ejecutar la lógica.
    * - Obtiene el estado actual de la sección desde `seccionQuery`.
    * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
@@ -193,7 +187,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   this.pagosDeDerechosForm.statusChanges
     .pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.unsubscribe$),
       delay(10),
       tap(() => {
         const SECCION: number = 1;
@@ -241,7 +235,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  * 
  * - Se suscribe al método `pagoDeCargarDatos()` del servicio.
  * - Los datos obtenidos son aplicados al formulario `pagosDeDerechosForm`.
- * - La suscripción se gestiona con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
+ * - La suscripción se gestiona con `takeUntil(this.unsubscribe$)` para evitar fugas de memoria.
  * 
  * @see {@link AcuicolaService} para la obtención de datos.
  * @see {@link pagosDeDerechosForm} para el almacenamiento de los datos en el formulario.
@@ -249,7 +243,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   pagoDeCargarDatos(): void {
     this.acuicolaService
       .pagoDeCargarDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: PagoDeDerechos) => {
         this.pagosDeDerechosForm.patchValue(data);
       })
@@ -286,7 +280,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  * 
  * - Se suscribe a `getPagoDerechosRevision()` del servicio.
  * - Los datos obtenidos se asignan al formulario `pagosDeDerechosForm`.
- * - Usa `takeUntil(this.destroyNotifier$)` para manejar la desuscripción y evitar fugas de memoria.
+ * - Usa `takeUntil(this.unsubscribe$)` para manejar la desuscripción y evitar fugas de memoria.
  * 
  * @see {@link AcuicolaService} para la obtención de datos de revisión de pago.
  * @see {@link pagosDeDerechosForm} para almacenar los datos en el formulario.
@@ -294,7 +288,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   pagoDerechosRevision(): void {
     this.acuicolaService
       .getPagoDerechosRevision()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data: PagoDeDerechosRevision) => {
         this.pagosDeDerechosForm.patchValue(data);
       })
@@ -304,17 +298,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  * @method ngOnDestroy
  * @description Maneja la limpieza de recursos antes de destruir el componente.
  * 
- * - Emite un valor en `unsubscribe$` y `destroyNotifier$` para notificar a los observables que deben completar.
+ * - Emite un valor en `unsubscribe$` y `unsubscribe$` para notificar a los observables que deben completar.
  * - Llama a `complete()` en ambos `Subject` para liberar memoria y evitar fugas de suscripciones.
  * 
  * @see {@link unsubscribe$} Subject utilizado para cancelar suscripciones activas.
- * @see {@link destroyNotifier$} Subject adicional para limpiar recursos del componente.
  */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 
 }
