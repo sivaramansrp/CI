@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
-import { AVISO } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/constantes/130106/aviso-privacidad.enum'
+import { AVISO } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum'
 import { Partidas } from '@libs/shared/data-access-user/src/core/models/130106/partidas.model';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
