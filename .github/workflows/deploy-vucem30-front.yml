@@ -1,26 +1,25 @@
 name: CI/CD deploy-vucem30-front
-
 on:
   workflow_dispatch:
-
   push:
     branches: [ "develop" ]
     paths:
       - 'frontend/**'
-
 jobs:
   deploy:
     name: Deploy deploy-vucem30-front and build Docker image
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
-
+        with:
+          fetch-depth: 0  # Clonar el historial completo para mejorar el procesamiento de NX
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22.14.0
-
+          cache: 'npm'  # Habilitar caché para npm
+      
       - name: Instalar NX globalmente
         run: npm install -g nx@19.3.1
       
@@ -29,10 +28,10 @@ jobs:
         
       - name: Define SonarScanner full name
         run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
-        
-      - name: Listar archivos
+      
+      - name: Listar estructura del proyecto
         run: ls -la
-  
+      
       - name: Download SonarScanner
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
@@ -41,34 +40,87 @@ jobs:
       - name: Verify SonarScanner Installation
         run: |
           ./${{ env.SONAR }}/bin/sonar-scanner --version
-        
+      
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: |
+            ~/.npm
+            node_modules
+            */*/node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
+      
       - name: Install dependencies
         run: |
           npm install --force
           npm ci
-          
+      
+      # Limpiar la caché de NX antes de continuar
+      - name: Reset NX cache
+        run: npx nx reset
+      
+      # Debug de directorios antes de la construcción
+      - name: Debug directory structure before build
+        run: |
+          find . -type d -name "apps" | sort
+          find . -type d -name "dist" | sort
+      
+      # Modificar la configuración del docker-compose para asegurarnos de que use la estructura correcta
+      - name: Check Docker configurations
+        run: |
+          cat ./docker/modulefederation-microfrontends.yml
+          find . -name "Dockerfile" | xargs cat
+      
+      # Construir los proyectos con NX antes del Docker build para verificar que compilan correctamente
+      - name: Pre-build NX projects
+        run: |
+          # Intentar construir cada proyecto por separado para identificar problemas específicos
+          npx nx build dashboard --configuration=development || echo "Dashboard build failed"
+          npx nx build funcionario --configuration=development || echo "Funcionario build failed"
+          npx nx build semarnat --configuration=development || echo "Semarnat build failed"
+          npx nx build cofepris --configuration=development || echo "Cofepris build failed"
+          npx nx build se --configuration=development || echo "SE build failed"
+          npx nx build amecafe --configuration=development || echo "Amecafe build failed"
+          npx nx build agace --configuration=development || echo "Agace build failed"
+          npx nx build agriculture --configuration=development || echo "Agriculture build failed"
+      
+      # Debug de directorios después de la construcción de NX
+      - name: Debug directory structure after NX build
+        run: |
+          find . -path "*/dist/apps/*" -type d | sort
+          ls -la dist/ 2>/dev/null || echo "No dist directory at root"
+          find . -name "dist" -type d -exec ls -la {} \; 2>/dev/null || echo "No dist directories found"
+      
+      # Intentar construir las imágenes Docker una por una para identificar problemas específicos
+      - name: Build Docker images individually
+        run: |
+          # Extraer cada servicio del docker-compose y construirlo individualmente
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-dashboard || echo "Dashboard Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-funcionario-microfront || echo "Funcionario Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-semarnat-microfront || echo "Semarnat Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-cofepris-microfront || echo "Cofepris Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-se-microfront || echo "SE Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-amecafe-microfront || echo "Amecafe Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-agace-microfront || echo "Agace Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-agriculture-microfront || echo "Agriculture Docker build failed"
+      
+      # Ahora intentar la construcción completa del docker-compose
       - name: Build Docker images from docker-compose
         run: docker compose -f ./docker/modulefederation-microfrontends.yml build
-        
+      
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-
+      
       - name: Login to GitHub Packages
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
-
+      
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
@@ -76,8 +128,9 @@ jobs:
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
-
+      
       - name: Execute remote command (last one)
+        if: success()  # Solo ejecutar si todos los pasos anteriores tuvieron éxito
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
