@@ -17,7 +17,7 @@ export class FirmaPageComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: TramiteFolioService,
+    private TramiteFolioServices: TramiteFolioService,
   ) { }
 
   /**
@@ -31,7 +31,7 @@ export class FirmaPageComponent implements OnDestroy {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.TramiteFolioServices
         .obtenerTramite(19)
         .pipe(
           takeUntil(this.destroy$),

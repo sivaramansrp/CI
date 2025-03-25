@@ -783,6 +783,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   }
 
+
   /**
   * Alterna el estado de visibilidad del componente colapsable.
   *
@@ -964,7 +965,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
-    // this.crosslistStore.establecerFechas(this.selectRangoDias);
     this.colapsable = true;
   }
 

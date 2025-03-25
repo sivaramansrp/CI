@@ -37,7 +37,7 @@ export class PasoTresComponent implements OnDestroy {
   /**
    * Constructor que se utiliza para la inyección de dependencias.
    * @param router Servicio de enrutamiento.
-   * @param serviciosExtraordinariosServices Servicio de servicios extraordinarios.
+   * @param tramiteFolioService Servicio de servicios extraordinarios.
    * @param tramiteStore Almacén de trámites.
    */
   constructor(

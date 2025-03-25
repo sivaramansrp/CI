@@ -18,8 +18,11 @@ export class PasoDosComponent implements OnInit {
   documentosSeleccionados: Catalogo[] = [];
 
   constructor(
-    private catalogosServices: CatalogosService,
-  ) { }
+              private catalogosServices: CatalogosService,)
+  // eslint-disable-next-line no-empty-function
+  {
+
+  }
 
   ngOnInit(): void {
     this.getTiposDocumentos();

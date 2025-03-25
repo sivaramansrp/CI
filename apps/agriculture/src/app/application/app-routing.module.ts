@@ -56,6 +56,13 @@ const routes: Routes = [
       import('./tramites/220402/pantallas-captura.module').then(
         (m) => m.PantallasCapturaModule
       )
+  },
+  {
+    path: 'peticion-requisitos-fitosanitarios',
+    loadChildren: () =>
+      import('./tramites/220102/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
   }
 ];
 

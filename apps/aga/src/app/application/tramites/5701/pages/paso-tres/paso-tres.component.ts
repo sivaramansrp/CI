@@ -13,9 +13,12 @@ export class PasoTresComponent {
 
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: TramiteFolioService,
-    private tramiteStore: TramiteFolioStore
-  ) { }
+    private tramiteFolioServices: TramiteFolioService,
+    private tramiteStore: TramiteFolioStore,) 
+  // eslint-disable-next-line no-empty-function
+  {
+
+  }
 
   /**
   * Maneja el evento para obtener la firma y realiza acciones adicionales.
@@ -25,7 +28,7 @@ export class PasoTresComponent {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.tramiteFolioServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {

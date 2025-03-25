@@ -12,6 +12,9 @@ export * from './core/models/shared/configuracion-columna.model';
 export * from './core/models/shared/forms-model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
+
+export * from './core/queries/seccion.query';
+
 export * from './core/queries/seccion.query';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
@@ -47,6 +50,10 @@ export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/services/shared/wizard/wizard.service';
 export * from './core/services/shared/modal-aviso/modal-aviso.service';
+export * from './core/services/shared/documento/documento.service';
+export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
+export * from './core/services/shared/subir-documento/subir-documento.service';
+
 export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
 export * from './tramites/components/acuse/acuse.component';
@@ -144,7 +151,7 @@ export * from './core/enums/constantes-alertas.enum';
 export * from './tramites/directives/solo-numeros/solo-numeros.directive'
 
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
-export * from './tramites/directives/Uppercase/uppercase.directive'
+export * from './tramites/directives/Uppercase/uppercase.directive';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
 export * from './tramites/components/tabla-dinamica/tabla-dinamica.component';
 export * from './core/models/shared/configuracion-columna.model';
@@ -156,3 +163,4 @@ export * from './core/services/231001/administrar-residuos.service';
 export * from './core/estados/terceros.store';
 export * from './core/queries/terceros.query';
 export * from './core/models/shared/agregar-trasnporte.model'
+export * from './core/services/shared/tramite-folio/tramite-folio.service';

@@ -18,13 +18,13 @@ export class PasoTresComponent {
    * Constructor del componente.
    * 
    * @param router Servicio de enrutamiento.
-   * @param serviciosExtraordinariosServices Servicio para gestionar los servicios extraordinarios.
+   * @param tramiteFolioService Servicio para gestionar los servicios extraordinarios.
    * @param tramiteStore Almacén para gestionar el estado del trámite.
    */
   constructor(
     private router: Router,
     private tramiteFolioService: TramiteFolioService,
-    private tramiteStore: TramiteFolioStore
+    private tramiteFolioStore: TramiteFolioStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -41,7 +41,7 @@ export class PasoTresComponent {
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            this.tramiteFolioStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['servicios-extraordinarios/acuse']);
           }),
           catchError((_error) => {

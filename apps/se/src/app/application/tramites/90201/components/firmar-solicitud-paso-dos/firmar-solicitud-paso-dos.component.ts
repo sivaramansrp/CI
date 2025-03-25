@@ -82,7 +82,7 @@ export class FirmarSolicitudPasoDosComponent implements OnDestroy {
   /**
    * Constructor del componente.
    * @param router - El enrutador.
-   * @param serviciosExtraordinariosServices - Los servicios extraordinarios.
+   * @param TramiteFolioServices - Los servicios extraordinarios.
    * @param tramiteStore - El almacén de trámites.
    */
   constructor(

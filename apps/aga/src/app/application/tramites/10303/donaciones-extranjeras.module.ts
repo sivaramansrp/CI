@@ -76,7 +76,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogosService,
     InicioSesionService,
     SubirDocumentoService,
-    TramiteFolioService, 
+    TramiteFolioService 
   ]
 })
 export class DonacionesExtranjerasModule { }
