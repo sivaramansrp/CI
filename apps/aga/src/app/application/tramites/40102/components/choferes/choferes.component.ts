@@ -31,7 +31,7 @@ import { Tramite40102Query } from '../../estados/tramite40102.query';
 import { Tramite40102Service } from '../../estados/tramite40102.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum'
+import {CHOFERES_PAGE} from '../../enum/transportista-terrestre.enum'
 
 @Component({
   selector: 'app-choferes',
@@ -74,7 +74,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   botonCancelar: string = CHOFERES_PAGE.BOTON_CANCELAR;
   botonGuardar: string = CHOFERES_PAGE.BOTON_GUARDAR;
   seleccionaUnValor: string = CHOFERES_PAGE.SELECCIONA_UNVALOR;
-  labelPuntos: string = CHOFERES_PAGE.LABEL_PUNTOS;
+  labelPuntos: string = '...';
   selectedAll: boolean = false;
   modal: string = 'modal';
   nacional: Array<Nacional> = [];
