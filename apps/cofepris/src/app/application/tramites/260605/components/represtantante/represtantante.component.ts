@@ -141,6 +141,9 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
       apellidoPaterno: [this.solicitudState?.apellidoPaterno, Validators.required],
       apellidoMaterno: [this.solicitudState?.apellidoMaterno, Validators.required],
     });
+    this.represtantante.get('nombre')?.disable();
+    this.represtantante.get('apellidoPaterno')?.disable();
+    this.represtantante.get('apellidoMaterno')?.disable();
   }
 
   /**

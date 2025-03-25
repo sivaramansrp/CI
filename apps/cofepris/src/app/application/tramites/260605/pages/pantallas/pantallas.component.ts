@@ -1,9 +1,8 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
-import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
+import { AccionBoton } from '@ng-mf/data-access-user';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
