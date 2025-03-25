@@ -1,9 +1,9 @@
-import { FirmaPageComponent } from '@ng-mf/data-access-user';
 import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
+import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
+import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -26,6 +26,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
+      ),
+  },
+  {
     path: 'registro-cuentas-bancarias',
     loadChildren: () =>
       import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
@@ -34,6 +41,19 @@ const ROUTES: Routes = [
     path: 'importante',
     loadChildren: () =>
       import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+  },
+  {
+    path: 'importador-exportador',
+    loadChildren: () =>
+      import('./tramites/10301/importador-exportador.module').then(
+        (m) => m.ImportadorExportadorModule
+      ),
+    },
+    {
+    path: 'donaciones-extranjeras',
+    loadChildren: () =>
+      import('./tramites/10303/donaciones-extranjeras.module').then(
+        (m) => m.DonacionesExtranjerasModule)
   },
   {
     path: 'muestras-mercancias',
@@ -61,9 +81,21 @@ const ROUTES: Routes = [
     component: AcusePageComponent
   },
   {
-  path: 'certi-registro',
+    path: 'cancelacion-servicios-extraordinarios',
     loadChildren: () =>
-      import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+      import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
+  },
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
+  {
+    path: 'certi-registro',
+      loadChildren: () =>
+        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
   }
 ];
 
