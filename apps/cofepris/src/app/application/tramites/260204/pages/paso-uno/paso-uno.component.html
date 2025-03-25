@@ -47,14 +47,17 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) {
-       @case (1) {
+      @switch (indice) { @case (1) {
       <solicitante [tabindex]="1"></solicitante>
-      }
-       @case (2) {
+      } @case (2) {
       <app-contenedor-de-datos-solicitud></app-contenedor-de-datos-solicitud>
-       }
-      }
+      } @case (3) {
+      <!-- <app-agregar-fabricante></app-agregar-fabricante> -->
+      <!-- <app-terceros-relacionados-vista></app-terceros-relacionados-vista> -->
+      <!-- <app-agregar-destinatario-final></app-agregar-destinatario-final> -->
+      <!-- <app-agregar-proveedor></app-agregar-proveedor> -->
+      <app-agregar-facturador></app-agregar-facturador>
+      } }
     </ng-container>
   </div>
 </div>
