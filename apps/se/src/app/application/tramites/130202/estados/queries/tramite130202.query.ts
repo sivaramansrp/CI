@@ -12,11 +12,9 @@ export class Tramite130202Query extends Query<Tramite130202State> {
   solicitud$ = this.select(state => state.solicitud);
   fraccion$ = this.select(state => state.fraccion);
   producto$ = this.select(state => state.producto);
-  // descripcion$ = this.select(state => state.descripcion);
   descripcionPartidasDeLaMercancia$ = this.select(state => state.descripcionPartidasDeLaMercancia);
   cantidadPartidasDeLaMercancia$ = this.select(state => state. cantidadPartidasDeLaMercancia);
   valorPartidaUSDPartidasDeLaMercancia$ = this.select(state => state.valorPartidaUSDPartidasDeLaMercancia);
-  // cantidad$ = this.select(state => state.cantidad);
   unidadMedida$ = this.select(state => state.unidadMedida);
   defaultSelect$ = this.select(state => state.defaultSelect);
   defaultProducto$ = this.select(state => state.defaultProducto);

@@ -1,7 +1,7 @@
 import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { DetosDeLaMercanciaComponent } from '../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component';
-import { DetosDelTramiteComponent } from '../../shared/components/detos-de-tramite/detos-del-tramite.component';
+import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { ExportacionMineralesDeHierroRoutingModule } from './exportacion-minerales-de-hierro-routing.module';
 
 import { ExportacionMineralesDeHierroComponent } from './pages/exportacion-minerales-de-hierro/exportacion-minerales-de-hierro.component';
@@ -33,8 +33,8 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     ReactiveFormsModule,
     PasoTresComponent,
     PasoDosComponent,
-    DetosDelTramiteComponent,
-    DetosDeLaMercanciaComponent,
+    DatosDelTramiteComponent,
+    DatosDeLaMercanciaComponent,
     PartidasDeLaComponent,
     TablaDinamicaComponent,
     PaisProcendenciaComponent,

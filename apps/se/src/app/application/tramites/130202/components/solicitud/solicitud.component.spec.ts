@@ -7,10 +7,10 @@ import { Tramite130202Query } from '../../estados/queries/tramite130202.query';
 import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { ProductoOption } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { PartidasDeLaComponent } from '../../../../shared/components/partidas-de-la/partidas-de-la.component';
-import { DetosDelTramiteComponent } from '../../../../shared/components/detos-de-tramite/detos-del-tramite.component';
-import { DetosDeLaMercanciaComponent } from '../../../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DatosDeLaMercanciaComponent } from '../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { PaisProcendenciaComponent } from '../../../../shared/components/pais-procendencia/pais-procendencia.component';
 import { RepresentacionComponent } from '../../../../shared/components/representacion/representacion.component';
 
@@ -29,7 +29,7 @@ describe('SolicitudComponent', () => {
   let mockQuery: jest.Mocked<Tramite130202Query>;
   let mockService: jest.Mocked<ExportacionMineralesDeHierroService>;
 
-  const mockProductoOptions: ProductoOption[] = [
+  const mockProductoOptions: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
     { label: 'Usado', value: 'Usado' },
   ];
@@ -91,9 +91,9 @@ describe('SolicitudComponent', () => {
       declarations: [SolicitudComponent],
       imports: [
         ReactiveFormsModule,
-        DetosDelTramiteComponent,
+        DatosDelTramiteComponent,
         PartidasDeLaComponent,
-        DetosDeLaMercanciaComponent,
+        DatosDeLaMercanciaComponent,
         PaisProcendenciaComponent,
         RepresentacionComponent,
       ],
@@ -121,18 +121,18 @@ describe('SolicitudComponent', () => {
 
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
-      jest.spyOn(component, 'initializeForms');
-      jest.spyOn(component, 'setupFormSubscriptions');
-      jest.spyOn(component, 'fetchOptions');
+      jest.spyOn(component, 'inicializarFormularios');
+      jest.spyOn(component, 'configuraciónFormularioSuscripciones');
+      jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
       jest.spyOn(component, 'getEstablecimiento');
       jest.spyOn(component, 'calculateTotals');
 
       component.ngOnInit();
 
-      expect(component.initializeForms).toHaveBeenCalled();
-      expect(component.setupFormSubscriptions).toHaveBeenCalled();
-      expect(component.fetchOptions).toHaveBeenCalled();
+      expect(component.inicializarFormularios).toHaveBeenCalled();
+      expect(component.configuraciónFormularioSuscripciones).toHaveBeenCalled();
+      expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
       expect(component.getEstablecimiento).toHaveBeenCalled();
       expect(component.calculateTotals).toHaveBeenCalled();
@@ -151,7 +151,7 @@ describe('SolicitudComponent', () => {
 
   describe('initializeForms', () => {
     it('debe inicializar todas las formas reactivas', () => {
-      component.initializeForms();
+      component.inicializarFormularios();
 
       expect(component.formDelTramite).toBeDefined();
       expect(component.mercanciaForm).toBeDefined();
@@ -167,7 +167,7 @@ describe('SolicitudComponent', () => {
 
   describe('fetchOptions', () => {
     it('Debería obtener las opciones de solicitud y producto', () => {
-      component.fetchOptions();
+      component.opcionesDeBusqueda();
 
       expect(mockService.getSolicitudeOptions).toHaveBeenCalled();
       expect(mockStore.updateState).toHaveBeenCalledWith({

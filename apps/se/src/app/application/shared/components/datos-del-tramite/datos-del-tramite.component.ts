@@ -7,13 +7,13 @@ import {
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
+import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 /**
  * @description Componente para manejar los detalles del trámite.
  * Proporciona entradas dinámicas para configurar un formulario y opciones relacionadas con los catálogos y solicitudes.
  */
 @Component({
-  selector: 'app-detos-del-tramite',
+  selector: 'app-datos-del-tramite',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,10 +22,10 @@ import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
     InputRadioComponent,
     CatalogoSelectComponent,
   ],
-  templateUrl: './detos-del-tramite.component.html',
-  styleUrl: './detos-del-tramite.component.scss',
+  templateUrl: './datos-del-tramite.component.html',
+  styleUrl: './datos-del-tramite.component.scss',
 })
-export class DetosDelTramiteComponent {
+export class DatosDelTramiteComponent {
   /**
    * @description El grupo de formulario reactivo que contiene los datos del trámite.
    */
@@ -54,7 +54,7 @@ export class DetosDelTramiteComponent {
    * @description Opciones de solicitud configuradas para el formulario.
    */
 
-  @Input() solicitudeOptions: ProductoOption[] = [];
+  @Input() solicitudOpciones: ProductoOpción[] = [];
 
   /**
    * @description Emisor de eventos para comunicar cambios de valores al componente padre.

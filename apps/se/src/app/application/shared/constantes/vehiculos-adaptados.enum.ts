@@ -2,13 +2,13 @@ export interface AccionBoton {
   accion: string;
   valor: number;
 }
-export interface ProductoOption {
+export interface ProductoOpción {
   label: string;
   value: string;
 }
 
 export interface ProductoResponse {
-  options: ProductoOption[];
+  options: ProductoOpción[];
   defaultSelect: string;
 }
 export interface Pais {

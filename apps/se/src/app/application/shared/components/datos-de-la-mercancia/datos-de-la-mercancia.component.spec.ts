@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { DetosDeLaMercanciaComponent } from './detos-de-la-mercancia.component';
-import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
+import { DatosDeLaMercanciaComponent } from './datos-de-la-mercancia.component';
+import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 describe('DetosDeLaMercanciaComponent', () => {
-  let component: DetosDeLaMercanciaComponent;
-  let fixture: ComponentFixture<DetosDeLaMercanciaComponent>;
+  let component: DatosDeLaMercanciaComponent;
+  let fixture: ComponentFixture<DatosDeLaMercanciaComponent>;
   let formBuilder: FormBuilder;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetosDeLaMercanciaComponent, ReactiveFormsModule], 
+      imports: [DatosDeLaMercanciaComponent, ReactiveFormsModule], 
     }).compileComponents();
   
-    fixture = TestBed.createComponent(DetosDeLaMercanciaComponent);
+    fixture = TestBed.createComponent(DatosDeLaMercanciaComponent);
     component = fixture.componentInstance;
     formBuilder = TestBed.inject(FormBuilder);
   
@@ -27,13 +27,13 @@ describe('DetosDeLaMercanciaComponent', () => {
       unidadMedida: ['', Validators.required], 
     });
   
-    component.productoOptions = [
+    component.productoOpciones = [
       { value: 'option1', label: 'Option 1' },
       { value: 'option2', label: 'Option 2' },
     ];
   
-    component.fraccionCatalog = [{ id: 1, descripcion: 'Fracción 1' }];
-    component.unidadCatalog = [{ id: 2, descripcion: 'Unidad 1' }];
+    component.fraccionCatalogo = [{ id: 1, descripcion: 'Fracción 1' }];
+    component.unidadCatalogo = [{ id: 2, descripcion: 'Unidad 1' }];
   
     fixture.detectChanges();
   });

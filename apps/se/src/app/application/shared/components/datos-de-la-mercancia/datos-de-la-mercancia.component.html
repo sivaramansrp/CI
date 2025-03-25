@@ -6,7 +6,7 @@
         <div class="form-group">
           <label for="producto">Producto*:</label>
           <app-input-radio
-            [radioOptions]="productoOptions"
+            [radioOptions]="productoOpciones"
             formControlName="producto"
             [isRequired]="true"
             (valueChange)="setValoresStore(form, 'producto', 'setProducto')"
@@ -39,12 +39,12 @@
     </div>
     <div class="form-group">
       <app-catalogo-select
-        [catalogo]="fraccionCatalog"
+        [catalogo]="fraccionCatalogo"
         [label]="'Fracción arancelaria'"
         [required]="true"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccion"
-        (change)="fetchFraccion()"
+        (change)="obtenerFraccion()"
         (valueChange)="setValoresStore(form, 'fraccion', 'setFraccion')"
       ></app-catalogo-select>
       <div *ngIf="esInvalido('fraccion')" class="text-danger">
@@ -100,12 +100,12 @@
       </div>
       <div class="col-md-4 form-group">
         <app-catalogo-select
-          [catalogo]="unidadCatalog"
+          [catalogo]="unidadCatalogo"
           [label]="'UMT'"
           [required]="true"
           [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
-          (change)="fetchFraccion()"
+          (change)="obtenerFraccion()"
           (valueChange)="setValoresStore(form, 'unidadMedida', 'setUnidadMedida')"
         ></app-catalogo-select>
         <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
