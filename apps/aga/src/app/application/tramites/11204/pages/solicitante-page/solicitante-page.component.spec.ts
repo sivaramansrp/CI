@@ -31,15 +31,17 @@ describe('SolicitantePageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('should initialize pasos and datosPasos on ngOnInit', () => {
-    component.ngOnInit();
     expect(component.pasos.length).toBe(3);
     expect(component.datosPasos.nroPasos).toBe(3);
     expect(component.datosPasos.indice).toBe(1);
   });
 
   it('should update paso title on ngOnInit', () => {
-    component.ngOnInit();
     const paso = component.pasos.find(p => p.indice === 2);
     expect(paso?.titulo).toBe('Cargar pago');
   });
@@ -93,4 +95,5 @@ describe('SolicitantePageComponent', () => {
     const pasoDosElement = fixture.debugElement.query(By.css('app-paso-dos'));
     expect(pasoDosElement).toBeTruthy();
   });
+
 });

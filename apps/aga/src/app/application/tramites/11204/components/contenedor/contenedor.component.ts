@@ -73,23 +73,43 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   showSeccionContenedor: boolean = false;
 
-  
+  /**
+   * Bandera para mostrar la tabla de archivo seleccionado.
+   */
   showArchivoSeleccionadoTable: boolean = false;
 
-  
+  /**
+   * Bandera para mostrar la sección de Excel.
+   */
   showSeccionExcel: boolean = false;
 
-  
+  /**
+   * Lista de aduanas.
+   */
   aduanaList: Aduanas[] = [];
 
+  /**
+   * Contenedores.
+   */
   contenedores: {
     catalogos: Catalogo[];
     labelNombre: string;
     primerOpcion: string;
   };
 
+  /**
+   * Índice actual.
+   */
   currentIdx: number = 0;
+
+  /**
+   * Bandera para mostrar el tipo de contenedor.
+   */
   mostrarAgregarTipoContenedor: boolean = false;
+
+  /**
+   * Bandera para mostrar los botones.
+   */
   showButtons: boolean = true;
 
   /**
@@ -98,7 +118,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   @Input() catalogoList: Catalogo[] = [];
 
   /**
-   * Lista de aduanas.
+   * Aduana.
    */
   aduana: {
     catalogos: Catalogo[];
@@ -107,12 +127,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * Define los datos que se mostrarán en la tabla dinámica.
+   * Datos que se mostrarán en la tabla dinámica.
    */
   datosTabla: any[] = [];
 
   /**
-   * Obtener el valor de la instrucción e inicializar la variable.
+   * Textos.
    */
   TEXTOS = TEXTOS;
 
@@ -155,13 +175,25 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   modalRef?: BsModalRef | null;
 
-  @ViewChild('modalAgregarConstanciaTransferencia') modalElement!: ElementRef; 
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalAgregarConstanciaTransferencia') modalElement!: ElementRef;
 
   /**
    * Evento para continuar.
    */
   @Output() continuarEvento = new EventEmitter<string>();
 
+  /**
+   * Constructor del componente.
+   * @param fb Constructor de formularios.
+   * @param datosTramiteService Servicio de datos del trámite.
+   * @param validacionesService Servicio de validaciones de formulario.
+   * @param Tramite11204Store Store del trámite 11204.
+   * @param Tramite11204Query Query del trámite 11204.
+   * @param modalService Servicio de modal.
+   */
   constructor(
     private fb: FormBuilder,
     private datosTramiteService: DatosTramiteService,
@@ -170,7 +202,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private Tramite11204Query: Tramite11204Query,
     private modalService: BsModalService,
   ) {
-    
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
@@ -207,6 +238,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.loadDatosTablaData();
   }
 
+  /**
+   * Método de destrucción del componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
@@ -230,7 +264,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
-     
     });
     this.mostrarCampos();
     this.solicitudForm
@@ -287,6 +320,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Cargar datos de la tabla.
+   */
   loadDatosTablaData(): void {
     this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.datosTabla = data;
@@ -344,11 +380,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm.get('archivoSeleccionado')?.disable();
   }
 
-  // Mostrar tipo de contenedor
+  /**
+   * Mostrar tipo de contenedor.
+   */
   mostrarTipoContenedor(): void {
     this.mostrarAgregarTipoContenedor = true;
   }
 
+  /**
+   * Mostrar modal de captura de datos.
+   */
   datosCapturaModal(): void {
     this.solicitudForm.markAllAsTouched();
     if (this.modalElement) {
@@ -406,6 +447,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Parsear contenido CSV.
+   * @param csv Contenido CSV.
+   */
   parseCSV(csv: string): void {
     const LINES = csv.split('\n').filter(line => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
@@ -430,6 +475,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTabla = DATA;
   }
 
+  /**
+   * Seleccionar pestaña actual.
+   */
   tabSeleccionado(): void {
     const CURRENT_IDX = localStorage.getItem('currentIdx');
     if (CURRENT_IDX !== null) {
@@ -437,6 +485,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Agregar solicitud.
+   */
   agregarSolicitud(): void {
     this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (respuesta) => {
@@ -473,7 +524,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       },
     );
   }
-  
+
+  /**
+   * Obtener la lista de aduanas.
+   */
   public fetchgetaduanaLista(): void {
     this.datosTramiteService
       .getAduanaLista('aduanaLista')
@@ -482,6 +536,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Emitir evento de continuar.
+   * Este método emite un evento para continuar con el proceso.
+   */
   continuar(): void {
     this.continuarEvento.emit('');
   }
