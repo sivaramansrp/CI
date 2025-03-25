@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ServiciosExtraordinariosService } from './servicios-extraordinarios.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TramiteFolioService } from '@libs/shared/data-access-user/src';
 
-describe('ServiciosExtraordinariosService', () => {
-  let service: ServiciosExtraordinariosService;
+describe('TramiteFolioService', () => {
+  let service: TramiteFolioService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule]
     });
-    service = TestBed.inject(ServiciosExtraordinariosService);
+    service = TestBed.inject(TramiteFolioService);
   });
 
   it('should be created', () => {
