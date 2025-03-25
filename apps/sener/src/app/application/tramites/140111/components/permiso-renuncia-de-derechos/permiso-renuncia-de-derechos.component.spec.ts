@@ -111,7 +111,7 @@ describe('PermisoRenunciaDeDerechosComponent', () => {
   });
 
   it('should patch stored form data', () => {
-    component.enPatchStoredFormData();
+    component.datosGuardadosParche();
     expect(component.permisoForm.get('motivoRenunciaDeDerechos')?.value).toBe('Motivo 1');
   });
 

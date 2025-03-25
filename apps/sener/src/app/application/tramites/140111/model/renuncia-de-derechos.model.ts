@@ -1,5 +1,5 @@
 export interface PermisoFormInterface {
-    folioTrámite: string;
+    folioTramite: string;
     tipoDeSolicitud: string;
     régimen: string;
     clasificaciónDelRégimen: string;

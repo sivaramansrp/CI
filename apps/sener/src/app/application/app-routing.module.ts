@@ -9,7 +9,7 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
-    path: 'renuncia-de-derechos-de',
+    path: 'renuncia-de-derechos-de-permisos',
     loadChildren: () =>
       import('./tramites/140111/renuncia-de-derechos-de.module').then(
         (m) => m.RenunciaDeDerechosDeModule

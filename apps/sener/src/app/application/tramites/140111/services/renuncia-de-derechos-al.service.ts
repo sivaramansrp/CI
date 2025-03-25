@@ -10,6 +10,10 @@ export class RenunciaDeDerechosAlServicio {
     // constructor
   }
  
+  /**
+ * Recupera la descripción del cupo desde un archivo JSON almacenado.
+ * El método devuelve un observable que contiene la estructura de datos correspondiente (PermisoFormInterface).
+ */
   getDescripcionDelCupo(): Observable<PermisoFormInterface> {
     return this.http.get<PermisoFormInterface>('assets/json/140111/renuncia-de-derechos.json');
   }

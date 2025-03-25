@@ -7,13 +7,13 @@ export const PERMISOS = [
       },
       {
         indice: 2,
-        titulo: 'Requisitos necesarios',
+        titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
       },
       {
         indice: 3,
-        titulo: 'Anexar requisitos',
+        titulo: 'Firmar solicitud',
         activo: false,
         completado: false,
       }

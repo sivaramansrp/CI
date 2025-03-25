@@ -62,7 +62,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearpermisoForm();
     this.enPatchForm();
-    this.enPatchStoredFormData()
+    this.datosGuardadosParche()
   }
 
    /**
@@ -72,7 +72,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    */
   crearpermisoForm(): void {
     this.permisoForm = this.fb.group({
-      folioTrámite: [{ value: '', disabled: true }],
+      folioTramite: [{ value: '', disabled: true }],
       tipoDeSolicitud: [{ value: '', disabled: true }],
       régimen: [{ value: '', disabled: true }],
       clasificaciónDelRégimen: [{ value: '', disabled: true }],
@@ -103,7 +103,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data: PermisoFormInterface) => {
       this.permisoForm.patchValue({
-        folioTrámite: data.folioTrámite,
+        folioTramite: data.folioTramite,
         tipoDeSolicitud: data.tipoDeSolicitud,
         régimen: data.régimen,
         clasificaciónDelRégimen: data.clasificaciónDelRégimen,
@@ -132,7 +132,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Actualiza el formulario con datos del store
    */
-  enPatchStoredFormData(): void {
+  datosGuardadosParche(): void {
     this.tramite140111Query.selectTramite140111$
         .pipe(
           takeUntil(this.destroyed$),
