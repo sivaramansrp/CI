@@ -33,8 +33,10 @@ RUN find /app -name "shared" -type d | xargs ls -la || echo "No shared directori
 FROM nginx:alpine-slim
 COPY ./libs/shared/nginx.conf /etc/nginx/nginx.conf
 
-# Use a conditional copy that won't fail the build
-COPY --from=node /app/dist/libs/shared /usr/share/nginx/html 2>/dev/null || echo "Warning: Could not copy files, but continuing build"
+# Fix: Removed the problematic conditional copy command
+COPY --from=node /app/dist/libs/shared /usr/share/nginx/html
 
-# Add a default index.html if the copy failed
-RUN echo '<html><body><h1>Placeholder Page</h1><p>This is a fallback page.</p></body></html>' > /usr/share/nginx/html/index.html
+# Add a default index.html if the directory is empty
+RUN if [ ! -f /usr/share/nginx/html/index.html ]; then \
+    echo '<html><body><h1>Placeholder Page</h1><p>This is a fallback page.</p></body></html>' > /usr/share/nginx/html/index.html; \
+    fi
