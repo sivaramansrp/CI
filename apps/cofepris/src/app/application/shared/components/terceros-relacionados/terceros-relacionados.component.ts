@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -14,6 +14,8 @@ import {
   Proveedor,
   PROVEEDOR_ENCABEZADO_DE_TABLA,
 } from '../../models/terceros-relacionados.model';
+import { Observable } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
@@ -31,8 +33,16 @@ export class TercerosRelacionadosComponent {
   configuracionTablaFacturador: ConfiguracionColumna<Facturador>[] =
     FACTURADOR_ENCABEZADO_DE_TABLA;
 
-  fabricanteTablaDatos = [];
-  destinatarioFinalTablaDatos = [];
-  proveedorTablaDatos = [];
-  facturadorTablaDatos = [];
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+
+  @Input() fabricanteTablaDatos = [];
+  @Input() destinatarioFinalTablaDatos = [];
+  @Input() proveedorTablaDatos = [];
+  @Input() facturadorTablaDatos = [];
+
+  navigateToAcciones(accionesPath: string): void {
+    this.router.navigate([accionesPath], {
+      relativeTo: this.activatedRoute,
+    });
+  }
 }

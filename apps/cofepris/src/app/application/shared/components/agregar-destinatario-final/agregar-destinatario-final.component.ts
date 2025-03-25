@@ -7,11 +7,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-agregar-destinatario-final',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+  ],
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
 })

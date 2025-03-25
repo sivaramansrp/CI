@@ -9,11 +9,17 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-agregar-proveedor',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    TituloComponent,
+  ],
   templateUrl: './agregar-proveedor.component.html',
   styleUrl: './agregar-proveedor.component.css',
 })

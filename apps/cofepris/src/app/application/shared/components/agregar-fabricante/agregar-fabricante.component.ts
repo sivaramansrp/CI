@@ -8,11 +8,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-agregar-fabricante',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+  ],
   templateUrl: './agregar-fabricante.component.html',
   styleUrl: './agregar-fabricante.component.css',
 })

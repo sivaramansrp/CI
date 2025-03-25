@@ -3,6 +3,10 @@ import { DatosMercanciaComponent } from '../../shared/components/datos-mercancia
 import { NgModule } from '@angular/core';
 import { ScianTablaContenedoraComponent } from './components/scian-tabla-contenedora/scian-tabla-contenedora.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { AgregarFabricanteComponent } from '../../shared/components/agregar-fabricante/agregar-fabricante.component';
+import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { AgregarProveedorComponent } from '../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { AgregarFacturadorComponent } from '../../shared/components/agregar-facturador/agregar-facturador.component';
 
 const ROUTES: Routes = [
   {
@@ -21,6 +25,22 @@ const ROUTES: Routes = [
   {
     path: 'mercancia-datos',
     component: DatosMercanciaComponent,
+  },
+  {
+    path: 'agregar-fabricante',
+    component: AgregarFabricanteComponent,
+  },
+  {
+    path: 'agregar-destinatario-final',
+    component: AgregarDestinatarioFinalComponent,
+  },
+  {
+    path: 'agregar-proveedor',
+    component: AgregarProveedorComponent,
+  },
+  {
+    path: 'agregar-facturador',
+    component: AgregarFacturadorComponent,
   },
 ];
 
