@@ -32,11 +32,11 @@ const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
 @Component({
-  selector: 'app-terceros-relacionadoes',
+  selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent,InputRadioComponent],
-  templateUrl: './terceros-Relacionadoes.component.html',
-  styleUrl: './terceros-Relacionadoes.component.scss',
+  templateUrl: './terceros-Relacionados.component.html',
+  styleUrl: './terceros-Relacionados.component.scss',
  
 })
 export class TercerosRelacionadoesComponent {

@@ -32,7 +32,7 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
 import { provideHttpClient } from '@angular/common/http';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { TercerosRelacionadoesComponent } from './components/terceros-Relacionadoes/terceros-Relacionadoes.component';
+import { TercerosRelacionadoesComponent } from './components/terceros-Relacionados/terceros-Relacionados.component';
 
 
 

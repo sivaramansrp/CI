@@ -41,7 +41,7 @@ export function createInitialState(): Sanitario260215State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'estadoState', resettable: true })
+@StoreConfig({ name: 'sanitarioState', resettable: true })
 export class Sanitario260215Store extends Store<Sanitario260215State> {
   constructor() {
     super(createInitialState());
