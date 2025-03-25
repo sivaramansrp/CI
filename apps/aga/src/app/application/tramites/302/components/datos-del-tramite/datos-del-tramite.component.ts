@@ -15,23 +15,21 @@ import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { AlertComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CertiRegistro302State } from '../../../../estados/tramites/tramite302.store';
+import { CertiRegistro302State } from '../../../../../application/core/estados/tramites/tramite302.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DetallesDelProducto } from '../../models/certi-registro.model';
 import { FormulariosDeCertiRegistroComponent } from '../formularios-de-certi-registro/formularios-de-certi-registro.component';
-import { InputCheckComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
-import { SelectCatalogosComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/select-catalogos/select-catalogos.component';
 import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Tramite302Query } from '../../../../estados/queries/tramite302.query';
-import { Tramite302Store } from '../../../../estados/tramites/tramite302.store';
+import { Tramite302Query } from '../../../../../application/core/queries/tramite302.query';
+import { Tramite302Store } from '../../../../../application/core/estados/tramites/tramite302.store';
 
 /**
 * DatosDelTramiteComponent componente utilizado para procesar los datos del producto*
 * Este componente utiliza varios subcomponentes como TitleComponent, CommonModule,
-* ReactiveFormsModule, SelectCatalogosComponent y InputCheckComponent, TablaDinamicaComponent,
+* ReactiveFormsModule y TablaDinamicaComponent,
 * AlertComponent, FormulariosDeCertiRegistroComponent
 * 
 * @component
@@ -42,8 +40,6 @@ import { Tramite302Store } from '../../../../estados/tramites/tramite302.store';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    InputCheckComponent,
-    SelectCatalogosComponent,
     TituloComponent,
     TablaDinamicaComponent,
     AlertComponent,

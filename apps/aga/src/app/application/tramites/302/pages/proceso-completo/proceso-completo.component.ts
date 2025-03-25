@@ -2,7 +2,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/forma-render.model';
-import { PASOS } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { PASOS } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 import { WizardComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**

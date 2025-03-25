@@ -5,7 +5,6 @@ import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import type { FormularioDinamico } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/forms-model';
-import { InputCheckComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent} from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component'
 import { ValidacionesFormularioService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
@@ -22,7 +21,6 @@ import { ValidacionesFormularioService } from '../../../../../../../../../libs/s
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    InputCheckComponent,
     TituloComponent,
     CatalogoSelectComponent
   ],
