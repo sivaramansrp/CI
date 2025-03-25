@@ -14,13 +14,12 @@ export interface Tramites260912State {
   llaveDePago: string;
   fecPago: string;
   impPago: string;
-
   btonDeRadio: string;
   justificación: string;
   rfcDel: string;
   denominacion: string;
   correo: string;
-  códigoPostal: string;
+  codigoPostal: string;
   estado: Catalogo | null;
   municipioOAlcaldía: string;
   localidad: string;
@@ -47,13 +46,12 @@ export function createInitialState(): Tramites260912State {
     llaveDePago: '',
     fecPago: '',
     impPago: '',
-
     btonDeRadio: '',
     justificación: '',
     rfcDel: '',
     denominacion: '',
     correo: '',
-    códigoPostal: '',
+    codigoPostal: '',
     estado: null,
     municipioOAlcaldía: '',
     localidad: '',
@@ -157,10 +155,10 @@ export class Tramite260912Store extends Store<Tramites260912State> {
     }));
   }
 
-  public setCódigoPostal(códigoPostal: string): void {
+  public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
-      códigoPostal,
+      codigoPostal,
     }));
   }
 

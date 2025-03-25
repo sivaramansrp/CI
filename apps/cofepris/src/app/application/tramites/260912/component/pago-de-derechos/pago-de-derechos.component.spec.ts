@@ -32,7 +32,7 @@ describe('PagoDeDerechosComponent', () => {
         rfcDel: '',
         denominacion: '',
         correo: '',
-        códigoPostal: '',
+        codigoPostal: '',
         estado: null,
         municipioOAlcaldía: '',
         localidad: '',
@@ -97,7 +97,7 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   
-  it('should fetch bancoList on getBancoList call', () => {
+  it('should fetch bancoList on obtenerBancoList call', () => {
     
     const mockBancoList = [{ id: 1, name: 'Banco 1' }];
 

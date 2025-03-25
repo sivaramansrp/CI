@@ -1,12 +1,12 @@
+import { Component, OnDestroy } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud.enum';
-import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -46,7 +46,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './datos-empresa.component.html',
   styleUrls: ['./datos-empresa.component.scss'],
 })
-export class DatosEmpresaComponent implements OnInit {
+export class DatosEmpresaComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario es colapsable.
    */
@@ -101,6 +101,11 @@ export class DatosEmpresaComponent implements OnInit {
   correo$: Observable<string | null> = this.Tramite260912Query.correo$;
 
   /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
+  public destroyed$ = new Subject<void>();
+
+  /**
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios.
@@ -121,25 +126,25 @@ export class DatosEmpresaComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
 
-    this.btonDeRadio$.subscribe((btonDeRadio) => {
+    this.btonDeRadio$.pipe(takeUntil(this.destroyed$)).subscribe((btonDeRadio) => {
       if (btonDeRadio) {
         this.form.get('btonDeRadio')?.setValue(btonDeRadio);
       }
     });
 
-    this.justificación$.subscribe((justificación) => {
+    this.justificación$.pipe(takeUntil(this.destroyed$)).subscribe((justificación) => {
       if (justificación) {
         this.form.get('justificación')?.setValue(justificación);
       }
     });
 
-    this.rfcDel$.subscribe((rfcDel) => {
+    this.rfcDel$.pipe(takeUntil(this.destroyed$)).subscribe((rfcDel) => {
       if (rfcDel) {
         this.datosDelEstablecimiento.get('rfcDel')?.setValue(rfcDel);
       }
     });
 
-    this.denominacion$.subscribe((denominacion) => {
+    this.denominacion$.pipe(takeUntil(this.destroyed$)).subscribe((denominacion) => {
       if (denominacion) {
         this.datosDelEstablecimiento
           .get('denominacion')
@@ -147,7 +152,7 @@ export class DatosEmpresaComponent implements OnInit {
       }
     });
 
-    this.correo$.subscribe((correo) => {
+    this.correo$.pipe(takeUntil(this.destroyed$)).subscribe((correo) => {
       if (correo) {
         this.datosDelEstablecimiento.get('correo')?.setValue(correo);
       }
@@ -230,5 +235,13 @@ export class DatosEmpresaComponent implements OnInit {
   getCorreo(): void {
     const CORREO = this.datosDelEstablecimiento.get('correo')?.value;
     this.Tramite260912Store.setCorreo(CORREO);
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

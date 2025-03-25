@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, InicioSesionService, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaComponent } from './component/datos-empresa/datos-empresa.component';
 import { DomicilioDelEstablecimientoComponent } from './component/domicilio-del-establecimiento/domicilio-del-establecimiento.component';
@@ -37,6 +37,6 @@ import { TramitesAsociadoComponent } from './component/tramites-asociado/tramite
     DomicilioDelEstablecimientoComponent,
     TercerosRelacionadosComponent
   ],
-  providers:[ToastrService]
+  providers:[ToastrService, InicioSesionService]
 })
 export class ModPermisoImportacionModule {}

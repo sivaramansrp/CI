@@ -9,7 +9,7 @@ describe('TramitesAsociadoComponent', () => {
 
   beforeEach(() => {
     const mockService = {
-      onAsociadosList: jest.fn().mockReturnValue(of([
+      enListaDeAsociados: jest.fn().mockReturnValue(of([
         { id: 1, folioTrámite: '12345', tipoTrámite: 'Tipo1', estatus: 'Activo', fechaAltaDeRegistro: '2025-03-19' },
         { id: 2, folioTrámite: '67890', tipoTrámite: 'Tipo2', estatus: 'Inactivo', fechaAltaDeRegistro: '2025-03-18' },
       ]))
@@ -55,8 +55,8 @@ describe('TramitesAsociadoComponent', () => {
       // Test the `clave` function for each column
       const mockItem = {
         id: 1,
-        folioTrámite: '12345',
-        tipoTrámite: 'Tipo1',
+        folioTramite: '12345',
+        tipoTramite: 'Tipo1',
         estatus: 'Activo',
         fechaAltaDeRegistro: '2025-03-19',
       };
@@ -66,10 +66,10 @@ describe('TramitesAsociadoComponent', () => {
           expect(col.clave(mockItem)).toBe(mockItem.id);
           break;
         case 1:
-          expect(col.clave(mockItem)).toBe(mockItem.folioTrámite);
+          expect(col.clave(mockItem)).toBe(mockItem.folioTramite);
           break;
         case 2:
-        expect(col.clave(mockItem)).toBe(mockItem.tipoTrámite);
+        expect(col.clave(mockItem)).toBe(mockItem.tipoTramite);
         break;
         case 3:
           expect(col.clave(mockItem)).toBe(mockItem.estatus);
@@ -81,28 +81,28 @@ describe('TramitesAsociadoComponent', () => {
     });
   });
 
-  it('should call getAsociadosList on ngOnInit', () => {
-    const spy = jest.spyOn(component, 'getAsociadosList');
+  it('should call obtenerListaDeAsociados on ngOnInit', () => {
+    const spy = jest.spyOn(component, 'obtenerListaDeAsociados');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
   it('should populate acuseTablaDatos with data from the service', () => {
-    component.getAsociadosList();
-    expect(service.onAsociadosList).toHaveBeenCalled();
+    component.obtenerListaDeAsociados();
+    expect(service.enListaDeAsociados).toHaveBeenCalled();
     expect(component.acuseTablaDatos.length).toBe(2);
-    expect(component.acuseTablaDatos[0].folioTrámite).toBe('12345');
+    expect(component.acuseTablaDatos[0].folioTramite).toBe('12345');
   });
 
   it('should handle empty data from the service', () => {
-    jest.spyOn(service, 'onAsociadosList').mockReturnValue(of([]));
-    component.getAsociadosList();
+    jest.spyOn(service, 'enListaDeAsociados').mockReturnValue(of([]));
+    component.obtenerListaDeAsociados();
     expect(component.acuseTablaDatos.length).toBe(0);
   });
 
   it('should handle errors from the service gracefully', () => {
-    jest.spyOn(service, 'onAsociadosList').mockReturnValue(throwError(() => new Error('Service error')));
-    component.getAsociadosList();
+    jest.spyOn(service, 'enListaDeAsociados').mockReturnValue(throwError(() => new Error('Service error')));
+    component.obtenerListaDeAsociados();
     expect(component.acuseTablaDatos).toEqual([]);
   });
 
@@ -112,8 +112,8 @@ describe('TramitesAsociadoComponent', () => {
   });
 
   it('should update table data when getAsociadosList is called', () => {
-    component.getAsociadosList();
+    component.obtenerListaDeAsociados();
     expect(component.acuseTablaDatos.length).toBe(2);
-    expect(component.acuseTablaDatos[1].folioTrámite).toBe('67890');
+    expect(component.acuseTablaDatos[1].folioTramite).toBe('67890');
   });
 });

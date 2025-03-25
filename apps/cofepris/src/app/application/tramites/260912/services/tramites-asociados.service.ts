@@ -11,7 +11,11 @@ export class TramitesAsociadosService {
   constructor(private http:HttpClient) { 
      // No se necesita lógica de inicialización adicional.
   }
-   onAsociadosList(): Observable<Asociados[]> {
+  /**
+ * Recupera la lista de asociados desde un archivo JSON almacenado.
+ * El método devuelve un observable que contiene un arreglo de objetos Asociados.
+ */
+  enListaDeAsociados(): Observable<Asociados[]> {
         return this.http.get<Asociados[]>('assets/json/260912/asociadosList.json');
       }
 }

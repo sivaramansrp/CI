@@ -69,7 +69,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearForm();
     this.enPatchStoredFormData();
-    this.getBancoList();
+    this.obtenerBancoList();
   }
 
   /**
@@ -87,14 +87,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     // Actualiza y valida el campo 'fecPago' cuando cambia su valor
     this.pagoDeDerechosForm.get('fecPago')?.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntil(this.destroyed$))
       .subscribe(() => {
         this.pagoDeDerechosForm.get('fecPago')?.updateValueAndValidity({ emitEvent: false });
       });
 
     // Actualiza y valida el campo 'impPago' cuando cambia su valor
     this.pagoDeDerechosForm.get('impPago')?.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntil(this.destroyed$))
       .subscribe(() => {
         this.pagoDeDerechosForm.get('impPago')?.updateValueAndValidity({ emitEvent: false });
       });
@@ -132,9 +132,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la lista de bancos del servicio y la asigna a `bancoList`.
+   * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
    */
-  getBancoList(): void {
+  obtenerBancoList(): void {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: BancoList[]) => {

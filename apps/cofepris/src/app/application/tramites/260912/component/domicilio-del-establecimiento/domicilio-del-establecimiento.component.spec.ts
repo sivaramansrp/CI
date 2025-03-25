@@ -15,7 +15,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 
   beforeEach(async () => {
     const queryMock: Partial<Tramite260912Query> = {
-      códigoPostal$: of('12345'),
+      codigoPostal$: of('12345'),
       estado$: of({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' } as Catalogo),
       municipioOAlcaldía$: of('Municipio'),
       localidad$: of('Localidad'),
@@ -33,7 +33,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     };
 
     const storeMock: Partial<Tramite260912Store> = {
-      setCódigoPostal: jest.fn(),
+      setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
       setMunicipioOAlcaldía: jest.fn(),
       setLocalidad: jest.fn(),
@@ -86,7 +86,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 
   it('should set form values from observables', () => {
     component.ngOnInit();
-    expect(component.form.get('códigoPostal')?.value).toBe('12345');
+    expect(component.form.get('codigoPostal')?.value).toBe('12345');
     expect(component.form.get('estado')?.value).toEqual({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
     expect(component.form.get('municipioOAlcaldía')?.value).toBe('Municipio');
     expect(component.form.get('localidad')?.value).toBe('Localidad');
@@ -105,7 +105,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 
   it('should call store methods on get methods', () => {
     component.getCodigoPostal();
-    expect(tramite260912Store.setCódigoPostal).toHaveBeenCalledWith('12345');
+    expect(tramite260912Store.setCodigoPostal).toHaveBeenCalledWith('12345');
 
     component.getEstado();
     expect(tramite260912Store.setEstado).toHaveBeenCalledWith({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
