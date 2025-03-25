@@ -1,9 +1,8 @@
-/* eslint-disable */
 export default {
-  displayName: 'se',
+  displayName: 'cofepris',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/se',
+  coverageDirectory: '../../coverage/apps/cofepris',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
