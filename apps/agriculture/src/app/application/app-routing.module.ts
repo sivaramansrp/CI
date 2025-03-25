@@ -58,6 +58,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'peticion-requisitos-fitosanitarios',
+    loadChildren: () =>
+      import('./tramites/220102/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  },
+  {
 
     path: 'inspeccion-fitosanitario',
     loadChildren: () =>

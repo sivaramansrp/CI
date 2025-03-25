@@ -21,7 +21,7 @@ const mockSubManufacturerDatos: Tramite80207State = {
     },
   };
 
-describe('ServiciosExtraordinariosService', () => {
+describe('TramiteFolioService', () => {
   let service: SubfabricanteService;
  let httpMock:HttpTestingController;
   beforeEach(() => {
