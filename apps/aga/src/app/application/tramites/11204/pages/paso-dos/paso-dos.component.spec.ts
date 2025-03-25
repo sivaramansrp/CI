@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoDosComponent } from './paso-dos.component';
 
 describe('PasoDosComponent', () => {
@@ -20,5 +19,5 @@ describe('PasoDosComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  
+
 });

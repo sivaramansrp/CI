@@ -1,37 +1,20 @@
-import { Aduanas } from '../../models/datos-tramite.model';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosDelContenedor } from '../../models/datos-tramite.model';
-import { DatosTramiteService } from '../../services/datos-tramite.service';
-import { EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { FormsModule } from '@angular/forms';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Solicitud11204State } from '../../estados/tramite11204.store';
+import moment from 'moment';
+import { Modal } from 'bootstrap';
+import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
-import { TEXTOS } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+
+import { Aduanas, DatosDelContenedor } from '../../models/datos-tramite.model';
+import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { ViewChild } from '@angular/core';
-import { map } from 'rxjs';
-import moment from 'moment';
-import { takeUntil } from 'rxjs';
-import { Modal } from 'bootstrap';
+
+import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -39,7 +22,7 @@ import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
-  styleUrl: './contenedor.component.scss',
+  styleUrls: ['./contenedor.component.scss'],
   standalone: true,
   imports: [
     FormsModule,
@@ -129,7 +112,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla: any[] = [];
+  datosTabla: Record<string, string>[] = [];
 
   /**
    * Textos.
@@ -324,9 +307,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Cargar datos de la tabla.
    */
   loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
-      this.datosTabla = data;
-    });
+    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (data) => {
+        this.contenedores.catalogos = data.data.map((contenedor: any) => ({
+          id: contenedor.id,
+          descripcion: contenedor.descripcion || ''
+        }));
+      },
+    );
   }
 
   /**
@@ -465,7 +453,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     const DATA = LINES.slice(1).map((line) => {
       const VALUES = line.split(',');
-      const OBJ: { [key: string]: string } = {};
+      const OBJ: Record<string, string> = {};
       HEADERS.forEach((header, index) => {
         const KEY = HEADER_MAP[header.trim()] || header.trim();
         OBJ[KEY] = VALUES[index]?.trim();

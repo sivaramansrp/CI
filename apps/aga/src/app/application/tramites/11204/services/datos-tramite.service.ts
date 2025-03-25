@@ -2,7 +2,6 @@ import { RespuestaAduanas, RespuestaContenedores } from "../models/datos-tramite
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { RespuestaApi } from "../models/datos-tramite.model";
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "../models/datos-tramite.model";
 
@@ -34,12 +33,12 @@ export class DatosTramiteService {
     return this.http.get<RespuestaContenedor>(`assets/json/11204/contenedorLista.json`);
   }
 
-  getAduanaLista(catalogo: string): Observable<RespuestaCatalogos> {
+  getAduanaLista(_catalogo: string): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11204/aduanaList.json`);
   }
   
-  getDatosTableData(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(`assets/json/11204/datosTabla.json`);
+  getDatosTableData(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11204/datosTabla.json`);
   }
 
 }

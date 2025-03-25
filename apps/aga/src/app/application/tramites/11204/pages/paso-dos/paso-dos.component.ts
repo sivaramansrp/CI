@@ -1,27 +1,49 @@
+import { CATALOGOS_ID, TEXTOS, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
+  styleUrls: ['./paso-dos.component.scss'],
 })
 export class PasoDosComponent implements OnInit {
+  /**
+   * Constante que contiene los textos utilizados en el componente.
+   */
   TEXTOS = TEXTOS;
 
+  /**
+   * Arreglo que contiene los tipos de documentos disponibles.
+   */
   tiposDocumentos: Catalogo[] = [];
+
+  /**
+   * Clase CSS para mostrar una alerta informativa.
+   */
   infoAlert = 'alert-info';
+
+  /**
+   * Arreglo que contiene el catálogo de documentos disponibles.
+   */
   catalogoDocumentos: Catalogo[] = [];
+
+  /**
+   * Arreglo que contiene los documentos seleccionados.
+   */
   documentosSeleccionados: Catalogo[] = [];
 
+  /**
+   * Constructor del componente.
+   * @param catalogosServices Servicio para obtener los catálogos.
+   */
   constructor(
-    private catalogosServices: CatalogosService,
+    private catalogosServices: CatalogosService
   ) { }
 
+  /**
+   * Método de inicialización del componente.
+   * Se ejecuta al inicializar el componente y obtiene los tipos de documentos.
+   */
   ngOnInit(): void {
     this.getTiposDocumentos();
     this.documentosSeleccionados = [
@@ -33,13 +55,12 @@ export class PasoDosComponent implements OnInit {
         id: 2,
         descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
       }
-    ]
-
+    ];
   }
 
   /**
- * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
- */
+   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+   */
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
@@ -49,7 +70,9 @@ export class PasoDosComponent implements OnInit {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { },
+        error: (_error): void => {
+          console.error('Error al obtener el catálogo de tipos de documentos', _error);
+        },
       });
   }
 }
