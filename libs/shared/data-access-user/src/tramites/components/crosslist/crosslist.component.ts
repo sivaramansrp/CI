@@ -1,9 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CrosslistState, CrosslistStore } from '../../../core/estados/crosslist.store';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { CrosslistQuery } from '../../../core/queries/crosslist.query';
 /**
  * Interfaz que representa las etiquetas de la lista cruzada.
  * 
@@ -22,7 +19,7 @@ export interface CrossListLable {
   styleUrl: './crosslist.component.scss',
   host: {}
 })
-export class CrosslistComponent implements OnInit {
+export class CrosslistComponent implements OnInit, OnChanges {
 
   @Input() botonField: any;
   @Input() botones: any;
@@ -33,63 +30,45 @@ export class CrosslistComponent implements OnInit {
 
   @Output() fechasSeleccionadasChange = new EventEmitter<string[]>();
 
-  @Input() fechasSeleccionadas: string[] = []; //Este no sera un input
-  @Input() fechas!: string[]; //Este no sera un input
-
+  @Input() fechasSeleccionadas: string[] = []; 
+  @Input() fechas: string[] = []; 
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('', [Validators.required]);
   fechasDatos: string[] = [];
 
-  public crosslistState!: CrosslistState;
-  private destroyNotifier$: Subject<void> = new Subject<void>();
-
-  constructor(
-    private crosslistQuery: CrosslistQuery,
-    private crosslistStore: CrosslistStore
-  ) { 
-        // El constructor se utiliza para la inyección de dependencias.
-  }
-
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
-   * - Suscribe al observable `selectCrosslist$` para obtener el estado actual de `crosslistState`
-   *   y lo asigna a la propiedad `crosslistState` del componente. La suscripción se gestiona
-   *   utilizando `takeUntil` para evitar fugas de memoria.
-   * 
    * - Verifica si la propiedad `botones` está definida. Si no lo está, llama al método
    *   `setButtonDefault` para establecer un valor predeterminado.
-   * 
-   * - Inicializa las propiedades `fechas` y `fechasSeleccionadas` con los valores del estado
-   *   actual de `crosslistState`.
-   * 
-   * - Evalúa si todas las fechas están seleccionadas. Si es así, inicializa `fechasDatos` como
-   *   un arreglo vacío. De lo contrario, asigna a `fechasDatos` los datos de fechas disponibles
-   *   en el estado actual o, si no hay datos, las fechas originales.
    */
   ngOnInit(): void {
-    this.crosslistQuery.selectCrosslist$
-      .pipe(takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.crosslistState = state;
-        })
-      )
-      .subscribe();
-
-
     if (!this.botones) {
       this.setButtonDefault();
     }
+  }
 
-    this.fechas = [...this.crosslistState.fechas];
-    this.fechasSeleccionadas = [...this.crosslistState.fechasSeleccionadas];
+  /**
+   * @inheritdoc
+   * Este método se ejecuta cuando cambian las propiedades de entrada del componente.
+   * 
+   * @param changes - Un objeto de tipo `SimpleChanges` que contiene los cambios en las propiedades de entrada.
+   * 
+   * ### Descripción:
+   * - Si la propiedad `fechas` cambia y tiene un valor actual, se actualiza la lista de fechas.
+   * - Si `fechasSeleccionadas` no tiene elementos, se asigna la lista completa de fechas a `fechasDatos`.
+   * - Si `fechasSeleccionadas` tiene elementos, se filtran las fechas para excluir las seleccionadas y se asignan a `fechasDatos`.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['fechas'] && changes['fechas'].currentValue) {
+      this.fechas = [...changes['fechas'].currentValue];
 
-    if (this.fechas.length === this.fechasSeleccionadas.length) {
-      this.fechasDatos = [];
-    } else {
-      this.fechasDatos = this.crosslistState.fechasDatos.length > 0 ? [...this.crosslistState.fechasDatos] : [...this.crosslistState.fechas];
+      if ( changes['fechasSeleccionadas'].currentValue.length === 0) {
+        this.fechasDatos = [...this.fechas];
+      } else {
+        this.fechasSeleccionadas = [...changes['fechasSeleccionadas'].currentValue];
+        this.fechasDatos = this.fechas.filter(fecha => !this.fechasSeleccionadas.includes(fecha));
+      }
     }
-
   }
 
   /**
@@ -154,9 +133,6 @@ export class CrosslistComponent implements OnInit {
       this.fechasDatos.splice(FECHA_VALOR, 1);
     }
 
-    this.crosslistStore.establecerFechasSeleccionadas(this.fechasSeleccionadas);
-    this.crosslistStore.establecerFechasDatos(this.fechasDatos);
-
     this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
   }
 
@@ -190,8 +166,6 @@ export class CrosslistComponent implements OnInit {
       this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
     }
 
-    this.crosslistStore.establecerFechasSeleccionadas(this.fechasSeleccionadas);
-    this.crosslistStore.establecerFechasDatos(this.fechasDatos);
     this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
   }
 

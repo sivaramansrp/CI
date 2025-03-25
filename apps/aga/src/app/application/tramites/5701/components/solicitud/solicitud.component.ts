@@ -43,10 +43,10 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { datosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
-import { CrosslistState, CrosslistStore } from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
-import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
+
 
 @Component({
   selector: 'app-solicitud',
@@ -73,7 +73,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   fechaInicioInput: InputFecha = FECHA_INICIO;
   fechaFinalInput: InputFecha = FECHA_FINAL;
-
   FormSolicitud!: FormGroup;
 
   colapsable: boolean = false;
@@ -89,11 +88,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
   public solicitudState!: Solicitud5701State;
-  public crosslistState!: CrosslistState;
 
   constructor(
-    private crosslistQuery: CrosslistQuery,
-    private crosslistStore: CrosslistStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite5701Store: Tramite5701Store,
@@ -118,14 +114,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.crosslistQuery.selectCrosslist$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((state) => {
-          this.crosslistState = state;
-        })
-      )
 
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -175,9 +163,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
-    this.colapsable = this.solicitudState.colapsable;
 
 
+    if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
+      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+        this.solicitudState.fechaInicio,
+        this.solicitudState.fechaFinal,
+        this.solicitudState.horaInicio,
+        this.solicitudState.horaFinal
+      );
+    }
+
+    this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0)? true : false;
   }
 
   /**
@@ -406,7 +403,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        colapsable: [this.solicitudState?.colapsable],
         fechasSeleccionadas: this.fb.array([]),
       }),
 
@@ -595,7 +591,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
-    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
   /**
@@ -751,9 +746,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
-    this.crosslistStore.establecerFechas(this.selectRangoDias);
     this.colapsable = true;
-    this.tramite5701Store.setColapsable(this.colapsable);
   }
 
 
@@ -780,7 +773,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Posteriormente, actualiza el estado de las fechas seleccionadas en el store
    * `tramite5701Store` llamando al método `setFechasSeleccionadas`.
    */
-  changeCrosslist(fechas: string[]): void {    
+  changeCrosslist(fechas: string[]): void {
     fechas.forEach((fecha) => {
       this.fechasSeleccionadas.push(new FormControl(fecha));
     });
