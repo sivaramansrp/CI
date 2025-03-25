@@ -12,6 +12,13 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
   CODIGOPOSTALSELECTDATA,
   COLONIASELECTDATA,
   LOCALIDADSELECTDATA,
@@ -19,25 +26,18 @@ import {
   PAISSELECTDATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
-} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
-import NacionalidadRadioOptions from 'libs/shared/theme/assets/json/260215/nacionalidad-options.json';
+import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260215/nacionalidad-options.json';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TableComponent } from '@ng-mf/data-access-user';
-import TipoPersonaRadioOptions from 'libs/shared/theme/assets/json/260215/tipo-persona-options.json';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260215/tipo-persona-options.json';
 
-/** 
+/**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
  */

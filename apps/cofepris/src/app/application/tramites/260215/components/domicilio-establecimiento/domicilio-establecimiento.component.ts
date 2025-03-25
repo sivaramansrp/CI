@@ -1,9 +1,14 @@
 import {
+  CROSLISTA_DE_PAISES,
+  INPUT_FECHA_CADUCIDAD_CONFIG,
+} from '../../enum/permiso.enum';
+import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  InputFechaComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -33,7 +38,6 @@ import {
   Tramite260215Store,
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CROSLISTA_DE_PAISES } from '../../enum/permiso.enum';
 import { CommonModule } from '@angular/common';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
@@ -63,9 +67,10 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    InputFechaComponent,
   ],
   templateUrl: './domicilio-establecimiento.component.html',
-  styleUrl: './domicilio-establecimiento.component.css',
+  styleUrls: ['./domicilio-establecimiento.component.css'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
   /**
@@ -83,6 +88,10 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constante para el mensaje de alerta.
+   */
+  INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
   /**
    * Constructor del componente.
    * @param fb

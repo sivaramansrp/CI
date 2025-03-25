@@ -91,20 +91,20 @@
 
           <div class="col-md-4">
             <div class="form-group">
-              <label class="form-label" for="fechaPago">Fecha de pago*:</label>
-              <input
-                class="form-control"
-                id="fechaPago"
-                formControlName="fechaPago"
-                type="date"
-                (change)="
+              <input-fecha
+                [datos]="INPUT_FECHA_CONFIG"
+                [setFecha]="
+                  formSolicitud.get('datosImportadorExportador.fechaPago')
+                    ?.value
+                "
+                (valorCambiado)="
                   setValoresStore(
                     datosImportadorExportador,
                     'fechaPago',
                     'setFechaPago'
                   )
                 "
-              />
+              ></input-fecha>
             </div>
           </div>
 

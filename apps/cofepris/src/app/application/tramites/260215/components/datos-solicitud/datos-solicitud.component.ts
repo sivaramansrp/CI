@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AlDar,
   AlertComponent,
@@ -142,7 +141,11 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite260215Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
+    (
+      this.tramite260215Store[metodoNombre] as (
+        value: string | number | boolean
+      ) => void
+    )(VALOR);
   }
 
   /**

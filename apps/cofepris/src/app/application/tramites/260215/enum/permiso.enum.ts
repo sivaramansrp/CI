@@ -14,7 +14,7 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BAHAMAS (COMMONWEALTH OF THE)',
   'BAHRAIN (KINGDOM OF)',
   "BANGLADESH (PEOPLE'S REPUBLIC OF)",
-  'BARBADOS',
+  'BARbados',
   'BELGIUM (KINGDOM OF)',
   'BELIZE',
   'BENIN (REPUBLIC OF)',
@@ -25,7 +25,19 @@ export const CONTINUAR: string = 't';
 export const MENSAJE_DE_ALERTA: string =
   'Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.';
 
-  /**
+export const INPUT_FECHA_CONFIG = {
+  labelNombre: 'Fecha de pago',
+  required: true,
+  habilitado: true,
+};
+
+export const INPUT_FECHA_CADUCIDAD_CONFIG = {
+  labelNombre: 'Fecha de caducidad',
+  required: false,
+  habilitado: true,
+};
+
+/**
  * Opciones para el selector de códigos postales.
  * Cada objeto contiene un ID y una descripción del código postal.
  */
@@ -97,5 +109,3 @@ export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
   'Código postal',
   'Colonia o equivalente',
 ];
-
-

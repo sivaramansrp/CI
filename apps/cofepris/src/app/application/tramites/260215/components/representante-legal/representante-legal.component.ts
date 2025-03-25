@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -99,7 +98,9 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite260215Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite260215Store[metodoNombre] as (value: string | number) => void)(
+      VALOR
+    );
   }
 
   /**

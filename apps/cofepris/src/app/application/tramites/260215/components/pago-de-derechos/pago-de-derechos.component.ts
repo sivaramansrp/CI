@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -8,11 +6,13 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
+import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
 /**
@@ -21,14 +21,15 @@ import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    CatalogoSelectComponent,
-    ReactiveFormsModule,
-  ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    InputFechaComponent,
+    TituloComponent,
+    CatalogoSelectComponent,
+  ],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -46,6 +47,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constante para configurar el input de fecha.
+   */
+  INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
   /**
    * Constructor del componente.
    */
@@ -118,7 +123,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite260215Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (
+      this.tramite301Store[metodoNombre] as (
+        value: string | number | null
+      ) => void
+    )(VALOR);
   }
 
   /**

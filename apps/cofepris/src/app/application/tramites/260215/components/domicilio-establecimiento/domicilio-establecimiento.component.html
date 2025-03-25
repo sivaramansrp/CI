@@ -231,9 +231,13 @@
       [datos]="mercanciasTablaDatos"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2"
-      data-bs-toggle="modal"
-      data-bs-target="#modalAddAgentMercancias">Modificar</button>
+      <button
+        class="btn btn-default me-2"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAddAgentMercancias"
+      >
+        Modificar
+      </button>
       <button class="btn btn-default me-2">Eliminar</button>
       <button
         class="btn btn-primary me-2"
@@ -550,20 +554,17 @@
             />
           </div>
           <div class="form-group">
-            <label for="fechaCaducidad">Fecha de caducidad</label>
-            <input
-              type="date"
-              class="form-control"
-              id="fechaCaducidad"
-              formControlName="fechaCaducidad"
-              (change)="
+            <input-fecha
+              [datos]="INPUT_FECHA_CADUCIDAD_CONFIG"
+              [setFecha]="formMercancias.get('fechaCaducidad')?.value"
+              (valorCambiado)="
                 setValoresStore(
                   formMercancias,
                   'fechaCaducidad',
                   'setFechaCaducidad'
                 )
               "
-            />
+            ></input-fecha>
           </div>
           <div class="form-group mt-5">
             <div class="panel-group ficha-collapse" id="accordion">

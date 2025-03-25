@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AlertComponent,
   InputRadioComponent,
@@ -21,14 +20,19 @@ import CumplimientoOptions from '@libs/shared/theme/assets/json/260215/cumplimie
 import { MENSAJE_DE_ALERTA } from '../../enum/permiso.enum';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
-
 /**
  * Componente principal para gestionar el formulario de manifiestos.
  */
 @Component({
   selector: 'app-manifiestos',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, ReactiveFormsModule, InputRadioComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    AlertComponent,
+    ReactiveFormsModule,
+    InputRadioComponent,
+  ],
   templateUrl: './manifiestos-declaraciones.component.html',
   styleUrl: './manifiestos-declaraciones.component.css',
 })
@@ -99,7 +103,11 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite260215Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
+    (
+      this.tramite260215Store[metodoNombre] as (
+        value: string | number | boolean
+      ) => void
+    )(VALOR);
   }
 
   /**
