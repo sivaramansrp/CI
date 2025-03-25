@@ -4,7 +4,6 @@ import { Component, OnInit } from '@angular/core';
 import { AccionesTabla } from '@libs/shared/data-access-user/src';
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { TITULO_ACUSE_NOTIFICACION } from '../../constantes/5701/notificacion.enum';
 
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -21,8 +20,6 @@ export class AcusePageComponent implements OnInit {
   datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
   folio!: string;
-
-  constructor() {}
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
