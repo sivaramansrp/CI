@@ -86,139 +86,139 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
     super(createInitialState());
   }
 
-  public setpuertodeEmbarque(puertodeEmbarque: string): void {
+  public establecerPuertodeEmbarque(puertodeEmbarque: string): void {
       this.update((state) => ({
         ...state,
         puertodeEmbarque,
       }));
     }
-    public setpuertodeDesembarque(puertodeDesembarque: string): void {
+    public establecerPuertodeDesembarque(puertodeDesembarque: string): void {
       this.update((state) => ({
         ...state,
         puertodeDesembarque,
       }));
     }
-    public setnombredelaEmbarcacion(nombredelaEmbarcacion: string): void {
+    public establecerNombredelaEmbarcacion(nombredelaEmbarcacion: string): void {
       this.update((state) => ({
         ...state,
         nombredelaEmbarcacion,
       }));
     }
-    public setnúmerodeVuelo(numerodeVuelo: string): void {
+    public establecerNúmerodeVuelo(numerodeVuelo: string): void {
       this.update((state) => ({
         ...state,
         numerodeVuelo,
       }));
     }
-    public setPuertodeTránsito(puertodeTransito : string):void{
+    public establecerPuertodeTránsito(puertodeTransito : string):void{
       this.update((state) => ({
         ...state,
         puertodeTransito,
       }));
     }
-    public setnombre(nombre : string):void{
+    public establecerNombre(nombre : string):void{
       this.update((state) => ({
         ...state,
         nombre,
       }));
     }
-    public setprimerApellido(primerApellido : string):void{
+    public establecerPrimerApellido(primerApellido : string):void{
       this.update((state) => ({
         ...state,
         primerApellido,
       }));
     }
-    public setnúmeroderegistroFiscal(numeroderegistroFiscal : string):void{
+    public establecerNúmeroderegistroFiscal(numeroderegistroFiscal : string):void{
       this.update((state) => ({
         ...state,
         numeroderegistroFiscal,
       }));
     }
-    public setrazónSocial(razonSocial : string):void{
+    public establecerRazónSocial(razonSocial : string):void{
       this.update((state) => ({
         ...state,
         razonSocial,
       }));
     }
-    public setcalle(calle : string):void{
+    public establecerCalle(calle : string):void{
       this.update((state) => ({
         ...state,
         calle,
       }));
     }
-    public setnúmeroLetra(numeroLetra : string):void{
+    public establecerNúmeroLetra(numeroLetra : string):void{
       this.update((state) => ({
         ...state,
         numeroLetra,
       }));
     }
-    public setciudad(ciudad : string):void{
+    public establecerCiudad(ciudad : string):void{
       this.update((state) => ({
         ...state,
         ciudad,
       }));
     }
-    public setcorreoElectrónico(correoElectronico : string):void{
+    public establecerCorreoElectrónico(correoElectronico : string):void{
       this.update((state) => ({
         ...state,
         correoElectronico,
       }));
     }
-    public setfax(fax : string):void{
+    public establecerFax(fax : string):void{
       this.update((state) => ({
         ...state,
         fax,
       }));
     }
-    public setteléfono(telefono : string):void{
+    public establecerTeléfono(telefono : string):void{
       this.update((state) => ({
         ...state,
         telefono,
       }));
     }
-    public setnombredelRepresentante(nombredelRepresentante : string):void{
+    public establecerNombredelRepresentante(nombredelRepresentante : string):void{
       this.update((state) => ({
         ...state,
         nombredelRepresentante,
       }));
     }
-    public setcargo(cargo : string):void{
+    public establecerCargo(cargo : string):void{
       this.update((state) => ({
         ...state,
         cargo,
       }));
     }
-    public setteléfonos(telefonos : string):void{
+    public establecerTeléfonos(telefonos : string):void{
       this.update((state) => ({
         ...state,
         telefonos,
       }));
     }
-    public setfaxs(faxs : string):void{
+    public establecerFaxs(faxs : string):void{
       this.update((state) => ({
         ...state,
         faxs,
       }));
     }
-    public setcorreoElectrónicos(correoElectronicos : string):void{
+    public establecerCorreoElectrónicos(correoElectronicos : string):void{
       this.update((state) => ({
         ...state,
         correoElectronicos,
       }));
     }
-    public setlugar(lugar : string):void{
+    public establecerLugar(lugar : string):void{
       this.update((state) => ({
         ...state,
         lugar,
       }));
     }
-    public setobservaciones(observaciones : string):void{
+    public establecerObservaciones(observaciones : string):void{
       this.update((state) => ({
         ...state,
         observaciones,
       }));
     }
-    public storeTableValues(fila : CompliMentaria):void{
+    public almacenarValoresDeTabla(fila : CompliMentaria):void{
       this.update((state) => {
         
         const TABLE_DATA = [...state.tableDataDatos, fila]
@@ -229,40 +229,40 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         
       });
     }
-    public setUnidadeMedida(unidaddeMedidadeComercializacion: Catalogo):void{
+    public establecerUnidadeMedida(unidaddeMedidadeComercializacion: Catalogo):void{
       this.update((state) => ({
         ...state,
         unidaddeMedidadeComercializacion,
       }));
     }
-    public setTipodeFactura(tipodeFactura:Catalogo):void{
+    public establecerTipodeFactura(tipodeFactura:Catalogo):void{
       this.update((state) => ({
         ...state,
         tipodeFactura,
       }));
     }
 
-    public setComplementoDelaDescripcion(complementoDelaDescripcion: string): void {
+    public establecerComplementoDelaDescripcion(complementoDelaDescripcion: string): void {
       this.update((state) => ({
          ...state,
           complementoDelaDescripcion 
         }));
     }
 
-    public setMarca(marca: string): void {
+    public establecerMarca(marca: string): void {
       this.update((state) => ({
          ...state,
           marca 
         }));
     }
 
-    public setValorMercancia(valorMercancia: string): void {
+    public establecerValorMercancia(valorMercancia: string): void {
       this.update((state) => ({
          ...state,
          valorMercancia 
         }));
     }
-    public setNumerodeFactura(numerodeFactura: string): void {
+    public establecerNumerodeFactura(numerodeFactura: string): void {
       this.update((state) => ({
          ...state, 
          numerodeFactura 

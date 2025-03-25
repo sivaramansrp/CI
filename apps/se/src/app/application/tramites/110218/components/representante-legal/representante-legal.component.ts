@@ -157,19 +157,19 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
 
     switch (controlName) {
       case 'nombredelRepresentante':
-        this.tramite110218Store.setnombredelRepresentante(VALUE);
+        this.tramite110218Store.establecerNombredelRepresentante(VALUE);
         break;
       case 'cargo':
-        this.tramite110218Store.setcargo(VALUE);
+        this.tramite110218Store.establecerCargo(VALUE);
         break;
       case 'telefonos':
-        this.tramite110218Store.setteléfonos(VALUE);
+        this.tramite110218Store.establecerTeléfonos(VALUE);
         break;
       case 'faxs':
-        this.tramite110218Store.setfaxs(VALUE);
+        this.tramite110218Store.establecerFaxs(VALUE);
         break;
       case 'correoElectronicos':
-        this.tramite110218Store.setcorreoElectrónicos(VALUE);
+        this.tramite110218Store.establecerCorreoElectrónicos(VALUE);
         break;
       default:
         break;

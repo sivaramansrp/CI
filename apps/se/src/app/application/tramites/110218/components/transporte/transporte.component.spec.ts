@@ -15,11 +15,11 @@ describe('TransporteComponent', () => {
 
   beforeEach(async () => {
     storeMock = {
-      setpuertodeEmbarque: jest.fn(),
-      setpuertodeDesembarque: jest.fn(),
-      setnombredelaEmbarcacion: jest.fn(),
-      setnúmerodeVuelo: jest.fn(),
-      setPuertodeTránsito: jest.fn(),
+      establecerPuertodeEmbarque: jest.fn(),
+      establecerPuertodeDesembarque: jest.fn(),
+      establecerNombredelaEmbarcacion: jest.fn(),
+      establecerNúmerodeVuelo: jest.fn(),
+      establecerPuertodeTránsito: jest.fn(),
     };
 
     queryMock = {
@@ -63,12 +63,12 @@ describe('TransporteComponent', () => {
 
   it('should call store methods on form control changes', () => {
     component.detallestransporte.get('puertodeEmbarque')?.setValue('Kobe');
-    component.onDetallestransporteChange('puertodeEmbarque');
-    expect(storeMock.setpuertodeEmbarque).toHaveBeenCalledWith('Kobe');
+    component.enCambioDeDetallesDeTransporte('puertodeEmbarque');
+    expect(storeMock.establecerPuertodeEmbarque).toHaveBeenCalledWith('Kobe');
 
     component.detallestransporte.get('numerodeVuelo')?.setValue('5678');
-    component.onDetallestransporteChange('numerodeVuelo');
-    expect(storeMock.setnúmerodeVuelo).toHaveBeenCalledWith('5678');
+    component.enCambioDeDetallesDeTransporte('numerodeVuelo');
+    expect(storeMock.establecerNúmerodeVuelo).toHaveBeenCalledWith('5678');
   });
 
   it('should unsubscribe on destroy', () => {

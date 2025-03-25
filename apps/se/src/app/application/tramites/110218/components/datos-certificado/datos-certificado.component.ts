@@ -192,7 +192,7 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    */
   enModificarFormulario(): void {
-    this.tramite110218Store.storeTableValues(this.filaSeleccionada);
+    this.tramite110218Store.almacenarValoresDeTabla(this.filaSeleccionada);
     this.modificarEventCertificado.emit(false);
 
   }
@@ -233,10 +233,10 @@ export class DatosCertificadoComponent implements OnInit {
 
     switch (controlName) {
       case 'lugar':
-        this.tramite110218Store.setlugar(VALUE);
+        this.tramite110218Store.establecerLugar(VALUE);
         break;
       case 'observaciones':
-        this.tramite110218Store.setobservaciones(VALUE);
+        this.tramite110218Store.establecerObservaciones(VALUE);
         break;
 
       default:

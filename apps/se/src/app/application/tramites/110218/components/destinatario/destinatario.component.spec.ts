@@ -15,16 +15,16 @@ describe('DestinatarioComponent', () => {
 
   beforeEach(async () => {
     mockStore = {
-      setnombre: jest.fn(),
-      setprimerApellido: jest.fn(),
-      setnúmeroderegistroFiscal: jest.fn(),
-      setrazónSocial: jest.fn(),
-      setcalle: jest.fn(),
-      setnúmeroLetra: jest.fn(),
-      setciudad: jest.fn(),
-      setcorreoElectrónico: jest.fn(),
-      setfax: jest.fn(),
-      setteléfono: jest.fn(),
+      establecerNombre: jest.fn(),
+      establecerPrimerApellido: jest.fn(),
+      establecerNúmeroderegistroFiscal: jest.fn(),
+      establecerRazónSocial: jest.fn(),
+      establecerCalle: jest.fn(),
+      establecerNúmeroLetra: jest.fn(),
+      establecerCiudad: jest.fn(),
+      establecerCorreoElectrónico: jest.fn(),
+      establecerFax: jest.fn(),
+      establecerTeléfono: jest.fn(),
     };
 
     mockQuery = {
@@ -114,36 +114,36 @@ describe('DestinatarioComponent', () => {
 
   it('should update store on form field changes', () => {
     component.onDatosdeldestinatarioChange('nombre');
-    expect(mockStore.setnombre).toHaveBeenCalled();
+    expect(mockStore.establecerNombre).toHaveBeenCalled();
 
     component.onDatosdeldestinatarioChange('primerApellido');
-    expect(mockStore.setprimerApellido).toHaveBeenCalled();
+    expect(mockStore.establecerPrimerApellido).toHaveBeenCalled();
 
     component.onDatosdeldestinatarioChange('numeroderegistroFiscal');
-    expect(mockStore.setnúmeroderegistroFiscal).toHaveBeenCalled();
+    expect(mockStore.establecerNúmeroderegistroFiscal).toHaveBeenCalled();
 
     component.onDatosdeldestinatarioChange('razonSocial');
-    expect(mockStore.setrazónSocial).toHaveBeenCalled();
+    expect(mockStore.establecerRazónSocial).toHaveBeenCalled();
   });
 
   it('should update store on address form field changes', () => {
     component.onDomiciliodeldestinatarioChange('calle');
-    expect(mockStore.setcalle).toHaveBeenCalled();
+    expect(mockStore.establecerCalle).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('numeroLetra');
-    expect(mockStore.setnúmeroLetra).toHaveBeenCalled();
+    expect(mockStore.establecerNúmeroLetra).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('ciudad');
-    expect(mockStore.setciudad).toHaveBeenCalled();
+    expect(mockStore.establecerCiudad).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('correoElectronico');
-    expect(mockStore.setcorreoElectrónico).toHaveBeenCalled();
+    expect(mockStore.establecerCorreoElectrónico).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('fax');
-    expect(mockStore.setfax).toHaveBeenCalled();
+    expect(mockStore.establecerFax).toHaveBeenCalled();
 
     component.onDomiciliodeldestinatarioChange('telefono');
-    expect(mockStore.setteléfono).toHaveBeenCalled();
+    expect(mockStore.establecerTeléfono).toHaveBeenCalled();
   });
 
   it('should unsubscribe on destroy', () => {

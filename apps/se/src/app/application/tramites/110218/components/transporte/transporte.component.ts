@@ -133,24 +133,24 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * TransporteComponent
    * Nombre del control del formulario.
    */
-  onDetallestransporteChange(controlName: string): void {
+  enCambioDeDetallesDeTransporte(controlName: string): void {
     const VALUE = this.detallestransporte.get(controlName)?.value;
 
     switch (controlName) {
       case 'puertodeEmbarque':
-        this.tramite110218Store.setpuertodeEmbarque(VALUE);
+        this.tramite110218Store.establecerPuertodeEmbarque(VALUE);
         break;
       case 'puertodeDesembarque':
-        this.tramite110218Store.setpuertodeDesembarque(VALUE);
+        this.tramite110218Store.establecerPuertodeDesembarque(VALUE);
         break;
       case 'nombredelaEmbarcacion':
-        this.tramite110218Store.setnombredelaEmbarcacion(VALUE);
+        this.tramite110218Store.establecerNombredelaEmbarcacion(VALUE);
         break;
       case 'numerodeVuelo':
-        this.tramite110218Store.setnúmerodeVuelo(VALUE);
+        this.tramite110218Store.establecerNúmerodeVuelo(VALUE);
         break;
       case 'puertodeTransito':
-        this.tramite110218Store.setPuertodeTránsito(VALUE);
+        this.tramite110218Store.establecerPuertodeTránsito(VALUE);
         break;
       default:
         break;

@@ -18,11 +18,11 @@ describe('RepresentanteLegalComponent', () => {
     destroyed$ = new Subject<void>();
 
     mockStore = {
-      setnombredelRepresentante: jest.fn(),
-      setcargo: jest.fn(),
-      setteléfonos: jest.fn(),
-      setfaxs: jest.fn(),
-      setcorreoElectrónicos: jest.fn(),
+      establecerNombredelRepresentante: jest.fn(),
+      establecerCargo: jest.fn(),
+      establecerTeléfonos: jest.fn(),
+      establecerFaxs: jest.fn(),
+      establecerCorreoElectrónicos: jest.fn(),
     };
 
     mockQuery = {
@@ -91,11 +91,11 @@ describe('RepresentanteLegalComponent', () => {
   it('should call the correct store method on form change', () => {
     component.datosdelexportador.get('nombredelRepresentante')?.setValue('New Name');
     component.onDatosdelexportadorChange('nombredelRepresentante');
-    expect(mockStore.setnombredelRepresentante).toHaveBeenCalledWith('New Name');
+    expect(mockStore.establecerNombredelRepresentante).toHaveBeenCalledWith('New Name');
 
     component.datosdelexportador.get('cargo')?.setValue('New Role');
     component.onDatosdelexportadorChange('cargo');
-    expect(mockStore.setcargo).toHaveBeenCalledWith('New Role');
+    expect(mockStore.establecerCargo).toHaveBeenCalledWith('New Role');
   });
 
   it('should clean up subscriptions on destroy', () => {

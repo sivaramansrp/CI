@@ -25,7 +25,7 @@ describe('DatosCertificadoComponent', () => {
     };
 
     mockStore = {
-      storeTableValues: jest.fn(),
+      almacenarValoresDeTabla: jest.fn(),
       setlugar: jest.fn(),
       setobservaciones: jest.fn(),
     };
@@ -68,7 +68,7 @@ describe('DatosCertificadoComponent', () => {
     const row = { id: 1, name: 'Row 1' };
     component.filaSeleccionada = row;
     component.enModificarFormulario();
-    expect(mockStore.storeTableValues).toHaveBeenCalledWith(row);
+    expect(mockStore.almacenarValoresDeTabla).toHaveBeenCalledWith(row);
     expect(component.modificarEventCertificado.emit).toHaveBeenCalledWith(false);
   });
 

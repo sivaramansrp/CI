@@ -159,7 +159,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * DestinatarioComponent
    */
   obtenerDatosDeTabla(): void {
-    this.service.getdestinatario().subscribe((data: any) => {
+    this.service.getdestinatario().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
       this.datosDelDestinatario.patchValue({
         segundoApellido: data.segundoApellido,
       });
@@ -214,16 +214,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
 
     switch (controlName) {
       case 'nombre':
-        this.tramite110218Store.setnombre(VALUE);
+        this.tramite110218Store.establecerNombre(VALUE);
         break;
       case 'primerApellido':
-        this.tramite110218Store.setprimerApellido(VALUE);
+        this.tramite110218Store.establecerPrimerApellido(VALUE);
         break;
       case 'numeroderegistroFiscal':
-        this.tramite110218Store.setnúmeroderegistroFiscal(VALUE);
+        this.tramite110218Store.establecerNúmeroderegistroFiscal(VALUE);
         break;
       case 'razonSocial':
-        this.tramite110218Store.setrazónSocial(VALUE);
+        this.tramite110218Store.establecerRazónSocial(VALUE);
         break;
       default:
         break;
@@ -240,22 +240,22 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
 
     switch (controlName) {
       case 'calle':
-        this.tramite110218Store.setcalle(VALUE);
+        this.tramite110218Store.establecerCalle(VALUE);
         break;
       case 'numeroLetra':
-        this.tramite110218Store.setnúmeroLetra(VALUE);
+        this.tramite110218Store.establecerNúmeroLetra(VALUE);
         break;
       case 'ciudad':
-        this.tramite110218Store.setciudad(VALUE);
+        this.tramite110218Store.establecerCiudad(VALUE);
         break;
       case 'correoElectronico':
-        this.tramite110218Store.setcorreoElectrónico(VALUE);
+        this.tramite110218Store.establecerCorreoElectrónico(VALUE);
         break;
       case 'fax':
-        this.tramite110218Store.setfax(VALUE);
+        this.tramite110218Store.establecerFax(VALUE);
         break;
       case 'telefono':
-        this.tramite110218Store.setteléfono(VALUE);
+        this.tramite110218Store.establecerTeléfono(VALUE);
         break;
       default:
         break;

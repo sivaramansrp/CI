@@ -248,7 +248,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    */
   enCambioDeUnidadDeMedida(): void {
     const UNIDADDE_MEDIDA = this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.value;
-    this.tramite110218Store.setUnidadeMedida(UNIDADDE_MEDIDA);
+    this.tramite110218Store.establecerUnidadeMedida(UNIDADDE_MEDIDA);
   }
 
   /**
@@ -256,7 +256,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    */
   enCambioDeTipoDeFactura(): void {
     const TIPODE_FACTURA = this.modifydatosdelcertificado.get('tipodeFactura')?.value;
-    this.tramite110218Store.setTipodeFactura(TIPODE_FACTURA);
+    this.tramite110218Store.establecerTipodeFactura(TIPODE_FACTURA);
   }
 
   /**
@@ -267,16 +267,16 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
     const VALUE = this.modifydatosdelcertificado.get(controlName)?.value;
     switch (controlName) {
       case 'complementoDelaDescripcion':
-        this.tramite110218Store.setComplementoDelaDescripcion(VALUE);
+        this.tramite110218Store.establecerComplementoDelaDescripcion(VALUE);
         break;
       case 'marca':
-        this.tramite110218Store.setMarca(VALUE);
+        this.tramite110218Store.establecerMarca(VALUE);
         break;
       case 'valorMercancia':
-        this.tramite110218Store.setValorMercancia(VALUE);
+        this.tramite110218Store.establecerValorMercancia(VALUE);
         break;
       case 'numerodeFactura':
-        this.tramite110218Store.setNumerodeFactura(VALUE);
+        this.tramite110218Store.establecerNumerodeFactura(VALUE);
         break;
       default:
         break;
