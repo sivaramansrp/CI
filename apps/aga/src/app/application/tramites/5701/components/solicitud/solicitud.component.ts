@@ -11,7 +11,7 @@ import {
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
-  MSJ_ERROR_FECHA, TITULO_MODAL_ERROR,
+  MSJ_ERROR_FECHA, PATENTES_ID, TITULO_MODAL_ERROR,
   TRANSPORTE,
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
@@ -46,7 +46,7 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
@@ -55,6 +55,7 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Modal } from 'bootstrap';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 
 
 
@@ -143,7 +144,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private formulariosService: FormulariosService,
     private catalogosServices: CatalogosService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private serviciosExtraordinariosService: ServiciosExtraordinariosService
     // eslint-disable-next-line no-empty-function
   ) { }
 
@@ -770,7 +772,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           tipoSolicitud: TIPO_SOLICITUD
         }
       );
-      this.setValoresStore(this.FormSolicitud, 'tipoSolicitud', 'setTipoSolicitud');      
+      this.setValoresStore(this.FormSolicitud, 'tipoSolicitud', 'setTipoSolicitud');
     }
 
     this.tipoSolicitudSeleccionada = parseInt(
@@ -829,10 +831,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    console.log('valido campo pedimento');    
     const ADUANA_VALIDACION = this.isValid(this.despacho, 'aduanaDespacho');
-    console.log(ADUANA_VALIDACION);
-    
     if (ADUANA_VALIDACION === null) {
       this.validacionPedimento = true;
     }
@@ -1123,20 +1122,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       valor: PATENTE,
     };
     this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
-
-    this.obtenerEmpresasPatente(PATENTE);
-    this.obtenerIdPatentesAduanales(PATENTE);
+    this.obtenerIdPatentesAduanales();
   }
 
-  obtenerEmpresasPatente(patente: string) {
-    console.log('Peticion POST a la api para obtener las empresas con la patente: ', patente);
-
-
+  obtenerEmpresasPatente(): Observable<string[]> {
+    return this.serviciosExtraordinariosService.getCatalogoById(PATENTES_ID)
+      .pipe(
+        map((resp) => {
+          return JSON.parse(resp.data);
+        })
+      );
   }
-  obtenerIdPatentesAduanales(patente: string): void {
-    console.log('Peticion POST a la api para obtener las patentes aduanales con la patente: ', patente);
 
-
+  obtenerIdPatentesAduanales(): void {
+    this.serviciosExtraordinariosService.getCatalogoById(PATENTES_ID)
+      .pipe(
+        map((resp) => {
+          return JSON.parse(resp.data);
+        })
+      );
   }
 
   checkPrograma(): void {
@@ -1189,9 +1193,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.datosImportadorExportador, 'industriaAutomotriz', 'setIndustriaAutomotriz');
   }
 
-  static obtenerFechasServicio(): void {
-    console.log('Se hace una peticion POST a la api para obtener las fechas del servicio');
-  }
 
   verificaDatosCheckInput(campoId: string, campoDescripcion: string, form: FormGroup): void {
     const VALOR = form.get(campoId)?.value;

@@ -75,3 +75,5 @@ export const TRANSPORTE = [
   'Marítimo',
   'Otro'
 ]
+
+export const PATENTES_ID = 33;
