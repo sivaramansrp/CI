@@ -16,10 +16,14 @@ import { NICO_TABLA } from '../../modelos/modificación-del-permiso-sanitario-de
 import { NicoInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento-260904.enum';
 import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaTabla } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -59,7 +63,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './domicilio-del-establecimiento-260904.component.html',
   styleUrl: './domicilio-del-establecimiento-260904.component.scss',
 })
-export class DomicilioDelEstablecimiento260904Component implements OnInit {
+export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDestroy {
   /**
    * Formulario principal.
    */
@@ -128,8 +132,8 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
   /**
    * Observable para el código postal.
    */
-  códigoPostal$: Observable<string | null> =
-    this.tramite260904Query.códigoPostal$;
+  codigoPostal$: Observable<string | null> =
+    this.tramite260904Query.codigoPostal$;
 
   /**
    * Observable para el estado.
@@ -202,6 +206,9 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
    */
   rfc$: Observable<string | null> = this.tramite260904Query.rfc$;
 
+  private destroy$ = new Subject<void>();
+
+
   /**
    * Constructor del componente.
    * 
@@ -228,90 +235,95 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
 
-    this.códigoPostal$.subscribe((códigoPostal) => {
-      if (códigoPostal) {
-        this.form.get('códigoPostal')?.setValue(códigoPostal);
+    this.codigoPostal$.pipe(takeUntil(this.destroy$)).subscribe((codigoPostal) => {
+      if (codigoPostal) {
+        this.form.get('codigoPostal')?.setValue(codigoPostal);
       }
     });
 
-    this.estado$.subscribe((estado) => {
+    this.estado$.pipe(takeUntil(this.destroy$)).subscribe((estado) => {
       if (estado) {
         this.form.get('estado')?.setValue(estado);
       }
     });
 
-    this.municipioOAlcaldía$.subscribe((municipioOAlcaldía) => {
+    this.municipioOAlcaldía$.pipe(takeUntil(this.destroy$)).subscribe((municipioOAlcaldía) => {
       if (municipioOAlcaldía) {
         this.form.get('municipioOAlcaldía')?.setValue(municipioOAlcaldía);
       }
     });
-    this.localidad$.subscribe((localidad) => {
+    this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
       if (localidad) {
         this.form.get('localidad')?.setValue(localidad);
       }
     });
-    this.colonias$.subscribe((colonias) => {
+    this.colonias$.pipe(takeUntil(this.destroy$)).subscribe((colonias) => {
       if (colonias) {
         this.form.get('colonias')?.setValue(colonias);
       }
     });
-    this.calle$.subscribe((calle) => {
+    this.calle$.pipe(takeUntil(this.destroy$)).subscribe((calle) => {
       if (calle) {
         this.form.get('calle')?.setValue(calle);
       }
     });
-    this.lada$.subscribe((lada) => {
+    this.lada$.pipe(takeUntil(this.destroy$)).subscribe((lada) => {
       if (lada) {
         this.form.get('lada')?.setValue(lada);
       }
     });
-    this.telefono$.subscribe((telefono) => {
+    this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
       if (telefono) {
         this.form.get('telefono')?.setValue(telefono);
       }
     });
 
-    this.avisoCheckbox$.subscribe((avisoCheckbox) => {
+    this.avisoCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((avisoCheckbox) => {
       if (avisoCheckbox) {
         this.domicilio.get('avisoCheckbox')?.setValue(avisoCheckbox);
       }
     });
 
-    this.regimen$.subscribe((regimen) => {
+    this.regimen$.pipe(takeUntil(this.destroy$)).subscribe((regimen) => {
       if (regimen) {
         this.domicilio.get('regimen')?.setValue(regimen);
       }
     });
 
-    this.aduanasEntradas$.subscribe((aduanasEntradas) => {
+    this.aduanasEntradas$.pipe(takeUntil(this.destroy$)).subscribe((aduanasEntradas) => {
       if (aduanasEntradas) {
         this.domicilio.get('aduanasEntradas')?.setValue(aduanasEntradas);
       }
     });
 
-    this.aifaCheckbox$.subscribe((aifaCheckbox) => {
+    this.aifaCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((aifaCheckbox) => {
       if (aifaCheckbox) {
         this.domicilio.get('aifaCheckbox')?.setValue(aifaCheckbox);
       }
     });
 
-    this.manifests$.subscribe((manifests) => {
+    this.manifests$.pipe(takeUntil(this.destroy$)).subscribe((manifests) => {
       if (manifests) {
         this.domicilio.get('manifests')?.setValue(manifests);
       }
     });
 
-    this.acuerdoPublico$.subscribe((acuerdoPublico) => {
+    this.acuerdoPublico$.pipe(takeUntil(this.destroy$)).subscribe((acuerdoPublico) => {
       if (acuerdoPublico) {
         this.representanteLegal.get('acuerdoPublico')?.setValue(acuerdoPublico);
       }
     });
 
-    this.rfc$.subscribe((rfc) => {
+    this.rfc$.pipe(takeUntil(this.destroy$)).subscribe((rfc) => {
       if (rfc) {
         this.representanteLegal.get('rfc')?.setValue(rfc);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -319,7 +331,7 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
    */
   crearFormulario(): void {
     this.form = this.fb.group({
-      códigoPostal: ['', [Validators.required]],
+      codigoPostal: ['', [Validators.required]],
       estado: ['', [Validators.required]],
       municipioOAlcaldía: ['', [Validators.required]],
       localidad: [''],
@@ -353,7 +365,7 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
   obtenerTablaDatos(): void {
     this.httpServicios
       .get<RespuestaTabla>('../../../../../assets/json/260904/tablaDatos.json')
-      .subscribe((data): void => {
+      .pipe(takeUntil(this.destroy$)).subscribe((data): void => {
         this.nicoTablaDatos = data?.data;
       });
   }
@@ -365,7 +377,7 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
     this.httpServicios
       .get<RespuestaCatalogos>(
         '../../../../../assets/json/260904/seleccion.json'
-      )
+      ).pipe(takeUntil(this.destroy$))
       .subscribe((data): void => {
         const DATOS = data?.data;
         this.estado = DATOS;
@@ -389,8 +401,8 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit {
    * Método para obtener el valor del código postal.
    */
   getCodigoPostal(): void {
-    const CODING_POSTAL = this.form.get('códigoPostal')?.value;
-    this.tramite260904Store.setCódigoPostal(CODING_POSTAL);
+    const CODING_POSTAL = this.form.get('codigoPostal')?.value;
+    this.tramite260904Store.setCodigoPostal(CODING_POSTAL);
   }
 
   /**

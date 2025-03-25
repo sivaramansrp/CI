@@ -7,8 +7,12 @@ import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud-260904.enum';
 import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260904Query } from '../../estados/queries/tramite260904.query';
 import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
@@ -42,7 +46,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './datos-de-la-solicitud-260904.component.html',
   styleUrl: './datos-de-la-solicitud-260904.component.scss',
 })
-export class DatosDeLaSolicitud260904Component implements OnInit {
+export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
   /**
    * Indica si el formulario es colapsable.
    */
@@ -96,6 +100,8 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
    */
   correo$: Observable<string | null> = this.tramite260904Query.correo$;
 
+  private destroy$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    * 
@@ -117,25 +123,25 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
 
-    this.btonDeRadio$.subscribe((btonDeRadio) => {
+    this.btonDeRadio$.pipe(takeUntil(this.destroy$)).subscribe((btonDeRadio) => {
       if (btonDeRadio) {
         this.form.get('btonDeRadio')?.setValue(btonDeRadio);
       }
     });
 
-    this.justificación$.subscribe((justificación) => {
+    this.justificación$.pipe(takeUntil(this.destroy$)).subscribe((justificación) => {
       if (justificación) {
         this.form.get('justificación')?.setValue(justificación);
       }
     });
 
-    this.rfcDel$.subscribe((rfcDel) => {
+    this.rfcDel$.pipe(takeUntil(this.destroy$)).subscribe((rfcDel) => {
       if (rfcDel) {
         this.datosDelEstablecimiento.get('rfcDel')?.setValue(rfcDel);
       }
     });
 
-    this.denominacion$.subscribe((denominacion) => {
+    this.denominacion$.pipe(takeUntil(this.destroy$)).subscribe((denominacion) => {
       if (denominacion) {
         this.datosDelEstablecimiento
           .get('denominacion')
@@ -143,11 +149,16 @@ export class DatosDeLaSolicitud260904Component implements OnInit {
       }
     });
 
-    this.correo$.subscribe((correo) => {
+    this.correo$.pipe(takeUntil(this.destroy$)).subscribe((correo) => {
       if (correo) {
         this.datosDelEstablecimiento.get('correo')?.setValue(correo);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
