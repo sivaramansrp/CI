@@ -1,8 +1,8 @@
 import { EncabezadoRequerimientoComponent, TituloComponent } from "@ng-mf/data-access-user";
-import { Component } from "@angular/core";
 import { CommonModule } from '@angular/common';
+import { Component } from "@angular/core";
 import { DatosUsuarioComponent } from "../notificacion-components/datos-usuario/datos-usuario.component";
-import { TITULO_NOTIFICACION } from "../../constantes/5701/notificacion.enum";
+import { TITULO_NOTIFICACION } from "../../core/enums/notificacion.enum";
 
 @Component({
     templateUrl: './notificacion-page.component.html',
