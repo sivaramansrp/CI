@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
-
+import { OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -45,7 +45,7 @@ import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss',
 })
-export class DatosCertificadoComponent implements OnInit {
+export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Formulario para los datos del certificado.
    * DatosCertificadoComponent
