@@ -1,0 +1,80 @@
+<div class="container">
+  <form [formGroup]="formProgrmasReporte">
+    <ng-titulo titulo="Periodo que cubre reporte annual" />
+
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <input-fecha
+            class="width"
+            [setFecha]="formProgrmasReporte.get('inicio')?.value"
+            [datos]="configuracionFechaInicioVigencia"
+          ></input-fecha>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input-fecha
+            class="width"
+            [setFecha]="formProgrmasReporte.get('fin')?.value"
+            [datos]="configuracionFechaFinVigencia"
+          ></input-fecha>
+        </div>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="solicitudSeleccionTabla"
+          [datos]="solicitudDatos"
+          [configuracionTabla]="solicitudConfiguracionTabla"
+          (filaSeleccionada)="actualizarProgramasReporte($event)"
+        >
+        </app-tabla-dinamica>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <label class="form-label" for="folioPrograma">Folio de programa:</label>
+        <input
+          type="text"
+          id="folioPrograma"
+          class="form-control"
+          formControlName="folioPrograma"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="modalidad"
+          >Selecciona la modalidad:</label
+        >
+        <input
+          type="text"
+          id="modalidad"
+          class="form-control"
+          formControlName="modalidad"
+        />
+      </div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <label class="form-label" for="tipoPrograma">Tipo programa:</label>
+        <input
+          type="text"
+          id="tipoPrograma"
+          class="form-control"
+          formControlName="tipoPrograma"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="estatus">Estatus:</label>
+        <input
+          type="text"
+          id="estatus"
+          class="form-control"
+          formControlName="estatus"
+        />
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </form>
+</div>

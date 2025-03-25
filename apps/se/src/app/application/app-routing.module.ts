@@ -178,6 +178,13 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
+  },
+  {
+    path: 'reporte-anual',
+    loadChildren: () =>
+      import('./tramites/150102/reporte-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
   }
 ];
 
