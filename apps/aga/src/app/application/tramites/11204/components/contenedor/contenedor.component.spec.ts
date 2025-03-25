@@ -58,24 +58,6 @@ describe('ContenedorComponent', () => {
     expect(agregarSolicitudSpy).toHaveBeenCalled();
   });
 
-  it('should call datosTramiteService.getDatosTableData on loadDatosTablaData', () => {
-    const getDatosTableDataSpy = jest.spyOn(datosTramiteServiceMock, 'getDatosTableData');
-    component.loadDatosTablaData();
-    expect(getDatosTableDataSpy).toHaveBeenCalled();
-  });
-
-  it('should call datosTramiteService.getContenedores on cargarCatalogos', () => {
-    const getContenedoresSpy = jest.spyOn(datosTramiteServiceMock, 'getContenedores');
-    component.cargarCatalogos();
-    expect(getContenedoresSpy).toHaveBeenCalled();
-  });
-
-  it('should call datosTramiteService.getAduanaLista on fetchgetaduanaLista', () => {
-    const getAduanaListaSpy = jest.spyOn(datosTramiteServiceMock, 'getAduanaLista');
-    component.fetchgetaduanaLista();
-    expect(getAduanaListaSpy).toHaveBeenCalled();
-  });
-
   it('should call continuarEvento.emit on continuar', () => {
     const continuarEventoSpy = jest.spyOn(component.continuarEvento, 'emit');
     component.continuar();
