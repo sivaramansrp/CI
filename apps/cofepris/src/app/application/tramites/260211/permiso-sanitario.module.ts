@@ -25,7 +25,7 @@ import { InicioSesionService } from '@libs/shared/data-access-user/src/core/serv
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoduosComponent } from './pages/pasoduos/pasoduos.component';
-import { PasotresComponent } from './pages/pasotres/pasotres.component';
+import { PasotresComponent } from './pages/paso-tres/paso-tres.component';
 import { PermisoSanitarioRoutingModule } from './permiso-sanitario-routing.module';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';

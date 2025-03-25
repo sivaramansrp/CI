@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable,throwError } from 'rxjs';
 
 import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { MercanciasTabla, RespuestaTabla } from '../components/domicillo/domicillo.component';
 
  
 /**
@@ -50,6 +51,18 @@ getTable(): Observable<PermisoModel []> {
 
 getData(): Observable<Catalogo[]> {
   return this.http.get<Catalogo[]>('assets/json/260211/terceros-relacionadoes.json');
+}
+
+obtenerEstadoList(): Observable<RespuestaCatalogos> {
+  return this.http.get<RespuestaCatalogos>('assets/json/260211/seleccion.json');
+}
+
+obtenerTablaDatos(): Observable<RespuestaTabla> {
+  return this.http.get<RespuestaTabla>('assets/json/260211/tablaDatos.json');
+}
+
+obtenerMercanciasDatos(): Observable<MercanciasTabla> {
+  return this.http.get<MercanciasTabla>('assets/json/260211/mercanciasDatos.json');
 }
 }
 

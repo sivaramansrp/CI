@@ -5,6 +5,7 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  InputFecha,
   InputFechaComponent,
   RespuestaCatalogos,
   TablaDinamicaComponent,
@@ -40,6 +41,8 @@ import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enum
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
+import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
+import { SanitarioService } from '../../services/sanitario.service';
  
  
 /**
@@ -49,15 +52,15 @@ export interface RespuestaTabla {
   /**
    * Código de respuesta.
    */
-  code: number;
+  código: number;
   /**
    * Datos de la tabla NICO.
    */
-  data: NicoInfo[];
+  datos: NicoInfo[];
   /**
    * Mensaje de la respuesta.
    */
-  message: string;
+  mensaje: string;
 }
  
 /**
@@ -67,15 +70,15 @@ export interface MercanciasTabla {
   /**
    * Código de respuesta.
    */
-  code: number;
+  código: number;
   /**
    * Datos de la tabla de mercancías.
    */
-  data: MercanciasInfo[];
+  datos: MercanciasInfo[];
   /**
    * Mensaje de la respuesta.
    */
-  message: string;
+  mensaje: string;
 }
  
 /**
@@ -111,6 +114,14 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    * Notificador para destruir los observables al finalizar.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  
+  /**
+   * property {Subject<void>} destroyed$
+   * description Sujeto utilizado para manejar la destrucción de observables.
+   * private
+   */
+  private destroyed$ = new Subject<void>();
  
   /**
    * Constructor del componente.
@@ -123,7 +134,8 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private readonly fb: FormBuilder,
     private readonly httpServicios: HttpClient,
     private tramite260211Store: Tramite260211Store,
-    private tramite260211Query: Tramite260211Query
+    private tramite260211Query: Tramite260211Query,
+    private service: SanitarioService,
   ) {
     // Dependencia inyectada para uso posterior
   }
@@ -206,7 +218,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   /**
    * Indica si la sección "Duo" es colapsable.
    */
-  colapsableDuos: boolean = false;
+  colapsableDos: boolean = false;
  
   /**
    * Indica si la sección "Tres" es colapsable.
@@ -221,7 +233,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   /**
    * Lista de países para seleccionar el origen de la segunda sección.
    */
-  seleccionarOrigenDelPaisDuos: string[] = this.crosListaDePaises;
+  seleccionarOrigenDelPaisDos: string[] = this.crosListaDePaises;
  
   /**
    * Lista de países para seleccionar el origen de la tercera sección.
@@ -235,6 +247,14 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     tituluDeLaIzquierda: 'País de procedencia',
     derecha: 'País(es) seleccionados',
   };
+
+  
+  
+/**
+ * Configuración de las fechas de inicio y fin.
+ * @type {InputFecha}
+ */
+public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
 /**
  * Método que se ejecuta al inicializar el componente.
  */
@@ -316,7 +336,7 @@ paisDeProcedenciaBotons = [
 /**
  * Botones de acción para gestionar listas de países en la segunda sección.
  */
-paisDeProcedenciaBotonsDuos = [
+paisDeProcedenciaBotonsDos = [
   { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[1].agregar('t') },
   { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[1].agregar('') },
   { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[1].quitar('') },
@@ -337,9 +357,9 @@ paisDeProcedenciaBotonsTres = [
  * Obtiene la lista de estados desde un archivo JSON.
  */
 obtenerEstadoList(): void {
-  this.httpServicios
-    .get<RespuestaCatalogos>('../../../../../assets/json/260211/seleccion.json')
-    .subscribe((data): void => {
+  this.service.obtenerEstadoList()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
       const DATOS = data?.data;
       this.estado = DATOS;
     });
@@ -349,22 +369,24 @@ obtenerEstadoList(): void {
  * Obtiene los datos para la tabla de NICO desde un archivo JSON.
  */
 obtenerTablaDatos(): void {
-  this.httpServicios
-    .get<RespuestaTabla>('../../../../../assets/json/260211/tablaDatos.json')
-    .subscribe((data): void => {
-      this.nicoTablaDatos = data?.data;
-    });
+  this.service.obtenerTablaDatos()
+  .pipe(takeUntil(this.destroyed$))
+  .subscribe((data) => {
+    const DATOS = data?.datos;
+    this.nicoTablaDatos = DATOS;
+  });
 }
  
 /**
  * Obtiene los datos de la tabla de mercancías desde un archivo JSON.
  */
 obtenerMercanciasDatos(): void {
-  this.httpServicios
-    .get<MercanciasTabla>('../../../../../assets/json/260211/mercanciasDatos.json')
-    .subscribe((data): void => {
-      this.mercanciasTablaDatos = data?.data;
-    });
+  this.service.obtenerMercanciasDatos()
+  .pipe(takeUntil(this.destroyed$))
+  .subscribe((data) => {
+    const DATOS = data?.datos;
+    this.mercanciasTablaDatos = DATOS;
+  });
 }
  
 /**
@@ -400,8 +422,8 @@ mostrar_colapsable(): void {
 /**
  * Alterna el estado colapsable de la segunda sección.
  */
-mostrar_colapsableDuos(): void {
-  this.colapsableDuos = !this.colapsableDuos;
+mostrar_colapsableDos(): void {
+  this.colapsableDos = !this.colapsableDos;
 }
  
 /**
@@ -427,8 +449,21 @@ mostrar_colapsableTres(): void {
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  
+  /**
+   * Cambia el valor de la fecha final en el formulario.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
+  public cambioFechaFinal(nuevo_valor: string): void {
+
+    this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
+    this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
   }
 
 }

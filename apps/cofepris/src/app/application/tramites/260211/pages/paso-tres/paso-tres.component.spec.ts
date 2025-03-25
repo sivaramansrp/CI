@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { PasotresComponent } from './pasotres.component';
+import { PasotresComponent } from './paso-tres.component';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
 
