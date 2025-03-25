@@ -8,11 +8,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import {
-  Catalogo,
-  Solicitud10301State,
-  Tramite10301Store,
-} from '../../estados/tramite10301.store';
+import { Catalogo } from '../../estados/tramite10301.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -22,11 +18,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+//import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImportadorExportadorService } from '../../services/importador-exportador.service';
 import { SELECCION } from '../../constantes/importador-exportador.enum';
-import { Tramite10301Query } from '../../estados/tramite10301.query';
 
 /**
  * Texto de adjuntar para terceros.
@@ -38,8 +33,8 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
  */
 @Component({
   selector: 'app-datos-del-tramite',
-  templateUrl: './datos-del-tramite.component.html',
-  styleUrls: ['./datos-del-tramite.component.scss'],
+  templateUrl: './datos-generales-de-la-solicitud.component.html',
+  styleUrls: ['./datos-generales-de-la-solicitud.component.scss'],
   standalone: true,
   imports: [
     CommonModule,
@@ -53,41 +48,8 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
     ReactiveFormsModule,
   ],
 })
-export class DatosDelTramiteComponent implements OnInit, OnDestroy {
-  /**
-   * Suscripciones a observables.
-   */
-  private subscriptions: Subscription[] = [];
-
-  /**
-   * Estado de la solicitud.
-   */
-  public solicitudState!: Solicitud10301State;
-
-  /**
-   * Notificador para destruir observables.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-  /**
-   * Suscripción para obtener el catálogo de aduanas.
-   */
-  getAduanaIngresaraSubscription!: Subscription;
-
-  /**
-   * Suscripción para obtener el catálogo de años.
-   */
-  getAnoSubscription!: Subscription;
-
-  /**
-   * Suscripción para obtener el catálogo de condiciones.
-   */
-  getCondicionSubscription!: Subscription;
-
-  /**
-   * Suscripción para obtener el catálogo de países.
-   */
-  getPaisSubscription!: Subscription;
-
+export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
+  
   /**
    * Texto de adjuntar para terceros.
    */
@@ -210,19 +172,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     },
   ];
 
-  /**
-   * Constructor que se utiliza para la inyección de dependencias.
-   * Constructor que se utiliza para la inyección de dependencias.
-   * @param importarExportar Servicio de importador/exportador.
-   * @param importarExportar Servicio de importador/exportador.
-   * @param store Store de Akita para gestionar el estado.
-   * @param query Query de Akita para seleccionar el estado.
-   */
-
   constructor(
     private importarExportar: ImportadorExportadorService,
-    private store: Tramite10301Store,
-    private query: Tramite10301Query,
+
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {
@@ -241,66 +193,42 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.getAduanaIngresara();
-    this.getAno();
-    this.getCondicion();
-    this.getPais();
 
-    this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
     this.donanteDomicilio();
 
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectAduana$.subscribe((aduana) => {
+        this.fechasSeleccionadas = [];
+
+
+
         this.aduana = {
           labelNombre: 'Aduana por la que ingresará la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: aduana ?? [],
         };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectAno$.subscribe((ano) => {
+    
+   
         this.ano = {
           labelNombre: 'Año',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: ano || [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectCondicion$.subscribe((condicion) => {
+        }
+   
         this.condicion = {
           labelNombre: 'Condición de la mercancía',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: condicion ?? [],
-        };
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectPais$.subscribe((pais) => {
+        }
+   
         this.pais = {
           labelNombre: 'País',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: pais ?? [],
+          catalogos: [] ?? [],
         };
-      })
-    );
+      
   }
   /**
    * Agrega elementos a la lista de fechas según el tipo especificado.
@@ -322,7 +250,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         );
       }
     }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
+    //this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   /**
@@ -345,7 +273,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         );
       }
     }
-    this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
+   // this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
 
   /**
@@ -361,68 +289,17 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   cambiarRadio(value: string | number) {
     this.valorSeleccionado = value as string;
-    this.store.setValorSeleccionado(this.valorSeleccionado);
+   // this.store.setValorSeleccionado(this.valorSeleccionado);
   }
 
-  /**
-   * Obtiene el catálogo de años.
-   */
-  getAno(): void {
-    this.getAnoSubscription = this.importarExportar
-      .getAno()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAno(RESPONSE);
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de condiciones.
-   */
-  getCondicion(): void {
-    this.getCondicionSubscription = this.importarExportar
-      .getCondicion()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setCondicion(RESPONSE);
-        }
-      });
-  }
-
-  /**
-   * Obtiene el catálogo de países.
-   */
-  getPais(): void {
-    this.getPaisSubscription = this.importarExportar
-      .getPais()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setPais(RESPONSE);
-        }
-      });
-  }
-
-  getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.importarExportar
-      .getAduanaIngresara()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAduana(RESPONSE);
-        }
-      });
-  }
+ 
 
   /**
    * Abre el popup.
    */
   openPopup() {
     this.isPopupOpen = true;
-    this.store.setIsPopupOpen(this.isPopupOpen);
+    //this.store.setIsPopupOpen(this.isPopupOpen);
   }
 
   /**
@@ -431,8 +308,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   closePopup() {
     this.isPopupOpen = false;
     this.isPopupClose = false;
-    this.store.setIsPopupOpen(this.isPopupOpen);
-    this.store.setIsPopupClose(this.isPopupClose);
+    //this.store.setIsPopupOpen(this.isPopupOpen);
+    //this.store.setIsPopupClose(this.isPopupClose);
   }
 
   /**
@@ -440,7 +317,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   nextTabla() {
     this.showTabla = false;
-    this.store.setShowTabla(this.showTabla);
+   // this.store.setShowTabla(this.showTabla);
   }
 
   /**
@@ -462,6 +339,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    * @returns {void}
    */
+  /** 
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -469,7 +347,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
+  }*/
+
   /**
    * Obtiene el grupo de formulario de importador/exportador.
    *
@@ -484,75 +363,75 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.tramiteForm = this.fb.group({
       importadorExportador: this.fb.group({
-        aduana: [this.solicitudState?.aduana, [Validators.required]],
+        aduana: ['aduana', [Validators.required]],
         nombre: [
-          this.solicitudState?.nombre,
+          'PREUBA QA',
           [Validators.required, Validators.maxLength(50)],
         ],
         tipoMercancia: [
-          this.solicitudState?.tipoMercancia,
+          'tipoMercancia',
           [Validators.required, Validators.maxLength(100)],
         ],
         usoEspecifico: [
-          this.solicitudState?.usoEspecifico,
+          'usoEspecifico',
           [Validators.required, Validators.maxLength(512)],
         ],
-        condicion: [this.solicitudState?.condicion, Validators.required],
+        condicion: ['condicion', Validators.required],
         marca: [
-          this.solicitudState?.marca,
+          'marca',
           [Validators.required, Validators.maxLength(50)],
         ],
-        ano: [this.solicitudState?.ano, [Validators.required]],
+        ano: ['ano', [Validators.required]],
         modelo: [
-          this.solicitudState?.modelo,
+          'modelo',
           [Validators.required, Validators.maxLength(50)],
         ],
         serie: [
-          this.solicitudState?.serie,
+          'serie',
           [Validators.required, Validators.maxLength(50)],
         ],
-        manifesto: [this.solicitudState?.manifesto, Validators.required],
+        manifesto: ['manifesto', Validators.required],
         calle: [
-          this.solicitudState?.calle,
+          'calle',
           [Validators.required, Validators.maxLength(100)],
         ],
         numeroExterior: [
-          this.solicitudState?.numeroExterior,
+          'numeroExterior',
           [Validators.required, Validators.maxLength(10)],
         ],
         numeroInterior: [
-          this.solicitudState?.numeroInterior,
+          'numeroInterior',
           [Validators.maxLength(10)],
         ],
         telefono: [
-          this.solicitudState?.telefono,
+          'telefono',
           [Validators.required, Validators.pattern(/^\d{10}$/)],
         ],
         correoElectronico: [
-          this.solicitudState?.correoElectronico,
+          'correoElectronico',
           [Validators.required, Validators.email],
         ],
-        pais: [this.solicitudState?.pais, Validators.required],
+        pais: ['pais', Validators.required],
         codigoPostal: [
-          this.solicitudState?.codigoPostal,
+          'codigoPostal',
           [Validators.required, Validators.pattern(/^\d{5}$/)],
         ],
         estado: [
-          this.solicitudState?.estado,
+          'estado',
           [Validators.required, Validators.maxLength(50)],
         ],
         colonia: [
-          this.solicitudState?.colonia,
+          'colonia',
           [Validators.required, Validators.maxLength(50)],
         ],
-        opcion: [this.solicitudState?.opcion],
+        opcion: ['opcion', Validators.maxLength(50)],
       }),
     });
   }
 
   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
+   
   ngOnDestroy(): void {
     if (this.getAduanaIngresaraSubscription) {
       this.getAduanaIngresaraSubscription.unsubscribe();
@@ -568,4 +447,5 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
+    */
 }

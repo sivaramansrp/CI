@@ -52,11 +52,6 @@ export class SolicitantePageComponent {
     txtBtnSig: 'Continuar',
   };
 
-  /**
-   * Constructor para inyectar las dependencias necesarias.
-   * @param chofer40102Query - Servicio para consultar el estado de choferes.
-   * @param chofer40102Store - Servicio para gestionar el estado de choferes.
-   */
   constructor() {}
 
   /**

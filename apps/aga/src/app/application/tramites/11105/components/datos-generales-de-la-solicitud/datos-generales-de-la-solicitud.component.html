@@ -14,13 +14,6 @@
               style="margin-left: -245px"
               formControlName="manifesto"
               id="manifesto"
-              (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'manifesto',
-                  'setManifesto'
-                )
-              "
             />
             *Manifesto bajo protesta de decir verdad que el donante de la
             mercancía es extranjero
@@ -35,9 +28,7 @@
               [required]="true"
               id="aduana"
               formControlName="aduana"
-              (change)="
-                setValoresStore(importadorExportador, 'aduana', 'setAduana')
-              "
+              [disabled]="true"
             >
             </app-catalogo-select>
           </div>
@@ -64,7 +55,7 @@
         </div>
       </div>
 
-      <ng-container *ngIf="!showTabla && isPopupClose">
+      <!--<ng-container *ngIf="!showTabla && isPopupClose">
         <div class="row mt-5">
           <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
         </div>
@@ -76,29 +67,24 @@
           [botonField]="botonField"
         ></crosslist>
         <ng-container formGroupName="importadorExportador">
-        <div class="row mt-5">
-          <div class="col-md-12">
-            <label>Tipo de mercancía*:</label>
-            <input
-              type="text"
-              width:140
-              required="true"
-              class="form-control"
-              id="tipoMercancia"
-              formControlName="tipoMercancia"
-              [ngClass]="
-                isValid(importadorExportador, 'tipoMercancia') ? 'required' : ''
-              "
-              (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'tipoMercancia',
-                  'setTipoMercancia'
-                )
-              "
-            />
+          <div class="row mt-5">
+            <div class="col-md-12">
+              <label>Tipo de mercancía*:</label>
+              <input
+                type="text"
+                width:140
+                required="true"
+                class="form-control"
+                id="tipoMercancia"
+                formControlName="tipoMercancia"
+                [ngClass]="
+                  isValid(importadorExportador, 'tipoMercancia')
+                    ? 'required'
+                    : ''
+                "
+              />
+            </div>
           </div>
-        </div>
         </ng-container>
         <ng-container formGroupName="importadorExportador">
           <div class="row mt-3">
@@ -115,13 +101,6 @@
                     ? 'required'
                     : ''
                 "
-                (change)="
-                  setValoresStore(
-                    importadorExportador,
-                    'usoEspecifico',
-                    'setUsoEspecifico'
-                  )
-                "
               />
             </div>
             <div class="col-md-4">
@@ -132,13 +111,6 @@
                 [required]="true"
                 id="condicion"
                 formControlName="condicion"
-                (change)="
-                  setValoresStore(
-                    importadorExportador,
-                    'condicion',
-                    'setCondicion'
-                  )
-                "
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -150,9 +122,6 @@
                 formControlName="marca"
                 [ngClass]="
                   isValid(importadorExportador, 'marca') ? 'required' : ''
-                "
-                (change)="
-                  setValoresStore(importadorExportador, 'marca', 'setMarca')
                 "
               />
             </div>
@@ -166,9 +135,6 @@
                 [required]="false"
                 id="ano"
                 formControlName="ano"
-                (change)="
-                  setValoresStore(importadorExportador, 'ano', 'setAno')
-                "
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -181,9 +147,6 @@
                 [ngClass]="
                   isValid(importadorExportador, 'modelo') ? 'required' : ''
                 "
-                (change)="
-                  setValoresStore(importadorExportador, 'modelo', 'setModelo')
-                "
               />
             </div>
             <div class="col-md-4">
@@ -195,9 +158,6 @@
                 formControlName="serie"
                 [ngClass]="
                   isValid(importadorExportador, 'serie') ? 'required' : ''
-                "
-                (change)="
-                  setValoresStore(importadorExportador, 'serie', 'setSerie')
                 "
               />
             </div>
@@ -245,7 +205,7 @@
         </div>
 
         <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
-      </ng-container>
+      </ng-container>-->
 
       <ng-titulo titulo="Datos del donante extrajero" />
       <ng-container formGroupName="importadorExportador">
@@ -258,11 +218,9 @@
               class="form-control"
               id="nombre"
               formControlName="nombre"
+              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'nombre') ? 'required' : ''
-              "
-              (change)="
-                setValoresStore(importadorExportador, 'nombre', 'setNombre')
               "
             />
           </div>
@@ -277,11 +235,9 @@
               maxlength="100"
               id="calle"
               formControlName="calle"
+              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'calle') ? 'required' : ''
-              "
-              (change)="
-                setValoresStore(importadorExportador, 'calle', 'setCalle')
               "
             />
           </div>
@@ -294,17 +250,11 @@
               class="form-control"
               id="numeroExterior"
               formControlName="numeroExterior"
+              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'numeroExterior')
                   ? 'required'
                   : ''
-              "
-              (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'numeroExterior',
-                  'setNumeroExterior'
-                )
               "
             />
           </div>
@@ -318,17 +268,11 @@
               maxlength="55"
               id="numeroInterior"
               formControlName="numeroInterior"
+              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'numeroInterior')
                   ? 'required'
                   : ''
-              "
-              (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'numeroInterior',
-                  'setNumeroInterior'
-                )
               "
             />
           </div>
@@ -340,12 +284,10 @@
               class="form-control"
               id="telefono"
               formControlName="telefono"
+              [disabled]="true"
               maxlength="30"
               [ngClass]="
                 isValid(importadorExportador, 'telefono') ? 'required' : ''
-              "
-              (change)="
-                setValoresStore(importadorExportador, 'telefono', 'setTelefono')
               "
             />
           </div>
@@ -357,17 +299,11 @@
               maxlength="50"
               id="correoElectronico"
               formControlName="correoElectronico"
+              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'correoElectronico')
                   ? 'required'
                   : ''
-              "
-              (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'correoElectronico',
-                  'setCorreoElectronico'
-                )
               "
             />
           </div>
@@ -381,9 +317,7 @@
               [required]="true"
               id="pais"
               formControlName="pais"
-              (change)="
-                setValoresStore(importadorExportador, 'pais', 'setPais')
-              "
+              [disabled]="true"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
@@ -394,15 +328,9 @@
               class="form-control"
               id="codigoPostal"
               formControlName="codigoPostal"
+              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'codigoPostal') ? 'required' : ''
-              "
-              (change)="
-                setValoresStore(
-                  importadorExportador,
-                  'codigoPostal',
-                  'setCodigoPostal'
-                )
               "
             />
           </div>
@@ -416,9 +344,6 @@
               formControlName="estado"
               [ngClass]="
                 isValid(importadorExportador, 'estado') ? 'required' : ''
-              "
-              (change)="
-                setValoresStore(importadorExportador, 'estado', 'setEstado')
               "
             />
           </div>
@@ -435,9 +360,6 @@
               [ngClass]="
                 isValid(importadorExportador, 'colonia') ? 'required' : ''
               "
-              (change)="
-                setValoresStore(importadorExportador, 'colonia', 'setColonia')
-              "
             />
           </div>
         </div>
@@ -453,9 +375,6 @@
             (valueChange)="cambiarRadio($event)"
             id="opcion"
             formControlName="opcion"
-            (change)="
-              setValoresStore(importadorExportador, 'opcion', 'setOpcion')
-            "
           >
           </app-input-radio>
         </div>

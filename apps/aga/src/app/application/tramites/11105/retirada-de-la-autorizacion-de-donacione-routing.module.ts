@@ -4,7 +4,7 @@ import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-p
 
 export const ROUTES_TERRESTRE: Routes = [
   {
-    path: 'retirada-de-la-autorización-de-donacione',
+    path: 'solicitud',
     component: SolicitantePageComponent,
   },
 ];
