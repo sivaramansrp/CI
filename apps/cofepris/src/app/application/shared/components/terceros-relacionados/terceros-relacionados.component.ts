@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -14,8 +14,10 @@ import {
   Proveedor,
   PROVEEDOR_ENCABEZADO_DE_TABLA,
 } from '../../models/terceros-relacionados.model';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
+import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
@@ -23,7 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   configuracionTablaFabricante: ConfiguracionColumna<Fabricante>[] =
     FABRICANTE_ENCABEZADO_DE_TABLA;
   configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] =
@@ -33,16 +35,54 @@ export class TercerosRelacionadosComponent {
   configuracionTablaFacturador: ConfiguracionColumna<Facturador>[] =
     FACTURADOR_ENCABEZADO_DE_TABLA;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  private destroy$ = new Subject<void>();
 
-  @Input() fabricanteTablaDatos = [];
-  @Input() destinatarioFinalTablaDatos = [];
-  @Input() proveedorTablaDatos = [];
-  @Input() facturadorTablaDatos = [];
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private tramiteStore: Tramite260204Store,
+    private tramiteQuery: Tramite260204Query
+  ) {}
+
+  fabricanteTablaDatos: Fabricante[] = [];
+  destinatarioFinalTablaDatos: Destinatario[] = [];
+  proveedorTablaDatos: Proveedor[] = [];
+  facturadorTablaDatos: Facturador[] = [];
+
+  ngOnInit(): void {
+    this.tramiteQuery.getFabricanteTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.fabricanteTablaDatos = data;
+      });
+
+    this.tramiteQuery.getDestinatarioFinalTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.destinatarioFinalTablaDatos = data;
+      });
+
+    this.tramiteQuery.getProveedorTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.proveedorTablaDatos = data;
+      });
+
+    this.tramiteQuery.getFacturadorTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.facturadorTablaDatos = data;
+      });
+  }
 
   navigateToAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emit a value to complete the subscriptions
+    this.destroy$.complete(); // Close the subject
   }
 }
