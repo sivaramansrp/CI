@@ -6,6 +6,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
+import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CertificadoOrigenComponent } from './components/certificado-origen/cert
     WizardComponent,
     SolicitanteComponent,
     CertificadoOrigenComponent,
-    AlertComponent
+    AlertComponent,
+    DestinatarioComponent
     
   ],
 })
