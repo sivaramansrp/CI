@@ -10,7 +10,7 @@
                     tabindex="0"
                   >
                     <p class="panel-title">
-                      <span>Opciones</span><span>de</span><span>pre-llenado</span><span>de</span><span>Solicitud</span>
+                      Opciones de pre-llenado de Solicitud
                     </p>
                     <button type="button" class="collpase-button collapsed"></button>
                   </div>
@@ -42,15 +42,15 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="rfcDel">RFC del responsable sanitario:</label>
+                  <label class="form-label" for="rfcResponsableSanitario">RFC del responsable sanitario:</label>
                   <input
                     class="form-control"
-                    id="rfcDel"
+                    id="rfcResponsableSanitario"
                     placeholder=""
                     type="text"
                     [disabled]="true"
-                    formControlName="rfcDel"
-                    (change)="setValoresStore(forma,'rfcDel', 'setRfcDel')"
+                    formControlName="rfcResponsableSanitario"
+                    (change)="setValoresStore(forma,'rfcResponsableSanitario', 'setRfcResponsableSanitario')"
                   />
                 </div>
             </div>

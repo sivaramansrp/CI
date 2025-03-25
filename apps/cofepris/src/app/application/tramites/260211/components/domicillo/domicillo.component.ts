@@ -5,6 +5,7 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  InputFechaComponent,
   RespuestaCatalogos,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -90,6 +91,7 @@ export interface MercanciasTabla {
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
+    InputFechaComponent
   ],
   templateUrl: './domicillo.component.html',
   styleUrl: './domicillo.component.css',
@@ -283,7 +285,7 @@ ngOnInit(): void {
    */
   this.formMercancias = this.fb.group({
     clasificacion: [this.solicitudState?.clasificacion, Validators.required],
-    especificar: [this.solicitudState?.especificar, Validators.required],
+    especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto, Validators.required],
     denominacionEspecifica: [this.solicitudState?.denominacionEspecifica, Validators.required],
     denominacionDistintiva: [this.solicitudState?.denominacionDistintiva, Validators.required],
     denominacionComun: [this.solicitudState?.denominacionComun, Validators.required],
