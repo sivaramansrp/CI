@@ -1,9 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component } from '@angular/core';
 
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 
-import { PASOS } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { PASOS } from '@libs/shared/data-access-user/src';
 
 /**
  * @component

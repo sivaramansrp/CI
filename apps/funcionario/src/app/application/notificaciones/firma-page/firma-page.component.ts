@@ -1,7 +1,7 @@
-import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy } from '@angular/core';
+import { EncabezadoRequerimientoComponent, FirmaElectronicaComponent, TramiteFolioService } from '@libs/shared/data-access-user/src';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { EncabezadoRequerimientoComponent, FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'lib-firma-page',
@@ -18,7 +18,7 @@ export class FirmaPageComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private tramiteFolioService: TramiteFolioService,
   ) { }
 
   /**
@@ -28,13 +28,13 @@ export class FirmaPageComponent implements OnDestroy {
   obtieneFirma(ev: string): void {
     const RUTA_ACTUAL = this.router.url;
     const SEGEMENTOS_RUTA = RUTA_ACTUAL.split('/');
-    
-    this.ruta = SEGEMENTOS_RUTA.slice(0, SEGEMENTOS_RUTA.length - 1).join('/');    
+
+    this.ruta = SEGEMENTOS_RUTA.slice(0, SEGEMENTOS_RUTA.length - 1).join('/');
 
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.tramiteFolioService
         .obtenerTramite(19)
         .pipe(
           takeUntil(this.destroy$),

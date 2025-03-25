@@ -16,8 +16,8 @@ export interface Solicitud110201State {
   fraccionArancelaria: string;
   numeroRegistro: string;
   nombreComercial: string;
-  fechaInicioB: string;
-  fechFinB: string;
+  fechaInicial: string;
+  fechaFinal: string;
   archivo: string;
   observaciones: string;
   presica: string;
@@ -39,21 +39,21 @@ export interface Solicitud110201State {
   correoElectronico: string;
   nacion: Catalogo[] | null;
   transporte: Catalogo[] | null;
-  fraccionMercanArancelaria: string;
-  nombretecnico: string;
+  fraccionMercanciaArancelaria: string;
+  nombreTecnico: string;
   nombreEnIngles: string;
-  criterioparaconferir: string;
+  criterioParaConferir: string;
   marca: string;
   cantidad: string;
   umc: Catalogo[] | null;
-  valordelamercancia: string;
-  complementodeladescripcion: string;
-  masabruta: string;
-  nombrecomercialdelamercancia: string;
+  valorDelaMercancia: string;
+  complementoDelaDescripcion: string;
+  masaBruta: string;
+  nombreComercialDelaMercancia: string;
   unidadMedida: Catalogo[] | null;
   tipoFactura: Catalogo[] | null;
   fecha: string;
-  nFactura: string;
+  numeroFactura: string;
   justificacion: string;
   casillaVerificacion: string;
 }
@@ -68,8 +68,8 @@ export function createInitialState(): Solicitud110201State {
     fraccionArancelaria: '',
     numeroRegistro: '',
     nombreComercial: '',
-    fechaInicioB: '',
-    fechFinB: '',
+    fechaInicial: '',
+    fechaFinal: '',
     archivo: '',
     observaciones: '',
     presica: '',
@@ -91,21 +91,21 @@ export function createInitialState(): Solicitud110201State {
     correoElectronico: '',
     nacion: null,
     transporte: null,
-    fraccionMercanArancelaria: '',
-    nombretecnico: '',
+    fraccionMercanciaArancelaria: '',
+    nombreTecnico: '',
     nombreEnIngles: '',
-    criterioparaconferir: '',
+    criterioParaConferir: '',
     marca: '',
     cantidad: '',
     umc: null,
-    valordelamercancia: '',
-    complementodeladescripcion: '',
-    masabruta: '',
-    nombrecomercialdelamercancia: '',
+    valorDelaMercancia: '',
+    complementoDelaDescripcion: '',
+    masaBruta: '',
+    nombreComercialDelaMercancia: '',
     unidadMedida: null,
     tipoFactura: null,
     fecha: '',
-    nFactura: '',
+    numeroFactura: '',
     justificacion: '',
     casillaVerificacion: '',
   };
@@ -151,22 +151,22 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
   }
 /**
    * Establece la fracción arancelaria de la mercancía.
-   * @param fraccionMercanArancelaria Cadena que representa la fracción arancelaria de la mercancía.
+   * @param fraccionMercanciaArancelaria Cadena que representa la fracción arancelaria de la mercancía.
    */
-  public setfraccionMercanArancelaria(fraccionMercanArancelaria: string) {
+  public setfraccionMercanArancelaria(fraccionMercanciaArancelaria: string) {
     this.update((state) => ({
       ...state,
-      fraccionMercanArancelaria,
+      fraccionMercanciaArancelaria,
     }));
   }
  /**
    * Establece el nombre técnico de la mercancía.
-   * @param nombretecnico Cadena que representa el nombre técnico.
+   * @param nombreTecnico Cadena que representa el nombre técnico.
    */
-  public setnombretecnico(nombretecnico: string) {
+  public setnombretecnico(nombreTecnico: string) {
     this.update((state) => ({
       ...state,
-      nombretecnico,
+      nombreTecnico,
     }));
   }
 /**
@@ -181,12 +181,12 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
   }
 /**
    * Establece el criterio para conferir origen.
-   * @param criterioparaconferir Cadena que representa el criterio para conferir origen.
+   * @param criterioParaConferir Cadena que representa el criterio para conferir origen.
    */
-  public setcriterioparaconferir(criterioparaconferir: string) {
+  public setcriterioparaconferir(criterioParaConferir: string) {
     this.update((state) => ({
       ...state,
-      criterioparaconferir,
+      criterioParaConferir,
     }));
   }
  /**
@@ -251,12 +251,12 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
   }
 /**
    * Establece el número de factura.
-   * @param nFactura Cadena que representa el número de factura.
+   * @param numeroFactura Cadena que representa el número de factura.
    */
-  public setNFactura(nFactura: string) {
+  public setNFactura(numeroFactura: string) {
     this.update((state) => ({
       ...state,
-      nFactura,
+      numeroFactura,
     }));
   }
   /**
@@ -271,42 +271,42 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
   }
  /**
    * Establece el catálogo de transporte.
-   * @param valordelamercancia Lista de objetos de tipo `Catalogo` o `null`.
+   * @param valorDelaMercancia Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setvalordelamercancia(valordelamercancia: string) {
+  public setvalordelamercancia(valorDelaMercancia: string) {
     this.update((state) => ({
       ...state,
-      valordelamercancia,
+      valorDelaMercancia,
     }));
   }
  /**
    * Establece el valor de la casilla de verificación.
-   * @param complementodeladescripcion Cadena que representa el valor de la casilla.
+   * @param complementoDelaDescripcion Cadena que representa el valor de la casilla.
    */
-  public setcomplementodeladescripcion(complementodeladescripcion: string) {
+  public setcomplementodeladescripcion(complementoDelaDescripcion: string) {
     this.update((state) => ({
       ...state,
-      complementodeladescripcion,
+      complementoDelaDescripcion,
     }));
   }
 /**
  * Establece el valor de la masa bruta de la mercancía.
- * @param masabruta Cadena que representa la masa bruta.
+ * @param masaBruta Cadena que representa la masa bruta.
  */
-  public setmasabruta(masabruta: string) {
+  public setmasabruta(masaBruta: string) {
     this.update((state) => ({
       ...state,
-      masabruta,
+      masaBruta,
     }));
   }
 /**
  * Establece el nombre comercial de la mercancía.
- * @param nombrecomercialdelamercancia Cadena que representa el nombre comercial de la mercancía.
+ * @param nombreComercialDelaMercancia Cadena que representa el nombre comercial de la mercancía.
  */
-  public setnombrecomercialdelamercancia(nombrecomercialdelamercancia: string) {
+  public setnombrecomercialdelamercancia(nombreComercialDelaMercancia: string) {
     this.update((state) => ({
       ...state,
-      nombrecomercialdelamercancia,
+      nombreComercialDelaMercancia,
     }));
   }
 /**
@@ -331,22 +331,22 @@ export class Tramite110201Store extends Store<Solicitud110201State> {
   }
 /**
  * Establece la fecha de inicio del bloque.
- * @param fechaInicioB Cadena que representa la fecha de inicio del bloque.
+ * @param fechaInicial Cadena que representa la fecha de inicio del bloque.
  */
-  public setFechInicioB(fechaInicioB: string) {
+  public setFechInicioB(fechaInicial: string) {
     this.update((state) => ({
       ...state,
-      fechaInicioB,
+      fechaInicial,
     }));
   }
 /**
  * Establece la fecha de fin del bloque.
- * @param fechFinB Cadena que representa la fecha de fin del bloque.
+ * @param fechaFinal Cadena que representa la fecha de fin del bloque.
  */
-  public setFechFinB(fechFinB: string) {
+  public setFechFinB(fechaFinal: string) {
     this.update((state) => ({
       ...state,
-      fechFinB,
+      fechaFinal,
     }));
   }
 /**

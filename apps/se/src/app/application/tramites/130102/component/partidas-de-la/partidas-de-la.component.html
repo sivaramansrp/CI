@@ -7,7 +7,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label class="form-label" for="cantidad">Cantidad*:</label>
-                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" appUppercase
+                        <input class="form-control" type="text" id="cantidad" formControlName="cantidad" libUppercase
                             aria-labelledby="cantidad"   (change)="setValoresStore(form,'cantidad', 'setCantidad_partidas')" >
                             <div *ngIf="esInvalido('cantidad')" class="text-danger">
                                 <small *ngIf="form.controls['cantidad'].hasError('required')">Cantidad es obligatoria.</small>

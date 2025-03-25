@@ -476,10 +476,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
         tipoFactura:
           this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.nFactura,
+        numFactura: this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
         complementoDescripcion:
           this.mercanciaForm?.value.validacionMercanciaForm
-            .complementodeladescripcion,
+            .complementoDelaDescripcion,
         fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
       });
     }
@@ -665,27 +665,27 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           this.solicitudState?.nombreComercial,
           [Validators.required],
         ],
-        fechaInicioB: [
-          this.solicitudState?.fechaInicioB,
+        fechaInicial: [
+          this.solicitudState?.fechaInicial,
           [Validators.required],
         ],
-        fechFinB: [this.solicitudState?.fechFinB, [Validators.required]],
+        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
       }),
     });
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
-        fraccionMercanArancelaria: ['', [Validators.required]],
-        nombretecnico: [
+        fraccionMercanciaArancelaria: ['', [Validators.required]],
+        nombreTecnico: [
           '',
           [Validators.required],
         ],
-        nombrecomercialdelamercancia: [
+        nombreComercialDelaMercancia: [
           '',
           [Validators.required],
         ],
 
-        criterioparaconferir: ['', [Validators.required]],
+        criterioParaConferir: ['', [Validators.required]],
         nombreEnIngles: ['', [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
         cantidad: [
@@ -693,16 +693,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
           [Validators.required, Validators.pattern(/^\d+$/)],
         ],
         umc: [this.solicitudState?.umc, [Validators.required]],
-        valordelamercancia: [
-          this.solicitudState?.valordelamercancia,
+        valorDelaMercancia: [
+          this.solicitudState?.valorDelaMercancia,
           [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
         ],
-        complementodeladescripcion: [
-          this.solicitudState?.complementodeladescripcion,
+        complementoDelaDescripcion: [
+          this.solicitudState?.complementoDelaDescripcion,
           [Validators.required],
         ],
-        masabruta: [
-          this.solicitudState?.masabruta,
+        masaBruta: [
+          this.solicitudState?.masaBruta,
           [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
         ],
         unidadMedida: [
@@ -711,7 +711,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
-        nFactura: [this.solicitudState?.nFactura, [Validators.required]],
+        numeroFactura: [this.solicitudState?.numeroFactura, [Validators.required]],
       }),
     });
   }

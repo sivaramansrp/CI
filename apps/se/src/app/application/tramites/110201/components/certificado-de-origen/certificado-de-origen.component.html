@@ -95,11 +95,11 @@
               type="date"
               required="true"
               class="form-control"
-              formControlName="fechaInicioB"
+              formControlName="fechaInicial"
               (change)="
                 setValoresStore(
                   validacionForm,
-                  'fechaInicioB',
+                  'fechaInicial',
                   'setFechInicioB'
                 )
               "
@@ -111,9 +111,9 @@
               type="date"
               required="true"
               class="form-control"
-              formControlName="fechFinB"
+              formControlName="fechaFinal"
               (change)="
-                setValoresStore(validacionForm, 'fechFinB', 'setFechFinB')
+                setValoresStore(validacionForm, 'fechaFinal', 'setFechFinB')
               "
             />
           </div>
@@ -309,11 +309,11 @@
             required="true"
             class="form-control grisColor"
             readonly
-            formControlName="fraccionMercanArancelaria"
+            formControlName="fraccionMercanciaArancelaria"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'fraccionMercanArancelaria',
+                'fraccionMercanciaArancelaria',
                 'setfraccionMercanArancelaria'
               )
             "
@@ -327,12 +327,12 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombrecomercialdelamercancia"
+            formControlName="nombreComercialDelaMercancia"
             readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nombrecomercialdelamercancia',
+                'nombreComercialDelaMercancia',
                 'setnombrecomercialdelamercancia'
               )
             "
@@ -346,12 +346,12 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombretecnico"
+            formControlName="nombreTecnico"
             readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nombretecnico',
+                'nombreTecnico',
                 'setnombretecnico'
               )
             "
@@ -382,12 +382,12 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="criterioparaconferir"
+            formControlName="criterioParaConferir"
             readonly
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'criterioparaconferir',
+                'criterioParaConferir',
                 'setcriterioparaconferir'
               )
             "
@@ -458,11 +458,11 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="valordelamercancia"
+            formControlName="valorDelaMercancia"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'valordelamercancia',
+                'valorDelaMercancia',
                 'setvalordelamercancia'
               )
             "
@@ -473,11 +473,11 @@
           <textarea
             cols="80"
             rows="3"
-            formControlName="complementodeladescripcion"
+            formControlName="complementoDelaDescripcion"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'complementodeladescripcion',
+                'complementoDelaDescripcion',
                 'setcomplementodeladescripcion'
               )
             "
@@ -491,11 +491,11 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="masabruta"
+            formControlName="masaBruta"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'masabruta',
+                'masaBruta',
                 'setmasabruta'
               )
             "
@@ -538,11 +538,11 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="nFactura"
+            formControlName="numeroFactura"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
-                'nFactura',
+                'numeroFactura',
                 'setNFactura'
               )
             "

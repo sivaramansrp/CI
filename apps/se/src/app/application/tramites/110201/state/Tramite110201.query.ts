@@ -56,12 +56,12 @@ export class Tramite110201Query extends Query<Solicitud110201State> {
   /**
    * Selecciona la fecha de inicio del bloque.
    */
-  selectFechInicioB$ = this.select((state) => state.fechaInicioB);
+  selectFechInicioB$ = this.select((state) => state.fechaInicial);
 
   /**
    * Selecciona la fecha de fin del bloque.
    */
-  selectFechFinB$ = this.select((state) => state.fechFinB);
+  selectFechFinB$ = this.select((state) => state.fechaFinal);
 
   /**
    * Selecciona el archivo adjunto.
