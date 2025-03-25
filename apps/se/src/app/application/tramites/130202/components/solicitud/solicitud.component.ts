@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,7 +7,7 @@ import { ExportacionMineralesDeHierroService } from '../../services/exportacion-
 import { HttpClient } from '@angular/common/http';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../130202/enums/representacion-federal.enum';
+import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130202Query } from '../../estados/queries/tramite130202.query';
 import { Tramite130202Store } from '../../estados/tramites/tramites130202.store';
@@ -116,7 +115,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       label: 'Clasificación del régimen',
       placeholder: 'Seleccione un documento',
       required: true,
-      controlName: 'classification',
+      controlName: 'clasificacion',
     },
   ];
   /**
@@ -188,7 +187,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.getEstablecimiento();
-    this.calculateTotals();
+    this.calcularTotales();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -224,7 +223,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
       regimen: ['', Validators.required],
-      classification: ['', Validators.required],
+      clasificacion: ['', Validators.required],
     });
  
     this.mercanciaForm = this.fb.group({
@@ -309,11 +308,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
       });
  
-    this.tramite130202Query.classification$
+    this.tramite130202Query.clasificacion$
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((classification) => {
+      .subscribe((clasificacion) => {
         this.formDelTramite.patchValue(
-          { classification },
+          { clasificacion },
           { emitEvent: false }
         );
       });
@@ -367,10 +366,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.tramite130202Store.updateState({
           solicitud: value.solicitud,
           regimen: value.regimen,
-          classification: value.classification,
+          clasificacion: value.clasificacion,
         });
       });
  
+
     this.mercanciaForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe((value) => {
@@ -411,10 +411,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * calculateTotals
+   * calcularTotales
    * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
    */
-  calculateTotals(): void {
+  calcularTotales(): void {
     const CANTITAD_TOTAL = this.tableBodyData.reduce(
       (sum: number, item: { tbodyData: string[] }) =>
         sum + parseFloat(item.tbodyData[0]),
@@ -464,11 +464,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
   /**
-   * handleFilaSeleccionada
+   * manejarlaFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
    * Lista de filas seleccionadas.
    */
-  handleFilaSeleccionada(filasSeleccionadas: any[]): void {
+  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
       ? filasSeleccionadas[0]
       : null;

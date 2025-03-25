@@ -36,7 +36,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
-    PartidasDeLaComponent,
+    PartidasDeLaMercanciaComponent ,
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,

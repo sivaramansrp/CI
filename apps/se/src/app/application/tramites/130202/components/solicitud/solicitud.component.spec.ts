@@ -8,7 +8,7 @@ import { ExportacionMineralesDeHierroService } from '../../services/exportacion-
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { PartidasDeLaComponent } from '../../../../shared/components/partidas-de-la/partidas-de-la.component';
+import { PartidasDeLaMercanciaComponent  } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDeLaMercanciaComponent } from '../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { PaisProcendenciaComponent } from '../../../../shared/components/pais-procendencia/pais-procendencia.component';
@@ -92,7 +92,7 @@ describe('SolicitudComponent', () => {
       imports: [
         ReactiveFormsModule,
         DatosDelTramiteComponent,
-        PartidasDeLaComponent,
+        PartidasDeLaMercanciaComponent ,
         DatosDeLaMercanciaComponent,
         PaisProcendenciaComponent,
         RepresentacionComponent,
@@ -126,7 +126,7 @@ describe('SolicitudComponent', () => {
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
       jest.spyOn(component, 'getEstablecimiento');
-      jest.spyOn(component, 'calculateTotals');
+      jest.spyOn(component, 'calcularTotales');
 
       component.ngOnInit();
 
@@ -135,7 +135,7 @@ describe('SolicitudComponent', () => {
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
       expect(component.getEstablecimiento).toHaveBeenCalled();
-      expect(component.calculateTotals).toHaveBeenCalled();
+      expect(component.calcularTotales).toHaveBeenCalled();
     });
 
     it('Debería actualizar mostrarTabla según la consulta', () => {
@@ -190,7 +190,7 @@ describe('SolicitudComponent', () => {
         valorTotalUSD: [{ value: '', disabled: true }],
       });
 
-      component.calculateTotals();
+      component.calcularTotales();
 
       expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(30);
       expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(300);

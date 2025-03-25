@@ -15,17 +15,17 @@
 ></app-datos-de-la-mercancia>
 
 
-<app-partidas-de-la
+<app-partidas-de-la-mercancia
   [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
   [formForTotalCount]="formForTotalCount"
   [tableHeaderData]="tableHeaderData"
   [tableBodyData]="tableBodyData"
   [mostrarTabla]="mostrarTabla"
-  (filaSeleccionadaChange)="handleFilaSeleccionada($event)"
+  (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   (setValoresStoreEvent)="setValoresStore($event)"
-></app-partidas-de-la>
+></app-partidas-de-la-mercancia>
 
 
 <app-pais-procendencia

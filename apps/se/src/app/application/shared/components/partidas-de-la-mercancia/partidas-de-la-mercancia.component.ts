@@ -20,7 +20,7 @@ import { TableComponent } from '@ng-mf/data-access-user';
  * y eventos para interactuar con otros componentes o servicios.
  */
 @Component({
-  selector: 'app-partidas-de-la',
+  selector: 'app-partidas-de-la-mercancia',
   standalone: true,
   imports: [
     CommonModule,

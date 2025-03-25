@@ -12,7 +12,7 @@ export interface Tramite130202State {
   defaultSelect: string;
   defaultProducto: string;
   regimen: string;
-  classification: string;
+  clasificacion: string;
   filaSeleccionada: null;
   cantidadPartidasDeLaMercancia: string;
   valorPartidaUSDPartidasDeLaMercancia: number;
@@ -41,7 +41,7 @@ export function createInitialState(): Tramite130202State {
     unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
-    classification: '',
+    clasificacion: '',
     cantidadPartidasDeLaMercancia: '',
     valorPartidaUSDPartidasDeLaMercancia: 0,
     descripcionPartidasDeLaMercancia: '',
@@ -111,8 +111,8 @@ export class Tramite130202Store extends Store<Tramite130202State> {
   public setregimen(regimen: string): void {
     this.update({ regimen });
   }
-  public setclasificacion(classification: string): void {
-    this.update({ classification });
+  public setclasificacion(clasificacion: string): void {
+    this.update({ clasificacion });
   }
   public setMostrarTabla(mostrar: boolean): void {
     this.update({ mostrarTabla: mostrar });

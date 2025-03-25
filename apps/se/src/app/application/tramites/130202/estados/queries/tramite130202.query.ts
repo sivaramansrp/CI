@@ -18,7 +18,7 @@ export class Tramite130202Query extends Query<Tramite130202State> {
   unidadMedida$ = this.select(state => state.unidadMedida);
   defaultSelect$ = this.select(state => state.defaultSelect);
   defaultProducto$ = this.select(state => state.defaultProducto);
-  classification$ =this.select(state =>state.classification)
+  clasificacion$ =this.select(state =>state.clasificacion)
   regimen$=this.select(state=>state.regimen)
   bloque$=this.select(state=>state.bloque)
   usoEspecifico$=this.select(state=>state.usoEspecifico)
