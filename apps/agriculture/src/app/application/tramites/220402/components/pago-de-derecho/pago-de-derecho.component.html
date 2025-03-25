@@ -44,7 +44,7 @@
               <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia" type="text"
                 [ngClass]="isValid(datosImportadorExportador,'cadenaDependencia') ? 'required' : ''"
                 (change)="setValoresStore(datosImportadorExportador,'cadenaDependencia', 'setCadenaDependencia')"
-                appUppercase />
+                libUppercase />
             </div>
           </div>
           <div class="col-md-4">
@@ -83,7 +83,7 @@
               <label class="form-label" for="importePago">Importe de pago*:</label>
               <input class="form-control" id="importePago" formControlName="importePago" type="text"
                 [ngClass]="isValid(datosImportadorExportador,'importePago') ? 'required' : ''"
-                (change)="setValoresStore(datosImportadorExportador,'importePago', 'setImportePago')" appUppercase />
+                (change)="setValoresStore(datosImportadorExportador,'importePago', 'setImportePago')" libUppercase />
             </div>
           </div>
         </div>
