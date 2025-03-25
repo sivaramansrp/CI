@@ -30,6 +30,10 @@ export class RenunciaDeDerechosDePermisosComponent {
     txtBtnSig: 'Continuar',
   };
 
+   /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
