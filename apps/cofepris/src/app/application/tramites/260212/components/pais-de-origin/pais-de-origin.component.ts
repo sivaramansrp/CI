@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { CrosslistComponent, CrossListLable } from '@libs/shared/data-access-user/src';
+
+import { CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user/src';
+
 import { FormControl } from '@angular/forms';
+
+import Procedencia from 'libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
 
 @Component({
   selector: 'app-pais-de-origin',
@@ -16,20 +21,20 @@ export class PaisDeOriginComponent {
   /**
  * Arreglo para almacenar el rango de días seleccionables.
  */
-  selectRangoDias: string[] = [];
+  selectRangoDias = Procedencia;
   /**
  * Arreglo para almacenar las fechas seleccionadas por el usuario.
  */
-  fechasSeleccionadas: string[] = [];
+  fechasSeleccionadas: string[] = Procedencia;
   /**
    * Arreglo para almacenar los datos relacionados con las fechas.
    */
-  fechasDatos: string[] = [];
+  fechasDatos: string[] = Procedencia;
 
   /**
    * Constructor de la clase PaisDeOriginComponent.
    */
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
   constructor(){}
 
   /**
@@ -59,7 +64,7 @@ export class PaisDeOriginComponent {
   /**
    * Alterna la visibilidad de la sección plegable.
    */
-  mostrar_plegable() {
+  mostrar_plegable():void {
     this.plegable = !this.plegable;
   }
 
@@ -95,13 +100,15 @@ export class PaisDeOriginComponent {
    * Agrega elementos a la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   agregar(tipo: string) {
     if (tipo === 't') {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const fechaValor = this.fecha.value.map(Number);
-      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
+      this.fechasSeleccionadas?.push(this.fechasDatos[fechaValor]);
       this.fechasDatos.splice(fechaValor, 1);
     }
   }
@@ -115,9 +122,10 @@ export class PaisDeOriginComponent {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {
-      const fechaValor = this.fechaSeleccionada.value.map(Number);
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const fechaValor = this.fechaSeleccionada?.value.map(Number);
       this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas.splice(fechaValor, 1);
+      this.fechasSeleccionadas?.splice(fechaValor, 1);
     }
   }
 

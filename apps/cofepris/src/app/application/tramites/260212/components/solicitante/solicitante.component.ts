@@ -1,8 +1,8 @@
-/* eslint-disable @angular-eslint/use-lifecycle-interface */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 
@@ -22,7 +22,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './solicitante.component.html',
   styleUrl: './solicitante.component.scss',
 })
-export class SolicitanteComponent {
+export class SolicitanteComponent implements OnInit {
 
   /**
    * Un grupo de formularios que representa el formulario de solicitud.
@@ -94,13 +94,13 @@ export class SolicitanteComponent {
     this.solicitudForm.get('denominacion')?.setValue('SVHGSA ASCV 332');
     this.solicitudForm.get('actividadEconomica')?.setValue('SIMa gsys');
     this.solicitudForm.get('correoElectronico')?.setValue('SV US');
-    this.solicitudForm.get('pais')?.setValue('ESTADOS UNIDOS MEXICANOS'),
-      this.solicitudForm.get('codigoPostal')?.setValue('81210'),
-      this.solicitudForm.get('estado')?.setValue('SINALOA'),
-      this.solicitudForm.get('municipioAlcaldia')?.setValue('AHOME'),
-      this.solicitudForm.get('localidad')?.setValue('LOS MOCHIS'),
-      this.solicitudForm.get('colonia')?.setValue('MIGUEL HIDALGO'),
-      this.solicitudForm.get('calle')?.setValue('CAMINO VIEJO'),
+    this.solicitudForm.get('pais')?.setValue('ESTADOS UNIDOS MEXICANOS');
+      this.solicitudForm.get('codigoPostal')?.setValue('81210');
+      this.solicitudForm.get('estado')?.setValue('SINALOA');
+      this.solicitudForm.get('municipioAlcaldia')?.setValue('AHOME');
+      this.solicitudForm.get('localidad')?.setValue('LOS MOCHIS');
+      this.solicitudForm.get('colonia')?.setValue('MIGUEL HIDALGO');
+      this.solicitudForm.get('calle')?.setValue('CAMINO VIEJO');
       this.solicitudForm.get('numeroExterior')?.setValue('1353')
   }
 

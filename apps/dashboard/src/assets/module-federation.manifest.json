@@ -1,10 +1,13 @@
 {
   "login": "http://localhost:4201",
+  "agace": "http://localhost:4209",
   "aga": "http://localhost:4202",
   "agriculture": "http://localhost:4204",
   "se": "http://localhost:4205",
   "semarnat": "http://localhost:4206",
   "funcionario": "http://localhost:4210",
-  "agace": "http://localhost:4209",
-  "cofepris": "http://localhost:4211"
+  "cofepris": "http://localhost:4211",
+  "sener": "http://localhost:4217",
+  "amecafe":"http://localhost:4212",
+  "inbal": "http://localhost:4218"
 }

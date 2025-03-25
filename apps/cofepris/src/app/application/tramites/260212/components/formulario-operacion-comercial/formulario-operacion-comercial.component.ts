@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { catalogoResponse, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { CatalogoSelectComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Tramite260212Store } from '../../estados/tramite260212.store';
+
+import { Tramite260212Query } from '../../estados/tramite260212.query';
+
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Componente FormularioOperacionComercialComponent
@@ -13,12 +19,22 @@ import { SolicitudService } from '../../services/solicitud.service';
   selector: 'app-formulario-operacion-comercial',
   standalone: true,
   imports: [CommonModule,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    ReactiveFormsModule
   ],
   templateUrl: './formulario-operacion-comercial.component.html',
   styleUrl: './formulario-operacion-comercial.component.scss',
 })
-export class FormularioOperacionComercialComponent implements OnInit {
+export class FormularioOperacionComercialComponent implements OnInit, OnDestroy {
+  /** Subject para destruir el componente */
+  private destroy$ = new Subject<void>();
+  /** Observable para el estado seleccionado */
+  selectedRegimen$: Observable<catalogoResponse | null> =
+    this.tramite260212Query.selectedRegimen$;
+  /** Catálogo de estados cargado desde un archivo JSON */
+
+  selectedEntradas$: Observable<catalogoResponse | null> =
+    this.tramite260212Query.selectedEntradas$;
   /**
  * Arreglo que almacena las claves del catálogo.
  */
@@ -40,7 +56,11 @@ export class FormularioOperacionComercialComponent implements OnInit {
    * @param fb - Una instancia de FormBuilder para manejar la creación de formularios reactivos.
    * @param solicitudService - Servicio para manejar las solicitudes relacionadas con la operación comercial.
    */
-  constructor(private fb: FormBuilder, private solicitudService: SolicitudService) { }
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
+    private tramite260212Store: Tramite260212Store,
+    private tramite260212Query: Tramite260212Query
+  ) { }
 
   /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
@@ -55,15 +75,26 @@ export class FormularioOperacionComercialComponent implements OnInit {
       this.clave = data;
     }
     );
+    this.selectedRegimen$.subscribe((regimen) => {
+      if (regimen) {
+        this.formularioOperacionForm.get('regimen')?.setValue(regimen);
+      }
+    });
+    this.selectedEntradas$.subscribe((entradas) => {
+      if (entradas) {
+        this.formularioOperacionForm.get('entradas')?.setValue(entradas);
+      }
+    });
   }
 
   /**
    * Inicializa el formulario `formularioOperacionForm` con campos y sus validaciones requeridas.
    */
-  formularioOperacionInitial() {
+  formularioOperacionInitial():void {
     this.formularioOperacionForm = this.fb.group({
       noLicenciaSanitaria: [''],
       regimen: ['', Validators.required],
+      entradas:[]
 
     })
   }
@@ -72,8 +103,26 @@ export class FormularioOperacionComercialComponent implements OnInit {
    * Cambia el estado de solo lectura del formulario según el estado del checkbox.
    * @param event Evento que activa el cambio de estado.
    */
-  alternarSoloLectura(event: Event) {
-    const checkbox = event.target as HTMLInputElement;
-    this.esSoloLectura = !checkbox.checked;
+  alternarSoloLectura(event: Event):void {
+    const CHECK_BOX = event.target as HTMLInputElement;
+    this.esSoloLectura = !CHECK_BOX.checked;
   }
+
+  updateRegimen():void{
+    const REGIMEN = this.formularioOperacionForm.get('regimen')?.value;
+    this.tramite260212Store.setRegimen(REGIMEN);
+  }
+
+  updateEntradas():void{
+    const ENTRADAS = this.formularioOperacionForm.get('entradas')?.value;
+    this.tramite260212Store.setEntradas(ENTRADAS);
+  }
+  
+  /*
+  * Método del ciclo de vida de Angular - destruye el componente
+*/
+ngOnDestroy(): void {
+  this.destroy$.next();
+  this.destroy$.complete();
+}
 }

@@ -11,7 +11,7 @@ export interface Solicitud5701 {
   datosServicio: DatosServicio;
   datosDespacho: DatosDespacho;
   datosPedimento: DatosPedimento;
-  mercancia: DatosMercancia;
+  satosMercancia: DatosMercancia;
   responsablesDespacho: ResponsablesDespacho[];
   pagos: DatosPago;
 
@@ -127,7 +127,11 @@ export interface Personas {
 }
 
 export interface TipoDocumento {
+ 
+  selected: unknown;
   tipoDocumento: number;
+  
+  
 }
 
 export interface ListaPasosWizard {

@@ -1,12 +1,16 @@
-import { Component, EventEmitter, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PaisDeOriginComponent } from '../pais-de-origin/pais-de-origin.component';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
+
 import { Tramite260212Query } from '../../estados/tramite260212.query';
+
 import { Observable, Subject } from 'rxjs';
 
 /**

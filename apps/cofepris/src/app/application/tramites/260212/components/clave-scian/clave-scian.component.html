@@ -2,16 +2,13 @@
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title">Instalaciones</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </div>
         <div class="modal-body">
             <ng-container>
                 <ng-titulo titulo="Clave S.C.I.A.N"></ng-titulo>
                 <form [formGroup]="claveForm">
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="row m-2">
+                        <div class="col-md-6 padding-align">
                             <app-catalogo-select [catalogo]="clave" [label]="'Clave S.C.I.A.N*:'" [required]="true"
                                 name="clave" formControlName="clave" (change)="getMunicipios()">
                             </app-catalogo-select>

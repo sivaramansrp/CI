@@ -1,7 +1,5 @@
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
-
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
@@ -16,6 +14,12 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+   {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule)
+      },
 
   {
     path: 'exportador-autorizado',
@@ -23,6 +27,27 @@ const ROUTES: Routes = [
       import('./tramites/110102/exportador-autorizado.module').then(
         (m) => m.ExportadorautorizadoModule
       ),
+  },
+  {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      )
+    },
+    {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+  {
+    path: 'empresa-frontera',
+    loadChildren: () =>
+      import('./tramites/120602/empresa-frontera-solicitud.module').then(
+        (m) => m.EmpresaFronteraSolicitudModule
+      )
   },
   {
     path: 'prosec-modificacion',
@@ -39,6 +64,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
+      ),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
@@ -48,6 +80,11 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/90201/expansion-de-productores/expansion-de-productores.module').then(
         (m) => m.ExpansionDeProductoresModule),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -62,6 +99,12 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  }, 
+  {
+    path: 'cancelacion-de',
+    loadChildren: () =>
+      import('./tramites/140103/cancelacion-de.module').then(
+        (m) => m.CancelacionDeModule)
   },
   {
     path: 'certificado-registro',
@@ -81,8 +124,8 @@ const ROUTES: Routes = [
       import('./tramites/80207/subfabricante-extension.module').then(
         (m) => m.SubfabricanteExtentionModule
       ),
-    },
-{
+  },
+  {
     path: 'immex-ampliacion-sensibles',
     loadChildren: () =>
       import('./tramites/80202/immex-ampliacion-sensibles.module').then(
@@ -95,7 +138,7 @@ const ROUTES: Routes = [
       import('./tramites/80203/immex-registro-de-solicitud-modalidad.modulo').then(
         (m) => m.ImmexRegistroDeSolicitudModalityModule
       )
-    },
+  },
   {
     path: 'modificacion',
     loadChildren: () =>
@@ -116,14 +159,18 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
   }
-
-
-
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

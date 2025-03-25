@@ -1,6 +1,8 @@
 {
   "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*", "**/*.spec.ts", "**/*.scss"],
+
+  "ignorePatterns": ["!**/*","**/*.spec.ts", "**/*.scss"],
+
   "overrides": [
     {
       "files": ["*.ts"],
@@ -59,6 +61,7 @@
         "grouped-accessor-pairs": "error",
         "guard-for-in": "error",
         "max-classes-per-file": "error",
+        "no-console": ["error", { "allow": ["warn", "error"] }],
         "no-alert": "error",
         "no-caller": "error",
         "no-constructor-return": "error",

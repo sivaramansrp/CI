@@ -160,7 +160,7 @@ export const PROTESTA = {
 export const FECHA_SALIDA = {
   labelNombre:'Fecha de expedición de certificado de Molino o de calidad',
   required: true,
-  habilitado: false,
+  habilitado: true,
 }
 
 export const TXT_ALERTA_ACUSE = (folio: string) => {
@@ -259,6 +259,11 @@ del listado de solicitudes pendientes por firmar. Número de solicitud [20275874
 export const solicitud = {
   alerta: `<p>Tu solicitud ha sido registrada con el siguiente número de folio <0200900200120242540000002>.</p>`,
 }
+
+export const Todospasos = {
+  Importante: `<p>La Solicitud ha quedado registrada con el número temporal 202767557. Éste no tiene validez legal y sirve solamente para
+  efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`
+};
 
 
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
