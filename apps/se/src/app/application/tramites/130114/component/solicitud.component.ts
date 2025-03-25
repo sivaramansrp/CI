@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {DetosDeLaMercanciaComponent} from '../../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component'
+import { DetosDeLaMercanciaComponent} from '../../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component'
 import { DetosDelTramiteComponent} from '../../../shared/components/detos-de-tramite/detos-del-tramite.component';
 import { PaisProcendenciaComponent } from '../../../shared/components/pais-procendencia/pais-procendencia.component';
 import { RepresentacionComponent } from '../../../shared/components/representacion/representacion.component'
