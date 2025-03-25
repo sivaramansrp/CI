@@ -1,7 +1,7 @@
 import {
     Sanitario260215State,
     Sanitario260215Store,
-  } from '../tramites/sanitari260211.store';
+  } from '../tramites/sanitario.store';
   import { Injectable } from '@angular/core';
   import { Query } from '@datorama/akita';
   

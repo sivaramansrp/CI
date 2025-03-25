@@ -13,7 +13,7 @@ import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260211
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 
 
-import { Sanitario260215Store } from '../../../../estados/tramites/sanitari260211.store'
+import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store'
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
