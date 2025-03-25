@@ -165,14 +165,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         ).subscribe();
 
-    this.crearFormularioPago();
-    this.formularioPago.statusChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        error: (e) => console.error('Error durante los cambios de estado del formulario:', e),
-        complete: () => this.verificarEstadoDelBoton(),
-      });
-
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
 
@@ -187,58 +179,19 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         ).subscribe();
 
-        this.formularioPago.statusChanges
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          delay(10),
-          tap(() => {
-            const ACTIVE_STATE = { ...this.formularioPago.value };
-            this.tramiteStore.setInternaPagoDeDerechosTramite(ACTIVE_STATE); 
-          })
-        )
-        .subscribe();
-  
-      // Para el botón de validación Continuar
-      this.seccionQuery.selectSeccionState$
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          map((seccionState) => {
-            this.seccion = seccionState;
-          })
-        )
-        .subscribe();
-  
-    /**
-     * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
-     *
-     * @description
-     * - Se suscribe a los cambios en el estado del formulario.
-     * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
-     * - Aplica un retraso de 10ms antes de ejecutar la lógica.
-     * - Obtiene el estado actual de la sección desde `seccionQuery`.
-     * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
-     *
-     * @see {@link seccionQuery} para obtener el estado de la sección.
-     * @see {@link seccionStore} para actualizar la validación de la sección.
-     */
-      this.formularioPago.statusChanges
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          delay(10),
-          tap(() => {
-            const SECCION: number = 1;
-            const SECCION_STATE = this.seccionQuery.getValue();
-            const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-            const CONTROL_PATH = 'formularioPago';
-            const CONTROL = this.formularioPago.get(CONTROL_PATH)?.status;
-  
-            FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid || CONTROL === 'VALID';
-  
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          })
-        )
-        .subscribe();
-        this.suscribirseACambiosDeFormularioPago();
+    this.subscribeToFormularioPagoChanges(() => {
+      const ACTIVE_STATE = { ...this.formularioPago.value };
+      this.tramiteStore.setInternaPagoDeDerechosTramite(ACTIVE_STATE);
+
+      const SECCION: number = 1;
+      const SECCION_STATE = this.seccionQuery.getValue();
+      const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+      const CONTROL_PATH = 'formularioPago';
+      const CONTROL = this.formularioPago.get(CONTROL_PATH)?.status;
+
+      FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid || CONTROL === 'VALID';
+      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+    });
   }
 
   /**
@@ -405,55 +358,26 @@ private obtenerListaBanco(): void {
   }
 
   /**
-   * Observa los cambios en el estado del formulario y actualiza el estado en el store.
-   * También actualiza la validación de la sección correspondiente.
-   * @method observarCambiosFormulario
+   * Método reutilizable para suscribirse a los cambios en el estado del formularioPago.
+   * @param {() => void} callback - Función que se ejecutará en cada cambio de estado.
    */
-  private observarCambiosFormulario(): void {
+  private subscribeToFormularioPagoChanges(callback: () => void): void {
     this.formularioPago.statusChanges
       .pipe(
         takeUntil(this.unsubscribe$),
         delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.formularioPago.value };
-          this.tramiteStore.setInternaPagoDeDerechosTramite(ACTIVE_STATE);
-  
-          const SECCION: number = 1;
-          const SECCION_STATE = this.seccionQuery.getValue();
-          const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-          const CONTROL_PATH = 'formularioPago';
-          const CONTROL = this.formularioPago.get(CONTROL_PATH)?.status;
-  
-          FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid || CONTROL === 'VALID';
-          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-        })
+        tap(callback)
       )
       .subscribe();
   }
 
     /**
-   * Se suscribe a los cambios en el estado del formularioPago y actualiza el store.
-   * @method suscribirseACambiosDeFormularioPago
-   */
-  private suscribirseACambiosDeFormularioPago(): void {
-    this.formularioPago.statusChanges
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        delay(10),
-        tap(() => {
-          const ESTADO_ACTIVO = { ...this.formularioPago.value };
-          this.tramiteStore.setInternaPagoDeDerechosTramite(ESTADO_ACTIVO);
-        })
-      )
-      .subscribe();
-  }
-      /**
    * Maneja la limpieza de recursos antes de destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
    * @method ngOnDestroy
    */
-      ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
-      }
+    ngOnDestroy(): void {
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
+    }
 }
