@@ -23,7 +23,7 @@ export function createInitialState(): TramiteCofeprisState {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite', resettable: true })
+@StoreConfig({ name: 'tramiteCofeprisStore', resettable: true })
 export class TramiteCofeprisStore extends Store<TramiteCofeprisState> {
   constructor() {
     super(createInitialState());

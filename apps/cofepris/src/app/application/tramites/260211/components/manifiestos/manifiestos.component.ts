@@ -8,7 +8,7 @@ import {
 } from '../../../../estados/tramites/tramite260211.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { MENSAJEDEALERTA } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
+import { MENSAJE_DE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
  
 /**
@@ -34,7 +34,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
    * Mensaje de alerta para el usuario.
    */
-  public mensaje: string = MENSAJEDEALERTA;
+  public mensaje: string = MENSAJE_DE_ALERTA;
  
   /**
    * Estado de la solicitud obtenido desde el store.
