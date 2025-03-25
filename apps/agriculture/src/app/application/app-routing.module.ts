@@ -64,6 +64,13 @@ const ROUTES: Routes = [
         (m) => m.InspeccionFisicaZoosanitarioModule
       )
   },
+  {  
+    path: 'peticion-requisitos-fitosanitarios',
+    loadChildren: () =>
+      import('./tramites/220102/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  }
 ];
 
 @NgModule({
