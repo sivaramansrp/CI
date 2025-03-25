@@ -13,12 +13,12 @@ import {
 import {
   Solicitud301State,
   Tramite301Store,
-} from '../../../../estados/tramites/tramite301.store';
+} from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
+import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
 /**
  * Componente `DeLaMuestraComponent`
