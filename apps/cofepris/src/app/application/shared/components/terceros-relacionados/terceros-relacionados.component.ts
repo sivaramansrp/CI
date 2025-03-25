@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import {
@@ -36,7 +36,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     FACTURADOR_ENCABEZADO_DE_TABLA;
 
   private destroy$ = new Subject<void>();
-
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,

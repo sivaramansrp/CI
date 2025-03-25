@@ -78,7 +78,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   }
 
   guardarFabricante(): void {
-    let nuevoFabricante: Fabricante = {
+    const NUEVO_FABRICANTE: Fabricante = {
       nombreRazonSocial:
         this.agregarFabricanteForm.value.razonSocial ||
         `${this.agregarFabricanteForm.value.nombres} ${
@@ -102,7 +102,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     };
 
     // Add to the array
-    this.fabricantes.push(nuevoFabricante);
+    this.fabricantes.push(NUEVO_FABRICANTE);
 
     this.tramiteStore.updateFabricanteTablaDatos(this.fabricantes);
     this.ubicaccion.back();
