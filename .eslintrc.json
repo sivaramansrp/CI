@@ -18,6 +18,12 @@
               }
             ]
           }
+        ],
+        "dot-notation": [
+          "error",
+          {
+            "allowPattern": "^[a-zA-Z_]+$"
+          }
         ]
       }
     },
