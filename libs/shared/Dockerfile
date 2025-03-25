@@ -33,9 +33,9 @@ COPY ./libs/shared/nginx.conf /etc/nginx/nginx.conf
 
 # Copy with wildcard to find where the build output actually is
 # Try multiple possible locations
-COPY --from=node /app/dist/libs/shared* /usr/share/nginx/html/ || true
-COPY --from=node /app/dist/shared* /usr/share/nginx/html/ || true
-COPY --from=node /app/libs/shared/dist* /usr/share/nginx/html/ || true
+COPY --from=node /app/dist/libs/shared/* /usr/share/nginx/html/ 2>/dev/null || true
+COPY --from=node /app/dist/shared/* /usr/share/nginx/html/ 2>/dev/null || true 
+COPY --from=node /app/libs/shared/dist/* /usr/share/nginx/html/ 2>/dev/null || true
 
 # Always create a fallback page
 RUN echo '<html><body><h1>Placeholder Page</h1><p>This is a fallback page.</p></body></html>' > /usr/share/nginx/html/index.html
