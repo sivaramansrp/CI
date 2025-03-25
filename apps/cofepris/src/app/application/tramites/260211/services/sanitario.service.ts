@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 
 import { catchError, Observable,throwError } from 'rxjs';
 
-import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { MercanciasTabla, RespuestaTabla } from '../components/domicillo/domicillo.component';
 
@@ -67,10 +66,6 @@ getLocalidaddata(): Observable<unknown> {
  *
  * @returns {Observable<PermisoModel[]>} Un observable que emite una lista de objetos `PermisoModel`.
  */
-
-getTable(): Observable<PermisoModel []> {
-  return this.http.get<PermisoModel []>('assets/json/260211/terceros.json');
-} 
 
 /**
  * Obtiene datos adicionales relacionados con terceros desde un archivo JSON.

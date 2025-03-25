@@ -13,10 +13,10 @@
             <div class="col-md-4">
 
               <div class="form-group">
-                <label class="form-label" for="Chandenadependencia">Chandena de la dependencia:</label>
-                <input class="form-control" id="Chandenadependencia" formControlName="Chandenadependencia"
+                <label class="form-label" for="cadenaDependencia">Chandena de la dependencia:</label>
+                <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia"
                   placeholder="" type="text"
-                  (change)="setValoresStore(derechosForm,'Chandenadependencia', 'setChandenadependencia')">
+                  (change)="setValoresStore(derechosForm,'cadenaDependencia', 'setcadenaDependencia')">
               </div>
             </div>
             <div class="col-md-4">
@@ -24,17 +24,17 @@
                   <app-catalogo-select
                     [catalogo]="derechosList"
                    
-                    [label]="'benco'"
+                    [label]="'banco'"
                     [placeholder]="'Seleccione una aduana'"
-                    formControlName="benco"
-                    (change)="setValoresStore(derechosForm,'benco', 'setbenco')"></app-catalogo-select>
+                    formControlName="banco"
+                    (change)="setValoresStore(derechosForm,'banco', 'setbanco')"></app-catalogo-select>
                 </div>
               </div>
           </div>
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="Llave">Llave de page</label>
+                <label class="form-label" for="Llave">Llave de pago</label>
                 <input class="form-control" id="Llave" placeholder="" type="text"
                   formControlName="Llave" 
                   (change)="setValoresStore(derechosForm,'Llave', 'setLlave')">
@@ -42,9 +42,9 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="deFetch">Fetch de page</label>
-                  <input class="form-control" id="deFetch" placeholder="" type="date"
-                    formControlName="deFetch" (change)="setValoresStore(derechosForm,'deFetch', 'setdeFetch')">
+                  <label class="form-label" for="tipoFetch">Fetch de page</label>
+                  <input class="form-control" id="tipoFetch" placeholder="" type="date"
+                    formControlName="deFetch" (change)="setValoresStore(derechosForm,'tipoFetch', 'settipoFetch')">
                 </div>
               </div>
               <div class="col-md-4">

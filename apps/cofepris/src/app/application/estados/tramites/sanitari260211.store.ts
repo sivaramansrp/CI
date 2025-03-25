@@ -1,7 +1,6 @@
 import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-// import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
 export interface Sanitario260215State {

@@ -51,7 +51,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * description Sujeto utilizado para notificar la destrucción del componente.
    * private
    */
-  private destroyNotifier$: Subject<void> = new Subject(); // Subject to notify component destruction.
+  private destroyNotifier$: Subject<void> = new Subject(); // Subject para notificar la destrucción del componente..
 
   /**
    * compodoc
@@ -59,7 +59,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * description Sujeto utilizado para manejar la destrucción de observables.
    * private
    */
-  private destroyed$ = new Subject<void>(); // Subject to handle observable cleanup.
+  private destroyed$ = new Subject<void>(); // Subject para manejar la limpieza de observables.
 
   /**
    * compodoc
@@ -100,27 +100,27 @@ export class DerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     // Suscripción al estado de la solicitud
-    this.permiso260211Query.selectSolicitud$ // Observable to fetch the current state of the application.
+    this.permiso260211Query.selectSolicitud$ // Observable para obtener el estado actual de la aplicación.
       .pipe(
-        takeUntil(this.destroyNotifier$), // Automatically unsubscribe when the component is destroyed.
+        takeUntil(this.destroyNotifier$), // Darse de baja automáticamente cuando el componente se destruya..
         map((seccionState) => {
-          this.solicitudState = seccionState; // Assign the fetched state to solicitudState.
+          this.solicitudState = seccionState; // Asignar el estado obtenido a solicitudState..
         })
       )
-      .subscribe(); // Subscribe to the observable.
+      .subscribe(); // Suscribirse al observable..
 
     // Configuración del formulario reactivo
     this.derechosForm = this.fb.group({
-      referencia: [this.solicitudState?.referencia], // Initialize the "referencia" field with the state value.
-      Chandenadependencia: [this.solicitudState?.Chandenadependencia], // Initialize the "Chandenadependencia" field.
-      Llave: [this.solicitudState?.Llave], // Initialize the "Llave" field.
-      benco: [this.solicitudState?.benco], // Initialize the "benco" field.
-      deFetch: [this.solicitudState?.deFetch], // Initialize the "deFetch" field.
-      importe: [this.solicitudState?.importe], // Initialize the "importe" field.
+      referencia: [this.solicitudState?.referencia], 
+      cadenaDependencia: [this.solicitudState?.cadenaDependencia], 
+      Llave: [this.solicitudState?.Llave], 
+      banco: [this.solicitudState?.banco], 
+      tipoFetch: [this.solicitudState?.tipoFetch], 
+      importe: [this.solicitudState?.importe], 
     });
 
     // Carga de datos iniciales
-    this.loadComboUnidadMedida(); // Call the method to load the initial data.
+    this.loadComboUnidadMedida(); // Llamar al método para cargar los datos iniciales.
   }
 
  /**
@@ -134,8 +134,8 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * returns {void}
    */
  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
-  const valor = form.get(campo)?.value; // Get the value of the specified field from the form.
-  (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor); // Update the store with the new value.
+  const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
+  (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor); 
 }
 
   /**
@@ -146,10 +146,10 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * returns {void}
    */
   loadComboUnidadMedida(): void {
-    this.service.getDatos() // Call the service method to fetch data.
-      .pipe(takeUntil(this.destroyed$)) // Automatically unsubscribe when the component is destroyed.
+    this.service.getDatos() // Llamar al método del servicio para obtener datos.
+      .pipe(takeUntil(this.destroyed$)) // Darse de baja automáticamente cuando el componente sea destruido. .
       .subscribe((data): void => {
-        this.derechosList = data as Catalogo[]; // Assign the fetched data to derechosList.
+        this.derechosList = data as Catalogo[]; // Asignar los datos obtenidos a derechosList.
       });
   }
 
@@ -161,9 +161,9 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * returns {void}
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(); // Notify all subscriptions to complete.
-    this.destroyed$.complete(); // Complete the destroyed$ subject.
-    this.destroyNotifier$.next(); // Notify all subscriptions to complete.
-    this.destroyNotifier$.complete(); // Complete the destroyNotifier$ subject.
+    this.destroyed$.next(); 
+    this.destroyed$.complete(); 
+    this.destroyNotifier$.next(); 
+    this.destroyNotifier$.complete(); 
   }
 }

@@ -16,7 +16,7 @@ import {
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { DatosComponent } from './pages/datos/datos.component';
-import { TercerosRelacionadosComponent } from './components/tercerosRelacionados/tercerosRelacionados.component';
+
 import { DatosEstablecimientoComponent } from './components/datosEstablecimiento/datosEstablecimiento.component';
 import { DerechosComponent } from './components/derechos/derechos.component';
 import { SanitarioService } from './services/sanitario.service';
@@ -33,7 +33,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { TercerosRelacionadoesComponent } from './components/terceros-Relacionadoes/terceros-Relacionadoes.component';
-// import { ModelComponent } from './components/model/modal.component';
+
 
 
 @NgModule({
@@ -52,9 +52,7 @@ import { TercerosRelacionadoesComponent } from './components/terceros-Relacionad
     WizardComponent,
     SolicitanteComponent,
     BtnContinuarComponent,
-    TercerosRelacionadosComponent,
     TercerosRelacionadoesComponent,
-    // ModelComponent,
     DatosEstablecimientoComponent,
     DerechosComponent,
     AnexarDocumentosComponent,
