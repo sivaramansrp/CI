@@ -9,6 +9,8 @@ import { Mercancia } from '../models/configuracio-columna.model';
 })
 export class CertificadoValidacionService {
 
+  private apiUrl = 'assets/json/110202/';
+
   // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient) { }
 
@@ -98,4 +100,14 @@ export class CertificadoValidacionService {
     return this.http
       .get<{ data: Catalogo[] }>('assets/json/110202/umc.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
-  }}
+  }
+
+  obtenerPaisDestino(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>(`${this.apiUrl}pais-destino.json`)
+      .pipe(map((res) => res.data));
+  }
+
+}
+
+  

@@ -6,6 +6,7 @@ import { Mercancia } from '../models/configuracio-columna.model';
 // Interfaz que define el estado del trámite.
 export interface TramiteState {
   idiomaDatos: Catalogo[];
+  paisDestin: Catalogo[];
   entidadFederativaDatos: Catalogo[];
   representacionFederalDatos: Catalogo[];
   altaPlanta: Catalogo[];
@@ -21,6 +22,8 @@ export interface TramiteState {
   mercanciaForm:{ [key: string]: undefined | boolean | string | number | object}
   formaValida: { [key: string]: boolean };
    buscarMercancia: Mercancia[];
+
+   destinatarioForm:{ [key: string]: undefined | boolean | string | number | object };
 }
 
 // Interfaz que define el estado de la solicitud 110204.
@@ -109,8 +112,14 @@ export const INITIAL_STATE: TramiteState = {
     descripcion: '',
   },
   idiomaDatos: [],
+  paisDestin: [],
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
+
+  destinatarioForm: {
+    MedioDeTransporte:'',
+    paisDestin:'',
+  }
 };
 
 /**
@@ -442,4 +451,21 @@ export class Tramite110202Store extends Store<TramiteState> {
         buscarMercancia,
       }));
     }
+
+    public setpaisDestino(paisDestin: Catalogo[]): void {
+      this.update((state) => ({
+        ...state,
+        paisDestin,
+      }));
+    }
+
+    setDestinatarioForm(values: { [key: string]: undefined | boolean | string | number | object }): void {
+      this.update((state) => ({
+        destinatarioForm: {
+          ...state.destinatarioForm,
+          ...values,
+        },
+      }));
+    }
 }
+

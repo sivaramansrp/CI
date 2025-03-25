@@ -120,6 +120,14 @@ export class Tramite110202Query extends Query<TramiteState> {
     return state.representacionFederalDatos;
   });
 
+  selectPaisDestino$ = this.select((state) => {    
+    return state.paisDestin;
+  });
+
+  destinatarioForm$ = this.select((state) => {    
+    return state.destinatarioForm;
+  });
+
   /**
    * Constructor del servicio TramiteQuery.
    * 
