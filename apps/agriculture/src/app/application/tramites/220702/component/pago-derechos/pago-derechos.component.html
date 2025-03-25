@@ -3,41 +3,21 @@
     <div class="row mt-5">
       <ng-titulo titulo="Pago de derechos" />
       <div class="row">
-        <div class="col-md-12 mt-5">
-          <label for="exentoDePago"
-            >Exento de pago:</label
-          >
-        </div>
-
         <div class="col-md-12">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="exentoDePago"
-              id="SiSolicitudFerros"
-              value="1"
-              formControlName="exentoDePago"
-            />
-            <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
+          <div class="row mt-2">
+              <div class="col-md-12">
+                  <label for="certficacion_a">Exento de pago:</label>
+              </div>
+              <div class="col-md-4">
+                  <app-input-radio [radioOptions]="radioOpcions" 
+                  (valueChange)="cambiarRadio($event)" formControlName="exentoDePago"
+                      [isRequired]="true" [layout]="'vertical'"></app-input-radio>
+              </div>
           </div>
-        </div>
-
-        <div class="col-md-12 mb-4">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="exentoDePago"
-              id="NoSolicitudFerros"
-              value="0"
-              formControlName="exentoDePago"
-            />
-            <label class="form-check-label" for="NoSolicitudFerros">No</label>
-          </div>
-        </div>
-
       </div>
+
+       </div>
+
       
       <div class="col-md-4 form-group">
         <label class="form-label" for="claveDeReferencia"
@@ -47,7 +27,7 @@
           type="text"
           id="claveDeReferencia"
           class="form-control"
-          formControlName="claveDeReferencia"
+          formControlName="claveDeReferenciaDerechos"
         />
       </div>
 
@@ -59,7 +39,7 @@
           type="text"
           id="cadenaDependencia"
           class="form-control"
-          formControlName="cadenaDependencia"
+          formControlName="cadenaDependenciaDerechos"
         />
       </div>
 
@@ -69,7 +49,7 @@
           type="text"
           id="banco"
           class="form-control"
-          formControlName="banco"
+          formControlName="bancoDerechos"
         />
       </div>
 
@@ -79,18 +59,20 @@
           type="text"
           id="llaveDePago"
           class="form-control"
-          formControlName="llaveDePago"
+          formControlName="llaveDePagoDerechos"
         />
       </div>
 
       <div class="col-md-4 form-group">
-        <label class="form-label" for="fechaInicio">Fecha de pago:</label>
-        <input
-          type="date"
-          id="fechaInicio"
-          class="form-control"
-          formControlName="fechaInicio"
-        />
+        <div class="form-field">
+          <input-fecha
+            [datos]="configuracionFechaFinVigencia"
+            (valorCambiado)="cambioFechaDePago($event)"
+            [setFecha]="this.tramiteState.fechaDePago"
+          
+          ></input-fecha>
+        </div>
+
       </div>
 
       <div class="col-md-4 form-group">
@@ -99,7 +81,7 @@
           type="text"
           id="importeDePago"
           class="form-control"
-          formControlName="importeDePago"
+          formControlName="importeDePagoDerechos"
         />
       </div>
     </div>

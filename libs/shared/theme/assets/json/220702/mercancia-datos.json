@@ -2,21 +2,21 @@
     "code": 200,
     "data": [
       {
-        "Fraccionarancelaria": "Actualización",
-        "Descripciondelafraccion": "Mantenimiento",
-        "Nico": "Reparación",
-        "DescripcionNico": "Instalación",
-        "UnidaddemedidadetarifaUMT": "Revisión",
-        "CantidadtotalUMT": "Asesoría"
+        "fraccionArancelaria": "Actualización",
+        "descripcionDelaFraccion": "Mantenimiento",
+        "nico": "Reparación",
+        "descripcionNico": "Instalación",
+        "unidadDeMedidadeTarifaUMT": "Revisión",
+        "cantidadTotalUMT": "Asesoría"
         
       },
       {
-        "Fraccionarancelaria": "Diagnóstico",
-        "Descripciondelafraccion": "Soporte",
-        "Nico": "Configuración",
-        "DescripcionNico": "Optimización",
-        "UnidaddemedidadetarifaUMT": "Personalización",
-        "CantidadtotalUMT": "Migración"
+        "fraccionArancelaria": "Diagnóstico",
+        "descripcionDelaFraccion": "Soporte",
+        "nico": "Configuración",
+        "descripcionNico": "Optimización",
+        "unidadDeMedidadeTarifaUMT": "Personalización",
+        "cantidadTotalUMT": "Migración"
         
       }
     ],

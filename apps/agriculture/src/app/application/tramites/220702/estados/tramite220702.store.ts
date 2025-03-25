@@ -26,15 +26,15 @@ export interface TramiteState {
     cadenaDependenciaRevision: string;
     bancoRevision: string;
     llaveDePagoRevision: string;
-    fechaInicioRevision: string;
+    fechaPagoDeDerechosRevision: string;
     importeDePagoRevision: string;
     justificacion: string;
-    certificadosAutorizados: string;
-    fechaInicioUno: string;
+    certificadosAutorizados: string;   
     horaDeInspeccion: string;
     aduanaDeIngreso: number;
     oficinaDeInspeccion: string;
     puntoDeInspeccion: string;
+    valorSeleccionado: string | null;
     nombreInspector: string;
     primerApellido: string;
     segundoApellido: string;
@@ -43,6 +43,17 @@ export interface TramiteState {
     medioDeTransporte: string;
     identificacionTransporte: string;
     esSolicitudFerros: string;
+    claveDeReferenciaDerechos:string;
+    cadenaDependenciaDerechos:string;
+    bancoDerechos:string;
+    llaveDePagoDerechos:string;
+    fechaDePago:string;
+    importeDePagoDerechos:string;
+    exentoDePago:string;
+    fechaDeInspeccion:string;
+    fechaPagoDeDerechos:string;
+    
+
 }
 
 /**
@@ -102,11 +113,10 @@ export function createInitialState(): TramiteState {
         cadenaDependenciaRevision: '',
         bancoRevision: '',
         llaveDePagoRevision: '',
-        fechaInicioRevision: '',
+        fechaPagoDeDerechosRevision: '',
         importeDePagoRevision: '',
         justificacion: '',
         certificadosAutorizados: '',
-        fechaInicioUno: '',
         horaDeInspeccion: '',
         aduanaDeIngreso: 0,
         oficinaDeInspeccion: '',
@@ -119,6 +129,17 @@ export function createInitialState(): TramiteState {
         medioDeTransporte: '',
         identificacionTransporte: '',
         esSolicitudFerros: '',
+        valorSeleccionado: null,
+        claveDeReferenciaDerechos:'',
+        cadenaDependenciaDerechos:'',
+        bancoDerechos:'',
+        llaveDePagoDerechos:'',
+        fechaDePago:'',
+        importeDePagoDerechos:'',
+        exentoDePago:'',
+        fechaDeInspeccion:'',
+        fechaPagoDeDerechos:'',
+
     };
 }
 
@@ -291,18 +312,17 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
-     * @method setFechaInicioRevision
-     * @description
-     * Actualiza el estado de `fechaInicioRevision` con un nuevo valor.
-     * @param {string} fechaInicioRevision - Fecha de inicio de revisión.
-     */
-    public setFechaInicioRevision(fechaInicioRevision: string): void {
-        this.update((state) => ({
-            ...state,
-            fechaInicioRevision,
-        }));
-    }
-
+ * @method setFechaPagoDeDerechosRevision
+ * @description
+ * Actualiza el estado de `fechaPagoDeDerechosRevision` con un nuevo valor.
+ * @param {string} fechaPagoDeDerechosRevision - Fecha de pago de derechos de revisión.
+ */
+public setFechaPagoDeDerechosRevision(fechaPagoDeDerechosRevision: string): void {
+    this.update((state) => ({
+        ...state,
+        fechaPagoDeDerechosRevision,
+    }));
+}
     /**
      * @method setImporteDePagoRevision
      * @description
@@ -339,19 +359,6 @@ export class TramiteStore extends Store<TramiteState> {
         this.update((state) => ({
             ...state,
             certificadosAutorizados,
-        }));
-    }
-
-    /**
-     * @method setFechaInicioUno
-     * @description
-     * Actualiza el estado de `fechaInicioUno` con un nuevo valor.
-     * @param {string} fechaInicioUno - Fecha de inicio uno.
-     */
-    public setFechaInicioUno(fechaInicioUno: string): void {
-        this.update((state) => ({
-            ...state,
-            fechaInicioUno,
         }));
     }
 
@@ -510,4 +517,71 @@ export class TramiteStore extends Store<TramiteState> {
             esSolicitudFerros,
         }));
     }
+
+    /**
+ * @method setValorSeleccionado
+ * @description
+ * Actualiza el estado de `valorSeleccionado` con un nuevo valor.
+ * @param {string} valorSeleccionado - Valor seleccionado.
+ */
+public setValorSeleccionado(valorSeleccionado: string): void {
+    this.update((state) => ({
+        ...state,
+        valorSeleccionado,
+    }));
+}
+
+/**
+ * @method setExentoDePago
+ * @description
+ * Actualiza el estado de `exentoDePago` con un nuevo valor.
+ * @param {string} exentoDePago - Exento de pago.
+ */
+public setExentoDePago(exentoDePago: string): void {
+    this.update((state) => ({
+        ...state,
+        exentoDePago,
+    }));
+}
+
+/**
+ * @method setFechaDeInspeccion
+ * @description
+ * Actualiza el estado de `fechaDeInspeccion` con un nuevo valor.
+ * @param {string} fechaDeInspeccion - Fecha de inspección.
+ */
+public setFechaDeInspeccion(fechaDeInspeccion: string): void {
+    this.update((state) => ({
+        ...state,
+        fechaDeInspeccion,
+    }));
+}
+
+/**
+ * @method setFechaDePago
+ * @description
+ * Actualiza el estado de `fechaDePago` con un nuevo valor.
+ * @param {string} fechaDePago - Fecha de pago.
+ */
+public setFechaDePago(fechaDePago: string): void {
+    this.update((state) => ({
+        ...state,
+        fechaDePago,
+    }));
+}
+
+/**
+ * @method setFechaPagoDeDerechos
+ * @description
+ * Actualiza el estado de `fechaPagoDeDerechos` con un nuevo valor.
+ * @param {string} fechaPagoDeDerechos - Fecha de pago de derechos.
+ */
+public setFechaPagoDeDerechos(fechaPagoDeDerechos: string): void {
+    this.update((state) => ({
+        ...state,
+        fechaPagoDeDerechos,
+    }));
+}
+
+      
 }

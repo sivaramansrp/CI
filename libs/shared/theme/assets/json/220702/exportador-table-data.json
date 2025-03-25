@@ -1,35 +1,35 @@
 {
     "exportadorContenido": [
         {
-            "TABLA_Columna_1": "PRUEBA",
-            "TABLA_Columna_2": "15-155455555",
-            "TABLA_Columna_3": "---",
-            "TABLA_Columna_4": "Domicilio",
-            "TABLA_Columna_5": "JAPON",
+            "tablaColumna1": "PRUEBA",
+            "tablaColumna2": "15-155455555",
+            "tablaColumna3": "---",
+            "tablaColumna4": "Domicilio",
+            "tablaColumna5": "JAPON",
             "estatus": true
         },
         {
-            "TABLA_Columna_1": "PRUEBA - 2",
-            "TABLA_Columna_2": "15-155455555",
-            "TABLA_Columna_3": "---",
-            "TABLA_Columna_4": "Domicilio",
-            "TABLA_Columna_5": "JAPON",
+            "tablaColumna1": "PRUEBA - 2",
+            "tablaColumna2": "15-155455555",
+            "tablaColumna3": "---",
+            "tablaColumna4": "Domicilio",
+            "tablaColumna5": "JAPON",
             "estatus": false
         }
     ],
     "destinoContenido": [
         {
-            "TABLA_Columna_1": "PRUEBA",
-            "TABLA_Columna_2": "---",
-            "TABLA_Columna_3": "---",
-            "TABLA_Columna_4": "Calle",
-            "TABLA_Columna_5": "15",
-            "TABLA_Columna_6": "2",
-            "TABLA_Columna_7": "MAXICO (ESTADO UNIDOS MEXICANOS)",
-            "TABLA_Columna_8": "Centro",
-            "TABLA_Columna_9": "TEPATITLAN DE MORELOS",
-            "TABLA_Columna_10": "JALISCO",
-            "TABLA_Columna_11": "---",
+            "tablaColumna1": "PRUEBA",
+            "tablaColumna2": "---",
+            "tablaColumna3": "---",
+            "tablaColumna4": "Calle",
+            "tablaColumna5": "15",
+            "tablaColumna6": "2",
+            "tablaColumna7": "MAXICO (ESTADO UNIDOS MEXICANOS)",
+            "tablaColumna8": "Centro",
+            "tablaColumna9": "TEPATITLAN DE MORELOS",
+            "tablaColumna10": "JALISCO",
+            "tablaColumna11": "---",
             "estatus": false
         }
     ]

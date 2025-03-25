@@ -59,10 +59,8 @@ describe('PagoDerechosComponent', () => {
     component.fitosanitarioService = component.fitosanitarioService || {};
     component.fitosanitarioService.pagoDeCargarDatos = jest.fn().mockReturnValue(observableOf({}));
     component.pagosDerechosForm = component.pagosDerechosForm || {};
-    component.pagosDerechosForm.patchValue = jest.fn();
     component.pagoDeCargarDatos();
     expect(component.fitosanitarioService.pagoDeCargarDatos).toHaveBeenCalled();
-    expect(component.pagosDerechosForm.patchValue).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

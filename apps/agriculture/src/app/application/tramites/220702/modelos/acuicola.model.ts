@@ -92,25 +92,25 @@ export interface InternaDatosGeneralesInt {
     regimenAlQueDestina:string;
 }
 export interface ServiceDatos {
-    TABLA_Columna_1: string;
-    TABLA_Columna_2: string;
-    TABLA_Columna_3: string;
-    TABLA_Columna_4: string;
-    TABLA_Columna_5: string;
-    TABLA_Columna_6: string;
-    TABLA_Columna_7: string;
-    TABLA_Columna_8: string;
-    TABLA_Columna_9: string;
-    TABLA_Columna_10: string;
-    TABLA_Columna_11: string;
-    TABLA_Columna_12: string;
-    TABLA_Columna_13: string;
-    TABLA_Columna_14: string;
-    TABLA_Columna_15: string;
-    TABLA_Columna_16: string;
-    TABLA_Columna_17: string;
-    TABLA_Columna_18: string;
-    TABLA_Columna_19: string;
+    tablaColumna1: string;
+    tablaColumna2: string;
+    tablaColumna3: string;
+    tablaColumna4: string;
+    tablaColumna5: string;
+    tablaColumna6: string;
+    tablaColumna7: string;
+    tablaColumna8: string;
+    tablaColumna9: string;
+    tablaColumna10: string;
+    tablaColumna11: string;
+    tablaColumna12: string;
+    tablaColumna13: string;
+    tablaColumna14: string;
+    tablaColumna15: string;
+    tablaColumna16: string;
+    tablaColumna17: string;
+    tablaColumna18: string;
+    tablaColumna19: string;
   }
   
   export interface MercanciaDatosDos {
@@ -119,12 +119,12 @@ export interface ServiceDatos {
     message: string;
   }
   export interface ServiceDatosDeMercancia {
-    Fraccionarancelaria: string;
-    Descripciondelafraccion: string;
-    Nico: string;
-    DescripcionNico: string;
-    UnidaddemedidadetarifaUMT: string;
-    CantidadtotalUMT: string;
+    fraccionArancelaria: string;
+    descripcionDelaFraccion: string;
+    nico: string;
+    descripcionNico: string;
+    unidadDeMedidadeTarifaUMT: string;
+    cantidadTotalUMT: string;
     estatus: boolean;
   }
   
@@ -134,11 +134,11 @@ export interface ServiceDatos {
     message: string;
   }
   export interface ExportadorInfo {
-    Nombre: string;
-    Telefono: string;
+    nombre: string;
+    teleFono: string;
     correo: string;
-    Domicilio: string;
-    Pais: string;
+    domicilio: string;
+    pais: string;
   }
   
  export interface ExportadorInfoDatos {
@@ -148,17 +148,17 @@ export interface ServiceDatos {
   }
 
 export interface DestinoInfo {
-    TABLA_Columna_1: string;
-    TABLA_Columna_2: string;
-    TABLA_Columna_3: string;
-    TABLA_Columna_4: string;
-    TABLA_Columna_5: string;
-    TABLA_Columna_6: string;
-    TABLA_Columna_7: string;
-    TABLA_Columna_8: string;
-    TABLA_Columna_9: string;
-    TABLA_Columna_10: string;
-    TABLA_Columna_11: string;
+  tablaColumna1: string;
+  tablaColumna2: string;
+  tablaColumna3: string;
+  tablaColumna4: string;
+  tablaColumna5: string;
+  tablaColumna6: string;
+  tablaColumna7: string;
+  tablaColumna8: string;
+  tablaColumna9: string;
+  tablaColumna10: string;
+  tablaColumna11: string;
   }
   
   export interface DestinoInfoDatos {

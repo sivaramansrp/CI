@@ -1,6 +1,6 @@
-import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
+import { INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent,InputRadioComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeLaSolicitudInt, InspeccionApiResponse} from '../../modelos/acuicola.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +25,7 @@ import { TramiteStoreQuery } from '../../estados/tramite220702.query';
     TituloComponent,
     CatalogoSelectComponent,
     InputFechaComponent,
+    InputRadioComponent,
     TablaDinamicaComponent,
     ReactiveFormsModule,
     CommonModule
@@ -63,6 +64,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {TablaSeleccion}
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+    /**
+   * Valor seleccionado del radio.
+   */
+    valorSeleccionado!: string|null;
+
 
   /**
    * Catálogo de horas de inspección.
@@ -130,6 +137,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     catalogos: [],
   };
 
+  radioOpcions = [
+    { label: 'Sí', value: 'sí' },
+    { label: 'No', value: 'no' },
+  ];
+
+  /**
+   * Cambia el valor seleccionado del radio.
+   * @param value Valor seleccionado.
+   */
+  cambiarRadio(value: string | number):void {
+    this.valorSeleccionado = value as string;
+    this.tramiteStore.setEsSolicitudFerros(this.valorSeleccionado);
+  }
+
   /**
    * Textos estáticos utilizados en el componente.
    * @type {Object}
@@ -154,7 +175,28 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Configuración del campo de fecha de inicio.
    * @type {InputFecha}
    */
-  fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
+  
+  fechaInicioInput: InputFecha = {
+    labelNombre: 'Fecha de Inicio de Vigencia',
+    required: false,
+    habilitado: false,
+  };
+
+  configuracionFechaFinVigencia: InputFecha = {
+    labelNombre: 'Fecha de inspección ',
+    required: false,
+    habilitado: true,
+  };
+
+  /**
+   * Maneja los cambios en el campo de fecha de inicio.
+   * @param nuevo_valor El nuevo valor de fecha seleccionado.
+   */
+  cambioFechaInicio(nuevo_valor: string): void {
+    this.tramiteStore.setFechaDeInspeccion(nuevo_valor);
+   
+  }
+  /**
 
   
   /**
@@ -215,10 +257,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((datos: TramiteState) => {
         this.tramiteState = datos;
+        this.valorSeleccionado=datos.valorSeleccionado
         this.datosDeLaSolicitudForm.patchValue({
           justificacion: datos.justificacion,
           certificadosAutorizados: datos.certificadosAutorizados,
-          fechaInicioUno: datos.fechaInicio,
           horaDeInspeccion: datos.horaDeInspeccion,
           aduanaDeIngreso: datos.aduanaDeIngreso,
           oficinaDeInspeccion: datos.oficinaDeInspeccion,
@@ -247,7 +289,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: [{value:this.tramiteState.justificacion}, Validators.required],
       certificadosAutorizados: [{ value:this.tramiteState.certificadosAutorizados, disabled: true }, Validators.required],
-      fechaInicioUno: [{value:this.tramiteState.fechaInicioUno}, Validators.required],
       horaDeInspeccion: [{value:this.tramiteState.horaDeInspeccion}, Validators.required],
       aduanaDeIngreso: [{value:this.tramiteState.aduanaDeIngreso}, Validators.required],
       oficinaDeInspeccion: [{value:this.tramiteState.oficinaDeInspeccion}, Validators.required],
@@ -486,10 +527,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
 
-  cambioFechaInicio(event:Event):void{
-    const FECHA = (event.target as HTMLInputElement).value;
-    this.tramiteStore.setFechaInicio(FECHA);
-  }
    
   /**
    * Maneja el cambio en la aduana de ingreso.

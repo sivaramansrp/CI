@@ -65,16 +65,17 @@
             formControlName="certificadosAutorizados"
           />
         </div>
-        <div class="col-md-4 form-group">
-          <label class="form-label" for="fechaInicio">Fecha de inspección *:</label>
-          <input
-            type="date"
-            id="fechaInicio"
-            class="form-control"
-            formControlName="fechaInicioUno"
-            (change)="cambioFechaInicio($event)"
-          />
+        
+      <div class="col-md-4">
+        <div class="form-field">
+          <input-fecha
+            [datos]="configuracionFechaFinVigencia"
+            (valorCambiado)="cambioFechaInicio($event)"
+            [setFecha]="this.tramiteState.fechaDeInspeccion"
+          
+          ></input-fecha>
         </div>
+      </div>
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select
@@ -211,41 +212,23 @@
             (change)="cambioIdentificacionTransporte($event)"
           />
         </div>
-
-        <div class="col-md-12 mt-5">
-          <label for="esSolicitudFerros"
-            >¿La solicitud de Inspección Física es para trámites que arriban por
-            Ferrocarril o por Partes II?*:</label
-          >
-        </div>
-
+       <div class="row">
         <div class="col-md-12">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="esSolicitudFerros"
-              id="SiSolicitudFerros"
-              value="1"
-              formControlName="esSolicitudFerros"
-            />
-            <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
+          <div class="row mt-2">
+              <div class="col-md-12">
+                  <label for="certficacion_a">¿La solicitud de Inspección Física es para trámites que arriban por
+                    Ferrocarril o por Partes II?*:</label>
+              </div>
+              <div class="col-md-4">
+                  <app-input-radio [radioOptions]="radioOpcions" 
+                  (valueChange)="cambiarRadio($event)" formControlName="esSolicitudFerros"
+                      [isRequired]="true" [layout]="'vertical'"></app-input-radio>
+              </div>
           </div>
-        </div>
+      </div>
 
-        <div class="col-md-12 mb-4">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="esSolicitudFerros"
-              id="NoSolicitudFerros"
-              value="0"
-              formControlName="esSolicitudFerros"
-            />
-            <label class="form-check-label" for="NoSolicitudFerros">No</label>
-          </div>
-        </div>
+       </div>
+
 
         <h6>Datos de la mercancía:</h6>
         <app-tabla-dinamica

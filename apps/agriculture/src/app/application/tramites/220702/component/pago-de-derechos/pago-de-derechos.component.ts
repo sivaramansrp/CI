@@ -50,7 +50,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Configuración de la fecha de inicio para el campo de fecha en el formulario.
    * @type {InputFecha}
    */
+  
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  /**
+ * @property {InputFecha} configuracionFechaFinVigencia
+ * @description
+ * Configuración del campo de fecha de fin de vigencia para el formulario de pago de derechos.
+ * @type {InputFecha}
+ */
+configuracionFechaFinVigencia: InputFecha = {
+  labelNombre: 'Fecha de pago ',
+  required: false,
+  habilitado: true,
+};
+ /**
+ * @method cambioFechaPagoDeDerechos
+ * @description
+ * Maneja los cambios en el campo de fecha de inicio.
+ * @param {string} nuevo_valor - El nuevo valor de fecha seleccionado.
+ * @returns {void}
+ */
+cambioFechaPagoDeDerechos(nuevo_valor: string): void {
+  this.tramiteStore.setFechaPagoDeDerechos(nuevo_valor);
+}
+
+   
+
+
 
   /**
    * Estado actual del trámite.
@@ -63,6 +89,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+ * @method cambioFechaPagoDeDerechosRevision
+ * @description
+ * Maneja los cambios en el campo de fecha de inicio para la revisión de pago de derechos.
+ * @param {string} nuevo_valor - El nuevo valor de fecha seleccionado.
+ * @returns {void}
+ */
+cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
+  this.tramiteStore.setFechaPagoDeDerechosRevision(nuevo_valor);
+}
 
   /**
    * Constructor del componente.
@@ -105,13 +142,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       cadenaDependencia: [{ value: this.tramiteState.cadenaDependencia, disabled: true }, Validators.required],
       banco: [{ value: this.tramiteState.banco }, Validators.required],
       llaveDePago: [{ value: this.tramiteState.llaveDePago }, Validators.required],
-      fechaInicio: [{ value: this.tramiteState.fechaInicio, disabled: true }, Validators.required],
+      fechaPagoDeDerechos: [{ value: this.tramiteState.fechaPagoDeDerechos, disabled: true }, Validators.required],
       importeDePago: [{ value: this.tramiteState.importeDePago, disabled: true }, Validators.required],
       claveDeReferenciaRevision: [{ value: this.tramiteState.claveDeReferenciaRevision, disabled: true }, Validators.required],
       cadenaDependenciaRevision: [{ value: this.tramiteState.cadenaDependenciaRevision, disabled: true }, Validators.required],
       bancoRevision: [{ value: this.tramiteState.bancoRevision, disabled: true }, Validators.required],
       llaveDePagoRevision: [{ value: this.tramiteState.llaveDePagoRevision, disabled: true }, Validators.required],
-      fechaInicioRevision: [{ value: this.tramiteState.fechaInicioRevision, disabled: true }, Validators.required],
+      fechaPagoDeDerechosRevision: [{ value: this.tramiteState.fechaPagoDeDerechosRevision, disabled: true }, Validators.required],
       importeDePagoRevision: [{ value: this.tramiteState.importeDePagoRevision, disabled: true }, Validators.required],
     });
 
@@ -130,7 +167,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           cadenaDependenciaRevision: datos.cadenaDependenciaRevision,
           bancoRevision: datos.bancoRevision,
           llaveDePagoRevision: datos.llaveDePagoRevision,
-          fechaInicioRevision: datos.fechaInicioRevision,
+          fechaPagoDeDerechosRevision: datos.fechaPagoDeDerechosRevision,
           importeDePagoRevision: datos.importeDePagoRevision,
         });
       })
@@ -149,7 +186,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe((data: PagoDeDerechosResponseDos) => {
         this.tramiteStore.setClaveDeReferencia(data.data.claveDeReferencia);
         this.tramiteStore.setCadenaDependencia(data.data.cadenaDependencia);
-        this.tramiteStore.setFechaInicio(data.data.fechaInicio);
         this.tramiteStore.setImporteDePago(data.data.importeDePago);
       });
   }
@@ -189,7 +225,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.tramiteStore.setCadenaDependenciaRevision(data.data.cadenaDependenciaRevision);
         this.tramiteStore.setBancoRevision(data.data.bancoRevision);
         this.tramiteStore.setLlaveDePagoRevision(data.data.llaveDePagoRevision);
-        this.tramiteStore.setFechaInicioRevision(data.data.fechaInicioRevision);
         this.tramiteStore.setImporteDePagoRevision(data.data.importeDePagoRevision);
       });
   }
