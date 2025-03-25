@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
-import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
+import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
+import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
 import { CommonModule } from '@angular/common';
 import { By } from '@angular/platform-browser';
 

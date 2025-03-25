@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
-import { FirmaPageComponent } from '@ng-mf/data-access-user';import { NgModule } from '@angular/core';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 

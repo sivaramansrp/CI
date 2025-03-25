@@ -4,8 +4,8 @@ import { of } from 'rxjs';
 import { SolicitanteComponent } from './solicitante.component';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite11201Query } from '../../../../estados/queries/tramite11201.query';
-import { Tramite11201Store } from '../../../../estados/tramites/tramite11201.store';
+import { Tramite11201Query } from '../../../../core/queries/tramite11201.query';
+import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
 import { provideHttpClient } from '@angular/common/http';
 
 describe('SolicitanteComponent', () => {
