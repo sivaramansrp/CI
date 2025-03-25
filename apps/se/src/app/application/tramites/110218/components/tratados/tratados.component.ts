@@ -2,7 +2,13 @@
 import { CommonModule } from '@angular/common';
 
 import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+
+import { EXPEDICION } from '../../constants/certificado-tecnico-japon.enum';
+import { VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -12,10 +18,6 @@ import { InputFecha } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-
-import { EXPEDICION } from '../../constants/certificado-tecnico-japon.enum';
-import { VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -31,7 +33,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './tratados.component.html',
   styleUrl: './tratados.component.scss',
 })
-export class TratadosComponent implements OnInit {
+export class TratadosComponent implements OnInit, OnDestroy {
 
   /**
    * {FormGroup} detallesdeltransporte - Formulario reactivo para los detalles del transporte.
