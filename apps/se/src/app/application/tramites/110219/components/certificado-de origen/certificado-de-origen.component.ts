@@ -1,29 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
+import { ConfiguracionColumna, InputFecha, TablaSeleccion, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { FECHAENCIMIENTO, FECHAEXPEDICIÓN, FECHAFINAL, FECHAINICIAL, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
 import { CertificadoService } from '../../services/certificado.service';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InputFechaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
+import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
+import { Tramite110219Query } from '../../estados/Tramite110219.query';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
 const TEXTO_DE_ALERTA_MERCANCIAS ='Mercancias del Certificado';
 const TEXTO_DE_ALERTA_PRODUCTORES= 'Productores asociados';
 
 @Component({
   selector: 'app-certificado-de-origen',
   standalone: true,
-  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent,ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, AlertComponent, TablaDinamicaComponent, ReactiveFormsModule, InputFechaComponent],
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
-export class CertificadoDeOrigenComponent implements OnInit {
+export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
   TEXTO_DE_ALERTA_MERCANCIAS = TEXTO_DE_ALERTA_MERCANCIAS;
   TEXTO_DE_ALERTA_PRODUCTORES = TEXTO_DE_ALERTA_PRODUCTORES;
-  TablaSeleccion = TablaSeleccion;
-   cancelacionForm!: FormGroup;
   public mercanciaCertificadoTablaDatos: MercanciaCertificado[] = [];
   public productoresAsociadosTablaDatos: ProductoresAsociados[] = [];
+  fechaInicialInput: InputFecha = FECHAEXPEDICIÓN;
+  fechaFinalInput: InputFecha =FECHAENCIMIENTO;
+  TablaSeleccion = TablaSeleccion;
+  cancelacionForm!: FormGroup;
+  public solicitudState!: Solicitud110219State;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   public encabezadosMercancias: ConfiguracionColumna<MercanciaCertificado>[] = [
       {encabezado: 'Número de Orden',clave: (ele: MercanciaCertificado) => ele.numeroOrden, orden: 1, },
@@ -48,13 +56,30 @@ export class CertificadoDeOrigenComponent implements OnInit {
     {encabezado: 'Razón Social',clave: (ele: ProductoresAsociados) => ele.razonSocial, orden: 6,},
   ];
 
-constructor(private certificadoService:CertificadoService ){}
+ constructor(private certificadoService: CertificadoService,
+    private fb:FormBuilder, 
+    private validacionesService: ValidacionesFormularioService,
+    private store: Tramite110219Store,
+    private query: Tramite110219Query,
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   ngOnInit(): void {
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required)
     });
     this.getMercanciaCertificadoTabla();
+
+     this.query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+    this.donanteDomicilio();
   }
 
   validarDestinatarioFormulario(): void {
@@ -69,4 +94,35 @@ constructor(private certificadoService:CertificadoService ){}
       this.mercanciaCertificadoTablaDatos = data;
     });
   }
+
+  
+    isValid(form: FormGroup, field: string): boolean {
+      return this.validacionesService.isValid(form, field) || false;
+    }
+  
+    setValoresStore(
+      form: FormGroup,
+      campo: string,
+      metodoNombre: keyof Tramite110219Store
+    ): void {
+      const VALOR = form.get(campo)?.value;
+      (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+    }
+   
+    get validacionForm(): FormGroup {
+      return this.cancelacionForm.get('validacionForm') as FormGroup;
+    }
+  
+    donanteDomicilio(): void {
+      this.cancelacionForm = this.fb.group({
+        validacionForm: this.fb.group({
+          motivoCancelacion:[this.solicitudState?.motivoCancelacion,[Validators.required]],
+          mercanciaCertificado:[this.solicitudState?.mercanciaCertificado, [Validators.required]],
+          productoresAsociados:[this.solicitudState?.productoresAsociados, [Validators.required]],
+        })})
+}
+ngOnDestroy(): void {
+
+}
+
 }

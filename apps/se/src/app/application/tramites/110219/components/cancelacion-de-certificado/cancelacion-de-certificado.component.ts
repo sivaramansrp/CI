@@ -5,6 +5,7 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  InputFecha,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
@@ -14,9 +15,10 @@ import { map, ReplaySubject, Subscription, takeUntil } from 'rxjs';
 import { CertificadoService } from '../../services/certificado.service';
 import { AlertComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
-import { ColumnasTabla } from '../../models/certificado.model';
+import { ColumnasTabla, FECHAFINAL, FECHAINICIAL } from '../../models/certificado.model';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
+import { InputFechaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
 const TERCEROS_TEXTO_DE_ALERTA ='Certificados Disponibles';
 @Component({
   selector: 'app-cancelacion-de-certificado',
@@ -27,7 +29,8 @@ const TERCEROS_TEXTO_DE_ALERTA ='Certificados Disponibles';
     ReactiveFormsModule,
     CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    InputFechaComponent
 ],
   templateUrl: './cancelacion-de-certificado.component.html',
   styleUrl: './cancelacion-de-certificado.component.css',
@@ -46,7 +49,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   public certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
   isBuscar: boolean = false;
   public solicitudState!: Solicitud110219State;
-
+  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaFinalInput: InputFecha =FECHAFINAL;
+  
   public tratadoCatalogo: CatalogosSelect = {
     labelNombre: 'Tratado/Acuerdo:',
     required: false,
@@ -61,7 +66,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   };
  
   constructor(private certificadoService: CertificadoService,
-    private fb:FormBuilder, private validacionesService: ValidacionesFormularioService,
+    private fb:FormBuilder, 
+    private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query,
   ) {
@@ -119,7 +125,6 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   public getSolicitudesTabla(): void {
     this.certificadoService.getSolicitudesTabla().subscribe((data) => {
-      console.log(data)
       this.certificadoDisponsiblesTablaDatos = data;
     });
   }

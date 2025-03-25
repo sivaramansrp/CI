@@ -4,7 +4,8 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Número de certificado de origen*:</label>
-        <input type="text" required="true" class="form-control" formControlName="numeroCertificado"/>
+        <input type="text" required="true" class="form-control" formControlName="numeroCertificado"
+        (change)="setValoresStore(validacionForm, 'numeroCertificado', 'setNumeroCertificado')"/>
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
         <button type="button" class="btn btn-primary ms-3" (click)="onBuscarClick()">
@@ -21,6 +22,7 @@
           [required]="false"
           id="pais"
           formControlName="pais"
+          (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
         ></app-catalogo-select>
       </div>
     </div>
@@ -32,18 +34,24 @@
           [required]="false"
           id="tratado"
           formControlName="tratado"
-        ></app-catalogo-select>
+          (change)="setValoresStore(validacionForm, 'tratado', 'setTratado')">
+        </app-catalogo-select>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label>Fecha inicial:</label>
-        <input type="date" required="true" class="form-control" formControlName="fechaInicial"/>
+        <input-fecha [setFecha]="cancelacionForm.get('fechaInicial')?.value" 
+        [datos]="fechaInicialInput"
+        (change)="setValoresStore(validacionForm, 'fechaInicial', 'setFechaInicial')"
+         ></input-fecha>
       </div>
       <div class="col-md-4">
-        <label>Fecha final:</label>
-        <input type="date" required="true" class="form-control" formControlName="fechaFinal"/>
+        <input-fecha [setFecha]="cancelacionForm.get('fechaFinal')?.value" 
+      [datos]="fechaFinalInput"
+      (change)="setValoresStore(validacionForm, 'fechaFinal', 'setFechaFinal')"
+       ></input-fecha>
       </div>
+      
       <div class="col-md-3 mt-5 d-flex justify-content-end buscars">
         <button type="button" class="btn btn-primary ms-3">
           Buscar Certificado
@@ -54,15 +62,13 @@
       <div class="row mt-5">
         <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
       </div>
-      <div class="row mt-5">
-        <app-tabla-dinamica></app-tabla-dinamica>
-      </div>
       <div class="table-container mt-5">
         <app-tabla-dinamica
           [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
           [configuracionTabla]="headers"
           [datos]="certificadoDisponsiblesTablaDatos"
           formControlName="certificadoDisponibles"
+          (change)="setValoresStore(validacionForm, 'certificadoDisponibles', 'setCertificadodisponsibles')"
         ></app-tabla-dinamica>
       </div>
     </ng-container>

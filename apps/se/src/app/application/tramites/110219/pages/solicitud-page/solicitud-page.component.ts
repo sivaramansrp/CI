@@ -41,14 +41,11 @@ interface AccionBoton {
   ],
 })
 export class SolicitudPageComponent implements OnInit {
-
-
   ngOnInit(): void {
-    this.pasos = this.pasos.filter(step => step.indice !== 2)
-  
-  .map(step => step.indice === 3 ? { ...step, indice: 2 } : step);
+    this.pasos = this.pasos
+      .filter((step) => step.indice !== 2)
 
-
+      .map((step) => (step.indice === 3 ? { ...step, indice: 2 } : step));
   }
   nombre!: number;
 
@@ -86,10 +83,7 @@ export class SolicitudPageComponent implements OnInit {
    * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
-    
     this.indice = i;
-    
-   
   }
 
   /**
@@ -108,7 +102,6 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   onChildEvent(event: number) {
-    console.log(this.pasos)
     this.nombre = event;
   }
 }

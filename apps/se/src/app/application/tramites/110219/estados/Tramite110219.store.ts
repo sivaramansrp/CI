@@ -98,14 +98,14 @@ export class Tramite110219Store extends Store<Solicitud110219State> {
     }));
   }
 
-  public setFechInicial(fechaInicial: string) {
+  public setFechaInicial(fechaInicial: string) {
     this.update((state) => ({
       ...state,
       fechaInicial,
     }));
   }
 
-  public setFechFinal(fechaFinal: string) {
+  public setFechaFinal(fechaFinal: string) {
     this.update((state) => ({
       ...state,
       fechaFinal,
