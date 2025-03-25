@@ -63,6 +63,13 @@ const routes: Routes = [
       import('./tramites/220404/desistimiento.module').then(
         (m) => m.DesistimientoModule
       )
+  },
+  {
+    path: 'peticion-requisitos-fitosanitarios',
+    loadChildren: () =>
+      import('./tramites/220102/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
   }
 ];
 
