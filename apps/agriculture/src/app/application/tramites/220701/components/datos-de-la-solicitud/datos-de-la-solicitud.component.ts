@@ -237,6 +237,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           }
         })
       ).subscribe();
+  /**
+   * Se suscribe a los cambios en el estado del formulario.
+   * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+   */
+    this.datosDeLaSolicitudForm.statusChanges
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
+          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
 
   /**
    * Obtiene los datos iniciales requeridos para el componente.
@@ -254,38 +268,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$),
         map((seccionState) => {
           this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-
-    // Para el botón Continuar
-    /**
-   * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
-   * 
-   * @description 
-   * - Se suscribe a los cambios en el estado del formulario.
-   * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
-   * - Aplica un retraso de 10ms antes de ejecutar la lógica.
-   * - Obtiene el estado actual de la sección desde `seccionQuery`.
-   * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
-   * 
-   * @see {@link seccionQuery} para obtener el estado de la sección.
-   * @see {@link seccionStore} para actualizar la validación de la sección.
-   */
-    this.datosDeLaSolicitudForm.statusChanges
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        delay(10),
-        tap(() => {
-          const SECCION: number = 1;
-          const SECCION_STATE = this.seccionQuery.getValue();
-          const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-          const CONTROL_PATH = 'datosDeLaSolicitudForm';
-          const CONTROL = this.datosDeLaSolicitudForm.get(CONTROL_PATH)?.status;
-
-          FORMAS_VALIDADAS[SECCION] = this.datosDeLaSolicitudForm.valid || CONTROL === 'VALID';
-
-          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
         })
       )
       .subscribe();

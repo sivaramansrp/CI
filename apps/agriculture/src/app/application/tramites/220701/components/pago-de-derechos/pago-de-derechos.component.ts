@@ -135,6 +135,25 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
 
+    /**
+ * @description Observa los cambios en el estado del formulario y actualiza el estado del trámite en la tienda Akita.
+ * 
+ * - Se suscribe a los cambios de estado del formulario `pagosDeDerechosForm`.
+ * - Aplica un retraso de 10ms antes de ejecutar la lógica.
+ * - Obtiene el estado actual del formulario y lo almacena en la tienda Akita.
+ * - Finaliza la suscripción cuando `unsubscribe$` emite un valor para evitar fugas de memoria.
+ */
+    this.pagosDeDerechosForm.statusChanges
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      delay(10),
+      tap(() => {
+        const ACTIVE_STATE = { ...this.pagosDeDerechosForm.value };
+        this.tramiteStore.setPagoDeDerechosTramite(ACTIVE_STATE); 
+      })
+    )
+    .subscribe();
+
 
   /**
  * @description Observa el estado de la sección y actualiza la variable local `seccion`.
@@ -148,38 +167,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       map((seccionState) => {
         this.seccion = seccionState;
-      })
-    )
-    .subscribe();
-
-  // Para el botón Continuar
-    /**
-   * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
-   * 
-   * @description 
-   * - Se suscribe a los cambios en el estado del formulario.
-   * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
-   * - Aplica un retraso de 10ms antes de ejecutar la lógica.
-   * - Obtiene el estado actual de la sección desde `seccionQuery`.
-   * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
-   * 
-   * @see {@link seccionQuery} para obtener el estado de la sección.
-   * @see {@link seccionStore} para actualizar la validación de la sección.
-   */
-  this.pagosDeDerechosForm.statusChanges
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      delay(10),
-      tap(() => {
-        const SECCION: number = 1;
-        const SECCION_STATE = this.seccionQuery.getValue();
-        const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-        const CONTROL_PATH = 'pagosDeDerechosForm';
-        const CONTROL = this.pagosDeDerechosForm.get(CONTROL_PATH)?.status;
-
-        FORMAS_VALIDADAS[SECCION] = this.pagosDeDerechosForm.valid || CONTROL === 'VALID';
-
-        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
       })
     )
     .subscribe();
