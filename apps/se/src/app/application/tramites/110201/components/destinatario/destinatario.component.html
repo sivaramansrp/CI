@@ -64,7 +64,7 @@
           type="text"
           class="form-control"
           [ngClass]="{
-            GrayClass:
+            'gray-class':
               registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
           }"
           id="denominacion"
@@ -171,9 +171,8 @@
     <div class="row">
       <div class="col-md-8 mb-3">
         <app-catalogo-select
-          [catalogo]="nacion.catalogos"
-          [label]="nacion.labelNombre"
-          [placeholder]="nacion.primerOpcion"
+          [catalogo]="options"
+          [label]="'País destino'"
           [required]="true"
           formControlName="nacion"
           (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
@@ -183,9 +182,8 @@
     <ng-titulo titulo="Detalles del transporte" />
     <div class="col-md-8 mb-3">
       <app-catalogo-select
-        [catalogo]="transporte.catalogos"
-        [label]="transporte.labelNombre"
-        [placeholder]="transporte.primerOpcion"
+        [catalogo]="options"
+        [label]="'Medio de transporte'"
         [required]="true"
         formControlName="transporte"
         (change)="

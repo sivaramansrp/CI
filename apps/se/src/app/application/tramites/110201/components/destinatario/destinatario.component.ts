@@ -1,4 +1,5 @@
 import {
+  Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
   ValidacionesFormularioService,
@@ -14,7 +15,7 @@ import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
@@ -52,11 +53,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   transporte!: CatalogosSelect;
 
   /**
-   * Lista de suscripciones activas.
-   */
-  private subscriptions: Subscription[] = [];
-
-  /**
    * Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud110201State;
@@ -67,16 +63,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Suscripción para obtener el catálogo de países de destino.
-   */
-  getPaisDestinoSubscription!: Subscription;
-
-  /**
-   * Suscripción para obtener el catálogo de medios de transporte.
-   */
-  getTransporteSubscription!: Subscription;
-
-  /**
    * Indica si el formulario está deshabilitado.
    */
   isDisabled: boolean = false;
@@ -85,6 +71,18 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
+/**
+ * Opciones del catálogo.
+ * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+ * Estas opciones se utilizan para poblar los selectores en el formulario.
+ */
+options!: Catalogo[];
+
+/**
+ * Notificador para destruir observables al destruir el componente.
+ * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+ */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Constructor del componente.
@@ -137,42 +135,19 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.donanteDomicilio();
 
-    this.subscriptions.push(
-      this.query.selectNacion$.subscribe((nacion) => {
-        this.nacion = {
-          labelNombre: 'País destino',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: nacion ?? [],
-        };
-      })
-    );
-
-    this.subscriptions.push(
-      this.query.selectTransporte$.subscribe((transporte) => {
-        this.transporte = {
-          labelNombre: 'Medio de transporte',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: transporte ?? [],
-        };
-      })
-    );
   }
 
   /**
    * Obtiene el catálogo de países de destino desde el servicio.
    */
   getPaisDestino(): void {
-    this.getPaisDestinoSubscription = this.registroService
-      .getPaisDestino()
+    this.registroService
+      .getPaisDestino().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setNacion(RESPONSE);
+          this.options = resp.data as Catalogo[];
         }
       });
   }
@@ -181,12 +156,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de medios de transporte desde el servicio.
    */
   getTransporte(): void {
-    this.getTransporteSubscription = this.registroService
-      .getTransporte()
+    this.registroService
+      .getTransporte().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setTransporte(RESPONSE);
+          this.options = resp.data as Catalogo[];
         }
       });
   }
@@ -276,13 +250,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    if (this.getPaisDestinoSubscription) {
-      this.getPaisDestinoSubscription.unsubscribe();
-    }
-    if (this.getTransporteSubscription) {
-      this.getTransporteSubscription.unsubscribe();
-    }
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+   
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

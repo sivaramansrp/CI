@@ -12,9 +12,8 @@
         <div class="row">
           <div class="col-md-4">
             <app-catalogo-select
-              [catalogo]="tratado.catalogos"
-              [label]="tratado.labelNombre"
-              [placeholder]="tratado.primerOpcion"
+              [catalogo]="optionsTratado"
+              [label]="'Tratado/Acuerdo'"
               [required]="true"
               id="tratado"
               formControlName="tratado"
@@ -25,9 +24,8 @@
           </div>
           <div class="col-md-4">
             <app-catalogo-select
-              [catalogo]="pais.catalogos"
-              [label]="pais.labelNombre"
-              [placeholder]="pais.primerOpcion"
+              [catalogo]="optionsPais"
+              [label]="'País / Bloque'"
               [required]="true"
               id="pais"
               formControlName="pais"
@@ -90,32 +88,20 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-4">
-            <label>Fecha inicio:</label>
-            <input
-              type="date"
-              required="true"
-              class="form-control"
-              formControlName="fechaInicial"
-              (change)="
-                setValoresStore(
-                  validacionForm,
-                  'fechaInicial',
-                  'setFechInicioB'
-                )
+            <input-fecha
+              [setFecha]="
+                registroForm.get('validacionForm.fechaInicial')?.value
               "
-            />
+              [datos]="fechaInicialInput"
+              (valorCambiado)="cambioFechaInicial($event)"
+            ></input-fecha>
           </div>
           <div class="col-md-4">
-            <label>Fecha fin:</label>
-            <input
-              type="date"
-              required="true"
-              class="form-control"
-              formControlName="fechaFinal"
-              (change)="
-                setValoresStore(validacionForm, 'fechaFinal', 'setFechFinB')
-              "
-            />
+            <input-fecha
+              [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value"
+              [datos]="fechaFinalInput"
+              (valorCambiado)="cambioFechaFinal($event)"
+            ></input-fecha>
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -231,14 +217,14 @@
           <label>Mercancías seleccionadas</label>
         </div>
 
-        <div class="table-container mt-5" *ngIf="!isMercancia">
+        <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="headersData"
           ></app-tabla-dinamica>
         </div>
 
-        <div class="table-container mt-5" *ngIf="isMercancia">
+        <div class="table-container mt-5" *ngIf="esMercanciaEnEdicion">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="headersData"
@@ -246,14 +232,14 @@
           ></app-tabla-dinamica>
         </div>
         <i
-          *ngIf="isMercancia"
+          *ngIf="esMercanciaEnEdicion"
           id="bi-1-square"
           class="bi bi-1-square"
           viewBox="0 0 16 16"
         ></i>
         <div
           class="col-md-12 mt-5 d-flex justify-content-end"
-          *ngIf="isMercancia"
+          *ngIf="esMercanciaEnEdicion"
         >
           <button type="button" class="btn btn-default ms-3">Eliminar</button>
           <button
@@ -297,7 +283,7 @@
   </form>
 </div>
 
-<div class="container" *ngIf="!isMercancia && esFormulario">
+<div class="container" *ngIf="!esMercanciaEnEdicion && esFormulario">
   <ng-titulo titulo="Datos de la mercancía" />
   <form [formGroup]="mercanciaForm" (ngSubmit)="validarMercanciaForm()">
     <ng-container formGroupName="validacionMercanciaForm">
@@ -440,9 +426,8 @@
       <div class="row mt-5">
         <div class="col-md-4">
           <app-catalogo-select
-            [catalogo]="umc.catalogos"
-            [label]="umc.labelNombre"
-            [placeholder]="umc.primerOpcion"
+            [catalogo]="optionsUMC"
+            [label]="'UMC'"
             [required]="true"
             [tooltipQuestionCircle]="true"
             id="umc"
@@ -503,9 +488,8 @@
         </div>
         <div class="col-md-8">
           <app-catalogo-select
-            [catalogo]="unidadMedida.catalogos"
-            [label]="unidadMedida.labelNombre"
-            [placeholder]="unidadMedida.primerOpcion"
+            [catalogo]="optionsUnidadMedida"
+            [label]="'Unidad de medida de la masa bruta'"
             [required]="true"
             id="unidadMedida"
             formControlName="unidadMedida"
@@ -521,16 +505,11 @@
       </div>
       <div class="row mt-5">
         <div class="col-md-4">
-          <label>Fecha de factura*:</label>
-          <input
-            type="date"
-            required="true"
-            class="form-control"
-            formControlName="fecha"
-            (change)="
-              setValoresStore(validacionMercanciaForm, 'fecha', 'setFecha')
-            "
-          />
+          <input-fecha
+            [setFecha]="registroForm.get('fecha')?.value"
+            [datos]="fechaFacturaInput"
+            (valorCambiado)="cambioFechaFactura($event)"
+          ></input-fecha>
         </div>
         <div class="col-md-4">
           <label>N° factura*:</label>
@@ -550,9 +529,8 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select
-            [catalogo]="tipoFactura.catalogos"
-            [label]="tipoFactura.labelNombre"
-            [placeholder]="tipoFactura.primerOpcion"
+            [catalogo]="optionsTipoFactura"
+            [label]="'Tipo de factura'"
             [required]="true"
             id="tipoFactura"
             formControlName="tipoFactura"
