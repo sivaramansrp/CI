@@ -31,7 +31,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Configuración del formulario de renuncia de derechos de permisos.
    */
-  public permisoForm!: FormGroup;
+  public formulario!: FormGroup;
 
    /**
    * Declaración bajo protesta de decir verdad.
@@ -71,23 +71,23 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * @description Crea y configura el formulario de renuncia de derechos de permisos.
    */
   crearpermisoForm(): void {
-    this.permisoForm = this.fb.group({
-      folioTramite: [{ value: '', disabled: true }],
-      tipoDeSolicitud: [{ value: '', disabled: true }],
-      régimen: [{ value: '', disabled: true }],
-      clasificaciónDelRégimen: [{ value: '', disabled: true }],
-      periodoDeVigencia: [{ value: '', disabled: true }],
-      unidadDeMedida: [{ value: '', disabled: true }],
-      fracciónArancelaria: [{ value: '', disabled: true }],
-      cantidadAutorizada: [{ value: '', disabled: true }],
-      valorAutorizado: [{ value: '', disabled: true }],
-      nico: [{ value: '', disabled: true }],
-      descripciónNico: [{ value: '', disabled: true }],
-      acotación: [{ value: '', disabled: true }],
-      permisoVálidoDesde: [{ value: '', disabled: true }],
-      permisoVálidoHasta: [{ value: '', disabled: true }],
+    this.formulario = this.fb.group({
+      mercanciaSolicitudFolioTramite: [{ value: '', disabled: true }],
+      mercacniaSolicitudTipoSolicitud: [{ value: '', disabled: true }],
+      mercacniaSolicitudRegimen: [{ value: '', disabled: true }],
+      mercacniaSolicitudClasificacionRegimen: [{ value: '', disabled: true }],
+      mercacniaSolicitudPeriodoDeVigencia: [{ value: '', disabled: true }],
+      mercacniaSolicitudUnidadMedida: [{ value: '', disabled: true }],
+      mercacniaSolicitudFraccionArancelaria: [{ value: '', disabled: true }],
+      mercacniaSolicitudCantidadAutorizada: [{ value: '', disabled: true }],
+      mercacniaSolicitudValorAutorizado: [{ value: '', disabled: true }],
+      solicitudNicoSener: [{ value: '', disabled: true }],
+      solicitudDescNicoSener: [{ value: '', disabled: true }],
+      solicitudAcotacion: [{ value: '', disabled: true }],
+      mercacniaSolicitudPermisoValidoDesde: [{ value: '', disabled: true }],
+      mercacniaSolicitudPermisoValidoHasta: [{ value: '', disabled: true }],
       motivoRenunciaDeDerechos:['', [Validators.required, Validators.maxLength(255)]],
-      controlar: [true, Validators.requiredTrue]
+      mercacniaSolicitudControlar: [true, Validators.requiredTrue]
     });
   }
 
@@ -102,21 +102,21 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.Servicio.getDescripcionDelCupo()
     .pipe(takeUntil(this.destroyed$))
     .subscribe((data: PermisoFormInterface) => {
-      this.permisoForm.patchValue({
-        folioTramite: data.folioTramite,
-        tipoDeSolicitud: data.tipoDeSolicitud,
-        régimen: data.régimen,
-        clasificaciónDelRégimen: data.clasificaciónDelRégimen,
-        periodoDeVigencia: data.periodoDeVigencia,
-        unidadDeMedida: data.unidadDeMedida,
-        fracciónArancelaria: data.fracciónArancelaria,
-        cantidadAutorizada: data.cantidadAutorizada,
-        valorAutorizado: data.valorAutorizado,
-        nico: data.nico,
-        descripciónNico: data.descripciónNico,
-        acotación: data.acotación,
-        permisoVálidoDesde: data.permisoVálidoDesde,
-        permisoVálidoHasta: data.permisoVálidoHasta,
+      this.formulario.patchValue({
+        mercanciaSolicitudFolioTramite: data.folioTramite,
+        mercacniaSolicitudTipoSolicitud: data.tipoDeSolicitud,
+        mercacniaSolicitudRegimen: data.regimen,
+        mercacniaSolicitudClasificacionRegimen: data.clasificacionDelRegimen,
+        mercacniaSolicitudPeriodoDeVigencia: data.periodoDeVigencia,
+        mercacniaSolicitudUnidadMedida: data.unidadDeMedida,
+        mercacniaSolicitudFraccionArancelaria: data.fraccionArancelaria,
+        mercacniaSolicitudCantidadAutorizada: data.cantidadAutorizada,
+        mercacniaSolicitudValorAutorizado: data.valorAutorizado,
+        solicitudNicoSener: data.nico,
+        solicitudDescNicoSener: data.descripcionNico,
+        solicitudAcotacion: data.acotacion,
+        mercacniaSolicitudPermisoValidoDesde: data.permisoValidoDesde,
+        mercacniaSolicitudPermisoValidoHasta: data.permisoValidoHasta,
       });
     });
   }
@@ -137,7 +137,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState:Tramite140111State) => {
-            this.permisoForm.patchValue(
+            this.formulario.patchValue(
                 {
                   motivoRenunciaDeDerechos:seccionState.motivoRenunciaDeDerechos,
                 }
@@ -153,7 +153,7 @@ export class PermisoRenunciaDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {boolean} - Retorna true si el control es inválido, de lo contrario false.
    */
    esInvalido(nombreControl: string): boolean {
-    const CONTROL = this.permisoForm.get(nombreControl);
+    const CONTROL = this.formulario.get(nombreControl);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;

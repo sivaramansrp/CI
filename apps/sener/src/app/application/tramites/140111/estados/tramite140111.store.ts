@@ -7,13 +7,13 @@ import { Injectable } from '@angular/core';
  */
 export interface Tramite140111State {
   motivoRenunciaDeDerechos: string;
-  controlar:boolean;
+  mercacniaSolicitudControlar:boolean;
 }
 
 export function createInitialState(): Tramite140111State {
   return {
     motivoRenunciaDeDerechos: '',
-    controlar:true
+    mercacniaSolicitudControlar:true
   };
 }
 

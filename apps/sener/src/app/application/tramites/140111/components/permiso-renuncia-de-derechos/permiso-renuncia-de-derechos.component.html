@@ -1,5 +1,5 @@
 <div class="container">
-  <form [formGroup]="permisoForm">
+  <form [formGroup]="formulario">
     <ng-titulo titulo="Permiso renuncia de derechos" />
     <div class="row mt-2">
       <div class="col-md-5">
@@ -9,8 +9,8 @@
             class="form-control disabled-color"
             placeholder=""
             type="text"
-            name="folioTramite"
-            formControlName="folioTramite"
+            name="mercanciaSolicitudFolioTramite"
+            formControlName="mercanciaSolicitudFolioTramite"
           />
         </div>
       </div>
@@ -22,8 +22,8 @@
             placeholder=""
             type="text"
             readonly
-            name="tipoDeSolicitud"
-            formControlName="tipoDeSolicitud"
+            name="mercacniaSolicitudTipoSolicitud"
+            formControlName="mercacniaSolicitudTipoSolicitud"
           />
         </div>
       </div>
@@ -35,8 +35,8 @@
             placeholder=""
             type="text"
             readonly
-            name="régimen"
-            formControlName="régimen"
+            name="mercacniaSolicitudRegimen"
+            formControlName="mercacniaSolicitudRegimen"
           />
         </div>
       </div>
@@ -51,8 +51,8 @@
             placeholder=""
             type="text"
             readonly
-            name="clasificaciónDelRégimen"
-            formControlName="clasificaciónDelRégimen"
+            name="mercacniaSolicitudClasificacionRegimen"
+            formControlName="mercacniaSolicitudClasificacionRegimen"
           />
         </div>
       </div>
@@ -64,8 +64,8 @@
             placeholder=""
             type="text"
             readonly
-            name="periodoDeVigencia"
-            formControlName="periodoDeVigencia"
+            name="mercacniaSolicitudPeriodoDeVigencia"
+            formControlName="mercacniaSolicitudPeriodoDeVigencia"
           />
         </div>
       </div>
@@ -77,8 +77,8 @@
             placeholder=""
             type="text"
             readonly
-            name="unidadDeMedida"
-            formControlName="unidadDeMedida"
+            name="mercacniaSolicitudUnidadMedida"
+            formControlName="mercacniaSolicitudUnidadMedida"
           />
         </div>
       </div>
@@ -93,8 +93,8 @@
             placeholder=""
             type="text"
             readonly
-            name="fracciónArancelaria"
-            formControlName="fracciónArancelaria"
+            name="mercacniaSolicitudFraccionArancelaria"
+            formControlName="mercacniaSolicitudFraccionArancelaria"
           />
         </div>
       </div>
@@ -106,8 +106,8 @@
             placeholder=""
             type="text"
             readonly
-            name="cantidadAutorizada"
-            formControlName="cantidadAutorizada"
+            name="mercacniaSolicitudCantidadAutorizada"
+            formControlName="mercacniaSolicitudCantidadAutorizada"
           />
         </div>
       </div>
@@ -119,8 +119,8 @@
             placeholder=""
             type="text"
             readonly
-            name="valorAutorizado"
-            formControlName="valorAutorizado"
+            name="mercacniaSolicitudValorAutorizado"
+            formControlName="mercacniaSolicitudValorAutorizado"
           />
         </div>
       </div>
@@ -135,8 +135,8 @@
             placeholder=""
             type="text"
             readonly
-            name="nico"
-            formControlName="nico"
+            name="solicitudNicoSener"
+            formControlName="solicitudNicoSener"
           />
         </div>
       </div>
@@ -146,7 +146,7 @@
           <textarea
             class="form-control disabled-color textarea-auto-height"
             rows="2"
-            formControlName="descripciónNico"
+            formControlName="solicitudDescNicoSener"
           ></textarea>
         </div>
       </div>
@@ -156,9 +156,9 @@
           <textarea
             class="form-control disabled-color textarea-auto-height"
             rows="2"
-            name="acotación"
+            name="solicitudAcotacion"
             readonly
-            formControlName="acotación"
+            formControlName="solicitudAcotacion"
           ></textarea>
         </div>
       </div>
@@ -173,8 +173,8 @@
             placeholder=""
             type="text"
             readonly
-            name="permisoVálidoDesde"
-            formControlName="permisoVálidoDesde"
+            name="mercacniaSolicitudPermisoValidoDesde"
+            formControlName="mercacniaSolicitudPermisoValidoDesde"
           />
         </div>
       </div>
@@ -186,8 +186,8 @@
             placeholder=""
             type="text"
             readonly
-            name="permisoVálidoHasta"
-            formControlName="permisoVálidoHasta"
+            name="mercacniaSolicitudPermisoValidoHasta"
+            formControlName="mercacniaSolicitudPermisoValidoHasta"
           />
         </div>
       </div>
@@ -204,12 +204,12 @@
             rows="4"
             name="motivoRenunciaDeDerechos"
             formControlName="motivoRenunciaDeDerechos"
-            (change)="setValoresStore(permisoForm,'motivoRenunciaDeDerechos','setMotivoRenunciaDeDerechos')"
+            (change)="setValoresStore(formulario,'motivoRenunciaDeDerechos','setMotivoRenunciaDeDerechos')"
           ></textarea>
 
           <div *ngIf="esInvalido('motivoRenunciaDeDerechos')" class="text-danger">
-            <small *ngIf="permisoForm.controls['motivoRenunciaDeDerechos'].hasError('required')">Motivo de renuncia de derechos es obligatoria.</small>
-            <small *ngIf="permisoForm.controls['motivoRenunciaDeDerechos'].hasError('maxlength')">Máximo 255 caracteres.</small>
+            <small *ngIf="formulario.controls['motivoRenunciaDeDerechos'].hasError('required')">Motivo de renuncia de derechos es obligatoria.</small>
+            <small *ngIf="formulario.controls['motivoRenunciaDeDerechos'].hasError('maxlength')">Máximo 255 caracteres.</small>
         </div>
         </div>
       </div>
@@ -221,7 +221,7 @@
         <div class="form-check bg-light p-0">
 
             <div class="alert alert-info content-with-checkbox">
-              <input class="form-check-input" formControlName="controlar" [ngClass]="{'is-invalid': esInvalido('controlar')}" type="checkbox" id="manifiesto">
+              <input class="form-check-input" formControlName="mercacniaSolicitudControlar" [ngClass]="{'is-invalid': esInvalido('mercacniaSolicitudControlar')}" type="checkbox" id="manifiesto">
               {{MANIFIESTO_BAJO_PROTESTA}}
             </div>
         </div>

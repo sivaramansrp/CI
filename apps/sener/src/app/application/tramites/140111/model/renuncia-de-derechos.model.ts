@@ -1,18 +1,18 @@
 export interface PermisoFormInterface {
     folioTramite: string;
     tipoDeSolicitud: string;
-    régimen: string;
-    clasificaciónDelRégimen: string;
+    regimen: string;
+    clasificacionDelRegimen: string;
     periodoDeVigencia: string;
     unidadDeMedida: string;
-    fracciónArancelaria: string | number;
+    fraccionArancelaria: string | number;
     cantidadAutorizada: string | number;
     valorAutorizado: string | number;
     nico: string | number;
-    descripciónNico: string;
-    acotación: string;
-    permisoVálidoDesde: string;
-    permisoVálidoHasta: string;
+    descripcionNico: string;
+    acotacion: string;
+    permisoValidoDesde: string;
+    permisoValidoHasta: string;
     motivoRenunciaDeDerechos: string;
     controlar: boolean;
 }
