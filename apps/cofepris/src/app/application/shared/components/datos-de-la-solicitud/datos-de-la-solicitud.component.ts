@@ -1,9 +1,9 @@
 
+import { ALERTA_DE_MANIFESTO_Y_DECLARACIONES, ALERTA_OPCIONS } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, DatosDeTablaSeleccionados, TablaMercanciasConfig, TablaMercanciasDatos } from '../../models/datos-solicitud.model';
+import { Catalogo, DatosDeTablaSeleccionados, OpcionConfig, TablaMercanciasConfig, TablaMercanciasDatos, TablaOpcionConfig } from '../../models/datos-solicitud.model';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ALERTA_DE_MANIFESTO_Y_DECLARACIONES } from '../../constantes/datos-solicitud.enum';
 import { AbstractControl } from '@angular/forms';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -27,7 +27,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
   @Input() public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
-  
+  @Input() public opcionConfig!: OpcionConfig<TablaOpcionConfig>;
+
+  @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> = new EventEmitter<TablaOpcionConfig[]>();
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> = new EventEmitter<TablaScianConfig[]>();
   @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> = new EventEmitter<TablaMercanciasDatos[]>();
   @Output() datosDeTablaSeleccionados: EventEmitter<DatosDeTablaSeleccionados> = new EventEmitter<DatosDeTablaSeleccionados>();
@@ -43,9 +45,12 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   public infoAlert = 'alert-info';
   public manifiestosCasillaDeVerificacion = false;
-  public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES
+  public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+  public alertaOpicion = ALERTA_OPCIONS;
   public tablaMercanciasLista: TablaMercanciasDatos[] = [];
   public scianLista: TablaScianConfig[] = [];
+  public opcionLista: TablaOpcionConfig[] = [];
+  public opcionesColapsable = false;
 
   constructor(public fb:FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) { }
 
@@ -163,8 +168,14 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   modificarDatos(): void {
   this.datosDeTablaSeleccionados.emit({
     scianSeleccionados: this.scianLista,
-    mercanciasSeleccionados: this.tablaMercanciasLista
+    mercanciasSeleccionados: this.tablaMercanciasLista,
+    opcionSeleccionados: this.opcionLista
   });
   }
   
+  mostrarColapsable(orden: number): void {
+    if (orden === 1) {
+      this.opcionesColapsable = !this.opcionesColapsable;
+    } 
+  }
 }

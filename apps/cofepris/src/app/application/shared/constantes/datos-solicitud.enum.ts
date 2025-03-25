@@ -1,4 +1,26 @@
-import { TablaMercanciasDatos, TablaScianConfig } from "../models/datos-solicitud.model";
+import { TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from "../models/datos-solicitud.model";
+
+export const OPCION_TABLA = [
+  {
+    encabezado: 'Fecha creación',
+    clave: (ele: TablaOpcionConfig): string => ele.fechaCreacion, 
+    orden: 1,
+  },
+  {
+    encabezado: 'Mercancía',
+    clave: (ele: TablaOpcionConfig): string => ele.mercancia, 
+    orden: 2,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: TablaOpcionConfig): string => ele.cantidad, 
+    orden: 3,
+  },
+  {
+    encabezado: 'Proveedor',
+    clave: (ele: TablaOpcionConfig): string => ele.proveedor, 
+    orden: 4,
+  }];
 
 export const SCIAN_TABLA = [
     {
@@ -12,6 +34,8 @@ export const SCIAN_TABLA = [
         orden: 1,
       }
 ]
+
+export const ALERTA_OPCIONS = `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
 
 export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row">
     <div class="col-md-1 mt-4">
@@ -163,4 +187,19 @@ export const CROSLISTA_DE_PAISES: string[] = [
   "BELIZE",
   "BENIN (REPUBLIC OF)",
   "BHUTAN (KINGDOM OF)"
+];
+
+export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
+  {
+    fechaCreacion: '2025-02-19 11:26:55.0',
+    mercancia: 'Los demás. Unicamente: Los que no sean estupefacientes o psicotrópicos, o contengan dichas sustancias...',
+    cantidad: '0.5',
+    proveedor: 'TramitesVUCEM SA de CV',
+  },
+  {
+    fechaCreacion: '2024-11-08 13:02:58.0',
+    mercancia: 'Los demás. Unicamente: Los que no sean estupefacientes o psicotrópicos, o contengan',
+    cantidad: '0.5',
+    proveedor: 'TramitesVUCEM SA de CV',
+  },
 ];

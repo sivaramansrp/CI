@@ -24,10 +24,21 @@ export interface RespuestaCatalogos {
 }
 
 export interface TablaScianConfig {
-clave: string;
-descripcion: string;
+  clave: string;
+  descripcion: string;
+  }
+export interface TablaOpcionConfig {
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: string;
+  proveedor: string;
 }
 
+export interface OpcionConfig<T> {
+  tipoSeleccionTabla: TablaSeleccion | undefined;
+  configuracionTabla: ConfiguracionColumna<T>[];
+  datos: T[];
+}
 export interface ScianConfig<T> {
     tipoSeleccionTabla: TablaSeleccion;
     configuracionTabla: ConfiguracionColumna<T>[];
@@ -71,6 +82,7 @@ export enum TablaSeleccion {
   export interface DatosDeTablaSeleccionados {
     scianSeleccionados: TablaScianConfig[];
     mercanciasSeleccionados: TablaMercanciasDatos[];
+    opcionSeleccionados: TablaOpcionConfig[];
   }
 
   /**
