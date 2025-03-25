@@ -8,6 +8,8 @@ export interface Tramite110216State {
   idioma: Catalogo | null;
   entidadFederativa: Catalogo | null;
   representacionFederal: Catalogo | null;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean
 }
 
 export function createInitialState(): Tramite110216State {
@@ -16,6 +18,8 @@ export function createInitialState(): Tramite110216State {
     idioma: null,
     entidadFederativa: null,
     representacionFederal: null,
+    datosConfidencialesProductor: false,
+    productorMismoExportador: false
   };
 }
 
@@ -53,6 +57,18 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({
       ...state,
       representacionFederal,
+    }));
+  }
+  public setDatosConfidencialesProductor(datosConfidencialesProductor: boolean): void {
+    this.update((state) => ({
+      ...state,
+      datosConfidencialesProductor,
+    }));
+  }
+  public setProductorMismoExportador(productorMismoExportador: boolean): void {
+    this.update((state) => ({
+      ...state,
+      productorMismoExportador,
     }));
   }
 
