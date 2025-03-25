@@ -74,7 +74,6 @@ export class PaisProcendenciaComponent {
 @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
 /**
  * Configuración de los botones para la gestión de la selección de países.
- * @type {Array<{ btnNombre: string; class: string; funcion: () => void }>}
  */
 campoDeBotones = [
   {
@@ -90,7 +89,6 @@ campoDeBotones = [
     class: 'btn-primary',
     /**
      * Función para agregar todos los elementos.
-     * @type {() => void}
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -153,7 +151,6 @@ campoDeBotones = [
     class: 'btn-default',
     /**
      * Función para restar todos los elementos.
-     * @type {() => void}
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
