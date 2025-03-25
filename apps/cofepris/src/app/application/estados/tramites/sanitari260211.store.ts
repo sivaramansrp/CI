@@ -1,7 +1,7 @@
 import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
+import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
 export interface Sanitario260215State {
   selectedEstado: catalogoResponse | null;
@@ -11,19 +11,19 @@ export interface Sanitario260215State {
   /**
    * Datos del fabricante.
    */
-  Fabricante: TablaDatos[];
+  Fabricante: tablaDatos[];
   /**
    * Datos del destinatario.
    */
-  Destinatario: TablaDatos[];
+  Destinatario: tablaDatos[];
   /**
    * Datos del proveedor.
    */
-  Proveedor: TablaDatos[];
+  Proveedor: tablaDatos[];
   /**
    * Datos del facturador.
    */
-  Facturador: TablaDatos[];
+  Facturador: tablaDatos[];
 }
 
 export function createInitialState(): Sanitario260215State {
@@ -81,7 +81,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param fabricante Arreglo de datos del fabricante.
    */
-  public setFabricante(fabricante: TablaDatos[]) {
+  public setFabricante(fabricante: tablaDatos[]) {
     this.update((state) => ({
       ...state,
       Fabricante: fabricante,
@@ -93,7 +93,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param destinatario Arreglo de datos del destinatario.
    */
-  public setDestinatario(destinatario: TablaDatos[]) {
+  public setDestinatario(destinatario: tablaDatos[]) {
     this.update((state) => ({
       ...state,
       Destinatario: destinatario,
@@ -105,7 +105,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param proveedor Arreglo de datos del proveedor.
    */
-  public setProveedor(proveedor: TablaDatos[]) {
+  public setProveedor(proveedor: tablaDatos[]) {
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,
@@ -117,7 +117,7 @@ export class Sanitario260215Store extends Store<Sanitario260215State> {
    *
    * @param facturador Arreglo de datos del facturador.
    */
-  public setFacturador(facturador: TablaDatos[]) {
+  public setFacturador(facturador: tablaDatos[]) {
     this.update((state) => ({
       ...state,
       Facturador: facturador,
