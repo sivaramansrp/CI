@@ -32,8 +32,15 @@ export function createInitialState(): DesistimientoState {
  * Administra el estado de la modalidad de cambio utilizando Akita.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'cancelar-solicitud', resettable: true })
+@StoreConfig({ name: 'desistimiento', resettable: true })
 export class DesistimientoStore extends Store<DesistimientoState> {
+    /**
+    * Constructor de la clase.
+    * Llama al constructor de la clase base y establece el estado inicial.
+    * 
+    * El estado inicial se crea utilizando la función `createInitialState`,
+    * que define la configuración predeterminada para esta clase.
+    */
     constructor() {
         super(createInitialState());
     }
@@ -57,5 +64,4 @@ export class DesistimientoStore extends Store<DesistimientoState> {
       public limpiarFormulario(): void {
         this.reset();
     }
-
 }

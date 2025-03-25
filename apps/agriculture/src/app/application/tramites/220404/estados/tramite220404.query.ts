@@ -1,7 +1,7 @@
 /**
  * @nombre DesistimientoQuery
- * @descripción Esta clase es una consulta (Query) de Akita que permite obtener el estado del store `CancelarSolicitudStore`.
- * Se utiliza para seleccionar y acceder a los datos del estado de la aplicación relacionados con `CancelarSolicitudStore`.
+ * @descripción Esta clase es una consulta (Query) de Akita que permite obtener el estado del store `DesistimientoStore`.
+ * Se utiliza para seleccionar y acceder a los datos del estado de la aplicación relacionados con `DesistimientoStore`.
  * 
  * @autor [Tu Nombre]
  * @fecha [Fecha de Creación]
