@@ -20,7 +20,6 @@ export class SolicitanteService {
   getDatosGenerales(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
       catchError((error) => {
-        console.log(error);
         return throwError(() => error);
       })
     );

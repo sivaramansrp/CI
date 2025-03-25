@@ -3,23 +3,22 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { FirmarSolicitudComponent } from './firmar-solicitud.component';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios/servicios-extraordinarios.service';
-import { TramiteStore } from '../../../../estados/tramite.store';
+import { TramiteFolioService, TramiteFolioStore } from '@libs/shared/data-access-user/src';
 
 fdescribe('FirmarSolicitudComponent', () => {
   let component: FirmarSolicitudComponent;
   let fixture: ComponentFixture<FirmarSolicitudComponent>;
   let mockRouter: jasmine.SpyObj<Router>;
-  let mockServiciosExtraordinariosService: jasmine.SpyObj<ServiciosExtraordinariosService>;
-  let mockTramiteStore: jasmine.SpyObj<TramiteStore>;
+  let mockTramiteFolioService: jasmine.SpyObj<TramiteFolioService>;
+  let mockTramiteFolioStore: jasmine.SpyObj<TramiteFolioStore>;
 
   beforeEach(async () => {
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
-    mockServiciosExtraordinariosService = jasmine.createSpyObj(
-      'ServiciosExtraordinariosService',
+    mockTramiteFolioService = jasmine.createSpyObj(
+      'TramiteFolioService',
       ['obtenerTramite']
     );
-    mockTramiteStore = jasmine.createSpyObj('TramiteStore', [
+    mockTramiteFolioStore = jasmine.createSpyObj('TramiteFolioStore', [
       'establecerTramite',
     ]);
 
@@ -28,10 +27,10 @@ fdescribe('FirmarSolicitudComponent', () => {
       providers: [
         { provide: Router, useValue: mockRouter },
         {
-          provide: ServiciosExtraordinariosService,
-          useValue: mockServiciosExtraordinariosService,
+          provide: TramiteFolioService,
+          useValue: mockTramiteFolioService,
         },
-        { provide: TramiteStore, useValue: mockTramiteStore },
+        { provide: TramiteFolioStore, useValue: mockTramiteFolioStore },
       ],
     }).compileComponents();
 
@@ -51,16 +50,16 @@ fdescribe('FirmarSolicitudComponent', () => {
       codigo: 'code',
       data: 'mockData',
     };
-    mockServiciosExtraordinariosService.obtenerTramite.and.returnValue(
+    mockTramiteFolioService.obtenerTramite.and.returnValue(
       of(mockTramite)
     );
 
     component.obtieneFirma('mockFirma');
 
     expect(
-      mockServiciosExtraordinariosService.obtenerTramite
+      mockTramiteFolioService.obtenerTramite
     ).toHaveBeenCalledWith(19);
-    expect(mockTramiteStore.establecerTramite).toHaveBeenCalledWith(
+    expect(mockTramiteFolioStore.establecerTramite).toHaveBeenCalledWith(
       'mockData',
       'mockFirma'
     );
@@ -70,16 +69,16 @@ fdescribe('FirmarSolicitudComponent', () => {
   });
 
   it('should handle error when obtaining tramite fails', () => {
-    mockServiciosExtraordinariosService.obtenerTramite.and.returnValue(
+    mockTramiteFolioService.obtenerTramite.and.returnValue(
       throwError('error')
     );
 
     component.obtieneFirma('mockFirma');
 
     expect(
-      mockServiciosExtraordinariosService.obtenerTramite
+      mockTramiteFolioService.obtenerTramite
     ).toHaveBeenCalledWith(19);
-    expect(mockTramiteStore.establecerTramite).not.toHaveBeenCalled();
+    expect(mockTramiteFolioStore.establecerTramite).not.toHaveBeenCalled();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 
@@ -87,9 +86,9 @@ fdescribe('FirmarSolicitudComponent', () => {
     component.obtieneFirma('');
 
     expect(
-      mockServiciosExtraordinariosService.obtenerTramite
+      mockTramiteFolioService.obtenerTramite
     ).not.toHaveBeenCalled();
-    expect(mockTramiteStore.establecerTramite).not.toHaveBeenCalled();
+    expect(mockTramiteFolioStore.establecerTramite).not.toHaveBeenCalled();
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
 });
