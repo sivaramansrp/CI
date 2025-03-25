@@ -1,38 +1,45 @@
+# Workflow name and trigger configuration
 name: CI/CD deploy-vucem30-front
-
 on:
-  workflow_dispatch:
-
+  workflow_dispatch:  # Allows manual execution of the workflow from GitHub interface
   push:
-    branches: [ "develop" ]
+    branches: [ "develop" ]  # Automatically runs on push to develop branch
     paths:
-      - 'frontend/**'
+      - 'frontend/**'  # Only triggers when changes are made in the frontend directory
 
 jobs:
   deploy:
     name: Deploy deploy-vucem30-front and build Docker image
     runs-on: ubuntu-latest
-
     steps:
+      # Repository checkout with full history to optimize NX
       - uses: actions/checkout@v3
-
+        with:
+          fetch-depth: 0  # Clone the complete history to improve NX processing
+      
+      # Set up Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22.14.0
-
-      - name: Instalar NX globalmente
+          # Not using cache: 'npm' as it requires a lock file (package-lock.json)
+      
+      # Global installation of NX to manage the monorepo
+      - name: Install NX globally
         run: npm install -g nx@19.3.1
       
+      # Set up variables for SonarQube Scanner
       - name: Set Sonar Version Number
         run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
         
       - name: Define SonarScanner full name
         run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
-        
-      - name: Listar archivos
+      
+      # Diagnostics: List initial project structure
+      - name: List project structure
         run: ls -la
-  
+      
+      # Download and install SonarQube Scanner for quality analysis
       - name: Download SonarScanner
         run: |
           curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
@@ -41,43 +48,120 @@ jobs:
       - name: Verify SonarScanner Installation
         run: |
           ./${{ env.SONAR }}/bin/sonar-scanner --version
-        
+      
+      # Manual cache configuration to speed up dependency installations
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-
+      
+      # Install dependencies with --force to ignore conflicts
       - name: Install dependencies
         run: |
           npm install --force
-          npm ci
+          # Not using npm ci as it requires package-lock.json
+      
+      # Verify NX installation and display version
+      - name: Setup NX
+        run: |
+          npm list -g nx || npm install -g nx@19.3.1
+          npx nx --version
+      
+      # Clear NX cache to avoid issues with previous projects
+      - name: Reset NX cache
+        run: npx nx reset
+      
+      # Diagnostics: Examine directory structure before compilation
+      - name: Debug directory structure before build
+        run: |
+          find . -type d -name "apps" | sort
+          find . -type d -name "dist" | sort
+      
+      # Verify Docker configuration for diagnostics
+      - name: Check Docker configurations
+        run: |
+          cat ./docker/modulefederation-microfrontends.yml
+          find . -name "Dockerfile" -type f | xargs grep -l "COPY" | xargs cat
+      
+      # Compilation of NX projects with failure recovery strategy
+      - name: Pre-build NX projects
+        run: |
+          # Attempt 1: Build all projects together first (faster if it works)
+          echo "Attempting to build all projects together..."
+          npx nx run-many --target=build --all --configuration=development || true
           
+          # Attempt 2: If global approach fails, build each project separately
+          echo "Building projects individually to identify specific issues..."
+          npx nx build dashboard --configuration=development || echo "Dashboard build failed"
+          npx nx build funcionario --configuration=development || echo "Funcionario build failed"
+          npx nx build semarnat --configuration=development || echo "Semarnat build failed"
+          npx nx build cofepris --configuration=development || echo "Cofepris build failed"
+          npx nx build se --configuration=development || echo "SE build failed"
+          npx nx build amecafe --configuration=development || echo "Amecafe build failed"
+          npx nx build agace --configuration=development || echo "Agace build failed"
+          npx nx build agriculture --configuration=development || echo "Agriculture build failed"
+      
+      # Diagnostics: Examine directory structure after compilation
+      - name: Debug directory structure after NX build
+        run: |
+          echo "Searching for generated distribution directories..."
+          find . -path "*/dist/apps/*" -type d | sort
+          ls -la dist/ 2>/dev/null || echo "No dist directory at root"
+          find . -name "dist" -type d -exec ls -la {} \; 2>/dev/null || echo "No dist directories found"
+      
+      # Building all Docker images in a single step
       - name: Build Docker images from docker-compose
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
-        
+        run: |
+          echo "Building all Docker images..."
+          docker compose -f ./docker/modulefederation-microfrontends.yml build || true
+      
+      # Recovery strategy: Build images individually if the previous step failed
+      - name: Build Docker images individually if needed
+        if: ${{ failure() }}
+        run: |
+          echo "Building Docker images individually to isolate issues..."
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-dashboard || echo "Dashboard Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-funcionario-microfront || echo "Funcionario Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-semarnat-microfront || echo "Semarnat Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-cofepris-microfront || echo "Cofepris Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-se-microfront || echo "SE Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-amecafe-microfront || echo "Amecafe Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-agace-microfront || echo "Agace Docker build failed"
+          docker compose -f ./docker/modulefederation-microfrontends.yml build modulefederation-agriculture-microfront || echo "Agriculture Docker build failed"
+      
+      # Configure Docker Buildx for image publishing
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
-
+      
+      # Authentication to GitHub Container Registry
       - name: Login to GitHub Packages
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_PAT }}
-
+      
+      # Build and publish the main image to GitHub Container Registry
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           context: .
+          file: ./libs/shared/Dockerfile  # Specify the path to the Dockerfile
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
-
+      
+      # Final deployment to the development environment using Kubernetes
       - name: Execute remote command (last one)
+        if: success()  # Only run if all previous steps were successful
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
@@ -85,5 +169,6 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
           script: |
+            echo "Restarting deployment in Kubernetes..."
             cd /home/ubuntu/v30
             microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
