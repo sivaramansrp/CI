@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionAporteColumna } from '@ng-mf/data-access-user';
 import { EventEmitter } from '@angular/core';
-import {
-  ConfiguracionAporteColumna,
-  TablaCampoSeleccion,
-} from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { Input } from '@angular/core';
 import { Output } from '@angular/core';
+import { TablaCampoSeleccion } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
@@ -35,6 +33,10 @@ export class TablaConEntradaComponent<T> {
    */
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * @description Propiedad que asigna la enumeración `TablaCampoSeleccion` para su uso en el componente.
+   * Esta enumeración permite definir los diferentes tipos de selección disponibles en una tabla.
+   */
   tablaCampoSeleccion = TablaCampoSeleccion;
 
   /**
@@ -72,8 +74,16 @@ export class TablaConEntradaComponent<T> {
     true
   );
 
-  @Output() seleccionarFilaDeEntrada: EventEmitter<T> = new EventEmitter<T>(true);
-
+  /**
+   * @description Emisor de eventos que permite notificar cuando se selecciona una fila de entrada.
+   * El evento emite un valor genérico de tipo `T` y utiliza la configuración de emisión en modo `async`.
+   *
+   * @type {EventEmitter<T>}
+   * @property {boolean} async - Indica que el EventEmitter opera en modo asíncrono (`true`).
+   */
+  @Output() seleccionarFilaDeEntrada: EventEmitter<T> = new EventEmitter<T>(
+    true
+  );
 
   /**
    * Almacena el ID de la fila seleccionada.
@@ -126,16 +136,16 @@ export class TablaConEntradaComponent<T> {
    */
   cambiarEstadoCheckbox(event: Event, indice: number): void {
     // Obtener el checkbox desde el evento
-    const checkbox = event.target as HTMLInputElement;
+    const CHECKBOX = event.target as HTMLInputElement;
     // Verificamos si el checkbox está seleccionado
-    if (checkbox?.checked) {
+    if (CHECKBOX?.checked) {
       if (!this.filasSeleccionadas.includes(indice)) {
         this.filasSeleccionadas.push(indice);
       }
     } else {
-      const idx = this.filasSeleccionadas.indexOf(indice);
-      if (idx > -1) {
-        this.filasSeleccionadas.splice(idx, 1);
+      const IDX = this.filasSeleccionadas.indexOf(indice);
+      if (IDX > -1) {
+        this.filasSeleccionadas.splice(IDX, 1);
       }
     }
     this.listaDeFilaSeleccionada.emit(
@@ -151,9 +161,9 @@ export class TablaConEntradaComponent<T> {
    * @returns {void} - No retorna nada,
    */
   seleccionarDeseleccionarTodos(event: Event): void {
-    const checkbox = event.target as HTMLInputElement; // Obtener el checkbox desde el evento
+    const CHECKBOX = event.target as HTMLInputElement; // Obtener el checkbox desde el evento
 
-    if (checkbox.checked) {
+    if (CHECKBOX.checked) {
       // Si el checkbox de "seleccionar todo" está marcado, agregamos todos los índices al array
       this.filasSeleccionadas = this.datos.map((_, indice) => indice);
       this.listaDeFilaSeleccionada.emit(
@@ -168,10 +178,19 @@ export class TablaConEntradaComponent<T> {
     }
   }
 
+  /**
+   * @description Método para actualizar dinámicamente el valor de un campo específico en la fila de datos.
+   * Captura el valor introducido por el usuario y lo asigna al objeto correspondiente dentro del arreglo `datos`.
+   * Posteriormente, emite un evento con la fila actualizada.
+   *
+   * @param {Event} evento - Evento que contiene el valor del campo ingresado por el usuario.
+   * @param {number} i - Índice de la fila dentro del arreglo `datos` que se va a actualizar.
+   * @param {string} llave - Clave del campo que se actualizará en la fila correspondiente.
+   */
   changeInputValue(evento: Event, i: number, llave: string): void {
-    const VALUE = (evento.target as HTMLInputElement).value;
-    (this.datos[i] as Record<string, any>)[llave] = VALUE;
-    this.seleccionarFilaDeEntrada.emit(this.datos[i]);
+    const VALUE = (evento.target as HTMLInputElement).value; // Captura el valor ingresado
+    (this.datos[i] as Record<string, any>)[llave] = VALUE; // Actualiza el campo de la fila correspondiente
+    this.seleccionarFilaDeEntrada.emit(this.datos[i]); // Emite la fila actualizada
   }
 
   /**

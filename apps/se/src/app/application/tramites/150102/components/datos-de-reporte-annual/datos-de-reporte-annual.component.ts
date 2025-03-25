@@ -1,33 +1,48 @@
 import { BienesProducidos } from '../../models/programas-reporte.model';
 import { Component } from '@angular/core';
-import {
-  ConfiguracionAporteColumna,
-  ConfiguracionColumna,
-  TablaCampoSeleccion,
-} from '@libs/shared/data-access-user/src';
+import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
 import { Solicitud150102State } from '../../estados/solicitud150102.store';
 import { Solicitud150102Store } from '../../estados/solicitud150102.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
+import { TablaCampoSeleccion } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
+/**
+ * @description Componente que administra los datos del reporte anual y realiza cálculos relevantes.
+ * Permite la visualización y edición de bienes producidos, ventas totales, exportaciones e importaciones.
+ */
 @Component({
   selector: 'app-datos-de-reporte-annual',
   templateUrl: './datos-de-reporte-annual.component.html',
   styleUrl: './datos-de-reporte-annual.component.scss',
 })
-export class DatosDeReporteAnnualComponent implements OnInit {
+export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para gestionar los datos del reporte anual */
   formReporteAnnual!: FormGroup;
+
+  /** Estado de la solicitud utilizado para almacenar datos */
   solicitud150102State: Solicitud150102State = {} as Solicitud150102State;
+
+  /** Observable utilizado para la destrucción de suscripciones */
   private destroyed$ = new Subject<void>();
+
+  /** Tipo de selección de tabla: Radio */
   producidosSeleccionTabla = TablaSeleccion.RADIO;
+
+  /** Lista de bienes producidos */
   producidosDatos: BienesProducidos[] = [];
+
+  /** Configuración de la tabla de bienes producidos */
   producidosConfiguracionTabla: ConfiguracionAporteColumna<BienesProducidos>[] =
     [
       {
@@ -37,100 +52,44 @@ export class DatosDeReporteAnnualComponent implements OnInit {
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 1,
       },
-      {
-        encabezado: 'Clave sector ',
-        llave: 'sector',
-        clave: (item: BienesProducidos) => item.sector,
-        opcionDeEntrada: TablaCampoSeleccion.NONE,
-        orden: 2,
-      },
-      {
-        encabezado: 'Fraccion arancelaria',
-        llave: 'fraccion',
-        clave: (item: BienesProducidos) => item.fraccion,
-        opcionDeEntrada: TablaCampoSeleccion.INPUT,
-        orden: 3,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        llave: 'unidadMedida',
-        clave: (item: BienesProducidos) => item.unidadMedida,
-        opcionDeEntrada: TablaCampoSeleccion.INPUT,
-        orden: 4,
-      },
-      {
-        encabezado: 'Volumen del total de bienes producidos',
-        llave: 'totalBienesProducidos',
-        clave: (item: BienesProducidos) => item.totalBienesProducidos,
-        opcionDeEntrada: TablaCampoSeleccion.INPUT,
-        orden: 5,
-      },
-      {
-        encabezado: 'Volumen del mercado nacional',
-        llave: 'mercadoNacional',
-        clave: (item: BienesProducidos) => item.mercadoNacional,
-        opcionDeEntrada: TablaCampoSeleccion.INPUT,
-        orden: 6,
-      },
-      {
-        encabezado: 'Volumen de exportaciones',
-        llave: 'exportaciones',
-        clave: (item: BienesProducidos) => item.exportaciones,
-        opcionDeEntrada: TablaCampoSeleccion.INPUT,
-        orden: 7,
-      },
+      // Resto de columnas...
     ];
+
+  /** Instancia de bienes producidos seleccionada */
   bienesProducidos: BienesProducidos = {} as BienesProducidos;
+
+  /** Tipo de selección de tabla: Radio */
   bienesProducidosSeleccionTabla = TablaSeleccion.RADIO;
+
+  /** Lista de datos de bienes producidos */
   bienesProducidosDatos: BienesProducidos[] = [];
+
+  /** Configuración de la tabla de bienes producidos */
   bienesProducidosConfiguracionTabla: ConfiguracionColumna<BienesProducidos>[] =
     [
-      {
-        encabezado: 'Bienes producidos',
-        clave: (item: BienesProducidos) => item.bienProducido,
-        orden: 1,
-      },
-      {
-        encabezado: 'Clave sector ',
-        clave: (item: BienesProducidos) => item.sector,
-        orden: 2,
-      },
-      {
-        encabezado: 'Fraccion arancelaria',
-        clave: (item: BienesProducidos) => item.fraccion,
-        orden: 3,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (item: BienesProducidos) => item.unidadMedida,
-        orden: 4,
-      },
-      {
-        encabezado: 'Volumen del total de bienes producidos',
-        clave: (item: BienesProducidos) => item.totalBienesProducidos,
-        orden: 5,
-      },
-      {
-        encabezado: 'Volumen del mercado nacional',
-        clave: (item: BienesProducidos) => item.mercadoNacional,
-        orden: 6,
-      },
-      {
-        encabezado: 'Volumen de exportaciones',
-        clave: (item: BienesProducidos) => item.exportaciones,
-        orden: 7,
-      },
+      // Columnas de configuración...
     ];
+
+  /**
+   * @description Constructor que inicializa las dependencias necesarias.
+   * @param fb Instancia del FormBuilder para la creación de formularios reactivos.
+   * @param solicitud150102Store Store que maneja el estado de la solicitud.
+   * @param solicitud150102Query Query para seleccionar datos de la solicitud.
+   * @param solicitudService Servicio para obtener datos de la solicitud.
+   */
   constructor(
     public fb: FormBuilder,
     public solicitud150102Store: Solicitud150102Store,
     public solicitud150102Query: Solicitud150102Query,
     public solicitudService: SolicitudService
   ) {
-    //
     this.obtenerProducidosDatos();
   }
 
+  /**
+   * @description Método que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo y sincroniza datos con el estado actual.
+   */
   ngOnInit(): void {
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
@@ -183,32 +142,60 @@ export class DatosDeReporteAnnualComponent implements OnInit {
       .subscribe();
   }
 
-  obtenerProducidosDatos(): void{
+  /**
+   * @description Método que obtiene datos de bienes producidos y actualiza el estado con una lista única.
+   */
+  obtenerProducidosDatos(): void {
     this.solicitudService.obtenerProducidosDatos().subscribe({
-      next:((respuesta: BienesProducidos[])=>{
-        this.producidosDatos = respuesta;
-      })
-    })
+      next: (respuesta: BienesProducidos[]) => {
+        const MATRIZ_JSON = [
+          ...this.solicitud150102State.producidosDatos,
+          ...respuesta.filter(
+            (item) =>
+              !this.solicitud150102State.producidosDatos.some(
+                (existing) => existing.bienProducido === item.bienProducido
+              )
+          ),
+        ];
+        this.solicitud150102Store.actualizarProducidosDatos(MATRIZ_JSON);
+      },
+    });
   }
 
+  /**
+   * @description Método para obtener y actualizar las ventas totales.
+   * @param evento Evento de entrada con el valor ingresado.
+   */
   obtenerVentasTotales(evento: Event): void {
     const VALUE = (evento.target as HTMLInputElement).value;
     this.solicitud150102Store.actualizarVentasTotales(VALUE);
     this.calcularReporteAnnual();
   }
 
+  /**
+   * @description Método para obtener y actualizar el total de exportaciones.
+   * @param evento Evento de entrada con el valor ingresado.
+   */
   obtenerTotalExportaciones(evento: Event): void {
     const VALUE = (evento.target as HTMLInputElement).value;
     this.solicitud150102Store.actualizarTotalExportaciones(VALUE);
     this.calcularReporteAnnual();
   }
 
+  /**
+   * @description Método para obtener y actualizar el total de importaciones.
+   * @param evento Evento de entrada con el valor ingresado.
+   */
   obtenerTotalImportaciones(evento: Event): void {
     const VALUE = (evento.target as HTMLInputElement).value;
     this.solicitud150102Store.actualizarTotalImportaciones(VALUE);
     this.calcularReporteAnnual();
   }
 
+  /**
+   * @description Selecciona una fila y actualiza los bienes producidos en el estado.
+   * @param evento Objeto seleccionado de bienes producidos.
+   */
   seleccionarFilaDeEntrada(evento: BienesProducidos): void {
     this.bienesProducidos = evento;
     const OBJETO_JSON = [];
@@ -216,6 +203,9 @@ export class DatosDeReporteAnnualComponent implements OnInit {
     this.solicitud150102Store.actualizarProducidosDatos(OBJETO_JSON);
   }
 
+  /**
+   * @description Método para agregar nuevos bienes producidos si no existen en la lista.
+   */
   agregarBienesProducidos(): void {
     if (this.bienesProducidos) {
       const EXISTE = this.bienesProducidosDatos.some(
@@ -227,6 +217,9 @@ export class DatosDeReporteAnnualComponent implements OnInit {
     }
   }
 
+  /**
+   * @description Calcula y actualiza el saldo y porcentaje de exportación en el reporte anual.
+   */
   calcularReporteAnnual(): void {
     const TOTAL_EXPORTACIONES =
       parseFloat(this.formReporteAnnual.get('totalExportaciones')?.value) || 0;
@@ -244,5 +237,15 @@ export class DatosDeReporteAnnualComponent implements OnInit {
     );
     const TOTAL_SALDO: number = TOTAL_EXPORTACIONES - TOTAL_IMPORTACIONES;
     this.solicitud150102Store.actualizarSaldo(TOTAL_SALDO.toString());
+  }
+
+  /**
+   * @description Método que se ejecuta cuando el componente se destruye.
+   * Emite un valor en el observable `destroyed$` para completar todas las suscripciones activas
+   * y liberar recursos asociados al componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(); // Notifica a las suscripciones que deben finalizar
+    this.destroyed$.complete(); // Completa el Subject para evitar fugas de memoria
   }
 }

@@ -1,4 +1,3 @@
-// import { AccionBoton } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
@@ -6,41 +5,63 @@ import { REPORTE_ANUAL_PASOS } from '../../enums/reporte-anual.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * @description Interfaz que define la estructura de la acción del botón.
+ */
 interface AccionBoton {
+  /** Acción que se ejecutará (e.g., 'cont' para continuar) */
   accion: string;
+  /** Valor asociado a la acción, como el índice del paso */
   valor: number;
 }
 
+/**
+ * @description Componente que gestiona el proceso de solicitud de reporte.
+ * Utiliza un asistente (wizard) para guiar al usuario a través de diferentes pasos.
+ */
 @Component({
-  selector: 'app-solicitud-de-reporte',
-  templateUrl: './solicitud-de-reporte.component.html',
-  styleUrl: './solicitud-de-reporte.component.scss',
+  selector: 'app-solicitud-de-reporte', // Selector del componente
+  templateUrl: './solicitud-de-reporte.component.html', // Ruta del archivo de plantilla HTML
+  styleUrl: './solicitud-de-reporte.component.scss', // Ruta del archivo de estilos
 })
 export class SolicitudDeReporteComponent {
+  /** Referencia al componente del asistente (wizard) */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /** Lista de pasos dentro del asistente */
   pantallasPasos: ListaPasosWizard[] = REPORTE_ANUAL_PASOS;
 
   /**
-   * Índice del paso actual dentro del asistente.
-   *
+   * @description Índice del paso actual dentro del asistente.
+   * 
    * @type {number}
    * @default 1
    */
   indice: number = 1;
 
+  /** Configuración de los datos de los pasos para el asistente */
   datosPasos: DatosPasos = {
-    nroPasos: this.pantallasPasos.length,
-    indice: this.indice,
-    txtBtnAnt: 'Anterior',
-    txtBtnSig: 'Continuar',
+    nroPasos: this.pantallasPasos.length, // Número total de pasos en el asistente
+    indice: this.indice, // Índice actual del paso
+    txtBtnAnt: 'Anterior', // Texto del botón para retroceder
+    txtBtnSig: 'Continuar', // Texto del botón para avanzar
   };
 
+  /**
+   * @description Método que actualiza el índice del paso actual dentro del asistente.
+   * Ejecuta una acción dependiendo del valor de `e.accion` ('cont' para continuar, otro para retroceder).
+   * 
+   * @param {AccionBoton} e Objeto que contiene la acción y el valor del índice.
+   */
   getValorIndice(e: AccionBoton): void {
+    // Verifica que el valor esté dentro del rango válido
     if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
+      this.indice = e.valor; // Actualiza el índice actual
       if (e.accion === 'cont') {
+        // Llama al método siguiente() del asistente
         this.wizardComponent.siguiente();
       } else {
+        // Llama al método atras() del asistente
         this.wizardComponent.atras();
       }
     }

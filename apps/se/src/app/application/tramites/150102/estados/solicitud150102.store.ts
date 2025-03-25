@@ -3,21 +3,41 @@ import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 
+/**
+ * @description Interfaz que define el estado de la solicitud.
+ * Contiene propiedades relacionadas con los datos de reporte anual.
+ */
 export interface Solicitud150102State {
+  /** Fecha de inicio del reporte */
   inicio: string;
+  /** Fecha de fin del reporte */
   fin: string;
+  /** Folio del programa asociado a la solicitud */
   folioPrograma: string;
+  /** Modalidad del programa */
   modalidad: string;
+  /** Tipo de programa */
   tipoPrograma: string;
+  /** Estatus del programa */
   estatus: string;
+  /** Ventas totales */
   ventasTotales: string;
+  /** Total de exportaciones */
   totalExportaciones: string;
+  /** Total de importaciones */
   totalImportaciones: string;
+  /** Saldo calculado */
   saldo: string;
+  /** Porcentaje de exportación calculado */
   porcentajeExportacion: string;
+  /** Lista de bienes producidos */
   producidosDatos: BienesProducidos[];
 }
 
+/**
+ * @description Función que crea el estado inicial de la solicitud.
+ * @returns El estado inicial de la solicitud con valores predeterminados.
+ */
 export function createInitialState(): Solicitud150102State {
   return {
     inicio: '',
@@ -31,19 +51,30 @@ export function createInitialState(): Solicitud150102State {
     totalImportaciones: '',
     saldo: '0',
     porcentajeExportacion: '0',
-    producidosDatos:[]
+    producidosDatos: [],
   };
 }
 
+/**
+ * @description Servicio que gestiona el estado de la solicitud utilizando Akita.
+ * Proporciona métodos para actualizar distintas propiedades del estado.
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'solicitud150102Store', resettable: true })
 export class Solicitud150102Store extends Store<Solicitud150102State> {
+  /**
+   * @description Constructor que inicializa el store con el estado inicial.
+   */
   constructor() {
     super(createInitialState());
   }
 
+  /**
+   * @description Actualiza la fecha de fin del reporte.
+   * @param fin Fecha de fin como una cadena.
+   */
   actualizarFin(fin: string): void {
     this.update((state) => ({
       ...state,
@@ -51,6 +82,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
+  /**
+   * @description Actualiza el folio del programa.
+   * @param folioPrograma Folio del programa como una cadena.
+   */
   actualizarFolioPrograma(folioPrograma: string): void {
     this.update((state) => ({
       ...state,
@@ -58,6 +93,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
+  /**
+   * @description Actualiza la modalidad del programa.
+   * @param modalidad Modalidad del programa como una cadena.
+   */
   actualizarModalidad(modalidad: string): void {
     this.update((state) => ({
       ...state,
@@ -65,6 +104,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
+  /**
+   * @description Actualiza el tipo de programa.
+   * @param tipoPrograma Tipo de programa como una cadena.
+   */
   actualizarTipoPrograma(tipoPrograma: string): void {
     this.update((state) => ({
       ...state,
@@ -72,6 +115,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
+  /**
+   * @description Actualiza el estatus del programa.
+   * @param estatus Estatus del programa como una cadena.
+   */
   actualizarEstatus(estatus: string): void {
     this.update((state) => ({
       ...state,
@@ -79,6 +126,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
+  /**
+   * @description Actualiza la fecha de inicio del reporte.
+   * @param inicio Fecha de inicio como una cadena.
+   */
   actualizarInicio(inicio: string): void {
     this.update((state) => ({
       ...state,
@@ -86,6 +137,10 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
+  /**
+   * @description Actualiza las ventas totales.
+   * @param ventasTotales Ventas totales como una cadena.
+   */
   actualizarVentasTotales(ventasTotales: string): void {
     this.update((state) => ({
       ...state,
@@ -93,34 +148,54 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     }));
   }
 
-actualizarTotalExportaciones(totalExportaciones: string): void {
+  /**
+   * @description Actualiza el total de exportaciones.
+   * @param totalExportaciones Total de exportaciones como una cadena.
+   */
+  actualizarTotalExportaciones(totalExportaciones: string): void {
     this.update((state) => ({
       ...state,
       totalExportaciones,
     }));
   }
 
-actualizarTotalImportaciones(totalImportaciones: string): void {
+  /**
+   * @description Actualiza el total de importaciones.
+   * @param totalImportaciones Total de importaciones como una cadena.
+   */
+  actualizarTotalImportaciones(totalImportaciones: string): void {
     this.update((state) => ({
       ...state,
       totalImportaciones,
     }));
   }
 
-actualizarSaldo(saldo: string): void {
+  /**
+   * @description Actualiza el saldo calculado.
+   * @param saldo Saldo como una cadena.
+   */
+  actualizarSaldo(saldo: string): void {
     this.update((state) => ({
       ...state,
       saldo,
     }));
   }
 
-actualizarPorcentajeExportacion(porcentajeExportacion: string): void {
+  /**
+   * @description Actualiza el porcentaje de exportación calculado.
+   * @param porcentajeExportacion Porcentaje de exportación como una cadena.
+   */
+  actualizarPorcentajeExportacion(porcentajeExportacion: string): void {
     this.update((state) => ({
       ...state,
       porcentajeExportacion,
     }));
   }
 
+  /**
+   * @description Actualiza la lista de bienes producidos.
+   * @param producidosDatos Arreglo de bienes producidos.
+   */
   actualizarProducidosDatos(producidosDatos: BienesProducidos[]): void {
     this.update((state) => ({
       ...state,
@@ -128,4 +203,10 @@ actualizarPorcentajeExportacion(porcentajeExportacion: string): void {
     }));
   }
 
+  /**
+   * Restablece el estado de la tienda a su estado inicial.
+   */
+  resetStore(): void {
+    this.reset();
+  }
 }
