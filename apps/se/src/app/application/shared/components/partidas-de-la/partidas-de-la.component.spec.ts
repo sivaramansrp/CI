@@ -16,7 +16,7 @@ describe('PartidasDeLaComponent', () => {
     component = fixture.componentInstance;
 
     // Initialize inputs
-    component.form = new FormBuilder().group({
+    component.partidasDelaMercanciaForm = new FormBuilder().group({
       cantidad: [''],
       descripcion: [''],
     });
@@ -78,15 +78,15 @@ describe('PartidasDeLaComponent', () => {
   });
 
   it('should return true if form control is invalid in esInvalido', () => {
-    component.form.get('cantidad')?.setValidators(() => ({ invalid: true }));
-    component.form.get('cantidad')?.markAsTouched();
+    component.partidasDelaMercanciaForm.get('cantidad')?.setValidators(() => ({ invalid: true }));
+    component.partidasDelaMercanciaForm.get('cantidad')?.markAsTouched();
 
     expect(component.esInvalido('cantidad')).toBe(true);
   });
 
   it('should return false if form control is valid in esInvalido', () => {
-    component.form.get('cantidad')?.setValidators(() => null);
-    component.form.get('cantidad')?.markAsTouched();
+    component.partidasDelaMercanciaForm.get('cantidad')?.setValidators(() => null);
+    component.partidasDelaMercanciaForm.get('cantidad')?.markAsTouched();
 
     expect(component.esInvalido('cantidad')).toBe(false);
   });
