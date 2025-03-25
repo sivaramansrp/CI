@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable sort-imports */
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, QueryList} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -19,6 +19,8 @@ import { PreOperativo } from '../../models/datos-modificacion.model';
 import { DATOS_PRODUCTO } from '../../constantes/datos-scian.enum';
 import { DatosProducto } from '../../models/datos-modificacion.model';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { CROSLISTA_DE_PAISES } from '../../constantes/datos-producto.enum';
+import { CrossListLable } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-domicilio-del-establecimiento',
@@ -28,6 +30,7 @@ import { CrosslistComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+  @ViewChild(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   domicilioForm!: FormGroup;
   claveScianForm!: FormGroup;
   DatosMercanciaForm!: FormGroup;
@@ -35,12 +38,36 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   claveScian:Catalogo[] = [];
   radioOptions: PreOperativo[] = [];
   descripcionScian:Catalogo[] = [];
+  clasificacionProducto:Catalogo[] = [];
   private destroy$ = new Subject<void>();
   /** Enum para la selección de tablas */
   TablaSeleccion = TablaSeleccion;
   configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
   datosData: ScianData [] = [];
   colapsable: boolean = false;
+    /**
+   * Lista de países para la selección de origen.
+   */
+    public crosListaDePaises = CROSLISTA_DE_PAISES;
+    /**
+   * Lista de países para seleccionar el origen de la primera sección.
+   */
+    seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+    public paisDeProcedenciaLabel: CrossListLable = {
+      tituluDeLaIzquierda: 'Uso específico:',
+      derecha: 'Uso específico seleccionado*:',
+    };
+    
+  /**
+ * Botones de acción para gestionar listas de países en la primera sección.
+ */
+  paisDeProcedenciaBotons = [
+    { btnNombre: 'Agregar todos', class: 'btn-primary', funcion: ():void => this.crossList.toArray()[0].agregar('t') },
+    { btnNombre: 'Agregar selección', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].agregar('') },
+    { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[0].quitar('') },
+    { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[0].quitar('t') },
+  ];
+
   configuracionTablaProductoDatos: ConfiguracionColumna<DatosProducto>[] = DATOS_PRODUCTO.map(col => ({
     ...col,
     clave: (item: DatosProducto) => {
@@ -89,10 +116,15 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     this.obtenerDatosClave();
     this.obtenerDatosDescripcion();
     this.obtenerDatosPreOperativo();
+    this.obtenerclassificacionProductos();
+
 
   } 
   
-
+  mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+  
   cargarEstadoData(): void {
     this.datosService.obtenerEstadoData()
       .pipe(takeUntil(this.destroy$))
@@ -144,6 +176,15 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         this.radioOptions = resp;
       });
+  }
+
+  obtenerclassificacionProductos(): void {
+    this.datosService
+    .obtenerClasificationProductos()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((resp) => {
+      this.clasificacionProducto = resp;
+    });
   }
 
   /**

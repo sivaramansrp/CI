@@ -39,5 +39,9 @@ export class DatosService {
   obtenerDatosProducto(): Observable<DatosProducto[]> {
     return this.http.get<DatosProducto[]>('assets/json/260603/datos-producto.json');
   }
+  obtenerClasificationProductos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260603/clasificacion-producto.json');
+  }
 
+  
 }
