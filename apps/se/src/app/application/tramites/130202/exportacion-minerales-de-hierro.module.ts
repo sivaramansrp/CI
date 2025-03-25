@@ -11,8 +11,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 
 import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
+
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
-import { PartidasDeLaComponent } from '../../shared/components/partidas-de-la/partidas-de-la.component';
+import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
@@ -35,7 +36,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PasoDosComponent,
     DetosDelTramiteComponent,
     DetosDeLaMercanciaComponent,
-    PartidasDeLaComponent,
+    PartidasDeLaMercanciaComponent,
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,

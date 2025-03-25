@@ -14,7 +14,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 /**
- * PartidasDeLaComponent
+ * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
  * Proporciona un formulario para capturar datos, una tabla dinámica para mostrar información
  * y eventos para interactuar con otros componentes o servicios.
@@ -32,10 +32,10 @@ import { TableComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     TablaDinamicaComponent,
   ],
-  templateUrl: './partidas-de-la.component.html',
-  styleUrl: './partidas-de-la.component.scss',
+  templateUrl: './partidas-de-la-mercancia.component.html',
+  styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaComponent {
+export class PartidasDeLaMercanciaComponent {
   /**
    * form
    * Formulario reactivo principal para capturar los datos de las partidas.
@@ -103,7 +103,7 @@ export class PartidasDeLaComponent {
    * FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
-    //  Constructor de la
+    //  Constructor del componente
   }
 
   /**

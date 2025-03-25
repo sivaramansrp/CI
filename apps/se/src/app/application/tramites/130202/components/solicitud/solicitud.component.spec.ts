@@ -8,7 +8,7 @@ import { ExportacionMineralesDeHierroService } from '../../services/exportacion-
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOption } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { PartidasDeLaComponent } from '../../../../shared/components/partidas-de-la/partidas-de-la.component';
+import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { DetosDelTramiteComponent } from '../../../../shared/components/detos-de-tramite/detos-del-tramite.component';
 import { DetosDeLaMercanciaComponent } from '../../../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component';
 import { PaisProcendenciaComponent } from '../../../../shared/components/pais-procendencia/pais-procendencia.component';
@@ -92,7 +92,7 @@ describe('SolicitudComponent', () => {
       imports: [
         ReactiveFormsModule,
         DetosDelTramiteComponent,
-        PartidasDeLaComponent,
+        PartidasDeLaMercanciaComponent,
         DetosDeLaMercanciaComponent,
         PaisProcendenciaComponent,
         RepresentacionComponent,
