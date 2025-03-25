@@ -25,6 +25,7 @@ import { RequisitosComponent } from '../components/requisitos/requisitos.compone
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { provideHttpClient } from '@angular/common/http';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [DatosComponent, PantallasComponent, FirmarSolicitudComponent],
@@ -55,7 +56,8 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
   providers: [
     ServiciosPantallaService,
     provideHttpClient(),
-    ToastrService
+    ToastrService,
+    BsModalService
     
   ]
 })
