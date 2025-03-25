@@ -70,4 +70,9 @@ getMediaDeTransporte(): Observable<Catalogo[]>{
   return this.http.get<Catalogo[]>('./assets/json/290201/mediodetransporte.json');
 
 }
+
+getPaisData(): Observable<Catalogo[]>{
+  return this.http.get<Catalogo[]>('./assets/json/290201/paisdeimportacion.json');
+
+}
 }

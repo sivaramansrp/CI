@@ -1,12 +1,47 @@
 <div class="col-md-12">
     <ng-titulo titulo="Destinatario (destino final)" />
-    <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table>
+    <!-- <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table> -->
+    <table class="table table-responsive">
+      <thead>
+        <tr>
+          <th><input type="checkbox"></th>
+          <th>Tipo persona</th>
+          <th>Denominación/razón social*</th>
+          <th>Domicilio</th>
+          <th>Pais</th>
+          <th>Codigo postal</th>
+          <th>Telefono</th>
+          <th>Correo electronico</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of newDestinatarioData; let i=index">
+          <td class="text-center">
+            <input type="checkbox" (change)="onSelectRow(item, $event)" />
+          </td>
+          <td class="text-center">{{item.tipoPersona}}</td>
+          <td class="text-center">{{item.denominacion}}</td>
+          <td class="text-center">{{item.domicilio}}</td>
+          <td class="text-center">{{item.paisData}}</td>
+          <td class="text-center">{{item.codigopostal}}</td>
+          <td class="text-center">{{item.telefono}}</td>
+          <td class="text-center">{{item.correoelectronica}}</td>
+        </tr>
+      </tbody>
+
+    </table>
+    <div class="btn-group">
+      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)="onModify()">Modificar</button>
+      <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)="onDelete()">Eliminar</button>
+      <button class="btn btn-primary me-2" type="button">Continuar</button>
+    </div>
 </div>
 
-<div class="container">
-    <form [formGroup]="destinatarioForm" >
+<div class="container"  *ngIf="isFormVisible">
+    <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
         <ng-titulo titulo="Datos personales" />
-        <ng-container formGroupName="destinatarioForm">
+        <!-- <ng-container formGroupName="destinatarioForm"> -->
             <div class="row mb-3">
               <div class="col-md-12">
                 <label class="form-label" for="tipoPersona">Tipo persona*:</label>
@@ -22,7 +57,7 @@
                 <label for="moral">Moral</label>
               </div>
             </div>
-          </ng-container>
+          <!-- </ng-container> -->
         
             <div class="row">
               <div class="col-md-8 mb-3">
@@ -30,6 +65,56 @@
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"/>
               </div>
             </div>
-        
+            <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label class="form-label" for="domicilio">Domicilio</label>
+                <textarea class="form-control" id="domicilio" rows="2" height="50"
+                placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"></textarea>
+              </div>
+            </div>
+            </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <app-catalogo-select
+                id="paisData"
+                formControlName="paisData"
+                [catalogo]="paisData.catalogos"
+                [label]="'Pais'"
+                [placeholder]="paisData.primerOpcion"
+                [required]="true"
+              ></app-catalogo-select>
+             </div>
+          </div>
+          </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="codigopostal">Codigo postal:</label>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="telefono">Telefono:</label>
+                <input class="form-control" id="telefono" type="text" formControlName="telefono"/>
+              </div>
+                <div class="col-md-4 mb-3">
+                  <label class="form-label" for="correoelectronica">Correo electronico:</label>
+                  <input class="form-control" id="correoelectronica" type="text" formControlName="correoelectronica"/>
+                </div>
+            </div>
+            <div class="col-md-12 d-flex justify-content-end">
+       
+              <div class="btn-group">
+                <button class="btn btn-danger"
+                  type="button">Cancelar</button>
+                  <button class="btn btn-primary me-2"
+                  type="button"(click)="onLimpiar()">Limpiar</button>
+                  <button class="btn btn-primary me-2"
+                  type="button" (click)="onSubmit()">Guardar</button>
+              </div>
+            
+          </div>
     </form>
 </div>

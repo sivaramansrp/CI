@@ -5,6 +5,8 @@ import { Catalogo, CatalogosSelect, TituloComponent } from '@libs/shared/data-ac
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-datos-del-cafe',
   standalone: true,
@@ -73,8 +75,20 @@ export class DatosDelCafeComponent {
     
   
   constructor(
-      private registrarsolicitud: RegistrarSolicitudService
-    ){}
+      private registrarsolicitud: RegistrarSolicitudService,
+      private fb: FormBuilder,
+    ){
+      this.dataCafeForm = this.fb.group({
+        envasadoen: ['', Validators.required],
+        utilizoCafeComo:['',Validators.required],
+              domicilio:['',Validators.required],
+              paisData:['',Validators.required],
+              codigopostal:['',Validators.required],
+              telefono:['',Validators.required],
+              correoelectronica:['',Validators.required]
+      
+            })
+    }
 
     ngOnInit(): void {
          this.getEnvasadoenData();
