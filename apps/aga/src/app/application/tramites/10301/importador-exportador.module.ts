@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent,FirmaElectronicaComponent, InputRadioComponent, ServiciosExtraordinariosService, SolicitanteComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent,FirmaElectronicaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TituloComponent, TramiteFolioService, WizardComponent } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -45,7 +45,7 @@ providers: [
   ToastrService,
   ImportadorExportadorService,
   CatalogosService,
-  ServiciosExtraordinariosService
+  TramiteFolioService
 ],
 schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
