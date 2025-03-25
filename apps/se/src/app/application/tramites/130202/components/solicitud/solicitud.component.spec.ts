@@ -153,7 +153,7 @@ describe('SolicitudComponent', () => {
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
-      jest.spyOn(component, 'configuraciónFormularioSuscripciones');
+      jest.spyOn(component, 'configuracionFormularioSuscripciones');
       jest.spyOn(component, 'opcionesDeBusqueda');
       jest.spyOn(component, 'formularioTotalCount');
       jest.spyOn(component, 'getEstablecimiento');
@@ -165,7 +165,7 @@ describe('SolicitudComponent', () => {
       component.ngOnInit();
 
       expect(component.inicializarFormularios).toHaveBeenCalled();
-      expect(component.configuraciónFormularioSuscripciones).toHaveBeenCalled();
+      expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
       expect(component.getEstablecimiento).toHaveBeenCalled();

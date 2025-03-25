@@ -183,7 +183,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarFormularios();
-    this.configuraciónFormularioSuscripciones();
+    this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.getEstablecimiento();
@@ -295,7 +295,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Configura las suscripciones para actualizar formularios y almacenar estados.
    */
-  configuraciónFormularioSuscripciones(): void {
+  configuracionFormularioSuscripciones(): void {
     this.tramite130202Query.solicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((solicitud) => {
