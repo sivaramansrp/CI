@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 /**
  * Interfaz que representa las etiquetas de la lista cruzada.
  * 
@@ -20,102 +20,163 @@ export interface CrossListLable {
   host: {}
 })
 export class CrosslistComponent implements OnInit, OnChanges {
-  @Input({ required: true }) fechas!: string[];
+
   @Input() botonField: any;
   @Input() botones: any;
+
   @Input() label: CrossListLable | undefined;
-  fechasDatos: string[] = [];
-  @Input() fechasSeleccionadas: string[] = [];
-  fecha: FormControl = new FormControl('');
-  fechaSeleccionada: FormControl = new FormControl('',[Validators.required]);
   @Input() showSearchInput1: boolean = false;
   @Input() showSearchInput2: boolean = false;
+
   @Output() fechasSeleccionadasChange = new EventEmitter<string[]>();
-  ngOnInit() {
-    this.fechasDatos = [...this.fechas];
+
+  @Input() fechasSeleccionadas: string[] = []; 
+  @Input() fechas: string[] = []; 
+  fecha: FormControl = new FormControl('');
+  fechaSeleccionada: FormControl = new FormControl('', [Validators.required]);
+  fechasDatos: string[] = [];
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * - Verifica si la propiedad `botones` está definida. Si no lo está, llama al método
+   *   `setButtonDefault` para establecer un valor predeterminado.
+   */
+  ngOnInit(): void {
     if (!this.botones) {
       this.setButtonDefault();
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['fechas']?.currentValue) {
-      this.fechas = [...changes['fechas']?.currentValue];
-      this.fechasDatos = [...this.fechas]
-    }
-    const set1 = new Set(this.fechasSeleccionadas);
-      for (let i = this.fechasDatos.length - 1; i >= 0; i--) {
-        if (set1.has(this.fechasDatos[i])) {
-          this.fechasDatos.splice(i, 1);
-        }
-      }
-  }
   /**
-   * Establece los botones predeterminados para la interfaz de usuario.
+   * @inheritdoc
+   * Este método se ejecuta cuando cambian las propiedades de entrada del componente.
    * 
-   * Este método configura un conjunto de botones con sus nombres, clases CSS y funciones asociadas.
-   * Los botones incluyen opciones para agregar, agregar todas, quitar y quitar todas.
+   * @param changes - Un objeto de tipo `SimpleChanges` que contiene los cambios en las propiedades de entrada.
    * 
-   * @returns {void}
+   * ### Descripción:
+   * - Si la propiedad `fechas` cambia y tiene un valor actual, se actualiza la lista de fechas.
+   * - Si `fechasSeleccionadas` no tiene elementos, se asigna la lista completa de fechas a `fechasDatos`.
+   * - Si `fechasSeleccionadas` tiene elementos, se filtran las fechas para excluir las seleccionadas y se asignan a `fechasDatos`.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['fechas'] && changes['fechas'].currentValue) {
+      this.fechas = [...changes['fechas'].currentValue];
+
+      if ( changes['fechasSeleccionadas'].currentValue.length === 0) {
+        this.fechasDatos = [...this.fechas];
+      } else {
+        this.fechasSeleccionadas = [...changes['fechasSeleccionadas'].currentValue];
+        this.fechasDatos = this.fechas.filter(fecha => !this.fechasSeleccionadas.includes(fecha));
+      }
+    }
+  }
+
+  /**
+   * Configura los botones predeterminados para el componente Crosslist.
+   * 
+   * Esta función inicializa un arreglo de botones con sus propiedades y funciones asociadas.
+   * Cada botón tiene un nombre, una clase CSS y una función que se ejecuta al hacer clic.
+   * 
+   * Botones configurados:
+   * - "Agregar": Ejecuta la función `agregar` con un parámetro vacío.
+   * - "Agregar todas": Ejecuta la función `agregar` con el parámetro 't'.
+   * - "Quitar": Ejecuta la función `quitar` con un parámetro vacío.
+   * - "Quitar todas": Ejecuta la función `quitar` con el parámetro 't'.
    */
   setButtonDefault(): void {
     this.botones = [
       {
         btnNombre: 'Agregar',
         class: 'btn-primary',
-        funcion: () => this.agregar(''),
+        funcion: (): void => this.agregar(''),
       },
       {
         btnNombre: 'Agregar todas',
         class: 'btn-default',
 
-        funcion: () => this.agregar('t'),
+        funcion: (): void => this.agregar('t'),
       },
       {
         btnNombre: 'Quitar',
         class: 'btn-danger',
 
-        funcion: () => this.quitar(''),
+        funcion: (): void => this.quitar(''),
       },
       {
         btnNombre: 'Quitar todas',
         class: 'btn-default',
 
-        funcion: () => this.quitar('t'),
+        funcion: (): void => this.quitar('t'),
       },
     ];
-
   }
 
-
-  agregar(type: string) {
+  /**
+   * Agrega fechas seleccionadas o actualiza las listas de fechas según el tipo especificado.
+   *
+   * @param type - Un string que indica el tipo de operación a realizar:
+   *               - 't': Copia todas las fechas actuales a la lista de fechas seleccionadas y limpia la lista de datos de fechas.
+   *               - Cualquier otro valor: Agrega una fecha seleccionada desde la lista de datos de fechas y la elimina de esta última.
+   *
+   * Este método actualiza las propiedades internas `fechasSeleccionadas` y `fechasDatos`,
+   * y sincroniza estos cambios con el estado del `crosslistStore`. Además, emite un evento
+   * para notificar los cambios en las fechas seleccionadas.
+   */
+  agregar(type: string): void {
     if (type === 't') {
       this.fechasSeleccionadas = [...this.fechas];
       this.fechasDatos = [];
     } else {
-      const fechaValor = this.fecha.value.map(Number);
+      const FECHA_VALOR = this.fecha.value.map(Number);
       this.fechasSeleccionadas = Object.assign([], this.fechasSeleccionadas);
-      this.fechasSeleccionadas.push(this.fechasDatos[fechaValor]);
-      this.fechasDatos.splice(fechaValor, 1);
+      this.fechasSeleccionadas.push(this.fechasDatos[FECHA_VALOR]);
+      this.fechasDatos.splice(FECHA_VALOR, 1);
     }
+
     this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
   }
 
-  quitar(type: string = '') {
+  /**
+   * Elimina elementos de las listas de fechas según el tipo especificado.
+   *
+   * @param type - Un string que indica el tipo de operación a realizar.
+   *               Si es 't', se restablecen las listas de fechas a su estado inicial.
+   *               Si es cualquier otro valor, se elimina una fecha seleccionada y se agrega de nuevo a la lista de fechas disponibles.
+   *
+   * - Cuando `type` es 't':
+   *   - Se restablece la lista `fechasDatos` con los valores originales de `fechas`.
+   *   - Se vacía la lista `fechasSeleccionadas`.
+   *
+   * - En otros casos:
+   *   - Se obtiene el índice de la fecha seleccionada desde `fechaSeleccionada`.
+   *   - Se mueve la fecha correspondiente de `fechasSeleccionadas` a `fechasDatos`.
+   *   - Se actualizan las listas eliminando y agregando los elementos correspondientes.
+   *
+   * Además, actualiza el estado en el `crosslistStore` y emite un evento para notificar
+   * los cambios en la lista de fechas seleccionadas.
+   */
+  quitar(type: string = ''): void {
     if (type === 't') {
       this.fechasDatos = [...this.fechas];
       this.fechasSeleccionadas = [];
     } else {
-      const fechaValor = this.fechaSeleccionada.value.map(Number);
+      const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
       this.fechasSeleccionadas = Object.assign([], this.fechasSeleccionadas);
-      this.fechasDatos.push(this.fechasSeleccionadas[fechaValor]);
-      this.fechasSeleccionadas.splice(fechaValor, 1);
+      this.fechasDatos.push(this.fechasSeleccionadas[FECHA_VALOR]);
+      this.fechasSeleccionadas.splice(FECHA_VALOR, 1);
     }
+
     this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
   }
 
+  /**
+   * Verifica si el control de fecha seleccionado es inválido.
+   *
+   * @returns {boolean | null} - Devuelve `true` si el control es inválido y ha sido tocado,
+   * `false` si es válido, o `null` si no hay un control definido.
+   */
   isInvalid(): boolean | null {
-    const control = this.fechaSeleccionada;
-    return control ? control.invalid && control.touched : null;
+    const CONTROL = this.fechaSeleccionada;
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 }

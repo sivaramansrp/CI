@@ -58,12 +58,19 @@ const routes: Routes = [
       )
   },
   {
+    path: 'peticion-requisitos-fitosanitarios',
+    loadChildren: () =>
+      import('./tramites/220102/fitosanitario.module').then(
+        (m) => m.FitosanitarioModule
+      )
+  },
+  {
     path: 'certificado-exportacion',
     loadChildren: () =>
       import('./tramites/220403/exportaccion-acuicola.module').then(
-        (m) => m.ExportaccionAcuicolaModule
+      (m) => m.ExportaccionAcuicolaModule
       )
-  }
+  },
 ];
 
 @NgModule({
