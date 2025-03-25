@@ -13,6 +13,7 @@ import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
 import { ReplaySubject, takeUntil } from 'rxjs';
+import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum'
 
 import {
   DatosDelVehículo,
@@ -46,32 +47,31 @@ export class VehiculosComponent implements AfterViewInit, OnDestroy {
   VehiculoColors: any[] = [];
   PaisEmisor2daPlaca: any[] = [];
   // secondTableData: any[] = [];
-  labelSolicitudVehiculoTipoVehiculo = 'Tipo de vehiculo';
-  solicitudTituloDatosVehiculo: string = 'Datos del Vehículo';
-  labelSolicitudVehiculoVin: string = 'Número de identificacion vehicular';
-  labelPuntos: string = 'Puntos';
-  nonSelectionTextTipoVehiculo: string = 'Selecciona un valor';
-  nonSelectionTextPaisEmisor: string = 'Selecciona un valor';
-  nonSelectionTextColorAGA: string = 'Selecciona un valor';
-  nonSelectionTextAnios: string = 'Selecciona un valor';
-  labelSolicitudVehiculoIdDeVehiculo: string = 'ID de Vehículo';
-  labelSolicitudVehiculoNumeroPlacas: string = 'Número de Placas';
-  labelSolicitudVehiculoPaisEmisor: string = 'País Emisor';
-  labelSolicitudDomicilioEstado: string = 'Estado o provincia';
-  labelSolicitudVehiculoMarca: string = 'Marca';
-  labelSolicitudVehiculoModelo: string = 'Modelo';
-  labelAnioVEH: string = 'Año';
-  labelSolicitudVehiculoTransponder: string = 'Transponder';
-  labelSolicitudVehiculoColor: string = 'Color de vehiculo';
-  labelSolicitudVehiculoNumeroEconomico: string = 'Número económico';
-  labelSolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
-  labelsolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
-  labelSolicitudVehiculoEmisor2daPlaca: string = 'Estado emisor de 2da Placa';
-  labelSolicitudVehiculoPaisEmisor2daPlaca: string = 'País Emisor 2da Placa';
-  labelDescripcionVehiculo: string = 'Descripción del vehículo';
-  botonLimpiar: string = 'Limpiar';
-  botonCancelar: string = 'Cancelar';
-  botonGuardar: string = 'Guardar';
+  labelSolicitudVehiculoTipoVehiculo = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TIPO_VEHICULO;
+  solicitudTituloDatosVehiculo: string = VEHICULO_PAGE.SOLICITUD_TITULO_DATOS_VEHICULO;
+  labelSolicitudVehiculoVin: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_VIN;
+  labelPuntos: string = VEHICULO_PAGE.LABEL_PUNTOS;
+  nonSelectionTextTipoVehiculo: string = VEHICULO_PAGE.NON_SELECTION_TEXT_TIPO_VEHICULO;
+  nonSelectionTextPaisEmisor: string = VEHICULO_PAGE.NON_SELECTION_TEXT_PAIS_EMISOR;
+  nonSelectionTextColorAGA: string = VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
+  nonSelectionTextAnios: string = VEHICULO_PAGE.NON_SELECTION_TEXT_ANIOS;
+  labelSolicitudVehiculoIdDeVehiculo: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_ID_DEVEHICULO;
+  labelSolicitudVehiculoNumeroPlacas: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMEROPLACAS;
+  labelSolicitudVehiculoPaisEmisor: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR;
+  labelSolicitudDomicilioEstado: string = VEHICULO_PAGE.LABEL_SOLICITUD_DOMICILIO_ESTADO;
+  labelSolicitudVehiculoMarca: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MARCA;
+  labelSolicitudVehiculoModelo: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MODELO;
+  labelAnioVEH: string = VEHICULO_PAGE.LABEL_ANIO_VEH;
+  labelSolicitudVehiculoTransponder: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TRANSPONDER;
+  labelSolicitudVehiculoColor: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_COLOR;
+  labelSolicitudVehiculoNumeroEconomico: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_ECONOMICO;
+  labelSolicitudVehiculoNumero2daPlaca: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_2DAPLACA;
+  labelSolicitudVehiculoEmisor2daPlaca: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_EMISOR_2DAPLACA;
+  labelSolicitudVehiculoPaisEmisor2daPlaca: string = VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR_2DAPLACA;
+  labelDescripcionVehiculo: string = VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
+  botonLimpiar: string = VEHICULO_PAGE.BOTON_LIMPIAR;
+  botonCancelar: string = VEHICULO_PAGE.BOTON_CANCELAR;
+  botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
