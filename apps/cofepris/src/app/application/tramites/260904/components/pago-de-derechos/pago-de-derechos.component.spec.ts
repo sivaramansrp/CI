@@ -46,7 +46,7 @@ describe('PagoDeDerechosComponent', () => {
       manifests: '',
       acuerdoPublico: '',
       rfc: '',
-      códigoPostal: ''
+      codigoPostal: ''
     };
 
     mockTramite260912Query = {
