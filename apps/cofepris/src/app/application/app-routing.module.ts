@@ -7,6 +7,13 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
+  },
+  {
+    path: 'permiso-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
+        (m) => m.PermisoPlaguicidasImportacionModule
+      ),
   }
 ];
 
