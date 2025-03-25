@@ -1,14 +1,7 @@
 
 
 export interface PermisoModel {
-  // Nombre : string;
-  //  RFC :string;
-  //  CURP :string;
-  //  Teléfono:number;
-  //  CorreoElectrónico:string;
-  //  calle:string;
-
-  Nombre : string;
+ Nombre : string;
   RFC :string;
   CURP :string;
   Teléfono:number;
@@ -24,9 +17,6 @@ export interface PermisoModel {
      estadoLocalidad:string;
      codigoPostal:number;
 
-
-
-  
 }
 
 export interface TablaDatos {

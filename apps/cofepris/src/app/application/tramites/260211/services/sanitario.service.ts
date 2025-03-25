@@ -21,6 +21,12 @@ export class SanitarioService {
   
   constructor( private http: HttpClient) { }
 
+  /**
+ * Obtiene datos relacionados con derechos desde un archivo JSON.
+ *
+ * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
+ */
+
   getDatos(): Observable<unknown> {
     return this.http.get('assets/json/260211/derechos.json').pipe(
       catchError((error: unknown) => {
@@ -29,6 +35,11 @@ export class SanitarioService {
     );
  }
 
+/**
+ * Obtiene datos relacionados con proveedores desde un archivo JSON.
+ *
+ * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
+ */
  getProveedordata(): Observable<unknown> {
   return this.http.get('assets/json/260211/proveedor.json').pipe(
     catchError((error: unknown) => {
@@ -36,6 +47,12 @@ export class SanitarioService {
     })
   );
 }
+
+/**
+ * Obtiene datos relacionados con localidades desde un archivo JSON.
+ *
+ * @returns {Observable<unknown>} Un observable que emite los datos obtenidos.
+ */
 getLocalidaddata(): Observable<unknown> {
   return this.http.get('assets/json/260211/estadolocalidad.json').pipe(
     catchError((error: unknown) => {
@@ -44,25 +61,25 @@ getLocalidaddata(): Observable<unknown> {
   );
 }
 
+/**
+ * Obtiene datos relacionados con terceros desde un archivo JSON.
+ *
+ * @returns {Observable<PermisoModel[]>} Un observable que emite una lista de objetos `PermisoModel`.
+ */
+
 getTable(): Observable<PermisoModel []> {
   return this.http.get<PermisoModel []>('assets/json/260211/terceros.json');
 } 
+
+/**
+ * Obtiene datos adicionales relacionados con terceros desde un archivo JSON.
+ *
+ * @returns {Observable<Catalogo[]>} Un observable que emite una lista de objetos `Catalogo`.
+ */
 
 getData(): Observable<Catalogo[]> {
   return this.http.get<Catalogo[]>('assets/json/260211/terceros-relacionadoes.json');
 }
 }
 
-  
-  
-
-  /**
-   * Constructor del servicio.
-   *
-   * Actualmente, no realiza ninguna acción al ser instanciado.
-   */
-  // constructor() {
-  //   // Dependencia inyectada para uso posterior
-  // }
-// }
  
