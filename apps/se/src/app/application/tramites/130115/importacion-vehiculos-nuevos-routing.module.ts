@@ -1,18 +1,18 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { PageComponent } from './pages/page/page.component';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 const ROUTES: Routes = [
   {
-    path: 'page',
-    component: PageComponent,
+    path: 'solicitud',
+    component: SolicitudPageComponent,
 
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'datos',
+    redirectTo: 'solicitud',
   }
 ];
 
