@@ -23,15 +23,15 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormularioDirectorGeneral();
-    this.setFormValues();
+    this.establecerValoresDeFormulario();
 
     // Escucha los cambios del formulario y actualiza la tienda
     this.directorGeneralForm.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((formData) => {
-        this.updateStore(formData);
+        this.actualizarTienda(formData);
       });
-    this.updateStore(this.directorGeneralForm.value);
+    this.actualizarTienda(this.directorGeneralForm.value);
   }
 
 
@@ -50,7 +50,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
   /**
    * Establece los valores del formulario utilizando datos simulados.
    */
-  setFormValues(): void {
+  establecerValoresDeFormulario(): void {
     if (mockData) {
       setTimeout(() => {
         this.directorGeneralForm.patchValue({
@@ -66,8 +66,8 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    * Actualiza la tienda con los datos del formulario actualizados.
    * @param updatedData Los datos actualizados del formulario.
    */
-  updateStore(updatedData: unknown): void {
-    const EXISTINGDATA = this.chofer40103Query.getValue().choferes;
+  actualizarTienda(actualizarTienda: unknown): void {
+    const DATOS_EXISTENTES = this.chofer40103Query.getValue().choferes;
     // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
   }
     /**

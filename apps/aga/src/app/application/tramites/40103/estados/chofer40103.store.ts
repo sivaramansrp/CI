@@ -4,9 +4,9 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 export interface Choferesnacionales40103State {
   choferes: string[];
-  choferesextranjero: string[];
+  choferesExtranjero: string[];
   vehiculos: string[];
-  unidadesdearrastre: string[];
+  unidadesDeArrastre: string[];
   estado: Catalogo[];
   seccion: boolean[];
   formaValida: boolean[];
@@ -19,9 +19,9 @@ export function createChoferState(): Choferesnacionales40103State {
   const STORED_DATA = localStorage.getItem('choferesList');
   return {
     choferes: STORED_DATA ? JSON.parse(STORED_DATA) : [],
-    choferesextranjero: [],
+    choferesExtranjero: [],
     vehiculos: [],
-    unidadesdearrastre: [],
+    unidadesDeArrastre: [],
     estado: [],
     seccion: [],
     formaValida: [],

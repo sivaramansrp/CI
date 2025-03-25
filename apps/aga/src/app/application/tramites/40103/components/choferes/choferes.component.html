@@ -56,7 +56,7 @@
                   <th>Primer Apellido</th>
                   <th>Segundo Apellido</th>
                   <th>RFC</th>
-                  <th>Numero de gafete del chofer</th>
+                  <th>TYPO: Número</th>
                   <th>Fecha fin de Vigencia Gafete</th>
                   <th>Municipio o alcaldía</th>
                   <th>Colonia</th>
@@ -90,11 +90,11 @@
                   <td>{{ nacion.numeroInterior }}</td>
                   <td>{{ nacion.paisCHN }}</td>
                   <td>{{ nacion.estado }}</td>
-                  <td>{{ nacion.apellidoPaterno }}</td>
-                  <td>{{ nacion.apellidoMaternoCHN }}</td>
+                  <td>{{ nacion.apelliDoPaterno }}</td>
+                  <td>{{ nacion.apelliDoMaternoChn }}</td>
                   <td>{{ nacion.rfc }}</td>
                   <td>{{ nacion.gafete }}</td>
-                  <td>{{ nacion.vigenciagafete }}</td>
+                  <td>{{ nacion.vigenciaGafete }}</td>
                   <td>{{ nacion.delegacionCHN }}</td>
                   <td>{{ nacion.coloniaCHN }}</td>
                   <td>{{ nacion.paisOrigenCHN }}</td>
@@ -140,13 +140,13 @@
                   <th>
                     <input type="checkbox" />
                   </th>
-                  <th>Numero del seguro social</th>
-                  <th>Nombre</th>
+                  <th>TYPO: Número</th>
+                  <th>TYPO: Número</th>
                   <th>Calle</th>
                   <th>Numero exterior</th>
                   <th>Numero interior</th>
                   <th>Estado</th>
-                  <th>Pais</th>
+                  <th>TYPO: País</th>
 
                   <th>Estado</th>
                   <th>Apellido Paterno</th>
@@ -182,11 +182,11 @@
                   <td>{{ exterior.estado }}</td>
                   <td>{{ exterior.paisCHN }}</td>
                   <td>{{ exterior.estado }}</td>
-                  <td>{{ exterior.apellidoPaterno }}</td>
-                  <td>{{ exterior.apellidoMaternoCHN }}</td>
+                  <td>{{ exterior.apelliDoPaterno }}</td>
+                  <td>{{ exterior.apelliDoMaternoChn }}</td>
                   <td>{{ exterior.rfc }}</td>
                   <td>{{ exterior.gafete }}</td>
-                  <td>{{ exterior.vigenciagafete }}</td>
+                  <td>{{ exterior.vigenciaGafete }}</td>
                   <td>{{ exterior.delegacionCHN }}</td>
                   <td>{{ exterior.coloniaCHN }}</td>
                   <td>{{ exterior.paisOrigenCHN }}</td>
@@ -258,14 +258,16 @@
                 </div>
                 <div
                   *ngIf="
-                    GETFORM_VALUES['curp'].invalid && (GETFORM_VALUES['curp'].dirty || GETFORM_VALUES['curp'].touched)
+                    getFormValues['curp'].invalid &&
+                    (getFormValues['curp'].dirty ||
+                    getFormValues['curp'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="GETFORM_VALUES['curp'].errors?.['required']"
+                  <small *ngIf="getFormValues['curp'].errors?.['required']"
                     >CURP es obligatorio.</small
                   >
-                  <small *ngIf="GETFORM_VALUES['curp'].errors?.['maxLength']"
+                  <small *ngIf="getFormValues['curp'].errors?.['maxLength']"
                     >CURP debe tener exactamente 18 caracteres.</small
                   >
                 </div>
@@ -320,15 +322,16 @@
                 </div>
                 <div
                   *ngIf="
-                    GETFORM_VALUES['nombre'].invalid &&
-                    (GETFORM_VALUES['nombre'].dirty || GETFORM_VALUES['nombre'].touched)
+                    getFormValues['nombre'].invalid &&
+                    (getFormValues['nombre'].dirty ||
+                    getFormValues['nombre'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="GETFORM_VALUES['nombre'].errors?.['required']"
+                  <small *ngIf="getFormValues['nombre'].errors?.['required']"
                     >El nombre es obligatorio.</small
                   >
-                  <small *ngIf="GETFORM_VALUES['nombre'].errors?.['maxLength']"
+                  <small *ngIf="getFormValues['nombre'].errors?.['maxLength']"
                     >El nombre no puede tener más de 20 caracteres.</small
                   >
                 </div>
@@ -348,15 +351,18 @@
                 </div>
                 <div
                   *ngIf="
-                    GETFORM_VALUES['apellidoPaterno'].invalid &&
-                    (GETFORM_VALUES['apellidoPaterno'].dirty || GETFORM_VALUES['apellidoPaterno'].touched)
+                    getFormValues['apellidoPaterno'].invalid &&
+                    (getFormValues['apellidoPaterno'].dirty ||
+                    getFormValues['apellidoPaterno'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="GETFORM_VALUES['apellidoPaterno'].errors?.['required']"
+                  <small
+                    *ngIf="getFormValues['apellidoPaterno'].errors?.['required']"
                     >El nombre es obligatorio.</small
                   >
-                  <small *ngIf="GETFORM_VALUES['apellidoPaterno'].errors?.['maxLength']"
+                  <small
+                    *ngIf="getFormValues['apellidoPaterno'].errors?.['maxLength']"
                     >El nombre no puede tener más de 20 caracteres.</small
                   >
                 </div>
@@ -375,16 +381,18 @@
                 </div>
                 <div
                   *ngIf="
-                    GETFORM_VALUES['apellidoMaternoCHN'].invalid &&
-                    (GETFORM_VALUES['apellidoMaternoCHN'].dirty ||
-                    GETFORM_VALUES['apellidoMaternoCHN'].touched)
+                    getFormValues['apellidoMaternoCHN'].invalid &&
+                    (getFormValues['apellidoMaternoCHN'].dirty ||
+                    getFormValues['apellidoMaternoCHN'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="GETFORM_VALUES['apellidoMaternoCHN'].errors?.['required']"
+                  <small
+                    *ngIf="getFormValues['apellidoMaternoCHN'].errors?.['required']"
                     >El nombre es obligatorio.</small
                   >
-                  <small *ngIf="GETFORM_VALUES['apellidoMaternoCHN'].errors?.['maxLength']"
+                  <small
+                    *ngIf="getFormValues['apellidoMaternoCHN'].errors?.['maxLength']"
                     >El nombre no puede tener más de 20 caracteres.</small
                   >
                 </div>
@@ -394,7 +402,7 @@
             <div class="row">
               <div class="col-md-4">
                 <div>
-                  <label for="gafete">Number de gafete del chofer:</label>
+                  <label for="gafete">TYPO: Número:</label>
                 </div>
                 <div>
                   <input
@@ -405,15 +413,16 @@
                 </div>
                 <div
                   *ngIf="
-                    GETFORM_VALUES['gafete'].invalid &&
-                    (GETFORM_VALUES['gafete'].dirty || GETFORM_VALUES['gafete'].touched)
+                    getFormValues['gafete'].invalid &&
+                    (getFormValues['gafete'].dirty ||
+                    getFormValues['gafete'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="GETFORM_VALUES['gafete'].errors?.['required']"
+                  <small *ngIf="getFormValues['gafete'].errors?.['required']"
                     >El gafete es obligatorio.</small
                   >
-                  <small *ngIf="GETFORM_VALUES['gafete'].errors?.['maxLength']"
+                  <small *ngIf="getFormValues['gafete'].errors?.['maxLength']"
                     >El gafete no puede tener más de 10 caracteres.</small
                   >
                 </div>
@@ -433,17 +442,19 @@
                 </div>
                 <div
                   *ngIf="
-                    GETFORM_VALUES['vigenciagafete'].invalid &&
-                    (GETFORM_VALUES['vigenciagafete'].dirty || GETFORM_VALUES['vigenciagafete'].touched)
+                    getFormValues['vigenciagafete'].invalid &&
+                    (getFormValues['vigenciagafete'].dirty ||
+                    getFormValues['vigenciagafete'].touched)
                   "
                   class="text-danger"
                 >
-                  <small *ngIf="GETFORM_VALUES['vigenciagafete'].errors?.['required']"
-                    >El vigenciagafete es obligatorio.</small
+                  <small
+                    *ngIf="getFormValues['vigenciagafete'].errors?.['required']"
+                    >Should be 'La vigencia del gafete.</small
                   >
-                  <small *ngIf="GETFORM_VALUES['vigenciagafete'].errors?.['maxLength']"
-                    >El vigenciagafete no puede tener más de 10
-                    caracteres.</small
+                  <small
+                    *ngIf="getFormValues['vigenciagafete'].errors?.['maxLength']"
+                    >Should be 'La vigencia del gafete.</small
                   >
                 </div>
               </div>
@@ -473,15 +484,16 @@
                   </div>
                   <div
                     *ngIf="
-                      GETFORM_VALUES['calle'].invalid &&
-                      (GETFORM_VALUES['calle'].dirty || GETFORM_VALUES['calle'].touched)
+                      getFormValues['calle'].invalid &&
+                      (getFormValues['calle'].dirty ||
+                      getFormValues['calle'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="GETFORM_VALUES['calle'].errors?.['required']"
+                    <small *ngIf="getFormValues['calle'].errors?.['required']"
                       >calle es obligatorio.</small
                     >
-                    <small *ngIf="GETFORM_VALUES['calle'].errors?.['maxLength']"
+                    <small *ngIf="getFormValues['calle'].errors?.['maxLength']"
                       >calle no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -500,15 +512,18 @@
                   </div>
                   <div
                     *ngIf="
-                      GETFORM_VALUES['numeroExterior'].invalid &&
-                      (GETFORM_VALUES['numeroExterior'].dirty || GETFORM_VALUES['numeroExterior'].touched)
+                      getFormValues['numeroExterior'].invalid &&
+                      (getFormValues['numeroExterior'].dirty ||
+                      getFormValues['numeroExterior'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="GETFORM_VALUES['numeroExterior'].errors?.['required']"
+                    <small
+                      *ngIf="getFormValues['numeroExterior'].errors?.['required']"
                       >Numero Exterior es obligatorio.</small
                     >
-                    <small *ngIf="GETFORM_VALUES['numeroExterior'].errors?.['maxLength']"
+                    <small
+                      *ngIf="getFormValues['numeroExterior'].errors?.['maxLength']"
                       >Numero Exterior no puede tener más de 10
                       caracteres.</small
                     >
@@ -561,87 +576,49 @@
                         {{ item.descripcion }}
                       </option>
                     </select>
-
-                    <!-- <input type="hidden" name="entidadSolicitud" />
-                    <select
-                      id="entidadFederativaCHN"
-                      class="form-control"
-                      formControlName="entidadFederativaCHN"
-                      (change)="onEstadoChange($event)"
-                    >
-                      <option value="">Selecciona un valor</option>
-                      <option
-                        *ngFor="let estado of estados"
-                        [value]="estado.clave"
-                      >
-                        {{ estado.descripcion }}
-                      </option>
-                    </select> -->
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <div>
-                    <label for="delegacionCHN">Municipio o alcaldía:</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select
-                      id="delegacionCHN"
-                      class="form-control"
+                    <app-catalogo-select
+                      class="delegacionCHN"
+                      [catalogo]="delegacionCHN"
                       formControlName="delegacionCHN"
-                      (change)="onMunicipioChange($event)"
-                    >
-                      <option value="">Selecciona un valor</option>
-                      <option
-                        *ngFor="let municipio of municipios"
-                        [value]="municipio.clave"
-                      >
-                        {{ municipio.descripcion }}
-                      </option>
-                    </select>
+                      [required]="true"
+                      name="delegacionCHN"
+                      label="Municipio o alcaldía"
+                    ></app-catalogo-select>
                   </div>
                 </div>
               </div>
 
               <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-4 mb-3">
+               
                   <div>
-                    <label for="coloniaCHN">Colonia:</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select
-                      id="coloniaCHN"
-                      class="form-control"
-                      formControlName="coloniaCHN"
-                    >
-                      <option value="">Selecciona un valor</option>
-                      <option
-                        *ngFor="let colonia of colonias"
-                        [value]="colonia.clave"
-                      >
-                        {{ colonia.descripcion }}
-                      </option>
-                    </select>
+
+                    <app-catalogo-select
+                    class="coloniaCHN"
+                    [catalogo]="coloniaCHN"
+                    formControlName="coloniaCHN"
+                    [required]="true"
+                    name="coloniaCHN"
+                    label="Colonia"
+                  ></app-catalogo-select>
+                   
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4 mb-3">
                   <div>
-                    <label for="paisOrigenCHN">País de residencia:</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select
-                      id="paisOrigenCHN"
-                      class="form-control"
+                    <app-catalogo-select
+                      class="paisOrigenCHN"
+                      [catalogo]="paisOrigenCHN"
                       formControlName="paisOrigenCHN"
-                    >
-                      <option value="">Selecciona un valor</option>
-                      <option *ngFor="let pais of paises" [value]="pais.clave">
-                        {{ pais.descripcion }}
-                      </option>
-                    </select>
+                      [required]="true"
+                      name="paisOrigenCHN"
+                      label="País de residencia"
+                    ></app-catalogo-select>
                   </div>
                 </div>
 
@@ -659,15 +636,17 @@
                   </div>
                   <div
                     *ngIf="
-                      GETFORM_VALUES['ciudad'].invalid &&
-                      (GETFORM_VALUES['ciudad'].dirty || GETFORM_VALUES['ciudad'].touched)
+                      getFormValues['ciudad'].invalid &&
+                      (getFormValues['ciudad'].dirty ||
+                      getFormValues['ciudad'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="GETFORM_VALUES['ciudad'].errors?.['required']"
+                    <small *ngIf="getFormValues['ciudad'].errors?.['required']"
                       >ciudad es obligatorio.</small
                     >
-                    <small *ngIf="GETFORM_VALUES['ciudad'].errors?.['maxLength']"
+                    <small
+                      *ngIf="getFormValues['ciudad'].errors?.['maxLength']"
                       >ciudad no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -689,15 +668,18 @@
                   </div>
                   <div
                     *ngIf="
-                      GETFORM_VALUES['localidad'].invalid &&
-                      (GETFORM_VALUES['localidad'].dirty || GETFORM_VALUES['localidad'].touched)
+                      getFormValues['localidad'].invalid &&
+                      (getFormValues['localidad'].dirty ||
+                      getFormValues['localidad'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="GETFORM_VALUES['localidad'].errors?.['required']"
+                    <small
+                      *ngIf="getFormValues['localidad'].errors?.['required']"
                       >localidad es obligatorio.</small
                     >
-                    <small *ngIf="GETFORM_VALUES['localidad'].errors?.['maxLength']"
+                    <small
+                      *ngIf="getFormValues['localidad'].errors?.['maxLength']"
                       >localidad no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -716,15 +698,18 @@
                   </div>
                   <div
                     *ngIf="
-                      GETFORM_VALUES['codigoPostal'].invalid &&
-                      (GETFORM_VALUES['codigoPostal'].dirty || GETFORM_VALUES['codigoPostal'].touched)
+                      getFormValues['codigoPostal'].invalid &&
+                      (getFormValues['codigoPostal'].dirty ||
+                      getFormValues['codigoPostal'].touched)
                     "
                     class="text-danger"
                   >
-                    <small *ngIf="GETFORM_VALUES['codigoPostal'].errors?.['required']"
+                    <small
+                      *ngIf="getFormValues['codigoPostal'].errors?.['required']"
                       >codigoPostal es obligatorio.</small
                     >
-                    <small *ngIf="GETFORM_VALUES['codigoPostal'].errors?.['maxLength']"
+                    <small
+                      *ngIf="getFormValues['codigoPostal'].errors?.['maxLength']"
                       >codigoPostal no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -881,20 +866,18 @@
               <div class="row mt-3">
                 <!-- Nacionalidad -->
                 <div class="col-md-4">
+                
                   <div>
-                    <label for="nacionalidadCHE">{{ labelNacionalidad }}</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select
-                      formControlName="nacionalidadCHE"
-                      class="form-control"
-                    >
-                      <option value="">{{ seleccionaUnValor }}</option>
-                      <option *ngFor="let pais of paises" [value]="pais.clave">
-                        {{ pais.descripcion }}
-                      </option>
-                    </select>
+
+                    <app-catalogo-select
+                    class="nacionalidadCHE"
+                    [catalogo]="nacionalidadCHE"
+                    formControlName="nacionalidadCHE"
+                    [required]="true"
+                    name="nacionalidadCHE"
+                    label="Nacionalidad"
+                  ></app-catalogo-select>
+                   
                   </div>
                 </div>
 
@@ -1002,17 +985,16 @@
               <div class="row">
                 <!-- País -->
                 <div class="col-md-4">
+                 
                   <div>
-                    <label for="paisCHE">{{ labelPais }}</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select formControlName="paisCHE" class="form-control">
-                      <option value="">{{ seleccionaUnValor }}</option>
-                      <option *ngFor="let pais of paises" [value]="pais.clave">
-                        {{ pais.descripcion }}
-                      </option>
-                    </select>
+                    <app-catalogo-select
+                    class="paisOrigenCHN"
+                    [catalogo]="paisOrigenCHN"
+                    formControlName="paisOrigenCHN"
+                    [required]="true"
+                    name="paisOrigenCHN"
+                    label="País de residencia"
+                  ></app-catalogo-select>
                   </div>
                 </div>
 
@@ -1117,20 +1099,16 @@
               <div class="row mt-3">
                 <!-- País de Origen -->
                 <div class="col-md-4">
+                 
                   <div>
-                    <label for="paisOrigenCHE">{{ labelPaisOrigen }}</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select
-                      formControlName="paisOrigenCHE"
-                      class="form-control"
-                    >
-                      <option value="">{{ seleccionaUnValor }}</option>
-                      <option *ngFor="let pais of paises" [value]="pais.clave">
-                        {{ pais.descripcion }}
-                      </option>
-                    </select>
+                    <app-catalogo-select
+                    class="paisOrigenCHN"
+                    [catalogo]="paisOrigenCHN"
+                    formControlName="paisOrigenCHN"
+                    [required]="true"
+                    name="paisOrigenCHN"
+                    label="País de residencia"
+                  ></app-catalogo-select>
                   </div>
                 </div>
 

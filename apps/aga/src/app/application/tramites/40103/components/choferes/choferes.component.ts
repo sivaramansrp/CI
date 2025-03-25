@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @nx/enforce-module-boundaries */
+
 import {
   AfterViewInit,
   Component,
@@ -24,7 +22,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import {
-  Catalogo,
   extranjero,
 } from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { ChangeDetectorRef } from '@angular/core';
@@ -35,6 +32,11 @@ import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/tr
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+
 @Component({
   selector: 'app-choferes',
   templateUrl: './choferes.component.html',
@@ -45,6 +47,8 @@ import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockd
     CommonModule,
     SharedModule,
     FormsModule,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent
   ],
 })
 export class ChoferesComponent implements OnInit {
@@ -77,20 +81,18 @@ export class ChoferesComponent implements OnInit {
   botonGuardar: string = 'Guardar';
   seleccionaUnValor: string = 'Selecciona un valor';
   labelPuntos: string = '...';
-  selectedAll: boolean = false;
+  seleccionadosTodos: boolean = false;
   modal: string = 'modal';
   nacional: Array<Nacional> = [];
   extranjero: Array<extranjero> = [];
   activeTab: string = 'nacional';
   Choferesextranjeros: string = 'Choferes extranjeros';
-  // estados: any[] = [];
   estado$!: Observable<Catalogo[]>;
   municipios: any[] = [];
-  paisOrigenCHN: any[] = [];
   entidadFederativaCHN: any[] = [];
   colonias: any[] = [];
   paises: any[] = [];
-  choferesextranjero: any[] = [];
+  choferesExtranjero: any[] = [];
   choferes: any[] = [];
   formChoferes!: FormGroup;
   choferesList$: Observable<any[]> = new Observable();
@@ -99,6 +101,10 @@ export class ChoferesComponent implements OnInit {
   selectedRow: any;
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   @Input() catalogo: Catalogo[] = [];
+  public paisOrigenCHN!: Catalogo[];
+  public delegacionCHN!: Catalogo[];
+  public coloniaCHN!: Catalogo[];
+  public nacionalidadCHE!: Catalogo[];
   onEstadoChange: any;
   onMunicipioChange: any;
   /**
@@ -205,11 +211,15 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     ChoferesComponent.loadEstados();
     this.estadoSeleccion();
     this.setFormValues();
+    this.paisEmisorData();
+    this.delegacionChnData();
+    this.coloniaChnData();
+    this.nacionaliDadChe();
   }
   /**
    * Obtiene los controles de formulario del formulario choferes.
    */
-  get GETFORM_VALUES() {
+  get getFormValues() {
     return this.formChoferes.controls;
   }
   abrirModal(): void {
@@ -502,14 +512,14 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
 
       // Actualizar la fuente de datos (choferesList$)
       this.choferesextranjerosList$ = this.choferesextranjerosList$.pipe(
-        map((choferesextranjero: any) => {
-          return choferesextranjero.map((choferesextranjero: any) => {
+        map((choferesExtranjero: any) => {
+          return choferesExtranjero.map((choferesExtranjero: any) => {
             if (
-              (choferesextranjero as any).id === (this.selectedRow as any).id
+              (choferesExtranjero as any).id === (this.selectedRow as any).id
             ) {
               return UPDATE_ROWS;
             }
-            return choferesextranjero;
+            return choferesExtranjero;
           });
         })
       );
@@ -528,5 +538,27 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   estadoSeleccion(): void {
     const ESTADO = this.formChoferes.get('estado')?.value;
     this.chofer40103Store.setEstado(ESTADO);
+  }
+
+  paisEmisorData(): void {
+    this.chofer40103Service.getPaisOrigenChn().subscribe((data) => {
+      this.paisOrigenCHN = data;
+    });
+  }
+  delegacionChnData(): void {
+    this.chofer40103Service.getDelegacionChn().subscribe((data) => {
+      this.delegacionCHN = data;
+    });
+  }
+
+  coloniaChnData(): void {
+    this.chofer40103Service.getColoniaChn().subscribe((data) => {
+      this.coloniaCHN = data;
+    });
+  }
+  nacionaliDadChe(): void {
+    this.chofer40103Service.getNacionaliDadChe().subscribe((data) => {
+      this.nacionalidadCHE = data;
+    });
   }
 }

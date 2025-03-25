@@ -48,10 +48,9 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   VehiculoVEH: Catalogo[] = [];
   VehiculoColors: Catalogo[] = [];
   PaisEmisor2daPlaca: DatosDelVehículoPaisEmisor[] = [];
-  // secondTableData: any[] = [];
-  labelSolicitudVehiculoTipoVehiculo = 'Tipo de vehiculo';
-  solicitudTituloDatosVehiculo: string = 'Datos del Vehículo';
-  labelSolicitudVehiculoVin: string = 'Número de identificacion vehicular';
+  labelSolicitudVehiculoTipoVehiculo = 'Tipo de vehículo';
+  solicitudTituloDatosVehiculo: string = 'Datos del vehículo';
+  labelSolicitudVehiculoVin: string = 'Número de identificación vehicular';
   labelPuntos: string = 'Puntos';
   nonSelectionTextTipoVehiculo: string = 'Selecciona un valor';
   nonSelectionTextPaisEmisor: string = 'Selecciona un valor';
@@ -68,7 +67,6 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   labelSolicitudVehiculoColor: string = 'Color de vehiculo';
   labelSolicitudVehiculoNumeroEconomico: string = 'Número económico';
   labelSolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
-  labelsolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
   labelSolicitudVehiculoEmisor2daPlaca: string = 'Estado emisor de 2da Placa';
   labelSolicitudVehiculoPaisEmisor2daPlaca: string = 'País Emisor 2da Placa';
   labelDescripcionVehiculo: string = 'Descripción del vehículo';
@@ -186,7 +184,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
       })
     );
     this.unidadesdearrastreList$ = this.chofer40103Query.getUnidadesdeArrastre$;
-    this.UnidadesDearrastre();
+    this.unidadesDearrastre();
     this.subscriptions.add(
       this.chofer40103Query.getUnidadesdeArrastre$.subscribe(
         (unidadesdearrastre: any) => {
@@ -250,7 +248,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     );
 
     if (VIN_EXISTS) {
-      this.toastr.error('⚠️ This VIN already exists!');
+      this.toastr.error('⚠️ ¡Este VIN ya existe!');
       return;
     }
 
@@ -262,19 +260,19 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     // Actualizar el estado de Akita
     this.chofer40103Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
     this.formVehiculo.reset();
-    this.toastr.success('🚗 Vehiculo added successfully!');
+    this.toastr.success('🚗 ¡Vehículo añadido exitosamente!');
     this.closeModal();
   }
 
   /**
    * Maneja la lógica para agregar unidades de arrastre.
    */
-  UnidadesDearrastre(): void {
+  unidadesDearrastre(): void {
     if (this.formVehiculo.valid) {
       const NEW_UNIDAD = this.formVehiculo.value;
-      const CURRENT_DATA = this.chofer40103Query.getunidadesdearrastre();
+      const DATOS_ACTUALES = this.chofer40103Query.getunidadesdearrastre();
       this.chofer40103Store.setUnidadesdeArrastre([
-        ...CURRENT_DATA,
+        ...DATOS_ACTUALES,
         NEW_UNIDAD,
       ]);
       this.unidadesdearrastreList$ =
@@ -328,7 +326,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Obtiene los valores del formulario.
    */
-  get GETFORM_VALUES() {
+  get getFormValues() {
     return this.formVehiculo.controls;
   }
 

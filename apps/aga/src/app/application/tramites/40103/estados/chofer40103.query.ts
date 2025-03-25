@@ -19,7 +19,7 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
   /**
    * Observable que selecciona la lista de choferes extranjeros.
    */
-  getchoferesextranjero$ = this.select((state) => state.choferesextranjero);
+  getchoferesextranjero$ = this.select((state) => state.choferesExtranjero);
 
   /**
    * Observable que selecciona la lista de vehículos.
@@ -29,7 +29,7 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
   /**
    * Observable que selecciona la lista de unidades de arrastre.
    */
-  getUnidadesdeArrastre$ = this.select((state) => state.unidadesdearrastre);
+  getUnidadesdeArrastre$ = this.select((state) => state.unidadesDeArrastre);
 
   /**
    * Observable que selecciona el estado completo de la sección.
@@ -51,7 +51,7 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
    * @returns La lista de choferes extranjeros.
    */
   getchoferesextranjero(): string[] {
-    return this.getValue().choferesextranjero;
+    return this.getValue().choferesExtranjero;
   }
 
   /**
@@ -67,6 +67,6 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
    * @returns La lista de unidades de arrastre.
    */
   getunidadesdearrastre(): string[] {
-    return this.getValue().unidadesdearrastre;
+    return this.getValue().unidadesDeArrastre;
   }
 }

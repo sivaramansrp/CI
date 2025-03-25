@@ -173,18 +173,18 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoVin2'].invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoVin2'].dirty ||
-                                    GETFORM_VALUES['solicitudVehiculoVin2'].touched)
+                                    getFormValues['solicitudVehiculoVin2'].invalid &&
+                                    (getFormValues['solicitudVehiculoVin2'].dirty ||
+                                    getFormValues['solicitudVehiculoVin2'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoVin2'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoVin2'].errors?.['required']"
                                     >El campo es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoVin2'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoVin2'].errors?.['pattern']"
                                     >Solo se permiten números (máx. 17
                                     dígitos).</small
                                   >
@@ -250,20 +250,20 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoNumeroPlacas']
+                                    getFormValues['solicitudVehiculoNumeroPlacas']
                                       .invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoNumeroPlacas'].dirty ||
-                                    GETFORM_VALUES['solicitudVehiculoNumeroPlacas']
+                                    (getFormValues['solicitudVehiculoNumeroPlacas'].dirty ||
+                                    getFormValues['solicitudVehiculoNumeroPlacas']
                                         .touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroPlacas'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroPlacas'].errors?.['required']"
                                     >Número de Placas es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroPlacas'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroPlacas'].errors?.['pattern']"
                                     >Solo se permiten letras y números (máx. 8
                                     caracteres).</small
                                   >
@@ -304,23 +304,23 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudDomicilioEstado'].invalid &&
-                                    (GETFORM_VALUES['solicitudDomicilioEstado'].dirty ||
-                                    GETFORM_VALUES['solicitudDomicilioEstado'].touched)
+                                    getFormValues['solicitudDomicilioEstado'].invalid &&
+                                    (getFormValues['solicitudDomicilioEstado'].dirty ||
+                                    getFormValues['solicitudDomicilioEstado'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudDomicilioEstado'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudDomicilioEstado'].errors?.['required']"
                                     >Estado es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudDomicilioEstado'].errors?.['maxlength']"
+                                    *ngIf="getFormValues['solicitudDomicilioEstado'].errors?.['maxlength']"
                                     >Estado no puede exceder 20
                                     caracteres.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudDomicilioEstado'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudDomicilioEstado'].errors?.['pattern']"
                                     >Solo se permiten letras y espacios.</small
                                   >
                                 </div>
@@ -348,23 +348,23 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoMarca'].invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoMarca'].dirty ||
-                                    GETFORM_VALUES['solicitudVehiculoMarca'].touched)
+                                    getFormValues['solicitudVehiculoMarca'].invalid &&
+                                    (getFormValues['solicitudVehiculoMarca'].dirty ||
+                                    getFormValues['solicitudVehiculoMarca'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoMarca'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoMarca'].errors?.['required']"
                                     >La marca del vehículo es
                                     obligatoria.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoMarca'].errors?.['maxlength']"
+                                    *ngIf="getFormValues['solicitudVehiculoMarca'].errors?.['maxlength']"
                                     >No puede exceder 100 caracteres.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoMarca'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoMarca'].errors?.['pattern']"
                                     >Solo se permiten letras, números, espacios
                                     y guiones.</small
                                   >
@@ -391,23 +391,23 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoModelo'].invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoModelo'].dirty ||
-                                    GETFORM_VALUES['solicitudVehiculoModelo'].touched)
+                                    getFormValues['solicitudVehiculoModelo'].invalid &&
+                                    (getFormValues['solicitudVehiculoModelo'].dirty ||
+                                    getFormValues['solicitudVehiculoModelo'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoModelo'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoModelo'].errors?.['required']"
                                     >La marca del vehículo es
                                     obligatoria.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoModelo'].errors?.['maxlength']"
+                                    *ngIf="getFormValues['solicitudVehiculoModelo'].errors?.['maxlength']"
                                     >No puede exceder 20 caracteres.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoModelo'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoModelo'].errors?.['pattern']"
                                     >Solo se permiten letras, números, espacios
                                     y guiones.</small
                                   >
@@ -422,9 +422,9 @@
                                   }}</label>
                                   <span class="require">*</span>
                                 </div>
-                                <div class="anioVehiculoVEH">
+                                <div class="anio-vehiculo-veh">
                                   <app-catalogo-select
-                                    class="anioVehiculoVEH"
+                                    class="anio-vehiculo-veh"
                                     [catalogo]="VehiculoVEH"
                                     formControlName="anioVehiculoVEH"
                                     [required]="true"
@@ -456,22 +456,22 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoTransponder'].invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoTransponder'].dirty ||
-                                    GETFORM_VALUES['solicitudVehiculoTransponder'].touched)
+                                    getFormValues['solicitudVehiculoTransponder'].invalid &&
+                                    (getFormValues['solicitudVehiculoTransponder'].dirty ||
+                                    getFormValues['solicitudVehiculoTransponder'].touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoTransponder'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoTransponder'].errors?.['required']"
                                     >El transponder es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoTransponder'].errors?.['maxlength']"
+                                    *ngIf="getFormValues['solicitudVehiculoTransponder'].errors?.['maxlength']"
                                     >Máximo 50 caracteres permitidos.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoTransponder'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoTransponder'].errors?.['pattern']"
                                     >Solo se permiten letras y números.</small
                                   >
                                 </div>
@@ -510,26 +510,26 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoNumeroEconomico']
+                                    getFormValues['solicitudVehiculoNumeroEconomico']
                                       .invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoNumeroEconomico']
+                                    (getFormValues['solicitudVehiculoNumeroEconomico']
                                       .dirty ||
-                                      GETFORM_VALUES['solicitudVehiculoNumeroEconomico']
+                                      getFormValues['solicitudVehiculoNumeroEconomico']
                                         .touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroEconomico'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroEconomico'].errors?.['required']"
                                     >Número Económico es obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroEconomico'].errors?.['maxLength']"
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroEconomico'].errors?.['maxLength']"
                                     >Número Económico no debe exceder los 17
                                     caracteres.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoNumeroEconomico'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoNumeroEconomico'].errors?.['pattern']"
                                     >Solo se permiten letras y números.</small
                                   >
                                 </div>
@@ -580,26 +580,26 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca']
+                                    getFormValues['solicitudVehiculoEmisor2daPlaca']
                                       .invalid &&
-                                    (GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca']
+                                    (getFormValues['solicitudVehiculoEmisor2daPlaca']
                                       .dirty ||
-                                      GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca']
+                                      getFormValues['solicitudVehiculoEmisor2daPlaca']
                                         .touched)
                                   "
                                   class="text-danger"
                                 >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca'].errors?.['required']"
+                                    *ngIf="getFormValues['solicitudVehiculoEmisor2daPlaca'].errors?.['required']"
                                     >Emisor de la 2da Placa es
                                     obligatorio.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca'].errors?.['maxLength']"
+                                    *ngIf="getFormValues['solicitudVehiculoEmisor2daPlaca'].errors?.['maxLength']"
                                     >No debe exceder los 20 caracteres.</small
                                   >
                                   <small
-                                    *ngIf="GETFORM_VALUES['solicitudVehiculoEmisor2daPlaca'].errors?.['pattern']"
+                                    *ngIf="getFormValues['solicitudVehiculoEmisor2daPlaca'].errors?.['pattern']"
                                     >Solo se permiten letras y números.</small
                                   >
                                 </div>
@@ -772,7 +772,7 @@
                         <div class="modal-body">
                           <form
                             [formGroup]="formVehiculo"
-                            (ngSubmit)="UnidadesDearrastre()"
+                            (ngSubmit)="unidadesDearrastre()"
                           >
                             <div class="row">
                               <div class="col-md-12">

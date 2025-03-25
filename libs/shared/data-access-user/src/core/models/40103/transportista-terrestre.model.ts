@@ -6,13 +6,13 @@ export interface Nacional {
     numeroInterior: string;
     paisCHN: string;
     estado: string;
-    apellidoPaterno: string;
-    apellidoMaternoCHN: string;
+    apelliDoPaterno: string;
+    apelliDoMaternoChn: string;
     rfc: string;
     gafete: string;
-    vigenciagafete: string;
-    entidadFederativaCHN: string;
-    numerodelsegurosocial: string;
+    vigenciaGafete: string;
+    entidadFederativaChn: string;
+    numeroDelSeguroSocial: string;
     nombres: string;
   
     delegacionCHN: string;
@@ -28,13 +28,13 @@ export interface Nacional {
     numeroInterior: string;
     paisCHN: string;
     estado: string;
-    apellidoPaterno: string;
-    apellidoMaternoCHN: string;
+    apelliDoPaterno: string;
+    apelliDoMaternoChn: string;
     rfc: string;
     gafete: string;
-    vigenciagafete: string;
-    numerodelsegurosocial: string;
-    entidadFederativaCHN: string;
+    vigenciaGafete: string;
+    entidadFederativaChn: string;
+    numeroDelSeguroSocial: string;
   }
   export interface DatosDelVehículo {
     clave: string;
@@ -63,4 +63,6 @@ export interface Nacional {
     tam?: string;
     dpi?: string;
   }
-  
+  export interface Tipos {
+    tiposData: string; // Tipo de documento.
+  }

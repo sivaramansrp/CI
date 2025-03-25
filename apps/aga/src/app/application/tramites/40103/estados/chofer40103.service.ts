@@ -54,9 +54,9 @@ export class Chofer40103Service {
     // Actualizar tienda Akita
     this.chofer40103Store.update((state) => ({
       ...state,
-      choferesextranjero: isExtranjero
+      choferesExtranjero: isExtranjero
         ? CHOFER_ARRAY
-        : state.choferesextranjero,
+        : state.choferesExtranjero,
       choferes: !isExtranjero ? CHOFER_ARRAY : state.choferes,
     }));
 
@@ -127,5 +127,25 @@ export class Chofer40103Service {
   }
   getsolicitudVehiculoColor(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/vehiculo-color.json');
+  }
+  getPaisOrigenChn():Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('/assets/json/40103/pais-origen.json');
+ 
+  }
+  getDelegacionChn():Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('/assets/json/40103/municipio.json');
+ 
+  }
+  getColoniaChn():Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('/assets/json/40103/colonia.json');
+ 
+  }
+  getNacionaliDadChe():Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('/assets/json/40103/nacionalidad.json');
+ 
+  }
+  getChoferData():Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('/assets/json/40103/chofer.json');
+ 
   }
 }
