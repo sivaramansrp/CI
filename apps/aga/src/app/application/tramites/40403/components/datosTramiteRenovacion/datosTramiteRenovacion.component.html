@@ -1,0 +1,139 @@
+<form [formGroup]="form">
+  <div>
+    <div class="row">
+      <div class="col-md-12">
+        <input type="hidden" formControlName="solicitud.idSolicitud" id="idSolicitud" />
+        <input type="hidden" formControlName="solicitud.solicitante.idPersonaSolicitud" />
+        <input type="hidden" formControlName="solicitud.solicitante.ideGenerica1" />
+        <input type="hidden" formControlName="solicitud.caatSolicitudes[0].fechaInicioVigencia" id="solicitud.caatSolicitudes[0].fechaInicioVigencia" />
+        <input type="hidden" formControlName="solicitud.caatSolicitudes[0].fechaFinVigencia" id="solicitud.caatSolicitudes[0].fechaFinVigencia" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div style="margin-bottom:25px">
+          <label for="claveFolioCAAT">Buscar CAAT</label>
+          <span class="require">*</span>
+          <label for="puntos">Puntos</label>
+        </div>
+        <div>
+          <input
+            type="text"
+            formControlName="claveFolioCAAT"
+            id="claveFolioCAAT"
+            maxlength="4"
+            (blur)="caatConMayusculas($event)"
+            class="form-control"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            (click)="buscarSolicitudPorCAAT()"
+          >
+            Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-md-4">
+        <div>
+          <label for="caatAereoRenovacionCaat">CAAT</label>
+          <label for="puntos">Puntos</label>
+        </div>
+        <div>
+          <input
+            type="text"
+            readonly
+            formControlName="solicitud.caatSolicitudes[0].caat.cveFolioCaat"
+            maxlength="4"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="col col-md-4">
+        <div>
+          <label for="descripcionTipoCaat">Perfil</label>
+          <label for="puntos">Puntos</label>
+        </div>
+        <div>
+          <input
+            type="text"
+            readonly
+            formControlName="descripcionTipoCaat"
+            id="descripcionTipoCaat"
+            maxlength=""
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col col-md-4">
+        <div>
+          <label for="solicitudSolicitanteGenerica1">Generica1</label>
+          <label for="puntos">Puntos</label>
+        </div>
+        <div>
+          <select
+            formControlName="solicitud.solicitante.ideGenerica1"
+            id="solicitud.solicitante.ideGenerica1"
+            disabled
+            class="form-control"
+          >
+            <option value="">----- Selecciona -----</option>
+            <option *ngFor="let item of codigoTransportacion" [value]="item.clave">
+              {{ item.descripcion }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col col-md-4" style="margin-top: 15px;">
+        <div>
+          <label for="solicitudIdeCodTransportacionAerea">Cod Transportación Aérea</label>
+          <label for="puntos">Puntos</label>
+        </div>
+        <div>
+          <select
+            formControlName="solicitud.ideCodTransportacionAerea"
+            id="solicitud.ideCodTransportacionAerea"
+            disabled
+            class="form-control"
+          >
+            <option value="">----- Seleccione -----</option>
+            <option *ngFor="let item of tipoCaatAereo" [value]="item.clave">
+              {{ item.descripcion }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <div>
+          <label for="solicitudIataIcao">IATA/ICAO</label>
+          <label for="puntos">Puntos</label>
+        </div>
+        <div>
+          <input
+            type="text"
+            readonly
+            formControlName="solicitud.codIataIcao"
+            maxlength="3"
+            class="form-control"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

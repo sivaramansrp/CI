@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
-import { FirmaPageComponent } from '@ng-mf/data-access-user';import { NgModule } from '@angular/core';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -8,7 +9,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'servicios-extraordinarios',
@@ -34,12 +35,16 @@ const ROUTES: Routes = [
   {
     path: 'registro-cuentas-bancarias',
     loadChildren: () =>
-      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+      import(
+        './tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module'
+      ).then((m) => m.RegistroCuentasBancariasModule),
   },
   {
     path: 'importante',
     loadChildren: () =>
-      import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.Pantallas301Module
+      ),
   },
   {
     path: 'importador-exportador',
@@ -47,12 +52,13 @@ const ROUTES: Routes = [
       import('./tramites/10301/importador-exportador.module').then(
         (m) => m.ImportadorExportadorModule
       ),
-    },
-    {
+  },
+  {
     path: 'donaciones-extranjeras',
     loadChildren: () =>
       import('./tramites/10303/donaciones-extranjeras.module').then(
-        (m) => m.DonacionesExtranjerasModule)
+        (m) => m.DonacionesExtranjerasModule
+      ),
   },
   {
     path: 'muestras-mercancias',
@@ -63,39 +69,49 @@ const ROUTES: Routes = [
   },
   {
     path: 'atender-requerimientos',
-    loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
-      (m) => m.AtencionRequerimientosModule
-    ),
+    loadChildren: () =>
+      import('./atencion-requerimientos/atencion-requerimientos.module').then(
+        (m) => m.AtencionRequerimientosModule
+      ),
   },
   {
     path: 'notificacion',
-    component: NotificacionPageComponent
+    component: NotificacionPageComponent,
   },
   {
     path: 'firmar',
-    component: FirmaPageComponent
+    component: FirmaPageComponent,
   },
   {
     path: 'acuse',
-    component: AcusePageComponent
+    component: AcusePageComponent,
   },
   {
     path: 'cancelacion-servicios-extraordinarios',
     loadChildren: () =>
-      import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
+      import(
+        './tramites/570101/cancelacion-servicios-extraordinarios.module'
+      ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-  
-{
-  path: 'registro-digitalizar-documentos',
-  loadChildren: () =>
-    import('./tramites/701/registro-digitalizar-documentos.module').then(
-      (m) => m.RegistroDigitalizarDocumentosModule
-    ),
-},
+
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
+
+  {
+    path: 'attentionOfRenewal',
+    loadChildren: () =>
+      import('./tramites/40403/attentionOfRenewal.module').then((m) => m.AttentionOfRenewalModule
+      ),
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
