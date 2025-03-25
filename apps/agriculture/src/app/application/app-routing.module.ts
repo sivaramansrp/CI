@@ -58,6 +58,13 @@ const ROUTES: Routes = [
       )
   },
   {
+    path: 'desistimiento',
+    loadChildren: () =>
+      import('./tramites/220404/desistimiento.module').then(
+        (m) => m.DesistimientoModule
+      )
+  },
+  {
     path: 'inspeccion-fisica',
     loadChildren: () =>
       import('./tramites/220701/inspeccion-fisica-zoosanitario.module').then(
