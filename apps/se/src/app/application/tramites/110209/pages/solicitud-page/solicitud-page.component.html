@@ -1,0 +1,32 @@
+<div class="page">
+  <div class="container">
+
+  @if(!showMercanciaForm){
+
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Validar por motivos técnicos el certificado SGP </h2>
+      </div>
+      <app-wizard [listaPasos]="pasos"></app-wizard>
+    </div>
+
+    <div class="row">
+      @switch (indice) {
+      @case (1) {
+        <app-capturar-solicitud [indice]="capturarTapIndice" (modificarEventCapturar)="showMercancia($event,0)"></app-capturar-solicitud>
+      }
+      @case (2) {
+       <app-firmar-solicitud></app-firmar-solicitud>
+      }
+      }
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    </div>
+  }
+  @else{
+
+    <div>
+      <app-registro-de-mercancia (modificarEventMercancia)="showMercancia($event,5)"></app-registro-de-mercancia>
+    </div>
+  }
+  </div>
+</div>
