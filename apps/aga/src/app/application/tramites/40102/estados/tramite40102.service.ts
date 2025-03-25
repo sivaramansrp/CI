@@ -60,7 +60,7 @@ export class Tramite40102Service {
   }
   getVehiculoColor(): Observable<VehiculoColor[]> {
     return this.http.get<VehiculoColor[]>(
-      './assets/json/40102/vehiculo-colorjson'
+      './assets/json/40102/vehiculo-color.json'
     );
   }
   getVehiculoVEH(): Observable<VehiculoVEHs[]> {

@@ -1,9 +1,8 @@
 import { catchError, map } from 'rxjs';
-import { TramiteStore } from '../../../../estados/tramite.store';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-
+import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 @Component({
   selector: 'paso-tres',
   templateUrl: './paso-tres.component.html',
@@ -12,7 +11,7 @@ import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 export class PasoTresComponent {
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: TramiteFolioService,
     private tramiteStore: TramiteStore
   ) {}
 

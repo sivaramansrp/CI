@@ -31,6 +31,7 @@ import { Tramite40102Query } from '../../estados/tramite40102.query';
 import { Tramite40102Service } from '../../estados/tramite40102.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import {CHOFERES_PAGE} from '../../enum/transportista-terrestre.enum'
 
 @Component({
   selector: 'app-choferes',
@@ -45,35 +46,35 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
   ],
 })
 export class ChoferesComponent implements OnInit, OnDestroy {
-  solicitudTituloChoferExtranjero: string = 'Datos del chofer extranjero';
-  labelSolicitudPersonaNombre: string = 'Nombre';
-  labelSolicitudPersonaPrimerApellido: string = 'Primer Apellido ';
-  labelSolicitudPersonaSegundoApellido: string = 'Segundo Apellido';
-  labelNacionalidad: string = 'Nacionalidad';
-  labelSolicitudChoferExtGafete: string = 'Numero de gafete del chofer';
-  labelSolicitudChoferExtVigenciaGafete: string = 'Vigencia del Gafete';
-  labelSolicitudChoferExtNss: string = 'Número de Seguro Social (NSS)';
-  labelSolicitudChoferExtIdeFiscal: string = 'Número de Identificación Fiscal';
+  solicitudTituloChoferExtranjero: string = CHOFERES_PAGE.SOLICITUD_TITULO_CHOFER_EXTRANJERO;
+  labelSolicitudPersonaNombre: string = CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_NOMBRE;
+  labelSolicitudPersonaPrimerApellido: string = CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_PRIMER_APELLIDO;
+  labelSolicitudPersonaSegundoApellido: string = CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_SEGUNDO_APELLIDO;
+  labelNacionalidad: string = CHOFERES_PAGE.LABEL_NACIONALIDAD;
+  labelSolicitudChoferExtGafete: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_GAFETE;
+  labelSolicitudChoferExtVigenciaGafete: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_VIGENCIA_GAFETE;
+  labelSolicitudChoferExtNss: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_NSS;
+  labelSolicitudChoferExtIdeFiscal: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_IDE_FISCAL';
   tooltipIdentificacionFiscal: string =
-    'Número de identificación fiscal en el país de residencia';
-  solicitudTituloDomicilioFiscal: string = 'Domicilio Fiscal';
-  labelPais: string = 'País';
-  labelSolicitudDomicilioCodigoPostal: string = 'Código Postal';
-  labelEntidadFederativa: string = 'Estado';
-  labelSolicitudDomicilioCalle: string = 'Calle';
-  labelSolicitudDomicilioNumeroExterior: string = 'Número exterior';
-  labelSolicitudDomicilioNumeroInterior: string = 'Número interior';
-  labelPaisOrigen: string = 'País de residencia';
-  labelSolicitudDomicilioCiudad: string = 'Ciudad';
-  labelSolicitudCorreo: string = 'Correo electrónico';
-  labelSolicitudTelefono: string = 'Teléfono';
-  camposObligatorios: string = '* Campos obligatorios';
-  botonBuscar: string = 'Buscar';
-  botonLimpiar: string = 'Limpiar';
-  botonCancelar: string = 'Cancelar';
-  botonGuardar: string = 'Guardar';
-  seleccionaUnValor: string = 'Selecciona un valor';
-  labelPuntos: string = '...';
+  CHOFERES_PAGE.TOOL_TIP_IDENTIFICACION_FISCAL;
+  solicitudTituloDomicilioFiscal: string = CHOFERES_PAGE.SOLICITUD_TITULO_DOMICILIO_FISCAL;
+  labelPais: string = CHOFERES_PAGE.LABEL_PAIS;
+  labelSolicitudDomicilioCodigoPostal: string = CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CODIGO_POSTAL;
+  labelEntidadFederativa: string = CHOFERES_PAGE.LABEL_ENTIDAD_FEDERATIVA;
+  labelSolicitudDomicilioCalle: string = CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CALLE;
+  labelSolicitudDomicilioNumeroExterior: string = CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_EXTERIOR;
+  labelSolicitudDomicilioNumeroInterior: string = CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_INTERIOR;
+  labelPaisOrigen: string = CHOFERES_PAGE.LABEL_PAIS_ORIGEN;
+  labelSolicitudDomicilioCiudad: string = CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CIUDAD;
+  labelSolicitudCorreo: string = CHOFERES_PAGE.LABEL_SOLICITUD_CORREO;
+  labelSolicitudTelefono: string = CHOFERES_PAGE.LABEL_SOLICITUD_TELEFONO;
+  camposObligatorios: string = CHOFERES_PAGE.CAMPOS_OBLIGATORIOS;
+  botonBuscar: string = CHOFERES_PAGE.BOTON_BUSCAR;
+  botonLimpiar: string = CHOFERES_PAGE.BOTON_LIMPIAR;
+  botonCancelar: string = CHOFERES_PAGE.BOTON_CANCELAR;
+  botonGuardar: string = CHOFERES_PAGE.BOTON_GUARDAR;
+  seleccionaUnValor: string = CHOFERES_PAGE.SELECCIONA_UNVALOR;
+  labelPuntos: string = CHOFERES_PAGE.LABEL_PUNTOS;
   selectedAll: boolean = false;
   modal: string = 'modal';
   nacional: Array<Nacional> = [];
