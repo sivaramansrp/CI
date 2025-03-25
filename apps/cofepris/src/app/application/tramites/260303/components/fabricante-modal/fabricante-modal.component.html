@@ -2,153 +2,155 @@
     <h3 class="modal-title pull-left">{{titulo}}</h3>
   </div>
   <div class="modal-body">
-    @if(titulo !== 'Agregar otros') {
-    <h5>Datos generales</h5>
-    <div class="row mb-5">
-        <div class="col-md-8">
-            <div class="form-group">
-                <label for="denominacion">Denominación/razón social*:</label>
-                <input type="text" class="form-control" id="denominacion">
-            </div>
-        </div>
-    </div>
-    } @else {
-        <div class="row mb-5">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="nombreDescripcion">Tercero nombre descripcion*:</label>
-                    <input type="text" class="form-control" id="nombreDescripcion">
+    <form [formGroup]="tercerosRelacionadosForm">
+        @if(titulo !== 'Agregar otros') {
+            <h5>Datos generales</h5>
+            <div class="row mb-5">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="denominacion">Denominación/razón social*:</label>
+                        <input type="text" class="form-control" formControlName="denominacionSocial" id="denominacion">
+                    </div>
                 </div>
             </div>
-        </div>
-        <h5>Datos generales</h5>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <p class="fw-bold">Terceros nacionalidad*:</p>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-                    <label class="form-check-label" for="flexRadioDefault3">
-                        Nacional
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4">
-                    <label class="form-check-label" for="flexRadioDefault4">
-                        Extranjero
-                    </label>
-                  </div>
-            </div>
-            <div class="col-md-6">
-                <p class="fw-bold">Tipo persona*:</p>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                        Fisica <i class="bi bi-question-circle-fill"></i>
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                    <label class="form-check-label" for="flexRadioDefault2">
-                        Moral <i class="bi bi-question-circle-fill"></i>
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3">
-                    <label class="form-check-label" for="flexRadioDefault3">
-                        No contribuyente
-                    </label>
-                  </div>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="rfc" class="form-label">RFC*:</label>
-                    <input type="text" id="rfc" class="form-control">
+            } @else {
+                <div class="row mb-5">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="nombreDescripcion">Tercero nombre descripcion*:</label>
+                            <input type="text" class="form-control" formControlName="terceroNombre" id="nombreDescripcion">
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary mt-5">Bucar</button>
+                <h5>Datos generales</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="fw-bold">Terceros nacionalidad*:</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" formControlName="nacional" name="nacional" id="flexRadioDefault3">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                                Nacional
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" formControlName="extranjero" name="extranjero" id="flexRadioDefault4">
+                            <label class="form-check-label" for="flexRadioDefault4">
+                                Extranjero
+                            </label>
+                          </div>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="fw-bold">Tipo persona*:</p>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" formControlName="fisica" name="fisica" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                Fisica <i class="bi bi-question-circle-fill"></i>
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" formControlName="moral" name="moral" id="flexRadioDefault2">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                Moral <i class="bi bi-question-circle-fill"></i>
+                            </label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" formControlName="noContribuyente" name="noContribuyente" id="flexRadioDefault3">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                                No contribuyente
+                            </label>
+                          </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="curp" class="form-label">C.U.R.P*:</label>
-                    <input type="text" id="curp" class="form-control">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="rfc" class="form-label">RFC*:</label>
+                            <input type="text" id="rfc" formControlName="rfc" class="form-control">
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary mt-5">Bucar</button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="curp" class="form-label">C.U.R.P*:</label>
+                            <input type="text" id="curp" formControlName="curp" class="form-control">
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-8">
-                <div class="form-group">
-                    <label for="denominacion" class="form-label">Denominación/razón social*:</label>
-                    <input type="text" id="denominacion" class="form-control">
+                <div class="row mb-3">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="denominacion" class="form-label">Denominación/razón social*:</label>
+                            <input type="text" id="denominacion" formControlName="razonSocial" class="form-control">
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    }
-    <h5>Domicilio</h5>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="pais" class="form-label">País</label>
-                <input type="text" id="pais" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="estado" class="form-label">Estado</label>
-                <input type="text" id="estado" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="estado" class="form-label">Código postal o equivalente</label>
-                <input type="text" id="estado" class="form-control">
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-8">
-            <div class="form-group">
-                <label for="calle" class="form-label">Calle*:</label>
-                <input type="text" id="calle" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="numeroExterior" class="form-label">Número exterior*:</label>
-                <input type="text" id="numeroExterior" class="form-control">
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label for="numeroInterior" class="form-label">Número interior:</label>
-                <input type="text" id="numeroInterior" class="form-control">
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="d-flex">
-                <div class="form-group">
-                    <label for="lada" class="form-label">Lada:</label>
-                    <input type="text" id="lada" class="form-control lada">
+            }
+            <h5>Domicilio</h5>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="pais" class="form-label">País</label>
+                        <input type="text" id="pais" formControlName="pais" class="form-control">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="telefono" class="form-label">Teléfono*:</label>
-                    <input type="text" id="telefono" class="form-control">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="estado" class="form-label">Estado</label>
+                        <input type="text" id="estado" formControlName="estado" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="estado" class="form-label">Código postal o equivalente</label>
+                        <input type="text" id="estado" formControlName="codigoPostal" class="form-control">
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="d-flex">
-                <div class="form-group">
-                    <label for="correoElectronico" class="form-label">Correo electrónico: </label>
-                    <input type="text" id="correoElectronico" class="form-control">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="calle" class="form-label">Calle*:</label>
+                        <input type="text" id="calle" formControlName="calle" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="numeroExterior" class="form-label">Número exterior*:</label>
+                        <input type="text" id="numeroExterior" formControlName="numeroExterior" class="form-control">
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="numeroInterior" class="form-label">Número interior:</label>
+                        <input type="text" id="numeroInterior" formControlName="numeroInterior" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <label for="lada" class="form-label">Lada:</label>
+                            <input type="text" id="lada" formControlName="lada" class="form-control lada">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" class="form-label">Teléfono*:</label>
+                            <input type="text" id="telefono" formControlName="telefono" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <label for="correoElectronico" class="form-label">Correo electrónico: </label>
+                            <input type="text" id="correoElectronico" formControlName="correoElectronico" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </form>
   </div>
   <div class="modal-footer">
     <div class="d-flex justify-content-end">

@@ -3,10 +3,11 @@
 import { Component, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, CrossListLable, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CROSLISTA_DE_PAISES, PAISES_DE_ORIGEN, USO_ESPECIFICO } from '../../services/certificados-licencias-permisos.enum';
+import { validate } from 'uuid';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -35,6 +36,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   public mercanciasTablaDatos: MercanciasDatos[] = [];
   public tipoDeProductoCatalogo!: Catalogo[];
   public paisDeProcedenciaCatalogo!: Catalogo[];
+  public domicilioDeElstablecimientoForm!: FormGroup;
+  public representanteLegalForm!: FormGroup;
+  public scianForm!: FormGroup;
+  public mercanciasForm!: FormGroup;
     /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -128,6 +133,10 @@ constructor(
 
 ngOnInit(): void {
   this.inicializarTablaYCatalogoDatos();
+  this.crearElstablecimientoForm();
+  this.crearRepresentanteLegalForm();
+  this.cerrarSCIANForm();
+  this.cerrarMercanciasForm();
 }
 
 public inicializarTablaYCatalogoDatos(): void {
@@ -153,6 +162,69 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public deepCopy(obj = {}) {
     return JSON.parse(JSON.stringify(obj));
+  }
+
+  public crearElstablecimientoForm(): void {
+    this.domicilioDeElstablecimientoForm = this.fb.group({
+      codigoPostal: ['',Validators.required],
+      estado: ['',Validators.required],
+      municipio: ['',Validators.required],
+      localidad: ['',Validators.required],  
+      colonia: ['',Validators.required],
+      calleYNumero: ['',Validators.required],
+      correoElecronico: ['',Validators.required],
+      rfc: ['',Validators.required],
+      lada: [''],
+      telefono: ['',Validators.required],
+      avisoDeFuncionamiento: [''],
+      licenciaSanitaria: [{ value: '', disabled: false }],
+      regimenDestinara: [''],
+      aduana: ['']
+    });
+  }
+
+  public crearRepresentanteLegalForm(): void {
+    this.representanteLegalForm = this.fb.group({
+      losDatosNo: [''],
+      losDatosYes: [''],
+      rfc: [''],
+      nombreORazon: [''],
+      apellidoPaterno: [''],
+      apellidoMaterno: ['']
+    });
+  }
+
+  public cerrarSCIANForm(): void {
+    this.scianForm = this.fb.group({
+      clave: [''],
+      descripcion: ['']
+    });
+  }
+
+  public cerrarMercanciasForm(): void {
+    this.mercanciasForm = this.fb.group({
+      clave: [''],
+      especificarClasificacion: [''],
+      dci: [''],
+      marcaComercialODenominacionDistintiva: [''],
+      tipoDeProducto: [''],
+      fraccionArancelaria: [''],
+      descripcionDeLaFraccion: [''],
+      cantidadUmt: [''],
+      umt: [''],
+      umc: [''],
+      numeroCas: [''],
+      cantidadDeLotes: [''],
+      kgOrPorLote: [''],
+      pais: [''],
+      paisDeProcedencia: [''],
+      detallarUso: [''],
+      cantidadUmc: [''],
+      numeroDePiezas: [''],
+      descripcionDelNumeroDePiezas: [''],
+      numeroDeRegistro: [''],
+      presentacion: ['']
+    });
   }
 
 
@@ -250,4 +322,14 @@ public inicializarTablaYCatalogoDatos(): void {
       this.paisDeProcedenciaCatalogo = DATOS.data;
     });
   }
+
+  public onFuncionamientoCheckboxCambiar(event: Event): void{
+    const VALOR = event.target as HTMLInputElement;
+    if(VALOR.checked) {
+        this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.disable();
+    } else {
+        this.domicilioDeElstablecimientoForm.get('licenciaSanitaria')?.enable();
+    }
+  }
+
 }

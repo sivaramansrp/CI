@@ -4,13 +4,16 @@
     <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES"></ng-alert>
     <div class="row mb-3">
         <div class="col-md-6">
-            <app-catalogo-select 
+            <form [formGroup]="tipoDeDocumentoForm">
+              <app-catalogo-select 
                 [catalogo]="tipoDocumentoCatalogo" 
                 [label]="'Tipo de documento'" 
                 [required]="true" 
                 name="documento"
+                formControlName="tipoDocumento"
                 (change)="setValoresStore()">
-            </app-catalogo-select>
+              </app-catalogo-select>
+            </form>
         </div>
         <div class="col-md-6">
             <div class="form-check d-flex justify-content-evenly">
