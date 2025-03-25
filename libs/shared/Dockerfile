@@ -5,7 +5,6 @@ WORKDIR /app
 # Copy package files first for better layer caching
 COPY package.json .
 COPY nx.json .
-COPY workspace.json ./workspace.json
 
 # Install dependencies
 RUN npm install --force --no-audit
