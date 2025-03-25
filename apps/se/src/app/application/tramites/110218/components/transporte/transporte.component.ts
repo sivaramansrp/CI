@@ -1,15 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-import { REG_X, REGEX_DESCRIPCION_ESPECIALES, TituloComponent } from '@ng-mf/data-access-user';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 
-import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { REG_X } from '@ng-mf/data-access-user';
+import { REGEX_DESCRIPCION_ESPECIALES } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para manejar los detalles del transporte para el certificado técnico de Japón.

@@ -1,16 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { REG_X, REGEX_DESCRIPCION_ESPECIALES, TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { REG_X } from '@libs/shared/data-access-user/src';
+import { REGEX_DESCRIPCION_ESPECIALES } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para manejar los datos del destinatario para el certificado técnico de Japón.

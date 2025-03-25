@@ -1,24 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
 
-import { CERTIFICADO_TABLA, CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
+import { CERTIFICADO_TABLA } from '../../models/certificado-tecnico-japon.enum';
+import { CompliMentaria } from '../../models/certificado-tecnico-japon.enum';
 
 /**
  * Componente para mostrar y manejar los datos del certificado técnico de Japón.

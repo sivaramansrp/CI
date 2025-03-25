@@ -1,18 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { Catalogo, CatalogoSelectComponent, REG_X, REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
-
 import { Router } from '@angular/router';
+
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+import { REG_X } from '@libs/shared/data-access-user/src';
+import { REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
+
+import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
+
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para el formulario de mercancías seleccionadas.

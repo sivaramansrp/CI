@@ -1,21 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/**
- * Componente Tratados
- * Este componente maneja los detalles del transporte relacionados con tratados y acuerdos.
- * TratadosComponent
- */
 
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InputFecha, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user';
+
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-import { EXPEDICION, VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
+import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
+
+import { EXPEDICION } from '../../constants/certificado-tecnico-japon.enum';
+import { VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
 
 /**
  * TratadosComponent
