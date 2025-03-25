@@ -3,6 +3,10 @@ import { Component } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { ViewChild } from '@angular/core';
+/**
+ * @description Componente encargado de gestionar y mostrar los datos relacionados con la aplicación.
+ * Implementa la interfaz `AfterViewInit` para realizar acciones adicionales después de que la vista ha sido inicializada.
+ */
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',
