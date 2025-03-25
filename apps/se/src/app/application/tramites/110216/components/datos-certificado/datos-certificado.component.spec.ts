@@ -1,144 +1,124 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { ToastrModule, provideToastr } from 'ngx-toastr';
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 import { DatosCertificadoComponent } from './datos-certificado.component';
-import { FormBuilder } from '@angular/forms';
-import { Tramite110204Store } from '../../estados/tramite110204.store';
-import { Tramite110204Query } from '../../estados/tramite110204.query';
-import { CertificadosOrigenGridService } from '../../services/certificadosOrigen.service';
-import { ToastrService } from 'ngx-toastr';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-
-@Injectable()
-class MockTramite110204Store {}
-
-@Injectable()
-class MockTramite110204Query {
-  formDatosCertificado$ = observableOf({});
-  selectAltaPlanta$ = {};
-  selectPaisBloque$ = {};
-  selectBuscarMercancia$ = {};
-}
-
+import { CertificadosOrigenService } from '../../services/certificadosOrigen.service';
+import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
+import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 
 describe('DatosCertificadoComponent', () => {
-  let fixture;
-  let component;
+  let component: DatosCertificadoComponent;
+  let fixture: ComponentFixture<DatosCertificadoComponent>;
+  let certificadosOrigenServiceMock: any;
+  let tramite110216StoreMock: any;
+  let tramite110216QueryMock: any;
 
- beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    certificadosOrigenServiceMock = {
+      obtenerIdioma: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Español' }] })),
+      obtenerEntidadFederativa: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Entidad 1' }] })),
+      obtenerRepresentacionFederal: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Representación 1' }] }))
+    };
+
+    tramite110216StoreMock = {
+      setIdioma: jest.fn(),
+      setEntidadFederativa: jest.fn(),
+      setRepresentacionFederal: jest.fn()
+    };
+
+    tramite110216QueryMock = {
+      selectSolicitud$: of({
+        observaciones: 'Observaciones de prueba',
+        idioma: 1,
+        entidadFederativa: 1,
+        representacionFederal: 1
+      })
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        CommonModule,
+        TituloComponent,
+        CatalogoSelectComponent,
+        DatosCertificadoComponent
+      ],
       providers: [
         ToastrService,
-                provideToastr({
-                  positionClass: 'toast-top-right',
-                }),
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
         FormBuilder,
-        CertificadosOrigenGridService,
-        { provide: Tramite110204Store, useClass: MockTramite110204Store },
-        { provide: Tramite110204Query, useClass: MockTramite110204Query },
-        SeccionLibQuery,
-        SeccionLibStore
+        { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
+        { provide: Tramite110216Store, useValue: tramite110216StoreMock },
+        { provide: Tramite110216Query, useValue: tramite110216QueryMock }
       ]
-    }).overrideComponent(DatosCertificadoComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosCertificadoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run GetterDeclaration #formularioControl', async () => {
-    component.formDatosCertificado = component.formDatosCertificado || {};
-    component.formDatosCertificado.get = jest.fn();
-    const formularioControl = component.formularioControl;
-    expect(component.formDatosCertificado.get).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.cargarIdioma = jest.fn();
-    component.cargarEntidadFederativa = jest.fn();
-    component.formDatosCertificado = component.formDatosCertificado || {};
-    component.formDatosCertificado.valueChanges = observableOf({});
-    component.store = component.store || {};
-    component.store.setFormDatosCertificado = jest.fn();
-    component.cargarRepresentacionFederal = jest.fn();
+  it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.cargarIdioma).toHaveBeenCalled();
-    expect(component.cargarEntidadFederativa).toHaveBeenCalled();
-    expect(component.store.setFormDatosCertificado).toHaveBeenCalled();
-    expect(component.cargarRepresentacionFederal).toHaveBeenCalled();
+    expect(component.formDatosCertificado).toBeDefined();
+    expect(component.formDatosCertificado.get('observaciones')?.value).toBe('Observaciones de prueba');
+    expect(component.formDatosCertificado.get('idioma')?.value).toBe(1);
+    expect(component.formDatosCertificado.get('entidadFederativa')?.value).toBe(1);
+    expect(component.formDatosCertificado.get('representacionFederal')?.value).toBe(1);
   });
 
-  it('should run #idiomaSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setIdiomaDatos = jest.fn();
-    component.idiomaSeleccion({});
-    expect(component.store.setIdiomaDatos).toHaveBeenCalled();
+  it('should call setValoresStore when idiomaSeleccion is called', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.idiomaSeleccion();
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'idioma', 'setIdioma');
   });
 
-  it('should run #entidadFederativaSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setEntidadFederativaDatos = jest.fn();
-    component.entidadFederativaSeleccion({});
-    expect(component.store.setEntidadFederativaDatos).toHaveBeenCalled();
+  it('should call setValoresStore when entidadFederativaSeleccion is called', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.entidadFederativaSeleccion();
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
   });
 
-  it('should run #representacionFederalSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setRepresentacionFederalDatos = jest.fn();
-    component.representacionFederalSeleccion({});
-    expect(component.store.setRepresentacionFederalDatos).toHaveBeenCalled();
+  it('should call setValoresStore when representacionFederalSeleccion is called', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.representacionFederalSeleccion();
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
   });
 
-  it('should run #cargarIdioma()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerIdioma = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setIdiomaDatos = jest.fn();
-    component.cargarIdioma();
-    expect(component.certificadoService.obtenerIdioma).toHaveBeenCalled();
-    expect(component.store.setIdiomaDatos).toHaveBeenCalled();
-  });
-
-  it('should run #cargarRepresentacionFederal()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerRepresentacionFederal = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setRepresentacionFederalDatos = jest.fn();
-    component.cargarRepresentacionFederal();
-    expect(component.certificadoService.obtenerRepresentacionFederal).toHaveBeenCalled();
-    expect(component.store.setRepresentacionFederalDatos).toHaveBeenCalled();
-  });
-
-  it('should run #cargarEntidadFederativa()', async () => {
-    component.certificadoService = component.certificadoService || {};
-    component.certificadoService.obtenerEntidadFederativa = jest.fn().mockReturnValue(observableOf({}));
-    component.store = component.store || {};
-    component.store.setEntidadFederativaDatos = jest.fn();
-    component.cargarEntidadFederativa();
-    expect(component.certificadoService.obtenerEntidadFederativa).toHaveBeenCalled();
-    expect(component.store.setEntidadFederativaDatos).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyNotifier$ = component.destroyNotifier$ || {};
-    component.destroyNotifier$.next = jest.fn();
-    component.destroyNotifier$.complete = jest.fn();
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 
+  it('should load idiomas on cargarIdioma', () => {
+    component.cargarIdioma();
+    expect(certificadosOrigenServiceMock.obtenerIdioma).toHaveBeenCalled();
+    expect(component.idiomas).toEqual([{ id: 1, descripcion: 'Español' }]);
+  });
+
+  it('should load entidadFederativas on cargarEntidadFederativa', () => {
+    component.cargarEntidadFederativa();
+    expect(certificadosOrigenServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
+    expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
+  });
+
+  it('should load representacionFederal on cargarRepresentacionFederal', () => {
+    component.cargarRepresentacionFederal();
+    expect(certificadosOrigenServiceMock.obtenerRepresentacionFederal).toHaveBeenCalled();
+    expect(component.representacionFederal).toEqual([{ id: 1, descripcion: 'Representación 1' }]);
+  });
 });

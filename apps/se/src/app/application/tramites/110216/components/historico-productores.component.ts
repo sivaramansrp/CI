@@ -86,14 +86,12 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initActionFormBuild();
   }
-
   initActionFormBuild(): void {
     this.formulario = this.fb.group({
       datosConfidencialesProductor: [this.tramiteState?.datosConfidencialesProductor, []],
       productorMismoExportador: [this.tramiteState?.productorMismoExportador, []],
     });
   }
-
   cargarProductorPorExportador(): void {
     this.certificadosOrigenService.obtenerProductorPorExportador()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -101,7 +99,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         this.productoresExportador = respuesta.datos;
       });
   }
-
   obtenerSeleccionadoProductores(evento: HistoricoColumnas[]): void {
     this.seleccionadoProductoresExportador = evento;
   }
@@ -113,7 +110,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.productoresExportador = this.productoresExportador.filter(elementos => !this.seleccionadoProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
     this.seleccionadoProductoresExportador = [];
   }
-
   eliminarProductoresSeleccionados(): void {
     this.productoresExportador = [...this.productoresExportador, ...this.seleccionadoAgregarProductoresExportador];
     this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
@@ -124,7 +120,6 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
