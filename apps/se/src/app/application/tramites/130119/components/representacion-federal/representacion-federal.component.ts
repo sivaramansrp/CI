@@ -38,13 +38,13 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * Arreglo de catálogos que contiene las opciones para el estado.
    * Se obtiene del servicio DatosDeLaSolicitudService.
    */
-  estadoOptions: Catalogo[] = [];
+  opcionesEstado: Catalogo[] = [];
 
   /**
    * Arreglo de catálogos que contiene las opciones para la representación federal.
    * Se obtiene del servicio DatosDeLaSolicitudService.
    */
-  representacionFederalOptions: Catalogo[] = [];
+  opcionesRepresentacionFederal: Catalogo[] = [];
 
   /**
    * Subject utilizado para gestionar la desuscripción de observables al destruir el componente.
@@ -72,7 +72,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cargarEstado();
     this.cargarRepresentacionFederal();
-    this.getValorsStore();
+    this.getValoresStore();
   }
 
   /**
@@ -83,7 +83,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe(
       (data) => {
-        this.estadoOptions = data;
+        this.opcionesEstado = data;
       }
     );
   }
@@ -96,7 +96,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyed$)
     ).subscribe(
       (data) => {
-        this.representacionFederalOptions = data;
+        this.opcionesRepresentacionFederal = data;
       }
     );
   }
@@ -115,7 +115,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los valores del store del trámite y los asigna al formulario.
    */
-  getValorsStore(): void {
+  getValoresStore(): void {
     this.tramite130119Query.selectTramite130119$
       .pipe(
         takeUntil(this.destroyed$),

@@ -32,13 +32,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Opciones de régimen.
    * @type {Catalogo[]}
    */
-  regimenOptions!: Catalogo[];
+  opcionesDeRegimen!: Catalogo[];
 
   /**
    * Opciones de clasificación de régimen.
    * @type {Catalogo[]}
    */
-  clasificacionDeRegimenOptions!: Catalogo[];
+  opcionesDeClasificacionDeRegimen!: Catalogo[];
 
   /**
    * Formulario para los datos del trámite.
@@ -70,7 +70,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getRegimenOptions();
     this.getClasificacionDeRegimen();
-    this.getValorsStore();
+    this.getValoresStore();
   }
 
   /**
@@ -80,7 +80,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.service.getRegimen().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data) => {
-      this.regimenOptions = data;
+      this.opcionesDeRegimen = data;
     });
   }
 
@@ -91,7 +91,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.service.getClasificacionDeRegimen().pipe(
       takeUntil(this.destroyed$)
     ).subscribe((data) => {
-      this.clasificacionDeRegimenOptions = data;
+      this.opcionesDeClasificacionDeRegimen = data;
     });
   }
 
@@ -109,7 +109,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */
-  getValorsStore(): void {
+  getValoresStore(): void {
     this.tramite130119Query.selectTramite130119$
       .pipe(
         takeUntil(this.destroyed$),

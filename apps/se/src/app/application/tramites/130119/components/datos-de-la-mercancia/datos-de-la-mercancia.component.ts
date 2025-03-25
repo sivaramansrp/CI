@@ -52,7 +52,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
    * Opciones de fracción arancelaria.
    * @type {Catalogo[]}
    */
-  fraccionArancelariaOptions!: Catalogo[];
+  opcionesFraccionArancelaria!: Catalogo[];
 
   /**
    * Opciones de países.
@@ -90,7 +90,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getFraccionArancelaria();
     this.getPasises();
-    this.getValorsStore();
+    this.getValoresStore();
   }
 
   /**
@@ -100,7 +100,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     this.service.getFraccionArancelaria().pipe(
       takeUntil(this.destroyed$)).subscribe(
         (data) => {
-          this.fraccionArancelariaOptions = data;
+          this.opcionesFraccionArancelaria = data;
         });
   }
 
@@ -140,7 +140,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los valores del store y los asigna al formulario.
    */
-  getValorsStore(): void {
+  getValoresStore(): void {
     this.tramite130119Query.selectTramite130119$
       .pipe(
         takeUntil(this.destroyed$),
