@@ -19,13 +19,13 @@ import { takeUntil } from 'rxjs';
 
 
 @Component({
-  selector: 'app-historico-roductores',
+  selector: 'app-historico-productores',
   standalone: true,
   imports: [CommonModule, TituloComponent, FormsModule, ReactiveFormsModule, TablaDinamicaComponent],
-  templateUrl: './historico-roductores.component.html',
-  styleUrl: './historico-roductores.component.scss',
+  templateUrl: './historico-productores.component.html',
+  styleUrl: './historico-productores.component.scss',
 })
-export class HistoricoRoductoresComponent implements OnInit, OnDestroy {
+export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   formulario!: FormGroup;
   TablaSeleccion = TablaSeleccion;
   tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HistoricoRoductoresComponent } from './historico-roductores.component';
+import { HistoricoRoductoresComponent } from './historico-productores.component';
 
 describe('HistoricoRoductoresComponent', () => {
   let component: HistoricoRoductoresComponent;
