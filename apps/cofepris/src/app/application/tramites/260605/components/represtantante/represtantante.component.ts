@@ -1,10 +1,21 @@
-import { AlertComponent,Aviso,TituloComponent} from '@ng-mf/data-access-user';
-import { Component, OnDestroy,OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
+import { AlertComponent, Aviso, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
-import {Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
+
+/**
+ * Interfaz para los datos de prueba del representante.
+ */
+interface ReprestantanteTestData {
+  rfc: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+}
+
 @Component({
   selector: 'app-represtantante', // Selector del componente en la plantilla HTML
   templateUrl: './represtantante.component.html', // Ruta a la plantilla HTML
@@ -64,6 +75,19 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   /**
+   * Datos de prueba del representante.
+   * 
+   * @type {ReprestantanteTestData}
+   * @memberof ReprestantanteComponent
+   */
+  represtantanteTestData: ReprestantanteTestData = {
+    rfc: 'RFC123',
+    nombre: 'John',
+    apellidoPaterno: 'Doe',
+    apellidoMaterno: 'Smith'
+  };
+
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Instancia de FormBuilder para la creación de formularios.
@@ -76,7 +100,23 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     private tramite260605Store: Tramite260605Store,
     private tramite260605Query: Tramite260605Query
   ) {
-    // Initialization logic if needed
+    // Lógica de inicialización si es necesario
+  }
+
+  /**
+   * Método que se ejecuta al enviar el formulario.
+   * 
+   * @memberof ReprestantanteComponent
+   */
+  onSubmit(): void {
+    const RFC = this.represtantante.get('rfc')?.value;
+    if (RFC) {
+      this.represtantante.patchValue({
+        nombre: this.represtantanteTestData.nombre,
+        apellidoPaterno: this.represtantanteTestData.apellidoPaterno,
+        apellidoMaterno: this.represtantanteTestData.apellidoMaterno
+      });
+    }
   }
 
   /**
