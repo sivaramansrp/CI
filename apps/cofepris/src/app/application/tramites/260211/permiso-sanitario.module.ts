@@ -17,7 +17,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 import { DatosComponent } from './pages/datos/datos.component';
 import { TercerosRelacionadosComponent } from './components/tercerosRelacionados/tercerosRelacionados.component';
-import { DatosDeLaComponent } from './components/datosDeLa/datosDeLa.component';
+import { DatosEstablecimientoComponent } from './components/datosEstablecimiento/datosEstablecimiento.component';
 import { DerechosComponent } from './components/derechos/derechos.component';
 import { SanitarioService } from './services/sanitario.service';
 
@@ -55,7 +55,7 @@ import { TercerosRelacionadoesComponent } from './components/terceros-Relacionad
     TercerosRelacionadosComponent,
     TercerosRelacionadoesComponent,
     // ModelComponent,
-    DatosDeLaComponent,
+    DatosEstablecimientoComponent,
     DerechosComponent,
     AnexarDocumentosComponent,
     TituloComponent,

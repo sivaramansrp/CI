@@ -22,7 +22,7 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
  * incluyendo domicilio, manifiestos y representante legal.
  */
 @Component({
-  selector: 'app-datos-de-la',
+  selector: 'app-datos-establecimiento',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,10 +33,10 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
     ManifiestosComponent,
     RepresentanteLegalComponent,
   ],
-  templateUrl: './datosDeLa.component.html',
-  styleUrls: ['./datosDeLa.component.css'],
+  templateUrl: './datosEstablecimiento.component.html',
+  styleUrls: ['./datosEstablecimiento.component.css'],
 })
-export class DatosDeLaComponent implements OnInit, OnDestroy {
+export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    * @type {Solicitud260211State}
@@ -103,7 +103,7 @@ constructor(
       /**
        * RFC del solicitante, campo deshabilitado.
        */
-      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true }],
+      rfcResponsableSanitario: [{ value: this.solicitudState?.rfcResponsableSanitario, disabled: true }],
  
       /**
        * Denominación del solicitante, campo requerido.

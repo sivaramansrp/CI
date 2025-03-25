@@ -7,9 +7,9 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud260211State {
     /**
-     * El valor de rfcDel.
+     * El valor de rfcResponsableSanitario.
      */
-    rfcDel: string;
+    rfcResponsableSanitario: string;
     /**
      * El valor de denominacion.
      */
@@ -83,9 +83,9 @@ export interface Solicitud260211State {
     */
     clasificacion:string;
     /**
-     * El valor de especificar.
+     * El valor de especificarClasificacionProducto.
     */
-    especificar:string;
+    especificarClasificacionProducto:string;
     /**
      * El valor de denominacionEspecifica.
     */
@@ -172,7 +172,7 @@ export function createInitialState(): Solicitud260211State {
         /**
          * El valor de rfcDel.
          */
-        rfcDel: '',
+        rfcResponsableSanitario: '',
         /**
          * El valor de denominacion.
          */
@@ -246,9 +246,9 @@ export function createInitialState(): Solicitud260211State {
         */
         clasificacion: '',
         /**
-         * El valor de especificar.
+         * El valor de especificarClasificacionProducto.
         */
-        especificar: '',
+        especificarClasificacionProducto: '',
         /**
          * El valor de denominacionEspecifica.
         */
@@ -352,13 +352,13 @@ export class Tramite260211Store extends Store<Solicitud260211State>{
     }
 
     /**
-     * Establece el estado de rfcDel.
-     * @param rfcDel - El valor de rfcDel.
+     * Establece el estado de rfcResponsableSanitario.
+     * @param rfcResponsableSanitario - El valor de rfcResponsableSanitario.
      */
-    public setRfcDel(rfcDel: string) {
+    public setRfcResponsableSanitario(rfcResponsableSanitario: string) {
         this.update((state) => ({
             ...state,
-            rfcDel,
+            rfcResponsableSanitario,
         }));
     }
     /**
@@ -545,10 +545,10 @@ export class Tramite260211Store extends Store<Solicitud260211State>{
      * Establece el estado de especificar.
      * @param especificar - El valor de especificar.
      */
-    public setEspecificar(especificar: string) {
+    public setEspecificarClasificacionProducto(especificarClasificacionProducto: string) {
         this.update((state) => ({
             ...state,
-            especificar,
+            especificarClasificacionProducto,
         }));
     }
     /**
