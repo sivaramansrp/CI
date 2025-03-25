@@ -161,10 +161,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'ref-procedure',
+    path: 'diamante-bruto',
     loadChildren: () =>
-      import('./tramites/130114/ref-procedure.module').then(
-        (m) => m.RefProcedureModule
+      import('./tramites/130114/diamante-bruto.module').then(
+        (m) => m.DiamanteBrutoModule
       )
   },
   {

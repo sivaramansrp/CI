@@ -103,7 +103,7 @@ export class PartidasDeLaComponent {
    * FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
-    //  Constructor para inicializar el componente e inyectar dependencias.
+    //  Constructor de la
   }
 
   /**

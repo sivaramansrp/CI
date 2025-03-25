@@ -3,22 +3,14 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
-
-
-
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
@@ -38,70 +30,158 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   templateUrl: './pais-procendencia.component.html',
   styleUrl: './pais-procendencia.component.scss',
 })
-export class PaisProcendenciaComponent implements OnInit {
-  @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
-  @Input()paisProc: Catalogo[] = [];
-  @Input()paisesPorBloque: Catalogo[] = [];
-  @Input() selectRangoDias: string[] = [];
-  @Output() bloqueCambiar = new EventEmitter<number>();
-  @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
-  paisForm!: FormGroup;
-  campoDeBotones = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.agregar('t');
-        }
-      },
+export class PaisProcendenciaComponent {
+/**
+ * Referencia al componente CrosslistComponent.
+ * @type {CrosslistComponent}
+ */
+@ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+
+/**
+ * Formulario reactivo para la selección de países.
+ * @type {FormGroup}
+ */
+@Input() paisForm!: FormGroup;
+
+/**
+ * Lista de países de procedencia.
+ * @type {Catalogo[]}
+ */
+@Input() paisProc: Catalogo[] = [];
+
+/**
+ * Lista de países agrupados por bloques.
+ * @type {Catalogo[]}
+ */
+@Input() paisesPorBloque: Catalogo[] = [];
+
+/**
+ * Rango de días seleccionables.
+ * @type {string[]}
+ */
+@Input() selectRangoDias: string[] = [];
+
+/**
+ * Evento emitido cuando se cambia el bloque seleccionado.
+ * @type {EventEmitter<number>}
+ */
+@Output() bloqueCambiar = new EventEmitter<number>();
+
+/**
+ * Evento emitido para establecer valores en el store.
+ * @type {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
+ */
+@Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
+/**
+ * Configuración de los botones para la gestión de la selección de países.
+ */
+campoDeBotones = [
+  {
+    /**
+     * Nombre del botón para agregar todos los elementos.
+     * @type {string}
+     */
+    btnNombre: 'Agregar todos',
+    /**
+     * Clase CSS del botón.
+     * @type {string}
+     */
+    class: 'btn-primary',
+    /**
+     * Función para agregar todos los elementos.
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('t');
+      }
     },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.agregar('');
-        }
-      },
+  },
+  {
+    /**
+     * Nombre del botón para agregar la selección actual.
+     * @type {string}
+     */
+    btnNombre: 'Agregar selección',
+    /**
+     * Clase CSS del botón.
+     * @type {string}
+     */
+    class: 'btn-default',
+    /**
+     * Función para agregar la selección actual.
+     * @type {() => void}
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('');
+      }
     },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.quitar('');
-        }
-      },
+  },
+  {
+    /**
+     * Nombre del botón para restar la selección actual.
+     * @type {string}
+     */
+    btnNombre: 'Restar selección',
+    /**
+     * Clase CSS del botón.
+     * @type {string}
+     */
+    class: 'btn-danger',
+    /**
+     * Función para restar la selección actual.
+     * @type {() => void}
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('');
+      }
     },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.quitar('t');
-        }
-      },
+  },
+  {
+    /**
+     * Nombre del botón para restar todos los elementos.
+     * @type {string}
+     */
+    btnNombre: 'Restar todos',
+    /**
+     * Clase CSS del botón.
+     * @type {string}
+     */
+    class: 'btn-default',
+    /**
+     * Función para restar todos los elementos.
+     */
+    funcion: (): void => {
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('t');
+      }
     },
-  ];
-  constructor(
-    private http: HttpClient, 
-    private fb: FormBuilder) {
-    // Constructor del componente
-  }
-  ngOnInit(): void {
-    this.paisForm = this.fb.group({
-      bloque: [''],
-      usoEspecifico: ['', Validators.required],
-      justificacionImportacionExportacion: ['', [Validators.required]],
-      observaciones: [''],
-    });
-  }
-  enCambioDeBloque(event: Event): void {
-    const SELECTED_BLOQUE = Number((event.target as HTMLInputElement).value);
-    this.bloqueCambiar.emit(SELECTED_BLOQUE);
-  }
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
-    this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
-  }
+  },
+];
+ /**
+ * Constructor del componente.
+ */
+constructor() {
+  // Constructor del componente
+}
+
+/**
+ * Maneja el cambio de bloque seleccionado.
+ * @param {Event} event - El evento de cambio.
+ */
+enCambioDeBloque(event: Event): void {
+  const SELECTED_BLOQUE = Number((event.target as HTMLInputElement).value);
+  this.bloqueCambiar.emit(SELECTED_BLOQUE);
+}
+
+/**
+ * Establece valores en el store.
+ * @param {FormGroup} form - El formulario reactivo.
+ * @param {string} campo - El campo a actualizar.
+ * @param {string} metodoNombre - El nombre del método.
+ */
+setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
+  this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
+}
 }
