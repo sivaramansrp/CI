@@ -11,7 +11,7 @@ export class Tramite110218Query extends Query<Solicitud110218State> {
   puertodeEmbarque$ = this.select((state) => state.puertodeEmbarque);
   puertodeDesembarque$ = this.select((state) => state.puertodeDesembarque);
   puertodeTransito$ = this.select((state) => state.puertodeTransito);
-  nombredelaEmbarcación$ = this.select((state) => state.nombredelaEmbarcación);
+  nombredelaEmbarcacion$ = this.select((state) => state.nombredelaEmbarcacion);
   numerodeVuelo$ = this.select((state) => state.numerodeVuelo);
   nombre$ = this.select((state) => state.nombre);
   primerApellido$ = this.select((state) => state.primerApellido);

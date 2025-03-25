@@ -151,14 +151,14 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.suscribirseACambiosEnLaTienda();
-    this.getTabledatas();
+    this.obtenerDatosDeTabla();
   }
 
   /**
    * Obtiene los datos del destinatario desde el servicio.
    * DestinatarioComponent
    */
-  getTabledatas(): void {
+  obtenerDatosDeTabla(): void {
     this.service.getdestinatario().subscribe((data: any) => {
       this.datosDelDestinatario.patchValue({
         segundoApellido: data.segundoApellido,

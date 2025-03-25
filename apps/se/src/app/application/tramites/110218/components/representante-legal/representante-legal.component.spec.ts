@@ -73,14 +73,14 @@ describe('RepresentanteLegalComponent', () => {
     });
   });
 
-  it('should call getTabledatas() and update the form', () => {
-    component.getTabledatas();
+  it('should call obtenerDatosDeTabla() and update the form', () => {
+    component.obtenerDatosDeTabla();
     expect(mockService.getrepresentante).toHaveBeenCalled();
     expect(component.datosdelexportador.get('empresa')?.value).toBe('Test Corp');
   });
 
   it('should subscribe to store changes and update form values', () => {
-    component.subscribeToStoreChanges();
+    component.suscribirseACambiosDeTienda();
     expect(component.datosdelexportador.get('nombredelRepresentante')?.value).toBe('John Doe');
     expect(component.datosdelexportador.get('cargo')?.value).toBe('Manager');
     expect(component.datosdelexportador.get('telefonos')?.value).toBe('123456789');

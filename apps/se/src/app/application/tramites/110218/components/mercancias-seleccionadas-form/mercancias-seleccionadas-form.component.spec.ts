@@ -94,21 +94,21 @@ describe('MercanciasSeleccionadasFormComponent', () => {
     expect(component.modifydatosdelcertificado.get('nombreIngles')?.value).toBe('Product 1');
   });
 
-  it('should emit modificarSuccessBtn event on modificarSuccess', () => {
-    jest.spyOn(component.modificarSuccessBtn, 'emit');
+  it('should emit modificarÉxitoBtn event on modificarSuccess', () => {
+    jest.spyOn(component.modificarÉxitoBtn, 'emit');
     component.modificarSuccess();
-    expect(component.modificarSuccessBtn.emit).toHaveBeenCalledWith(true);
+    expect(component.modificarÉxitoBtn.emit).toHaveBeenCalledWith(true);
   });
 
   it('should update store on unidad de medida change', () => {
     component.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.setValue('Unidad 1');
-    component.onChangeUnidadMedida();
+    component.enCambioDeUnidadDeMedida();
     expect(mockStore.setUnidadeMedida).toHaveBeenCalledWith('Unidad 1');
   });
 
   it('should update store on tipo de factura change', () => {
     component.modifydatosdelcertificado.get('tipodeFactura')?.setValue('Factura 1');
-    component.onChangeTipodeFactura();
+    component.enCambioDeTipoDeFactura();
     expect(mockStore.setTipodeFactura).toHaveBeenCalledWith('Factura 1');
   });
 

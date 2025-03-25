@@ -9,7 +9,7 @@
                     <input type="text" class="form-control bg-white" id="lugar" placeholder="Tamaulipas 15 cl: centro"
                         formControlName="lugar"
                         [class.is-invalid]="datosDelCertificado.get('lugar')?.touched && datosDelCertificado.get('lugar')?.invalid"
-                        (change)="onDatosdelcertificadoChange('lugar')">
+                        (change)="enCambioDeDatosDelCertificado('lugar')">
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
 
@@ -18,7 +18,7 @@
                     <textarea class="form-control custom-textarea bg-white" id="observaciones"
                         placeholder="OTRAS OBSERVACIONES" formControlName="observaciones"
                         [class.is-invalid]="datosDelCertificado.get('observaciones')?.touched && datosDelCertificado.get('observaciones')?.invalid"
-                        (change)="onDatosdelcertificadoChange('observaciones')">
+                        (change)="enCambioDeDatosDelCertificado('observaciones')">
                 </textarea>
                     <div class="invalid-feedback">Este campo es obligatorio.</div>
                 </div>
@@ -29,10 +29,10 @@
     </div>
     <h6>Mercancías seleccionadas</h6>
     <app-tabla-dinamica [configuracionTabla]="arregloConfiguracionTabla" [datos]="datos" [tipoSeleccionTabla]="radioDeMesa"
-        (filaSeleccionada)="handleFilaSeleccionada($event)">
+        (filaSeleccionada)="manejarFilaSeleccionada($event)">
     </app-tabla-dinamica>
     <div class="col-md-12">
-        <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="onModifyForm()">
+        <button type="button" class="btn btn-primary col-auto pull-right float-end mt-3" (click)="enModificarFormulario()">
             Modificar
         </button>
     </div>

@@ -55,7 +55,7 @@
                 <app-catalogo-select [catalogo]="unidaddeMedidadeComercializacionOptions"
                     formControlName="unidaddeMedidadeComercializacion" name="unidaddeMedidadeComercializacion"
                     [label]="'Unidad de medida de comercialización'"
-                    (change)="onChangeUnidadMedida()"></app-catalogo-select>
+                    (change)="enCambioDeUnidadDeMedida()"></app-catalogo-select>
                 <div *ngIf="modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.touched &&
                              modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.invalid">
                     <small class="text-danger">Seleccione una opción.</small>
@@ -81,7 +81,7 @@
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="tipodeFacturaOptions" formControlName="tipodeFactura"
                     [label]="'Tipo de factura'" name="tipodeFactura"
-                    (change)="onChangeTipodeFactura()"></app-catalogo-select>
+                    (change)="enCambioDeTipoDeFactura()"></app-catalogo-select>
                 <div *ngIf="modifydatosdelcertificado.get('tipodeFactura')?.touched &&
                              modifydatosdelcertificado.get('tipodeFactura')?.invalid">
                     <small class="text-danger">Seleccione un tipo de factura.</small>

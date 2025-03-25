@@ -107,7 +107,7 @@ export class DatosCertificadoComponent implements OnInit {
   /**
    * Datos seleccionados previamente en la tabla, obtenidos desde el store.
   */
-  selectedTableFromStore: any;
+  tablaSeleccionadaDeLaTienda: any;
 
   /**
  * Índice utilizado para propósitos internos del componente.
@@ -119,14 +119,13 @@ export class DatosCertificadoComponent implements OnInit {
  */
   @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
   /**
-   * Constructor del componente.
-   *
-   * Constructor de formularios.
-   * Servicio para obtener datos del certificado.
-   * Store para el trámite 110218.
-   * Query para el trámite 110218.
-   * Servicio de enrutamiento.
-   */
+ * Constructor for the component.
+ * 
+ * FormBuilder instance for creating form groups.
+ * Service for handling certificate-related operations.
+ * Store for managing state related to Tramite 110218.
+ * Query for retrieving data related to Tramite 110218.
+ */
   constructor(
     private fb: FormBuilder,
     private service: CertificadoTecnicoJaponService,
@@ -135,9 +134,24 @@ export class DatosCertificadoComponent implements OnInit {
   ) {
     this.datosDelCertificado = this.crearFormularioDatosDelCertificado();
   }
+  
+  /**
+   * Creates and returns a FormGroup for certificate data.
+   * 
+   * The form group containing 'lugar' and 'observaciones' controls.
+   */
   private crearFormularioDatosDelCertificado(): FormGroup {
     return this.fb.group({
+      /**
+       * The place where the certificate is issued.
+       * This field is required.
+       */
       lugar: ['', Validators.required],
+  
+      /**
+       * Observations or remarks related to the certificate.
+       * This field is required.
+       */
       observaciones: ['', Validators.required]
     });
   }
@@ -146,11 +160,11 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    */
   ngOnInit(): void {
-    this.getTabledatas();
+    this.obtenerDatosDeTabla();
     this.suscribirseACambiosEnLaTienda();
 
     this.tramite110218Query.tableDataDatos$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.selectedTableFromStore = data;
+      this.tablaSeleccionadaDeLaTienda = data;
     }
     )
 
@@ -160,7 +174,7 @@ export class DatosCertificadoComponent implements OnInit {
    * Obtiene los datos de la tabla desde el servicio.
    * DatosCertificadoComponent
    */
-  getTabledatas(): void {
+  obtenerDatosDeTabla(): void {
     this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
       this.datos = data;
     });
@@ -170,14 +184,14 @@ export class DatosCertificadoComponent implements OnInit {
    * DatosCertificadoComponent
    * Fila seleccionada.
    */
-  handleFilaSeleccionada(fila: CompliMentaria): void {
+  manejarFilaSeleccionada(fila: CompliMentaria): void {
     this.filaSeleccionada = fila;
   }
   /**
    * Navega a la sección de mercancías seleccionadas del formulario.
    * DatosCertificadoComponent
    */
-  onModifyForm(): void {
+  enModificarFormulario(): void {
     this.tramite110218Store.storeTableValues(this.filaSeleccionada);
     this.modificarEventCertificado.emit(false);
 
@@ -214,7 +228,7 @@ export class DatosCertificadoComponent implements OnInit {
       * DatosCertificadoComponent
       * Nombre del control del formulario.
       */
-  onDatosdelcertificadoChange(controlName: string): void {
+  enCambioDeDatosDelCertificado(controlName: string): void {
     const VALUE = this.datosDelCertificado.get(controlName)?.value;
 
     switch (controlName) {

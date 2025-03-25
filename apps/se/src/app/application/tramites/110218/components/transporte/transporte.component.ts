@@ -51,7 +51,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * Observable para el nombre de la embarcación.
    * TransporteComponent
    */
-  nombredelaEmbarcación$: Observable<string | null> = this.tramite110218Query.nombredelaEmbarcación$;
+  nombredelaEmbarcacion$: Observable<string | null> = this.tramite110218Query.nombredelaEmbarcacion$;
   /**
    * Observable para el número de vuelo.
    * TransporteComponent
@@ -84,7 +84,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
       puertodeEmbarque: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
       puertodeDesembarque: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
       puertodeTransito: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
-      nombredelaEmbarcación: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
+      nombredelaEmbarcacion: ['', [Validators.required, Validators.pattern(REGEX_DESCRIPCION_ESPECIALES)]], // Campo obligatorio, solo letras y espacios
       numerodeVuelo: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]], // Campo obligatorio, solo números permitidos
     });
   }
@@ -94,18 +94,18 @@ export class TransporteComponent implements OnInit, OnDestroy {
    * TransporteComponent
    */
   ngOnInit(): void {
-    this.subscribeToStoreChanges();
+    this.suscribirseACambiosDeTienda();
   }
 
   /**
    * Suscribe a los cambios en el store y actualiza el formulario.
    * TransporteComponent
    */
-  subscribeToStoreChanges(): void {
+  suscribirseACambiosDeTienda(): void {
     const OBSERVABLES = {
       puertodeEmbarque: this.puertodeEmbarque$,
       puertodeDesembarque: this.puertodeDesembarque$,
-      nombredelaEmbarcación: this.nombredelaEmbarcación$,
+      nombredelaEmbarcacion: this.nombredelaEmbarcacion$,
       numerodeVuelo: this.numerodeVuelo$,
       puertodeTransito: this.puertodeTransito$,
     };
@@ -143,8 +143,8 @@ export class TransporteComponent implements OnInit, OnDestroy {
       case 'puertodeDesembarque':
         this.tramite110218Store.setpuertodeDesembarque(VALUE);
         break;
-      case 'nombredelaEmbarcación':
-        this.tramite110218Store.setnombredelaEmbarcación(VALUE);
+      case 'nombredelaEmbarcacion':
+        this.tramite110218Store.setnombredelaEmbarcacion(VALUE);
         break;
       case 'numerodeVuelo':
         this.tramite110218Store.setnúmerodeVuelo(VALUE);

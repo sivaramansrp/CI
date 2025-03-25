@@ -44,12 +44,12 @@
       
          
           <div class="col-md-4">
-            <label class="form-label" for="nombredelaEmbarcación">Nombre de la embarcación:</label>
+            <label class="form-label" for="nombredelaEmbarcacion">Nombre de la embarcación:</label>
             <input 
-              type="text" class="form-control" id="nombredelaEmbarcación" 
-              placeholder="Puerto Boca" formControlName="nombredelaEmbarcación"
-              [class.is-invalid]="detallestransporte.get('nombredelaEmbarcación')?.touched && detallestransporte.get('nombredelaEmbarcación')?.invalid"
-              (change)="onDetallestransporteChange('nombredelaEmbarcación')">
+              type="text" class="form-control" id="nombredelaEmbarcacion" 
+              placeholder="Puerto Boca" formControlName="nombredelaEmbarcacion"
+              [class.is-invalid]="detallestransporte.get('nombredelaEmbarcacion')?.touched && detallestransporte.get('nombredelaEmbarcacion')?.invalid"
+              (change)="onDetallestransporteChange('nombredelaEmbarcacion')">
             <div class="invalid-feedback">
               Corrija el nombre.
             </div>

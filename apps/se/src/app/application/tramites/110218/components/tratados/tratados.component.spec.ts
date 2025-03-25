@@ -43,14 +43,14 @@ describe('TratadosComponent', () => {
     expect(component.detallesdeltransporte.disabled).toBe(true);
   });
 
-  it('should call getTabledatas on ngOnInit', () => {
-    jest.spyOn(component, 'getTabledatas');
+  it('should call obtenerDatosDeTabla on ngOnInit', () => {
+    jest.spyOn(component, 'obtenerDatosDeTabla');
     component.ngOnInit();
-    expect(component.getTabledatas).toHaveBeenCalled();
+    expect(component.obtenerDatosDeTabla).toHaveBeenCalled();
   });
 
-  it('should update form values when getTabledatas is called', () => {
-    component.getTabledatas();
+  it('should update form values when obtenerDatosDeTabla is called', () => {
+    component.obtenerDatosDeTabla();
     expect(component.detallesdeltransporte.value).toEqual({
       tratadoAcuerdo: 'Acuerdo Test',
       paisBloque: 'Bloque Test',

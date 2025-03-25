@@ -101,7 +101,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   /**
    * Evento que se emite cuando la modificación se realiza con éxito.
    */
-  @Output() modificarSuccessBtn = new EventEmitter<boolean>();
+  @Output() modificarÉxitoBtn = new EventEmitter<boolean>();
   /**
    * Constructor del componente.
    *
@@ -239,14 +239,14 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    */
 
   modificarSuccess(): void {
-    this.modificarSuccessBtn.emit(true);
+    this.modificarÉxitoBtn.emit(true);
 
   }
 
   /**
    * Maneja el cambio en la unidad de medida y actualiza el store.
    */
-  onChangeUnidadMedida(): void {
+  enCambioDeUnidadDeMedida(): void {
     const UNIDADDE_MEDIDA = this.modifydatosdelcertificado.get('unidaddeMedidadeComercializacion')?.value;
     this.tramite110218Store.setUnidadeMedida(UNIDADDE_MEDIDA);
   }
@@ -254,7 +254,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   /**
    * Maneja cambios en el tipo de factura y actualiza el estado en el store.
    */
-  onChangeTipodeFactura(): void {
+  enCambioDeTipoDeFactura(): void {
     const TIPODE_FACTURA = this.modifydatosdelcertificado.get('tipodeFactura')?.value;
     this.tramite110218Store.setTipodeFactura(TIPODE_FACTURA);
   }

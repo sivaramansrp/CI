@@ -100,16 +100,16 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * RepresentanteLegalComponent
    */
   ngOnInit(): void {
-    this.subscribeToStoreChanges();
-    this.getTabledatas();
+    this.suscribirseACambiosDeTienda();
+    this.obtenerDatosDeTabla();
   }
 
   /**
    * Obtiene los datos del representante legal desde el servicio.
    * RepresentanteLegalComponent
    */
-  getTabledatas(): void {
-    this.service.getrepresentante().subscribe((data: any) => {
+  obtenerDatosDeTabla(): void {
+    this.service.getrepresentante().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
       this.datosdelexportador.patchValue({
         empresa: data.empresa,
       });
@@ -120,7 +120,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * Suscribe a los cambios en el store y actualiza el formulario.
    * RepresentanteLegalComponent
    */
-  subscribeToStoreChanges(): void {
+  suscribirseACambiosDeTienda(): void {
     const OBSERVABLES = {
       nombredelRepresentante: this.nombredelRepresentante$,
       cargo: this.cargo$,

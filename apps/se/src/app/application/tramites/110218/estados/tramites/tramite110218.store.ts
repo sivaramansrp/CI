@@ -14,7 +14,7 @@ export interface Solicitud110218State {
   puertodeEmbarque: string,
   puertodeDesembarque:string,
   puertodeTransito:string,
-  nombredelaEmbarcación:string,
+  nombredelaEmbarcacion:string,
   numerodeVuelo:string,
   nombre:string,
   primerApellido:string,
@@ -48,7 +48,7 @@ export function createInitialState(): Solicitud110218State {
     puertodeEmbarque:'',
     puertodeDesembarque:'',
     puertodeTransito:'',
-    nombredelaEmbarcación:'',
+    nombredelaEmbarcacion:'',
     numerodeVuelo:'',
     nombre:'',
     primerApellido:'',
@@ -98,10 +98,10 @@ export class Tramite110218Store extends Store<Solicitud110218State> {
         puertodeDesembarque,
       }));
     }
-    public setnombredelaEmbarcación(nombredelaEmbarcación: string): void {
+    public setnombredelaEmbarcacion(nombredelaEmbarcacion: string): void {
       this.update((state) => ({
         ...state,
-        nombredelaEmbarcación,
+        nombredelaEmbarcacion,
       }));
     }
     public setnúmerodeVuelo(numerodeVuelo: string): void {

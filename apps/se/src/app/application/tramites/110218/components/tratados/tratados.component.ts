@@ -60,7 +60,7 @@ export class TratadosComponent implements OnInit {
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
-    this.getTabledatas();
+    this.obtenerDatosDeTabla();
    
   }
   
@@ -75,10 +75,10 @@ export class TratadosComponent implements OnInit {
   }
   
   /**
-   * getTabledatas
+   * obtenerDatosDeTabla
    * Obtiene los datos de los tratados y actualiza el formulario.
    */
-  getTabledatas(): void {
+  obtenerDatosDeTabla(): void {
     this.service.gettratados().subscribe(
       (data: any) => {
         this.detallesdeltransporte.patchValue({

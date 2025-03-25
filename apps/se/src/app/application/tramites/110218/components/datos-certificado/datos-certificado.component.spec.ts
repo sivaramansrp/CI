@@ -56,31 +56,31 @@ describe('DatosCertificadoComponent', () => {
   });
 
   it('should subscribe to lugar$ and update the form', () => {
-    expect(component.datosdelcertificado.get('lugar')?.value).toBe('Lugar 1');
+    expect(component.datosDelCertificado.get('lugar')?.value).toBe('Lugar 1');
   });
 
   it('should subscribe to observaciones$ and update the form', () => {
-    expect(component.datosdelcertificado.get('observaciones')?.value).toBe('Observación 1');
+    expect(component.datosDelCertificado.get('observaciones')?.value).toBe('Observación 1');
   });
 
   it('should store selected row and emit event on form modification', () => {
     jest.spyOn(component.modificarEventCertificado, 'emit');
     const row = { id: 1, name: 'Row 1' };
-    component.selectedRow = row;
-    component.onModifyForm();
+    component.filaSeleccionada = row;
+    component.enModificarFormulario();
     expect(mockStore.storeTableValues).toHaveBeenCalledWith(row);
     expect(component.modificarEventCertificado.emit).toHaveBeenCalledWith(false);
   });
 
   it('should update store on lugar change', () => {
-    component.datosdelcertificado.get('lugar')?.setValue('Nuevo Lugar');
-    component.onDatosdelcertificadoChange('lugar');
+    component.datosDelCertificado.get('lugar')?.setValue('Nuevo Lugar');
+    component.enCambioDeDatosDelCertificado('lugar');
     expect(mockStore.setlugar).toHaveBeenCalledWith('Nuevo Lugar');
   });
 
   it('should update store on observaciones change', () => {
-    component.datosdelcertificado.get('observaciones')?.setValue('Nueva Observación');
-    component.onDatosdelcertificadoChange('observaciones');
+    component.datosDelCertificado.get('observaciones')?.setValue('Nueva Observación');
+    component.enCambioDeDatosDelCertificado('observaciones');
     expect(mockStore.setobservaciones).toHaveBeenCalledWith('Nueva Observación');
   });
 
@@ -90,7 +90,7 @@ describe('DatosCertificadoComponent', () => {
     const spyLugar = jest.spyOn(mockStore, 'setlugar');
     const spyObservaciones = jest.spyOn(mockStore, 'setobservaciones');
 
-    component.onDatosdelcertificadoChange('invalidControl');
+    component.enCambioDeDatosDelCertificado('invalidControl');
     expect(spyLugar).not.toHaveBeenCalled();
     expect(spyObservaciones).not.toHaveBeenCalled();
   });
@@ -105,7 +105,7 @@ describe('DatosCertificadoComponent', () => {
 
   it('should handle empty table data gracefully', () => {
     mockService.getDatosCertificado.mockReturnValue(of([]));
-    component.getTabledatas();
+    component.obtenerDatosDeTabla();
     expect(component.datos).toEqual([]);
   });
 

@@ -17,7 +17,7 @@ describe('TransporteComponent', () => {
     storeMock = {
       setpuertodeEmbarque: jest.fn(),
       setpuertodeDesembarque: jest.fn(),
-      setnombredelaEmbarcación: jest.fn(),
+      setnombredelaEmbarcacion: jest.fn(),
       setnúmerodeVuelo: jest.fn(),
       setPuertodeTránsito: jest.fn(),
     };
@@ -26,7 +26,7 @@ describe('TransporteComponent', () => {
       puertodeEmbarque$: of('Tokio'),
       puertodeDesembarque$: of('Osaka'),
       puertodeTransito$: of('Nagoya'),
-      nombredelaEmbarcación$: of('Nippon Maru'),
+      nombredelaEmbarcacion$: of('Nippon Maru'),
       numerodeVuelo$: of('1234'),
     };
 

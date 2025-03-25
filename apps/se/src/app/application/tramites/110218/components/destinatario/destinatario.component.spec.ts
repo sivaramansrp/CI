@@ -64,7 +64,7 @@ describe('DestinatarioComponent', () => {
   });
 
   it('should initialize forms with default values', () => {
-    expect(component.datosdeldestinatario.value).toEqual({
+    expect(component.datosDelDestinatario.value).toEqual({
       nombre: '',
       primerApellido: '',
       segundoApellido: '',
@@ -72,7 +72,7 @@ describe('DestinatarioComponent', () => {
       razonSocial: '',
     });
 
-    expect(component.domiciliodeldestinatario.value).toEqual({
+    expect(component.domicilioDelDestinatario.value).toEqual({
       calle: '',
       numeroLetra: '',
       ciudad: '',
@@ -83,32 +83,32 @@ describe('DestinatarioComponent', () => {
   });
 
   it('should validate required fields', () => {
-    component.datosdeldestinatario.get('nombre')?.setValue('');
-    component.datosdeldestinatario.get('primerApellido')?.setValue('');
-    component.datosdeldestinatario.get('numeroderegistroFiscal')?.setValue('');
-    component.datosdeldestinatario.get('razonSocial')?.setValue('');
+    component.datosDelDestinatario.get('nombre')?.setValue('');
+    component.datosDelDestinatario.get('primerApellido')?.setValue('');
+    component.datosDelDestinatario.get('numeroderegistroFiscal')?.setValue('');
+    component.datosDelDestinatario.get('razonSocial')?.setValue('');
 
-    expect(component.datosdeldestinatario.get('nombre')?.valid).toBeFalsy();
-    expect(component.datosdeldestinatario.get('primerApellido')?.valid).toBeFalsy();
-    expect(component.datosdeldestinatario.get('numeroderegistroFiscal')?.valid).toBeFalsy();
-    expect(component.datosdeldestinatario.get('razonSocial')?.valid).toBeFalsy();
+    expect(component.datosDelDestinatario.get('nombre')?.valid).toBeFalsy();
+    expect(component.datosDelDestinatario.get('primerApellido')?.valid).toBeFalsy();
+    expect(component.datosDelDestinatario.get('numeroderegistroFiscal')?.valid).toBeFalsy();
+    expect(component.datosDelDestinatario.get('razonSocial')?.valid).toBeFalsy();
   });
 
   it('should validate email format', () => {
-    component.domiciliodeldestinatario.get('correoElectronico')?.setValue('invalid-email');
-    expect(component.domiciliodeldestinatario.get('correoElectronico')?.valid).toBeFalsy();
+    component.domicilioDelDestinatario.get('correoElectronico')?.setValue('invalid-email');
+    expect(component.domicilioDelDestinatario.get('correoElectronico')?.valid).toBeFalsy();
 
-    component.domiciliodeldestinatario.get('correoElectronico')?.setValue('test@example.com');
-    expect(component.domiciliodeldestinatario.get('correoElectronico')?.valid).toBeTruthy();
+    component.domicilioDelDestinatario.get('correoElectronico')?.setValue('test@example.com');
+    expect(component.domicilioDelDestinatario.get('correoElectronico')?.valid).toBeTruthy();
   });
 
-  it('should patch form values when getTabledatas() is called', () => {
+  it('should patch form values when obtenerDatosDeTabla() is called', () => {
     jest.spyOn(mockService, 'getdestinatario');
 
-    component.getTabledatas();
+    component.obtenerDatosDeTabla();
     fixture.detectChanges();
 
-    expect(component.datosdeldestinatario.get('segundoApellido')?.value).toBe('Smith');
+    expect(component.datosDelDestinatario.get('segundoApellido')?.value).toBe('Smith');
     expect(mockService.getdestinatario).toHaveBeenCalled();
   });
 
