@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
-import { FirmaPageComponent } from '@ng-mf/data-access-user';import { NgModule } from '@angular/core';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -84,6 +85,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
+  
+{
+  path: 'registro-digitalizar-documentos',
+  loadChildren: () =>
+    import('./tramites/701/registro-digitalizar-documentos.module').then(
+      (m) => m.RegistroDigitalizarDocumentosModule
+    ),
+},
 ];
 
 @NgModule({
