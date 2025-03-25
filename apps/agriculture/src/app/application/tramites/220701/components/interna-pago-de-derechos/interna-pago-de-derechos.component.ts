@@ -432,16 +432,6 @@ private obtenerListaBanco(): void {
   }
 
     /**
-   * Maneja la limpieza de recursos antes de destruir el componente.
-   * Libera las suscripciones activas para evitar fugas de memoria.
-   * @method ngOnDestroy
-   */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
-
-    /**
    * Se suscribe a los cambios en el estado del formularioPago y actualiza el store.
    * @method suscribirseACambiosDeFormularioPago
    */
@@ -457,4 +447,13 @@ private obtenerListaBanco(): void {
       )
       .subscribe();
   }
+      /**
+   * Maneja la limpieza de recursos antes de destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   * @method ngOnDestroy
+   */
+      ngOnDestroy(): void {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+      }
 }
