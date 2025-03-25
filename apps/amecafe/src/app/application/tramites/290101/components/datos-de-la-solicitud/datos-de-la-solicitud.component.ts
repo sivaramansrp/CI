@@ -199,22 +199,39 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  ) { }
+  ) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+   }
 
-
-  navigateToBodegas() {
+  /**
+   * Redirige a la página de bodegas.
+   * Navega a la ruta correspondiente para gestionar los datos de bodegas.
+   */
+  redirigirBodegas(): void {
     this.router.navigate(['/pago/cafe-exportadores/bodegas']);
   }
 
-  navigateToCafeExportadores() {
+  /**
+   * Redirige a la página de café de exportadores.
+   * Navega a la ruta correspondiente para gestionar los datos de café de exportadores.
+   */
+  redirigirCafeExportadores(): void {
     this.router.navigate(['/pago/cafe-exportadores/cafe-de-exportadores']);
   }
 
-  navigateToBeneficios() {
+  /**
+   * Redirige a la página de beneficios.
+   * Navega a la ruta correspondiente para gestionar los datos de beneficios.
+   */
+  redirigirBeneficios(): void {
     this.router.navigate(['/pago/cafe-exportadores/beneficios']);
   }
 
-  navigateToRegions() {
+  /**
+   * Redirige a la página de regiones.
+   * Navega a la ruta correspondiente para gestionar los datos de regiones.
+   */
+  redirigirRegiones(): void {
     this.router.navigate(['/pago/cafe-exportadores/regiones']);
   }
 
@@ -298,7 +315,40 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
+        
+      /**
+       * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
+       * 
+       * @description 
+       * - Se suscribe a los cambios en el estado del formulario.
+       * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
+       * - Aplica un retraso de 10ms antes de ejecutar la lógica.
+       * - Obtiene el estado actual de la sección desde `seccionQuery`.
+       * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
+       * 
+       * @see {@link seccionQuery} para obtener el estado de la sección.
+       * @see {@link seccionStore} para actualizar la validación de la sección.
+       */
+      this.datosSolicitudForma.statusChanges
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        delay(10),
+        tap(() => {
+          const SECCION: number = 1;
+          const SECCION_STATE = this.seccionQuery.getValue();
+          const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+          const CONTROL_PATH = 'forma';
+          const CONTROL = this.datosSolicitudForma.get(CONTROL_PATH)?.status;
+
+          FORMAS_VALIDADAS[SECCION] = this.datosSolicitudForma.valid || CONTROL === 'VALID';
+
+          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        })
+      )
+      .subscribe();
     }
+  
+    
 
   /**
    * Método para buscar y cargar los datos de las tablas.

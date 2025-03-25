@@ -1,7 +1,7 @@
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
 import { RegionFormaInt} from '../../modelos/datos-de-interfaz.model';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnInit } from '@angular/core';
@@ -24,37 +24,51 @@ import { tap } from 'rxjs/operators';
   selector: 'app-regiones',
   templateUrl: './regiones.component.html',
 })
-export class RegionesComponent implements OnInit {
+export class RegionesComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para los datos de regiones.
+   * @type {FormGroup}
+   */
   regionForm!: FormGroup;
 
+  /**
+   * Estado del formulario de regiones.
+   * @type {RegionFormaInt}
+   */
   regionFormaState!: RegionFormaInt;
 
+  /**
+   * Catálogo de productos de café.
+   * @type {CatalogosSelect}
+   */
   productoCafe: CatalogosSelect = {
     labelNombre: '',
     required: false,
     primerOpcion: '',
     catalogos: [],
   };
+
+  /**
+   * Catálogo de estados.
+   * @type {CatalogosSelect}
+   */
   estado: CatalogosSelect = {
     labelNombre: '',
     required: false,
     primerOpcion: '',
     catalogos: [],
   };
+
+  /**
+   * Catálogo de tipos de café.
+   * @type {CatalogosSelect}
+   */
   descripTipoCafe: CatalogosSelect = {
     labelNombre: '',
     required: false,
     primerOpcion: '',
     catalogos: [],
   };
-
-
-  /**
-   * Subject para manejar la desuscripción de observables.
-   * Utilizado para evitar fugas de memoria.
-   * @type {Subject<void>}
-   */
-  private unsubscribe$ = new Subject<void>();
 
   /**
    * Estado de la sección actual.
@@ -70,30 +84,51 @@ export class RegionesComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private router: Router,
+  /**
+   * Constructor del componente.
+   * @param {Router} router - Servicio de enrutamiento de Angular.
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+   * @param {CatalogosService} catalogosService - Servicio para cargar catálogos.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta del estado del trámite.
+   * @param {TramiteStore} tramiteStore - Almacén del estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la sección.
+   * @param {SeccionLibStore} seccionStore - Almacén del estado de la sección.
+   */
+  constructor(
+    private router: Router,
     private fb: FormBuilder,
-    private catalogosService:CatalogosService,
+    private catalogosService: CatalogosService,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  ) {}
-  navigateToCafeExportadores() {
-    this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores']);
-    
+  ) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
-  ngOnInit(): void {
-      this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.regionFormaState = seccionState.RegionFormatState;
-        })
-      ).subscribe();
 
-      this.iniciarFormulario();
-      this.cargarEstadoCatalog();
-      this.cargarProductoCafe();
-      this.cargarTipoDeCafe();
+  /**
+   * Cambia la pestaña activa en la interfaz.
+   * @param {number} index - Índice de la pestaña a seleccionar.
+   */
+  seleccionaTab(index: number): void {
+    this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+  }
+
+  /**
+   * Método de inicialización del componente.
+   * Configura el formulario y carga los catálogos necesarios.
+   */
+  ngOnInit(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(seccionState => {
+        this.regionFormaState = seccionState.RegionFormatState;
+      });
+
+    this.iniciarFormulario();
+    this.cargarEstadoCatalog();
+    this.cargarProductoCafe();
+    this.cargarTipoDeCafe();
 
       /**
       * Se suscribe a los cambios en el estado de la solicitud de trámite.
@@ -124,36 +159,33 @@ export class RegionesComponent implements OnInit {
       )
       .subscribe();
 
-      /**
-       * Se suscribe a los cambios en el estado de la sección.
-       * Almacena la información de la sección en la propiedad `seccion`.
-       * Para el botón de validación Continuar
-       */
+    this.seccionQuery.selectSeccionState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(seccionState => {
+        this.seccion = seccionState;
+      });
+  }
 
-      this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-    }
-
-  iniciarFormulario() : void {
+  /**
+   * Inicializa el formulario reactivo.
+   */
+  iniciarFormulario(): void {
     this.regionForm = this.fb.group({
       estado: ['', Validators.required],
-      productoCafe:['', Validators.required],
+      productoCafe: ['', Validators.required],
       descRegionCompra: ['', [Validators.required]],
-      descripTipoCafe:['', Validators.required],
-      volumen: ['', [Validators.required]]
+      descripTipoCafe: ['', Validators.required],
+      volumen: ['', Validators.required],
     });
   }
 
+  /**
+   * Carga el catálogo de productos de café.
+   */
   cargarProductoCafe(): void {
     this.catalogosService.cargarBodegaPropiaAlquilad()
-     // .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(resp => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.productoCafe = {
@@ -166,10 +198,13 @@ export class RegionesComponent implements OnInit {
       });
   }
 
+  /**
+   * Carga el catálogo de tipos de café.
+   */
   cargarTipoDeCafe(): void {
     this.catalogosService.cargarTipoDeCafe()
-     // .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(resp => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.descripTipoCafe = {
@@ -182,10 +217,13 @@ export class RegionesComponent implements OnInit {
       });
   }
 
+  /**
+   * Carga el catálogo de estados.
+   */
   cargarEstadoCatalog(): void {
     this.catalogosService.cargarEstadoCatalog()
-     // .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((resp) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(resp => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.estado = {
@@ -198,11 +236,19 @@ export class RegionesComponent implements OnInit {
       });
   }
 
+  /**
+   * Resetea el formulario de regiones.
+   */
   cancelarBodega(): void {
     this.regionForm.reset();
-    
   }
 
-
-  
+  /**
+   * Método de limpieza al destruir el componente.
+   * Libera los recursos y cancela las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

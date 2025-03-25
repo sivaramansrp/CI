@@ -1,4 +1,3 @@
-/* eslint-disable @angular-eslint/component-selector */
 /**
  * @component PasoTresComponent
  * @description Este componente es responsable de manejar el tercer paso del trámite.

@@ -1,5 +1,7 @@
-
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { SECCIONES_TRAMITE_290101 } from '../../constantes/cafe-exportadores.enums';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
@@ -16,7 +18,8 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Índice de la pestaña seleccionada.
@@ -25,13 +28,23 @@ export class PasoUnoComponent implements OnInit {
    */
   indice: number = 1;
 
-  // eslint-disable-next-line no-empty-function
-  constructor(private seccionStore: SeccionLibStore) {
+  constructor(private route: ActivatedRoute, private seccionStore: SeccionLibStore) {
 
   }
 
   ngOnInit(): void {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(params => {
+        const tabIndex = +params['tab'];
+        this.indice = tabIndex && tabIndex > 0 && tabIndex <= this.seccionesDeLaSolicitud.length ? tabIndex : 1; 
+      });
     // this.asignarSecciones();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -60,19 +73,4 @@ export class PasoUnoComponent implements OnInit {
     this.indice = i;
     this.tabChanged.emit(i);
   }
-
-  // private asignarSecciones(): void {
-  //   const SECCIONES: boolean[] = [];
-  //   const FORMA_VALIDA: boolean[] = [];
-  //   const PREDETERMINADO = SECCIONES_TRAMITE_290101
-  //   for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-  //     if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-  //       // @ts-expect-error - fix this
-  //       SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-  //       FORMA_VALIDA.push(false);
-  //     }
-  //   }
-  //   this.seccionStore.establecerSeccion(SECCIONES);
-  //   this.seccionStore.establecerFormaValida(FORMA_VALIDA);
-  // }
 }

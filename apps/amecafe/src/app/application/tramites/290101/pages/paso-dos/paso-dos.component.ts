@@ -1,5 +1,3 @@
-/* eslint-disable @angular-eslint/component-selector */
-/* eslint-disable */
 /**
  * @component PasoDosComponent
  * @description Este componente es responsable de manejar el segundo paso del trámite.
