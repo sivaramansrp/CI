@@ -135,25 +135,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    /**
- * @description Observa los cambios en el estado del formulario y actualiza el estado del trámite en la tienda Akita.
- * 
- * - Se suscribe a los cambios de estado del formulario `pagosDeDerechosForm`.
- * - Aplica un retraso de 10ms antes de ejecutar la lógica.
- * - Obtiene el estado actual del formulario y lo almacena en la tienda Akita.
- * - Finaliza la suscripción cuando `unsubscribe$` emite un valor para evitar fugas de memoria.
- */
-    this.pagosDeDerechosForm.statusChanges
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      delay(10),
-      tap(() => {
-        const ACTIVE_STATE = { ...this.pagosDeDerechosForm.value };
-        this.tramiteStore.setPagoDeDerechosTramite(ACTIVE_STATE); 
-      })
-    )
-    .subscribe();
-
 
   /**
  * @description Observa el estado de la sección y actualiza la variable local `seccion`.

@@ -179,7 +179,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         ).subscribe();
 
-    this.subscribeToFormularioPagoChanges(() => {
+    this.suscribirFormularioPagoChanges(() => {
       const ACTIVE_STATE = { ...this.formularioPago.value };
       this.tramiteStore.setInternaPagoDeDerechosTramite(ACTIVE_STATE);
 
@@ -361,7 +361,7 @@ private obtenerListaBanco(): void {
    * Método reutilizable para suscribirse a los cambios en el estado del formularioPago.
    * @param {() => void} callback - Función que se ejecutará en cada cambio de estado.
    */
-  private subscribeToFormularioPagoChanges(callback: () => void): void {
+  private suscribirFormularioPagoChanges(callback: () => void): void {
     this.formularioPago.statusChanges
       .pipe(
         takeUntil(this.unsubscribe$),

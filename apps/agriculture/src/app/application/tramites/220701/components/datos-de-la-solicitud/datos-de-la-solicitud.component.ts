@@ -237,20 +237,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           }
         })
       ).subscribe();
-  /**
-   * Se suscribe a los cambios en el estado del formulario.
-   * Después de un breve retraso, actualiza el estado de la solicitud en el store.
-   */
-    this.datosDeLaSolicitudForm.statusChanges
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
-          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
 
   /**
    * Obtiene los datos iniciales requeridos para el componente.

@@ -373,17 +373,6 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
 
-        this.forma.statusChanges
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          delay(10),
-          tap(() => {
-            const ACTIVE_STATE = { ...this.forma.value };
-            this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE); 
-          })
-        )
-        .subscribe();
-
       this.obtenerDatos(); 
   
       this.seccionQuery.selectSeccionState$
