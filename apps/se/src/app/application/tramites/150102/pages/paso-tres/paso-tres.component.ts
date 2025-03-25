@@ -35,7 +35,7 @@ export class PasoTresComponent {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.router.navigate(['servicios-extraordinarios/acuse']);
+      this.router.navigateByUrl('pago/reporte-anual/acuse');
     }
   }
 }

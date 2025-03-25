@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProgramasReporte } from '../models/programas-reporte.model';
+import { BienesProducidos, ProgramasReporte } from '../models/programas-reporte.model';
 import { ReporteFechas } from '../models/programas-reporte.model';
 
 
@@ -24,4 +24,13 @@ export class SolicitudService {
       'assets/json/150102/reporte-fechas.json'
     );
   }
+
+  obtenerProducidosDatos(): Observable<BienesProducidos[]> {
+    return this.http.get<BienesProducidos[]>(
+      'assets/json/150102/producidos-datos.json'
+    );
+  }
+
+
+  
 }

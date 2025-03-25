@@ -156,3 +156,4 @@ export * from './core/enums/tabla-seleccion.enum';
 
 export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
+export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';

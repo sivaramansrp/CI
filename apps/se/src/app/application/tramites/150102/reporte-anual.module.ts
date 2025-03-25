@@ -1,4 +1,5 @@
-import { BtnContinuarComponent, FirmaElectronicaComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent } from './components/acuse-page/acuse-page.component';
+import { AcuseComponent, AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeReporteAnnualComponent } from './components/datos-de-reporte-annual/datos-de-reporte-annual.component';
@@ -8,7 +9,7 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { ProgramasReporteAnnualComponent } from './components/programas-reporte-annual/programas-reporte-annual.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ReporteAnualRoutingModule } from './reporte-anual-routing.module';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitanteComponent, TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudDeReporteComponent } from './pages/solicitud-de-reporte/solicitud-de-reporte.component';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
@@ -20,7 +21,7 @@ import { provideHttpClient } from '@angular/common/http';
     ProgramasReporteAnnualComponent,
     DatosDeReporteAnnualComponent,
     DatosComponent,
-    PasoTresComponent,
+    PasoTresComponent,   
   ],
   imports: [
     CommonModule,
@@ -33,7 +34,11 @@ import { provideHttpClient } from '@angular/common/http';
     FirmaElectronicaComponent,
     TituloComponent,
     InputFechaComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    TablaConEntradaComponent,
+    AcuseComponent,
+    AlertComponent,
+    AcusePageComponent
   ],
   providers: [provideHttpClient(), ToastrService],
 })

@@ -1,3 +1,4 @@
+import { BienesProducidos } from '../models/programas-reporte.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -14,6 +15,7 @@ export interface Solicitud150102State {
   totalImportaciones: string;
   saldo: string;
   porcentajeExportacion: string;
+  producidosDatos: BienesProducidos[];
 }
 
 export function createInitialState(): Solicitud150102State {
@@ -27,8 +29,9 @@ export function createInitialState(): Solicitud150102State {
     ventasTotales: '',
     totalExportaciones: '',
     totalImportaciones: '',
-    saldo: '',
-    porcentajeExportacion: '',
+    saldo: '0',
+    porcentajeExportacion: '0',
+    producidosDatos:[]
   };
 }
 
@@ -117,4 +120,12 @@ actualizarPorcentajeExportacion(porcentajeExportacion: string): void {
       porcentajeExportacion,
     }));
   }
+
+  actualizarProducidosDatos(producidosDatos: BienesProducidos[]): void {
+    this.update((state) => ({
+      ...state,
+      producidosDatos,
+    }));
+  }
+
 }
