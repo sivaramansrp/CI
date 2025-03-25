@@ -1,6 +1,6 @@
 import {
   FirmaElectronicaComponent,
-  ServiciosExtraordinariosService,
+  TramiteFolioService,
 } from '@ng-mf/data-access-user';
 import { catchError, map, Subscription } from 'rxjs';
 import { Component } from '@angular/core';
@@ -28,7 +28,7 @@ export class PasoTresComponent {
  
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: TramiteFolioService,
     private tramiteStore: TramiteStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.
