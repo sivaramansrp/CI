@@ -87,14 +87,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     // Actualiza y valida el campo 'fecPago' cuando cambia su valor
     this.pagoDeDerechosForm.get('fecPago')?.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntil(this.destroyed$))
       .subscribe(() => {
         this.pagoDeDerechosForm.get('fecPago')?.updateValueAndValidity({ emitEvent: false });
       });
 
     // Actualiza y valida el campo 'impPago' cuando cambia su valor
     this.pagoDeDerechosForm.get('impPago')?.valueChanges
-      .pipe(distinctUntilChanged())
+      .pipe(distinctUntilChanged(), takeUntil(this.destroyed$))
       .subscribe(() => {
         this.pagoDeDerechosForm.get('impPago')?.updateValueAndValidity({ emitEvent: false });
       });
