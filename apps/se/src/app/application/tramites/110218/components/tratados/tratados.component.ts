@@ -16,6 +16,8 @@ import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/sr
 
 import { EXPEDICION } from '../../constants/certificado-tecnico-japon.enum';
 import { VENCIMIENTO } from '../../constants/certificado-tecnico-japon.enum';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * TratadosComponent
@@ -59,6 +61,7 @@ export class TratadosComponent implements OnInit {
    * ngOnInit
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
+  private destroyed$ = new Subject<void>();
   ngOnInit(): void {
     this.obtenerDatosDeTabla();
    
@@ -79,7 +82,7 @@ export class TratadosComponent implements OnInit {
    * Obtiene los datos de los tratados y actualiza el formulario.
    */
   obtenerDatosDeTabla(): void {
-    this.service.gettratados().subscribe(
+    this.service.gettratados().pipe(takeUntil(this.destroyed$)).subscribe(
       (data: any) => {
         this.detallesdeltransporte.patchValue({
           tratadoAcuerdo: data.tratadoAcuerdo,
@@ -91,5 +94,9 @@ export class TratadosComponent implements OnInit {
         });
       }
     );
+  }
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
