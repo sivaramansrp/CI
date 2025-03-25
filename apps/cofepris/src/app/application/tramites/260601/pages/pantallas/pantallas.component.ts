@@ -48,6 +48,9 @@ export class PantallasComponent{
    */
   public infoAlert = 'alert-info';
 
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
   TEXTOS = AVISO_PRIVACIDAD;
 
   /**

@@ -4,17 +4,17 @@
         {
             "id": 1,
             "clave": 614041,
-            "descripcion": "DESCRIPCION_SCIAN_1"
+            "descripcion": "DESCRIPCIÓN_SCIAN_1"
         },
         {
             "id": 2,
             "clave": 614042,
-            "descripcion": "DESCRIPCION_SCIAN_2"
+            "descripcion": "DESCRIPCIÓN_SCIAN_2"
         },
         {
             "id": 3,
             "clave": 614043,
-            "descripcion": "DESCRIPCION_SCIAN_3"
+            "descripcion": "DESCRIPCIÓN_SCIAN_3"
         }
     ],
     "message": "Consulta exitosa"

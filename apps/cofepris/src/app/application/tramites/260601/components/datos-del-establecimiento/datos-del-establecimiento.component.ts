@@ -1,20 +1,24 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { map, merge, Observable, Subject, takeUntil } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
-import scianTable from 'libs/shared/theme/assets/json/260601/scian-table.json';
-import productoTable from 'libs/shared/theme/assets/json/260601/producto-table.json';
 import { CATALOGOS_ID, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-enum';
+import { CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
+import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
-import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
+import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import productoTable from '@libs/shared/theme/assets/json/260601/producto-table.json';
+import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
 
+/**
+ * Componente para gestionar el datos del establecimiento.
+ */
 @Component({
   selector: 'app-datos-del-establecimiento',
   standalone: true,
@@ -34,13 +38,26 @@ import { RepresentanteLegalComponent } from '../representante-legal/representant
   templateUrl: './datos-del-establecimiento.component.html',
   styleUrl: './datos-del-establecimiento.component.css',
 })
-export class DatosDelEstablecimientoComponent implements OnInit {
+/*eslint class-methods-use-this: ["error", { "exceptMethods": ["enCambioDeValor", "abrirDialogoAgregarDatosSCIAN", "agregarAgente", "limpiarDatosSCIAN", "agregarDatosSCIAN"] }] */
+export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario principal para los datos del establecimiento.
+   */
   datosDelEstablecimientoForm!: FormGroup;
 
+  /**
+   * Formulario para los datos del domicilio del establecimiento.
+   */
   domicilloDelEstablecimientoForm!: FormGroup;
 
+  /**
+   * Formulario para los datos SCIAN.
+   */
   scianForm!: FormGroup;
 
+  /**
+   * Formulario para los manifiestos relacionados con el establecimiento.
+   */
   manifiestosForm!: FormGroup;
 
   /**
@@ -48,26 +65,64 @@ export class DatosDelEstablecimientoComponent implements OnInit {
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
+  /**
+   * Catálogo de estados disponibles.
+   */
   estado!: Catalogo[];
+
+  /**
+   * Catálogo de claves SCIAN.
+   */
   claveScian!: Catalogo[];
+
+  /**
+   * Catálogo de descripciones SCIAN.
+   */
   descripcionScian!: Catalogo[];
 
+  /**
+   * Catálogo de regímenes fiscales disponibles.
+   */
   regimenes!: Catalogo[];
 
+  /**
+   * Catálogo de aduanas disponibles.
+   */
   aduanas!: Catalogo[];
 
+  /**
+   * Estado actual del aviso sanitario.
+   */
   public avisoSanitarioState!: AvisoSanitarioState;
 
+  /**
+   * Cabeceras de la tabla de SCIAN.
+   */
   public scianHeaderData: string[] = [];
 
+  /**
+   * Cuerpo de datos de la tabla SCIAN.
+   */
   public scianBodyData: unknown = null;
 
+  /**
+   * Cabeceras de la tabla de productos.
+   */
   public productoHeaderData: string[] = [];
 
+  /**
+   * Cuerpo de datos de la tabla de productos.
+   */
   public productoBodyData: unknown = null;
 
+  /**
+   * Datos de la tabla SCIAN desde un archivo JSON.
+   */
   public getSCIANTableData = scianTable;
 
+  /**
+   * Datos de la tabla de productos desde un archivo JSON.
+   */
   public getProductoTableData = productoTable;
 
   /**
@@ -85,6 +140,9 @@ export class DatosDelEstablecimientoComponent implements OnInit {
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
+  /**
+   * Indica si el estado del formulario está habilitado.
+   */
   habilitarEstado: boolean = true;
 
   /**
@@ -97,6 +155,14 @@ export class DatosDelEstablecimientoComponent implements OnInit {
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
+  /**
+   * Constructor del componente. Utilizado para inyectar servicios necesarios.
+   * 
+   * @param fb FormBuilder para construir formularios reactivos.
+   * @param avisoSanitarioService Servicio para gestionar datos del aviso sanitario.
+   * @param tramite260601Store Store para manejar el estado del trámite.
+   * @param tramite260601Query Query para observar cambios en el estado del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private avisoSanitarioService: AvisoSanitarioService,
@@ -106,6 +172,9 @@ export class DatosDelEstablecimientoComponent implements OnInit {
     // El constructor se utiliza para la inyección de dependencias.    
   }
 
+  /**
+   * Método de inicialización que configura formularios, catálogos y suscripciones.
+   */
   ngOnInit(): void {
     this.inicializaCatalogos();
 
@@ -132,6 +201,9 @@ export class DatosDelEstablecimientoComponent implements OnInit {
     this.aduanaSeleccion();
   }
 
+  /**
+   * Crea y configura los formularios principales y sus validaciones.
+   */
   crearFormulario(): void {
     this.datosDelEstablecimientoForm = this.fb.group({
       RFCResponsableSanitario: [
@@ -219,10 +291,8 @@ export class DatosDelEstablecimientoComponent implements OnInit {
       ],
     });
     this.manifiestosForm = this.fb.group({
-      seleccionadaManifiesto: [
+      seleccionadaManifiesto:
         this.fb.array(this.avisoSanitarioState?.seleccionadaManifiesto),
-        [Validators.required]
-      ],
       informacionConfidencial: [
         this.avisoSanitarioState?.informacionConfidencial,
         Validators.required
@@ -260,7 +330,7 @@ export class DatosDelEstablecimientoComponent implements OnInit {
       );
 
     const DESCRIPCION_SCIAN$: Observable<void> = this.avisoSanitarioService
-      .getDescripcionScian(CATALOGOS_ID.CAT_DESCRIPCION_SCIAN)
+      .getDescripcionScian()
       .pipe(
         map((resp) => {
           this.descripcionScian = resp.data;
@@ -294,62 +364,89 @@ export class DatosDelEstablecimientoComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Maneja la selección del estado y lo actualiza en el store.
+   */
   estadoSeleccion(): void {
     const ESTADO = this.domicilloDelEstablecimientoForm.get('cveEstado')?.value;
     this.tramite260601Store.setEstado(ESTADO);
   }
 
+  /**
+   * Maneja la selección de la clave SCIAN y obtiene su descripción.
+   */
   claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
+    this.avisoSanitarioService.getDescripcionScian()
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe({
+        next: (result) => {
+          const SCIAN_DESCRIPCION = result.data[0].descripcion;
+          this.scianForm.get('cveSCIANDescripcion')?.setValue(SCIAN_DESCRIPCION);
+          this.tramite260601Store.setDescripcionScian(SCIAN_DESCRIPCION);
+        }
+      })
     this.tramite260601Store.setClaveScian(CLAVE_SCIAN);
   }
 
+  /**
+   * Maneja la selección de la descripción SCIAN.
+   */
   descripcionScianSeleccion(): void {
     const DESCRIPCION_SCIAN = this.scianForm.get('cveSCIANDescripcion')?.value;
     this.tramite260601Store.setDescripcionScian(DESCRIPCION_SCIAN);
   }
 
+  /**
+   * Maneja la selección del régimen fiscal y lo actualiza en el store.
+   */
   regimenesSeleccion(): void {
-    const REGIMENES = this.scianForm.get('cveRegimenes')?.value;
-    this.tramite260601Store.setDescripcionScian(REGIMENES);
+    const REGIMENES = this.domicilloDelEstablecimientoForm.get('cveRegimenes')?.value;
+    this.tramite260601Store.setCveRegimenes(REGIMENES);
   }
 
+  /**
+   * Maneja la selección de la aduana y lo actualiza en el store.
+   */
   aduanaSeleccion(): void {
-    const ADUANAS = this.scianForm.get('cveAduanas')?.value;
-    this.tramite260601Store.setDescripcionScian(ADUANAS);
+    const ADUANAS = this.domicilloDelEstablecimientoForm.get('cveAduanas')?.value;
+    this.tramite260601Store.setCveAduanas(ADUANAS);
   }
 
+  /**
+   * Obtiene los datos para la tabla SCIAN.
+   */
   public obtenerSCIAN(): void {
     this.scianHeaderData = this.getSCIANTableData.tableHeader;
     this.scianBodyData = this.getSCIANTableData.tableBody;
   }
 
+  /**
+   * Obtiene los datos para la tabla de productos.
+   */
   public obtenerProducto(): void {
     this.productoHeaderData = this.getProductoTableData.tableHeader;
     this.productoBodyData = this.getProductoTableData.tableBody;
   }
 
-  seleccionarEstablecimiento() {
+  /**
+   * Muestra el modal para la selección del establecimiento.
+   */
+  seleccionarEstablecimiento(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
   }
 
-  aceptar() {
-    this.datosDelEstablecimientoForm.get('RFCResponsableSanitario')?.enable();
-    this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
-    this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
+  /**
+   * Habilita todos los campos en los formularios del establecimiento y domicilio.
+   */
+  aceptar(): void {
+    this.datosDelEstablecimientoForm.enable();
 
     // Habilitar todos los campos en el formulario Domicilio del Establecimiento
-    this.domicilloDelEstablecimientoForm.get('codigoPostal')?.enable();
-    this.domicilloDelEstablecimientoForm.get('cveEstado')?.enable();
-    this.domicilloDelEstablecimientoForm.get('descripcionMunicipio')?.enable();
-    this.domicilloDelEstablecimientoForm.get('informacionExtra')?.enable();
-    this.domicilloDelEstablecimientoForm.get('descripcionColonia')?.enable();
-    this.domicilloDelEstablecimientoForm.get('calle')?.enable();
-    this.domicilloDelEstablecimientoForm.get('lada')?.enable();
-    this.domicilloDelEstablecimientoForm.get('telefono')?.enable();
+    this.domicilloDelEstablecimientoForm.enable();
     this.habilitarEstado = false;
   }
 
@@ -358,11 +455,13 @@ export class DatosDelEstablecimientoComponent implements OnInit {
    * Inicializa `manifiestosSeleccionados` con valores `false`.
    */
   obtenerManifiestos(): void {
-    this.avisoSanitarioService.getManifiestos().subscribe({
-      next: (result: ManifiestosRespuesta) => {
-        this.manifiestos = result?.data;
-      }
-    });
+    this.avisoSanitarioService.getManifiestos()
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe({
+        next: (result: ManifiestosRespuesta) => {
+          this.manifiestos = result?.data;
+        }
+      });
   }
 
   /**
@@ -386,24 +485,55 @@ export class DatosDelEstablecimientoComponent implements OnInit {
     // Implementar la lógica para evento de cambio de valor.
   }
 
+  /**
+   * Abre el diálogo para agregar datos SCIAN.
+   */
   abrirDialogoAgregarDatosSCIAN(): void {
-
+    // Implementar la lógica para abrir dialogo agregar datos SCIAN.
   }
 
-  agregarAgente() {
-
+  /**
+   * Agrega un agente relacionado con el establecimiento.
+   */
+  agregarAgente(): void {
+    // Implementar la lógica para agregar agente.
   }
 
-  limpiarDatosSCIAN() {
-
+  /**
+   * Limpia los datos SCIAN del formulario.
+   */
+  limpiarDatosSCIAN(): void {
+    // Implementar la lógica para limpiar datos SCIAN.
   }
 
-  agregarDatosSCIAN() {
-
+  /**
+   * Agrega los datos SCIAN al formulario.
+   */
+  agregarDatosSCIAN(): void {
+    // Implementar la lógica para agregar datos SCIAN.
   }
 
-  agregarMercanciaGrid2606() {
+  /**
+   * Método para abrir dialogo mercancías.
+   * 
+   * @returns {void}
+   */
+  agregarMercanciaGrid2606(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
 
+  /**
+   * Cierra el modal.
+   * 
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**

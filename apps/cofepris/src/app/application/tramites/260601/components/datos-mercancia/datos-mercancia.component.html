@@ -18,13 +18,15 @@
         <div class="col-md-8">
             <label for="nombreProducto" class="form-label">Denominación específica del producto*:</label>
             <input type="text" name="nombreProducto" id="nombreProducto" class="form-control"
-                formControlName="nombreProducto">
+                formControlName="nombreProducto"
+                (change)="setValoresStore(agregarMercanciaForm,'nombreProducto', 'setNombreProducto')">
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">
             <label for="marca" class="form-label">Marca comercial o denominación distintiva*:</label>
-            <input type="text" name="marca" id="marca" class="form-control" formControlName="marca">
+            <input type="text" name="marca" id="marca" class="form-control" formControlName="marca"
+                (change)="setValoresStore(agregarMercanciaForm,'marca', 'setMarca')">
         </div>
     </div>
     <div class="row">
@@ -36,9 +38,11 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*:</label>
+            <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*: <span
+                    class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
             <input type="text" name="fraccionArancelaria" id="fraccionArancelaria" class="form-control"
-                formControlName="fraccionArancelaria">
+                formControlName="fraccionArancelaria"
+                (change)="setValoresStore(agregarMercanciaForm,'fraccionArancelaria', 'setFraccionArancelaria')">
         </div>
     </div>
     <div class="row">
@@ -46,20 +50,23 @@
             <label for="fraccionArancelariaDescripcion" class="form-label">Descripción de la fracción
                 arancelaria*:</label>
             <input type="text" name="fraccionArancelariaDescripcion" id="fraccionArancelariaDescripcion"
-                class="form-control" formControlName="fraccionArancelariaDescripcion">
+                class="form-control" formControlName="fraccionArancelariaDescripcion"
+                (change)="setValoresStore(agregarMercanciaForm,'fraccionArancelariaDescripcion', 'setFraccionArancelariaDescripcion')">
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">
             <label for="modelo" class="form-label">Modelo*:</label>
-            <input type="text" name="modelo" id="modelo" class="form-control" formControlName="modelo">
+            <input type="text" name="modelo" id="modelo" class="form-control" formControlName="modelo"
+                (change)="setValoresStore(agregarMercanciaForm,'modelo', 'setModelo')">
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">
             <label for="productoDescripcion" class="form-label">Descripción del producto*:</label>
             <input type="text" name="productoDescripcion" id="productoDescripcion" class="form-control"
-                formControlName="productoDescripcion">
+                formControlName="productoDescripcion"
+                (change)="setValoresStore(agregarMercanciaForm,'productoDescripcion', 'setProductoDescripcion')">
         </div>
     </div>
 
@@ -81,12 +88,14 @@
                         <div class="panel-body">
                             <!-- País de orígen -->
                             <ng-container *ngIf="i === 0">
-                                <app-pais-de-origen></app-pais-de-origen>
+                                <crosslist [fechas]="seleccionarPaisOrigen" [botones]="botones"
+                                    [label]="paisOrigenCrosslistDatos?.label"></crosslist>
                             </ng-container>
 
                             <!-- País de procedencia -->
                             <ng-container *ngIf="i === 1">
-                                <app-pais-de-procedencia></app-pais-de-procedencia>
+                                <crosslist [fechas]="seleccionarPaisProcedencis" [botones]="botones"
+                                    [label]="paisProcedencisCrosslistDatos?.label"></crosslist>
                             </ng-container>
                         </div>
                     </div>
@@ -116,8 +125,8 @@
                     @if(colapsable){
                     <div class="panel-collapse collapse in" id="panel-01">
                         <div class="panel-body">
-                            <crosslist [fechas]="seleccionarUsoEspecifico" [botones]="usoEspecificoBotons"
-                                [label]="usoEspecificoLabel"></crosslist>
+                            <crosslist [fechas]="seleccionarUsoEspecifico" [botones]="botones"
+                                [label]="usoEspecificoCrosslistDatos?.label"></crosslist>
                         </div>
                     </div>
                     }

@@ -1,14 +1,19 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { MSG_ERROR_REPRESENTANTE_LEGAL } from '../../constantes/aviso-enum';
+import { RepresentanteLegalRespuesta } from '../../models/aviso-model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
-import { MSG_ERROR_REPRESENTANTE_LEGAL } from '../../constantes/aviso-enum';
-import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
 
+/**
+ * Componente para gestionar el representante legal.
+ */
 @Component({
   selector: 'app-representante-legal',
   standalone: true,
@@ -21,9 +26,15 @@ import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.css',
 })
-export class RepresentanteLegalComponent {
+export class RepresentanteLegalComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario principal para gestionar los datos del representante legal.
+   */
   representanteLegalForm!: FormGroup;
 
+  /**
+   * Estado actual del aviso sanitario.
+   */
   public avisoSanitarioState!: AvisoSanitarioState;
 
   /**
@@ -31,6 +42,16 @@ export class RepresentanteLegalComponent {
     */
   private destruirNotificador$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * Inyecta servicios necesarios para gestionar el estado del trámite y las interacciones del formulario.
+   *
+   * @param fb FormBuilder para construir formularios reactivos.
+   * @param tramite260601Store Store para gestionar el estado del trámite.
+   * @param tramite260601Query Query para observar cambios en el estado del trámite.
+   * @param avisoSanitarioService Servicio para gestionar las interacciones de aviso sanitario.
+   * @param toastr Servicio para mostrar notificaciones al usuario.
+   */
   constructor(
     private fb: FormBuilder,
     private tramite260601Store: Tramite260601Store,
@@ -38,10 +59,13 @@ export class RepresentanteLegalComponent {
     private avisoSanitarioService: AvisoSanitarioService,
     private toastr: ToastrService
   ) {
-    // Inicializar el formulario principal
-    this.crearFormulario();
+    // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /**
+   * Inicializa el componente.
+   * Suscribe al estado del trámite y configura el formulario principal.
+   */
   ngOnInit(): void {
     this.tramite260601Query.selectSeccionState$
       .pipe(
@@ -51,8 +75,14 @@ export class RepresentanteLegalComponent {
         })
       )
       .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearFormulario();
   }
 
+  /**
+   * Crea y configura el formulario principal para el representante legal.
+   */
   crearFormulario(): void {
     this.representanteLegalForm = this.fb.group({
       rfc: [
@@ -74,24 +104,41 @@ export class RepresentanteLegalComponent {
     });
   }
 
-  obtenerRespuestaIDCPorRFC() {
-    let rfcRepresentanteLegalCofepris = this.representanteLegalForm.get('rfc')?.value;
+  /**
+   * Obtiene la información del representante legal según el RFC ingresado.
+   * Actualiza el formulario con los datos obtenidos o muestra un error en caso de valor no válido.
+   */
+  obtenerRespuestaIDCPorRFC(): void {
+    const RFC_REPRESENTANTE_LEGAL_COFEPRIS = this.representanteLegalForm.get('rfc')?.value;
 
-    if (rfcRepresentanteLegalCofepris == null || rfcRepresentanteLegalCofepris == undefined || rfcRepresentanteLegalCofepris == '') {
+    if (RFC_REPRESENTANTE_LEGAL_COFEPRIS === null || RFC_REPRESENTANTE_LEGAL_COFEPRIS === undefined || RFC_REPRESENTANTE_LEGAL_COFEPRIS === '') {
       this.toastr.error(MSG_ERROR_REPRESENTANTE_LEGAL);
       this.representanteLegalForm.reset();
     } else {
-      this.avisoSanitarioService.buscarRfc().subscribe({
-        next: (result: any) => {
-          let representanteLegal = result.data[0];
-          this.representanteLegalForm.patchValue({
-            nombreOrazonsocial: representanteLegal.nombreOrazonsocial,
-            apellidoPaterno: representanteLegal.apellidoPaterno,
-            apellidoMaterno: representanteLegal.apellidoMaterno
-          });
-        }
-      })
+      this.avisoSanitarioService.buscarRfc()
+        .pipe(takeUntil(this.destruirNotificador$))
+        .subscribe({
+          next: (result: RepresentanteLegalRespuesta) => {
+            const REPRESENTANTE_LEGAL = result.data[0];
+            this.representanteLegalForm.patchValue({
+              nombreOrazonsocial: REPRESENTANTE_LEGAL.nombreOrazonsocial,
+              apellidoPaterno: REPRESENTANTE_LEGAL.apellidoPaterno,
+              apellidoMaterno: REPRESENTANTE_LEGAL.apellidoMaterno
+            });
+            this.tiendaCampoRepresentanteLegal();
+          }
+        })
     }
+  }
+
+  /**
+   * Almacena los valores del formulario del representante legal en el store.
+   */
+  tiendaCampoRepresentanteLegal(): void {
+    this.setValoresStore(this.representanteLegalForm, 'nombreOrazonsocial', 'setNombreOrazonsocial');
+    this.setValoresStore(this.representanteLegalForm, 'apellidoPaterno', 'setApellidoPaterno');
+    this.setValoresStore(this.representanteLegalForm, 'apellidoMaterno', 'setApellidoMaterno');
+    this.setValoresStore(this.representanteLegalForm, 'rfc', 'setRfc');
   }
 
   /**

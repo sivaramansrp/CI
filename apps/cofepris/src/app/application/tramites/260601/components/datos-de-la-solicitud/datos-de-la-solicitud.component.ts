@@ -1,10 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Solicitud } from '../../models/aviso-model';
+
 import { SOLICITUD_HEADER, TEXTOS_SOLICITUD } from '../../constantes/aviso-enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelEstablecimientoComponent } from '../datos-del-establecimiento/datos-del-establecimiento.component';
+import { Solicitud } from '../../models/aviso-model';
 
+/**
+ * Componente para gestionar el datos de la solicitud.
+ */
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,

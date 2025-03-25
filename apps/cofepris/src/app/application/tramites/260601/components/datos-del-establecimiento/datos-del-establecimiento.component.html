@@ -29,11 +29,13 @@
         <div class="col-md-4">
             <label for="rfc" class="form-label">RFC del responsable sanitario:</label>
             <input type="text" class="form-control" formControlName="RFCResponsableSanitario"
-                id="RFCResponsableSanitario">
+                id="RFCResponsableSanitario"
+                (change)="setValoresStore(datosDelEstablecimientoForm,'RFCResponsableSanitario', 'setRFCResponsableSanitario')">
         </div>
         <div class="col-md-8">
             <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
-            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68">
+            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
+                (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
         </div>
     </div>
     <div class="row">
@@ -42,7 +44,8 @@
                     class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
                     data-bs-toggle="tooltip"></span></label>
             <input type="text" class="form-control" formControlName="correoElectronico" id="correoElectronico"
-                maxlength="320">
+                maxlength="320"
+                (change)="setValoresStore(datosDelEstablecimientoForm,'correoElectronico', 'setCorreoElectronico')">
         </div>
     </div>
 </div>
@@ -55,7 +58,8 @@
         <div class="col-md-4">
             <label for="codigoPostal" class="form-label">Código postal*:</label>
             <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
-                maxlength="12">
+                maxlength="12"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
         </div>
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'" [required]="true"
@@ -65,19 +69,22 @@
         <div class="col-md-4">
             <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
             <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
-                formControlName="descripcionMunicipio" maxlength="120">
+                formControlName="descripcionMunicipio" maxlength="120"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
         </div>
     </div>
     <div class="row">
         <div class="col-md-4">
             <label for="informacionExtra" class="form-label">Localidad*:</label>
             <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
-                formControlName="informacionExtra" maxlength="120">
+                formControlName="informacionExtra" maxlength="120"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
         </div>
         <div class="col-md-4">
             <label for="descripcionColonia" class="form-label">Colonia*:</label>
             <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
-                formControlName="descripcionColonia" maxlength="120">
+                formControlName="descripcionColonia" maxlength="120"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
         </div>
     </div>
     <div class="row">
@@ -85,18 +92,20 @@
             <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill"
                     title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
                     data-bs-toggle="tooltip"></span></label>
-            <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90">
+            <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'calle', 'setCalle')">
         </div>
     </div>
     <div class="row">
         <div class="col-md-1">
             <label for="lada" class="form-label">Lada:</label>
-            <input type="text" name="lada" id="lada" class="form-control" formControlName="lada">
+            <input type="text" name="lada" id="lada" class="form-control" formControlName="lada"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'lada', 'setLada')">
         </div>
         <div class="col-md-3">
             <label for="telefono" class="form-label">Teléfono:</label>
             <input type="text" name="telefono" id="telefono" class="form-control" formControlName="telefono"
-                maxlength="30">
+                maxlength="30" (change)="setValoresStore(domicilloDelEstablecimientoForm,'telefono', 'setTelefono')">
         </div>
     </div>
     <div class="row">
@@ -140,9 +149,8 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <app-catalogo-select formControlName="cveSCIANDescripcion"
-                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion"
-                                    [isDisabled]="true"></app-catalogo-select>
+                                <app-catalogo-select [catalogo]="descripcionScian" formControlName="cveSCIANDescripcion" class="seleccion-solo-lectura"
+                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion"></app-catalogo-select>
                             </div>
                         </div>
                     </form>
@@ -171,14 +179,15 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-4">
         <div class="form-check">
             <input class="form-check-input" type="checkbox" value="" id="avisoFuncionamiento"
-                formControlName="avisoFuncionamiento">
+                formControlName="avisoFuncionamiento"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'avisoFuncionamiento', 'setAvisoFuncionamiento')">
             <label class="form-check-label" for="avisoFuncionamiento">Aviso de funcionamiento:</label>
         </div>
     </div>
-    <div class="row mt-5">
+    <div class="row">
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
                 [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
@@ -258,8 +267,8 @@
     <div class="row">
         <div class="col-md-12">
             <label class="form-label" for="informacionConfidencial">Los datos o anexos pueden contener información
-                confidencial Está de acuerdo en hacerlos públicos?*:</label>
-            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
                 formControlName="informacionConfidencial"
                 (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
                 (valueChange)="enCambioDeValor()"></app-input-radio>

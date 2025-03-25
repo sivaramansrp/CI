@@ -48,3 +48,74 @@ export interface ManifiestosRespuesta {
    */
   data: Manifiestos[];
 }
+
+/**
+ * Interfaz que define las etiquetas para una lista cruzada.
+ */
+export interface CrossListLable {
+  /** Texto que aparece en la parte izquierda de la etiqueta. */
+  tituluDeLaIzquierda: string;
+
+  /** Texto que aparece en la parte derecha de la etiqueta. */
+  derecha: string;
+}
+
+/**
+ * Interfaz que representa una lista cruzada, incluyendo etiquetas y fechas asociadas.
+ */
+export interface CrossList {
+  /** Etiquetas asociadas a la lista cruzada. */
+  label: CrossListLable;
+
+  /** Fechas asociadas con los datos de la lista cruzada. */
+  fechas: string[];
+}
+
+/**
+ * Interfaz que agrupa varias listas cruzadas relacionadas con una mercancía.
+ */
+export interface MercanciaCrossList {
+  /** Lista cruzada para los países de origen de la mercancía. */
+  paisOrigenCrossList: CrossList;
+
+  /** Lista cruzada para los países de procedencia de la mercancía. */
+  paisProcedencisCrossList: CrossList;
+
+  /** Lista cruzada para los usos específicos de la mercancía. */
+  usoEspecificoCrossList: CrossList;
+}
+
+/**
+ * Respuesta de la API al buscar datos del representante legal.
+ */
+export interface RepresentanteLegalRespuesta {
+  /**
+   * Datos del representante legal obtenidos de la API.
+   */
+  data: RepresentanteLegal[];
+}
+
+/**
+ * Interfaz que representa los datos de un representante legal.
+ */
+export interface RepresentanteLegal {
+  /** 
+   * RFC del representante legal. 
+   */
+  rfc: string;
+
+  /**
+   * Nombre o razón social del representante legal.
+   */
+  nombreOrazonsocial: string;
+
+  /**
+   * Apellido paterno del representante legal.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * Apellido materno del representante legal.
+   */
+  apellidoMaterno: string;
+}

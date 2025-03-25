@@ -3,15 +3,15 @@
     "data": [
         {
             "id": 1,
-            "descripcion": "Producto_Clasificación_1"
+            "descripcion": "País_1"
         },
         {
             "id": 2,
-            "descripcion": "Producto_Clasificación_2"
+            "descripcion": "País_2"
         },
         {
             "id": 3,
-            "descripcion": "Producto_Clasificación_3"
+            "descripcion": "País_3"
         }
     ],
     "message": "Consulta exitosa"

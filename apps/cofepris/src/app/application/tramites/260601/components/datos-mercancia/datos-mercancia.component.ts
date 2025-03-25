@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { CrossListLable } from '@ng-mf/data-access-user';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, CrosslistComponent } from '@libs/shared/data-access-user/src';
-import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
-import { map, merge, Observable, Subject, takeUntil } from 'rxjs';
-import { CATALOGOS_ID, CONTINUAR, CROSLISTA_DE_USO_ESPECIFICO, PANELS } from '../../constantes/aviso-enum';
-import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
-import { PaisDeProcedenciaComponent } from '../pais-de-procedencia/pais-de-procedencia.component';
 
+import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
+import { BOTONS, CATALOGOS_ID, PANELS } from '../../constantes/aviso-enum';
+import { Catalogo, CatalogoSelectComponent, CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { CrossList, MercanciaCrossList } from '../../models/aviso-model';
+import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+
+/**
+ * Componente para gestionar el mercancia datos.
+ */
 @Component({
   selector: 'app-datos-mercancia',
   standalone: true,
@@ -19,20 +21,40 @@ import { PaisDeProcedenciaComponent } from '../pais-de-procedencia/pais-de-proce
     FormsModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    PaisDeOrigenComponent,
-    PaisDeProcedenciaComponent,
     CrosslistComponent
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.css',
 })
-export class DatosMercanciaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario principal para los datos de la mercancía.
+   */
   agregarMercanciaForm!: FormGroup;
+
+  /**
+   * Catálogo de clasificación de productos.
+   */
   productoClasificacion!: Catalogo[];
+
+  /**
+   * Catálogo de clasificación específica de productos.
+   */
   especificoProductoClasificacion!: Catalogo[];
+
+  /**
+   * Catálogo de tipos de productos.
+   */
   tipoProducto!: Catalogo[];
+
+  /**
+   * Catálogo de países de destino.
+   */
   paisDestino!: Catalogo[];
 
+  /**
+   * Estado actual del aviso sanitario.
+   */
   public avisoSanitarioState!: AvisoSanitarioState;
 
   /**
@@ -40,49 +62,45 @@ export class DatosMercanciaComponent implements OnInit {
    */
   panels = PANELS;
 
+  /**
+   * Estado del panel colapsable.
+   */
   colapsable: boolean = false;
 
   /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
+   * Botones configurados para acciones en tablas, como agregar o restar elementos.
    */
-  usoEspecificoBotons = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregar(''),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregar(CONTINUAR),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar(CONTINUAR),
-    },
-  ];
+  botones = BOTONS;
 
-  public usoEspecificoLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Uso específico:',
-    derecha: 'Uso específico seleccionada*:',
-  };
+  /**
+   * Datos de listas cruzadas específicas de uso.
+   */
+  usoEspecificoCrosslistDatos: CrossList | undefined;
 
-  public crosListaDeUsoEspecifico = CROSLISTA_DE_USO_ESPECIFICO;
+  /**
+   * Datos de listas cruzadas para país de origen.
+   */
+  paisOrigenCrosslistDatos: CrossList | undefined;
+
+  /**
+   * Datos de listas cruzadas para país de procedencia.
+   */
+  paisProcedencisCrosslistDatos: CrossList | undefined;
 
   /**
    * Lista de rangos de días seleccionarUsoEspecifico.
    */
-  seleccionarUsoEspecifico: string[] = this.crosListaDeUsoEspecifico;
+  seleccionarUsoEspecifico: string[] = [];
+
+  /**
+   * Fechas seleccionadas para país de procedencia.
+   */
+  seleccionarPaisProcedencis: string[] = [];
+
+  /**
+   * Fechas seleccionadas para país de origen.
+   */
+  seleccionarPaisOrigen: string[] = [];
 
   /**
    * Lista de fechas usoEspecificoSeleccionadas.
@@ -95,20 +113,19 @@ export class DatosMercanciaComponent implements OnInit {
   usoEspecificoDatos: string[] = [];
 
   /**
-   * Control de formulario para la usoEspecificoFecha.
-   */
-  usoEspecificoFecha: FormControl = new FormControl('');
-
-  /**
-   * Control de formulario para la fecha usoEspecificoFechaSeleccionada.
-   */
-  usoEspecificoFechaSeleccionada: FormControl = new FormControl('');
-
-  /**
    * Subject para destruir las suscripciones.
    */
   private destruirNotificador$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * Inyecta servicios necesarios para la gestión del formulario, los catálogos, y el estado del trámite.
+   * 
+   * @param fb FormBuilder para construir y gestionar formularios reactivos.
+   * @param avisoSanitarioService Servicio para interactuar con datos del aviso sanitario.
+   * @param tramite260601Store Store para manejar el estado del trámite.
+   * @param tramite260601Query Query para observar y consultar el estado del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private avisoSanitarioService: AvisoSanitarioService,
@@ -118,6 +135,9 @@ export class DatosMercanciaComponent implements OnInit {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /**
+   * Inicializa el componente y configura los catálogos, formularios y suscripciones.
+   */
   ngOnInit(): void {
     this.inicializaCatalogos();
 
@@ -137,8 +157,19 @@ export class DatosMercanciaComponent implements OnInit {
     this.especificoProductoClasificacionSeleccion();
     this.tipoProductoSeleccion();
     this.paisDestinoSeleccion();
+
+    this.obtenerMercanciaCrosslist();
+
+    this.agregarMercanciaForm.get('fraccionArancelaria')?.valueChanges
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe(() => {
+        this.autocompletarDescripcion();
+      });
   }
 
+  /**
+   * Crea y configura el formulario principal de datos de mercancía.
+   */
   crearFormulario(): void {
     this.agregarMercanciaForm = this.fb.group({
       cveProductoClasificacion: [
@@ -185,8 +216,8 @@ export class DatosMercanciaComponent implements OnInit {
   }
 
   /**
-     * Inicializa los catálogos necesarios para el formulario.
-     */
+   * Inicializa los catálogos necesarios para el formulario.
+   */
   private inicializaCatalogos(): void {
     const PRODUCTO_CLASIFICACION$: Observable<void> = this.avisoSanitarioService
       .getProductoClasificacion(CATALOGOS_ID.CAT_PRODUCTO_CLASIFICACION)
@@ -230,24 +261,36 @@ export class DatosMercanciaComponent implements OnInit {
       .subscribe();
   }
 
+  /**
+   * Maneja la selección de la clasificación de productos.
+   */
   productoClasificacionSeleccion(): void {
     const PRODUCTO_CLASIFICACION = this.agregarMercanciaForm.get('cveProductoClasificacion')?.value;
     this.tramite260601Store.setProductoClasificacion(PRODUCTO_CLASIFICACION);
   }
 
+  /**
+   * Maneja la selección de la clasificación específica de productos.
+   */
   especificoProductoClasificacionSeleccion(): void {
     const ESPECIFICO_PRODUCTO_CLASIFICACION = this.agregarMercanciaForm.get('cveEspecificoProductoClasifi')?.value;
     this.tramite260601Store.setEspecificoProductoClasificacion(ESPECIFICO_PRODUCTO_CLASIFICACION);
   }
 
+  /**
+   * Maneja la selección del tipo de producto.
+   */
   tipoProductoSeleccion(): void {
     const TIPO_PRODUCTO = this.agregarMercanciaForm.get('cveTipoProducto')?.value;
     this.tramite260601Store.setTipoProducto(TIPO_PRODUCTO);
   }
 
+  /**
+   * Maneja la selección del país de destino.
+   */
   paisDestinoSeleccion(): void {
     const PAIS_DESTINO = this.agregarMercanciaForm.get('cvePaisDestino')?.value;
-    this.tramite260601Store.setTipoProducto(PAIS_DESTINO);
+    this.tramite260601Store.setPaisDestino(PAIS_DESTINO);
   }
 
   /**
@@ -264,109 +307,45 @@ export class DatosMercanciaComponent implements OnInit {
     });
   }
 
+  /**
+   * Obtiene los datos de listas cruzadas para la mercancía.
+   */
+  obtenerMercanciaCrosslist(): void {
+    this.avisoSanitarioService.obtenerMercanciaCrosslist()
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe({
+        next: (respuesta: MercanciaCrossList) => {
+          this.paisOrigenCrosslistDatos = respuesta.paisOrigenCrossList;
+          this.paisProcedencisCrosslistDatos = respuesta.paisProcedencisCrossList;
+          this.usoEspecificoCrosslistDatos = respuesta.usoEspecificoCrossList;
+          this.seleccionarUsoEspecifico = respuesta.usoEspecificoCrossList.fechas;
+          this.seleccionarPaisProcedencis = respuesta.paisProcedencisCrossList.fechas;
+          this.seleccionarPaisOrigen = respuesta.paisOrigenCrossList.fechas;
+        }
+      });
+  }
+
+  /**
+   * Alterna el estado del panel colapsable para uso específico.
+   */
   mostrar_uso_especifico_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
-  agregar(tipo: string): void {
-    if (tipo === CONTINUAR) {
-      this.usoEspecificoSeleccionadas = [...this.seleccionarUsoEspecifico];
-      this.usoEspecificoDatos = [];
-    } else {
-      const FECHAVALOR = this.usoEspecificoFecha.value?.map(Number);
-      this.usoEspecificoSeleccionadas.push(
-        this.usoEspecificoDatos[FECHAVALOR]
-      );
-      this.usoEspecificoDatos.splice(FECHAVALOR, 1);
-    }
+  /**
+   * Autocompleta la descripción de la fracción arancelaria.
+   */
+  autocompletarDescripcion(): void {
+    this.avisoSanitarioService.autocompletarDescripcion()
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe({
+        next: (result) => {
+          const FRACCION_DESCRIPCION = result.data[0].descripcion;
+          this.agregarMercanciaForm.get('fraccionArancelariaDescripcion')?.setValue(FRACCION_DESCRIPCION);
+          this.tramite260601Store.setFraccionArancelariaDescripcion(FRACCION_DESCRIPCION);
+        }
+      });
   }
-
-  /**
-   * Elimina elementos de la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  quitar(tipo: string = ''): void {
-    if (tipo === CONTINUAR) {
-      this.usoEspecificoDatos = [...this.usoEspecificoSeleccionadas];
-      this.usoEspecificoSeleccionadas = [];
-    } else {
-      const FECHAVALOR =
-        this.usoEspecificoFechaSeleccionada.value.map(Number);
-      this.usoEspecificoDatos.push(
-        this.usoEspecificoSeleccionadas[FECHAVALOR]
-      );
-      this.usoEspecificoSeleccionadas.splice(FECHAVALOR, 1);
-    }
-  }
-  /**
-   * Agrega elementos a la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  // agregarDos(tipo: string): void {
-  //   if (tipo === CONTINUAR) {
-  //     this.paisDelProductoSeleccionadas = [...this.listaPaisDelProducto];
-  //     this.paisDelProductoDatos = [];
-  //   } else {
-  //     const FECHAVALOR = this.paisDelProductoFecha.value.map(Number);
-  //     this.paisDelProductoSeleccionadas.push(
-  //       this.paisDelProductoDatos[FECHAVALOR]
-  //     );
-  //     this.paisDelProductoDatos.splice(FECHAVALOR, 1);
-  //   }
-  // }
-
-  /**
-   * Elimina elementos de la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  // quitarDos(tipo: string = ''): void {
-  //   if (tipo === CONTINUAR) {
-  //     this.paisDelProductoDatos = [...this.paisDelProductoSeleccionadas];
-  //     this.paisDelProductoSeleccionadas = [];
-  //   } else {
-  //     const FECHAVALOR =
-  //       this.paisDeProcedenciaFechaSeleccionada.value.map(Number);
-  //     this.paisDelProductoDatos.push(
-  //       this.paisDelProductoSeleccionadas[FECHAVALOR]
-  //     );
-  //     this.paisDelProductoSeleccionadas.splice(FECHAVALOR, 1);
-  //   }
-  // }
-
-  /**
-   * Agrega elementos a la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  // agregarTres(tipo: string): void {
-  //   if (tipo === CONTINUAR) {
-  //     this.aduanasDeEntradaSeleccionadas = [...this.seleccionarUsoEspecifico];
-  //     this.aduanasDeEntradaDatos = [];
-  //   } else {
-  //     const FECHAVALOR = this.aduanasDeEntradaFecha.value.map(Number);
-  //     this.aduanasDeEntradaSeleccionadas.push(
-  //       this.aduanasDeEntradaDatos[FECHAVALOR]
-  //     );
-  //     this.aduanasDeEntradaDatos.splice(FECHAVALOR, 1);
-  //   }
-  // }
-
-  /**
-   * Elimina elementos de la lista de fechas según el tipo especificado.
-   * @param {string} tipo - Tipo de acción a realizar.
-   */
-  // quitarTres(tipo: string = ''): void {
-  //   if (tipo === CONTINUAR) {
-  //     this.aduanasDeEntradaDatos = [...this.aduanasDeEntradaSeleccionadas];
-  //     this.aduanasDeEntradaSeleccionadas = [];
-  //   } else {
-  //     const FECHAVALOR =
-  //       this.aduanasDeEntradaFechaSeleccionada.value.map(Number);
-  //     this.aduanasDeEntradaDatos.push(
-  //       this.aduanasDeEntradaSeleccionadas[FECHAVALOR]
-  //     );
-  //     this.aduanasDeEntradaSeleccionadas.splice(FECHAVALOR, 1);
-  //   }
-  // }
 
   /**
   * Establece los valores en el store de tramite260601.

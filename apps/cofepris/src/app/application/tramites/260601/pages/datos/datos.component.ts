@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
-import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
 /**
@@ -10,7 +10,7 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   templateUrl: './datos.component.html',
   styles: ``,
 })
-export class DatosComponent {
+export class DatosComponent implements AfterViewInit {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */

@@ -11,7 +11,7 @@
 }
 
 #modalAgregarMercancia .modal-dialog {
-    max-width: 1000px !important;
+    max-width: 1100px !important;
 }
 
 #modalAlerta .modal-footer {
@@ -37,4 +37,8 @@
 
 .alert label {
     font-weight: normal;
+}
+
+.seleccion-solo-lectura {
+    pointer-events: none;
 }
