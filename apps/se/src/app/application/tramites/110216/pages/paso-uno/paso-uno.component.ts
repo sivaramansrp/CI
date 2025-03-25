@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { HistoricoProductoresComponent } from '../../components/historico-productores.component';
+import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 
 @Component({

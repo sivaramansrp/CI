@@ -1,19 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CertificadosOrigenService } from '../services/certificadosOrigen.service';
+import { CertificadosOrigenService } from '../../services/certificadosOrigen.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HistoricoColumnas } from '../models/certificado-origen.model';
+import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite110216Query } from '../../../estados/queries/tramite110216.query';
-import { Tramite110216State } from '../../../estados/tramites/tramite110216.store';
-import { Tramite110216Store } from '../../../estados/tramites/tramite110216.store';
+import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
+import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
+import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
