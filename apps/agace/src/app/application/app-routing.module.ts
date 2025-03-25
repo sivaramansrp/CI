@@ -18,6 +18,13 @@ const ROUTES: Routes = [
   {
     path: 'aviso',
     loadChildren: () =>
+      import('./tramites/32502/aviso.module').then(
+        (m) => m.AvisoModule
+      ),
+  },
+  {
+    path: 'aviso-procesos',
+    loadChildren: () =>
       import('./tramites/32504/aviso-procesos.module').then(
         (m) => m.AvisoProcesosModule
       ),
