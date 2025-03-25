@@ -1,26 +1,20 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @angular-eslint/no-empty-lifecycle-method */
-/* eslint-disable class-methods-use-this */
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
 import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  RespuestaCatalogos,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -73,7 +67,7 @@ export interface MercanciasTabla {
   templateUrl: './domicilio-establecimiento.component.html',
   styleUrl: './domicilio-establecimiento.component.css',
 })
-export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -274,11 +268,6 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
       fechaCaducidad: [''],
     });
   }
-
-  /**
-   * Método del ciclo de vida de Angular que se llama después de que Angular haya inicializado todas las vistas de un componente.
-   */
-  ngAfterViewInit(): void {}
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
