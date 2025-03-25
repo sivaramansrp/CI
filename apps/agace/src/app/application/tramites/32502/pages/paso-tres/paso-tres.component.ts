@@ -1,15 +1,15 @@
-import { Component, Inject } from '@angular/core';
-import { catchError, map, Subject, takeUntil } from 'rxjs';
+import { Component, Inject, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { TramiteAgaceStore } from '../../../../estados/tramite.store';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.css',
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy{
   /**
    * Tipo de persona.
    */
@@ -24,7 +24,7 @@ export class PasoTresComponent {
    */
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: TramiteFolioService,
     @Inject(TramiteAgaceStore) private tramiteStore: TramiteAgaceStore
   ) {
     // El constructor se utiliza para la inyección de dependencias.

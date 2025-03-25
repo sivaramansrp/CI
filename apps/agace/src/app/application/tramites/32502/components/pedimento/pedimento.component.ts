@@ -1,11 +1,10 @@
 /* eslint-disable no-alert */
 /* eslint-disable dot-notation */
 import { Component, Input, OnChanges, SimpleChanges, output } from '@angular/core';
+import { DatosComponentePedimento, Pedimento } from '../../../../core/models/32502/tramite32502.model';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BooleanoSiNoPipe } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { DatosComponentePedimento } from '@ng-mf/data-access-user';
-import { Pedimento } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 

@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { CATALOGOS_ID, FechaAproximadaImportacion } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-
-
+import { Subject, map, merge, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
-import { CATALOGOS_ID, FECHA_APROXIMADA_IMPORTACION, InputFecha } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
@@ -20,14 +18,18 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
   templateUrl: './solicitud.component.html',
   styleUrl:'./solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit {
+export class SolicitudComponent implements OnInit, OnDestroy {
     /**
    * Representa la fecha de inicio ingresada por el usuario.
    * 
-   * @type {InputFecha}
+   * @type {FechaAproximadaImportacion}
    * @default FECHA_INGRESO
    */
-    public fechaInicioInput: InputFecha = FECHA_APROXIMADA_IMPORTACION;
+    public fechaInicioInput: FechaAproximadaImportacion = {
+      labelNombre: 'Fecha Aproximada Importacion',
+      required: false,
+      habilitado: false,
+    };
 
   /**
    * Lista de catálogos de fracción arancelaria.

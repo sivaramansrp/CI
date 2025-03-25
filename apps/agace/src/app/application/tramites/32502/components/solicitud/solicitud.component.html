@@ -76,7 +76,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event) " [setFecha]="this.solicitudState.fechaInicio"></input-fecha>
+                    <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event) " [setFecha]="mercanciaST.get('fechaInicio')?.value"></input-fecha>
                     @if (isValid(mercanciaST,'fechaInicio')) {
                     <div class="mensaje-error">
                         Fecha no válida, elija otro día

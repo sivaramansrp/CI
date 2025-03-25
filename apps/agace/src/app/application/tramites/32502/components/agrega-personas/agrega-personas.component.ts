@@ -2,10 +2,10 @@
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Persona } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
+import { Persona } from '../../../../core/models/32502/tramite32502.model';
 import { SeccionAgaceState } from '../../../../estados/seccion.store';
 import { Subject } from 'rxjs';
 import { Tramite32502Query } from '../../../../estados/queries/tramite32502.query';
