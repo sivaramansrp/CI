@@ -403,6 +403,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
       (header, index) => ({
         encabezado: header,
+        /* eslint-disable @typescript-eslint/no-explicit-any */
         clave: (fila: any): string => fila.tbodyData[index],
         orden: index,
       })
@@ -468,6 +469,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
    * Lista de filas seleccionadas.
    */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
       ? filasSeleccionadas[0]

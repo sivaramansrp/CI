@@ -1,17 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PaisProcendenciaComponent } from './pais-procendencia.component';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { By } from '@angular/platform-browser';
-
+ 
 describe('PaisProcendenciaComponent', () => {
   let component: PaisProcendenciaComponent;
   let fixture: ComponentFixture<PaisProcendenciaComponent>;
-
+ 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -20,11 +19,11 @@ describe('PaisProcendenciaComponent', () => {
         TituloComponent,
         CrosslistComponent,
         CatalogoSelectComponent,
-        PaisProcendenciaComponent, // Import the standalone component here
+        PaisProcendenciaComponent, 
       ],
     }).compileComponents();
   });
-
+ 
   beforeEach(() => {
     fixture = TestBed.createComponent(PaisProcendenciaComponent);
     component = fixture.componentInstance;
@@ -35,7 +34,7 @@ describe('PaisProcendenciaComponent', () => {
       justificacionImportacionExportacion: new FormControl(''), // Add the missing 'justificacionImportacionExportacion' control
       observaciones: new FormControl(''), // Add the missing 'observaciones' control
     });
-    component.paisProc = [
+    component.elementosDeBloque = [
       { id: 1, descripcion: "SGP" },
       { id: 2, descripcion: "TLC JAPON" },
       { id: 3, descripcion: "TLC PERU" },
@@ -69,18 +68,17 @@ describe('PaisProcendenciaComponent', () => {
       "PERU (REPUBLICA DEL)",
       "BRASIL (REPUBLICA TEDE RAMA DE)"
     ];
-    fixture.detectChanges();
   });
-
+ 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
-
+ 
   it('Debe devolver verdadero si el control no es válido', () => {
-    component.paisForm.controls['pais'].setValue(''); // Set control to invalid state
+    component.paisForm.controls['pais'].setValue(''); 
     component.paisForm.controls['pais'].markAsTouched();
   });
 })

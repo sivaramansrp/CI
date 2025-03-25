@@ -1,93 +1,93 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;
   let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
+  let formBuilder: FormBuilder;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,PartidasDeLaMercanciaComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent], // Import standalone component
     }).compileComponents();
-
+  
+    formBuilder = TestBed.inject(FormBuilder);
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
-
-    // Initialize inputs
-    component.partidasDelaMercanciaForm = new FormBuilder().group({
-      cantidad: [''],
-      descripcion: [''],
+    component.partidasDelaMercanciaForm = formBuilder.group({
+      cantidadPartidasDeLaMercancia: ['', Validators.required],
+      nombrePartida: ['', Validators.required],
+      descripcionPartidasDeLaMercancia: ['', Validators.required], 
+      valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required], 
     });
-    component.formForTotalCount = new FormBuilder().group({
-      cantidadTotal: [{ value: '', disabled: true }],
-      valorTotalUSD: [{ value: '', disabled: true }],
-    });
-    component.tableHeaderData = [];
-    component.tableBodyData = [];
-    component.mostrarTabla = false;
-
-    fixture.detectChanges();
+  
+    fixture.detectChanges(); 
   });
+  
+  
+  
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should emit filaSeleccionadaChange when handleListaDeFilaSeleccionada is called', () => {
-    const filasSeleccionadas = [{ id: 1 }];
-    jest.spyOn(component.filaSeleccionadaChange, 'emit');
-
-    component.handleListaDeFilaSeleccionada(filasSeleccionadas);
-
-    expect(component.filaSeleccionadaChange.emit).toHaveBeenCalledWith(filasSeleccionadas);
-  });
-
-  it('should emit validarYEnviarFormularioEvent when validarYEnviarFormulario is called', () => {
-    jest.spyOn(component.validarYEnviarFormularioEvent, 'emit');
-
-    component.validarYEnviarFormulario();
-
-    expect(component.validarYEnviarFormularioEvent.emit).toHaveBeenCalled();
-  });
-
-  it('should emit navegarParaModificarPartidaEvent when navegarParaModificarPartida is called', () => {
-    jest.spyOn(component.navegarParaModificarPartidaEvent, 'emit');
-
-    component.navegarParaModificarPartida();
-
-    expect(component.navegarParaModificarPartidaEvent.emit).toHaveBeenCalled();
-  });
-
-  it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
-    const form = new FormBuilder().group({
-      cantidad: ['10'],
-    });
-    const campo = 'cantidad';
-    const metodoNombre = 'setCantidad';
-    jest.spyOn(component.setValoresStoreEvent, 'emit');
-
-    component.setValoresStore(form, campo, metodoNombre);
-
-    expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
-      form,
-      campo,
-      metodoNombre,
-    });
-  });
-
   it('should return true if form control is invalid in esInvalido', () => {
-    component.partidasDelaMercanciaForm.get('cantidad')?.setValidators(() => ({ invalid: true }));
-    component.partidasDelaMercanciaForm.get('cantidad')?.markAsTouched();
+    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('');
+    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].markAsTouched();
 
-    expect(component.esInvalido('cantidad')).toBe(true);
+    const isInvalid = component.esInvalido('cantidadPartidasDeLaMercancia');
+    expect(isInvalid).toBe(true);
   });
 
   it('should return false if form control is valid in esInvalido', () => {
-    component.partidasDelaMercanciaForm.get('cantidad')?.setValidators(() => null);
-    component.partidasDelaMercanciaForm.get('cantidad')?.markAsTouched();
+    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('Valid Value');
+    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].markAsTouched();
 
-    expect(component.esInvalido('cantidad')).toBe(false);
+    const isInvalid = component.esInvalido('cantidadPartidasDeLaMercancia');
+    expect(isInvalid).toBe(false);
+  });
+
+  it('should emit filaSeleccionadaChange when handleListaDeFilaSeleccionada is called', () => {
+    const emitSpy = spyOn(component.filaSeleccionadaChange, 'emit');
+    const filasSeleccionadas = [{ id: 1 }, { id: 2 }];
+
+    component.handleListaDeFilaSeleccionada(filasSeleccionadas);
+
+    expect(emitSpy).toHaveBeenCalledWith(filasSeleccionadas);
+  });
+
+  it('should emit validarYEnviarFormularioEvent when validarYEnviarFormulario is called', () => {
+    const emitSpy = spyOn(component.validarYEnviarFormularioEvent, 'emit');
+
+    component.validarYEnviarFormulario();
+
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should emit navegarParaModificarPartidaEvent when navegarParaModificarPartida is called', () => {
+    const emitSpy = spyOn(component.navegarParaModificarPartidaEvent, 'emit');
+
+    component.navegarParaModificarPartida();
+
+    expect(emitSpy).toHaveBeenCalled();
+  });
+
+  it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
+    const emitSpy = spyOn(component.setValoresStoreEvent, 'emit');
+    const testForm = formBuilder.group({
+      testControl: ['', Validators.required],
+    });
+    const testCampo = 'testCampo';
+    const testMetodoNombre = 'testMetodoNombre';
+
+    component.setValoresStore(testForm, testCampo, testMetodoNombre);
+
+    expect(emitSpy).toHaveBeenCalledWith({
+      form: testForm,
+      campo: testCampo,
+      metodoNombre: testMetodoNombre,
+    });
   });
 });
