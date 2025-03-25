@@ -1,6 +1,6 @@
 {
-    "code": 200,
-    "data": [
+    "código": 200,
+    "datos": [
       {
         "clasificacion":"clasificacion",
         "especificar":"especificar",
@@ -24,6 +24,6 @@
         "fechaCaducidad":"fechaCaducidad"
       }
     ],
-    "message": "Consulta exitosa"
+    "mensaje": "Consulta exitosa"
   }
   

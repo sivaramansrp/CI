@@ -2,8 +2,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/naming-convention */
  
-import { catchError, map } from 'rxjs';
-import { Component } from '@angular/core';
+import { catchError, map, Subject, takeUntil } from 'rxjs';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
@@ -15,10 +15,16 @@ import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
  * y posteriormente redirige a la pantalla de acuse si la firma es válida.
  */
 @Component({
-  selector: 'app-pasotres',
-  templateUrl: './pasotres.component.html',
+  selector: 'app-paso-tres',
+  templateUrl: './paso-tres.component.html',
 })
-export class PasotresComponent {
+export class PasotresComponent implements OnDestroy{
+  /**
+       * property {Subject<void>} destroyed$
+       * description Sujeto utilizado para manejar la destrucción de observables.
+       * private
+       */
+      private destroyed$ = new Subject<void>();
   /**
    * Constructor del componente.
    *
@@ -56,10 +62,20 @@ export class PasotresComponent {
           }),
           catchError((_error) => {
             return _error;
-          })
+          }),
+          takeUntil(this.destroyed$) 
         )
         .subscribe();
     }
+  }
+  
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
  

@@ -1,5 +1,6 @@
 import { CATALOGOS_ID, Catalogo,CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
  
 /**
  * Componente que maneja la selección de documentos en el paso de DUOS.
@@ -11,7 +12,14 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-pasoduos',
   templateUrl: './pasoduos.component.html',
 })
-export class PasoduosComponent implements OnInit {
+export class PasoduosComponent implements OnInit,OnDestroy {
+  /**
+     * property {Subject<void>} destroyed$
+     * description Sujeto utilizado para manejar la destrucción de observables.
+     * private
+     */
+    private destroyed$ = new Subject<void>();
+    
   /** Textos usados en el componente, provenientes de una fuente centralizada. */
   TEXTOS = TEXTOS;
  
@@ -23,9 +31,6 @@ export class PasoduosComponent implements OnInit {
  
   /** Catálogo completo de documentos disponibles. */
   catalogoDocumentos: Catalogo[] = [];
- 
-  /** Lista de documentos seleccionados por el usuario. */
-  documentosSeleccionados: Catalogo[] = [];
  
   /**
    * Constructor del componente.
@@ -45,17 +50,6 @@ export class PasoduosComponent implements OnInit {
   ngOnInit(): void {
     this.getTiposDocumentos();
  
-    // Documentos seleccionados por defecto al iniciar el componente
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que amparen el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
   }
  
   /**
@@ -67,6 +61,7 @@ export class PasoduosComponent implements OnInit {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (resp): void => {
           // Si la respuesta tiene documentos, los almacena en catalogoDocumentos
@@ -78,6 +73,15 @@ export class PasoduosComponent implements OnInit {
           // Manejo de errores, actualmente vacío pero puede ser implementado
         },
       });
+  }
+  
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }
  

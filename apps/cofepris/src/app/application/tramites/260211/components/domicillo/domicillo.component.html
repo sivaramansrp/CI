@@ -343,8 +343,8 @@
                         <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control" (change)="setValoresStore(formMercancias,'numeroRegistro', 'setNumeroRegistro')">
                     </div>
                     <div class="form-group">
-                        <label for="fechaCaducidad">Fecha de caducidad</label>
-                        <input type="date" class="form-control" id="fechaCaducidad" formControlName="fechaCaducidad"  (change)="setValoresStore(formMercancias,'fechaCaducidad', 'setFechaCaducidad')">
+                        
+                        <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
                     </div>
                     <div class="form-group mt-5">
                         <div class="panel-group ficha-collapse" id="accordion">
@@ -377,19 +377,19 @@
                           <div class="panel panel-default">
                             <div
                               class="panel-heading"
-                              (click)="mostrar_colapsableDuos()"
+                              (click)="mostrar_colapsableDos()"
                               tabindex="0"
                             >
                               <p class="panel-title">País de procedencia</p>
                               <button type="button" class="collpase-button collapsed"></button>
                             </div>
-                            @if(colapsableDuos){
+                            @if(colapsableDos){
                             <div class="panel-collapse collapse in" id="panel-01">
                               <div class="panel-body">
                                 <crosslist
-                                    [fechas]="seleccionarOrigenDelPaisDuos"
+                                    [fechas]="seleccionarOrigenDelPaisDos"
                                     [label]="paisDeProcedenciaLabel"
-                                    [botones]="paisDeProcedenciaBotonsDuos"
+                                    [botones]="paisDeProcedenciaBotonsDos"
                                 ></crosslist>
                               </div>
                             </div>
