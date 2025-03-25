@@ -54,6 +54,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   camposFormulario!: CampoForm[];
   headerTabla!: ItemTransporte[];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   bodyTabla: any[] = [];
 
   carreteroForma!: FormGroup;
@@ -260,14 +261,16 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
         break;
       }
     }
-    
+
     this.enviarTransporteTabla()
     this.cerrarModal();
   }
 
   seleccionarTodos(event: Event): void {
-    console.log(event);
-
+    const CHECKBOXES = document.querySelectorAll('.check-transporte');
+    CHECKBOXES.forEach((checkbox) => {
+      (checkbox as HTMLInputElement).checked = (event.target as HTMLInputElement).checked;
+    });
   }
 
   obtenerAniosModelo(): number[] {

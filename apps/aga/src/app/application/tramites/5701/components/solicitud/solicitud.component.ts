@@ -42,11 +42,11 @@ import {
   TIPO_SOLICITUD,
 } from '@ng-mf/data-access-user';
 
+import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
@@ -54,8 +54,8 @@ import { FormulariosService } from '@ng-mf/data-access-user';
 
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Modal } from 'bootstrap';
-import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
+import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 
 
 
@@ -68,9 +68,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
   @ViewChild('modalAviso') modalAviso!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
-
-
-
 
   tiposSolicitud!: Catalogo[];
   paisesOrigen!: CatalogoPaises[];
@@ -308,7 +305,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('vehiculo') as FormGroup;
   }
 
-
   /**
  * Obtiene el grupo de formulario 'transporteArriboSalida' del formulario principal 'FormSolicitud'.
  */
@@ -316,10 +312,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('transporteArriboSalida') as FormGroup;
   }
 
+  /**
+ * Obtiene el array del formulario 'itemsVehiculo' del grupo de formulario 'vehiculo'.
+ *
+ * @returns {FormArray} El array de formulario 'itemsVehiculo'.
+ */
   get itemsVehiculo(): FormArray {
     return this.vehiculo.get('vehiculoDatos') as FormArray;
   }
 
+  /**
+ * Obtiene el array del formulario 'fechasSeleccionadas' del grupo de formulario  'datosServicio'.
+ *
+ * @returns {FormArray} El array de formulario 'fechasSeleccionadas'.
+ */
   get fechasSeleccionadas(): FormArray {
     return this.datosServicio.get('fechasSeleccionadas') as FormArray;
   }
@@ -488,7 +494,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-
   /**
    * Obtiene la patente y la agrega al formulario.
    * 
@@ -653,7 +658,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
   fechaIntervaloValidator(): void {
-    // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
     const FECHA_INICIO = new Date(this.datosServicio.get('fechaInicio')?.value);
     const FECHA_FINAL = new Date(this.datosServicio.get('fechaFinal')?.value);
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
@@ -702,7 +706,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         if (FECHA_FINAL_CONTROL) {
           FECHA_FINAL_CONTROL.setErrors({ invalidIntervalo: true });
         }
-        // return { invalidIntervalo: true };
       }
 
       if (DIFERENCIA_EN_TIEMPO < 0) {
@@ -736,7 +739,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       const RFC_IMP_EXP =
         this.datosImportadorExportador.get('RFCImpExp')?.value;
       // Aqui se hará la busqueda del rfc, para obtener el nombre
-      this.llenarCamposDesactivados(
+      SolicitudComponent.llenarCamposDesactivados(
         this.datosImportadorExportador,
         'nombre'
       );
@@ -748,8 +751,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  llenarCamposDesactivados(form: FormGroup, field: string): void {
+  /**
+   * Habilita temporalmente un campo de un formulario, asigna un valor predeterminado
+   * y luego lo desactiva nuevamente.
+   *
+   * @param form - El grupo de formulario (`FormGroup`) que contiene el campo a modificar.
+   * @param field - El nombre del campo dentro del formulario que será modificado.
+   */
+  static llenarCamposDesactivados(form: FormGroup, field: string): void {
     form.get(field)?.enable();
     form.get(field)?.setValue('JUAN PEREZ CRUZ');
     form.get(field)?.disable();
@@ -791,7 +800,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   *
   * @returns {void} No retorna ningún valor.
   */
-  mostrar_colapsable(): void {
+  mostrarColapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
@@ -837,7 +846,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
    * Establece el valor de un campo en un formulario.
    *
@@ -854,7 +862,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   ): void {
     form.get(field)?.setValue(valor);
   }
-
 
   /**
    * Activa el input de idSocioComercial si se selecciona un socio comercial.
@@ -932,25 +939,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
       this.rangoFechas();
       this.mostrarRangoFechas = true;
     }
   }
 
+
   /**
-   * Calculates the range of dates and times based on the input values from the service,
-   * updates the selected range of days, and sets the collapsible state for the UI.
-   *
-   * @remarks
-   * This method retrieves the start and end dates (`fechaInicio` and `fechaFinal`) 
-   * as well as the start and end times (`horaInicio` and `horaFinal`) from the 
-   * `datosServicio` form group. It then calculates the range of days using the 
-   * `fechaService.obtenerDiasEntreFechas` method and updates the state in the 
-   * `crosslistStore` and `tramite5701Store`.
-   *
-   * @returns {void} This method does not return a value.
+   * Calcula el rango de días entre dos fechas y horas, 
+   * y actualiza el estado del componente.
    */
   rangoFechas(): void {
     const FECHA_INICIAL = this.datosServicio.get('fechaInicio')?.value;
@@ -966,7 +964,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     this.colapsable = true;
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
@@ -1216,9 +1213,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeAgregarVehiculo(event: any): void {
-    console.log(event);
-
+  changeAgregarVehiculo(vehiculos: any[], tipo: string): void {
+    if (tipo === 'vehiculo') {
+      this.tramite5701Store.setTransporte(vehiculos);
+    } else if (tipo === 'transporte') {
+      this.tramite5701Store.setTransporteArriboDatos(vehiculos);
+    }
   }
 
   /**

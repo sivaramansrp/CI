@@ -249,7 +249,7 @@
         <div class="col-md-12">
           <div class="panel-group ficha-collapse" id="accordion">
             <div class="panel panel-default">
-              <div class="panel-heading" (click)="mostrar_colapsable()">
+              <div class="panel-heading" (click)="mostrarColapsable()">
                 <h4 class="panel-title">
                   <a>
                     Especifique los días que se utilizarán dentro del periodo*:
@@ -436,7 +436,7 @@
       @if (vehiculo.get('tipoTransporte')?.value) {
       <div class="row">
         <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"
-          (datosTabla)="changeAgregarVehiculo($event)" [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
+          (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')" [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
       </div>
       }
     </div>
@@ -453,7 +453,7 @@
       </div>
       @if (transporteArriboSalida.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"></lib-agregar-transporte>
+        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value" (datosTabla)="changeAgregarVehiculo($event, 'transporte')" ></lib-agregar-transporte>
       </div>
       }
     </div>

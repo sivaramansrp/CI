@@ -87,7 +87,6 @@ export class PedimentoComponent implements OnInit, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['validacion']) {
-      console.log('validacion', changes['validacion'].currentValue);      
       this.validacion = changes['validacion'].currentValue;
     }
 
@@ -105,8 +104,6 @@ export class PedimentoComponent implements OnInit, OnChanges {
    */
   agregaPedimento(): void {
     this.validaCampos.emit();
-    console.log('agregaPedimento');
-    console.log(this.validacion);
     if (this.validacion) {
       this.acciones();
     }
