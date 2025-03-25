@@ -8,16 +8,18 @@ import { FormControl } from '@angular/forms';
 
 import Procedencia from 'libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
 
+export const TIPO_T: string = 't';
+
 @Component({
-  selector: 'app-pais-de-origin',
+  selector: 'app-pais-de-origen',
   standalone: true,
   imports: [CommonModule,
      CrosslistComponent
     ],
-  templateUrl: './pais-de-origin.component.html',
-  styleUrl: './pais-de-origin.component.scss',
+  templateUrl: './pais-de-origen.component.html',
+  styleUrl: './pais-de-origen.component.scss',
 })
-export class PaisDeOriginComponent {
+export class PaisDeOrigenComponent {
   /**
  * Arreglo para almacenar el rango de días seleccionables.
  */
@@ -81,7 +83,7 @@ export class PaisDeOriginComponent {
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar('t'),
+      funcion: () => this.agregar(TIPO_T),
     },
     {
       btnNombre: 'Restar selección',
@@ -91,7 +93,7 @@ export class PaisDeOriginComponent {
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: () => this.quitar('t'),
+      funcion: () => this.quitar(TIPO_T),
     },
   ];
 
@@ -102,7 +104,7 @@ export class PaisDeOriginComponent {
    */
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   agregar(tipo: string) {
-    if (tipo === 't') {
+    if (tipo === TIPO_T) {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
     } else {

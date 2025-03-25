@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { InputRadioComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
@@ -55,8 +56,8 @@ export class RepresentanteLegalComponent implements OnInit {
    * - Configura el formulario `personaForm`.
    * - Obtiene las opciones dinámicas para los radios desde un archivo JSON.
    */
-  ngOnInit() {
-    this.fetchSolicitudeOptions()
+  ngOnInit():void {
+    this.obtenerOpcionesSolicitud()
     this.personaForm = this.fb.group({
       rfc: ['', Validators.required],
       nombre: [{ value: '', disabled: true }],
@@ -72,14 +73,14 @@ export class RepresentanteLegalComponent implements OnInit {
    * @param field Nombre del campo del formulario a validar.
    * @returns `true` si el campo es válido; de lo contrario, `false`.
    */
-  isValid(field: string) {
+  esValido(field: string) {
     return this.validacionesService.isValid(this.personaForm, field);
   }
   /**
  * Obtiene las opciones dinámicas para los radios desde un archivo JSON y las almacena en `losDatos`.
  * Utiliza una petición HTTP para leer el archivo local.
  */
-  fetchSolicitudeOptions() {
+  obtenerOpcionesSolicitud():void {
     this.solicitudService.getLosOption().subscribe((data) => {
       this.losDatos = data;
     });

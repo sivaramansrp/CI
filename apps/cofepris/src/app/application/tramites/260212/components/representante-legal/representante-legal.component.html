@@ -23,17 +23,17 @@
     <div class="col-md-4 form-group">
       <label class="control-label" for="nombre">Nombre(s):</label>
       <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"
-        [ngClass]="isValid('nombre') ? 'required' : ''">
+        [ngClass]="esValido('nombre') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
       <label class="control-label" for="primerApellido">Apellido paterno:</label>
       <input class="form-control" id="primerApellido" placeholder="" type="text" formControlName="primerApellido"
-        [ngClass]="isValid('primerApellido') ? 'required' : ''">
+        [ngClass]="esValido('primerApellido') ? 'required' : ''">
     </div>
     <div class="col-md-4 form-group">
       <label class="control-label" for="segundoApellido">Apellido materno:</label>
       <input class="form-control" id="segundoApellido" placeholder="" type="text" formControlName="segundoApellido"
-        [ngClass]="isValid('segundoApellido') ? 'required' : ''">
+        [ngClass]="esValido('segundoApellido') ? 'required' : ''">
     </div>
   </div>
 </form>

@@ -63,7 +63,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   municipio$ = this.tramite260212Query.selectedMunicipio$
   localidad$ = this.tramite260212Query.selectedLocalidad$
   colonia$ = this.tramite260212Query.selectedColonia$
-  caller$ = this.tramite260212Query.selectedCaller$
+  calle$ = this.tramite260212Query.selectedCalle$
   lada$ = this.tramite260212Query.selectedLada$
   telefono$ =this.tramite260212Query.SelectedTelefono$
   codigoPostal$=this.tramite260212Query.SelectedCodigoPostal$
@@ -198,9 +198,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.datosEstablecimientoForm.get('colonia')?.setValue(colonia);
       }
     });
-    this.caller$.pipe(takeUntil(this.destroy$)).subscribe((caller) => {
-      if (caller) {
-        this.datosEstablecimientoForm.get('caller')?.setValue(caller);
+    this.calle$.pipe(takeUntil(this.destroy$)).subscribe((calle) => {
+      if (calle) {
+        this.datosEstablecimientoForm.get('calle')?.setValue(calle);
       }
     });
 
@@ -246,7 +246,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       municipio: ['', [Validators.required]],
       localidad: ['', [Validators.required]],
       colonia: ['', [Validators.required]],
-      caller: [''],
+      calle: [''],
       lada: ['', [Validators.required]],
       telefono: ['', [Validators.required]],
     });
@@ -377,9 +377,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260212Store.setColonia(COLONIA);
   }
 
-  updateCaller(): void {
-    const CALLER = this.datosEstablecimientoForm.get('caller')?.value;
-    this.tramite260212Store.setCaller(CALLER);
+  updateCalle(): void {
+    const CALLE = this.datosEstablecimientoForm.get('calle')?.value;
+    this.tramite260212Store.setCalle(CALLE);
   }
 
   updateLada(): void {

@@ -1,19 +1,19 @@
 import { TestBed } from '@angular/core/testing';
-import { PaisDeOriginComponent } from './pais-de-origin.component';
+import { PaisDeOrigenComponent } from './pais-de-origen.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 
 describe('PaisDeOriginComponent', () => {
-  let component: PaisDeOriginComponent;
+  let component: PaisDeOrigenComponent;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule, CommonModule, CrosslistComponent,PaisDeOriginComponent]
+      imports: [ReactiveFormsModule, CommonModule, CrosslistComponent,PaisDeOrigenComponent]
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(PaisDeOriginComponent);
+    const fixture = TestBed.createComponent(PaisDeOrigenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
