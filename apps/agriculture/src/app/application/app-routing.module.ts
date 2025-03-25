@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
@@ -58,6 +58,13 @@ const routes: Routes = [
       )
   },
   {
+    path: 'inspeccion-fisica',
+    loadChildren: () =>
+      import('./tramites/220701/inspeccion-fisica-zoosanitario.module').then(
+        (m) => m.InspeccionFisicaZoosanitarioModule
+      )
+  },
+  {  
     path: 'peticion-requisitos-fitosanitarios',
     loadChildren: () =>
       import('./tramites/220102/fitosanitario.module').then(
@@ -67,7 +74,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
