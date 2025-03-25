@@ -12,6 +12,9 @@ export * from './core/models/shared/configuracion-columna.model';
 export * from './core/models/shared/forms-model';
 export * from './core/models/usuario/perfilUsuario.model';
 export * from './core/models/usuario/rol.model';
+
+export * from './core/queries/seccion.query';
+
 export * from './core/queries/seccion.query';
 export * from './core/services/110102/datos-tratados-acuerdos/datosTratadosacuerdos.service';
 export * from './core/services/110102/exportador-autorizado/exportadorAutorizado.service';
@@ -46,6 +49,13 @@ export * from './core/services/shared/http/http.service';
 export * from './core/services/shared/solicitante/solicitante.service';
 export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/services/shared/wizard/wizard.service';
+export * from './core/services/shared/documento/documento.service';
+export * from './core/services/shared/inicio-sesion/inicio-sesion.service';
+export * from './core/services/shared/subir-documento/subir-documento.service';
+
+export * from './lib/data-access-user/data-access-user.component';
+export * from './lib/user.service';
+
 export * from './lib/data-access-user/data-access-user.component';
 export * from './lib/user.service';
 export * from './tramites/components/acuse/acuse.component';
