@@ -1,12 +1,10 @@
 <div class="container terceros-relacionados-container">
     <div *ngIf="showTableDiv">
-      <!-- title -->
       <ng-titulo titulo="Terceros relacionados" />
+      
+  <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
   
-      <!-- alert-box -->
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
-  
-      <!-- Fabricante table when on display -->
+      <!-- Tabla de fabricante cuando está en pantalla" -->
       <div class="mt-5">
         <h5>Fabricante:</h5>
         <div class="table-responsive mt-5">
@@ -26,7 +24,7 @@
         </div>
       </div>
   
-      <!-- Destinatario table -->
+      <!-- Destinatario tabla -->
       <div class="mt-5">
         <h5>Destinatario (destino final)*:</h5>
         <div class="table-responsive mt-5">
@@ -47,7 +45,7 @@
         </div>
       </div>
   
-      <!-- Proveedor table -->
+      <!-- Proveedor tabla -->
       <div class="mt-5">
         <h5>Proveedor:</h5>
         <div class="table-responsive mt-5">
@@ -67,7 +65,7 @@
         </div>
       </div>
   
-      <!-- Facturador table -->
+      <!-- Facturador tabla -->
       <div class="mt-5">
         <h5>Facturador:</h5>
         <div class="table-responsive mt-5">
@@ -92,29 +90,25 @@
     </div>
   </div>
   
-  <!-- When Agregar fabricante form is on Display -->
+  <!-- Cuando el formulario Agregar fabricante está en pantalla -->
   <app-modal [active]="showFabricante">
     <div class="agregar-fabricante-container">
       <ng-titulo titulo="Agregar fabricante" />
       <h5>Datos generales</h5>
   
       <form [formGroup]="agregarFabricanteFormGroup">
-        <!-- radio buttons -->
         <div class="row">
           <div class="col-md-6">
             <div>
               <h6>Terceros nacionalidad*:</h6>
               <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="nacional"
-                  formControlName="tercerosNacionalidad" id="nacional" [checked]="nacional"
-                  (change)="tercerosInputChecked('nacional')" />
-                <label class="control-label" for="nacional">Nacional</label>
-              </div>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="extranjero"
-                  formControlName="tercerosNacionalidad" id="extranjero" [checked]="extranjero"
-                  (change)="tercerosInputChecked('extranjero')" />
-                <label class="control-label" for="extranjero">Extranjero</label>
+                <app-input-radio
+                  [radioOptions]="nacionalidadOptions"
+                  [isRequired]="true"
+                  formControlName="tercerosNacionalidad"
+                  [layout]="'vertical'"
+                  (valueChange)="cambiarRadio($event)"
+                ></app-input-radio>
               </div>
             </div>
           </div>
@@ -123,23 +117,21 @@
             <div>
               <h6>Tipo persona*:</h6>
               <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-                <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-              </div>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-                <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
+                <app-input-radio
+                  [radioOptions]="tipoPersonaOptions"
+                  [isRequired]="true"
+                  formControlName="tipoPersona"
+                  [layout]="'vertical'"
+                  (valueChange)="cambiarRadioFisica($event)"
+                 
+                ></app-input-radio>
               </div>
             </div>
           </div>
         </div>
         <hr />
   
-        <!-- toggling inputs based on radio button selection -->
+        <!-- alternar entradas según la selección del botón de radio -->
   
         <div class="row">
           @if (nacional && fisica || (!fisica && !moral)){
@@ -250,7 +242,7 @@
           <hr>
           <hr>
   
-          <!-- Domicilio-form-container -->
+          <!-- Contenedor de formulario de domicilio -->
           <h5>Domicilio</h5>
           <div class="row d-flex domicilio-form-container">
   
@@ -394,12 +386,11 @@
             </div>
             <hr />
   
-            <!-- campos -->
             <div class="col-md-3 text-muted text-vertical-align-button">
               <span>*Campos obligatorios</span>
             </div>
   
-            <!-- last three buttons -->
+            <!-- últimos tres botones -->
             <div class="row">
               <div class="col-md-12 d-flex justify-content-end gap-1">
                 <button type="button" class="btn btn-danger"  (click)="toggleDivFabricante()">
@@ -419,37 +410,33 @@
     </div>
   </app-modal>
   
-  <!-- When Agregar destinatario form is on Display -->
+  <!-- Cuando el formulario Agregar destinatario está en pantalla -->
   <app-modal [active]="showDestinatario">
     <div class="agregar-destinatario-container">
       <ng-titulo titulo="Agregar destinatario (destino final)" />
       <h5>Datos generales</h5>
   
       <form [formGroup]="agregarDestinatarioFormGroup">
-        <!-- radio buttons -->
+        <!-- botones de radio -->
         <div class="row">
           <div class="col-md-6 offset-md-6">
             <div>
               <h6>Tipo persona*:</h6>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-                <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-              </div>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-                <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
+                <div class="mt-2">
+                <app-input-radio
+                  [radioOptions]="tipoPersonaOptions"
+                  [isRequired]="true"
+                  formControlName="tipoPersona"
+                  [layout]="'vertical'"
+                  (valueChange)="cambiarRadioFisica($event)"
+                
+                 ></app-input-radio>
               </div>
             </div>
           </div>
         </div>
         <hr />
-  
-  
-        <div class="row">
+      <div class="row">
           <div>
             <div class="col-md-4">
               <div class="form-group">
@@ -489,7 +476,7 @@
           <hr />
           <hr />
   
-          <!-- Domicilio-form-container -->
+          <!-- Contenedor de formulario de domicilio -->
           <h5>Domicilio</h5>
           <div class="row d-flex domicilio-form-container">
             <div class="col-md-4 mt-5">
@@ -589,12 +576,11 @@
             </div>
             <hr />
   
-            <!-- campos -->
-            <div class="col-md-3 text-muted text-vertical-align-button">
+           <div class="col-md-3 text-muted text-vertical-align-button">
               <span>*Campos obligatorios</span>
             </div>
   
-            <!-- last three buttons -->
+            <!-- últimos tres botones -->
             <div class="row">
               <div class="col-md-12 d-flex justify-content-end gap-1">
                 <button type="button" class="btn btn-danger"  (click)="toggleDivDestinatario()">
@@ -614,7 +600,7 @@
     </div>
   </app-modal>
   
-  <!-- When Agregar proveedor form is on Display -->
+  <!-- Cuando el formulario Agregar proveedor está en pantalla -->
   <app-modal [active]="showProveedor">
     <div class="agregar-proveedor-container">
       <ng-titulo titulo="Agregar proveedor" />
@@ -626,17 +612,15 @@
             <div>
               <h6>Tipo persona*:</h6>
               <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  id="fisica" value="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-                <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-              </div>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  id="moral" value="moral" [checked]="moral" (change)="inputChecked('moral')" />
-                <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-              </div>
+                <app-input-radio
+                  [radioOptions]="tipoPersonaOptions"
+                  [isRequired]="true"
+                  formControlName="tipoPersona"
+                  [layout]="'vertical'"
+                  (valueChange)="cambiarRadioFisica($event)"
+                  
+                ></app-input-radio>
+                </div>
             </div>
           </div>
         </div>
@@ -792,7 +776,7 @@
     </div>
   </app-modal>
   
-  <!-- When Agregar facturador form is on Display -->
+  <!-- Cuando el formulario Agregar facturador está en pantalla -->
   <app-modal [active]="showFacturador">
     <div class="agregar-facturador-container">
       <ng-titulo titulo="Agregar facturador" />
@@ -803,18 +787,14 @@
           <div class="col-md-6 offset-md-6">
             <div>
               <h6>Tipo persona*:</h6>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-                <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-              </div>
-              <div class="mt-2">
-                <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-                <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                    title="Title" ata-bs-toggle="tooltip"></span></label>
-              </div>
+             <app-input-radio
+              [radioOptions]="tipoPersonaOptions"
+              [isRequired]="true"
+              formControlName="tipoPersona"
+              [layout]="'vertical'"
+              (valueChange)="cambiarRadioFisica($event)"
+             
+            ></app-input-radio>
             </div>
           </div>
         </div>

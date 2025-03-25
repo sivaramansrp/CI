@@ -16,20 +16,25 @@ import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Sanitario260215Store } from '../../../../estados/tramites/sanitari260211.store'
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+
+// eslint-disable-next-line sort-imports
+import { TituloComponent , InputRadioComponent} from '@libs/shared/data-access-user/src';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
 import { ModalComponent } from '../model/modal.component';
+import nacionalidadRedio from 'libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
+import tipoPersonaoptions from 'libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
 
 
+ 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
 @Component({
   selector: 'app-terceros-relacionadoes',
   standalone: true,
-  imports: [CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent],
+  imports: [CommonModule,CatalogoSelectComponent,TituloComponent,TableComponent,ReactiveFormsModule,AlertComponent,FormsModule,ModalComponent,InputRadioComponent],
   templateUrl: './terceros-Relacionadoes.component.html',
   styleUrl: './terceros-Relacionadoes.component.scss',
  
@@ -168,6 +173,17 @@ export class TercerosRelacionadoesComponent {
    * @description Se utiliza para validar y procesar los datos del fabricante.
    */
   agregarFabricanteFormGroup!: FormGroup;
+
+  nacionalidadOptions = nacionalidadRedio;
+
+  /**
+   * Opciones para el radio de tipo de persona.
+   * Utiliza los datos predefinidos en `TipoPersonaRadioOptions`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de tipo de persona.
+   */
+ tipoPersonaOptions = tipoPersonaoptions;
+
 
   /**
    * Formulario reactivo para agregar un destinatario.
@@ -1262,6 +1278,26 @@ export class TercerosRelacionadoesComponent {
     return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
       ? null
       : { invalidRFC: true };
+  }
+
+   /**
+   * Cambia el valor del radio button seleccionado.
+   *
+   * @param value Valor seleccionado del radio button.
+   */
+   cambiarRadio(value: string | number) {
+    const VALOR_SELECCIONADO = value as string;
+    this.tercerosInputChecked(VALOR_SELECCIONADO);
+  }
+
+   /**
+   * Cambia el valor del radio button seleccionado.
+   *
+   * @param value Valor seleccionado del radio button.
+   */
+   cambiarRadioFisica(value: string | number) {
+    const VALOR_SELECCIONADO = value as string;
+    this.inputChecked(VALOR_SELECCIONADO);
   }
 
   /**
