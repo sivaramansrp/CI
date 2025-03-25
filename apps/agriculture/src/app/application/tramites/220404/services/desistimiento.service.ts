@@ -22,7 +22,7 @@ export class DesistimientoService {
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient) {
-    // No se necesita lógica de inicialización adicional.
+    /** No se necesita lógica de inicialización adicional. */
   }
 
   /**

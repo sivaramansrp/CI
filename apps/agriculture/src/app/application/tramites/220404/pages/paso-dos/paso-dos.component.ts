@@ -11,13 +11,13 @@ import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tra
   styleUrl: './paso-dos.component.scss'
 })
 export class PasoDosComponent implements OnDestroy{
-
+  /** Inyectamos los servicios necesarios*/
   constructor(
     private readonly router: Router,
     private readonly tramiteStore: TramiteStore,
     private readonly serviciosExtraordinariosService: ServiciosExtraordinariosService
   ) { 
-      // El constructor está intencionalmente vacío para la inyección de dependencias 
+      /** El constructor está intencionalmente vacío para la inyección de dependencias */ 
     }
 
   /**
@@ -36,6 +36,11 @@ export class PasoDosComponent implements OnDestroy{
   */
   private destroy$ = new Subject<void>();
 
+  /**
+  * Método para manejar la obtención de la firma y realizar acciones posteriores.
+  *
+  * @param {string} ev - La firma proporcionada como un string.
+  */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {

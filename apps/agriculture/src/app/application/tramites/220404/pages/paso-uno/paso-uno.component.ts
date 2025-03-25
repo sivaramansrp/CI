@@ -6,8 +6,12 @@ import { Component} from '@angular/core';
   styles: ``
 })
 export class PasoUnoComponent {
+  /**
+  * Índice del paso activo en el asistente.
+  * Se inicializa con el valor 1, indicando que el asistente comienza en el primer paso.
+  */
   indice: number = 1;
-  
+
   /**
    * @method seleccionaTab
    * @description

@@ -13,14 +13,34 @@ import { DesistimientoStore } from '../../estados/tramite220404.store';
 })
 
 export class SolicitudComponent implements OnInit, OnDestroy {
-  // Variables para manejar los estados de suscripción y el formulario
+  /** Variables para manejar los estados de suscripción y el formulario */
   public unsubscribe$ = new Subject<void>();
+
+  /**
+  * Estado actual del formulario de desistimiento.
+  * Almacena los datos de la solicitud de desistimiento.
+  */
   desistimientoFormState!: DesistimientoForm;
+
+  /**
+  * Formulario reactivo para gestionar los permisos de desistimiento.
+  * Contiene los controles del formulario necesarios para esta funcionalidad.
+  */
   formPermisoDesistir!: FormGroup;
+
+  /**
+   * Subject para controlar las suscripciones y evitar fugas de memoria.
+   * Se utiliza para cancelar todas las suscripciones al destruir el componente.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de las secciones obtenidas del store.
+   * Almacena las secciones y su estado de validación.
+   */
   public seccion!: SeccionLibState;
 
-  // Inyectamos los servicios necesarios
+  /** Inyectamos los servicios necesarios*/
   constructor(
     private fb: FormBuilder,
     public desistimientoStore: DesistimientoStore,
@@ -31,45 +51,45 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ) {
-    // El constructor está intencionalmente vacío para la inyección de dependencias 
+    /** El constructor está intencionalmente vacío para la inyección de dependencias */
   }
 
-  // Método que se ejecuta al iniciar el componente
+  /** Método que se ejecuta al iniciar el componente */
   ngOnInit(): void {
-    // Inicializa el formulario de desistimiento
+    /**  Inicializa el formulario de desistimiento */
     this.crearFormDesistimiento();
-    // Obtiene los datos necesarios para el desistimiento desde el servicio
+    /**  Obtiene los datos necesarios para el desistimiento desde el servicio */
     this.getDesistimiento();
     
-    // Suscribe a los cambios en el estado de "desistimiento"
+    /**  Suscribe a los cambios en el estado de "desistimiento" */
     this.desistimientoQuery.selectDesistimiento$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((desistimiento) => {
-          // Asigna el estado del desistimiento al formulario
+          /**  Asigna el estado del desistimiento al formulario */
           this.desistimientoFormState = desistimiento;
-          // Vuelve a crear el formulario con los datos actualizados
+          /**  Vuelve a crear el formulario con los datos actualizados */
           this.crearFormDesistimiento();
         })
       ).subscribe();
 
-    // Suscribe a los cambios en el estado de "seccion"
+    /**  Suscribe a los cambios en el estado de "seccion" */
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          // Actualiza el estado de la sección con el nuevo estado
+          /**  Actualiza el estado de la sección con el nuevo estado */
           this.seccion = seccionState;
         })
       )
       .subscribe();
 
-    // Suscribe a los cambios en el estado del formulario y verifica la validación
+    /**  Suscribe a los cambios en el estado del formulario y verifica la validación */
     this.formPermisoDesistir.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((_value) => {
-          // Actualiza las validaciones en el estado del formulario
+          /**  Actualiza las validaciones en el estado del formulario */
           this.actualizarValidationInStore();
         })
       )
@@ -104,7 +124,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Método para crear el formulario de retiro
+  /** Método para crear el formulario de retiro */
   crearFormDesistimiento(): void {
     this.formPermisoDesistir = this.fb.group({
       folio: [
@@ -129,7 +149,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.desistimientoService.getDesistimientoSolicitud()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
-        // Actualizamos los valores del formulario con los datos obtenidos
+        /**  Actualizamos los valores del formulario con los datos obtenidos */
         if (this.desistimientoFormState.folio === "") {
           this.formPermisoDesistir.patchValue(data);
           this.desistimientoFormState = data;
@@ -137,14 +157,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Método que se ejecuta cuando cambia la descripción
+  /**  Método que se ejecuta cuando cambia la descripción */
   onDescripcionChange(): void {
     const DESCRIPCION = this.formPermisoDesistir.get('descripcion')?.value;
-    // Actualizamos la descripción en el estado global
+    /**  Actualizamos la descripción en el estado global */
     this.desistimientoStore.setDescripcion(this.desistimientoFormState, DESCRIPCION);
     this.formPermisoDesistir.get('descripcion')?.updateValueAndValidity();
     this.actualizarValidationInStore();
   }
+  
   /**
    * Verifica si un campo específico en un formulario es válido.
    *
@@ -156,9 +177,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field) ?? false;
   }
 
-  // Método que se ejecuta cuando se destruye el componente
+  /**  Método que se ejecuta cuando se destruye el componente */
   ngOnDestroy(): void {
-    // Liberamos los recursos y notificamos a todos los observadores
+    /**  Liberamos los recursos y notificamos a todos los observadores */
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
