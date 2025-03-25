@@ -7,11 +7,9 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Contenedores } from '../../models/datos-tramite.model';
 import { DatosDelContenedor } from '../../models/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { EventEmitter } from '@angular/core';
-import { FormArray } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +22,6 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { TemplateRef } from '@angular/core';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
@@ -85,10 +82,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   
   aduanaList: Aduanas[] = [];
 
-  /**
-   * Lista de contenedores.
-   */
-  contenedores: Contenedores[] = [];
+  contenedores: {
+    catalogos: Catalogo[];
+    labelNombre: string;
+    primerOpcion: string;
+  };
 
   currentIdx: number = 0;
   mostrarAgregarTipoContenedor: boolean = false;
@@ -141,7 +139,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
     { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
+    { encabezado: 'Tipo de Documento', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 5 },
     { encabezado: 'vigencia', clave: (artículo) => artículo.vigencia, orden: 6 },
     { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 7 }
@@ -153,21 +151,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public datosDelContenedor: DatosDelContenedor[] = [];
 
   /**
-   * Datos del modelo abierto.
-   */
-  abiertoModeloDatos: string = '';
-
-  /**
    * Referencia al modal.
    */
   modalRef?: BsModalRef | null;
 
-  @ViewChild('modalAgregarConstanciaTransferencia') modalElement!: ElementRef;  // modalRef?: BsModalRef;
-
-  /**
-   * Plantilla del modal.
-   */
-  @ViewChild('plantillademodelo') plantillaDeModelo!: TemplateRef<Element>;
+  @ViewChild('modalAgregarConstanciaTransferencia') modalElement!: ElementRef; 
 
   /**
    * Evento para continuar.
@@ -186,6 +174,11 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.aduana = {
       catalogos: [],
       labelNombre: 'Aduana/sección aduanera',
+      primerOpcion: 'Seleccione un valor',
+    };
+    this.contenedores = {
+      catalogos: [],
+      labelNombre: 'Tipo de Documento',
       primerOpcion: 'Seleccione un valor',
     };
   }
@@ -209,6 +202,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .subscribe();
     this.inicializarFormulario();
     this.tabSeleccionado();
+    this.cargarCatalogos();
     this.fetchgetaduanaLista();
     this.loadDatosTablaData();
   }
@@ -418,7 +412,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const HEADER_MAP: { [key: string]: string } = {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
-      'Tipo de equipo': 'tipoEquipo',
+      'Tipo de documento': 'tipoEquipo',
       'N�mero de equipo': 'numeroEquipo',
       'D�gito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
@@ -466,6 +460,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Cargar catálogos de datos.
+   */
+  cargarCatalogos(): void {
+    this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (data) => {
+        this.contenedores.catalogos = data.data.map((contenedor: any) => ({
+          id: contenedor.id,
+          descripcion: contenedor.descripcion || ''
+        }));
+      },
+    );
+  }
+  
   public fetchgetaduanaLista(): void {
     this.datosTramiteService
       .getAduanaLista('aduanaLista')

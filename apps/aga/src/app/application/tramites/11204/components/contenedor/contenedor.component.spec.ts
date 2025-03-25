@@ -1,5 +1,4 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
- 
 import { ContenedorComponent } from './contenedor.component';
 import { provideHttpClient } from '@angular/common/http';
 import { of } from 'rxjs';

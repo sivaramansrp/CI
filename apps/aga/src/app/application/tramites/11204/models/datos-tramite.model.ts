@@ -30,7 +30,7 @@ export interface RespuestaApi {
 
 export interface RespuestaContenedores {
   code: number;
-  data: Contenedores[]
+  data: Contenedores[];
   message: string;
 }
 

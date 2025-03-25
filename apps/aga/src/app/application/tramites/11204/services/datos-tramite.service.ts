@@ -22,12 +22,6 @@ export class DatosTramiteService {
   getContenedores(): Observable<RespuestaContenedores> {
     return this.http.get<RespuestaContenedores>(`assets/json/11204/tipoLista.json`);
   }
-  /**
-  * Simular la carga de archivos
-  */
-  uploadArchivo(): Observable<RespuestaApi> {
-    return this.http.get<RespuestaApi>(`assets/json/11204/contenedorLista.json`);
-  }
 
   /**
   * Simular un envío exitoso de formulario
