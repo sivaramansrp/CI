@@ -1,3 +1,17 @@
+/**
+ * MERCANCIAS:
+ * Contiene la configuración de los campos relacionados con las mercancías.
+ * Cada objeto dentro del arreglo representa un campo con las siguientes propiedades:
+ * 
+ * - labelNombre: Etiqueta que describe el campo.
+ * - campo: Nombre del campo utilizado para identificarlo.
+ * - class: Clase CSS que define el tamaño y diseño del campo.
+ * - tipo_input: Tipo de entrada del campo (ej. select-catalogos, checkbox, textarea, etc.).
+ * - disabled: Indica si el campo está deshabilitado (true o false).
+ * - validators: Validaciones aplicadas al campo (ej. 'required').
+ * - placeholder: Texto de marcador de posición para el campo.
+ * - tooltip: Información adicional que se muestra como un tooltip (opcional).
+ */
 export const MERCANCIAS = [
     {
       labelNombre: 'Aduana por la que ingresará la mercancía',
@@ -6,10 +20,10 @@ export const MERCANCIAS = [
       tipo_input: 'select-catalogos',
       disabled: false,
       validators: ['required'],
-      placeholder: '---Seleccionia---',
+      placeholder: '---Selecciona---',
     },
     {
-      labelNombre: 'Organisamo publico',
+      labelNombre: 'Organismo público',
       campo: 'organisamoPublico',
       class: 'col-md-4',
       tipo_input: 'checkbox',
@@ -18,7 +32,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Fin al cual se destinara la mercancia',
+      labelNombre: 'Fin al cual se destinará la mercancía',
       campo: 'finAlDestinara',
       class: 'col-md-12',
       tipo_input: 'textarea',
@@ -29,6 +43,20 @@ export const MERCANCIAS = [
     }
   ];
 
+  /**
+ * PRODUCTOS:
+ * Contiene la configuración de los campos relacionados con las mercancías.
+ * Cada objeto dentro del arreglo representa un campo con las siguientes propiedades:
+ * 
+ * - labelNombre: Etiqueta que describe el campo.
+ * - campo: Nombre del campo utilizado para identificarlo.
+ * - class: Clase CSS que define el tamaño y diseño del campo.
+ * - tipo_input: Tipo de entrada del campo (ej. select-catalogos, checkbox, textarea, etc.).
+ * - disabled: Indica si el campo está deshabilitado (true o false).
+ * - validators: Validaciones aplicadas al campo (ej. 'required').
+ * - placeholder: Texto de marcador de posición para el campo.
+ * - tooltip: Información adicional que se muestra como un tooltip (opcional).
+ */
   export const PRODUCTOS = [
     {
       labelNombre: 'Tipo de mercancia',
@@ -69,7 +97,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'En su caso (maquinaria y equipo onsoleto)',
+      labelNombre: 'En su caso (maquinaria y equipo obsoleto)',
       campo: 'enSuCaso',
       class: 'col-md-12',
       tipo_input: '',
@@ -89,7 +117,7 @@ export const MERCANCIAS = [
         placeholder: '',
       },
       {
-        labelNombre: 'Ano de importacion temporal',
+        labelNombre: 'Año de importación temporal',
         campo: 'anoDeImportacionTemporal',
         class: 'col-md-4',
         tipo_input: 'select-catalogos',
@@ -120,6 +148,20 @@ export const MERCANCIAS = [
       }
   ];
 
+  /**
+ * DATOS_DEL_DONANTE:
+ * Contiene la configuración de los campos relacionados con las mercancías.
+ * Cada objeto dentro del arreglo representa un campo con las siguientes propiedades:
+ * 
+ * - labelNombre: Etiqueta que describe el campo.
+ * - campo: Nombre del campo utilizado para identificarlo.
+ * - class: Clase CSS que define el tamaño y diseño del campo.
+ * - tipo_input: Tipo de entrada del campo (ej. select-catalogos, checkbox, textarea, etc.).
+ * - disabled: Indica si el campo está deshabilitado (true o false).
+ * - validators: Validaciones aplicadas al campo (ej. 'required').
+ * - placeholder: Texto de marcador de posición para el campo.
+ * - tooltip: Información adicional que se muestra como un tooltip (opcional).
+ */
   export const DATOS_DEL_DONANTE = [
     {
       labelNombre: 'RFC',
@@ -152,6 +194,20 @@ export const MERCANCIAS = [
     }
   ];
 
+  /**
+ * DOMICILIO_FISCAL:
+ * Contiene la configuración de los campos relacionados con las mercancías.
+ * Cada objeto dentro del arreglo representa un campo con las siguientes propiedades:
+ * 
+ * - labelNombre: Etiqueta que describe el campo.
+ * - campo: Nombre del campo utilizado para identificarlo.
+ * - class: Clase CSS que define el tamaño y diseño del campo.
+ * - tipo_input: Tipo de entrada del campo (ej. select-catalogos, checkbox, textarea, etc.).
+ * - disabled: Indica si el campo está deshabilitado (true o false).
+ * - validators: Validaciones aplicadas al campo (ej. 'required').
+ * - placeholder: Texto de marcador de posición para el campo.
+ * - tooltip: Información adicional que se muestra como un tooltip (opcional).
+ */
   export const DOMICILIO_FISCAL = [
     {
       labelNombre: 'Pais',
@@ -219,7 +275,7 @@ export const MERCANCIAS = [
       tipo_input: 'text',
       disabled: true,
       tooltip: '',
-      validators: ['required'],
+      validators: [''],
       placeholder: '',
     },
     {
@@ -233,7 +289,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Telefono',
+      labelNombre: 'Teléfono',
       campo: 'telephono',
       class: 'col-md-4',
       tipo_input: 'text',
@@ -253,7 +309,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Telefono (opcional)',
+      labelNombre: 'Teléfono (opcional)',
       campo: 'telephonoOpcional',
       class: 'col-md-4',
       tipo_input: 'text',
@@ -264,6 +320,13 @@ export const MERCANCIAS = [
     }
   ];
 
-  export const DATOS_ALERT = {
-    message: `<p>Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación</p>`,
-  };
+  /**
+ * DATOS_ALERT:
+ * Contiene un mensaje de alerta que se muestra al usuario.
+ * 
+ * - message: Mensaje en formato HTML que indica al usuario que debe capturar
+ *   la descripción de la mercancía en los mismos términos de la carta de donación.
+ */
+export const DATOS_ALERT = {
+  message: `<p>Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación.</p>`,
+};

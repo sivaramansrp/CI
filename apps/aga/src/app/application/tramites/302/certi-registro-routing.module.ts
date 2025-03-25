@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ProcesoCompletoComponent } from './pages/proceso-completo/proceso-completo.component';
 

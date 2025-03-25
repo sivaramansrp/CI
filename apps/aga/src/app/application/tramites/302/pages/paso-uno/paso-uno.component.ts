@@ -1,7 +1,10 @@
-/* eslint-disable sort-imports */
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
+/**
+ * Componente PasoUnoComponent.
+ * Este componente representa el primer paso de un trámite.
+ * Permite seleccionar un subtítulo mediante pestañas.
+ */
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -9,11 +12,14 @@ import { CommonModule } from '@angular/common';
 })
 export class PasoUnoComponent {
   /**
-   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   * Variable que almacena el índice del subtítulo seleccionado.
+   * Por defecto, el índice inicial es 1.
    */
   indice: number = 1;
+
   /**
-   * Este método se utiliza para establecer el índice del subtítulo.
+   * Método para establecer el índice del subtítulo seleccionado.
+   * @param i - Índice del subtítulo que se desea seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
