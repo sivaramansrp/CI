@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'dispositivos-medicos-sin-registrar',
+    loadChildren: () =>
+      import('./tramites/260217/importacion-dispositivos-mediocos-sin-registrar.module').then(
+        (m) => m.ImportacionDispositivosMedicosSinRegistrarModule
+      )
+  },
 ];
 
 @NgModule({
