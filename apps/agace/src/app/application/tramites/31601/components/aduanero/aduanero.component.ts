@@ -1,3 +1,4 @@
+/* eslint-disable sort-imports */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -15,6 +16,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -26,6 +28,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TablePaginationComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
@@ -249,6 +252,10 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  public noSeHaSubidoNingunArchivo: boolean = false;
+
+  modalRef?: BsModalRef;
+
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
@@ -258,7 +265,8 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite31601Store: Tramite31601Store,
-    private tramite31601Query: Tramite31601Query
+    private tramite31601Query: Tramite31601Query,
+    private modalService: BsModalService
   ) {}
 
   /**
@@ -361,6 +369,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
           Validators.maxLength(8), // Ensures a maximum of 8 characters
         ],
       ],
+      archivoNacionales: ['']
     });
     this.getEstablecimiento();
     this.getEmpleadosData();
@@ -486,6 +495,18 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const valor = form.get(campo)?.value;
     (this.tramite31601Store[metodoNombre] as (value: any) => void)(valor);
+  }
+
+  subirArchivo(template: TemplateRef<void>): void {
+    this.modalRef = this.modalService.show(template);
+    if(this.preOperativeForm.get('archivoNacionales')?.value === '') {
+      this.noSeHaSubidoNingunArchivo = true;
+    }
+  }
+
+  cerrar(): void {
+    this.modalRef?.hide();
+    this.noSeHaSubidoNingunArchivo = false;
   }
 
   /**

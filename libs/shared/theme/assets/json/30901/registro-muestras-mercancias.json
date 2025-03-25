@@ -6,11 +6,11 @@
         "catalogos": [
             {
                 "descripcion": "Sí",
-                "id": 1
+                "id": 2
             },
             {
                 "descripcion": "No",
-                "id": 0
+                "id": 1
             }
         ]
     },
@@ -90,20 +90,32 @@
             }
         ]
     },
-    "tablaDeTarifasDePago":{
-        "tableHeader": ["Linea de captura", "Monto"],
+    "tablaDeTarifasDePago": {
+        "tableHeader": [
+            "Linea de captura",
+            "Monto"
+        ],
         "tableBody": [
-          {
-            "tbodyData": ["032000Q0GHM1284", "50000"]
-          }
+            {
+                "tbodyData": [
+                    "032000Q0GHM1284",
+                    "50000"
+                ]
+            }
         ]
-      },
-      "validezDeLaAutorizacion":{
+    },
+    "pagoDerechosLista": [
+        {
+            "linea": "032000Q0GHM1284",
+            "monto": "50000"
+        }
+    ],
+    "validezDeLaAutorizacion": {
         "fechaInicioVigencia": "01/01/2025",
-        "fechaFinVigencia":"30/01/2025"
-      },
-      "registroMuestrasDatos": {
-        "opcionDeImportador": "",
+        "fechaFinVigencia": "30/01/2025"
+    },
+    "registroMuestrasDatos": {
+        "opcionDeImportador": "no",
         "tomaMuestraDespacho": "",
         "descMotivoFaltaMuestra": "no",
         "comboFraccionConcatenada": "",
@@ -114,8 +126,7 @@
         "nombreQuimico": "Nombre Quimico",
         "nombreComercial": "Nombre Comercial",
         "numeroCAS": "34524",
-        "ideGenerica": "gaseoso",
-        "descClobGenerica": ""
-      }
-      
+        "ideGenerica": 1,
+        "descClobGenerica": "Test"
+    }
 }
