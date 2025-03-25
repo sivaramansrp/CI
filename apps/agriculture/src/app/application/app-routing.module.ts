@@ -70,7 +70,15 @@ const ROUTES: Routes = [
       import('./tramites/220102/fitosanitario.module').then(
         (m) => m.FitosanitarioModule
       )
-  }
+  },
+  {
+
+    path: 'inspeccion-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220702/inspeccion-fitosanitario.module').then(
+        (m) => m.InspeccionFitosanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
