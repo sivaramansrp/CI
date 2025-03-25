@@ -17,7 +17,7 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import CumplimientoOptions from 'libs/shared/theme/assets/json/260215/cumplimiento-options.json';
+import CumplimientoOptions from '@libs/shared/theme/assets/json/260215/cumplimiento-options.json';
 import { MENSAJE_DE_ALERTA } from '../../enum/permiso.enum';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 

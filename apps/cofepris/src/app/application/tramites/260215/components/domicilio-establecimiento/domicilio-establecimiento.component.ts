@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
@@ -456,7 +455,11 @@ export class DomicilioComponent implements OnInit, AfterViewInit, OnDestroy {
     metodoNombre: keyof Tramite260215Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260215Store[metodoNombre] as (value: any) => void)(VALOR);
+    (
+      this.tramite260215Store[metodoNombre] as (
+        value: string | number | boolean
+      ) => void
+    )(VALOR);
   }
 
   /**
