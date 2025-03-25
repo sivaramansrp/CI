@@ -1,20 +1,23 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
+import { Component } from '@angular/core';
 import { BodegasFormaInt} from '../../modelos/datos-de-interfaz.model';
-import { TramiteState, TramiteStore } from '../../estados/tramite290101.store';
-import { TramiteStoreQuery } from '../../estados/tramite290101.query';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
 import { SeccionLibState} from '@libs/shared/data-access-user/src';
+import { TramiteState } from '../../estados/tramite290101.store';
+import { TramiteStore } from '../../estados/tramite290101.store';
+import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
+import { Validators } from '@angular/forms';
 import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 
 
 @Component({
@@ -52,10 +55,9 @@ export class BodegasComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private router: Router,
-    private location: Location,
+  constructor(
+    private router: Router,
     private fb: FormBuilder,
-    
     private catalogosService:CatalogosService,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
