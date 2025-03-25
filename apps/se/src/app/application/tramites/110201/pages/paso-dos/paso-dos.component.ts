@@ -5,8 +5,9 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 /**
  * Componente que representa el segundo paso del trámite.
@@ -24,7 +25,7 @@ import { CommonModule } from '@angular/common';
     AnexarDocumentosComponent,
   ],
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit,OnDestroy {
   /**
    * Textos utilizados en el componente.
    */
@@ -38,18 +39,16 @@ export class PasoDosComponent implements OnInit {
   /**
    * Clase CSS para mostrar una alerta informativa.
    */
-  infoAlert = 'alert-info';
+  claseAlertaInformativa = 'alert-info';
 
   /**
    * Catálogo de documentos disponibles.
    */
   catalogoDocumentos: Catalogo[] = [];
-
-  /**
-   * Lista de documentos seleccionados por el usuario.
+   /**
+   * Suscripción para obtener los tipos de documentos.
    */
-  documentosSeleccionados: Catalogo[] = [];
-
+   getTiposDocumentosSubscription!: Subscription;
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
@@ -57,24 +56,13 @@ export class PasoDosComponent implements OnInit {
   constructor(private catalogosServices: CatalogosService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
+  
   /**
    * Método que se ejecuta al inicializar el componente.
    * Obtiene los tipos de documentos disponibles y establece los documentos seleccionados por defecto.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
   }
 
   /**
@@ -94,4 +82,13 @@ export class PasoDosComponent implements OnInit {
         },
       });
   }
+ /**
+   * Método de limpieza que se ejecuta cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    if (this.getTiposDocumentosSubscription) {
+      this.getTiposDocumentosSubscription.unsubscribe();
+    }
+  }
+
 }

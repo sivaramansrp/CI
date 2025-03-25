@@ -135,7 +135,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Indica si hay mercancías disponibles.
    */
-  isDisponibles: boolean = false;
+  hayMercanciasDisponibles: boolean = false;
 
   /**
    * Indica si se está editando una mercancía.
@@ -216,11 +216,22 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Indica si se está mostrando el formulario.
    */
   esFormulario: boolean = false;
-
+/**
+ * Datos de la tabla de mercancías disponibles.
+ * Representa una lista de objetos que contienen información sobre las mercancías disponibles
+ * para ser seleccionadas en el formulario.
+ */
   public mercanciaDisponsiblesTablaDatos: ColumnasTabla[] = [];
-
+/**
+ * Datos de la tabla de mercancías seleccionadas.
+ * Representa una lista de objetos que contienen información sobre las mercancías que han sido seleccionadas
+ * por el usuario en el formulario.
+ */
   public mercanciaSeleccionadasTablaData: SeleccionadasTabla[] = [];
-
+/**
+ * Configuración de las columnas de la tabla de mercancías disponibles.
+ * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías disponibles.
+ */
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     {
       encabezado: 'Fracción arancelaria',
@@ -253,7 +264,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       orden: 6,
     },
   ];
-
+/**
+ * Configuración de las columnas de la tabla de mercancías seleccionadas.
+ * Define los encabezados y las claves asociadas a cada columna de la tabla de mercancías seleccionadas.
+ */
   public headersData: ConfiguracionColumna<SeleccionadasTabla>[] = [
     {
       encabezado: 'Fracción arancelaria',
@@ -318,7 +332,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
-  handleClick(row: unknown) {
+  manejarClic(row: unknown) {
     this.esFormulario = true;
   }
   /**
@@ -420,12 +434,17 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       })
     );
   }
-
+/**
+ * Busca mercancías disponibles basándose en la descripción del tratado.
+ * Verifica si la lista `Tratadodescripcion` incluye el valor '1' para determinar si hay mercancías disponibles.
+ * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
+ * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
+ */
   buscarMercancias() {
     if (this.Tratadodescripcion.includes('1')) {
-      this.isDisponibles = true;
+      this.hayMercanciasDisponibles = true;
     } else {
-      this.isDisponibles = false;
+      this.hayMercanciasDisponibles = false;
     }
     this.getTratado();
     this.getPais();
@@ -478,15 +497,25 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
   }
-
+/**
+ * Configura los encabezados y el cuerpo de la tabla de mercancías.
+ * Asigna los valores de los encabezados y el cuerpo de la tabla desde los datos obtenidos.
+ */
   public mercanciatable(): void {
     this.mercanciasHeader = this.getMercanciaTable.tableHeader;
     this.mercanciasBody = this.getMercanciaTable.tableBody;
   }
-
+/**
+ * Activa el formulario para cargar un archivo.
+ * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
+ */
   cargaArchivo() {
     this.cargarArchivo = true;
   }
+  /**
+ * Muestra errores en el formulario y desactiva la carga de archivos.
+ * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
+ */
   darError() {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
@@ -556,11 +585,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         }
       });
   }
-
+/**
+ * Cierra el formulario para adjuntar un archivo de mercancías.
+ * Cambia el estado de la variable `cargarArchivo` a `false` para ocultar el formulario de carga de archivos.
+ */
   cerrarAdjuntarArchivoMercancias(): void {
     this.cargarArchivo = false;
   }
-
+/**
+ * Maneja el evento de selección de un archivo.
+ * Obtiene el archivo seleccionado por el usuario y asigna su nombre a la propiedad `nombreArchivo`.
+ * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
+ * @param event Evento que contiene la información del archivo seleccionado.
+ */
   alSeleccionarArchivo(event: any) {
     const FILE = event.target.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
@@ -678,13 +715,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       }),
     });
   }
-
+/**
+ * Obtiene los datos de la tabla de mercancías disponibles desde el servicio.
+ * Realiza una suscripción al método `getSolicitudesTabla` del servicio `RegistroService`
+ * y asigna los datos obtenidos a la propiedad `mercanciaDisponsiblesTablaDatos`.
+ */
   public getSolicitudesTabla(): void {
     this.registroService.getSolicitudesTabla().subscribe((data) => {
       this.mercanciaDisponsiblesTablaDatos = data;
     });
   }
-
+/**
+ * Obtiene los datos de la tabla de mercancías seleccionadas desde el servicio.
+ * Realiza una suscripción al método `getSolicitudesDataTabla` del servicio `RegistroService`
+ * y asigna los datos obtenidos a la propiedad `mercanciaSeleccionadasTablaData`.
+ */
   public getSolicitudesDataTabla(): void {
     this.registroService.getSolicitudesDataTabla().subscribe((data) => {
       this.mercanciaSeleccionadasTablaData = data;

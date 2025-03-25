@@ -130,18 +130,18 @@
         <div class="row mt-5">
           <label>Mercancías disponibles</label>
         </div>
-        <div class="table-container mt-5" *ngIf="!isDisponibles">
+        <div class="table-container mt-5" *ngIf="!hayMercanciasDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
             [configuracionTabla]="headers"
           ></app-tabla-dinamica>
         </div>
-        <div class="table-container mt-5" *ngIf="isDisponibles">
+        <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
             [configuracionTabla]="headers"
             [datos]="mercanciaDisponsiblesTablaDatos"
-            (click)="handleClick(mercanciaDisponsiblesTablaDatos)"
+            (click)="manejarClic(mercanciaDisponsiblesTablaDatos)"
           ></app-tabla-dinamica>
         </div>
         <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>

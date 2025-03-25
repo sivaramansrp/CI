@@ -42,8 +42,8 @@ describe('PasoDosComponent', () => {
     expect(component.TEXTOS).toBeDefined();
   });
 
-  it('should set `infoAlert` to "alert-info"', () => {
-    expect(component.infoAlert).toBe('alert-info');
+  it('should set `claseAlertaInformativa` to "alert-info"', () => {
+    expect(component.claseAlertaInformativa).toBe('alert-info');
   });
 
   it('should call `getTiposDocumentos` on `ngOnInit`', () => {
@@ -52,20 +52,7 @@ describe('PasoDosComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should initialize `documentosSeleccionados` with default values on `ngOnInit`', () => {
-    const expectedValues = [
-      { id: 1, descripcion: 'Documentos que ampare el valor de la mercancía' },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
-    component.ngOnInit();
-    expect(component.documentosSeleccionados).toEqual(expectedValues);
-  });
-
-  describe('getTiposDocumentos', () => {
+    describe('getTiposDocumentos', () => {
     it('should call `catalogosServices.getCatalogo` with `CAT_TIPO_DOCUMENTO`', () => {
       mockCatalogosService.getCatalogo.mockReturnValue(of([]));
       component.getTiposDocumentos();
