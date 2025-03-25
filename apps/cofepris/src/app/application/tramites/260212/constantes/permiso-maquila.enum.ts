@@ -112,3 +112,30 @@ export const COLONIASELECTDATA = [
   { id: 3, descripcion: 'EL BONDHO' },
 ]
 
+export const FECHA_DE_PAGO = {
+  labelNombre: 'Fecha de pago',
+  required: true,
+  habilitado: false,
+};
+
+export const NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO = [
+  {
+      label: 'Nacional',
+      value: '1',
+  },
+  {
+      label: 'Extranjero',
+      value: '0',
+  }
+];
+
+export const PERSONA_OPCIONES_DE_BOTON_DE_RADIO = [
+  {
+      label: 'Física',
+      value: '1',
+  },
+  {
+      label: 'Moral',
+      value: '0',
+  }
+];
