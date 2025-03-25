@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { SolicitudComponent } from '../../../130114/component/solicitud.component'
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
  */

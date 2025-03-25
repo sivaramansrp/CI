@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetosDelLaMarcaciaComponent } from '../../130102/component/datos-de-la-mercacia/datos-de-la-mercacia.component';
-import { CriterioDeDictComponent } from '../../130102/component/criterio-de-dict/criterio-de-dict.component';
+import {DetosDeLaMercanciaComponent} from '../../../shared/components/detos-de-la-mercancia/detos-de-la-mercancia.component'
 import { DetosDelTramiteComponent} from '../../../shared/components/detos-de-tramite/detos-del-tramite.component';
-import { RepresentacionComponent } from '../../130102/component/representacion/representacion.component';
+import { PaisProcendenciaComponent } from '../../../shared/components/pais-procendencia/pais-procendencia.component';
+import { RepresentacionComponent } from '../../../shared/components/representacion/representacion.component'
+import { PartidasDeLaComponent } from '../../../shared/components/partidas-de-la/partidas-de-la.component';
 @Component({
   selector: 'app-solicitud',
   standalone: true,
-  imports: [CommonModule,DetosDelLaMarcaciaComponent,DetosDelTramiteComponent,CriterioDeDictComponent,RepresentacionComponent],
+  imports: [CommonModule,PartidasDeLaComponent,DetosDeLaMercanciaComponent,DetosDelTramiteComponent,PaisProcendenciaComponent,RepresentacionComponent],
   templateUrl: './solicitud.component.html',
-  styleUrl: './solicitud.component.css',
+  styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent {}
