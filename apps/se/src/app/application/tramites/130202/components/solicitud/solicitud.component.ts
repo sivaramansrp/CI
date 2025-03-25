@@ -79,7 +79,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * CHECKBOX
    * Tipo de selección de la tabla dinámica (checkbox).
    */
-  CHECKBOX = TablaSeleccion.CHECKBOX; 
+  checkBox = TablaSeleccion.CHECKBOX; 
   /**
    * getEstablecimientoTableData
    * Datos de configuración de la tabla obtenidos de un archivo JSON.
