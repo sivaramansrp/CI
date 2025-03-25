@@ -7,7 +7,6 @@ import { Component, ViewChild } from '@angular/core';
 import { PASOS, TITULOMENSAJE } from '../../constants/pasos.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
@@ -22,8 +21,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    BtnContinuarComponent,
-    HttpClientModule
+    BtnContinuarComponent
   ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
