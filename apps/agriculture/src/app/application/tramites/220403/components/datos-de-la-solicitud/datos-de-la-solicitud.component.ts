@@ -1,3 +1,6 @@
+/**
+ * Componente para gestionar los datos de la solicitud en el trámite.
+ */
 import {
   CatalogosService,
   FormularioDinamico,
@@ -8,9 +11,9 @@ import {
   Props,
   TablaSeleccion,
 } from '@ng-mf/data-access-user';
-import { ColumnasTabla, DatosRealizer } from '../../models/acuicola.module';
+import { ColumnasTabla, DatosRealizar } from '../../models/acuicola.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DATOS_COMBINACION_REQUIRIDA, DATOS_TRAMITE_REALIZAR } from '../../constants/input-datos-config';
+import { DATOS_COMBINACION_REQUERIDA, DATOS_TRAMITE_REALIZAR } from '../../constants/input-datos-config';
 import {
   FormBuilder,
   FormGroup,
@@ -28,12 +31,23 @@ import { Tramite220403Store } from '../../estados/tramite220403.store';
   styleUrl: './datos-de-la-solicitud.component.css',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * Notificador para la destrucción del componente y la cancelación de suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  datosRealizer!: DatosRealizer;
+  
+  /**
+   * Datos del trámite a realizar.
+   */
+  datosRealizar!: DatosRealizar;
+  
+  /**
+   * Configuración de los inputs del formulario.
+   */
   configuracion: InputConfig[] = [
     {
-      title: 'Datos del tramite a realizer',
-      formGroupName: 'datosRealizer',
+      title: 'Datos del trámite a realizar',
+      formGroupName: 'datosRealizar',
       menu: [
         {
           inputType: InputTypes.RADIO,
@@ -98,12 +112,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       menu: [
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_COMBINACION_REQUIRIDA[0] as unknown as Props,
+          props: DATOS_COMBINACION_REQUERIDA[0] as unknown as Props,
           class: 'col-md-4',
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_COMBINACION_REQUIRIDA[1] as unknown as Props,
+          props: DATOS_COMBINACION_REQUERIDA[1] as unknown as Props,
           class: 'col-md-4',
         },
         {
@@ -113,7 +127,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         },
         {
           inputType: InputTypes.SELECT,
-          props: DATOS_COMBINACION_REQUIRIDA[2] as unknown as Props,
+          props: DATOS_COMBINACION_REQUERIDA[2] as unknown as Props,
           class: 'col-md-8',
         },
       ],
@@ -127,13 +141,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }[],
     data: [],
   } = {
-      headers:
-        [
-          { encabezado: 'No.partida', clave: (ele: ColumnasTabla) => ele.noPartida, orden: 1 },
-          {
-            encabezado: 'Fracción arancelaria',
-            clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
-            orden: 2,
+      headers: [
+        { encabezado: 'No.partida', clave: (ele: ColumnasTabla) => ele.noPartida, orden: 1 },
+        {
+          encabezado: 'Fracción arancelaria',
+          clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
+          orden: 2,
           },
           {
             encabezado: 'Descripción de la fracción',
@@ -200,7 +213,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           clave: (ele: ColumnasTabla) => ele.paisProcedencia,
           orden: 5,
         },
-        ],
+      ],
       data: []
     };
   TablaSeleccion = TablaSeleccion;
@@ -224,11 +237,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
     });
 
-    this.tramite220403Query.setDatosRealizer$
+    this.tramite220403Query.setDatosRealizar$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
-          this.formulario.get('datosRealizer')?.patchValue(state);
+          this.formulario.get('datosRealizar')?.patchValue(state);
         })
       )
       .subscribe();
@@ -248,7 +261,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   crearFormulario(): void {
     this.formulario = this.fb.group({
-      datosRealizer: this.fb.group({}),
+      datosRealizar: this.fb.group({}),
     });
   }
 
@@ -383,7 +396,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this.tramite220403store.setDatosRealizer(this.formulario.value);
+    this.tramite220403store.setDatosRealizar(this.formulario.value);
   }
 
   ngOnDestroy(): void {

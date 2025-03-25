@@ -1,4 +1,4 @@
-export interface LISTAPASOWIZARD {
+export interface ListsPasoWizard {
   /** Index of the step */
   indice: number;
   /** Title of the step */
@@ -12,7 +12,7 @@ export interface LISTAPASOWIZARD {
 /**
  * Interface representing an action button.
  */
-export interface ACCIONBOTON {
+export interface AccionBoton {
   /** Action to be performed */
   accion: string;
   /** Value associated with the action */
@@ -27,13 +27,13 @@ export interface DatosPasos {
 }
 
 export interface FormularioGrupo {
-  datosRealizer: DatosRealizer,
+  datosRealizar: DatosRealizar,
   combinacionRequerida: CombinacionRequerida,
   transporte: Transporte,
   pagoDerechos: PagoDerechos,
 }
 
-export interface DatosRealizer {
+export interface DatosRealizar {
   certificadoTipo: string,
   aduanaEmbarque: string,
   numeroContenedor: string,

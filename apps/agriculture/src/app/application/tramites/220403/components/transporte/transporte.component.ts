@@ -28,44 +28,69 @@ import { Transporte } from '../../models/acuicola.module';
 })
 export class TransporteComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
-  transporte!: Transporte;
-  configuracion: InputConfig[] = [
-    {
-      title: 'Transporte',
-      formGroupName: 'transporte',
-      menu: [
-        {
-          inputType: InputTypes.SELECT,
-          props: DATOS_TRANSPORTE[0] as unknown as Props,
-          class: 'col-md-4',
-        },
-        {
-          inputType: InputTypes.TEXT,
-          props: DATOS_TRANSPORTE[1] as unknown as Props,
-          class: 'col-md-4',
-        },
-        {
-          inputType: InputTypes.TEXT,
-          props: DATOS_TRANSPORTE[1] as unknown as Props,
-          class: 'col-md-4',
-        },
-        {
-          inputType: InputTypes.TEXT,
-          props: DATOS_TRANSPORTE[1] as unknown as Props,
-          class: 'col-md-4',
-        },
-        {
-          inputType: InputTypes.TEXT,
-          props: DATOS_TRANSPORTE[1] as unknown as Props,
-          class: 'col-md-4',
-        },
-      ],
-    },
-  ];
-  fiscal: FormularioDinamico[] = [];
-  formulario!: FormGroup;
-  evento = {};
-  inputTypes = InputTypes;
+  /**
+ * Representa los datos de transporte seleccionados en el formulario.
+ */
+transporte!: Transporte;
+
+/**
+ * Configuración de los campos del formulario para la sección de transporte.
+ * Define los tipos de entrada y sus propiedades correspondientes.
+ */
+configuracion: InputConfig[] = [
+  {
+    title: 'Transporte',
+    formGroupName: 'transporte',
+    menu: [
+      {
+        inputType: InputTypes.SELECT,
+        props: DATOS_TRANSPORTE[0] as unknown as Props,
+        class: 'col-md-4',
+      },
+      {
+        inputType: InputTypes.TEXT,
+        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        class: 'col-md-4',
+      },
+      {
+        inputType: InputTypes.TEXT,
+        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        class: 'col-md-4',
+      },
+      {
+        inputType: InputTypes.TEXT,
+        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        class: 'col-md-4',
+      },
+      {
+        inputType: InputTypes.TEXT,
+        props: DATOS_TRANSPORTE[1] as unknown as Props,
+        class: 'col-md-4',
+      },
+    ],
+  },
+];
+
+/**
+ * Arreglo que almacena la configuración de los formularios dinámicos para información fiscal.
+ */
+fiscal: FormularioDinamico[] = [];
+
+/**
+ * Formulario reactivo que almacena los datos ingresados por el usuario.
+ */
+formulario!: FormGroup;
+
+/**
+ * Objeto utilizado para capturar eventos del formulario.
+ */
+evento = {};
+
+/**
+ * Tipos de entrada disponibles en el formulario.
+ */
+inputTypes = InputTypes;
+
 
   constructor(
     private fb: FormBuilder,
@@ -166,6 +191,7 @@ export class TransporteComponent implements OnInit, OnDestroy {
     this.catalogosServicios
       .getCatalogo(clave)
       .pipe(
+        takeUntil(this.destroyNotifier$),
         map((resp) => {
           if (resp.length > 0) {
             this.configuracion[indiceGrupo].menu[indiceMenu].props.catalogos =

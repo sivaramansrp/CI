@@ -58,7 +58,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.inicializarFormGroup = jest.fn();
     
     (component as any).tramite220403Query = (component as any).tramite220403Query || {};
-    (component as any).tramite220403Query.setDatosRealizer$ = observableOf({});
+    (component as any).tramite220403Query.setDatosRealizar$ = observableOf({});
     (component as any).tramite220403Query.setCombinacionRequerida$ = observableOf({});
     
     (component as any).formulario = (component as any).formulario || {};
@@ -114,18 +114,18 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should run #onSubmit()', () => {
     // Accessing private property using `as any`
     (component as any).tramite220403store = {
-      setDatosRealizer: jest.fn()
+      setDatosRealizar: jest.fn()
     };
 
     (component as any).formulario = {
       value: {
-        datosRealizer: {}
+        datosRealizar: {}
       }
     };
 
     component.onSubmit();
 
-    expect((component as any).tramite220403store.setDatosRealizer).toHaveBeenCalled();
+    expect((component as any).tramite220403store.setDatosRealizar).toHaveBeenCalled();
 });
 
 

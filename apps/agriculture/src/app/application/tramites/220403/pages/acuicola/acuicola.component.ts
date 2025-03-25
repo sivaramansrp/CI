@@ -1,4 +1,4 @@
-import { ACCIONBOTON, DatosPasos, LISTAPASOWIZARD } from '../../models/acuicola.module';
+import { AccionBoton, DatosPasos, ListsPasoWizard } from '../../models/acuicola.module';
 import { Component, ViewChild } from '@angular/core';
 import { PASOS } from '../../constants/acuicola.module';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -10,9 +10,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 })
 export class AcuicolaComponent {
   /**
-   * @property {Array<LISTAPASOWIZARD>} pasos - Array de pasos del wizard.
+   * @property {Array<ListsPasoWizard>} pasos - Array de pasos del wizard.
    */
-  pasos: LISTAPASOWIZARD[] = PASOS;
+  pasos: ListsPasoWizard[] = PASOS;
 
   /**
    * @property {string | null} tituloMensaje - El título del mensaje.
@@ -39,9 +39,9 @@ export class AcuicolaComponent {
   /**
    * @method getValorIndice
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
-   * @param {ACCIONBOTON} e - Objeto de acción que contiene la acción y el valor a manejar.
+   * @param {AccionBoton} e - Objeto de acción que contiene la acción y el valor a manejar.
    */
-  getValorIndice(e: ACCIONBOTON): void {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

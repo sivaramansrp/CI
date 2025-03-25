@@ -1,9 +1,9 @@
-import { DatosRealizer, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
+import { DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 export const INITIAL_STATE: FormularioGrupo = {
-  datosRealizer: {
+  datosRealizar: {
     certificadoTipo: '',
     aduanaEmbarque: '',
     numeroContenedor: '',
@@ -51,14 +51,14 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
   /**
    * Establece los datos de modificación en el estado.
    * 
-   * @param {DatosRealizer} datosRealizer - Los datos de modificación que se van a establecer en el estado.
+   * @param {DatosRealizar} datosRealizar - Los datos de modificación que se van a establecer en el estado.
    * 
    * @returns {void} - No devuelve ningún valor.
    */
-  setDatosRealizer(datosRealizer: DatosRealizer): void {
+  setDatosRealizar(datosRealizar: DatosRealizar): void {
     this.update((state) => ({
       ...state,
-      datosRealizer,
+      datosRealizar,
     }));
   }
 

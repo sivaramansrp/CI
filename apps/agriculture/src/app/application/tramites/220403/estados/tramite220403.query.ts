@@ -12,8 +12,8 @@ import { Tramite220403Store } from './tramite220403.store';
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite220403Query extends Query<FormularioGrupo> {
-  setDatosRealizer$ = this.select((state) => {
-    return state.datosRealizer;
+  setDatosRealizar$ = this.select((state) => {
+    return state.datosRealizar;
   });
 
   setCombinacionRequerida$ = this.select((state) => {

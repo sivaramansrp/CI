@@ -237,7 +237,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    this.tramite220403store.setDatosRealizer(this.formulario.value.datosRealizer);
+    this.tramite220403store.setDatosRealizar(this.formulario.value.datosRealizar);
   }
 
   ngOnDestroy(): void {

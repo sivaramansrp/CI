@@ -8,7 +8,7 @@ export const DATOS_TRAMITE_REALIZAR = [
         jsonDataFileName: 'tipo-certificado.json',
     },
     {
-        labelNombre: 'Aduana de salida/lugard embarque:',
+        labelNombre: 'Aduana de salida/lugar de embarque:',
         campo: 'aduanaEmbarque',
         required: true,
         primerOpcion: 'Selecciona un valor',
@@ -45,7 +45,7 @@ export const DATOS_TRAMITE_REALIZAR = [
         catalogos: [],
     },
     {
-        labelNombre: 'Punto de ingreso l país destino:',
+        labelNombre: 'Punto de ingreso al país destino:',
         campo: 'paisDestino',
         class: 'col-md-12',
         tipo_input: 'text',
@@ -55,7 +55,7 @@ export const DATOS_TRAMITE_REALIZAR = [
     },
 ];
 
-export const DATOS_COMBINACION_REQUIRIDA = [
+export const DATOS_COMBINACION_REQUERIDA = [
     {
         labelNombre: 'Especie:',
         campo: 'especie',
