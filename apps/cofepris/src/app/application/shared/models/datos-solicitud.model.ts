@@ -51,6 +51,12 @@ export interface TablaMercanciasConfig<T> {
     datos: T[];
 }
 
+export interface DataSolicitudConfig<T> {
+  tipoSeleccionTabla: TablaSeleccion;
+  configuracionTabla: ConfiguracionColumna<T>[];
+  datos: T[];
+}
+
 export enum TablaSeleccion {
     CHECKBOX = 'CHECKBOX',
     RADIO = 'RADIO',
@@ -94,4 +100,28 @@ export enum TablaSeleccion {
 export interface CrossListLable {
     tituluDeLaIzquierda: string;
     derecha: string;
+  }
+
+  export interface DatosSolicitudFormState {
+    rfcSanitario: string;
+    denominacionRazon: string;
+    correoElectronico: string;
+    codigoPostal: string;
+    estado: string;
+    municipioAlcaldia: string;
+    localidad: string;
+    colonia: string;
+    calle: string;
+    lada: string;
+    telefono: string;
+    aviso: string;
+    licenciaSanitaria: string;
+    regimen: string;
+    adunasDeEntradas: string;
+    aeropuerto: boolean;
+    publico: string;
+    representanteRfc: string;
+    representanteNombre: string;
+    apellidoPaterno: string;
+    apellidoMaterno: string;
   }

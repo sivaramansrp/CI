@@ -1,5 +1,7 @@
-<app-datos-de-la-solicitud [scianConfig]="scianConfig"
+<app-datos-de-la-solicitud [datosSolicitudFormState]="this.tramiteState.datosSolicitudFormState"
+[scianConfig]="scianConfig"
 [tablaMercanciasConfig]="tablaMercanciasConfig" [opcionConfig]="opcionConfig"
+(datasolicituActualizar)="datasolicituActualizar($event)"
 (opcionSeleccionado)="opcionSeleccionado($event)"
 (scianSeleccionado)="scianSeleccionado($event)"
 (mercanciasSeleccionado)="mercanciasSeleccionado($event)"

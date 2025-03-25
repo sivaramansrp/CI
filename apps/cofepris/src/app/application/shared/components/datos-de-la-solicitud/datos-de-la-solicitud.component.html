@@ -42,12 +42,12 @@
         </div>
     </div>
 
-    <form formgroup="datosSolicitudForm">
+    <form [formGroup]="datosSolicitudForm">
         <div class="row mt-5">
             <div class="col-md-6">
                 <div class="form-group">
                     <label class="form-label" for="rfcSanitario">RFC del responsable sanitario:</label>
-                    <input class="form-control" id="rfcSanitario" placeholder="Nombre comercial" type="text"
+                    <input class="form-control" id="rfcSanitario" type="text"
                         formControlName="rfcSanitario"
                         [ngClass]="isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''">
                 </div>
@@ -127,14 +127,14 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <label class="form-label" for="lada">Lada:</label>
-                    <input class="form-control" id="lada" disabled type="number" formControlName="lada"
+                    <input class="form-control" id="lada" type="number" formControlName="lada"
                         [ngClass]="isValid(datosSolicitudForm, 'lada') ? 'required' : ''">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label class="form-label" for="telefono">Telefono*:</label>
-                    <input class="form-control" id="telefono" disabled type="number" formControlName="telefono"
+                    <input class="form-control" id="telefono" type="number" formControlName="telefono"
                         [ngClass]="isValid(datosSolicitudForm, 'telefono') ? 'required' : ''">
                 </div>
             </div>
@@ -175,7 +175,7 @@
                 <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:</label>
                 <span class="bi bi-question-circle-fill" title="Aeropuerto Internacional Ciudad de México"
                     data-bs-toggle="tooltip"></span>
-                <input class="form-control" id="licenciaSanitaria" disabled type="text"
+                <input class="form-control" id="licenciaSanitaria" type="text"
                     formControlName="licenciaSanitaria"
                     [ngClass]="isValid(datosSolicitudForm, 'licenciaSanitaria') ? 'required' : ''">
             </div>
@@ -287,7 +287,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="representanteNombre">Nombre o Razón Social*:</label>
-                    <input class="form-control" id="representanteNombre" disabled type="text"
+                    <input class="form-control" id="representanteNombre" type="text"
                         formControlName="representanteNombre"
                         [ngClass]="isValid(datosSolicitudForm, 'representanteNombre') ? 'required' : ''">
                 </div>
@@ -295,7 +295,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-                    <input class="form-control" id="apellidoPaterno" disabled type="text"
+                    <input class="form-control" id="apellidoPaterno" type="text"
                         formControlName="apellidoPaterno"
                         [ngClass]="isValid(datosSolicitudForm, 'apellidoPaterno') ? 'required' : ''">
                 </div>
@@ -303,7 +303,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-                    <input class="form-control" id="apellidoMaterno" disabled type="text"
+                    <input class="form-control" id="apellidoMaterno" type="text"
                         formControlName="apellidoMaterno"
                         [ngClass]="isValid(datosSolicitudForm, 'apellidoMaterno') ? 'required' : ''">
                 </div>

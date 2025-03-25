@@ -34,7 +34,10 @@ export const SCIAN_TABLA = [
         orden: 1,
       }
 ]
-
+export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
+  { clave: "001", descripcion: "Descripción 1" },
+  { clave: "002", descripcion: "Descripción 2" },
+];
 export const ALERTA_OPCIONS = `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
 
 export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row">
@@ -162,6 +165,29 @@ export const PRODUCTO_TABLA = [
     orden: 19,
   },
 ];
+
+export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
+  {
+    clasificacionProducto: 'MEDICAMENTOS/ FARMACIOS',
+    especificarClasificacionProducto: '',
+    denominacionEspecificaProducto: 'QA',
+    denominacionDistintiva: 'QA',
+    denominacionComun: 'QA',
+    formaFarmaceutica: '',
+    estadoFisico: '',
+    fraccionArancelaria: '',
+    descripcionFraccion: '',
+    unidadMedidaComercializacion: '',
+    cantidadUMC: '',
+    unidadMedidaTarifa: '',
+    cantidadUMT: '',
+    presentacion: '',
+    numeroRegistroSanitario: '',
+    paisOrigen: '',
+    paisProcedencia: '',
+    tipoProducto: '',
+    usoEspecifico: '',
+  }];
 
 /** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
 export const CONTINUAR: string = "t";

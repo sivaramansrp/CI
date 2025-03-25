@@ -1,9 +1,9 @@
-
 import { ALERTA_DE_MANIFESTO_Y_DECLARACIONES, ALERTA_OPCIONS } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, DatosDeTablaSeleccionados, OpcionConfig, TablaMercanciasConfig, TablaMercanciasDatos, TablaOpcionConfig } from '../../models/datos-solicitud.model';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Catalogo, DatosDeTablaSeleccionados, DatosSolicitudFormState, OpcionConfig, TablaMercanciasConfig, TablaMercanciasDatos, TablaOpcionConfig } from '../../models/datos-solicitud.model';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -11,28 +11,34 @@ import { CommonModule } from '@angular/common';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ScianConfig } from '../../models/datos-solicitud.model';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaScianConfig } from '../../models/datos-solicitud.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent],
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent,
+    ReactiveFormsModule, FormsModule
+  ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  private destroyNotifier$: Subject<void> = new Subject();
 
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
   @Input() public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
   @Input() public opcionConfig!: OpcionConfig<TablaOpcionConfig>;
+  @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
 
   @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> = new EventEmitter<TablaOpcionConfig[]>();
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> = new EventEmitter<TablaScianConfig[]>();
   @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> = new EventEmitter<TablaMercanciasDatos[]>();
   @Output() datosDeTablaSeleccionados: EventEmitter<DatosDeTablaSeleccionados> = new EventEmitter<DatosDeTablaSeleccionados>();
+
+  @Output() datasolicituActualizar: EventEmitter<DatosSolicitudFormState> = new EventEmitter<DatosSolicitudFormState>();
 
   public datosSolicitudForm!: FormGroup;
   public estadoDatos: Catalogo[] = [];
@@ -44,51 +50,50 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
    */
   public infoAlert = 'alert-info';
-  public manifiestosCasillaDeVerificacion = false;
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
   public alertaOpicion = ALERTA_OPCIONS;
   public tablaMercanciasLista: TablaMercanciasDatos[] = [];
   public scianLista: TablaScianConfig[] = [];
   public opcionLista: TablaOpcionConfig[] = [];
+
   public opcionesColapsable = false;
 
   constructor(public fb:FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.datosSolicitudForm = this.fb.group({
-      rfcSanitario: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      denominacionRazon: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      correoElectronico: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      codigoPostal: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      estado: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      municipioAlcaldia: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      localidad: ['', [Validators.required]],
-      colonia: ['', [Validators.required]],
-      calle: ['', [Validators.required]],
-      lada: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
-      aviso: ['', [Validators.required]],
-      licenciaSanitaria: ['', [Validators.required]],
-      regimen: ['', [Validators.required]],
-      adunasDeEntradas: ['', [Validators.required]],
-      aeropuerto: [false, [Validators.required]],
-      publico: ['no', [Validators.required]],
-      representanteRfc: ['', [Validators.required]],
-      representanteNombre: ['', [Validators.required]],
-      apellidoPaterno: ['', [Validators.required]],
-      apellidoMaterno: ['', [Validators.required]],
+      rfcSanitario: [this.datosSolicitudFormState.rfcSanitario, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+      denominacionRazon: [this.datosSolicitudFormState.denominacionRazon, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+      correoElectronico: [this.datosSolicitudFormState.correoElectronico, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+      codigoPostal: [this.datosSolicitudFormState.codigoPostal, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+      estado: [this.datosSolicitudFormState.estado, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+      municipioAlcaldia: [this.datosSolicitudFormState.municipioAlcaldia, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
+      localidad: [this.datosSolicitudFormState.localidad, [Validators.required]],
+      colonia: [this.datosSolicitudFormState.colonia, [Validators.required]],
+      calle: [this.datosSolicitudFormState.calle, [Validators.required]],
+      lada: [this.datosSolicitudFormState.lada, [Validators.required]],
+      telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
+      aviso: [this.datosSolicitudFormState.aviso, [Validators.required]],
+      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria, [Validators.required]],
+      regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
+      adunasDeEntradas: [this.datosSolicitudFormState.adunasDeEntradas, [Validators.required]],
+      aeropuerto: [this.datosSolicitudFormState.aeropuerto, [Validators.required]],
+      publico: [this.datosSolicitudFormState.publico, [Validators.required]],
+      representanteRfc: [this.datosSolicitudFormState.representanteRfc, [Validators.required]],
+      representanteNombre: [this.datosSolicitudFormState.representanteNombre, [Validators.required]],
+      apellidoPaterno: [this.datosSolicitudFormState.apellidoPaterno, [Validators.required]],
+      apellidoMaterno: [this.datosSolicitudFormState.apellidoMaterno, [Validators.required]],
     });
 
-    this.datosSolicitudForm.statusChanges.pipe(
-      tap((form) => {
-      if (form) {
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: '',
-          apellidoPaterno: '',
-          apellidoMaterno: ''
-        });
-      }
-    })).subscribe();
+    this.datosSolicitudForm.valueChanges.pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10)).subscribe(
+        (value) => {
+          if (value) {
+           this.datasolicituActualizar.emit(value);
+          }
+        }
+      );
   }
 
     /**
@@ -105,9 +110,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       return control.errors && control.touched;
     }
 
-    manifestoSellecionado(): void {
-      this.manifiestosCasillaDeVerificacion = !this.manifiestosCasillaDeVerificacion;
-    }
+  
 
   buscarRepresentanteRfc(): void {
    const RFC = this.datosSolicitudForm.get('representanteRfc')?.value;
@@ -178,4 +181,17 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       this.opcionesColapsable = !this.opcionesColapsable;
     } 
   }
+
+    /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }
