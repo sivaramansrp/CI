@@ -7,7 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '../../enum/servicios-extraordinarios.enum';
+import { PASOS } from '../../enum/servicios-extraordinarios110221.enum';
 
 interface AccionBoton {
   accion: string;

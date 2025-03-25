@@ -1,56 +1,74 @@
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import {
-  DESPACHO_DD,
-  DESPACHO_LDA,
-  FECHA_FINAL,
-  FECHA_INICIO,
-  HORA_FINAL,
-  HORA_INICIO,
-  SeccionLibQuery,
-  SeccionLibState,
-  SeccionLibStore,
-} from '@ng-mf/data-access-user';
-
-import {
-  Catalogo,
-  CatalogoPaises,
-} from '@ng-mf/data-access-user';
-import {
-  InputFecha,
-  InputHora,
-} from '@ng-mf/data-access-user';
-
-import { DatosComponentePedimento } from '@ng-mf/data-access-user';
-
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
-import {
-  CATALOGOS_ID,
-  TIPO_SOLICITUD,
-} from '@ng-mf/data-access-user';
-
-import { Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
-import { CatalogosService } from '@ng-mf/data-access-user';
-
-import { FechasService } from '@ng-mf/data-access-user';
-import { FormulariosService } from '@ng-mf/data-access-user';
-import { datosAgregarFormulario } from '@ng-mf/data-access-user';
-
+import { FormBuilder, FormArray, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {  CatalogosSelect,   DESPACHO_DD,   DESPACHO_LDA,  FECHA_FINAL,  FECHA_INICIO,  HORA_FINAL, HORA_INICIO,  SeccionLibQuery,   SeccionLibState,SeccionLibStore,  Catalogo,  CatalogoPaises,  InputFecha,  InputHora,  DatosComponentePedimento,   ValidacionesFormularioService,  CATALOGOS_ID,   TIPO_SOLICITUD, CatalogosService, FechasService, FormulariosService, datosAgregarFormulario, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, CatalogoSelectComponent} from '@ng-mf/data-access-user';
+import { Subject, delay, map, merge, takeUntil, tap, Subscription } from 'rxjs';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Solicitud110221State, Tramite110221Store } from '../../estados/tramites/tramite110221.store';
 import { Tramite110221Query } from '../../estados/queries/tramite110221.query';
+import { RegistroService } from '../../services/registro.service';
+import {
+  NICO_TABLA,
+  NicoInfo
+} from '@libs/shared/data-access-user/src/core/models/110221/certificado.model';
+import { HttpClient } from '@angular/common/http';
+
+
+export interface RespuestaTabla {
+  /**
+   * Código de respuesta.
+   */
+  code: number;
+  /**
+   * Datos de la tabla NICO.
+   */
+  data: NicoInfo[];
+  /**
+   * Mensaje de la respuesta.
+   */
+  message: string;
+}
 
 @Component({
   selector: 'app-certificado-origen',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    TablaDinamicaComponent
+  ],
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
 
-  tratadoAcuerdo!: Catalogo[];
-  paisBloque!: Catalogo[];
+  /**
+   * Catálogo de países.
+   */
+  pais!: CatalogosSelect;
+
+  /**
+   * Catálogo de tratados.
+   */
+  tratado!: CatalogosSelect;
+  /**
+   * Suscripción para obtener el catálogo de tratados.
+   */
+  getTratadoSubscription!: Subscription;
+
+  /**
+   * Suscripción para obtener el catálogo de países.
+   */
+  getPaisSubscription!: Subscription;
+
+  
+  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+
+  /**
+   * Datos cargados para la tabla NICO.
+   */
+  nicoTablaDatos: NicoInfo[] = [];
+
 
   tiposSolicitud!: Catalogo[];
   paisesOrigen!: CatalogoPaises[];
@@ -85,12 +103,29 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
   public solicitudState!: Solicitud110221State;
+  private subscriptions: Subscription[] = [];
+  /**
+   * Descripciones de los tratados.
+   */
+  Tratadodescripcion: unknown[] = [];
+  /**
+   * Indica si hay mercancías disponibles.
+   */
+  isDisponibles: boolean = false;
 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para crear formularios reactivos.
+   * @param httpServicios Cliente HTTP para servicios API.
+ 
+   */
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private tramite110221Store: Tramite110221Store,
     private tramite110221Query: Tramite110221Query,
+    private registroService: RegistroService,
+    private readonly httpServicios: HttpClient,
     private fechaService: FechasService,
     private fb: FormBuilder,
     private formulariosService: FormulariosService,
@@ -99,6 +134,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    //110221
+    this.getTratado();
+    this.getPais();
+    this.obtenerTablaDatos()
+
     // Peticiones a las apis
     this.inicializaCatalogos();
 
@@ -159,7 +199,35 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     this.obtenerPatente();
     this.tipoSolicitudSeleccion();
+
+
+    this.subscriptions.push(
+      this.tramite110221Query.seleccioneTratado$.subscribe((tratado) => {
+        this.tratado = {
+          labelNombre: 'Tratado/Acuerdo',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: tratado ?? [],
+        };
+        this.Tratadodescripcion = this.tratado.catalogos;
+      })
+    );
+
+    this.subscriptions.push(
+      this.tramite110221Query.selectPais$.subscribe((pais) => {
+        this.pais = {
+          labelNombre: 'País / Bloque',
+          required: true,
+          primerOpcion: 'Selecciona un valor',
+          catalogos: pais ?? [],
+        };
+      })
+    );
+
+
   }
+
+
 
   /**
    * Obtiene el grupo de formulario 'datosImportadorExportador' del formulario principal 'FormSolicitud'.
@@ -306,31 +374,13 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       );
 
-    const tratadoAcuerdo$ = this.catalogosServices
-    .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
-    .pipe(
-      map((resp) => {
-        this.tipoOperacion = JSON.parse(resp.data);
-      })
-    );
-
-    const paisBloque$ = this.catalogosServices
-      .getCatalogoById(CATALOGOS_ID.CAT_TIPO_OPERACION)
-      .pipe(
-        map((resp) => {
-          this.paisBloque = JSON.parse(resp.data);
-        })
-      );
-
     merge(
       catTipoSolicitud$,
       catalogoPaises$,
       catalogoAduanas$,
       catalogoAduanas$,
       seccionesAduaneras$,
-      tipoOperacion$,
-      tratadoAcuerdo$,
-      paisBloque$
+      tipoOperacion$
     ).subscribe();
   }
 
@@ -354,6 +404,29 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         this.solicitudState?.tipoSolicitud,
         [Validators.required],
       ],
+      validacionForm: this.fb.group({
+        tercerOperador: [this.solicitudState?.opEconomicoAut],  
+        tratado: [this.solicitudState?.tratado, [Validators.required]],
+        pais: [this.solicitudState?.pais, [Validators.required]],
+        fraccionArancelaria: [
+          this.solicitudState?.fraccionArancelaria,
+          [Validators.required, Validators.pattern(/^\d+$/)],
+        ],
+        numeroRegistro: [
+          this.solicitudState?.numeroRegistro,
+          [Validators.required],
+        ],
+        nombreComercial: [
+          this.solicitudState?.nombreComercial,
+          [Validators.required],
+        ],
+        fechaInicioB: [
+          this.solicitudState?.fechaInicioB,
+          [Validators.required],
+        ],
+        fechFinB: [this.solicitudState?.fechFinB, [Validators.required]],
+        archivo: [this.solicitudState?.archivo, [Validators.required]],
+      }),
       datosImportadorExportador: this.fb.group({
         rfcImportExport: [
           this.solicitudState?.rfcImportExport,
@@ -692,5 +765,66 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+    if (this.getTratadoSubscription) {
+      this.getTratadoSubscription.unsubscribe();
+    }
+    if (this.getPaisSubscription) {
+      this.getPaisSubscription.unsubscribe();
+    }
   }
+
+    /**
+   * Obtiene el formulario de validación.
+   */
+    get validacionForm(): FormGroup {
+      return this.FormSolicitud.get('validacionForm') as FormGroup;
+    }
+
+    
+      /**
+   * Obtiene el catálogo de tratados desde el servicio.
+   */
+  getTratado(): void {
+    this.getTratadoSubscription = this.registroService
+      .getTratado()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.tramite110221Store.setTratado(RESPONSE);
+        }
+      });
+  }
+  /**
+   * Obtiene el catálogo de países desde el servicio.
+   */
+  getPais(): void {
+    this.getPaisSubscription = this.registroService
+      .getPais()
+      .subscribe((resp) => {
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.tramite110221Store.setPais(RESPONSE);
+        }
+      });
+  }
+
+  buscarMercancias() {
+    if (this.Tratadodescripcion.includes('1')) {
+      this.isDisponibles = true;
+    } else {
+      this.isDisponibles = false;
+    }
+    this.getTratado();
+    this.getPais();
+  }
+
+  obtenerTablaDatos(): void {
+    this.httpServicios
+      .get<RespuestaTabla>('../../../../../assets/json/110221/certificado-tabla.json')
+      .subscribe((data): void => {
+        this.nicoTablaDatos = data?.data;
+      });
+  }
+  
+
 }

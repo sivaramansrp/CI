@@ -33,13 +33,13 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
 @NgModule({
   declarations: [
     SolicitudPageComponent,
-    CertificadoOrigenComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
     PasoUnoComponent,
     PasoDosComponent
   ],
   imports: [
+    CertificadoOrigenComponent,
     forwardRef(() => TercerosComponent),
     forwardRef(() =>AgregarTransporteComponent),
     forwardRef(() =>AlertComponent),

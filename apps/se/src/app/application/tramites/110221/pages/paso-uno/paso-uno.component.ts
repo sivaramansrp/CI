@@ -3,8 +3,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'paso-uno',
-  templateUrl: './paso-uno.component.html',
-  styles: ``
+  templateUrl: './paso-uno.component.html'
 })
 export class PasoUnoComponent {
   indice: number = 1;

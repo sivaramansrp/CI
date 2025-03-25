@@ -17,4 +17,15 @@ export class Tramite110221Query extends Query<Solicitud110221State> {
     protected override store: Tramite110221Store) {
     super(store);
   }
+
+    /**
+   * Selecciona el catálogo de tratados.
+   */
+    seleccioneTratado$ = this.select((state) => state.tratado);
+
+    /**
+     * Selecciona el catálogo de países.
+     */
+    selectPais$ = this.select((state) => state.pais);
+  
 }
