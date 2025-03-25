@@ -13,7 +13,7 @@ import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { ToastrService } from 'ngx-toastr';
 import { ReplaySubject, takeUntil } from 'rxjs';
-import {VEHICULO_PAGE} from '../../enum/transportista-terrestre.enum'
+import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum'
 
 import {
   DatosDelVehículo,
