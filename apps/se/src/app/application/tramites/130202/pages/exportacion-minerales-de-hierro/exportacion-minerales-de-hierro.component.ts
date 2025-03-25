@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS_EXPORTACION } from '../../constants/exportacion-minerales-de-hierro-pasos.enum';
 
-import { AccionBoton } from '../../enums/accionbotton.enum';
+import { AccionBoton } from '../../enums/accion-botton.enum';
 @Component({
   selector: 'app-exportacion-minerales-de-hierro',
   templateUrl: './exportacion-minerales-de-hierro.component.html',
