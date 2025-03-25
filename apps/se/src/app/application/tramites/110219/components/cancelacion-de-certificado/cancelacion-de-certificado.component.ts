@@ -7,13 +7,16 @@ import {
   ConfiguracionColumna,
   TablaSeleccion,
   TituloComponent,
+  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {  FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ReplaySubject, Subscription, takeUntil } from 'rxjs';
+import {  FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { map, ReplaySubject, Subscription, takeUntil } from 'rxjs';
 import { CertificadoService } from '../../services/certificado.service';
 import { AlertComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
 import { ColumnasTabla } from '../../models/certificado.model';
+import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
+import { Tramite110219Query } from '../../estados/Tramite110219.query';
 const TERCEROS_TEXTO_DE_ALERTA ='Certificados Disponibles';
 @Component({
   selector: 'app-cancelacion-de-certificado',
@@ -42,6 +45,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   TablaSeleccion = TablaSeleccion;
   public certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
   isBuscar: boolean = false;
+  public solicitudState!: Solicitud110219State;
+
   public tratadoCatalogo: CatalogosSelect = {
     labelNombre: 'Tratado/Acuerdo:',
     required: false,
@@ -56,7 +61,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   };
  
   constructor(private certificadoService: CertificadoService,
-    private fb:FormBuilder
+    private fb:FormBuilder, private validacionesService: ValidacionesFormularioService,
+    private store: Tramite110219Store,
+    private query: Tramite110219Query,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -64,6 +71,16 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     this.getTratadoData();
     this.getPaisdata();
     this.getSolicitudesTabla();
+
+    this.query.selectSolicitud$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+  this.donanteDomicilio();
   }
 
   validarDestinatarioFormulario(): void {
@@ -107,74 +124,35 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     });
   }
 
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite110219Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+ 
+  get validacionForm(): FormGroup {
+    return this.cancelacionForm.get('validacionForm') as FormGroup;
+  }
+
   donanteDomicilio(): void {
     this.cancelacionForm = this.fb.group({
       validacionForm: this.fb.group({
+        numeroCertificado:[this.solicitudState?.numeroCertificado,[Validators.required]],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
-        fraccionArancelaria: [
-          this.solicitudState?.fraccionArancelaria,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
-        numeroRegistro: [
-          this.solicitudState?.numeroRegistro,
-          [Validators.required],
-        ],
-        nombreComercial: [
-          this.solicitudState?.nombreComercial,
-          [Validators.required],
-        ],
-        fechaInicioB: [
-          this.solicitudState?.fechaInicioB,
-          [Validators.required],
-        ],
-        fechFinB: [this.solicitudState?.fechFinB, [Validators.required]],
-        archivo: [this.solicitudState?.archivo, [Validators.required]],
-      }),
-    });
-    this.mercanciaForm = this.fb.group({
-      validacionMercanciaForm: this.fb.group({
-        fraccionMercanArancelaria: ['', [Validators.required]],
-        nombretecnico: [
-          '',
-          [Validators.required],
-        ],
-        nombrecomercialdelamercancia: [
-          '',
-          [Validators.required],
-        ],
-
-        criterioparaconferir: ['', [Validators.required]],
-        nombreEnIngles: ['', [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
-        cantidad: [
-          this.solicitudState?.cantidad,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
-        umc: [this.solicitudState?.umc, [Validators.required]],
-        valordelamercancia: [
-          this.solicitudState?.valordelamercancia,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        complementodeladescripcion: [
-          this.solicitudState?.complementodeladescripcion,
-          [Validators.required],
-        ],
-        masabruta: [
-          this.solicitudState?.masabruta,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        unidadMedida: [
-          this.solicitudState?.unidadMedida,
-          [Validators.required],
-        ],
-        tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
-        fecha: [this.solicitudState?.fecha, [Validators.required]],
-        nFactura: [this.solicitudState?.nFactura, [Validators.required]],
+        fechaInicial: [this.solicitudState?.fechaInicial,[Validators.required]],
+        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
+        certificadoDisponibles: [this.solicitudState?.certificadoDisponibles, [Validators.required]],
       }),
     });
   }
-
 
   ngOnDestroy(): void {
 
