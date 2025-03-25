@@ -1,4 +1,4 @@
-import { CATALOGOS_ID, FechaAproximadaImportacion } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, InputFecha } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud32502State, Tramite32502Store } from '../../../../estados/tramites/tramite32502.store';
@@ -22,10 +22,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     /**
    * Representa la fecha de inicio ingresada por el usuario.
    * 
-   * @type {FechaAproximadaImportacion}
+   * @type {InputFecha}
    * @default FECHA_INGRESO
    */
-    public fechaInicioInput: FechaAproximadaImportacion = {
+    public fechaInicioInput: InputFecha = {
       labelNombre: 'Fecha Aproximada Importacion',
       required: false,
       habilitado: false,

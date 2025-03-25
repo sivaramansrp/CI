@@ -69,12 +69,6 @@ export interface InputFecha {
   habilitado: boolean;
 }
 
-export interface FechaAproximadaImportacion{
-  labelNombre: string;
-  required: boolean;
-  habilitado: boolean;
-}
-
 export type ConfiguracionTabla = Record<
   string,
   string | number | boolean | null
