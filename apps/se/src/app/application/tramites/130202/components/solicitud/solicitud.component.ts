@@ -7,8 +7,8 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
 import { HttpClient } from '@angular/common/http';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
-import { ProductoOption } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
+import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+import { TEXTOS } from '../../../130202/enums/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130202Query } from '../../estados/queries/tramite130202.query';
 import { Tramite130202Store } from '../../estados/tramites/tramites130202.store';
@@ -90,21 +90,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Opciones para el campo "producto".
    */
-  productoOptions: ProductoOption[] = [];
+  productoOpciones: ProductoOpción[] = [];
   /**
    * @description Catálogo con valores de fracción arancelaria.
    */
-  fraccionCatalog: Catalogo[] = fractionValues;
+  
+ fraccionCatalogo: Catalogo[] = fractionValues;
  
   /**
    * @description Catálogo con opciones de unidad de medida.
    */
-  unidadCatalog: Catalogo[] = unidadOptions;
+  unidadCatalogo: Catalogo[] = unidadOptions;
   /**
    * @description Campos de entrada configurables para detalles adicionales.
    */
  
-  detosInputFields = [
+  datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
       placeholder: 'Seleccione un documento',
@@ -125,7 +126,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Opciones de solicitud configurables.
    */
-  solicitudeOptions: ProductoOption[] = [];
+  opcionesSolicitud: ProductoOpción[] = [];
  
   /**
    * @description Sujeto para gestionar la destrucción de suscripciones.
@@ -182,9 +183,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.initializeForms();
-    this.setupFormSubscriptions();
-    this.fetchOptions();
+    this.inicializarFormularios();
+    this.configuraciónFormularioSuscripciones();
+    this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.getEstablecimiento();
     this.calculateTotals();
@@ -218,7 +219,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Inicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
-  initializeForms(): void {
+  
+     inicializarFormularios(): void {
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
       regimen: ['', Validators.required],
@@ -294,7 +296,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Configura las suscripciones para actualizar formularios y almacenar estados.
    */
-  setupFormSubscriptions(): void {
+  configuraciónFormularioSuscripciones(): void {
     this.tramite130202Query.solicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((solicitud) => {
@@ -432,13 +434,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Solicita opciones configurables para los formularios desde archivos JSON.
    */
-  fetchOptions(): void {
+  opcionesDeBusqueda(): void {
     this.exportacionMineralesDeHierroService
       .getSolicitudeOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
-          this.solicitudeOptions = data.options;
+          this.opcionesSolicitud = data.options;
           this.tramite130202Store.updateState({
             solicitud: data.options[0]?.value || '',
             defaultSelect: data.defaultSelect || 'Inicial',
@@ -453,7 +455,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
-          this.productoOptions = data.options;
+          this.productoOpciones = data.options;
           this.tramite130202Store.updateState({
             producto: data.options[0]?.value || 'Nuevo',
             defaultProducto: data.options[0]?.value || 'Nuevo',

@@ -6,13 +6,13 @@ export interface Tramite130202State {
   descripcion: string;
   fraccion: string;
   cantidad: string;
-  valorPartidaUSD: number; 
+  valorPartidaUSD: number;
   unidadMedida: string;
-  solicitud: string ; 
+  solicitud: string;
   defaultSelect: string;
   defaultProducto: string;
-  regimen:string;
-  classification:string;
+  regimen: string;
+  classification: string;
   filaSeleccionada: null;
   cantidadPartidasDeLaMercancia: string;
   valorPartidaUSDPartidasDeLaMercancia: number;
@@ -31,40 +31,38 @@ export function createInitialState(): Tramite130202State {
   return {
     filaSeleccionada: null,
     mostrarTabla: false,
-    solicitud: '', 
+    solicitud: '',
     fraccion: '',
     defaultSelect: 'Inicial',
     producto: '',
     descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
-    unidadMedida:'',
+    unidadMedida: '',
     defaultProducto: 'Nuevo',
     regimen: '',
     classification: '',
     cantidadPartidasDeLaMercancia: '',
-     valorPartidaUSDPartidasDeLaMercancia: 0,
-     descripcionPartidasDeLaMercancia: '',
-    valorFacturaUSD:'',
-    bloque:'',
-    usoEspecifico:'',
-    justificacionImportacionExportacion:'',
-    observaciones:'',
-    entidad:'',
-    representacion:'',
+    valorPartidaUSDPartidasDeLaMercancia: 0,
+    descripcionPartidasDeLaMercancia: '',
+    valorFacturaUSD: '',
+    bloque: '',
+    usoEspecifico: '',
+    justificacionImportacionExportacion: '',
+    observaciones: '',
+    entidad: '',
+    representacion: '',
   };
 }
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite130202' })
 export class Tramite130202Store extends Store<Tramite130202State> {
-  
   constructor() {
     super(createInitialState());
   }
 
   public setFraccion(fraccion: string): void {
-    
     this.update((state) => ({
       ...state,
       fraccion,
@@ -84,95 +82,101 @@ export class Tramite130202Store extends Store<Tramite130202State> {
       defaultSelect,
     }));
   }
- // Generic update method for multiple fields
- updateState(updates: Partial<Tramite130202State>): void {
-  this.update(updates);
-}
+  public updateState(updates: Partial<Tramite130202State>): void {
+    this.update(updates);
+  }
 
-// Specific setters
-setProducto(producto: string): void {
-  this.update({ producto });
-}
+  public setProducto(producto: string): void {
+    this.update({ producto });
+  }
 
-setDescripcion(descripcion: string): void {
-  this.update({ descripcion });
-}
+  public setDescripcion(descripcion: string): void {
+    this.update({ descripcion });
+  }
 
+  public setCantidad(cantidad: string): void {
+    this.update({ cantidad });
+  }
 
-setCantidad(cantidad: string): void {
-  this.update({ cantidad });
-}
+  public setValorPartidaUSD(valorPartidaUSD: number): void {
+    this.update({ valorPartidaUSD });
+  }
 
-setValorPartidaUSD(valorPartidaUSD: number): void {
-  this.update({ valorPartidaUSD });
-}
+  public setUnidadMedida(unidadMedida: string): void {
+    this.update({ unidadMedida });
+  }
+  public updateDefaultProducto(defaultProducto: string): void {
+    this.update({ defaultProducto });
+  }
+  public setregimen(regimen: string): void {
+    this.update({ regimen });
+  }
+  public setclasificacion(classification: string): void {
+    this.update({ classification });
+  }
+  public setMostrarTabla(mostrar: boolean): void {
+    this.update({ mostrarTabla: mostrar });
+  }
+  public setValorFacturaUSD(valorFacturaUSD: string): void {
+    this.update((state) => ({
+      ...state,
+      valorFacturaUSD,
+    }));
+  }
+  public setDescripcionPartidasDeLaMercancia(
+    descripcionPartidasDeLaMercancia: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      descripcionPartidasDeLaMercancia,
+    }));
+  }
 
-setUnidadMedida(unidadMedida: string): void {
-  this.update({ unidadMedida });
-}
-updateDefaultProducto(defaultProducto: string): void {
-  this.update({ defaultProducto });
-}
- setregimen(regimen:string): void{
-  this.update({regimen})
- }
- setclasificacion(classification:string):void{
-  this.update({classification})
- }
- setMostrarTabla(mostrar: boolean): void {
-  this.update({ mostrarTabla: mostrar });
-}
-public setValorFacturaUSD(valorFacturaUSD: string): void { 
-  this.update((state) => ({
-    ...state,
-    valorFacturaUSD,
-  }));
-}public setDescripcionPartidasDeLaMercancia(descripcionPartidasDeLaMercancia: string) : void {
-  this.update((state) => ({
-    ...state,
-    descripcionPartidasDeLaMercancia,
-  }));
-}
-
-public setCantidadPartidasDeLaMercancia(cantidadPartidasDeLaMercancia: string): void {
-  this.update((state) => ({
-    ...state,
-    cantidadPartidasDeLaMercancia,
-  }));
-}
-public setvalorPartidaUSD(valorPartidaUSD: number) : void {
-  this.update((state) => ({
-    ...state,
-    valorPartidaUSD,
-  }));
-}
-public setValorPartidaUSDPartidasDeLaMercancia(valorPartidaUSDPartidasDeLaMercancia: number): void { 
-  this.update((state) => ({
-    ...state,
-    valorPartidaUSDPartidasDeLaMercancia,
-  }));
-}
-setBloque(bloque:string):void{
-  this.update({bloque})
- }
- setUsoEspecifico(usoEspecifico:string):void{
-  this.update({usoEspecifico})
- }
- setJustificacionImportacionExportacion(justificacionImportacionExportacion:string):void{
-  this.update({justificacionImportacionExportacion})
- }
- setObservaciones(observaciones:string):void{
-  this.update({observaciones})
- }
-public setEntidad(entidad:string): void{
-  this.update({entidad})
- }
- public setRepresentacion(representacion:string): void{
-  this.update({representacion})
- }
-storeTableValues(fila: null): void {
-  this.update({
-    filaSeleccionada: fila,
-  });
-}
+  public setCantidadPartidasDeLaMercancia(
+    cantidadPartidasDeLaMercancia: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      cantidadPartidasDeLaMercancia,
+    }));
+  }
+  public setvalorPartidaUSD(valorPartidaUSD: number): void {
+    this.update((state) => ({
+      ...state,
+      valorPartidaUSD,
+    }));
+  }
+  public setValorPartidaUSDPartidasDeLaMercancia(
+    valorPartidaUSDPartidasDeLaMercancia: number
+  ): void {
+    this.update((state) => ({
+      ...state,
+      valorPartidaUSDPartidasDeLaMercancia,
+    }));
+  }
+  public setBloque(bloque: string): void {
+    this.update({ bloque });
+  }
+  public setUsoEspecifico(usoEspecifico: string): void {
+    this.update({ usoEspecifico });
+  }
+  public setJustificacionImportacionExportacion(
+    justificacionImportacionExportacion: string
+  ): void {
+    this.update({ justificacionImportacionExportacion });
+  }
+  public setObservaciones(observaciones: string): void {
+    this.update({ observaciones });
+  }
+  public setEntidad(entidad: string): void {
+    this.update({ entidad });
+  }
+  public setRepresentacion(representacion: string): void {
+    this.update({ representacion });
+  }
+  public storeTableValues(fila: null): void {
+    this.update({
+      filaSeleccionada: fila,
+    });
+  }
 }

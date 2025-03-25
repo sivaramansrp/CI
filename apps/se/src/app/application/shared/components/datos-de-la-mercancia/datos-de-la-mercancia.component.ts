@@ -7,13 +7,13 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
-import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
+import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 /**
  * @description Componente para manejar los detalles de la mercancía.
  * Proporciona entradas para configurar un formulario y opciones para productos, fracciones y unidades.
  */
 @Component({
-  selector: 'app-detos-de-la-mercancia',
+  selector: 'app-datos-de-la-mercancia',
   standalone: true,
   imports: [
     CommonModule,
@@ -22,10 +22,10 @@ import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
     InputRadioComponent,
     CatalogoSelectComponent,
   ],
-  templateUrl: './detos-de-la-mercancia.component.html',
-  styleUrl: './detos-de-la-mercancia.component.scss',
+  templateUrl: './datos-de-la-mercancia.component.html',
+  styleUrl: './datos-de-la-mercancia.component.scss',
 })
-export class DetosDeLaMercanciaComponent {
+export class DatosDeLaMercanciaComponent {
   /**
    * @description El grupo de formulario reactivo para capturar los detalles.
    */
@@ -33,15 +33,15 @@ export class DetosDeLaMercanciaComponent {
   /**
    * @description Opciones disponibles para los productos.
    */
-  @Input() productoOptions: ProductoOption[] = [];
+  @Input() productoOpciones: ProductoOpción[] = [];
   /**
    * @description Catálogo que contiene opciones de fracción.
    */
-  @Input() fraccionCatalog: Catalogo[] = [];
+  @Input() fraccionCatalogo: Catalogo[] = [];
   /**
    * @description Catálogo que contiene opciones de unidad.
    */
-  @Input() unidadCatalog: Catalogo[] = [];
+  @Input() unidadCatalogo: Catalogo[] = [];
   /**
    * @description Emisor de eventos para pasar datos del formulario al componente padre.
    * @event setValoresStoreEvent
@@ -57,10 +57,8 @@ export class DetosDeLaMercanciaComponent {
    * @method fetchFraccion
    * @description Obtiene información de fracción arancelaria.
    */
-  fetchFraccion(): void {
-    // this.valorSeleccionado = 'Nuevo';
-    this.form.get('unidadMedida')?.setValue(this.unidadCatalog[0].id);
-    // this.setValoresStore(this.formularioDatosMercancia, 'unidadMedida', 'setUnidadMedida');
+  obtenerFraccion(): void {
+    this.form.get('unidadMedida')?.setValue(this.unidadCatalogo[0].id);
   }
   /**
    * @description Verifica si un control del formulario es inválido.

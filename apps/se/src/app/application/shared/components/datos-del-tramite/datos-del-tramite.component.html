@@ -6,7 +6,7 @@
         <div class="form-group">
           <label for="solicitud">Solicitud*:</label>
           <app-input-radio
-            [radioOptions]="solicitudeOptions"
+            [radioOptions]="solicitudOpciones"
             formControlName="solicitud"
             [isRequired]="true"
             (valueChange)="setValoresStore(form, 'solicitud', 'updateSolicitud')"

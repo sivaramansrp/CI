@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DetosDelTramiteComponent } from './detos-del-tramite.component';
+import { DatosDelTramiteComponent } from './datos-del-tramite.component';
 import { EventEmitter } from '@angular/core';
-import { ProductoOption } from '../../constantes/vehiculos-adaptados.enum';
+import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
 
 describe('DetosDelTramiteComponent', () => {
-  let component: DetosDelTramiteComponent;
-  let fixture: ComponentFixture<DetosDelTramiteComponent>;
+  let component: DatosDelTramiteComponent;
+  let fixture: ComponentFixture<DatosDelTramiteComponent>;
   let formBuilder: FormBuilder = new FormBuilder();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DetosDelTramiteComponent, ReactiveFormsModule], 
+      imports: [DatosDelTramiteComponent, ReactiveFormsModule], 
     }).compileComponents();
   
-    fixture = TestBed.createComponent(DetosDelTramiteComponent);
+    fixture = TestBed.createComponent(DatosDelTramiteComponent);
     component = fixture.componentInstance;
     component.form = new FormBuilder().group({
       regimen: ['', Validators.required],
@@ -32,10 +32,10 @@ describe('DetosDelTramiteComponent', () => {
       [{ id: 1 }, { id: 2 }],
       [{ id: 3 }, { id: 4 }],
     ] as Catalogo[][];
-    component.solicitudeOptions = [
+    component.solicitudOpciones = [
       { value: 'option1', label: 'Option 1' },
       { value: 'option2', label: 'Option 2' },
-    ] as ProductoOption[];
+    ] as ProductoOpción[];
   
     fixture.detectChanges();
   });
