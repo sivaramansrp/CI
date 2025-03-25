@@ -1,16 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SolicitudPageComponent } from './solicitud-page.component';
-
+import {ContenedorDePasosComponent} from './contenedor-de-pasos.component';
+import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { HttpClientModule } from '@angular/common/http';
 describe('SolicitudPageComponent', () => {
-  let component: SolicitudPageComponent;
-  let fixture: ComponentFixture<SolicitudPageComponent>;
+
+  let component: ContenedorDePasosComponent;
+  let fixture: ComponentFixture<ContenedorDePasosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudPageComponent],
+      imports: [ContenedorDePasosComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolicitudPageComponent);
+    fixture = TestBed.createComponent(ContenedorDePasosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

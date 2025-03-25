@@ -43,7 +43,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getTiposDocumentos();
+   // this.getTiposDocumentos();
     this.documentosSeleccionados = [
       {
         id: 1,
