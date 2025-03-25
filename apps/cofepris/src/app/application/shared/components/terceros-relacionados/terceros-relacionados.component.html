@@ -1,0 +1,28 @@
+<div class="container terceros-relacionados-container">
+  <div>
+    <!-- title -->
+    <ng-titulo titulo="Terceros relacionados" />
+
+    <!-- alert-box -->
+    <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
+
+    <!-- Fabricante table when on display -->
+    <div class="mt-5">
+      <h5>Informacion de procedencia*</h5>
+      <div class="table-responsive mt-5">
+        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
+      </div>
+
+      <div class="d-flex justify-content-end mt-3">
+
+        <button type="button" class="btn btn-primary" (click)="clickAgregar()">
+          Agregar
+        </button>
+      </div>
+    </div>
+
+  </div>
+<div class="modal fade" tabindex="-1" role="dialog" *ngIf="isShownAgregar" id="myModal"
+[ngClass]="{ show: isShownAgregar }" aria-hidden="true">
+  <app-modal></app-modal>
+</div>
