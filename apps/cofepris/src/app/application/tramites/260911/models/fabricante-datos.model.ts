@@ -1,21 +1,20 @@
 export interface CapturarColumns {
-
-  Nombre_denominación_o_razón_social: string;
-  r_f_c: string;
+  nombreDenominacionORazonSocial: string;
+  rfc: string;
   curp: string;
-  teléfono: number;
-  correo_electrónico: string,
+  telefono: number;
+  correoElectronico: string,
   calle: string;
-  número_exterior: number;
-  número_interior: number;
-  País: string;
-  Colonia: string;
-  Municipio_o_alcaldía: string;
-  Localidad: string;
-  Entidad_federativa: string;
-  Estado_localidad: string;
-  Código_postal: string;
-  Colonia_o_equivalente: string;
+  numeroExterior: number;
+  numeroInterior: number;
+  pais: string;
+  colonia: string;
+  municipioOAlcaldia: string;
+  localidad: string;
+  entidadFederativa: string;
+  estadoLocalidad: string;
+  codigoPostal: string;
+  coloniaOEquivalente: string;
 }
 
 
@@ -24,12 +23,12 @@ export const FABRICANTE_TABLE_COLUMNS =
   [
     {
       encabezado: 'Nombre/denominación o razón social',
-      clave: (fila: CapturarColumns): string => fila.Nombre_denominación_o_razón_social,
+      clave: (fila: CapturarColumns): string => fila.nombreDenominacionORazonSocial,
       orden: 1,
     },
     {
       encabezado: 'R.F.C.',
-      clave: (fila:CapturarColumns) => fila.r_f_c,
+      clave: (fila: CapturarColumns) => fila.rfc,
       orden: 2,
     },
     {
@@ -39,12 +38,12 @@ export const FABRICANTE_TABLE_COLUMNS =
     },
     {
       encabezado: 'Teléfono',
-      clave: (fila: CapturarColumns) => fila.teléfono,
+      clave: (fila: CapturarColumns) => fila.telefono,
       orden: 4,
     },
     {
       encabezado: 'Correo electrónico',
-      clave: (fila: CapturarColumns) => fila.correo_electrónico,
+      clave: (fila: CapturarColumns) => fila.correoElectronico,
       orden: 5,
     },
     {
@@ -54,52 +53,52 @@ export const FABRICANTE_TABLE_COLUMNS =
     },
     {
       encabezado: 'Número exterior',
-      clave: (fila: CapturarColumns) => fila.número_exterior,
+      clave: (fila: CapturarColumns) => fila.numeroExterior,
       orden: 7,
     },
     {
       encabezado: 'Número interior',
-      clave: (fila: CapturarColumns) => fila.número_interior,
+      clave: (fila: CapturarColumns) => fila.numeroInterior,
       orden: 8,
     },
     {
       encabezado: 'País',
-      clave: (fila: CapturarColumns) => fila.País,
+      clave: (fila: CapturarColumns) => fila.pais,
       orden: 9,
     },
     {
       encabezado: 'Colonia',
-      clave: (fila: CapturarColumns) => fila.Colonia,
+      clave: (fila: CapturarColumns) => fila.colonia,
       orden: 10,
     },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (fila: CapturarColumns) => fila.Municipio_o_alcaldía,
+      clave: (fila: CapturarColumns) => fila.municipioOAlcaldia,
       orden: 11,
     },
     {
       encabezado: 'Localidad',
-      clave: (fila: CapturarColumns) => fila.Localidad,
+      clave: (fila: CapturarColumns) => fila.localidad,
       orden: 12,
     },
     {
       encabezado: 'Entidad federativa',
-      clave: (fila: CapturarColumns) => fila.Entidad_federativa,
+      clave: (fila: CapturarColumns) => fila.entidadFederativa,
       orden: 13,
     },
     {
       encabezado: 'Estado/localidad',
-      clave: (fila: CapturarColumns) => fila.Estado_localidad,
+      clave: (fila: CapturarColumns) => fila.estadoLocalidad,
       orden: 14,
     },
     {
       encabezado: 'Código postal',
-      clave: (fila: CapturarColumns) => fila.Código_postal,
+      clave: (fila: CapturarColumns) => fila.codigoPostal,
       orden: 15,
     },
     {
       encabezado: 'Colonia o equivalente',
-      clave: (fila: CapturarColumns) => fila.Colonia_o_equivalente,
+      clave: (fila: CapturarColumns) => fila.coloniaOEquivalente,
       orden: 16,
     },
   ];
