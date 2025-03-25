@@ -124,11 +124,33 @@
       </div>
     </div>
 
-    <div class="row mt-4">
-      <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-light">Cancelar</button>
-        <button type="button" class="btn btn-secondary ms-2">Limpiar</button>
-        <button type="submit" class="btn btn-primary ms-2">Guardar</button>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            name="modificarMercancias"
+            class="btn btn-default"
+          >
+            Modificar
+          </button>
+          <button
+            type="button"
+            name="eliminarMercancias"
+            class="btn btn-danger ms-2"
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            name="agregarMercancias"
+            class="btn btn-primary ms-2"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+          >
+            Agregar
+          </button>
+        </div>
       </div>
     </div>
   </form>

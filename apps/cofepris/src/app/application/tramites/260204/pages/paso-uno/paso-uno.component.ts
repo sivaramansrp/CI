@@ -6,6 +6,7 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 import { AgregarFabricanteComponent } from '../../../../shared/components/agregar-fabricante/agregar-fabricante.component';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { AgregarFacturadorComponent } from '../../../../shared/components/agregar-facturador/agregar-facturador.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -18,6 +19,7 @@ import { AgregarProveedorComponent } from '../../../../shared/components/agregar
     AgregarFabricanteComponent,
     AgregarDestinatarioFinalComponent,
     AgregarProveedorComponent,
+    AgregarFacturadorComponent,
   ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
