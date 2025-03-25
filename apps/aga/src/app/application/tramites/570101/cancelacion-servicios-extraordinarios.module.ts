@@ -14,9 +14,9 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from './service/servicios-extraordinarios.service';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
@@ -45,7 +45,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   providers: [
     ToastrService,
     CancelarSolicitudService,
-    ServiciosExtraordinariosService 
+    TramiteFolioService 
   ]
 })
 export class CancelacionServiciosExtraordinariosModule {}

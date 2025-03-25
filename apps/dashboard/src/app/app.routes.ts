@@ -96,5 +96,4 @@ export const appRoutes: Route[] = [
             exposedModule: './Module'
         }).then((m) => m.AppSenerModule)
   }
-  
 ];

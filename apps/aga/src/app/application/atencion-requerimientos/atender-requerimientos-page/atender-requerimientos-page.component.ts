@@ -1,6 +1,6 @@
+import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS_REQUERIMIENTOS, SeccionLibState, WizardComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 interface AccionBoton {
   accion: string;
