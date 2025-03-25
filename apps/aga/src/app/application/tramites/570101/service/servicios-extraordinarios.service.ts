@@ -14,7 +14,7 @@ export interface JSONResponse {
   providedIn: 'root',
 })
 
-export class ServiciosExtraordinariosService {
+export class TramiteFolioService {
   urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) {
