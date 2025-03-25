@@ -82,6 +82,11 @@ const ROUTES: Routes = [
         (m) => m.ExpansionDeProductoresModule),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
+  },
+  {
     path: 'elegibilidad-de-textiles',
     loadChildren: () =>
       import('./tramites/120301/elegibilidad-de-textiles.module').then(
@@ -100,6 +105,25 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/140103/cancelacion-de.module').then(
         (m) => m.CancelacionDeModule)
+  },
+  {
+    path: 'desmantelar',
+    loadChildren: () =>
+      import('./tramites/130106/desmantelar.module').then(
+        (m) => m.DesmantelarModule)
+  },
+  {
+    path: 'desistimiento-de-permiso',
+    loadChildren: () =>
+      import('./tramites/140105/desistimiento-de-permiso.module').then(
+        (m) => m.DesistimientoDePermisoModule)
+  },
+  {
+    path: 'certificado-sgp',
+    loadChildren: () =>
+      import('./tramites/110209/certificado-sgp.module').then(
+        (m) => m.CertificadoSGPModule
+      ),
   },
   {
     path: 'certificado-registro',
@@ -153,6 +177,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
   }
 ];

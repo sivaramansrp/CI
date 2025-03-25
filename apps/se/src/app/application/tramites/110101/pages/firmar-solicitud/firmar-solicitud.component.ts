@@ -22,12 +22,12 @@ export class FirmarSolicitudComponent {
   /**
      * Constructor del componente.
      * @param router - El enrutador.
-     * @param serviciosExtraordinariosServices - Los servicios extraordinarios.
+     * @param TramiteFolioServices - Los servicios extraordinarios.
      * @param TramiteAgaceStore - El almacén de trámites.
      */
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosPantallaService,
+    private TramiteFolioServices: ServiciosPantallaService,
     private TramiteAgaceStore: TramiteStore
   ) {
     // Constructor
@@ -41,7 +41,7 @@ export class FirmarSolicitudComponent {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.TramiteFolioServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
