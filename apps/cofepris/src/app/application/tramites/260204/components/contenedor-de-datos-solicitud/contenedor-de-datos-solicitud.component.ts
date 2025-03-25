@@ -14,7 +14,6 @@ import { Tramite260204Query } from '../../estados/queries/tramite260204Query.que
   imports: [CommonModule, DatosDeLaSolicitudComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
-  providers: [Tramite260204Query, Tramite260204Store]
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   private destroyNotifier$: Subject<void> = new Subject();
