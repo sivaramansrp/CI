@@ -206,8 +206,10 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
    */
   rfc$: Observable<string | null> = this.tramite260904Query.rfc$;
 
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
-
 
   /**
    * Constructor del componente.
@@ -321,6 +323,9 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
     });
   }
 
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

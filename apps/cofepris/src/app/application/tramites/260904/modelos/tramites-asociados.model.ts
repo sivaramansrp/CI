@@ -1,7 +1,7 @@
 export interface Asociados {
     id: number;
-    folioTrámite: string;
-    tipoTrámite: string;
+    folioTramite: string;
+    tipoTramite: string;
     estatus:string;
     fechaAltaDeRegistro:string;
 }

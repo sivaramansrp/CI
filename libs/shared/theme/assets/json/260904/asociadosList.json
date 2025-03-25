@@ -1,15 +1,15 @@
 [
     {
         "id": 1,
-        "folioTrámite": "0402600201220244006000003",
-        "tipoTrámite": "Permiso Sanitario de importación de Dispositivos Médicos para Maquila",
+        "folioTramite": "0402600201220244006000003",
+        "tipoTramite": "Permiso Sanitario de importación de Dispositivos Médicos para Maquila",
         "estatus": "Concluido",
         "fechaAltaDeRegistro":"19/08/2024"
     },
     {
         "id": 2,
-        "folioTrámite": "0402600901220244006000002",
-        "tipoTrámite": "Modificación al Permiso Sanitario de Imptación de Dispositivos Médicos para Maquilla",
+        "folioTramite": "0402600901220244006000002",
+        "tipoTramite": "Modificación al Permiso Sanitario de Imptación de Dispositivos Médicos para Maquilla",
         "estatus": "Concluido",
         "fechaAltaDeRegistro":"21/08/2024"
     }

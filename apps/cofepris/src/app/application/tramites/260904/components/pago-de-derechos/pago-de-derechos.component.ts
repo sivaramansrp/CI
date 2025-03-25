@@ -50,8 +50,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Constructor para inyectar los servicios y las tiendas necesarias.
    * @param fb - FormBuilder para formularios reactivos.
-   * @param tramite260912Store - Tienda para gestionar el estado del formulario.
-   * @param tramite260912Query - Servicio de consulta para acceder a los datos del store.
+   * @param tramite260904Store - Tienda para gestionar el estado del formulario.
+   * @param tramite260904Query - Servicio de consulta para acceder a los datos del store.
    * @param Servicio - Servicio para obtener la lista de bancos.
    */
   constructor(
@@ -138,7 +138,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: BancoList[]) => {
-        this.bancoList = data;
+        this.bancoList = data;        
       });
   }
 

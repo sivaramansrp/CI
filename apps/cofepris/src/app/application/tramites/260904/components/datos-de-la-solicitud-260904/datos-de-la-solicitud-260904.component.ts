@@ -99,7 +99,10 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
    * Observable para el correo del establecimiento.
    */
   correo$: Observable<string | null> = this.tramite260904Query.correo$;
-
+  
+  /**
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
 
   /**
@@ -156,10 +159,13 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
 
   /**
    * Método para mostrar u ocultar el formulario colapsable.
