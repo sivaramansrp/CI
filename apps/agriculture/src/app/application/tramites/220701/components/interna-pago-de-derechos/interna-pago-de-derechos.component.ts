@@ -238,6 +238,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
+        this.suscribirseACambiosDeFormularioPago();
   }
 
   /**
@@ -439,4 +440,21 @@ private obtenerListaBanco(): void {
       this.unsubscribe$.next();
       this.unsubscribe$.complete();
     }
+
+    /**
+   * Se suscribe a los cambios en el estado del formularioPago y actualiza el store.
+   * @method suscribirseACambiosDeFormularioPago
+   */
+  private suscribirseACambiosDeFormularioPago(): void {
+    this.formularioPago.statusChanges
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        delay(10),
+        tap(() => {
+          const ESTADO_ACTIVO = { ...this.formularioPago.value };
+          this.tramiteStore.setInternaPagoDeDerechosTramite(ESTADO_ACTIVO);
+        })
+      )
+      .subscribe();
+  }
 }
