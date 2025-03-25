@@ -10,20 +10,20 @@
       </div>
       <div class="row mb-3">
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Idioma'" [catalogo]="idiomas" [required]="true" name="estado"
-            formControlName="idioma" (selectionChange)="idiomaSeleccion()"></app-catalogo-select>
+          <app-catalogo-select class="row-margen-agrega" [label]="'Idioma'" [catalogo]="idiomas" [required]="true"
+            name="estado" formControlName="idioma" (selectionChange)="idiomaSeleccion()"></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <ng-titulo titulo="Representación federal" />
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="entidadFederativas" [required]="true"
-            name="estado" formControlName="entidadFederativa"
+          <app-catalogo-select class="row-margen-agrega" [label]="'Entidad federativa'" [catalogo]="entidadFederativas"
+            [required]="true" name="estado" formControlName="entidadFederativa"
             (selectionChange)="entidadFederativaSeleccion()"></app-catalogo-select>
         </div>
         <div class="col-md-6">
-          <app-catalogo-select [label]="'Representación federal'" [catalogo]="representacionFederal" [required]="true"
-            name="estado" formControlName="representacionFederal"
+          <app-catalogo-select class="row-margen-agrega" [label]="'Representación federal'"
+            [catalogo]="representacionFederal" [required]="true" name="estado" formControlName="representacionFederal"
             (selectionChange)="representacionFederalSeleccion()"></app-catalogo-select>
         </div>
       </div>

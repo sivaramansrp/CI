@@ -58,6 +58,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       entidadFederativa: [this.tramiteState?.entidadFederativa, [Validators.required, Validators.min(0)]],
       representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
     });
+    this.formDatosCertificado.markAllAsTouched();
+    console.log(this.formDatosCertificado);
   }
 
   cargarIdioma(): void {

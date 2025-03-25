@@ -5,17 +5,17 @@ import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 export interface Tramite110216State {
   observaciones: string;
-  idioma: Catalogo;
-  entidadFederativa: Catalogo;
-  representacionFederal: Catalogo;
+  idioma: Catalogo | null;
+  entidadFederativa: Catalogo | null;
+  representacionFederal: Catalogo | null;
 }
 
 export function createInitialState(): Tramite110216State {
   return {
     observaciones: '',
-    idioma: {} as Catalogo,
-    entidadFederativa: {} as Catalogo,
-    representacionFederal: {} as Catalogo,
+    idioma: null,
+    entidadFederativa: null,
+    representacionFederal: null,
   };
 }
 
