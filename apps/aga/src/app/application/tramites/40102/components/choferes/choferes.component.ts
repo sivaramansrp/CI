@@ -31,7 +31,7 @@ import { Tramite40102Query } from '../../estados/tramite40102.query';
 import { Tramite40102Service } from '../../estados/tramite40102.service';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import {CHOFERES_PAGE} from '../../enum/transportista-terrestre.enum'
+import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum'
 
 @Component({
   selector: 'app-choferes',
@@ -76,11 +76,11 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   seleccionaUnValor: string = CHOFERES_PAGE.SELECCIONA_UNVALOR;
   labelPuntos: string = '...';
   selectedAll: boolean = false;
-  modal: string = 'modal';
+  modal: string = CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
   extranjero: Array<Extranjero> = [];
-  activeTab: string = 'nacional';
-  Choferesextranjeros: string = 'Choferes extranjeros';
+  activeTab: string = CHOFERES_PAGE.ACTIVETAB;
+  Choferesextranjeros: string = CHOFERES_PAGE.CHOFERES_EXTRANJEROS;
   // estados: any[] = [];
   estado$!: Observable<Catalogo[]>;
   municipios: any[] = [];
