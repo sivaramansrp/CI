@@ -5,23 +5,23 @@ import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, catal
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-// eslint-disable-next-line sort-imports
+
 import { ClaveModel, MercanciaModel, solicitudModel } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
-// eslint-disable-next-line sort-imports
+
 import { DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
 import { ClaveScianComponent } from '../clave-scian/clave-scian.component';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-// eslint-disable-next-line sort-imports
+
 import { FormularioOperacionComercialComponent } from '../formulario-operacion-comercial/formulario-operacion-comercial.component';
 import { MercanciasTableFormComponent } from '../mercancias-tabla-form/mercancias-table-form.component';
-// eslint-disable-next-line sort-imports
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
-// eslint-disable-next-line sort-imports
+
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
-// eslint-disable-next-line sort-imports
+
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 /**
@@ -130,7 +130,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Variable que representa la tabla de selección de elementos.
    * Es una configuración utilizada para mostrar datos seleccionables.
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Constructor de la clase DatosDeLaSolicitudComponent.
@@ -302,12 +302,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Incluye detalles como clasificación, denominaciones, forma farmacéutica y estado físico.
  */
   mercanciasTabla: ConfiguracionColumna<MercanciaModel>[] = [
-    { encabezado: 'Clasificación del producto', clave: (item: MercanciaModel) => item.clasificaciónProducto, orden: 1 },
-    { encabezado: 'Especificar clasificación del producto', clave: (item: MercanciaModel) => item.especificarClasificación, orden: 2 },
-    { encabezado: 'Denominación específica del producto', clave: (item: MercanciaModel) => item.denominaciónEspecífica, orden: 3 },
-    { encabezado: 'Denominación distintiva', clave: (item: MercanciaModel) => item.denominaciónDistintiva, orden: 4 },
-    { encabezado: 'Denominación común, nombre común o nombre científico', clave: (item: MercanciaModel) => item.denominaciónComún, orden: 5 },
-    { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmacéutica, orden: 6 },
+    { encabezado: 'Clasificación del producto', clave: (item: MercanciaModel) => item.clasificacionProducto, orden: 1 },
+    { encabezado: 'Especificar clasificación del producto', clave: (item: MercanciaModel) => item.especificarClasificacion, orden: 2 },
+    { encabezado: 'Denominación específica del producto', clave: (item: MercanciaModel) => item.denominacionEspecifica, orden: 3 },
+    { encabezado: 'Denominación distintiva', clave: (item: MercanciaModel) => item.denominacionDistintiva, orden: 4 },
+    { encabezado: 'Denominación común, nombre común o nombre científico', clave: (item: MercanciaModel) => item.denominacionComun, orden: 5 },
+    { encabezado: 'Forma farmacéutica', clave: (item: MercanciaModel) => item.formaFarmaceutica, orden: 6 },
     { encabezado: 'Estado físico', clave: (item: MercanciaModel) => item.estadoFsico, orden: 7 }
   ];
 
@@ -317,7 +317,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Incluye detalles como fecha de creación, mercancía, cantidad y proveedor.
  */
   configuracionTablaSolicitud: ConfiguracionColumna<solicitudModel>[] = [
-    { encabezado: 'Fecha Creación', clave: (item: solicitudModel) => item.fechaCreación, orden: 1 },
+    { encabezado: 'Fecha Creación', clave: (item: solicitudModel) => item.fechaCreacion, orden: 1 },
     { encabezado: 'Mercancía', clave: (item: solicitudModel) => item.mercancía, orden: 2 },
     { encabezado: 'Cantidad', clave: (item: solicitudModel) => item.cantidad, orden: 3 },
     { encabezado: 'Proveedor', clave: (item: solicitudModel) => item.proveedor, orden: 4 }

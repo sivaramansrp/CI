@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { InputRadioComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
-import { LosOption } from '../../models/permiso-maquila.models';
+import { OpcionesPublicacion } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
 
 /**
@@ -33,7 +33,7 @@ export class RepresentanteLegalComponent implements OnInit {
   /**
  * Arreglo que almacena las opciones dinámicas obtenidas desde un archivo JSON.
  */
-  losDatos: LosOption[] = [];
+  losDatos: OpcionesPublicacion[] = [];
 
   /**
  * Valor seleccionado en los radios de opciones, con un valor predeterminado.
@@ -81,7 +81,7 @@ export class RepresentanteLegalComponent implements OnInit {
  * Utiliza una petición HTTP para leer el archivo local.
  */
   obtenerOpcionesSolicitud():void {
-    this.solicitudService.getLosOption().subscribe((data) => {
+    this.solicitudService.getOpcionesPublicacion().subscribe((data) => {
       this.losDatos = data;
     });
   }

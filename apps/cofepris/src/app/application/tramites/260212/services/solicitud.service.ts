@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LosOption, solicitudModel } from '../models/permiso-maquila.models';
+
+import { OpcionesPublicacion, solicitudModel } from '../models/permiso-maquila.models';
 import { catalogoResponse } from '@libs/shared/data-access-user/src';
 
 @Injectable({
@@ -21,16 +22,16 @@ export class SolicitudService {
     return this.http.get<catalogoResponse[]>('assets/json/260212/clave.json');
   }
 
-  getLosOption(){
-    return  this.http.get<LosOption[]>('/assets/json/260212/opciones-de-radio.json')
+  getOpcionesPublicacion(){
+    return this.http.get<OpcionesPublicacion[]>('/assets/json/260212/opciones-de-radio.json')
   }
 
   getclasificacionProducto(){
-    return  this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
+    return this.http.get<[]>('/assets/json/260212/clasificacionProducto.json')
   }
 
   geTestadoFisico(){
-    return  this.http.get<[]>('/assets/json/260212/estadoFisico.json')
+    return this.http.get<[]>('/assets/json/260212/estadoFisico.json')
   }
   
 
