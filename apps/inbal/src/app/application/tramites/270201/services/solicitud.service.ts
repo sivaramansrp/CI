@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Observable } from 'rxjs';
 
 
 @Injectable({

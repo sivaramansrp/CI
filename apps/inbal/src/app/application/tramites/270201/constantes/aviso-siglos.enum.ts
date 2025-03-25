@@ -25,7 +25,6 @@ export const AVISO_SIGLOS = [
   },
 ];
 
-// á é í ó ú
 export const OBRA_DE_ARTE_HEADER_DATA = [
   'Autor',
   'Título',

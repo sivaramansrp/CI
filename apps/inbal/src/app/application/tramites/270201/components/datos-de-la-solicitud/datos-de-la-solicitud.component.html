@@ -23,7 +23,7 @@
                 <div class="obra-De-Arte-table mt-5">
                     <label class="form-label" for="ciudad">Informacion obra de arte*:</label>
                     <div class="table-responsive">
-                        <ng-table [commonTableHeader]="obraDeArteHeader" [commonTableBody]=""></ng-table>
+                        <ng-table [commonTableHeader]="obraDeArteHeader" [commonTableBody]="obraDeArteRowData"></ng-table>
                     </div>
                 </div>
 
@@ -79,7 +79,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Aduana de entrada'" [required]="true"
                             for="aduanaEntrada" id="aduanaEntrada"
-                            formControlname="aduanaEntrada"></app-catalogo-select>
+                            formControlname="aduanaEntrada" name="aduanaData"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,6 @@
 
 <app-modal [active]="showObraDeArteModal">
     <div class="row">
-        <!-- <c-header-nav></c-header-nav> -->
         <ng-titulo titulo="Informacion de la obra de arte que se pretende importar/exportar" />
         <form [formGroup]="obraDeArteFormgroup">
             <div class="row">
@@ -122,7 +121,7 @@
                 <div class="col-md-12 mt-5">
                     <label class="form-label" for="medidas">Medidas*:</label>
                     <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true"
-                        [layout]="'vertical'" id="medidas" formControlName="medidas" ></app-input-radio>
+                        [layout]="'vertical'" id="medidas" formControlName="medidas" name="medidas"></app-input-radio>
                 </div>
 
                 <div class="col-md-4">
@@ -174,7 +173,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="monedaData" [label]="'Moneda'" [required]="true" for="moneda"
-                            id="moneda" fromControlName="moneda"></app-catalogo-select>
+                            id="moneda" formControlName="moneda" name="moneda"></app-catalogo-select>
                     </div>
                 </div>
 
@@ -190,7 +189,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="arancelariaData" [label]="'Fracción arancelaria'"
                             [required]="true" for="fraccionArancelaria" id="fraccionArancelaria"
-                            formControlname="fraccionArancelaria"></app-catalogo-select>
+                            formControlName="fraccionArancelaria" name="fraccionArancelaria"></app-catalogo-select>
                     </div>
                 </div>
 

@@ -37,6 +37,10 @@ import { ModalComponent } from '../modal/modal.component';
 import { CommonModule } from '@angular/common';
 import { SolicitudService } from '../../services/solicitud.service';
 
+import { TableData } from '../../models/aviso-siglos.models';
+
+import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
+
 const MANIFIESTO_ALERT =
   'Manifiesto que la información sobre la propiedád de la obra(s) y los datos técnicos de la obra(s) son ciertos y verdaderos.*';
 
@@ -84,14 +88,16 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
-
   solicitudFormGroup!: FormGroup;
   obraDeArteFormgroup!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
+    private tramite270201Store: Tramite270201Store,
     private solicitudService: SolicitudService
-  ) {}
+  ) {
+    // Constructor logic can be added here if needed
+  }
 
   ngOnInit(): void {
     this.solicitudService.getOperacionData().subscribe((data) => {
@@ -129,7 +135,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.initializeSolicitudFormGroup();
     this.initializeObraDeArteFormGroup();
 
-
     this.TEXTO_MANIFIESTO_ALERT = `
     <div>
       <div class="form-check">
@@ -148,7 +153,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       pais: new FormControl('', [Validators.required]),
       ciudad: new FormControl('', [Validators.required]),
       medioTransporte: new FormControl('', [Validators.required]),
-      aduanaEntrada: new FormControl('', [Validators.required])
+      aduanaEntrada: new FormControl('', [Validators.required]),
     });
   }
 
@@ -168,19 +173,55 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       moneda: new FormControl('', [Validators.required]),
       propietario: new FormControl('', [Validators.required]),
       fraccionArancelaria: new FormControl('', [Validators.required]),
-      descripcionArancelaria: new FormControl('', [Validators.required])
+      descripcionArancelaria: new FormControl('', [Validators.required]),
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  toggleObraDeArte() {
+  obraDeArteRowData: TableData[] = [];
+
+  toggleObraDeArte(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showObraDeArteModal = !this.showObraDeArteModal;
   }
 
-  
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  submitDeArteForm(){
-    console.log(this.obraDeArteFormgroup.value);
+  submitDeArteForm(): void {
+    const MEDIDAS_VALUE = OPCIONES_DE_BOTON_DE_RADIO.find(
+      (option) => option.value === this.obraDeArteFormgroup.value.medidas
+    )?.label;
+
+    const ARANCELARIA_VALUE = this.arancelariaData.find(
+      (item: Catalogo) => item.id === this.obraDeArteFormgroup.value.fraccionArancelaria
+    )?.descripcion;
+
+    const MONEDA_VALUE = this.monedaData.find(
+      (item: Catalogo) => item.id === this.obraDeArteFormgroup.value.moneda
+    )?.descripcion;
+
+    const OBRA_DE_ARTE_ROW = {
+      tbodyData: [
+        this.obraDeArteFormgroup.value.autor,
+        this.obraDeArteFormgroup.value.titulo,
+        this.obraDeArteFormgroup.value.tecnicaDeRealizacion,
+        MEDIDAS_VALUE,
+        this.obraDeArteFormgroup.value.ancho,
+        this.obraDeArteFormgroup.value.alto,
+        this.obraDeArteFormgroup.value.profundidad,
+        this.obraDeArteFormgroup.value.diametro,
+        this.obraDeArteFormgroup.value.variables,
+        this.obraDeArteFormgroup.value.anoDeCreacion,
+        this.obraDeArteFormgroup.value.avaluo,
+        MONEDA_VALUE,
+        this.obraDeArteFormgroup.value.propietario,
+        ARANCELARIA_VALUE,
+        this.obraDeArteFormgroup.value.descripcionArancelaria,
+      ],
+    };
+
+    this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+
+    this.tramite270201Store.setObraDeArte(this.obraDeArteRowData);
+
+    this.showTableDiv = !this.showTableDiv;
+    this.showObraDeArteModal = !this.showObraDeArteModal;
   }
 }
