@@ -7,7 +7,7 @@
     <div class="row mb-5">
       <div class="col-md-4">
         <app-catalogo-select
-          [catalogo]="paisProc"
+          [catalogo]="elementosDeBloque"
           [label]="'Bloque'"
           [placeholder]="'Seleccione un bloque'"
           formControlName="bloque"
@@ -33,13 +33,13 @@
     <div class="col-md-8">
       <div class="form-group">
         <label for="descripcion" class="form-label"
-          >Uso(s) especÍfico(s) de la mercancÍa*:</label
+          >Uso(s) especÍfico de la mercancÍa*:</label
         >
         <textarea
           class="form-control"
           rows="2"
           id="usoEspecifico"
-          placeholder="Uso(s) especÍfico(s) de la mercancÍa*:"
+          placeholder="Uso(s) especÍfico de la mercancÍa*:"
           formControlName="usoEspecifico"
           (change)="setValoresStore(paisForm,'usoEspecifico', 'setUsoEspecifico')"
         ></textarea>

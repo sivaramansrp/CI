@@ -1,19 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  CrosslistState,
-  CrosslistStore,
-} from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
 import { ExportacionMineralesDeHierroService } from '../../services/exportacion-minerales-de-hierro.service';
 import { HttpClient } from '@angular/common/http';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
 import { ProductoOption } from '../../../../shared/constantes/vehiculos-adaptados.enum';
-import { TEXTOS } from '../../../130202/enums/representacion-federal.enum';
+import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130202Query } from '../../estados/queries/tramite130202.query';
 import { Tramite130202Store } from '../../estados/tramites/tramites130202.store';
@@ -137,10 +132,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
   /**
-   * @description Arreglo que almacena un catálogo de países.
+   * @description Arreglo que almacena un catálogo de elementosDeBloque.
    * @type {Catalogo[]}
    */
-  paisProc: Catalogo[] = [];
+  elementosDeBloque: Catalogo[] = [];
   /**
    * @description Arreglo que contiene un catálogo de países organizados por bloque.
    * @type {Catalogo[]}
@@ -166,23 +161,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {any}
    */
   TEXTOS = TEXTOS;
-    /**
-   * Estado del componente Crosslist.
-   * @type {CrosslistState}
-   */
-    public crosslistState!: CrosslistState;
-
-    /**
-     * Lista de fechas.
-     * @type {string[]}
-     */
-    fechas!: string[];
-  
-    /**
-     * Datos de las fechas.
-     * @type {string[]}
-     */
-    fechasDatos!: string[];
   /**
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -190,18 +168,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {Tramite130202Store} tramite130202Store - Store para gestionar el estado del trámite 130202.
    * @param {Tramite130202Query} tramite130202Query - Query para consultar el estado del trámite 130202.
    * @param {ExportacionMineralesDeHierroService} exportacionMineralesDeHierroService - Servicio para la exportación de minerales de hierro.
-   * @param {ChangeDetectorRef} changeDetectorRef - Servicio para detectar cambios en el componente.
-   * @param {CrosslistQuery} crosslistQuery - Query para consultar el estado del componente Crosslist.
-   * @param {CrosslistStore} crosslistStore - Store para gestionar el estado del componente Crosslist.
    */
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private tramite130202Store: Tramite130202Store,
     private tramite130202Query: Tramite130202Query,
-    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService,
-    private crosslistQuery: CrosslistQuery,
-    private crosslistStore: CrosslistStore
+    private exportacionMineralesDeHierroService: ExportacionMineralesDeHierroService
   ) {
     //constructor
   }
@@ -219,26 +192,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
  
-        /**
-     * Suscripción al estado del componente Crosslist.
-     * @type {Observable<CrosslistState>}
-     */
-        this.crosslistQuery.selectCrosslist$
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((state) => {
-          /**
-           * Actualiza la lista de fechas con el estado recibido.
-           * @type {string[]}
-           */
-          this.fechas = state.fechas || [];
-  
-          /**
-           * Actualiza los datos de las fechas con el estado recibido o con la lista de fechas.
-           * @type {string[]}
-           */
-          this.fechasDatos = state.fechasDatos || this.fechas;
-        });
-
     this.tramite130202Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
@@ -572,7 +525,7 @@ listaDePaisesDisponibles(): void {
   this.exportacionMineralesDeHierroService
     .getListaDePaisesDisponibles()
     .subscribe((data) => {
-      this.paisProc = data;
+      this.elementosDeBloque = data;
     });
 }
 /**
@@ -587,7 +540,6 @@ fetchPaisesPorBloque(_bloqueId: number): void {
       this.selectRangoDias = this.paisesPorBloque.map(
         (pais: Catalogo) => pais.descripcion
       );
-      this.crosslistStore.establecerFechas(this.selectRangoDias);
     });
 }
 /**

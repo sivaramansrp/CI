@@ -28,7 +28,7 @@ export class ExportacionMineralesDeHierroComponent {
   };
 
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();

@@ -47,7 +47,7 @@ export class PaisProcendenciaComponent implements OnChanges {
  * Lista de países de procedencia.
  * @type {Catalogo[]}
  */
-@Input() paisProc: Catalogo[] = [];
+@Input() elementosDeBloque: Catalogo[] = [];
 
 /**
  * Lista de países agrupados por bloques.
