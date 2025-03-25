@@ -1,4 +1,4 @@
-interface PersmisoCalender {
+interface PersmisoCancelar {
     folioTramite: string;
     tipoSolicitud: string;
     regimen: string;
@@ -6,35 +6,35 @@ interface PersmisoCalender {
     condicionDeLaMercancia: string;
     fraccionArancelaria: string;
   }
-  export const PERSMISO_CALENDER_TABLE = [
+  export const PERSMISO_CANCELAR_TABLE = [
     {
-      encabezado: 'Folio tramite',
-      clave: (ele: PersmisoCalender) => ele.folioTramite,
+      encabezado: 'Folio trámite',
+      clave: (ele: PersmisoCancelar) => ele.folioTramite,
       orden: 1
     },
     {
       encabezado: 'Tipo solicitud',
-      clave: (ele: PersmisoCalender) => ele.tipoSolicitud,
+      clave: (ele: PersmisoCancelar) => ele.tipoSolicitud,
       orden: 2
     },
     {
-      encabezado: 'Regimen',
-      clave: (ele: PersmisoCalender) => ele.regimen,
+      encabezado: 'Régimen',
+      clave: (ele: PersmisoCancelar) => ele.regimen,
       orden: 3
     },
     {
-      encabezado: 'Clasificacion regimen',
-      clave: (ele: PersmisoCalender) => ele.clasificacionRegimen,
+      encabezado: 'Clasificación régimen',
+      clave: (ele: PersmisoCancelar) => ele.clasificacionRegimen,
       orden: 4
     },
     {
-      encabezado: 'Condicion de la mercancia',
-      clave: (ele: PersmisoCalender) => ele.condicionDeLaMercancia,
+      encabezado: 'Condición de la mercancía',
+      clave: (ele: PersmisoCancelar) => ele.condicionDeLaMercancia,
       orden: 5
     },
     {
-      encabezado: 'Fraccion arancelaria',
-      clave: (ele: PersmisoCalender) => ele.fraccionArancelaria,
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: PersmisoCancelar) => ele.fraccionArancelaria,
       orden: 6
     }
   ]
