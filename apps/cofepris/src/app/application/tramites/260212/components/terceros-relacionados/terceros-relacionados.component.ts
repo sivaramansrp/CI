@@ -29,8 +29,7 @@ import { TercerosService } from '../../services/terceros.service';
 
 import {
   NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO,
-  PERSONA_OPCIONES_DE_BOTON_DE_RADIO,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
+  PERSONA_OPCIONES_DE_BOTON_DE_RADIO
 } from '../../constantes/permiso-maquila.enum';
 import { ModalComponent } from '../modal/modal.component';
 
@@ -261,6 +260,10 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+    this.tercerosService.getEncabezadoDeTabla().subscribe((data: any) => {
+      this.tablaEncabezadoData = data.columns;
+    });
+
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -690,36 +693,10 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
-   * Encabezados para la tabla de fabricantes.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
-   *
-   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de fabricantes.
+   * Almacena los datos del encabezado de la tabla.
+   * Esta propiedad se utiliza para definir las columnas que se mostrarán en la tabla.
    */
-  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
-  /**
-   * Encabezados para la tabla de destinatarios.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
-   *
-   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de destinatarios.
-   */
-  destinatarioHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
-  /**
-   * Encabezados para la tabla de proveedores.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
-   *
-   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de proveedores.
-   */
-  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
-  /**
-   * Encabezados para la tabla de facturadores.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
-   *
-   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de facturadores.
-   */
-  facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  tablaEncabezadoData: string[] = [];
 
   public nacional = false;
 
