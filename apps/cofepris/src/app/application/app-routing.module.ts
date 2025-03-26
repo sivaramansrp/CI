@@ -9,6 +9,13 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  },
+  {
     path: 'importacion-productos',
     loadChildren: () =>
       import('./tramites/260101/importacion-productos.module').then(
