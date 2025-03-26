@@ -14,5 +14,14 @@
     "numeroRegistroProductos": "254023028953",
     "fechaVencimiento": "2023-07-05",
     "fechaExpedicion": "2023-07-05"
+  },
+  {
+    "fraccionArancelaria": "59080003",
+    "nombreTecnico": "prueba para RPE",
+    "nombreComercial": "nombre comercial",
+    "numeroRegistroProductos": "254023028966",
+    "fechaVencimiento": "2023-07-14",
+    "fechaExpedicion": "2023-07-14"
   }
+  
 ]

@@ -22,7 +22,7 @@
       </div>
       <div class="col-md-8 mb-3">
         <label>Razón social:</label>
-        <input type="text" class="form-control" [ngClass]="{ GrayClass: registroForm.get('validacionForm.apellidoPrimer')?.value !== '' }" id="denominacion" [readonly]=" registroForm.get('validacionForm.apellidoPrimer')?.value !== '' " formControlName="razonSocial" (change)=" setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial') " />
+        <input type="text" class="form-control" [ngClass]="{ 'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== '' }" id="denominacion" [readonly]=" registroForm.get('validacionForm.apellidoPrimer')?.value !== '' " formControlName="razonSocial" (change)=" setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial') " />
       </div>
     </div>
     <ng-titulo titulo="Domicilio del destinatario" />
@@ -63,12 +63,12 @@
     </div>
     <div class="row">
       <div class="col-md-8 mb-3">
-        <app-catalogo-select [catalogo]="nacion.catalogos" [label]="nacion.labelNombre" [placeholder]="nacion.primerOpcion" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />
     <div class="col-md-8 mb-3">
-      <app-catalogo-select [catalogo]="transporte.catalogos" [label]="transporte.labelNombre" [placeholder]="transporte.primerOpcion" [required]="true" formControlName="transporte" (change)=" setValoresStore(validacionForm, 'transporte', 'setTransporte') "></app-catalogo-select>
+      <app-catalogo-select [catalogo]="options" [label]="'Medio de transporte'" [required]="true" formControlName="transporte" (change)=" setValoresStore(validacionForm, 'transporte', 'setTransporte') "></app-catalogo-select>
     </div>
   </ng-container>
 </form>

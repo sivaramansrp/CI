@@ -1,4 +1,5 @@
 import {
+  Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
   TituloComponent,
@@ -11,7 +12,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110221State, Tramite110221Store } from '../../state/Tramite110221.store';
@@ -28,31 +29,12 @@ import { Tramite110221Query } from '../../state/Tramite110221.query';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-  ],
+],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
-  /**
-   * Lista de suscripciones activas.
-   */
-  private subscriptions: Subscription[] = [];
-
-  /**
-   * Suscripción para obtener el catálogo de idiomas.
-   */
-  getIdiomaSubscripcion!: Subscription;
-
-  /**
-   * Suscripción para obtener el catálogo de entidades.
-   */
-  getEntidadSubscripcion!: Subscription;
-
-  /**
-   * Suscripción para obtener el catálogo de representaciones.
-   */
-  getRepresentacionSubscripcion!: Subscription;
-
+ 
   /**
    * Formulario reactivo para los datos del certificado.
    */
@@ -97,6 +79,29 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Descripciones de las entidades federativas.
    */
   entidadDescripcion: unknown[] = [];
+/**
+ * Notificador para destruir observables al destruir el componente.
+ * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+ */
+private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+/**
+ * Opciones del catálogo de idiomas.
+ * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
+ */
+optionsIdioma!: Catalogo[];
+
+/**
+ * Opciones del catálogo de entidades federativas.
+ * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
+ */
+optionsEntidad!: Catalogo[];
+
+/**
+ * Opciones del catálogo de representaciones federales.
+ * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
+ */
+optionsRepresentacion!: Catalogo[];
 
   /**
    * Constructor del componente.
@@ -145,59 +150,28 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
 
-    this.subscriptions.push(
-      this.query.selectIdioma$.subscribe((idioma) => {
-        this.idioma = {
-          labelNombre: 'Idioma',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: idioma ?? [],
-        };
-      })
-    );
+    if (
+      this.entidadDescripcion.includes('8') &&
+      this.entidadFederativaData === 'DURANGO'
+    ) {
+      this.isJustificacion = true;
+    } else {
+      this.isJustificacion = false;
+    }
 
-    this.subscriptions.push(
-      this.query.selectEntidad$.subscribe((entidad) => {
-        this.entidad = {
-          labelNombre: 'Entidad federativa',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: entidad ?? [],
-        };
-        this.entidadDescripcion = this.entidad.catalogos;
-        if (
-          this.entidadDescripcion.includes('8') &&
-          this.entidadFederativaData === 'DURANGO'
-        ) {
-          this.isJustificacion = true;
-        } else {
-          this.isJustificacion = false;
-        }
-      })
-    );
-
-    this.subscriptions.push(
-      this.query.selectRepresentacion$.subscribe((representacion) => {
-        this.representacion = {
-          labelNombre: 'Representación federal',
-          required: true,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: representacion ?? [],
-        };
-      })
-    );
+   
   }
 
   /**
    * Obtiene el catálogo de idiomas desde el servicio.
    */
   getIdioma(): void {
-    this.getIdiomaSubscripcion = this.registroService
-      .getIdioma()
+   this.registroService
+      .getIdioma().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setIdioma(RESPONSE);
+          this.optionsIdioma = resp.data as Catalogo [];
+          
         }
       });
   }
@@ -206,12 +180,11 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de entidades desde el servicio.
    */
   getEntidad(): void {
-    this.getEntidadSubscripcion = this.registroService
-      .getEntidad()
+    this.registroService
+      .getEntidad().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setEntidad(RESPONSE);
+          this.optionsEntidad = resp.data as Catalogo [];
         }
       });
   }
@@ -220,12 +193,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de representaciones desde el servicio.
    */
   getRepresentacion(): void {
-    this.getRepresentacionSubscripcion = this.registroService
-      .getRepresentacion()
+    
+    this.registroService
+      .getRepresentacion().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setRepresentacion(RESPONSE);
+          this.optionsRepresentacion = resp.data= resp.data as Catalogo [];
         }
       });
   }
@@ -253,6 +226,15 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+
+    if (VALOR == 8 && metodoNombre == 'setEntidad' && this.entidadFederativaData === 'DURANGO'
+    ) {
+      this.isJustificacion = true;
+    } else {
+      this.isJustificacion = false;
+    }
+
+
   }
 
   /**
@@ -297,15 +279,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    if (this.getIdiomaSubscripcion) {
-      this.getIdiomaSubscripcion.unsubscribe();
-    }
-    if (this.getEntidadSubscripcion) {
-      this.getEntidadSubscripcion.unsubscribe();
-    }
-    if (this.getRepresentacionSubscripcion) {
-      this.getRepresentacionSubscripcion.unsubscribe();
-    }
+    
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
