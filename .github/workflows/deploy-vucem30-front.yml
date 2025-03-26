@@ -204,8 +204,7 @@ jobs:
       - name: Install dependencies
         run: |
           export PYTHON=/usr/bin/python3
-          npm install --force --no-optional || npm install --force --no-optional --legacy-peer-deps
-
+          npm install --force --python=/usr/bin/python3 || npm install --force --python=/usr/bin/python3 --legacy-peer-deps
       - name: Install NX globally
         run: |
           # Instalar NX globalmente
