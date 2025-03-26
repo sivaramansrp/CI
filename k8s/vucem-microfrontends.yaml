@@ -1,0 +1,229 @@
+---
+# Namespace for VUCEM Microfrontends
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vucem-${ENV}
+---
+# ConfigMap for environment variables
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vucem-frontend-config
+  namespace: vucem-${ENV}
+data:
+  NODE_ENV: "production"
+  API_URL: "https://api-vucem-${ENV}.example.com"
+---
+# Deployment for VUCEM Microfrontends
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vucem-microfrontends
+  namespace: vucem-${ENV}
+spec:
+  replicas: ${REPLICAS}
+  selector:
+    matchLabels:
+      app: vucem-microfrontends
+  template:
+    metadata:
+      labels:
+        app: vucem-microfrontends
+        env: ${ENV}
+    spec:
+      containers:
+        - name: dashboard
+          image: ${REGISTRY}/vucem-front-dashboard:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: login
+          image: ${REGISTRY}/vucem-front-login:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: aga
+          image: ${REGISTRY}/vucem-front-aga:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: agriculture
+          image: ${REGISTRY}/vucem-front-agriculture:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: se
+          image: ${REGISTRY}/vucem-front-se:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: semarnat
+          image: ${REGISTRY}/vucem-front-semarnat:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: agace
+          image: ${REGISTRY}/vucem-front-agace:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: funcionario
+          image: ${REGISTRY}/vucem-front-funcionario:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: cofepris
+          image: ${REGISTRY}/vucem-front-cofepris:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+        - name: amecafe
+          image: ${REGISTRY}/vucem-front-amecafe:${TAG}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+---
+# Service for VUCEM Microfrontends
+apiVersion: v1
+kind: Service
+metadata:
+  name: vucem-frontend-svc
+  namespace: vucem-${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+# Ingress for VUCEM Microfrontends
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: vucem-frontend-ingress
+  namespace: vucem-${ENV}
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - vucem-${ENV}.example.com
+    secretName: vucem-tls-cert
+  rules:
+  - host: vucem-${ENV}.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: vucem-frontend-svc
+            port:
+              number: 80
+---
+# HorizontalPodAutoscaler for VUCEM Microfrontends
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: vucem-microfrontends-hpa
+  namespace: vucem-${ENV}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vucem-microfrontends
+  minReplicas: ${MIN_REPLICAS}
+  maxReplicas: ${MAX_REPLICAS}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
