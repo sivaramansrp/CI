@@ -1,89 +1,414 @@
-name: CI/CD deploy-vucem30-front
-
+name: CI/CD VUCEM Microfrontends
 on:
   workflow_dispatch:
-
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      deployment_mode:
+        description: 'Deployment mode'
+        required: true
+        default: 'changed'
+        type: choice
+        options:
+          - changed
+          - selected
+          - all
+      selected_apps:
+        description: 'Select apps to deploy (comma-separated, only used when deployment_mode is "selected")'
+        required: false
+        default: 'dashboard'
+        type: string
   push:
-    branches: [ "develop" ]
+    branches: [ "develop", "main" ]
     paths:
-      - 'frontend/**'
+      - 'apps/**'
+      - 'libs/**'
+      - 'docker/**'
+      - 'package.json'
+      - 'nx.json'
+      - '.github/workflows/**'
+
+env:
+  NODE_VERSION: '20'
+  NX_VERSION: '16.10.0'
+  REGISTRY: ghcr.io
+  BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
+  ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe'
 
 jobs:
-  deploy:
-    name: Deploy deploy-vucem30-front and build Docker image
+  setup:
+    name: Setup and Check Environment
     runs-on: ubuntu-latest
-
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
+      final_apps: ${{ steps.determine-apps.outputs.final_apps }}
+      apps_matrix: ${{ steps.matrix-prep.outputs.apps_matrix }}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set environment
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.14.0
+          node-version: ${{ env.NODE_VERSION }}
 
-      - name: Instalar NX globalmente
-        run: npm install -g nx@19.3.1
-      
-      - name: Set Sonar Version Number
-        run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
-        
-      - name: Define SonarScanner full name
-        run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
-        
-      - name: Listar archivos
-        run: ls -la
-  
-      - name: Download SonarScanner
+      - name: Install NX globally
+        run: npm install -g nx@${{ env.NX_VERSION }}
+
+      - name: Detect changed apps
+        id: detect-changes
         run: |
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
-          unzip sonar-scanner.zip
+          # Detect changes in apps directory
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^apps/' || echo "")
           
-      - name: Verify SonarScanner Installation
+          if [ -z "$CHANGED_FILES" ]; then
+            # Check for changes in shared libs that would affect all apps
+            SHARED_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
+            if [ -n "$SHARED_CHANGES" ]; then
+              # If shared libs changed, mark all apps as changed
+              CHANGED_APPS="${{ env.ALL_APPS }}"
+            else
+              CHANGED_APPS=""
+            fi
+          else
+            # Extract the app names from changed files
+            CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
+          
+            # Always include dashboard when any app changes
+            if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
+              CHANGED_APPS="dashboard,$CHANGED_APPS"
+            fi
+          fi
+          
+          echo "Changed apps: $CHANGED_APPS"
+          echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
+
+      - name: Determine apps to deploy
+        id: determine-apps
         run: |
-          ./${{ env.SONAR }}/bin/sonar-scanner --version
-        
+          # Default to detected changes
+          FINAL_APPS=""
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Handle manual deployment mode selection
+            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
+              FINAL_APPS="${{ env.ALL_APPS }}"
+              echo "Using all apps mode"
+            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
+              FINAL_APPS="${{ github.event.inputs.selected_apps }}"
+              echo "Using selected apps mode: $FINAL_APPS"
+            else
+              # Changed mode - use detected changes or fallback to dashboard
+              if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+                FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+                echo "Using detected changed apps: $FINAL_APPS"
+              else
+                FINAL_APPS="dashboard"
+                echo "No changes detected, defaulting to dashboard"
+              fi
+            fi
+          else
+            # Auto mode for push events
+            if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+              FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+            else
+              # No changes detected, workflow will skip the build job
+              FINAL_APPS=""
+            fi
+          fi
+          
+          echo "final_apps=$FINAL_APPS" >> $GITHUB_OUTPUT
+
+      - name: Prepare matrix format
+        id: matrix-prep
+        if: steps.determine-apps.outputs.final_apps != ''
+        run: |
+          # Convertir a formato JSON para la matriz
+          APPS_ARRAY=$(echo "${{ steps.determine-apps.outputs.final_apps }}" | tr ',' '\n')
+          APPS_JSON="["
+          
+          # Construir array JSON manualmente para evitar dependencias externas
+          FIRST=true
+          for APP in $APPS_ARRAY; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              APPS_JSON="${APPS_JSON},"
+            fi
+            APPS_JSON="${APPS_JSON}\"${APP}\""
+          done
+          
+          APPS_JSON="${APPS_JSON}]"
+          echo "Matrix format: $APPS_JSON"
+          echo "apps_matrix=$APPS_JSON" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build Microfrontends
+    needs: setup
+    if: needs.setup.outputs.final_apps != ''
+    runs-on: ubuntu-latest # Usando el runner de GitHub Actions directamente, sin contenedor
+    timeout-minutes: 30 # Límite de tiempo para todo el job
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
+      fail-fast: false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
+
+      - name: Set npm and NX environment variables
+        run: |
+          # npm environment variables
+          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
+          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+          
+          # Disable NX native modules to avoid binary compatibility issues
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install dependencies
+      - name: Install dependencies with specific options
         run: |
-          npm install --force
-          npm ci
-          
-      - name: Build Docker images from docker-compose
-        run: docker compose -f ./docker/modulefederation-microfrontends.yml build
-        
+          npm install --legacy-peer-deps --no-package-lock
+
+      - name: Install NX globally with specific version
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
+
+      - name: Build ${{ matrix.app }}
+        run: |
+          # Usar comando directo sin npx para evitar problemas de binarios
+          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache
+
+      - name: Verify build output
+        run: |
+          ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
+
       - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
-      - name: Login to GitHub Packages
-        uses: docker/login-action@v1
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build image and push to GitHub Container Registry
-        uses: docker/build-push-action@v2
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-${{ matrix.app }}
+          tags: |
+            type=raw,value=${{ needs.setup.outputs.environment }}
+            type=sha,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+          labels: |
+            org.opencontainers.image.title=${{ matrix.app }}
+            org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
         with:
           context: .
-          tags: |
-            ghcr.io/vucem30/dockerized-front-vucem30:latest
-          push: ${{ github.ref == 'refs/heads/develop' }}
+          file: ./apps/${{ matrix.app }}/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          build-args: |
+            NODE_ENV=production
+            APP_ENV=${{ needs.setup.outputs.environment }}
+          timeout-minutes: 15
+          no-cache: ${{ contains(matrix.app, 'se') }}
 
-      - name: Execute remote command (last one)
+  deploy:
+    name: Deploy Microfrontends
+    needs: [setup, build]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.environment }}
+    steps:
+      - name: Checkout repository for Kubernetes manifests
+        uses: actions/checkout@v3
+
+      - name: Create Kubernetes deployment manifest
+        run: |
+          mkdir -p k8s
+          cat > k8s/microfrontends-deployment.yaml << EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: vucem-microfrontends-${{ needs.setup.outputs.environment }}
+            labels:
+              app: vucem-microfrontends
+              env: ${{ needs.setup.outputs.environment }}
+          spec:
+            replicas: ${{ needs.setup.outputs.environment == 'prod' && 2 || 1 }}
+            selector:
+              matchLabels:
+                app: vucem-microfrontends
+                env: ${{ needs.setup.outputs.environment }}
+            template:
+              metadata:
+                labels:
+                  app: vucem-microfrontends
+                  env: ${{ needs.setup.outputs.environment }}
+              spec:
+                imagePullSecrets:
+                  - name: github-container-registry
+                containers:
+          EOF
+          
+          # Add containers for each app to deploy
+          for app in $(echo "${{ needs.setup.outputs.final_apps }}" | tr ',' ' '); do
+            cat >> k8s/microfrontends-deployment.yaml << EOF
+                - name: $app
+                  image: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-$app:${{ needs.setup.outputs.environment }}
+                  imagePullPolicy: Always
+                  ports:
+                    - containerPort: 80
+                  resources:
+                    requests:
+                      memory: "128Mi"
+                      cpu: "100m"
+                    limits:
+                      memory: "256Mi"
+                      cpu: "500m"
+                  livenessProbe:
+                    httpGet:
+                      path: /
+                      port: 80
+                    initialDelaySeconds: 30
+                    timeoutSeconds: 3
+                    periodSeconds: 30
+                  readinessProbe:
+                    httpGet:
+                      path: /
+                      port: 80
+                    initialDelaySeconds: 10
+                    timeoutSeconds: 3
+                    periodSeconds: 10
+          EOF
+          done
+
+      - name: Create Kubernetes service manifest
+        run: |
+          cat > k8s/microfrontends-service.yaml << EOF
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: vucem-microfrontends-svc-${{ needs.setup.outputs.environment }}
+            labels:
+              app: vucem-microfrontends
+              env: ${{ needs.setup.outputs.environment }}
+          spec:
+            selector:
+              app: vucem-microfrontends
+              env: ${{ needs.setup.outputs.environment }}
+            ports:
+              - port: 80
+                targetPort: 80
+            type: ClusterIP
+          EOF
+
+      - name: Create Ingress manifest
+        run: |
+          cat > k8s/microfrontends-ingress.yaml << EOF
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: vucem-microfrontends-ingress-${{ needs.setup.outputs.environment }}
+            annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /
+          spec:
+            ingressClassName: nginx
+            rules:
+              - host: vucem-${{ needs.setup.outputs.environment }}.example.com
+                http:
+                  paths:
+                    - path: /
+                      pathType: Prefix
+                      backend:
+                        service:
+                          name: vucem-microfrontends-svc-${{ needs.setup.outputs.environment }}
+                          port:
+                            number: 80
+          EOF
+
+      - name: Execute remote deployment
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.REMOTE_SRV_IP }}
           username: ${{ secrets.REMOTE_SRV_USER }}
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
+          script_stop: true
           script: |
+            echo "Deploying VUCEM Microfrontends to ${{ needs.setup.outputs.environment }}..."
             cd /home/ubuntu/v30
-            microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
+            
+            # Apply Kubernetes manifests from a directory
+            mkdir -p k8s-${{ needs.setup.outputs.environment }}
+            cat > k8s-${{ needs.setup.outputs.environment }}/vucem-microfrontends.yaml << 'MANIFESTSEOF'
+            ${{ secrets.KUBECONFIG }}
+            MANIFESTSEOF
+            
+            # Apply Kubernetes manifests
+            microk8s kubectl apply -f k8s-${{ needs.setup.outputs.environment }}/vucem-microfrontends.yaml
+            
+            # Restart the deployment to pull the latest images
+            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
+            
+            # Wait for rollout to complete
+            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
