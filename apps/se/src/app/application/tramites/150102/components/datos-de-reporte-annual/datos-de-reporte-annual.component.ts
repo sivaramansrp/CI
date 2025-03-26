@@ -52,7 +52,48 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 1,
       },
-      // Resto de columnas...
+      {
+        encabezado: 'Clave sector ',
+        llave: 'sector',
+        clave: (item: BienesProducidos) => item.sector,
+        opcionDeEntrada: TablaCampoSeleccion.NONE,
+        orden: 2,
+      },
+      {
+        encabezado: 'Fraccion arancelaria',
+        llave: 'fraccion',
+        clave: (item: BienesProducidos) => item.fraccion,
+        opcionDeEntrada: TablaCampoSeleccion.INPUT,
+        orden: 3,
+      },
+      {
+        encabezado: 'Unidad de medida',
+        llave: 'unidadMedida',
+        clave: (item: BienesProducidos) => item.unidadMedida,
+        opcionDeEntrada: TablaCampoSeleccion.INPUT,
+        orden: 4,
+      },
+      {
+        encabezado: 'Volumen del total de bienes producidos',
+        llave: 'totalBienesProducidos',
+        clave: (item: BienesProducidos) => item.totalBienesProducidos,
+        opcionDeEntrada: TablaCampoSeleccion.INPUT,
+        orden: 5,
+      },
+      {
+        encabezado: 'Volumen del mercado nacional',
+        llave: 'mercadoNacional',
+        clave: (item: BienesProducidos) => item.mercadoNacional,
+        opcionDeEntrada: TablaCampoSeleccion.INPUT,
+        orden: 6,
+      },
+      {
+        encabezado: 'Volumen de exportaciones',
+        llave: 'exportaciones',
+        clave: (item: BienesProducidos) => item.exportaciones,
+        opcionDeEntrada: TablaCampoSeleccion.INPUT,
+        orden: 7,
+      },
     ];
 
   /** Instancia de bienes producidos seleccionada */
@@ -67,8 +108,43 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /** Configuración de la tabla de bienes producidos */
   bienesProducidosConfiguracionTabla: ConfiguracionColumna<BienesProducidos>[] =
     [
-      // Columnas de configuración...
+      {
+        encabezado: 'Bienes producidos',
+        clave: (item: BienesProducidos) => item.bienProducido,
+        orden: 1,
+      },
+      {
+        encabezado: 'Clave sector ',
+        clave: (item: BienesProducidos) => item.sector,
+        orden: 2,
+      },
+      {
+        encabezado: 'Fraccion arancelaria',
+        clave: (item: BienesProducidos) => item.fraccion,
+        orden: 3,
+      },
+      {
+        encabezado: 'Unidad de medida',
+        clave: (item: BienesProducidos) => item.unidadMedida,
+        orden: 4,
+      },
+      {
+        encabezado: 'Volumen del total de bienes producidos',
+        clave: (item: BienesProducidos) => item.totalBienesProducidos,
+        orden: 5,
+      },
+      {
+        encabezado: 'Volumen del mercado nacional',
+        clave: (item: BienesProducidos) => item.mercadoNacional,
+        orden: 6,
+      },
+      {
+        encabezado: 'Volumen de exportaciones',
+        clave: (item: BienesProducidos) => item.exportaciones,
+        orden: 7,
+      }
     ];
+
 
   /**
    * @description Constructor que inicializa las dependencias necesarias.

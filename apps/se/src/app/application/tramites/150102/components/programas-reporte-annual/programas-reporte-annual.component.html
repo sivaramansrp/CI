@@ -5,20 +5,39 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha
+          <input
+            type="text"
+            class="form-control"
+            formControlName="inicio"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'MM-YYYY', minMode: 'month' }"
+          />
+          <!-- <input-fecha
             class="width"
             [setFecha]="formProgrmasReporte.get('inicio')?.value"
             [datos]="configuracionFechaInicioVigencia"
-          ></input-fecha>
+          ></input-fecha> -->
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha
+          <input
+            type="text"
+            class="form-control"
+            formControlName="fin"
+            bsDatepicker
+            [bsConfig]="{ dateInputFormat: 'MM-YYYY', minMode: 'month' }"
+          />
+          <div class="input-group-append">
+            <span class="input-group-text">
+              <i class="fa fa-calendar"></i>
+            </span>
+          </div>
+          <!-- <input-fecha
             class="width"
             [setFecha]="formProgrmasReporte.get('fin')?.value"
             [datos]="configuracionFechaFinVigencia"
-          ></input-fecha>
+          ></input-fecha> -->
         </div>
       </div>
       <div class="col-md-4"></div>

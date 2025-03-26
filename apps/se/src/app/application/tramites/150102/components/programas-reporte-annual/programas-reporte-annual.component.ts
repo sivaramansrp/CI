@@ -29,7 +29,10 @@ import { takeUntil } from 'rxjs';
 export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
   formProgrmasReporte!: FormGroup;
-
+  bsConfig = {
+    dateInputFormat: 'MM/YYYY', // Set the input format to MM/YYYY
+    minMode: 'month' // Restrict selection to month and year only
+  };
   /** Configuración de la fecha de fin de vigencia */
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fin',
@@ -103,8 +106,8 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.formProgrmasReporte = this.fb.group({
-      inicio: [{ value: this.solicitud150102State.inicio, disabled: true }],
-      fin: [{ value: this.solicitud150102State.fin, disabled: true }],
+      inicio: [{ value: this.solicitud150102State.inicio, disabled: false }],
+      fin: [{ value: this.solicitud150102State.fin, disabled: false }],
       folioPrograma: [
         { value: this.solicitud150102State.folioPrograma, disabled: true },
       ],

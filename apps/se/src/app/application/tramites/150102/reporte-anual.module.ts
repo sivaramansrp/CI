@@ -1,6 +1,7 @@
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { AcusePageComponent } from './components/acuse-page/acuse-page.component';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -45,7 +46,8 @@ import { provideHttpClient } from '@angular/common/http';
     TablaConEntradaComponent,
     AcuseComponent,
     AlertComponent,
-    AcusePageComponent
+    AcusePageComponent,
+    BsDatepickerModule.forRoot(),
   ],
   providers: [provideHttpClient(), ToastrService],
 })
