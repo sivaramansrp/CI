@@ -1,0 +1,162 @@
+<div class="container">
+  <ng-titulo titulo="Anexo I" />
+  <ng-alert [CONTENIDO]="anexoUnoAlerta"></ng-alert>
+
+  <form [formGroup]="anexoUnoFormGroup">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fraccionArancelaria"
+            >Fracción arancelaria del producto:</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="fraccionArancelaria"
+            formControlName="fraccionArancelaria"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="descripcion" class="form-label text-start"
+            >Descripción:</label
+          >
+          <textarea
+            id="descripcion"
+            class="form-control"
+            style="height: 60%; resize: none"
+            formControlName="descripcion"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 container text-end mt-5">
+        <button class="btn btn-default me-2" (click)="eliminarAnexoUno()">
+          Eliminar
+        </button>
+        <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">
+          Agregar
+        </button>
+        <button
+          class="btn btn-primary"
+          (click)="setRuta('proveedor-por-archivo', 'IMPORT')"
+        >
+          Carga por archivo
+        </button>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="anexoConfiguartion.anexoUnoTablaSeleccionRadio"
+        [configuracionTabla]="anexoConfiguartion.anexoUnoEncabezadoDeTabla"
+        [datos]="anexoUnoTablaLista"
+        (filaSeleccionada)="setAnexoUnoLista($event)"
+      ></app-tabla-dinamica>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-12 container text-end mt-5">
+      <button
+        class="btn btn-default me-2"
+        (click)="setRuta('complementar-fraccion', 'IMPORT')"
+      >
+        Complementar Función
+      </button>
+
+      <button
+        class="btn btn-primary me-2"
+        (click)="setRuta('contenedor-proveedor-cliente', 'IMPORT')"
+      >
+        Proveedor Cliente
+      </button>
+      <button
+        class="btn btn-primary me-2"
+        (click)="setRuta('proyecto-immex', 'IMPORT')"
+      >
+        Proyecto IMMEX
+      </button>
+
+      <button
+        class="btn btn-primary"
+        (click)="setRuta('proveedor-por-archivo', 'IMPORT')"
+      >
+        Proveedor Cliente por Archivo
+      </button>
+    </div>
+  </div>
+
+  <form class="row mt-5" [formGroup]="anexoDosFormGroup">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fraccionArancelaria"
+            >Fracción arancelaria de la mercancía:</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="fraccionArancelaria"
+            formControlName="fraccionArancelaria"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="descripcion" class="form-label text-start"
+            >Descripción:</label
+          >
+          <textarea
+            id="descripcion"
+            class="form-control"
+            style="height: 60%; resize: none"
+            formControlName="descripcion"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 container text-end mt-5">
+        <button class="btn btn-default me-2" (click)="eliminarAnexoDos()">
+          Eliminar
+        </button>
+        <button class="btn btn-primary me-2" (click)="agregarAnexoDos()">
+          Agregar
+        </button>
+      </div>
+    </div>
+
+    <div class="row mt-5">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="anexoDosConfiguartion.anexoDosTablaSeleccionRadio"
+        [configuracionTabla]="anexoDosConfiguartion.anexoDosEncabezadoDeTabla"
+        [datos]="anexoDosTablaLista"
+        (filaSeleccionada)="setAnexoDosLista($event)"
+      ></app-tabla-dinamica>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-12 container text-end mt-5">
+      <button
+        class="btn btn-default me-2"
+        (click)="setRuta('complementar-fraccion', 'EXPORT')"
+      >
+        Complementar Función
+      </button>
+      <button
+        class="btn btn-primary me-2"
+        (click)="setRuta('contenedor-proveedor-cliente', 'EXPORT')"
+      >
+        Proveedor Cliente
+      </button>
+    </div>
+  </div>
+</div>
