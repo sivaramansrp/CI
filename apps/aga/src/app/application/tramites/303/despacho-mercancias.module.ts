@@ -1,6 +1,5 @@
 
 import { AgentesAgenciasAduanalesComponent } from './components/agentes-agencias-aduanales/agentes-agencias-aduanales.component';
-import { AgregaPersonasComponent } from './components/agrega-personas/agrega-personas.component';
 import { AgregarMiembrosEmpresaComponent } from './components/agregar-miembros-empresa/agregar-miembros-empresa.component';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
@@ -72,7 +71,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     InputHoraComponent,
     InputFechaComponent,
     CrosslistComponent,
-    AgregaPersonasComponent,
     SelectPaisesComponent,
     RepresentanteFiscalComponent,
     forwardRef(() => AnexarDocumentosComponent),
