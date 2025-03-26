@@ -4,7 +4,7 @@
  */
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { tableData } from '../../tramites/260212/models/permiso-maquila.models';
+import { TablaDatos } from '../../tramites/260212/models/permiso-maquila.models';
 
 /**
  * Interfaz que define el estado de los terceros relacionados para el trámite 260212.
@@ -14,19 +14,19 @@ export interface TercerosRelacionadas260212State {
   /**
    * Datos del fabricante.
    */
-  Fabricante: tableData[];
+  Fabricante: TablaDatos[];
   /**
    * Datos del destinatario.
    */
-  Destinatario: tableData[];
+  Destinatario: TablaDatos[];
   /**
    * Datos del proveedor.
    */
-  Proveedor: tableData[];
+  Proveedor: TablaDatos[];
   /**
    * Datos del facturador.
    */
-  Facturador: tableData[];
+  Facturador: TablaDatos[];
 }
 
 /**
@@ -67,7 +67,7 @@ export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
    * 
    * @param fabricante Arreglo de datos del fabricante.
    */
-  public setFabricante(fabricante: tableData[]) {
+  public setFabricante(fabricante: TablaDatos[]) {
     this.update((state) => ({
       ...state,
       Fabricante: fabricante,
@@ -79,7 +79,7 @@ export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
    * 
    * @param destinatario Arreglo de datos del destinatario.
    */
-  public setDestinatario(destinatario: tableData[]) {
+  public setDestinatario(destinatario: TablaDatos[]) {
     this.update((state) => ({
       ...state,
       Destinatario: destinatario,
@@ -91,7 +91,7 @@ export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
    * 
    * @param proveedor Arreglo de datos del proveedor.
    */
-  public setProveedor(proveedor: tableData[]) {
+  public setProveedor(proveedor: TablaDatos[]) {
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,
@@ -103,7 +103,7 @@ export class Tramite260212Store extends Store<TercerosRelacionadas260212State> {
    * 
    * @param facturador Arreglo de datos del facturador.
    */
-  public setFacturador(facturador: tableData[]) {
+  public setFacturador(facturador: TablaDatos[]) {
     this.update((state) => ({
       ...state,
       Facturador: facturador,

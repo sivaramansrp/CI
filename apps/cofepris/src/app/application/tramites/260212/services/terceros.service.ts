@@ -6,6 +6,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
@@ -31,5 +32,25 @@ export class TercerosService {
    */
   getData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260212/terceros-relacionados.json');
+  }
+
+  getPaisData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260212/pais.json');
+  }
+
+  getMunicipioData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260212/municipio.json');
+  }
+
+  getCodigoPostalData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260212/codigo-postal.json');
+  }
+
+  getColoniaData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260212/colonia.json');
+  }
+
+  getLocalidadData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260212/localidad.json');
   }
 }

@@ -159,7 +159,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateClaveDeReferncia(): void {
+  actualizarClaveDeReferncia(): void {
     const CORREO = this.pagoDerechos.get('claveDeReferncia')?.value;
     this.tramite260212Store.setClaveDeReferncia(CORREO);
   }
@@ -171,7 +171,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateCadenaDeLaDependencia(): void {
+  actualizarCadenaDeLaDependencia(): void {
     const CORREO = this.pagoDerechos.get('cadenaDeLaDependencia')?.value;
     this.tramite260212Store.setCadenaDeLaDependencia(CORREO);
   }
@@ -183,7 +183,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateLlaveDePago(): void {
+  actualizarLlaveDePago(): void {
     const CORREO = this.pagoDerechos.get('llaveDePago')?.value;
     this.tramite260212Store.setLlaveDePago(CORREO);
   }
@@ -195,7 +195,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateFechaDePago(): void {
+  actualizarFechaDePago(): void {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
     this.tramite260212Store.setFechaDePago(CORREO);
   }
@@ -207,7 +207,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateImporteDePago(): void {
+  actualizarImporteDePago(): void {
     const CORREO = this.pagoDerechos.get('importeDePago')?.value;
     this.tramite260212Store.setImporteDePago(CORREO);
   }
