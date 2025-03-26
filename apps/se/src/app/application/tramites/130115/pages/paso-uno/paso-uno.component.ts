@@ -1,3 +1,7 @@
+/**
+ * paso-uno.component.ts
+ * */
+
 import { Component } from '@angular/core';
 
 /**

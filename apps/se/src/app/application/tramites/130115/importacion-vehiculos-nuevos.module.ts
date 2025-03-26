@@ -2,36 +2,47 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent} from '@ng-mf/data-access-user';
+import { ImportacionVehiculosNuevosPageComponent } from './pages/importacion-vehiculos-nuevos-page/importacion-vehiculos-nuevos-page.component';
 
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 import { ImportacionVehiculosNuevosRoutingModule } from './importacion-vehiculos-nuevos-routing.module';
+
+import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
+import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
+import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
 
 
 
 @NgModule({
-  declarations: [SolicitudPageComponent, PasoUnoComponent],
+  declarations: [SolicitudComponent,ImportacionVehiculosNuevosPageComponent,PasoUnoComponent],
   imports: [
-    CommonModule, 
+    CommonModule,
     ImportacionVehiculosNuevosRoutingModule,
-    WizardComponent,
-    SolicitanteComponent,
-    TituloComponent,
-    CatalogoSelectComponent,
-    ReactiveFormsModule,
-    BtnContinuarComponent,
-    TablaDinamicaComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    AlertComponent,
-    ToastrModule.forRoot()
+        WizardComponent,
+        BtnContinuarComponent,
+        TituloComponent,
+        InputRadioComponent,
+        SolicitanteComponent,
+        ReactiveFormsModule,
+        PasoTresComponent,
+        PasoDosComponent,
+        DatosDelTramiteComponent,
+        DatosDeLaMercanciaComponent,
+        PartidasDeLaMercanciaComponent ,
+        TablaDinamicaComponent,
+        PaisProcendenciaComponent,
+        RepresentacionComponent,
+        CrosslistComponent
   ],
   providers: [
     ToastrService

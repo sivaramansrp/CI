@@ -1,3 +1,6 @@
+/**
+ * Componente que representa los pasos de datos en un proceso de múltiples pasos. 
+ * */
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, PASOS } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -21,10 +24,10 @@ interface AccionBoton {
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
  */
 @Component({
-  selector: 'app-solicitud-page',
- templateUrl: './solicitud-page.component.html'
+  selector: 'app-importacion-vehiculos-nuevos-page',
+ templateUrl: './importacion-vehiculos-nuevos-page.component.html'
 })
-export class SolicitudPageComponent {
+export class ImportacionVehiculosNuevosPageComponent {
   /**
    * Lista de pasos en el asistente.
    */

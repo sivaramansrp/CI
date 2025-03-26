@@ -1,12 +1,12 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { ImportacionVehiculosNuevosPageComponent } from './pages/importacion-vehiculos-nuevos-page/importacion-vehiculos-nuevos-page.component';
 
 const ROUTES: Routes = [
   {
     path: 'solicitud',
-    component: SolicitudPageComponent,
+    component: ImportacionVehiculosNuevosPageComponent,
 
   },
   {
