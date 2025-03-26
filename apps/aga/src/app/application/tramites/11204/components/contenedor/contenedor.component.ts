@@ -276,7 +276,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       tipoBusqueda: [this.solicitud11204State?.tipoBusqueda, Validators.required],
       aduana: [this.solicitud11204State?.aduana, Validators.required],
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
-      vigencia: [this.solicitud11204State?.Vigencia, Validators.required],
+      vigencia: [this.solicitud11204State?.vigencia, Validators.required],
       inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern('^[a-zA-Z0-9]+$')]],
       numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],

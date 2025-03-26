@@ -49,7 +49,7 @@ export interface Solicitud11204State {
   /**
    * Vigencia.
    */
-  Vigencia: string;
+  vigencia: string;
 
   /**
    * Iniciales del contenedor.
@@ -105,7 +105,7 @@ export function createInitialState(): Solicitud11204State {
     digitoDeControl: '',
     contenedores: '',
     fechaIngreso: '',
-    Vigencia: '',
+    vigencia: '',
     aduanaMenuDesplegable: '',
     fechaDeIngreso: '',
     archivoSeleccionado: ''
