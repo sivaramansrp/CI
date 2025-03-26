@@ -11,14 +11,9 @@
       <paso-uno></paso-uno>
       } @case (2) {
         <app-paso-dos></app-paso-dos>
-        }
-       
       }
-
-      <btn-continuar
-        [datos]="datosPasos"
-        (continuarEvento)="getValorIndice($event)"
-      ></btn-continuar>
+      }
+      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
     </div>
   </div>
 </div>

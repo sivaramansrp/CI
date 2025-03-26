@@ -5,7 +5,7 @@ export const PASOS = [
     activo: true,
     completado: true,
   },
- 
+
   {
     indice: 2,
     titulo: 'Firmar solicitud',

@@ -7,39 +7,30 @@ import { AnexarDocumentosComponent, AlertComponent, BtnContinuarComponent, Catal
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
+import { CertificadoOrigenRoutingModule } from './certificado-origen-routing.module';
+import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
+import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 
 @NgModule({
   declarations: [
-        PasoUnoComponent,
-       PasoDosComponent,
-       SolicitantePageComponent,
+            SolicitantePageComponent,
+            
   ],
   imports: [
-    CommonModule,
-    SharedModule,
+    BtnContinuarComponent,
+    CertificadoOrigenRoutingModule,
     RouterModule,
     WizardComponent,
-    ReactiveFormsModule,
-    FormsModule,
-    TituloComponent,
-    BtnContinuarComponent,
-    FirmaElectronicaComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-    SelectCatalogosComponent,
-    InputFechaComponent,
-    InputCheckComponent,
-    InputHoraComponent,
-    CrosslistComponent,
-    SelectPaisesComponent,
-    RepresentanteFiscalComponent,
-    CatalogoSelectComponent,
-    InputRadioComponent,
-    SolicitanteComponent,
+    PasoUnoComponent,
+    PasoDosComponent,
+    DatosCertificadoComponent,
+    DestinatarioComponent
+   
+  
    
   ],
-  exports: [PasoUnoComponent],
-  providers: [CatalogosService, ToastrService],
+  exports: [],
+  providers: [],
 })
 export class CertificadoOrigenModule{
 

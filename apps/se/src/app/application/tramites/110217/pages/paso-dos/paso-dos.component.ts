@@ -1,20 +1,61 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
 
 /**
- * Este componente se muestra en el paso dos del asistente.
- * En este paso se inicializan y muestran los textos necesarios.
+ * @class PasoTresComponent
+ * @description
+ * Este componente gestiona el tercer paso de un trámite, donde se obtiene la firma electrónica del usuario.
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ * @license MIT
+ *
+ * @selector app-paso-tres
+ * @standalone true
+ * @requires CommonModule
+ * @requires FirmaElectronicaComponent
+ *
+ * @templateUrl ./paso-tres.component.html
+ * @styleUrl ./paso-tres.component.scss
  */
 @Component({
   selector: 'app-paso-dos',
+  standalone: true,
+  imports: [CommonModule,FirmaElectronicaComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent {
   
   /**
-   * Variable que almacena los textos utilizados en el componente.
-   * Se inicializa con los textos provenientes de la constante TEXTOS importada.
+   * @constructor
+   * @description
+   * Constructor que inyecta `Router` para la navegación.
+   *
+   * @param {Router} router - Servicio de Angular para manejar la navegación.
+   * @access public
    */
-  TEXTOS = TEXTOS;
+  constructor(private router: Router) {
+    // Constructor
+  }
+
+  /**
+   * @method obtieneFirma
+   * @description
+   * Método que maneja la obtención de la firma electrónica.
+   * Si la firma es válida, navega a la página de acuse.
+   *
+   * @param {string} ev - Evento que contiene la firma electrónica.
+   * @returns {void}
+   * @access public
+   */
+  obtieneFirma(ev: string): void {
+    const FIRMA = ev;
+    if (FIRMA) {
+      this.router.navigate(['servicios-extraordinarios/acuse']);
+    }
+  }
 }
+

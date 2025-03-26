@@ -174,6 +174,7 @@ const ROUTES: Routes = [
         (m) => m.CertificadoOrigenModule
       ),
   },
+  
 ];
 
 @NgModule({
