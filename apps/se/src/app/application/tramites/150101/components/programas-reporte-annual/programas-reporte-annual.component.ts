@@ -58,21 +58,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.periodoReporteAnual = this.fb.group({
-      reporteAnualFechaInicio: [this.solicitud150101State?.reporteAnualFechaInicio],
-      reporteAnualFechaFin: [this.solicitud150101State?.reporteAnualFechaFin],
-      folioPrograma: [
-        { value: this.solicitud150101State?.folioPrograma, disabled: true },
-      ],
-      modalidad: [
-        { value: this.solicitud150101State?.modalidad, disabled: true },
-      ],
-      tipoPrograma: [
-        { value: this.solicitud150101State?.tipoPrograma, disabled: true },
-      ],
-      estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
-    });
-    this.solicitud150101Query.seleccionarSolicitud$
+   this.solicitud150101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud150101State) => {
@@ -89,7 +75,20 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    
+      this.periodoReporteAnual = this.fb.group({
+        reporteAnualFechaInicio: [this.solicitud150101State?.reporteAnualFechaInicio],
+        reporteAnualFechaFin: [this.solicitud150101State?.reporteAnualFechaFin],
+        folioPrograma: [
+          { value: this.solicitud150101State?.folioPrograma, disabled: true },
+        ],
+        modalidad: [
+          { value: this.solicitud150101State?.modalidad, disabled: true },
+        ],
+        tipoPrograma: [
+          { value: this.solicitud150101State?.tipoPrograma, disabled: true },
+        ],
+        estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
+      });
   }
 
   obtenerReporteFechas(): void {
@@ -114,6 +113,43 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     this.solicitud150101Store.actualizarModalidad(evento.modalidad);
     this.solicitud150101Store.actualizarTipoPrograma(evento.tipoPrograma);
     this.solicitud150101Store.actualizarEstatus(evento.estatus);
+    this.solicitud150101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((respuesta: Solicitud150101State) => {
+          this.solicitud150101State = respuesta;
+          // this.periodoReporteAnual.patchValue({
+          //   reporteAnualFechaInicio: this.solicitud150101State.reporteAnualFechaInicio,
+          //   reporteAnualFechaFin: this.solicitud150101State.reporteAnualFechaFin,
+          //   folioPrograma: this.solicitud150101State.folioPrograma,
+          //   modalidad: this.solicitud150101State.modalidad,
+          //   tipoPrograma: this.solicitud150101State.folioPrograma,
+          //   estatus: this.solicitud150101State.estatus,
+          // });
+        })
+      )
+      this.periodoReporteAnual = this.fb.group({
+        reporteAnualFechaInicio: [this.solicitud150101State?.reporteAnualFechaInicio],
+        reporteAnualFechaFin: [this.solicitud150101State?.reporteAnualFechaFin],
+        folioPrograma: [
+          { value: this.solicitud150101State?.folioPrograma, disabled: true },
+        ],
+        modalidad: [
+          { value: this.solicitud150101State?.modalidad, disabled: true },
+        ],
+        tipoPrograma: [
+          { value: this.solicitud150101State?.tipoPrograma, disabled: true },
+        ],
+        estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
+      });
+    // this.periodoReporteAnual.patchValue({
+    //   reporteAnualFechaInicio: this.solicitud150101State.reporteAnualFechaInicio,
+    //   reporteAnualFechaFin: this.solicitud150101State.reporteAnualFechaFin,
+    //   folioPrograma: this.solicitud150101State.folioPrograma,
+    //   modalidad: this.solicitud150101State.modalidad,
+    //   tipoPrograma: this.solicitud150101State.folioPrograma,
+    //   estatus: this.solicitud150101State.estatus,
+    // });
   }
 
   /**

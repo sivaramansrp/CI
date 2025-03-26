@@ -1,3 +1,4 @@
+import { AcusePageComponent } from './components/acuse/acuse-page/acuse-page.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -7,6 +8,10 @@ const ROUTES: Routes = [
   {
     path: 'solicitud',
     component: SolicitudDeReporteComponent,
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent
   },
 ];
 

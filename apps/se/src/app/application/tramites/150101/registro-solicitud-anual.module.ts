@@ -1,4 +1,5 @@
-import { BtnContinuarComponent, FirmaElectronicaComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, BtnContinuarComponent, FirmaElectronicaComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AcusePageComponent } from './components/acuse/acuse-page/acuse-page.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosDeReporteAnnualComponent } from './components/datos-de-reporte-annual/datos-de-reporte-annual.component';
@@ -33,7 +34,9 @@ import { provideHttpClient } from '@angular/common/http';
     FirmaElectronicaComponent,
     TituloComponent,
     InputFechaComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    AcuseComponent,
+    AcusePageComponent
   ],
   providers: [provideHttpClient(), ToastrService],
 })
