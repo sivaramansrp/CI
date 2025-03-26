@@ -18,7 +18,6 @@ ENV NX_NATIVE_BINDINGS=false
 
 # Copy configuration files first to leverage Docker caching
 COPY package*.json nx.json ./
-COPY decorate-angular-cli.js ./
 COPY .eslintrc.json ./
 
 # Install NX CLI globally with specific version for compatibility
