@@ -274,7 +274,11 @@
       </div>
     </div>
     <div class="row mt-4">
-      <div formGroupName="formaDatos" class="row mb-4" *ngIf="obtenerControles()">
+      <div
+        formGroupName="formaDatos"
+        class="row mb-4"
+        *ngIf="obtenerControles()"
+      >
         @for (item of camposFormulario; track $index) { @if (item.tipo_input ===
         'select') {
         <div [ngClass]="item.class">
@@ -308,7 +312,9 @@
 
         } @else {
         <div [ngClass]="item.class">
-          <label for="{{ item.campo }}">{{ item.labelNombre }} @if (item.required) {*}:</label>
+          <label for="{{ item.campo }}"
+            >{{ item.labelNombre }} @if (item.required) {*}:</label
+          >
           <input
             class="form-control"
             [type]="item.tipo_input"

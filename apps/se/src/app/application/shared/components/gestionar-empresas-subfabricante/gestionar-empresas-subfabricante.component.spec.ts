@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -9,11 +18,11 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { GestionarEmpresasSubfabricantesComponent} from './gestionar-empresas-subfabricante.component';
+import { GestionarEmpresasSubfabricantesComponent } from './gestionar-empresas-subfabricante.component';
 
 @Injectable()
 class MockRouter {
-  navigate() {};
+  navigate() {}
 }
 
 describe('GestionarEmpresasSubfabricantesComponent', () => {
@@ -22,93 +31,75 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder,
-        { provide: Router, useClass: MockRouter }
-      ]
-    }).overrideComponent(GestionarEmpresasSubfabricantesComponent, {
-
-    }).compileComponents();
+      imports: [FormsModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder, { provide: Router, useClass: MockRouter }],
+    })
+      .overrideComponent(GestionarEmpresasSubfabricantesComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(GestionarEmpresasSubfabricantesComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run SetterDeclaration #estadoCatalogo', async () => {
-
     component.estadoCatalogo = {};
-
   });
 
   it('should run SetterDeclaration #datosTablaSubfabricantesDisponibles', async () => {
-
     component.datosTablaSubfabricantesDisponibles = {};
-
   });
 
   it('should run SetterDeclaration #configuracionTablaDisponibles', async () => {
-
     component.configuracionTablaDisponibles = {};
-
   });
 
   it('should run SetterDeclaration #configuracionTablaSeleccionadas', async () => {
-
     component.configuracionTablaSeleccionadas = {};
-
   });
 
   it('should run SetterDeclaration #datosTablaSubfabricantesSeleccionadas', async () => {
-
     component.datosTablaSubfabricantesSeleccionadas = {};
-
   });
 
   it('should run SetterDeclaration #formularioDatosSubcontratista', async () => {
-    component._formularioDatosSubcontratista = component._formularioDatosSubcontratista || {};
+    component._formularioDatosSubcontratista =
+      component._formularioDatosSubcontratista || {};
     component._formularioDatosSubcontratista.setValue = jest.fn();
     component.formularioDatosSubcontratista = {
-      value: {}
+      value: {},
     };
-    expect(component._formularioDatosSubcontratista.setValue).toHaveBeenCalled();
+    expect(
+      component._formularioDatosSubcontratista.setValue
+    ).toHaveBeenCalled();
   });
 
   it('should run GetterDeclaration #estadoCatalogo', async () => {
-
     const estadoCatalogo = component.estadoCatalogo;
-
   });
 
   it('should run GetterDeclaration #datosTablaSubfabricantesDisponibles', async () => {
-
-    const datosTablaSubfabricantesDisponibles = component.datosTablaSubfabricantesDisponibles;
-
+    const datosTablaSubfabricantesDisponibles =
+      component.datosTablaSubfabricantesDisponibles;
   });
 
   it('should run GetterDeclaration #configuracionTablaDisponibles', async () => {
-
-    const configuracionTablaDisponibles = component.configuracionTablaDisponibles;
-
+    const configuracionTablaDisponibles =
+      component.configuracionTablaDisponibles;
   });
 
   it('should run GetterDeclaration #configuracionTablaSeleccionadas', async () => {
-
-    const configuracionTablaSeleccionadas = component.configuracionTablaSeleccionadas;
-
+    const configuracionTablaSeleccionadas =
+      component.configuracionTablaSeleccionadas;
   });
 
   it('should run GetterDeclaration #datosTablaSubfabricantesSeleccionadas', async () => {
-
-    const datosTablaSubfabricantesSeleccionadas = component.datosTablaSubfabricantesSeleccionadas;
-
+    const datosTablaSubfabricantesSeleccionadas =
+      component.datosTablaSubfabricantesSeleccionadas;
   });
-
 
   it('should run #inicializarFormularioDatosSubcontratista()', async () => {
     component.fb = component.fb || {};
@@ -120,9 +111,10 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
   it('should run #cambiarRFC()', async () => {
     component.alCambiarRFC = component.alCambiarRFC || {};
     component.alCambiarRFC.emit = jest.fn();
-    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista =
+      component.formularioDatosSubcontratista || {};
     component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.cambiarRFC();
     expect(component.alCambiarRFC.emit).toHaveBeenCalled();
@@ -130,9 +122,10 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
   });
 
   it('should run #cambiarEstado()', async () => {
-    component.formularioDatosSubcontratista = component.formularioDatosSubcontratista || {};
+    component.formularioDatosSubcontratista =
+      component.formularioDatosSubcontratista || {};
     component.formularioDatosSubcontratista.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.alCambiarEstado = component.alCambiarEstado || {};
     component.alCambiarEstado.emit = jest.fn();
@@ -149,11 +142,9 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
   });
 
   it('should run #onPlantasDisponiblesSeleccionadas()', async () => {
-
     component.onPlantasDisponiblesSeleccionadas({
-      length: {}
+      length: {},
     });
-
   });
 
   it('should run #agregarPlantas()', async () => {
@@ -164,11 +155,9 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
   });
 
   it('should run #onPlantasSeleccionadas()', async () => {
-
     component.onPlantasSeleccionadas({
-      length: {}
+      length: {},
     });
-
   });
 
   it('should run #eliminarPlantas()', async () => {
@@ -186,5 +175,4 @@ describe('GestionarEmpresasSubfabricantesComponent', () => {
     component.complementarPlantas();
     expect(component.plantasPorComplementar.emit).toHaveBeenCalled();
   });
-
 });

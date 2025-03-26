@@ -1,4 +1,8 @@
-import { Catalogo, ComplimentarFraccion, ComplimentarFraccionResoponse } from '../../models/nuevo-programa-industrial.model';
+import {
+  Catalogo,
+  ComplimentarFraccion,
+  ComplimentarFraccionResoponse,
+} from '../../models/nuevo-programa-industrial.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -16,8 +20,11 @@ import { Validators } from '@angular/forms';
 @Component({
   selector: 'app-complementar-fraccion',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent,
-    ReactiveFormsModule
+  imports: [
+    CommonModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
   ],
   templateUrl: './complementar-fraccion.component.html',
   styleUrl: './complementar-fraccion.component.scss',
@@ -26,7 +33,6 @@ import { Validators } from '@angular/forms';
  * Componente para complementar fracción.
  */
 export class ComplementarFraccionComponent implements OnInit {
-
   /**
    * Datos de la categoría seleccionada.
    */
@@ -40,7 +46,9 @@ export class ComplementarFraccionComponent implements OnInit {
   /**
    * Evento para emitir los datos de complementar fracción.
    */
-  @Output() emitirComplimentarFraccionDatos: EventEmitter<ComplimentarFraccionResoponse> = new EventEmitter<ComplimentarFraccionResoponse>(true);
+  @Output()
+  emitirComplimentarFraccionDatos: EventEmitter<ComplimentarFraccionResoponse> =
+    new EventEmitter<ComplimentarFraccionResoponse>(true);
 
   /**
    * Formulario para complementar fracción.
@@ -67,12 +75,30 @@ export class ComplementarFraccionComponent implements OnInit {
    */
   crearFormularioComplimentar(): void {
     this.complimentarForm = this.fb.group({
-      catagoria: [this.complimentarFraccionDatos.catagoria, Validators.required],
-      descripcion: [this.complimentarFraccionDatos.descripcion, Validators.required],
-      monedaNacionalMensual: [this.complimentarFraccionDatos.monedaNacionalMensual, Validators.required],
-      monedaNacionalDeDosPeriodos: [this.complimentarFraccionDatos.monedaNacionalDeDosPeriodos, Validators.required],
-      volumenMensual: [this.complimentarFraccionDatos.volumenMensual, Validators.required],
-      twoPeriodVolume: [this.complimentarFraccionDatos.twoPeriodVolume, Validators.required],
+      catagoria: [
+        this.complimentarFraccionDatos.catagoria,
+        Validators.required,
+      ],
+      descripcion: [
+        this.complimentarFraccionDatos.descripcion,
+        Validators.required,
+      ],
+      monedaNacionalMensual: [
+        this.complimentarFraccionDatos.monedaNacionalMensual,
+        Validators.required,
+      ],
+      monedaNacionalDeDosPeriodos: [
+        this.complimentarFraccionDatos.monedaNacionalDeDosPeriodos,
+        Validators.required,
+      ],
+      volumenMensual: [
+        this.complimentarFraccionDatos.volumenMensual,
+        Validators.required,
+      ],
+      twoPeriodVolume: [
+        this.complimentarFraccionDatos.twoPeriodVolume,
+        Validators.required,
+      ],
     });
   }
 
@@ -91,4 +117,3 @@ export class ComplementarFraccionComponent implements OnInit {
     this.ubicaccion.back();
   }
 }
-
