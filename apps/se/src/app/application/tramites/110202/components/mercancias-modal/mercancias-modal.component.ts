@@ -77,14 +77,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
   ) {
 
     this.tramiteQuery?.formMercancia$?.pipe(
+      delay(100),
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
-
-        // eslint-disable-next-line dot-notation
-        if (!this.actualizandoFormulario && estado && estado['fraccionArancelaria']) {
-          this.actualizandoFormulario = true;
-          this.mercanciaForm.patchValue(estado);
-          this.actualizandoFormulario = false;
-        }
+      // eslint-disable-next-line dot-notation
+      if (!this.actualizandoFormulario && estado && estado['fraccionArancelaria']) {
+        this.actualizandoFormulario = true;
+        this.mercanciaForm.patchValue(estado);
+        this.actualizandoFormulario = false;
+      }
       });
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;

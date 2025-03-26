@@ -84,6 +84,7 @@ export const INITIAL_STATE: TramiteState = {
   formDatosCertificado: {
     observacionesDates: '',
     idiomaDates: '',
+    precisaDates: '',
     EntidadFederativaDates: '',
     representacionFederalDates: '',
   },

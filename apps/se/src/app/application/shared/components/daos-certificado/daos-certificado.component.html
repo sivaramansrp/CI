@@ -25,12 +25,12 @@
         <div class="row">
           <ng-titulo titulo="Representación federal" />
           <div class="col-md-6">
-            <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="entidadFederativas$ || []" 
+            <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="entidadFederativaDatos || []" 
             [required]="true" name="estado"formControlName="EntidadFederativaDates"
             (selectionChange)="entidadFederativaSeleccion($event)"></app-catalogo-select>
           </div>
           <div class="col-md-6">
-            <app-catalogo-select [label]="'Representación federal'"  [catalogo]="representacionFederal$ || []" 
+            <app-catalogo-select [label]="'Representación federal'"  [catalogo]="representacionFederalDatos || []" 
             [required]="true" name="estado" formControlName="representacionFederalDates"
             (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
           </div>
