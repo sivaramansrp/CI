@@ -5,10 +5,11 @@ import { Component } from '@angular/core';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent {
-  
+
   indice: number = 1;
 
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
 }

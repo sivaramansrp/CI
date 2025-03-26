@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ImportacionDeVehiculosUsadosComponent } from './pages/importacion-de-vehiculos-usados/importacion-de-vehiculos-usados.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'importacion-de-vehiculos',
     component: ImportacionDeVehiculosUsadosComponent
@@ -16,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class ImportacionDeVehiculosUsadosRoutingModule { }
