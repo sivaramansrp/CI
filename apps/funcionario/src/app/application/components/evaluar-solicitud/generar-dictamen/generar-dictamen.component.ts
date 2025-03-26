@@ -18,5 +18,4 @@ constructor(private fb: FormBuilder
   sentidoDictamen: ['', [Validators.required]],
   justificacionDictamen:['', [Validators.required]]
   });
-
 }

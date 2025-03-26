@@ -33,8 +33,4 @@ export class DocumentosStates extends Store<SolicitudDocumentosState>{
     setSolicitudDocumentos( documentosSeleccionados : string[]){
         this.update(state => ({... state, documentosSeleccionados}));
     }
-
-    public limpiarDocumentos() {
-        this.reset();
-      }
 }

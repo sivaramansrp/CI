@@ -31,8 +31,4 @@ export class RequerimientosStates extends Store<SolicitudRequerimientosState>{
     setjustificacionRequerimientoValue( justificacionRequerimiento : string){
         this.update(state => ({... state, justificacionRequerimiento}));
     }
-    
-    public limpiarRequerimiento() {
-        this.reset();
-      }
 }

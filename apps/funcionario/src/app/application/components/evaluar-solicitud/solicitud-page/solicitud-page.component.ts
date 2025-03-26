@@ -19,15 +19,13 @@ export class SolicitudPageComponent {
      * Índice de la pestaña seleccionada
      */
   indice: number = 1;
-
   /**
    * Variable para firmar
    */
   public firmarFuncionario: boolean = true;
   constructor(
     private router: Router
-  ) {
-  }
+  ) {}
   /**
    * Método para seleccionar la pestaña
    * @param i indica el número de la pestaña seleccionada
@@ -37,7 +35,6 @@ export class SolicitudPageComponent {
       this.firmarFuncionario = false;
     }
     this.indice = i;
-    
   }
   /*
    * Método que se ejecuta para guardar y firmar

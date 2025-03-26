@@ -14,9 +14,12 @@ import { Router } from '@angular/router';
 })
 export class RequerimientoInformacionComponent {
   /**
-     * Índice de la pestaña seleccionada
-     */
+   * Índice de la pestaña seleccionada
+  */
   indiceDictamen: number = 1;
+  /**
+   * Índice para activar la pestaña requerimientos de documentación
+   */
   documentacion: boolean = false;
   constructor(
     private router: Router,
@@ -24,10 +27,6 @@ export class RequerimientoInformacionComponent {
   ) {
     this.estadoService.tabIndex$.subscribe(valor => this.documentacion = valor);
   }
-
-  ngOnInit(): void {
-  }
-
   /**
     * Método para seleccionar la pestaña
     * @param i indica el número de la pestaña seleccionada
@@ -35,9 +34,10 @@ export class RequerimientoInformacionComponent {
   seleccionaTab(i: number): void {
     this.indiceDictamen = i;
   }
-
+  /**
+   * Método para la función del botón continuar
+   */
   continuar(): void {
-    debugger
     if (this.indiceDictamen === 2 || this.documentacion === false) {
       this.router.navigate(['funcionario/firma-electronica']);
     } else {
