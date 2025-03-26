@@ -40,8 +40,8 @@ env:
   NX_VERSION: '16.10.0'
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
-  ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe'
-  # Añadir variables para controlar problemas de NX
+  ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
+  # Variables para controlar problemas de NX
   NX_SKIP_NX_CACHE: 'true'
   NX_NATIVE_BINDINGS: 'false'
 
@@ -226,6 +226,31 @@ jobs:
           echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
           echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
 
+      - name: Ensure .eslintrc.json exists in root
+        run: |
+          if [ ! -f ".eslintrc.json" ]; then
+            echo "Creating root .eslintrc.json file"
+            echo '{
+              "root": true,
+              "ignorePatterns": ["**/*"],
+              "plugins": ["@nx"],
+              "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "prettier"
+              ],
+              "overrides": [
+                {
+                  "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+                  "rules": {
+                    "@typescript-eslint/no-explicit-any": "off",
+                    "@nx/enforce-module-boundaries": "off"
+                  }
+                }
+              ]
+            }' > .eslintrc.json
+          fi
+
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -237,6 +262,9 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
           restore-keys: |
             ${{ runner.os }}-node-
+
+      - name: Reset NX cache
+        run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
 
       # Modificación para instalar los paquetes con más opciones de seguridad
       - name: Install dependencies with specific options
