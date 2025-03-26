@@ -184,11 +184,16 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set npm environment variables
+      - name: Set npm and NX environment variables
         run: |
+          # npm environment variables
           echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
           echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
           echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+          
+          # Disable NX native modules to avoid binary compatibility issues
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
@@ -202,25 +207,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install dependencies
+      - name: Install dependencies with specific options
         run: |
-          npm install --force || npm install --force --legacy-peer-deps
+          npm install --no-optional --legacy-peer-deps --no-package-lock
 
-      - name: Install NX globally
+      - name: Install NX globally with specific version
         run: |
           npm install -g nx@${{ env.NX_VERSION }}
           nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
-      - name: Reset NX cache
-        run: |
-          npm cache clean --force
-          npx nx reset || echo "Advertencia: Error al reiniciar caché de NX, continuando..."
-
       - name: Build ${{ matrix.app }}
         run: |
-          # Intentar construir con diferentes opciones si es necesario
-          npx nx build ${{ matrix.app }} --configuration=production || \
-          npx nx build ${{ matrix.app }} --configuration=production --skip-nx-cache
+          # Usar comando directo sin npx para evitar problemas de binarios
+          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache
 
       - name: Verify build output
         run: |
