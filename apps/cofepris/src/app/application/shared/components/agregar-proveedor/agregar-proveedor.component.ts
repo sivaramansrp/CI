@@ -1,17 +1,27 @@
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
+
 import { Component } from '@angular/core';
-import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Proveedor } from '../../models/terceros-relacionados.model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Validators } from '@angular/forms';
+
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { Proveedor } from '../../models/terceros-relacionados.model';
+
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+
 import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
 import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
-import { Validators } from '@angular/forms';
+
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 @Component({

@@ -1,19 +1,34 @@
-import {
-  DESTINATARIO_ENCABEZADO_DE_TABLA,
-  Destinatario,
-  FABRICANTE_ENCABEZADO_DE_TABLA,
-  FACTURADOR_ENCABEZADO_DE_TABLA,
-  Fabricante,
-  Facturador,
-  PROVEEDOR_ENCABEZADO_DE_TABLA,
-  Proveedor,
-} from '../../models/terceros-relacionados.model';
-import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Destinatario } from '../../models/terceros-relacionados.model';
+import { FABRICANTE_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { FACTURADOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Fabricante } from '../../models/terceros-relacionados.model';
+import { Facturador } from '../../models/terceros-relacionados.model';
+import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.model';
+import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
+import { Proveedor } from '../../models/terceros-relacionados.model';
+
+import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
+import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,

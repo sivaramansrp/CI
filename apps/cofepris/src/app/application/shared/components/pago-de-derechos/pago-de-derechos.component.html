@@ -1,1 +1,98 @@
-<p>pago-de-derechos works!</p>
+<div class="container mt-4">
+  <h4 class="fw-bold">Pago de derechos</h4>
+  <hr />
+
+  <form [formGroup]="pagoDerechosForm" (ngSubmit)="onSubmit()">
+    <div class="row g-3">
+      <!-- Clave de referencia -->
+      <div class="col-md-4">
+        <label for="claveReferencia" class="form-label"
+          >Clave de referencia:</label
+        >
+        <input
+          type="text"
+          id="claveReferencia"
+          class="form-control"
+          formControlName="claveReferencia"
+        />
+      </div>
+
+      <!-- Cadena de la dependencia -->
+      <div class="col-md-4">
+        <label for="cadenaDependencia" class="form-label"
+          >Cadena de la dependencia:</label
+        >
+        <input
+          type="text"
+          id="cadenaDependencia"
+          class="form-control"
+          formControlName="cadenaDependencia"
+        />
+      </div>
+
+      <!-- Estado (using <app-catalogo-select>) -->
+      <div class="col-md-4">
+        <label class="form-label">Estado/localidad*:</label>
+        <app-catalogo-select
+          [catalogo]="estadosDatos"
+          formControlName="estado"
+          [label]="'Estado/localidad*'"
+          [required]="true"
+        ></app-catalogo-select>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+      <!-- Llave de pago -->
+      <div class="col-md-4">
+        <label for="llavePago" class="form-label">Llave de pago:</label>
+        <input
+          type="text"
+          id="llavePago"
+          class="form-control"
+          formControlName="llavePago"
+        />
+      </div>
+
+      <!-- Fecha de pago -->
+      <div class="col-md-4">
+        <label for="fechaPago" class="form-label">Fecha de pago:</label>
+        <input
+          type="date"
+          id="fechaPago"
+          class="form-control"
+          formControlName="fechaPago"
+        />
+      </div>
+
+      <!-- Importe de pago -->
+      <div class="col-md-4">
+        <label for="importePago" class="form-label">Importe de pago:</label>
+        <input
+          type="text"
+          id="importePago"
+          class="form-control"
+          formControlName="importePago"
+        />
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-3">
+      <button
+        type="submit"
+        class="btn btn-primary me-2"
+        [disabled]="pagoDerechosForm.invalid"
+      >
+        Guardar
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        (click)="onReset()"
+      >
+        Borrar datos del pago
+      </button>
+    </div>
+  </form>
+</div>

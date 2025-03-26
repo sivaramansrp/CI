@@ -301,3 +301,11 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
       orden: 16,
     },
   ];
+export interface PagoDerechos {
+  claveReferencia: string;
+  cadenaDependencia: string;
+  estado: string;
+  llavePago: string;
+  fechaPago: string;
+  importePago: string;
+}
