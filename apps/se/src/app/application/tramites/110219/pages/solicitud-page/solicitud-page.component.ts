@@ -91,9 +91,11 @@ export class SolicitudPageComponent implements OnInit {
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.onChildEvent(this.nombre)
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
+        this.nombre = 1;
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
@@ -102,6 +104,8 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   onChildEvent(event: number) {
+    debugger
     this.nombre = event;
+   
   }
 }

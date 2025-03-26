@@ -4,11 +4,11 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Motivo de cancelación<span [ngClass]="{
-              'error-star': cancelacionForm.get('motivoCancelacion')?.invalid
+              'error-star': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid
             }">*</span>:</label>
         <div class="col-md-12 align-text-area">
           <textarea cols="60" rows="5" formControlName="motivoCancelacion" required [ngClass]="{
-              'error-border': cancelacionForm.get('motivoCancelacion')?.invalid
+              'error-border': cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid
             }" (change)="
               setValoresStore(
                 validacionForm,
@@ -17,7 +17,7 @@
               )
             "></textarea>
         </div>
-        <div *ngIf="cancelacionForm.get('motivoCancelacion')?.invalid" class="error-msg">
+        <div *ngIf="cancelacionForm.get('validacionForm.motivoCancelacion')?.invalid" class="error-msg">
           Este campo es obligatorio.
         </div>
       </div>
@@ -37,7 +37,7 @@
           readonly
           value="18/02/2025"
         /> -->
-        <input-fecha [setFecha]="cancelacionForm.get('fechaInicial')?.value" [datos]="fechaInicialInput"></input-fecha>
+        <input-fecha [setFecha]="cancelacionForm.get('fechaInicial')?.value" [datos]="fechaInicialInput" readon></input-fecha>
       </div>
       <div class="col-md-4">
         <!-- <label>Fecha de vencimiento:</label>

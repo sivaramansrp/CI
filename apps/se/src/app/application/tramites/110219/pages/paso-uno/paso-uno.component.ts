@@ -44,6 +44,8 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
+  @Output() childDataEvent : EventEmitter<number> = new EventEmitter<number>();
+
   /**
    * Constructor del componente.
    * Se utiliza para la inyección de dependencias.
@@ -76,6 +78,12 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
     this.myEvent.emit(this.indice)
+  }
+
+  passCancelacion(data:number){
+    this.childDataEvent.emit(data);
+     this.indice = 3;
+     this.seleccionaTab(this.indice);
   }
 
 }

@@ -1,11 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  BtnContinuarComponent,
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  DatosPasos,
   InputFecha,
+  ListaPasosWizard,
+  PASOS,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
@@ -30,7 +34,7 @@ const TERCEROS_TEXTO_DE_ALERTA ='Certificados Disponibles';
     CatalogoSelectComponent,
     AlertComponent,
     TablaDinamicaComponent,
-    InputFechaComponent
+    InputFechaComponent, BtnContinuarComponent
 ],
   templateUrl: './cancelacion-de-certificado.component.html',
   styleUrl: './cancelacion-de-certificado.component.css',
@@ -52,6 +56,8 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   fechaInicialInput: InputFecha = FECHAINICIAL;
   fechaFinalInput: InputFecha =FECHAFINAL;
   
+  @Output() dataEvent = new EventEmitter<number>();
+
   public tratadoCatalogo: CatalogosSelect = {
     labelNombre: 'Tratado/Acuerdo:',
     required: false,
@@ -88,6 +94,27 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     .subscribe();
   this.donanteDomicilio();
   }
+
+    /**
+     * Lista de pasos del asistente.
+     */
+    pasos: ListaPasosWizard[] = PASOS;
+
+     /**
+   * Índice del paso actual.
+   */
+  indice: number = 1;
+
+  /**
+     * Datos de los pasos del asistente.
+     */
+    datosPasos: DatosPasos = {
+      nroPasos: this.pasos.length,
+      indice: this.indice,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    };
+  
 
   validarDestinatarioFormulario(): void {
     if (this.cancelacionForm.invalid) {
@@ -157,6 +184,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
         certificadoDisponibles: [this.solicitudState?.certificadoDisponibles, [Validators.required]],
       }),
     });
+  }
+
+  click(){
+     this.dataEvent.emit(3);
   }
 
   ngOnDestroy(): void {
