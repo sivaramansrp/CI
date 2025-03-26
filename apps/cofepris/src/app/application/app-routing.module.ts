@@ -12,9 +12,15 @@ const ROUTES: Routes = [
     path: 'importacion-psicotropicos',
     loadChildren: () =>
       import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
-        (m) => m.CertificadosLicenciasPermisosModule
-      ),
+        (m) => m.CertificadosLicenciasPermisosModule),
   },
+  {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  }
 ];
 
 @NgModule({

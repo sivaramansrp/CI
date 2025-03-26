@@ -29,6 +29,11 @@ export const TEXTOS = {
   <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
+  ADJUNTAR_DOCUMENTOS: `<p>Para poder adjuntar tu documento, deberá cumplir las signuientes características:</p>
+  <p><b>•</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código java script, etc.</p>
+  <p><b>•</b> No debe contener páginas en blanco.</p>`,
+  ADJUNTAR_WARNING: `<p>La carga del documento puede tardar varios segundos, este tiempo dependerá del tamaño de tu archivo y de la velocidad de tu conexión.</p>`,
+  DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`
 };
 
 
@@ -186,6 +191,10 @@ export const PASOS4 = [
 export const Aviso = {
   Aviso: `<p style="text-align: center; font-weight: bold;">Aviso de privacidad simplificado:</p>
   <p>El Servicio de Administración Tributaria (SAT), es el sujeto obligado y responsable del tratamiento de los datos personales que se recaban a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM), los datos personales podrán ser utilizados y transferidos a la autoridades competentes, con la finalidad de llevar a cabo cualquier trámite relacionado con importaciones, exportaciones y tránsito de mercancías de comercio exterior, incluyendo las regulaciones y restricciones no arancelarias que, conforme a la legislación aplicable, sea exigido por las autoridades competentes en materia de comercio </p>`
+};
+
+export const AlDar = {
+  AlDar: `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`
 };
 
 export const Sectoresy = {
