@@ -26,7 +26,6 @@ COPY .eslintrc.json tsconfig*.json decorate-angular-cli.js ./
 # Add workspace configuration early
 RUN mkdir -p apps libs
 COPY apps/sener/project.json apps/sener/
-COPY workspace.json ./
 
 # Install NX CLI globally with specific version for compatibility
 RUN npm install -g nx@16.10.0
