@@ -1,0 +1,69 @@
+<div class="container">
+    <ng-titulo titulo="Pago de derechos" />   
+    <form [formGroup]="derechosForm" >
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">                
+                <label class="form-label" for="referencia">Clave de referencia:</label>
+                <input class="form-control" id="referencia" formControlName="referencia"
+                  placeholder="" type="text"
+                  (change)="setValoresStore(derechosForm,'referencia', 'setreferencia')">
+              </div>
+            </div>
+            <div class="col-md-4">
+
+              <div class="form-group">
+                <label class="form-label" for="cadenaDependencia">Chandena de la dependencia:</label>
+                <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia"
+                  placeholder="" type="text"
+                  (change)="setValoresStore(derechosForm,'cadenaDependencia', 'setcadenaDependencia')">
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                  <app-catalogo-select
+                    [catalogo]="derechosList"
+                   
+                    [label]="'banco'"
+                    [placeholder]="'Seleccione una aduana'"
+                    formControlName="banco"
+                    (change)="setValoresStore(derechosForm,'banco', 'setbanco')"></app-catalogo-select>
+                </div>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="Llave">Llave de pago</label>
+                <input class="form-control" id="Llave" placeholder="" type="text"
+                  formControlName="Llave" 
+                  (change)="setValoresStore(derechosForm,'Llave', 'setLlave')">
+              </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="tipoFetch">Fetch de page</label>
+                  <input class="form-control" id="tipoFetch" placeholder="" type="date"
+                    formControlName="deFetch" (change)="setValoresStore(derechosForm,'tipoFetch', 'settipoFetch')">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="importe">Importe de pago</label>
+                  <input class="form-control" id="importe" placeholder="" type="text"
+                    formControlName="importe" (change)="setValoresStore(derechosForm,'importe', 'setimporte')">
+                </div>
+              </div>
+          </div>
+          <div class="row mt-5 mb-2">
+            <div class="col-md-8">
+            </div>
+            <div class="col-md-4">
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary">Borrar datos del pago</button>
+              </div>
+            </div>
+          </div>   
+      </form>
+  </div>
+  
