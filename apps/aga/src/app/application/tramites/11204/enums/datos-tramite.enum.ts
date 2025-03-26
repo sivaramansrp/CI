@@ -8,3 +8,9 @@ export const VIGENCIA = {
     required: true,
     habilitado: true,
 };
+export const ANEXAR = {
+    label: 'Anexar necesarios'
+}
+export const CARGAR = {
+    label: 'Cargar pago'
+}
