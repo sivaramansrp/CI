@@ -1,4 +1,4 @@
-export const CHOFERES_PAGE: {
+export const CHOFERES_PAGE = {
   MODAL: 'modal',
   ACTIVETAB: 'nacional',
   CHOFERES_EXTRANJEROS: 'Choferes extranjeros',
@@ -31,7 +31,7 @@ export const CHOFERES_PAGE: {
   SELECCIONA_UNVALOR: 'Selecciona un valor'
 };
 
-export const VEHICULO_PAGE: {
+export const VEHICULO_PAGE= {
   SELECTED_TAB: 'Parque vehicular',
   ACTIVE_TAB: 'parquevehicular',
   LABEL_SOLICITUD_VEHICULO_TIPO_VEHICULO: 'Tipo de vehiculo',
