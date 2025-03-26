@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, merge } from 'rxjs';
+import { Subject, map, merge, takeUntil } from 'rxjs';
 
-import { Catalogo, CATALOGOS_ID, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, FECHA_SALIDA, InputFecha, PeximService, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Solicitud130118State, Tramite130118Store } from '../../estados/tramites/tramite130118.store';
+import { Tramite130118Query } from '../../estados/queries/tramite130118.query';
 
 
 /**
  * Componente para la vista de la solicitud de la sección de "130118".
  */
 @Component({
-  selector: 'solicitud',
+  selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit {
+
+/*eslint class-methods-use-this: ["error", { "exceptMethods": ["truncar"] }] */
+export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Lista de catálogos de régimen de mercancía.
@@ -69,7 +72,7 @@ export class SolicitudComponent implements OnInit {
   /**
    * Estado de la solicitud.
    */
-  public solicitudState: Solicitud130118State | undefined;
+  public solicitudState!: Solicitud130118State;
 
   /**
    * Indica si la persona física es visible.
@@ -92,20 +95,31 @@ export class SolicitudComponent implements OnInit {
   FormSolicitud!: FormGroup;
 
   /**
+   * Citas HTML de escape.
+   */
+  escaparHtml!: string;
+
+  /**
+   * Subject para destruir notificador.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
+  /**
    * Constructor del componente.
    * @param peximService Servicio para obtener datos de PEXIM.
    * @param fb FormBuilder para crear formularios.
    * @param validacionesService Servicio para validaciones de formularios.
    * @param tramite130118Store Almacén de estado para el trámite 130118.
+   * @param tramite130118Query Consulta de almacén para el procedimiento 130118.
    */
   constructor(
     private peximService: PeximService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private tramite130118Store: Tramite130118Store
+    private tramite130118Store: Tramite130118Store,
+    private tramite130118Query: Tramite130118Query
   ) {
-    // Inicializar el formulario principal
-    this.crearFormSolicitud();
+    // El constructor se utiliza para la inyección de dependencias       
   }
 
   /**
@@ -123,6 +137,18 @@ export class SolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.inicializaCatalogos();
 
+    this.tramite130118Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Inicializar el formulario principal
+    this.crearFormSolicitud();
+
     this.regimenMercanciaSeleccion();
     this.clasifiRegimenSeleccion();
     this.fraccionArancelariaSeleccion();
@@ -135,7 +161,6 @@ export class SolicitudComponent implements OnInit {
     this.representacionFederalSeleccion();
 
     this.muestraCamposPersona();
-
   }
 
   /**
@@ -254,7 +279,10 @@ export class SolicitudComponent implements OnInit {
           ]
         ],
         fechaSalida: [
-          { value: this.solicitudState?.fechaSalida, disabled: true }
+          this.solicitudState?.fechaSalida,
+          [
+            Validators.required
+          ]
         ],
         observaciones: [
           this.solicitudState?.observaciones,
@@ -324,7 +352,7 @@ export class SolicitudComponent implements OnInit {
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const regimenMercancia$ = this.peximService
+    const REGIMEN_MERCANCIA$ = this.peximService
       .getRegimenMercancia(CATALOGOS_ID.CAT_REGIMEN_MERCANCIA)
       .pipe(
         map((resp) => {
@@ -332,7 +360,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const clasifiRegimen$ = this.peximService
+    const CLASIFI_REGIMEN$ = this.peximService
       .getClasifiRegimen(CATALOGOS_ID.CAT_CLASIFI_REGIMEN)
       .pipe(
         map((resp) => {
@@ -340,7 +368,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const fraccionArancelaria$ = this.peximService
+    const FRACCION_ARANCELARIA$ = this.peximService
       .getFraccionArancelariaCatalogo(CATALOGOS_ID.CAT_FRACCION_ARANCELARIA)
       .pipe(
         map((resp) => {
@@ -348,7 +376,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const nico$ = this.peximService
+    const NICO$ = this.peximService
       .getNicoCatalogo(CATALOGOS_ID.CAT_NICO)
       .pipe(
         map((resp) => {
@@ -356,7 +384,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const unidadMedidaTarifaria$ = this.peximService
+    const UNIDAD_MEDIDA_TARIFARIA$ = this.peximService
       .getUnidadMedidaTarifariaCatalogo(CATALOGOS_ID.CAT_UNIDAD_MEDIDA_TARIFARIA)
       .pipe(
         map((resp) => {
@@ -364,7 +392,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const paisOrigen$ = this.peximService
+    const PAIS_ORIGEN$ = this.peximService
       .getPaisOrigenCatalogo(CATALOGOS_ID.CAT_PAIS_ORIGEN)
       .pipe(
         map((resp) => {
@@ -372,7 +400,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const paisDestino$ = this.peximService
+    const PAIS_DESTINO$ = this.peximService
       .getPaisDestinoCatalogo(CATALOGOS_ID.CAT_PAIS_DESTINO)
       .pipe(
         map((resp) => {
@@ -380,7 +408,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const molino$ = this.peximService
+    const MOLINO$ = this.peximService
       .getMolinoCatalogo(CATALOGOS_ID.CAT_MOLINO)
       .pipe(
         map((resp) => {
@@ -388,7 +416,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const estado$ = this.peximService
+    const ESTADO$ = this.peximService
       .getEstadoCatalogo(CATALOGOS_ID.CAT_ESTADO)
       .pipe(
         map((resp) => {
@@ -396,7 +424,7 @@ export class SolicitudComponent implements OnInit {
         })
       );
 
-    const representacionFederal$ = this.peximService
+    const REPRESENTACION_FEDERAL$ = this.peximService
       .getRepresentacionFederal(CATALOGOS_ID.CAT_REPRESENTACION_FEDERAL)
       .pipe(
         map((resp) => {
@@ -405,97 +433,112 @@ export class SolicitudComponent implements OnInit {
       );
 
     merge(
-      regimenMercancia$,
-      clasifiRegimen$,
-      fraccionArancelaria$,
-      nico$,
-      unidadMedidaTarifaria$,
-      paisOrigen$,
-      paisDestino$,
-      molino$,
-      estado$,
-      representacionFederal$
-    ).subscribe();
+      REGIMEN_MERCANCIA$,
+      CLASIFI_REGIMEN$,
+      FRACCION_ARANCELARIA$,
+      NICO$,
+      UNIDAD_MEDIDA_TARIFARIA$,
+      PAIS_ORIGEN$,
+      PAIS_DESTINO$,
+      MOLINO$,
+      ESTADO$,
+      REPRESENTACION_FEDERAL$
+    )
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe();
+  }
+
+  /**
+   * Establece los valores en el store de tramite130118.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite130118Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130118Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
    * Selecciona el régimen de mercancía.
    */
   regimenMercanciaSeleccion(): void {
-    const regimenMercancia = this.FormSolicitud.get('regimenMercancia')?.value;
-    this.tramite130118Store.setRegimenMercancia(regimenMercancia);
+    const REGIMEN_MERCANCIA = this.FormSolicitud.get('datosRegimen.regimenMercancia')?.value;
+    this.tramite130118Store.setRegimenMercancia(REGIMEN_MERCANCIA);
   }
 
   /**
    * Selecciona la clasificación de régimen.
    */
   clasifiRegimenSeleccion(): void {
-    const clasifiRegimen = this.FormSolicitud.get('clasifiRegimen')?.value;
-    this.tramite130118Store.setClasifiRegimen(clasifiRegimen);
+    const CLASIFI_REGIMEN = this.FormSolicitud.get('datosRegimen.clasifiRegimen')?.value;
+    this.tramite130118Store.setClasifiRegimen(CLASIFI_REGIMEN);
   }
 
   /**
    * Selecciona la fracción arancelaria.
    */
   fraccionArancelariaSeleccion(): void {
-    const fraccionArancelaria = this.FormSolicitud.get('fraccionArancelaria')?.value;
-    this.tramite130118Store.setFraccionArancelaria(fraccionArancelaria);
+    const FRACCION_ARANCELARIA = this.FormSolicitud.get('datosMercancia.fraccionArancelaria')?.value;
+    this.tramite130118Store.setFraccionArancelaria(FRACCION_ARANCELARIA);
   }
 
   /**
    * Selecciona el NICO.
    */
   nicoSeleccion(): void {
-    const nico = this.FormSolicitud.get('nico')?.value;
-    this.tramite130118Store.setNico(nico);
+    const NICO = this.FormSolicitud.get('datosMercancia.nico')?.value;
+    this.tramite130118Store.setNico(NICO);
   }
 
   /**
    * Selecciona la unidad de medida tarifaria.
    */
   unidadMedidaTarifariaSeleccion(): void {
-    const unidadMedidaTarifaria = this.FormSolicitud.get('unidadMedidaTarifaria')?.value;
-    this.tramite130118Store.setUnidadMedidaTarifaria(unidadMedidaTarifaria);
+    const UNIDAD_MEDIDA_TARIFARIA = this.FormSolicitud.get('datosMercancia.unidadMedidaTarifaria')?.value;
+    this.tramite130118Store.setUnidadMedidaTarifaria(UNIDAD_MEDIDA_TARIFARIA);
   }
 
   /**
    * Selecciona el país de origen.
    */
   paisOrigenSeleccion(): void {
-    const paisOrigen = this.FormSolicitud.get('paisOrigen')?.value;
-    this.tramite130118Store.setPaisOrigen(paisOrigen);
+    const PAIS_ORIGEN = this.FormSolicitud.get('datosMercancia.paisOrigen')?.value;
+    this.tramite130118Store.setPaisOrigen(PAIS_ORIGEN);
   }
 
   /**
    * Selecciona el país de destino.
    */
   paisDestinoSeleccion(): void {
-    const paisDestino = this.FormSolicitud.get('paisDestino')?.value;
-    this.tramite130118Store.setPaisDestino(paisDestino);
+    const PAIS_DESTINO = this.FormSolicitud.get('datosMercancia.paisDestino')?.value;
+    this.tramite130118Store.setPaisDestino(PAIS_DESTINO);
   }
 
   /**
    * Selecciona el molino.
    */
   molinoSeleccion(): void {
-    const molino = this.FormSolicitud.get('molino')?.value;
-    this.tramite130118Store.setMolino(molino);
+    const MOLINO = this.FormSolicitud.get('datosProducto.molino')?.value;
+    this.tramite130118Store.setMolino(MOLINO);
   }
 
   /**
    * Selecciona el estado.
    */
   estadoSeleccion(): void {
-    const estado = this.FormSolicitud.get('estado')?.value;
-    this.tramite130118Store.setEstado(estado);
+    const ESTADO = this.FormSolicitud.get('registroFederal.estado')?.value;
+    this.tramite130118Store.setEstado(ESTADO);
   }
 
   /**
    * Selecciona la representación federal.
    */
   representacionFederalSeleccion(): void {
-    const representacionFederal = this.FormSolicitud.get('representacionFederal')?.value;
-    this.tramite130118Store.setRepresentacionFederal(representacionFederal);
+    const REPRESENTACION_FEDERAL = this.FormSolicitud.get('registroFederal.representacionFederal')?.value;
+    this.tramite130118Store.setRepresentacionFederal(REPRESENTACION_FEDERAL);
   }
 
   /**
@@ -514,7 +557,8 @@ export class SolicitudComponent implements OnInit {
    * @returns {string} Cadena con comillas escapadas.
    */
   escapeHtmlQuotes(value: string): string {
-    return value ? value.replace(/"/g, '&#34;') : '';
+    this.escaparHtml = '&#34;';
+    return value ? value.replace(/"/g, this.escaparHtml) : '';
   }
 
   /**
@@ -522,13 +566,13 @@ export class SolicitudComponent implements OnInit {
    * @returns void
    */
   muestraCamposPersona(): void {
-    const razonSocial = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
-    const nombre = this.FormSolicitud.get('datosProducto.nombre')?.value;
+    const RAZONSOCIAL = this.FormSolicitud.get('datosProducto.razonSocial')?.value;
+    const NOMBRE = this.FormSolicitud.get('datosProducto.nombre')?.value;
 
-    if (razonSocial !== '' || razonSocial != null) {
+    if (RAZONSOCIAL) {
       this.personaMoral();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pmoral');
-    } else if (nombre !== '' || razonSocial != null) {
+    } else if (NOMBRE) {
       this.personaFisica();
       this.FormSolicitud.get('datosProducto.tipoPersona')?.setValue('pfisica');
     }
@@ -582,27 +626,29 @@ export class SolicitudComponent implements OnInit {
    * Función para calcular el precio unitario en USD.
    */
   calcularPrecioUnitarioUSD(): void {
-    const cantidadUmt = this.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.value;
-    const mercanciaAviso = this.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.value;
+    const CANTIDAD_UMT = this.FormSolicitud.get('datosMercancia.cantidadTarifaria')?.value;
+    const MERCANCIA_AVISO = this.FormSolicitud.get('datosMercancia.valorFacturaUSD')?.value;
 
-    if (cantidadUmt != null && cantidadUmt.toString().length >= 1 &&
-      mercanciaAviso != null && mercanciaAviso.toString().length >= 1) {
+    if (CANTIDAD_UMT !== null && CANTIDAD_UMT.toString().length >= 1 &&
+      MERCANCIA_AVISO !== null && MERCANCIA_AVISO.toString().length >= 1) {
 
-      if (cantidadUmt === 0 || cantidadUmt.toString().length === 0) {
+      if (CANTIDAD_UMT === 0 || CANTIDAD_UMT.toString().length === 0) {
         this.FormSolicitud.get('precioUnitarioAcero')?.setValue('0');
       } else {
-        const factor = 10000000;
+        const FACTOR = 10000000;
         let resultPrecioUni: number;
 
-        if ((mercanciaAviso * 1000) < cantidadUmt) {
+        if ((MERCANCIA_AVISO * 1000) < CANTIDAD_UMT) {
           resultPrecioUni = 0;
         } else {
-          const resultPrecioUniAux = this.truncar(
-            (mercanciaAviso * factor) / cantidadUmt / factor
+          const RESULT_PRECIO_UNIAUX = this.truncar(
+            (MERCANCIA_AVISO * FACTOR) / CANTIDAD_UMT / FACTOR
           );
-          resultPrecioUni = resultPrecioUniAux;
+          resultPrecioUni = RESULT_PRECIO_UNIAUX;
         }
         this.FormSolicitud.get('datosMercancia.precioUnitarioUSD')?.setValue(resultPrecioUni);
+
+        this.tramite130118Store.setPrecioUnitarioUSD(resultPrecioUni);
       }
     }
   }
@@ -613,17 +659,15 @@ export class SolicitudComponent implements OnInit {
    * @returns {number} Número truncado.
    */
   truncar(num: number): number {
-    const numStr = num.toString();
-    if (numStr.indexOf('.') !== -1) {
-      const numArr = numStr.split('.');
-      if (numArr.length === 1) {
+    const NUMSTR = num.toString();
+    if (NUMSTR.indexOf('.') !== -1) {
+      const NUMARR = NUMSTR.split('.');
+      if (NUMARR.length === 1) {
         return Number(num);
-      } else {
-        return parseFloat(numArr[0] + '.' + numArr[1].slice(0, 3));
       }
-    } else {
-      return Number(num);
+      return parseFloat(NUMARR[0] + '.' + NUMARR[1].slice(0, 3));
     }
+    return Number(num);
   }
 
   /**
@@ -631,7 +675,18 @@ export class SolicitudComponent implements OnInit {
    * @param nuevo_valor Nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
-    this.datosMercancia.get('fechaFinal')?.setValue(nuevo_valor);
-    this.datosMercancia.get('fechaFinal')?.markAsUntouched();
+    this.datosMercancia.patchValue({
+      fechaSalida: nuevo_valor,
+    });
+    this.tramite130118Store.setFechaSalida(nuevo_valor);
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

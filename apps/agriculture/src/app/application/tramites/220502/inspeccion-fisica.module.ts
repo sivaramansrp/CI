@@ -27,6 +27,8 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 import { SolicitudDatosComponent } from './shared/solicitud-datos/solicitud-datos.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
@@ -62,7 +64,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     HistorialInspeccionFisicaComponent,
     SolicitudComponent,
     ResponsableInspeccionEnPuntoComponent,
-    MedioTransporteComponent
+    MedioTransporteComponent,
+    ToastrModule.forRoot()
+  ],
+  providers:[
+    ToastrService
   ]
 })
 export class InspeccionFisicaModule {}

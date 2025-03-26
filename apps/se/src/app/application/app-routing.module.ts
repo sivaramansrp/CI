@@ -29,6 +29,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      )
+    },
+    {
     path: 'registro-como-empresa',
     loadChildren: () =>
       import('./tramites/120601/registro-como-empresa.module').then(
@@ -75,6 +82,11 @@ const ROUTES: Routes = [
         (m) => m.ExpansionDeProductoresModule),
   },
   {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
+  },
+  {
     path: 'elegibilidad-de-textiles',
     loadChildren: () =>
       import('./tramites/120301/elegibilidad-de-textiles.module').then(
@@ -87,12 +99,38 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  },
+  {
+    path: 'registro',
+    loadChildren:() =>
+      import('./tramites/110201/registro.module').then(
+        (m) => m.RegistroModule
+      )
   }, 
   {
     path: 'cancelacion-de',
     loadChildren: () =>
       import('./tramites/140103/cancelacion-de.module').then(
         (m) => m.CancelacionDeModule)
+  },
+  {
+    path: 'desmantelar',
+    loadChildren: () =>
+      import('./tramites/130106/desmantelar.module').then(
+        (m) => m.DesmantelarModule)
+  },
+  {
+    path: 'desistimiento-de-permiso',
+    loadChildren: () =>
+      import('./tramites/140105/desistimiento-de-permiso.module').then(
+        (m) => m.DesistimientoDePermisoModule)
+  },
+  {
+    path: 'certificado-sgp',
+    loadChildren: () =>
+      import('./tramites/110209/certificado-sgp.module').then(
+        (m) => m.CertificadoSGPModule
+      ),
   },
   {
     path: 'certificado-registro',
@@ -149,12 +187,26 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'solicitud-importacion-neumaticos-comercializar',
+    path: 'cancelaciones-ministerio',
     loadChildren: () =>
-      import('./tramites/130110/solicitud-importacion-neumaticos-comercializar.module').then(
-        (m) => m.SolicitudImportacionNeumaticosComercializarModule
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
       ),
+  },
+  {
+    path: 'exportacion-minerales',
+    loadChildren: () =>
+      import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
+        (m) => m.ExportacionMineralesDeHierroModule
+      ),
+  },
+  {
+    path: 'autorizacion-programa-nuevo',
+    loadChildren: () =>
+      import('./tramites/80102/autorizacion-programa-nuevo.module').then(
+        (m) => m.AutorizacionProgrmaNuevoModule),
   }
+
 ];
 
 @NgModule({
