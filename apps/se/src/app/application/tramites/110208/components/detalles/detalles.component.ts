@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Catalogo, CatalogoSelectComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
-import { HttpClient } from '@angular/common/http';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-detalles',
@@ -15,14 +16,16 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './detalles.component.html',
   styleUrl: './detalles.component.css',
 })
-export class DetallesComponent implements OnInit{
+export class DetallesComponent implements OnInit,OnDestroy{
   estado: Catalogo[] = [];
+
+  private destroyed$ = new Subject<void>();
 
   detallas!:FormGroup
 
     constructor(
       private fb: FormBuilder,
-      private readonly httpServicios: HttpClient,
+      private service: ValidarInicalmenteService,
     ) {
       // Dependencia inyectada para uso posterior
     }
@@ -41,11 +44,16 @@ export class DetallesComponent implements OnInit{
  * Obtiene la lista de estados desde un archivo JSON.
  */
     obtenerEstadoList(): void {
-      this.httpServicios
-        .get<RespuestaCatalogos>('../../../../../assets/json/110208/seleccion.json')
-        .subscribe((data): void => {
-          const DATOS = data?.data;
-          this.estado = DATOS;
-        });
+      this.service.obtenerEstadoList()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        const DATOS = data?.data;
+        this.estado = DATOS;
+      });
+    }
+
+    ngOnDestroy(): void {
+      this.destroyed$.next();
+      this.destroyed$.complete();
     }
 }

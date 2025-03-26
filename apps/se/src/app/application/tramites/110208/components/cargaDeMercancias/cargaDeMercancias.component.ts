@@ -1,11 +1,12 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, RespuestaCatalogos, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import {ALERTA_PARA, FECHA_DE_FACTURA} from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum'
 import { MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
-import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
+import { Subject, takeUntil } from 'rxjs';
 
 export interface RespuestaTabla {
   /**
@@ -64,7 +65,7 @@ export interface RespuestaDatos {
   templateUrl: './cargaDeMercancias.component.html',
   styleUrl: './cargaDeMercancias.component.css',
 })
-export class CargaDeMercanciasComponent implements OnInit{
+export class CargaDeMercanciasComponent implements OnInit,OnDestroy{
 
   formMercancia!: FormGroup
   /**
@@ -80,9 +81,11 @@ export class CargaDeMercanciasComponent implements OnInit{
 
   public fechaFacturaInput: InputFecha = FECHA_DE_FACTURA;
 
+  private destroyed$ = new Subject<void>();
+
   constructor(
-      private readonly httpServicios: HttpClient,
-      private fb: FormBuilder
+      private fb: FormBuilder,
+      private service: ValidarInicalmenteService,
     ) {
       // Dependencia inyectada para uso posterior
     }
@@ -98,7 +101,7 @@ export class CargaDeMercanciasComponent implements OnInit{
       nombreEnIngles:[{value:'',disabled:true}],
       criterioPara:[{value:'',disabled:true}],
       marca:[],
-      umc:[],
+      umc:[''],
       cantidad:['',Validators.required],
       valorDeLa:['',Validators.required],
       complementoDescripcion:['',Validators.required],
@@ -114,18 +117,19 @@ export class CargaDeMercanciasComponent implements OnInit{
   mercanciasFormaDatos: MercanciasFormInfo[] = []
 
   obtenerTablaDatos(): void {
-    this.httpServicios
-      .get<RespuestaTabla>('../../../../../assets/json/110208/mercancias-tabla.json')
-      .subscribe((data): void => {
-        this.mercanciasTablaDatos = data?.data;
-      });
+    this.service.obtenerTablaDatos()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      const DATOS = data?.data;
+      this.mercanciasTablaDatos = DATOS;
+    });
   }
 
   obtenerFormDatos(): void {
-    this.httpServicios
-      .get<RespuestaDatos>('../../../../../assets/json/110208/mercancia-datos.json')
-      .subscribe((data): void => {
-        this.mercanciasFormaDatos = data?.data;
+    this.service.obtenerFormDatos()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.mercanciasFormaDatos = data?.data;
         this.formMercancia.patchValue({
           fraccionArancelaria:this.mercanciasFormaDatos[0].fraccionArancelaria,
           nombreComercial:this.mercanciasFormaDatos[0].nombreComercial,
@@ -139,7 +143,7 @@ export class CargaDeMercanciasComponent implements OnInit{
           complementoDescripcion:this.mercanciasFormaDatos[0].complementoDescripcion,
           nFactura:this.mercanciasFormaDatos[0].nFactura
         })
-      });
+    });
   }
 
   abrirDialogoMercancias(): void {
@@ -168,15 +172,20 @@ export class CargaDeMercanciasComponent implements OnInit{
    * Obtiene la lista de estados desde un archivo JSON.
    */
   obtenerEstadoList(): void {
-    this.httpServicios
-      .get<RespuestaCatalogos>('../../../../../assets/json/110208/seleccion.json')
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.estado = DATOS;
-      });
+    this.service.obtenerEstadoList()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      const DATOS = data?.data;
+      this.estado = DATOS;
+    });
   }
   public cambioFechaFactura(nuevo_valor: string): void {
     this.formMercancia.get('fechaFactura')?.setValue(nuevo_valor);
     this.formMercancia.get('fechaFactura')?.markAsUntouched();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

@@ -2,16 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, RespuestaCatalogos, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import {FECHA_FINAL_110208,FECHA_INICIO_110208} from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum'
 import {
   NICO_TABLA,
   NicoInfo,
 } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
 import { CargaDeMercanciasComponent } from '../cargaDeMercancias/cargaDeMercancias.component';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
-export interface RespuestaTabla {
+export interface RespuestaTablaCertificado {
   /**
    * Código de respuesta.
    */
@@ -54,15 +54,16 @@ export class CertificadoOrigenComponent implements OnInit {
    */
   nicoTablaDatos: NicoInfo[] = [];
 
+  private destroyed$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
-   * @param httpServicios Cliente HTTP para servicios API.
  
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly httpServicios: HttpClient,
+    private service: ValidarInicalmenteService,
   ) {
     // Dependencia inyectada para uso posterior
   }
@@ -99,20 +100,21 @@ export class CertificadoOrigenComponent implements OnInit {
  * Obtiene la lista de estados desde un archivo JSON.
  */
   obtenerEstadoList(): void {
-    this.httpServicios
-      .get<RespuestaCatalogos>('../../../../../assets/json/110208/seleccion.json')
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.estado = DATOS;
-      });
+    this.service.obtenerEstadoList()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      const DATOS = data?.data;
+      this.estado = DATOS;
+    });
   }
 
   obtenerTablaDatos(): void {
-    this.httpServicios
-      .get<RespuestaTabla>('../../../../../assets/json/110208/certificado-tabla.json')
-      .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
-      });
+    this.service.obtenerTablaDatosCertificado()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      const DATOS = data?.data;
+      this.nicoTablaDatos = DATOS;
+    });
   }
   /**
    * Cambia el valor de la fecha final en el formulario.

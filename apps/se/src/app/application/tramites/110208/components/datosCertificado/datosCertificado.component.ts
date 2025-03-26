@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-certificado',
@@ -18,13 +19,15 @@ import { HttpClient } from '@angular/common/http';
 export class DatosCertificadoComponent implements OnInit,OnDestroy{
   formDatosCertificado!: FormGroup
 
+  private destroyed$ = new Subject<void>();
+
   /**
  * Lista de catálogos de estados.
  */
   estado: Catalogo[] = [];
   constructor(
       private readonly fb: FormBuilder,
-      private readonly httpServicios: HttpClient,
+      private service: ValidarInicalmenteService,
     ) {
       // Dependencia inyectada para uso posterior
     }
@@ -42,16 +45,17 @@ export class DatosCertificadoComponent implements OnInit,OnDestroy{
     /**
      * Obtiene la lista de estados desde un archivo JSON.
      */
-      obtenerEstadoList(): void {
-        this.httpServicios
-          .get<RespuestaCatalogos>('../../../../../assets/json/110208/seleccion.json')
-          .subscribe((data): void => {
-            const DATOS = data?.data;
-            this.estado = DATOS;
-          });
-      }
+    obtenerEstadoList(): void {
+      this.service.obtenerEstadoList()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data) => {
+          const DATOS = data?.data;
+          this.estado = DATOS;
+        });
+    }
 
     ngOnDestroy(): void {
-      
+      this.destroyed$.next();
+      this.destroyed$.complete();
     }
 }
