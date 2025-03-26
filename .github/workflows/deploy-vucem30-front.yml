@@ -184,15 +184,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set Python path as environment variable
+      - name: Set npm environment variables
         run: |
           echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
-          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
-
-      # Configuración de npm mediante variables de entorno en lugar de npm config
-      - name: Configure npm environment
-        run: |
           echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
@@ -212,10 +208,7 @@ jobs:
 
       - name: Install NX globally
         run: |
-          # Instalar NX globalmente
           npm install -g nx@${{ env.NX_VERSION }}
-          
-          # Verificar la instalación
           nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
       - name: Reset NX cache
