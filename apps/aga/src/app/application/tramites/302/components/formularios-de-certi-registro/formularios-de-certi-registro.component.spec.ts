@@ -20,7 +20,8 @@ describe('FormulariosDeCertiRegistroComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FormulariosDeCertiRegistroComponent);
     component = fixture.componentInstance;
-
+    component.menuDesplegableDatos = [];
+    component.formularioDatos = [];
     const formGroup = new FormGroup({});
     mockFormData.forEach(field => {
       formGroup.addControl(
@@ -66,12 +67,12 @@ describe('FormulariosDeCertiRegistroComponent', () => {
   
   it('should initialize dropdownData correctly', () => {
     component.menuDesplegableDatos = [
-      { id: 1, description: 'Option 1' },
-      { id: 2, description: 'Option 2' },
+      { id: 1, descripcion: 'Option 1' },
+      { id: 2, descripcion: 'Option 2' },
     ];
     fixture.detectChanges();
     expect(component.menuDesplegableDatos.length).toBe(2);
-    expect(component.menuDesplegableDatos[0].description).toBe('Option 1');
+    expect(component.menuDesplegableDatos[0].descripcion).toBe('Option 1');
   });
   
   it('should bind formData input correctly', () => {
