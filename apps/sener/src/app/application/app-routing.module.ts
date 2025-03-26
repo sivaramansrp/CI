@@ -7,6 +7,10 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
+  },
+  {
+    path:'producto-petrolifero',
+    loadChildren: () => import('./tramites/130202/exportacion-minerales-de-hierro.module').then(m => m.ExportacionMineralesDeHierroModule)
   }
 ];
 
