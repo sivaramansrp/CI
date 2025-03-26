@@ -39,6 +39,8 @@ export interface BienesProducidos {
   /** Nombre del bien producido */
   bienProducido: string;
   /** Sector al que pertenece el bien */
+  claveSector: string;
+  /** Sector al que pertenece el bien */
   sector: string;
   /** Fracción arancelaria asociada al bien */
   fraccion: string;

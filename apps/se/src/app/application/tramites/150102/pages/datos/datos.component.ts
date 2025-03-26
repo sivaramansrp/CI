@@ -10,6 +10,7 @@ import { ViewChild } from '@angular/core';
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',
+  styleUrl: './datos.component.scss',
 })
 export class DatosComponent implements AfterViewInit {
   /**
@@ -32,11 +33,26 @@ export class DatosComponent implements AfterViewInit {
   indice: number = 1;
 
   /**
+   * Indica si la fila de informe está seleccionada.
+   */
+  estaHabilitado: boolean = false;
+
+  /**
    * Método para actualizar el índice del subtítulo seleccionado.
    *
    * @param i - Índice de la pestaña seleccionada.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Método para obtener el estado de la fila de informe seleccionada.
+   * Actualiza el valor de `estaHabilitado` con el valor del evento.
+   */
+  getFilaDeInformeSeleccionada(evento: boolean): void {
+    if (evento) {
+      this.estaHabilitado = evento;
+    }
   }
 }

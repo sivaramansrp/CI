@@ -1,10 +1,12 @@
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
@@ -37,12 +39,19 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @property {string} minMode - Establece el modo mínimo de selección en el selector (mes).
    */
   bsConfig: Partial<BsDatepickerConfig> = {
-    dateInputFormat: 'MM/YYYY', // Formato de entrada: mes/año
+    dateInputFormat: 'MM-YYYY', // Formato de entrada: mes-año
     minMode: 'month', // Solo permite seleccionar mes y año
   };
 
   /** Estado actual de la solicitud */
   solicitud150102State: Solicitud150102State = {} as Solicitud150102State;
+
+  /**
+   * @description Evento que se emite al seleccionar una fila de la tabla.
+   * Emite un valor booleano para indicar si la fila ha sido seleccionada.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() filaDeInformeSeleccionada = new EventEmitter<boolean>();
 
   /** Subject para manejar la destrucción de observables */
   private destroyed$ = new Subject<void>();
@@ -56,7 +65,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   /** Configuración de la tabla para mostrar los datos de solicitud */
   solicitudConfiguracionTabla: ConfiguracionColumna<ProgramasReporte>[] = [
     {
-      encabezado: 'Numero/Registro de programa',
+      encabezado: 'Número/Registro de programa',
       clave: (item: ProgramasReporte) => item.folioPrograma,
       orden: 1,
     },
@@ -76,6 +85,13 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       orden: 4,
     },
   ];
+
+  /**
+   * @description Subject para manejar la destrucción de observables.
+   * Se utiliza para finalizar las suscripciones activas y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @description Constructor que inicializa los servicios y estado necesarios.
@@ -137,12 +153,15 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Actualiza el estado con las fechas obtenidas del servicio.
    */
   obtenerReporteFechas(): void {
-    this.solicitudService.obtenerReporteFechas().subscribe({
-      next: (respuesta: ReporteFechas) => {
-        this.solicitud150102Store.actualizarInicio(respuesta.inicio);
-        this.solicitud150102Store.actualizarFin(respuesta.fin);
-      },
-    });
+    this.solicitudService
+      .obtenerReporteFechas()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: ReporteFechas) => {
+          this.solicitud150102Store.actualizarInicio(respuesta.inicio);
+          this.solicitud150102Store.actualizarFin(respuesta.fin);
+        },
+      });
   }
 
   /**
@@ -150,11 +169,14 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Actualiza los datos con los resultados obtenidos del servicio.
    */
   obtenerProgramasReporte(): void {
-    this.solicitudService.obtenerProgramasReporte().subscribe({
-      next: (respuesta: ProgramasReporte[]) => {
-        this.solicitudDatos = respuesta;
-      },
-    });
+    this.solicitudService
+      .obtenerProgramasReporte()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: ProgramasReporte[]) => {
+          this.solicitudDatos = respuesta;
+        },
+      });
   }
 
   /**
@@ -166,6 +188,9 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     this.solicitud150102Store.actualizarModalidad(evento.modalidad);
     this.solicitud150102Store.actualizarTipoPrograma(evento.tipoPrograma);
     this.solicitud150102Store.actualizarEstatus(evento.estatus);
+    if (evento instanceof Object) {
+      this.filaDeInformeSeleccionada.emit(true);
+    }
   }
 
   /**
@@ -175,5 +200,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(); // Emite una señal para finalizar las suscripciones
     this.destroyed$.complete(); // Completa el Subject
+    this.destroyNotifier$.next(); // Emite una señal para finalizar las suscripciones
+    this.destroyNotifier$.complete(); // Completa el Subject
   }
 }

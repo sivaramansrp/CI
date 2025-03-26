@@ -49,31 +49,31 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /** Configuración de la tabla de bienes producidos */
   producidosConfiguracionTabla: ConfiguracionAporteColumna<BienesProducidos>[] =
     [
-      {
-        encabezado: 'Bienes producidos',
-        llave: 'bienProducido',
-        clave: (item: BienesProducidos) => item.bienProducido,
+       {
+        encabezado: 'Clave sector',
+        llave: 'claveSector',
+        clave: (item: BienesProducidos) => item.claveSector,
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 1,
       },
       {
-        encabezado: 'Clave sector ',
+        encabezado: 'sector ',
         llave: 'sector',
         clave: (item: BienesProducidos) => item.sector,
         opcionDeEntrada: TablaCampoSeleccion.NONE,
         orden: 2,
       },
       {
-        encabezado: 'Fraccion arancelaria',
+        encabezado: 'Fracción arancelaria',
         llave: 'fraccion',
         clave: (item: BienesProducidos) => item.fraccion,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 3,
       },
       {
-        encabezado: 'Unidad de medida',
-        llave: 'unidadMedida',
-        clave: (item: BienesProducidos) => item.unidadMedida,
+        encabezado: 'Bienes producidos',
+        llave: 'bienProducido',
+        clave: (item: BienesProducidos) => item.bienProducido,
         opcionDeEntrada: TablaCampoSeleccion.INPUT,
         orden: 4,
       },
@@ -119,11 +119,11 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
       },
       {
         encabezado: 'Clave sector ',
-        clave: (item: BienesProducidos) => item.sector,
+        clave: (item: BienesProducidos) => item.claveSector,
         orden: 2,
       },
       {
-        encabezado: 'Fraccion arancelaria',
+        encabezado: 'Fracción arancelaria',
         clave: (item: BienesProducidos) => item.fraccion,
         orden: 3,
       },
@@ -148,6 +148,13 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         orden: 7,
       },
     ];
+
+  /**
+   * @description Subject para manejar la destrucción de observables.
+   * Se utiliza para finalizar las suscripciones activas y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @description Constructor que inicializa las dependencias necesarias.
@@ -227,20 +234,23 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @description Método que obtiene datos de bienes producidos y actualiza el estado con una lista única.
    */
   obtenerProducidosDatos(): void {
-    this.solicitudService.obtenerProducidosDatos().subscribe({
-      next: (respuesta: BienesProducidos[]) => {
-        const MATRIZ_JSON = [
-          ...this.solicitud150102State.producidosDatos,
-          ...respuesta.filter(
-            (item) =>
-              !this.solicitud150102State.producidosDatos.some(
-                (existing) => existing.bienProducido === item.bienProducido
-              )
-          ),
-        ];
-        this.solicitud150102Store.actualizarProducidosDatos(MATRIZ_JSON);
-      },
-    });
+    this.solicitudService
+      .obtenerProducidosDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: BienesProducidos[]) => {
+          const MATRIZ_JSON = [
+            ...this.solicitud150102State.producidosDatos,
+            ...respuesta.filter(
+              (item) =>
+                !this.solicitud150102State.producidosDatos.some(
+                  (existing) => existing.claveSector === item.claveSector
+                )
+            ),
+          ];
+          this.solicitud150102Store.actualizarProducidosDatos(MATRIZ_JSON);
+        },
+      });
   }
 
   /**
@@ -290,7 +300,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   agregarBienesProducidos(): void {
     if (this.bienesProducidos) {
       const EXISTE = this.bienesProducidosDatos.some(
-        (item) => item.bienProducido === this.bienesProducidos.bienProducido
+        (item) => item.claveSector === this.bienesProducidos.claveSector
       );
       if (!EXISTE) {
         this.bienesProducidosDatos = [
@@ -334,5 +344,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(); // Notifica a las suscripciones que deben finalizar
     this.destroyed$.complete(); // Completa el Subject para evitar fugas de memoria
+    this.destroyNotifier$.next(); // Notifica a las suscripciones que deben finalizar
+    this.destroyNotifier$.complete(); // Completa el Subject para evitar fugas de memoria
   }
 }

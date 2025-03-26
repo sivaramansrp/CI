@@ -5,10 +5,12 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group input-container">
+          <label class="form-label" for="ideGenerica1">Inicio:</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control input-date"
             formControlName="inicio"
+            id="ideGenerica1"
             bsDatepicker
             [bsConfig]="bsConfig"
           />
@@ -17,10 +19,12 @@
       </div>
       <div class="col-md-4">
         <div class="form-group input-container">
+          <label class="form-label" for="ideGenerica2">Fin:</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control input-date"
             formControlName="fin"
+            id="ideGenerica2"
             bsDatepicker
             [bsConfig]="bsConfig"
           />

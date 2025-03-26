@@ -96,6 +96,7 @@ describe('DatosDeReporteAnnualComponent', () => {
         sector: 'Sector1',
         fraccion: 'Fraccion1',
         unidadMedida: 'Unidad1',
+        claveSector:'XIII',
         totalBienesProducidos: '100',
         mercadoNacional: '50',
         exportaciones: '50',

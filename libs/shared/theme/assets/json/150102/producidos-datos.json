@@ -1,9 +1,10 @@
 [
     {
-      "bienProducido": "XIII",
+      "bienProducido": "",
+      "claveSector":"XIII",
       "sector": "De la Industria Siderurgica",
       "fraccion": "",
-      "unidadMedida": "",
+      "unidadMedida": "Kilogramos",
       "totalBienesProducidos": "",
       "mercadoNacional": "",
       "exportaciones": ""
