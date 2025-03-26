@@ -350,6 +350,10 @@
         <button type="button" class="btn btn-primary btn-space">
           Eliminar
         </button>
+        <button type="button"
+          class="btn btn-default btn-primary">
+          Agregar
+        </button>
       </div>
       <div class="mt-4 form-group">
         <app-input-radio
@@ -652,10 +656,11 @@
               type="file"
               id="archivoNacionales"
               class="form-control w-auto"
+              formControlName="archivoNacionales"
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)">
               Anexar
             </button>
           </div>
@@ -702,7 +707,7 @@
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)">
               Anexar
             </button>
           </div>
@@ -1222,3 +1227,20 @@
     </div>
   </div>
 </div>
+
+<ng-template #template>
+  @if(noSeHaSubidoNingunArchivo) {
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Mensaje</h4>
+      <button type="button" class="btn-close close pull-right" aria-label="Close">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      Error,No se ha seleccionado un archivo
+    </div>
+    <div class="modal-footer custom-footer">
+      <button type="button" class="btn btn-default" (click)="cerrar()">Aceptar</button>
+    </div>
+  }
+</ng-template>
