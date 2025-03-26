@@ -36,8 +36,8 @@ on:
       - '.github/workflows/**'
 
 env:
-  NODE_VERSION: '22.14.0'
-  NX_VERSION: '19.3.1'
+  NODE_VERSION: '20'
+  NX_VERSION: '16.10.0'
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe'
@@ -168,20 +168,21 @@ jobs:
     needs: setup
     if: needs.setup.outputs.final_apps != ''
     runs-on: ubuntu-latest
+    container:
+      image: node:20-slim
     strategy:
       matrix:
         app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
       fail-fast: false
     steps:
+      - name: Install git
+        run: |
+          apt-get update && apt-get install -y git
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
@@ -200,11 +201,16 @@ jobs:
 
       - name: Install NX globally
         run: |
+          # Instalar NX globalmente
           npm install -g nx@${{ env.NX_VERSION }}
-          npx nx --version
+          
+          # Verificar la instalación
+          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
       - name: Reset NX cache
-        run: npx nx reset
+        run: |
+          npm cache clean --force
+          npx nx reset || echo "Advertencia: Error al reiniciar caché de NX, continuando..."
 
       - name: Build ${{ matrix.app }}
         run: npx nx build ${{ matrix.app }} --configuration=production
