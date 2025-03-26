@@ -99,7 +99,7 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
-  },
+  }, 
   {
     path: 'cancelacion-de',
     loadChildren: () =>
@@ -206,6 +206,7 @@ const ROUTES: Routes = [
         (m) => m.AvisoImportacionMaquinasModule
       ),
   }
+  
 ];
 
 @NgModule({
