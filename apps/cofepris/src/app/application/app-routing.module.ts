@@ -14,7 +14,14 @@ const ROUTES: Routes = [
       import('./tramites/260912/mod-permiso-importacion.module').then(
         (m)=> m.ModPermisoImportacionModule
       )
-  }
+  },
+  {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
