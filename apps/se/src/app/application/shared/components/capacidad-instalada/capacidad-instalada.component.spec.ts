@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -16,15 +25,13 @@ describe('CapacidadInstaladaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [FormsModule, ReactiveFormsModule],
 
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        Location
-      ]
-    }).overrideComponent(CapacidadInstaladaComponent, {
-
-    }).compileComponents();
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [Location],
+    })
+      .overrideComponent(CapacidadInstaladaComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(CapacidadInstaladaComponent);
     component = fixture.debugElement.componentInstance;
   });
@@ -39,5 +46,4 @@ describe('CapacidadInstaladaComponent', () => {
     component.regrasar();
     expect(component.ubicaccion.back).toHaveBeenCalled();
   });
-
 });
