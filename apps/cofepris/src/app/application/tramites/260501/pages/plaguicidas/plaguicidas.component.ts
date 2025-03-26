@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 
 
 interface AccionBoton {

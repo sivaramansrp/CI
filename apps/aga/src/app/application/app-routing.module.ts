@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
-import { FirmaPageComponent } from '@ng-mf/data-access-user';import { NgModule } from '@angular/core';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -22,6 +23,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/303/despacho-mercancias.module').then(
         (m) => m.DespachoMercanciasModule
+      ),
+  },
+  {
+    path: 'muestras-mercancias',
+    loadChildren: () =>
+      import('./tramites/30901/renovaciones-muestras-mercancias.module').then(
+        (m) => m.RenovacionesMuestrasMercanciasModule
       ),
   },
   {
@@ -61,6 +69,13 @@ const ROUTES: Routes = [
     ),
   },
   {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40102/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
     path: 'notificacion',
     component: NotificacionPageComponent
   },
@@ -77,6 +92,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
+  
+{
+  path: 'registro-digitalizar-documentos',
+  loadChildren: () =>
+    import('./tramites/701/registro-digitalizar-documentos.module').then(
+      (m) => m.RegistroDigitalizarDocumentosModule
+    ),
+},
 ];
 
 @NgModule({
