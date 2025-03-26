@@ -10,7 +10,7 @@
             @if (item.tipo_input === '') {
                 <div [ngClass]="item.class">
                   <div class="form-group">
-                    <label class="form-label mt-5 mb-3" [for]="item.campo">{{
+                    <label class="form-label mt-5 mb-3" [for]="item.campo" style="text-align: left !important;">{{
                       item.labelNombre
                     }}</label>
                   </div>
@@ -92,9 +92,15 @@
                 }
             </div>
           } @else if (item.tipo_input === 'select-catalogos') {
-            <div [ngClass]="item.class" class="mt-5">
-              <app-catalogo-select [catalogo]="menuDesplegableDatos ? menuDesplegableDatos : item?.listaDesplegable" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
-            </div>
+            @if (menuDesplegableDatos.length) {
+              <div [ngClass]="item.class" class="mt-5">
+                <app-catalogo-select [catalogo]="menuDesplegableDatos" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
+              </div>
+            } @else if (item?.listaDesplegable?.length){
+              <div [ngClass]="item.class" class="mt-5">
+                <app-catalogo-select [catalogo]="item?.listaDesplegable || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
+              </div>
+            }
           }
        } 
     </div>

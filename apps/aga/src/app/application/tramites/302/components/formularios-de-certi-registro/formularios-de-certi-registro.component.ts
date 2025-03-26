@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
@@ -25,7 +25,7 @@ import { ValidacionesFormularioService } from '../../../../../../../../../libs/s
     CatalogoSelectComponent
   ],
   templateUrl: './formularios-de-certi-registro.component.html',
-  styleUrl: './formularios-de-certi-registro.component.css',
+  styleUrl: './formularios-de-certi-registro.component.scss',
 })
 
 export class FormulariosDeCertiRegistroComponent {
@@ -62,7 +62,7 @@ export class FormulariosDeCertiRegistroComponent {
    * Este es un dato de tipo "any" que se utiliza para manejar la información
    * relacionada con los menús desplegables en el componente.
    */
-  @Input() public menuDesplegableDatos!: any;
+  @Input() public menuDesplegableDatos: Catalogo[] = [];
 
   /**
    * compo doc

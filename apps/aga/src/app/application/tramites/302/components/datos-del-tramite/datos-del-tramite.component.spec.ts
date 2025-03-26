@@ -36,21 +36,30 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   const formName = new FormGroup({});
-  const formData = [
+  const formData: {labelNombre: string, campo: string, disabled: boolean, validators: string[], class: string, tipo_input: string}[] = [
     {
+      labelNombre: 'Cantidad',
       campo: 'cantidad',
       disabled: false,
-      validators: ['required']
+      validators: ['required'],
+      class: 'col-md-8',
+      tipo_input: 'text'
     },
     {
+      labelNombre: 'Unidad de medida',
       campo: 'unidadDeMedida',
       disabled: false,
-      validators: []
+      validators: [],
+      class: 'col-md-4',
+      tipo_input: 'select-catalogos'
     },
     {
+      labelNombre: 'Ano de importacion temporal',
       campo: 'anoDeImportacionTemporal',
       disabled: true,
-      validators: ['required']
+      validators: ['required'],
+      class: 'col-md-4',
+      tipo_input: 'select-catalogos'
     },
   ];
 
@@ -111,7 +120,7 @@ describe('DatosDelTramiteComponent', () => {
     component.agregarProductos();
     expect(component.detallesDelProducto.length).toBe(1);
     expect(component.detallesDelProducto[0].tipoDeMercancia).toBe('Test Product');
-    expect(component.modalConfirmación).toBe('show');
+    expect(component.modalConfirmacion).toBe('show');
   });
 
   it('should set modal property to "show"', () => {

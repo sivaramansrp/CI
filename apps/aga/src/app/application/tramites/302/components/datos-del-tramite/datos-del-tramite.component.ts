@@ -1,7 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DATOS_ALERT,
@@ -19,13 +16,16 @@ import { CertiRegistro302State } from '../../../../../application/core/estados/t
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DetallesDelProducto } from '../../models/certi-registro.model';
+import { FormularioDinamico } from '@libs/shared/data-access-user/src';
 import { FormulariosDeCertiRegistroComponent } from '../formularios-de-certi-registro/formularios-de-certi-registro.component';
 import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite302Query } from '../../../../../application/core/queries/tramite302.query';
 import { Tramite302Store } from '../../../../../application/core/estados/tramites/tramite302.store';
-
+import aduanas from 'libs/shared/theme/assets/json/302/lista-de-oficinas-de-aduanas.json';
+import importaciónTemporal from 'libs/shared/theme/assets/json/302/list-importacion-temporal.json';
+import unidadDeMedida from 'libs/shared/theme/assets/json/302/lista-unidad-de-medida.json';
 /**
 * DatosDelTramiteComponent componente utilizado para procesar los datos del producto*
 * Este componente utiliza varios subcomponentes como TitleComponent, CommonModule,
@@ -116,16 +116,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]}
    * @memberof DatosDelTramiteComponent
    */
-  public listaDeOficinasDeAduanas: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'Opción 1',
-    },
-    {
-      id: 2,
-      descripcion: 'Opción 2',
-    },
-  ];
+  public listaDeOficinasDeAduanas: Catalogo[] = aduanas as Catalogo[];
 
   /**
    * Lista de opciones para el año de importación temporal.
@@ -133,16 +124,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]}
    * @memberof DatosDelTramiteComponent
    */
-  public listImportacionTemporal: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'Opción 1',
-    },
-    {
-      id: 2,
-      descripcion: 'Opción 2',
-    },
-  ];
+  public listImportacionTemporal: Catalogo[] = importaciónTemporal as Catalogo[];
 
   /**
    * List of options for the unit of measurement.
@@ -150,20 +132,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]}
    * @memberof DatosDelTramiteComponent
    */
-  public listaUnidadDeMedida: Catalogo[] = [
-    {
-      id: 1,
-      descripcion: 'Opción 1',
-    },
-    {
-      id: 2,
-      descripcion: 'Opción 2',
-    },
-    {
-      id: 3,
-      descripcion: 'Opción 3',
-    },
-  ];
+  public listaUnidadDeMedida: Catalogo[] = unidadDeMedida as Catalogo[];
 
   /**
    * Array que contiene los datos de las personas cargadas desde el archivo JSON.
@@ -190,39 +159,43 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @type {ConfiguracionColumna<>[]}
    * @memberof DatosDelTramiteComponent
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
-    {
-      encabezado: 'Tipo de mercancía',
-      clave: (item: any) => item.tipoDeMercancia,
-      orden: 1,
-    },
-    { encabezado: 'Cantidad', clave: (item: any) => item.cantidad, orden: 2 },
-    {
-      encabezado: 'Unidad de medida de comercialización',
-      clave: (item: any) => item.unidadDeMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Año de importación temporal',
-      clave: (item: any) => item.anoDeImportacion,
-      orden: 4,
-    },
-    {
-      encabezado: 'Modelo',
-      clave: (item: any) => item.modelo,
-      orden: 5,
-    },
-    {
-      encabezado: 'Marca',
-      clave: (item: any) => item.marca,
-      orden: 6,
-    },
-    {
-      encabezado: 'Número de serie',
-      clave: (item: any) => item.numeroDeSerie,
-      orden: 7,
-    },
-  ];
+    public configuracionTabla: ConfiguracionColumna<DetallesDelProducto>[] = [
+      {
+        encabezado: 'Tipo de mercancía',
+        clave: (item: DetallesDelProducto) => item.tipoDeMercancia,
+        orden: 1,
+      },
+      { 
+        encabezado: 'Cantidad',
+        clave: (item: DetallesDelProducto) => item.cantidad,
+        orden: 2
+      },
+      {
+        encabezado: 'Unidad de medida de comercialización',
+        clave: (item: DetallesDelProducto) => item.unidadDeMedida,
+        orden: 3,
+      },
+      {
+        encabezado: 'Año de importación temporal',
+        clave: (item: DetallesDelProducto) => item.anoDeImportacionTemporal,
+        orden: 4,
+      },
+      {
+        encabezado: 'Modelo',
+        clave: (item: DetallesDelProducto) => item.modelo,
+        orden: 5,
+      },
+      {
+        encabezado: 'Marca',
+        clave: (item: DetallesDelProducto) => item.marca,
+        orden: 6,
+      },
+      {
+        encabezado: 'Número de serie',
+        clave: (item: DetallesDelProducto) => item.numeroDeSerie,
+        orden: 7,
+      },
+    ];
 
   /** Variable que controla el estado del modal (abierto o cerrado). 
    * @type {string}
@@ -234,7 +207,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @type {string}
    * @memberof DatosDelTramiteComponent
   */
-  public modalConfirmación: string = 'modal';
+  public modalConfirmacion: string = 'modal';
 
   /**
    * Formulario reactivo para agregar productos.
@@ -345,10 +318,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param nombreDelFormulario - El FormGroup que será inicializado.
    * @param formularioDatos - La configuración de los campos que se agregarán al FormGroup.
    */
-  public inicializarFormGroup(nombreDelFormulario: FormGroup, formularioDatos: any) {
+  public inicializarFormGroup(nombreDelFormulario: FormGroup, formularioDatos: FormularioDinamico[]): void {
     if (nombreDelFormulario) {
-      formularioDatos?.forEach((campo: any) => {
-        const VALIDADORES = this.mapValidadores(campo?.validators);
+      formularioDatos?.forEach((campo: FormularioDinamico) => {
+        const VALIDADORES = DatosDelTramiteComponent.mapValidadores(campo?.validators);
         nombreDelFormulario?.addControl(
           campo.campo,
           new FormControl({ value: this.certiRegistroState[campo.campo], disabled: campo.disabled }, VALIDADORES)
@@ -356,10 +329,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
         if (campo.campo === 'unidadDeMedida') {
           campo.listaDesplegable = this.listaUnidadDeMedida;
-        }
-
-        if (campo.campo === 'anoDeImportacionTemporal') {
+        } else if (campo.campo === 'anoDeImportacionTemporal') {
           campo.listaDesplegable = this.listImportacionTemporal;
+        } else {
+          campo.listaDesplegable = [];
         }
       });
     }
@@ -376,13 +349,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param validadores Lista de nombres de validadores como cadenas.
    * @returns Arreglo de funciones de validación (`ValidatorFn[]`).
    */
-  private mapValidadores = (validadores: string[]): ValidatorFn[] => {
+  private static mapValidadores(validadores: string[]): ValidatorFn[] {
     const VALIDADORES_DE_FORMULARIO: ValidatorFn[] = [];
     if (validadores?.includes('required')) {
       VALIDADORES_DE_FORMULARIO?.push(Validators.required);
     }
     return VALIDADORES_DE_FORMULARIO;
-  };
+  }
 
   /** 
    * compo doc
@@ -390,7 +363,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @description
    * Asigna la descripción del catálogo seleccionado al control del formulario. */
   // eslint-disable-next-line class-methods-use-this
-  public docSeleccionado(event: Catalogo, forma: FormGroup, controlDeFormulario: string) {
+  public docSeleccionado(event: Catalogo, forma: FormGroup, controlDeFormulario: string): void {
     if (event) {
       forma?.get(controlDeFormulario)?.setValue(event?.descripcion);
     }
@@ -403,7 +376,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Abre un modal estableciendo su estado a 'show'.
    * Este método se utiliza para mostrar el modal en la interfaz de usuario.
    */
-  public abrirModal() {
+  public abrirModal(): void {
     this.modal = 'show';
   }
 
@@ -414,7 +387,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Cierra el modal utilizando una referencia al botón de cierre.
    * Este método simula un clic en el botón de cierre del modal para ocultarlo.
    */
-  public cerrarModal() {
+  public cerrarModal(): void {
     this.closeModal.nativeElement.click();
   }
 
@@ -427,13 +400,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * se agrega a la lista `detallesDelProducto`, se reinicia el formulario,
    * se cierra el modal y se muestra el modal de confirmación.
    */
-  public agregarProductos() {
+  public agregarProductos(): void {
     if (this.formAgregarProductos.valid) {
       const PRODUCTOS = this.formAgregarProductos?.value;
       this.detallesDelProducto?.push(PRODUCTOS);
       this.formAgregarProductos.reset();
       this.cerrarModal();
-      this.modalConfirmación = 'show';
+      this.modalConfirmacion = 'show';
     }
   }
 

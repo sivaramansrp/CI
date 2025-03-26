@@ -59,7 +59,7 @@ export const MERCANCIAS = [
  */
   export const PRODUCTOS = [
     {
-      labelNombre: 'Tipo de mercancia',
+      labelNombre: 'Tipo de mercancía',
       campo: 'tipoDeMercancia',
       class: 'col-md-4',
       tipo_input: 'text',
@@ -68,7 +68,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Condicion de la mercancia',
+      labelNombre: 'Condición de la mercancía',
       campo: 'condicionDeLaMercancia',
       class: 'col-md-8',
       tipo_input: 'text',
@@ -137,7 +137,7 @@ export const MERCANCIAS = [
         placeholder: '',
       },
       {
-        labelNombre: 'Numero de serie',
+        labelNombre: 'Número de serie',
         campo: 'numeroDeSerie',
         class: 'col-md-8',
         tipo_input: 'text',
@@ -174,7 +174,7 @@ export const MERCANCIAS = [
       tooltip: ''
     },
     {
-      labelNombre: 'Numero de programa Immex',
+      labelNombre: 'Número de programa Immex',
       campo: 'programaImmex',
       class: 'col-md-8',
       tipo_input: 'text',
@@ -183,7 +183,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Nombre / Razon Social',
+      labelNombre: 'Razón / Razon Social',
       campo: 'nombreRazonSocial',
       class: 'col-md-8',
       tipo_input: 'text',
@@ -210,7 +210,7 @@ export const MERCANCIAS = [
  */
   export const DOMICILIO_FISCAL = [
     {
-      labelNombre: 'Pais',
+      labelNombre: 'País',
       campo: 'pais',
       class: 'col-md-4',
       tipo_input: 'text',
@@ -259,7 +259,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Numero y/o letra exterior',
+      labelNombre: 'Número y/o letra exterior',
       campo: 'numeroExterior',
       class: 'col-md-4',
       tipo_input: 'text',
@@ -269,7 +269,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Numero y/o letra interior',
+      labelNombre: 'Número y/o letra interior',
       campo: 'numeroInterior',
       class: 'col-md-4',
       tipo_input: 'text',
@@ -279,7 +279,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Correo electronico',
+      labelNombre: 'Correo electrónico',
       campo: 'correoElectronico',
       class: 'col-md-8',
       tipo_input: 'text',
@@ -299,7 +299,7 @@ export const MERCANCIAS = [
       placeholder: '',
     },
     {
-      labelNombre: 'Correo electronico (opcional)',
+      labelNombre: 'Correo electrónico (opcional)',
       campo: 'correoElectronicoOpcional',
       class: 'col-md-8',
       tipo_input: 'text',
