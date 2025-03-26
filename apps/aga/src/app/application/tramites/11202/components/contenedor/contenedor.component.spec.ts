@@ -4,8 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
 import { ContenedorComponent } from './contenedor.component';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
-import { Contenedor11202Store } from '../../../../estados/tramites/contenedor11202.store';
-import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
+import { Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
+import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
 
 describe('ContenedorComponent', () => {
   let component: ContenedorComponent;

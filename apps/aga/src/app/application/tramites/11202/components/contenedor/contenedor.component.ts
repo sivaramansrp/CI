@@ -7,10 +7,9 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json';
 
-import { Contenedor11202Query } from '../../../../estados/queries/contenedor11202.query';
-import { Contenedor11202State} from '../../../../estados/tramites/contenedor11202.store';
-import {Contenedor11202Store} from '../../../../estados/tramites/contenedor11202.store';
 import {TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
+import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
+import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
 
 @Component({
   selector: 'app-contenedor',

@@ -1,38 +1,34 @@
-import { Component } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { TramiteStore } from '../../../../estados/tramite.store';
-import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { catchError, map } from 'rxjs';
-import { FirmaElectronicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component";
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
-/**
- * Componente para mostrar el subtítulo del asistente.
- * @component PasoTresComponent
- * @selector app-paso-tres
- * @templateUrl ./paso-tres.component.html
- * @styleUrls ./paso-tres.component.scss --220201
- */
 @Component({
-  selector: 'app-paso-tres',
-  standalone: true,
+  selector: 'paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrls: ['./paso-tres.component.scss'],
-  imports: [FirmaElectronicaComponent],
-
+  styleUrl: './paso-tres.component.scss'
 })
 export class PasoTresComponent {
 
   constructor(
-      private router: Router,
-      private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
-      private tramiteStore: TramiteStore
-    ) { }
- obtieneFirma(ev: string): void {
+    private router: Router,
+    private tramiteFolioServices: TramiteFolioService,
+    private tramiteStore: TramiteFolioStore,) 
+  // eslint-disable-next-line no-empty-function
+  {
+
+  }
+
+  /**
+  * Maneja el evento para obtener la firma y realiza acciones adicionales.
+  * @param ev - La cadena de texto que representa la firma obtenida.
+  */
+  obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.tramiteFolioServices
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
@@ -47,10 +43,7 @@ export class PasoTresComponent {
     }
   }
 
-/**
-   * Objeto con las instrucciones.
-   * @property {string} TEXTOS - Instrucciones para el usuario. --220201
-   */
-TEXTOS: string = TEXTOS?.INSTRUCCIONES;
+
+
 
 }

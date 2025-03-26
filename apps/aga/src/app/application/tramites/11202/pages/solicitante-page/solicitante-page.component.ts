@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
+
 
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { SeccionState, SeccionStore } from '../../../../core/estados/seccion.store';
+import { SeccionQuery } from '../../../../core/queries/seccion.query';
 interface AccionBoton {
   accion: string;
   valor: number;

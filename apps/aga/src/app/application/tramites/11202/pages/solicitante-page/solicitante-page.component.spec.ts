@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
-import { SeccionStore } from '../../../../estados/seccion.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { SeccionQuery } from '../../../../core/queries/seccion.query';
+import { SeccionStore } from '../../../../core/estados/seccion.store';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;

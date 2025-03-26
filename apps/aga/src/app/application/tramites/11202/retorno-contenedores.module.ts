@@ -19,6 +19,7 @@ import { RetornoContenedoresRoutingModule } from './retorno-contenedores-routing
     PasoUnoComponent,
     SolicitantePageComponent,
     PasoDosComponent,
+    PasoTresComponent,
     
   ],
   imports: [
@@ -43,7 +44,7 @@ import { RetornoContenedoresRoutingModule } from './retorno-contenedores-routing
     RepresentanteFiscalComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    PasoTresComponent,
+
   ],
   exports: [SolicitanteComponent, ContenedorComponent, PasoUnoComponent],
   providers: [CatalogosService, ToastrService],
