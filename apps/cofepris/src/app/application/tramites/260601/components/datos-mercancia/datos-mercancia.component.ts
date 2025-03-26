@@ -75,17 +75,17 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Datos de listas cruzadas específicas de uso.
    */
-  usoEspecificoCrosslistDatos: CrossList | undefined;
+  usoEspecificoCrosslistDatos: CrossList = {} as CrossList;
 
   /**
    * Datos de listas cruzadas para país de origen.
    */
-  paisOrigenCrosslistDatos: CrossList | undefined;
+  paisOrigenCrosslistDatos: CrossList = {} as CrossList;
 
   /**
    * Datos de listas cruzadas para país de procedencia.
    */
-  paisProcedencisCrosslistDatos: CrossList | undefined;
+  paisProcedencisCrosslistDatos: CrossList = {} as CrossList;
 
   /**
    * Lista de rangos de días seleccionarUsoEspecifico.

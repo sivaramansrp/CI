@@ -41,6 +41,9 @@ import { ToastrService } from 'ngx-toastr';
     InicioSesionService,
     SubirDocumentoService,
     CatalogosService
+  ],
+  exports: [
+    DatosComponent
   ]
 })
 export class AvisoSanitarioModule { }

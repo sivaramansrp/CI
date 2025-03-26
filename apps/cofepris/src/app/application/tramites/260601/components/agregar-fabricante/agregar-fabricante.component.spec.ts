@@ -1,42 +1,51 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { DatosMercanciaComponent } from './datos-mercancia.component';
-import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { AgregarFabricanteComponent } from './agregar-fabricante.component';
 import { Tramite260601Store } from '../../estados/tramites/tramite260601.store';
 import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
-import { of } from 'rxjs';
+import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
+import { of, Subject } from 'rxjs';
 
-fdescribe('DatosMercanciaComponent', () => {
-  let component: DatosMercanciaComponent;
-  let fixture: ComponentFixture<DatosMercanciaComponent>;
+describe('AgregarFabricanteComponent', () => {
+  let component: AgregarFabricanteComponent;
+  let fixture: ComponentFixture<AgregarFabricanteComponent>;
   let mockAvisoSanitarioService: Partial<AvisoSanitarioService>;
   let mockTramite260601Store: Partial<Tramite260601Store>;
   let mockTramite260601Query: Partial<Tramite260601Query>;
+  let fb: FormBuilder;
 
   beforeEach(async () => {
     mockAvisoSanitarioService = {
-      getProductoClasificacion: jest.fn().mockReturnValue(of({ data: [{ label: 'Clasificación 1', value: 'c1' }] })),
-      getEspecificoProductoClasificacion: jest.fn().mockReturnValue(of({ data: [{ label: 'Específico 1', value: 'e1' }] })),
-      getTipoProducto: jest.fn().mockReturnValue(of({ data: [{ label: 'Tipo 1', value: 't1' }] })),
-      getPaisDestino: jest.fn().mockReturnValue(of({ data: [{ label: 'País 1', value: 'p1' }] })),
-      obtenerMercanciaCrosslist: jest.fn().mockReturnValue(
-        of({
-          paisOrigenCrossList: { label: { izquierda: 'Izquierda', derecha: 'Derecha' }, fechas: ['01/01/2023'] },
-          paisProcedencisCrossList: { label: { izquierda: 'Izquierda', derecha: 'Derecha' }, fechas: ['02/01/2023'] },
-          usoEspecificoCrossList: { label: { izquierda: 'Izquierda', derecha: 'Derecha' }, fechas: ['03/01/2023'] },
-        })
-      ),
-      autocompletarDescripcion: jest.fn().mockReturnValue(
-        of({ data: [{ descripcion: 'Descripción Fracción' }] })
-      ),
+      getProductoClasificacion: jest.fn().mockReturnValue(of({ data: [{ value: 'producto1', label: 'Producto 1' }] })),
     };
 
     mockTramite260601Store = {
-      setProductoClasificacion: jest.fn(),
-      setEspecificoProductoClasificacion: jest.fn(),
       setTipoProducto: jest.fn(),
-      setPaisDestino: jest.fn(),
-      setFraccionArancelariaDescripcion: jest.fn(),
+      setTercerosNacionalidadFabricante: jest.fn(),
+      setTipoPersonaFabricante: jest.fn(),
+      setFabricanteNombre: jest.fn(),
+      setMostrarRfcFabricanteBuscarBoton: jest.fn(),
+      setMostrarCurpFabricanteBuscarBoton: jest.fn(),
+      setInhabilitarPaisFabricante: jest.fn(),
+      setRfcFabricanteInhabilitar: jest.fn(),
+      setCurpFabricanteInhabilitar: jest.fn(),
+      setFabricanteNombreInhabilitar: jest.fn(),
+      setFabricantePrimerApellido: jest.fn(),
+      setFabricantePrimerApellidoInhabilitar: jest.fn(),
+      setFabricanteSegundoApellidoInhabilitar: jest.fn(),
+      setFabricanteRazonSocialInhabilitar: jest.fn(),
+      setPaisFabricanteInhabilitar: jest.fn(),
+      setEstadoFabricanteInhabilitar: jest.fn(),
+      setAlcaldiaFabricanteInhabilitar: jest.fn(),
+      setLocalidadFabricanteInhabilitar: jest.fn(),
+      setCodigoPostalInhabilitar: jest.fn(),
+      setColoniaFabricanteInhabilitar: jest.fn(),
+      setCalleFabricanteInhabilitar: jest.fn(),
+      setNumeroExteriorFabricanteInhabilitar: jest.fn(),
+      setNumeroInteriorFabricanteInhabilitar: jest.fn(),
+      setLadaFabricanteInhabilitar: jest.fn(),
+      setTelefonoFabricanteInhabilitar: jest.fn(),
+      setCorreoElectronicoFabricanteInhabilitar: jest.fn(),
     };
 
     mockTramite260601Query = {
@@ -160,8 +169,7 @@ fdescribe('DatosMercanciaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosMercanciaComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, AgregarFabricanteComponent],
       providers: [
         FormBuilder,
         { provide: AvisoSanitarioService, useValue: mockAvisoSanitarioService },
@@ -170,8 +178,9 @@ fdescribe('DatosMercanciaComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosMercanciaComponent);
+    fixture = TestBed.createComponent(AgregarFabricanteComponent);
     component = fixture.componentInstance;
+    fb = TestBed.inject(FormBuilder);
     fixture.detectChanges();
   });
 
@@ -179,91 +188,82 @@ fdescribe('DatosMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should populate estado catalog in ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.paisDestino).toEqual([{ label: 'País 1', value: 'pais1' }]);
-  });
-
-  it('should create the form in crearFormulario', () => {
+  it('should initialize agregarFabricanteForm in crearFormulario', () => {
     component.crearFormulario();
-    expect(component.agregarMercanciaForm).toBeDefined();
-    expect(component.agregarMercanciaForm.get('cveProductoClasificacion')).toBeDefined();
-    expect(component.agregarMercanciaForm.get('cvePaisDestino')).toBeDefined();
+    expect(component.agregarFabricanteForm).toBeDefined();
+    expect(component.agregarFabricanteForm.get('datosGeneralesForm')).toBeDefined();
+    expect(component.agregarFabricanteForm.get('datosPersonalesForm')).toBeDefined();
+    expect(component.agregarFabricanteForm.get('domicilioForm')).toBeDefined();
   });
 
-  it('should fetch and populate catalog data in inicializaCatalogos', () => {
-    component.ngOnInit();
-    expect(mockAvisoSanitarioService.getProductoClasificacion).toHaveBeenCalled();
-    expect(mockAvisoSanitarioService.getEspecificoProductoClasificacion).toHaveBeenCalled();
-    expect(mockAvisoSanitarioService.getTipoProducto).toHaveBeenCalled();
-    expect(mockAvisoSanitarioService.getPaisDestino).toHaveBeenCalled();
-  });
-
-  it('should handle productoClasificacionSeleccion correctly', () => {
-    const spySetProductoClasificacion = jest.spyOn(mockTramite260601Store, 'setProductoClasificacion');
+  it('should update store value for paisSeleccion', () => {
     component.crearFormulario();
-    component.agregarMercanciaForm.get('cveProductoClasificacion')?.setValue('c1');
-    component.productoClasificacionSeleccion();
-    expect(spySetProductoClasificacion).toHaveBeenCalledWith('c1');
+    component.domicilioForm.get('cvePaisFabricante')?.setValue('producto1');
+    component.paisSeleccion();
+    expect(mockTramite260601Store.setTipoProducto).toHaveBeenCalledWith('producto1');
   });
 
-  it('should handle especificoProductoClasificacionSeleccion correctly', () => {
-    const spySetEspecificoProductoClasificacion = jest.spyOn(mockTramite260601Store, 'setEspecificoProductoClasificacion');
+  it('should handle nacionalidad change correctly in onNacionalidadCambio', () => {
+    component.onNacionalidadCambio('nacional');
+    expect(mockTramite260601Store.setTercerosNacionalidadFabricante).toHaveBeenCalledWith('nacional');
+    expect(mockTramite260601Store.setTipoPersonaFabricante).toHaveBeenCalledWith('');
+    expect(mockTramite260601Store.setMostrarRfcFabricanteBuscarBoton).toHaveBeenCalledWith(false);
+    expect(mockTramite260601Store.setInhabilitarPaisFabricante).toHaveBeenCalledWith(true);
+
+    component.onNacionalidadCambio('extranjero');
+    expect(component.tipoPersonaOpciones).toEqual(
+      component.inicialTipoPersonaOpciones.filter((option) => option.value !== 'noContribuyente')
+    );
+  });
+
+  it('should handle tipoPersona change correctly in onTipoPersonaCambio', () => {
     component.crearFormulario();
-    component.agregarMercanciaForm.get('cveEspecificoProductoClasifi')?.setValue('e1');
-    component.especificoProductoClasificacionSeleccion();
-    expect(spySetEspecificoProductoClasificacion).toHaveBeenCalledWith('e1');
+    component.onTipoPersonaCambio('fisica');
+    expect(mockTramite260601Store.setTipoPersonaFabricante).toHaveBeenCalledWith('fisica');
+    expect(mockTramite260601Store.setRfcFabricanteInhabilitar).toHaveBeenCalledWith(false);
+    expect(mockTramite260601Store.setMostrarRfcFabricanteBuscarBoton).toHaveBeenCalledWith(true);
+    expect(mockTramite260601Store.setMostrarCurpFabricanteBuscarBoton).toHaveBeenCalledWith(false);
   });
 
-  it('should handle tipoProductoSeleccion correctly', () => {
-    const spySetTipoProducto = jest.spyOn(mockTramite260601Store, 'setTipoProducto');
+  it('should reset datosPersonalesForm in resetDatosPersonalesForm', () => {
     component.crearFormulario();
-    component.agregarMercanciaForm.get('cveTipoProducto')?.setValue('t1');
-    component.tipoProductoSeleccion();
-    expect(spySetTipoProducto).toHaveBeenCalledWith('t1');
+    component.resetDatosPersonalesForm();
+    expect(component.datosGeneralesForm.get('rfcFabricante')?.disabled).toBeTruthy();
+    expect(component.datosGeneralesForm.get('curpFabricante')?.disabled).toBeTruthy();
+    expect(mockTramite260601Store.setRfcFabricanteInhabilitar).toHaveBeenCalledWith(true);
+    expect(mockTramite260601Store.setCurpFabricanteInhabilitar).toHaveBeenCalledWith(true);
+    expect(mockTramite260601Store.setFabricanteNombre).toHaveBeenCalledWith('');
+    expect(mockTramite260601Store.setFabricantePrimerApellido).toHaveBeenCalledWith('');
   });
 
-  it('should handle paisDestinoSeleccion correctly', () => {
-    const spySetPaisDestino = jest.spyOn(mockTramite260601Store, 'setPaisDestino');
+  it('should reset domicilioForm in resetDomicilioForm', () => {
     component.crearFormulario();
-    component.agregarMercanciaForm.get('cvePaisDestino')?.setValue('p1');
-    component.paisDestinoSeleccion();
-    expect(spySetPaisDestino).toHaveBeenCalledWith('p1');
+    component.resetDomicilioForm();
+    expect(mockTramite260601Store.setPaisFabricante).toHaveBeenCalledWith('');
+    expect(mockTramite260601Store.setEstadoFabricante).toHaveBeenCalledWith('');
+    expect(component.domicilioForm.get('cvePaisFabricante')?.disabled).toBeTruthy();
   });
 
-  it('should handle mostrar_colapsable correctly', () => {
-    const index = 0;
-    component.panels = [{ label: 'Panel 1', isCollapsed: true }, { label: 'Panel 2', isCollapsed: true }];
-    component.mostrar_colapsable(index);
-    expect(component.panels[index].isCollapsed).toBe(false);
-    expect(component.panels[1].isCollapsed).toBe(true);
-  });
-
-  it('should fetch and populate crosslist data in obtenerMercanciaCrosslist', () => {
-    component.obtenerMercanciaCrosslist();
-    expect(component.paisOrigenCrosslistDatos).toEqual({ label: { izquierda: 'Izquierda', derecha: 'Derecha' }, fechas: ['01/01/2023'] });
-    expect(component.paisProcedencisCrosslistDatos).toEqual({ label: { izquierda: 'Izquierda', derecha: 'Derecha' }, fechas: ['02/01/2023'] });
-    expect(component.usoEspecificoCrosslistDatos).toEqual({ label: { izquierda: 'Izquierda', derecha: 'Derecha' }, fechas: ['03/01/2023'] });
-  });
-
-  it('should toggle colapsable state in mostrar_uso_especifico_colapsable', () => {
-    expect(component.colapsable).toBe(false);
-    component.mostrar_uso_especifico_colapsable();
-    expect(component.colapsable).toBe(true);
-  });
-
-  it('should autocomplete description in autocompletarDescripcion', () => {
-    const spySetDescripcion = jest.spyOn(mockTramite260601Store, 'setFraccionArancelariaDescripcion');
+  it('should update domicilioForm disabled state in inhabilitarDomicilioForm', () => {
     component.crearFormulario();
-    component.autocompletarDescripcion();
-    expect(component.agregarMercanciaForm.get('fraccionArancelariaDescripcion')?.value).toBe('Descripción Fracción');
-    expect(spySetDescripcion).toHaveBeenCalledWith('Descripción Fracción');
+    component.inhabilitarDomicilioForm(true);
+    expect(mockTramite260601Store.setPaisFabricanteInhabilitar).toHaveBeenCalledWith(true);
+    expect(mockTramite260601Store.setEstadoFabricanteInhabilitar).toHaveBeenCalledWith(true);
+  });
+
+  it('should update datosPersonalesForm disabled state in inhabilitarDatosPersonalesForm', () => {
+    component.crearFormulario();
+    component.inhabilitarDatosPersonalesForm(false);
+    expect(mockTramite260601Store.setFabricanteNombreInhabilitar).toHaveBeenCalledWith(false);
+    expect(mockTramite260601Store.setFabricantePrimerApellidoInhabilitar).toHaveBeenCalledWith(false);
   });
 
   it('should unsubscribe in ngOnDestroy', () => {
     const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
     const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
+
     component.ngOnDestroy();
+
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });

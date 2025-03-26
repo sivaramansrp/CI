@@ -86,7 +86,13 @@ describe('DatosDelEstablecimientoComponent', () => {
         numeroInterior: 'Interior1',
         domicilioLada: 'Lada1',
         domicilioTelefono: 'Telefono1',
-        domicilioCorreoElectronico: 'email@proveedor.com'
+        domicilioCorreoElectronico: 'email@proveedor.com',
+        mostrarRfcBuscarBoton: false,
+        mostrarCurpBuscarBoton: false,
+        inhabilitarPais: true,
+        mostrarRfcFabricanteBuscarBoton: false,
+        mostrarCurpFabricanteBuscarBoton: false,
+        inhabilitarPaisFabricante: true,
       }),
     };
 

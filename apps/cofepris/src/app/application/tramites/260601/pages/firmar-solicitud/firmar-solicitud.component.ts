@@ -1,9 +1,9 @@
-import { catchError, map } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil} from 'rxjs';
 import { Router } from '@angular/router';
 
-import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso tres del trámite.
@@ -13,7 +13,13 @@ import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
   templateUrl: './firmar-solicitud.component.html',
   styles: ``,
 })
-export class FirmarSolicitudComponent {
+export class FirmarSolicitudComponent implements OnDestroy {
+
+  /**
+   * Subject para destruir notificador.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente.
    * 
@@ -46,9 +52,19 @@ export class FirmarSolicitudComponent {
           }),
           catchError((_error) => {
             return _error;
-          })
+          }),
+          takeUntil(this.destruirNotificador$)
         )
         .subscribe();
     }
+  }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

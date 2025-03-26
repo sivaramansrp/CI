@@ -166,4 +166,12 @@ export class AvisoSanitarioService {
   autocompletarDescripcion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/260601/descripcion-fraccion-arancelaria.json');
   }
+
+  /**
+   * Obtiene los datos del documentos seleccionados.
+   * @returns Observable con los datos del documentos seleccionados.
+   */
+  obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/260601/documentos-seleccionados.json');
+  }
 }

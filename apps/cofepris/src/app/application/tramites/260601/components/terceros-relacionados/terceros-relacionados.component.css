@@ -5,3 +5,7 @@
 .modal-body, .modal-footer {
     padding: 2rem;
 }
+
+.modal-header {
+    justify-content: left;
+}

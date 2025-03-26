@@ -3,6 +3,7 @@ import { TercerosRelacionadosComponent } from './terceros-relacionados.component
 import fabricanteTable from '@libs/shared/theme/assets/json/260601/fabricante-table.json';
 import proveedorTable from '@libs/shared/theme/assets/json/260601/proveedor-table.json';
 import { TERCEROR_TEXTO_DE_ALERTA } from '../../constantes/aviso-enum';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
@@ -10,7 +11,10 @@ describe('TercerosRelacionadosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TercerosRelacionadosComponent],
+      imports: [
+        TercerosRelacionadosComponent,
+        HttpClientModule
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);

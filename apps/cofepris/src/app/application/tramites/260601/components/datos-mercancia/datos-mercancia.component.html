@@ -89,13 +89,13 @@
                             <!-- País de orígen -->
                             <ng-container *ngIf="i === 0">
                                 <crosslist [fechas]="seleccionarPaisOrigen" [botones]="botones"
-                                    [label]="paisOrigenCrosslistDatos?.label"></crosslist>
+                                    [label]="paisOrigenCrosslistDatos.label"></crosslist>
                             </ng-container>
 
                             <!-- País de procedencia -->
                             <ng-container *ngIf="i === 1">
                                 <crosslist [fechas]="seleccionarPaisProcedencis" [botones]="botones"
-                                    [label]="paisProcedencisCrosslistDatos?.label"></crosslist>
+                                    [label]="paisProcedencisCrosslistDatos.label"></crosslist>
                             </ng-container>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                     <div class="panel-collapse collapse in" id="panel-01">
                         <div class="panel-body">
                             <crosslist [fechas]="seleccionarUsoEspecifico" [botones]="botones"
-                                [label]="usoEspecificoCrosslistDatos?.label"></crosslist>
+                                [label]="usoEspecificoCrosslistDatos.label"></crosslist>
                         </div>
                     </div>
                     }

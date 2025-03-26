@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { Solicitud } from '../../models/aviso-model';
-import { SOLICITUD_HEADER, TEXTOS_SOLICITUD } from '../../constantes/aviso-enum';
+import { TEXTOS_SOLICITUD } from '../../constantes/aviso-enum';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { DatosDelEstablecimientoComponent } from '../datos-del-establecimiento/datos-del-establecimiento.component';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -9,7 +14,14 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosDeLaSolicitudComponent],
+      imports: [
+        DatosDeLaSolicitudComponent, 
+        HttpClientModule, 
+        CommonModule, 
+        AlertComponent, 
+        DatosDelEstablecimientoComponent,
+        ToastrModule.forRoot()
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
@@ -29,8 +41,15 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.colapsable).toBe(true);
   });
 
-  it('should initialize tablaHeadData with SOLICITUD_HEADER.hSolicitud', () => {
-    expect(component.tablaHeadData).toEqual(SOLICITUD_HEADER.hSolicitud);
+  it('should initialize tablaHeadData with mockTablaHeadDatos', () => {
+    const mockTablaHeadDatos = {
+      "hSolicitud": [
+        "Fecha Creación",
+        "Mercancía",
+        "Cantidad",
+        "Proovedor"
+      ]};
+    expect(component.tablaHeadData).toEqual(mockTablaHeadDatos);
   });
 
   it('should have tablaFilaDatos input defined as an empty array initially', () => {

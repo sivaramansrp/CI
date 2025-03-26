@@ -94,6 +94,17 @@ export const TIPO_PERSONA_OPCIONES = [
 ]
 
 /**
+ * Constante que define las categorías de terceros para clasificación por nacionalidad y tipo de persona.
+ */
+export const DATOS_CATEGORIAS_TERCEROS = {
+  NACIONAL: 'nacional',
+  EXTRANJERO: 'extranjero',
+  FISICA: 'fisica',
+  MORAL: 'moral',
+  NO_CONTRIBUYENTE: 'noContribuyente',
+}
+
+/**
  * Mensaje de error mostrado cuando el RFC del representante legal no es ingresado.
  */
 export const MSG_ERROR_REPRESENTANTE_LEGAL = 'Debe ingresar el RFC.';

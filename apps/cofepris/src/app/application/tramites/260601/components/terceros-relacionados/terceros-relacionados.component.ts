@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AlertComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AgregarFabricanteComponent } from '../agregar-fabricante/agregar-fabricante.component';
 import { AgregarProveedorComponent } from '../agregar-proveedor/agregar-proveedor.component';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
 import { TERCEROR_TEXTO_DE_ALERTA } from '../../constantes/aviso-enum';
@@ -19,7 +20,8 @@ import proveedorTable from '@libs/shared/theme/assets/json/260601/proveedor-tabl
     TituloComponent,
     AlertComponent,
     TableComponent,
-    AgregarProveedorComponent
+    AgregarProveedorComponent,
+    AgregarFabricanteComponent
   ],
   providers: [AvisoSanitarioService],
   templateUrl: './terceros-relacionados.component.html',

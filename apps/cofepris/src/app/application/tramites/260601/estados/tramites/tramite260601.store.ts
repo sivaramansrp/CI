@@ -103,64 +103,250 @@ export interface AvisoSanitarioState {
     apellidoMaterno: string;
 
     /** Nacionalidad de terceros relacionados. */
-    tercerosNacionalidad: string;
+    tercerosNacionalidad: string | number;
 
     /** Tipo de persona de terceros relacionados. */
-    tipoPersona: string;
+    tipoPersona: string | number;
 
     /** RFC del proveedor relacionado. */
     rfcProveedor: string;
 
+    /** Indica si el campo de RFC del proveedor está inhabilitado. */
+    rfcProveedorInhabilitar: boolean;
+
     /** CURP del proveedor relacionado. */
     curp: string;
+
+    /** Indica si el campo de CURP está inhabilitado. */
+    curpInhabilitar: boolean;
 
     /** Nombre del proveedor relacionado. */
     proveedorNombre: string;
 
+    /** Indica si el campo del nombre del proveedor está inhabilitado. */
+    proveedorNombreInhabilitar: boolean;
+
     /** Primer apellido del proveedor relacionado. */
     proveedorPrimerApellido: string;
+
+    /** Indica si el campo del primer apellido del proveedor está inhabilitado. */
+    proveedorPrimerApellidoInhabilitar: boolean;
 
     /** Segundo apellido del proveedor relacionado. */
     proveedorSegundoApellido: string;
 
+    /** Indica si el campo del segundo apellido del proveedor está inhabilitado. */
+    proveedorSegundoApellidoInhabilitar: boolean;
+
     /** Razón social del proveedor relacionado. */
     proveedorRazonSocial: string;
+
+    /** Indica si el campo de razón social del proveedor está inhabilitado. */
+    proveedorRazonSocialInhabilitar: boolean;
 
     /** Clave del país del domicilio. */
     cvePais: string;
 
+    /** Indica si el campo del país está inhabilitado. */
+    cvePaisInhabilitar: boolean;
+
     /** Estado del domicilio. */
     domicilioEstado: string;
+
+    /** Indica si el campo del estado del domicilio está inhabilitado. */
+    domicilioEstadoInhabilitar: boolean;
 
     /** Alcaldía del domicilio. */
     alcaldia: string;
 
+    /** Indica si el campo de la alcaldía está inhabilitado. */
+    alcaldiaInhabilitar: boolean;
+
     /** Localidad del domicilio. */
     localidad: string;
+
+    /** Indica si el campo de la localidad está inhabilitado. */
+    localidadInhabilitar: boolean;
 
     /** Código postal del domicilio. */
     domicilioCodigoPostal: string;
 
+    /** Indica si el campo del código postal del domicilio está inhabilitado. */
+    domicilioCodigoPostalInhabilitar: boolean;
+
     /** Colonia del domicilio. */
     colonia: string;
+
+    /** Indica si el campo de la colonia está inhabilitado. */
+    coloniaInhabilitar: boolean;
 
     /** Calle del domicilio. */
     domicilioCalle: string;
 
+    /** Indica si el campo de la calle del domicilio está inhabilitado. */
+    domicilioCalleInhabilitar: boolean;
+
     /** Número exterior del domicilio. */
     numeroExterior: string;
+
+    /** Indica si el campo del número exterior está inhabilitado. */
+    numeroExteriorInhabilitar: boolean;
 
     /** Número interior del domicilio. */
     numeroInterior: string;
 
+    /** Indica si el campo del número exterior está inhabilitado. */
+    numeroInteriorInhabilitar: boolean;
+
     /** LADA del número telefónico del domicilio. */
     domicilioLada: string;
+
+    /** Representa el número interior del domicilio y su estado editable. */
+    domicilioLadaInhabilitar: boolean;
 
     /** Teléfono del domicilio. */
     domicilioTelefono: string;
 
+    /** Indica si el campo de teléfono del domicilio está inhabilitado. */
+    domicilioTelefonoInhabilitar: boolean;
+
     /** Correo electrónico del domicilio. */
     domicilioCorreoElectronico: string;
+
+    /** Indica si el campo de correo electrónico del domicilio está inhabilitado. */
+    domicilioCorreoElectronicoInhabilitar: boolean;
+
+    /** Indica si se debe mostrar el botón de búsqueda para RFC. */
+    mostrarRfcBuscarBoton: boolean;
+
+    /** Indica si se debe mostrar el botón de búsqueda para CURP. */
+    mostrarCurpBuscarBoton: boolean;
+
+    /** Indica si el país del domicilio está inhabilitado. */
+    inhabilitarPais: boolean;
+
+    /** Nacionalidad de terceros relacionados. */
+    tercerosNacionalidadFabricante: string | number;
+
+    /** Tipo de persona de terceros relacionados. */
+    tipoPersonaFabricante: string | number;
+
+    /** RFC del fabricante relacionado. */
+    rfcFabricante: string;
+
+    /** Indica si el campo de RFC del fabricante está inhabilitado. */
+    rfcFabricanteInhabilitar: boolean;
+
+    /** CURP del fabricante relacionado. */
+    curpFabricante: string;
+
+    /** Indica si el campo de CURP está inhabilitado. */
+    curpFabricanteInhabilitar: boolean;
+
+    /** Nombre del fabricante relacionado. */
+    fabricanteNombre: string;
+
+    /** Indica si el campo del nombre del fabricante está inhabilitado. */
+    fabricanteNombreInhabilitar: boolean;
+
+    /** Primer apellido del fabricante relacionado. */
+    fabricantePrimerApellido: string;
+
+    /** Indica si el campo del primer apellido del fabricante está inhabilitado. */
+    fabricantePrimerApellidoInhabilitar: boolean;
+
+    /** Segundo apellido del fabricante relacionado. */
+    fabricanteSegundoApellido: string;
+
+    /** Indica si el campo del segundo apellido del fabricante está inhabilitado. */
+    fabricanteSegundoApellidoInhabilitar: boolean;
+
+    /** Razón social del fabricante relacionado. */
+    fabricanteRazonSocial: string;
+
+    /** Indica si el campo de razón social del fabricante está inhabilitado. */
+    fabricanteRazonSocialInhabilitar: boolean;
+
+    /** Clave del país del domicilio. */
+    cvePaisFabricante: string;
+
+    /** Indica si el campo del país está inhabilitado. */
+    cvePaisFabricanteInhabilitar: boolean;
+
+    /** Estado del domicilio. */
+    estadoFabricante: string;
+
+    /** Indica si el campo del estado del domicilio está inhabilitado. */
+    estadoFabricanteInhabilitar: boolean;
+
+    /** Alcaldía del domicilio. */
+    alcaldiaFabricante: string;
+
+    /** Indica si el campo de la alcaldía está inhabilitado. */
+    alcaldiaFabricanteInhabilitar: boolean;
+
+    /** Localidad del domicilio. */
+    localidadFabricante: string;
+
+    /** Indica si el campo de la localidad está inhabilitado. */
+    localidadFabricanteInhabilitar: boolean;
+
+    /** Código postal del domicilio. */
+    codigoPostalFabricante: string;
+
+    /** Indica si el campo del código postal del domicilio está inhabilitado. */
+    codigoPostalFabricanteInhabilitar: boolean;
+
+    /** Colonia del domicilio. */
+    coloniaFabricante: string;
+
+    /** Indica si el campo de la colonia está inhabilitado. */
+    coloniaFabricanteInhabilitar: boolean;
+
+    /** Calle del domicilio. */
+    calleFabricante: string;
+
+    /** Indica si el campo de la calle del domicilio está inhabilitado. */
+    calleFabricanteInhabilitar: boolean;
+
+    /** Número exterior del domicilio. */
+    numeroExteriorFabricante: string;
+
+    /** Indica si el campo del número exterior está inhabilitado. */
+    numeroExteriorFabricanteInhabilitar: boolean;
+
+    /** Número interior del domicilio. */
+    numeroInteriorFabricante: string;
+
+    /** Indica si el campo del número interior está inhabilitado. */
+    numeroInteriorFabricanteInhabilitar: boolean;
+
+    /** LADA del número telefónico del domicilio. */
+    ladaFabricante: string;
+
+    /** Indica si el campo del lada está inhabilitado. */
+    ladaFabricanteInhabilitar: boolean;
+
+    /** Teléfono del domicilio. */
+    telefonoFabricante: string;
+
+    /** Indica si el campo del teléfono está inhabilitado. */
+    telefonoFabricanteInhabilitar: boolean;
+
+    /** Correo electrónico del domicilio. */
+    correoElectronicoFabricante: string;
+
+    /** Indica si el campo del correo electrónico está inhabilitado. */
+    correoElectronicoFabricanteInhabilitar: boolean;
+
+    /** Indica si se debe mostrar el botón de búsqueda para RFC. */
+    mostrarRfcFabricanteBuscarBoton: boolean;
+
+    /** Indica si se debe mostrar el botón de búsqueda para CURP. */
+    mostrarCurpFabricanteBuscarBoton: boolean;
+
+    /** Indica si el país del domicilio está inhabilitado. */
+    inhabilitarPaisFabricante: boolean;
 }
 
 /**
@@ -206,25 +392,90 @@ export function createInitialState(): AvisoSanitarioState {
         tercerosNacionalidad: '',
         tipoPersona: '',
         rfcProveedor: '',
+        rfcProveedorInhabilitar: true,
         curp: '',
+        curpInhabilitar: true,
 
         proveedorNombre: '',
+        proveedorNombreInhabilitar: true,
         proveedorPrimerApellido: '',
+        proveedorPrimerApellidoInhabilitar: true,
         proveedorSegundoApellido: '',
+        proveedorSegundoApellidoInhabilitar: true,
         proveedorRazonSocial: '',
+        proveedorRazonSocialInhabilitar: true,
 
         cvePais: '',
+        cvePaisInhabilitar: true,
         domicilioEstado: '',
+        domicilioEstadoInhabilitar: true,
         alcaldia: '',
+        alcaldiaInhabilitar: true,
         localidad: '',
+        localidadInhabilitar: true,
         domicilioCodigoPostal: '',
+        domicilioCodigoPostalInhabilitar: true,
         colonia: '',
+        coloniaInhabilitar: true,
         domicilioCalle: '',
+        domicilioCalleInhabilitar: true,
         numeroExterior: '',
+        numeroExteriorInhabilitar: true,
         numeroInterior: '',
+        numeroInteriorInhabilitar: true,
         domicilioLada: '',
+        domicilioLadaInhabilitar: true,
         domicilioTelefono: '',
+        domicilioTelefonoInhabilitar: true,
         domicilioCorreoElectronico: '',
+        domicilioCorreoElectronicoInhabilitar: true,
+        mostrarRfcBuscarBoton: false,
+        mostrarCurpBuscarBoton: false,
+        inhabilitarPais: true,
+
+        tercerosNacionalidadFabricante: '',
+        tipoPersonaFabricante: '',
+        rfcFabricante: '',
+        rfcFabricanteInhabilitar: true,
+        curpFabricante: '',
+        curpFabricanteInhabilitar: true,
+
+        fabricanteNombre: '',
+        fabricanteNombreInhabilitar: true,
+        fabricantePrimerApellido: '',
+        fabricantePrimerApellidoInhabilitar: true,
+        fabricanteSegundoApellido: '',
+        fabricanteSegundoApellidoInhabilitar: true,
+        fabricanteRazonSocial: '',
+        fabricanteRazonSocialInhabilitar: true,
+
+        cvePaisFabricante: '',
+        cvePaisFabricanteInhabilitar: true,
+        estadoFabricante: '',
+        estadoFabricanteInhabilitar: true,
+        alcaldiaFabricante: '',
+        alcaldiaFabricanteInhabilitar: true,
+        localidadFabricante: '',
+        localidadFabricanteInhabilitar: true,
+        codigoPostalFabricante: '',
+        codigoPostalFabricanteInhabilitar: true,
+        coloniaFabricante: '',
+        coloniaFabricanteInhabilitar: true,
+        calleFabricante: '',
+        calleFabricanteInhabilitar: true,
+        numeroExteriorFabricante: '',
+        numeroExteriorFabricanteInhabilitar: true,
+        numeroInteriorFabricante: '',
+        numeroInteriorFabricanteInhabilitar: true,
+        ladaFabricante: '',
+        ladaFabricanteInhabilitar: true,
+        telefonoFabricante: '',
+        telefonoFabricanteInhabilitar: true,
+        correoElectronicoFabricante: '',
+        correoElectronicoFabricanteInhabilitar: true,
+        mostrarRfcFabricanteBuscarBoton: false,
+        mostrarCurpFabricanteBuscarBoton: false,
+        inhabilitarPaisFabricante: true,
     }
 }
 
@@ -631,9 +882,501 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     /**
      * Actualiza el terceros nacionalidad.
      * 
+     * @param tercerosNacionalidadFabricante Nuevo valor del terceros nacionalidad.
+     */
+    public setTercerosNacionalidadFabricante(tercerosNacionalidadFabricante: string | number): void {
+        this.update((state) => ({
+            ...state,
+            tercerosNacionalidadFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el tipo persona.
+     * 
+     * @param tipoPersonaFabricante Nuevo valor del tipo persona.
+     */
+    public setTipoPersonaFabricante(tipoPersonaFabricante: string | number): void {
+        this.update((state) => ({
+            ...state,
+            tipoPersonaFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el rfc fabricante.
+     * 
+     * @param rfcFabricante Nuevo valor del rfc fabricante.
+     */
+    public setRfcFabricante(rfcFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            rfcFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el rfc fabricante inhabilitar.
+     * 
+     * @param rfcFabricanteInhabilitar Nuevo valor del rfc fabricante inhabilitar.
+     */
+    public setRfcFabricanteInhabilitar(rfcFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            rfcFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el curp fabricante inhabilitar.
+     * 
+     * @param curpFabricanteInhabilitar Nuevo valor del curp fabricante inhabilitar.
+     */
+    public setCurpFabricanteInhabilitar(curpFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            curpFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el curp.
+     * 
+     * @param curpFabricante Nuevo valor del curp.
+     */
+    public setCurpFabricante(curpFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            curpFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante nombre.
+     * 
+     * @param fabricanteNombre Nuevo valor del fabricante nombre.
+     */
+    public setFabricanteNombre(fabricanteNombre: string): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteNombre,
+        }));
+    }
+
+    /**
+     * Actualiza el nombre fabricante inhabilitar.
+     * 
+     * @param fabricanteNombreInhabilitar Nuevo valor del nombre fabricante inhabilitar.
+     */
+    public setFabricanteNombreInhabilitar(fabricanteNombreInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteNombreInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante primer apellido.
+     * 
+     * @param fabricantePrimerApellido Nuevo valor del fabricante primer apellido.
+     */
+    public setFabricantePrimerApellido(fabricantePrimerApellido: string): void {
+        this.update((state) => ({
+            ...state,
+            fabricantePrimerApellido,
+        }));
+    }
+
+    /**
+     * Actualiza el nombre fabricante inhabilitar.
+     * 
+     * @param fabricantePrimerApellidoInhabilitar Nuevo valor del nombre fabricante inhabilitar.
+     */
+    public setFabricantePrimerApellidoInhabilitar(fabricantePrimerApellidoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            fabricantePrimerApellidoInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante segundo apellido.
+     * 
+     * @param fabricanteSegundoApellido Nuevo valor fabricante segundo apellido.
+     */
+    public setFabricanteSegundoApellido(fabricanteSegundoApellido: string): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteSegundoApellido,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante segundo apellido inhabilitar.
+     * 
+     * @param fabricanteSegundoApellidoInhabilitar Nuevo valor fabricante segundo apellido inhabilitar.
+     */
+    public setFabricanteSegundoApellidoInhabilitar(fabricanteSegundoApellidoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteSegundoApellidoInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante razón social.
+     * 
+     * @param fabricanteRazonSocial Nuevo valor del fabricante razón social.
+     */
+    public setFabricanteRazonSocial(fabricanteRazonSocial: string): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteRazonSocial,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante razón social inhabilitar.
+     * 
+     * @param fabricanteRazonSocialInhabilitar Nuevo valor del fabricante razón social inhabilitar.
+     */
+    public setFabricanteRazonSocialInhabilitar(fabricanteRazonSocialInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteRazonSocialInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el país.
+     * 
+     * @param cvePaisFabricante Nuevo valor del país.
+     */
+    public setPaisFabricante(cvePaisFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            cvePaisFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el país fabricante inhabilitar.
+     * 
+     * @param cvePaisFabricanteInhabilitar Nuevo valor del país fabricante inhabilitar.
+     */
+    public setPaisFabricanteInhabilitar(cvePaisFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            cvePaisFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante estado.
+     * 
+     * @param fabricanteEstado Nuevo valor del fabricante estado.
+     */
+    public setEstadoFabricante(fabricanteEstado: string): void {
+        this.update((state) => ({
+            ...state,
+            fabricanteEstado,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante estado inhabilitar.
+     * 
+     * @param estadoFabricanteInhabilitar Nuevo valor del fabricante estado inhabilitar.
+     */
+    public setEstadoFabricanteInhabilitar(estadoFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            estadoFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante alcaldía.
+     * 
+     * @param alcaldiaFabricante Nuevo valor del fabricante alcaldía.
+     */
+    public setAlcaldiaFabricante(alcaldiaFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            alcaldiaFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el fabricante alcaldía inhabilitar.
+     * 
+     * @param alcaldiaFabricanteInhabilitar Nuevo valor del fabricante alcaldía inhabilitar.
+     */
+    public setAlcaldiaFabricanteInhabilitar(alcaldiaFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            alcaldiaFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el localidad.
+     * 
+     * @param localidadFabricante Nuevo valor del localidad.
+     */
+    public setLocalidadFabricante(localidadFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            localidadFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el localidad inhabilitar.
+     * 
+     * @param localidadFabricanteInhabilitar Nuevo valor del localidad inhabilitar.
+     */
+    public setLocalidadFabricanteInhabilitar(localidadFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            localidadFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio código postal.
+     * 
+     * @param codigoPostalFabricante Nuevo valor del domicilio código postal.
+     */
+    public setCodigoPostalFabricante(codigoPostalFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            codigoPostalFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio código postal inhabilitar.
+     * 
+     * @param codigoPostalFabricanteInhabilitar Nuevo valor del domicilio código postal inhabilitar.
+     */
+    public setCodigoPostalInhabilitar(codigoPostalFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            codigoPostalFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el ccolonia.
+     * 
+     * @param coloniaFabricante Nuevo valor del colonia.
+     */
+    public setColoniaFabricante(coloniaFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            coloniaFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el ccolonia inhabilitar.
+     * 
+     * @param coloniaFabricanteInhabilitar Nuevo valor del colonia inhabilitar.
+     */
+    public setColoniaFabricanteInhabilitar(coloniaFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            coloniaFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio calle.
+     * 
+     * @param domicilioCalle Nuevo valor del domicilio calle.
+     */
+    public setCalleFabricante(domicilioCalle: string): void {
+        this.update((state) => ({
+            ...state,
+            domicilioCalle,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio calle inhabilitar.
+     * 
+     * @param calleFabricanteInhabilitar Nuevo valor del domicilio calle inhabilitar.
+     */
+    public setCalleFabricanteInhabilitar(calleFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            calleFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el número exterior.
+     * 
+     * @param numeroExteriorFabricante Nuevo valor del número exterior.
+     */
+    public setNumeroExteriorFabricante(numeroExteriorFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroExteriorFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el número exterior inhabilitar.
+     * 
+     * @param numeroExteriorFabricanteInhabilitar Nuevo valor del número exterior inhabilitar.
+     */
+    public setNumeroExteriorFabricanteInhabilitar(numeroExteriorFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            numeroExteriorFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el número interior.
+     * 
+     * @param numeroInteriorFabricante Nuevo valor del número interior.
+     */
+    public setNumeroInteriorFabricante(numeroInteriorFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroInteriorFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el número interior inhabilitar.
+     * 
+     * @param numeroInteriorFabricanteInhabilitar Nuevo valor del número interior inhabilitar.
+     */
+    public setNumeroInteriorFabricanteInhabilitar(numeroInteriorFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            numeroInteriorFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio lada.
+     * 
+     * @param ladaFabricante Nuevo valor del domicilio lada.
+     */
+    public setLadaFabricante(ladaFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            ladaFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio lada inhabilitar.
+     * 
+     * @param ladaFabricanteInhabilitar Nuevo valor del domicilio lada inhabilitar.
+     */
+    public setLadaFabricanteInhabilitar(ladaFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            ladaFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio teléfono.
+     * 
+     * @param telefonoFabricante Nuevo valor del domicilio teléfono.
+     */
+    public setTelefonoFabricante(telefonoFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            telefonoFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio teléfono inhabilitar.
+     * 
+     * @param telefonoFabricanteInhabilitar Nuevo valor del domicilio teléfono inhabilitar.
+     */
+    public setTelefonoFabricanteInhabilitar(telefonoFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            telefonoFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio correo electrónico.
+     * 
+     * @param correoElectronicoFabricante Nuevo valor del domicilio correo electrónico.
+     */
+    public setCorreoElectronicoFabricante(correoElectronicoFabricante: string): void {
+        this.update((state) => ({
+            ...state,
+            correoElectronicoFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio correo electrónico inhabilitar.
+     * 
+     * @param correoElectronicoFabricanteInhabilitar Nuevo valor del domicilio correo electrónico inhabilitar.
+     */
+    public setCorreoElectronicoFabricanteInhabilitar(correoElectronicoFabricanteInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            correoElectronicoFabricanteInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el mostrar rfc fabricante buscar boton.
+     * 
+     * @param mostrarRfcFabricanteBuscarBoton Nuevo valor del mostrar rfc fabricante buscar boton.
+     */
+    public setMostrarRfcFabricanteBuscarBoton(mostrarRfcFabricanteBuscarBoton: boolean): void {
+        this.update((state) => ({
+            ...state,
+            mostrarRfcFabricanteBuscarBoton,
+        }));
+    }
+
+    /**
+     * Actualiza el mostrar curp fabricante buscar boton.
+     * 
+     * @param mostrarCurpFabricanteBuscarBoton Nuevo valor del mostrar curp fabricante buscar boton.
+     */
+    public setMostrarCurpFabricanteBuscarBoton(mostrarCurpFabricanteBuscarBoton: boolean): void {
+        this.update((state) => ({
+            ...state,
+            mostrarCurpFabricanteBuscarBoton,
+        }));
+    }
+
+    /**
+     * Actualiza el país fabricante inhabilitar.
+     * 
+     * @param inhabilitarPaisFabricante Nuevo valor del país fabricante inhabilitar.
+     */
+    public setInhabilitarPaisFabricante(inhabilitarPaisFabricante: boolean): void {
+        this.update((state) => ({
+            ...state,
+            inhabilitarPaisFabricante,
+        }));
+    }
+
+    /**
+     * Actualiza el terceros nacionalidad.
+     * 
      * @param tercerosNacionalidad Nuevo valor del terceros nacionalidad.
      */
-    public setTercerosNacionalidad(tercerosNacionalidad: string): void {
+    public setTercerosNacionalidad(tercerosNacionalidad: string | number): void {
         this.update((state) => ({
             ...state,
             tercerosNacionalidad,
@@ -645,7 +1388,7 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
      * 
      * @param tipoPersona Nuevo valor del tipo persona.
      */
-    public setTipoPersona(tipoPersona: string): void {
+    public setTipoPersona(tipoPersona: string | number): void {
         this.update((state) => ({
             ...state,
             tipoPersona,
@@ -661,6 +1404,30 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             rfcProveedor,
+        }));
+    }
+
+    /**
+     * Actualiza el rfc proveedor inhabilitar.
+     * 
+     * @param rfcProveedorInhabilitar Nuevo valor del rfc proveedor inhabilitar.
+     */
+    public setRfcProveedorInhabilitar(rfcProveedorInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            rfcProveedorInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el curp inhabilitar.
+     * 
+     * @param curpInhabilitar Nuevo valor del curp inhabilitar.
+     */
+    public setCurpInhabilitar(curpInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            curpInhabilitar,
         }));
     }
 
@@ -689,6 +1456,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el proveedor nombre inhabilitar.
+     * 
+     * @param proveedorNombreInhabilitar Nuevo valor del proveedor nombre inhabilitar.
+     */
+    public setProveedorNombreInhabilitar(proveedorNombreInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            proveedorNombreInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el proveedor primer apellido.
      * 
      * @param proveedorPrimerApellido Nuevo valor del proveedor primer apellido.
@@ -697,6 +1476,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             proveedorPrimerApellido,
+        }));
+    }
+
+    /**
+     * Actualiza el proveedor primer apellido inhabilitar.
+     * 
+     * @param proveedorPrimerApellidoInhabilitar Nuevo valor del proveedor primer apellido inhabilitar.
+     */
+    public setProveedorPrimerApellidoInhabilitar(proveedorPrimerApellidoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            proveedorPrimerApellidoInhabilitar,
         }));
     }
 
@@ -713,6 +1504,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el proveedor segundo apellido inhabilitar.
+     * 
+     * @param proveedorSegundoApellidoInhabilitar Nuevo valor proveedor segundo apellido inhabilitar.
+     */
+    public setProveedorSegundoApellidoInhabilitar(proveedorSegundoApellidoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            proveedorSegundoApellidoInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el proveedor razón social.
      * 
      * @param proveedorRazonSocial Nuevo valor del proveedor razón social.
@@ -721,6 +1524,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             proveedorRazonSocial,
+        }));
+    }
+
+    /**
+     * Actualiza el proveedor razón social inhabilitar.
+     * 
+     * @param proveedorRazonSocialInhabilitar Nuevo valor del proveedor razón social inhabilitar.
+     */
+    public setProveedorRazonSocialInhabilitar(proveedorRazonSocialInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            proveedorRazonSocialInhabilitar,
         }));
     }
 
@@ -737,6 +1552,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el país inhabilitar.
+     * 
+     * @param cvePaisInhabilitar Nuevo valor del país inhabilitar.
+     */
+    public setPaisInhabilitar(cvePaisInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            cvePaisInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el domicilio estado.
      * 
      * @param domicilioEstado Nuevo valor del domicilio estado.
@@ -745,6 +1572,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             domicilioEstado,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio estado inhabilitar.
+     * 
+     * @param domicilioEstadoInhabilitar Nuevo valor del domicilio estado inhabilitar.
+     */
+    public setDomicilioEstadoInhabilitar(domicilioEstadoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            domicilioEstadoInhabilitar,
         }));
     }
 
@@ -761,6 +1600,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el alcaldía inhabilitar.
+     * 
+     * @param alcaldiaInhabilitar Nuevo valor del alcaldía inhabilitar.
+     */
+    public setAlcaldiaInhabilitar(alcaldiaInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            alcaldiaInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el localidad.
      * 
      * @param localidad Nuevo valor del localidad.
@@ -769,6 +1620,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             localidad,
+        }));
+    }
+
+    /**
+     * Actualiza el localidad inhabilitar.
+     * 
+     * @param localidadInhabilitar Nuevo valor del localidad inhabilitar.
+     */
+    public setLocalidadInhabilitar(localidadInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            localidadInhabilitar,
         }));
     }
 
@@ -785,6 +1648,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el domicilio código postal inhabilitar.
+     * 
+     * @param domicilioCodigoPostalInhabilitar Nuevo valor del domicilio código postal inhabilitar.
+     */
+    public setDomicilioCodigoPostalInhabilitar(domicilioCodigoPostalInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            domicilioCodigoPostalInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el ccolonia.
      * 
      * @param colonia Nuevo valor del colonia.
@@ -793,6 +1668,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             colonia,
+        }));
+    }
+
+    /**
+     * Actualiza el ccolonia inhabilitar.
+     * 
+     * @param coloniaInhabilitar Nuevo valor del colonia inhabilitar.
+     */
+    public setColoniaInhabilitar(coloniaInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            coloniaInhabilitar,
         }));
     }
 
@@ -809,6 +1696,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el domicilio calle inhabilitar.
+     * 
+     * @param domicilioCalleInhabilitar Nuevo valor del domicilio calle inhabilitar.
+     */
+    public setDomicilioCalleInhabilitar(domicilioCalleInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            domicilioCalleInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el número exterior.
      * 
      * @param numeroExterior Nuevo valor del número exterior.
@@ -817,6 +1716,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             numeroExterior,
+        }));
+    }
+
+    /**
+     * Actualiza el número exterior inhabilitar.
+     * 
+     * @param numeroExteriorInhabilitar Nuevo valor del número exterior inhabilitar.
+     */
+    public setNumeroExteriorInhabilitar(numeroExteriorInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            numeroExteriorInhabilitar,
         }));
     }
 
@@ -833,6 +1744,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el número interior inhabilitar.
+     * 
+     * @param numeroInteriorInhabilitar Nuevo valor del número interior inhabilitar.
+     */
+    public setNumeroInteriorInhabilitar(numeroInteriorInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            numeroInteriorInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el domicilio lada.
      * 
      * @param domicilioLada Nuevo valor del domicilio lada.
@@ -841,6 +1764,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             domicilioLada,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio lada inhabilitar.
+     * 
+     * @param domicilioLadaInhabilitar Nuevo valor del domicilio lada inhabilitar.
+     */
+    public setDomicilioLadaInhabilitar(domicilioLadaInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            domicilioLadaInhabilitar,
         }));
     }
 
@@ -857,6 +1792,18 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
     }
 
     /**
+     * Actualiza el domicilio teléfono inhabilitar.
+     * 
+     * @param domicilioTelefonoInhabilitar Nuevo valor del domicilio teléfono inhabilitar.
+     */
+    public setDomicilioTelefonoInhabilitar(domicilioTelefonoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            domicilioTelefonoInhabilitar,
+        }));
+    }
+
+    /**
      * Actualiza el domicilio correo electrónico.
      * 
      * @param domicilioCorreoElectronico Nuevo valor del domicilio correo electrónico.
@@ -865,6 +1812,54 @@ export class Tramite260601Store extends Store<AvisoSanitarioState> {
         this.update((state) => ({
             ...state,
             domicilioCorreoElectronico,
+        }));
+    }
+
+    /**
+     * Actualiza el domicilio correo electrónico inhabilitar.
+     * 
+     * @param domicilioCorreoElectronicoInhabilitar Nuevo valor del domicilio correo electrónico inhabilitar.
+     */
+    public setDomicilioCorreoElectronicoInhabilitar(domicilioCorreoElectronicoInhabilitar: boolean): void {
+        this.update((state) => ({
+            ...state,
+            domicilioCorreoElectronicoInhabilitar,
+        }));
+    }
+
+    /**
+     * Actualiza el mostrar rfc buscar boton.
+     * 
+     * @param mostrarRfcBuscarBoton Nuevo valor del mostrar rfc buscar boton.
+     */
+    public setMostrarRfcBuscarBoton(mostrarRfcBuscarBoton: boolean): void {
+        this.update((state) => ({
+            ...state,
+            mostrarRfcBuscarBoton,
+        }));
+    }
+
+    /**
+     * Actualiza el mostrar curp buscar boton.
+     * 
+     * @param mostrarCurpBuscarBoton Nuevo valor del mostrar curp buscar boton.
+     */
+    public setMostrarCurpBuscarBoton(mostrarCurpBuscarBoton: boolean): void {
+        this.update((state) => ({
+            ...state,
+            mostrarCurpBuscarBoton,
+        }));
+    }
+
+    /**
+     * Actualiza el inhabilitar país.
+     * 
+     * @param inhabilitarPais Nuevo valor del inhabilitar país.
+     */
+    public setInhabilitarPais(inhabilitarPais: boolean): void {
+        this.update((state) => ({
+            ...state,
+            inhabilitarPais,
         }));
     }
 }
