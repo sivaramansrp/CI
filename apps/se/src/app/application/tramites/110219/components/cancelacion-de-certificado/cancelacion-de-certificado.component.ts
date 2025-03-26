@@ -23,7 +23,9 @@ import { ColumnasTabla, FECHAFINAL, FECHAINICIAL } from '../../models/certificad
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
 import { InputFechaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
-
+/** 
+ * Texto de alerta que se muestra para indicar los certificados disponibles.
+ */
 const TERCEROS_TEXTO_DE_ALERTA = 'Certificados Disponibles';
 
 /**
@@ -126,7 +128,9 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query
-  ) {}
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /** Inicializa el componente. */
   ngOnInit(): void {

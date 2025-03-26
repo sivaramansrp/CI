@@ -11,8 +11,14 @@ import { InputFechaComponent } from "../../../../../../../../../libs/shared/data
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
-
+/** 
+ * Texto de alerta que se muestra para la tabla de mercancías del certificado.
+ */
 const TEXTO_DE_ALERTA_MERCANCIAS = 'Mercancias del Certificado';
+
+/** 
+ * Texto de alerta que se muestra para la tabla de productores asociados al certificado.
+ */
 const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
 
 /**
@@ -95,7 +101,9 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     private store: Tramite110219Store,
     private query: Tramite110219Query
-  ) {}
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /** Inicializa el componente. */
   ngOnInit(): void {
