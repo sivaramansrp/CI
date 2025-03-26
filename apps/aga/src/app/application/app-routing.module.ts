@@ -93,6 +93,13 @@ const ROUTES: Routes = [
       (m) => m.RegistroDigitalizarDocumentosModule
     ),
 },
+{
+  path: 'retirada-de-la-autorizacion-de-donaciones',
+  loadChildren: () =>
+    import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
+      (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
+    ),
+}
 ];
 
 @NgModule({

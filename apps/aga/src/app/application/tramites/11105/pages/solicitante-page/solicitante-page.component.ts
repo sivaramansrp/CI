@@ -1,9 +1,17 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  BtnContinuarComponent,
+  DatosPasos,
+} from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../../../11105/pages/paso-uno/paso-uno.component';
+import { PasoTresComponent } from '../../../11105/pages/paso-tres/paso-tres.component';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
@@ -17,6 +25,15 @@ interface AccionBoton {
  * Componente para gestionar la página del solicitante.
  */
 @Component({
+  standalone: true,
+  imports: [
+    WizardComponent,
+    CommonModule,
+    BtnContinuarComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    ReactiveFormsModule,
+  ],
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',

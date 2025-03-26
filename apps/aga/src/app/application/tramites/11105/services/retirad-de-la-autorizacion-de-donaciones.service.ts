@@ -9,7 +9,7 @@ import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 @Injectable({
   providedIn: 'root',
 })
-export class RetiradaDeLaAutorizacionDeDonacioneService {
+export class RetiradaDeLaAutorizacionDeDonacionesService {
   /**
    * Constructor que se utiliza para la inyección de dependencias.
    * @param http Servicio HTTP para realizar solicitudes.

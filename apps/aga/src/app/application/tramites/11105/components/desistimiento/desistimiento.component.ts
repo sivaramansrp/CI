@@ -1,16 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import mockData from 'libs/shared/theme/assets/json/40102/solicitante-mockdata.json';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import mockData from 'libs/shared/theme/assets/json/11105/solicitante-mockdata.json';
 
 /**
  * Componente para gestionar el formulario del solicitante.
  */
 @Component({
-  selector: 'app-solicitante',
+  standalone: true,
+  imports: [CommonModule,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
+  selector: 'app-desistimiento',
   templateUrl: './desistimiento.component.html',
   styleUrl: './desistimiento.component.scss',
 })
-export class SolicitanteComponent implements OnInit {
+export class DesistimientoComponent implements OnInit {
   /**
    * Grupo de formulario para el formulario de solicitud.
    */

@@ -4,6 +4,7 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONA
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
+import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TIPO_PERSONA } from '@ng-mf/data-access-user';
@@ -12,10 +13,10 @@ import { TIPO_PERSONA } from '@ng-mf/data-access-user';
  * Componente que representa el paso uno del trámite.
  */
 @Component({
+  standalone: true,
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  standalone:true,
-  imports:[SolicitanteComponent,CommonModule,DatosGeneralesDeLaSolicitudComponent, FormsModule, ReactiveFormsModule]
+  imports:[SolicitanteComponent,CommonModule,DatosGeneralesDeLaSolicitudComponent, FormsModule, ReactiveFormsModule,DesistimientoComponent]
   
 })
 export class PasoUnoComponent implements AfterViewInit {

@@ -21,7 +21,7 @@ import {
 import { CommonModule } from '@angular/common';
 //import { SELECCION } from '../../constantes/importador-exportador.enum';
 
-import {RetiradaDeLaAutorizacionDeDonacioneService} from '../../services/retirad-de-la-autorizacion-de-donacione.service';
+import {RetiradaDeLaAutorizacionDeDonacionesService} from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
 
 /**
  * Texto de adjuntar para terceros.
@@ -32,7 +32,7 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
  * Componente que representa los datos del trámite.
  */
 @Component({
-  selector: 'app-datos-del-tramite',
+  selector: 'app-datos-generales-de-la-solicitud',
   templateUrl: './datos-generales-de-la-solicitud.component.html',
   styleUrls: ['./datos-generales-de-la-solicitud.component.scss'],
   standalone: true,
@@ -166,7 +166,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
   */
 
   constructor(
-    private retiradaDeLaAutorizacionDeDonacioneService: RetiradaDeLaAutorizacionDeDonacioneService,
+    private retiradaDeLaAutorizacionDeDonacionesService: RetiradaDeLaAutorizacionDeDonacionesService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {
@@ -190,7 +190,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
 
         //this.fechasSeleccionadas = [];
 
-        this.retiradaDeLaAutorizacionDeDonacioneService.getAduanaIngresara().subscribe((response) => {
+        this.retiradaDeLaAutorizacionDeDonacionesService.getAduanaIngresara().subscribe((response) => {
           this.aduana = {
             labelNombre: 'Aduana por la que ingresará la mercancía',
             required: false,
@@ -198,13 +198,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
             catalogos: response.data ?? [],
           };
         });
-        this.retiradaDeLaAutorizacionDeDonacioneService.getAno().subscribe((response) => {this.ano = {
+        this.retiradaDeLaAutorizacionDeDonacionesService.getAno().subscribe((response) => {this.ano = {
           labelNombre: 'Año',
           required: false,
           primerOpcion: 'Selecciona un valor',
           catalogos: response.data || [],
         }}); 
-        this.retiradaDeLaAutorizacionDeDonacioneService.getCondicion().subscribe((response) => {
+        this.retiradaDeLaAutorizacionDeDonacionesService.getCondicion().subscribe((response) => {
           this.condicion = {
             labelNombre: 'Condición de la mercancía',
             required: false,
@@ -212,7 +212,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
             catalogos: response.data ?? [],
           }
         });
-        this.retiradaDeLaAutorizacionDeDonacioneService.getPais().subscribe((response) => {
+        this.retiradaDeLaAutorizacionDeDonacionesService.getPais().subscribe((response) => {
           this.pais = {
             labelNombre: 'País',
             required: false,

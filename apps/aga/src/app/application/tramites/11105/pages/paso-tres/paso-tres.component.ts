@@ -1,10 +1,27 @@
+import {
+  CatalogoSelectComponent,
+  TituloComponent,
+  TramiteFolioService,
+} from '@ng-mf/data-access-user';
 import { catchError, map } from 'rxjs';
-import { TramiteStore } from '../../../../estados/tramite.store';
+
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+
+import { ReactiveFormsModule } from '@angular/forms';
+import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    FirmaElectronicaComponent,
+  ],
   selector: 'paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
@@ -12,8 +29,8 @@ import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 export class PasoTresComponent {
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
-    private tramiteStore: TramiteStore
+    private tramiteFolioService: TramiteFolioService,
+    private tramiteStore: TramiteFolioStore
   ) {}
 
   /**
@@ -24,7 +41,7 @@ export class PasoTresComponent {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.tramiteFolioService
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {
