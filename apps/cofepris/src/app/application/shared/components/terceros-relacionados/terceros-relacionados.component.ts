@@ -1,7 +1,11 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  ConfiguracionColumna,
+  TablaSeleccion,
+} from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import {
@@ -13,6 +17,7 @@ import {
   FACTURADOR_ENCABEZADO_DE_TABLA,
   Proveedor,
   PROVEEDOR_ENCABEZADO_DE_TABLA,
+  MENSAJE_TABLA_OBLIGATORIA,
 } from '../../models/terceros-relacionados.model';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,11 +26,19 @@ import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tram
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    TablaDinamicaComponent,
+    AlertComponent,
+  ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  public infoAlert = 'alert-info';
+  MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
+
   configuracionTablaFabricante: ConfiguracionColumna<Fabricante>[] =
     FABRICANTE_ENCABEZADO_DE_TABLA;
   configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] =
