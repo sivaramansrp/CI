@@ -185,12 +185,21 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
-  },{
+  },
+  {
+    path: 'exportacion-minerales',
+    loadChildren: () =>
+      import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
+        (m) => m.ExportacionMineralesDeHierroModule
+      ),
+  },
+  {
     path: 'autorizacion-programa-nuevo',
     loadChildren: () =>
       import('./tramites/80102/autorizacion-programa-nuevo.module').then(
         (m) => m.AutorizacionProgrmaNuevoModule),
   }
+
 ];
 
 @NgModule({
