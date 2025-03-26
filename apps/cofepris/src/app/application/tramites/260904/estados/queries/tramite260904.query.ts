@@ -12,7 +12,7 @@ export class Tramite260904Query extends Query<Tramite260904State> {
   correo$ = this.select((state) => state.correo);
   codigoPostal$ = this.select((state) => state.codigoPostal);
   estado$ = this.select((state) => state.estado);
-  municipioOAlcaldía$ = this.select((state) => state.municipioOAlcaldía);
+  municipioOAlcaldia$ = this.select((state) => state.municipioOAlcaldia);
   localidad$ = this.select((state) => state.localidad);
   colonias$ = this.select((state) => state.colonias);
   calle$ = this.select((state) => state.calle);
