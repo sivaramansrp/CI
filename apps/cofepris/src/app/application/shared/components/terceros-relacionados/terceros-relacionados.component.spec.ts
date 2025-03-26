@@ -8,7 +8,6 @@ describe('TercerosRelacionadosComponent', () => {
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
 
   beforeEach(async () => {
-
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadosComponent],
       providers: [
@@ -20,7 +19,7 @@ describe('TercerosRelacionadosComponent', () => {
               queryParams: {},
             },
           },
-        }
+        },
       ],
     }).compileComponents();
 
@@ -41,12 +40,12 @@ describe('TercerosRelacionadosComponent', () => {
     expect(completeSpy).toHaveBeenCalled();
   });
 
-  it('should navigate to the correct path when navigateToAcciones is called', () => {
+  it('should navigate to the correct path when irAAcciones is called', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = jest.spyOn(router, 'navigate');
     const accionesPath = 'test-path';
 
-    component.navigateToAcciones(accionesPath);
+    component.irAAcciones(accionesPath);
 
     expect(navigateSpy).toHaveBeenCalledWith([accionesPath], {
       relativeTo: component['activatedRoute'],

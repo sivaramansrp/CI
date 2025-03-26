@@ -173,12 +173,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method navigateToAcciones
+   * @method irAAcciones
    * @description Navega a la ruta relativa proporcionada desde el contexto actual.
    *
    * @param {string} accionesPath - Ruta relativa hacia la que se desea navegar.
    */
-  navigateToAcciones(accionesPath: string): void {
+  irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });

@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { CommonModule } from '@angular/common';
-import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,19 +16,27 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudComponent,CommonModule, TituloComponent, CatalogoSelectComponent,
-         TablaDinamicaComponent, AlertComponent,
-          ReactiveFormsModule, FormsModule],
-          providers: [{
-            provide: ActivatedRoute,
-            useValue: {
-              snapshot: {
-                params: {},
-                queryParams: {}
-              }
-            }
-          }]
-
+      imports: [
+        DatosDeLaSolicitudComponent,
+        CommonModule,
+        TituloComponent,
+        CatalogoSelectComponent,
+        TablaDinamicaComponent,
+        AlertComponent,
+        ReactiveFormsModule,
+        FormsModule,
+      ],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              params: {},
+              queryParams: {},
+            },
+          },
+        },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
@@ -49,8 +62,8 @@ describe('DatosDeLaSolicitudComponent', () => {
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
-      apellidoMaterno: ''
-    }
+      apellidoMaterno: '',
+    };
     fixture.detectChanges();
   });
 
@@ -67,9 +80,15 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should update form fields when buscarRepresentanteRfc is called', () => {
     component.datosSolicitudForm.patchValue({ representanteRfc: 'RFC123' });
     component.buscarRepresentanteRfc();
-    expect(component.datosSolicitudForm.get('representanteNombre')?.value).toBe('EUROFOODS DE MEXICO');
-    expect(component.datosSolicitudForm.get('apellidoPaterno')?.value).toBe('GONZALEZ');
-    expect(component.datosSolicitudForm.get('apellidoMaterno')?.value).toBe('PINAL');
+    expect(component.datosSolicitudForm.get('representanteNombre')?.value).toBe(
+      'EUROFOODS DE MEXICO'
+    );
+    expect(component.datosSolicitudForm.get('apellidoPaterno')?.value).toBe(
+      'GONZALEZ'
+    );
+    expect(component.datosSolicitudForm.get('apellidoMaterno')?.value).toBe(
+      'PINAL'
+    );
   });
 
   it('should emit scianSeleccionado when eliminarScian is called', () => {
@@ -82,16 +101,20 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   it('should emit mercanciasSeleccionado when eliminarMercancias is called', () => {
     jest.spyOn(component.mercanciasSeleccionado, 'emit');
-    component.tablaMercanciasConfig = { datos: [{ clasificacionProducto: 'A1' }] } as any;
+    component.tablaMercanciasConfig = {
+      datos: [{ clasificacionProducto: 'A1' }],
+    } as any;
     component.tablaMercanciasLista = [{ clasificacionProducto: 'A1' }] as any;
     component.eliminarMercancias();
     expect(component.mercanciasSeleccionado.emit).toHaveBeenCalledWith([]);
   });
 
-  it('should navigate to the correct path when navigateToAcciones is called', () => {
+  it('should navigate to the correct path when irAAcciones is called', () => {
     const routerSpy = jest.spyOn(component.router, 'navigate');
-    component.navigateToAcciones('test-path');
-    expect(routerSpy).toHaveBeenCalledWith(['test-path'], { relativeTo: component.activatedRoute });
+    component.irAAcciones('test-path');
+    expect(routerSpy).toHaveBeenCalledWith(['test-path'], {
+      relativeTo: component.activatedRoute,
+    });
   });
 
   it('should emit datosDeTablaSeleccionados when modificarDatos is called', () => {
@@ -118,5 +141,4 @@ describe('DatosDeLaSolicitudComponent', () => {
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
   });
-
 });

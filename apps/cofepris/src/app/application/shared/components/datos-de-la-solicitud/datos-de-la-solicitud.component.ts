@@ -1,8 +1,25 @@
-import { ALERTA_DE_MANIFESTO_Y_DECLARACIONES, ALERTA_OPCIONS } from '../../constantes/datos-solicitud.enum';
+import {
+  ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
+  ALERTA_OPCIONS,
+} from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, DatosDeTablaSeleccionados, DatosSolicitudFormState, OpcionConfig, TablaMercanciasConfig, TablaMercanciasDatos, TablaOpcionConfig } from '../../models/datos-solicitud.model';
+import {
+  Catalogo,
+  DatosDeTablaSeleccionados,
+  DatosSolicitudFormState,
+  OpcionConfig,
+  TablaMercanciasConfig,
+  TablaMercanciasDatos,
+  TablaOpcionConfig,
+} from '../../models/datos-solicitud.model';
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
@@ -19,8 +36,14 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent,
-    ReactiveFormsModule, FormsModule
+  imports: [
+    CommonModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    AlertComponent,
+    ReactiveFormsModule,
+    FormsModule,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -29,17 +52,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
-  @Input() public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
+  @Input()
+  public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
   @Input() public opcionConfig!: OpcionConfig<TablaOpcionConfig>;
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
   @Input() public opcionesColapsableState!: boolean;
 
-  @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> = new EventEmitter<TablaOpcionConfig[]>();
-  @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> = new EventEmitter<TablaScianConfig[]>();
-  @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> = new EventEmitter<TablaMercanciasDatos[]>();
-  @Output() datosDeTablaSeleccionados: EventEmitter<DatosDeTablaSeleccionados> = new EventEmitter<DatosDeTablaSeleccionados>();
+  @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> =
+    new EventEmitter<TablaOpcionConfig[]>();
+  @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> =
+    new EventEmitter<TablaScianConfig[]>();
+  @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> =
+    new EventEmitter<TablaMercanciasDatos[]>();
+  @Output() datosDeTablaSeleccionados: EventEmitter<DatosDeTablaSeleccionados> =
+    new EventEmitter<DatosDeTablaSeleccionados>();
 
-  @Output() datasolicituActualizar: EventEmitter<DatosSolicitudFormState> = new EventEmitter<DatosSolicitudFormState>();
+  @Output() datasolicituActualizar: EventEmitter<DatosSolicitudFormState> =
+    new EventEmitter<DatosSolicitudFormState>();
 
   public datosSolicitudForm!: FormGroup;
   public estadoDatos: Catalogo[] = [];
@@ -59,21 +88,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   public opcionesColapsable = false;
 
-  constructor(public fb: FormBuilder, public router: Router, public activatedRoute: ActivatedRoute) { }
+  constructor(
+    public fb: FormBuilder,
+    public router: Router,
+    public activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.crearDatosSolicitudForm();
-    this.datosSolicitudForm.valueChanges.pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10)).subscribe(
-        (value) => {
-          if (value) {
-            this.datasolicituActualizar.emit(value);
-          }
+    this.datosSolicitudForm.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$), delay(10))
+      .subscribe((value) => {
+        if (value) {
+          this.datasolicituActualizar.emit(value);
         }
-      );
-      this.opcionesColapsable = this.opcionesColapsableState;
-
+      });
+    this.opcionesColapsable = this.opcionesColapsableState;
   }
 
   /**
@@ -81,32 +111,98 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Crea y configura el formulario reactivo `datosSolicitudForm` con los campos necesarios
    *              para capturar la información de la solicitud. Cada campo incluye validaciones como
    *              longitud mínima, longitud máxima y obligatoriedad.
-   * 
+   *
    * @returns {void} Este método no retorna ningún valor.
    */
   crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
-      rfcSanitario: [this.datosSolicitudFormState.rfcSanitario, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      denominacionRazon: [this.datosSolicitudFormState.denominacionRazon, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      correoElectronico: [this.datosSolicitudFormState.correoElectronico, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      codigoPostal: [this.datosSolicitudFormState.codigoPostal, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      estado: [this.datosSolicitudFormState.estado, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      municipioAlcaldia: [this.datosSolicitudFormState.municipioAlcaldia, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
-      localidad: [this.datosSolicitudFormState.localidad, [Validators.required]],
+      rfcSanitario: [
+        this.datosSolicitudFormState.rfcSanitario,
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
+      denominacionRazon: [
+        this.datosSolicitudFormState.denominacionRazon,
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
+      correoElectronico: [
+        this.datosSolicitudFormState.correoElectronico,
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
+      codigoPostal: [
+        this.datosSolicitudFormState.codigoPostal,
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
+      estado: [
+        this.datosSolicitudFormState.estado,
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
+      municipioAlcaldia: [
+        this.datosSolicitudFormState.municipioAlcaldia,
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
+      localidad: [
+        this.datosSolicitudFormState.localidad,
+        [Validators.required],
+      ],
       colonia: [this.datosSolicitudFormState.colonia, [Validators.required]],
       calle: [this.datosSolicitudFormState.calle, [Validators.required]],
       lada: [this.datosSolicitudFormState.lada, [Validators.required]],
       telefono: [this.datosSolicitudFormState.telefono, [Validators.required]],
       aviso: [this.datosSolicitudFormState.aviso, [Validators.required]],
-      licenciaSanitaria: [this.datosSolicitudFormState.licenciaSanitaria, [Validators.required]],
+      licenciaSanitaria: [
+        this.datosSolicitudFormState.licenciaSanitaria,
+        [Validators.required],
+      ],
       regimen: [this.datosSolicitudFormState.regimen, [Validators.required]],
-      adunasDeEntradas: [this.datosSolicitudFormState.adunasDeEntradas, [Validators.required]],
-      aeropuerto: [this.datosSolicitudFormState.aeropuerto, [Validators.required]],
+      adunasDeEntradas: [
+        this.datosSolicitudFormState.adunasDeEntradas,
+        [Validators.required],
+      ],
+      aeropuerto: [
+        this.datosSolicitudFormState.aeropuerto,
+        [Validators.required],
+      ],
       publico: [this.datosSolicitudFormState.publico, [Validators.required]],
-      representanteRfc: [this.datosSolicitudFormState.representanteRfc, [Validators.required]],
-      representanteNombre: [this.datosSolicitudFormState.representanteNombre, [Validators.required]],
-      apellidoPaterno: [this.datosSolicitudFormState.apellidoPaterno, [Validators.required]],
-      apellidoMaterno: [this.datosSolicitudFormState.apellidoMaterno, [Validators.required]],
+      representanteRfc: [
+        this.datosSolicitudFormState.representanteRfc,
+        [Validators.required],
+      ],
+      representanteNombre: [
+        this.datosSolicitudFormState.representanteNombre,
+        [Validators.required],
+      ],
+      apellidoPaterno: [
+        this.datosSolicitudFormState.apellidoPaterno,
+        [Validators.required],
+      ],
+      apellidoMaterno: [
+        this.datosSolicitudFormState.apellidoMaterno,
+        [Validators.required],
+      ],
     });
   }
 
@@ -125,14 +221,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Busca el RFC del representante en el formulario y, si existe, 
-   * actualiza los campos relacionados con el nombre, apellido paterno 
+   * Busca el RFC del representante en el formulario y, si existe,
+   * actualiza los campos relacionados con el nombre, apellido paterno
    * y apellido materno del representante con valores predeterminados.
    *
    * @remarks
-   * Este método verifica si el campo 'representanteRfc' tiene un valor 
-   * en el formulario `datosSolicitudForm`. Si el valor está presente, 
-   * se actualizan los campos 'representanteNombre', 'apellidoPaterno' 
+   * Este método verifica si el campo 'representanteRfc' tiene un valor
+   * en el formulario `datosSolicitudForm`. Si el valor está presente,
+   * se actualizan los campos 'representanteNombre', 'apellidoPaterno'
    * y 'apellidoMaterno' con datos específicos.
    */
   buscarRepresentanteRfc(): void {
@@ -141,27 +237,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.datosSolicitudForm.patchValue({
         representanteNombre: 'EUROFOODS DE MEXICO',
         apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL'
+        apellidoMaterno: 'PINAL',
       });
     }
   }
 
   /**
    * Elimina elementos de la configuración SCIAN que coincidan con los elementos de la lista SCIAN.
-   * 
+   *
    * Este método filtra los datos de la configuración SCIAN (`scianConfig.datos`) eliminando
    * aquellos elementos cuya clave coincida con algún elemento de la lista SCIAN (`scianLista`).
-   * 
+   *
    * Si hay un elemento seleccionado (`scianSeleccionado`), emite los datos actualizados
    * de la configuración SCIAN.
    */
   eliminarScian(): void {
-    if(!this.scianLista.length){
+    if (!this.scianLista.length) {
       return;
     }
-    this.scianConfig.datos = this.scianConfig.datos.filter((idx: TablaScianConfig) => {
-      return !this.scianLista.some((idx2: TablaScianConfig) => idx2.clave === idx.clave);
-    });
+    this.scianConfig.datos = this.scianConfig.datos.filter(
+      (idx: TablaScianConfig) => {
+        return !this.scianLista.some(
+          (idx2: TablaScianConfig) => idx2.clave === idx.clave
+        );
+      }
+    );
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
@@ -169,21 +269,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Elimina las mercancías seleccionadas de la lista de datos de la tabla.
-   * 
-   * Este método filtra los datos de la tabla de mercancías (`tablaMercanciasConfig.datos`) 
-   * eliminando aquellos elementos cuya clasificación de producto coincide con 
+   *
+   * Este método filtra los datos de la tabla de mercancías (`tablaMercanciasConfig.datos`)
+   * eliminando aquellos elementos cuya clasificación de producto coincide con
    * alguno de los elementos en la lista de mercancías (`tablaMercanciasLista`).
-   * 
-   * Si hay mercancías seleccionadas (`mercanciasSeleccionado`), emite el evento 
+   *
+   * Si hay mercancías seleccionadas (`mercanciasSeleccionado`), emite el evento
    * con los datos actualizados de la tabla de mercancías.
    */
   eliminarMercancias(): void {
-    if(!this.tablaMercanciasLista.length){
+    if (!this.tablaMercanciasLista.length) {
       return;
     }
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) => {
-      return !this.tablaMercanciasLista.some((idx2: TablaMercanciasDatos) => idx2.clasificacionProducto === idx.clasificacionProducto);
-    });
+    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter(
+      (idx: TablaMercanciasDatos) => {
+        return !this.tablaMercanciasLista.some(
+          (idx2: TablaMercanciasDatos) =>
+            idx2.clasificacionProducto === idx.clasificacionProducto
+        );
+      }
+    );
     if (this.mercanciasSeleccionado) {
       this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
     }
@@ -193,7 +298,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta de acciones
    * @param accionesPath
    */
-  navigateToAcciones(accionesPath: string): void {
+  irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
@@ -214,35 +319,37 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
-    this.navigateToAcciones('../scian-selecion');
+    this.irAAcciones('../scian-selecion');
   }
 
   /**
    * Agrega las mercancías seleccionadas a la configuración de la tabla y emite el evento correspondiente.
-   * 
+   *
    * Este método concatena los datos de la lista de mercancías seleccionadas con los datos existentes
    * en la configuración de la tabla. Si hay un elemento seleccionado, emite un evento con los datos
    * actualizados. Finalmente, navega a la ruta especificada para realizar acciones adicionales.
-   * 
+   *
    * @returns {void} Este método no devuelve ningún valor.
    */
   agregarMercancias(): void {
-      this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(this.tablaMercanciasLista);
+    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(
+      this.tablaMercanciasLista
+    );
     if (this.mercanciasSeleccionado) {
       this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
     }
-    this.navigateToAcciones('../mercancia-datos');
+    this.irAAcciones('../mercancia-datos');
   }
 
   /**
    * Emite un evento con los datos seleccionados de las listas asociadas.
-   * 
-   * Este método recopila las listas seleccionadas de `scianLista`, 
-   * `tablaMercanciasLista` y `opcionLista`, y las emite a través del 
+   *
+   * Este método recopila las listas seleccionadas de `scianLista`,
+   * `tablaMercanciasLista` y `opcionLista`, y las emite a través del
    * evento `datosDeTablaSeleccionados`.
-   * 
+   *
    * @remarks
-   * Este método es útil para comunicar los datos seleccionados a otros 
+   * Este método es útil para comunicar los datos seleccionados a otros
    * componentes o servicios que estén escuchando el evento emitido.
    */
   modificarDatos(): void {
@@ -250,14 +357,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       scianSeleccionados: this.scianLista,
       mercanciasSeleccionados: this.tablaMercanciasLista,
       opcionSeleccionados: this.opcionLista,
-      opcionesColapsableState: this.opcionesColapsable
+      opcionesColapsableState: this.opcionesColapsable,
     });
   }
 
   /**
    * Muestra u oculta una sección colapsable basada en el orden proporcionado.
-   * 
-   * @param orden - Un número que indica el orden de la sección colapsable. 
+   *
+   * @param orden - Un número que indica el orden de la sección colapsable.
    *                Si el valor es 1, alterna el estado de `opcionesColapsable`.
    */
   mostrarColapsable(orden: number): void {
@@ -267,18 +374,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         scianSeleccionados: this.scianLista,
         mercanciasSeleccionados: this.tablaMercanciasLista,
         opcionSeleccionados: this.opcionLista,
-        opcionesColapsableState: this.opcionesColapsable
+        opcionesColapsableState: this.opcionesColapsable,
       });
     }
   }
 
   /**
    * Emite un evento con los datos seleccionados de la tabla.
-   * 
+   *
    * Este método recopila las listas seleccionadas de SCIAN, mercancías y opciones,
    * y las emite a través del evento `datosDeTablaSeleccionados` para que puedan ser
    * procesadas por otros componentes o servicios.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   ngOnDestroy(): void {
