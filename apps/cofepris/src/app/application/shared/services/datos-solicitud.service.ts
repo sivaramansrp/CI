@@ -1,7 +1,4 @@
-import {
-  Observable,
-  map
-} from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -11,7 +8,14 @@ import { RespuestaCatalogos } from '../models/datos-solicitud.model';
   providedIn: 'root',
 })
 export class DatosSolicitudService {
+  /**
+   * @property {string} jsonUrl
+   * Ruta relativa al archivo JSON que contiene los datos del domicilio.
+   * Usado para cargar información desde el frontend (assets).
+   * @private
+   */
   private jsonUrl = 'assets/json/260204/domicilio.json';
+
   constructor(public httpServicios: HttpClient) {}
   /**
    * Obtiene una respuesta desde una URL y asigna los datos a una variable.
@@ -57,19 +61,19 @@ export class DatosSolicitudService {
 
   obtenerListaLocalidades(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<{localidad: Catalogo[]}>(this.jsonUrl)
+      .get<{ localidad: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.localidad));
   }
 
   obtenerListaCodigosPostales(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<{codigo_postal: Catalogo[]}>(this.jsonUrl)
+      .get<{ codigo_postal: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.codigo_postal));
   }
 
   obtenerListaColonias(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<{colonia: Catalogo[]}>(this.jsonUrl)
+      .get<{ colonia: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.colonia));
   }
 }

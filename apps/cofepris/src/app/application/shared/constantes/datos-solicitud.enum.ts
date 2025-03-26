@@ -1,42 +1,47 @@
-import { TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig } from "../models/datos-solicitud.model";
+import {
+  TablaMercanciasDatos,
+  TablaOpcionConfig,
+  TablaScianConfig,
+} from '../models/datos-solicitud.model';
 
 export const OPCION_TABLA = [
   {
     encabezado: 'Fecha creación',
-    clave: (ele: TablaOpcionConfig): string => ele.fechaCreacion, 
+    clave: (ele: TablaOpcionConfig): string => ele.fechaCreacion,
     orden: 1,
   },
   {
     encabezado: 'Mercancía',
-    clave: (ele: TablaOpcionConfig): string => ele.mercancia, 
+    clave: (ele: TablaOpcionConfig): string => ele.mercancia,
     orden: 2,
   },
   {
     encabezado: 'Cantidad',
-    clave: (ele: TablaOpcionConfig): string => ele.cantidad, 
+    clave: (ele: TablaOpcionConfig): string => ele.cantidad,
     orden: 3,
   },
   {
     encabezado: 'Proveedor',
-    clave: (ele: TablaOpcionConfig): string => ele.proveedor, 
+    clave: (ele: TablaOpcionConfig): string => ele.proveedor,
     orden: 4,
-  }];
+  },
+];
 
 export const SCIAN_TABLA = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (ele: TablaScianConfig): string => ele.clave,
-      orden: 1,
-    },
-    {
-        encabezado: 'Descripcion del S.C.I.A.N.',
-        clave: (ele: TablaScianConfig): string => ele.descripcion,
-        orden: 1,
-      }
-]
+  {
+    encabezado: 'Clave S.C.I.A.N.',
+    clave: (ele: TablaScianConfig): string => ele.clave,
+    orden: 1,
+  },
+  {
+    encabezado: 'Descripcion del S.C.I.A.N.',
+    clave: (ele: TablaScianConfig): string => ele.descripcion,
+    orden: 1,
+  },
+];
 export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
-  { clave: "001", descripcion: "Descripción 1" },
-  { clave: "002", descripcion: "Descripción 2" },
+  { clave: '001', descripcion: 'Descripción 1' },
+  { clave: '002', descripcion: 'Descripción 2' },
 ];
 export const ALERTA_OPCIONS = `<p>Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.</p>`;
 
@@ -56,15 +61,14 @@ export const ALERTA_DE_MANIFESTO_Y_DECLARACIONES = `<div class="row">
     </div>
 </div>`;
 
-
 /**
  * Represents a constant array `PRODUCTO_TABLA` that defines the structure of a product table.
  * Each object in the array contains the following properties:
- * 
+ *
  * - `encabezado`: A string representing the header of the column.
  * - `clave`: A function that takes an object of type `TablaMercanciasDatos` and returns the value of the corresponding key.
  * - `orden`: A number representing the order of the column in the table.
- * 
+ *
  * @constant
  * @type {Array<{ encabezado: string; clave: (ele: TablaMercanciasDatos) => any; orden: number }>}
  */
@@ -76,12 +80,14 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Especificar clasificación del producto',
-    clave: (ele: TablaMercanciasDatos): string => ele.especificarClasificacionProducto, // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string =>
+      ele.especificarClasificacionProducto, // Reemplaza 'ele.especificarClasificacionProducto' con la clave correcta
     orden: 2,
   },
   {
     encabezado: 'Denominación específica del producto',
-    clave: (ele: TablaMercanciasDatos): string => ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string =>
+      ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
   },
   {
@@ -116,7 +122,8 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string =>
+      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },
   {
@@ -187,44 +194,47 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
     paisProcedencia: '',
     tipoProducto: '',
     usoEspecifico: '',
-  }];
+  },
+];
 
 /** "t" se utiliza para continuar el botón que se usa globalmente para el procedimiento 230401 */
-export const CONTINUAR: string = "t";
+export const CONTINUAR: string = 't';
 
 export const CROSLISTA_DE_PAISES: string[] = [
-  "AFGANISTÁN (EMIRATO ISLÁMICO)",
-  "ALBANIA (REPÚBLICA DE)",
-  "ALEMANIA (REPÚBLICA FEDERAL DE)",
-  "ANDORRA (PRINCIPADO DE)",
-  "ANGOLA (REPÚBLICA DE)",
-  "ANGUILLA",
-  "ANTIGUA Y BARBUDA",
-  "ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)",
-  "ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)",
-  "ARGENTINA (REPÚBLICA)",
-  "AUSTRALIA (COMMONWEALTH OF)",
-  "AUSTRIA (REPUBLIC OF)",
-  "BAHAMAS (COMMONWEALTH OF THE)",
-  "BAHRAIN (KINGDOM OF)",
+  'AFGANISTÁN (EMIRATO ISLÁMICO)',
+  'ALBANIA (REPÚBLICA DE)',
+  'ALEMANIA (REPÚBLICA FEDERAL DE)',
+  'ANDORRA (PRINCIPADO DE)',
+  'ANGOLA (REPÚBLICA DE)',
+  'ANGUILLA',
+  'ANTIGUA Y BARBUDA',
+  'ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)',
+  'ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)',
+  'ARGENTINA (REPÚBLICA)',
+  'AUSTRALIA (COMMONWEALTH OF)',
+  'AUSTRIA (REPUBLIC OF)',
+  'BAHAMAS (COMMONWEALTH OF THE)',
+  'BAHRAIN (KINGDOM OF)',
   "BANGLADESH (PEOPLE'S REPUBLIC OF)",
-  "BARBADOS",
-  "BELGIUM (KINGDOM OF)",
-  "BELIZE",
-  "BENIN (REPUBLIC OF)",
-  "BHUTAN (KINGDOM OF)"
+  'BARBADOS',
+  'BELGIUM (KINGDOM OF)',
+  'BELIZE',
+  'BENIN (REPUBLIC OF)',
+  'BHUTAN (KINGDOM OF)',
 ];
 
 export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   {
     fechaCreacion: '2025-02-19 11:26:55.0',
-    mercancia: 'Los demás. Unicamente: Los que no sean estupefacientes o psicotrópicos, o contengan dichas sustancias...',
+    mercancia:
+      'Los demás. Únicamente: Los que no sean estupefacientes o psicotrópicos, o contengan dichas sustancias...',
     cantidad: '0.5',
     proveedor: 'TramitesVUCEM SA de CV',
   },
   {
     fechaCreacion: '2024-11-08 13:02:58.0',
-    mercancia: 'Los demás. Unicamente: Los que no sean estupefacientes o psicotrópicos, o contengan',
+    mercancia:
+      'Los demás. Únicamente: Los que no sean estupefacientes o psicotrópicos, o contengan',
     cantidad: '0.5',
     proveedor: 'TramitesVUCEM SA de CV',
   },
