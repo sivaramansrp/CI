@@ -4,17 +4,10 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ModificatNoticeService } from '../../services/modificat-notice.service';
+import { ReprestantanteData } from '../../models/aduaneras-informaciones.model';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
 
-/**
- * Interfaz para los datos de prueba del representante.
- */
-interface ReprestantanteTestData {
-  rfc: string;
-  nombre: string;
-  apellidoPaterno: string;
-  apellidoMaterno: string;
-}
 
 @Component({
   selector: 'app-represtantante', // Selector del componente en la plantilla HTML
@@ -77,14 +70,14 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
   /**
    * Datos de prueba del representante.
    * 
-   * @type {ReprestantanteTestData}
+   * @type {ReprestantanteData}
    * @memberof ReprestantanteComponent
    */
-  represtantanteTestData: ReprestantanteTestData = {
-    rfc: 'RFC123',
-    nombre: 'John',
-    apellidoPaterno: 'Doe',
-    apellidoMaterno: 'Smith'
+  ReprestantanteData: ReprestantanteData = {
+    rfc: '',
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: ''
   };
 
   /**
@@ -98,26 +91,13 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite260605Store: Tramite260605Store,
-    private tramite260605Query: Tramite260605Query
+    private tramite260605Query: Tramite260605Query,
+    private modificatNoticeService: ModificatNoticeService
   ) {
     // Lógica de inicialización si es necesario
   }
 
-  /**
-   * Método que se ejecuta al enviar el formulario.
-   * 
-   * @memberof ReprestantanteComponent
-   */
-  onSubmit(): void {
-    const RFC = this.represtantante.get('rfc')?.value;
-    if (RFC) {
-      this.represtantante.patchValue({
-        nombre: this.represtantanteTestData.nombre,
-        apellidoPaterno: this.represtantanteTestData.apellidoPaterno,
-        apellidoMaterno: this.represtantanteTestData.apellidoMaterno
-      });
-    }
-  }
+  
 
   /**
    * Método que se ejecuta al iniciar el componente.
@@ -144,6 +124,24 @@ export class ReprestantanteComponent implements OnInit, OnDestroy {
     this.represtantante.get('nombre')?.disable();
     this.represtantante.get('apellidoPaterno')?.disable();
     this.represtantante.get('apellidoMaterno')?.disable();
+  }
+
+
+  /**
+   * Método para obtener los datos disponibles de los representantes.
+   * Realiza una solicitud al servicio `modificatNoticeService` para recuperar
+   * la información de los representantes y la asigna a la propiedad `ReprestantanteData`.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  public obteneraduanasDisponiblesdatos(): void {
+    this.modificatNoticeService.ObtenerReprestantanteData().subscribe((response) => {
+      this.represtantante.patchValue({
+        nombre: response.nombre,
+        apellidoPaterno: response.apellidoPaterno,
+        apellidoMaterno: response.apellidoMaterno
+      });
+    });
   }
 
   /**

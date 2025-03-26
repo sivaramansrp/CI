@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { ModificatNoticeService } from './services/modificat-notice.service';
 import { NavComponent } from '@libs/shared/data-access-user/src/tramites/components/nav/nav.component';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
@@ -21,6 +22,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { provideHttpClient } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -50,6 +52,7 @@ import { provideHttpClient } from '@angular/common/http';
     InicioSesionService,
     SubirDocumentoService,
     ServiciosPantallaService,
+    ModificatNoticeService
   ],
 })
 export class Pantallas260605Module {}

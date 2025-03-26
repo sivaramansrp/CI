@@ -2,10 +2,23 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
 import {Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Aduana } from '../../models/aduaneras-informaciones.model';
 import { CommonModule } from '@angular/common';
+import { ModificatNoticeService } from '../../services/modificat-notice.service';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
 /**
  * Componente para gestionar el formulario de información aduanera.
+ * 
+ * @export
+ * @class AduanerasInformacionesComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */
+/**
+ * Componente para gestionar la información aduanera en el formulario de trámites.
+ * 
+ * Este componente permite seleccionar, agregar y remover aduanas disponibles,
+ * así como gestionar el estado del formulario reactivo relacionado con la información aduanera.
  * 
  * @export
  * @class AduanerasInformacionesComponent
@@ -42,24 +55,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    * @type {{ id: number; name: string }[]}
    * @memberof AduanerasInformacionesComponent
    */
-  aduanasDisponibles = [
-    {
-      "id": 1,
-      "name": "ACAPULCO, PUERTO Y AEROPUERTO"
-    },
-    {
-      "id": 2,
-      "name": "ADUANA DE PANTACO"
-    },
-    {
-      "id": 3,
-      "name": "Aguascalientes, AGS."
-    },
-    {
-      "id": 4,
-      "name": "CD. CAMARGO, TAMPS."
-    }
-  ];
+  aduanasDisponibles:Aduana[] = [];
 
   /**
    * Índice seleccionado para agregar o remover aduanas.
@@ -122,7 +118,8 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite260605Store: Tramite260605Store,
-    private tramite260605Query: Tramite260605Query
+    private tramite260605Query: Tramite260605Query,
+    private modificatNoticeService: ModificatNoticeService
   ) {
     // Initialization logic if needed
   }
@@ -148,7 +145,22 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
       numeroDPmiso: [this.solicitudState?.numeroDPmiso, Validators.required],
       cstumbresAtuales: [this.solicitudState?.cstumbresAtuales, Validators.required],
     });
+    this.obteneraduanasDisponiblesdatos();
   }
+
+
+  /**
+   * Obtiene la lista de aduanas disponibles desde el servicio `modificatNoticeService`
+   * y actualiza la propiedad `aduanasDisponibles` con la respuesta obtenida.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  public obteneraduanasDisponiblesdatos(): void {
+    this.modificatNoticeService.obteneraduanasDisponiblesdatos().subscribe((response) => {
+     this.aduanasDisponibles = response;
+    });
+  }
+
 
   /**
    * Método ejecutado cuando se envía el formulario.

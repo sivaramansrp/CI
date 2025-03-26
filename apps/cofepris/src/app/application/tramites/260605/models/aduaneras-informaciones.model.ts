@@ -1,42 +1,3 @@
-/**
- * Interfaz que representa un representante.
- * 
- * @export
- * @interface Represtantante
- */
-export interface Represtantante {
-  /**
-   * RFC del representante.
-   * 
-   * @type {string}
-   * @memberof Represtantante
-   */
-  rfc: string;
-
-  /**
-   * Nombre del representante.
-   * 
-   * @type {string}
-   * @memberof Represtantante
-   */
-  nombre: string;
-
-  /**
-   * Apellido paterno del representante.
-   * 
-   * @type {string}
-   * @memberof Represtantante
-   */
-  apellidoPaterno: string;
-
-  /**
-   * Apellido materno del representante.
-   * 
-   * @type {string}
-   * @memberof Represtantante
-   */
-  apellidoMaterno: string;
-}
 
 /**
  * Interfaz que representa la información aduanera.
@@ -93,19 +54,24 @@ export interface AduanerasInformaciones {
  * @interface Aduana
  */
 export interface Aduana {
-  /**
-   * ID de la aduana.
-   * 
-   * @type {number}
-   * @memberof Aduana
-   */
   id: number;
-
-  /**
-   * Nombre de la aduana.
-   * 
-   * @type {string}
-   * @memberof Aduana
-   */
   name: string;
 }
+/**
+ * Interfaz para los datos de prueba del representante.
+ */
+/**
+ * Interfaz que representa los datos de un representante.
+ * 
+ * @property {string} rfc - Registro Federal de Contribuyentes del representante.
+ * @property {string} nombre - Nombre del representante.
+ * @property {string} apellidoPaterno - Apellido paterno del representante.
+ * @property {string} apellidoMaterno - Apellido materno del representante.
+ */
+export interface ReprestantanteData {
+  rfc: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+}
+
