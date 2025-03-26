@@ -1,8 +1,8 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { DatosDelTramite, ResponsableInspección } from '../../modelos/acuicola.model';
-import { EXPEDICION_FACTURA_FECHA, INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
+import { DatosDelTramite, ResponsableInspeccion } from '../../modelos/acuicola.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
 import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
@@ -15,6 +15,11 @@ import { TramiteState } from '../../estados/tramite220703.store';
 import { TramiteStore } from '../../estados/tramite220703.store';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 
+export const FECHA_INSPECCION = {
+  labelNombre: 'Fecha de inspección',
+  required: true,
+  habilitado: true,
+};
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -25,12 +30,20 @@ import { TramiteStoreQuery } from '../../estados/tramite220703.query';
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    InputFechaComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss'
 })
+
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+    * Configuración de las fechas de inicio y fin.
+    * @type {InputFecha}
+    */
+  public fechaInspeccionInput: InputFecha = FECHA_INSPECCION;
 
   /**
    * Formulario reactivo para capturar los datos de la solicitud.
@@ -150,7 +163,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Configuración del campo de fecha de inicio.
    * @type {InputFecha}
    */
-  fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -208,7 +220,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       map((datos: TramiteState) => {
         this.tramiteState = datos;
         this.datosDeLaSolicitudForm.patchValue({
-          fechaInicioInput: datos.fechaInicioInput,
+          fechaInspeccionInput: datos.fechaInspeccionInput,
           aduanaDeIngreso: datos.aduanaDeIngreso,
           tipoContenedor: datos.tipoContenedor,
           identificacionTransporte: datos.identificacionTransporte,
@@ -229,12 +241,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: [{ value: this.tramiteState.justificacion }, Validators.required],
       certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
-      fechaInicioInput: [{ value: this.tramiteState.fechaInicioInput }, Validators.required],
+      fechaInspeccionInput: [{ value: this.tramiteState.fechaInspeccionInput }, Validators.required],
       horaDeInspeccion: ['', Validators.required],
       aduanaDeIngreso: [{ value: this.tramiteState.aduanaDeIngreso }, Validators.required],
       oficinaDeInspeccion: ['', Validators.required],
       puntoDeInspeccion: ['', Validators.required],
-      nombreInspector: [{ value: '', disabled: true }, Validators.required],
+      nombreInspector: [{ value: 'QA', disabled: true }, Validators.required],
       primerApellido: [{ value: '', disabled: true }, Validators.required],
       segundoApellido: [{ value: '', disabled: true }, Validators.required],
       cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
@@ -255,13 +267,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el cambio de la fecha de inicio en el formulario.
-   * @param {Event} event - El evento de cambio generado por el input.
-   * @returns {void}
+   * Actualiza la fecha de inspección en el formulario y store.
+   * @param {string} nuevo_valor - Nueva fecha de inspección.
    */
-  cambioFechaInicio(event: Event): void {
-    const FECHA = (event.target as HTMLInputElement).value;
-    this.tramiteStore.setFechaInicio(FECHA);
+  cambioFechaInspeccion(nuevo_valor: string): void {
+    this.datosDeLaSolicitudForm.get('fechaInspeccionInput')?.setValue(nuevo_valor);
+    this.tramiteStore.setFechaInicio(nuevo_valor);
+    this.datosDeLaSolicitudForm.get('fechaInspeccionInput')?.markAsUntouched();
   }
 
   /**
@@ -349,7 +361,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.horaDeInspeccion = {
-            labelNombre: 'Hora de inspección',
+            labelNombre: 'Hora de inspección*',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -467,7 +479,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.acuicolaService
       .obtenerResponsableDatos()
       .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: ResponsableInspección) => {
+      .subscribe((data: ResponsableInspeccion) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       })
   }

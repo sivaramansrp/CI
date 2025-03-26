@@ -60,7 +60,7 @@ describe('DatosGeneralesComponent', () => {
     component.getAduanaDeIngreso = jest.fn();
     component.getOficinaDeInspeccion = jest.fn();
     component.getPuntoDeInspeccion = jest.fn();
-    component.getRegimenAlQue = jest.fn();
+    component.getRegimenAlQueSeDestinara = jest.fn();
     component.getPuntoDeVerificacion = jest.fn();
     component.getDatosParaMovilizacion = jest.fn();
     component.getMercanciaTablaDatos = jest.fn();
@@ -77,7 +77,7 @@ describe('DatosGeneralesComponent', () => {
     expect(component.getAduanaDeIngreso).toHaveBeenCalled();
     expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
     expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
-    expect(component.getRegimenAlQue).toHaveBeenCalled();
+    expect(component.getRegimenAlQueSeDestinara).toHaveBeenCalled();
     expect(component.getPuntoDeVerificacion).toHaveBeenCalled();
     expect(component.getDatosParaMovilizacion).toHaveBeenCalled();
 
@@ -128,14 +128,14 @@ describe('DatosGeneralesComponent', () => {
     expect(component.acuicolaService.getPuntoDeInspeccion).toHaveBeenCalled();
   });
 
-  it('should run #getRegimenAlQue()', async () => {
+  it('should run #getRegimenAlQueSeDestinara()', async () => {
     component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getRegimenAlQue = jest.fn().mockReturnValue(observableOf({
+    component.acuicolaService.getRegimenAlQueSeDestinara = jest.fn().mockReturnValue(observableOf({
       code: {},
       data: {}
     }));
-    component.getRegimenAlQue();
-    expect(component.acuicolaService.getRegimenAlQue).toHaveBeenCalled();
+    component.getRegimenAlQueSeDestinara();
+    expect(component.acuicolaService.getRegimenAlQueSeDestinara).toHaveBeenCalled();
   });
 
   it('should run #getDatosParaMovilizacion()', async () => {

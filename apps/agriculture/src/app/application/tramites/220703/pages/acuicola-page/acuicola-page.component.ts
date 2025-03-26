@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
@@ -31,7 +31,7 @@ interface AccionBoton {
   templateUrl: './acuicola-page.component.html',
   styleUrl: './acuicola-page.component.scss'
 })
-export class AcuicolaPageComponent implements OnInit {
+export class AcuicolaPageComponent implements OnInit, OnDestroy {
   /**
    * Lista de pasos del asistente.
    */
@@ -129,5 +129,15 @@ export class AcuicolaPageComponent implements OnInit {
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMAVALIDA);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Emite una señal a través del notifier de destrucción y completa el observable.
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.unsubscribe();
   }
 }

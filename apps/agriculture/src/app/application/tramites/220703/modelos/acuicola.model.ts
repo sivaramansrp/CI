@@ -2,7 +2,7 @@ export interface DatosDelTramite {
     certificadosAutorizados: number;
 }
 
-export interface ResponsableInspección {
+export interface ResponsableInspeccion {
     puntoDeInspeccion: string;
     primerApellido: string;
     segundoApellido: string;
@@ -21,7 +21,7 @@ export interface MercanciaDatos {
 export interface PagoDeDerechos {
     claveDeReferencia: string;
     cadenaDependencia: string;
-    banco: string;
+    banco: number;
     llaveDePago: string;
     fechaInicioInput: string;
     importeDePago: string;

@@ -1,16 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { TramiteState, TramiteStore } from '../../estados/tramite220703.store';
+import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { PagoDeDerechos } from '../../modelos/acuicola.model';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject} from 'rxjs';
+import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 
 @Component({
   selector: 'app-pago-derechos',
   standalone: true,
   imports: [
     TituloComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputFechaComponent
   ],
   templateUrl: './pago-derechos.component.html',
   styleUrl: './pago-derechos.component.scss'
@@ -28,6 +32,22 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * @type {TramiteState}
+  * @description Variable que almacena el estado inicial de un trámite. Se inicializa como un objeto vacío y se fuerza su tipo a TramiteState.
+  */
+  tramiteState: TramiteState = {} as TramiteState;
+
+  /**
+   * Configuración para el campo de fecha de pago (versión estándar).
+   * @type {InputFecha}
+   */
+  fachaDePago: InputFecha = {
+    labelNombre: 'Fecha de pago',
+    required: false,
+    habilitado: true,
+  };
+
+  /**
    * Constructor del componente.
    * 
    * @param fb Servicio de FormBuilder para crear formularios reactivos.
@@ -36,6 +56,8 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
+    private tramiteStore: TramiteStore,
+    private tramiteStoreQuery: TramiteStoreQuery,
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -47,6 +69,17 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.iniciarFormulario();
     this.pagoDeCargarDatos();
+
+    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((datos: TramiteState) => {
+        this.tramiteState = datos;
+        this.pagosDerechosForm.patchValue({
+          fechaDePago: datos.fechaDePago,
+        });
+      })
+    )
+      .subscribe();
   }
 
   /**
@@ -58,9 +91,18 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
       cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
       banco: [{ value: '', disabled: true }, Validators.required],
       llaveDePago: [{ value: '', disabled: true }, Validators.required],
-      fechaInicio: [{ value: '', disabled: true }, Validators.required],
+      fechaDePago: [{ value: this.tramiteState.fechaDePago, disabled: true }, Validators.required],
       importeDePago: [{ value: '', disabled: true }, Validators.required],
     });
+  }
+
+  /**
+   * Cambia la fecha de pago de derechos en el almacén de trámite.
+   * @param {string} nuevo_valor - El nuevo valor de la fecha de pago de derechos.
+   * @returns {void} No retorna ningún valor.
+   */
+  cambioFechaPagoDeDerechos(nuevo_valor: string): void {
+    this.tramiteStore.setFechaPagoDeDerechos(nuevo_valor);
   }
 
   /**

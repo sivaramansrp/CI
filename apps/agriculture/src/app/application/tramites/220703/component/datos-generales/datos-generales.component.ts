@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MERCANCIA_SERVICIO, mercanciaInfo } from '../../constantes/acuicola.enum';
+import { MERCANCIA_SERVICIO, MercanciaInfo } from '../../constantes/acuicola.enum';
 import { TramiteState, TramiteStore } from '../../estados/tramite220703.store';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,11 @@ import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+export const FECHA_DE_PAGO = {
+  labelNombre: 'Fecha de inspección',
+  required: true,
+  habilitado: true,
+};
 
 @Component({
   selector: 'app-datos-generales',
@@ -106,15 +111,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Configuración de columnas para la tabla de mercancías.
-   * @type {ConfiguracionColumna<mercanciaInfo>[]}
+   * @type {ConfiguracionColumna<MercanciaInfo>[]}
    */
-  mercanciaTabla: ConfiguracionColumna<mercanciaInfo>[] = MERCANCIA_SERVICIO;
+  mercanciaTabla: ConfiguracionColumna<MercanciaInfo>[] = MERCANCIA_SERVICIO;
 
   /**
    * Datos de la mercancía para la tabla.
-   * @type {mercanciaInfo[]}
+   * @type {MercanciaInfo[]}
    */
-  mercanciaTablaDatos: mercanciaInfo[] = [];
+  mercanciaTablaDatos: MercanciaInfo[] = [];
+
+  /**
+   * Controlador de entrada para la fecha de inicio/pago.
+   * @type {InputFecha}
+   */
+  public fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -160,7 +171,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.getAduanaDeIngreso();
     this.getOficinaDeInspeccion();
     this.getPuntoDeInspeccion();
-    this.getRegimenAlQue();
+    this.getRegimenAlQueSeDestinara();
     this.getPuntoDeVerificacion();
     this.getDatosParaMovilizacion();
     this.getMercanciaTablaDatos();
@@ -331,11 +342,11 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene los regímenes a los que se destina la mercancía desde el servicio.
-   * @method getRegimenAlQue
+   * @method getRegimenAlQueSeDestinara
    * @returns {void}
    */
-  getRegimenAlQue(): void {
-    this.acuicolaService.getRegimenAlQue()
+  getRegimenAlQueSeDestinara(): void {
+    this.acuicolaService.getRegimenAlQueSeDestinara()
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;

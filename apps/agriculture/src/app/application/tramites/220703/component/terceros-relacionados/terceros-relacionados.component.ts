@@ -1,10 +1,10 @@
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { DESTINO_SERVICIO, destinoInfo, exportadorInfo } from '../../constantes/acuicola.enum';
+import { DESTINO_SERVICIO, DestinoInfo, ExportadorInfo } from '../../constantes/acuicola.enum';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { EXPORTADOR_SERVICIO } from '../../constantes/acuicola.enum';
-import { MANDATORY_INSTRUCTION } from '../../constantes/acuicola.enum';
+import { INSTRUCCION_OBLIGATORIA } from '../../constantes/acuicola.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -37,7 +37,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     * Instrucción que se muestra al usuario para indicar que debe hacer doble clic en un elemento
     * de la tabla para seleccionarlo.
     */
-  instruccionDobleClic: string = MANDATORY_INSTRUCTION;
+  instruccionDobleClic: string = INSTRUCCION_OBLIGATORIA;
 
   /**
    * Configuración para la selección de elementos en la tabla mediante checkboxes.
@@ -47,22 +47,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla para los datos de exportadores.
    */
-  exportadorTabla: ConfiguracionColumna<exportadorInfo>[] = EXPORTADOR_SERVICIO;
+  exportadorTabla: ConfiguracionColumna<ExportadorInfo>[] = EXPORTADOR_SERVICIO;
 
   /**
    * Datos que se muestran en la tabla de exportadores.
    */
-  exportadorTableDatos: exportadorInfo[] = [];
+  exportadorTableDatos: ExportadorInfo[] = [];
 
   /**
    * Configuración de las columnas de la tabla para los datos de destinos.
    */
-  destinoTabla: ConfiguracionColumna<destinoInfo>[] = DESTINO_SERVICIO;
+  destinoTabla: ConfiguracionColumna<DestinoInfo>[] = DESTINO_SERVICIO;
 
   /**
    * Datos que se muestran en la tabla de destinos.
    */
-  destinoTableDatos: destinoInfo[] = [];
+  destinoTableDatos: DestinoInfo[] = [];
 
   /**
    * Constructor del componente.

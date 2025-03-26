@@ -39,7 +39,7 @@ export const TEXTOS_REQUISITOS =
 export const INSTRUCCION_DOBLE_CLIC =
   'Al dar clic en el botón "Cargar" se creará una nueva solicitud con los mismos datos de la solcitud 202766288 ';
 
-export const MANDATORY_INSTRUCTION =
+export const INSTRUCCION_OBLIGATORIA =
   'Se requieren las constantes que definen las tablas de instrucciones marcadas con un asterisco.';
 
 export const TEXTOS_220703 = {
@@ -53,283 +53,279 @@ export const TEXTOS_220703 = {
 export const MERCANCIA_SERVICIO = [
   {
     encabezado: 'No. pardita',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna1,
     orden: 1,
   },
   {
     encabezado: 'Tipo de requisito',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna2,
     orden: 2,
   },
   {
     encabezado: 'Requisito',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna3,
     orden: 3,
   },
   {
     encabezado: 'Número Certificado Internacional',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna4,
     orden: 4,
   },
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna5,
     orden: 5,
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_6,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna6,
     orden: 6,
   },
   {
     encabezado: 'Nico',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_7,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna7,
     orden: 7,
   },
   {
     encabezado: 'Descripción Nico',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_8,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna8,
     orden: 8,
   },
   {
     encabezado: 'Descripción',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_8,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna8,
     orden: 8,
   },
   {
     encabezado: 'Unidad de medida tarifa (UMT)',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_9,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna9,
     orden: 9,
   },
   {
     encabezado: 'Cantidad UMT',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_10,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna10,
     orden: 10,
   },
   {
     encabezado: 'Unidad de medida de comercializacion (UMC)',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_11,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna11,
     orden: 11,
   },
   {
     encabezado: 'Cantidad UMC',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_12,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna12,
     orden: 12,
   },
   {
     encabezado: 'Uso',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_13,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna13,
     orden: 13,
   },
   {
     encabezado: 'Especie',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_14,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna14,
     orden: 14,
   },
   {
-    encabezado: 'Paises de origen',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_15,
+    encabezado: 'Países de origen',
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna15,
     orden: 15,
   },
   {
-    encabezado: 'Paises de procedencia',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_16,
+    encabezado: 'Países de procedencia',
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna16,
     orden: 16,
-  },
+  },  
 
   {
-    encabezado: 'Numero de lote',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_17,
+    encabezado: 'Número de lote',
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna17,
     orden: 17,
   },
 
   {
     encabezado: 'Fase de desarrollo',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_18,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna18,
     orden: 18,
   },
   {
     encabezado: 'Certificado Internacional Electrónico',
-    clave: (ele: mercanciaInfo): string => ele.TABLA_Columna_19,
+    clave: (ele: MercanciaInfo): string => ele.tablaColumna19,
     orden: 19,
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface mercanciaInfo {
-  TABLA_Columna_1: string;
-  TABLA_Columna_2: string;
-  TABLA_Columna_3: string;
-  TABLA_Columna_4: string;
-  TABLA_Columna_5: string;
-  TABLA_Columna_6: string;
-  TABLA_Columna_7: string;
-  TABLA_Columna_8: string;
-  TABLA_Columna_9: string;
-  TABLA_Columna_10: string;
-  TABLA_Columna_11: string;
-  TABLA_Columna_12: string;
-  TABLA_Columna_13: string;
-  TABLA_Columna_14: string;
-  TABLA_Columna_15: string;
-  TABLA_Columna_16: string;
-  TABLA_Columna_17: string;
-  TABLA_Columna_18: string;
-  TABLA_Columna_19: string;
+export interface MercanciaInfo {
+  tablaColumna1: string;
+  tablaColumna2: string;
+  tablaColumna3: string;
+  tablaColumna4: string;
+  tablaColumna5: string;
+  tablaColumna6: string;
+  tablaColumna7: string;
+  tablaColumna8: string;
+  tablaColumna9: string;
+  tablaColumna10: string;
+  tablaColumna11: string;
+  tablaColumna12: string;
+  tablaColumna13: string;
+  tablaColumna14: string;
+  tablaColumna15: string;
+  tablaColumna16: string;
+  tablaColumna17: string;
+  tablaColumna18: string;
+  tablaColumna19: string;
   estatus: boolean;
 }
 
 export const EXPORTADOR_SERVICIO = [
   {
     encabezado: 'Nombre/ denominación o razón social',
-    clave: (ele: exportadorInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: ExportadorInfo): string => ele.tablaColumna1,
     orden: 1,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: exportadorInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: ExportadorInfo): string => ele.tablaColumna2,
     orden: 2,
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (ele: exportadorInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: ExportadorInfo): string => ele.tablaColumna3,
     orden: 3,
   },
   {
     encabezado: 'Domicilio',
-    clave: (ele: exportadorInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: ExportadorInfo): string => ele.tablaColumna4,
     orden: 4,
   },
   {
     encabezado: 'País',
-    clave: (ele: exportadorInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: ExportadorInfo): string => ele.tablaColumna5,
     orden: 5,
   },
 ];
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface exportadorInfo {
-  TABLA_Columna_1: string;
-  TABLA_Columna_2: string;
-  TABLA_Columna_3: string;
-  TABLA_Columna_4: string;
-  TABLA_Columna_5: string;
+export interface ExportadorInfo {
+  tablaColumna1: string;
+  tablaColumna2: string;
+  tablaColumna3: string;
+  tablaColumna4: string;
+  tablaColumna5: string;
   estatus: boolean;
 }
 
 export const DESTINO_SERVICIO = [
   {
     encabezado: 'Nombre/ denominación o razón social',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna1,
     orden: 1,
   },
   {
     encabezado: 'Teléfono',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_2,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna2,
     orden: 2,
   },
   {
     encabezado: 'Correo electrónico',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_3,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna3,
     orden: 3,
   },
   {
     encabezado: 'Calle',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_4,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna4,
     orden: 4,
   },
   {
     encabezado: 'Número extrior',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_5,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna5,
     orden: 5,
   },
   {
     encabezado: 'Número interior',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_6,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna6,
     orden: 6,
   },
   {
     encabezado: 'País',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_7,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna7,
     orden: 7,
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_8,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna8,
     orden: 8,
   },
   {
     encabezado: 'Mucinipio o alcaldía',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_9,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna9,
     orden: 9,
   },
   {
     encabezado: 'Entidad federativa',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_10,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna10,
     orden: 10,
   },
   {
     encabezado: 'Código postal',
-    clave: (ele: destinoInfo): string => ele.TABLA_Columna_11,
+    clave: (ele: DestinoInfo): string => ele.tablaColumna11,
     orden: 11,
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface destinoInfo {
-  TABLA_Columna_1: string;
-  TABLA_Columna_2: string;
-  TABLA_Columna_3: string;
-  TABLA_Columna_4: string;
-  TABLA_Columna_5: string;
-  TABLA_Columna_6: string;
-  TABLA_Columna_7: string;
-  TABLA_Columna_8: string;
-  TABLA_Columna_9: string;
-  TABLA_Columna_10: string;
-  TABLA_Columna_11: string;
+export interface DestinoInfo {
+  tablaColumna1: string;
+  tablaColumna2: string;
+  tablaColumna3: string;
+  tablaColumna4: string;
+  tablaColumna5: string;
+  tablaColumna6: string;
+  tablaColumna7: string;
+  tablaColumna8: string;
+  tablaColumna9: string;
+  tablaColumna10: string;
+  tablaColumna11: string;
   estatus: boolean;
 }
 
 export const MEDIO_SERVICIO = [
   {
     encabezado: 'Fracción arancelaria',
-    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_1,
+    clave: (ele: MercanciaDatosInfo): string => ele.tablaColumna1,
     orden: 1,
   },
   {
-    encabezado: 'Teléfono',
-    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_2,
+    encabezado: 'Descripción de la fracción',
+    clave: (ele: MercanciaDatosInfo): string => ele.tablaColumna2,
     orden: 2,
   },
   {
-    encabezado: 'Correo electrónico',
-    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_3,
+    encabezado: 'Nico',
+    clave: (ele: MercanciaDatosInfo): string => ele.tablaColumna3,
     orden: 3,
   },
   {
-    encabezado: 'Domicilio',
-    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_4,
+    encabezado: 'Descripción Nico',
+    clave: (ele: MercanciaDatosInfo): string => ele.tablaColumna4,
     orden: 4,
   },
   {
-    encabezado: 'País',
-    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_5,
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: MercanciaDatosInfo): string => ele.tablaColumna5,
     orden: 5,
   },
   {
-    encabezado: 'País',
-    clave: (ele: MercanciaDatosInfo): string => ele.TABLA_Columna_6,
+    encabezado: 'Cantidad total UMT',
+    clave: (ele: MercanciaDatosInfo): string => ele.tablaColumna6,
     orden: 6,
   },
 ];
-export interface MercanciaDatosInfo {
-  TABLA_Columna_1: string;
-  TABLA_Columna_2: string;
-  TABLA_Columna_3: string;
-  TABLA_Columna_4: string;
-  TABLA_Columna_5: string;
-  TABLA_Columna_6: string;
+  export interface MercanciaDatosInfo {
+  tablaColumna1: string;
+  tablaColumna2: string;
+  tablaColumna3: string;
+  tablaColumna4: string;
+  tablaColumna5: string;
+  tablaColumna6: string;
   estatus: boolean;
 }
 

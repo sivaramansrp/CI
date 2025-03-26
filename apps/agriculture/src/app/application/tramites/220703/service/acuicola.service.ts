@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DatosDelTramite, PagoDeDerechos, PagoDeDerechosRevision, ResponsableInspección } from '../modelos/acuicola.model';
+import { DatosDelTramite, PagoDeDerechos, PagoDeDerechosRevision, ResponsableInspeccion } from '../modelos/acuicola.model';
+import { DestinoInfo } from '../constantes/acuicola.enum';
+import { ExportadorInfo } from '../constantes/acuicola.enum';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MercanciaDatosInfo } from '../constantes/acuicola.enum';
+import { MercanciaInfo } from '../constantes/acuicola.enum';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { destinoInfo } from '../constantes/acuicola.enum';
-import { exportadorInfo } from '../constantes/acuicola.enum';
 import { map } from 'rxjs';
-import { mercanciaInfo } from '../constantes/acuicola.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -101,8 +101,8 @@ export class AcuicolaService {
    * 
    * @returns Un `Observable` que emite un objeto de tipo `ResponsableInspección`.
    */
-  obtenerResponsableDatos(): Observable<ResponsableInspección> {
-    return this.http.get<ResponsableInspección>(`${this.apiUrl}responsable-inspeccion.json`).pipe(
+  obtenerResponsableDatos(): Observable<ResponsableInspeccion> {
+    return this.http.get<ResponsableInspeccion>(`${this.apiUrl}responsable-inspeccion.json`).pipe(
       map((res: any) => {
         return res.data;
       })
@@ -179,7 +179,7 @@ export class AcuicolaService {
    * 
    * @returns Un `Observable` que emite un objeto de tipo `RespuestaCatalogos`.
    */
-  getRegimenAlQue(): Observable<RespuestaCatalogos> {
+  getRegimenAlQueSeDestinara(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`${this.apiUrl}regimen-al-que-se-destinara.json`).pipe(
       map(response => {
         return response;
@@ -227,10 +227,10 @@ export class AcuicolaService {
 
   /**
    * Obtiene los datos de la mercancía (merchandise) desde un archivo JSON.
-   * @returns Un Observable que emite un array de objetos de tipo `mercanciaInfo`.
+   * @returns Un Observable que emite un array de objetos de tipo `MercanciaInfo`.
    */
-  getMercanciaDatos(): Observable<mercanciaInfo[]> {
-    return this.http.get<mercanciaInfo[]>(`${this.apiUrl}datos-de-merchandise.json`).pipe(
+  getMercanciaDatos(): Observable<MercanciaInfo[]> {
+    return this.http.get<MercanciaInfo[]>(`${this.apiUrl}datos-de-merchandise.json`).pipe(
       map(response => {
         return response;
       })
@@ -239,10 +239,10 @@ export class AcuicolaService {
 
   /**
    * Obtiene los datos del exportador desde un archivo JSON.
-   * @returns Un Observable que emite un array de objetos de tipo `exportadorInfo`.
+   * @returns Un Observable que emite un array de objetos de tipo `ExportadorInfo`.
    */
-  getExportadorDatos(): Observable<exportadorInfo[]> {
-    return this.http.get<exportadorInfo[]>(`${this.apiUrl}datos-de-exportador.json`).pipe(
+  getExportadorDatos(): Observable<ExportadorInfo[]> {
+    return this.http.get<ExportadorInfo[]>(`${this.apiUrl}datos-de-exportador.json`).pipe(
       map(response => {
         return response;
       })
@@ -251,10 +251,10 @@ export class AcuicolaService {
 
   /**
    * Obtiene los datos del destino desde un archivo JSON.
-   * @returns Un Observable que emite un array de objetos de tipo `destinoInfo`.
+   * @returns Un Observable que emite un array de objetos de tipo `DestinoInfo`.
    */
-  getDestinoDatos(): Observable<destinoInfo[]> {
-    return this.http.get<destinoInfo[]>(`${this.apiUrl}datos-de-destino.json`).pipe(
+  getDestinoDatos(): Observable<DestinoInfo[]> {
+    return this.http.get<DestinoInfo[]>(`${this.apiUrl}datos-de-destino.json`).pipe(
       map(response => {
         return response;
       })

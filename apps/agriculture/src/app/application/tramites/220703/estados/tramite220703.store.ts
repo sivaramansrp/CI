@@ -13,7 +13,9 @@ import { Injectable } from '@angular/core';
  * Representa el estado de la modalidad de cambio.
  */
 export interface TramiteState {
-    fechaInicioInput: string;
+    fechaInspeccionInput: string;
+    fechaPagoDeDerechos: string;
+    fechaDePago:string;
     aduanaDeIngreso: number;
     tipoContenedor: number;
     identificacionTransporte: string;
@@ -24,7 +26,12 @@ export interface TramiteState {
     regimenAlQueDestina: number,
     datosParaMovilizacion: number,
     puntoDeVerificacion: number,
-    banco: number
+    banco: number,
+    fechaPagoDeDerechosRevision: string;
+    llaveDePago:string;
+    claveDeReferencia:string;
+    importeDePago:string;
+    cadenaDependencia:string;
 
 }
 
@@ -36,7 +43,9 @@ export interface TramiteState {
  */
 export function createInitialState(): TramiteState {
     return {
-        fechaInicioInput: '',
+        fechaInspeccionInput: '',
+        fechaPagoDeDerechos: '',
+        fechaDePago:'',
         aduanaDeIngreso: 0,
         tipoContenedor: 0,
         identificacionTransporte: '',
@@ -47,8 +56,12 @@ export function createInitialState(): TramiteState {
         regimenAlQueDestina: 0,
         datosParaMovilizacion: 0,
         puntoDeVerificacion: 0,
-        banco: 0
-
+        banco: 0,
+        fechaPagoDeDerechosRevision: '',
+        llaveDePago:'',
+        claveDeReferencia:'',
+        importeDePago:'',
+        cadenaDependencia:'',
     };
 }
 
@@ -66,13 +79,13 @@ export class TramiteStore extends Store<TramiteState> {
 
     /**
      * Actualiza la fecha de inicio en el estado del trámite.
-     * @param {string} fechaInicioInput - La fecha de inicio en formato de texto.
+     * @param {string} fechaInspeccionInput - La fecha de inicio en formato de texto.
      * @returns {void}
      */
-    public setFechaInicio(fechaInicioInput: string): void {
+    public setFechaInicio(fechaInspeccionInput: string): void {
         this.update((state) => ({
             ...state,
-            fechaInicioInput,
+            fechaInspeccionInput,
         }));
     }
 
@@ -205,6 +218,90 @@ export class TramiteStore extends Store<TramiteState> {
         this.update((state) => ({
             ...state,
             banco,
+        }));
+    }
+
+    /**
+     * Establece la fecha de pago de derechos en el estado.
+     * @param {string} fechaPagoDeDerechos - La nueva fecha de pago de derechos.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setFechaPagoDeDerechos(fechaPagoDeDerechos: string): void {
+        this.update((state) => ({
+            ...state,
+            fechaPagoDeDerechos,
+        }));
+    }
+
+    /**
+     * Establece la fecha de pago de derechos de revisión en el estado.
+     * @param {string} fechaPagoDeDerechosRevision - La nueva fecha de pago de derechos de revisión.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setFechaPagoDeDerechosRevision(fechaPagoDeDerechosRevision: string): void {
+        this.update((state) => ({
+            ...state,
+            fechaPagoDeDerechosRevision,
+        }));
+    }
+
+    /**
+     * Establece la llave de pago en el estado.
+     * @param {string} llaveDePago - La nueva llave de pago.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setLlaveDePago(llaveDePago: string): void {
+        this.update((state) => ({
+            ...state,
+            llaveDePago,
+        }));
+    }
+
+    /**
+     * Establece la clave de referencia en el estado.
+     * @param {string} claveDeReferencia - La nueva clave de referencia.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setClaveDeReferencia(claveDeReferencia: string): void {
+        this.update((state) => ({
+            ...state,
+            claveDeReferencia,
+        }));
+    }
+
+    /**
+     * Establece el importe de pago en el estado.
+     * @param {string} importeDePago - El nuevo importe de pago.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setImporteDePago(importeDePago: string): void {
+        this.update((state) => ({
+            ...state,
+            importeDePago,
+        }));
+    }
+
+    /**
+     * Establece la cadena de dependencia en el estado.
+     * @param {string} cadenaDependencia - La nueva cadena de dependencia.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setCadenaDependencia(cadenaDependencia: string): void {
+        this.update((state) => ({
+            ...state,
+            cadenaDependencia,
+        }));
+    }
+
+    /**
+     * Establece la fecha de pago en el estado.
+     * @param {string} fechaDePago - La nueva fecha de pago.
+     * @returns {void} No retorna ningún valor.
+     */
+    public setFechaDePago(fechaDePago: string): void {
+        this.update((state) => ({
+            ...state,
+            fechaDePago,
         }));
     }
 

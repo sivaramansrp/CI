@@ -4,7 +4,7 @@
       <ng-titulo titulo="Pago de derechos" />
       <div class="col-md-4 form-group">
         <label class="form-label" for="claveDeReferencia"
-          >Clave de referencia*:</label
+          >Clave de referencia:</label
         >
         <input
           type="text"
@@ -16,7 +16,7 @@
 
       <div class="col-md-4 form-group">
         <label class="form-label" for="cadenaDependencia"
-          >Cadena de la dependencia*:</label
+          >Cadena de la dependencia:</label
         >
         <input
           type="text"
@@ -37,7 +37,7 @@
       </div>
 
       <div class="col-md-4 form-group">
-        <label class="form-label" for="llaveDePago">Llave de pago*:</label>
+        <label class="form-label" for="llaveDePago">Llave de pago:</label>
         <input
           type="text"
           id="llaveDePago"
@@ -47,17 +47,15 @@
       </div>
 
       <div class="col-md-4 form-group">
-        <label class="form-label" for="fechaInicio">Fecha de pago:</label>
-        <input
-          type="date"
-          id="fechaInicio"
-          class="form-control"
-          formControlName="fechaInicio"
-        />
+        <input-fecha
+        [datos]="fachaDePago"
+        (valorCambiado)="cambioFechaPagoDeDerechos($event)"
+        [setFecha]="this.tramiteState.fechaPagoDeDerechos"
+      ></input-fecha>
       </div>
 
       <div class="col-md-4 form-group">
-        <label class="form-label" for="importeDePago">Importe de pago*:</label>
+        <label class="form-label" for="importeDePago">Importe de pago:</label>
         <input
           type="text"
           id="importeDePago"

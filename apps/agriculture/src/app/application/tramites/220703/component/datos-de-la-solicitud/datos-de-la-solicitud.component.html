@@ -63,16 +63,15 @@
             formControlName="certificadosAutorizados"
           />
         </div>
+        
         <div class="col-md-4">
-          <label class="form-label" for="fechaInicio">Fecha de inspección *:</label>
-          <input
-            type="date"
-            id="fechaInicio"
-            class="form-control"
-            formControlName="fechaInicioInput"
-            (change)="cambioFechaInicio($event)"
-          />
+          <input-fecha
+            [datos]="fechaInspeccionInput"
+            [setFecha]="datosDeLaSolicitudForm.get('fechaInspeccionInput')?.value"
+            (valorCambiado)="cambioFechaInspeccion($event)"
+          ></input-fecha>
         </div>
+
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select
@@ -113,7 +112,6 @@
               [catalogo]="puntoDeInspeccion.catalogos"
               [label]="puntoDeInspeccion.labelNombre"
               [placeholder]="puntoDeInspeccion.primerOpcion"
-              formControlName="puntoDeInspeccion"
               [isDisabled]="true"
             ></app-catalogo-select>
           </div>
@@ -232,7 +230,6 @@
           </div>
         </div>
 
-        
         <div class="col-md-12 mb-4">
           <div class="form-check">
             <input

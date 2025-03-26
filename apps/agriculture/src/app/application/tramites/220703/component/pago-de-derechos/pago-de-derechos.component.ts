@@ -1,10 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PagoDeDerechos, PagoDeDerechosRevision } from '../../modelos/acuicola.model';
 import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
-import { FECHA_DE_PAGO } from '../../constantes/acuicola.enum';
 import { Subject } from 'rxjs';
 import { TramiteState } from '../../estados/tramite220703.store';
 import { TramiteStore } from '../../estados/tramite220703.store';
@@ -17,7 +16,8 @@ import { TramiteStoreQuery } from '../../estados/tramite220703.query';
   imports: [
     TituloComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputFechaComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss'
@@ -42,9 +42,27 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   */
   tramiteState: TramiteState = {} as TramiteState;
 
-  /** Configuración de la fecha de inicio para el campo de fecha en el formulario. */
-  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+  /**
+   * Configuración para el campo de fecha de pago (versión estándar).
+   * @type {InputFecha}
+   */
+  fachaDePago: InputFecha = {
+    labelNombre: 'Fecha de pago*',
+    required: false,
+    habilitado: true,
+  };
 
+  /**
+  * Configuración para el campo de fecha de pago (versión revisión).
+  * Difiere de la estándar por no incluir asterisco en el label.
+  * @type {InputFecha}
+  */
+  fachaDePagoRevision: InputFecha = {
+    labelNombre: 'Fecha de pago',
+    required: false,
+    habilitado: true,
+  };
+  
   /** Subject utilizado para gestionar la desuscripción de observables. */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -79,13 +97,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       map((datos: TramiteState) => {
         this.tramiteState = datos;
         this.pagosDeDerechosForm.patchValue({
-          fechaInicioInput: datos.fechaInicioInput,
-          banco: datos.banco
+          claveDeReferencia: datos.claveDeReferencia,
+          cadenaDependencia: datos.cadenaDependencia,
+          importeDePago: datos.importeDePago,
+          banco: datos.banco,
+          llaveDePago: datos.llaveDePago,
+          fechaPagoDeDerechosRevision: datos.fechaPagoDeDerechosRevision,
         });
       })
-    )
-      .subscribe();
-
+    ).subscribe();
   }
 
   /**
@@ -93,17 +113,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   iniciarFormulario(): void {
     this.pagosDeDerechosForm = this.fb.group({
-      claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
+      claveDeReferencia: [{ value: this.tramiteState.claveDeReferencia, disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.tramiteState.cadenaDependencia, disabled: true }, Validators.required],
       banco: [{ value: this.tramiteState.banco }, Validators.required],
-      llaveDePago: [{ value: '', disabled: true }, Validators.required],
-      fechaInicioInput: [{ value: this.tramiteState.fechaInicioInput }, Validators.required],
-      importeDePago: [{ value: '', disabled: true }, Validators.required],
+      llaveDePago: [{ value: this.tramiteState.llaveDePago }, Validators.required],
+      fechaPagoDeDerechos: [{ value: this.tramiteState.fechaPagoDeDerechos, disabled: true }, Validators.required],
+      importeDePago: [{ value: this.tramiteState.importeDePago, disabled: true }, Validators.required],
       claveDeReferenciaRevision: [{ value: '', disabled: true }, Validators.required],
       cadenaDependenciaRevision: [{ value: '', disabled: true }, Validators.required],
       bancoRevision: [{ value: '', disabled: true }, Validators.required],
       llaveDePagoRevision: [{ value: '', disabled: true }, Validators.required],
-      fechaInicioRevision: [{ value: '', disabled: true }, Validators.required],
+      fechaPagoDeDerechosRevision: [{ value: '', disabled: true }, Validators.required],
       importeDePagoRevision: [{ value: '', disabled: true }, Validators.required],
     });
   }
@@ -113,18 +133,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {Catalogo} event - El objeto de tipo `Catalogo` que contiene el ID del banco.
    * @returns {void}
    */
-  cambioBanco(event: Catalogo): void {
+  selectBancoCatalogo(event: Catalogo): void {
     this.tramiteStore.setBanco(event.id);
   }
 
   /**
-   * Maneja el cambio de la fecha final en el formulario.
-   * @param {Event} event - El evento de cambio generado por el input.
-   * @returns {void}
+   * Actualiza la fecha de pago de derechos en el store.
+   * @param {string} nuevo_valor - Nueva fecha de pago.
    */
-  cambioFechaFinal(event: Event): void {
-    const FECHA = (event.target as HTMLInputElement).value;
-    this.tramiteStore.setFechaInicio(FECHA);
+  cambioFechaPagoDeDerechos(nuevo_valor: string): void {
+    this.tramiteStore.setFechaPagoDeDerechos(nuevo_valor);
+  }
+
+  /**
+  * Actualiza la fecha de pago de derechos (revisión) en el store.
+  * @param {string} nuevo_valor - Nueva fecha de pago para revisión.
+  */
+  cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
+    this.tramiteStore.setFechaPagoDeDerechosRevision(nuevo_valor);
+  }
+
+  /**
+  * Establece la llave de pago a partir del evento de input.
+  * @param {Event} event - Evento del campo de entrada.
+  */
+  setllaveDePago(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.tramiteStore.setLlaveDePago(VALUE);
   }
 
   /**
@@ -135,7 +170,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pagoDeCargarDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechos) => {
-        this.pagosDeDerechosForm.patchValue(data);
+        this.tramiteStore.setClaveDeReferencia(data.claveDeReferencia);
+        this.tramiteStore.setCadenaDependencia(data.cadenaDependencia);
+        this.tramiteStore.setImporteDePago(data.importeDePago);
       })
   }
 

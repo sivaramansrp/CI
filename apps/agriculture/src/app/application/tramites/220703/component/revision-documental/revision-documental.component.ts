@@ -34,7 +34,7 @@ export class RevisionDocumentalComponent {
   * Índice actual de la fila.
   * @type {number}
   */
-  índiceActual: number = 1;
+  indiceActual: number = 1;
 
   /**
   * Filas de datos.

@@ -32,8 +32,9 @@
             [catalogo]="banco.catalogos"
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
+            formControlName="banco"
             [isDisabled]="false"
-            (selectionChange)="cambioBanco($event)"
+            (selectionChange)="selectBancoCatalogo($event)"
           ></app-catalogo-select>
         </div>
       </div>
@@ -45,18 +46,16 @@
           id="llaveDePago"
           class="form-control"
           formControlName="llaveDePago"
+          (change)="setllaveDePago($event)"
         />
       </div>
 
       <div class="col-md-4">
-        <label class="form-label" for="fechaInicio">Fecha de inspección *:</label>
-        <input
-          type="date"
-          id="fechaInicio"
-          class="form-control"
-          formControlName="fechaInicioInput"
-          (change)="cambioFechaFinal($event)"
-        />
+        <input-fecha
+        [datos]="fachaDePago"
+        (valorCambiado)="cambioFechaPagoDeDerechos($event)"
+        [setFecha]="this.tramiteState.fechaPagoDeDerechos"
+      ></input-fecha>
       </div>
 
       <div class="col-md-4 form-group">
@@ -127,15 +126,11 @@
       </div>
 
       <div class="col-md-4 form-group">
-        <label class="form-label" for="fechaInicioRevision"
-          >Fecha de pago:</label
-        >
-        <input
-          type="date"
-          id="fechaInicioRevision"
-          class="form-control"
-          formControlName="fechaInicioRevision"
-        />
+        <input-fecha
+        [datos]="fachaDePagoRevision"
+        (valorCambiado)="cambioFechaPagoDeDerechosRevision($event)"
+        [setFecha]="this.tramiteState.fechaPagoDeDerechosRevision"
+      ></input-fecha>
       </div>
 
       <div class="col-md-4 form-group">
