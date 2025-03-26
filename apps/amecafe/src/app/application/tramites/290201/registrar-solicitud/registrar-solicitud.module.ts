@@ -17,6 +17,8 @@ import { DatosTramiteComponent } from '../components/datosTramite.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudService } from '../services/registrar-solicitud.service';
 import { TercerosRelacionadosComponent } from '../components/terceros-relacionados/terceros-relacionados.component';
+import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+
 @NgModule({
   declarations: [
     PasoDosComponent,
@@ -26,6 +28,7 @@ import { TercerosRelacionadosComponent } from '../components/terceros-relacionad
   ],
   imports: [
     TituloComponent,
+    DatosDeLaSolicitudComponent,
     TercerosRelacionadosComponent,
     DatosTramiteComponent,
     BtnContinuarComponent,

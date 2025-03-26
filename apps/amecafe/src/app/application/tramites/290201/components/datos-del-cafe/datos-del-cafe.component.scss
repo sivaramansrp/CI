@@ -1,0 +1,8 @@
+.scrollable-table-container {
+    max-height: 300px; /* Set the desired height for the table container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ddd; /* Optional: Add a border for better visibility */
+  }
+  table tbody tr {
+    cursor: pointer;
+  }

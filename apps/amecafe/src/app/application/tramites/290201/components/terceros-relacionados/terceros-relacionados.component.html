@@ -23,7 +23,7 @@
           <td class="text-center">{{item.tipoPersona}}</td>
           <td class="text-center">{{item.denominacion}}</td>
           <td class="text-center">{{item.domicilio}}</td>
-          <td class="text-center">{{item.paisData}}</td>
+          <td class="text-center">{{item.pais}}</td>
           <td class="text-center">{{item.codigopostal}}</td>
           <td class="text-center">{{item.telefono}}</td>
           <td class="text-center">{{item.correoelectronica}}</td>
@@ -79,7 +79,7 @@
               <div class="form-group">
                 <app-catalogo-select
                 id="paisData"
-                formControlName="paisData"
+                formControlName="pais"
                 [catalogo]="paisData.catalogos"
                 [label]="'Pais'"
                 [placeholder]="paisData.primerOpcion"

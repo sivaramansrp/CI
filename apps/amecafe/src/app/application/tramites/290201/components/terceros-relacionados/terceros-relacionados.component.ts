@@ -6,13 +6,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule,TableComponent,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.css',
+  styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit{
   destinatarioForm!: FormGroup;
@@ -34,12 +35,13 @@ export class TercerosRelacionadosComponent implements OnInit{
     constructor(
       private registrarsolicitud: RegistrarSolicitudService,
       private fb: FormBuilder,
+      private changeDetectorRef: ChangeDetectorRef
     ){
       this.destinatarioForm = this.fb.group({
         tipoPersona: ['', Validators.required],
         denominacion:['',Validators.required],
         domicilio:['',Validators.required],
-        paisData:['',Validators.required],
+        pais:['',Validators.required],
         codigopostal:['',Validators.required],
         telefono:['',Validators.required],
         correoelectronica:['',Validators.required]
@@ -47,7 +49,6 @@ export class TercerosRelacionadosComponent implements OnInit{
       })
     }
 
-  
     ngOnInit(): void {
       this.getPaisData();
  }
@@ -65,21 +66,37 @@ export class TercerosRelacionadosComponent implements OnInit{
   // console.log(this.newDestinatarioData);
   // console.log('Form submitted:', this.destinatarioForm.value);
   //   this.isFormVisible = false;
+  const formData = this.destinatarioForm.value;
+      
+
+        console.log('Catalogos:', this.paisData.catalogos);
+        console.log('Form pais ID:', formData.pais);
+        // Map the ID to its corresponding value
+        const paisDataValue = this.paisData.catalogos.find(
+          (item: Catalogo) => String(item.id) === String(formData.pais)
+        )?.descripcion; // Replace 'id' with the correct property from Catalogo
+
+        // Replace the ID with the value
+        formData.pais = paisDataValue;
+      
+        console.log('Form Data:', formData);
   if (this.selectedRow) {
     // Update the selected row with the modified form data
     const index = this.newDestinatarioData.indexOf(this.selectedRow);
     if (index !== -1) {
-      this.newDestinatarioData[index] = this.destinatarioForm.value;
+      this.newDestinatarioData[index] = { ...formData }; 
     }
     console.log('Row updated:', this.newDestinatarioData[index]);
   } else {
     // Add a new row if no row is selected
-    this.newDestinatarioData.push(this.destinatarioForm.value);
-    console.log('New row added:', this.destinatarioForm.value);
+    this.newDestinatarioData.push({ ...formData });
+    console.log('New row added:', { ...formData });
   }
-  this.destinatarioForm.reset();
+   this.destinatarioForm.reset();
   this.isFormVisible = false;
   this.selectedRow = null;
+
+  
   }
   onLimpiar(){
     this.destinatarioForm.reset();
@@ -92,11 +109,21 @@ export class TercerosRelacionadosComponent implements OnInit{
     }
   }
   onModify() {
-    if (this.selectedRow) {
-      this.destinatarioForm.patchValue(this.selectedRow);
-      this.isFormVisible = true;
-    }
+  if (this.selectedRow) {
+    // Find the ID corresponding to the description in the selected row
+    const paisId = this.paisData.catalogos.find(
+      (item: Catalogo) => item.descripcion === this.selectedRow.pais
+    )?.id;
+
+    // Patch the form with the selected row data, including the mapped pais ID
+    this.destinatarioForm.patchValue({
+      ...this.selectedRow,
+      pais: paisId, // Set the ID for the pais field
+    });
+
+    this.isFormVisible = true;
   }
+}
   onDelete() {
     if (this.selectedRow) {
       const index = this.newDestinatarioData.indexOf(this.selectedRow);
@@ -107,5 +134,6 @@ export class TercerosRelacionadosComponent implements OnInit{
       this.selectedRow = null; // Clear the selection
     }
   }
+  
   
 }

@@ -48,7 +48,6 @@ export class SolicitudPageComponent {
       )
       .subscribe();
 
-    this.asignarSecciones();
   }
 
   seleccionaTab(i: number): void {
@@ -69,15 +68,5 @@ export class SolicitudPageComponent {
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones() {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
-      formaValida.push(false);
-    }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
-  }
+ 
 }

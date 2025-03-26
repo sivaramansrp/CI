@@ -1,6 +1,77 @@
-<div class="container">
-    <form [formGroup]="dataCafeForm">
-      <ng-titulo titulo="Informacion del Cafe" />
+
+
+<div class="row">
+   <ng-titulo titulo="Lotes" />
+ </div>
+ <div class="col-md-12 scrollable-table-container">
+   <table class="table table-responsive">
+   <thead>
+     <tr>
+       <th><input type="checkbox"></th>
+       <th>Envasado en</th>
+       <th>Utilizo cafe como materia prima?</th>
+       <th>Cantidad utilizada</th>
+       <th>No.pedimento</th>
+       <th>Pais</th>
+       <th>Fraccion arancelaria</th>
+       <th>Cantidad</th>
+       <th>Unidad de medida</th>
+       <th>Precio aplicable</th>
+       <th>Moneda</th>
+       <th>Lote</th>
+       <th>Otras marcas</th>
+       <th>EI cafe tiene caracteristicas especiales?</th>
+       <th>Fecha de exportacion</th>
+       <th>Pais de transbordo</th>
+       <th>Medio de transporte</th>
+       <th>Identificador transporte</th>
+       <th>Observaciones</th>
+     </tr>
+   </thead>
+   <tbody>
+     <tr *ngFor="let row of tableData; let i = index"   (click)="onRowClick(row)" >
+      <td class="text-center">
+         <input type="checkbox" (click)="onCheckboxClick($event, i)" />
+       </td>
+       <td class="text-center">{{row.envasadoen}}</td>
+       <td class="text-center">{{row.utilizoCafeComo}}</td>
+       <td class="text-center">{{row.cantidadutilizada}}</td>
+       <td class="text-center">{{row.numerodepedimento}}</td>
+       <td class="text-center">{{row.paisdeimportacion}}</td>
+       <td class="text-center">{{row.fraccionarancelaria}}</td>
+       <td class="text-center">{{row.cantidad}}</td>
+       <td class="text-center">{{row.unidaddemedida}}</td>
+       <td class="text-center">{{row.precioapplicable}}</td>
+       <!-- <td class="text-center">{{row.domicilio}}</td> -->
+       <td class="text-center">{{row.dolar}}</td>
+       <td class="text-center">{{row.lote}}</td>
+       <td class="text-center">{{row.otrasmarcas}}</td>
+       <td class="text-center">{{row.elcafe}}</td>
+       <td class="text-center">{{row.fechaexportacion}}</td>
+       <td class="text-center">{{row.paisdetransbordo}}</td>
+       <td class="text-center">{{row.mediodetransporte}}</td>
+       <td class="text-center">{{row.Identificadordel}}</td>
+       <td class="text-center">{{row.observaciones}}</td>
+      </tr>
+     </tbody>
+    </table>
+ </div>
+ <div class="col-md-12 d-flex justify-content-end">
+   <div class="btn-group">
+     <button class="btn btn-danger"
+       type="button" (click)="onDeleteSelectedRows()">Borrar</button>
+       <button class="btn btn-primary"
+       type="button" (click)="onAgregar()">Agregar</button>
+     
+   </div>
+   <div class="btn-group">
+     <button class="btn btn-primary me-2"
+     type="button">Continuar</button>
+   </div>
+</div>
+<div class="container"  *ngIf="isFormVisible">
+    <form [formGroup]="dataCafeForm" (ngSubmit)="onSubmit()">
+      <ng-titulo titulo="Datos Del Cafe" />
       <div class="row">
         <div class="col-md-4 mb-3">
             <div class="form-group">
@@ -94,7 +165,7 @@
                 <div class="form-group">
                     <app-catalogo-select
                     id="dolarData"
-                    formControlName="dolarData"
+                    formControlName="dolar"
                     [catalogo]="dolarData.catalogos"
                     [label]="''"
                     [placeholder]="dolarData.primerOpcion"
@@ -161,7 +232,7 @@
                             <div class="form-group">
                                 <app-catalogo-select
                                 id="mediodetransporteData"
-                                formControlName="mediodetransporteData"
+                                formControlName="mediodetransporte"
                                 [catalogo]="mediodetransporteData.catalogos"
                                 [label]="'Medio de transporte'"
                                 [placeholder]="mediodetransporteData.primerOpcion"
@@ -193,10 +264,10 @@
             <button class="btn btn-danger"
               type="button">Cancelar</button>
               <button class="btn btn-primary me-2"
-              type="button">Agregar</button>
+              type="button" (click)="onSubmit()">Agregar</button>
           </div>
         
       </div>
     </form>
  </div>
- 
+ <app-datos-de-la-solicitud></app-datos-de-la-solicitud>

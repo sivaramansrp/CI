@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Observable } from 'rxjs';
+import { Solicitud } from '../models/tabla-model';
 
 @Injectable({
   providedIn: 'root'
@@ -75,4 +76,9 @@ getPaisData(): Observable<Catalogo[]>{
   return this.http.get<Catalogo[]>('./assets/json/290201/paisdeimportacion.json');
 
 }
+
+getSolicitudData(): Observable<Solicitud[]> {
+  return this.http.get<Solicitud[]>('./assets/json/290201/solicitud.json');
+}
+
 }
