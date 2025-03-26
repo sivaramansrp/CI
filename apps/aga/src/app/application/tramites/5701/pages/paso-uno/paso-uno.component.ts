@@ -9,6 +9,12 @@ import { Component } from '@angular/core';
 export class PasoUnoComponent {
   indice: number = 1;
 
+  /**
+   * Selecciona una pestaña específica y actualiza el índice actual.
+   *
+   * @param {number} i - El índice de la pestaña a seleccionar.
+   * @returns {void}
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
