@@ -198,8 +198,6 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80102/autorizacion-programa-nuevo.module').then(
         (m) => m.AutorizacionProgrmaNuevoModule),
-  }
-
   },
   {
     path: 'aviso-importacion-maquinas',
