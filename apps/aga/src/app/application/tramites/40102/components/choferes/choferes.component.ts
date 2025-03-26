@@ -54,7 +54,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   labelSolicitudChoferExtGafete: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_GAFETE;
   labelSolicitudChoferExtVigenciaGafete: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_VIGENCIA_GAFETE;
   labelSolicitudChoferExtNss: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_NSS;
-  labelSolicitudChoferExtIdeFiscal: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_IDE_FISCAL';
+  labelSolicitudChoferExtIdeFiscal: string = CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_IDE_FISCAL;
   tooltipIdentificacionFiscal: string =
   CHOFERES_PAGE.TOOL_TIP_IDENTIFICACION_FISCAL;
   solicitudTituloDomicilioFiscal: string = CHOFERES_PAGE.SOLICITUD_TITULO_DOMICILIO_FISCAL;
