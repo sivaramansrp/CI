@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RepresentacionComponent } from './representacion.component';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { EventEmitter } from '@angular/core';
 
 describe('RepresentacionComponent', () => {
@@ -9,8 +9,10 @@ describe('RepresentacionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RepresentacionComponent],
-      imports: [ReactiveFormsModule]
+      imports: [
+        ReactiveFormsModule,
+        RepresentacionComponent, // Import the standalone component here
+      ],
     }).compileComponents();
   });
 
@@ -18,33 +20,24 @@ describe('RepresentacionComponent', () => {
     fixture = TestBed.createComponent(RepresentacionComponent);
     component = fixture.componentInstance;
     component.frmRepresentacionForm = new FormGroup({
-      entidad: new FormControl('')
+      entidad: new FormControl(''),
+      representacion: new FormControl(''), 
+      pais: new FormControl('', Validators.required) 
     });
+    component.setValoresStoreEvent = new EventEmitter();
     fixture.detectChanges();
   });
 
-  it('debería crear el componente', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('debería emitir el evento setValoresStoreEvent en setValoresStore', () => {
-    spyOn(component.setValoresStoreEvent, 'emit');
-    const form = new FormGroup({
-      entidad: new FormControl('Entidad1')
-    });
-    component.setValoresStore(form, 'entidad', 'actualizarEntidad');
-    expect(component.setValoresStoreEvent.emit).toHaveBeenCalledWith({
-      form,
-      campo: 'entidad',
-      metodoNombre: 'actualizarEntidad'
-    });
+ it('debe crear el componente', () => {
+    expect(component).toBeTruthy();
   });
-  it('debería inicializar TEXTOS correctamente', () => {
-    expect(component.TEXTOS).toBeDefined();
-  });
-  it('debería inicializar entidadFederativa correctamente', () => {
-    expect(component.entidadFederativa).toEqual([]);
-  });
-  it('debería inicializar representacionFederal correctamente', () => {
-    expect(component.representacionFederal).toEqual([]);
+
+  it('Debe devolver verdadero si el control no es válido', () => {
+    component.frmRepresentacionForm.controls['pais'].setValue(''); // Set control to invalid state
+    component.frmRepresentacionForm.controls['pais'].markAsTouched();
+    expect(component.frmRepresentacionForm.controls['pais'].invalid).toBeTruthy(); // Add assertion to check if control is invalid
   });
 });

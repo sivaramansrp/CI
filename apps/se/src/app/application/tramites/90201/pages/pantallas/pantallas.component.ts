@@ -10,7 +10,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 // eslint-disable-next-line sort-imports
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { PANTAPASOS } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.enum';

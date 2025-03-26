@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AcusePageComponent } from './acuse/acuse-page/acuse-page.component';
-import { FirmaPageComponent } from '@ng-mf/data-access-user';import { NgModule } from '@angular/core';
+import { FirmaPageComponent } from '@ng-mf/data-access-user';
+import { NgModule } from '@angular/core';
 import { NotificacionPageComponent } from './notificaciones/notificacion-page/notificacion-page.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -66,6 +67,13 @@ const ROUTES: Routes = [
     loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
       (m) => m.AtencionRequerimientosModule
     ),
+  },
+  {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40102/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
   },
   {
     path: 'notificacion',

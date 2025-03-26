@@ -3,7 +3,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormGroup,
   ReactiveFormsModule,
@@ -30,7 +30,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   templateUrl: './pais-procendencia.component.html',
   styleUrl: './pais-procendencia.component.scss',
 })
-export class PaisProcendenciaComponent {
+export class PaisProcendenciaComponent implements OnChanges {
 /**
  * Referencia al componente CrosslistComponent.
  * @type {CrosslistComponent}
@@ -47,7 +47,7 @@ export class PaisProcendenciaComponent {
  * Lista de países de procedencia.
  * @type {Catalogo[]}
  */
-@Input() paisProc: Catalogo[] = [];
+@Input() elementosDeBloque: Catalogo[] = [];
 
 /**
  * Lista de países agrupados por bloques.
@@ -74,6 +74,7 @@ export class PaisProcendenciaComponent {
 @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
 /**
  * Configuración de los botones para la gestión de la selección de países.
+ * 
  */
 campoDeBotones = [
   {
@@ -89,6 +90,7 @@ campoDeBotones = [
     class: 'btn-primary',
     /**
      * Función para agregar todos los elementos.
+     *
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -109,7 +111,7 @@ campoDeBotones = [
     class: 'btn-default',
     /**
      * Función para agregar la selección actual.
-     * @type {() => void}
+     * 
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -130,8 +132,9 @@ campoDeBotones = [
     class: 'btn-danger',
     /**
      * Función para restar la selección actual.
-     * @type {() => void}
+     *
      */
+
     funcion: (): void => {
       if (this.crosslistComponent) {
         this.crosslistComponent.quitar('');
@@ -151,6 +154,7 @@ campoDeBotones = [
     class: 'btn-default',
     /**
      * Función para restar todos los elementos.
+     * 
      */
     funcion: (): void => {
       if (this.crosslistComponent) {
@@ -165,7 +169,20 @@ campoDeBotones = [
 constructor() {
   // Constructor del componente
 }
-
+/**
+ * Método que se ejecuta cuando hay cambios en las propiedades de entrada del componente.
+ * @param {SimpleChanges} changes - Objeto que contiene los cambios en las propiedades de entrada.
+ */
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes) {
+    /**
+     * Actualiza la propiedad selectRangoDias con las descripciones de los países agrupados por bloques.
+     */
+    this.selectRangoDias = this.paisesPorBloque.map(
+      (pais: Catalogo) => pais.descripcion
+    );
+  }
+}
 /**
  * Maneja el cambio de bloque seleccionado.
  * @param {Event} event - El evento de cambio.
@@ -174,7 +191,6 @@ enCambioDeBloque(event: Event): void {
   const SELECTED_BLOQUE = Number((event.target as HTMLInputElement).value);
   this.bloqueCambiar.emit(SELECTED_BLOQUE);
 }
-
 /**
  * Establece valores en el store.
  * @param {FormGroup} form - El formulario reactivo.
