@@ -49,53 +49,166 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para cancelar suscripciones activas al destruir el componente.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {ScianConfig<TablaScianConfig>} scianConfig
+   * Configuración de la tabla SCIAN recibida como input.
+   */
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
+
+  /**
+   * @property {TablaMercanciasConfig<TablaMercanciasDatos>} tablaMercanciasConfig
+   * Configuración de la tabla de mercancías recibida como input.
+   */
   @Input()
   public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
+
+  /**
+   * @property {OpcionConfig<TablaOpcionConfig>} opcionConfig
+   * Configuración de la tabla de opciones.
+   */
   @Input() public opcionConfig!: OpcionConfig<TablaOpcionConfig>;
+
+  /**
+   * @property {DatosSolicitudFormState} datosSolicitudFormState
+   * Estado inicial del formulario de solicitud, recibido como input.
+   */
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
+
+  /**
+   * @property {boolean} opcionesColapsableState
+   * Estado colapsable inicial para mostrar u ocultar ciertas secciones.
+   */
   @Input() public opcionesColapsableState!: boolean;
 
+  /**
+   * @event opcionSeleccionado
+   * Emite las opciones seleccionadas al componente padre.
+   */
   @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> =
     new EventEmitter<TablaOpcionConfig[]>();
+
+  /**
+   * @event scianSeleccionado
+   * Emite los registros seleccionados de SCIAN.
+   */
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> =
     new EventEmitter<TablaScianConfig[]>();
+
+  /**
+   * @event mercanciasSeleccionado
+   * Emite los registros de mercancías seleccionados.
+   */
   @Output() mercanciasSeleccionado: EventEmitter<TablaMercanciasDatos[]> =
     new EventEmitter<TablaMercanciasDatos[]>();
+
+  /**
+   * @event datosDeTablaSeleccionados
+   * Emite una estructura que agrupa las selecciones de SCIAN, opciones y mercancías.
+   */
   @Output() datosDeTablaSeleccionados: EventEmitter<DatosDeTablaSeleccionados> =
     new EventEmitter<DatosDeTablaSeleccionados>();
 
+  /**
+   * @event datasolicituActualizar
+   * Emite el estado actualizado del formulario cada vez que cambia su valor.
+   */
   @Output() datasolicituActualizar: EventEmitter<DatosSolicitudFormState> =
     new EventEmitter<DatosSolicitudFormState>();
 
-  public datosSolicitudForm!: FormGroup;
-  public estadoDatos: Catalogo[] = [];
-  public regimenDatos: Catalogo[] = [];
-  public adunasDeEntradasDatos: Catalogo[] = [];
   /**
-   *
-   * Una cadena que representa la clase CSS para una alerta de información.
-   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   * @property {FormGroup} datosSolicitudForm
+   * Formulario reactivo principal del componente.
+   */
+  public datosSolicitudForm!: FormGroup;
+
+  /**
+   * @property {Catalogo[]} estadoDatos
+   * Lista de estados para catálogos relacionados.
+   */
+  public estadoDatos: Catalogo[] = [];
+
+  /**
+   * @property {Catalogo[]} regimenDatos
+   * Lista de regímenes disponibles.
+   */
+  public regimenDatos: Catalogo[] = [];
+
+  /**
+   * @property {Catalogo[]} adunasDeEntradasDatos
+   * Lista de aduanas de entrada disponibles.
+   */
+  public adunasDeEntradasDatos: Catalogo[] = [];
+
+  /**
+   * @property {string} infoAlert
+   * Clase CSS usada para mostrar alertas informativas.
    */
   public infoAlert = 'alert-info';
+
+  /**
+   * @property {string} alertaDeManifestoContenido
+   * Mensaje de alerta relacionado con el manifiesto y declaraciones.
+   */
   public alertaDeManifestoContenido = ALERTA_DE_MANIFESTO_Y_DECLARACIONES;
+
+  /**
+   * @property {string} alertaOpicion
+   * Mensaje de alerta para la tabla de opciones.
+   */
   public alertaOpicion = ALERTA_OPCIONS;
+
+  /**
+   * @property {TablaMercanciasDatos[]} tablaMercanciasLista
+   * Lista de mercancías mostradas en la tabla.
+   */
   public tablaMercanciasLista: TablaMercanciasDatos[] = [];
+
+  /**
+   * @property {TablaScianConfig[]} scianLista
+   * Lista de registros SCIAN seleccionados.
+   */
   public scianLista: TablaScianConfig[] = [];
+
+  /**
+   * @property {TablaOpcionConfig[]} opcionLista
+   * Lista de opciones seleccionadas.
+   */
   public opcionLista: TablaOpcionConfig[] = [];
 
+  /**
+   * @property {boolean} opcionesColapsable
+   * Controla el estado de colapsado de la sección de opciones.
+   */
   public opcionesColapsable = false;
 
+  /**
+   * @constructor
+   * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
+   *
+   * @param fb - FormBuilder para crear el formulario reactivo.
+   * @param router - Servicio de enrutamiento.
+   * @param activatedRoute - Ruta actual activa.
+   */
   constructor(
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Hook que se ejecuta al inicializar el componente.
+   * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
+   */
   ngOnInit(): void {
     this.crearDatosSolicitudForm();
+
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
       .subscribe((value) => {
@@ -103,6 +216,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.datasolicituActualizar.emit(value);
         }
       });
+
     this.opcionesColapsable = this.opcionesColapsableState;
   }
 
