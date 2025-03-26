@@ -16,12 +16,13 @@ const ROUTES: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
-   {
+  {
     path: 'entidad-legal',
     loadChildren: () =>
       import('./tramites/120404/entidad-legal.module').then(
-        (m) => m.EntidadLegalModule)
-      },
+        (m) => m.EntidadLegalModule
+      ),
+  },
 
   {
     path: 'exportador-autorizado',
@@ -35,9 +36,9 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/120501/solicitar-transferencia-cupos.module').then(
         (m) => m.SolicitarTransferenciaCuposModule
-      )
-    },
-    {
+      ),
+  },
+  {
     path: 'registro-como-empresa',
     loadChildren: () =>
       import('./tramites/120601/registro-como-empresa.module').then(
@@ -114,13 +115,15 @@ const ROUTES: Routes = [
     path: 'desmantelar',
     loadChildren: () =>
       import('./tramites/130106/desmantelar.module').then(
-        (m) => m.DesmantelarModule)
+        (m) => m.DesmantelarModule
+      ),
   },
   {
     path: 'desistimiento-de-permiso',
     loadChildren: () =>
       import('./tramites/140105/desistimiento-de-permiso.module').then(
-        (m) => m.DesistimientoDePermisoModule)
+        (m) => m.DesistimientoDePermisoModule
+      ),
   },
   {
     path: 'certificado-sgp',
@@ -197,6 +200,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80101/nuevo-programa-industrial.module').then(
         (m) => m.NuevoProgramaIndustrialModule
+      ),
+  },
+  {
+    path: 'exportacion-minerales',
+    loadChildren: () =>
+      import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
+        (m) => m.ExportacionMineralesDeHierroModule
       ),
   },
 ];
