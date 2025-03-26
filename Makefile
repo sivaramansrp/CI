@@ -7,8 +7,11 @@ NC = \033[0m # No Color
 
 # Common variables
 NETWORK_NAME = modulefederation-network
+DOCKER_REGISTRY ?= ghcr.io
+REPO_OWNER ?= vucem30
+ENV ?= dev
 
-.PHONY: help build-all run-all stop-all logs ps clean clean-all build-login run-login build-aga run-aga
+.PHONY: help build-all run-all stop-all logs ps clean clean-all build-login run-login build-aga run-aga test lint build-ci deploy-ci
 
 # Help documentation
 help:
@@ -32,9 +35,20 @@ help:
 	@echo " make build-dashboard - Build dashboard (shell) microfrontend"
 	@echo " make run-dashboard   - Run dashboard microfrontend (port 4200)"
 	@echo ""
+	@echo "$(YELLOW)CI/CD commands:$(NC)"
+	@echo " make test             - Run all tests"
+	@echo " make test app=<name>  - Run tests for specific app"
+	@echo " make lint             - Run linting on all apps"
+	@echo " make lint app=<name>  - Run linting for specific app"
+	@echo " make build-ci         - Build all apps for CI"
+	@echo " make build-ci app=<name> - Build specific app for CI"
+	@echo " make deploy-ci        - Deploy to Kubernetes (requires env=<dev|staging|prod>)"
+	@echo ""
 	@echo "$(YELLOW)Examples:$(NC)"
 	@echo " make build-login run-login - Build and run just the login microfrontend"
 	@echo " make logs app=login        - Show logs for login container"
+	@echo " make test app=dashboard    - Run tests for dashboard app"
+	@echo " make deploy-ci env=dev     - Deploy to development environment"
 
 # Create network
 create-network:
@@ -118,3 +132,56 @@ run-aga: create-network
 	@echo "$(GREEN)Starting AGA microfrontend$(NC)"
 	docker-compose -f docker/modulefederation-aga-microfront.yml up -d
 	@echo "$(GREEN)AGA available at: http://localhost:4202$(NC)"
+
+# CI/CD Commands
+test:
+	@if [ "$(app)" != "" ]; then \
+		echo "$(GREEN)Running tests for $(app)$(NC)"; \
+		npx nx test $(app) --passWithNoTests; \
+	else \
+		echo "$(GREEN)Running tests for all apps$(NC)"; \
+		npx nx run-many --target=test --all --passWithNoTests; \
+	fi
+
+lint:
+	@if [ "$(app)" != "" ]; then \
+		echo "$(GREEN)Linting $(app)$(NC)"; \
+		npx nx lint $(app); \
+	else \
+		echo "$(GREEN)Linting all apps$(NC)"; \
+		npx nx run-many --target=lint --all; \
+	fi
+
+build-ci:
+	@if [ "$(app)" != "" ]; then \
+		echo "$(GREEN)Building $(app) for CI$(NC)"; \
+		npx nx build $(app) --configuration=production; \
+	else \
+		echo "$(GREEN)Building all apps for CI$(NC)"; \
+		npx nx run-many --target=build --all --configuration=production --parallel=3; \
+	fi
+
+deploy-ci:
+	@if [ "$(ENV)" = "dev" ] || [ "$(ENV)" = "staging" ] || [ "$(ENV)" = "prod" ]; then \
+		echo "$(GREEN)Deploying to $(ENV) environment$(NC)"; \
+		echo "Setting up Kubernetes manifests..."; \
+		mkdir -p k8s-deploy; \
+		REPLICAS=$$([ "$(ENV)" = "prod" ] && echo "2" || echo "1"); \
+		MIN_REPLICAS=$$([ "$(ENV)" = "prod" ] && echo "2" || echo "1"); \
+		MAX_REPLICAS=$$([ "$(ENV)" = "prod" ] && echo "5" || echo "3"); \
+		TAG=$$([ "$(ENV)" = "prod" ] && echo "latest" || echo "$(ENV)"); \
+		sed -e "s|\$${ENV}|$(ENV)|g" \
+			-e "s|\$${REPLICAS}|$${REPLICAS}|g" \
+			-e "s|\$${MIN_REPLICAS}|$${MIN_REPLICAS}|g" \
+			-e "s|\$${MAX_REPLICAS}|$${MAX_REPLICAS}|g" \
+			-e "s|\$${REGISTRY}|$(DOCKER_REGISTRY)/$(REPO_OWNER)|g" \
+			-e "s|\$${TAG}|$${TAG}|g" \
+			k8s/vucem-microfrontends.yaml > k8s-deploy/vucem-microfrontends-$(ENV).yaml; \
+		echo "Kubernetes manifest prepared at k8s-deploy/vucem-microfrontends-$(ENV).yaml"; \
+		echo "To apply to cluster, run:"; \
+		echo "  kubectl apply -f k8s-deploy/vucem-microfrontends-$(ENV).yaml"; \
+	else \
+		echo "$(RED)Error: Environment not specified or invalid$(NC)"; \
+		echo "Usage: make deploy-ci env=<dev|staging|prod>"; \
+		exit 1; \
+	fi
