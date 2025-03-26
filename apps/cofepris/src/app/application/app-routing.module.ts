@@ -9,12 +9,18 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  },
+  {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
       import('./tramites/260214/importacion-dispositivos-mediocos-uso.module').then(
-        (m) => m.ImportacionDispositivosMedicosUsoModule
-      ),
-  },
+        (m) => m.ImportacionDispositivosMedicosUsoModule)
+  }
 ];
 
 @NgModule({

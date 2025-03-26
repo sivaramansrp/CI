@@ -1,0 +1,177 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="form-group">
+        <h5 class="form-label text-start">Fracción arancelaria</h5>
+        <p class="form-label text-start">
+          {{ proyectoImmexDatos.fraccionArancelaria }}
+        </p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <h5 class="form-label text-start">Anexo II</h5>
+        <p class="form-label text-start">{{ proyectoImmexDatos.anexoDos }}</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <h5 class="form-label text-start">Tipo</h5>
+        <p class="form-label text-start">{{ proyectoImmexDatos.tipo }}</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="form-group">
+        <h5 class="form-label text-start">UMT</h5>
+        <p class="form-label text-start">{{ proyectoImmexDatos.umt }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Proyecto IMMEX" />
+    </div>
+  </div>
+  <form [formGroup]="proyectoForm">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="descripcion" class="form-label text-start"
+            >Descripción comersial*:</label
+          >
+          <textarea
+            id="descripcion"
+            class="form-control"
+            style="height: 60%; resize: none"
+            formControlName="descripcion"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <app-catalogo-select
+            [catalogo]="documentoCatalogDatos"
+            [label]="'Tipo de documento*:'"
+            [required]="true"
+            [isDisabled]="true"
+            name="paisDestino"
+            formControlName="tipoDeDocumente"
+          ></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fechaDeFirma">Fecha de firma*:</label>
+          <input
+            class="form-control min-hgt"
+            id="fechaDeFirma"
+            formControlName="fechaDeFirma"
+            type="date"
+          />
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="fechaDeVigencia"
+            >Fecha de fin de vigencia*:</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="fechaDeVigencia"
+            formControlName="fechaDeVigencia"
+            type="date"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="rfcTaxId"
+            >RFC de la parte firmante Tax ID*:</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="rfcTaxId"
+            formControlName="rfcTaxId"
+            type="number"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-8">
+        <div class="form-group">
+          <label class="form-label" for="razonSocial"
+            >Razón social de la parte firmante</label
+          >
+          <input
+            class="form-control min-hgt"
+            id="razonSocial"
+            formControlName="razonSocial"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">* Campos obligatorios</div>
+  </form>
+  <div class="row justify-content-end">
+    <button
+      type="button"
+      class="btn btn-danger col-auto mt-3 mr-5 me-3"
+      (click)="limpar()"
+    >
+      Limpar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-primary col-auto pull-right float-end mt-3 me-3"
+      (click)="aggregar()"
+    >
+      Agregar
+    </button>
+  </div>
+
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="
+        proyectoImmexConfiguartion.proyectoImmexSeleccionCheckBox
+      "
+      [configuracionTabla]="proyectoImmexConfiguartion.proyectoImmexTabla"
+      [datos]="proyectoImmexTablaLista"
+      (listaDeFilaSeleccionada)="setProyectpLista($event)"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row justify-content-end">
+    <button
+      type="button"
+      class="btn btn-danger col-auto mt-3 mr-5 me-3"
+      (click)="elimiar()"
+    >
+      Eliminar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-primary col-auto pull-right float-end mt-3 me-3"
+      (click)="eidtar()"
+    >
+      Editar
+    </button>
+  </div>
+  <div class="row">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-primary me-2" (click)="regresar()">
+        Regresar Anexo
+      </button>
+    </div>
+  </div>
+</div>
