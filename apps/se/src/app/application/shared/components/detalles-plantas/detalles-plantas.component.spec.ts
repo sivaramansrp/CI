@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -16,14 +25,12 @@ describe('DetallesPlantasComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder
-      ]
-    }).overrideComponent(DetallesPlantasComponent, {
-
-    }).compileComponents();
+      imports: [FormsModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder],
+    })
+      .overrideComponent(DetallesPlantasComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(DetallesPlantasComponent);
     component = fixture.debugElement.componentInstance;
   });
@@ -35,7 +42,7 @@ describe('DetallesPlantasComponent', () => {
   it('should run #inicializarFormularioDatosPlantas()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn().mockReturnValue({
-      get: function() {}
+      get: function () {},
     });
     component.inicializarFormularioDatosPlantas();
     // expect(component.fb.group).toHaveBeenCalled();
@@ -52,7 +59,7 @@ describe('DetallesPlantasComponent', () => {
     component.formularioDatosPlantas = component.formularioDatosPlantas || {};
     component.formularioDatosPlantas.patchValue = jest.fn();
     component.cambiarPermaneceMerCancia({
-      id: {}
+      id: {},
     });
     // expect(component.formularioDatosPlantas.patchValue).toHaveBeenCalled();
   });
@@ -61,9 +68,8 @@ describe('DetallesPlantasComponent', () => {
     component.formularioDatosPlantas = component.formularioDatosPlantas || {};
     component.formularioDatosPlantas.patchValue = jest.fn();
     component.cambiartipoContribuyente({
-      id: {}
+      id: {},
     });
     // expect(component.formularioDatosPlantas.patchValue).toHaveBeenCalled();
   });
-
 });
