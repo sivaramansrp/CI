@@ -1,5 +1,9 @@
-import { Catalogo, ProyectoImmexConfiguartion, ProyectoImmexEncabezado } from '../../models/nuevo-programa-industrial.model';
-import { OnInit,Output } from '@angular/core';
+import {
+  Catalogo,
+  ProyectoImmexConfiguartion,
+  ProyectoImmexEncabezado,
+} from '../../models/nuevo-programa-industrial.model';
+import { OnInit, Output } from '@angular/core';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -13,12 +17,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
-
 @Component({
   selector: 'app-proyecto-immex',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent,
-    TablaDinamicaComponent
+  imports: [
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './proyecto-immex.component.html',
   styleUrl: './proyecto-immex.component.scss',
@@ -27,7 +34,6 @@ import { Validators } from '@angular/forms';
  * Componente para gestionar los proyectos IMMEX.
  */
 export class ProyectoImmexComponent implements OnInit {
-
   /**
    * Datos del proyecto IMMEX.
    * @type {PoryectoDatos}
@@ -44,19 +50,22 @@ export class ProyectoImmexComponent implements OnInit {
    * Configuración del proyecto IMMEX.
    * @type {ProyectoImmexConfiguartion<ProyectoImmexEncabezado>}
    */
-  @Input() proyectoImmexConfiguartion!: ProyectoImmexConfiguartion<ProyectoImmexEncabezado>;
+  @Input()
+  proyectoImmexConfiguartion!: ProyectoImmexConfiguartion<ProyectoImmexEncabezado>;
 
   /**
    * Lista de encabezados del proyecto IMMEX.
    * @type {ProyectoImmexEncabezado[]}
    */
   @Input() proyectoImmexTablaLista: ProyectoImmexEncabezado[] = [];
-  
+
   /**
    * Emisor de eventos para devolver la lista de encabezados del proyecto IMMEX.
    * @type {EventEmitter<ProyectoImmexEncabezado[]>}
    */
-  @Output() obtenerProyectoTablaDevolverLaLlamada: EventEmitter<ProyectoImmexEncabezado[]> = new EventEmitter<ProyectoImmexEncabezado[]>(true);
+  @Output() obtenerProyectoTablaDevolverLaLlamada: EventEmitter<
+    ProyectoImmexEncabezado[]
+  > = new EventEmitter<ProyectoImmexEncabezado[]>(true);
 
   /**
    * Formulario reactivo para gestionar los datos del proyecto IMMEX.
@@ -82,10 +91,10 @@ export class ProyectoImmexComponent implements OnInit {
    * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
    */
   constructor(private fb: FormBuilder, private ubicaccion: Location) {
-   //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
   }
 
-  ngOnInit():void{
+  ngOnInit(): void {
     this.crearProyectoForm();
   }
 
@@ -98,10 +107,13 @@ export class ProyectoImmexComponent implements OnInit {
       descripcion: [this.proyectoImmexDatos.descripcion, Validators.required],
       tipoDeDocumente: ['', Validators.required],
       fechaDeFirma: [this.proyectoImmexDatos.fechaDeFirma, Validators.required],
-      fechaDeVigencia: [this.proyectoImmexDatos.fechaDeVigencia, Validators.required],
+      fechaDeVigencia: [
+        this.proyectoImmexDatos.fechaDeVigencia,
+        Validators.required,
+      ],
       rfcTaxId: [0, Validators.required],
       razonSocial: ['', Validators.required],
-    })
+    });
   }
 
   /**
@@ -113,7 +125,7 @@ export class ProyectoImmexComponent implements OnInit {
     const LISTA_SELECCIONADA = event ? event : [];
     this.seleccionList = LISTA_SELECCIONADA;
     this.seleccionList.map((ele) => {
-      ele.estatus = true
+      ele.estatus = true;
       return ele;
     });
     this.obtenerProyectoTablaDevolverLaLlamada.emit(LISTA_SELECCIONADA);
@@ -131,17 +143,20 @@ export class ProyectoImmexComponent implements OnInit {
         encabezadoDescripcionOtro: this.proyectoForm.get('descripcion')?.value,
         encabezadoTipoDocument: this.proyectoForm.get('tipoDeDocumente')?.value,
         encabezadoFechaFirma: this.proyectoForm.get('fechaDeFirma')?.value,
-        encabezadoFechaVigencia: this.proyectoForm.get('fechaDeVigencia')?.value,
+        encabezadoFechaVigencia:
+          this.proyectoForm.get('fechaDeVigencia')?.value,
         encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
         encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
         estatus: this.seleccionList[0].estatus,
-        encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria
-      }
+        encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria,
+      };
       const OBJECTO_INDICE = this.proyectoImmexTablaLista.findIndex((idx) => {
         return idx.encabezadoRfc === OBJECTO_IDX.encabezadoRfc;
-      })
+      });
       this.proyectoImmexTablaLista.splice(OBJECTO_INDICE, 1, OBJECTO_IDX);
-      this.obtenerProyectoTablaDevolverLaLlamada.emit(this.proyectoImmexTablaLista);
+      this.obtenerProyectoTablaDevolverLaLlamada.emit(
+        this.proyectoImmexTablaLista
+      );
       this.esTablaeleccionada = !this.esTablaeleccionada;
       this.seleccionList = [];
       this.proyectoForm.reset();
@@ -155,10 +170,12 @@ export class ProyectoImmexComponent implements OnInit {
       encabezadoRfc: this.proyectoForm.get('rfcTaxId')?.value,
       encabezadoRazonFirmante: this.proyectoForm.get('razonSocial')?.value,
       estatus: false,
-      encabezadoFraccion:this.proyectoImmexDatos?.fraccionArancelaria
-    }
+      encabezadoFraccion: this.proyectoImmexDatos?.fraccionArancelaria,
+    };
     this.proyectoImmexTablaLista.push(OBJECTO_IDX);
-    this.obtenerProyectoTablaDevolverLaLlamada.emit(this.proyectoImmexTablaLista);
+    this.obtenerProyectoTablaDevolverLaLlamada.emit(
+      this.proyectoImmexTablaLista
+    );
     this.proyectoForm.reset();
   }
 
@@ -175,9 +192,11 @@ export class ProyectoImmexComponent implements OnInit {
    * @returns {void}
    */
   elimiar(): void {
-    this.proyectoImmexTablaLista = this.proyectoImmexTablaLista.filter((idx) => {
-      return !idx.estatus;
-    });
+    this.proyectoImmexTablaLista = this.proyectoImmexTablaLista.filter(
+      (idx) => {
+        return !idx.estatus;
+      }
+    );
   }
 
   /**
@@ -194,8 +213,8 @@ export class ProyectoImmexComponent implements OnInit {
       fechaDeFirma: this.seleccionList[0].encabezadoFechaFirma,
       fechaDeVigencia: this.seleccionList[0].encabezadoFechaVigencia,
       rfcTaxId: this.seleccionList[0].encabezadoRfc,
-      razonSocial: this.seleccionList[0].encabezadoRazonFirmante
-    })
+      razonSocial: this.seleccionList[0].encabezadoRazonFirmante,
+    });
   }
 
   /**

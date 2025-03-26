@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,26 +20,21 @@ import { MontosDeInversionComponent } from './montos-de-inversion.component';
 import { FormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 
-
 describe('MontosDeInversionComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder,
-        Location
-      ]
-    }).overrideComponent(MontosDeInversionComponent, {
-
-    }).compileComponents();
+      imports: [FormsModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder, Location],
+    })
+      .overrideComponent(MontosDeInversionComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(MontosDeInversionComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -48,5 +52,4 @@ describe('MontosDeInversionComponent', () => {
     component.ubicaccion.back = jest.fn();
     component.regrasar();
   });
-
 });
