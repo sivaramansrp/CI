@@ -17,7 +17,7 @@ import unidadOptions from '@libs/shared/theme/assets/json/130111/unidad_da.json'
 import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
 
 /**
- * @description Componente para gestionar la solicitud de mercancías.
+ * jest.spyOnComponente para gestionar la solicitud de mercancías.
  * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
  */
 @Component({
@@ -32,12 +32,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   partidasDelaMercanciaForm!: FormGroup;
   /**
-   * @description Formulario reactivo para los datos del trámite.
+   * jest.spyOnFormulario reactivo para los datos del trámite.
    */
   formDelTramite!: FormGroup;
  
   /**
-   * @description Formulario reactivo para los detalles de la mercancía.
+   * jest.spyOnFormulario reactivo para los detalles de la mercancía.
    */
   mercanciaForm!: FormGroup;
   /**
@@ -47,12 +47,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   formForTotalCount!: FormGroup;
   /**
    * Formulario reactivo para la selección de países.
-   * @type {FormGroup}
    */
   paisForm!: FormGroup;
   /**
    * Formulario reactivo para la representación.
-   * @type {FormGroup}
    */
   frmRepresentacionForm!: FormGroup;
   /**
@@ -89,21 +87,21 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   filaSeleccionada: any = null;
  
   /**
-   * @description Opciones para el campo "producto".
+   * jest.spyOnOpciones para el campo "producto".
    */
   productoOpciones: ProductoOpción[] = [];
   /**
-   * @description Catálogo con valores de fracción arancelaria.
+   * jest.spyOnCatálogo con valores de fracción arancelaria.
    */
   
  fraccionCatalogo: Catalogo[] = fractionValues;
  
   /**
-   * @description Catálogo con opciones de unidad de medida.
+   * jest.spyOnCatálogo con opciones de unidad de medida.
    */
   unidadCatalogo: Catalogo[] = unidadOptions;
   /**
-   * @description Campos de entrada configurables para detalles adicionales.
+   * jest.spyOnCampos de entrada configurables para detalles adicionales.
    */
  
   datosInputFields = [
@@ -121,55 +119,44 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     },
   ];
   /**
-   * @description Matriz de catálogos adicionales para el formulario.
+   * jest.spyOnMatriz de catálogos adicionales para el formulario.
    */
   catalogosArray: Catalogo[][] = solicitudeSelectVal;
   /**
-   * @description Opciones de solicitud configurables.
+   * jest.spyOnOpciones de solicitud configurables.
    */
   opcionesSolicitud: ProductoOpción[] = [];
  
   /**
-   * @description Sujeto para gestionar la destrucción de suscripciones.
+   * jest.spyOnSujeto para gestionar la destrucción de suscripciones.
    */
   private destroyed$ = new Subject<void>();
   /**
-   * @description Arreglo que almacena un catálogo de elementosDeBloque.
-   * @type {Catalogo[]}
+   * jest.spyOnArreglo que almacena un catálogo de elementosDeBloque.
    */
   elementosDeBloque: Catalogo[] = [];
   /**
-   * @description Arreglo que contiene un catálogo de países organizados por bloque.
-   * @type {Catalogo[]}
+   * jest.spyOnArreglo que contiene un catálogo de países organizados por bloque.
    */
   paisesPorBloque: Catalogo[] = [];
   /**
-   * @description Arreglo que guarda un catálogo de entidades federativas.
-   * @type {Catalogo[]}
+   * jest.spyOnArreglo que guarda un catálogo de entidades federativas.
    */
   entidadFederativa: Catalogo[] = [];
   /**
-   * @description Arreglo que almacena un catálogo de representaciones federales.
-   * @type {Catalogo[]}
+   * jest.spyOnArreglo que almacena un catálogo de representaciones federales.
    */
   representacionFederal: Catalogo[] = [];
   /**
-   * @description Arreglo de cadenas que representa las opciones seleccionables de rangos de días.
-   * @type {string[]}
+   * jest.spyOnArreglo de cadenas que representa las opciones seleccionables de rangos de días.
    */
   selectRangoDias: string[] = [];
   /**
-   * @description Objeto o constante que contiene los textos utilizados en la aplicación.
-   * @type {any}
+   * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
    */
   TEXTOS = TEXTOS;
   /**
    * Constructor del componente.
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {HttpClient} http - Servicio para realizar solicitudes HTTP.
-   * @param {Tramite130111Store} tramite130111Store - Store para gestionar el estado del trámite 130111.
-   * @param {Tramite130111Query} tramite130111Query - Query para consultar el estado del trámite 130111.
-   * @param {importaciondeVehiculosService} importaciondeVehiculosService - Servicio para la exportación de minerales de hierro.
    */
   constructor(
     private fb: FormBuilder,
@@ -181,7 +168,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     //constructor
   }
   /**
-   * @description Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
+   * jest.spyOnCiclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
     this.inicializarFormularios();
@@ -218,7 +205,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * @description Inicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
+   * jest.spyOnInicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   
      inicializarFormularios(): void {
@@ -295,7 +282,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
   /**
-   * @description Configura las suscripciones para actualizar formularios y almacenar estados.
+   * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
     this.tramite130111Query.solicitud$
@@ -435,7 +422,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * @description Solicita opciones configurables para los formularios desde archivos JSON.
+   * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
    */
   opcionesDeBusqueda(): void {
     this.importaciondeVehiculosService
@@ -536,7 +523,7 @@ listaDePaisesDisponibles(): void {
 }
 /**
 * Método para obtener la lista de países por bloque.
-* @param {number} _bloqueId - Identificador del bloque.
+* Identificador del bloque.
 */
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.importaciondeVehiculosService
@@ -550,14 +537,14 @@ fetchPaisesPorBloque(_bloqueId: number): void {
 }
 /**
 * Maneja el cambio de bloque seleccionado.
-* @param {number} bloqueId - Identificador del bloque seleccionado.
+* Identificador del bloque seleccionado.
 */
 enCambioDeBloque(bloqueId: number): void {
   this.fetchPaisesPorBloque(bloqueId);
 }
   /**
-   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
-   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
+   * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
+   * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
    */
   setValoresStore(event: {
     form: FormGroup;
@@ -626,7 +613,7 @@ enCambioDeBloque(bloqueId: number): void {
   }
  
   /**
-   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
+   * jest.spyOnCiclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

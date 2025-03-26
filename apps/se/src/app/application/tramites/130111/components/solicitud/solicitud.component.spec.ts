@@ -8,6 +8,8 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
 import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @Component({ selector: 'app-partidas-de-la-mercancia', template: '' })
 class PartidasDeLaMercanciaStubComponent {}
@@ -128,7 +130,7 @@ describe('SolicitudComponent', () => {
         PaisProcendenciaStubComponent,
         RepresentacionStubComponent,
       ],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule,HttpClientModule],
       providers: [
         FormBuilder,
         { provide: Tramite130111Store, useValue: mockStore },
