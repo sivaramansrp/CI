@@ -69,6 +69,13 @@ const ROUTES: Routes = [
     ),
   },
   {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40102/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
     path: 'notificacion',
     component: NotificacionPageComponent
   },
@@ -85,14 +92,18 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-  
-{
-  path: 'registro-digitalizar-documentos',
-  loadChildren: () =>
-    import('./tramites/701/registro-digitalizar-documentos.module').then(
-      (m) => m.RegistroDigitalizarDocumentosModule
-    ),
-},
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
+  {
+    path: 'certi-registro',
+      loadChildren: () =>
+        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+  }
 ];
 
 @NgModule({

@@ -9,7 +9,7 @@ import { AMBIENTES } from '@ng-mf/data-access-user';
  * @implements {OnInit}
  */
 @Component({
-  selector: 'seleccion-tramite',
+  selector: 'app-seleccion-tramite',
   templateUrl: './seleccion-tramite.component.html',
 })
 export class SeleccionTramiteComponent implements OnInit {
