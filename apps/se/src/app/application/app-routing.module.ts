@@ -187,6 +187,21 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'exportacion-minerales',
+    loadChildren: () =>
+      import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
+        (m) => m.ExportacionMineralesDeHierroModule
+      ),
+  },
+  {
+    path: 'autorizacion-programa-nuevo',
+    loadChildren: () =>
+      import('./tramites/80102/autorizacion-programa-nuevo.module').then(
+        (m) => m.AutorizacionProgrmaNuevoModule),
+  }
+
+  },
+  {
     path: 'aviso-importacion-maquinas',
     loadChildren: () =>
       import('./tramites/130119/aviso-importacion-maquinas.module').then(
