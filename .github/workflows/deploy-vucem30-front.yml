@@ -471,13 +471,13 @@ jobs:
             cd /home/ubuntu/v30
             
             # Apply Kubernetes manifests from a directory
-            mkdir -p k8s-${{ needs.setup.outputs.environment }}
-            cat > k8s-${{ needs.setup.outputs.environment }}/vucem-microfrontends.yaml << 'MANIFESTSEOF'
+            mkdir -p k8s
+            cat > k8s/vucem-microfrontends.yaml << 'MANIFESTSEOF'
             ${{ secrets.KUBECONFIG }}
             MANIFESTSEOF
             
             # Apply Kubernetes manifests
-            microk8s kubectl apply -f k8s-${{ needs.setup.outputs.environment }}/vucem-microfrontends.yaml
+            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
             
             # Restart the deployment to pull the latest images
             microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
