@@ -176,6 +176,10 @@ jobs:
       matrix:
         app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
       fail-fast: false
+    strategy:
+      matrix:
+        app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
+      fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -270,8 +274,13 @@ jobs:
           build-args: |
             NODE_ENV=production
             APP_ENV=${{ needs.setup.outputs.environment }}
+            PYTHON_PATH=/usr/bin/python3
           timeout-minutes: 15
-          no-cache: ${{ contains(matrix.app, 'se') }}
+          build-context:
+            python_bin::<<EOF
+            #!/bin/sh
+            echo "/usr/bin/python3"
+            EOF
 
   deploy:
     name: Deploy Microfrontends
