@@ -10,9 +10,6 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
-
-import { TercerosService } from './services/terceros.service';
-
 import { NgModule } from '@angular/core';
 
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
@@ -23,7 +20,11 @@ import { EntradaHumanaRoutingModule } from './entrada-humana-routing.module';
 import { Datos260402Component } from './pages/datos-260402/datos-260402.component';
 import { EntradaHumanaComponent } from './pages/entrada-humana/entrada-humana.component';
 import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { ModalComponent } from '../../shared/components/modal/modal.component';
+
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+import { PagoDeDerechosService } from './services/pago-de-derechos.service';
+
+import { DatosGeneralesComponent } from '../../shared/components/datos-generales/datos-generales.component';
 
 
 @NgModule({
@@ -39,8 +40,9 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
     PasoTresComponent,
     BtnContinuarComponent,
     TercerosRelacionadosComponent,
-    ModalComponent
+    DatosGeneralesComponent,
+    PagoDeDerechosComponent
   ],
-  providers: [provideHttpClient(), ToastrService,TercerosService,InicioSesionService,SubirDocumentoService ],
+  providers: [provideHttpClient(), ToastrService,PagoDeDerechosService,InicioSesionService,SubirDocumentoService ],
 })
 export class EntradaHumanaModule { }

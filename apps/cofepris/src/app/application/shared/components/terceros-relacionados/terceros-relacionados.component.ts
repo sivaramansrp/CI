@@ -4,6 +4,7 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnInit } from '@angular/core';
+
 import { AlertComponent, TableComponent } from '@ng-mf/data-access-user';
 
 import {
@@ -13,12 +14,13 @@ import {
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MANIFIESTOS_ALERT, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA} from '../../../tramites/260402/constantes/permiso-maquila.enum';
 
-import {
-  TableData,
-} from '../../../tramites/260402/models/permiso-maquila.models'
-import { ModalComponent } from '../modal/modal.component';
+
+
+import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
+import { TableData } from '../../models/entrada-humana.models';
+import { TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../tramites/260402/constantes/permiso-maquila.enum';
+import { MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
 /**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
@@ -36,7 +38,7 @@ import { ModalComponent } from '../modal/modal.component';
     TableComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
-    ModalComponent
+    DatosGeneralesComponent
   ],
 })
 
@@ -49,15 +51,22 @@ fabricanteRowData:TableData[]=[];
 
 TEXTO_DE_ALERTA: string = MANIFIESTOS_ALERT.DATOS_MANIFIESTOS;
 
-isShownAgregar = false
 
 constructor(){}
 
-ngOnInit(): void {
-  
+
+ngOnInit(): void{
+
 }
 
-clickAgregar():void{
-  this.isShownAgregar = !this.isShownAgregar
+isModalVisible = false;
+
+openModal() {
+  this.isModalVisible = true;
 }
+
+closeModal() {
+  this.isModalVisible = false;
+}
+
 }

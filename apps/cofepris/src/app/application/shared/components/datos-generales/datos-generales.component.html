@@ -1,0 +1,85 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content p-5">
+            <div class="border-0">
+                <ng-titulo titulo="Agregar información de procedencia" />
+            </div>
+            <div class="">
+                <form [formGroup]="modalForm">
+                    <h5>Datos generales</h5>
+                    <div class="row">
+                        <div class="d-flex justify-content-end col-md-8">
+                            <div class="form-check">
+                                <label class="fw-bold">Tipo persona*:</label>
+                                <app-input-radio [radioOptions]="radioBtn" [isRequired]="true" [layout]="'vertical'"
+                                    [gap]="'50px'" formControlName="tipoPersona"></app-input-radio>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                        <div class="col-md-8">
+                        <label for="razonSocial" class="form-label">Denominación/razón social*:</label>
+                        <input type="text" class="form-control" id="razonSocial" formControlName="razonSocial"/>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Domicilio</label>
+                        <div class="row">
+                            <div class="col-md-4" style="padding-left: 28px;padding-right: 27px;">
+                                <app-catalogo-select [label]="'País'" [required]="true" name="País"
+                                    formControlName="país"  formControlName="pais">
+                                </app-catalogo-select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label" for="estado">Estado:</label>
+                                <input type="text" class="form-control" id="estado" formControlName="estado">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Código postal o equivalente:</label>
+                                <input type="text" class="form-control" id="codigoPostal" formControlName="codigoPostal"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Calle*:</label>
+                                <input type="text" class="form-control" id="calle" formControlName="calle"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Número exterior*:</label>
+                                <input type="text" class="form-control" id="numeroExterior" formControlName="numeroExterior"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Número interior:</label>
+                                <input type="text" class="form-control" id="numeroInterior" formControlName="numeroInterior"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Lada:</label>
+                                <input type="text" class="form-control" id="lada" formControlName="lada"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Teléfono:</label>
+                                <input type="text" class="form-control" id="telefono" formControlName="telefono"/>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Correo electrónico:</label>
+                                <input type="text" class="form-control" id="correo-electronico" formControlName="correoElectronico"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger p-3" (click)="closeModal()">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-secondary p-3" (click)="clearFields()">Limpiar</button>
+                    <button type="button" class="btn btn-primary p-3">
+                        Guardar
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

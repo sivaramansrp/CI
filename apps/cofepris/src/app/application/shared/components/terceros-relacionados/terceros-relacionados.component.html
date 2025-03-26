@@ -15,14 +15,14 @@
 
       <div class="d-flex justify-content-end mt-3">
 
-        <button type="button" class="btn btn-primary" (click)="clickAgregar()">
+        <button type="button" class="btn btn-primary" (click)="openModal()">
           Agregar
         </button>
       </div>
     </div>
 
   </div>
-<div class="modal fade" tabindex="-1" role="dialog" *ngIf="isShownAgregar" id="myModal"
-[ngClass]="{ show: isShownAgregar }" aria-hidden="true">
-  <app-modal></app-modal>
-</div>
+
+  <div *ngIf="isModalVisible">
+    <app-datos-generales (close)="closeModal()"></app-datos-generales>
+  </div>
