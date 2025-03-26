@@ -1,94 +1,135 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { ReprestantanteComponent } from './represtantante.component';
-import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { of } from 'rxjs';
+import { ModificatNoticeService } from '../../services/modificat-notice.service';
 
 describe('ReprestantanteComponent', () => {
-  let component: ReprestantanteComponent;
-  let fixture: ComponentFixture<ReprestantanteComponent>;
-  let store: jest.Mocked<Tramite260605Store>;
-  let query: jest.Mocked<Tramite260605Query>;
+  let componente: ReprestantanteComponent;
+  let tramite260605QueryMock: any;
+  let tramite260605StoreMock: any;
+  let modificatNoticeServiceMock: any;
 
-  beforeEach(async () => {
-    store = {
+  beforeEach(() => {
+    tramite260605QueryMock = {
+      selectSolicitud$: of({
+        rfc: 'ABC123456789',
+        nombre: 'Juan',
+        apellidoPaterno: 'Pérez',
+        apellidoMaterno: 'Gómez',
+        numeroDPmiso: '',
+        cstumbresAtuales: [],
+        aduanasDisponibles: [],
+        aduanasSeleccionadas: [],
+        cantidadSolicitada: 0,
+      }),
+    };
+
+    tramite260605StoreMock = {
       setRfc: jest.fn(),
       setNombre: jest.fn(),
       setApellidoPaterno: jest.fn(),
       setApellidoMaterno: jest.fn(),
-    } as unknown as jest.Mocked<Tramite260605Store>;
+    };
 
-    query = {
-      selectSolicitud$: of({
-        rfc: 'RFC123',
-        nombre: 'John',
-        apellidoPaterno: 'Doe',
-        apellidoMaterno: 'Smith'
-      }),
-      getValue: jest.fn().mockReturnValue({
-        rfc: 'RFC123',
-        nombre: 'John',
-        apellidoPaterno: 'Doe',
-        apellidoMaterno: 'Smith'
-      })
-    } as unknown as jest.Mocked<Tramite260605Query>;
+    modificatNoticeServiceMock = {
+      ObtenerReprestantanteData: jest.fn().mockReturnValue(
+        of({
+          nombre: 'Juan',
+          apellidoPaterno: 'Pérez',
+          apellidoMaterno: 'Gómez',
+        })
+      ),
+    };
 
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FormsModule,
-        ReprestantanteComponent, // Importar el componente independiente
-        TituloComponent,
-        AlertComponent
-      ],
+    TestBed.configureTestingModule({
       providers: [
         FormBuilder,
-        { provide: Tramite260605Store, useValue: store },
-        { provide: Tramite260605Query, useValue: query }
-      ]
-    }).compileComponents();
+        { provide: Tramite260605Store, useValue: tramite260605StoreMock },
+        { provide: Tramite260605Query, useValue: tramite260605QueryMock },
+        { provide: ModificatNoticeService, useValue: modificatNoticeServiceMock },
+      ],
+    });
 
-    fixture = TestBed.createComponent(ReprestantanteComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    const fb = TestBed.inject(FormBuilder);
+    const tramite260605Store = TestBed.inject(Tramite260605Store);
+    const tramite260605Query = TestBed.inject(Tramite260605Query);
+    const modificatNoticeService = TestBed.inject(ModificatNoticeService);
+
+    componente = new ReprestantanteComponent(
+      fb,
+      tramite260605Store,
+      tramite260605Query,
+      modificatNoticeService
+    );
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('debería crear el componente', () => {
-    expect(component).toBeTruthy();
+    expect(componente).toBeTruthy();
   });
 
-  it('debería inicializar el formulario con datos del store', () => {
-    expect(component.represtantante).toBeDefined();
-    expect(component.represtantante.get('rfc')?.value).toBe('RFC123');
-    expect(component.represtantante.get('nombre')?.value).toBe('John');
-    expect(component.represtantante.get('apellidoPaterno')?.value).toBe('Doe');
-    expect(component.represtantante.get('apellidoMaterno')?.value).toBe('Smith');
+  it('debería inicializar el formulario y suscribirse a tramite260605Query', () => {
+    componente.ngOnInit();
+
+    expect(componente.solicitudState).toEqual({
+      rfc: 'ABC123456789',
+      nombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaterno: 'Gómez',
+      numeroDPmiso: '',
+      cstumbresAtuales: [],
+      aduanasDisponibles: [],
+      aduanasSeleccionadas: [],
+      cantidadSolicitada: 0,
+    });
+
+    expect(componente.represtantante.value).toEqual({
+      rfc: 'ABC123456789',
+      nombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaterno: 'Gómez',
+    });
+
+    expect(componente.represtantante.get('nombre')?.disabled).toBe(true);
+    expect(componente.represtantante.get('apellidoPaterno')?.disabled).toBe(true);
+    expect(componente.represtantante.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
-  it('debería llamar a setValoresStore con los argumentos correctos', () => {
-    component.setValoresStore(component.represtantante, 'rfc', 'setRfc');
-    component.setValoresStore(component.represtantante, 'nombre', 'setNombre');
-    component.setValoresStore(component.represtantante, 'apellidoPaterno', 'setApellidoPaterno');
-    component.setValoresStore(component.represtantante, 'apellidoMaterno', 'setApellidoMaterno');
+  it('debería llamar a ObtenerReprestantanteData y actualizar los valores del formulario', () => {
+    componente.ngOnInit();
+    componente.obteneraduanasDisponiblesdatos();
 
-    expect(store.setRfc).toHaveBeenCalledWith('RFC123');
-    expect(store.setNombre).toHaveBeenCalledWith('John');
-    expect(store.setApellidoPaterno).toHaveBeenCalledWith('Doe');
-    expect(store.setApellidoMaterno).toHaveBeenCalledWith('Smith');
+    expect(modificatNoticeServiceMock.ObtenerReprestantanteData).toHaveBeenCalled();
+    expect(componente.represtantante.value).toEqual({
+      rfc: 'ABC123456789',
+      nombre: 'Juan',
+      apellidoPaterno: 'Pérez',
+      apellidoMaterno: 'Gómez',
+    });
   });
 
-  it('debería destruir el notifier en ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('debería llamar al método correcto en Tramite260605Store cuando se llama a setValoresStore', () => {
+    componente.ngOnInit();
+    componente.setValoresStore(componente.represtantante, 'rfc', 'setRfc');
+    expect(tramite260605StoreMock.setRfc).toHaveBeenCalledWith('ABC123456789');
+  });
 
-    component.ngOnDestroy();
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const destroyNotifierSpy = jest.spyOn(componente['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(
+      componente['destroyNotifier$'],
+      'complete'
+    );
 
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    componente.ngOnDestroy();
+
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });

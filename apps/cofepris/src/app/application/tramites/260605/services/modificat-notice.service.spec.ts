@@ -10,8 +10,8 @@ describe('ModificatNoticeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [ModificatNoticeService],
+      imports: [HttpClientTestingModule], // Importa HttpClientTestingModule para simular solicitudes HTTP
+      providers: [ModificatNoticeService], // Proporciona el servicio que se está probando
     });
 
     service = TestBed.inject(ModificatNoticeService);
@@ -26,7 +26,7 @@ describe('ModificatNoticeService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('debería recuperar datos de representante desde un archivo JSON', () => {
+  it('debería recuperar los datos del representante desde un archivo JSON', () => {
     const mockReprestantanteData: ReprestantanteData = {
       rfc: 'RFC123',
       nombre: 'John',
@@ -38,12 +38,12 @@ describe('ModificatNoticeService', () => {
       expect(data).toEqual(mockReprestantanteData);
     });
 
-    const req = httpMock.expectOne('assets/json/260605/registro-de-solicitudes-tabla.json');
+    const req = httpMock.expectOne('assets/json/260605/represtantante.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockReprestantanteData); // Simula la respuesta del servidor
   });
 
-  it('debería manejar errores al recuperar datos de representante', () => {
+  it('debería manejar errores al recuperar los datos del representante', () => {
     const mockError = new ErrorEvent('Network error');
 
     service.ObtenerReprestantanteData().subscribe({
@@ -53,14 +53,14 @@ describe('ModificatNoticeService', () => {
       },
     });
 
-    const req = httpMock.expectOne('assets/json/260605/registro-de-solicitudes-tabla.json');
+    const req = httpMock.expectOne('assets/json/260605/represtantante.json');
     req.error(mockError); // Simula un error de red
   });
 
-  it('debería recuperar datos de aduanas disponibles desde un archivo JSON', () => {
+  it('debería recuperar la lista de aduanas disponibles desde un archivo JSON', () => {
     const mockAduanas: Aduana[] = [
-      { id: 1, nombre: 'Aduana 1' },
-      { id: 2, nombre: 'Aduana 2' },
+      { id: 1, name: 'Aduana 1' },
+      { id: 2, name: 'Aduana 2' },
     ];
 
     service.obteneraduanasDisponiblesdatos().subscribe((data) => {
@@ -72,7 +72,7 @@ describe('ModificatNoticeService', () => {
     req.flush(mockAduanas); // Simula la respuesta del servidor
   });
 
-  it('debería manejar errores al recuperar datos de aduanas disponibles', () => {
+  it('debería manejar errores al recuperar la lista de aduanas disponibles', () => {
     const mockError = new ErrorEvent('Network error');
 
     service.obteneraduanasDisponiblesdatos().subscribe({
