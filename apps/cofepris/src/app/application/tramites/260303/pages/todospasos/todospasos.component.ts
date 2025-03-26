@@ -10,6 +10,10 @@ import { CatalogosService } from '@libs/shared/data-access-user/src/core/service
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { ANEXAR, REQUISITOS } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 
+/**
+ * PasoUnoComponent es responsable de manejar el primer paso del proceso.
+ * para actualizar el componente actual que se está mostrando.
+ */
 @Component({
   selector: 'app-todospasos',
   templateUrl: './todospasos.component.html',
@@ -87,6 +91,16 @@ export class TodospasosComponent {
     }
   }
 
+  /**
+   * Actualiza la propiedad `titulo` en función del valor actual de `indice`.
+   * 
+   * El método utiliza una declaración `switch` para determinar el valor apropiado
+   * de `titulo` según los siguientes casos:
+   * - `indice` igual a 1: Establece `titulo` como `PASO_TWO`.
+   * - `indice` igual a 2: Establece `titulo` como `PASO_THREE`.
+   * - `indice` igual a 3: Establece `titulo` como `PASO_FOUR`.
+   * - Caso por defecto: Establece `titulo` como `PASO_ONE`.
+   */
   public getHeaderDatos() {
     switch (this.indice) {
       case 1: {
@@ -126,7 +140,9 @@ export class TodospasosComponent {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { },
+        error: (_error): void => { 
+          //
+        },
       });
   }
 

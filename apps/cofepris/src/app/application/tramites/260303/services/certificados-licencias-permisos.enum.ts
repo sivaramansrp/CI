@@ -120,3 +120,9 @@ export const PASO_ONE = 'Solicitud Importación de Medicamentos que sean o conte
 export const PASO_TWO = 'Cargar archivos';
 export const PASO_THREE = 'Cargar archivos';
 export const PASO_FOUR = 'Firmar';
+
+export const FECHA_PAGO = {
+  labelNombre: 'Fecha de pago',
+  required: false,
+  habilitado: false,
+};

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { CertificadosLicenciasPermisosRoutingModule } from './certificados-licencias-permisos-routing.module';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';

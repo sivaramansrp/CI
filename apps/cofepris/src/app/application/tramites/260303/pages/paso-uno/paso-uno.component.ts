@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 
+/**
+ * PasoUnoComponent es responsable de manejar el primer paso del proceso.
+ * para actualizar el componente actual que se está mostrando.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',

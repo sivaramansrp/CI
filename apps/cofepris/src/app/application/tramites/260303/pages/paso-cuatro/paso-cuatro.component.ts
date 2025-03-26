@@ -1,6 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import { Component } from '@angular/core';
 
+/**
+ * PasoCuatroComponent es responsable de manejar el primer paso del proceso.
+ * para actualizar el componente actual que se está mostrando.
+ */
 @Component({
   selector: 'app-paso-cuatro',
   templateUrl: './paso-cuatro.component.html',

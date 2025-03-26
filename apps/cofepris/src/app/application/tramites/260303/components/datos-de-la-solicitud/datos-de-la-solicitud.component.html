@@ -8,7 +8,8 @@
             <form [formGroup]="denominacionForm">
                 <div class="form-group">
                     <label for="denominacionRazon" class="form-label">Denominación o razón social*:</label>
-                    <input type="text" id="denominacionRazon" formControlName="denominacionRazon" class="form-control">
+                    <input type="text" id="denominacionRazon" formControlName="denominacionRazon" 
+                    class="form-control" (change)="setValoresStore(denominacionForm,'denominacionRazon', 'setDenominacionRazon')">
                 </div>
             </form>
         </div>
@@ -19,7 +20,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="codigoPostal" class="form-label">Código postal*:</label>
-                    <input type="text" id="codigoPostal" formControlName="codigoPostal" class="form-control">
+                    <input type="text" id="codigoPostal" 
+                        formControlName="codigoPostal" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['codigoPostal'].invalid && domicilioDeElstablecimientoForm.controls['codigoPostal'].touched) {
                     <div class="d-block">
@@ -35,13 +39,17 @@
                     [label]="'Estado'"
                     [required]="true"
                     formControlName="estado"
-                    name="estado">
+                    name="estado"
+                    (change)="setValoresStore(domicilioDeElstablecimientoForm,'estado', 'setEstado')">
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="municipioAlcaldia" class="form-label">Municipio o alcaldía*:</label>
-                    <input type="text" id="municipioAlcaldia" formControlName="municipio" class="form-control">
+                    <input type="text" id="municipioAlcaldia" 
+                        formControlName="municipio"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'municipio', 'SetMunicipio')" 
+                        class="form-control">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['municipio'].invalid && domicilioDeElstablecimientoForm.controls['municipio'].touched) {
                     <div class="d-block">
@@ -56,7 +64,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="localidad" class="form-label">Localidad*:</label>
-                    <input type="text" id="localidad" formControlName="localidad" class="form-control">
+                    <input type="text" id="localidad" 
+                        formControlName="localidad" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'localidad', 'setLocalidad')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['localidad'].invalid && domicilioDeElstablecimientoForm.controls['localidad'].touched) {
                     <div class="d-block">
@@ -69,7 +80,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="colonia" class="form-label">Colonia*:</label>
-                    <input type="text" id="colonia" formControlName="colonia" class="form-control">
+                    <input type="text" id="colonia" 
+                        formControlName="colonia" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'colonia', 'setColonia')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['colonia'].invalid && domicilioDeElstablecimientoForm.controls['colonia'].touched) {
                     <div class="d-block">
@@ -82,7 +96,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="calle" class="form-label">Calle y número*: <i class="bi bi-question-circle-fill"></i></label>
-                    <input type="text" id="calle" formControlName="calleYNumero" class="form-control">
+                    <input type="text" id="calle" 
+                        formControlName="calleYNumero" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'calleYNumero', 'SetCalleYNumero')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['calleYNumero'].invalid && domicilioDeElstablecimientoForm.controls['calleYNumero'].touched) {
                     <div class="d-block">
@@ -97,7 +114,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="correoElectronico" class="form-label">Correo electrónico*: <i class="bi bi-question-circle-fill"></i></label>
-                    <input type="text" id="correoElectronico" formControlName="correoElecronico" class="form-control">
+                    <input type="text" id="correoElectronico" 
+                        formControlName="correoElecronico" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'correoElecronico', 'SetCorreoElecronico')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['correoElecronico'].invalid && domicilioDeElstablecimientoForm.controls['correoElecronico'].touched) {
                     <div class="d-block">
@@ -110,7 +130,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="rfc" class="form-label">RFC del responsable sanitario*:</label>
-                    <input type="text" id="rfc" formControlName="rfc" class="form-control">
+                    <input type="text" id="rfc" 
+                        formControlName="rfc" 
+                        class="form-control"
+                        (change)="setValoresStore(domicilioDeElstablecimientoForm,'rfc', 'setRfc')">
                 </div>
                 @if(domicilioDeElstablecimientoForm.controls['rfc'].invalid && domicilioDeElstablecimientoForm.controls['rfc'].touched) {
                     <div class="d-block">
@@ -124,11 +147,16 @@
                 <div class="d-flex">
                     <div class="form-group">
                         <label for="lada" class="form-label">Lada:</label>
-                        <input type="text" id="lada" class="form-control lada" formControlName="lada">
+                        <input type="text" id="lada" class="form-control lada" 
+                            formControlName="lada"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setLada')">
                     </div>
                     <div class="form-group">
                         <label for="telefono" class="form-label">Teléfono*:</label>
-                        <input type="text" id="telefono" formControlName="telefono" class="form-control">
+                        <input type="text" id="telefono" 
+                            formControlName="telefono" 
+                            class="form-control"
+                            (change)="setValoresStore(domicilioDeElstablecimientoForm,'lada', 'setTelefono')">
                     </div>
                     @if(domicilioDeElstablecimientoForm.controls['telefono'].invalid && domicilioDeElstablecimientoForm.controls['telefono'].touched) {
                         <div class="d-block">
@@ -169,7 +197,10 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="licenciaSanitaria" class="form-label">No. de licencia sanitaria: <i class="bi bi-question-circle-fill"></i></label>
-                <input type="text" id="licenciaSanitaria" formControlName="licenciaSanitaria" class="form-control">
+                <input type="text" id="licenciaSanitaria" 
+                    formControlName="licenciaSanitaria" 
+                    class="form-control"
+                    (change)="setValoresStore(domicilioDeElstablecimientoForm,'licenciaSanitaria', 'setLicenciaSanitaria')">
             </div>
         </div>
     </div>
@@ -180,7 +211,8 @@
                 [label]="'Régimen al que se destinará la mercancía'"
                 [required]="true"
                 formControlName="regimenDestinara"
-                name="regimenCatalogo">
+                name="regimenCatalogo"
+                (change)="setValoresStore(domicilioDeElstablecimientoForm,'regimenDestinara', 'setRegimenDestinara')">
             </app-catalogo-select>
         </div>
     </div>
@@ -206,7 +238,8 @@
                 [label]="'Aduana'"
                 [required]="true"
                 formControlName="aduana"
-                name="regimenCatalogo">
+                name="regimenCatalogo"
+                (change)="setValoresStore(domicilioDeElstablecimientoForm,'aduana', 'setAduanasEntradas')">
             </app-catalogo-select>
         </div>
     </div>
@@ -226,6 +259,7 @@
                   name="losDatosNo"
                   formControlName="losDatosNo"
                   id="losDatos-no"
+                  (change)="setValoresStore(representanteLegalForm,'losDatosNo', 'setLosDatosNo')"
                 />
                 <label class="form-check-label" for="importaciones1-si">No</label>
               </div>
@@ -236,6 +270,7 @@
                   name="losDatosYes"
                   formControlName="losDatosYes"
                   id="losDatos-si"
+                  (change)="setValoresStore(representanteLegalForm,'losDatosYes', 'setLosDatosYes')"
                 />
                 <label class="form-check-label" for="importaciones1-no">Sí</label>
               </div>
@@ -246,7 +281,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="rfc" class="form-label">RFC*:</label>
-                    <input type="text" id="rfc" formControlName="rfc" class="form-control">
+                    <input type="text" id="rfc" formControlName="rfc" class="form-control"
+                    (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')">
                 </div>
                 @if(representanteLegalForm.controls['rfc'].invalid && representanteLegalForm.controls['rfc'].touched) {
                     <div class="d-block">
@@ -264,7 +300,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="nombreORazon" class="form-label">Nombre o Razón Social*:</label>
-                    <input type="text" id="nombreORazon" formControlName="nombreORazon" class="form-control">
+                    <input type="text" id="nombreORazon" 
+                        formControlName="nombreORazon" 
+                        class="form-control"
+                        (change)="setValoresStore(representanteLegalForm,'nombreORazon', 'setNombreORazon')">
                 </div>
                 @if(representanteLegalForm.controls['nombreORazon'].invalid && representanteLegalForm.controls['nombreORazon'].touched) {
                     <div class="d-block">
@@ -277,7 +316,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
-                    <input type="text" id="apellidoPaterno" formControlName="apellidoPaterno" class="form-control">
+                    <input type="text" id="apellidoPaterno" 
+                        formControlName="apellidoPaterno" 
+                        class="form-control"
+                        (change)="setValoresStore(representanteLegalForm,'apellidoPaterno', 'setApellidoPaterno')">
                 </div>
                 @if(representanteLegalForm.controls['apellidoPaterno'].invalid && representanteLegalForm.controls['apellidoPaterno'].touched) {
                     <div class="d-block">
@@ -290,7 +332,10 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="apellidoMaterno" class="form-label">Apellido materno:</label>
-                    <input type="text" id="apellidoMaterno" formControlName="apellidoMaterno" class="form-control">
+                    <input type="text" id="apellidoMaterno" 
+                        formControlName="apellidoMaterno" 
+                        class="form-control"
+                        (change)="setValoresStore(representanteLegalForm,'apellidoMaterno', 'setApellidoMaterno')">
                 </div>
                 @if(representanteLegalForm.controls['apellidoMaterno'].invalid && representanteLegalForm.controls['apellidoMaterno'].touched) {
                     <div class="d-block">
@@ -334,6 +379,7 @@
                         [label]="'Clave S.C.I.A.N'"
                         [required]="true"
                         formControlName="clave"
+                        (change)="setValoresStore(scianForm,'clave', 'setClave')"
                         name="clave">
                     </app-catalogo-select>
                 </div>
@@ -345,6 +391,7 @@
                         [label]="'Descripción del S.C.I.A.N'"
                         [required]="true"
                         formControlName="descripcion"
+                        (change)="setValoresStore(scianForm,'descripcion', 'setDescripcion')"
                         name="descripcion">
                     </app-catalogo-select>
                 </div>
@@ -380,7 +427,9 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="especificar" class="form-label">Especificar clasificación del producto*:</label>
-                        <input type="text" id="especificar" formControlName="especificarClasificacion" class="form-control">
+                        <input type="text" id="especificar" 
+                            formControlName="especificarClasificacion" 
+                            class="form-control">
                     </div>
                 </div>
             </div>
