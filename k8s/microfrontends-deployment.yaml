@@ -1,0 +1,309 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vucem-microfrontends-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    env: ${ENV}
+spec:
+  replicas: ${REPLICAS}
+  selector:
+    matchLabels:
+      app: vucem-microfrontends
+      env: ${ENV}
+  template:
+    metadata:
+      labels:
+        app: vucem-microfrontends
+        env: ${ENV}
+    spec:
+      imagePullSecrets:
+        - name: github-container-registry
+      containers:
+        - name: dashboard
+          image: ${REGISTRY}/vucem-front-dashboard:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: login
+          image: ${REGISTRY}/vucem-front-login:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: aga
+          image: ${REGISTRY}/vucem-front-aga:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: agriculture
+          image: ${REGISTRY}/vucem-front-agriculture:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: se
+          image: ${REGISTRY}/vucem-front-se:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: semarnat
+          image: ${REGISTRY}/vucem-front-semarnat:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: agace
+          image: ${REGISTRY}/vucem-front-agace:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: funcionario
+          image: ${REGISTRY}/vucem-front-funcionario:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: cofepris
+          image: ${REGISTRY}/vucem-front-cofepris:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: amecafe
+          image: ${REGISTRY}/vucem-front-amecafe:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: sener
+          image: ${REGISTRY}/vucem-front-sener:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
