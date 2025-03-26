@@ -13,6 +13,8 @@ import {
 export class Tramite110219Query extends Query<Solicitud110219State> {
   /**
    * Constructor de la clase.
+   * Inicializa la consulta con la tienda que contiene el estado del trámite.
+   * 
    * @param store Instancia de la tienda `Tramite110219Store` que contiene el estado del trámite.
    */
   constructor(protected override store: Tramite110219Store) {
@@ -21,11 +23,24 @@ export class Tramite110219Query extends Query<Solicitud110219State> {
 
   /**
    * Selecciona todo el estado de la solicitud.
+   * 
+   * @returns Un observable que emite el estado completo de la solicitud.
    */
   selectSolicitud$ = this.select((state) => {
     return state;
   });
 
+  /**
+   * Selecciona la lista de países asociados al trámite.
+   * 
+   * @returns Un observable que emite la lista de países.
+   */
   selectPais$ = this.select((state) => state.pais);
+
+  /**
+   * Selecciona la lista de tratados asociados al trámite.
+   * 
+   * @returns Un observable que emite la lista de tratados.
+   */
   selectTratado$ = this.select((state) => state.tratado);
 }

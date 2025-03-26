@@ -54,7 +54,10 @@ export class SolicitudPageComponent implements OnInit {
   * Índice del paso actual.
   */
  indice: number = 1;
- nombre!: number;
+/**
+   * Número del paso actual.
+   */
+nombre!: number;
  
   /**
    * Datos de los pasos del asistente.
@@ -65,7 +68,10 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
+/**
+   * Inicializa el componente.
+   * Filtra y mapea los pasos del asistente para excluir y reorganizar pasos específicos.
+   */
   ngOnInit(): void {
     this.pasos = this.pasos
       .filter((step) => step.indice !== 2)
@@ -96,7 +102,11 @@ export class SolicitudPageComponent implements OnInit {
       }
     }
   }
-
+/**
+   * Maneja el evento emitido por un componente hijo.
+   * 
+   * @param event Número del evento emitido.
+   */
   alEventoHijo(event: number) {
     this.nombre = event;
   }

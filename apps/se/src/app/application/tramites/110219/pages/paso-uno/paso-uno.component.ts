@@ -12,40 +12,44 @@ import { CertificadoDeOrigenComponent } from '../../components/certificado-de or
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  standalone:true,
+  standalone: true,
   imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
 })
-
 export class PasoUnoComponent implements AfterViewInit {
-
+  /**
+   * Evento para emitir el índice de la pestaña seleccionada al componente padre.
+   */
   @Output() miEvento: EventEmitter<number> = new EventEmitter<number>();
 
-  /** 
-   * Referencia al componente SolicitanteComponent 
+  /**
+   * Referencia al componente `SolicitanteComponent`.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-  /** 
-   * Tipo de persona seleccionada 
+  /**
+   * Tipo de persona seleccionada.
    */
   tipoPersona!: number;
 
-  /** 
-   * Configuración del formulario para la persona moral 
+  /**
+   * Configuración del formulario para la persona moral.
    */
   persona: FormularioDinamico[] = [];
 
-  /** 
-   * Configuración del formulario para el domicilio fiscal 
+  /**
+   * Configuración del formulario para el domicilio fiscal.
    */
   domicilioFiscal: FormularioDinamico[] = [];
 
-  /** 
-   * Índice de la pestaña seleccionada en la UI 
+  /**
+   * Índice de la pestaña seleccionada en la UI.
    */
   indice: number = 1;
 
-  @Output() eventoDatosHijo : EventEmitter<number> = new EventEmitter<number>();
+  /**
+   * Evento para emitir datos al componente padre.
+   */
+  @Output() eventoDatosHijo: EventEmitter<number> = new EventEmitter<number>();
 
   /**
    * Constructor del componente.
@@ -74,17 +78,21 @@ export class PasoUnoComponent implements AfterViewInit {
   /**
    * Cambia la pestaña seleccionada en la UI.
    * 
-   * @param i - Índice de la pestaña a activar.
+   * @param i Índice de la pestaña a activar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.miEvento.emit(this.indice)
+    this.miEvento.emit(this.indice);
   }
 
-  emitirCancelacion(data:number){
+  /**
+   * Emite un evento al componente padre con los datos proporcionados.
+   * 
+   * @param data Datos a emitir al componente padre.
+   */
+  emitirCancelacion(data: number): void {
     this.eventoDatosHijo.emit(data);
-     this.indice = 3;
-     this.seleccionaTab(this.indice);
+    this.indice = 3;
+    this.seleccionaTab(this.indice);
   }
-
 }
