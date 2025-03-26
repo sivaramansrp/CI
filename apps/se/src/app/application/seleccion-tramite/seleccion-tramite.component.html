@@ -2,14 +2,15 @@
   <div class="container">
     <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
     <div class="row">
-      <table class="table table-responsive table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Tipo tr&aacute;mite</th>
-            <th>URL</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="table-scroll">
+        <table class="table table-striped table-responsive table-hover">
+          <thead>
+            <tr>
+              <th>Tipo tr&aacute;mite</th>
+              <th>URL</th>
+            </tr>
+          </thead>
+          <tbody>
           <tr>
             <td>5701</td>
             <td>
@@ -176,8 +177,15 @@
               <a routerLink="/pago/certificado-sgp/solicitud">{{ ruta }}/pago/certificado-sgp/solicitud</a>
             </td>
           </tr>
+          <tr>
+            <td>80302</td>
+            <td>
+              <a routerLink="/pago/solicitud-modificacion">{{ruta}}/pago/solicitud-modificacion</a>
+            </td>
+          </tr>
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   </div>
 </div>

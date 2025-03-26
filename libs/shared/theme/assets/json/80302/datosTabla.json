@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "calle": "Avenida Reforma",
+        "numeroExterior": "123",
+        "numeroInterior": "4B",
+        "codigoPostal": "12345",
+        "colonia": "Centro",
+        "municipioOAlcaldia": "Cuauhtémoc",
+        "entidadFederativa": "Ciudad de México",
+        "pais": "México",
+        "rfc": "ABC123456789",
+        "domicilioFiscal": "Avenida Reforma 123, Centro, CDMX",
+        "razonSocial": "Empresa Ejemplo S.A. de C.V.",
+        "desEstatus": "Activo"
+    }
+]

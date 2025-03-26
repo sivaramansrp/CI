@@ -2,7 +2,8 @@
   <div class="container">
     <ng-titulo titulo="Selecci&oacute;n de tr&aacute;mite" />
     <div class="row">
-      <table class="table table-responsive table-striped table-hover">
+    <div class="table-scroll">
+    <table class="table table-responsive table-striped table-hover">
         <thead>
           <tr>
             <th>Tipo tr&aacute;mite</th>
@@ -384,6 +385,9 @@
             <td>140201</td>
             <td>
               <a routerLink="/se/cancelaciones-ministerio/solicitud">{{ ruta }}/se/cancelaciones-ministerio/solicitud</a>
+              </td>
+          </tr>
+          <tr>
             <td>140103</td>
             <td>
               <a routerLink="/se/cancelacion-de/solicitante">{{ ruta }}/se/pago/cancelacion-de/solicitante</a>
@@ -421,8 +425,15 @@
               <a routerLink="/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo">{{ruta}}/peticion-requisitos-fitosanitarios/invocar-modulo</a>
               </td>
             </tr>
+           <tr>
+            <td>80302</td>
+            <td>
+              <a routerLink="/se/modificacion">{{ruta}}/se/modificacion</a>
+            </td>
+          </tr>
         </tbody>
       </table>
+    </div>
     </div>
   </div>
 </div>

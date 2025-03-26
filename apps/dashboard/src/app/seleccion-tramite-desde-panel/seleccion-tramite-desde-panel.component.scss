@@ -1,0 +1,24 @@
+.table-scroll {
+  max-height: 400px; /* Set the desired height for the scrollable area */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.table-scroll table {
+  width: 100%;
+  border-collapse: collapse; /* Collapse borders for cleaner look */
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa; /* Background color for the sticky header */
+  z-index: 1; /* Ensure the header stays above the content */
+  border-bottom: 2px solid #ccc; /* Add bottom border to header */
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  width: 0%; /* Ensure equal width for header and body cells */
+  white-space: nowrap; /* Prevent wrapping for consistent width */
+}
