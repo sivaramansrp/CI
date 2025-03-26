@@ -18,6 +18,13 @@ import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tram
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para agregar datos de un fabricante.
+ * Provee un formulario reactivo y métodos para guardar la información del fabricante.
+ *
+ * @example
+ * <app-agregar-fabricante></app-agregar-fabricante>
+ */
 @Component({
   selector: 'app-agregar-fabricante',
   standalone: true,
@@ -31,18 +38,77 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-fabricante.component.css',
 })
 export class AgregarFabricanteComponent implements OnDestroy, OnInit {
+  /**
+   * Función de callback (Input) para propagar la lista de fabricantes.
+   * @property {(value: Fabricante[]) => void} guardarFabricanteForm
+   */
   @Input()
   guardarFabricanteForm!: (value: Fabricante[]) => void;
+
+  /**
+   * FormGroup para el formulario de agregar fabricante.
+   * @property {FormGroup} agregarFabricanteForm
+   */
   agregarFabricanteForm: FormGroup;
+
+  /**
+   * Datos de catálogo de códigos postales.
+   * @property {Catalogo[]} codigosPostalesDatos
+   */
   public codigosPostalesDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de países.
+   * @property {Catalogo[]} paisesDatos
+   */
   public paisesDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de estados.
+   * @property {Catalogo[]} estadosDatos
+   */
   public estadosDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de municipios.
+   * @property {Catalogo[]} municipiosDatos
+   */
   public municipiosDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de localidades.
+   * @property {Catalogo[]} localidadesDatos
+   */
   public localidadesDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de colonias.
+   * @property {Catalogo[]} coloniasDatos
+   */
   public coloniasDatos: Catalogo[] = [];
+
+  /**
+   * Arreglo de fabricantes a agregar.
+   * @property {Fabricante[]} fabricantes
+   */
   fabricantes: Fabricante[] = [];
+
+  /**
+   * Subject que se utiliza para desuscribir observables y evitar fugas de memoria.
+   * @property {Subject<void>} unsubscribe$
+   * @private
+   */
   private unsubscribe$ = new Subject<void>();
 
+  /**
+   * Constructor que inyecta los servicios y crea el formulario de fabricante.
+   *
+   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {Tramite260204Store} tramiteStore - Store para manejar la información del trámite 260204.
+   * @param {Tramite260204Query} tramiteQuery - Query para consultar el estado del trámite 260204.
+   * @param {Location} ubicaccion - Servicio para manejar la navegación en el historial del navegador.
+   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener información de catálogos.
+   */
   constructor(
     private fb: FormBuilder,
     private tramiteStore: Tramite260204Store,
@@ -75,10 +141,18 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     });
   }
 
+  /**
+   * Hook que se ejecuta al inicializar el componente.
+   * Llama a la función para cargar los datos de los catálogos.
+   */
   ngOnInit(): void {
     this.cargarDatos();
   }
 
+  /**
+   * Guarda un fabricante nuevo en el arreglo `fabricantes`, lo actualiza en el store y
+   * regresa a la página anterior en el historial del navegador.
+   */
   guardarFabricante(): void {
     const NUEVO_FABRICANTE: Fabricante = {
       nombreRazonSocial:
@@ -103,12 +177,21 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       coloniaEquivalente: this.agregarFabricanteForm.value.correoElectronico,
     };
 
-    // Add to the array
+    // Agregar el nuevo fabricante al arreglo
     this.fabricantes.push(NUEVO_FABRICANTE);
 
+    // Actualizar datos en el store
     this.tramiteStore.updateFabricanteTablaDatos(this.fabricantes);
+
+    // Regresar a la vista anterior
     this.ubicaccion.back();
   }
+
+  /**
+   * Carga datos de catálogos (códigos postales, países, estados, municipios, etc.)
+   * utilizando el servicio `DatosSolicitudService`.
+   * Se desuscribe automáticamente al destruir el componente.
+   */
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaCodigosPostales()
@@ -152,6 +235,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
         this.coloniasDatos = data;
       });
   }
+
+  /**
+   * Hook que se ejecuta al destruir el componente.
+   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

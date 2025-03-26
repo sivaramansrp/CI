@@ -14,7 +14,12 @@ import { Subject } from 'rxjs';
 import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-
+/**
+ * @component PagoDeDerechosComponent
+ * @description Componente responsable de capturar y gestionar la información relacionada
+ * con el pago de derechos. Utiliza formularios reactivos para validar los datos y
+ * actualiza el estado del trámite automáticamente al detectar cambios.
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
@@ -28,12 +33,40 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit {
+  /**
+   * @property {Subject<void>} unsubscribe$
+   * Subject utilizado para gestionar las desuscripciones automáticas y evitar fugas de memoria.
+   * Se completa manualmente cuando el componente se destruye.
+   * @private
+   */
   private unsubscribe$ = new Subject<void>();
+
+  /**
+   * @property {InputFecha} fechaInicioInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+  /**
+   * @property {FormGroup} pagoDerechosForm
+   * Formulario reactivo que captura los datos del pago de derechos.
+   */
   pagoDerechosForm: FormGroup;
+
+  /**
+   * @property {Catalogo[]} estadosDatos
+   * Lista de estados obtenida desde el servicio de catálogos.
+   */
   estadosDatos!: Catalogo[];
 
+  /**
+   * @constructor
+   * Inicializa el formulario y las dependencias del componente.
+   *
+   * @param fb - FormBuilder para construir el formulario reactivo.
+   * @param datosSolicitudService - Servicio para obtener catálogos desde el backend.
+   * @param tramiteStore - Store que administra el estado del trámite actual.
+   */
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
@@ -52,10 +85,12 @@ export class PagoDeDerechosComponent implements OnInit {
     });
   }
 
-  onReset(): void {
-    this.pagoDerechosForm.reset();
-  }
-
+  /**
+   * @method ngOnInit
+   * @description Hook que se ejecuta al inicializar el componente.
+   * Carga los datos iniciales desde el store, configura el formulario
+   * con esos valores y suscribe a cambios para mantener el estado sincronizado.
+   */
   ngOnInit(): void {
     const DATOS_STORE = this.tramiteStore.getValue().pagoDerechos;
 
@@ -73,11 +108,19 @@ export class PagoDeDerechosComponent implements OnInit {
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
       ],
     });
+
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.tramiteStore.updatePagoDerechos(valores);
     });
+
     this.cargarDatos();
   }
+
+  /**
+   * @method cargarDatos
+   * @description Obtiene la lista de estados desde el servicio `DatosSolicitudService`
+   * y la asigna a la propiedad `estadosDatos`.
+   */
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaEstados()
@@ -85,5 +128,13 @@ export class PagoDeDerechosComponent implements OnInit {
       .subscribe((data) => {
         this.estadosDatos = data;
       });
+  }
+
+  /**
+   * @method onReset
+   * @description Limpia todos los campos del formulario de pago de derechos.
+   */
+  onReset(): void {
+    this.pagoDerechosForm.reset();
   }
 }

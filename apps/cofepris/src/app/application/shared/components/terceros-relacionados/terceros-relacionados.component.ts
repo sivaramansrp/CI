@@ -29,6 +29,12 @@ import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tram
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * @component TercerosRelacionadosComponent
+ * @description Componente que muestra las tablas dinámicas de terceros relacionados: fabricantes,
+ * destinatarios finales, proveedores y facturadores. Permite visualizar los datos almacenados
+ * en el store y navegar a las secciones correspondientes para su edición o creación.
+ */
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
@@ -42,20 +48,68 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados.component.css',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+  /**
+   * @property {string} infoAlert
+   * Tipo de alerta visual mostrada en la interfaz.
+   */
   public infoAlert = 'alert-info';
+
+  /**
+   * @property {string} MENSAJE_TABLA_OBLIGATORIA
+   * Constante de mensaje para indicar que la tabla es obligatoria.
+   */
   MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
 
+  /**
+   * @property {ConfiguracionColumna<Fabricante>[]} configuracionTablaFabricante
+   * Configuración de columnas para la tabla de fabricantes.
+   */
   configuracionTablaFabricante: ConfiguracionColumna<Fabricante>[] =
     FABRICANTE_ENCABEZADO_DE_TABLA;
+
+  /**
+   * @property {ConfiguracionColumna<Destinatario>[]} configuracionTablaDestinatarioFinal
+   * Configuración de columnas para la tabla de destinatarios finales.
+   */
   configuracionTablaDestinatarioFinal: ConfiguracionColumna<Destinatario>[] =
     DESTINATARIO_ENCABEZADO_DE_TABLA;
+
+  /**
+   * @property {ConfiguracionColumna<Proveedor>[]} configuracionTablaProveedor
+   * Configuración de columnas para la tabla de proveedores.
+   */
   configuracionTablaProveedor: ConfiguracionColumna<Proveedor>[] =
     PROVEEDOR_ENCABEZADO_DE_TABLA;
+
+  /**
+   * @property {ConfiguracionColumna<Facturador>[]} configuracionTablaFacturador
+   * Configuración de columnas para la tabla de facturadores.
+   */
   configuracionTablaFacturador: ConfiguracionColumna<Facturador>[] =
     FACTURADOR_ENCABEZADO_DE_TABLA;
 
+  /**
+   * @property {Subject<void>} destroy$
+   * Subject para cancelar suscripciones y evitar fugas de memoria.
+   * @private
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * @property {TablaSeleccion} tipoSeleccionTabla
+   * Tipo de selección que utiliza la tabla dinámica (por ejemplo, checkbox).
+   */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * @constructor
+   * Inyecta los servicios de router, rutas activas y store del trámite.
+   *
+   * @param router - Servicio de enrutamiento de Angular.
+   * @param activatedRoute - Ruta activa actual.
+   * @param tramiteStore - Store que administra los datos del trámite.
+   * @param tramiteQuery - Servicio para consultar los datos del trámite.
+   */
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -63,11 +117,35 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite260204Query
   ) {}
 
+  /**
+   * @property {Fabricante[]} fabricanteTablaDatos
+   * Datos de la tabla de fabricantes.
+   */
   fabricanteTablaDatos: Fabricante[] = [];
+
+  /**
+   * @property {Destinatario[]} destinatarioFinalTablaDatos
+   * Datos de la tabla de destinatarios finales.
+   */
   destinatarioFinalTablaDatos: Destinatario[] = [];
+
+  /**
+   * @property {Proveedor[]} proveedorTablaDatos
+   * Datos de la tabla de proveedores.
+   */
   proveedorTablaDatos: Proveedor[] = [];
+
+  /**
+   * @property {Facturador[]} facturadorTablaDatos
+   * Datos de la tabla de facturadores.
+   */
   facturadorTablaDatos: Facturador[] = [];
 
+  /**
+   * @method ngOnInit
+   * @description Hook de ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe a los observables de cada tipo de tabla del store.
+   */
   ngOnInit(): void {
     this.tramiteQuery.getFabricanteTablaDatos$
       .pipe(takeUntil(this.destroy$))
@@ -94,14 +172,25 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @method navigateToAcciones
+   * @description Navega a la ruta relativa proporcionada desde el contexto actual.
+   *
+   * @param {string} accionesPath - Ruta relativa hacia la que se desea navegar.
+   */
   navigateToAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
   }
 
+  /**
+   * @method ngOnDestroy
+   * @description Hook de ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas.
+   */
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emit a value to complete the subscriptions
-    this.destroy$.complete(); // Close the subject
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

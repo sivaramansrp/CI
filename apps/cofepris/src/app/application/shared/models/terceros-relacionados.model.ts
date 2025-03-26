@@ -1,8 +1,17 @@
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
+/**
+ * @const MENSAJE_TABLA_OBLIGATORIA
+ * @description Mensaje que indica que las tablas marcadas con asterisco son obligatorias
+ * y se debe agregar al menos un registro.
+ */
 export const MENSAJE_TABLA_OBLIGATORIA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
+/**
+ * @interface Fabricante
+ * @description Representa los datos correspondientes a un fabricante.
+ */
 export interface Fabricante {
   nombreRazonSocial: string;
   rfc: string;
@@ -22,6 +31,10 @@ export interface Fabricante {
   coloniaEquivalente: string;
 }
 
+/**
+ * @const FABRICANTE_ENCABEZADO_DE_TABLA
+ * @description Columnas configuradas para mostrar los datos del fabricante en una tabla.
+ */
 export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] =
   [
     {
@@ -78,6 +91,10 @@ export const FABRICANTE_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Fabricante>[] 
     },
   ];
 
+/**
+ * @interface Destinatario
+ * @description Representa los datos correspondientes a un destinatario.
+ */
 export interface Destinatario {
   nombreRazonSocial: string;
   rfc: string;
@@ -97,6 +114,10 @@ export interface Destinatario {
   coloniaEquivalente: string;
 }
 
+/**
+ * @const DESTINATARIO_ENCABEZADO_DE_TABLA
+ * @description Columnas configuradas para mostrar los datos del destinatario en una tabla.
+ */
 export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario>[] =
   [
     {
@@ -153,6 +174,10 @@ export const DESTINATARIO_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Destinatario
     },
   ];
 
+/**
+ * @interface Proveedor
+ * @description Representa los datos correspondientes a un proveedor.
+ */
 export interface Proveedor {
   nombreRazonSocial: string;
   rfc: string;
@@ -172,6 +197,10 @@ export interface Proveedor {
   coloniaEquivalente: string;
 }
 
+/**
+ * @const PROVEEDOR_ENCABEZADO_DE_TABLA
+ * @description Columnas configuradas para mostrar los datos del proveedor en una tabla.
+ */
 export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
   [
     {
@@ -227,6 +256,11 @@ export const PROVEEDOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Proveedor>[] =
       orden: 16,
     },
   ];
+
+/**
+ * @interface Facturador
+ * @description Representa los datos correspondientes a un facturador.
+ */
 export interface Facturador {
   nombreRazonSocial: string;
   rfc: string;
@@ -246,6 +280,10 @@ export interface Facturador {
   coloniaEquivalente: string;
 }
 
+/**
+ * @const FACTURADOR_ENCABEZADO_DE_TABLA
+ * @description Columnas configuradas para mostrar los datos del facturador en una tabla.
+ */
 export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] =
   [
     {
@@ -301,6 +339,11 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
       orden: 16,
     },
   ];
+
+/**
+ * @interface PagoDerechosFormState
+ * @description Representa el estado del formulario para el pago de derechos.
+ */
 export interface PagoDerechosFormState {
   claveReferencia: string;
   cadenaDependencia: string;
@@ -310,6 +353,10 @@ export interface PagoDerechosFormState {
   importePago: string;
 }
 
+/**
+ * @const FECHA_DE_PAGO
+ * @description Configuración del campo “Fecha de pago” en el formulario.
+ */
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de pago',
   required: true,

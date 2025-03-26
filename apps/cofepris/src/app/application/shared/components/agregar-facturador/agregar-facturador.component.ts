@@ -16,7 +16,10 @@ import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tra
 import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
-
+/**
+ * Componente para agregar un facturador (persona física o moral) al trámite actual.
+ * Permite capturar datos generales y de contacto, y actualiza el store con el nuevo registro.
+ */
 @Component({
   standalone: true,
   imports: [
@@ -29,10 +32,40 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-facturador.component.css',
 })
 export class AgregarFacturadorComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para capturar los datos del facturador.
+   * @property {FormGroup} agregarFacturadorForm
+   */
   agregarFacturadorForm: FormGroup;
+
+  /**
+   * Subject utilizado para desuscribirse automáticamente de observables al destruir el componente.
+   * @property {Subject<void>} unsubscribe$
+   * @private
+   */
   private unsubscribe$ = new Subject<void>();
+
+  /**
+   * Lista de países obtenidos del servicio.
+   * @property {Catalogo[]} paisesDatos
+   */
   paisesDatos: Catalogo[] = [];
+
+  /**
+   * Lista de facturadores almacenados localmente.
+   * @property {Facturador[]} facturadores
+   */
   facturadores: Facturador[] = [];
+
+  /**
+   * Constructor que inicializa el formulario y servicios necesarios.
+   *
+   * @param {FormBuilder} fb - FormBuilder para construir el formulario reactivo.
+   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener listas de catálogos.
+   * @param {Tramite260204Store} tramiteStore - Store que administra el estado del trámite.
+   * @param {Tramite260204Query} tramiteQuery - Servicio para consultar el estado actual del trámite.
+   * @param {Location} ubicaccion - Servicio para manejar la navegación (volver atrás).
+   */
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
@@ -58,6 +91,24 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Hook de inicialización del componente. Carga los catálogos necesarios.
+   */
+  ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  /**
+   * Hook de destrucción del componente. Libera recursos y detiene suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * Carga los países desde el servicio y los almacena en `paisesDatos`.
+   */
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaPaises()
@@ -66,13 +117,12 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
         this.paisesDatos = data;
       });
   }
-  ngOnInit(): void {
-    this.cargarDatos();
-  }
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+
+  /**
+   * Construye un objeto `Facturador` a partir del formulario,
+   * lo agrega al arreglo `facturadores` y actualiza el store.
+   * Después, limpia el formulario y regresa a la vista anterior.
+   */
   guardarFacturador(): void {
     const NUEVO_FACTURADOR: Facturador = {
       nombreRazonSocial: `${this.agregarFacturadorForm.value.nombres} ${

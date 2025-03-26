@@ -1,22 +1,29 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Location } from '@angular/common';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Location } from '@angular/common';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
 import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
-import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
+ *
+ * @example
+ * <app-agregar-destinatario-final></app-agregar-destinatario-final>
+ */
 @Component({
   selector: 'app-agregar-destinatario-final',
   standalone: true,
@@ -30,18 +37,71 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-final.component.css',
 })
 export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
+  /**
+   * Subject utilizado para gestionar la desuscripción de observables.
+   * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
+   * @property {Subject<void>} unsubscribe$
+   * @private
+   */
   private unsubscribe$ = new Subject<void>();
 
+  /**
+   * Grupo de formulario reactivo para recopilar los datos del destinatario final.
+   * @property {FormGroup} agregarDestinatarioFinal
+   */
   agregarDestinatarioFinal: FormGroup;
+
+  /**
+   * Datos de catálogo de países.
+   * @property {Catalogo[]} paisesDatos
+   */
   public paisesDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de estados.
+   * @property {Catalogo[]} estadosDatos
+   */
   public estadosDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de municipios.
+   * @property {Catalogo[]} municipiosDatos
+   */
   public municipiosDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de localidades.
+   * @property {Catalogo[]} localidadesDatos
+   */
   public localidadesDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de colonias.
+   * @property {Catalogo[]} coloniasDatos
+   */
   public coloniasDatos: Catalogo[] = [];
+
+  /**
+   * Datos de catálogo de códigos postales.
+   * @property {Catalogo[]} codigosPostalesDatos
+   */
   public codigosPostalesDatos: Catalogo[] = [];
 
+  /**
+   * Arreglo que almacena la lista de destinatarios.
+   * @property {Destinatario[]} destinatarios
+   */
   destinatarios: Destinatario[] = [];
 
+  /**
+   * Crea el componente e inicializa el grupo de formulario.
+   *
+   * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
+   * @param {Tramite260204Store} tramiteStore - Servicio que maneja las actualizaciones de estado para "Tramite260204".
+   * @param {Tramite260204Query} tramiteQuery - Servicio para consultar el estado de "Tramite260204".
+   * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
+   * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
+   */
   constructor(
     private fb: FormBuilder,
     private tramiteStore: Tramite260204Store,
@@ -77,6 +137,11 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
     });
   }
 
+  /**
+   * Guarda un nuevo destinatario en el arreglo local `destinatarios`
+   * y actualiza la información en el store. Finalmente, resetea el formulario
+   * y navega hacia atrás en el historial.
+   */
   guardarDestinatario(): void {
     const NUEVO_DESTINATARIO: Destinatario = {
       nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
@@ -105,14 +170,29 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
   }
+
+  /**
+   * Hook del ciclo de vida que se invoca cuando se destruye el componente.
+   * Completa el Subject `unsubscribe$` para desuscribir todos los observables.
+   */
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
 
+  /**
+   * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
+   * Llama al método `cargarDatos()`.
+   */
   ngOnInit(): void {
     this.cargarDatos();
   }
+
+  /**
+   * Recupera varias listas de datos del servicio `DatosSolicitudService` y
+   * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
+   * destrucción usando `takeUntil(this.unsubscribe$)`.
+   */
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaCodigosPostales()
