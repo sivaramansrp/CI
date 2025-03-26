@@ -95,10 +95,10 @@ describe('ContenedorComponent', () => {
   it('should reset form and flags on limpiarCampos', () => {
     component.limpiarCampos();
     expect(component.solicitudForm.pristine).toBeTruthy();
-    expect(component.showSeccionArchivoCsv).toBeFalsy();
-    expect(component.showSeccionAduanaaFecha).toBeFalsy();
-    expect(component.showSeccionContenedor).toBeFalsy();
-    expect(component.showSeccionExcel).toBeFalsy();
+    expect(component.mostrarSeccionArchivoCsv).toBeFalsy();
+    expect(component.mostrarSeccionAduanaaFecha).toBeFalsy();
+    expect(component.mostrarSeccionContenedor).toBeFalsy();
+    expect(component.mostrarSeccionExcel).toBeFalsy();
     expect(component.mostrarAgregarTipoContenedor).toBeFalsy();
   });
 
@@ -107,10 +107,10 @@ describe('ContenedorComponent', () => {
     expect(component.mostrarAgregarTipoContenedor).toBeTruthy();
   });
 
-  it('should show modal and set showButtons to false on datosCapturaModal', () => {
+  it('should mostrar modal and set mostrarButtons to false on datosCapturaModal', () => {
     component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
     component.datosCapturaModal();
-    expect(component.showButtons).toBeFalsy();
+    expect(component.mostrarButtons).toBeFalsy();
   });
 
 });

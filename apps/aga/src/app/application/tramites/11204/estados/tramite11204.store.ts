@@ -7,9 +7,9 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud11204State {
   /**
-   * Menú desplegable.
+   * Menu desplegable.
    */
-  menúDesplegable: string;
+  menuDesplegable: string;
 
   /**
    * RFC.
@@ -27,7 +27,7 @@ export interface Solicitud11204State {
   datosDelContenedor: [];
 
   /**
-   * Tipo de búsqueda.
+   * Tipo de busqueda.
    */
   tipoBusqueda: string;
 
@@ -52,12 +52,12 @@ export interface Solicitud11204State {
   inicialesContenedor: string;
 
   /**
-   * Número del contenedor.
+   * Numero del contenedor.
    */
   numeroContenedor: string;
 
   /**
-   * Dígito de control.
+   * Digito de control.
    */
   digitoDeControl: string;
 
@@ -67,9 +67,9 @@ export interface Solicitud11204State {
   contenedores: string;
 
   /**
-   * Menú desplegable de aduana.
+   * Menu desplegable de aduana.
    */
-  aduanaMenúDesplegable: string;
+  aduanaMenuDesplegable: string;
 
   /**
    * Fecha de ingreso.
@@ -88,9 +88,9 @@ export interface Solicitud11204State {
  */
 export function createInitialState(): Solicitud11204State {
   return {
-    menúDesplegable: '',
-    rfc: 'AAL0409235E6',
-    denominacion: 'AGRICOLA ALPE S DE RL DE CV',
+    menuDesplegable: '',
+    rfc: '',
+    denominacion: '',
     datosDelContenedor: [],
     tipoBusqueda: '',
     aduana: '',
@@ -100,7 +100,7 @@ export function createInitialState(): Solicitud11204State {
     contenedores: '',
     fechaIngreso: '',
     Vigencia: '',
-    aduanaMenúDesplegable: '',
+    aduanaMenuDesplegable: '',
     fechaDeIngreso: '',
     archivoSeleccionado: ''
   };
@@ -119,13 +119,13 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
   }
 
   /**
-   * Establece el valor del menú desplegable de aduana.
-   * @param aduanaMenúDesplegable Valor del menú desplegable de aduana.
+   * Establece el valor del menu desplegable de aduana.
+   * @param aduanaMenuDesplegable Valor del menu desplegable de aduana.
    */
-  public setAduanaMenúDesplegable(aduanaMenúDesplegable: string): void {
+  public setAduanaMenuDesplegable(aduanaMenuDesplegable: string): void {
     this.update((state) => ({
       ...state,
-      aduanaMenúDesplegable,
+      aduanaMenuDesplegable,
     }));
   }
 
@@ -185,8 +185,8 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
   }
 
   /**
-   * Establece el tipo de búsqueda.
-   * @param tipoBusqueda Tipo de búsqueda.
+   * Establece el tipo de busqueda.
+   * @param tipoBusqueda Tipo de busqueda.
    */
   public setTipoBusqueda(tipoBusqueda: string): void {
     this.update((state) => ({
@@ -229,8 +229,8 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
   }
 
   /**
-   * Establece el número del contenedor.
-   * @param numeroContenedor Número del contenedor.
+   * Establece el numero del contenedor.
+   * @param numeroContenedor Numero del contenedor.
    */
   public setNumeroContenedor(numeroContenedor: string): void {
     this.update((state) => ({
@@ -240,8 +240,8 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
   }
 
   /**
-   * Establece el dígito de control.
-   * @param digitoDeControl Dígito de control.
+   * Establece el digito de control.
+   * @param digitoDeControl Digito de control.
    */
   public setDigitoDeControl(digitoDeControl: string): void {
     this.update((state) => ({

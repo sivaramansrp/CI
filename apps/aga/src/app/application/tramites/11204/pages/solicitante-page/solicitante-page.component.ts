@@ -49,6 +49,7 @@ export class SolicitantePageComponent implements OnInit {
    * Se ejecuta al inicializar el componente y actualiza el título del segundo paso.
    */
   ngOnInit(): void {
+    this.pasos = PASOS;
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
         return { ...paso, titulo: 'Cargar pago' };

@@ -14,7 +14,7 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 
-import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, RespuestaCatalogos, REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -44,27 +44,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar la sección de adjuntar archivo.
    */
-  showSeccionArchivoCsv: boolean = false;
+  mostrarSeccionArchivoCsv: boolean = false;
 
   /**
    * Bandera para mostrar la sección de aduana y fecha.
    */
-  showSeccionAduanaaFecha: boolean = false;
+  mostrarSeccionAduanaaFecha: boolean = false;
 
   /**
    * Bandera para mostrar la sección de contenedor.
    */
-  showSeccionContenedor: boolean = false;
+  mostrarSeccionContenedor: boolean = false;
 
   /**
    * Bandera para mostrar la tabla de archivo seleccionado.
    */
-  showArchivoSeleccionadoTable: boolean = false;
+  mostrarArchivoSeleccionadoTable: boolean = false;
 
   /**
    * Bandera para mostrar la sección de Excel.
    */
-  showSeccionExcel: boolean = false;
+  mostrarSeccionExcel: boolean = false;
 
   /**
    * Lista de aduanas.
@@ -81,9 +81,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * Índice actual.
+   * indice actual.
    */
-  currentIdx: number = 0;
+  idxActual: number = 0;
 
   /**
    * Bandera para mostrar el tipo de contenedor.
@@ -93,7 +93,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para mostrar los botones.
    */
-  showButtons: boolean = true;
+  mostrarButtons: boolean = true;
 
   /**
    * Lista de catálogos.
@@ -134,18 +134,20 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   amount: number = 328.5;
 
+  REGEX_NUMER = /[^0-9]/g;
+
   /**
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de Documento', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
-    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 5 },
-    { encabezado: 'vigencia', clave: (artículo) => artículo.vigencia, orden: 6 },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 7 }
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
+    { encabezado: 'Numero de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
+    { encabezado: 'Digito Verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
+    { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
+    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
+    { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 }
   ];
 
   /**
@@ -242,8 +244,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
-      aduanaMenúDesplegable: [
-        this.solicitud11204State.aduanaMenúDesplegable,
+      aduanaMenuDesplegable: [
+        this.solicitud11204State.aduanaMenuDesplegable,
         Validators.required,
       ],
       archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
@@ -253,7 +255,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('inicialesContenedor')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+          const SANITIZED = valor.replace(REGEX_REEMPLAZAR).toUpperCase();
           this.solicitudForm
             .get('inicialesContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -269,7 +271,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('numeroContenedor')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(/[^a-zA-Z0-9]/g, '');
+          const SANITIZED = valor.replace(REGEX_REEMPLAZAR);
           this.solicitudForm
             .get('numeroContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -280,7 +282,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('digitoDeControl')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(/[^0-9]/g, '');
+          const SANITIZED = valor.replace(this.REGEX_NUMER);
           this.solicitudForm
             .get('digitoDeControl')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -333,22 +335,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Mostrar campos según el tipo de búsqueda seleccionado.
+   * Mostrar campos segun el tipo de busqueda seleccionado.
    */
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.solicitudForm.get('tipoBusqueda')?.value;
-    this.showSeccionArchivoCsv = false;
-    this.showSeccionAduanaaFecha = false;
-    this.showSeccionContenedor = false;
-    this.showSeccionExcel = false;
+    this.mostrarSeccionArchivoCsv = false;
+    this.mostrarSeccionAduanaaFecha = false;
+    this.mostrarSeccionContenedor = false;
+    this.mostrarSeccionExcel = false;
 
     switch (TIPO_BUSQUEDA) {
       case 'Contenedor':
-        this.showSeccionContenedor = true;
-        this.showSeccionAduanaaFecha = true;
+        this.mostrarSeccionContenedor = true;
+        this.mostrarSeccionAduanaaFecha = true;
         break;
       case 'Archivo CSV':
-        this.showSeccionArchivoCsv = true;
+        this.mostrarSeccionArchivoCsv = true;
         break;
       default:
         break;
@@ -360,10 +362,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   limpiarCampos(): void {
     this.solicitudForm.reset();
-    this.showSeccionArchivoCsv = false;
-    this.showSeccionAduanaaFecha = false;
-    this.showSeccionContenedor = false;
-    this.showSeccionExcel = false;
+    this.mostrarSeccionArchivoCsv = false;
+    this.mostrarSeccionAduanaaFecha = false;
+    this.mostrarSeccionContenedor = false;
+    this.mostrarSeccionExcel = false;
     this.mostrarAgregarTipoContenedor = false;
     this.solicitudForm.get('archivoSeleccionado')?.disable();
   }
@@ -384,7 +386,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
-    this.showButtons = false;
+    this.mostrarButtons = false;
   }
 
   /**
@@ -401,7 +403,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Validar el dígito verificador y agregar la solicitud.
+   * Validar el digito verificador y agregar la solicitud.
    */
   datosCaptura(): void {
     this.solicitudForm.markAllAsTouched();
@@ -429,7 +431,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       READER.onload = (e): void => {
         const TEXT = e.target?.result as string;
         this.parseCSV(TEXT);
-        this.showArchivoSeleccionadoTable = true;
+        this.mostrarArchivoSeleccionadoTable = true;
       };
       READER.readAsText(FILE);
     }
@@ -446,8 +448,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de documento': 'tipoEquipo',
-      'N�mero de equipo': 'numeroEquipo',
-      'D�gito Verificador': 'digitoVerificador',
+      'Numero de equipo': 'numeroEquipo',
+      'Digito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
       'Vigencia': 'vigencia'
     };
@@ -459,7 +461,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         OBJ[KEY] = VALUES[index]?.trim();
       });
       return OBJ;
-    }).filter(artículo => Object.values(artículo).some(valor => valor));
+    }).filter(articulo => Object.values(articulo).some(valor => valor));
     this.datosTabla = DATA;
   }
 
@@ -467,9 +469,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Seleccionar pestaña actual.
    */
   tabSeleccionado(): void {
-    const CURRENT_IDX = localStorage.getItem('currentIdx');
+    const CURRENT_IDX = localStorage.getItem('idxActual');
     if (CURRENT_IDX !== null) {
-      this.currentIdx = Number(CURRENT_IDX);
+      this.idxActual = Number(CURRENT_IDX);
     }
   }
 

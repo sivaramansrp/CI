@@ -28,7 +28,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="showSeccionAduanaaFecha">
+        <ng-container *ngIf="mostrarSeccionAduanaaFecha">
             <div id="seccionAduanaaFecha">
                 <div class="row">
                     <div class="col-md-12">
@@ -49,7 +49,7 @@
                 <br><br>
             </div>
         </ng-container>
-        <ng-container *ngIf="showSeccionContenedor">
+        <ng-container *ngIf="mostrarSeccionContenedor">
             <div id="seccionContenedor">
                 <div class="row">
                     <div class="col-md-12">
@@ -71,7 +71,7 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroContenedor">Número de equipo</label>
+                            <label for="numeroContenedor">Numero de equipo</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
                                 class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
@@ -80,7 +80,7 @@
                 </div>
                 <br />
                 <div class="row">
-                    <div class="col-md-12" *ngIf="showButtons">
+                    <div class="col-md-12" *ngIf="mostrarButtons">
                         <div class="form-group pull-right">
                             <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
                             <button type="button" class="btn btn-primary ms-2" (click)="datosCapturaModal()"
@@ -102,7 +102,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Dígito verificador</label>
+                            <label for="digitoDeControl">Digito verificador</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
                                 class="form-control">
                         </div>
@@ -138,7 +138,7 @@
             </div>
         </ng-container>
 
-        <ng-container *ngIf="showSeccionArchivoCsv">
+        <ng-container *ngIf="mostrarSeccionArchivoCsv">
             <div id="tabs">
                 <div id="adjuntarArchivo">
                     <div class="row">
@@ -146,8 +146,8 @@
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
                                 [placeholder]="aduana.primerOpcion" [required]="true"
-                                formControlName="aduanaMenúDesplegable"
-                                (change)="setValoresStore(solicitudForm,'aduanaMenúDesplegable', 'setAduanaMenúDesplegable')"></app-catalogo-select>
+                                formControlName="aduanaMenuDesplegable"
+                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
                         </div>
                     </div>
                     <div class="row">
@@ -161,14 +161,14 @@
                             <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
                                 Archivo</button>
                         </div>
-                        <div *ngIf="showArchivoSeleccionadoTable" class="table-container ">
+                        <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th></th>
                                         <th>Iniciales del equipo</th>
-                                        <th>Número de equipo</th>
-                                        <th>Dígito Verificador</th>
+                                        <th>Numero de equipo</th>
+                                        <th>Digito Verificador</th>
                                         <th>Tipo de equipo</th>
                                         <th>Fecha Ingreso</th>
                                         <th>vigencia</th>

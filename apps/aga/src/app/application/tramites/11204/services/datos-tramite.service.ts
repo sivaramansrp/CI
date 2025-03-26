@@ -5,38 +5,59 @@ import { Observable } from "rxjs";
 import { RespuestaCatalogos } from "@libs/shared/data-access-user/src";
 import { RespuestaContenedor } from "../models/datos-tramite.model";
 
+/**
+ * Servicio Injectable para gestionar las operaciones relacionadas con los datos del trámite.
+ */
 @Injectable({
   providedIn: 'any',
 })
 export class DatosTramiteService {
-
+  /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar solicitudes a la API.
+   */
   constructor(
     private http: HttpClient
     // eslint-disable-next-line no-empty-function
-  ) {
-  }
+  ) {}
+
   /**
-   * Get a lista of Contenedores
+   * Obtiene la lista de contenedores.
+   * @returns Un observable con la respuesta de los catálogos de contenedores.
    */
   getContenedores(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11204/tipoLista.json`);
   }
 
   /**
-  * Simular un envío exitoso de formulario
-  */
+   * Simula el envío exitoso de una solicitud.
+   * @returns Un observable con la respuesta de las aduanas.
+   */
   submitSolicitud(): Observable<RespuestaAduanas> {
     return this.http.get<RespuestaAduanas>(`assets/json/11204/aduanaList.json`);
   }
 
+  /**
+   * Agrega una solicitud.
+   * @returns Un observable con la respuesta del contenedor.
+   */
   agregarSolicitud(): Observable<RespuestaContenedor> {
     return this.http.get<RespuestaContenedor>(`assets/json/11204/contenedorLista.json`);
   }
 
+  /**
+   * Obtiene la lista de aduanas.
+   * @param _catalogo Identificador del catálogo.
+   * @returns Un observable con la respuesta de los catálogos de aduanas.
+   */
   getAduanaLista(_catalogo: string): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11204/aduanaList.json`);
   }
-  
+
+  /**
+   * Obtiene los datos para mostrar en la tabla.
+   * @returns Un observable con la respuesta de los catálogos de datos de la tabla.
+   */
   getDatosTableData(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(`assets/json/11204/datosTabla.json`);
   }
