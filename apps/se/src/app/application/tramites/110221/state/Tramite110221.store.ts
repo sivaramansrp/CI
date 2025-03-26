@@ -11,6 +11,7 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 110221.
  */
 export interface Solicitud110221State {
+  tercerOperador: boolean;
   tratado: Catalogo[] | null;
   pais: Catalogo[] | null;
   fraccionArancelaria: string;
@@ -63,6 +64,7 @@ export interface Solicitud110221State {
  */
 export function createInitialState(): Solicitud110221State {
   return {
+    tercerOperador: false,
     tratado: null,
     pais: null,
     fraccionArancelaria: '',
@@ -118,6 +120,12 @@ export function createInitialState(): Solicitud110221State {
 export class Tramite110221Store extends Store<Solicitud110221State> {
   constructor() {
     super(createInitialState());
+  }
+  public setTercerOperador(tercerOperador: boolean) {
+    this.update((state) => ({
+      ...state,
+      tercerOperador,
+    }));
   }
   /**
    * Establece el catálogo de tratados.

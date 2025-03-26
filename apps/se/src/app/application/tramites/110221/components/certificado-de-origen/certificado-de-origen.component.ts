@@ -49,6 +49,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  requeridoCertificateRequeridoPanama: boolean = false;
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -648,6 +649,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
+        tercerOperador: [this.solicitudState?.tercerOperador],
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
         fraccionArancelaria: [
