@@ -12,8 +12,12 @@ import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/2606
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ExportacionService } from '../../services/exportacion.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+
+import { Tramites260604Store, solicitud260604State } from '../../../../estados/tramites260604.store';
+
+import { Tramites260604Query } from '../../../../estados/tramites260604.query'
 
 @Component({
   selector: 'app-terceros-relacionado',
@@ -23,6 +27,8 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './tercerosRelacionado.component.css',
 })
 export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
+  private destroyNotifier$: Subject<void> = new Subject();
+    public solicitudState!: solicitud260604State;
   facturatorForm!:FormGroup;
   private destroyed$ = new Subject<void>();
   public TEXTOS = MENSAJEDEALERTA;
@@ -33,7 +39,9 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   tercerosProd: PermisoModel[] = [];
   tableHeaderData: string[] = ['Nombre/denominacion o razon social', 'RFC', 'CURP', 'Telefono', 'Correo electronico', 'Calle', 'Numero exterior', 'Numero interior','pais', 'Colonia','Municipio o alcaldia','Localidad','Entidad federrative', 'Estado/localidad','Codigo postal'];
   constructor(private fb: FormBuilder,
-  private service: ExportacionService){}
+  private service: ExportacionService,
+  private tramites260604Store: Tramites260604Store,
+  private tramites260604Query: Tramites260604Query,){}
 
   @ViewChild('closeModal') closeModal!: ElementRef;
 
@@ -56,6 +64,15 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
+
+    this.tramites260604Query.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          )
+          .subscribe();
     this.loadMercancias();
     this.loadLocalidad();
     this. getFacturator();
@@ -85,20 +102,20 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   getFacturator(): void {
     this.facturatorForm = this.fb.group({
       tipoPersona: ['fisica', Validators.required], // Default to "fisica"
-      nombres: ['', Validators.required],
-      facturatorapellido: ['', Validators.required],
-      facturatorsapellido: [''],
-      destinatariodenominacion:['',Validators.required],
-      facturatorcpail: ['', Validators.required],
-      facturatorestado: ['', Validators.required],
-      facturatorcp: [''],
-      facturatorequivalente: [''],
-      facturatorcalle: ['', Validators.required],
-      facturatorexperior: ['', Validators.required],
-      facturatorinterior: [''],
-      facturatorlada: ['', Validators.required],
-      facturatortelefono: [''],
-      facturatorElectronico: ['', [Validators.required, Validators.email]],
+      nombre: [ this.solicitudState?.nombre || '', [Validators.required]],
+      apellidoPrimer: [ this.solicitudState?.apellidoPrimer || '', Validators.required],
+      apellidoSegundo: [this.solicitudState?.apellidoSegundo || ''],
+      denominacionRazonSocial:[this.solicitudState?.denominacionRazonSocial || '',[Validators.maxLength(254)]],
+      selectPais: ['', Validators.required],
+      estadoLocalidad: [this.solicitudState?.estadoLocalidad ||'', Validators.required],
+      codPostal1: [this.solicitudState?.codPostal1 ||''],
+      coloniaEquiv: [this.solicitudState?.coloniaEquiv ||''],
+      calle: [this.solicitudState?.calle ||'', [Validators.maxLength(300)]],
+      numExterior: [this.solicitudState?.numExterior ||'',[Validators.maxLength(55)]],
+      numInterior: [this.solicitudState?.numInterior ||'',[Validators.maxLength(55)]],
+      lada: [this.solicitudState?.lada ||'', [Validators.maxLength(5)]],
+      telefono: [this.solicitudState?.telefono ||''],
+      correoElectronico: [this.solicitudState?.telefono ||'', [Validators.required, Validators.email]],
     });
   
 
@@ -129,10 +146,17 @@ this.facturatorForm.get('tipoPersona')?.valueChanges.subscribe((value) => {
 isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramites260604Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramites260604Store [metodoNombre] as (value: string) => void)(VALOR);
+  }
 
+ 
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
     
   }
 
