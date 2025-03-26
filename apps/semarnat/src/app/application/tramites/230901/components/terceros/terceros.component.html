@@ -1,0 +1,28 @@
+<div class="container">
+    <ng-titulo titulo="Datos de la solicitud" />
+    <form [formGroup]="destinatarioForm">
+        <div class="row">
+            <app-catalogo-select [catalogo]="catalogos" formControlName="entidadFederativa" class="col-md-4" [label]="'Entidad federativa'"></app-catalogo-select>
+        </div>
+        <label class="row mt-5">destinatarios*:</label>
+        <div class="row mt-4">
+            <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="tablaDatos"
+            [tipoSeleccionTabla]="TablaSeleccion"
+          ></app-tabla-dinamica>
+        </div>
+        <div class="row" style="padding-bottom: 20px; text-align: right">
+            <div>
+              <button type="button" class="btn btn-default me-2">Eliminar Seleccionados</button>
+              <button type="button" class="btn btn-danger me-2">Eliminar no seleccioonados</button>
+              <button
+                type="button"
+                class="btn btn-primary me-2"
+              >
+                Modificar
+              </button>
+            </div>
+          </div>
+    </form>
+</div>

@@ -1,0 +1,8 @@
+.fixed-width-button {
+    width: 220px;
+}
+
+.pagination {
+  display: table;
+  margin: 0 auto;
+}

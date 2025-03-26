@@ -17,6 +17,11 @@ const ROUTES: Routes = [
     path: 'aviso-de-materiales',
     loadChildren: ()=>
       import('./tramites/231001/aviso-de-materiales.module').then((m)=>m.AvisodematerialesModule)
+  },
+  {
+    path:'autorizaciones-de-vida-silvestre',
+    loadChildren:()=>
+      import('./tramites/230901/autorizaciones-de-vida-silvestre.module').then((m)=>m.AutorizacionesDeVidaSilvestreModule)
   }
 ];
 
