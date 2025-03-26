@@ -1,10 +1,18 @@
 # Dockerfile
 
 # Stage 1: Build the Angular app
-FROM node:20-slim AS node
+FROM node:20-alpine AS node
 WORKDIR /app
 
-# Install dependencies
+# Instalar dependencias mínimas necesarias para compilación
+RUN apk add --no-cache python3 make g++
+
+# Configurar npm para usar python3
+ENV npm_config_python=/usr/bin/python3
+ENV npm_config_build_from_source=false
+ENV npm_config_prefer_offline=true
+
+# Copiar proyecto
 COPY . .
 # Debug output para verificar archivos
 RUN pwd && ls -la
@@ -12,7 +20,7 @@ RUN pwd && ls -la
 # Install Nx CLI globally (versión específica para evitar incompatibilidades)
 RUN npm install -g nx@latest
 
-# Instalar dependencias del proyecto
+# Instalar dependencias del proyecto con opciones para evitar problemas
 RUN npm install --legacy-peer-deps --no-audit
 
 # Verificar la configuración de webpack y module-federation
