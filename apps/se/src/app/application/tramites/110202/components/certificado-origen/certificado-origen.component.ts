@@ -1,68 +1,33 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
+import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { Mercancia } from '../../models/configuracio-columna.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
-import { Modal } from 'bootstrap';                     
+import { Modal } from 'bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 
-
-/**
- * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
- * 
- * @constant
- * @type {Object}
- * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
- * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
- * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
-*/
-export const FECHA_INICIO = {
-  labelNombre: 'Fecha inicio',
-  required: true,
-  habilitado: true,
-};
-
-
-/**
- * Constante que representa la configuración de la fecha final en el componente de certificado de origen.
- * 
- * @constant
- * @type {Object}
- * @property {string} labelNombre - El nombre de la etiqueta para la fecha final.
- * @property {boolean} required - Indica si el campo de fecha final es obligatorio.
- * @property {boolean} habilitado - Indica si el campo de fecha final está habilitado.
-*/
-export const FECHA_FINAL = {
-  labelNombre: 'Fecha final',
-  required: true,
-  habilitado: true,
-};
-
-
 @Component({
-  selector: 'app-certificado-de-origen',
+  selector: 'app-certificado-origen',
   standalone: true,
   imports: [
-    TituloComponent,
     ReactiveFormsModule,
     CommonModule,
-    TablaDinamicaComponent,
-    InputFechaComponent,
-    CatalogoSelectComponent,
+    CertificadoDeOrigenComponent,
     MercanciasModalComponent
-],
-  templateUrl: './certificado-de-origen.component.html',
-  styleUrl: './certificado-de-origen.component.scss'
+  ],
+  templateUrl: './certificado-origen.component.html',
+  styleUrl: './certificado-origen.component.scss'
 })
 
-export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, OnInit {
+export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnInit {
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -71,17 +36,12 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
   formCertificado!: FormGroup;
 
   /**
-   * Configuración de las fechas de inicio y fin.
-   * @type {InputFecha}
-   */
-  public fechaInicioInput: InputFecha = FECHA_INICIO;
-  public fechaFinalInput: InputFecha = FECHA_FINAL;
-  /**
    * Observable que emite la lista de estados disponibles.
    * @type {Observable<Catalogo[]>}
    */
   estados$!: Observable<Catalogo[]>;
-
+  formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+  tablaSeleccionEvent:boolean = false;
   /**
    * Observable que emite la lista de países y bloques disponibles.
    * @type {Observable<Catalogo[]>}
@@ -123,7 +83,7 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
    * @type {Observable<Mercancia[]>}
    */
   datos1$: Observable<Mercancia[]> | undefined;
-
+  datosTabla$: Observable<Mercancia[]> | undefined;
   /**
    * Estado de la selección de la tabla.
    * @type {TablaSeleccion}
@@ -137,21 +97,21 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
   private seccion!: SeccionLibState;
 
 
-    /**
-   * Datos de la bitácora obtenidos desde el servicio.
-   * @type {Mercancia[]}
-   */
+  /**
+ * Datos de la bitácora obtenidos desde el servicio.
+ * @type {Mercancia[]}
+ */
 
-    datosSeleccionados!: Mercancia;
-    /**
-   * Instancia del modal de modificación.
-   */
-    modalInstance!: Modal;
+  datosSeleccionados!: Mercancia;
+  /**
+ * Instancia del modal de modificación.
+ */
+  modalInstance!: Modal;
 
-    /**
-   * Referencia al modal de modificación en la plantilla HTML.
-   */
-      @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+  /**
+ * Referencia al modal de modificación en la plantilla HTML.
+ */
+  @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -164,7 +124,7 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
    * @param seccionQuery Consulta para obtener el estado de la sección.
    * @param seccionStore Store para actualizar el estado de la sección.
    */
-  private actualizandoFormulario = false;
+  public actualizandoFormulario = false;
   constructor(
     private fb: FormBuilder,
     private store: Tramite110202Store,
@@ -183,8 +143,8 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
       fracciónArancelariaForm: [''],
       registroProductoForm: [''],
       nombreComercialForm: [''],
-      fechaFinal: ['',[Validators.required]],
-      fechaInicio: ['',[Validators.required]],
+      fechaFinal: ['', [Validators.required]],
+      fechaInicio: ['', [Validators.required]],
     });
 
     /**
@@ -194,12 +154,15 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
       if (!this.actualizandoFormulario && estado) {
-        this.actualizandoFormulario = true;        
-        this.formCertificado.patchValue(estado);
+        console.log(estado,'estado');
+        this.actualizandoFormulario = true;
+        this.formCertificadoValues = estado;
+        console.log('formCertificadoValues',this.formCertificadoValues);
+        // this.formCertificado.patchValue(estado);
         this.actualizandoFormulario = false;
       }
     });
-  
+
 
     /**
      * Suscripción al estado de la sección para obtener y actualizar el estado.
@@ -219,7 +182,12 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.pais$ = this.tramiteQuery.selectPaisBloque$;
     this.datos1$ = this.tramiteQuery.selectBuscarMercancia$;
-    
+    this.datosTabla$ = this.tramiteQuery.selectmercanciaTabla$;
+
+  }
+
+  listFunc(e: unknown): void {
+    this.store.setFormCertificado(e as { [key: string]: string | number | boolean | object | undefined });
   }
 
 
@@ -248,12 +216,12 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
   ngOnInit(): void {
     this.cargarTratadoAcuerdo();
     this.cargarBloque();
-    this.formCertificado.valueChanges.subscribe(value => {      
-      if (!this.actualizandoFormulario) {
-      this.store.setFormCertificado(value);
-      this.validarFormulario();
-      }
-    });
+    // this.formCertificado.valueChanges.subscribe(value => {      
+    //   if (!this.actualizandoFormulario) {
+    //   this.store.setFormCertificado(value);
+    //   this.validarFormulario();
+    //   }
+    // });
   }
 
   /**
@@ -339,13 +307,7 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
     this.destroyNotifier$.complete();
   }
 
-  /**
-   * Getter para obtener el control del formulario de la entidad federativa.
-   * @returns {FormControl} El control para la entidad federativa.
-   */
-  get formularioControl(): FormControl {
-    return this.formCertificado.get('') as FormControl;
-  }
+ 
 
   /**
    * Busca la mercancia y actualiza los datos en el store.
@@ -372,60 +334,42 @@ export class CertificadoDeOrigenComponent implements AfterViewInit, OnDestroy, O
   }
 
   /**
-   * Cambia el valor de la fecha de inicio en el formulario.
-   * @param nuevo_valor Nuevo valor de la fecha.
-   */
-  public cambioFechaInicio(nuevo_valor: string): void {
-    this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaInicio')?.markAsUntouched();
+ * Método para abrir el modal de modificación.
+ */
+  abrirModificarModal(datos1: Mercancia): void {
+    this.datosSeleccionados = datos1;
+    this.store.setFormMercancia({...datos1});
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    }
   }
 
   /**
-   * Cambia el valor de la fecha final en el formulario.
-   * @param nuevo_valor Nuevo valor de la fecha final.
+   * Cierra el modal de modificación si está abierto.
+   * 
+   * @remarks
+   * Este método verifica si hay una instancia de modal activa y, 
+   * en caso afirmativo, la oculta.
    */
-  public cambioFechaFinal(nuevo_valor: string): void {
+  cerrarModificarModal(): void {
+    if (this.modalInstance) {
+      this.tablaSeleccionEvent = true;
 
-    this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaFinal')?.markAsUntouched();
+      this.modalInstance.hide();
+    }
   }
 
-    /**
-   * Método para abrir el modal de modificación.
+  /**
+   * @inheritdoc
+   * @method
+   * @description
+   * Este método se ejecuta después de que la vista del componente ha sido inicializada.
+   * Inicializa el modal de modificación si está disponible.
    */
-    abrirModificarModal(datos1: Mercancia): void {
-      this.datosSeleccionados = datos1;    
-      this.store.setFormMercancia({ ...datos1 });
-        
-      if (this.modalInstance) {
-        this.modalInstance.show();
-      }      
+  ngAfterViewInit(): void {
+    // Inicializa el modal de modificación
+    if (this.modifyModal) {
+      this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
-
-    /**
-     * Cierra el modal de modificación si está abierto.
-     * 
-     * @remarks
-     * Este método verifica si hay una instancia de modal activa y, 
-     * en caso afirmativo, la oculta.
-     */
-    cerrarModificarModal():void {
-      if (this.modalInstance) {
-        this.modalInstance.hide();
-      }
-    }
-
-    /**
-     * @inheritdoc
-     * @method
-     * @description
-     * Este método se ejecuta después de que la vista del componente ha sido inicializada.
-     * Inicializa el modal de modificación si está disponible.
-     */
-    ngAfterViewInit():void {
-      // Inicializa el modal de modificación
-      if (this.modifyModal) {
-        this.modalInstance = new Modal(this.modifyModal.nativeElement);
-      }
-    }  
+  }
 }

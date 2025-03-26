@@ -22,6 +22,7 @@ export interface TramiteState {
   mercanciaForm:{ [key: string]: undefined | boolean | string | number | object}
   formaValida: { [key: string]: boolean };
    buscarMercancia: Mercancia[];
+   mercanciaTabla: Mercancia[];
 
    destinatarioForm:{ [key: string]: undefined | boolean | string | number | object };
 }
@@ -62,6 +63,7 @@ export const INITIAL_STATE: TramiteState = {
   altaPlanta: [],
   paisBloques: [],
   buscarMercancia: [],
+  mercanciaTabla: [],
   estado: {
     id: -1,
     descripcion: '',
@@ -75,7 +77,7 @@ export const INITIAL_STATE: TramiteState = {
     bloque: '',
     nombreComercialForm: '',
     registroProductoForm: '',
-    fracciónArancelariaForm: '',
+    fraccionArancelariaForm: '',
     fechaInicioInput:'',
     fechaFinalInput:'',
   },
@@ -86,22 +88,25 @@ export const INITIAL_STATE: TramiteState = {
     representacionFederalDates: '',
   },
   mercanciaForm:{
-    fraccionNaladi:'',
-    fraccionNaladiSa93: '',
-    fraccionNaladiSa96: '',
-    fraccionNaladiSa02: '',
+    fraccionArancelaria: '',
+    nombreComercialMercancia: '',
     nombreTecnico: '',
-    nombreComercial:'',
-    normaOrigen:'',
-    id:'',
-    cantidad:'',
-    umc:'',
-    tipoFactura:'',
-    valorMercancia:'',
-    fechaFinalInput:'',
-    numeroFactura:'',
-    nalad:'',
-    complementoClasificacion:''
+    nombreIngles: '',
+    criterioClasificacion: '',
+    marca: '',
+    cantidad: '',
+    umc: '',
+    valorMercancia: '',
+    complementoClasificacion: '',
+    masaBruta: '',
+    unidadMedidaMasaBruta: '',
+    numeroFactura: '',
+    tipoFactura: '',
+    fechaFinal: '',
+    normaOrigen: '',
+    id: '',
+    fechaFinalInput: '',
+    nalad: ''    
   },
   facturas:{
     id: -1,
@@ -449,6 +454,14 @@ export class Tramite110202Store extends Store<TramiteState> {
       this.update((state) => ({
         ...state,
         buscarMercancia,
+      }));
+    }
+
+
+    setmer(mercanciaTabla: Mercancia[]): void {
+      this.update((state) => ({
+        ...state,
+        mercanciaTabla,
       }));
     }
 

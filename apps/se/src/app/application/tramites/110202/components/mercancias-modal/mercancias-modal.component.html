@@ -6,55 +6,69 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" >
+      <div class="modal-body">
         <form [formGroup]="mercanciaForm">
-          <div class="form-group">
-            <label class="form-label" for="rfc">Clasificación NALAD: <span class="bi bi-question-circle-fill fs-4 m-1" title="Title" ata-bs-toggle="tooltip"></span></label>
-            <input type="text" class="form-control" formControlName="fraccionNaladi">
-          </div>
-          <div class="form-group">
-            <label for="naladisa93">Clasificación NALADISA 1993:</label>
-            <input type="text" class="form-control" formControlName="fraccionNaladiSa93">
-          </div>
-          <div class="form-group">
-            <label for="naladisa1996">Clasificación NALADISA 1996:</label>
-            <input type="text" class="form-control" formControlName="fraccionNaladiSa96">
-          </div>
-          <div class="form-group">
-            <label for="naladisa2002">Clasificación NALADISA 2002:</label>
-            <input type="text" class="form-control" formControlName="fraccionNaladiSa02">
-          </div>
-          <div class="form-group">
-            <label for="nombreComercial">Nombre comercial de la mercancía (que aparece en la factura):</label>
-            <input type="text" class="form-control" formControlName="nombreComercial">
-          </div>
-          <div class="form-group">
-            <label for="nombreTecnico">Nombre técnico:</label>
-            <input type="text" class="form-control" formControlName="nombreTecnico">
-          </div>
-          <div class="form-group">
-            <label for="normaOrigen">Norma origen:</label>
-            <input type="text" class="form-control" formControlName="normaOrigen">
-          </div>
-          <div class="row mt-3 mb-3">
+          <div class="row mb-3">
             <div class="col-md-4">
+              <label class="form-label" for="fraccionArancelaria">Fracción arancelaria: </label>
+              <input type="text" class="form-control" formControlName="fraccionArancelaria" [readonly]="true">
+            </div>
+            <div class="col-md-8">
+              <label for="nombreComercialMercancia">Nombre comercial de la mercancía (igual que en la factura):</label>
+              <input type="text" class="form-control" formControlName="nombreComercialMercancia">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-8">
+              <label for="nombreTecnico">Nombre técnico:</label>
+              <input type="text" class="form-control" formControlName="nombreTecnico">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-6">
+              <label for="nombreIngles">Nombre en inglés:</label>
+              <input type="text" class="form-control" formControlName="nombreIngles">
+            </div>
+            <div class="col-md-6">
+              <label for="criterioClasificacion">Criterio para clasificación:</label>
+              <input type="text" class="form-control" formControlName="criterioClasificacion">
+            </div>
+          </div>
+      
+          <div class="row mt-3 mb-3">
+            <div class="col-md-6">
+              <label for="marca">Marca:</label>
+              <input type="text" class="form-control" formControlName="marca">
+            </div>
+            <div class="col-md-6">
               <label for="cantidad">Cantidad:</label>
               <input type="number" class="form-control" formControlName="cantidad">
             </div>
+          </div>
+          <div class="row mt-3 mb-3">
             <div class="col-md-7">
-              <app-catalogo-select [catalogo]="(umcs$ | async) || []" [label]="'UMC'"
-              [required]="true" name="estado" formControlName="umc"
-              (selectionChange)="tipoUmcSeleccion($event)"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="(umcs$ | async) || []" [label]="'UMC'" [required]="true" name="estado" formControlName="umc" (selectionChange)="tipoUmcSeleccion($event)"></app-catalogo-select>
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-6">
-              <label for="valorMercancia">Valor de la mercancía (dólares):</label>
+              <label for="valorMercancia">Valor de la mercancía (dólares)*:</label>
               <input type="number" class="form-control" formControlName="valorMercancia">
             </div>
             <div class="col-md-6">
-              <label for="complementoClasificacion">Complemento de la clasificación:</label>
+              <label for="complementoClasificacion">Complemento de la clasificación*:</label>
               <textarea class="mb-4 h-20 w-100 form-control" formControlName="complementoClasificacion" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="masaBruta">Masa Bruta*:</label>
+              <input type="number" class="form-control" formControlName="masaBruta">
+            </div>
+            <div class="col-md-6">
+              <app-catalogo-select [catalogo]="(umcs$ | async) || []" [label]="'UMC'" [required]="true" name="estado" formControlName="unidadMedidaMasaBruta" (selectionChange)="tipoUmcSeleccion($event)"></app-catalogo-select>
             </div>
           </div>
           <div class="row mb-3">
@@ -66,16 +80,14 @@
               <input type="text" class="form-control" formControlName="numeroFactura">
             </div>
             <div class="col-md-4 mr-2">
-              <app-catalogo-select [catalogo]="(facturas$ | async) || []" [label]="'Tipo de factura'"
-              [required]="true" name="estado" formControlName="tipoFactura"
-              (selectionChange)="tipoFacturasSeleccion($event)"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="(facturas$ | async) || []" [label]="'Tipo de factura'" [required]="true" name="estado" formControlName="tipoFactura" (selectionChange)="tipoFacturasSeleccion($event)"></app-catalogo-select>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" (click)="cerrarModal()">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="activarModal()" [disabled]="mercanciaForm.invalid">Agregar</button>
+        <button type="button" class="btn btn-primary" (click)="activarModal()" >Agregar</button>
       </div>
 
       <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}" [ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
@@ -88,7 +100,7 @@
               <p>{{ mensajeDeAlerta }}</p>
             </div>
             <div class="modal-footer justify-content-center">
-              <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
+              <button type="button" class="btn btn-primary" (click)="accept()">Aceptar</button>
             </div>
           </div>
         </div>

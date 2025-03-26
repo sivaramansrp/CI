@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
     <form [formGroup]="formDatosCertificado">
       <ng-titulo titulo="Datos del certificado" />
   
@@ -29,4 +29,6 @@
         </div>
       </div>
     </form>
-  </div>
+  </div> -->
+
+  <app-daos-certificado [precisa]="precisa" [idioma]="idioma" [idiomaDatos]="(idiomaDatos$ | async) || []"></app-daos-certificado>

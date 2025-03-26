@@ -1,7 +1,7 @@
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, of, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { Mercancia } from '../../models/configuracio-columna.model';
@@ -40,6 +40,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   mensajeDeAlerta: string = 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.';
   mercanciaForm!: FormGroup;
+  @Output()tablaSeleccionEvent = new EventEmitter(); 
   @Output() guardarClicado = new EventEmitter();
   @Output() cerrarClicado = new EventEmitter();
 
@@ -78,13 +79,13 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.tramiteQuery?.formMercancia$?.pipe(
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
 
-      // eslint-disable-next-line dot-notation
-      if (!this.actualizandoFormulario && estado && estado['fraccionNaladiSa02']) {
-        this.actualizandoFormulario = true;
-        this.mercanciaForm.patchValue(estado);
-        this.actualizandoFormulario = false;
-      }
-    });
+        // eslint-disable-next-line dot-notation
+        if (!this.actualizandoFormulario && estado && estado['fraccionArancelaria']) {
+          this.actualizandoFormulario = true;
+          this.mercanciaForm.patchValue(estado);
+          this.actualizandoFormulario = false;
+        }
+      });
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;
 
@@ -92,20 +93,21 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.mercanciaForm = this.fb.group({
-      fraccionNaladi: [{ value: '', disabled: true }],
-      fraccionNaladiSa93: [{ value: '', disabled: true }],
-      fraccionNaladiSa96: [{ value: '', disabled: true }],
-      fraccionNaladiSa02: [{ value: '', disabled: true }],
-      nombreComercial: [{ value: '', disabled: true }],
+      fraccionArancelaria: [{ value: '', }],
+      nombreComercialMercancia: [{ value: '', disabled: true }],
       nombreTecnico: [{ value: '', disabled: true }],
-      normaOrigen: [{ value: '', disabled: true }],
+      nombreIngles: [{ value: '', disabled: true }],
+      criterioClasificacion: [{ value: '', disabled: true }],
+      marca: [''],
       cantidad: [''],
-      umc: [''],
-      valorMercancia: [''],
-      complementoClasificacion: [''],
-      fechaFinalInput: ['',[Validators.required]],
+      umc: ['', Validators.required],
+      valorMercancia: ['', [Validators.required, Validators.min(0)]],
+      complementoClasificacion: ['', Validators.required],
+      masaBruta: ['', [Validators.required, Validators.min(0)]],
+      unidadMedidaMasaBruta: ['', Validators.required],
       numeroFactura: [''],
-      tipoFactura: ['']
+      tipoFactura: [''],
+      fechaFinal: ['', Validators.required]
     });
 
     this.parchearValoresDelFormulario();
@@ -126,20 +128,23 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
     if (this.datosSeleccionados) {
       this.mercanciaForm.patchValue({
-        // fraccionNaladi: this.datosSeleccionados.,
-        // fraccionNaladiSa93: this.datosSeleccionados.fraccionNaladiSa93,
-        // fraccionNaladiSa96: this.datosSeleccionados.fraccionNaladiSa96,
-        // fraccionNaladiSa02: this.datosSeleccionados.fraccionNaladiSa02,
-        nombreComercial: this.datosSeleccionados.nombreComercial,
+        fraccionArancelaria: this.datosSeleccionados.fraccionArancelaria,
+        nombreComercialMercancia: this.datosSeleccionados.nombreComercial,
         nombreTecnico: this.datosSeleccionados.nombreTecnico,
-        normaOrigen: this.datosSeleccionados.normaOrigen,
+        nombreIngles: this.datosSeleccionados.nombreIngles,
+        criterioClasificacion: this.datosSeleccionados.criterioClasificacion,
+        marca: this.datosSeleccionados.marca,
         cantidad: this.datosSeleccionados.cantidad,
         umc: this.datosSeleccionados.umc,
         valorMercancia: this.datosSeleccionados.valorMercancia,
         complementoClasificacion: this.datosSeleccionados.complementoClasificacion,
-        fechaFinalInput: this.datosSeleccionados.fechaFinalInput,
+        masaBruta: this.datosSeleccionados.masaBruta,
+        unidadMedidaMasaBruta: this.datosSeleccionados.unidadMedidaMasaBruta,
         numeroFactura: this.datosSeleccionados.numeroFactura,
-        tipoFactura: this.datosSeleccionados.tipoFactura
+        tipoFactura: this.datosSeleccionados.tipoFactura,
+        fechaFinal: this.datosSeleccionados.fechaFinalInput,
+        normaOrigen: this.datosSeleccionados.normaOrigen,
+        id: this.datosSeleccionados.id,
       });
     }
   }
@@ -174,16 +179,16 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         }
       );
   }
-    /**
-   * Cambia el valor de la fecha final en el formulario.
-   * @param nuevo_valor Nuevo valor de la fecha final.
-   */
-    public cambioFechaFinal(nuevo_valor: string): void {
+  /**
+ * Cambia el valor de la fecha final en el formulario.
+ * @param nuevo_valor Nuevo valor de la fecha final.
+ */
+  public cambioFechaFinal(nuevo_valor: string): void {
 
-      this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
-      this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
-    }
-  
+    this.mercanciaForm.get('fechaFinal')?.setValue(nuevo_valor);
+    this.mercanciaForm.get('fechaFinal')?.markAsUntouched();
+  }
+
 
   /**
    * Carga las UMC desde el servicio y las establece en el store.
@@ -206,8 +211,18 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * Dispara el evento para guardar los datos del formulario y muestra una alerta.
    */
   activarModal(): void {
-    this.guardarClicado.emit(this.mercanciaForm.value);
     this.mostrarAlerta = true;
+  }
+
+  accept(): void {
+    this.guardarClicado.emit(this.mercanciaForm.value);
+    this.store.setmer([this.mercanciaForm.value]);
+    if (this.mostrarAlerta) {
+      of(null).pipe(delay(100)).subscribe(() => {
+        this.cerrarModal();
+        this.tablaSeleccionEvent.emit(true)
+      });
+    }
   }
 
   /**

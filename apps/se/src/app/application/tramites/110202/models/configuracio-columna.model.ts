@@ -78,6 +78,11 @@ export interface DatosMercancia {
     fechaFinalInput?:string;
     numeroFactura?:string;
     nalad?:string;
+    nombreIngles?:string;
+    criterioClasificacion?:string;
+    marca?:string;
+    masaBruta?:string;
+    unidadMedidaMasaBruta?:string;
     complementoClasificacion?:string;
   }
 

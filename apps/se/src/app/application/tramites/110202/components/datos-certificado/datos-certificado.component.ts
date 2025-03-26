@@ -1,23 +1,24 @@
-import { Catalogo, CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
-import { CertificadoValidacionService } from '../../../110202/services/certificado-validacion.service';
+import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
+import { DaosCertificadoComponent } from "../../../../shared/components/daos-certificado/daos-certificado.component";
 import { ToastrService } from 'ngx-toastr';
-import { Tramite110202Query } from '../../../110202/estados/tramite110202.query';
-import { Tramite110202Store } from '../../../110202/estados/tramite110202.store';
+import { Tramite110202Query } from '../../estados/tramite110202.query';
+import { Tramite110202Store } from '../../estados/tramite110202.store';
 
 @Component({
-  selector: 'app-daos-certificado',
+  selector: 'app-datos-certificado',
   standalone: true,
-  imports: [TituloComponent
-  , ReactiveFormsModule, CatalogoSelectComponent, CommonModule],
-  templateUrl: './daos-certificado.component.html',
-  styleUrl: './daos-certificado.component.scss'
+  imports: [ReactiveFormsModule,CommonModule,DaosCertificadoComponent],
+  templateUrl: './datos-certificado.component.html',
+  styleUrl: './datos-certificado.component.scss'
 })
-export class DaosCertificadoComponent implements OnDestroy, OnInit {
-    
+export class DatosCertificadoComponent implements OnDestroy, OnInit {
+  precisa:boolean = true;
+  idioma:boolean = true;
     /**
      * Formulario reactivo que contiene los datos del certificado.
      * Utilizado para la validación y gestión de los datos en el formulario.
@@ -32,7 +33,7 @@ export class DaosCertificadoComponent implements OnDestroy, OnInit {
     /**
      * Observable que contiene la lista de idiomas disponibles.
      */
-    idioma$!: Observable<Catalogo[]>;
+    idiomaDatos$!: Observable<Catalogo[]>;
   
     /**
      * Observable que contiene la lista de entidades federativas disponibles.
@@ -109,7 +110,7 @@ export class DaosCertificadoComponent implements OnDestroy, OnInit {
       /**
        * Asignación de los observables que contienen los catálogos de datos a los que se puede suscribir el componente.
        */
-      this.idioma$ = this.tramiteQuery.selectIdioma$;
+      this.idiomaDatos$ = this.tramiteQuery.selectIdioma$;
       this.entidadFederativas$ = this.tramiteQuery.selectEntidadFederativa$;
       this.representacionFederal$ = this.tramiteQuery.selectrepresentacionFederal$;
     }
@@ -177,12 +178,12 @@ export class DaosCertificadoComponent implements OnDestroy, OnInit {
       /**
        * Suscripción a los cambios de valor del formulario para enviar los datos al store.
       */
-     this.formDatosCertificado.valueChanges.subscribe(value => {
-      if (!this.actualizandoFormulario) {
-        this.store.setFormDatosCertificado(value);
-        this.validarFormulario();
-      }
-      });
+    //  this.formDatosCertificado.valueChanges.subscribe(value => {
+    //   if (!this.actualizandoFormulario) {
+    //     this.store.setFormDatosCertificado(value);
+    //     this.validarFormulario();
+    //   }
+    //   });
       this.cargarRepresentacionFederal();
   
     }

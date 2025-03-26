@@ -30,12 +30,12 @@ export class Tramite110202Query extends Query<TramiteState> {
   FormaValida$ = this.select((state) => {
     return Object.values(state.formaValida).every(value => value === true);
   });
-  
+
   /**
    * Selecciona el formulario del certificado.
    * @returns {Observable<any>} - Observable con el formulario del certificado.
    */
-  formCertificado$ = this.select((state) => {    
+  formCertificado$ = this.select((state) => {
     return state.formCertificado;
   });
 
@@ -43,25 +43,33 @@ export class Tramite110202Query extends Query<TramiteState> {
    * Selecciona las fechas del certificado.
    * @returns {Observable<any>} - Observable con las fechas del certificado.
    */
-  formDatosCertificado$ = this.select((state) => {    
+  formDatosCertificado$ = this.select((state) => {
     return state.formDatosCertificado;
   });
 
 
-    /**
-   * Selecciona las fechas del certificado.
-   * @returns {Observable<any>} - Observable con las fechas del certificado.
-   */
-    formMercancia$ = this.select((state) => {    
-      return state.mercanciaForm;
-    });
+  /**
+ * Selecciona las fechas del certificado.
+ * @returns {Observable<any>} - Observable con las fechas del certificado.
+ */
+  formMercancia$ = this.select((state) => {
+    return state.mercanciaForm;
+  });
 
-    /**
-   * Selecciona la mercancía que se está buscando.
-   * @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.
-   */
-  selectBuscarMercancia$ = this.select((state) => {    
+  /**
+ * Selecciona la mercancía que se está buscando.
+ * @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.
+ */
+  selectBuscarMercancia$ = this.select((state) => {
     return state.buscarMercancia;
+  });
+
+  /**
+* Selecciona la mercancía que se está buscando.
+* @returns {Observable<any>} - Observable con los datos de la mercancía a buscar.
+*/
+  selectmercanciaTabla$ = this.select((state) => {
+    return state.mercanciaTabla;
   });
 
   /**
@@ -72,22 +80,22 @@ export class Tramite110202Query extends Query<TramiteState> {
     return state.altaPlanta;
   });
 
-   /**
-   * Selecciona el estado del factura.
-   * @returns {Observable<any>} - Observable con los factura.
-   */
-   selectFactura$ = this.select((state) => {
+  /**
+  * Selecciona el estado del factura.
+  * @returns {Observable<any>} - Observable con los factura.
+  */
+  selectFactura$ = this.select((state) => {
     return state.factura;
   });
 
-    /**
-   * Selecciona el estado del umc.
-   * @returns {Observable<any>} - Observable con los umc.
-   */
-    selectUmc$ = this.select((state) => {
-      return state.umcs;
-    });
-  
+  /**
+ * Selecciona el estado del umc.
+ * @returns {Observable<any>} - Observable con los umc.
+ */
+  selectUmc$ = this.select((state) => {
+    return state.umcs;
+  });
+
   /**
    * Selecciona los países bloqueados.
    * @returns {Observable<any>} - Observable con los países bloqueados.
@@ -100,7 +108,7 @@ export class Tramite110202Query extends Query<TramiteState> {
    * Selecciona el idioma de los datos.
    * @returns {Observable<any>} - Observable con los datos del idioma seleccionado.
    */
-  selectIdioma$ = this.select((state) => {    
+  selectIdioma$ = this.select((state) => {
     return state.idiomaDatos;
   });
 
@@ -120,11 +128,11 @@ export class Tramite110202Query extends Query<TramiteState> {
     return state.representacionFederalDatos;
   });
 
-  selectPaisDestino$ = this.select((state) => {    
+  selectPaisDestino$ = this.select((state) => {
     return state.paisDestin;
   });
 
-  destinatarioForm$ = this.select((state) => {    
+  destinatarioForm$ = this.select((state) => {
     return state.destinatarioForm;
   });
 

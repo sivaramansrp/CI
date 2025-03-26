@@ -2,17 +2,33 @@
     <form [formGroup]="formCertificado">
         <div>
             <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
+            @if(operador){
+                <div class="row">
+                    <div class="col-md-12">
+                      <label for="Tipo_de_Certificado"
+                        >&iquest; La operación se realizó con un tercer operador?</label
+                      >
+                    </div>
+                    <div class="col">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="si"
+                            formControlName="si" >
+                          <label class="form-check-label" for="si">SI</label>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="row mb-3">
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="(estados$ | async) || []" [label]="'Tratado / Acuerdo'"
+                <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
                     (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
             </div>
 
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="(pais$ | async) || []" [label]="'País / Bloque'" [required]="true"
+                <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
                     (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
             </div>
@@ -20,7 +36,7 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
-                <input type="text" class="form-control" formControlName="fracciónArancelariaForm"
+                <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
                     id="fracciónArancelaria">
             </div>
 
@@ -50,7 +66,7 @@
 
         <div class="row w-100">
             <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarrMercancia()">Mercancías Disponibles</button>
+                <button class="btn btn-primary"  (click)="buscarrMercancia()">Mercancías Disponibles</button>
             </div>
         </div>
 
@@ -60,14 +76,24 @@
 
             </div>
         </div>
-        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="(datos1$ | async) || []"
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
             [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+
+            
+            @if(tablaSeleccionEvent){
+            <div class="row">
+                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
+                [datos]="guardarClicado || []"  ></app-tabla-dinamica>
+              </div>
+
+              <div class="row d-flex  mt-3 mb-4 justify-content-end">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button type="button" class="btn btn-default" >Eliminar</button>&nbsp;&nbsp;
+                    <button type="button" class="btn btn-primary" >Modificar</button>
+                </div>
+              </div>
+            }
 
     </form>
 
-</div>
-
-<div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancias-modal  [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
-        (cerrarClicado)="cerrarModificarModal()"></app-mercancias-modal>
 </div>

@@ -1,9 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { AlertComponent, FormularioDinamico, PAGO_DE_DERECHOS, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
-import { DaosCertificadoComponent } from '../../components/daos-certificado/daos-certificado.component';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 
 @Component({
@@ -12,12 +12,11 @@ import { DestinatarioComponent } from '../../components/destinatario/destinatari
   imports: [
     CommonModule,
     SolicitanteComponent,
-    CertificadoDeOrigenComponent,
+    CertificadoOrigenComponent,
     DestinatarioComponent,
-    DaosCertificadoComponent,
-    AlertComponent
-
-  ],
+    AlertComponent,
+    DatosCertificadoComponent
+],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
