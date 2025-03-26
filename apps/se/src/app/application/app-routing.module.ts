@@ -198,7 +198,15 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80102/autorizacion-programa-nuevo.module').then(
         (m) => m.AutorizacionProgrmaNuevoModule),
-  }
+  },
+  {
+    path: 'previos-exportacion',
+    loadChildren: () =>
+      import('./tramites/130217/control-permisos-previos-exportacion.module').then(
+        (m) => m.controlPermisosPreviosExportacionModule
+      ),
+  },
+  
 
 ];
 
