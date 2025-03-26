@@ -34,7 +34,7 @@ describe('PagoDeDerechosComponent', () => {
         correo: '',
         codigoPostal: '',
         estado: null,
-        municipioOAlcaldía: '',
+        municipioOAlcaldia: '',
         localidad: '',
         colonias: '',
         calle: '',

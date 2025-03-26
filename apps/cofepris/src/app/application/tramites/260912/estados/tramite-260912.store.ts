@@ -21,7 +21,7 @@ export interface Tramites260912State {
   correo: string;
   codigoPostal: string;
   estado: Catalogo | null;
-  municipioOAlcaldía: string;
+  municipioOAlcaldia: string;
   localidad: string;
   colonias: string;
   calle:string;
@@ -53,7 +53,7 @@ export function createInitialState(): Tramites260912State {
     correo: '',
     codigoPostal: '',
     estado: null,
-    municipioOAlcaldía: '',
+    municipioOAlcaldia: '',
     localidad: '',
     colonias: '',
     calle: '',
@@ -169,10 +169,10 @@ export class Tramite260912Store extends Store<Tramites260912State> {
     }));
   } 
 
-  public setMunicipioOAlcaldía(municipioOAlcaldía: string): void {
+  public setMunicipioOAlcaldia(municipioOAlcaldia: string): void {
     this.update((state) => ({
       ...state,
-      municipioOAlcaldía,
+      municipioOAlcaldia,
     }));
   } 
 

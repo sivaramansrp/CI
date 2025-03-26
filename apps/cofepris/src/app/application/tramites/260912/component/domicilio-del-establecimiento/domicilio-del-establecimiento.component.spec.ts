@@ -17,7 +17,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     const queryMock: Partial<Tramite260912Query> = {
       codigoPostal$: of('12345'),
       estado$: of({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' } as Catalogo),
-      municipioOAlcaldía$: of('Municipio'),
+      municipioOAlcaldia$: of('Municipio'),
       localidad$: of('Localidad'),
       colonias$: of('Colonia'),
       calle$: of('Calle'),
@@ -35,7 +35,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     const storeMock: Partial<Tramite260912Store> = {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
-      setMunicipioOAlcaldía: jest.fn(),
+      setMunicipioOAlcaldia: jest.fn(),
       setLocalidad: jest.fn(),
       setColonias: jest.fn(),
       setCalle: jest.fn(),
@@ -88,7 +88,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     component.ngOnInit();
     expect(component.form.get('codigoPostal')?.value).toBe('12345');
     expect(component.form.get('estado')?.value).toEqual({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
-    expect(component.form.get('municipioOAlcaldía')?.value).toBe('Municipio');
+    expect(component.form.get('municipioOAlcaldia')?.value).toBe('Municipio');
     expect(component.form.get('localidad')?.value).toBe('Localidad');
     expect(component.form.get('colonias')?.value).toBe('Colonia');
     expect(component.form.get('calle')?.value).toBe('Calle');
@@ -111,7 +111,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     expect(tramite260912Store.setEstado).toHaveBeenCalledWith({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
 
     component.getMunicipioOAlcaldia();
-    expect(tramite260912Store.setMunicipioOAlcaldía).toHaveBeenCalledWith('Municipio');
+    expect(tramite260912Store.setMunicipioOAlcaldia).toHaveBeenCalledWith('Municipio');
 
     component.getLocalidad();
     expect(tramite260912Store.setLocalidad).toHaveBeenCalledWith('Localidad');
