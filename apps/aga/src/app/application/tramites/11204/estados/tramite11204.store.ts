@@ -25,6 +25,11 @@ export interface Solicitud11204State {
    * Datos del contenedor.
    */
   datosDelContenedor: [];
+  
+  /**
+   * Datos del contenedor.
+   */
+  datosDelCsvArchivo: [];
 
   /**
    * Tipo de busqueda.
@@ -92,6 +97,7 @@ export function createInitialState(): Solicitud11204State {
     rfc: '',
     denominacion: '',
     datosDelContenedor: [],
+    datosDelCsvArchivo: [],
     tipoBusqueda: '',
     aduana: '',
     inicialesContenedor: '',
@@ -181,6 +187,17 @@ export class Tramite11204Store extends Store<Solicitud11204State> {
     this.update((state) => ({
       ...state,
       datosDelContenedor,
+    }));
+  }
+
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelCsvArchivo Datos del contenedor.
+   */
+  public setDelCsv(datosDelCsvArchivo: []): void {
+    this.update((state) => ({
+      ...state,
+      datosDelCsvArchivo,
     }));
   }
 

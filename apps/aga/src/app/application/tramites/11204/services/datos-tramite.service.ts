@@ -30,14 +30,6 @@ export class DatosTramiteService {
   }
 
   /**
-   * Simula el envío exitoso de una solicitud.
-   * @returns Un observable con la respuesta de las aduanas.
-   */
-  submitSolicitud(): Observable<RespuestaAduanas> {
-    return this.http.get<RespuestaAduanas>(`assets/json/11204/aduanaList.json`);
-  }
-
-  /**
    * Agrega una solicitud.
    * @returns Un observable con la respuesta del contenedor.
    */

@@ -111,18 +111,12 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <label for="fechaIngreso">Fecha de ingreso</label>
-                            <span class="require">*</span>
-                            <input class="form-control disabled " type="date" name="fechaIngreso" id="fechaIngreso"
-                                formControlName="fechaIngreso" [ngClass]="isValid('fechaIngreso') ? 'required' : ''">
+                            <input-fecha [datos]="fechaIngreso" (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <label for="fechaIngreso">Vigencia</label>
-                            <span class="require">*</span>
-                            <input class="form-control disabled " type="date" name="vigencia" id="vigencia"
-                                formControlName="vigencia" [ngClass]="isValid('vigencia') ? 'required' : ''">
+                            <input-fecha [datos]="Vigencia" (valorCambiado)="cambioVigencia($event)"></input-fecha>
                         </div>
                     </div>
                     <br />
@@ -162,32 +156,8 @@
                                 Archivo</button>
                         </div>
                         <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Iniciales del equipo</th>
-                                        <th>Numero de equipo</th>
-                                        <th>Digito Verificador</th>
-                                        <th>Tipo de equipo</th>
-                                        <th>Fecha Ingreso</th>
-                                        <th>vigencia</th>
-                                        <th>Aduana</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let articulo of datosTabla; let i = index">
-                                        <td class="grey-column">{{ i + 1 }}</td>
-                                        <td>{{ articulo['inicialesEquipo'] }}</td>
-                                        <td>{{ articulo['numeroEquipo'] }}</td>
-                                        <td>{{ articulo['digitoVerificador'] }}</td>
-                                        <td>{{ articulo['tipoEquipo'] }}</td>
-                                        <td>{{ articulo['fechaIngreso'] }}</td>
-                                        <td>{{ articulo['vigencia'] }}</td>
-                                        <td>{{ articulo['aduana'] }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <app-tabla-dinamica [configuracionTabla]="csvTabla"
+                                [datos]="datosDelCsvArchivo"></app-tabla-dinamica>
                         </div>
                     </div>
                 </div>

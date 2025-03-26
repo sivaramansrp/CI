@@ -8,13 +8,14 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
-import { Aduanas, DatosDelContenedor } from '../../models/datos-tramite.model';
+import { Aduanas, DatosDelContenedor, datosDelCsvArchivo } from '../../models/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 
-import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, RespuestaCatalogos, REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
+import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, RespuestaCatalogos, REGEX_REEMPLAZAR, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
 
 /**
  * Componente para gestionar la solicitud de contenedores.
@@ -31,7 +32,8 @@ import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, Configuracio
     TituloComponent,
     CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    InputFechaComponent
   ],
   providers: [BsModalService]
 })
@@ -137,6 +139,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   REGEX_NUMER = /[^0-9]/g;
 
   /**
+   * Representa la fecha de inicio ingresada por el usuario.
+   * 
+   * @type {InputFecha}
+   * @default FECHA_INGRESO
+   */
+  public fechaIngreso: InputFecha = FECHA_INGRESO;
+
+  /**
+   * Representa la Vigencia ingresada por el usuario.
+   * 
+   * @type {InputFecha}
+   * @default VIGENCIA
+   */
+  public Vigencia: InputFecha = VIGENCIA;
+
+  /**
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
@@ -151,9 +169,28 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Configuración de las columnas de la tabla.
+   */
+  public csvTabla: ConfiguracionColumna<datosDelCsvArchivo>[] = [
+    { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
+    { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
+    { encabezado: 'Numero de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
+    { encabezado: 'Digito Verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
+    { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
+    { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
+    { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
+    { encabezado: 'Aduana', clave: (articulo) => articulo.aduana, orden: 7 }
+  ];
+
+  /**
    * Datos del contenedor.
    */
   public datosDelContenedor: DatosDelContenedor[] = [];
+
+ /**
+   * Datos del contenedor.
+   */
+ public datosDelCsvArchivo: datosDelCsvArchivo[] = [];
 
   /**
    * Referencia al modal.
@@ -435,6 +472,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       };
       READER.readAsText(FILE);
     }
+    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
+          this.datosDelCsvArchivo.push(respuesta.datos);
+          (this.Tramite11204Store.setDelCsv as (valor: datosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+        }
+      }
+    );
   }
 
   /**
@@ -521,6 +567,26 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
         this.catalogoList = respuesta.data;
       });
+  }
+
+  /**
+   * Cambia la fecha de ingreso en el formulario de solicitud.
+   *
+   * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
+   */
+  public cambioFechaIngreso(nuevo_valor: string): void {
+    this.solicitudForm.get('fechaIngreso')?.setValue(nuevo_valor);
+    this.solicitudForm.get('fechaIngreso')?.markAsUntouched();
+  }
+
+  /**
+   * Cambia la vigencia en el formulario de solicitud.
+   *
+   * @param nuevo_valor - El nuevo valor de la vigencia en formato de cadena.
+   */
+  public cambioVigencia(nuevo_valor: string): void {
+    this.solicitudForm.get('vigencia')?.setValue(nuevo_valor);
+    this.solicitudForm.get('vigencia')?.markAsUntouched();
   }
 
   /**

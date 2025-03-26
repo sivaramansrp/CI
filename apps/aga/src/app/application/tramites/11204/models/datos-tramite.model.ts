@@ -77,6 +77,52 @@ export interface DatosDelContenedor {
 }
 
 /**
+ * Interfaz que representa los datos de un csv.
+ * Utilizamos esta interfaz para definir la estructura de los datos detallados de un contenedor.
+ */
+export interface datosDelCsvArchivo {
+  /**
+   * Identificador del contenedor.
+   */
+  id: number;
+
+  /**
+   * Iniciales del equipo.
+   */
+  inicialesEquipo: string;
+
+  /**
+   * Número del equipo.
+   */
+  numeroEquipo: number;
+
+  /**
+   * Dígito verificador del equipo.
+   */
+  digitoVerificador: number;
+
+  /**
+   * Tipo de equipo.
+   */
+  tipoEquipo: string;
+
+  /**
+   * Identificador de la aduana.
+   */
+  aduana: number;
+
+  /**
+   * Fecha de ingreso del equipo.
+   */
+  fechaIngreso: string;
+
+  /**
+   * Vigencia del equipo.
+   */
+  vigencia: string;
+}
+
+/**
  * Interfaz que representa la respuesta de una operación relacionada con un contenedor.
  * Utilizamos esta interfaz para definir la estructura de la respuesta de una operación que involucra un contenedor.
  */
