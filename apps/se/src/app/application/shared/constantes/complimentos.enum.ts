@@ -161,7 +161,8 @@ export const TABLA_SOCIO_ACCIONISTAS = [
   },
   {
     encabezado: 'Correo',
-    clave: (ele: SociaoAccionistas): string | undefined => ele.correoElectronico,
+    clave: (ele: SociaoAccionistas): string | undefined =>
+      ele.correoElectronico,
     orden: 6,
   },
 ];
@@ -205,7 +206,8 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
   },
   {
     encabezado: 'Correo',
-    clave: (ele: SociaoAccionistas): string | undefined => ele.correoElectronico,
+    clave: (ele: SociaoAccionistas): string | undefined =>
+      ele.correoElectronico,
     orden: 7,
   },
 ];

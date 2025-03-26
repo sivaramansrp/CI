@@ -70,7 +70,7 @@ export class MontosDeInversionComponent {
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(private fb: FormBuilder, private ubicaccion:Location) {
+  constructor(private fb: FormBuilder, private ubicaccion: Location) {
     this.createMontosDeInversionForm();
   }
 

@@ -14,11 +14,16 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 
-
 @Component({
   selector: 'app-anexo-dos-y-tres',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, AlertComponent],
+  imports: [
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+    AlertComponent,
+  ],
   templateUrl: './anexo-dos-y-tres.component.html',
   styleUrl: './anexo-dos-y-tres.component.scss',
 })
@@ -64,12 +69,14 @@ export class AnexoDosYTresComponent {
   /**
    * Evento para devolver la llamada del Anexo Dos
    */
-  @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoEncabezado[]> = new EventEmitter<AnexoEncabezado[]>(true);
+  @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoEncabezado[]> =
+    new EventEmitter<AnexoEncabezado[]>(true);
 
   /**
    * Evento para devolver la llamada del Anexo Tres
    */
-  @Output() obtenerAnexoTresDevolverLaLlamada: EventEmitter<AnexoEncabezado[]> = new EventEmitter<AnexoEncabezado[]>(true);
+  @Output() obtenerAnexoTresDevolverLaLlamada: EventEmitter<AnexoEncabezado[]> =
+    new EventEmitter<AnexoEncabezado[]>(true);
 
   /**
    * Constructor del componente
@@ -115,7 +122,8 @@ export class AnexoDosYTresComponent {
    */
   agregarAnexoDos(): void {
     const OBJECTO_IDX: AnexoEncabezado = {
-      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')?.value,
+      encabezadoFraccion: this.anexoDosFormGroup.get('fraccionArancelaria')
+        ?.value,
       encabezadoDescripcion: this.anexoDosFormGroup.get('descripcion')?.value,
       estatus: false,
     };
@@ -139,7 +147,8 @@ export class AnexoDosYTresComponent {
    */
   agregarAnexoTres(): void {
     const OBJECTO_IDX: AnexoEncabezado = {
-      encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')?.value,
+      encabezadoFraccion: this.anexoTresFormGroup.get('fraccionArancelaria')
+        ?.value,
       encabezadoDescripcion: this.anexoTresFormGroup.get('descripcion')?.value,
       estatus: false,
     };
@@ -155,7 +164,9 @@ export class AnexoDosYTresComponent {
   setAnexoDosLista(event: AnexoEncabezado[]): void {
     const LISTA_SELECCIONADA = event ? event : [];
     this.anexoDosTablaLista = this.anexoDosTablaLista.map((idx) => {
-      const INDICE = LISTA_SELECCIONADA.findIndex((obj) => obj.encabezadoFraccion === idx.encabezadoFraccion);
+      const INDICE = LISTA_SELECCIONADA.findIndex(
+        (obj) => obj.encabezadoFraccion === idx.encabezadoFraccion
+      );
       if (INDICE !== -1) {
         idx.estatus = true;
       }
@@ -171,7 +182,9 @@ export class AnexoDosYTresComponent {
   setAnexoTresLista(event: AnexoEncabezado[]): void {
     const LISTA_SELECCIONADA = event ? event : [];
     this.anexoTresTablaLista = this.anexoTresTablaLista.map((idx) => {
-      const INDICE = LISTA_SELECCIONADA.findIndex((obj) => obj.encabezadoFraccion === idx.encabezadoFraccion);
+      const INDICE = LISTA_SELECCIONADA.findIndex(
+        (obj) => obj.encabezadoFraccion === idx.encabezadoFraccion
+      );
       if (INDICE !== -1) {
         idx.estatus = true;
       }
