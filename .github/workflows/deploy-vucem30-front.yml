@@ -457,7 +457,6 @@ jobs:
                           port:
                             number: 80
           EOF
-
       - name: Execute remote deployment
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -470,14 +469,17 @@ jobs:
             echo "Deploying VUCEM Microfrontends to ${{ needs.setup.outputs.environment }}..."
             cd /home/ubuntu/v30
             
-            # Apply Kubernetes manifests from a directory
+            # Create temporary directory for manifests
             mkdir -p k8s
-            cat > k8s/vucem-microfrontends.yaml << 'MANIFESTSEOF'
-            ${{ secrets.KUBECONFIG }}
-            MANIFESTSEOF
             
             # Apply Kubernetes manifests
-            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
+            microk8s kubectl apply -f - << EOF
+            $(cat k8s/microfrontends-deployment.yaml)
+            ---
+            $(cat k8s/microfrontends-service.yaml)
+            ---
+            $(cat k8s/microfrontends-ingress.yaml)
+            EOF
             
             # Restart the deployment to pull the latest images
             microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
