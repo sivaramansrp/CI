@@ -11,6 +11,20 @@ on:
           - dev
           - staging
           - prod
+      deployment_mode:
+        description: 'Deployment mode'
+        required: true
+        default: 'changed'
+        type: choice
+        options:
+          - changed
+          - selected
+          - all
+      selected_apps:
+        description: 'Select apps to deploy (comma-separated, only used when deployment_mode is "selected")'
+        required: false
+        default: 'dashboard'
+        type: string
   push:
     branches: [ "develop", "main" ]
     paths:
@@ -26,6 +40,7 @@ env:
   NX_VERSION: '19.3.1'
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
+  ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe'
 
 jobs:
   setup:
@@ -34,6 +49,7 @@ jobs:
     outputs:
       environment: ${{ steps.set-env.outputs.environment }}
       changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
+      final_apps: ${{ steps.determine-apps.outputs.final_apps }}
       apps_matrix: ${{ steps.matrix-prep.outputs.apps_matrix }}
     steps:
       - name: Checkout repository
@@ -63,42 +79,73 @@ jobs:
       - name: Detect changed apps
         id: detect-changes
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            # Build all apps for manual workflow runs
-            CHANGED_APPS="dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe"
-          else
-            # Detect changes in apps directory
-            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^apps/' || echo "")
+          # Detect changes in apps directory
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^apps/' || echo "")
           
-            if [ -z "$CHANGED_FILES" ]; then
-              # Check for changes in shared libs that would affect all apps
-              SHARED_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
-              if [ -n "$SHARED_CHANGES" ]; then
-                # If shared libs changed, rebuild all apps
-                CHANGED_APPS="dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe"
-              else
-                CHANGED_APPS=""
-              fi
+          if [ -z "$CHANGED_FILES" ]; then
+            # Check for changes in shared libs that would affect all apps
+            SHARED_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
+            if [ -n "$SHARED_CHANGES" ]; then
+              # If shared libs changed, mark all apps as changed
+              CHANGED_APPS="${{ env.ALL_APPS }}"
             else
-              # Extract the app names from changed files
-              CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
+              CHANGED_APPS=""
+            fi
+          else
+            # Extract the app names from changed files
+            CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
           
-              # Always include dashboard when any app changes
-              if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
-                CHANGED_APPS="dashboard,$CHANGED_APPS"
-              fi
+            # Always include dashboard when any app changes
+            if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
+              CHANGED_APPS="dashboard,$CHANGED_APPS"
             fi
           fi
           
           echo "Changed apps: $CHANGED_APPS"
           echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
 
+      - name: Determine apps to deploy
+        id: determine-apps
+        run: |
+          # Default to detected changes
+          FINAL_APPS=""
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Handle manual deployment mode selection
+            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
+              FINAL_APPS="${{ env.ALL_APPS }}"
+              echo "Using all apps mode"
+            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
+              FINAL_APPS="${{ github.event.inputs.selected_apps }}"
+              echo "Using selected apps mode: $FINAL_APPS"
+            else
+              # Changed mode - use detected changes or fallback to dashboard
+              if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+                FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+                echo "Using detected changed apps: $FINAL_APPS"
+              else
+                FINAL_APPS="dashboard"
+                echo "No changes detected, defaulting to dashboard"
+              fi
+            fi
+          else
+            # Auto mode for push events
+            if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+              FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+            else
+              # No changes detected, workflow will skip the build job
+              FINAL_APPS=""
+            fi
+          fi
+          
+          echo "final_apps=$FINAL_APPS" >> $GITHUB_OUTPUT
+
       - name: Prepare matrix format
         id: matrix-prep
-        if: steps.detect-changes.outputs.changed_apps != ''
+        if: steps.determine-apps.outputs.final_apps != ''
         run: |
           # Convertir a formato JSON para la matriz
-          APPS_ARRAY=$(echo "${{ steps.detect-changes.outputs.changed_apps }}" | tr ',' '\n')
+          APPS_ARRAY=$(echo "${{ steps.determine-apps.outputs.final_apps }}" | tr ',' '\n')
           APPS_JSON="["
           
           # Construir array JSON manualmente para evitar dependencias externas
@@ -119,7 +166,7 @@ jobs:
   build:
     name: Build Microfrontends
     needs: setup
-    if: needs.setup.outputs.changed_apps != ''
+    if: needs.setup.outputs.final_apps != ''
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -229,8 +276,8 @@ jobs:
                 containers:
           EOF
           
-          # Add containers for each changed app
-          for app in $(echo "${{ needs.setup.outputs.changed_apps }}" | tr ',' ' '); do
+          # Add containers for each app to deploy
+          for app in $(echo "${{ needs.setup.outputs.final_apps }}" | tr ',' ' '); do
             cat >> k8s/microfrontends-deployment.yaml << EOF
                 - name: $app
                   image: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-$app:${{ needs.setup.outputs.environment }}
