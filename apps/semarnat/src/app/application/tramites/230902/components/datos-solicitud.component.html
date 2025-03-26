@@ -1,0 +1,57 @@
+<div class="container">
+    <ng-titulo titulo="Datos de la solicitud" />
+      <form [formGroup]="FormSolicitud">
+          <div class="row">
+              <div class="col-md-4">
+                <app-catalogo-select [catalogo]="PermisoCitesService.tiposDeMovimiento" formControlName="tipodemovimiento" [label]="'Tipo de movimiento'"
+                  [required]="true" name="tipodemovimiento" (change)="onTipoMovimientoChange()"></app-catalogo-select>
+              </div>
+          </div>
+            
+            @if (true) {
+              <ng-titulo titulo="Régimen" />
+              <div class="row">
+                  <div class="col-md-4">
+                    <app-catalogo-select [catalogo]="PermisoCitesService.tiposDeRegimen" formControlName="tipoderegimen" [label]="'Tipo de régimen'"
+                      [required]="true" name="tipoderegimen" (change)="onTipoRegimenChange()"></app-catalogo-select>
+                  </div>
+              </div>
+              <ng-titulo [titulo]="solicitudState.tipoDeMovimiento==='2' || solicitudState.tipoDeMovimiento==='3' ? 'Aduanas de salida':'Adnuana'"></ng-titulo>
+              <div class="row mt-3">
+                <div class="col-md-12 mt-3">
+                  @if(solicitudState.tipoDeMovimiento==="1"){
+                    <h5>Aduana des entrades (Maximo 3 aduanas)</h5>
+                  }
+                  <crosslist [fechas]="seleccionarOrigenDelAduana" [botones]="aduanasBotons"
+                    [label]="aquandasLabel"></crosslist>
+                </div>
+              </div>
+              
+              <div>
+                <h6>Mercancia*:</h6>
+                <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos" [tipoSeleccionTabla]="TablaSeleccion"></app-tabla-dinamica>
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination justify-content-center">     
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>    
+                  </ul>
+                </nav>
+                <div class="row" style="padding-bottom: 20px;text-align: right;">
+                    <div>
+                      <button type="button" class="btn btn-default me-2" >Modficar</button>
+                      <button type="button" class="btn btn-danger me-2">Eliminar</button>
+                      <button type="button" class="btn btn-primary me-2">Agregar</button>
+                    </div>
+                </div>
+              </div>
+              
+  
+              <ng-titulo titulo="Finalidad del movimiento" />
+              <div class="row mt-3">
+                <div class="col-md-12 mt-3">
+                  <crosslist [fechas]="seleccionarOrigenDelAduana" [botones]="aduanasBotons"
+                    [label]="aquandasLabel"></crosslist>
+                </div>
+              </div>
+            }
+      </form>
+  </div>

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DatosSolicitudComponent } from './DatosSolicitud.component';
+import { DatosSolicitudComponent } from './datos-solicitud.component';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
