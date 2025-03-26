@@ -27,12 +27,12 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroDeDonacionComponent } from './components/registro-de-donacion/registro-de-donacion.component';
 import { RegistroSolicitudPageComponent } from './pages/registro-solicitud-page/registro-solicitud-page.component';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 
@@ -76,7 +76,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogosService,
     InicioSesionService,
     SubirDocumentoService,
-    ServiciosExtraordinariosService 
+    TramiteFolioService 
   ]
 })
 export class DonacionesExtranjerasModule { }
