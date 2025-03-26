@@ -168,6 +168,7 @@ jobs:
     needs: setup
     if: needs.setup.outputs.final_apps != ''
     runs-on: ubuntu-latest # Usando el runner de GitHub Actions directamente, sin contenedor
+    timeout-minutes: 30 # Límite de tiempo para todo el job
     permissions:
       contents: read
       packages: write
@@ -269,6 +270,8 @@ jobs:
           build-args: |
             NODE_ENV=production
             APP_ENV=${{ needs.setup.outputs.environment }}
+          timeout-minutes: 15
+          no-cache: ${{ contains(matrix.app, 'se') }}
 
   deploy:
     name: Deploy Microfrontends
