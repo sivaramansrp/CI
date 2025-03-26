@@ -166,7 +166,14 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
-  }
+  },
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110211/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
+  },
 ];
 
 @NgModule({
