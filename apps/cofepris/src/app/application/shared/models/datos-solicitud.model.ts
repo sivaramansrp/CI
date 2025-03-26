@@ -89,6 +89,7 @@ export enum TablaSeleccion {
     scianSeleccionados: TablaScianConfig[];
     mercanciasSeleccionados: TablaMercanciasDatos[];
     opcionSeleccionados: TablaOpcionConfig[];
+    opcionesColapsableState: boolean;
   }
 
   /**

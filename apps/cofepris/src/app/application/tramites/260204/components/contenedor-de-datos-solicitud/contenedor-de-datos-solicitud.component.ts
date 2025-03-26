@@ -114,6 +114,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,
       seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
+      opcionesColapsableState: event.opcionesColapsableState
     }))
   }
 

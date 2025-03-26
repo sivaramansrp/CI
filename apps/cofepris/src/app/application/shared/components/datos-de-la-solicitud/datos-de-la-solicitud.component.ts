@@ -32,6 +32,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @Input() public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
   @Input() public opcionConfig!: OpcionConfig<TablaOpcionConfig>;
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
+  @Input() public opcionesColapsableState!: boolean;
 
   @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> = new EventEmitter<TablaOpcionConfig[]>();
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> = new EventEmitter<TablaScianConfig[]>();
@@ -71,6 +72,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           }
         }
       );
+      this.opcionesColapsable = this.opcionesColapsableState;
+
   }
 
   /**
@@ -246,7 +249,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosDeTablaSeleccionados.emit({
       scianSeleccionados: this.scianLista,
       mercanciasSeleccionados: this.tablaMercanciasLista,
-      opcionSeleccionados: this.opcionLista
+      opcionSeleccionados: this.opcionLista,
+      opcionesColapsableState: this.opcionesColapsable
     });
   }
 
@@ -259,6 +263,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   mostrarColapsable(orden: number): void {
     if (orden === 1) {
       this.opcionesColapsable = !this.opcionesColapsable;
+      this.datosDeTablaSeleccionados.emit({
+        scianSeleccionados: this.scianLista,
+        mercanciasSeleccionados: this.tablaMercanciasLista,
+        opcionSeleccionados: this.opcionLista,
+        opcionesColapsableState: this.opcionesColapsable
+      });
     }
   }
 

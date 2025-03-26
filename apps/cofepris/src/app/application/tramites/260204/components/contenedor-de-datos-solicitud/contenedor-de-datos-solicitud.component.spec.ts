@@ -150,6 +150,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
         tipoProducto: '',
         usoEspecifico: ''
       }],
+      opcionesColapsableState: false
     };
     component.datosDeTablaSeleccionados(mockEvent);
     expect(mockTramite260204Store.update).toHaveBeenCalledWith(expect.objectContaining({

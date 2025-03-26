@@ -12,6 +12,7 @@ export interface Tramite260204State {
     seleccionadoopcionDatos: TablaOpcionConfig[];
     seleccionadoScianDatos: TablaScianConfig[];
     seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+    opcionesColapsableState: boolean;
 }
 
 export function createInitialState(): Tramite260204State {
@@ -66,6 +67,7 @@ export function createInitialState(): Tramite260204State {
             seleccionadoopcionDatos: [],
             seleccionadoScianDatos: [],
             seleccionadoTablaMercanciasDatos: [],
+            opcionesColapsableState: false
         };
     }
 
