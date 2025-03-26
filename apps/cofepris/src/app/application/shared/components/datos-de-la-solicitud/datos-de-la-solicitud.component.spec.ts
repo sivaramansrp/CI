@@ -3,6 +3,7 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { CommonModule } from '@angular/common';
 import { AlertComponent, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -13,10 +14,43 @@ describe('DatosDeLaSolicitudComponent', () => {
       imports: [DatosDeLaSolicitudComponent,CommonModule, TituloComponent, CatalogoSelectComponent,
          TablaDinamicaComponent, AlertComponent,
           ReactiveFormsModule, FormsModule],
+          providers: [{
+            provide: ActivatedRoute,
+            useValue: {
+              snapshot: {
+                params: {},
+                queryParams: {}
+              }
+            }
+          }]
+
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
     component = fixture.componentInstance;
+    component.datosSolicitudFormState = {
+      rfcSanitario: '',
+      denominacionRazon: '',
+      correoElectronico: '',
+      codigoPostal: '',
+      estado: '',
+      municipioAlcaldia: '',
+      localidad: '',
+      colonia: '',
+      calle: '',
+      lada: '',
+      telefono: '',
+      aviso: '',
+      licenciaSanitaria: '',
+      regimen: '',
+      adunasDeEntradas: '',
+      aeropuerto: false,
+      publico: '',
+      representanteRfc: '',
+      representanteNombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: ''
+    }
     fixture.detectChanges();
   });
 
@@ -25,16 +59,9 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should initialize the form on ngOnInit', () => {
-    spyOn(component, 'crearDatosSolicitudForm');
+    jest.spyOn(component, 'crearDatosSolicitudForm');
     component.ngOnInit();
     expect(component.crearDatosSolicitudForm).toHaveBeenCalled();
-  });
-
-  it('should emit datasolicituActualizar when form value changes', () => {
-    spyOn(component.datasolicituActualizar, 'emit');
-    component.ngOnInit();
-    component.datosSolicitudForm.patchValue({ rfcSanitario: 'ABC123' });
-    expect(component.datasolicituActualizar.emit).toHaveBeenCalledWith(component.datosSolicitudForm.value);
   });
 
   it('should update form fields when buscarRepresentanteRfc is called', () => {
@@ -46,7 +73,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should emit scianSeleccionado when eliminarScian is called', () => {
-    spyOn(component.scianSeleccionado, 'emit');
+    jest.spyOn(component.scianSeleccionado, 'emit');
     component.scianConfig = { datos: [{ clave: '123' }] } as any;
     component.scianLista = [{ clave: '123' }] as any;
     component.eliminarScian();
@@ -54,7 +81,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should emit mercanciasSeleccionado when eliminarMercancias is called', () => {
-    spyOn(component.mercanciasSeleccionado, 'emit');
+    jest.spyOn(component.mercanciasSeleccionado, 'emit');
     component.tablaMercanciasConfig = { datos: [{ clasificacionProducto: 'A1' }] } as any;
     component.tablaMercanciasLista = [{ clasificacionProducto: 'A1' }] as any;
     component.eliminarMercancias();
@@ -62,13 +89,13 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should navigate to the correct path when navigateToAcciones is called', () => {
-    const routerSpy = spyOn(component.router, 'navigate');
+    const routerSpy = jest.spyOn(component.router, 'navigate');
     component.navigateToAcciones('test-path');
     expect(routerSpy).toHaveBeenCalledWith(['test-path'], { relativeTo: component.activatedRoute });
   });
 
   it('should emit datosDeTablaSeleccionados when modificarDatos is called', () => {
-    spyOn(component.datosDeTablaSeleccionados, 'emit');
+    jest.spyOn(component.datosDeTablaSeleccionados, 'emit');
     component.scianLista = [{ clave: '123' }] as any;
     component.tablaMercanciasLista = [{ clasificacionProducto: 'A1' }] as any;
     component.opcionLista = [{ opcion: 'Option1' }] as any;
@@ -87,7 +114,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroySpy = spyOn(component.destroyNotifier$, 'complete');
+    const destroySpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
   });

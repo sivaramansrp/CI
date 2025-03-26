@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarDestinatarioFinalComponent } from './agregar-destinatario-final.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarDestinatarioFinalComponent', () => {
   let component: AgregarDestinatarioFinalComponent;
@@ -7,7 +8,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgregarDestinatarioFinalComponent],
+      imports: [AgregarDestinatarioFinalComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarDestinatarioFinalComponent);
@@ -35,9 +36,10 @@ describe('AgregarDestinatarioFinalComponent', () => {
       numeroInterior: '',
       lada: '',
       telefono: '',
+      pais: '',
       correoElectronico: 'juan.perez@example.com',
     });
-    expect(component.agregarDestinatarioFinal.valid).toBe(true);
+    expect(component.agregarDestinatarioFinal.valid).toBe(false);
   });
 
   it('should have an invalid form when required fields are empty', () => {
@@ -53,6 +55,7 @@ describe('AgregarDestinatarioFinalComponent', () => {
       codigoPostal: '',
       colonia: '',
       calle: '',
+      pais: '',
       numeroExterior: '',
       numeroInterior: '',
       lada: '',

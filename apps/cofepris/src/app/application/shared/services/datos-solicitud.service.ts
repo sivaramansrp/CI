@@ -1,8 +1,11 @@
+import {
+  Observable,
+  map
+} from 'rxjs';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '../models/datos-solicitud.model';
-import { map, Observable } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
 
 @Injectable({
   providedIn: 'root',
@@ -36,37 +39,37 @@ export class DatosSolicitudService {
 
   obtenerListaPaises(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<Catalogo[]>(this.jsonUrl)
-      .pipe(map((res: any) => res.pais));
+      .get<{ pais: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.pais));
   }
 
   obtenerListaEstados(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<Catalogo[]>(this.jsonUrl)
-      .pipe(map((res: any) => res.estado));
+      .get<{ estado: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.estado));
   }
 
   obtenerListaMunicipios(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<Catalogo[]>(this.jsonUrl)
-      .pipe(map((res: any) => res.municipio));
+      .get<{ municipio: Catalogo[] }>(this.jsonUrl)
+      .pipe(map((res) => res.municipio));
   }
 
   obtenerListaLocalidades(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<Catalogo[]>(this.jsonUrl)
-      .pipe(map((res: any) => res.localidad));
+      .get<{localidad: Catalogo[]}>(this.jsonUrl)
+      .pipe(map((res) => res.localidad));
   }
 
   obtenerListaCodigosPostales(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<Catalogo[]>(this.jsonUrl)
-      .pipe(map((res: any) => res.codigo_postal));
+      .get<{codigo_postal: Catalogo[]}>(this.jsonUrl)
+      .pipe(map((res) => res.codigo_postal));
   }
 
   obtenerListaColonias(): Observable<Catalogo[]> {
     return this.httpServicios
-      .get<Catalogo[]>(this.jsonUrl)
-      .pipe(map((res: any) => res.colonia));
+      .get<{colonia: Catalogo[]}>(this.jsonUrl)
+      .pipe(map((res) => res.colonia));
   }
 }

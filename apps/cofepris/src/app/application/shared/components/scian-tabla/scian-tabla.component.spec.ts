@@ -3,24 +3,8 @@ import { ScianTablaComponent } from './scian-tabla.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Location } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('ScianTablaComponent', () => {
-  let component: ScianTablaComponent;
-  let fixture: ComponentFixture<ScianTablaComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ScianTablaComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ScianTablaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
   describe('ScianTablaComponent', () => {
     let component: ScianTablaComponent;
     let fixture: ComponentFixture<ScianTablaComponent>;
@@ -31,7 +15,7 @@ describe('ScianTablaComponent', () => {
       
 
       await TestBed.configureTestingModule({
-        imports: [ScianTablaComponent, ReactiveFormsModule],
+        imports: [ScianTablaComponent, ReactiveFormsModule, HttpClientTestingModule],
        
       }).compileComponents();
 
@@ -85,4 +69,4 @@ describe('ScianTablaComponent', () => {
       component.cancelar();
     });
   });
-});
+

@@ -1,5 +1,3 @@
-import { Component, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   AccionBoton,
   AlertComponent,
@@ -7,11 +5,13 @@ import {
   ListaPasosWizard,
   PASOS,
 } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { Component, ViewChild } from '@angular/core';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
