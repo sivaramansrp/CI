@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
