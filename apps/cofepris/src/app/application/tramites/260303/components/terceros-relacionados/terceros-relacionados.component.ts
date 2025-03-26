@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @nx/enforce-module-boundaries */
+
 /* eslint-disable sort-imports */
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
