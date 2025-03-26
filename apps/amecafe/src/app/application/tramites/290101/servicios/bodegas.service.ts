@@ -1,40 +1,37 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-empty-function */
-/**
- * @@Injectable
- * @description Servicio para obtener los datos del permiso IMMEX.
- */
-
-import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
+import { Observable } from 'rxjs';
 
+/**
+ * Servicio para gestionar las operaciones relacionadas con las bodegas.
+ * Proporciona métodos para obtener datos desde un archivo JSON.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class BodegasService {
   /**
-   * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del permiso IMMEX.
+   * URL base para los datos de las bodegas.
+   * @type {string}
    */
   private jsonUrl = '/assets/json/290101/';
-  /**
-   * @constructor
-   * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
-   */
-  constructor(private http: HttpClient) {}
 
   /**
-   * @method getDatos
-   * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
-   * @returns {Observable<any[]>} Observable con los datos del permiso IMMEX.
+   * Constructor del servicio.
+   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(private http: HttpClient) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
+
+  /**
+   * Obtiene los datos de las bodegas desde el archivo JSON.
+   * @returns {Observable<any>} Observable con los datos de las bodegas.
+   */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   getDatos(): Observable<any> {
     return this.http.get<any[]>(this.jsonUrl).pipe(
+      // Se pueden agregar operadores adicionales si es necesario
     );
-  }  
-  
-
+  }
 }

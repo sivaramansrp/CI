@@ -1,18 +1,19 @@
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
-import { RegionFormaInt} from '../../modelos/datos-de-interfaz.model';
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { RegionFormaInt} from '../../modelos/datos-de-interfaz.model';
 import { Router } from '@angular/router';
 import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
 import { SeccionLibState} from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
 import { TramiteState } from '../../estados/tramite290101.store';
 import { TramiteStore } from '../../estados/tramite290101.store';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { Subject } from 'rxjs';
 import { Validators } from '@angular/forms';
 import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
@@ -102,7 +103,9 @@ export class RegionesComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  ) {}
+  ) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
 
   /**

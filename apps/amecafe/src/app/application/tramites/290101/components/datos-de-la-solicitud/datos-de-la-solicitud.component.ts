@@ -1,43 +1,40 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-
 import { BENEFICIOS_SERVICIO } from '../../modelos/cafe-exportadores.model';
 import { BODEGAS_SERVICIO } from '../../modelos/cafe-exportadores.model';
+import { BeneficiosInfo } from '../../modelos/cafe-exportadores.model';
+import { BodegasInfo } from '../../modelos/cafe-exportadores.model';
 import { CAFE_EXPORTADORES } from '../../modelos/cafe-exportadores.model';
-import { REGIONES_SERVICIO } from '../../modelos/cafe-exportadores.model';
-import { Router } from '@angular/router';
-
-import { beneficiosInfo } from '../../modelos/cafe-exportadores.model';
-import { bodegasInfo } from '../../modelos/cafe-exportadores.model';
-import { cafeExporacionInfo } from '../../modelos/cafe-exportadores.model';
-import { regionesInfo } from '../../modelos/cafe-exportadores.model';
+import { CafeExporacionInfo } from '../../modelos/cafe-exportadores.model';
 import { CatalogosService } from '../../servicios/catalogos.service';
-import { ProductoTablaServicios } from '../../servicios/regiones-compra.service';
-
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DatosSolicitudFormaInt } from '../../modelos/datos-de-interfaz.model';
-import { TramiteState, TramiteStore } from '../../estados/tramite290101.store';
-import { TramiteStoreQuery } from '../../estados/tramite290101.query';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ProductoTablaServicios } from '../../servicios/regiones-compra.service';
+import { REGIONES_SERVICIO } from '../../modelos/cafe-exportadores.model';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RegionesInfo } from '../../modelos/cafe-exportadores.model';
+import { Router } from '@angular/router';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { TramiteState } from '../../estados/tramite290101.store';
+import { TramiteStore } from '../../estados/tramite290101.store';
+import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { Validators } from '@angular/forms';
 import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -94,62 +91,62 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla para la lista de regiones.
    * Define las propiedades y formato de las columnas en la tabla de regiones.
-   * @type {ConfiguracionColumna<regionesInfo>[]}
+   * @type {ConfiguracionColumna<RegionesInfo>[]}
    */
-  regionesTabla: ConfiguracionColumna<regionesInfo>[] = REGIONES_SERVICIO;
+  regionesTabla: ConfiguracionColumna<RegionesInfo>[] = REGIONES_SERVICIO;
 
   /**
    * Datos de las regiones cargados en la tabla.
    * Contiene la información de las regiones asociadas al trámite.
-   * @type {regionesInfo[]}
+   * @type {RegionesInfo[]}
    */
-  regionesTableDatos: regionesInfo[] = [];
-  regionesCompraApiDatos: any[] = [];
+  regionesTableDatos: RegionesInfo[] = [];
+  regionesCompraApiDatos: RegionesInfo[] = [];
 
   /**
    * Configuración de las columnas de la tabla para la lista de beneficios.
    * Define las propiedades y formato de las columnas en la tabla de beneficios.
-   * @type {ConfiguracionColumna<beneficiosInfo>[]}
+   * @type {ConfiguracionColumna<BeneficiosInfo>[]}
    */
-  beneficiosTabla: ConfiguracionColumna<beneficiosInfo>[] = BENEFICIOS_SERVICIO;
+  beneficiosTabla: ConfiguracionColumna<BeneficiosInfo>[] = BENEFICIOS_SERVICIO;
 
   /**
    * Datos de los beneficios cargados en la tabla.
    * Contiene la información de los beneficios asociados al trámite.
-   * @type {beneficiosInfo[]}
+   * @type {BeneficiosInfo[]}
    */
-  beneficiosTableDatos: beneficiosInfo[] = [];
-  beneficiosApiDatos: any[] = [];
+  beneficiosTableDatos: BeneficiosInfo[] = [];
+  beneficiosApiDatos: BeneficiosInfo[] = [];
 
   /**
    * Configuración de las columnas de la tabla para la lista de bodegas.
    * Define las propiedades y formato de las columnas en la tabla de bodegas.
-   * @type {ConfiguracionColumna<bodegasInfo>[]}
+   * @type {ConfiguracionColumna<BodegasInfo>[]}
    */
-  bodegasTabla: ConfiguracionColumna<bodegasInfo>[] = BODEGAS_SERVICIO;
+  bodegasTabla: ConfiguracionColumna<BodegasInfo>[] = BODEGAS_SERVICIO;
 
   /**
    * Datos de las bodegas cargados en la tabla.
    * Contiene la información de las bodegas asociadas al trámite.
-   * @type {bodegasInfo[]}
+   * @type {BodegasInfo[]}
    */
-  bodegasTableDatos: bodegasInfo[] = [];
-  bodegasApiDatos: any[] = [];
+  bodegasTableDatos: BodegasInfo[] = [];
+  bodegasApiDatos: BodegasInfo[] = [];
 
   /**
    * Configuración de las columnas de la tabla para la lista de café de exportación.
    * Define las propiedades y formato de las columnas en la tabla de café de exportación.
-   * @type {ConfiguracionColumna<cafeExporacionInfo>[]}
+   * @type {ConfiguracionColumna<CafeExporacionInfo>[]}
    */
-  cafeExporacionTabla: ConfiguracionColumna<cafeExporacionInfo>[] = CAFE_EXPORTADORES;
+  cafeExporacionTabla: ConfiguracionColumna<CafeExporacionInfo>[] = CAFE_EXPORTADORES;
 
   /**
    * Datos del café de exportación cargados en la tabla.
    * Contiene la información del café de exportación asociado al trámite.
-   * @type {cafeExporacionInfo[]}
+   * @type {CafeExporacionInfo[]}
    */
-  cafeExporacionTableDatos: cafeExporacionInfo[] = [];
-  cafeExportacionApiDatos: any[] = [];
+  cafeExporacionTableDatos: CafeExporacionInfo[] = [];
+  cafeExportacionApiDatos: CafeExporacionInfo[] = [];
 
   /**
    * Suscripciones activas en el componente.
@@ -243,7 +240,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.iniciarFormulario();
     this.radioOpcion = this.catalogosService.RadioOpcion;
 
-    const exentoDePagoSubscription = this.datosSolicitudForma.get('exentoDePago')?.valueChanges.subscribe((value) => {
+    const EXENTO_DE_PAGO_SUBSCRIPTION = this.datosSolicitudForma.get('exentoDePago')?.valueChanges.subscribe((value) => {
       if (value === 'false') {
         this.datosSolicitudForma.get('claveDelPadron')?.disable();
       } else {
@@ -251,8 +248,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (exentoDePagoSubscription) {
-      this.subscriptions.push(exentoDePagoSubscription);
+    if (EXENTO_DE_PAGO_SUBSCRIPTION) {
+      this.subscriptions.push(EXENTO_DE_PAGO_SUBSCRIPTION);
     }
 
     /**
@@ -280,14 +277,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tap(() => {
         const ACTIVE_STATE = { ...this.datosSolicitudForma.value };
         this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
-
-        const SECCION: number = 1;
-        const seccionState = this.seccionQuery.getValue();
-        const FORMAS_VALIDADAS = [...seccionState.formaValida];
-        const CONTROL_PATH = 'datosSolicitudForma';
-        const CONTROL = this.datosSolicitudForma.get(CONTROL_PATH)?.status;
-        FORMAS_VALIDADAS[SECCION] = this.datosSolicitudForma.valid || CONTROL === 'VALID';
-        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
       })
     )
     .subscribe();
@@ -333,7 +322,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   buscarDatos(): void {
     this.productoTablaServicios.obtenerDatos()
       .subscribe({
-        next: (response: { regionesCompraApiDatos: regionesInfo[]; beneficiosApiDatos: beneficiosInfo[]; bodegasApiDatos: bodegasInfo[]; cafeExportacionApiDatos: cafeExporacionInfo[] }) => {
+        next: (response: { regionesCompraApiDatos: RegionesInfo[]; beneficiosApiDatos: BeneficiosInfo[]; bodegasApiDatos: BodegasInfo[]; cafeExportacionApiDatos: CafeExporacionInfo[] }) => {
           if (response && Array.isArray(response.regionesCompraApiDatos) &&
             Array.isArray(response.beneficiosApiDatos) &&
             Array.isArray(response.bodegasApiDatos) &&

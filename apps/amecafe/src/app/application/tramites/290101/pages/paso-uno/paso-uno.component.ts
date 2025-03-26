@@ -1,9 +1,13 @@
-import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit} from '@angular/core';
+import { Output } from '@angular/core';
 import { SECCIONES_TRAMITE_290101 } from '../../constantes/cafe-exportadores.enums';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Componente para el asistente de solicitud.
@@ -29,15 +33,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   indice: number = 1;
 
   constructor(private route: ActivatedRoute, private seccionStore: SeccionLibStore) {
-
+// Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   ngOnInit(): void {
     this.route.queryParams
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(params => {
-        const tabIndex = +params['tab'];
-        this.indice = tabIndex && tabIndex > 0 && tabIndex <= this.seccionesDeLaSolicitud.length ? tabIndex : 1; 
+        const TAB_INDEX = Number(params['tab']);
+        this.indice = TAB_INDEX && TAB_INDEX > 0 && TAB_INDEX <= this.seccionesDeLaSolicitud.length ? TAB_INDEX : 1; 
       });
     // this.asignarSecciones();
   }

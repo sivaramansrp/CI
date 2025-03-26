@@ -52,27 +52,27 @@ export interface Catalogo {
 export const REGIONES_SERVICIO = [
   {
     encabezado: 'Estado',
-    clave: (ele: regionesInfo) => ele.TABLA_Columna_1,
+    clave: (ele: RegionesInfo): string => ele.TABLA_Columna_1,
     orden: 1
   },
   {
     encabezado: 'Café Compra',
-    clave: (ele: regionesInfo) => ele.TABLA_Columna_2,
+    clave: (ele: RegionesInfo): string => ele.TABLA_Columna_2,
     orden: 2
   },
   {
     encabezado: 'Región',
-    clave: (ele: regionesInfo) => ele.TABLA_Columna_3,
+    clave: (ele: RegionesInfo): string => ele.TABLA_Columna_3,
     orden: 3
   },
   {
     encabezado: 'Tipo de Café',
-    clave: (ele: regionesInfo) => ele.TABLA_Columna_4,
+    clave: (ele: RegionesInfo): string => ele.TABLA_Columna_4,
     orden: 4
   },
   {
     encabezado: 'Volúmen',
-    clave: (ele: regionesInfo) => ele.TABLA_Columna_5,
+    clave: (ele: RegionesInfo): string => ele.TABLA_Columna_5,
     orden: 5
   }
 ]
@@ -88,7 +88,7 @@ export const REGIONES_SERVICIO = [
  * @property {string} TABLA_Columna_5 - Información de la columna 5.
  * @property {boolean} estatus - Estado de la región.
  */
-export interface regionesInfo {
+export interface RegionesInfo {
   TABLA_Columna_1: string;
   TABLA_Columna_2: string;
   TABLA_Columna_3: string;
@@ -105,57 +105,57 @@ export interface regionesInfo {
 export const BENEFICIOS_SERVICIO = [
   {
     encabezado: 'Nombre',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_1,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_1,
     orden: 1
   },
   {
     encabezado: 'Calle',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_2,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_2,
     orden: 2
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_3,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_3,
     orden: 3
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_4,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_4,
     orden: 4
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_5,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_5,
     orden: 5
   }
   ,
   {
     encabezado: 'Estado',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_6,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_6,
     orden: 6
   }
   ,
   {
     encabezado: 'Código Postal',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_7,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_7,
     orden: 7
   }
   ,
   {
     encabezado: 'Propia o Aliquilada',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_8,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_8,
     orden: 8
   }
   ,
   {
     encabezado: 'Capacidad (Kg)',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_9,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_9,
     orden: 9
   }
   ,
   {
     encabezado: 'Volúmen (Kg)',
-    clave: (ele: beneficiosInfo) => ele.TABLA_Columna_10,
+    clave: (ele: BeneficiosInfo): string => ele.TABLA_Columna_10,
     orden: 10
   }
 ]
@@ -163,7 +163,7 @@ export const BENEFICIOS_SERVICIO = [
 /**
  * Interfaz para la información de BENEFICIOS.
  * @export
- * @interface beneficiosInfo
+ * @interface BeneficiosInfo
  * @property {string} TABLA_Columna_1 - Información de la columna 1.
  * @property {string} TABLA_Columna_2 - Información de la columna 2.
  * @property {string} TABLA_Columna_3 - Información de la columna 3.
@@ -176,7 +176,7 @@ export const BENEFICIOS_SERVICIO = [
  * @property {string} TABLA_Columna_10 - Información de la columna 10.
  * @property {boolean} estatus - Estado del beneficio.
  */
-export interface beneficiosInfo {
+export interface BeneficiosInfo {
   TABLA_Columna_1: string;
   TABLA_Columna_2: string;
   TABLA_Columna_3: string;
@@ -198,47 +198,47 @@ export interface beneficiosInfo {
 export const BODEGAS_SERVICIO = [
   {
     encabezado: 'Nombre',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_1,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_1,
     orden: 1
   },
   {
     encabezado: 'Calle',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_2,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_2,
     orden: 2
   },
   {
     encabezado: 'Número Exterior',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_3,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_3,
     orden: 3
   },
   {
     encabezado: 'Número Interior',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_4,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_4,
     orden: 4
   },
   {
     encabezado: 'Colonia',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_5,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_5,
     orden: 5
   },
   {
     encabezado: 'Estado',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_6,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_6,
     orden: 6
   },
   {
     encabezado: 'Código Postal',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_7,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_7,
     orden: 7
   },
   {
     encabezado: 'Propia o Aliquilada',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_8,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_8,
     orden: 8
   },
   {
     encabezado: 'Capacidad (Kg)',
-    clave: (ele: bodegasInfo) => ele.TABLA_Columna_9,
+    clave: (ele: BodegasInfo): string => ele.TABLA_Columna_9,
     orden: 9
   }
 ]
@@ -246,7 +246,7 @@ export const BODEGAS_SERVICIO = [
 /**
  * Interfaz para la información de BODEGAS.
  * @export
- * @interface bodegasInfo
+ * @interface BodegasInfo
  * @property {string} TABLA_Columna_1 - Información de la columna 1.
  * @property {string} TABLA_Columna_2 - Información de la columna 2.
  * @property {string} TABLA_Columna_3 - Información de la columna 3.
@@ -258,7 +258,7 @@ export const BODEGAS_SERVICIO = [
  * @property {string} TABLA_Columna_9 - Información de la columna 9.
  * @property {boolean} estatus - Estado de la bodega.
  */
-export interface bodegasInfo {
+export interface BodegasInfo {
   TABLA_Columna_1: string;
   TABLA_Columna_2: string;
   TABLA_Columna_3: string;
@@ -279,17 +279,17 @@ export interface bodegasInfo {
 export const CAFE_EXPORTADORES = [
   {
     encabezado: 'Marca Comercial',
-    clave: (ele: cafeExporacionInfo) => ele.TABLA_Columna_1,
+    clave: (ele: CafeExporacionInfo): string => ele.TABLA_Columna_1,
     orden: 1
   },
   {
     encabezado: 'Clasificación',
-    clave: (ele: cafeExporacionInfo) => ele.TABLA_Columna_2,
+    clave: (ele: CafeExporacionInfo): string => ele.TABLA_Columna_2,
     orden: 2
   },
   {
     encabezado: 'Volúmen (Kg)',
-    clave: (ele: cafeExporacionInfo) => ele.TABLA_Columna_3,
+    clave: (ele: CafeExporacionInfo): string => ele.TABLA_Columna_3,
     orden: 3
   },
 ]
@@ -297,13 +297,13 @@ export const CAFE_EXPORTADORES = [
 /**
  * Interfaz para la información de CAFÉ DE EXPORTACIÓN.
  * @export
- * @interface cafeExporacionInfo
+ * @interface CafeExporacionInfo
  * @property {string} TABLA_Columna_1 - Información de la columna 1.
  * @property {string} TABLA_Columna_2 - Información de la columna 2.
  * @property {string} TABLA_Columna_3 - Información de la columna 3.
  * @property {boolean} estatus - Estado del café de exportación.
  */
-export interface cafeExporacionInfo {
+export interface CafeExporacionInfo {
   TABLA_Columna_1: string;
   TABLA_Columna_2: string;
   TABLA_Columna_3: string;
