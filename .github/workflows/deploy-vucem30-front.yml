@@ -209,7 +209,7 @@ jobs:
 
       - name: Install dependencies with specific options
         run: |
-          npm install --no-optional --legacy-peer-deps --no-package-lock
+          npm install --legacy-peer-deps --no-package-lock
 
       - name: Install NX globally with specific version
         run: |
