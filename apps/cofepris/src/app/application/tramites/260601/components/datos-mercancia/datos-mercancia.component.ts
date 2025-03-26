@@ -301,9 +301,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   mostrar_colapsable(index: number): void {
-    const IS_CURRENTLY_OPEN = this.panels[index].isCollapsed;
+    const ES_ABIERTO_ACTUALMENTE = this.panels[index].isCollapsed;
     this.panels.forEach((panel, i) => {
-      panel.isCollapsed = i === index ? !IS_CURRENTLY_OPEN : true;
+      panel.isCollapsed = i === index ? !ES_ABIERTO_ACTUALMENTE : true;
     });
   }
 
