@@ -3,7 +3,7 @@ import { Component, ViewChild} from '@angular/core';
 // eslint-disable-next-line sort-imports
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 
-import { LISTA_PASOS_WIZARD } from '../../constantes/lista-pasos-wizard.enum';
+import { LISTA_PASOS_WIZARD } from '../../../../shared/constantes/lista-pasos-wizard.enum';
 
 interface AccionBoton {
   accion: string;
