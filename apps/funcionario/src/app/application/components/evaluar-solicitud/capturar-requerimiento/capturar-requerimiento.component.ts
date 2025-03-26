@@ -65,7 +65,10 @@ export class CapturarRequerimientoComponent {
   }
   /**
    * Método para establecer el tipo de requerimiento seleccionado 
-   * De acuerdo al tipo de requerimiento el observable activa o desactiva el Tab para el requrimiento de documentación
+    * De acuerdo al tipo de requerimiento el observable activa o desactiva el Tab para el requrimiento de documentación
+    *@param {FormGroup} form - El formulario del cual se obtiene el valor.
+    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+    * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
    */
   tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates) {
     this.setValoresStore(form, campo, metodoNombre);
