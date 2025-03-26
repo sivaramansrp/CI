@@ -19,3 +19,7 @@ export interface Catalogo {
 export interface CatalogoLista {
   datos: Catalogo[];
 }
+export interface AgregarDatosProductorFormulario {
+  numeroRegistroFiscal: string;
+  fax: string;
+}

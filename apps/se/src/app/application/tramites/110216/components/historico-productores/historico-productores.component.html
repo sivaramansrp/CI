@@ -39,7 +39,8 @@
                         (click)="productoresSeleccionados()">
                         Seleccionar
                     </button>
-                    <button type="button" name="agregarProductorPorExportador" class="btn btn-primary">
+                    <button type="button" name="agregarProductorPorExportador" class="btn btn-primary"
+                        (click)="agregarDatosProductorPorExportador()">
                         Productor nuevo
                     </button>
                 </div>
@@ -56,4 +57,35 @@
             </div>
         </div>
     </form>
+</div>
+<div class="modal fade" id="modalAgregarDatosProductorPorExportador" tabindex="-1"
+    #modalAgregarDatosProductorPorExportador aria-labelledby="modalAgregarDatosProductorPorExportador"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <ng-titulo titulo="Datos productor por exportador" />
+                <form [formGroup]="agregarDatosProductorFormulario">
+                    <div class="col-md-4">
+                        <label class="form-label" for="numeroRegistroFiscal">Número de registro fiscal*:</label>
+                        <input type="text" class="form-control" name="numeroRegistroFiscal" id="numeroRegistroFiscal"
+                            (change)="setValoresStore(agregarDatosProductorFormulario,'numeroRegistroFiscal', 'setAgregarDatosProductorNumeroRegistroFiscal')"
+                            formControlName="numeroRegistroFiscal"
+                            [ngClass]="isValid(agregarDatosProductorFormulario, 'numeroRegistroFiscal') ? 'required' : ''">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="fax">Fax:</label>
+                        <input type="text" class="form-control" name="fax" id="fax" formControlName="fax"
+                            (change)="setValoresStore(agregarDatosProductorFormulario,'fax', 'setAgregarDatosProductorFax')"
+                            [ngClass]=" isValid(agregarDatosProductorFormulario, 'fax') ? 'required' : ''">
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer custom-footer">
+                <button type="button" class="btn btn-default ms-3" data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                <button type="button" class="btn btn-primary" (click)="agregarExportador()">Agregar</button>
+            </div>
+        </div>
+    </div>
 </div>

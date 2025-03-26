@@ -1,8 +1,9 @@
+
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, SeccionLibStore } from '@ng-mf/data-access-user';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PASOS } from '../../constants/inicialmente-certificado-origen.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constants/inicialmente-certificado-origen.enum';;
 interface AccionBoton {
   accion: string;
   valor: number;

@@ -1,4 +1,5 @@
 
+import { AgregarDatosProductorFormulario } from '../../tramites/110216/models/certificado-origen.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
@@ -10,6 +11,7 @@ export interface Tramite110216State {
   representacionFederal: Catalogo | null;
   datosConfidencialesProductor: boolean;
   productorMismoExportador: boolean
+  agregarDatosProductorFormulario: AgregarDatosProductorFormulario
 }
 
 export function createInitialState(): Tramite110216State {
@@ -18,8 +20,12 @@ export function createInitialState(): Tramite110216State {
     idioma: null,
     entidadFederativa: null,
     representacionFederal: null,
-    datosConfidencialesProductor: false,
-    productorMismoExportador: false
+    datosConfidencialesProductor: true,
+    productorMismoExportador: true,
+    agregarDatosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: ''
+    }
   };
 }
 
@@ -69,6 +75,18 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({
       ...state,
       productorMismoExportador,
+    }));
+  }
+  public setAgregarDatosProductorFax(fax: string): void {
+    this.update((state) => ({
+      ...state,
+      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, fax },
+    }));
+  }
+  public setAgregarDatosProductorNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, numeroRegistroFiscal },
     }));
   }
 

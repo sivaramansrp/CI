@@ -1,12 +1,14 @@
-import { Observable, map } from 'rxjs';
+import { CatalogoLista } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CatalogoLista, ProductorExportador } from '../models/certificado-origen.model';
+import { Observable } from 'rxjs';
+import { ProductorExportador } from '../models/certificado-origen.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificadosOrigenService {
+  // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient) { }
 
 

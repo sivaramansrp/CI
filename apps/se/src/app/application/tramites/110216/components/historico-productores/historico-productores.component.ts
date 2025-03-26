@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CertificadosOrigenService } from '../../services/certificadosOrigen.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
@@ -6,6 +6,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
+import { Modal } from 'bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -14,6 +15,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { Tramite110216State } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -66,12 +69,16 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   seleccionadoAgregarProductoresExportador: HistoricoColumnas[] = [];
   destroyNotifier$: Subject<void> = new Subject();
   public tramiteState!: Tramite110216State;
+  @ViewChild('modalAgregarDatosProductorPorExportador') modalElement!: ElementRef;
+  @ViewChild('closeModal') closeModal!: ElementRef;
+  agregarDatosProductorFormulario!: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private certificadosOrigenService: CertificadosOrigenService,
     public store: Tramite110216Store,
     public tramiteQuery: Tramite110216Query,
+    private validacionesService: ValidacionesFormularioService
     // eslint-disable-next-line no-empty-function
   ) { }
   ngOnInit(): void {
@@ -84,12 +91,19 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.initActionFormBuild();
+    this.initFormulario();
+    this.initAgregarDatosProductorFormulario();
   }
-  initActionFormBuild(): void {
+  initFormulario(): void {
     this.formulario = this.fb.group({
       datosConfidencialesProductor: [this.tramiteState?.datosConfidencialesProductor, []],
       productorMismoExportador: [this.tramiteState?.productorMismoExportador, []],
+    });
+  }
+  initAgregarDatosProductorFormulario(): void {
+    this.agregarDatosProductorFormulario = this.fb.group({
+      numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required, Validators.minLength(5)]],
+      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.required, Validators.maxLength(20)]]
     });
   }
   cargarProductorPorExportador(): void {
@@ -115,6 +129,26 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     this.agregarProductoresExportador = this.agregarProductoresExportador.filter(elementos => !this.seleccionadoAgregarProductoresExportador.some(elementosSecundarios => elementosSecundarios.id === elementos.id));
     this.seleccionadoAgregarProductoresExportador = [];
 
+  }
+  agregarDatosProductorPorExportador(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
+  }
+  agregarExportador(): void {
+    this.agregarDatosProductorFormulario.markAllAsTouched();
+    if (this.agregarDatosProductorFormulario.valid) {
+      this.cerrarModal()
+    }
+  }
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite110216Store): void {
     const VALOR = form.get(campo)?.value;
