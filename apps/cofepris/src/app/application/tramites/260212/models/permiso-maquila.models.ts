@@ -2,7 +2,7 @@
  * Modelo de datos para una solicitud.
  * Contiene información básica sobre la solicitud.
  */
-export interface solicitudModel {
+export interface SolicitudModel {
   fechaCreacion: string;
   mercancía: string;
   cantidad: string;

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { OpcionesPublicacion, solicitudModel } from '../models/permiso-maquila.models';
+import { OpcionesPublicacion, SolicitudModel } from '../models/permiso-maquila.models';
 import { catalogoResponse } from '@libs/shared/data-access-user/src';
 
 @Injectable({
@@ -14,8 +14,8 @@ export class SolicitudService {
   constructor(private http: HttpClient) { }
 
 
-  getSolicitudes(): Observable<solicitudModel[]> {
-    return this.http.get<solicitudModel[]>('assets/json/260212/solicitud.json');
+  getSolicitudes(): Observable<SolicitudModel[]> {
+    return this.http.get<SolicitudModel[]>('assets/json/260212/solicitud.json');
   }
 
   getclave(): Observable<catalogoResponse[]> {

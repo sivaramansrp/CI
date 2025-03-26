@@ -6,7 +6,7 @@ import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, catal
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { ClaveModel, MercanciaModel, solicitudModel } from '../../models/permiso-maquila.models';
+import { ClaveModel, MercanciaModel, SolicitudModel } from '../../models/permiso-maquila.models';
 import { SolicitudService } from '../../services/solicitud.service';
 
 import { DATOS_ALERT, MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
@@ -81,7 +81,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Arreglo que almacena los datos de la solicitud.
  * Se utiliza para gestionar la información relacionada con las solicitudes en el componente.
  */
-  solicitudData: solicitudModel[] = [];
+  solicitudData: SolicitudModel[] = [];
 
   /**
  * Arreglo que almacena los datos de las mercancías.
@@ -143,8 +143,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(private solicitudService: SolicitudService, private fb: FormBuilder,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query
-    // eslint-disable-next-line no-empty-function
-  ) { }
+  ) {
+    // La lógica de inicialización se puede agregar aquí si es necesario.
+  }
 
   /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
@@ -256,8 +257,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Alterna el estado de la variable `plegable`.
  * Cambia entre mostrar y ocultar una sección plegable.
  */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  mostrarPlegable() {
+
+  mostrarPlegable():void {
     this.plegable = !this.plegable;
   }
 
@@ -265,16 +266,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Muestra el formulario para S.C.I.A.N.
  * Establece la variable `mostrarFormularioScian` en true.
  */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  toggleScianFormulario() {
+
+  toggleScianFormulario():void {
     this.mostrarFormularioScian = true
   }
   /**
    * Oculta el formulario para S.C.I.A.N.
    * Establece la variable `mostrarFormularioScian` en false.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  cerrarScianFormulario() {
+
+  cerrarScianFormulario():void {
     this.mostrarFormularioScian = false;
   }
 
@@ -282,8 +283,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Muestra el formulario para las mercancías.
  * Establece la variable `mostrarFormularioMercancias` en true.
  */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  openMercanciasForm() {
+
+  openMercanciasForm():void {
     this.mostrarFormularioMercancias = true;
   }
 
@@ -291,8 +292,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * Oculta el formulario para las mercancías.
  * Establece la variable `mostrarFormularioMercancias` en false.
  */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  closeMercanciasForm() {
+
+  closeMercanciasForm():void {
     this.mostrarFormularioMercancias = false;
   }
 
@@ -316,11 +317,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  * - Define las columnas con encabezados y claves para los datos relevantes de las solicitudes.
  * - Incluye detalles como fecha de creación, mercancía, cantidad y proveedor.
  */
-  configuracionTablaSolicitud: ConfiguracionColumna<solicitudModel>[] = [
-    { encabezado: 'Fecha Creación', clave: (item: solicitudModel) => item.fechaCreacion, orden: 1 },
-    { encabezado: 'Mercancía', clave: (item: solicitudModel) => item.mercancía, orden: 2 },
-    { encabezado: 'Cantidad', clave: (item: solicitudModel) => item.cantidad, orden: 3 },
-    { encabezado: 'Proveedor', clave: (item: solicitudModel) => item.proveedor, orden: 4 }
+  configuracionTablaSolicitud: ConfiguracionColumna<SolicitudModel>[] = [
+    { encabezado: 'Fecha Creación', clave: (item: SolicitudModel) => item.fechaCreacion, orden: 1 },
+    { encabezado: 'Mercancía', clave: (item: SolicitudModel) => item.mercancía, orden: 2 },
+    { encabezado: 'Cantidad', clave: (item: SolicitudModel) => item.cantidad, orden: 3 },
+    { encabezado: 'Proveedor', clave: (item: SolicitudModel) => item.proveedor, orden: 4 }
   ];
 
   /**
