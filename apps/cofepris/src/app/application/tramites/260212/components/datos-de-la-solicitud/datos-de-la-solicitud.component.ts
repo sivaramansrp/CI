@@ -160,7 +160,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.solicitudData = data;
     });
 
-    this.solicitudService.getclave().subscribe((data) => {
+    this.solicitudService.getClave().subscribe((data) => {
       this.estado = data;
     })
 

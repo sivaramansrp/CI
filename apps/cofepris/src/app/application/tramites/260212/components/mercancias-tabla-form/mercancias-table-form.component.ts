@@ -100,15 +100,15 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.datosMercanciaFormInitial();
 
-    this.solicitudService.getclave().subscribe((data) => {
+    this.solicitudService.getClave().subscribe((data) => {
       this.especificarClasificacion = data;
     });
 
-    this.solicitudService.getclasificacionProducto().subscribe((data) => {
+    this.solicitudService.getClasificacionProducto().subscribe((data) => {
       this.clasificacionProducto = data;
     });
 
-    this.solicitudService.geTestadoFisico().subscribe((data) => {
+    this.solicitudService.getTestadoFisico().subscribe((data) => {
       this.estadoFisico = data;
     });
 

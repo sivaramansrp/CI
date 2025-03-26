@@ -120,7 +120,7 @@ export class PaisDeOrigenComponent {
    * @param {string} tipo - Tipo de acción a realizar.
    */
   quitar(tipo = '') {
-    if (tipo === 't') {
+    if (tipo === TIPO_T) {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
     } else {

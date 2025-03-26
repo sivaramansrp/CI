@@ -73,7 +73,7 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
 
     this.formularioOperacionInitial()
 
-    this.solicitudService.getclave().subscribe((data) => {
+    this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
     }
     );

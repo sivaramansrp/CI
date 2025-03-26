@@ -78,7 +78,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.claveScianForm();
 
-    this.solicitudService.getclave().subscribe((data) => {
+    this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
     });
 
