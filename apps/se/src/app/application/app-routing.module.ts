@@ -99,6 +99,13 @@ const ROUTES: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  },
+  {
+    path: 'registro',
+    loadChildren:() =>
+      import('./tramites/110201/registro.module').then(
+        (m) => m.RegistroModule
+      )
   }, 
   {
     path: 'cancelacion-de',
