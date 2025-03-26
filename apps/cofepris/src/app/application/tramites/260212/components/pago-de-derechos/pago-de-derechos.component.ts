@@ -7,12 +7,14 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CatalogoSelectComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
+
+import { FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
@@ -29,6 +31,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
     TituloComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
+    InputFechaComponent
   ],
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss',],
@@ -47,6 +50,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   llaveDePago$ = this.tramite260212Query.selectedLlaveDePago$
   fechaDePago$ = this.tramite260212Query.selectedFechaDePago$
   importeDePago$ = this.tramite260212Query.selectedImporteDePago$
+
+
+  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
+  fechaPagoDate: string = '15/03/2025';
+
   /**
    * Datos para el selector de opciones.
    */
@@ -150,7 +159,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateClaveDeReferncia(): void {
+  actualizarClaveDeReferncia(): void {
     const CORREO = this.pagoDerechos.get('claveDeReferncia')?.value;
     this.tramite260212Store.setClaveDeReferncia(CORREO);
   }
@@ -162,7 +171,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateCadenaDeLaDependencia(): void {
+  actualizarCadenaDeLaDependencia(): void {
     const CORREO = this.pagoDerechos.get('cadenaDeLaDependencia')?.value;
     this.tramite260212Store.setCadenaDeLaDependencia(CORREO);
   }
@@ -174,7 +183,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateLlaveDePago(): void {
+  actualizarLlaveDePago(): void {
     const CORREO = this.pagoDerechos.get('llaveDePago')?.value;
     this.tramite260212Store.setLlaveDePago(CORREO);
   }
@@ -186,7 +195,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateFechaDePago(): void {
+  actualizarFechaDePago(): void {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
     this.tramite260212Store.setFechaDePago(CORREO);
   }
@@ -198,7 +207,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * 
    * @comdoc
    */
-  updateImporteDePago(): void {
+  actualizarImporteDePago(): void {
     const CORREO = this.pagoDerechos.get('importeDePago')?.value;
     this.tramite260212Store.setImporteDePago(CORREO);
   }
@@ -217,7 +226,4 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-
-
 }

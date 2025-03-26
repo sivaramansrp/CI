@@ -1,17 +1,17 @@
 <div class="container terceros-relacionados-container">
   <div *ngIf="showTableDiv">
-    <!-- title -->
+
+    <!-- titulo -->
     <ng-titulo titulo="Terceros relacionados" />
 
-    <!-- alert-box -->
+    <!-- alerta -->
     <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
 
-    <!-- Fabricante table when on display -->
+    <!-- La mesa del fabricante en exhibición -->
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"
-          ></ng-table>
+        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
       </div>
       <br />
 
@@ -26,12 +26,11 @@
       </div>
     </div>
 
-    <!-- Destinatario table -->
+    <!-- La mesa del destinatario en exhibición -->
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData"
-        >
+        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData">
         </ng-table>
       </div>
       <br />
@@ -47,12 +46,11 @@
       </div>
     </div>
 
-    <!-- Proveedor table -->
+    <!-- La mesa del proveedor en exhibición -->
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"
-          ></ng-table>
+        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"></ng-table>
       </div>
       <br />
 
@@ -67,12 +65,11 @@
       </div>
     </div>
 
-    <!-- Facturador table -->
+    <!-- La mesa del facturador en exhibición -->
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"
-          ></ng-table>
+        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"></ng-table>
       </div>
       <br />
 
@@ -86,35 +83,25 @@
         </button>
       </div>
     </div>
-
-    <br />
-    <br />
   </div>
 </div>
 
-<!-- When Agregar fabricante form is on Display -->
+<!-- El formulario para agregar fabricante está en exhibición -->
 <app-modal [active]="showFabricante">
   <div class="agregar-fabricante-container">
     <ng-titulo titulo="Agregar fabricante" />
     <h5>Datos generales</h5>
 
     <form [formGroup]="agregarFabricanteFormGroup">
-      <!-- radio buttons -->
+      <!--botones de radio -->
       <div class="row">
         <div class="col-md-6">
           <div>
             <h6>Terceros nacionalidad*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="nacional"
-                formControlName="tercerosNacionalidad" id="nacional" [checked]="nacional"
-                (change)="tercerosInputChecked('nacional')" />
-              <label class="control-label" for="nacional">Nacional</label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tercerosNacionalidad" value="extranjero"
-                formControlName="tercerosNacionalidad" id="extranjero" [checked]="extranjero"
-                (change)="tercerosInputChecked('extranjero')" />
-              <label class="control-label" for="extranjero">Extranjero</label>
+              <app-input-radio [radioOptions]="nacionalidadOpcionDeBotonDeRadio" [isRequired]="true"
+                [layout]="'vertical'" formControlName="tercerosNacionalidad"
+                (valueChange)="tercerosInputChecked($event)"></app-input-radio>
             </div>
           </div>
         </div>
@@ -123,23 +110,15 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Fabricante')"></app-input-radio>
             </div>
           </div>
         </div>
       </div>
       <hr />
 
-      <!-- toggling inputs based on radio button selection -->
+      <!-- Activar/desactivar campos del formulario según la selección del botón de radio -->
 
       <div class="row">
         @if (nacional && fisica || (!fisica && !moral)){
@@ -153,8 +132,7 @@
             </div>
           </div>
         </div>
-        <hr>
-        <hr>
+        <hr />
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
           <div class="col-md-4">
@@ -216,7 +194,7 @@
           </div>
         </div>
         }
-
+        <hr />
         @if (extranjero && fisica){
         <h5>Datos personales</h5>
         <div class="row d-flex datos-personales-form-container">
@@ -244,54 +222,43 @@
           </div>
         </div>
         }
-
-
-
-        <hr>
-        <hr>
-
-        <!-- Domicilio-form-container -->
+        <hr />
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
 
           @if(nacional){
           <div>
-            <div class="col-md-4 mt-2">
+            <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="pais">Pais*:</label>
-                <select class="form-control" id="pais" formControlName="pais" name="pais">
-                  <option value="">MEXICO(ESTADOS UNIDOS MEXICANO)</option>
-                  <option value="sample 1">sample 1</option>
-                  <option value="sample 2">sample 2</option>
-                  <option value="sample 3">sample 3</option>
-                </select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
+                  id="pais" formControlName="pais" name="pais"></app-catalogo-select>
               </div>
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
                   for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
               </div>
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-4">
               <div class="form-group">
-                <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia'" [required]="true"
+                <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía'" [required]="true"
                   for="municipioAlcaldia" id="municipioAlcaldia"
                   formControlName="municipioAlcaldia"></app-catalogo-select>
               </div>
             </div>
             <hr />
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                  for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+                  for="localidad" id="localidad" formControlName="localidad" name="localidad"></app-catalogo-select>
               </div>
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
                   [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
@@ -299,7 +266,7 @@
               </div>
             </div>
 
-            <div class="col-md-4 mt-2">
+            <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
                   formControlName="colonia"></app-catalogo-select>
@@ -308,17 +275,13 @@
           </div>
           }
 
+
           @if(extranjero){
           <div class="pl-0">
             <div class="col-md-4">
               <div class="form-group">
-                <label class="form-label" for="pais">Pais*:</label>
-                <select class="form-control" id="pais" formControlName="pais" name="pais">
-                  <option value="">MEXICO(ESTADOS UNIDOS MEXICANO)</option>
-                  <option value="sample 1">sample 1</option>
-                  <option value="sample 2">sample 2</option>
-                  <option value="sample 3">sample 3</option>
-                </select>
+                <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais"
+                  id="pais" formControlName="pais" name="pais"></app-catalogo-select>
               </div>
             </div>
 
@@ -333,8 +296,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="extranjeroCodigo">Código postal o equivalente:</label>
-                <input type="text" id="extranjeroCodigo"  name="extranjeroCodigo"
-                  class="form-control" />
+                <input type="text" id="extranjeroCodigo" name="extranjeroCodigo" class="form-control" />
               </div>
             </div>
 
@@ -343,8 +305,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="extranjeroColonia">Colonia o equivalente:</label>
-                <input class="form-control" type="text" id="extranjeroColonia"
-                  name="extranjeroColonia" />
+                <input class="form-control" type="text" id="extranjeroColonia" name="extranjeroColonia" />
               </div>
             </div>
           </div>
@@ -407,7 +368,7 @@
             <span>*Campos obligatorios</span>
           </div>
 
-          <!-- last three buttons -->
+          <!-- últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
               <button type="button" class="btn btn-danger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -430,29 +391,21 @@
   </div>
 </app-modal>
 
-<!-- When Agregar destinatario form is on Display -->
+<!-- El formulario para agregar destinatario está en exhibición -->
 <app-modal [active]="showDestinatario">
   <div class="agregar-destinatario-container">
     <ng-titulo titulo="Agregar destinatario (destino final)" />
     <h5>Datos generales</h5>
 
     <form [formGroup]="agregarDestinatarioFormGroup">
-      <!-- radio buttons -->
+      <!--botones de radio -->
       <div class="row">
         <div class="col-md-6 offset-md-6">
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Destinatario')"></app-input-radio>
             </div>
           </div>
         </div>
@@ -461,16 +414,14 @@
 
 
       <div class="row">
-        <!-- <div> -->
-          <div class="col-md-4 p-2">
-            <div class="form-group">
-              <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
-                  ata-bs-toggle="tooltip"></span>
-              </label>
-              <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
-            </div>
+        <div class="col-md-4 p-2">
+          <div class="form-group">
+            <label for="rfc" class="form-label">R.F.C*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
+                ata-bs-toggle="tooltip"></span>
+            </label>
+            <input type="text" id="rfc" formControlName="rfc" class="form-control" name="rfc" />
           </div>
-        <!-- </div> -->
+        </div>
 
         @if (fisica || (!fisica && !moral)){
         <div class="row">
@@ -496,64 +447,53 @@
           </div>
         </div>
         }
-
         <hr />
-        <hr />
-
-        <!-- Domicilio-form-container -->
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="pais">Pais*:</label>
-              <select class="form-control" id="pais" formControlName="pais" name="pais">
-                <option value="">MEXICO(ESTADOS UNIDOS MEXICANO)</option>
-                <option value="sample 1">sample 1</option>
-                <option value="sample 2">sample 2</option>
-                <option value="sample 3">sample 3</option>
-              </select>
+              <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
+                formControlName="pais" name="pais"></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad*'" [required]="true"
-                for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+                for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"
+                name="estadoLocalidad"></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia:'" [required]="true"
-                for="municipioAlcaldia" id="municipioAlcaldia"
-                formControlName="municipioAlcaldia"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldía:'" [required]="true"
+                for="municipioAlcaldia" id="municipioAlcaldia" formControlName="municipioAlcaldia"
+                name="municipioAlcaldia"></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+                for="localidad" id="localidad" formControlName="localidad" name="localidad"></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente*:'"
-                for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+                for="codigoPostaloEquivalente" id="codigoPostaloEquivalente" formControlName="codigoPostaloEquivalente"
+                name="codigoPostaloEquivalente"></app-catalogo-select>
             </div>
           </div>
 
           <div class="col-md-4 mt-5">
             <div class="form-group">
               <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia:'" for="colonia" id="colonia"
-                formControlName="colonia"></app-catalogo-select>
+                formControlName="colonia" name="colonia"></app-catalogo-select>
             </div>
           </div>
-
-          <br />
-          <br />
 
           <div class="col-md-8">
             <div class="form-group">
@@ -609,7 +549,7 @@
             <span>*Campos obligatorios</span>
           </div>
 
-          <!-- last three buttons -->
+          <!-- últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
               <button type="button" class="btn btn-danger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -632,7 +572,7 @@
   </div>
 </app-modal>
 
-<!-- When Agregar proveedor form is on Display -->
+<!-- El formulario para agregar proveedor está en exhibición -->
 <app-modal [active]="showProveedor">
   <div class="agregar-proveedor-container">
     <ng-titulo titulo="Agregar proveedor" />
@@ -644,16 +584,8 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                id="fisica" value="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                id="moral" value="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Proveedor')"></app-input-radio>
             </div>
           </div>
         </div>
@@ -699,21 +631,13 @@
         </div>
       </div>
       }
-
-      <br />
-      <br />
-
+      <hr />
       <h5>Domicilio</h5>
       <div class="row d-flex domicilio-form-container">
         <div class="col-md-4 mt-5">
           <div class="form-group">
-            <label class="form-label" for="pais">Pais*:</label>
-            <select class="form-control" id="pais" formControlName="pais" name="pais">
-              <option value="">Seleccione un valor</option>
-              <option value="sample1">sample 1</option>
-              <option value="sample2">sample 2</option>
-              <option value="sample3">sample 3</option>
-            </select>
+            <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
+              formControlName="pais" name="pais"></app-catalogo-select>
           </div>
         </div>
 
@@ -739,10 +663,8 @@
               name="coloniaoEquivalente" />
           </div>
         </div>
-
         <hr />
-        <hr />
-
+        <div class="clearfix"></div>
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1" title="Title"
@@ -796,6 +718,8 @@
           <span>*Campos obligatorios</span>
         </div>
 
+
+        <!-- últimos tres botones -->
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end gap-1">
             <button type="button" class="btn btn-danger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -817,7 +741,7 @@
   </div>
 </app-modal>
 
-<!-- When Agregar facturador form is on Display -->
+<!-- El formulario para agregar facturador está en exhibición -->
 <app-modal [active]="showFacturador">
   <div class="agregar-facturador-container">
     <ng-titulo titulo="Agregar facturador" />
@@ -829,16 +753,8 @@
           <div>
             <h6>Tipo persona*:</h6>
             <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="fisica" id="fisica" [checked]="fisica" (change)="inputChecked('fisica')" />
-              <label class="control-label" for="fisica">Física<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
-            </div>
-            <div class="mt-2">
-              <input class="form-check-input me-3" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                value="moral" id="moral" [checked]="moral" (change)="inputChecked('moral')" />
-              <label class="control-label" for="moral">Moral<span class="bi bi-question-circle-fill fs-4 m-1"
-                  title="Title" ata-bs-toggle="tooltip"></span></label>
+              <app-input-radio [radioOptions]="personaOpcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
+                formControlName="tipoPersona" (valueChange)="tipoPersonaChecked($event, 'Facturador' )"></app-input-radio>
             </div>
           </div>
         </div>
@@ -885,20 +801,13 @@
           </div>
         </div>
         }
-        <hr>
-        <hr>
-
+        <hr />
         <h5>Domicilio</h5>
         <div class="row d-flex domicilio-form-container">
           <div class="col-md-4 mt-5">
             <div class="form-group">
-              <label class="form-label" for="pais">Pais*:</label>
-              <select class="form-control" id="pais" formControlName="pais" name="pais">
-                <option value="">Seleccione un valor</option>
-                <option value="sample1">sample 1</option>
-                <option value="sample2">sample 2</option>
-                <option value="sample3">sample 3</option>
-              </select>
+              <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true" for="pais" id="pais"
+                formControlName="pais" name="pais"></app-catalogo-select>
             </div>
           </div>
 
@@ -924,10 +833,8 @@
                 name="coloniaoEquivalente" />
             </div>
           </div>
-
           <hr />
-          <hr />
-
+          <div class="clearfix"></div>
           <div class="col-md-8">
             <div class="form-group">
               <label class="form-label" for="calle">Calle*:<span class="bi bi-question-circle-fill fs-4 m-1"
@@ -981,6 +888,7 @@
             <span>*Campos obligatorios</span>
           </div>
 
+          <!-- últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
               <button type="button" class="btn btn-danger" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -1000,6 +908,5 @@
         </div>
       </div>
     </form>
-
   </div>
 </app-modal>
