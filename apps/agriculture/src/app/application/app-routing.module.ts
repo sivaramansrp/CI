@@ -86,6 +86,15 @@ const ROUTES: Routes = [
         (m) => m.InspeccionFitosanitarioModule
       ),
   },
+
+  {
+
+    path: 'acuicola-fisica',
+    loadChildren: () =>
+      import('./tramites/220703/acuicola-fisica.module').then(
+        (m) => m.AcuicolaFisicaModule
+      ),
+  },
 ];
 
 @NgModule({
