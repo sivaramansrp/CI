@@ -1,19 +1,18 @@
-import { Component } from '@angular/core';
+import {
+  DESTINATARIO_ENCABEZADO_DE_TABLA,
+  Destinatario,
+  FABRICANTE_ENCABEZADO_DE_TABLA,
+  FACTURADOR_ENCABEZADO_DE_TABLA,
+  Fabricante,
+  Facturador,
+  PROVEEDOR_ENCABEZADO_DE_TABLA,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
 import { CommonModule } from '@angular/common';
-
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import {
-  Destinatario,
-  DESTINATARIO_ENCABEZADO_DE_TABLA,
-  Fabricante,
-  FABRICANTE_ENCABEZADO_DE_TABLA,
-  Facturador,
-  FACTURADOR_ENCABEZADO_DE_TABLA,
-  Proveedor,
-  PROVEEDOR_ENCABEZADO_DE_TABLA,
-} from '../../models/terceros-relacionados.model';
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
