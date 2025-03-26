@@ -6,12 +6,20 @@ import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 /**
- * @description Interfaz que define la estructura de la acción del botón.
+ * @description Interfaz que define la estructura y propiedades de una acción asociada a un botón interactivo.
+ * Esta interfaz permite manejar eventos y datos relacionados con el funcionamiento del botón.
+ *
+ * @interface AccionBoton
+ * @property {string} accion - Define la acción que se ejecutará cuando se interactúe con el botón.
+ * Puede incluir valores como 'cont' para avanzar, o 'atras' para retroceder, según la lógica del asistente.
+ * @property {number} valor - Representa un valor numérico asociado a la acción, como el índice del paso actual.
+ * Este campo se utiliza para identificar el contexto de la acción realizada.
  */
 interface AccionBoton {
-  /** Acción que se ejecutará (e.g., 'cont' para continuar) */
+  /** Especifica la acción a realizar al presionar el botón (e.g., 'cont' para continuar, 'atras' para retroceder). */
   accion: string;
-  /** Valor asociado a la acción, como el índice del paso */
+
+  /** Valor numérico asociado a la acción, usado para definir el paso o estado actual. */
   valor: number;
 }
 
@@ -33,7 +41,7 @@ export class SolicitudDeReporteComponent {
 
   /**
    * @description Índice del paso actual dentro del asistente.
-   * 
+   *
    * @type {number}
    * @default 1
    */
@@ -50,7 +58,7 @@ export class SolicitudDeReporteComponent {
   /**
    * @description Método que actualiza el índice del paso actual dentro del asistente.
    * Ejecuta una acción dependiendo del valor de `e.accion` ('cont' para continuar, otro para retroceder).
-   * 
+   *
    * @param {AccionBoton} e Objeto que contiene la acción y el valor del índice.
    */
   getValorIndice(e: AccionBoton): void {

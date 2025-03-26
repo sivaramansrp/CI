@@ -43,6 +43,9 @@ export interface Solicitud150102State {
 /**
  * @description Función que crea el estado inicial de la solicitud.
  * @returns El estado inicial de la solicitud con valores predeterminados.
+ * @function createInitialState
+ * @returns {Solicitud150102State} Estado inicial de la solicitud.
+ * 
  */
 export function createInitialState(): Solicitud150102State {
   return {
@@ -70,6 +73,11 @@ export function createInitialState(): Solicitud150102State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'solicitud150102Store', resettable: true })
+/**
+ * @description Servicio que gestiona el estado de la solicitud utilizando Akita.
+ * Proporciona métodos para actualizar distintas propiedades del estado.
+ * @class Solicitud150102Store
+ */
 export class Solicitud150102Store extends Store<Solicitud150102State> {
   /**
    * @description Constructor que inicializa el store con el estado inicial.

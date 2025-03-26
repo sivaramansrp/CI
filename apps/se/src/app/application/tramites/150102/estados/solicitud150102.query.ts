@@ -8,6 +8,10 @@ import { Solicitud150102Store } from './solicitud150102.store';
  * Utiliza la librería Akita para gestionar el estado de la aplicación.
  */
 @Injectable({ providedIn: 'root' })
+/**
+ * @description Servicio que implementa una consulta (`Query`) para acceder al estado de la solicitud.
+ * Utiliza la librería Akita para gestionar el estado de la aplicación.
+ */
 export class Solicitud150102Query extends Query<Solicitud150102State> {
   /**
    * @description Observable que permite seleccionar el estado completo de la solicitud.

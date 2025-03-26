@@ -12,6 +12,11 @@ import { ReporteFechas } from '../models/programas-reporte.model';
 @Injectable({
   providedIn: 'root',
 })
+/**
+ * @description Servicio encargado de realizar solicitudes HTTP relacionadas con el reporte anual.
+ *  Proporciona métodos para obtener los programas de reporte, las fechas del reporte y los datos de bienes producidos.
+ * @class SolicitudService
+ */
 export class SolicitudService {
   /**
    * @description Constructor del servicio. Inyecta la dependencia de HttpClient para realizar las solicitudes HTTP.

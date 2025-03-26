@@ -26,6 +26,10 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-de-reporte-annual.component.html',
   styleUrl: './datos-de-reporte-annual.component.scss',
 })
+/**
+ * @description Componente que administra los datos del reporte anual y realiza cálculos relevantes.
+ * Permite la visualización y edición de bienes producidos, ventas totales, exportaciones e importaciones.
+ */
 export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para gestionar los datos del reporte anual */
   formReporteAnnual!: FormGroup;
