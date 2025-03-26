@@ -140,8 +140,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
   /**
    * Observable para el municipio o alcaldía.
    */
-  municipioOAlcaldía$: Observable<string | null> =
-    this.tramite260911Query.municipioOAlcaldía$;
+  municipioOAlcaldia$: Observable<string | null> =
+    this.tramite260911Query.municipioOAlcaldia$;
 
   /**
    * Observable para la localidad.
@@ -244,9 +244,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
       }
     });
 
-    this.municipioOAlcaldía$.pipe(takeUntil(this.destroy$)).subscribe((municipioOAlcaldía) => {
-      if (municipioOAlcaldía) {
-        this.form.get('municipioOAlcaldía')?.setValue(municipioOAlcaldía);
+    this.municipioOAlcaldia$.pipe(takeUntil(this.destroy$)).subscribe((municipioOAlcaldia) => {
+      if (municipioOAlcaldia) {
+        this.form.get('municipioOAlcaldia')?.setValue(municipioOAlcaldia);
       }
     });
     this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
@@ -330,7 +330,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
     this.form = this.fb.group({
       codigoPostal: ['', [Validators.required]],
       estado: ['', [Validators.required]],
-      municipioOAlcaldía: ['', [Validators.required]],
+      municipioOAlcaldia: ['', [Validators.required]],
       localidad: [''],
       colonias: [''],
       calle: ['', [Validators.required]],
@@ -414,8 +414,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
    * Método para obtener el valor del municipio o alcaldía.
    */
   getMunicipioOAlcaldia(): void {
-    const MUNICIPIO_OALCALDIA = this.form.get('municipioOAlcaldía')?.value;
-    this.tramite260911Store.setMunicipioOAlcaldía(MUNICIPIO_OALCALDIA);
+    const MUNICIPIO_OALCALDIA = this.form.get('municipioOAlcaldia')?.value;
+    this.tramite260911Store.setMunicipioOAlcaldia(MUNICIPIO_OALCALDIA);
   }
 
   /**

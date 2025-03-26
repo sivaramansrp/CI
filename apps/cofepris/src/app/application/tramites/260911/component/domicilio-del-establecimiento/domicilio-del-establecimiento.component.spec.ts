@@ -17,7 +17,7 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
     const queryMock: Partial<Tramite260911Query> = {
       codigoPostal$: of('12345'),
       estado$: of({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' } as Catalogo),
-      municipioOAlcaldía$: of('Municipio'),
+      municipioOAlcaldia$: of('Municipio'),
       localidad$: of('Localidad'),
       colonias$: of('Colonia'),
       calle$: of('Calle'),
@@ -35,7 +35,7 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
     const storeMock: Partial<Tramite260911Store> = {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
-      setMunicipioOAlcaldía: jest.fn(),
+      setMunicipioOAlcaldia: jest.fn(),
       setLocalidad: jest.fn(),
       setColonias: jest.fn(),
       setCalle: jest.fn(),
@@ -111,7 +111,7 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
     expect(tramite260911Store.setEstado).toHaveBeenCalledWith({ id: 1, nombre: 'Estado', descripcion: 'Descripcion' });
 
     component.getMunicipioOAlcaldia();
-    expect(tramite260911Store.setMunicipioOAlcaldía).toHaveBeenCalledWith('Municipio');
+    expect(tramite260911Store.setMunicipioOAlcaldia).toHaveBeenCalledWith('Municipio');
 
     component.getLocalidad();
     expect(tramite260911Store.setLocalidad).toHaveBeenCalledWith('Localidad');
