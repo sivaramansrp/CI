@@ -286,7 +286,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *                    `false` si al menos uno de los controles habilitados es inválido.
    */
   esFormValido(): boolean {
-    // eslint-disable-next-line guard-for-in
+    
     for (const NOMBRE_DEL_CONTROL in this.FormSolicitud.controls) {
       const CONTROL = this.FormSolicitud.get(NOMBRE_DEL_CONTROL);
       if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
