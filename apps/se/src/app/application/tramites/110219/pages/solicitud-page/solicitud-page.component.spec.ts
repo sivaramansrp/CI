@@ -5,6 +5,8 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -21,6 +23,8 @@ describe('SolicitudPageComponent', () => {
         CommonModule,
         SolicitudPageComponent
       ],
+      providers: [ provideHttpClient(),
+        provideHttpClientTesting(),],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
@@ -32,6 +36,27 @@ describe('SolicitudPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
+ 
+
+  it('should run #seleccionaTab()', () => {
+    component.seleccionaTab(1);
+    expect(component.indice).toBe(1);
+  });
+
+  it('should run #getValorIndice()', () => {
+    component.wizardComponent = component.wizardComponent || {} as WizardComponent;
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({ valor: 2, accion: 'cont' });
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+
+    component.getValorIndice({ valor: 1, accion: 'prev' });
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  
   describe('ngOnInit', () => {
     it('should filter and map the steps correctly', () => {
       component.ngOnInit();
