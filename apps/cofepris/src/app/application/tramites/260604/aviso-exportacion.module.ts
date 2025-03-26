@@ -14,14 +14,17 @@ import {
   TituloComponent,
   WizardComponent,} from '@libs/shared/data-access-user/src';
 
-import { TercerosRelacionadoComponent } from './components/tercerosRelacionado/tercerosRelacionado.component';
+// import { TercerosRelacionadoComponent } from './components/tercerosRelacionado/tercerosRelacionado.component';
+import { TercerosRelacionadoComponent } from '../../shared/components/tercerosRelacionado/tercerosRelacionado.component'
 
-import { DatosDelaComponent } from './components/datosDela/datosDela.component';
+
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
 import { ToastrService } from 'ngx-toastr';
+
 import { HttpClientModule } from '@angular/common/http';
-import { ExportacionService } from './services/exportacion.service';
+
+import { ExportacionService } from '../../shared/services/exportacion.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +42,7 @@ import { ExportacionService } from './services/exportacion.service';
   // TituloComponent,
   WizardComponent,
   TercerosRelacionadoComponent,
-  DatosDelaComponent,
+ 
   SolicitanteComponent,
   PasoDosComponent,
   PasoTresComponent,
