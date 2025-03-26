@@ -1,6 +1,5 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
 /**
