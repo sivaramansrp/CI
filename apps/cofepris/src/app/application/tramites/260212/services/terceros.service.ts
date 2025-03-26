@@ -53,4 +53,8 @@ export class TercerosService {
   getLocalidadData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260212/localidad.json');
   }
+
+  getEncabezadoDeTabla(): Observable<string[]> {
+    return this.http.get<string[]>('assets/json/260212/encabezado-de-tabla.json');
+  }
 }

@@ -24,29 +24,6 @@ export const PERMISO_MAQUILA = [
 ];
 
 /**
- * Encabezados para la tabla de terceros relacionados.
- * Cada cadena representa una columna en la tabla.
- */
-export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
-  'Nombre/denominación o razón social',
-  'R.F.C',
-  'CURP',
-  'Teléfono',
-  'Correo electrónico',
-  'Calle',
-  'Número exterior',
-  'Número interior',
-  'País',
-  'Colonia',
-  'Municipio o alcaldía',
-  'Localidad',
-  'Entidad federativa',
-  'Estado/localidad',
-  'Código postal',
-  'Colonia o equivalente',
-];
-
-/**
  * Mensajes de alerta para los datos de solicitud.
  * Contiene información sobre el comportamiento al dar doble clic en una solicitud.
  */
