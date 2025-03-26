@@ -19,6 +19,7 @@
       </div>
     </div>
   </div>
+  <app-establecimiento></app-establecimiento>
 </div>
 
 <div
@@ -50,11 +51,11 @@
                 [isRequired]="true"
                 [layout]="'vertical'"
                 [gap]="'50px'"
-                formControlName="terceros.nacionalidad"
+                formControlName="tercerosNacionalidad"
               ></app-input-radio>
             </div>
             <div class="col-md-6">
-              <label class="mt-1 mb-3" for="terceros.tipoPersona">
+              <label class="mt-1 mb-3" for="tercerosTipoPersona">
                 Tipo persona*:
               </label>
               <div
@@ -66,7 +67,7 @@
                   [value]="option.value"
                   [checked]="selectedValue === option.value"
                   (change)="onSelectionChange(option.value)"
-                  formControlName="terceros.tipoPersona"
+                  formControlName="tercerosTipoPersona"
                 />
                 <span class="radio-label">
                   {{ option.label }}
@@ -83,66 +84,85 @@
           </div>
           <div class="row">
             <div class="col-md-4">
-              <label class="mt-1 mb-3" for="terceros.rfc"
+              <label class="mt-1 mb-3" for="tercerosRfc"
                 >RFC <span class="require">*</span>:</label
               >
 
-              <div class="d-flex flex-column">
+              <div class="d-flex flex-column align-items-end">
                 <input
                   type="text"
-                  id="terceros.rfc"
-                  formControlName="terceros.rfc"
+                  id="tercerosRfc"
+                  formControlName="tercerosRfc"
                   class="form-control"
                   maxlength="254"
-                  [disabled]="true"
                 />
-                <div class="mt-auto">
-                  <button type="button" class="btn btn-secondary mt-2">
-                    Button Below RFC
+                <div class="mt-4">
+                  <button type="button" class="btn btn-primary mt-2">
+                    Buscar
                   </button>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
-              <label class="mt-1 mb-3" for="terceros.curp">
+              <label class="mt-1 mb-3" for="tercerosCurp">
                 CURP<span class="require">*</span>:</label
               >
               <div>
                 <input
                   type="text"
-                  id="terceros.curp"
-                  formControlName="terceros.curp"
+                  id="tercerosCurp"
+                  formControlName="tercerosCurp"
                   class="form-control"
                 />
               </div>
             </div>
             <div class="col-md-4"></div>
           </div>
-          <div class="row">
-            <div id="contenidoRazonSocial" class="col-md-8 mb-3">
-              <label for="terceros.denominacionRazonSocial"
-                >Denominación/razón social
-                <span class="require">*</span>:</label
-              >
 
-              <div>
+          <div>
+            <label>Datos personales </label>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label" for="tercerosNombre"
+                  >Nombre(s)<span class="require">*</span>:</label
+                >
                 <input
-                  type="text"
-                  id="terceros_rSocial"
-                  formControlName="terceros.denominacionRazonSocial"
                   class="form-control"
-                  maxlength="254"
-                  [disabled]="true"
+                  id="tercerosNombre"
+                  placeholder=""
+                  type="text"
+                  formControlName="tercerosNombre"
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="tercerosPrimerApellido"
+                  >Primer apellido<span class="require">*</span>:</label
+                >
+                <input
+                  class="form-control"
+                  id="tercerosPrimerApellidoId"
+                  placeholder=""
+                  type="text"
+                  formControlName="tercerosPrimerApellido"
+                />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="tercerosSegundoApellido"
+                  >Segundo apellido<span class="require">*</span>:</label
+                >
+                <input
+                  class="form-control"
+                  id="tercerosSegundoApellidoId"
+                  placeholder=""
+                  type="text"
+                  formControlName="tercerosSegundoApellido"
                 />
               </div>
             </div>
           </div>
-          <label >Domicillio
-
-          </label>
           <div class="row">
-<div class="col-md-6">
-  <label for="terceros.denominacionRazonSocial"
+            <div id="contenidoRazonSocial" class="col-md-8 mb-3">
+              <label for="tercerosDenominacionRazonSocial"
                 >Denominación/razón social
                 <span class="require">*</span>:</label
               >
@@ -151,25 +171,181 @@
                 <input
                   type="text"
                   id="terceros_rSocial"
-                  formControlName="terceros.denominacionRazonSocial"
+                  formControlName="tercerosDenominacionRazonSocial"
                   class="form-control"
                   maxlength="254"
-                  [disabled]="true"
                 />
-</div>
-<div class="col-md-6">
-
-</div>
-<div class="col-md-6">
-
-</div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-            Aceptar
-          </button>
-          <button type="button" class="btn btn-primary">Cancelar</button>
+          <label>Domicillio </label>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosPais"
+                >País<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosPaisID"
+                placeholder=""
+                type="text"
+                formControlName="tercerosPais"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosEstadoLocalidad"
+                >Estado/localidad<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosPaisID"
+                placeholder=""
+                type="text"
+                formControlName="tercerosEstadoLocalidad"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosMunicipioAlcaldia"
+                >Municipio/alcaldía<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosMunicipioAlcaldiaID"
+                placeholder=""
+                type="text"
+                formControlName="tercerosMunicipioAlcaldia"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosLocalidad"
+                >Localidad<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosLocalidadId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosLocalidad"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosCodigoPostal"
+                >Código postal o equivalente<span class="require">*</span
+                >:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosCodigoPostalId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosCodigoPostal"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosColonia"
+                >Colonia<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosColoniaId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosColonia"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-8">
+              <label class="form-label" for="tercerosCalle"
+                >Calle<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosCalleId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosCalle"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosNumeroExterior"
+                >Número exterior<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosNumeroExteriorId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosNumeroExterior"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosNumeroInterior"
+                >Número interior<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosNumeroInteriorId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosNumeroInterior"
+              />
+            </div>
+            <div class="col-md-1">
+              <label class="form-label" for="tercerosLada"
+                >Lada<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosLadaId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosLada"
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="tercerosTelefono"
+                >Teléfono<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosTelefonoId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosTelefono"
+              />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="tercerosCorreoElectronico"
+                >Correo electrónico<span class="require">*</span>:</label
+              >
+              <input
+                class="form-control"
+                id="tercerosCorreoElectronicoId"
+                placeholder=""
+                type="text"
+                formControlName="tercerosCorreoElectronico"
+              />
+            </div>
+          </div>
+          <div class="modal-footer mt-5">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary">Limpiar</button>
+            <button type="button" class="btn btn-primary">Guardar</button>
+          </div>
         </div>
       </form>
     </div>

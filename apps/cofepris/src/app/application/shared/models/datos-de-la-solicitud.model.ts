@@ -15,3 +15,8 @@ export interface PropietarioModel {
   estadoLocalidad:string;
   codigoPostal:string;
 }
+
+export interface ScianModel {
+  claveScian: string;
+  descripcionScian: string;
+}
