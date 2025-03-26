@@ -7,6 +7,7 @@ import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComp
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { DatosCertificadoComponent } from './components/datosCertificado/datosCertificado.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
     SolicitanteComponent,
     CertificadoOrigenComponent,
     AlertComponent,
-    DestinatarioComponent
+    DestinatarioComponent,
+    DatosCertificadoComponent
     
   ],
 })
