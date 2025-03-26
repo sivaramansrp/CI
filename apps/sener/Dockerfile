@@ -64,8 +64,11 @@ FROM nginx:alpine-slim
 WORKDIR /usr/share/nginx/html
 
 # Copy Nginx configuration or create a default one
-COPY ./apps/sener/nginx.conf /etc/nginx/nginx.conf 2>/dev/null || echo "server { listen 80; location / { root /usr/share/nginx/html; try_files \$uri \$uri/ /index.html; } }" > /etc/nginx/nginx.conf
+# Copy Nginx configuration if it exists
+COPY ./apps/sener/nginx.conf /etc/nginx/nginx.conf
 
+# Create a default nginx.conf if the copy fails
+RUN test -f /etc/nginx/nginx.conf || echo 'server { listen 80; location / { root /usr/share/nginx/html; try_files $uri $uri/ /index.html; } }' > /etc/nginx/nginx.conf
 # Copy built application files
 COPY --from=node /app/dist/apps/sener .
 
