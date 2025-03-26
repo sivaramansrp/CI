@@ -221,6 +221,10 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+  {
+    path: 'exportar-diamantes',
+    loadChildren: () => import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then((m) => m.ExportaciónDeDiamantesEnBrutoModule)
+  }
 ];
 
 @NgModule({
