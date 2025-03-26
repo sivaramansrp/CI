@@ -41,29 +41,21 @@ interface AccionBoton {
   ],
 })
 export class SolicitudPageComponent implements OnInit {
-  ngOnInit(): void {
-    this.pasos = this.pasos
-      .filter((step) => step.indice !== 2)
-
-      .map((step) => (step.indice === 3 ? { ...step, indice: 2 } : step));
-  }
-  nombre!: number;
-
-  /**
-   * Lista de pasos del asistente.
-   */
-  pasos: ListaPasosWizard[] = PASOS;
-
-  /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
- 
-  /**
+/**
    * Referencia al componente del asistente.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+ /**
+   * Lista de pasos del asistente.
+   */
+ pasos: ListaPasosWizard[] = PASOS;
 
+ /**
+  * Índice del paso actual.
+  */
+ indice: number = 1;
+ nombre!: number;
+ 
   /**
    * Datos de los pasos del asistente.
    */
@@ -74,6 +66,12 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
+  ngOnInit(): void {
+    this.pasos = this.pasos
+      .filter((step) => step.indice !== 2)
+      .map((step) => (step.indice === 3 ? { ...step, indice: 2 } : step));
+  }
+  
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -87,7 +85,7 @@ export class SolicitudPageComponent implements OnInit {
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    this.onChildEvent(this.nombre);
+    this.alEventoHijo(this.nombre);
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -99,7 +97,7 @@ export class SolicitudPageComponent implements OnInit {
     }
   }
 
-  onChildEvent(event: number) {
+  alEventoHijo(event: number) {
     this.nombre = event;
   }
 }
