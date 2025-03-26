@@ -34,12 +34,13 @@ jobs:
     outputs:
       environment: ${{ steps.set-env.outputs.environment }}
       changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
+      apps_matrix: ${{ steps.matrix-prep.outputs.apps_matrix }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
+
       - name: Set environment
         id: set-env
         run: |
@@ -50,15 +51,15 @@ jobs:
           else
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-      
+
       - name: Install NX globally
         run: npm install -g nx@${{ env.NX_VERSION }}
-      
+
       - name: Detect changed apps
         id: detect-changes
         run: |
@@ -68,7 +69,7 @@ jobs:
           else
             # Detect changes in apps directory
             CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^apps/' || echo "")
-            
+          
             if [ -z "$CHANGED_FILES" ]; then
               # Check for changes in shared libs that would affect all apps
               SHARED_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
@@ -81,7 +82,7 @@ jobs:
             else
               # Extract the app names from changed files
               CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
-              
+          
               # Always include dashboard when any app changes
               if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
                 CHANGED_APPS="dashboard,$CHANGED_APPS"
@@ -92,6 +93,29 @@ jobs:
           echo "Changed apps: $CHANGED_APPS"
           echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
 
+      - name: Prepare matrix format
+        id: matrix-prep
+        if: steps.detect-changes.outputs.changed_apps != ''
+        run: |
+          # Convertir a formato JSON para la matriz
+          APPS_ARRAY=$(echo "${{ steps.detect-changes.outputs.changed_apps }}" | tr ',' '\n')
+          APPS_JSON="["
+          
+          # Construir array JSON manualmente para evitar dependencias externas
+          FIRST=true
+          for APP in $APPS_ARRAY; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              APPS_JSON="${APPS_JSON},"
+            fi
+            APPS_JSON="${APPS_JSON}\"${APP}\""
+          done
+          
+          APPS_JSON="${APPS_JSON}]"
+          echo "Matrix format: $APPS_JSON"
+          echo "apps_matrix=$APPS_JSON" >> $GITHUB_OUTPUT
+
   build:
     name: Build Microfrontends
     needs: setup
@@ -99,19 +123,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app:  ${{ fromJSON(format('["{0}"]', replace(needs.setup.outputs.changed_apps, ',', '","'))) }}
+        app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
       fail-fast: false
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-      
+
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -123,35 +147,35 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      
+
       - name: Install dependencies
         run: npm install --force
-      
+
       - name: Install NX globally
         run: |
           npm install -g nx@${{ env.NX_VERSION }}
           npx nx --version
-      
+
       - name: Reset NX cache
         run: npx nx reset
-      
+
       - name: Build ${{ matrix.app }}
         run: npx nx build ${{ matrix.app }} --configuration=production
-      
+
       - name: Verify build output
         run: |
           ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      
+
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v4
@@ -161,7 +185,7 @@ jobs:
             type=raw,value=${{ needs.setup.outputs.environment }}
             type=sha,format=short
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-      
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -181,7 +205,7 @@ jobs:
     steps:
       - name: Checkout repository for Kubernetes manifests
         uses: actions/checkout@v3
-      
+
       - name: Create Kubernetes deployment manifest
         run: |
           mkdir -p k8s
@@ -228,7 +252,7 @@ jobs:
                     periodSeconds: 30
           EOF
           done
-      
+
       - name: Create Kubernetes service manifest
         run: |
           cat > k8s/microfrontends-service.yaml << EOF
@@ -245,7 +269,7 @@ jobs:
                 targetPort: 80
             type: ClusterIP
           EOF
-      
+
       - name: Create Ingress manifest
         run: |
           cat > k8s/microfrontends-ingress.yaml << EOF
@@ -269,7 +293,7 @@ jobs:
                           port:
                             number: 80
           EOF
-      
+
       - name: Execute remote deployment
         uses: appleboy/ssh-action@v0.1.8
         with:
