@@ -1,13 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
-// import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-// import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-// import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
 import {
   CATALOGOS_ID,
   Catalogo,
   CatalogosService,
   TEXTOS,
 } from '@libs/shared/data-access-user/src';
+import { Component, Inject, OnInit } from '@angular/core';
 
 /**
  * Componente para el paso dos del trámite.
