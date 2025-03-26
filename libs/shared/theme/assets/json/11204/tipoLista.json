@@ -3,15 +3,15 @@
     "data": [
         {
             "id": "C12345",
-            "tipo": "Tipo Documento 1"
+            "descripcion": "Tipo Documento 1"
         },
         {
             "id": "C67890",
-            "tipo": "Tipo Documento 2"
+            "descripcion": "Tipo Documento 2"
         },
         {
             "id": "C11223",
-            "tipo": "Tipo Documento 3"
+            "descripcion": "Tipo Documento 3"
         }
     ],
     "message": ""

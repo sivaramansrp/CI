@@ -505,10 +505,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   cargarCatalogos(): void {
     this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
-        this.contenedores.catalogos = data.data.map((contenedor: any) => ({
-          id: contenedor.id,
-          descripcion: contenedor.descripcion || ''
-        }));
+        this.contenedores.catalogos = data.data;
       },
     );
   }

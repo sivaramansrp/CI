@@ -1,4 +1,4 @@
-import { RespuestaAduanas, RespuestaContenedores } from "../models/datos-tramite.model";
+import { RespuestaAduanas } from "../models/datos-tramite.model";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
@@ -18,8 +18,8 @@ export class DatosTramiteService {
   /**
    * Get a lista of Contenedores
    */
-  getContenedores(): Observable<RespuestaContenedores> {
-    return this.http.get<RespuestaContenedores>(`assets/json/11204/tipoLista.json`);
+  getContenedores(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>(`assets/json/11204/tipoLista.json`);
   }
 
   /**
