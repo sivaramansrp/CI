@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -15,19 +24,25 @@ class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
 describe('AnexoDosYTresComponent', () => {
@@ -36,18 +51,18 @@ describe('AnexoDosYTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule, AnexoDosYTresComponent ],
+      imports: [FormsModule, ReactiveFormsModule, AnexoDosYTresComponent],
       declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder
-      ]
-    }).overrideComponent(AnexoDosYTresComponent, {
-
-    }).compileComponents();
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder],
+    })
+      .overrideComponent(AnexoDosYTresComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(AnexoDosYTresComponent);
     component = fixture.debugElement.componentInstance;
   });
@@ -60,24 +75,25 @@ describe('AnexoDosYTresComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #createAnexoDosForm()', async () => {
+  it('should run #crearFormularioAnexoDos()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.createAnexoDosForm();
+    component.crearFormularioAnexoDos();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
-  it('should run #createAnexoTresForm()', async () => {
+  it('should run #crearFormularioAnexoTres()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.createAnexoTresForm();
+    component.crearFormularioAnexoTres();
     expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #eliminarAnexoDos()', async () => {
     component.anexoDosTablaLista = component.anexoDosTablaLista || {};
     component.anexoDosTablaLista = ['anexoDosTablaLista'];
-    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada =
+      component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.eliminarAnexoDos();
     expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalled();
@@ -86,11 +102,12 @@ describe('AnexoDosYTresComponent', () => {
   it('should run #agregarAnexoDos()', async () => {
     component.anexoDosFormGroup = component.anexoDosFormGroup || {};
     component.anexoDosFormGroup.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.anexoDosTablaLista = component.anexoDosTablaLista || {};
     component.anexoDosTablaLista.push = jest.fn();
-    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada =
+      component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.agregarAnexoDos();
     expect(component.anexoDosFormGroup.get).toHaveBeenCalled();
@@ -101,7 +118,8 @@ describe('AnexoDosYTresComponent', () => {
   it('should run #eliminarAnexoTres()', async () => {
     component.anexoDosTablaLista = component.anexoDosTablaLista || {};
     component.anexoDosTablaLista = ['anexoDosTablaLista'];
-    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada =
+      component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.eliminarAnexoTres();
     expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalled();
@@ -110,11 +128,12 @@ describe('AnexoDosYTresComponent', () => {
   it('should run #agregarAnexoTres()', async () => {
     component.anexoTresFormGroup = component.anexoTresFormGroup || {};
     component.anexoTresFormGroup.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.anexoTresTablaLista = component.anexoTresTablaLista || {};
     component.anexoTresTablaLista.push = jest.fn();
-    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada =
+      component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.agregarAnexoTres();
     expect(component.anexoTresFormGroup.get).toHaveBeenCalled();
@@ -124,94 +143,165 @@ describe('AnexoDosYTresComponent', () => {
 
   it('should run #setAnexoTresLista() and update the list correctly', async () => {
     const event = [
-      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: false },
-      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+      {
+        ENCABEZADO_FRACCION: '001',
+        ENCABEZADO_DESCRIPCION: 'Description 1',
+        estatus: false,
+      },
+      {
+        ENCABEZADO_FRACCION: '002',
+        ENCABEZADO_DESCRIPCION: 'Description 2',
+        estatus: false,
+      },
     ];
     component.anexoTresTablaLista = [
-      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: false },
-      { ENCABEZADO_FRACCION: '003', ENCABEZADO_DESCRIPCION: 'Description 3', estatus: false }
+      {
+        ENCABEZADO_FRACCION: '001',
+        ENCABEZADO_DESCRIPCION: 'Description 1',
+        estatus: false,
+      },
+      {
+        ENCABEZADO_FRACCION: '003',
+        ENCABEZADO_DESCRIPCION: 'Description 3',
+        estatus: false,
+      },
     ];
-    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada =
+      component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.setAnexoTresLista(event);
     expect(component.anexoTresTablaLista[0].estatus).toBe(true);
     expect(component.anexoTresTablaLista[1].estatus).toBe(true);
-    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoTresTablaLista);
+    expect(
+      component.obtenerAnexoTresDevolverLaLlamada.emit
+    ).toHaveBeenCalledWith(component.anexoTresTablaLista);
   });
-  
+
   it('should run #setAnexoDosLista() and update the list correctly', async () => {
     const event = [
-      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: true },
-      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+      {
+        ENCABEZADO_FRACCION: '001',
+        ENCABEZADO_DESCRIPCION: 'Description 1',
+        estatus: true,
+      },
+      {
+        ENCABEZADO_FRACCION: '002',
+        ENCABEZADO_DESCRIPCION: 'Description 2',
+        estatus: false,
+      },
     ];
     component.anexoDosTablaLista = [
-      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: true },
-      { ENCABEZADO_FRACCION: '003', ENCABEZADO_DESCRIPCION: 'Description 3', estatus: false }
+      {
+        ENCABEZADO_FRACCION: '001',
+        ENCABEZADO_DESCRIPCION: 'Description 1',
+        estatus: true,
+      },
+      {
+        ENCABEZADO_FRACCION: '003',
+        ENCABEZADO_DESCRIPCION: 'Description 3',
+        estatus: false,
+      },
     ];
-    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada =
+      component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.setAnexoDosLista(event);
     expect(component.anexoDosTablaLista[0].estatus).toBe(true);
     expect(component.anexoDosTablaLista[1].estatus).toBe(true);
-    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoDosTablaLista);
+    expect(
+      component.obtenerAnexoDosDevolverLaLlamada.emit
+    ).toHaveBeenCalledWith(component.anexoDosTablaLista);
   });
 
   it('should run #eliminarAnexoDos() and remove items without status', async () => {
     component.anexoDosTablaLista = [
-      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: true },
-      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+      {
+        ENCABEZADO_FRACCION: '001',
+        ENCABEZADO_DESCRIPCION: 'Description 1',
+        estatus: true,
+      },
+      {
+        ENCABEZADO_FRACCION: '002',
+        ENCABEZADO_DESCRIPCION: 'Description 2',
+        estatus: false,
+      },
     ];
-    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada =
+      component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.eliminarAnexoDos();
     expect(component.anexoDosTablaLista.length).toBe(1);
     expect(component.anexoDosTablaLista[0].ENCABEZADO_FRACCION).toBe('002');
-    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoDosTablaLista);
+    expect(
+      component.obtenerAnexoDosDevolverLaLlamada.emit
+    ).toHaveBeenCalledWith(component.anexoDosTablaLista);
   });
 
   it('should run #eliminarAnexoTres() and remove items without status', async () => {
     component.anexoTresTablaLista = [
-      { ENCABEZADO_FRACCION: '001', ENCABEZADO_DESCRIPCION: 'Description 1', estatus: true },
-      { ENCABEZADO_FRACCION: '002', ENCABEZADO_DESCRIPCION: 'Description 2', estatus: false }
+      {
+        ENCABEZADO_FRACCION: '001',
+        ENCABEZADO_DESCRIPCION: 'Description 1',
+        estatus: true,
+      },
+      {
+        ENCABEZADO_FRACCION: '002',
+        ENCABEZADO_DESCRIPCION: 'Description 2',
+        estatus: false,
+      },
     ];
-    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada =
+      component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.eliminarAnexoTres();
     expect(component.anexoTresTablaLista.length).toBe(1);
     expect(component.anexoTresTablaLista[0].ENCABEZADO_FRACCION).toBe('002');
-    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoTresTablaLista);
+    expect(
+      component.obtenerAnexoTresDevolverLaLlamada.emit
+    ).toHaveBeenCalledWith(component.anexoTresTablaLista);
   });
 
   it('should run #agregarAnexoDos() and add a new item correctly', async () => {
     component.anexoDosFormGroup = component.anexoDosFormGroup || {};
     component.anexoDosFormGroup.get = jest.fn().mockReturnValue({
-      value: 'test value'
+      value: 'test value',
     });
     component.anexoDosTablaLista = [];
-    component.obtenerAnexoDosDevolverLaLlamada = component.obtenerAnexoDosDevolverLaLlamada || {};
+    component.obtenerAnexoDosDevolverLaLlamada =
+      component.obtenerAnexoDosDevolverLaLlamada || {};
     component.obtenerAnexoDosDevolverLaLlamada.emit = jest.fn();
     component.agregarAnexoDos();
-    expect(component.anexoDosFormGroup.get).toHaveBeenCalledWith('fraccionArancelaria');
+    expect(component.anexoDosFormGroup.get).toHaveBeenCalledWith(
+      'fraccionArancelaria'
+    );
     expect(component.anexoDosFormGroup.get).toHaveBeenCalledWith('descripcion');
     expect(component.anexoDosTablaLista.length).toBe(1);
     expect(component.anexoDosTablaLista[0].estatus).toBe(false);
-    expect(component.obtenerAnexoDosDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoDosTablaLista);
+    expect(
+      component.obtenerAnexoDosDevolverLaLlamada.emit
+    ).toHaveBeenCalledWith(component.anexoDosTablaLista);
   });
 
   it('should run #agregarAnexoTres() and add a new item correctly', async () => {
     component.anexoTresFormGroup = component.anexoTresFormGroup || {};
     component.anexoTresFormGroup.get = jest.fn().mockReturnValue({
-      value: 'test value'
+      value: 'test value',
     });
     component.anexoTresTablaLista = [];
-    component.obtenerAnexoTresDevolverLaLlamada = component.obtenerAnexoTresDevolverLaLlamada || {};
+    component.obtenerAnexoTresDevolverLaLlamada =
+      component.obtenerAnexoTresDevolverLaLlamada || {};
     component.obtenerAnexoTresDevolverLaLlamada.emit = jest.fn();
     component.agregarAnexoTres();
-    expect(component.anexoTresFormGroup.get).toHaveBeenCalledWith('fraccionArancelaria');
-    expect(component.anexoTresFormGroup.get).toHaveBeenCalledWith('descripcion');
+    expect(component.anexoTresFormGroup.get).toHaveBeenCalledWith(
+      'fraccionArancelaria'
+    );
+    expect(component.anexoTresFormGroup.get).toHaveBeenCalledWith(
+      'descripcion'
+    );
     expect(component.anexoTresTablaLista.length).toBe(1);
     expect(component.anexoTresTablaLista[0].estatus).toBe(false);
-    expect(component.obtenerAnexoTresDevolverLaLlamada.emit).toHaveBeenCalledWith(component.anexoTresTablaLista);
+    expect(
+      component.obtenerAnexoTresDevolverLaLlamada.emit
+    ).toHaveBeenCalledWith(component.anexoTresTablaLista);
   });
-
 });

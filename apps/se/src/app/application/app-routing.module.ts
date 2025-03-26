@@ -209,6 +209,13 @@ const ROUTES: Routes = [
         (m) => m.ExportacionMineralesDeHierroModule
       ),
   },
+  {
+    path: 'autorizacion-programa-nuevo',
+    loadChildren: () =>
+      import('./tramites/80102/autorizacion-programa-nuevo.module').then(
+        (m) => m.AutorizacionProgrmaNuevoModule
+      ),
+  },
 ];
 
 @NgModule({

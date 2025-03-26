@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -11,6 +10,7 @@ import { FECHA_DE_CEDULA } from '../../constantes/empleados.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/empleados.enum';
 import { FECHA_FIN_VIGENCIA } from '../../constantes/empleados.enum';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { Location } from '@angular/common';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -94,15 +94,15 @@ export class EmpleadosComponent {
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
   constructor(public fb: FormBuilder, private ubicaccion: Location) {
-    this.createEmpleadosForm();
+    this.crearFormularioEmpleados();
   }
 
   /**
    * Crea el formulario de empleados.
-   * @method createEmpleadosForm
+   * @method crearFormularioEmpleados
    * @returns {void}
    */
-  createEmpleadosForm(): void {
+  crearFormularioEmpleados(): void {
     this.empleadosForm = this.fb.group({
       totalDeEmpleados: [''],
       directos: [''],
@@ -119,10 +119,10 @@ export class EmpleadosComponent {
   }
 
   /**
-   * Navega a la ubicación anterior en el historial de navegación.
-   * Utiliza el servicio de ubicación para retroceder una página.
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
    */
-  goBack(): void {
+  regrasar(): void {
     this.ubicaccion.back();
   }
 }

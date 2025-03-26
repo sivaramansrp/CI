@@ -87,11 +87,12 @@ export class MontosDeInversionComponent {
       mnx: [''],
     });
   }
+
   /**
-   * Navega a la ubicación anterior en el historial de navegación.
-   * Utiliza el servicio de ubicación para retroceder una página.
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
    */
-  goBack(): void {
+  regrasar(): void {
     this.ubicaccion.back();
   }
 }

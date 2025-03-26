@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
@@ -12,6 +11,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
+import { Location } from '@angular/common';
 
 /**
  * Componente para gestionar la información complementaria de planta.
@@ -31,9 +31,13 @@ import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
   styleUrl: './complementar-planta.component.scss',
 })
 export class ComplementarPlantaComponent {
-  // eslint-disable-next-line no-empty-function
-  constructor(private ubicaccion: Location) {}
-
+  /**
+   * Constructor de la clase ComplementarPlantaComponent.
+   * @param {Location} ubicaccion - Servicio de Angular para manejar la ubicación del navegador.
+   */
+  constructor(private ubicaccion: Location) {
+    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
+  }
   /**
    * Configuración de la fecha de firma.
    * @property {InputFecha} fetchaDeFirma
@@ -77,10 +81,10 @@ export class ComplementarPlantaComponent {
   complementoDePlantaDatos = [];
 
   /**
-   * Navega a la ubicación anterior en el historial de navegación.
-   * Utiliza el servicio de ubicación para retroceder una página.
+   * Vuelve a la ubicación anterior en el historial del navegador.
+   * @returns {void}
    */
-  goBack(): void {
+  regrasar(): void {
     this.ubicaccion.back();
   }
 }

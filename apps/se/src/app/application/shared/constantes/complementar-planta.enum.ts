@@ -8,57 +8,58 @@ export const FECHA_DE_FIN_DE_VIGENCIA = {
   required: true,
   habilitado: true,
 };
+
 export interface ComplementoDePlanta {
-  planta: string;
-  permaneceraMercanciaPrograma: string;
-  tipoDocumento: string;
-  fechaDeFirma: string;
-  fechaDeFinDeVigencia: string;
-  documentoRespaldo: string;
-  fechaDeFirmaDocumento: string;
-  fechaDeFinDeVigenciaDocumento: string;
+  PLANTA: string;
+  PERMANECERA_MERCANCIA_PROGRAMA: string;
+  TIPO_DOCUMENTO: string;
+  FECHA_DE_FIRMA: string;
+  FECHA_DE_FIN_DE_VIGENCIA: string;
+  DOCUMENTO_RESPALDO: string;
+  FECHA_DE_FIRMA_DOCUMENTO: string;
+  FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO: string;
 }
 export const COMPLEMENTO_DE_PLANTA = [
   {
     encabezado: '#Planta',
-    clave: (ele: ComplementoDePlanta): string => ele.planta,
+    clave: (ele: ComplementoDePlanta): string => ele.PLANTA,
     orden: 1,
   },
   {
     encabezado: 'Permanecerá mercancía al amparo del programa',
     clave: (ele: ComplementoDePlanta): string =>
-      ele.permaneceraMercanciaPrograma,
+      ele.PERMANECERA_MERCANCIA_PROGRAMA,
     orden: 2,
   },
   {
     encabezado: 'Tipo de documento',
-    clave: (ele: ComplementoDePlanta): string => ele.tipoDocumento,
+    clave: (ele: ComplementoDePlanta): string => ele.TIPO_DOCUMENTO,
     orden: 3,
   },
   {
     encabezado: 'Fecha de firma (programa)',
-    clave: (ele: ComplementoDePlanta): string => ele.fechaDeFirma,
+    clave: (ele: ComplementoDePlanta): string => ele.FECHA_DE_FIRMA,
     orden: 4,
   },
   {
     encabezado: 'Fecha de fin de vigencia (programa)',
-    clave: (ele: ComplementoDePlanta): string => ele.fechaDeFinDeVigencia,
+    clave: (ele: ComplementoDePlanta): string => ele.FECHA_DE_FIN_DE_VIGENCIA,
     orden: 5,
   },
   {
     encabezado: 'Documento respaldo',
-    clave: (ele: ComplementoDePlanta): string => ele.documentoRespaldo,
+    clave: (ele: ComplementoDePlanta): string => ele.DOCUMENTO_RESPALDO,
     orden: 6,
   },
   {
     encabezado: 'Fecha de firma (documento)',
-    clave: (ele: ComplementoDePlanta): string => ele.fechaDeFirmaDocumento,
+    clave: (ele: ComplementoDePlanta): string => ele.FECHA_DE_FIRMA_DOCUMENTO,
     orden: 7,
   },
   {
     encabezado: 'Fecha de fin de vigencia (documento)',
     clave: (ele: ComplementoDePlanta): string =>
-      ele.fechaDeFinDeVigenciaDocumento,
+      ele.FECHA_DE_FIN_DE_VIGENCIA_DOCUMENTO,
     orden: 8,
   },
 ];

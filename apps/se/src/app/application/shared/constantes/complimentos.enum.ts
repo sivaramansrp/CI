@@ -1,4 +1,4 @@
-import { DatosCatalago } from '../../tramites/80101/models/nuevo-programa-industrial.model';
+import { DatosCatalago } from '../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SociaoAccionistas } from '../models/complimentos.model';
 
 export const FORMA_SOCIO_ACCIONISTAS: DatosCatalago[] = [
@@ -161,7 +161,8 @@ export const TABLA_SOCIO_ACCIONISTAS = [
   },
   {
     encabezado: 'Correo',
-    clave: (ele: SociaoAccionistas): string | undefined => ele.correoElectronico,
+    clave: (ele: SociaoAccionistas): string | undefined =>
+      ele.correoElectronico,
     orden: 6,
   },
 ];
@@ -205,7 +206,8 @@ export const TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS = [
   },
   {
     encabezado: 'Correo',
-    clave: (ele: SociaoAccionistas): string | undefined => ele.correoElectronico,
+    clave: (ele: SociaoAccionistas): string | undefined =>
+      ele.correoElectronico,
     orden: 7,
   },
 ];

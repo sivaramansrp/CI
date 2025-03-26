@@ -1,6 +1,5 @@
 import { PlantasSubfabricante } from '../models/empresas-subfabricanta.model';
 
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION = [
   {
     encabezado: 'Calle',

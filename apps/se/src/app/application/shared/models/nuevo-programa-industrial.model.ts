@@ -18,7 +18,7 @@ export interface AnexoUnoConfiguartion<T> {
   anexoUnoTablaSeleccionRadio: TablaSeleccion;
   anexoUnoEncabezadoDeTabla: ConfiguracionColumna<T>[];
 }
-export interface AnexoImportacionConfiguartion<T> {
+export interface AnexoDosConfiguartion<T> {
   anexoDosTablaSeleccionRadio: TablaSeleccion;
   anexoDosEncabezadoDeTabla: ConfiguracionColumna<T>[];
 }
@@ -88,18 +88,18 @@ export interface ComplimentarFraccionResoponse {
   twoPeriodVolume: number;
 }
 
-  export interface PoryectoDatos {
-    fraccionArancelaria: string,
-    anexoDos: string,
-    tipo: string,
-    umt: string,
-    descripcion: string;
-    tipoDeDocumente: string;
-    fechaDeFirma: string;
-    fechaDeVigencia: string;
-    rfcTaxId: number;
-    razonSocial: string
-  }
+export interface PoryectoDatos {
+  fraccionArancelaria: string;
+  anexoDos: string;
+  tipo: string;
+  umt: string;
+  descripcion: string;
+  tipoDeDocumente: string;
+  fechaDeFirma: string;
+  fechaDeVigencia: string;
+  rfcTaxId: number;
+  razonSocial: string;
+}
 
 export interface RutaNombre {
   catagoria: string;
@@ -108,7 +108,7 @@ export interface RutaNombre {
 }
 
 export interface ProveedorClienteTabla {
-  fraccion: number;
+  fraccion?: string;
   paisDeOrigin?: number;
   proveedor?: string;
   razonSocialProveedor?: string;
