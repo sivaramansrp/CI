@@ -13,6 +13,10 @@ const ROUTES: Routes = [
     loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)  
   },
   {
+    path: 'aviso-exportacion',
+    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)  
+  },
+  {
     path: 'permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260211/permiso-sanitario.module').then(
