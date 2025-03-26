@@ -189,9 +189,10 @@ jobs:
           echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
           echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
 
-      - name: Configure npm
+      # Configuración de npm mediante variables de entorno en lugar de npm config
+      - name: Configure npm environment
         run: |
-          npm config set unsafe-perm true
+          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
