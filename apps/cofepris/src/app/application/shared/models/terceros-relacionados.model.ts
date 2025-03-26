@@ -301,7 +301,7 @@ export const FACTURADOR_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Facturador>[] 
       orden: 16,
     },
   ];
-export interface PagoDerechos {
+export interface PagoDerechosFormState {
   claveReferencia: string;
   cadenaDependencia: string;
   estado: string;
@@ -309,3 +309,9 @@ export interface PagoDerechos {
   fechaPago: string;
   importePago: string;
 }
+
+export const FECHA_DE_PAGO = {
+  labelNombre: 'Fecha de pago',
+  required: true,
+  habilitado: true,
+};

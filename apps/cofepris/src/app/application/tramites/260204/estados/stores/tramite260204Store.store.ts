@@ -5,6 +5,7 @@ import { Facturador } from '../../../../shared/models/terceros-relacionados.mode
 import { Injectable } from '@angular/core';
 import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
 import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -27,6 +28,7 @@ export interface Tramite260204State {
   seleccionadoScianDatos: TablaScianConfig[];
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
   opcionesColapsableState: boolean;
+  pagoDerechos: PagoDerechosFormState;
 }
 
 export function createInitialState(): Tramite260204State {
@@ -86,6 +88,14 @@ export function createInitialState(): Tramite260204State {
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
     opcionesColapsableState: false,
+    pagoDerechos: {
+      claveReferencia: '',
+      cadenaDependencia: '',
+      estado: '',
+      llavePago: '',
+      fechaPago: '',
+      importePago: '',
+    },
   };
 }
 
@@ -159,6 +169,12 @@ export class Tramite260204Store extends Store<Tramite260204State> {
     this.update((state) => ({
       ...state,
       tablaMercanciasConfigDatos,
+    }));
+  }
+  public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
+    this.update((state) => ({
+      ...state,
+      pagoDerechos: nuevoPagoDerechos,
     }));
   }
 }

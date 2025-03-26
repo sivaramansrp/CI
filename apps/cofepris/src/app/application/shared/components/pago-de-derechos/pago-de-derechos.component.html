@@ -2,7 +2,7 @@
   <h4 class="fw-bold">Pago de derechos</h4>
   <hr />
 
-  <form [formGroup]="pagoDerechosForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="pagoDerechosForm">
     <div class="row g-3">
       <!-- Clave de referencia -->
       <div class="col-md-4">
@@ -32,7 +32,6 @@
 
       <!-- Estado (using <app-catalogo-select>) -->
       <div class="col-md-4">
-        <label class="form-label">Estado/localidad*:</label>
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
@@ -56,13 +55,7 @@
 
       <!-- Fecha de pago -->
       <div class="col-md-4">
-        <label for="fechaPago" class="form-label">Fecha de pago:</label>
-        <input
-          type="date"
-          id="fechaPago"
-          class="form-control"
-          formControlName="fechaPago"
-        />
+        <input-fecha [datos]="fechaInicioInput"></input-fecha>
       </div>
 
       <!-- Importe de pago -->
@@ -77,22 +70,19 @@
       </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="mt-3">
-      <button
-        type="submit"
-        class="btn btn-primary me-2"
-        [disabled]="pagoDerechosForm.invalid"
-      >
-        Guardar
-      </button>
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        (click)="onReset()"
-      >
-        Borrar datos del pago
-      </button>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            name="agregarMercancias"
+            class="btn btn-primary ms-2"
+            (click)="onReset()"
+          >
+            Borrar datos del pago
+          </button>
+        </div>
+      </div>
     </div>
   </form>
 </div>

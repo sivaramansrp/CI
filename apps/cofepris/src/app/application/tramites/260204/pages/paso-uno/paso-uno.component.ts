@@ -7,6 +7,7 @@ import { AgregarFabricanteComponent } from '../../../../shared/components/agrega
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { AgregarFacturadorComponent } from '../../../../shared/components/agregar-facturador/agregar-facturador.component';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -20,6 +21,7 @@ import { AgregarFacturadorComponent } from '../../../../shared/components/agrega
     AgregarDestinatarioFinalComponent,
     AgregarProveedorComponent,
     AgregarFacturadorComponent,
+    PagoDeDerechosComponent,
   ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
