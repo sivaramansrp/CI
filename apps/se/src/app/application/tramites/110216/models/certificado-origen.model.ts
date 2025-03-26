@@ -23,3 +23,36 @@ export interface AgregarDatosProductorFormulario {
   numeroRegistroFiscal: string;
   fax: string;
 }
+export interface GrupoReceptor {
+  nombre: string;
+  apellidoPrimer: string;
+  apellidoSegundo: string;
+  numeroFiscal: string;
+  razonSocial: string;
+}
+export interface GrupoDeDirecciones {
+  ciudad: string,
+  calle: string,
+  numeroLetra: string,
+  lada: string,
+  telefono: string,
+  fax: string,
+  correoElectronico: string,
+}
+export interface GrupoRepresentativo {
+  lugar: string;
+  nombreExportador: string;
+  empresa: string;
+  cargo: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+}
+export interface GrupoDeTransporte {
+  puertoEmbarque: string;
+  puertoDesembarque: string;
+  puertoTransito: string;
+  nombreEmbarcacion: string;
+  numeroVuelo: string;
+}
