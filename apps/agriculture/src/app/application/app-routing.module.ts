@@ -91,7 +91,15 @@ const ROUTES: Routes = [
       import('./tramites/220403/exportaccion-acuicola.module').then(
       (m) => m.ExportaccionAcuicolaModule
       )
-  }
+  },
+  {
+
+    path: 'acuicola-fisica',
+    loadChildren: () =>
+      import('./tramites/220703/acuicola-fisica.module').then(
+        (m) => m.AcuicolaFisicaModule
+      ),
+  },
 ];
 
 @NgModule({
