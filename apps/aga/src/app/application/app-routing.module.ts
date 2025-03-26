@@ -69,6 +69,13 @@ const ROUTES: Routes = [
     ),
   },
   {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40102/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
     path: 'temporal-contenedores',
     loadChildren: () => import('./tramites/11201/temporal-contenedores.module').then(
       (m) => m.TemporalContenedoresModule
