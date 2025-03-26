@@ -18,4 +18,23 @@ describe('ScianTablaContenedoraComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render the component correctly', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled).toMatchSnapshot();
+  });
+
+  it('should have a defined component instance', () => {
+    expect(component).toBeDefined();
+  });
+
+  it('should call a specific method when invoked', () => {
+    const spy = jest.spyOn(component, 'obtenerSeleccionado');
+    const event = {
+      clave: 'test',
+      descripcion: 'test description'
+      }
+    component.obtenerSeleccionado(event);
+    expect(spy).toHaveBeenCalled();
+  });
 });

@@ -1,20 +1,22 @@
-/* eslint-disable no-console */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Fabricante } from '../../models/terceros-relacionados.model';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
+import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Fabricante } from '../../models/terceros-relacionados.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
+import { Location } from '@angular/common';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
+import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
+import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-agregar-fabricante',

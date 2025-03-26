@@ -168,7 +168,7 @@ export const PRODUCTO_TABLA = [
 
 export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
   {
-    clasificacionProducto: 'MEDICAMENTOS/ FARMACIOS',
+    clasificacionProducto: '1',
     especificarClasificacionProducto: '',
     denominacionEspecificaProducto: 'QA',
     denominacionDistintiva: 'QA',

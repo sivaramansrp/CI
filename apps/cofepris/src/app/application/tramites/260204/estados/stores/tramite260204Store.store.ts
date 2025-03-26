@@ -1,39 +1,40 @@
-import {
-  DatosSolicitudFormState,
-  TablaMercanciasDatos,
-  TablaOpcionConfig,
-  TablaScianConfig,
-} from '../../../../shared/models/datos-solicitud.model';
-import {
-  PRODUCTO_TABLA_DATA,
-  SCIAN_TABLA_DATA,
-  TABLA_OPCION_DATA,
-} from '../../../../shared/constantes/datos-solicitud.enum';
-import { Store, StoreConfig } from '@datorama/akita';
+import { DatosSolicitudFormState } from '../../../../shared/models/datos-solicitud.model';
+import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
+import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
-import {
-  Destinatario,
-  Fabricante,
-  Facturador,
-  Proveedor,
-} from '../../../../shared/models/terceros-relacionados.model';
+import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
+import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
+import { TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
+import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.model';
+import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
 export interface Tramite260204State {
+  destinatarioFinalTablaDatos: Destinatario[];
+  facturadorTablaDatos: Facturador[];
+  proveedorTablaDatos: Proveedor[];
+  fabricanteTablaDatos: Fabricante[];
   datosSolicitudFormState: DatosSolicitudFormState;
+  mercanciaForm: MercanciaForm;
   opcionConfigDatos: TablaOpcionConfig[];
   scianConfigDatos: TablaScianConfig[];
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
   seleccionadoopcionDatos: TablaOpcionConfig[];
   seleccionadoScianDatos: TablaScianConfig[];
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
-  fabricanteTablaDatos: Fabricante[];
-  destinatarioFinalTablaDatos: Destinatario[];
-  proveedorTablaDatos: Proveedor[];
-  facturadorTablaDatos: Facturador[];
+  opcionesColapsableState: boolean;
 }
 
 export function createInitialState(): Tramite260204State {
   return {
+    destinatarioFinalTablaDatos: [],
+    facturadorTablaDatos: [],
+    proveedorTablaDatos: [],
+    fabricanteTablaDatos: [],
     datosSolicitudFormState: {
       rfcSanitario: '',
       denominacionRazon: '',
@@ -51,22 +52,40 @@ export function createInitialState(): Tramite260204State {
       regimen: '',
       adunasDeEntradas: '',
       aeropuerto: false,
-      publico: 'no',
+      publico: 'si',
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
       apellidoMaterno: '',
     },
+    mercanciaForm: {
+      clasificacionProducto: '',
+      especificarClasificacionProducto: '',
+      denominacionEspecificaProducto: '',
+      denominacionDistintiva: '',
+      denominacionComun: '',
+      tipoProducto: '',
+      formaFarmaceutica: '',
+      estadoFisico: '',
+      fraccionArancelaria: '',
+      descripcionFraccion: '',
+      cantidadUmtValor: '',
+      cantidadUmt: '',
+      cantidadUmcValor: '',
+      cantidadUmc: '',
+      presentacion: '',
+      numeroRegistroSanitario: '',
+      fechaCaducidad: '',
+      paisDeOriginDatos: [],
+      paisDeProcedenciaDatos: [],
+    },
     opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: SCIAN_TABLA_DATA,
+    scianConfigDatos: [], // SCIAN_TABLA_DATA
     tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
-    fabricanteTablaDatos: [],
-    destinatarioFinalTablaDatos: [],
-    proveedorTablaDatos: [],
-    facturadorTablaDatos: [],
+    opcionesColapsableState: false,
   };
 }
 
@@ -117,6 +136,29 @@ export class Tramite260204Store extends Store<Tramite260204State> {
     this.update((state) => ({
       ...state,
       facturadorTablaDatos: [...state.facturadorTablaDatos, ...newFacturadores],
+    }));
+  }
+
+  public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
+    this.update((state) => ({
+      ...state,
+      opcionConfigDatos,
+    }));
+  }
+
+  public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
+    this.update((state) => ({
+      ...state,
+      scianConfigDatos,
+    }));
+  }
+
+  public updateTablaMercanciasConfigDatos(
+    tablaMercanciasConfigDatos: TablaMercanciasDatos[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      tablaMercanciasConfigDatos,
     }));
   }
 }

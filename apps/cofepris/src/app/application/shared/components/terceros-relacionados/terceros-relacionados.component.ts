@@ -1,28 +1,19 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
 import {
-  AlertComponent,
-  ConfiguracionColumna,
-  TablaSeleccion,
-} from '@ng-mf/data-access-user';
+  DESTINATARIO_ENCABEZADO_DE_TABLA,
+  Destinatario,
+  FABRICANTE_ENCABEZADO_DE_TABLA,
+  FACTURADOR_ENCABEZADO_DE_TABLA,
+  Fabricante,
+  Facturador,
+  PROVEEDOR_ENCABEZADO_DE_TABLA,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import {
-  Destinatario,
-  DESTINATARIO_ENCABEZADO_DE_TABLA,
-  Fabricante,
-  FABRICANTE_ENCABEZADO_DE_TABLA,
-  Facturador,
-  FACTURADOR_ENCABEZADO_DE_TABLA,
-  Proveedor,
-  PROVEEDOR_ENCABEZADO_DE_TABLA,
-  MENSAJE_TABLA_OBLIGATORIA,
-} from '../../models/terceros-relacionados.model';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,

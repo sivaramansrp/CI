@@ -26,12 +26,13 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-  private destroyNotifier$: Subject<void> = new Subject();
+  public destroyNotifier$: Subject<void> = new Subject();
 
   @Input() public scianConfig!: ScianConfig<TablaScianConfig>;
   @Input() public tablaMercanciasConfig!: TablaMercanciasConfig<TablaMercanciasDatos>;
   @Input() public opcionConfig!: OpcionConfig<TablaOpcionConfig>;
   @Input() public datosSolicitudFormState!: DatosSolicitudFormState;
+  @Input() public opcionesColapsableState!: boolean;
 
   @Output() opcionSeleccionado: EventEmitter<TablaOpcionConfig[]> = new EventEmitter<TablaOpcionConfig[]>();
   @Output() scianSeleccionado: EventEmitter<TablaScianConfig[]> = new EventEmitter<TablaScianConfig[]>();
@@ -58,9 +59,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   public opcionesColapsable = false;
 
-  constructor(public fb:FormBuilder, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(public fb: FormBuilder, public router: Router, public activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.crearDatosSolicitudForm();
+    this.datosSolicitudForm.valueChanges.pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10)).subscribe(
+        (value) => {
+          if (value) {
+            this.datasolicituActualizar.emit(value);
+          }
+        }
+      );
+      this.opcionesColapsable = this.opcionesColapsableState;
+
+  }
+
+  /**
+   * @method crearDatosSolicitudForm
+   * @description Crea y configura el formulario reactivo `datosSolicitudForm` con los campos necesarios
+   *              para capturar la información de la solicitud. Cada campo incluye validaciones como
+   *              longitud mínima, longitud máxima y obligatoriedad.
+   * 
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  crearDatosSolicitudForm(): void {
     this.datosSolicitudForm = this.fb.group({
       rfcSanitario: [this.datosSolicitudFormState.rfcSanitario, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
       denominacionRazon: [this.datosSolicitudFormState.denominacionRazon, [Validators.required, Validators.minLength(2), Validators.maxLength(150)]],
@@ -84,64 +108,87 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       apellidoPaterno: [this.datosSolicitudFormState.apellidoPaterno, [Validators.required]],
       apellidoMaterno: [this.datosSolicitudFormState.apellidoMaterno, [Validators.required]],
     });
-
-    this.datosSolicitudForm.valueChanges.pipe(
-      takeUntil(this.destroyNotifier$),
-      delay(10)).subscribe(
-        (value) => {
-          if (value) {
-           this.datasolicituActualizar.emit(value);
-          }
-        }
-      );
   }
 
-    /**
-     * Valida si el campo de un formulario no contiene errores
-     * @param {AbstractControl} control  : Control del formulario
-     * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
-     * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
-     */
-    // eslint-disable-next-line class-methods-use-this
-    public isValid(control: AbstractControl, campo?: string): boolean | null {
-      if (control instanceof FormGroup && campo) {
-        return control.controls[campo].errors && control.controls[campo].touched;
-      }
-      return control.errors && control.touched;
+  /**
+   * Valida si el campo de un formulario no contiene errores
+   * @param {AbstractControl} control  : Control del formulario
+   * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
+   * @returns {boolean | null} : Retorna true si el campo contiene errores y ha sido tocado, de lo contrario retorna false
+   */
+  // eslint-disable-next-line class-methods-use-this
+  public isValid(control: AbstractControl, campo?: string): boolean | null {
+    if (control instanceof FormGroup && campo) {
+      return control.controls[campo].errors && control.controls[campo].touched;
     }
-
-  
-
-  buscarRepresentanteRfc(): void {
-   const RFC = this.datosSolicitudForm.get('representanteRfc')?.value;
-      if (RFC) {
-        this.datosSolicitudForm.patchValue({
-          representanteNombre: 'EUROFOODS DE MEXICO',
-          apellidoPaterno: 'GONZALEZ',
-          apellidoMaterno: 'PINAL'
-        });
-      }
+    return control.errors && control.touched;
   }
 
+  /**
+   * Busca el RFC del representante en el formulario y, si existe, 
+   * actualiza los campos relacionados con el nombre, apellido paterno 
+   * y apellido materno del representante con valores predeterminados.
+   *
+   * @remarks
+   * Este método verifica si el campo 'representanteRfc' tiene un valor 
+   * en el formulario `datosSolicitudForm`. Si el valor está presente, 
+   * se actualizan los campos 'representanteNombre', 'apellidoPaterno' 
+   * y 'apellidoMaterno' con datos específicos.
+   */
+  buscarRepresentanteRfc(): void {
+    const RFC = this.datosSolicitudForm.get('representanteRfc')?.value;
+    if (RFC) {
+      this.datosSolicitudForm.patchValue({
+        representanteNombre: 'EUROFOODS DE MEXICO',
+        apellidoPaterno: 'GONZALEZ',
+        apellidoMaterno: 'PINAL'
+      });
+    }
+  }
+
+  /**
+   * Elimina elementos de la configuración SCIAN que coincidan con los elementos de la lista SCIAN.
+   * 
+   * Este método filtra los datos de la configuración SCIAN (`scianConfig.datos`) eliminando
+   * aquellos elementos cuya clave coincida con algún elemento de la lista SCIAN (`scianLista`).
+   * 
+   * Si hay un elemento seleccionado (`scianSeleccionado`), emite los datos actualizados
+   * de la configuración SCIAN.
+   */
   eliminarScian(): void {
-    this.scianConfig.datos = this.scianConfig.datos.filter((idx: TablaScianConfig) =>{
+    if(!this.scianLista.length){
+      return;
+    }
+    this.scianConfig.datos = this.scianConfig.datos.filter((idx: TablaScianConfig) => {
       return !this.scianLista.some((idx2: TablaScianConfig) => idx2.clave === idx.clave);
     });
-    if(this.scianSeleccionado){
+    if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
   }
 
+  /**
+   * Elimina las mercancías seleccionadas de la lista de datos de la tabla.
+   * 
+   * Este método filtra los datos de la tabla de mercancías (`tablaMercanciasConfig.datos`) 
+   * eliminando aquellos elementos cuya clasificación de producto coincide con 
+   * alguno de los elementos en la lista de mercancías (`tablaMercanciasLista`).
+   * 
+   * Si hay mercancías seleccionadas (`mercanciasSeleccionado`), emite el evento 
+   * con los datos actualizados de la tabla de mercancías.
+   */
   eliminarMercancias(): void {
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) =>{
+    if(!this.tablaMercanciasLista.length){
+      return;
+    }
+    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.filter((idx: TablaMercanciasDatos) => {
       return !this.tablaMercanciasLista.some((idx2: TablaMercanciasDatos) => idx2.clasificacionProducto === idx.clasificacionProducto);
     });
-    if(this.mercanciasSeleccionado){
+    if (this.mercanciasSeleccionado) {
       this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
-    }  
+    }
   }
 
-  
   /**
    * Navega a la ruta de acciones
    * @param accionesPath
@@ -152,46 +199,90 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Agrega los elementos seleccionados de la lista SCIAN a la configuración actual
+   * y emite los datos actualizados si hay un elemento seleccionado.
+   * Luego, navega a la ruta de acciones correspondiente.
+   *
+   * @remarks
+   * - Combina los datos existentes con los nuevos elementos seleccionados de la lista SCIAN.
+   * - Emite un evento con los datos actualizados si `scianSeleccionado` está definido.
+   * - Redirige al usuario a la ruta '../scian-selecion'.
+   */
   agregarScian(): void {
     this.scianConfig.datos = this.scianConfig.datos.concat(this.scianLista);
-    if(this.scianSeleccionado){
+    if (this.scianSeleccionado) {
       this.scianSeleccionado.emit(this.scianConfig.datos);
     }
     this.navigateToAcciones('../scian-selecion');
   }
 
+  /**
+   * Agrega las mercancías seleccionadas a la configuración de la tabla y emite el evento correspondiente.
+   * 
+   * Este método concatena los datos de la lista de mercancías seleccionadas con los datos existentes
+   * en la configuración de la tabla. Si hay un elemento seleccionado, emite un evento con los datos
+   * actualizados. Finalmente, navega a la ruta especificada para realizar acciones adicionales.
+   * 
+   * @returns {void} Este método no devuelve ningún valor.
+   */
   agregarMercancias(): void {
-    this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(this.tablaMercanciasLista);
-    if(this.mercanciasSeleccionado){
+      this.tablaMercanciasConfig.datos = this.tablaMercanciasConfig.datos.concat(this.tablaMercanciasLista);
+    if (this.mercanciasSeleccionado) {
       this.mercanciasSeleccionado.emit(this.tablaMercanciasConfig.datos);
     }
     this.navigateToAcciones('../mercancia-datos');
   }
 
+  /**
+   * Emite un evento con los datos seleccionados de las listas asociadas.
+   * 
+   * Este método recopila las listas seleccionadas de `scianLista`, 
+   * `tablaMercanciasLista` y `opcionLista`, y las emite a través del 
+   * evento `datosDeTablaSeleccionados`.
+   * 
+   * @remarks
+   * Este método es útil para comunicar los datos seleccionados a otros 
+   * componentes o servicios que estén escuchando el evento emitido.
+   */
   modificarDatos(): void {
-  this.datosDeTablaSeleccionados.emit({
-    scianSeleccionados: this.scianLista,
-    mercanciasSeleccionados: this.tablaMercanciasLista,
-    opcionSeleccionados: this.opcionLista
-  });
+    this.datosDeTablaSeleccionados.emit({
+      scianSeleccionados: this.scianLista,
+      mercanciasSeleccionados: this.tablaMercanciasLista,
+      opcionSeleccionados: this.opcionLista,
+      opcionesColapsableState: this.opcionesColapsable
+    });
   }
-  
+
+  /**
+   * Muestra u oculta una sección colapsable basada en el orden proporcionado.
+   * 
+   * @param orden - Un número que indica el orden de la sección colapsable. 
+   *                Si el valor es 1, alterna el estado de `opcionesColapsable`.
+   */
   mostrarColapsable(orden: number): void {
     if (orden === 1) {
       this.opcionesColapsable = !this.opcionesColapsable;
-    } 
+      this.datosDeTablaSeleccionados.emit({
+        scianSeleccionados: this.scianLista,
+        mercanciasSeleccionados: this.tablaMercanciasLista,
+        opcionSeleccionados: this.opcionLista,
+        opcionesColapsableState: this.opcionesColapsable
+      });
+    }
   }
 
-    /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
+  /**
+   * Emite un evento con los datos seleccionados de la tabla.
+   * 
+   * Este método recopila las listas seleccionadas de SCIAN, mercancías y opciones,
+   * y las emite a través del evento `datosDeTablaSeleccionados` para que puedan ser
+   * procesadas por otros componentes o servicios.
+   * 
    * @returns {void} No retorna ningún valor.
    */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

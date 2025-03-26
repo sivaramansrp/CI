@@ -3,7 +3,7 @@ import { TramiteStore } from '../../../../estados/tramite.store';
 
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
@@ -20,7 +20,7 @@ export class PasoTresComponent {
 
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private tramiteFolioService: TramiteFolioService,
     private tramiteStore: TramiteStore
   // eslint-disable-next-line no-empty-function
   ) { }
@@ -33,7 +33,7 @@ export class PasoTresComponent {
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosServices
+      this.tramiteFolioService
         .obtenerTramite(19)
         .pipe(
           map((tramite) => {

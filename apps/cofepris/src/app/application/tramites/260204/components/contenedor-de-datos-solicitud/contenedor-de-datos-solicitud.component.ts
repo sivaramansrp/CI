@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
-import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA, TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
 import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -34,12 +34,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
     configuracionTabla: PRODUCTO_TABLA,
     datos: [] as TablaMercanciasDatos[],
   }
-
-  
-  public opcionConfigDatos: TablaOpcionConfig[] = [];
   public scianConfigDatos: TablaScianConfig[] = [];
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
-  
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
   public seleccionadoScianDatos: TablaScianConfig[] = [];
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
@@ -60,30 +56,66 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
     ).subscribe();
   }
 
-
-
+  /**
+   * Maneja el evento cuando se selecciona una opción en la tabla.
+   * 
+   * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`) 
+   *                que representa las opciones seleccionadas.
+   * 
+   * Actualiza la configuración de datos en el store `tramite260204Store` 
+   * con las opciones seleccionadas.
+   */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.opcionConfigDatos = event;
+    this.tramite260204Store.updateOpcionConfigDatos(event);
   }
 
+  /**
+   * Maneja el evento cuando se selecciona un elemento en la tabla SCIAN.
+   * 
+   * @param event - Arreglo de configuraciones seleccionadas de la tabla SCIAN.
+   * 
+   * Este método actualiza los datos de configuración SCIAN en el estado del trámite 260204
+   * utilizando el evento proporcionado.
+   */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.scianConfigDatos = event;
+    this.tramite260204Store.updateScianConfigDatos(event);    
   }
 
+  /**
+   * Maneja el evento de selección de mercancías en la tabla.
+   * 
+   * @param event - Arreglo de objetos de tipo `TablaMercanciasDatos` que contiene 
+   *                los datos seleccionados en la tabla de mercancías.
+   */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.tablaMercanciasConfigDatos = event;
+    this.tramite260204Store.updateTablaMercanciasConfigDatos(event);
   }
 
 
+  /**
+   * Actualiza el estado del formulario de datos de la solicitud en el store.
+   *
+   * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
+   */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
     this.tramite260204Store.updateDatosSolicitudFormState(event);
   }
 
+  /**
+   * Actualiza el estado de la tienda `tramite260204Store` con los datos seleccionados
+   * provenientes del evento de la tabla.
+   *
+   * @param event - Objeto que contiene las opciones seleccionadas, los datos SCIAN seleccionados
+   * y las mercancías seleccionadas de la tabla.
+   */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.seleccionadoScianDatos = event.scianSeleccionados;
-    this.seleccionadoTablaMercanciasDatos = event.mercanciasSeleccionados;
-    this.seleccionadoopcionDatos = event.opcionSeleccionados;
-
+    this.tramite260204Store.update((state) => ({
+      ...state,
+      seleccionadoopcionDatos: event.opcionSeleccionados,
+      seleccionadoScianDatos: event.scianSeleccionados,
+      seleccionadoTablaMercanciasDatos: event.mercanciasSeleccionados,
+      opcionesColapsableState: event.opcionesColapsableState
+    }))
   }
 
     /**
