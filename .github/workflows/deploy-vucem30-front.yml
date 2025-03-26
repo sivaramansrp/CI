@@ -169,20 +169,25 @@ jobs:
     if: needs.setup.outputs.final_apps != ''
     runs-on: ubuntu-latest
     container:
-      image: node:20-slim
+      image: node:20
     strategy:
       matrix:
         app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
       fail-fast: false
     steps:
-      - name: Install git
+      - name: Install build dependencies
         run: |
-          apt-get update && apt-get install -y git
+          apt-get update && apt-get install -y git python3 make g++ python3-pip
 
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Configure npm
+        run: |
+          npm config set python /usr/bin/python3
+          npm config set unsafe-perm true
 
       - name: Cache Node.js modules
         uses: actions/cache@v3
@@ -197,7 +202,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install --force
+        run: |
+          export PYTHON=/usr/bin/python3
+          npm install --force --no-optional || npm install --force --no-optional --legacy-peer-deps
 
       - name: Install NX globally
         run: |
@@ -213,7 +220,10 @@ jobs:
           npx nx reset || echo "Advertencia: Error al reiniciar caché de NX, continuando..."
 
       - name: Build ${{ matrix.app }}
-        run: npx nx build ${{ matrix.app }} --configuration=production
+        run: |
+          # Intentar construir con diferentes opciones si es necesario
+          npx nx build ${{ matrix.app }} --configuration=production || \
+          npx nx build ${{ matrix.app }} --configuration=production --skip-nx-cache
 
       - name: Verify build output
         run: |
