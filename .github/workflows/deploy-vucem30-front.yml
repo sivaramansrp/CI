@@ -351,112 +351,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ needs.setup.outputs.environment }}
     steps:
-      - name: Checkout repository for Kubernetes manifests
-        uses: actions/checkout@v3
-
-      - name: Create Kubernetes deployment manifest
-        run: |
-          mkdir -p k8s
-          cat > k8s/microfrontends-deployment.yaml << EOF
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: vucem-microfrontends-${{ needs.setup.outputs.environment }}
-            labels:
-              app: vucem-microfrontends
-              env: ${{ needs.setup.outputs.environment }}
-          spec:
-            replicas: ${{ needs.setup.outputs.environment == 'prod' && 2 || 1 }}
-            selector:
-              matchLabels:
-                app: vucem-microfrontends
-                env: ${{ needs.setup.outputs.environment }}
-            template:
-              metadata:
-                labels:
-                  app: vucem-microfrontends
-                  env: ${{ needs.setup.outputs.environment }}
-              spec:
-                imagePullSecrets:
-                  - name: github-container-registry
-                containers:
-          EOF
-          
-          # Add containers for each app to deploy
-          for app in $(echo "${{ needs.setup.outputs.final_apps }}" | tr ',' ' '); do
-            cat >> k8s/microfrontends-deployment.yaml << EOF
-                - name: $app
-                  image: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-$app:${{ needs.setup.outputs.environment }}
-                  imagePullPolicy: Always
-                  ports:
-                    - containerPort: 80
-                  resources:
-                    requests:
-                      memory: "128Mi"
-                      cpu: "100m"
-                    limits:
-                      memory: "256Mi"
-                      cpu: "500m"
-                  livenessProbe:
-                    httpGet:
-                      path: /health.txt
-                      port: 80
-                    initialDelaySeconds: 30
-                    timeoutSeconds: 3
-                    periodSeconds: 30
-                  readinessProbe:
-                    httpGet:
-                      path: /health.txt
-                      port: 80
-                    initialDelaySeconds: 10
-                    timeoutSeconds: 3
-                    periodSeconds: 10
-          EOF
-          done
-
-      - name: Create Kubernetes service manifest
-        run: |
-          cat > k8s/microfrontends-service.yaml << EOF
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: vucem-microfrontends-svc-${{ needs.setup.outputs.environment }}
-            labels:
-              app: vucem-microfrontends
-              env: ${{ needs.setup.outputs.environment }}
-          spec:
-            selector:
-              app: vucem-microfrontends
-              env: ${{ needs.setup.outputs.environment }}
-            ports:
-              - port: 80
-                targetPort: 80
-            type: ClusterIP
-          EOF
-
-      - name: Create Ingress manifest
-        run: |
-          cat > k8s/microfrontends-ingress.yaml << EOF
-          apiVersion: networking.k8s.io/v1
-          kind: Ingress
-          metadata:
-            name: vucem-microfrontends-ingress-${{ needs.setup.outputs.environment }}
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /
-          spec:
-            ingressClassName: nginx
-            rules:
-              - host: vucem-${{ needs.setup.outputs.environment }}.example.com
-                http:
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      backend:
-                        service:
-                          name: vucem-microfrontends-svc-${{ needs.setup.outputs.environment }}
-                          port:
-                            number: 80
-          EOF
       - name: Execute remote deployment
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -472,14 +366,113 @@ jobs:
             # Create temporary directory for manifests
             mkdir -p k8s
             
-            # Apply Kubernetes manifests
-            microk8s kubectl apply -f - << EOF
-            $(cat k8s/microfrontends-deployment.yaml)
-            ---
-            $(cat k8s/microfrontends-service.yaml)
-            ---
-            $(cat k8s/microfrontends-ingress.yaml)
+            # Prepare the apps to be included in the deployment
+            APPS_LIST="${{ needs.setup.outputs.final_apps }}"
+            
+            # Create deployment manifest directly on the remote server
+            cat > k8s/microfrontends-deployment.yaml << EOF
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: vucem-microfrontends-${{ needs.setup.outputs.environment }}
+              labels:
+                app: vucem-microfrontends
+                env: ${{ needs.setup.outputs.environment }}
+            spec:
+              replicas: ${{ needs.setup.outputs.environment == 'prod' && 2 || 1 }}
+              selector:
+                matchLabels:
+                  app: vucem-microfrontends
+                  env: ${{ needs.setup.outputs.environment }}
+              template:
+                metadata:
+                  labels:
+                    app: vucem-microfrontends
+                    env: ${{ needs.setup.outputs.environment }}
+                spec:
+                  imagePullSecrets:
+                    - name: github-container-registry
+                  containers:
             EOF
+            
+            # Add containers for each app to deploy
+            for app in $(echo "$APPS_LIST" | tr ',' ' '); do
+              cat >> k8s/microfrontends-deployment.yaml << EOF
+                  - name: $app
+                    image: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-$app:${{ needs.setup.outputs.environment }}
+                    imagePullPolicy: Always
+                    ports:
+                      - containerPort: 80
+                    resources:
+                      requests:
+                        memory: "128Mi"
+                        cpu: "100m"
+                      limits:
+                        memory: "256Mi"
+                        cpu: "500m"
+                    livenessProbe:
+                      httpGet:
+                        path: /health.txt
+                        port: 80
+                      initialDelaySeconds: 30
+                      timeoutSeconds: 3
+                      periodSeconds: 30
+                    readinessProbe:
+                      httpGet:
+                        path: /health.txt
+                        port: 80
+                      initialDelaySeconds: 10
+                      timeoutSeconds: 3
+                      periodSeconds: 10
+            EOF
+            done
+            
+            # Create service manifest directly on the remote server
+            cat > k8s/microfrontends-service.yaml << EOF
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: vucem-microfrontends-svc-${{ needs.setup.outputs.environment }}
+              labels:
+                app: vucem-microfrontends
+                env: ${{ needs.setup.outputs.environment }}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${{ needs.setup.outputs.environment }}
+              ports:
+                - port: 80
+                  targetPort: 80
+              type: ClusterIP
+            EOF
+            
+            # Create ingress manifest directly on the remote server
+            cat > k8s/microfrontends-ingress.yaml << EOF
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: vucem-microfrontends-ingress-${{ needs.setup.outputs.environment }}
+              annotations:
+                nginx.ingress.kubernetes.io/rewrite-target: /
+            spec:
+              ingressClassName: nginx
+              rules:
+                - host: vucem-${{ needs.setup.outputs.environment }}.example.com
+                  http:
+                    paths:
+                      - path: /
+                        pathType: Prefix
+                        backend:
+                          service:
+                            name: vucem-microfrontends-svc-${{ needs.setup.outputs.environment }}
+                            port:
+                              number: 80
+            EOF
+            
+            # Apply Kubernetes manifests
+            microk8s kubectl apply -f k8s/microfrontends-deployment.yaml
+            microk8s kubectl apply -f k8s/microfrontends-service.yaml
+            microk8s kubectl apply -f k8s/microfrontends-ingress.yaml
             
             # Restart the deployment to pull the latest images
             microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
