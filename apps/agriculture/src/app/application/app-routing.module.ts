@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
@@ -58,6 +58,20 @@ const routes: Routes = [
       )
   },
   {
+    path: 'desistimiento',
+    loadChildren: () =>
+      import('./tramites/220404/desistimiento.module').then(
+        (m) => m.DesistimientoModule
+      )
+  },
+  {
+    path: 'inspeccion-fisica',
+    loadChildren: () =>
+      import('./tramites/220701/inspeccion-fisica-zoosanitario.module').then(
+        (m) => m.InspeccionFisicaZoosanitarioModule
+      )
+  },
+  {  
     path: 'peticion-requisitos-fitosanitarios',
     loadChildren: () =>
       import('./tramites/220102/fitosanitario.module').then(
@@ -65,16 +79,23 @@ const routes: Routes = [
       )
   },
   {
+    path: 'inspeccion-fitosanitario',
+    loadChildren: () =>
+      import('./tramites/220702/inspeccion-fitosanitario.module').then(
+        (m) => m.InspeccionFitosanitarioModule
+      ),
+  },
+  {
     path: 'certificado-exportacion',
     loadChildren: () =>
       import('./tramites/220403/exportaccion-acuicola.module').then(
       (m) => m.ExportaccionAcuicolaModule
       )
-  },
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule { }
