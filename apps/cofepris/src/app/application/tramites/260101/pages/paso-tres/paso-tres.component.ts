@@ -1,7 +1,7 @@
 import { catchError, map } from 'rxjs';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 
 /**
  * Componente PasoTresComponent.
@@ -22,7 +22,7 @@ export class PasoTresComponent {
    */
   constructor(
     private router: Router,
-    private serviciosExtraordinariosServices: ServiciosExtraordinariosService,
+    private serviciosExtraordinariosServices: TramiteFolioService,
   ) { 
     // Inicialización
   }
