@@ -200,12 +200,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$: Subject<void> = new Subject();
 
-/**
- * Constructor para inicializar el formulario de datos del subcontratista.
- * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
- * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
- * @param {ComplimentosService} complimentosService - Servicio para obtener los datos de complementos.
- */
+  /**
+   * Constructor para inicializar el formulario de datos del subcontratista.
+   * @param {FormBuilder} fb - FormBuilder para la creación del formulario reactivo.
+   * @param {CatalogosService} catalogosServices - Servicio para obtener los catálogos.
+   * @param {ComplimentosService} complimentosService - Servicio para obtener los datos de complementos.
+   */
   constructor(
     private fb: FormBuilder,
     private catalogosServices: CatalogosService,
@@ -248,12 +248,12 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
- * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
- * Obtiene los catálogos de países y estados, y configura las suscripciones para los cambios en el formulario.
- * Si hay datos de complementos disponibles, los establece en el formulario.
- * @returns {void}
- */
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Obtiene los catálogos de países y estados, y configura las suscripciones para los cambios en el formulario.
+   * Si hay datos de complementos disponibles, los establece en el formulario.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.getCatalogoPaises();
     this.getCatalogoEstado();
