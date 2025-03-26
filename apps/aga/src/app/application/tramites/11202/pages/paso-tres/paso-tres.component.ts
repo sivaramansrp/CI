@@ -1,49 +1,40 @@
-import { catchError, map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@ng-mf/data-access-user';
-import { TramiteFolioStore } from '@ng-mf/data-access-user';
 
+/**
+ * Componente para el paso tres del trámite 301.
+ * Este componente se utiliza para mostrar los pasos del asistente - 301
+ * Lista de pasos
+ * Índice del paso
+ */
 @Component({
   selector: 'paso-tres',
+  standalone: true,
   templateUrl: './paso-tres.component.html',
-  styleUrl: './paso-tres.component.scss'
+  imports: [FirmaElectronicaComponent, CommonModule],
 })
 export class PasoTresComponent {
-
-  constructor(
-    private router: Router,
-    private tramiteFolioServices: TramiteFolioService,
-    private tramiteStore: TramiteFolioStore,) 
-  // eslint-disable-next-line no-empty-function
-  {
-
+  /**
+   * componente doc
+   * @constructor
+   * @param {Router} router - Servicio de Angular para la navegación entre rutas.
+   */
+  constructor(private router: Router) {
+    // Constructor del componente
   }
 
   /**
-  * Maneja el evento para obtener la firma y realiza acciones adicionales.
-  * @param ev - La cadena de texto que representa la firma obtenida.
-  */
+   * componente doc
+   * @método obtieneFirma
+   * @descripcion Recibe la firma electrónica y redirige a la página de acuse si la firma es válida.
+   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
+   */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      // Obtiene el número de trámite
-      this.tramiteFolioServices
-        .obtenerTramite(19)
-        .pipe(
-          map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-            this.router.navigate(['servicios-extraordinarios/acuse']);
-          }),
-          catchError((_error) => {
-            return _error;
-          })
-        )
-        .subscribe();
+      this.router.navigate(['temporal-contenedores/acuse']); // Navegación a la página de acuse
     }
   }
-
-
-
-
 }
