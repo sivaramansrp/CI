@@ -41,6 +41,9 @@ env:
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe'
+  # Añadir variables para controlar problemas de NX
+  NX_SKIP_NX_CACHE: 'true'
+  NX_NATIVE_BINDINGS: 'false'
 
 jobs:
   setup:
@@ -79,12 +82,27 @@ jobs:
       - name: Detect changed apps
         id: detect-changes
         run: |
+          # En caso de workflow_dispatch, no necesitamos detectar cambios si no es modo 'changed'
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.deployment_mode }}" != "changed" ]; then
+            echo "changed_apps=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Para push events, necesitamos encontrar el commit antes
+          BEFORE_COMMIT=""
+          if [ "${{ github.event.before }}" != "" ]; then
+            BEFORE_COMMIT="${{ github.event.before }}"
+          else
+            # Si no hay before commit, usar HEAD~1
+            BEFORE_COMMIT=$(git rev-parse HEAD~1)
+          fi
+          
           # Detect changes in apps directory
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^apps/' || echo "")
+          CHANGED_FILES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^apps/' || echo "")
           
           if [ -z "$CHANGED_FILES" ]; then
             # Check for changes in shared libs that would affect all apps
-            SHARED_CHANGES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
+            SHARED_CHANGES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
             if [ -n "$SHARED_CHANGES" ]; then
               # If shared libs changed, mark all apps as changed
               CHANGED_APPS="${{ env.ALL_APPS }}"
@@ -167,15 +185,15 @@ jobs:
     name: Build Microfrontends
     needs: setup
     if: needs.setup.outputs.final_apps != ''
-    runs-on: ubuntu-latest # Usando el runner de GitHub Actions directamente, sin contenedor
-    timeout-minutes: 30 # Límite de tiempo para todo el job
+    runs-on: ubuntu-latest
+    timeout-minutes: 40  # Aumentado para dar más tiempo
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
         app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
-      fail-fast: false
+      fail-fast: false  # Permitir que otros jobs continúen si uno falla
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -186,6 +204,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install build dependencies
         run: |
@@ -196,7 +216,11 @@ jobs:
           # npm environment variables
           echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
           echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
           echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+          
+          # Establecer tiempo de espera de npm más largo
+          echo "npm_config_timeout=600000" >> $GITHUB_ENV
           
           # Disable NX native modules to avoid binary compatibility issues
           echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
@@ -210,13 +234,17 @@ jobs:
             node_modules
             apps/*/node_modules
             libs/*/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
           restore-keys: |
             ${{ runner.os }}-node-
 
+      # Modificación para instalar los paquetes con más opciones de seguridad
       - name: Install dependencies with specific options
         run: |
-          npm install --legacy-peer-deps --no-package-lock
+          # Verificar que npm está correctamente configurado
+          npm config list
+          # Instalar dependencias con más opciones de seguridad
+          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
       - name: Install NX globally with specific version
         run: |
@@ -225,15 +253,25 @@ jobs:
 
       - name: Build ${{ matrix.app }}
         run: |
+          # Crear un script de build temporal sin postinstall hooks
+          echo "Construyendo la aplicación ${{ matrix.app }}..."
+          
           # Usar comando directo sin npx para evitar problemas de binarios
-          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache
+          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
 
       - name: Verify build output
         run: |
           ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
 
-      - name: Set up Docker Buildx
+      - name: Setup Docker Buildx with increased memory
         uses: docker/setup-buildx-action@v2
+        with:
+          config: |
+            [worker.oci]
+              max-parallelism = 1
+            [worker.containerd]
+              memory = "4Gi"
+              memory-swap = "4Gi"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
@@ -256,6 +294,7 @@ jobs:
             org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
             org.opencontainers.image.vendor=${{ github.repository_owner }}
 
+      # Modificado para construir directamente con el Dockerfile optimizado
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -270,7 +309,9 @@ jobs:
           build-args: |
             NODE_ENV=production
             APP_ENV=${{ needs.setup.outputs.environment }}
-          timeout-minutes: 15
+            NX_SKIP_NX_CACHE=true
+            NX_NATIVE_BINDINGS=false
+          timeout-minutes: 20  # Aumentado
           no-cache: ${{ contains(matrix.app, 'se') }}
 
   deploy:
@@ -327,14 +368,14 @@ jobs:
                       cpu: "500m"
                   livenessProbe:
                     httpGet:
-                      path: /
+                      path: /health.txt
                       port: 80
                     initialDelaySeconds: 30
                     timeoutSeconds: 3
                     periodSeconds: 30
                   readinessProbe:
                     httpGet:
-                      path: /
+                      path: /health.txt
                       port: 80
                     initialDelaySeconds: 10
                     timeoutSeconds: 3
