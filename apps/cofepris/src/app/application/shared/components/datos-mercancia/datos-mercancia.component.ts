@@ -1,8 +1,8 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Catalogo, CrossListLable, TablaMercanciasDatos } from '../../models/datos-solicitud.model';
+import { Catalogo, CrossListLable, MercanciaForm, TablaMercanciasDatos } from '../../models/datos-solicitud.model';
 import { CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
 import { CrosslistQuery } from '@libs/shared/data-access-user/src/core/queries/crosslist.query';
 import { CrosslistStore } from '@libs/shared/data-access-user/src/core/estados/crosslist.store';
@@ -20,6 +20,9 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 })
 export class DatosMercanciaComponent implements OnInit{
   public mercanciaForm!: FormGroup;
+
+    @Input() public mercanciaFormState!: MercanciaForm;
+  
   @Output() mercanciaSeleccionado: EventEmitter<TablaMercanciasDatos> = new EventEmitter<TablaMercanciasDatos>();
 
   public clasificacionProductoDatos!: Catalogo[];
@@ -70,25 +73,25 @@ public seleccionadasUsoEspesificoDatos: string[] = [];
 
   ngOnInit(): void {
     this.mercanciaForm = this.fb.group({
-      clasificacionProducto: ['', Validators.required],
-      especificarClasificacionProducto: ['', Validators.required],
-      denominacionEspecificaProducto: ['', Validators.required],
-      denominacionDistintiva: ['', Validators.required],
-      denominacionComun: ['', Validators.required],
-      tipoProducto: ['', Validators.required],
-      formaFarmaceutica: ['', Validators.required],
-      estadoFisico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: ['', Validators.required],
-      cantidadUmtValor: ['', Validators.required],
-      cantidadUmt: ['', Validators.required],
-      cantidadUmcValor: ['', Validators.required],
-      cantidadUmc: ['', Validators.required],
-      presentacion: ['', Validators.required],
-      numeroRegistroSanitario: ['', Validators.required],
-      fechaCaducidad: [''],
-      paisDeOriginDatos: [[], Validators.required],
-      paisDeProcedenciaDatos: [[], Validators.required],
+      clasificacionProducto: [this.mercanciaFormState.clasificacionProducto, Validators.required],
+      especificarClasificacionProducto: [this.mercanciaFormState.especificarClasificacionProducto, Validators.required],
+      denominacionEspecificaProducto: [this.mercanciaFormState.denominacionEspecificaProducto, Validators.required],
+      denominacionDistintiva: [this.mercanciaFormState.denominacionDistintiva, Validators.required],
+      denominacionComun: [this.mercanciaFormState.denominacionComun, Validators.required],
+      tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
+      formaFarmaceutica: [this.mercanciaFormState.formaFarmaceutica, Validators.required],
+      estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
+      fraccionArancelaria: [this.mercanciaFormState.fraccionArancelaria, Validators.required],
+      descripcionFraccion: [this.mercanciaFormState.descripcionFraccion, Validators.required],
+      cantidadUmtValor: [this.mercanciaFormState.cantidadUmtValor, Validators.required],
+      cantidadUmt: [this.mercanciaFormState.cantidadUmt, Validators.required],
+      cantidadUmcValor: [this.mercanciaFormState.cantidadUmcValor, Validators.required],
+      cantidadUmc: [this.mercanciaFormState.cantidadUmc, Validators.required],
+      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
+      numeroRegistroSanitario: [this.mercanciaFormState.numeroRegistroSanitario, Validators.required],
+      fechaCaducidad: [this.mercanciaFormState.fechaCaducidad],
+      paisDeOriginDatos: [this.mercanciaFormState.paisDeOriginDatos || [], Validators.required],
+      paisDeProcedenciaDatos: [this.mercanciaFormState.paisDeProcedenciaDatos || [], Validators.required],
     });
     this.crosslistStore.establecerFechas(this.paisDeProcedenciaDatos);
     this.crosslistStore.establecerFechasSeleccionadas(this.seleccionadasPaisDeProcedenciaDatos);
@@ -110,6 +113,13 @@ public seleccionadasUsoEspesificoDatos: string[] = [];
         return control.errors && control.touched;
       }
 
+      /**
+       * Método que se ejecuta cuando cambia la selección de países de origen.
+       * Actualiza la lista de países seleccionados y sincroniza el formulario de mercancía
+       * con los datos seleccionados.
+       *
+       * @param events - Arreglo de cadenas que representa los países seleccionados.
+       */
       paisDeOriginSeleccionadasChange(events: string[]): void{
         this.seleccionadasPaisDeOriginDatos = events;
         this.mercanciaForm.patchValue({
@@ -117,6 +127,14 @@ public seleccionadasUsoEspesificoDatos: string[] = [];
         });
       }
 
+      /**
+       * Maneja el evento de cambio para las selecciones de país de procedencia.
+       * 
+       * @param events - Un arreglo de cadenas que representa los países seleccionados.
+       * 
+       * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
+       * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
+       */
       paisDeProcedenciaSeleccionadasChange(events: string[]): void{
         this.seleccionadasPaisDeProcedenciaDatos = events;
         this.mercanciaForm.patchValue({
@@ -124,6 +142,14 @@ public seleccionadasUsoEspesificoDatos: string[] = [];
         });
       }
 
+      /**
+       * Maneja el evento de cambio para las selecciones de uso específico.
+       * 
+       * @param events - Un arreglo de cadenas que representa las selecciones actuales de uso específico.
+       * 
+       * Este método actualiza la propiedad `seleccionadasUsoEspesificoDatos` con las selecciones proporcionadas
+       * y actualiza el formulario `mercanciaForm` para reflejar los valores seleccionados en el campo `usoEspecifico`.
+       */
       usoEspesificoSeleccionadasChange(events: string[]): void{
         this.seleccionadasUsoEspesificoDatos = events;
         this.mercanciaForm.patchValue({
@@ -131,6 +157,14 @@ public seleccionadasUsoEspesificoDatos: string[] = [];
         });
       }
 
+      /**
+       * Alterna el estado colapsable de una sección específica basada en el orden proporcionado.
+       * 
+       * @param orden - Número que indica la sección a modificar:
+       *   - 1: Alterna el estado de `paisDeOriginColapsable`.
+       *   - 2: Alterna el estado de `paisDeProcedenciaColapsable`.
+       *   - 3: Alterna el estado de `usoEspesificoColapsable`.
+       */
       mostrarColapsable(orden: number): void {
         if (orden === 1) {
           this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
@@ -141,11 +175,23 @@ public seleccionadasUsoEspesificoDatos: string[] = [];
         }
       }
 
+      /**
+       * Agrega una nueva mercancía utilizando los datos del formulario actual
+       * y emite un evento con la información de la mercancía seleccionada.
+       * Luego, navega de regreso a la ubicación anterior.
+       *
+       * @returns {void} Este método no devuelve ningún valor.
+       */
       agregarMercancia(): void {
         this.mercanciaSeleccionado.emit(this.mercanciaForm.value);
         this.ubicaccion.back();
       }
 
+      /**
+       * Restablece el formulario de mercancía a su estado inicial.
+       * Este método se utiliza para limpiar todos los campos del formulario,
+       * eliminando cualquier dato ingresado previamente.
+       */
       limpiarMercancia(): void {
         this.mercanciaForm.reset();
       }

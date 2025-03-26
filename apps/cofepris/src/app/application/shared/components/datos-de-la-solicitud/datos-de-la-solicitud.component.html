@@ -65,6 +65,8 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label class="form-label" for="correoElectronico">Correo electrónico:</label>
+                    <span class="bi bi-question-circle-fill" title="Correo electrónico"
+                    data-bs-toggle="tooltip"></span>
                     <input class="form-control" id="correoElectronico" type="text" formControlName="correoElectronico"
                         [ngClass]="isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''">
                 </div>
@@ -117,6 +119,8 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label class="form-label" for="calle">Calle*:</label>
+                    <span class="bi bi-question-circle-fill" title="Calle"
+                    data-bs-toggle="tooltip"></span>
                     <input class="form-control" id="calle" type="text" formControlName="calle"
                         [ngClass]="isValid(datosSolicitudForm, 'calle') ? 'required' : ''">
                 </div>
@@ -146,7 +150,6 @@
                 [configuracionTabla]="scianConfig.configuracionTabla" [datos]="scianConfig.datos"
                 (listaDeFilaSeleccionada)="scianLista = $event"></app-tabla-dinamica>
         </div>
-        @if (scianConfig.datos.length === 0) {
         <div class="row">
             <div class="col-md-12">
                 <div class="pull-right ml-2">
@@ -160,7 +163,6 @@
                 </div>
             </div>
         </div>
-        }
         }
 
         <div class="row mt-2">
@@ -224,12 +226,14 @@
                             Modificar
                         </button>
                         <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2"
-                            (click)="eliminarMercancias()">
+                            (click)="eliminarMercancias()"
+                            [disabled]="!this.tablaMercanciasLista.length">
                             Eliminar
                         </button>
                     }
                     <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                        data-bs-target="#modalAgregarMercancias" (click)="agregarMercancias()">
+                        data-bs-target="#modalAgregarMercancias" (click)="agregarMercancias()"
+                        [disabled]="!this.tablaMercanciasLista.length">
                         Agregar
                     </button>
                 </div>

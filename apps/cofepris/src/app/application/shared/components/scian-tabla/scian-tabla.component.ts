@@ -35,15 +35,43 @@ export class ScianTablaComponent implements OnInit{
   }
 
   
+  /**
+   * Maneja el evento cuando se selecciona un elemento del catálogo.
+   * Filtra la lista de elementos SCIAN para encontrar el elemento correspondiente
+   * basado en el ID del evento y actualiza el formulario con la descripción del elemento seleccionado.
+   *
+   * @param event - Objeto del tipo `Catalogo` que contiene los datos del elemento seleccionado.
+   */
   claveSelecionada(event: Catalogo): void {
     this.scianNinoLista = this.scianLista.filter((ele) => ele.id === event.id);
+    this.scianForm.patchValue({
+      scianNino: `${this.scianNinoLista[0].descripcion} Descripción for Test`
+    })
   }
 
+  /**
+   * Agrega un nuevo elemento SCIAN a la lista seleccionada y emite el evento correspondiente.
+   * 
+   * Este método crea un objeto de configuración `TablaScianConfig` utilizando los valores
+   * proporcionados en el formulario y la lista `scianNinoLista`. Luego, emite el objeto
+   * creado a través del evento `scianSeleccionado` y navega hacia atrás en la ubicación actual.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   agregarScian(): void {
-    this.scianSeleccionado.emit(this.scianForm.value);
+    const SCIAN_IDX: TablaScianConfig = {
+      clave:  this.scianNinoLista[0].descripcion,
+      descripcion: this.scianForm.get('scianNino')?.value
+    }
+    this.scianSeleccionado.emit(SCIAN_IDX);
     this.ubicaccion.back();
   }
 
+  /**
+   * Restablece el formulario SCIAN a su estado inicial.
+   * Este método reinicia todos los campos del formulario SCIAN,
+   * eliminando cualquier dato ingresado previamente.
+   */
   limpiarScian(): void {
     this.scianForm.reset();
   }

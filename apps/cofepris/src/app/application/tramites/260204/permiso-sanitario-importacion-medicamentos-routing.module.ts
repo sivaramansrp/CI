@@ -1,5 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
-import { DatosMercanciaComponent } from '../../shared/components/datos-mercancia/datos-mercancia.component';
+import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
 import { ScianTablaContenedoraComponent } from './components/scian-tabla-contenedora/scian-tabla-contenedora.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
@@ -20,7 +20,7 @@ const ROUTES: Routes = [
   },
   {
     path: 'mercancia-datos',
-    component: DatosMercanciaComponent,
+    component: DatosMercanciaContenedoraComponent,
   },
 ];
 

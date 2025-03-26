@@ -125,3 +125,25 @@ export interface CrossListLable {
     apellidoPaterno: string;
     apellidoMaterno: string;
   }
+
+  export interface MercanciaForm {
+    clasificacionProducto: string;
+    especificarClasificacionProducto: string;
+    denominacionEspecificaProducto: string;
+    denominacionDistintiva: string;
+    denominacionComun: string;
+    tipoProducto: string;
+    formaFarmaceutica: string;
+    estadoFisico: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    cantidadUmtValor: string;
+    cantidadUmt: string;
+    cantidadUmcValor: string;
+    cantidadUmc: string;
+    presentacion: string;
+    numeroRegistroSanitario: string;
+    fechaCaducidad: string;
+    paisDeOriginDatos: string[]; // Assuming it's an array of any type, adjust if needed
+    paisDeProcedenciaDatos: string[]; // Assuming it's an array of any type, adjust if needed
+  }
