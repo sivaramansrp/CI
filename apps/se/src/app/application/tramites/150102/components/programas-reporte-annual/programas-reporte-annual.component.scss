@@ -1,9 +1,24 @@
-.input-group-text {
-    background-color: #f8f9fa; /* Light gray background */
-    border: 1px solid #ced4da; /* Match input field border */
-    cursor: pointer; /* Make the calendar icon clickable */
-  }
-  
-  .input-group {
-    max-width: 300px; /* Adjust width as needed */
-  }
+.input-container {
+  position: relative;
+  width: 300px;
+}
+
+.input-date {
+  width: 100%;
+  padding-right: 35px; 
+  padding-left: 10px;
+  height: 40px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ccc;
+  pointer-events: none; 
+  font-size: 18px;
+}

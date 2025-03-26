@@ -32,6 +32,12 @@ export interface Solicitud150102State {
   porcentajeExportacion: string;
   /** Lista de bienes producidos */
   producidosDatos: BienesProducidos[];
+  /**
+   * @description Arreglo que contiene los datos de los bienes producidos.
+   * Cada elemento del arreglo es de tipo `BienesProducidos` y representa
+   * un bien con sus respectivas características y detalles.
+   */
+  bienesProducidosDatos: BienesProducidos[];
 }
 
 /**
@@ -52,6 +58,7 @@ export function createInitialState(): Solicitud150102State {
     saldo: '0',
     porcentajeExportacion: '0',
     producidosDatos: [],
+    bienesProducidosDatos: [],
   };
 }
 
@@ -200,6 +207,19 @@ export class Solicitud150102Store extends Store<Solicitud150102State> {
     this.update((state) => ({
       ...state,
       producidosDatos,
+    }));
+  }
+
+  /**
+   * @description Actualiza la lista de bienes producidos.
+   * @param bienesProducidosDatos Arreglo de bienes producidos.
+   */
+  actualizarBienesProducidosDatos(
+    bienesProducidosDatos: BienesProducidos[]
+  ): void {
+    this.update((state) => ({
+      ...state,
+      bienesProducidosDatos,
     }));
   }
 

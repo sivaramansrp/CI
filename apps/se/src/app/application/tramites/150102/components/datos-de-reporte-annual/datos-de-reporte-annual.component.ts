@@ -142,9 +142,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         encabezado: 'Volumen de exportaciones',
         clave: (item: BienesProducidos) => item.exportaciones,
         orden: 7,
-      }
+      },
     ];
-
 
   /**
    * @description Constructor que inicializa las dependencias necesarias.
@@ -213,6 +212,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
               this.solicitud150102State.porcentajeExportacion,
           });
           this.producidosDatos = this.solicitud150102State.producidosDatos;
+          this.bienesProducidosDatos =
+            this.solicitud150102State.bienesProducidosDatos;
         })
       )
       .subscribe();
@@ -288,8 +289,14 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         (item) => item.bienProducido === this.bienesProducidos.bienProducido
       );
       if (!EXISTE) {
-        this.bienesProducidosDatos.push(this.bienesProducidos);
+        this.bienesProducidosDatos = [
+          ...this.bienesProducidosDatos,
+          this.bienesProducidos,
+        ];
       }
+      this.solicitud150102Store.actualizarBienesProducidosDatos(
+        this.bienesProducidosDatos
+      );
     }
   }
 

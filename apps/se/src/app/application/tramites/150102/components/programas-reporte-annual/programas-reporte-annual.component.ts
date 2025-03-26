@@ -1,8 +1,8 @@
-import { Component} from '@angular/core';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { InputFecha } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
@@ -29,22 +29,16 @@ import { takeUntil } from 'rxjs';
 export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
   formProgrmasReporte!: FormGroup;
-  bsConfig = {
-    dateInputFormat: 'MM/YYYY', // Set the input format to MM/YYYY
-    minMode: 'month' // Restrict selection to month and year only
-  };
-  /** Configuración de la fecha de fin de vigencia */
-  configuracionFechaFinVigencia: InputFecha = {
-    labelNombre: 'Fin',
-    required: false,
-    habilitado: false,
-  };
-
-  /** Configuración de la fecha de inicio de vigencia */
-  configuracionFechaInicioVigencia: InputFecha = {
-    labelNombre: 'Inicio',
-    required: false,
-    habilitado: false,
+  /**
+   * @description Configuración del componente `BsDatepicker`.
+   * Permite establecer el formato de la fecha y restringir la selección a nivel de mes y año.
+   *
+   * @property {string} dateInputFormat - Define el formato de la fecha mostrada en el campo de entrada (MM/YYYY).
+   * @property {string} minMode - Establece el modo mínimo de selección en el selector (mes).
+   */
+  bsConfig: Partial<BsDatepickerConfig> = {
+    dateInputFormat: 'MM/YYYY', // Formato de entrada: mes/año
+    minMode: 'month', // Solo permite seleccionar mes y año
   };
 
   /** Estado actual de la solicitud */
@@ -106,8 +100,8 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.formProgrmasReporte = this.fb.group({
-      inicio: [{ value: this.solicitud150102State.inicio, disabled: false }],
-      fin: [{ value: this.solicitud150102State.fin, disabled: false }],
+      inicio: [{ value: this.solicitud150102State.inicio, disabled: true }],
+      fin: [{ value: this.solicitud150102State.fin, disabled: true }],
       folioPrograma: [
         { value: this.solicitud150102State.folioPrograma, disabled: true },
       ],
