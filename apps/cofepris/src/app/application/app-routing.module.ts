@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoMaquilaModule
       ),
   },
+  {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -16,7 +16,7 @@ export interface Tramite260212State {
   setMunicipio:string,
   setLocalidad:string,
   setColonia:string,
-  setCaller:string,
+  setCalle:string,
   setLada:string,
   setTelefono:string,
   setCodigoPostal:string,
@@ -42,7 +42,7 @@ export function createInitialState(): Tramite260212State {
     setMunicipio:'',
     setLocalidad:'',
     setColonia:'',
-    setCaller:'',
+    setCalle:'',
     setLada:'',
     setTelefono:'',
     setCodigoPostal:'',
@@ -58,7 +58,7 @@ export function createInitialState(): Tramite260212State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'estadoState', resettable: true })
+@StoreConfig({ name: 'permisoMaquilaState', resettable: true })
 export class Tramite260212Store extends Store<Tramite260212State> {
   constructor() {
     super(createInitialState());
@@ -141,10 +141,10 @@ export class Tramite260212Store extends Store<Tramite260212State> {
     }));
   }
 
-  public setCaller(setCaller: string):void {
+  public setCalle(setCalle: string):void {
     this.update((state) => ({
       ...state,
-      setCaller,
+      setCalle,
     }));
   }
 

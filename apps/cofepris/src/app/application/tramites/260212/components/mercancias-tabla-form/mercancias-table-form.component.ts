@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { PaisDeOriginComponent } from '../pais-de-origin/pais-de-origin.component';
+
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -12,6 +12,7 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 import { Observable, Subject } from 'rxjs';
+import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -25,7 +26,7 @@ import { Observable, Subject } from 'rxjs';
     CatalogoSelectComponent,
     TituloComponent,
     CrosslistComponent,
-    PaisDeOriginComponent
+    PaisDeOrigenComponent
   ],
   templateUrl: './mercancias-table-form.component.html',
   styleUrl: './mercancias-table-form.component.scss',
@@ -56,7 +57,7 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   /**
   * Emite el evento de Cancelaración para cerrar el formulario.
   */
-  cerrarMercanciasTableForm() {
+  cerrarMercanciasTableForm(): void {
     this.Cancelar.emit();
   }
   /**
@@ -64,8 +65,14 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
     */
   especificarClasificacion: Catalogo[] = [];
 
+  /**
+   * Arreglo que almacena las clasificaciones del producto.
+   */
   clasificacionProducto: Catalogo[] = [];
 
+  /**
+   * Arreglo que almacena los estados físicos del producto.
+   */
   estadoFisico: Catalogo[] = [];
 
   /**
@@ -82,7 +89,9 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query
-  ) { }
+  ) {
+    // Se puede agregar lógica de inicialización aquí si es necesario
+  }
 
   /**
   * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
@@ -113,7 +122,7 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   /**
  * Inicializa el formulario `datosMercanciaForm` con campos requeridos y validaciones.
  */
-  datosMercanciaFormInitial() {
+  datosMercanciaFormInitial(): void {
     this.datosMercanciaForm = this.fb.group({
       clasificacion: ['', Validators.required],
       especificarClasificacion: ['', Validators.required],
@@ -132,17 +141,20 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
     });
   }
 
-  getMunicipios(): void {
+  /**
+   * Obtiene el valor de 'especificarClasificacion' del formulario y lo establece en el store.
+   */
+  getEspecificar(): void {
     const SELECTED_ESPECIFICIAR = this.datosMercanciaForm.get('especificarClasificacion')?.value;
     this.tramite260212Store.setDespecificarClasificacion(SELECTED_ESPECIFICIAR);
   }
 
-    /**
-   * Angular lifecycle hook invoked when the component is destroyed.
-   * Cleans up any subscriptions or resources associated with the component.
-   */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  /**
+ * Angular lifecycle hook invoked when the component is destroyed.
+ * Cleans up any subscriptions or resources associated with the component.
+ */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

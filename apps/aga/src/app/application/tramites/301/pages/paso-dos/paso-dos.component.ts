@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
-import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { TEXTOS } from '@ng-mf/data-access-user';
 
 /**
  * Componente para el paso dos del trámite 301.

@@ -9,7 +9,7 @@
             </div>
             <div class="col-md-8 ml">
                 <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto*:'"
-                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getMunicipios()">
+                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getEspecificar()">
                 </app-catalogo-select>
             </div>
             <div class="col-md-8">
@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <app-pais-de-origin></app-pais-de-origin>
+        <app-pais-de-origen></app-pais-de-origen>
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" (click)="cerrarMercanciasTableForm()">
                 Cancelar

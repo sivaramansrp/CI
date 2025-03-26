@@ -2,8 +2,8 @@
  * Modelo de datos para una solicitud.
  * Contiene información básica sobre la solicitud.
  */
-export interface solicitudModel {
-  fechaCreación: string;
+export interface SolicitudModel {
+  fechaCreacion: string;
   mercancía: string;
   cantidad: string;
   proveedor: string;
@@ -15,17 +15,17 @@ export interface solicitudModel {
  */
 export interface MercanciaModel {
 
-  clasificaciónProducto: string;
+  clasificacionProducto: string;
 
-  especificarClasificación: string;
+  especificarClasificacion: string;
   
-  denominaciónEspecífica: string;
+  denominacionEspecifica: string;
 
-  denominaciónDistintiva: string;
+  denominacionDistintiva: string;
 
-  denominaciónComún: string;
+  denominacionComun: string;
 
-  formaFarmacéutica: string;
+  formaFarmaceutica: string;
 
   estadoFsico: string;
 }
@@ -45,7 +45,7 @@ export interface ClaveModel {
  * Modelo para opciones de un select.
  * Cada opción tiene un label y un valor.
  */
-export interface LosOption {
+export interface OpcionesPublicacion{
 
   label: string;
   value: string;

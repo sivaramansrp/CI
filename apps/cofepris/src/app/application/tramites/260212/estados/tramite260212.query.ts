@@ -19,7 +19,7 @@ export class Tramite260212Query extends Query<Tramite260212State> {
   selectedMunicipio$ = this.select((state) => state.setMunicipio);
   selectedLocalidad$ =this.select((state) => state.setLocalidad);
   selectedColonia$ =this.select((state) => state.setColonia);
-  selectedCaller$ =this.select((state) => state.setCaller);
+  selectedCalle$ =this.select((state) => state.setCalle);
   selectedLada$ =this.select((state) => state.setLada);
   SelectedTelefono$=this.select((state) => state.setTelefono);
   SelectedCodigoPostal$=this.select((state) => state.setCodigoPostal)
