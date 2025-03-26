@@ -128,8 +128,8 @@ describe('PagoDeDerechosComponent', () => {
   });
 
   
-  it('should fetch bancoList on getBancoList call', () => {
-    
+  it('should fetch bancoList on obtenerBancoList call', () => {
+     
     const mockBancoList = [{ id: 1, name: 'Banco 1' }];
 
     // Ensure the mock is set up before the component is initialized

@@ -69,7 +69,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearForm();
     this.enPatchStoredFormData();
-    this.getBancoList();
+    this.obtenerBancoList();
   }
 
   /**
@@ -131,17 +131,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     };
   }
 
-  /**
-   * Obtiene la lista de bancos del servicio y la asigna a `bancoList`.
+ /**
+   * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
    */
-  getBancoList(): void {
-    this.Servicio.onBancoList()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: BancoList[]) => {
-        this.bancoList = data;
-      });
-  }
-
+ obtenerBancoList(): void {
+  this.Servicio.onBancoList()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data: BancoList[]) => {
+      this.bancoList = data;
+    });
+}
   /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.

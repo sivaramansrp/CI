@@ -35,8 +35,8 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    */
   public configuracionTabla: ConfiguracionColumna<Asociados>[] = [
     { encabezado: '', clave: (item: Asociados) => item.id, orden: 1 },
-    { encabezado: 'Folio trámite', clave: (item: Asociados) => item.folioTrámite, orden: 2 },
-    { encabezado: 'Tipo trámite', clave: (item: Asociados) => item.tipoTrámite, orden: 3 },
+    { encabezado: 'Folio trámite', clave: (item: Asociados) => item.folioTramite, orden: 2 },
+    { encabezado: 'Tipo trámite', clave: (item: Asociados) => item.tipoTramite, orden: 3 },
     { encabezado: 'Estatus', clave: (item: Asociados) => item.estatus, orden: 4 },
     { encabezado: 'Fecha alta de registro', clave: (item: Asociados) => item.fechaAltaDeRegistro, orden: 5 },
   ];
@@ -49,9 +49,9 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    */
   public acuseTablaDatos: Asociados[] = [];
 
- /**
-   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
-   */
+  /**
+    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+    */
   public destroyed$ = new Subject<void>();
 
   /**
@@ -74,7 +74,7 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    * @returns {void} No retorna nada.
    */
   ngOnInit(): void {
-    this.getAsociadosList();
+    this.obtenerListaDeAsociados();
   }
 
   /**
@@ -83,8 +83,8 @@ export class TramitesAsociadoComponent implements OnInit, OnDestroy {
    *
    * @returns {void} No retorna nada.
    */
-  getAsociadosList(): void {
-    this.servicios.onAsociadosList().pipe(takeUntil(this.destroyed$)).subscribe((data: Asociados[]) => {
+  obtenerListaDeAsociados(): void {
+    this.servicios.enListaDeAsociados().pipe(takeUntil(this.destroyed$)).subscribe((data: Asociados[]) => {
       this.acuseTablaDatos = data; // Asigna los datos obtenidos a la tabla dinámica.
     });
   }

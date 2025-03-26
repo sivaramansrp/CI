@@ -1,12 +1,12 @@
-import { ALERT } from '../../enums/datos-de-la-solicitud-260904.enum';
+import { Component, OnDestroy } from '@angular/core';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud-260904.enum';
-import { Observable } from 'rxjs';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/datos-de-la-solicitud.enum';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -15,9 +15,9 @@ import { Tramite260911Store } from '../../estados/store/tramite260911.store';
 import { Validators } from '@angular/forms';
 
 /**
- * Componente para gestionar los datos de la solicitud 260904.
+ * Componente para gestionar los datos de la solicitud.
  * 
- * @selector app-datos-de-la-solicitud-260904
+ * @selector app-datos-de-la-solicitud
  * @standalone true
  * @imports [
  *   CommonModule,
@@ -26,8 +26,8 @@ import { Validators } from '@angular/forms';
  *   ReactiveFormsModule,
  *   TituloComponent
  * ]
- * @templateUrl ./datos-de-la-solicitud-260904.component.html
- * @styleUrl ./datos-de-la-solicitud-260904.component.scss
+ * @templateUrl ./datos-de-la-solicitud.component.html
+ * @styleUrl ./datos-de-la-solicitud.component.scss
  */
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -42,10 +42,10 @@ import { Validators } from '@angular/forms';
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
-   * Indica si el formulario es colapsable.
-   */
+    * Indica si el formulario es colapsable.
+    */
   colapsable: boolean = true;
 
   /**
@@ -72,41 +72,43 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * Observable para el botón de radio.
    */
   btonDeRadio$: Observable<string | null> =
-    this.tramite260904Query.btonDeRadio$;
+    this.tramite260911Query.btonDeRadio$;
 
   /**
    * Observable para la justificación.
    */
   justificación$: Observable<string | null> =
-    this.tramite260904Query.justificación$;
+    this.tramite260911Query.justificación$;
 
   /**
    * Observable para el RFC del establecimiento.
    */
-  rfcDel$: Observable<string | null> = this.tramite260904Query.rfcDel$;
+  rfcDel$: Observable<string | null> = this.tramite260911Query.rfcDel$;
 
   /**
    * Observable para la denominación del establecimiento.
    */
   denominacion$: Observable<string | null> =
-    this.tramite260904Query.denominacion$;
+    this.tramite260911Query.denominacion$;
 
   /**
    * Observable para el correo del establecimiento.
    */
-  correo$: Observable<string | null> = this.tramite260904Query.correo$;
+  correo$: Observable<string | null> = this.tramite260911Query.correo$;
+
+  private destroy$ = new Subject<void>();
 
   /**
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios.
-   * @param tramite260904Query Consulta de datos del trámite.
-   * @param tramite260904Store Almacenamiento de datos del trámite.
+   * @param tramite260911Query Consulta de datos del trámite.
+   * @param tramite260911Store Almacenamiento de datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private tramite260904Query: Tramite260911Query,
-    private tramite260904Store: Tramite260911Store
+    private tramite260911Query: Tramite260911Query,
+    private tramite260911Store: Tramite260911Store
   ) {
     // Constructor
   }
@@ -117,25 +119,25 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.crearFormulario();
 
-    this.btonDeRadio$.subscribe((btonDeRadio) => {
+    this.btonDeRadio$.pipe(takeUntil(this.destroy$)).subscribe((btonDeRadio) => {
       if (btonDeRadio) {
         this.form.get('btonDeRadio')?.setValue(btonDeRadio);
       }
     });
 
-    this.justificación$.subscribe((justificación) => {
+    this.justificación$.pipe(takeUntil(this.destroy$)).subscribe((justificación) => {
       if (justificación) {
         this.form.get('justificación')?.setValue(justificación);
       }
     });
 
-    this.rfcDel$.subscribe((rfcDel) => {
+    this.rfcDel$.pipe(takeUntil(this.destroy$)).subscribe((rfcDel) => {
       if (rfcDel) {
         this.datosDelEstablecimiento.get('rfcDel')?.setValue(rfcDel);
       }
     });
 
-    this.denominacion$.subscribe((denominacion) => {
+    this.denominacion$.pipe(takeUntil(this.destroy$)).subscribe((denominacion) => {
       if (denominacion) {
         this.datosDelEstablecimiento
           .get('denominacion')
@@ -143,11 +145,16 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       }
     });
 
-    this.correo$.subscribe((correo) => {
+    this.correo$.pipe(takeUntil(this.destroy$)).subscribe((correo) => {
       if (correo) {
         this.datosDelEstablecimiento.get('correo')?.setValue(correo);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -192,7 +199,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   getBtonDeRadio(): void {
     const BTON_DE_RADIO = this.form.get('btonDeRadio')?.value;
-    this.tramite260904Store.setBtonDeRadio(BTON_DE_RADIO);
+    this.tramite260911Store.setBtonDeRadio(BTON_DE_RADIO);
   }
 
   /**
@@ -200,7 +207,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   getJustificacion(): void {
     const JUSTIFICACION = this.form.get('justificación')?.value;
-    this.tramite260904Store.setJustificación(JUSTIFICACION);
+    this.tramite260911Store.setJustificación(JUSTIFICACION);
   }
 
   /**
@@ -208,7 +215,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   getRfcDel(): void {
     const RFC_DEL = this.datosDelEstablecimiento.get('rfcDel')?.value;
-    this.tramite260904Store.setRfcDel(RFC_DEL);
+    this.tramite260911Store.setRfcDel(RFC_DEL);
   }
 
   /**
@@ -217,7 +224,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   getDenominacion(): void {
     const DENOMINACION =
       this.datosDelEstablecimiento.get('denominacion')?.value;
-    this.tramite260904Store.setDenominacion(DENOMINACION);
+    this.tramite260911Store.setDenominacion(DENOMINACION);
   }
 
   /**
@@ -225,6 +232,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   getCorreo(): void {
     const CORREO = this.datosDelEstablecimiento.get('correo')?.value;
-    this.tramite260904Store.setCorreo(CORREO);
+    this.tramite260911Store.setCorreo(CORREO);
   }
 }

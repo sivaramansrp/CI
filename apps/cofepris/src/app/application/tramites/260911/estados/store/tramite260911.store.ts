@@ -10,7 +10,7 @@ export interface Tramite260911State {
   rfcDel: string;
   denominacion: string;
   correo: string;
-  códigoPostal: string;
+  codigoPostal: string;
   estado: Catalogo | null;
   municipioOAlcaldía: string;
   localidad: string;
@@ -43,7 +43,7 @@ export function createInitialState(): Tramite260911State {
     rfcDel: '',
     denominacion: '',
     correo: '',
-    códigoPostal: '',
+    codigoPostal: '',
     estado: null,
     municipioOAlcaldía: '',
     localidad: '',
@@ -112,7 +112,7 @@ export class Tramite260911Store extends Store<Tramite260911State> {
     }));
   }
 
-  public setCódigoPostal(códigoPostal: string): void {
+  public setCodigoPostal(códigoPostal: string): void {
     this.update((state) => ({
       ...state,
       códigoPostal,
