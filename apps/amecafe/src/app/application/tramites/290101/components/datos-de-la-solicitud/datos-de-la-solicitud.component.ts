@@ -21,9 +21,8 @@ import { Router } from '@angular/router';
 import { beneficiosInfo } from '../../modelos/cafe-exportadores.model';
 import { bodegasInfo } from '../../modelos/cafe-exportadores.model';
 import { cafeExporacionInfo } from '../../modelos/cafe-exportadores.model';
-import { RadioOpcion } from '../../modelos/cafe-exportadores.model';
 import { regionesInfo } from '../../modelos/cafe-exportadores.model';
-
+import { CatalogosService } from '../../servicios/catalogos.service';
 import { ProductoTablaServicios } from '../../servicios/regiones-compra.service';
 
 import { DatosSolicitudFormaInt } from '../../modelos/datos-de-interfaz.model';
@@ -32,6 +31,7 @@ import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibState } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
 import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
@@ -67,25 +67,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   solicitudState!: DatosSolicitudFormaInt;
 
   /**
-   * Opciones para el radio button de exención de pago.
-   * @property {RadioOpcion[]} radioOptions
-   */
-  radioOptions: RadioOpcion[] = [
-    {
-      "label": "Sí",
-      "value": "Si"
-    },
-    {
-      "label": "No",
-      "value": "no"
-    }
-  ];
+ * Opciones para el componente de radio buttons.
+ * Contiene un arreglo de objetos con etiquetas y valores para las opciones.
+ * @property {Array<{ label: string; value: string }>} radioOpcion
+ */
 
+  radioOpcion: { label: string; value: string }[] = [];
   /**
    * Valor seleccionado en el radio button de exención de pago.
    * @property {string} valorSeleccionado
    */
-  valorSeleccionado: string = 'no';
+  valorSeleccionado: string = 'true';
 
   /**
    * Tipo de selección de la tabla utilizando un radio button.
@@ -199,6 +191,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private catalogosService: CatalogosService,
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
    }
@@ -247,16 +240,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    this.datosSolicitudForma = this.fb.group({
-      claveDelPadron: [{ value: '', disabled: this.valorSeleccionado === 'no' }],
-      exentoDePago: [this.valorSeleccionado],
-      observaciones: [''],
-      requiereInspeccionInmediata: [false],
-      informacionConfidencial: [''],
-    });
+    this.iniciarFormulario();
+    this.radioOpcion = this.catalogosService.RadioOpcion;
 
     const exentoDePagoSubscription = this.datosSolicitudForma.get('exentoDePago')?.valueChanges.subscribe((value) => {
-      if (value === 'no') {
+      if (value === 'false') {
         this.datosSolicitudForma.get('claveDelPadron')?.disable();
       } else {
         this.datosSolicitudForma.get('claveDelPadron')?.enable();
@@ -292,6 +280,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tap(() => {
         const ACTIVE_STATE = { ...this.datosSolicitudForma.value };
         this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+
+        const SECCION: number = 1;
+        const seccionState = this.seccionQuery.getValue();
+        const FORMAS_VALIDADAS = [...seccionState.formaValida];
+        const CONTROL_PATH = 'datosSolicitudForma';
+        const CONTROL = this.datosSolicitudForma.get(CONTROL_PATH)?.status;
+        FORMAS_VALIDADAS[SECCION] = this.datosSolicitudForma.valid || CONTROL === 'VALID';
+        this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
       })
     )
     .subscribe();
@@ -315,40 +311,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-        
-      /**
-       * Observa los cambios en el estado del formulario y actualiza la validación de la sección correspondiente.
-       * 
-       * @description 
-       * - Se suscribe a los cambios en el estado del formulario.
-       * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
-       * - Aplica un retraso de 10ms antes de ejecutar la lógica.
-       * - Obtiene el estado actual de la sección desde `seccionQuery`.
-       * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
-       * 
-       * @see {@link seccionQuery} para obtener el estado de la sección.
-       * @see {@link seccionStore} para actualizar la validación de la sección.
-       */
-      this.datosSolicitudForma.statusChanges
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        delay(10),
-        tap(() => {
-          const SECCION: number = 1;
-          const SECCION_STATE = this.seccionQuery.getValue();
-          const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
-          const CONTROL_PATH = 'forma';
-          const CONTROL = this.datosSolicitudForma.get(CONTROL_PATH)?.status;
-
-          FORMAS_VALIDADAS[SECCION] = this.datosSolicitudForma.valid || CONTROL === 'VALID';
-
-          this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-        })
-      )
-      .subscribe();
     }
-  
-    
+
+    /**
+     * Inicializa el formulario reactivo.
+     */
+    iniciarFormulario(): void {
+      this.datosSolicitudForma = this.fb.group({
+        exentoDePago: [this.valorSeleccionado, Validators.required],
+        claveDelPadron: [{ value: '', disabled: this.valorSeleccionado === 'false' }, Validators.required],
+        observaciones: ['', Validators.required],
+        requiereInspeccionInmediata: [false, Validators.required],
+        informacionConfidencial: ['', Validators.required],
+      });
+    } 
 
   /**
    * Método para buscar y cargar los datos de las tablas.

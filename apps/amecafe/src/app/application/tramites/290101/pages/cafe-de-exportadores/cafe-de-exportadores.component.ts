@@ -75,20 +75,9 @@ export class CafeDeExportadoresComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Constructor del componente.
-   * @param {Router} router - Servicio de enrutamiento de Angular.
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {CatalogosService} catalogosService - Servicio para cargar catálogos.
-   * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta del estado del trámite.
-   * @param {TramiteStore} tramiteStore - Almacén del estado del trámite.
-   * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la sección.
-   * @param {SeccionLibStore} seccionStore - Almacén del estado de la sección.
-   */
-  constructor(
-    private router: Router,
+  constructor(private router: Router,
     private fb: FormBuilder,
-    private catalogosService: CatalogosService,
+    private catalogosService :CatalogosService ,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
@@ -97,18 +86,14 @@ export class CafeDeExportadoresComponent implements OnInit {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
-  /**
+    /**
    * Cambia la pestaña activa en la interfaz.
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
-  seleccionaTab(index: number): void {
-    this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
-  }
-
-  /**
-   * Método de inicialización del componente.
-   * Configura el formulario y carga los catálogos necesarios.
-   */
+    seleccionaTab(index: number): void {
+      this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+    }
+  
   ngOnInit(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -120,70 +105,68 @@ export class CafeDeExportadoresComponent implements OnInit {
     this.cargarClasificacion();
 
     /**
-     * Se suscribe a los cambios en el estado de la solicitud de trámite.
-     * Actualiza el formulario con los datos obtenidos del estado.
-     */
+    * Se suscribe a los cambios en el estado de la solicitud de trámite.
+    * Actualiza el formulario con los datos obtenidos del estado.
+    */
     this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState: TramiteState) => {
-          if (seccionState) {
-            this.cafeExportFormState = seccionState?.CafeExportFormState;
-            this.cafeExportForm.patchValue(this.cafeExportFormState);
-          }
-        })
-      )
-      .subscribe();
-
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: TramiteState) => {
+        if (seccionState) {
+          this.cafeExportFormState = seccionState?.CafeExportFormState;
+          this.cafeExportForm.patchValue(this.cafeExportFormState);
+        }
+      })
+    )
+    .subscribe();
     /**
      * Se suscribe a los cambios en el estado del formulario.
      * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     * También asegura que el botón "Guardar" se habilite/deshabilite correctamente.
      */
     this.cafeExportForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.cafeExportForm.value };
-          this.tramiteStore.setCafExportTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      delay(10),
+      tap(() => {
+        const ACTIVE_STATE = { ...this.cafeExportForm.value };
+        this.tramiteStore.setCafExportTramite(ACTIVE_STATE);
+      })
+    )
+    .subscribe();
 
     /**
      * Se suscribe a los cambios en el estado de la sección.
      * Almacena la información de la sección en la propiedad `seccion`.
-     * Para el botón de validación Continuar.
+     * Para el botón de validación Continuar
      */
+
     this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map(seccionState => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccion = seccionState;
+      })
+    )
+    .subscribe();
+
   }
 
   /**
-   * Inicializa el formulario reactivo.
+   * Inicializa el formulario reactivo con validaciones.
    */
   iniciarFormulario(): void {
     this.cafeExportForm = this.fb.group({
       descripcionMercancia: ['', [Validators.required, Validators.maxLength(15)]],
-      catalogoDClave: ['', Validators.required],
-      clasificacion: [''],
+      clasificacion: ['', Validators.required],
       porcentajeConcentracion: ['', Validators.required],
     });
   }
 
-  /**
-   * Carga el catálogo de clasificación o tipo.
-   */
   cargarClasificacion(): void {
     this.catalogosService.cargarClasificacion()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(resp => {
+     .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.clasificacion = {
@@ -196,10 +179,12 @@ export class CafeDeExportadoresComponent implements OnInit {
       });
   }
 
-  /**
-   * Resetea el formulario de café de exportadores.
-   */
+  
   cancelarBodega(): void {
+    takeUntil(this.destroyNotifier$)
     this.cafeExportForm.reset();
   }
+
+
+  
 }

@@ -14,6 +14,9 @@ import { map } from 'rxjs';
   providedIn: 'root'
 })
 export class ProductoTablaServicios {
+  obtenerOpcionesExencionDePago(): import("../modelos/cafe-exportadores.model").RadioOpcion[] {
+    throw new Error('Method not implemented.');
+  }
   /**
    * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del permiso IMMEX.
    */

@@ -102,9 +102,8 @@ export class RegionesComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-  ) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
-  }
+  ) {}
+
 
   /**
    * Cambia la pestaña activa en la interfaz.

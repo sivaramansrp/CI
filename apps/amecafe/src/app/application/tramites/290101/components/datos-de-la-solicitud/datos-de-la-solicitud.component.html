@@ -8,8 +8,8 @@
                         <label for="certficacion_a">Exento de pago*</label>
                     </div>
                     <div class="col-md-4">
-                        <app-input-radio [radioOptions]="radioOptions" formControlName="exentoDePago"
-                            [isRequired]="true" [layout]="'horizontal'"></app-input-radio>
+                        <app-input-radio [radioOptions]="radioOpcion" formControlName="exentoDePago"
+                             [layout]="'horizontal'"></app-input-radio>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
       <div class="form-group">
         <label for="observaciones">Observaciones</label>
         <span class="require">*</span>
-        <textarea formControlName="observaciones" cols="60" rows="3" class="form-control required" id="valueTA"></textarea>
+        <textarea formControlName="observaciones" cols="60" rows="3" class="form-control required" id="valueTA" [required]="true"></textarea>
       </div>
     </div>
   </div>
@@ -143,7 +143,7 @@
     <div class="col-md-12">
       <div class="form-group">
         <div class="form-check">
-          <input type="checkbox" class="form-check-input" formControlName="requiereInspeccionInmediata" id="requiereInspeccionInmediata" />
+          <input type="checkbox" class="form-check-input" formControlName="requiereInspeccionInmediata" id="requiereInspeccionInmediata" [required]="true"/>
           <label class="form-check-label" for="requiereInspeccionInmediata">Autorizo que mi información pueda ser utilizada para promoción en publicaciones de carácter público</label>
         </div>
       </div>
@@ -161,7 +161,7 @@
     <div class="col-md-12">
       <div class="alert alert-info">
         <div class="form-check text-left">
-          <input type="checkbox" class="form-check-input pull-left" formControlName="informacionConfidencial" id="informacionConfidencial" />
+          <input type="checkbox" class="form-check-input pull-left" formControlName="informacionConfidencial" id="informacionConfidencial" [required]="true"/>
           <label class="form-check-label" for="informacionConfidencial" style="margin-left: 10px; font-weight: normal;">Protesto decir verdad</label>
         </div>
       </div>

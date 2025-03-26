@@ -51,8 +51,8 @@
                   type="button"
                   class="btn btn-danger me-2"
                   id="cancelarBtnBd"
-                  (click)="cancelarBodega()"
                   (click)="seleccionaTab(2)"
+                  (click)="cancelarBodega()"
                 >
                   Cancelar
                 </button>
@@ -60,6 +60,7 @@
                   type="submit"
                   class="btn btn-primary"
                   id="guardarBtnBd"
+                  [disabled]="cafeExportForm.invalid"
                   (click)="seleccionaTab(2)"
                 >
                   Guardar

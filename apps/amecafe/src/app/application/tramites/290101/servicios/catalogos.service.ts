@@ -39,8 +39,12 @@ export class CatalogosService {
     );
   }
 
-
-  // obtenerEstablecimiento(): Observable<RespuestaCatalogos> {
-  //   return this.http.get<RespuestaCatalogos>('/assets/json/290101/establecimiento.json');
-  // }
+  /**
+   * Obtiene las opciones para el radio button de exención de pago.
+   * @returns {RadioOpcion[]} Lista de opciones para el radio button.
+   */
+  RadioOpcion = [
+    { label: 'Sí', value: 'true' },
+    { label: 'No', value: 'false' }
+  ];
 }

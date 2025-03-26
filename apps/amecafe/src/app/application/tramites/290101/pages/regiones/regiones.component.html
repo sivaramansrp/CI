@@ -85,9 +85,10 @@
                   type="submit"
                   class="btn btn-primary"
                   id="guardarBtnBd"
+                  [disabled]="regionForm.invalid"
                   (click)="seleccionaTab(2)"
                 >
-                  Guardar
+                  Continuar
                 </button>
               </div>
             </div>

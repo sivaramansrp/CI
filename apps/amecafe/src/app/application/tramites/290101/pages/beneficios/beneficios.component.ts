@@ -136,21 +136,20 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    /**
+        /**
      * Se suscribe a los cambios en el estado del formulario.
      * Después de un breve retraso, actualiza el estado de la solicitud en el store.
      */
-    this.beneficiosForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.beneficiosForm.value };
-          this.tramiteStore.setBeneficiosTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
+        this.beneficiosForm.statusChanges
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(10),
+          tap(() => {
+            const ACTIVE_STATE = { ...this.beneficiosForm.value };
+            this.tramiteStore.setBeneficiosTramite(ACTIVE_STATE);
+          })
+        )
+        .subscribe();
 
     /**
      * Se suscribe a los cambios en el estado de la sección.
