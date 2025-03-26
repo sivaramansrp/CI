@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { Observable, catchError, throwError } from 'rxjs';
 
 /**
- * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110201.
+ * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110221.
  */
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de tratados.
    */
   getTratado() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/tratado.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/tratado.json');
   }
 
   /**
@@ -43,7 +44,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de países.
    */
   getPais() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/pais.json');
   }
 
   /**
@@ -51,7 +52,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de idiomas.
    */
   getIdioma() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/idioma.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/idioma.json');
   }
 
   /**
@@ -59,7 +60,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de países de destino.
    */
   getPaisDestino() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/pais.json');
   }
 
   /**
@@ -67,7 +68,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de transportes.
    */
   getTransporte() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/pais.json');
   }
 
   /**
@@ -75,7 +76,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de entidades.
    */
   getEntidad() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/entidad.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/entidad.json');
   }
 
   /**
@@ -83,7 +84,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de representaciones.
    */
   getRepresentacion() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/entidad.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/entidad.json');
   }
 
   /**
@@ -92,7 +93,7 @@ export class RegistroService {
    */
   getTipoFactura() {
     return this.http.get<RespuestaCatalogos>(
-      'assets/json/110201/tipofactura.json'
+      'assets/json/110221/tipofactura.json'
     );
   }
 
@@ -101,7 +102,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de UMC.
    */
   getUMC() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/umc.json');
   }
 
   /**
@@ -109,7 +110,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de unidades de medida.
    */
   getUnidadMedida() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/umc.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110221/umc.json');
   }
 
   /**
@@ -128,21 +129,21 @@ export class RegistroService {
    *
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
-//  public getSolicitudesTabla():Observable<ColumnasTabla[]> {
-//   return this.http.get<ColumnasTabla[]>('assets/json/110201/mercancia-disponsible.json').pipe(
-//     catchError((error) => {
-//       return throwError(() => error);
-//     })
-//   );
-// }
+ public getSolicitudesTabla():Observable<ColumnasTabla[]> {
+  return this.http.get<ColumnasTabla[]>('assets/json/110221/mercancia-disponsible.json').pipe(
+    catchError((error) => {
+      return throwError(() => error);
+    })
+  );
+}
 
-// public getSolicitudesDataTabla():Observable<SeleccionadasTabla[]> {
-//   return this.http.get<SeleccionadasTabla[]>('assets/json/110201/mercancia-seleccionadas.json').pipe(
-//     catchError((error) => {
-//       return throwError(() => error);
-//     })
-//   );
-// }
+public getSolicitudesDataTabla():Observable<SeleccionadasTabla[]> {
+  return this.http.get<SeleccionadasTabla[]>('assets/json/110221/mercancia-seleccionadas.json').pipe(
+    catchError((error) => {
+      return throwError(() => error);
+    })
+  );
+}
 
 
 }

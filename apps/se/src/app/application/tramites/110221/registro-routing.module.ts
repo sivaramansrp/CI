@@ -1,14 +1,13 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { AcusePageComponent } from '@ng-mf/data-access-user';
 
-export const ROUTES_SOLICITUDES: Routes = [
+const ROUTES: Routes = [
   {
     path: 'solicitud',
     component: SolicitudPageComponent,
   },
-  {
+    {
     path: '',
     pathMatch: 'full',
     redirectTo: 'solicitud',
@@ -16,7 +15,7 @@ export const ROUTES_SOLICITUDES: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
-  exports: [RouterModule],
+  imports: [RouterModule.forChild(ROUTES)],
+  exports: [RouterModule]
 })
-export class ValidateCertificatePanamaRoutingModule {}
+export class RegistroRoutingModule { }

@@ -1,31 +1,77 @@
-import { Component, ViewChild } from '@angular/core';
 import {
-  DatosPasos, SeccionLibQuery, SeccionLibState,
-  SeccionLibStore,
+  BtnContinuarComponent,
+  DatosPasos,
 } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
+import { PASOS } from '@ng-mf/data-access-user';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PASOS } from '../../enum/servicios-extraordinarios110221.enum';
 
+/**
+ * Texto de alerta para terceros.
+ */
+const TERCEROS_TEXTO_DE_ALERTA =
+  'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+/**
+ * Interfaz que define la estructura de una acción de botón.
+ */
 interface AccionBoton {
+  /**
+   * La acción que se realizará.
+   */
   accion: string;
+
+  /**
+   * El valor asociado a la acción.
+   */
   valor: number;
 }
-
+/**
+ * Componente que representa la página de solicitud.
+ */
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
+  standalone: true,
+  imports: [
+    WizardComponent,
+    CommonModule,
+    BtnContinuarComponent,
+    FormsModule,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    ReactiveFormsModule,
+  ],
 })
+/**
+ * Componente que representa la página de solicitud.
+ */
 export class SolicitudPageComponent {
+  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+  /**
+   * Lista de pasos del asistente.
+   */
   pasos: ListaPasosWizard[] = PASOS;
-  indice: number = 1;
-  public seccion!: SeccionLibState;
-  private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Índice del paso actual.
+   */
+  indice: number = 1;
+
+  /**
+   * Referencia al componente del asistente.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   * Datos de los pasos del asistente.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -33,28 +79,18 @@ export class SolicitudPageComponent {
     txtBtnSig: 'Continuar',
   };
 
-  constructor(
-    private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
-  ) { }
-
-  ngOnInit() {
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
-
-    this.asignarSecciones();
-  }
-
+  /**
+   * Selecciona una pestaña del asistente.
+   * @param i Índice de la pestaña a seleccionar.
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
+  /**
+   * Obtiene el valor del índice de la acción del botón.
+   * @param e Acción del botón.
+   */
   getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
@@ -64,20 +100,5 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras();
       }
     }
-  }
-
-  /**
-   * Método para asignar las secciones existentes al stored
-   */
-  private asignarSecciones() {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
-      formaValida.push(false);
-    }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
   }
 }

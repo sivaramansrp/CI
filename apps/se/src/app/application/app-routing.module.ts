@@ -185,7 +185,14 @@ const ROUTES: Routes = [
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
-  }
+  },
+  {
+    path: 'registro',
+    loadChildren:() =>
+      import('./tramites/110221/registro.module').then(
+        (m) => m.RegistroModule
+      )
+  },
 ];
 
 @NgModule({
