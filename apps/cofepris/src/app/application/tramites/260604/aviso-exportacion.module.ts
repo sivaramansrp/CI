@@ -22,9 +22,11 @@ import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
 import { ToastrService } from 'ngx-toastr';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 
 import { ExportacionService } from '../../shared/services/exportacion.service';
+import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 
 @NgModule({
   declarations: [
@@ -50,9 +52,11 @@ import { ExportacionService } from '../../shared/services/exportacion.service';
 ],
 providers: [
  ToastrService,
-//  provideHttpClient(),
+ provideHttpClient(),
   ServiciosPantallasService,
-  ExportacionService
+  ExportacionService,
+  InicioSesionService,
+  SubirDocumentoService 
 ],
 })
 export class AvisoExportacionModule {}
