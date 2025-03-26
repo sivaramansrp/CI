@@ -21,7 +21,7 @@ ENV NX_VERBOSE_LOGGING=true
 COPY package*.json nx.json ./
 
 # Copy eslint and other config files
-COPY .eslintrc.json tsconfig*.json decorate-angular-cli.js ./
+COPY .eslintrc.json tsconfig*.json ./
 
 # Add workspace configuration early
 RUN mkdir -p apps libs
