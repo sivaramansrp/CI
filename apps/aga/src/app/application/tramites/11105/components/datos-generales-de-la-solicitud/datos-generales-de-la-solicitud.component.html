@@ -28,7 +28,6 @@
               [required]="true"
               id="aduana"
               formControlName="aduana"
-              [disabled]="true"
             >
             </app-catalogo-select>
           </div>
@@ -218,7 +217,6 @@
               class="form-control"
               id="nombre"
               formControlName="nombre"
-              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'nombre') ? 'required' : ''
               "
@@ -235,7 +233,6 @@
               maxlength="100"
               id="calle"
               formControlName="calle"
-              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'calle') ? 'required' : ''
               "
@@ -250,7 +247,6 @@
               class="form-control"
               id="numeroExterior"
               formControlName="numeroExterior"
-              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'numeroExterior')
                   ? 'required'
@@ -268,7 +264,6 @@
               maxlength="55"
               id="numeroInterior"
               formControlName="numeroInterior"
-              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'numeroInterior')
                   ? 'required'
@@ -284,7 +279,6 @@
               class="form-control"
               id="telefono"
               formControlName="telefono"
-              [disabled]="true"
               maxlength="30"
               [ngClass]="
                 isValid(importadorExportador, 'telefono') ? 'required' : ''
@@ -299,7 +293,6 @@
               maxlength="50"
               id="correoElectronico"
               formControlName="correoElectronico"
-              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'correoElectronico')
                   ? 'required'
@@ -317,7 +310,6 @@
               [required]="true"
               id="pais"
               formControlName="pais"
-              [disabled]="true"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
@@ -328,7 +320,6 @@
               class="form-control"
               id="codigoPostal"
               formControlName="codigoPostal"
-              [disabled]="true"
               [ngClass]="
                 isValid(importadorExportador, 'codigoPostal') ? 'required' : ''
               "

@@ -358,66 +358,66 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
       importadorExportador: this.fb.group({
         aduana: ['aduana', [Validators.required]],
         nombre: [
-          'PREUBA QA',
+          { value: 'PREUBA QA', disabled: true }, 
           [Validators.required, Validators.maxLength(50)],
         ],
         tipoMercancia: [
-          'tipoMercancia',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(100)],
         ],
         usoEspecifico: [
-          'usoEspecifico',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(512)],
         ],
         condicion: ['condicion', Validators.required],
         marca: [
-          'marca',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        ano: ['ano', [Validators.required]],
+        ano: [{ value: 'PREUBA QA', disabled: true }, [Validators.required]],
         modelo: [
-          'modelo',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
         serie: [
-          'serie',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
         manifesto: ['manifesto', Validators.required],
         calle: [
-          'calle',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(100)],
         ],
         numeroExterior: [
-          'numeroExterior',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(10)],
         ],
         numeroInterior: [
-          'numeroInterior',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.maxLength(10)],
         ],
         telefono: [
-          'telefono',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.pattern(/^\d{10}$/)],
         ],
         correoElectronico: [
-          'correoElectronico',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.email],
         ],
         pais: ['pais', Validators.required],
         codigoPostal: [
-          'codigoPostal',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.pattern(/^\d{5}$/)],
         ],
         estado: [
-          'estado',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
         colonia: [
-          'colonia',
+          { value: 'PREUBA QA', disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
-        opcion: ['opcion', Validators.maxLength(50)],
+        opcion: [{ value: 'PREUBA QA', disabled: true }, Validators.maxLength(50)],
       }),
     });
   }
