@@ -1,11 +1,11 @@
+import { BeneficiosComponent } from './pages/beneficios/beneficios.component';
+import { BodegasComponent } from './pages/bodegas/bodegas.component';
+import { CafeDeExportadoresComponent } from './pages/cafe-de-exportadores/cafe-de-exportadores.component'
 import { CafeExportadoresComponent } from './pages/cafe-exportadores/cafe-exportadores.component';
 import { NgModule } from '@angular/core';
+import { RegionesComponent } from './pages/regiones/regiones.component'
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
-import { BodegasComponent } from './pages/bodegas/bodegas.component';
-import{CafeDeExportadoresComponent} from './pages/cafe-de-exportadores/cafe-de-exportadores.component'
-import { BeneficiosComponent } from './pages/beneficios/beneficios.component';
-import {RegionesComponent} from './pages/regiones/regiones.component'
 /**
  * @constant ROUTES_PERMISO
  * @description Rutas para el módulo de registro de solicitud IMMEX.

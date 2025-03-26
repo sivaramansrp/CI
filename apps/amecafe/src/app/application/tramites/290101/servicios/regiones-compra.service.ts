@@ -1,38 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-empty-function */
 /**
  * @@Injectable
- * @description Servicio para obtener los datos del permiso IMMEX.
+ * @description Servicio para obtener los datos del regiones compra.
  */
-import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductoTablaServicios {
-  obtenerOpcionesExencionDePago(): import("../modelos/cafe-exportadores.model").RadioOpcion[] {
-    throw new Error('Method not implemented.');
-  }
   /**
-   * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del permiso IMMEX.
+   * @property {string} jsonUrl - URL del archivo JSON que contiene los datos del regiones compra.
    */
   private jsonUrl = '/assets/json/290101/producto-tabla-datos.json';
   /**
    * @constructor
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   /**
    * @method getDatos
-   * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
-   * @returns {Observable<any[]>} Observable con los datos del permiso IMMEX.
+   * @description Obtiene los datos del regiones compra desde el archivo JSON.
+   * @returns {Observable<any[]>} Observable con los datos del regiones compra.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   obtenerDatos(): Observable<any> {
     return this.http.get<any[]>(this.jsonUrl).pipe(
     );

@@ -14,7 +14,6 @@ interface AccionBoton {
   templateUrl: './cafe-exportadores.component.html',
 })
 export class CafeExportadoresComponent {
-  asistenteSolicitud: any;
 
   /**
    * @property {Array<ListaPasosWizard>} pasos - Array de pasos del wizard.
@@ -50,7 +49,7 @@ export class CafeExportadoresComponent {
    * El `valor` representa el índice del paso al que ir.
    * La `accion` determina si avanzar (cont) o retroceder (atras).
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

@@ -9,7 +9,9 @@ import { map } from 'rxjs';
 })
 export class CatalogosService {
   private jsonUrl = '/assets/json/290101/';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Se puede agregar aquí la lógica del constructor si es necesario
+  }
 
   obtenerAduanaDeIngreso(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('/assets/json/290101/aduana_de_ingreso.json');
