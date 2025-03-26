@@ -184,9 +184,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set Python path as environment variable
+        run: |
+          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
+          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+
       - name: Configure npm
         run: |
-          npm config set python /usr/bin/python3
           npm config set unsafe-perm true
 
       - name: Cache Node.js modules
@@ -203,8 +207,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          export PYTHON=/usr/bin/python3
-          npm install --force --python=/usr/bin/python3 || npm install --force --python=/usr/bin/python3 --legacy-peer-deps
+          npm install --force || npm install --force --legacy-peer-deps
+
       - name: Install NX globally
         run: |
           # Instalar NX globalmente
