@@ -1,0 +1,24 @@
+
+<ng-titulo [titulo]="titulo"></ng-titulo>
+
+<div class="row" [formGroup]="solicitud">
+  <div class="col-md-8">
+    <div formGroupName="solicitante" class="form-group">
+      <label class="control-label" for="tipoAgente">{{ tipoAgenteLabel }}</label>
+      <span class="require">*</span>
+      <label class="control-label">:</label>
+      <select class="form-control" formControlName="tipoAgente" id="tipoAgente">
+        <option value="">Selecciona tipo de agente</option>
+        <option value="TIAGN.AN">Agente naviero</option>
+        <option value="TIAGN.AIC">Agente internacional de carga</option>
+        <option value="TIAGN.CB">Consignatario de buque</option>
+      </select>
+    </div>
+
+    <div class="text-right">
+      <button class="btn btn-danger" type="button" (click)="limpiarAgente()">
+        Limpiar
+      </button>
+    </div>
+  </div>
+</div>

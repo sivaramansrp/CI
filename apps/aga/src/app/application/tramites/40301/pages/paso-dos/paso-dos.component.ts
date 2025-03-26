@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '../../service/servicios-extraordinarios.service';
+import { ServiciosExtraordinariosService } from '../../service_/servicios-extraordinarios.service';
 import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 
 @Component({

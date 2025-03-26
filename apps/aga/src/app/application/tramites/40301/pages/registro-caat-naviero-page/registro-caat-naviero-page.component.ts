@@ -1,5 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, SECCIONES_TRAMITE_570101, SeccionLibQuery, SeccionLibState, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, 
+  ListaPasosWizard, 
+  SECCIONES_TRAMITE_570101, 
+  SeccionLibQuery, 
+  SeccionLibState, 
+  SeccionLibStore, 
+  WizardComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CANCELACION_PASOS } from '../../enum/cancelacion-servicios-extraordinarios.enum';
 import { Modal } from 'bootstrap';
@@ -11,7 +17,7 @@ interface AccionBoton {
 }
 
 @Component({
-  templateUrl: './cancelacion-extraordinarios-page.component.html',
+  templateUrl: './registro-caat-naviero-page.component.html',
   styles: ``,
 })
 

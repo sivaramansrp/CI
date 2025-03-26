@@ -1,19 +1,20 @@
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { RegistroCaatNavieroPageComponent } from './pages/cancelacion-extraordinarios-page/cancelacion-extraordinarios-page.component';
-import { CancelarSolicitudComponent } from './components/cancelar-solicitud/cancelar-solicitud.component';
-import { CancelarSolicitudService } from './service/cancelar-solicitud.service';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { FormsModule } from '@angular/forms';
+import { LayaoutCapturaTipoAgenteComponent } from './components/layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
+import { LayoutDirectorGeneralComponent } from './components/layoutDirectorGeneral/layoutDirectorGeneral.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegistroCaatNavieroPageComponent } from './pages/registro-caat-naviero-page/registro-caat-naviero-page.component';
 import { RegistroCaatNavieroRoutingModule } from './registro-caat-naviero-routing.module';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
-import { ServiciosExtraordinariosService } from './service/servicios-extraordinarios.service';
+import { ServiciosExtraordinariosService } from './service_/servicios-extraordinarios.service';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule } from 'ngx-toastr';
@@ -26,7 +27,8 @@ import { forwardRef } from '@angular/core';
     RegistroCaatNavieroPageComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    CancelarSolicitudComponent,
+    LayaoutCapturaTipoAgenteComponent,
+    LayoutDirectorGeneralComponent
   ],
   imports: [
     forwardRef(() => BtnContinuarComponent),
@@ -34,6 +36,7 @@ import { forwardRef } from '@angular/core';
     CommonModule,
     forwardRef(() => CrosslistComponent),
     forwardRef(() => FirmaElectronicaComponent),
+    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     forwardRef(() => SelectPaisesComponent),
@@ -46,7 +49,7 @@ import { forwardRef } from '@angular/core';
   exports: [],
   providers: [
     ToastrService,
-    CancelarSolicitudService,
+    // CancelarSolicitudService,
     ServiciosExtraordinariosService 
   ]
 })

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { CancelarSolicitudComponent } from '../../components/cancelar-solicitud/cancelar-solicitud.component';
+import { LayaoutCapturaTipoAgenteComponent } from '../../components/layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
+import { LayoutDirectorGeneralComponent } from '../../components/layoutDirectorGeneral/layoutDirectorGeneral.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -11,7 +12,8 @@ export class PasoUnoComponent {
   
   @Output() pestanaCambiado = new EventEmitter<number>();
   @Output() isValid = new EventEmitter<boolean>();
-  @ViewChild(CancelarSolicitudComponent) cancelarSolicitudComponent!: CancelarSolicitudComponent
+  @ViewChild(LayaoutCapturaTipoAgenteComponent) tipoAgentsComponent!: LayaoutCapturaTipoAgenteComponent
+  @ViewChild(LayoutDirectorGeneralComponent) layoutDirectorGeneral!: LayoutDirectorGeneralComponent
 
   /**
    * @method seleccionaTab
@@ -31,7 +33,7 @@ export class PasoUnoComponent {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   isFormValid(): boolean {
-    return this.cancelarSolicitudComponent?.formCancelorSolicitud.valid;
+    return this.tipoAgentsComponent?.solicitud.valid && this.layoutDirectorGeneral?.solicitud.valid;
   }
 }
 

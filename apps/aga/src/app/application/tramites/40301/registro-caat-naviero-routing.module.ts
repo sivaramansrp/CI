@@ -1,11 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
-import { RegistroCaatNavieroPageComponent } from './pages/cancelacion-extraordinarios-page/cancelacion-extraordinarios-page.component';
 import { NgModule } from '@angular/core';
+import { RegistroCaatNavieroPageComponent } from './pages/registro-caat-naviero-page/registro-caat-naviero-page.component';
 
 
 export const ROUTES_SOLICITUDES: Routes = [
   {
-    path: 'cancelacion-extraordinarios',
+    path: 'caat-naviero',
     component: RegistroCaatNavieroPageComponent,
   }
 ];
