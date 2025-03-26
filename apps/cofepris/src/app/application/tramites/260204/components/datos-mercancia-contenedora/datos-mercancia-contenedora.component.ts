@@ -1,12 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Tramite260204State, Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
+import {
+  Tramite260204State,
+  Tramite260204Store,
+} from '../../estados/stores/tramite260204Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
-
+/**
+ * @component DatosMercanciaContenedoraComponent
+ * @description Componente encargado de gestionar y actualizar la información de una mercancía seleccionada.
+ * Observa el estado del trámite y permite al usuario seleccionar y modificar datos de mercancías
+ * en la tabla principal.
+ */
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,
@@ -15,13 +23,42 @@ import { Tramite260204Query } from '../../estados/queries/tramite260204Query.que
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent implements OnInit {
+  /**
+   * @property {TablaMercanciasDatos} SeleccionadoDatos
+   * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
+   */
   public SeleccionadoDatos!: TablaMercanciasDatos;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para limpiar las suscripciones activas al destruir el componente.
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {Tramite260204State} tramiteState
+   * Estado completo del trámite, que contiene información como la tabla de mercancías.
+   */
   public tramiteState!: Tramite260204State;
 
-  constructor(private tramite260204Query: Tramite260204Query,
-    private tramite260204Store: Tramite260204Store) { }
+  /**
+   * @constructor
+   * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.
+   *
+   * @param tramite260204Query - Servicio para observar el estado actual del trámite.
+   * @param tramite260204Store - Store que permite actualizar el estado del trámite.
+   */
+  constructor(
+    private tramite260204Query: Tramite260204Query,
+    private tramite260204Store: Tramite260204Store
+  ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
+   * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
+   */
   ngOnInit(): void {
     this.tramite260204Query.selectTramiteState$
       .pipe(
@@ -29,23 +66,26 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
         map((seccionState) => {
           this.tramiteState = seccionState;
         })
-      ).subscribe();
+      )
+      .subscribe();
   }
 
   /**
-   * Maneja la selección de una mercancía en la tabla de datos.
-   * 
-   * @param event - Objeto de tipo `TablaMercanciasDatos` que contiene la información de la mercancía seleccionada.
-   * 
-   * Este método realiza las siguientes acciones:
-   * 1. Asigna el objeto seleccionado a la propiedad `SeleccionadoDatos`.
-   * 2. Crea un objeto `SELECCIONADO_MERCANCIA` con los datos relevantes de la mercancía seleccionada.
-   * 3. Busca el índice de la mercancía seleccionada en la configuración de la tabla de mercancías (`tablaMercanciasConfigDatos`).
-   * 4. Si la mercancía ya existe en la tabla, actualiza su información en la lista.
-   * 5. Actualiza el estado de la tienda (`tramite260204Store`) con los datos actualizados de la mercancía seleccionada y la tabla de mercancías.
+   * @method mercanciaSeleccionado
+   * @description Maneja la selección de una mercancía en la tabla de datos.
+   *
+   * Este método:
+   * - Asigna el objeto seleccionado a `SeleccionadoDatos`.
+   * - Crea una versión simplificada de la mercancía.
+   * - Verifica si ya existe en la tabla.
+   * - La reemplaza o la agrega según sea el caso.
+   * - Finalmente, actualiza el estado del store.
+   *
+   * @param {TablaMercanciasDatos} event - Objeto de tipo `TablaMercanciasDatos` que representa la mercancía seleccionada.
    */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
     this.SeleccionadoDatos = event;
+
     const SELECCIONADO_MERCANCIA = {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
@@ -65,23 +105,32 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       paisOrigen: event.paisOrigen,
       paisProcedencia: event.paisProcedencia,
       tipoProducto: event.tipoProducto,
-      usoEspecifico: event.usoEspecifico
-    }
-    const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex((idx) => {
-      return idx.clasificacionProducto === SELECCIONADO_MERCANCIA.clasificacionProducto.toString();
-    })
+      usoEspecifico: event.usoEspecifico,
+    };
+
+    const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(
+      (idx) =>
+        idx.clasificacionProducto ===
+        SELECCIONADO_MERCANCIA.clasificacionProducto.toString()
+    );
+
     let datosActivos = [];
+
     if (INDICES !== -1) {
       const TABLE_MERCANCIA_DATA = this.tramiteState.tablaMercanciasConfigDatos;
-      TABLE_MERCANCIA_DATA.splice(INDICES, 1, SELECCIONADO_MERCANCIA)
+      TABLE_MERCANCIA_DATA.splice(INDICES, 1, SELECCIONADO_MERCANCIA);
       datosActivos = TABLE_MERCANCIA_DATA;
-    }else{
-      datosActivos = [...this.tramiteState.tablaMercanciasConfigDatos, SELECCIONADO_MERCANCIA];
+    } else {
+      datosActivos = [
+        ...this.tramiteState.tablaMercanciasConfigDatos,
+        SELECCIONADO_MERCANCIA,
+      ];
     }
+
     this.tramite260204Store.update((state) => ({
       ...state,
       seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
-      tablaMercanciasConfigDatos: datosActivos
-    }))
+      tablaMercanciasConfigDatos: datosActivos,
+    }));
   }
 }
