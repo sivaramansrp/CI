@@ -33,7 +33,7 @@ export class AutorizarDictamenComponent implements OnInit{
   /**
    * @description Metodo que redirige a la pantalla de firma electronica
    */
-  BtnAutorizar(): void {  
+  navigateToFirmaElectronica(): void {  
     this.router.navigate(['funcionario/firma-electronica']);    
   } 
 
@@ -53,7 +53,7 @@ export class AutorizarDictamenComponent implements OnInit{
   /**
    * @description Metodo que redirige a la pantalla de Observaciones
    */
-  BtnObservaciones(): void {  
+  navigateToObservaciones(): void {  
     this.router.navigate(['funcionario/observaciones-dictamen']);    
   } 
 

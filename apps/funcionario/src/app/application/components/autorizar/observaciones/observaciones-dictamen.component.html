@@ -56,10 +56,10 @@
 
     <div class="row mt-5 mb-5">
       <div class="col-md-12 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="BtnGuardarObs()">
+        <button type="button" class="btn btn-primary" (click)="guardarObservaciones()">
             Generar observación
           </button>
-        <button type="button" class="btn btn-default me-3" (click)="BtnRegresar()">
+        <button type="button" class="btn btn-default me-3" (click)="navigateToAutorizarDictamen()">
           Regresar
         </button>        
       </div>
@@ -69,29 +69,13 @@
   <div class="row mt-5" *ngIf="observaciones.length > 0">
     <div class="col-md-12">
       <h3>Observaciones al dictamen</h3>
-
-      <table class="table table-bordered table-responsive table-striped table-hover">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Fecha generación</th>
-            <th>Fecha atención</th>
-            <th>Generada por</th>
-            <th>Estatus</th>
-            <th>Detalle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let observacion of observaciones">
-            <td>{{ observacion.id }}</td>
-            <td>{{ observacion.fechaGeneracion }}</td>
-            <td>{{ observacion.fechaAtencion }}</td>
-            <td>{{ observacion.GeneradaPor }}</td>
-            <td>{{ observacion.Estatus }}</td>
-            <td>{{ observacion.Detalle }}</td>
-          </tr>
-        </tbody>
-      </table>
+        <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="observaciones">
+        </app-tabla-dinamica>
+        <ul class="pagination d-flex justify-content-center">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+        </ul>      
     </div>
   </div>
 </div>
