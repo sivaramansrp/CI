@@ -105,6 +105,11 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro',
+    loadChildren: () =>
+      import('./tramites/110201/registro.module').then((m) => m.RegistroModule),
+  },
+  {
     path: 'cancelacion-de',
     loadChildren: () =>
       import('./tramites/140103/cancelacion-de.module').then(
