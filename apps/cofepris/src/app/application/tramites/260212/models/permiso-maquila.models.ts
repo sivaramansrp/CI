@@ -55,7 +55,7 @@ export interface LosOption {
  * Modelo de datos para una fila de una tabla.
  * Representa los datos que se mostrarán en la tabla.
  */
-export interface tableData {
+export interface TablaDatos {
 
   tbodyData: string[];
 }
@@ -64,7 +64,7 @@ export interface tableData {
  * Modelo que extiende a tableData, incluyendo información sobre la selección de la fila.
  * Indica si la fila está seleccionada o no.
  */
-export interface selectedRowData extends tableData {
+export interface DatosSeleccionados extends TablaDatos {
 
   checked: boolean;
 }
