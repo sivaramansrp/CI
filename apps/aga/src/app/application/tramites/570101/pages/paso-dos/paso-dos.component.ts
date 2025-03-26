@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
-import { ServiciosExtraordinariosService } from '../../service/servicios-extraordinarios.service';
+import { TramiteFolioService } from '@libs/shared/data-access-user/src';
 import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 
 @Component({
@@ -15,7 +15,7 @@ export class PasoDosComponent implements OnDestroy{
   constructor(
     private readonly router: Router,
     private readonly tramiteStore: TramiteStore,
-    private readonly serviciosExtraordinariosService: ServiciosExtraordinariosService
+    private readonly TramiteFolioService: TramiteFolioService
   ) { 
       // El constructor está intencionalmente vacío para la inyección de dependencias 
     }
@@ -40,7 +40,7 @@ export class PasoDosComponent implements OnDestroy{
     const FIRMA: string = ev;
     if (FIRMA) {
       // Obtiene el número de trámite
-      this.serviciosExtraordinariosService
+      this.TramiteFolioService
         .obtenerTramite(19)
         .pipe(
           takeUntil(this.destroy$),
