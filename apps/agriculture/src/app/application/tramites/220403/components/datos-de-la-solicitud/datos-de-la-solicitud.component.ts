@@ -216,11 +216,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       ],
       data: []
     };
-  TablaSeleccion = TablaSeleccion;
-  fiscal: FormularioDinamico[] = [];
-  formulario!: FormGroup;
-  evento = {};
-  inputTypes = InputTypes;
+  /** 
+ * Almacena la configuración de la tabla de selección utilizada en el formulario.
+ */
+TablaSeleccion = TablaSeleccion;
+
+/** 
+ * Arreglo que almacena la configuración del formulario dinámico fiscal.
+ */
+fiscal: FormularioDinamico[] = [];
+
+/** 
+ * Representa el formulario principal del componente.
+ */
+formulario!: FormGroup;
+
+/** 
+ * Objeto utilizado para almacenar eventos dentro del componente.
+ */
+evento = {};
+
+/** 
+ * Enum que contiene los diferentes tipos de inputs disponibles en el formulario.
+ */
+inputTypes = InputTypes;
+
 
   constructor(
     private fb: FormBuilder,
