@@ -1,11 +1,10 @@
 import { Directive, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appSoloNumeros]'
+  selector: '[libSoloNumeros]',
+  standalone: true,
 })
 export class SoloNumerosDirective {
-
-  constructor() { }
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
@@ -18,7 +17,7 @@ export class SoloNumerosDirective {
 
     const numero = /^[0-9]$/;
 
-    if(!numero.test(event.key))
+    if (!numero.test(event.key))
       event.preventDefault();
   }
 }
