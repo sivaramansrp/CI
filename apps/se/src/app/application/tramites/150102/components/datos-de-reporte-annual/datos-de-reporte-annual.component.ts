@@ -49,7 +49,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /** Configuración de la tabla de bienes producidos */
   producidosConfiguracionTabla: ConfiguracionAporteColumna<BienesProducidos>[] =
     [
-       {
+      {
         encabezado: 'Clave sector',
         llave: 'claveSector',
         clave: (item: BienesProducidos) => item.claveSector,
@@ -196,16 +196,12 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         },
         [Validators.maxLength(16)],
       ],
-      saldo: [
-        { value: this.solicitud150102State.saldo, disabled: true },
-        [Validators.maxLength(16)],
-      ],
+      saldo: [{ value: this.solicitud150102State.saldo, disabled: true }],
       porcentajeExportacion: [
         {
           value: this.solicitud150102State.porcentajeExportacion,
           disabled: true,
         },
-        [Validators.maxLength(16)],
       ],
     });
 
