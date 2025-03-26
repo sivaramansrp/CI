@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
+import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
-import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+// import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+// import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
@@ -26,7 +27,7 @@ export class SanitarioComponent {
     txtBtnSig: 'Continuar',
   };
 
-  getValorIndice(e: AccionBoton): void{
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
