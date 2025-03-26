@@ -40,23 +40,29 @@ const TERCEROS_TEXTO_DE_ALERTA ='Certificados Disponibles';
   styleUrl: './cancelacion-de-certificado.component.css',
 })
 export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   cancelacionForm!: FormGroup;
-  // private subscriptions: Subscription[] = [];
-  getTratadoSubscription: any;
-  getPaisSubscription: any;
-  pais!: CatalogosSelect;
-  tratado!: CatalogosSelect;
-  bancoSeleccionado!: Catalogo;
-  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
-  TablaSeleccion = TablaSeleccion;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public certificadoDisponsiblesTablaDatos: ColumnasTabla[] = [];
-  isBuscar: boolean = false;
-  public solicitudState!: Solicitud110219State;
+  @Output() dataEvent = new EventEmitter<number>();
+  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   fechaInicialInput: InputFecha = FECHAINICIAL;
   fechaFinalInput: InputFecha =FECHAFINAL;
-  
-  @Output() dataEvent = new EventEmitter<number>();
+  public solicitudState!: Solicitud110219State;
+  pasos: ListaPasosWizard[] = PASOS;
+  TablaSeleccion = TablaSeleccion;
+  estaBuscando: boolean = false;
+  tratado!: CatalogosSelect;
+  pais!: CatalogosSelect;
+  indice: number = 1;
+
+
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar',
+  };
 
   public tratadoCatalogo: CatalogosSelect = {
     labelNombre: 'Tratado/Acuerdo:',
@@ -95,32 +101,6 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   this.donanteDomicilio();
   }
 
-    /**
-     * Lista de pasos del asistente.
-     */
-    pasos: ListaPasosWizard[] = PASOS;
-
-     /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
-
-  /**
-     * Datos de los pasos del asistente.
-     */
-    datosPasos: DatosPasos = {
-      nroPasos: this.pasos.length,
-      indice: this.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    };
-  
-
-  validarDestinatarioFormulario(): void {
-    if (this.cancelacionForm.invalid) {
-      this.cancelacionForm.markAllAsTouched();
-    }
-  }
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     {encabezado: 'Número de certificado',clave: (ele: ColumnasTabla) => ele.numeroCertificado, orden: 1, },
     {encabezado: 'Pais/Bloque', clave: (ele: ColumnasTabla) => ele.pais,orden: 2,},
@@ -129,8 +109,33 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     {encabezado: 'Fecha vencimíento',clave: (ele: ColumnasTabla) => ele.fechaVencimiento, orden: 5,},
   ];
 
-  onBuscarClick(){
-    this.isBuscar = true;
+  cambioFechaInicial(nuevo_fechaIncial: string): void {
+    this.cancelacionForm.patchValue({
+      validacionForm: {
+        fechaInicial: nuevo_fechaIncial,
+      },
+    });
+    this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechaInicial');
+  }
+
+  cambioFechaFinal(nuevo_fechaFinal: string): void {
+    this.cancelacionForm.patchValue({
+      validacionForm: {
+        fechaFinal: nuevo_fechaFinal,
+      },
+    });
+
+    this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechaFinal');
+  }
+   
+  validarDestinatarioFormulario(): void {
+    if (this.cancelacionForm.invalid) {
+      this.cancelacionForm.markAllAsTouched();
+    }
+  }
+ 
+  alBuscarClic(){
+    this.estaBuscando = true;
   }
   
   getTratadoData(): void {
@@ -181,16 +186,16 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
         pais: [this.solicitudState?.pais, [Validators.required]],
         fechaInicial: [this.solicitudState?.fechaInicial,[Validators.required]],
         fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
-        certificadoDisponibles: [this.solicitudState?.certificadoDisponibles, [Validators.required]],
       }),
     });
   }
 
-  click(){
+  emitirEventoClick(){
      this.dataEvent.emit(3);
   }
 
   ngOnDestroy(): void {
-
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

@@ -15,9 +15,10 @@ import { CertificadoDeOrigenComponent } from '../../components/certificado-de or
   standalone:true,
   imports: [CommonModule, SolicitanteComponent, CancelacionDeCertificadoComponent, CertificadoDeOrigenComponent],
 })
+
 export class PasoUnoComponent implements AfterViewInit {
 
-  @Output() myEvent: EventEmitter<number> = new EventEmitter<number>();
+  @Output() miEvento: EventEmitter<number> = new EventEmitter<number>();
 
   /** 
    * Referencia al componente SolicitanteComponent 
@@ -77,7 +78,7 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.myEvent.emit(this.indice)
+    this.miEvento.emit(this.indice)
   }
 
   passCancelacion(data:number){

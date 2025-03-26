@@ -22,23 +22,24 @@ const TEXTO_DE_ALERTA_PRODUCTORES= 'Productores asociados';
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
-  TEXTO_DE_ALERTA_MERCANCIAS = TEXTO_DE_ALERTA_MERCANCIAS;
-  TEXTO_DE_ALERTA_PRODUCTORES = TEXTO_DE_ALERTA_PRODUCTORES;
+
+  cancelacionForm!: FormGroup;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public mercanciaCertificadoTablaDatos: MercanciaCertificado[] = [];
   public productoresAsociadosTablaDatos: ProductoresAsociados[] = [];
+  TEXTO_DE_ALERTA_PRODUCTORES = TEXTO_DE_ALERTA_PRODUCTORES;
+  TEXTO_DE_ALERTA_MERCANCIAS = TEXTO_DE_ALERTA_MERCANCIAS;
   fechaInicialInput: InputFecha = FECHAEXPEDICIÓN;
   fechaFinalInput: InputFecha =FECHAENCIMIENTO;
-  TablaSeleccion = TablaSeleccion;
-  cancelacionForm!: FormGroup;
   public solicitudState!: Solicitud110219State;
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  TablaSeleccion = TablaSeleccion;
 
   public encabezadosMercancias: ConfiguracionColumna<MercanciaCertificado>[] = [
       {encabezado: 'Número de Orden',clave: (ele: MercanciaCertificado) => ele.numeroOrden, orden: 1, },
       {encabezado: 'Fracción Arancelaria', clave: (ele: MercanciaCertificado) => ele.fraccionArancelaria,orden: 2,},
       {encabezado: 'Nombre Técnico',clave: (ele: MercanciaCertificado) => ele.nombreTecnico, orden: 3,},
       {encabezado: 'Nombre Comercial',clave: (ele: MercanciaCertificado) => ele.nombreComercial,orden: 4,},
-      {encabezado: 'Nombre en Inglés',clave: (ele: MercanciaCertificado) => ele.nombreIngles, orden: 5,},
+      {encabezado: 'Nombre en Ingles',clave: (ele: MercanciaCertificado) => ele.nombreIngles, orden: 5,},
       {encabezado: 'Complemento descripción',clave: (ele: MercanciaCertificado) => ele.complementoDescripcion, orden: 6,},
       {encabezado: 'Número de certificado',clave: (ele: MercanciaCertificado) => ele.numeroCertificado, orden: 7, },
       {encabezado: 'Pais/Bloque', clave: (ele: MercanciaCertificado) => ele.pais,orden: 8,},
@@ -66,6 +67,7 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required)
     });
@@ -79,7 +81,7 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
           })
         )
         .subscribe();
-    this.donanteDomicilio();
+        this.donanteDomicilio();
   }
 
   validarDestinatarioFormulario(): void {
@@ -90,11 +92,9 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
 
   public getMercanciaCertificadoTabla(): void {
     this.certificadoService.getMercanciaCertificadoTabla().subscribe((data) => {
-      console.log(data)
       this.mercanciaCertificadoTablaDatos = data;
     });
   }
-
   
     isValid(form: FormGroup, field: string): boolean {
       return this.validacionesService.isValid(form, field) || false;
@@ -114,15 +114,22 @@ export class CertificadoDeOrigenComponent implements OnInit,OnDestroy {
     }
   
     donanteDomicilio(): void {
+      
       this.cancelacionForm = this.fb.group({
         validacionForm: this.fb.group({
           motivoCancelacion:[this.solicitudState?.motivoCancelacion,[Validators.required]],
-          mercanciaCertificado:[this.solicitudState?.mercanciaCertificado, [Validators.required]],
-          productoresAsociados:[this.solicitudState?.productoresAsociados, [Validators.required]],
+          fechaExpedicion:[this.solicitudState?.fechaExpedicion, [Validators.required]],
+          fechaVencimiento:[this.solicitudState?.fechaVencimiento, [Validators.required]],
         })})
+
+        if (this.cancelacionForm.invalid) {
+          this.cancelacionForm.markAllAsTouched();
+          this.cancelacionForm.markAsDirty();
+        }
 }
 ngOnDestroy(): void {
-
+this.destroyed$.next(true);
+this.destroyed$.complete();
 }
 
 }

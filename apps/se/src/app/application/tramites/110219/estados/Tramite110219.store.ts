@@ -48,10 +48,9 @@ export interface Solicitud110219State {
   tratado: Catalogo[] | null;
   fechaInicial: string;
   fechaFinal: string;
-  certificadoDisponibles: string;
   motivoCancelacion: string;
-  mercanciaCertificado: string;
-  productoresAsociados: string;
+  fechaExpedicion: string;
+  fechaVencimiento: string;
 }
 /**
  * Crea el estado inicial para la solicitud del trámite 110219.
@@ -69,10 +68,9 @@ export function createInitialState(): Solicitud110219State {
     tratado: null,
     fechaInicial: '',
     fechaFinal: '',
-    certificadoDisponibles: '',
     motivoCancelacion: '',
-    mercanciaCertificado: '',
-    productoresAsociados: '',
+    fechaExpedicion: '',
+    fechaVencimiento: '',
   };
 }
 
@@ -85,11 +83,11 @@ export class Tramite110219Store extends Store<Solicitud110219State> {
     super(createInitialState());
   }
   public setNumeroCertificado(numeroCertificado: string) {
-    this.update((state) => ({...state,numeroCertificado,}));
+    this.update((state) => ({ ...state, numeroCertificado }));
   }
 
   public setPais(pais: Catalogo[]) {
-    this.update((state) => ({...state, pais, }));
+    this.update((state) => ({ ...state, pais }));
   }
   public setTratado(tratado: Catalogo[]) {
     this.update((state) => ({
@@ -111,28 +109,25 @@ export class Tramite110219Store extends Store<Solicitud110219State> {
       fechaFinal,
     }));
   }
-  public setCertificadodisponsibles(certificadoDisponibles: string) {
-    this.update((state) => ({
-      ...state,
-      certificadoDisponibles,
-    }));
-  }
+
   public setMotivoCancelacion(motivoCancelacion: string) {
     this.update((state) => ({
       ...state,
       motivoCancelacion,
     }));
   }
-  public setMercanciaCertificado(mercanciaCertificado: string) {
+
+  public setFechaExpedicion(fechaExpedicion: string) {
     this.update((state) => ({
       ...state,
-      mercanciaCertificado,
+      fechaExpedicion,
     }));
   }
-  public setProductoresAsociados(productoresAsociados: string) {
+
+  public setFechaVencimiento(fechaVencimiento: string) {
     this.update((state) => ({
       ...state,
-      productoresAsociados,
+      fechaVencimiento,
     }));
   }
 }

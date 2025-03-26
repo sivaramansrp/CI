@@ -58,11 +58,7 @@ export class SolicitudPageComponent implements OnInit {
    * Índice del paso actual.
    */
   indice: number = 1;
-  /**
-   * Controla la visibilidad del mensaje de bienvenida.
-   */
-  showWelcomeAlert: boolean = false;
-
+ 
   /**
    * Referencia al componente del asistente.
    */
@@ -91,7 +87,7 @@ export class SolicitudPageComponent implements OnInit {
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
-    this.onChildEvent(this.nombre)
+    this.onChildEvent(this.nombre);
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -104,8 +100,6 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   onChildEvent(event: number) {
-    debugger
     this.nombre = event;
-   
   }
 }
