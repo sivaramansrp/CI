@@ -1,0 +1,167 @@
+<div class="container">
+  <ng-titulo titulo="Capacidad Instalada"></ng-titulo>
+  <div class="row">
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="fraccionArancelariaProductoTerminadoCatlogo"
+        [label]="'Fracción arancelaria de producto terminado'"
+        [required]="true"
+        name="fraccionArancelariaProductoTerminado"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="umt">UMT:</label>
+      <input
+        class="form-control min-hgt"
+        id="umt"
+        formControlName="umt"
+        type="text"
+      />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-8">
+      <label class="control-label" for="descripsion"
+        >Descripción comercial del producto terminado*:</label
+      >
+      <textarea
+        rows="2"
+        class="form-control h-100"
+        id="descripcionComercialProductoTerminado "
+        formControlName="descripcionComercialProductoTerminado "
+        placeholder=""
+      ></textarea>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <label class="form-label" for="turnos">Turnos:</label>
+      <input
+        class="form-control min-hgt"
+        id="turnos"
+        formControlName="turnos"
+        type="text"
+      />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="horasPorTurno">Horas por turno:</label>
+      <input
+        class="form-control min-hgt"
+        id="horasPorTurno"
+        formControlName="horasPorTurno"
+        type="text"
+      />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <label class="form-label" for="cantidadEmpleados"
+        >Cantidad empleados:</label
+      >
+      <input
+        class="form-control min-hgt"
+        id="cantidadEmpleados "
+        formControlName="cantidadEmpleados"
+        type="text"
+      />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="cantidadMaquinaria"
+        >Cantidad maquinaria:</label
+      >
+      <input
+        class="form-control min-hgt"
+        id="cantidadMaquinaria"
+        formControlName="cantidadMaquinaria"
+        type="text"
+      />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-8">
+      <label class="control-label" for="descripcionMaquinaria "
+        >Descripción de la maquinaria*:</label
+      >
+      <textarea
+        rows="2"
+        class="form-control h-100"
+        id="descripcionMaquinaria "
+        formControlName="descripcionMaquinaria "
+        placeholder=""
+      ></textarea>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <label class="form-label" for="capacidadInstaladaMensual"
+        >Capacidad instalada mensual:</label
+      >
+      <input
+        class="form-control min-hgt"
+        id="capacidadInstaladaMensual"
+        formControlName="capacidadInstaladaMensual"
+        type="text"
+      />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="capacidadInstaladaAnual">
+        Capacidad instalada anual:</label
+      >
+      <input
+        class="form-control min-hgt"
+        id="capacidadInstaladaAnual"
+        formControlName="capacidadInstaladaAnual"
+        type="text"
+      />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <label class="form-label" for="calculoCapacidadInstalada"
+        >Cálculo de la capacidad instalada:</label
+      >
+      <input
+        class="form-control min-hgt"
+        id="calculoCapacidadInstalada"
+        formControlName="calculoCapacidadInstalada"
+        type="text"
+      />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="capacidadUtilizadaPct"
+        >Capacidad efectivamente utilizada (porcentaje):</label
+      >
+      <input
+        class="form-control min-hgt"
+        id="capacidadUtilizadaPct"
+        formControlName="capacidadUtilizadaPct"
+        type="text"
+      />
+      <p>((horasTurno * turnos)* empleados/capacidadEfectiva)</p>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2">Limpiar</button>
+      <button class="btn btn-primary">Agregar</button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <h5>Capacidad Instalada</h5>
+  </div>
+  <div class="row">
+    <app-tabla-dinamica
+      [configuracionTabla]="capacidadInstaladaEncabezado"
+      [tipoSeleccionTabla]="constructorapacidadInstaladaTablaSeleccion"
+      [datos]="capacidadInstaladaDatos"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2" (click)="regrasar()">
+        Regresar a plantas
+      </button>
+    </div>
+  </div>
+</div>
