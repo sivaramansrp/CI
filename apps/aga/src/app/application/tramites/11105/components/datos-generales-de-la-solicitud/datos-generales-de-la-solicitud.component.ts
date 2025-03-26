@@ -8,7 +8,6 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Catalogo } from '../../estados/tramite10301.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -20,8 +19,9 @@ import {
 } from '@angular/forms';
 //import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { SELECCION } from '../../constantes/importador-exportador.enum';
+//import { SELECCION } from '../../constantes/importador-exportador.enum';
+
+import {RetiradaDeLaAutorizacionDeDonacioneService} from '../../services/retirad-de-la-autorizacion-de-donacione.service';
 
 /**
  * Texto de adjuntar para terceros.
@@ -104,16 +104,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
    * Lista de rangos de días seleccionados.
    */
   selectRangoDias: [] = [];
-  /**
-   * Lista de fechas seleccionadas.
-   */
-
-  fechasSeleccionadas: Catalogo[] = [];
-
-  /**
-   * Lista de datos de fechas disponibles.
-   */
-  fechasDatos: Catalogo[] = [];
+ 
+ 
   /**
    * Control de formulario para la fecha.
    */
@@ -148,7 +140,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
-   */
+   
   botonField = [
     {
       btnNombre: 'Agregar',
@@ -171,10 +163,10 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
       funcion: () => this.quitar(SELECCION.SELECT_ALL),
     },
   ];
+  */
 
   constructor(
-    private importarExportar: ImportadorExportadorService,
-
+    private retiradaDeLaAutorizacionDeDonacioneService: RetiradaDeLaAutorizacionDeDonacioneService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {
@@ -196,44 +188,43 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
 
     this.donanteDomicilio();
 
-        this.fechasSeleccionadas = [];
+        //this.fechasSeleccionadas = [];
 
-
-
-        this.aduana = {
-          labelNombre: 'Aduana por la que ingresará la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: aduana ?? [],
-        };
-    
-   
-        this.ano = {
+        this.retiradaDeLaAutorizacionDeDonacioneService.getAduanaIngresara().subscribe((response) => {
+          this.aduana = {
+            labelNombre: 'Aduana por la que ingresará la mercancía',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: response.data ?? [],
+          };
+        });
+        this.retiradaDeLaAutorizacionDeDonacioneService.getAno().subscribe((response) => {this.ano = {
           labelNombre: 'Año',
           required: false,
           primerOpcion: 'Selecciona un valor',
-          catalogos: ano || [],
-        }
-   
-        this.condicion = {
-          labelNombre: 'Condición de la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: condicion ?? [],
-        }
-   
-        this.pais = {
-          labelNombre: 'País',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: [] ?? [],
-        };
-      
+          catalogos: response.data || [],
+        }}); 
+        this.retiradaDeLaAutorizacionDeDonacioneService.getCondicion().subscribe((response) => {
+          this.condicion = {
+            labelNombre: 'Condición de la mercancía',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: response.data ?? [],
+          }
+        });
+        this.retiradaDeLaAutorizacionDeDonacioneService.getPais().subscribe((response) => {
+          this.pais = {
+            labelNombre: 'País',
+            required: false,
+            primerOpcion: 'Selecciona un valor',
+            catalogos: response.data ?? [],
+          };
+        }); 
   }
   /**
    * Agrega elementos a la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
-   */
+   
   agregar(tipo: string) {
     if (tipo === SELECCION.SELECT_ALL) {
       this.fechasSeleccionadas = [...this.selectRangoDias];
@@ -252,11 +243,12 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
     }
     //this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
+  */
 
   /**
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
-   */
+   
   quitar(tipo: string = '') {
     if (tipo === SELECCION.SELECT_ALL) {
       this.fechasDatos = [...this.fechasSeleccionadas];
@@ -275,6 +267,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit {
     }
    // this.store.setFechasSeleccionadas(this.fechasSeleccionadas);
   }
+   */
 
   /**
    * Opciones de radio.

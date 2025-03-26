@@ -13,4 +13,4 @@ export const ROUTES_TERRESTRE: Routes = [
   imports: [RouterModule.forChild(ROUTES_TERRESTRE)],
   exports: [RouterModule],
 })
-export class TransportistaTerrestreRoutingModule {}
+export class RetiradaDeLaAutorizacionDeDonacioneRoutingModule {}
