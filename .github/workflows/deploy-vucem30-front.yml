@@ -366,49 +366,8 @@ jobs:
             # Create directory for manifests if it doesn't exist
             mkdir -p k8s
             
-            # Create a consolidated manifest file using a template approach
-            cat > k8s/vucem-microfrontends.yaml << 'EOF'
----
-# Namespace for VUCEM Microfrontends
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: vucem-__ENV__
----
-# ConfigMap for environment variables
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: vucem-frontend-config
-  namespace: vucem-__ENV__
-data:
-  NODE_ENV: "production"
-  API_URL: "https://api-vucem-__ENV__.example.com"
----
-# Deployment for VUCEM Microfrontends
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: vucem-microfrontends-__ENV__
-  namespace: vucem-__ENV__
-  labels:
-    app: vucem-microfrontends
-    env: __ENV__
-spec:
-  replicas: __REPLICAS__
-  selector:
-    matchLabels:
-      app: vucem-microfrontends
-      env: __ENV__
-  template:
-    metadata:
-      labels:
-        app: vucem-microfrontends
-        env: __ENV__
-    spec:
-      imagePullSecrets:
-        - name: github-container-registry
-      containers:
+            # Download the K8s manifest template from repository
+            curl -s https://raw.githubusercontent.com/vucem30-dev/frontend/fix/cicd/k8s/vucem-microfrontends.yaml -o k8s/vucem-microfrontends.yaml
 EOF
             
             # Prepare the apps to be included in the deployment
@@ -425,161 +384,43 @@ EOF
               MAX_REPLICAS=3
             fi
             
-            # Add containers for each app to deploy
-            for app in $(echo "$APPS_LIST" | tr ',' ' '); do
-              cat >> k8s/vucem-microfrontends.yaml << EOF
-        - name: $app
-          image: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-$app:${{ needs.setup.outputs.environment }}
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 80
-          resources:
-            requests:
-              memory: "128Mi"
-              cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "500m"
-          livenessProbe:
-            httpGet:
-              path: /health.txt
-              port: 80
-            initialDelaySeconds: 30
-            timeoutSeconds: 3
-            periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /health.txt
-              port: 80
-            initialDelaySeconds: 10
-            timeoutSeconds: 3
-            periodSeconds: 10
-EOF
-            done
-            
-            # Add service and ingress configurations
-            cat >> k8s/vucem-microfrontends.yaml << 'EOF'
----
-# Service for VUCEM Microfrontends
-apiVersion: v1
-kind: Service
-metadata:
-  name: vucem-frontend-svc-__ENV__
-  namespace: vucem-__ENV__
-  labels:
-    app: vucem-microfrontends
-    env: __ENV__
-    tier: frontend
-spec:
-  selector:
-    app: vucem-microfrontends
-    env: __ENV__
-  ports:
-    - name: http
-      port: 80
-      targetPort: 80
-      protocol: TCP
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
-  type: ClusterIP
----
-# Ingress for VUCEM Microfrontends
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: vucem-frontend-ingress-__ENV__
-  namespace: vucem-__ENV__
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
-    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - vucem-__ENV__.example.com
-    secretName: vucem-tls-cert
-  rules:
-  - host: vucem-__ENV__.example.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: vucem-frontend-svc-__ENV__
-            port:
-              number: 80
-      - path: /remoteAppEntry.js
-        pathType: Exact
-        backend:
-          service:
-            name: vucem-frontend-svc-__ENV__
-            port:
-              number: 80
-      - path: /auth(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: vucem-frontend-svc-__ENV__
-            port:
-              number: 80
-      - path: /login(/|$)(.*)
-        pathType: Prefix
-        backend:
-          service:
-            name: vucem-frontend-svc-__ENV__
-            port:
-              number: 80
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: vucem-backend-svc
-            port:
-              number: 8080
----
-# HorizontalPodAutoscaler for VUCEM Microfrontends
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: vucem-microfrontends-hpa-__ENV__
-  namespace: vucem-__ENV__
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: vucem-microfrontends-__ENV__
-  minReplicas: __MIN_REPLICAS__
-  maxReplicas: __MAX_REPLICAS__
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+            # Generate module federation manifest
+            cat > module-federation.manifest.json << EOF
+{
+  "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
+  "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga", 
+  "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
+  "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
+  "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
+  "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
+  "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
+  "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
+  "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
+  "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
+}
 EOF
             
-            # Replace placeholders with actual values
-            sed -i "s/__ENV__/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/__REPLICAS__/$REPLICAS/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/__MIN_REPLICAS__/$MIN_REPLICAS/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/__MAX_REPLICAS__/$MAX_REPLICAS/g" k8s/vucem-microfrontends.yaml
+            # Replace placeholders with actual values for all parameters
+            sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+            sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
+            sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+            
+            # Set replica counts based on environment
+            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+              sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
+            else
+              sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
+            fi
+            
+            # Create ConfigMap for Module Federation Manifest
+            microk8s kubectl create configmap module-federation-manifest \
+              --from-file=module-federation.manifest.json \
+              -n vucem-${{ needs.setup.outputs.environment }} \
+              --dry-run=client -o yaml | microk8s kubectl apply -f -
             
             # Validate YAML syntax (optional but recommended)
             if command -v yamllint &> /dev/null; then
