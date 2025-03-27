@@ -68,7 +68,7 @@ export class ObservacionesDictamenComponent implements OnInit {
   /**
    * @description Metodo que redirige a la pantalla de Autorizar Dictamen
    */
-  navigateToAutorizarDictamen(): void {  
+  navegarAAutorizarDictamen(): void {  
     this.router.navigate(['funcionario/autorizar-dictamen']);    
   }   
   /**
