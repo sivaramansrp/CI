@@ -1,4 +1,5 @@
 
+import { AcusePageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
@@ -7,6 +8,10 @@ const ROUTES_CONTENEDOR: Routes = [
   {
     path: 'solicitante',
     component: SolicitantePageComponent,
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
   },
   {
     path: '',

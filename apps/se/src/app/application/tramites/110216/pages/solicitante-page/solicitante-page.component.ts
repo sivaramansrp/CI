@@ -3,6 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/inicialmente-certificado-origen.enum';
+import { TEXTOS } from '../../constants/inicialmente-certificado-origen.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
   accion: string;
@@ -16,7 +17,8 @@ interface AccionBoton {
 export class SolicitantePageComponent {
 
   pasos: ListaPasosWizard[] = PASOS;
-  indice: number = 1;
+  indice: number = 2;
+  TEXTOS = TEXTOS;
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
