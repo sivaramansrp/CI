@@ -8,7 +8,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src';
 
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 
 
