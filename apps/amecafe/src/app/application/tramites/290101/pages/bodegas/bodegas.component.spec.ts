@@ -1,23 +1,155 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { CafeExportadoresComponent } from './cafe-exportadores.component';
+import { Component } from '@angular/core';
+import { BodegasComponent } from './bodegas.component';
+import { Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { CatalogosService } from '../../servicios/catalogos.service';
+import { TramiteStoreQuery } from '../../estados/tramite290101.query';
+import { TramiteStore } from '../../estados/tramite290101.store';
+import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
-describe('CafeExportadoresComponent', () => {
-  let component: CafeExportadoresComponent;
-  let fixture: ComponentFixture<CafeExportadoresComponent>;
+@Injectable()
+class MockRouter {
+  navigate() {};
+}
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CafeExportadoresComponent]
-    })
-    .compileComponents();
+@Injectable()
+class MockCatalogosService {}
 
-    fixture = TestBed.createComponent(CafeExportadoresComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+@Injectable()
+class MockTramiteStoreQuery {}
+
+@Injectable()
+class MockTramiteStore {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+describe('BodegasComponent', () => {
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        BodegasComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Router, useClass: MockRouter },
+        FormBuilder,
+        { provide: CatalogosService, useClass: MockCatalogosService },
+        { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
+        { provide: TramiteStore, useClass: MockTramiteStore },
+        SeccionLibQuery,
+        SeccionLibStore
+      ]
+    }).overrideComponent(BodegasComponent, {
+
+    }).compileComponents();
+    fixture = TestBed.createComponent(BodegasComponent);
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #seleccionaTab()', async () => {
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.seleccionaTab({});
+    expect(component.router.navigate).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnInit()', async () => {
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({
+      BodegasFormaState: {}
+    });
+    component.iniciarFormulario = jest.fn();
+    component.cargarEstadoCatalog = jest.fn();
+    component.cargarBodegaPropiaAlquilad = jest.fn();
+    component.bodegaForm = component.bodegaForm || {};
+    component.bodegaForm.patchValue = jest.fn();
+    component.bodegaForm.statusChanges = observableOf({});
+    component.bodegaForm.value = 'value';
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setBodegasTramite = jest.fn();
+    component.seccionQuery = component.seccionQuery || {};
+    component.seccionQuery.selectSeccionState$ = observableOf({});
+    component.ngOnInit();
+    expect(component.iniciarFormulario).toHaveBeenCalled();
+    expect(component.cargarEstadoCatalog).toHaveBeenCalled();
+    expect(component.cargarBodegaPropiaAlquilad).toHaveBeenCalled();
+    expect(component.bodegaForm.patchValue).toHaveBeenCalled();
+    expect(component.tramiteStore.setBodegasTramite).toHaveBeenCalled();
+  });
+
+  it('should run #iniciarFormulario()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.iniciarFormulario();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #cargarBodegaPropiaAlquilad()', async () => {
+    component.catalogosService = component.catalogosService || {};
+    component.catalogosService.cargarBodegaPropiaAlquilad = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.cargarBodegaPropiaAlquilad();
+    expect(component.catalogosService.cargarBodegaPropiaAlquilad).toHaveBeenCalled();
+  });
+
+  it('should run #cargarEstadoCatalog()', async () => {
+    component.catalogosService = component.catalogosService || {};
+    component.catalogosService.cargarEstadoCatalog = jest.fn().mockReturnValue(observableOf({
+      code: {},
+      data: {}
+    }));
+    component.cargarEstadoCatalog();
+    expect(component.catalogosService.cargarEstadoCatalog).toHaveBeenCalled();
+  });
+
+  it('should run #cancelarBodega()', async () => {
+    component.bodegaForm = component.bodegaForm || {};
+    component.bodegaForm.reset = jest.fn();
+    component.cancelarBodega();
+    expect(component.bodegaForm.reset).toHaveBeenCalled();
+  });
+
 });

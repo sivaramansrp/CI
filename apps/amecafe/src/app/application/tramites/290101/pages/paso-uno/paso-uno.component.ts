@@ -43,7 +43,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         const TAB_INDEX = Number(params['tab']);
         this.indice = TAB_INDEX && TAB_INDEX > 0 && TAB_INDEX <= this.seccionesDeLaSolicitud.length ? TAB_INDEX : 1; 
       });
-    // this.asignarSecciones();
   }
 
   ngOnDestroy(): void {

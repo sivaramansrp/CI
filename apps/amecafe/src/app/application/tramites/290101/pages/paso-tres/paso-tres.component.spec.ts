@@ -1,39 +1,64 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule, provideToastr } from 'ngx-toastr';
-import { PasoTresComponent } from './paso-tres.component';
-import { Router, RouterModule } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-class MockRouter {
-  navigate(): void {}
+import { Component } from '@angular/core';
+import { PasoTresComponent } from './paso-tres.component';
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
 }
 
 describe('PasoTresComponent', () => {
   let fixture;
-  let component: PasoTresComponent;
-  let router: Router;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, ToastrModule, RouterModule],
-      declarations: [PasoTresComponent], // Added component declaration
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: Router, useClass: MockRouter },
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        PasoTresComponent,
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
       ],
-    }).compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
 
+      ]
+    }).overrideComponent(PasoTresComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoTresComponent);
-    component = fixture.componentInstance;
-    router = TestBed.inject(Router);
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
 });
