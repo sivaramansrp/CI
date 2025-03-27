@@ -1,4 +1,4 @@
 {
-    "include": ["apps/aga/src/app/application/trimites/11202/**/*.ts"],
-    "exclude": ["src/test.ts", "src/**/*.spec.ts"]
-  }
+  "include": ["apps/**/src/**/*.ts"],
+  "exclude": ["src/test.ts", "src/**/*.spec.ts"]
+}
