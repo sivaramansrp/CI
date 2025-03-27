@@ -1,4 +1,8 @@
-import { AnexoDosEncabezado, AnexoUnoEncabezado, ProveedorClienteTabla } from '../../models/nuevo-programa-industrial.model';
+import {
+  AnexoDosEncabezado,
+  AnexoUnoEncabezado,
+  ProveedorClienteTabla,
+} from '../../models/nuevo-programa-industrial.model';
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -6,7 +10,13 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -45,7 +55,9 @@ export class ProveedorClienteComponent implements OnChanges {
    * Emisor de eventos para los datos actualizados de proveedores y clientes.
    * @type {EventEmitter<ProveedorClienteTabla[]>}
    */
-  @Output() public datosActualizadosProveedorCliente = new EventEmitter<ProveedorClienteTabla[]>();
+  @Output() public datosActualizadosProveedorCliente = new EventEmitter<
+    ProveedorClienteTabla[]
+  >();
 
   /**
    * Formulario reactivo para gestionar los datos de proveedores y clientes.
@@ -81,7 +93,8 @@ export class ProveedorClienteComponent implements OnChanges {
    * Configuración de la tabla de proveedores y clientes.
    * @type {any}
    */
-  public readonly PROVEEDOR_CLIENTE_TABLA_CONFIG = PROVEEDOR_CLIENTE_TABLA_CONFIG;
+  public readonly PROVEEDOR_CLIENTE_TABLA_CONFIG =
+    PROVEEDOR_CLIENTE_TABLA_CONFIG;
 
   /**
    * Constructor de la clase ProveedorClienteComponent.
@@ -100,7 +113,8 @@ export class ProveedorClienteComponent implements OnChanges {
   ngOnChanges(): void {
     if (this.fraccionTablaDatos) {
       this.formularioProveedorCliente.patchValue({
-        descripcionComercial: this.fraccionTablaDatos.encabezadoDescripcionComercial,
+        descripcionComercial:
+          this.fraccionTablaDatos.encabezadoDescripcionComercial,
       });
     }
   }
@@ -158,7 +172,7 @@ export class ProveedorClienteComponent implements OnChanges {
    */
   aggregar(): void {
     const PROVEEDOR_CLIENTE: ProveedorClienteTabla = {
-      fraccion:this.fraccionTablaDatos?.encabezadoFraccion,
+      fraccion: this.fraccionTablaDatos?.encabezadoFraccion,
       paisDestino: this.obtenerValorPaisDeDestino(
         this.formularioProveedorCliente.get('paisDestino')?.value
       ),
@@ -175,7 +189,9 @@ export class ProveedorClienteComponent implements OnChanges {
    * @returns {string} La descripción del país de destino.
    */
   obtenerValorPaisDeDestino(id: number): string {
-    const PAIS = this.paisDestinoCatalog.find((ele) => ele.id === parseInt(id.toString(), 10));
+    const PAIS = this.paisDestinoCatalog.find(
+      (ele) => ele.id === parseInt(id.toString(), 10)
+    );
     return PAIS ? PAIS.descripcion : '';
   }
 
@@ -185,7 +201,9 @@ export class ProveedorClienteComponent implements OnChanges {
    * @returns {number} El ID del país de destino.
    */
   obtenerValorPaisDeDestinoId(valor: string): number {
-    const PAIS = this.paisDestinoCatalog.find((ele) => ele.descripcion === valor);
+    const PAIS = this.paisDestinoCatalog.find(
+      (ele) => ele.descripcion === valor
+    );
     return PAIS ? PAIS.id : 0;
   }
 
@@ -208,9 +226,12 @@ export class ProveedorClienteComponent implements OnChanges {
   eidtar(): void {
     if (this.proveedorClienteListaSeleccionada.length > 0) {
       this.formularioProveedorCliente.patchValue({
-        paisDestino: this.obtenerValorPaisDeDestinoId(this.proveedorClienteListaSeleccionada[0].paisDestino),
+        paisDestino: this.obtenerValorPaisDeDestinoId(
+          this.proveedorClienteListaSeleccionada[0].paisDestino
+        ),
         rfc: this.proveedorClienteListaSeleccionada[0].rfcClinte,
-        razonSocialCliente: this.proveedorClienteListaSeleccionada[0].razonSocial,
+        razonSocialCliente:
+          this.proveedorClienteListaSeleccionada[0].razonSocial,
       });
     }
   }
@@ -221,6 +242,8 @@ export class ProveedorClienteComponent implements OnChanges {
    */
   regrsarAnnexoI(): void {
     this.ubicaccion.back();
-    this.datosActualizadosProveedorCliente.emit(this.proveedorClienteTablsDatos);
+    this.datosActualizadosProveedorCliente.emit(
+      this.proveedorClienteTablsDatos
+    );
   }
 }
