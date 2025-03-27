@@ -301,7 +301,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * 
    * @returns {void}
    */
-  abrirModal(tableData:any): void {
+  abrirModal(tableData: Mercancia): void {
     this.filaClics.emit(tableData);
   }
 }
