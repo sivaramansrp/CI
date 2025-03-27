@@ -117,7 +117,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     private datosSolicitudService: DatosSolicitudService
   ) {
     this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: ['', Validators.required],
+      nacionalidad: ['Nacional', Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
@@ -243,5 +243,23 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+   /**
+ * @method limpiarFormulario
+ * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+   limpiarFormulario(): void {
+    this.agregarFabricanteForm.reset();
+  }
+/**
+ * @method cancelar
+ * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  cancelar():void{
+    this.ubicaccion.back();
   }
 }
