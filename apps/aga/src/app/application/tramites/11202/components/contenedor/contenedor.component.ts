@@ -2,22 +2,45 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
-
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
 import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json';
-
 import {TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
 import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
+import { DatosDelContenedor, GridContenedores } from 'libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';  
+
+/**
+ * @component ContenedorComponent
+ * @description
+ * This component is responsible for managing the container-related operations in the application.
+ * It provides functionality for handling forms, displaying dynamic tables, managing file uploads,
+ * and interacting with services to fetch and submit data.
+ *
+ * @selector app-contenedor
+ * @templateUrl ./contenedor.component.html
+ * @styleUrl ./contenedor.component.scss
+ *
+ * @implements OnInit, OnDestroy
+ */
 
 @Component({
   selector: 'app-contenedor',
   templateUrl: './contenedor.component.html',
   styleUrl: './contenedor.component.scss',
+ 
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
+   /**
+   * @property {Contenedor11202State} contenedorState
+   * Stores the state of the container-related data.
+   */
   public contenedorState!: Contenedor11202State;
+
+  /**
+   * @property {string} TEXTOS
+   * Stores the text constants for the component.
+   */
   TEXTOS = TEXTOS_REQUISITOS;
   /**
    * Lista de catálogos de Seleccione una opción.
@@ -29,32 +52,135 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Define los datos que se mostrarán en la tabla dinámica.
    */
    datosTabla: any[] = [];
-  
-
-
+    /**
+   * @property {any} radioOptions
+   * Options for the radio buttons.
+   */
   radioOptions = preOperativo;
+  /**
+   * @property {Subscription} private subscription
+   * Subscription to handle the component's lifecycle.
+   */
   private subscription: Subscription = new Subscription();
+   
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Emits a signal to clean up subscriptions when the component is destroyed.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {FormGroup} solicitudForm
+   * Form group for the container form.
+   */
   solicitudForm!: FormGroup;
+
+  /**
+   * @property {boolean} seccionAdjuntarArchivoVisible
+   * Indicates whether the file upload section is visible.
+   */
   isAdjuntarArchivoVisible: boolean = false;
+
+  /**
+   * @property {boolean} seccionAduanaaFechaVisible
+   * Indicates whether the customs and date section is visible.
+   */
   seccionAduanaaFechaVisible: boolean = false;
+
+  /**
+   * @property {boolean} seccionContenedorVisible
+   * Indicates whether the container section is visible.
+   */
   seccionContenedorVisible: boolean = false;
+
+  /**
+   * @property {boolean} agregarTipoContenedorVisible
+   * Indicates whether the add container type section is visible.
+   */
   seccionContenedor: boolean = false;
+
+  /**
+   * @property {boolean} seccionExcelVisible
+   * Indicates whether the Excel section is visible.
+   */
   agregarTipoContenedorVisible: boolean = false;
+
+  /**
+   * @property {boolean} cargarArchivoVisible
+   * Indicates whether the file upload section is visible.
+   */
   seccionExcelVisible: boolean = false;
+
+  /**
+   * @property {Catalogo[]} catalogAduanas
+   * Stores the customs catalog
+   * */
   catalogAduanas: Catalogo[] = [];
+
+  /**
+   * @property {Catalogo[]} catalogContenedores
+   * Stores the container catalog
+   * */
   catalogContenedores: string[] = [];
+
+  /**
+   * @property {any[]} contenedores
+   * Stores the container data
+   * */
   contenedores: any[] = [];
+
+  /**
+   * @property {string} archivoSeleccionado
+   * Stores the selected file
+   */
   archivoSeleccionado: string = '';
+ 
+  /**
+   * @property {boolean} cargarArchivoVisible
+   * Indicates whether the file upload section is visible.
+   */
   cargarArchivoVisible: boolean = false;
+
+  /**
+   * @property {boolean} exceptionCaught
+   * Indicates whether an exception was caught.
+   */ 
   exceptionCaught: boolean = false;
+
+  /**
+   * @property {boolean} showCargarArchivoTable
+   * Indicates whether the file upload table is visible.
+   */
   actionBean = { requiereGuardadoParcial: false };
+
+  /**
+   * @property {boolean} showArchivoSeleccionadoTable
+   * Indicates whether the selected file table is visible.
+   */
   nonSelectionTextTipoContendor: string = 'Selecciona un valor';
+
+  /**
+   * @property {number} currentIdx
+   * Stores the current index of the tab.
+   */
   cargarArchivo: boolean = false;
+
+  /**
+   * @property {number} currentIdx
+   * Stores the current index of the tab.
+   */
   currentIdx: number = 0;
 
+  /**
+   * @property {boolean} showCargarArchivoTable
+   * Indicates whether the file upload table is visible.
+   */
   showCargarArchivoTable: boolean = false;
+
+  /**
+   * @property {boolean} showArchivoSeleccionadoTable
+   * Indicates whether the selected file table is visible.
+   */
   showArchivoSeleccionadoTable: boolean = false;
 
   constructor(
@@ -65,28 +191,31 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
-   * Método de ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Método de destrucción del componente.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
    * Método de ciclo de vida de Angular que se llama cuando el componente se inicializa.
    */
   ngOnInit(): void {
-    this.cargarCatalogAduanas();
-    this.subscription.add(
-      this.contenedorQuery.selectSolicitud$
+    
+          this.contenedorQuery.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
-            this.contenedorState = seccionState;
+            this.contenedorState ={
+              ...this.contenedorState,
+              ...seccionState,
+            }
           })
         )
         .subscribe()
-    );
+   
+    this.cargarCatalogAduanas();
     this.crearFormSolicitud();
     this.cargarCatalogContenedores();
     this.tabSeleccionado();
@@ -155,23 +284,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Captura los datos del formulario y los envía.
    */
+  
   datosCaptura(): void {
     if (this.solicitudForm.valid) {
-      this.datosTramiteService
-        .submitSolicitud(this.solicitudForm.value)
-        .subscribe(
-          (response) => {
-            this.exceptionCaught = false;
-          },
-          (error) => {
-           
-            this.exceptionCaught = true;
-          }
-        );
-    } else {
-      this.exceptionCaught = true;
-    }
+    this.datosTramiteService
+    .submitSolicitud(this.solicitudForm.value)
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((data: any) => {
+      this.exceptionCaught=false;
+    });
+}
   }
+    
+ 
 
   /**
    * Agrega un nuevo contenedor al grid.
@@ -224,19 +349,19 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
     const HEADER_MAP: { [key: string]: string } = {
-      Aduana: 'aduana',
+      'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de equipo': 'tipoEquipo',
-      'N�mero de equipo': 'numeroEquipo',
-      'D�gito Verificador': 'digitoVerificador',
+      'Número de equipo': 'numeroEquipo',
+      'Dígito Verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
-      Vigencia: 'vigencia',
+      'Vigencia': 'vigencia',
       'Estado de constancia': 'estadoConstancia',
       'Existe en VUCEM': 'existeEnVUCEM',
       'Id constancia': 'idConstancia',
-      'N�mero manifiesto': 'numeroManifiesto',
+      'Número manifiesto': 'numeroManifiesto',
       'Id solicitud': 'idSolicitud',
-      'Fecha inicio': 'fechaInicio',
+      'Fecha inicio': 'fechaInicio'
     };
     const DATA = LINES.slice(1)
       .map((line) => {
@@ -335,9 +460,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+  /**
+   * Carga los datos de la tabla dinámica.
+   */
   loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
+    this.datosTramiteService.getDatosTableData()
+    .pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.datosTabla = data;
     });
   }
@@ -370,4 +498,41 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   get datosContenedor(): FormGroup {
     return this.solicitudForm.get('datosContenedor') as FormGroup;
   }
+
+   /**
+   * Configuración de las columnas de la tabla.
+   */
+   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
+    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
+    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
+    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
+    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
+    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
+    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
+    { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
+    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
+    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
+    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
+    { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
+    { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
+    { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
+  ];
+
+
+    /**
+   * Configuración de las columnas de la tabla.
+   */
+    public gridContenedores: ConfiguracionColumna<GridContenedores>[] = [
+      { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+      { encabezado: 'Iniciales del contenedor', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
+      { encabezado: 'Número contenedor', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
+      { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
+      { encabezado: 'Tipo Contenedor', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
+      { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
+        { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
+      { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
+      { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
+  
+    ];
 }

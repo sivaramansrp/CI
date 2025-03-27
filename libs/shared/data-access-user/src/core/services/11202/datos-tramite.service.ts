@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Catalogo } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +43,7 @@ Obtenga una lista ficticia de Contenedores
   /**
    * Simular un envío exitoso de formulario
    */
-  submitSolicitud(solicitudData: any): Observable<any> {
+  submitSolicitud(solicitudData: FormGroup): Observable<any> {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
 

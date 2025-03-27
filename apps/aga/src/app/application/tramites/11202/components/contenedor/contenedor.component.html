@@ -156,41 +156,11 @@
     <div class="col-md-12" id="idGridContenedoresRC">
       <div class="table-responsive">
         <div class="innercontainer">
-          <table align="center">
-            <tr>
-              <td align="center" colspan="3">
-                <table id="gridContenedoresRC" class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Iniciales contenedor</th>
-                      <th>Número contenedor</th>
-                      <th>Digito Verificador</th>
-                      <th>Tipo Contenedor</th>
-                      <th>Aduana</th>
-                      <th>Estado de constancia</th>
-                      <th>Existe en VUCEM</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let contenedor of contenedores">
-                      <td>{{ contenedor.inicialesContenedor }}</td>
-                      <td>{{ contenedor.numeroContenedor }}</td>
-                      <td>{{ contenedor.digito }}</td>
-                      <td>{{ contenedor.tipoContenedor }}</td>
-                      <td>{{ contenedor.aduana }}</td>
-                      <td>{{ contenedor.tipo }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </div>
+          <app-tabla-dinamica [configuracionTabla]="gridContenedores"
+          [datos]="contenedores"></app-tabla-dinamica>
+          </div>
       </div>
-      <div align="center" id="paginGridContenedoresRC">
-       
       </div>
-    </div>
 
     <div *ngIf="exceptionCaught">
       <div class="row" style="margin-top: 30px">
@@ -273,45 +243,9 @@
           Cargar Archivo
         </button>
       </div>
-      <div *ngIf="showArchivoSeleccionadoTable">
-        <table class="table table-bordered" align="center">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Iniciales del equipo</th>
-              <th>Número de equipo</th>
-              <th>Dígito Verificador</th>
-              <th>Tipo de equipo</th>
-              <th>Aduana</th>
-              <th>Fecha Ingreso</th>
-              <th>Vigencia</th>
-              <th>Estado de constancia</th>
-              <th>Existe en VUCEM</th>
-              <th>Id constancia</th>
-              <th>Número manifiesto</th>
-              <th>Id solicitud</th>
-              <th>Fecha inicio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of datosTabla; let i = index">
-              <td class="grey-column">{{ i + 1 }}</td>
-              <td>{{ item.inicialesEquipo }}</td>
-              <td>{{ item.numeroEquipo }}</td>
-              <td>{{ item.digitoVerificador }}</td>
-              <td>{{ item.tipoEquipo }}</td>
-              <td>{{ item.aduana }}</td>
-              <td>{{ item.fechaIngreso }}</td>
-              <td>{{ item.vigencia }}</td>
-              <td>{{ item.estadoConstancia }}</td>
-              <td>{{ item.existeEnVUCEM }}</td>
-              <td>{{ item.idConstancia }}</td>
-              <td>{{ item.numeroManifiesto }}</td>
-              <td>{{ item.idSolicitud }}</td>
-              <td>{{ item.fechaInicio }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div *ngIf="showArchivoSeleccionadoTable" >
+        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+          [datos]="datosTabla"></app-tabla-dinamica>
       </div>
       <div class="col-md-4">
         <ng-titulo titulo="Cargar Archivo" />
@@ -332,44 +266,9 @@
         </button>
       </div>
       <div *ngIf="showCargarArchivoTable">
-        <table class="table table-bordered" align="center">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Iniciales del equipo</th>
-              <th>Número de equipo</th>
-              <th>Dígito Verificador</th>
-              <th>Tipo de equipo</th>
-              <th>Aduana</th>
-              <th>Fecha Ingreso</th>
-              <th>Vigencia</th>
-              <th>Estado de constancia</th>
-              <th>Existe en VUCEM</th>
-              <th>Id constancia</th>
-              <th>Número manifiesto</th>
-              <th>Id solicitud</th>
-              <th>Fecha inicio</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of datosTabla; let i = index">
-              <td class="grey-column">{{ i + 1 }}</td>
-              <td>{{ item.inicialesEquipo }}</td>
-              <td>{{ item.numeroEquipo }}</td>
-              <td>{{ item.digitoVerificador }}</td>
-              <td>{{ item.tipoEquipo }}</td>
-              <td>{{ item.aduana }}</td>
-              <td>{{ item.fechaIngreso }}</td>
-              <td>{{ item.vigencia }}</td>
-              <td>{{ item.estadoConstancia }}</td>
-              <td>{{ item.existeEnVUCEM }}</td>
-              <td>{{ item.idConstancia }}</td>
-              <td>{{ item.numeroManifiesto }}</td>
-              <td>{{ item.idSolicitud }}</td>
-              <td>{{ item.fechaInicio }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                        [datos]="datosTabla"></app-tabla-dinamica>
+       
       </div>
     </div>
   </div>

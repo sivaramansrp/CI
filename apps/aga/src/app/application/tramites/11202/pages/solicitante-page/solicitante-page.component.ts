@@ -1,15 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../../../constantes/11202/retorno-contenedores.enum';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
-
-
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { SeccionState, SeccionStore } from '../../../../core/estados/seccion.store';
-import { SeccionQuery } from '../../../../core/queries/seccion.query';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -19,50 +12,59 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent implements OnInit{
+export class SolicitantePageComponent {
+  /**
+   * Lista de pasos del wizard.
+   * 
+   * Esta propiedad contiene un array de objetos `ListaPasosWizard` que representan los pasos del wizard.
+   */
   pasos: Array<ListaPasosWizard> = PASOS;
+
+  /**
+   * Índice del paso actual en el wizard.
+   * 
+   * Esta propiedad indica el índice del paso actual en el wizard, comenzando desde 1.
+   */
   indice: number = 1;
-  public seccion!: SeccionState;
-  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Referencia al componente del wizard.
+   * 
+   * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `WizardComponent`.
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  /**
+   * Datos de los pasos del wizard.
+   * 
+   * Esta propiedad contiene un objeto `DatosPasos` que almacena información sobre el número de pasos,
+   * el índice actual, y los textos de los botones "Anterior" y "Continuar".
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  constructor(
-    private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore
-  ) {}
 
-  ngOnInit() {
-    this.pasos = PASOS;
-    this.pasos = this.pasos.map((paso) => {
-      if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
-        return { ...paso, titulo: 'Firmar solicitud' };
-      }
-      return paso;
-    });
-   
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
 
-    this.asignarSecciones();
-  }
-
+  /**
+  * Método para seleccionar una pestaña específica en el wizard.
+  * 
+  * @param {number} i - El índice de la pestaña a seleccionar.
+  */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-  getValorIndice(e: AccionBoton):void {
+  /**
+   * Método para obtener el valor del índice y actualizar el wizard.
+   * 
+   * @param {AccionBoton} e - El objeto que contiene la acción y el valor del índice.
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
@@ -70,18 +72,11 @@ export class SolicitantePageComponent implements OnInit{
       }
     }
   }
+
   /**
-   * Método para asignar las secciones existentes al stored
+   * Método para continuar al siguiente paso en el wizard.
    */
-  private asignarSecciones():void {
-    const SECCIONES: boolean[] = [];
-    const FORMVALIDA: boolean[] = [];
-    for (const LLAVE_SECCION in SECCIONES_TRAMITE_5701.PASO_1) {
-      // @ts-ignore - fix this
-      SECCIONES.push(SECCIONES_TRAMITE_5701.PASO_1[LLAVE_SECCION]);
-      FORMVALIDA.push(false);
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMVALIDA);
+  continuar(): void {
+    this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
   }
 }

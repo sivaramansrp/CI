@@ -26,21 +26,21 @@ export interface Solicitud11202State {
 
 export function createInitialState(): Solicitud11202State {
   return {
-    "rfc": "",
-    "denominacion": "",
-    "actividadEconomica": "",
-    "correoElectronico": "",
-    "pais": "",
-    "codigoPostal": 0,
-    "estado": "",
-    "municipioAlcaldia": "",
-    "localidad": "",
-    "colonia": "",
-    "calle": "",
-    "numeroExterior": "",
-    "numeroInterior": "",
-    "lada": "",
-    "telefono": 0
+    rfc: '',
+    denominacion: '',
+    actividadEconomica: '',
+    correoElectronico: '',
+    pais: '',
+    codigoPostal: 0,
+    estado: '',
+    municipioAlcaldia: '',
+    localidad: '',
+    colonia: '',
+    calle: '',
+    numeroExterior: '',
+    numeroInterior: '',
+    lada: '',
+    telefono: 0,
   };
 }
 
