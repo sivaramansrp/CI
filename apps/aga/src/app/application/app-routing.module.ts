@@ -76,6 +76,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'temporal-contenedores',
+    loadChildren: () => import('./tramites/11201/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
+  },
+  {
     path: 'notificacion',
     component: NotificacionPageComponent
   },
@@ -92,21 +98,25 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
-  
-{
-  path: 'registro-digitalizar-documentos',
-  loadChildren: () =>
-    import('./tramites/701/registro-digitalizar-documentos.module').then(
-      (m) => m.RegistroDigitalizarDocumentosModule
-    ),
-},
-{
-  path: 'retirada-de-la-autorizacion-de-donaciones',
-  loadChildren: () =>
-    import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
-      (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
-    ),
-}
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
+  {
+    path: 'certi-registro',
+      loadChildren: () =>
+        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+  },
+  {
+    path: 'retirada-de-la-autorizacion-de-donaciones',
+    loadChildren: () =>
+      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
+        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
+      ),
+  }
 ];
 
 @NgModule({
