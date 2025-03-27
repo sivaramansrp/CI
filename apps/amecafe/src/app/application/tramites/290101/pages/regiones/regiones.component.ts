@@ -113,7 +113,7 @@ export class RegionesComponent implements OnInit, OnDestroy {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+    this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
   }
 
   /**
@@ -191,7 +191,7 @@ export class RegionesComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.productoCafe = {
-            labelNombre: 'Café compra*',
+            labelNombre: 'Café compra',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -210,7 +210,7 @@ export class RegionesComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.descripTipoCafe = {
-            labelNombre: 'Tipo de café*',
+            labelNombre: 'Tipo de café',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -229,7 +229,7 @@ export class RegionesComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.estado = {
-            labelNombre: 'Estado*',
+            labelNombre: 'Estado',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

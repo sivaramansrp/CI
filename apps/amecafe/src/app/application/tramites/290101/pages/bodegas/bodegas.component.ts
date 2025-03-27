@@ -103,7 +103,7 @@ export class BodegasComponent implements OnInit {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+    this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
   }
 
   /**
@@ -195,7 +195,7 @@ export class BodegasComponent implements OnInit {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.propAlquil = {
-            labelNombre: 'Propia o alquilada*',
+            labelNombre: 'Propia o alquilada',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -214,7 +214,7 @@ export class BodegasComponent implements OnInit {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.estado = {
-            labelNombre: 'Estado*',
+            labelNombre: 'Estado',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

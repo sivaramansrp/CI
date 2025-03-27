@@ -91,7 +91,7 @@ export class CafeDeExportadoresComponent implements OnInit {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
     seleccionaTab(index: number): void {
-      this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+      this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
     }
   
   ngOnInit(): void {
@@ -170,7 +170,7 @@ export class CafeDeExportadoresComponent implements OnInit {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.clasificacion = {
-            labelNombre: 'Clasificacion/Tipo*',
+            labelNombre: 'Clasificacion/Tipo',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

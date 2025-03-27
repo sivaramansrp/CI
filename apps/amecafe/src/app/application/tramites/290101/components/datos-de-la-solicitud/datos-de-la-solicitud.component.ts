@@ -198,7 +198,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de bodegas.
    */
   redirigirBodegas(): void {
-    this.router.navigate(['/pago/cafe-exportadores/bodegas']);
+    this.router.navigate(['/amecafe/cafe-exportadores/bodegas']);
   }
 
   /**
@@ -206,7 +206,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de café de exportadores.
    */
   redirigirCafeExportadores(): void {
-    this.router.navigate(['/pago/cafe-exportadores/cafe-de-exportadores']);
+    this.router.navigate(['/amecafe/cafe-exportadores/cafe-de-exportadores']);
   }
 
   /**
@@ -214,7 +214,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de beneficios.
    */
   redirigirBeneficios(): void {
-    this.router.navigate(['/pago/cafe-exportadores/beneficios']);
+    this.router.navigate(['/amecafe/cafe-exportadores/beneficios']);
   }
 
   /**
@@ -222,7 +222,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Navega a la ruta correspondiente para gestionar los datos de regiones.
    */
   redirigirRegiones(): void {
-    this.router.navigate(['/pago/cafe-exportadores/regiones']);
+    this.router.navigate(['/amecafe/cafe-exportadores/regiones']);
   }
 
   /**

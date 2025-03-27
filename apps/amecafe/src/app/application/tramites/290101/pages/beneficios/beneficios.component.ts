@@ -104,7 +104,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
    * @param {number} index - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(index: number): void {
-    this.router.navigate(['/pago/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
+    this.router.navigate(['/amecafe/cafe-exportadores/cafe-exportadores'], { queryParams: { tab: index } });
   }
 
   /**
@@ -173,7 +173,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
   iniciarFormulario(): void {
     this.beneficiosForm = this.fb.group({
       razonSocial: ['', [Validators.required, Validators.maxLength(200)]],
-      propAlquil: ['', Validators.required],
+      propAlquil: ['', [Validators.required]],
       calle: ['', [Validators.required, Validators.maxLength(100)]],
       numeroExterior: ['', Validators.required],
       numeroInterior: ['', Validators.maxLength(50)],
@@ -195,7 +195,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.propAlquil = {
-            labelNombre: 'Propia o alquilada*',
+            labelNombre: 'Propia o alquilada',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
@@ -214,7 +214,7 @@ export class BeneficiosComponent implements OnInit, OnDestroy {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
           this.estado = {
-            labelNombre: 'Estado*',
+            labelNombre: 'Estado',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,
