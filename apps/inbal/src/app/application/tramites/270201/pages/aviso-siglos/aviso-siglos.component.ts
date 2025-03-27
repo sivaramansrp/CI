@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { AVISO_SIGLOS } from '../../constantes/aviso-siglos.enum';
 
-import {DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import {DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
 
 
 

@@ -10,7 +10,9 @@ import { Observable } from 'rxjs';
 })
 export class SolicitudService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { 
+    //constructor code here
+  }
 
   getOperacionData(): Observable<Catalogo[]>{
     return this.http.get<Catalogo[]>('assets/json/270201/operacion.json')

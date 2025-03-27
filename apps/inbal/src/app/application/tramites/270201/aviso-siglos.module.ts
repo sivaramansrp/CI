@@ -10,6 +10,10 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { NgModule } from '@angular/core';
 
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 
@@ -33,6 +37,8 @@ import { SolicitudService } from './services/solicitud.service';
     BtnContinuarComponent,
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
+    PasoDosComponent,
+    PasoTresComponent
   ],
   providers: [
     provideHttpClient(),

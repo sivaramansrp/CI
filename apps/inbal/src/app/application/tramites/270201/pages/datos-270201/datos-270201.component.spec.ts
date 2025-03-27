@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { Datos270201Component } from './datos-270201.component';
 
 describe('Datos270201Component', () => {
@@ -8,7 +7,9 @@ describe('Datos270201Component', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Datos270201Component]
+      declarations: [Datos270201Component],
+      imports:[],
+      providers:[]
     })
     .compileComponents();
 
@@ -17,7 +18,19 @@ describe('Datos270201Component', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have "indice" initialized to 1', () => {
+    expect(component.indice).toBe(1);
+  });
+
+  it('should change "indice" when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
+
+    component.seleccionaTab(5);
+    expect(component.indice).toBe(5);
   });
 });
