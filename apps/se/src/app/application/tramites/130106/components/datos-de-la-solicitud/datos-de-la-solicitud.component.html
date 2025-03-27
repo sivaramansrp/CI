@@ -1,0 +1,39 @@
+<div class="container">
+    <ng-titulo titulo="Datos del trámite a realizar" />
+    <form [formGroup]="formulario">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="solicitud" class="form-label">Solicitud*:</label>
+                <div>
+                    <input type="radio" id="solicitudInicial" formControlName="solicitud" name="solicitud"
+                        value="inicial" checked (change)="setValoresStore(formulario,'solicitud', 'setSolicitud')"> Inicial
+                </div>
+            </div>
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen"
+                    [label]="'Régimen al que se destinará la mercancía'" [required]="true"
+                    name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'regimen', 'setRegimen')"></app-catalogo-select>
+                <br>
+                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion"
+                    [label]="'Clasificación del régimen'" [required]="true"
+                    name="Clasificación del régimen" (change)="setValoresStore(formulario,'clasificacion', 'setClasificacion')"></app-catalogo-select>
+            </div>
+        </div>
+    </form>
+    <ng-titulo titulo="Datos de la mercancía" />
+    <form [formGroup]="formulario">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="producto" class="form-label">Producto*:</label>
+                <app-input-radio [radioOptions]="radioOptions" [isRequired]="true"
+                     [layout]="'vertical'" formControlName="producto"
+                     (change)="setValoresStore(formulario, 'producto', 'setProducto')" ></app-input-radio>
+            </div>
+            <div class="col-md-6">
+                <label for="descripcion">Descripción de la mercancía*:</label>
+                <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                    formControlName="solicitudDescripcion" style="height: 90px;" (change)="setValoresStore(formulario,'solicitudDescripcion', 'setSolicitudDescripcion')"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
