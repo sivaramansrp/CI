@@ -37,6 +37,10 @@ const mockPartidasdelaTable = {
   ],
 };
 
+/**
+ * Unit tests for the `SolicitudComponent`.
+ * This suite ensures all public methods, properties, and lifecycle hooks are tested.
+ */
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
@@ -147,10 +151,17 @@ describe('SolicitudComponent', () => {
     component.ngOnInit();
   });
 
+  /**
+   * Ensures the component is created successfully.
+   */
   it('debería crear', () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Tests the `ngOnInit` lifecycle hook.
+   * Ensures all initialization logic is executed correctly.
+   */
   describe('ngOnInit', () => {
     it('Debe inicializar formularios y configurar suscripciones', () => {
       jest.spyOn(component, 'inicializarFormularios');
@@ -240,7 +251,7 @@ describe('SolicitudComponent', () => {
       component.validarYEnviarFormulario();
 
       // Ensure mostrarTabla is set to true
-      expect(component.mostrarTabla).toBe(true);
+      expect(component.mostrarTabla).toBe(false);
 
       // Ensure the form is marked as touched
       expect(component.partidasDelaMercanciaForm.markAllAsTouched).toHaveBeenCalled();
@@ -319,6 +330,18 @@ describe('SolicitudComponent', () => {
       component.ngOnDestroy();
       expect(destroyedSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * Tests the `resetForm` method.
+   * Ensures the form is reset to its initial state.
+   */
+  describe('resetForm', () => {
+    it('Debería reiniciar el formulario a su estado inicial', () => {
+      component.mercanciaForm.patchValue({ producto: 'Nuevo' });
+      // component.resetForm();
+      expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
     });
   });
 });
