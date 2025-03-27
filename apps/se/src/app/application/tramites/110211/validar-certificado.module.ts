@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CamDatosCertificadoComponent } from './components/cam-datos-certificado/cam-datos-certificado.component';
+import { DaosCertificadoComponent } from '../../shared/components/daos-certificado/daos-certificado.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { CamDatosCertificadoComponent } from './components/cam-datos-certificado
     RouterModule,
     InputFechaComponent,
     CertificadoDeOrigenComponent,
+    DaosCertificadoComponent
     
   ]
 })

@@ -24,6 +24,7 @@ export class CertificadoOrigenComponent {
 
     ngOnInit(): void {
       this.estadoOpcion();
+      this.paisOpcion();
     }
 
     estadoOpcion(): void {
