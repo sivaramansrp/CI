@@ -14,15 +14,8 @@
           data-toggle="tab">Certificado de origen</a>
       </li>
     </ul>
-
-    <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante #Solicitante></solicitante>
-      } @case (2) {
-      <app-cancelacion-de-certificado (dataEvent)="emitirCancelacion($event)"></app-cancelacion-de-certificado>
-      } @case (3){
-      <app-certificado-de-origen></app-certificado-de-origen>
-      } }
-    </ng-container>
+    <ng-container> @switch (indice) { @case (1) { <solicitante #Solicitante></solicitante> } @case (2) {
+      <app-cancelacion-de-certificado (dataEvent)="emitirCancelacion($event)"></app-cancelacion-de-certificado> } @case
+      (3){ <app-certificado-de-origen></app-certificado-de-origen> } } </ng-container>
   </div>
 </div>
