@@ -10,9 +10,9 @@ import { CertificadoOrigenComponent } from './components/certificado-origen/cert
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CamDatosCertificadoComponent } from './components/cam-datos-certificado/cam-datos-certificado.component';
 
 
 @NgModule({
@@ -22,7 +22,7 @@ import { CertificadoDeOrigenComponent } from '../../shared/components/certificad
     PasoDosComponent,
     CertificadoOrigenComponent,
     MercanciaComponent,
-    DatosCertificadoComponent,
+    CamDatosCertificadoComponent,
     DestinatarioComponent
   ],
   imports: [
@@ -37,8 +37,8 @@ import { CertificadoDeOrigenComponent } from '../../shared/components/certificad
     CatalogoSelectComponent,
     RouterModule,
     InputFechaComponent,
-    CertificadoDeOrigenComponent
-
+    CertificadoDeOrigenComponent,
+    
   ]
 })
 export class ValidarCertificadoModule { }
