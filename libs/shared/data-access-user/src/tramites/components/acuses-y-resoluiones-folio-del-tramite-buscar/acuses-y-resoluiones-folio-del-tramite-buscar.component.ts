@@ -1,11 +1,13 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
+  AMBIENTES,
   InputFecha,
   InputFechaComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from "@angular/router";
+
 
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicial',
@@ -20,20 +22,30 @@ export const FECHA_FINAL = {
 };
 
 @Component({
-  selector: 'folio-del-trámite',
+  selector: 'acuses-y-resoluiones-folio-del-tramite-buscar',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent],
-  templateUrl: './folio-del-trámite.component.html',
-  styleUrl: './folio-del-trámite.component.scss',
+  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent,RouterModule],
+  templateUrl: './acuses-y-resoluiones-folio-del-tramite-buscar.component.html',
+  styleUrl: './acuses-y-resoluiones-folio-del-tramite-buscar.component.scss',
 })
-export class FolioDelTramiteComponent {
+export class AcusesYResoluionesFolioDelTramiteBuscarComponent implements OnInit {
   public FormBusqueda!: FormGroup;
   public fechaInicioInput: InputFecha = FECHA_INICIO;
-  public fechaFinalInput: InputFecha = FECHA_FINAL;
+ public fechaFinalInput: InputFecha = FECHA_FINAL;
   public router!: Router;
 
   public constructor(protected readonly formBuilder: FormBuilder) {
     this.FormBusqueda = this.inicializaFormulario();
+  }
+  
+  public ruta: string = '';
+  
+  ngOnInit(): void {
+    if (window.location.host.indexOf('localhost') !== -1) {
+      this.ruta = 'localhost:4208';
+    } else {
+      this.ruta = 'localhost:4208';
+    }
   }
 
   /**
