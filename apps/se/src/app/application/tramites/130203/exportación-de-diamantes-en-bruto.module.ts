@@ -28,6 +28,7 @@ import { ToastrService } from 'ngx-toastr';
   declarations: [
     PasoUnoComponent,
     ExportacionDeDiamantesEnBrutoComponent,
+    SolicitudComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +37,7 @@ import { ToastrService } from 'ngx-toastr';
     BtnContinuarComponent,
     TituloComponent,
     InputRadioComponent,
-    SolicitudComponent,
+    // SolicitudComponent,
     SolicitanteComponent,
     ReactiveFormsModule,
     PasoTresComponent,
