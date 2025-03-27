@@ -87,6 +87,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @Input() public opcionesColapsableState!: boolean;
 
   /**
+   * Controla si se deben ocultar o mostrar ciertas opciones en el componente.
+   * 
+   * @property {boolean} ocultarOpciones
+   */
+  @Input() ocultarOpciones !: boolean;
+
+  /**
    * @event opcionSeleccionado
    * Emite las opciones seleccionadas al componente padre.
    */
