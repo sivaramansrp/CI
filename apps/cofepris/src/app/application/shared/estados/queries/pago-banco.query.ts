@@ -1,12 +1,12 @@
 import {
-  Solicitud260502State,
-  Tramite260502Store,
-} from '../../estados/stores/tramite260502.store';
+  SolicitudPagoBancoState,
+  TramitePagoBancoStore,
+} from '../stores/pago-banco.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class Tramite260502Query extends Query<Solicitud260502State> {
+export class TramitePagoBancoQuery extends Query<SolicitudPagoBancoState> {
   /**
    * Selecciona el estado completo de la solicitud
    */
@@ -15,7 +15,7 @@ export class Tramite260502Query extends Query<Solicitud260502State> {
   });
 
   /**Guarda el estado completo del formulario de la solicitud */
-  constructor(protected override store: Tramite260502Store) {
+  constructor(protected override store: TramitePagoBancoStore) {
     super(store);
   }
 }

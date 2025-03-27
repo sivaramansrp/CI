@@ -1,18 +1,32 @@
-import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import {
-  Solicitud260502State,
-  Tramite260502Store,
-} from '../../estados/stores/tramite260502.store';
+  Catalogo,
+  CatalogosSelect,
+  InputFechaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  SolicitudPagoBancoState,
+  TramitePagoBancoStore,
+} from '../../estados/stores/pago-banco.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { Tramite260502Query } from '../../estados/queries/tramite260502.query';
+import { INPUT_FECHA_CONFIG } from '../../constantes/permiso-plaguicidas-datos.enum';
+import { PermisoPlaguicidasDatosService } from '../../services/permiso-plaguicidas-datos.service';
+import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 
 @Component({
-  selector: 'app-pago-de-derechos',
+  selector: 'app-pago-de-derechos-banco',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    TituloComponent,
+    InputFechaComponent,
+    ReactiveFormsModule,
+  ],
   templateUrl: './pago-de-derechos-banco.component.html',
   styleUrl: './pago-de-derechos-banco.component.scss',
 })
@@ -23,9 +37,9 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   formSolicitud!: FormGroup;
 
   /**
-   * Estado de la solicitud de la sección 260502.
+   * Estado de la solicitud de la sección PagoBanco.
    */
-  public solicitudState!: Solicitud260502State;
+  public solicitudState!: SolicitudPagoBancoState;
 
   /**
    * Subject para notificar la destrucción del componente.
@@ -42,10 +56,10 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite260502Store: Tramite260502Store,
-    private tramite260502Query: Tramite260502Query,
-    @Inject(ServiciosPermisoSanitarioService)
-    private serviciosPermisoSanitarioService: ServiciosPermisoSanitarioService
+    private tramitePagoBancoStore: TramitePagoBancoStore,
+    private tramitePagoBancoQuery: TramitePagoBancoQuery,
+    @Inject(PermisoPlaguicidasDatosService)
+    private permisoPlaguicidasDatosService: PermisoPlaguicidasDatosService
   ) {
     this.fetchBancoData();
   }
@@ -65,7 +79,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   ngOnInit(): void {
-    this.tramite260502Query.selectSolicitud$
+    this.tramitePagoBancoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -91,7 +105,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   fetchBancoData(): void {
-    this.serviciosPermisoSanitarioService
+    this.permisoPlaguicidasDatosService
       .getBancoData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
@@ -106,11 +120,11 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite260502Store
+    metodoNombre: keyof TramitePagoBancoStore
   ): void {
     const VALOR = form.get(campo)?.value;
     (
-      this.tramite260502Store[metodoNombre] as (
+      this.tramitePagoBancoStore[metodoNombre] as (
         value: string | number | null
       ) => void
     )(VALOR);

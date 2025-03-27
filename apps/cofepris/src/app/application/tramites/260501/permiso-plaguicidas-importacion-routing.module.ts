@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component';
 
 const ROUTES: Routes = [
@@ -14,9 +14,8 @@ const ROUTES: Routes = [
   },
 ];
 
-
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class PermisoPlaguicidasImportacionRoutingModule { }
+export class PermisoPlaguicidasImportacionRoutingModule {}
