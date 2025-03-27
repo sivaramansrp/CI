@@ -1,13 +1,12 @@
+import { ControlPermisosPreviosExportacionComponent } from './pages/control-permisos-previos-exportacion/control-permisos-previos-exportacion.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 
-import { ExportacionMineralesDeHierroComponent } from './pages/exportacion-minerales-de-hierro/exportacion-minerales-de-hierro.component';
-
 const ROUTES: Routes = [
   {
     path: 'control-permisos-previos-exportacion',
-    component: ExportacionMineralesDeHierroComponent
+    component: ControlPermisosPreviosExportacionComponent
   },
   {
     path: '',

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Tramite130217Store } from '../../estados/tramites/tramites130217.store';
 import { Tramite130217Query } from '../../estados/queries/tramite130217.query';
@@ -342,5 +342,152 @@ describe('SolicitudComponent', () => {
       expect(destroyedSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
     });
+  });
+
+  it('should set filaSeleccionada and call storeTableValues when filasSeleccionadas has elements', () => {
+    const filasSeleccionadas = [{ id: 1, name: 'Test Row' }];
+    component.manejarlaFilaSeleccionada(filasSeleccionadas);
+
+    expect(component.filaSeleccionada).toBe(filasSeleccionadas[0]);
+    expect(mockStore.storeTableValues).toHaveBeenCalledWith(filasSeleccionadas[0]);
+  });
+
+  it('should set filaSeleccionada to null and not call storeTableValues when filasSeleccionadas is empty', () => {
+    const filasSeleccionadas: any[] = [];
+    component.manejarlaFilaSeleccionada(filasSeleccionadas);
+
+    expect(component.filaSeleccionada).toBeNull();
+    expect(mockStore.storeTableValues).not.toHaveBeenCalled();
+  });
+
+
+  describe('setValoresStore', () => {
+    let mockForm: FormGroup;
+  
+    beforeEach(() => {
+      mockForm = TestBed.inject(FormBuilder).group({
+        valorPartidaUSD: ['100.50'],
+        descripcion: ['Test Description'],
+        cantidad: ['50'],
+        unidadMedida: ['kg'],
+        bloque: ['Bloque 1'],
+        usoEspecifico: ['Uso Específico'],
+        justificacionImportacionExportacion: ['Justificación'],
+        observaciones: ['Observaciones'],
+        entidad: ['Entidad 1'],
+        representacion: ['Representación 1'],
+      });
+    });
+  
+    function testSetValoresStore(event: { campo: string; metodoNombre: string }, expectedValue: any) {
+      mockForm.patchValue({ [event.campo]: expectedValue }); // Set the expected value in the form
+      component.setValoresStore({ form: mockForm, ...event });
+      expect((mockStore as any)[event.metodoNombre]).toHaveBeenCalledWith(expectedValue);
+    }
+  
+    it('should handle numeric values correctly for setValorPartidaUSD', () => {
+      testSetValoresStore(
+        { campo: 'valorPartidaUSD', metodoNombre: 'setValorPartidaUSD' },
+        100.5
+      );
+    });
+  
+    it('should handle string values correctly for setDescripcion', () => {
+      testSetValoresStore(
+        { campo: 'descripcion', metodoNombre: 'setDescripcion' },
+        'Test Description'
+      );
+    });
+  
+    it('should handle numeric values correctly for setCantidad', () => {
+      testSetValoresStore(
+        { campo: 'cantidad', metodoNombre: 'setCantidad' },
+        '50'
+      );
+    });
+  
+    it('should handle string values correctly for setUnidadMedida', () => {
+      testSetValoresStore(
+        { campo: 'unidadMedida', metodoNombre: 'setUnidadMedida' },
+        'kg'
+      );
+    });
+  
+    it('should handle string values correctly for setBloque', () => {
+      testSetValoresStore(
+        { campo: 'bloque', metodoNombre: 'setBloque' },
+        'Bloque 1'
+      );
+    });
+  
+    it('should handle string values correctly for setUsoEspecifico', () => {
+      testSetValoresStore(
+        { campo: 'usoEspecifico', metodoNombre: 'setUsoEspecifico' },
+        'Uso Específico'
+      );
+    });
+  
+    it('should handle string values correctly for setJustificacionImportacionExportacion', () => {
+      testSetValoresStore(
+        { campo: 'justificacionImportacionExportacion', metodoNombre: 'setJustificacionImportacionExportacion' },
+        'Justificación'
+      );
+    });
+  
+    it('should handle string values correctly for setObservaciones', () => {
+      testSetValoresStore(
+        { campo: 'observaciones', metodoNombre: 'setObservaciones' },
+        'Observaciones'
+      );
+    });
+  
+    it('should handle string values correctly for setEntidad', () => {
+      testSetValoresStore(
+        { campo: 'entidad', metodoNombre: 'setEntidad' },
+        'Entidad 1'
+      );
+    });
+  
+    it('should handle string values correctly for setRepresentacion', () => {
+      testSetValoresStore(
+        { campo: 'representacion', metodoNombre: 'setRepresentacion' },
+        'Representación 1'
+      );
+    });
+  
+    it('should log an error for an invalid metodoNombre', () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const event = {
+        form: mockForm,
+        campo: 'descripcion',
+        metodoNombre: 'invalidMethod',
+      };
+  
+      component.setValoresStore(event);
+  
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Método invalidMethod no existe en Tramite130217Store'
+      );
+    });
+  });
+  
+
+  it('should log an error for an invalid metodoNombre', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const mockForm = TestBed.inject(FormBuilder).group({
+      producto: ['Nuevo'],
+    });
+
+    const event = {
+      form: mockForm,
+      campo: 'producto',
+      metodoNombre: 'invalidMethod',
+    };
+
+    component.setValoresStore(event);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Método invalidMethod no existe en Tramite130217Store'
+    );
   });
 });

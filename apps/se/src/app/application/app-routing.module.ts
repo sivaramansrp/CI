@@ -203,7 +203,7 @@ const ROUTES: Routes = [
     path: 'previos-exportacion',
     loadChildren: () =>
       import('./tramites/130217/control-permisos-previos-exportacion.module').then(
-        (m) => m.controlPermisosPreviosExportacionModule
+        (m) => m.ControlPermisosPreviosExportacionModule
       ),
   },
   
