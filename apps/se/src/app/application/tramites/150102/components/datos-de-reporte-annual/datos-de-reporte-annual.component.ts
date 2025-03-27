@@ -254,8 +254,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param evento Evento de entrada con el valor ingresado.
    */
   obtenerVentasTotales(evento: Event): void {
-    const VALUE = (evento.target as HTMLInputElement).value;
-    this.solicitud150102Store.actualizarVentasTotales(VALUE);
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud150102Store.actualizarVentasTotales(VALOR);
     this.calcularReporteAnnual();
   }
 
@@ -264,8 +264,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param evento Evento de entrada con el valor ingresado.
    */
   obtenerTotalExportaciones(evento: Event): void {
-    const VALUE = (evento.target as HTMLInputElement).value;
-    this.solicitud150102Store.actualizarTotalExportaciones(VALUE);
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud150102Store.actualizarTotalExportaciones(VALOR);
     this.calcularReporteAnnual();
   }
 
@@ -274,8 +274,8 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param evento Evento de entrada con el valor ingresado.
    */
   obtenerTotalImportaciones(evento: Event): void {
-    const VALUE = (evento.target as HTMLInputElement).value;
-    this.solicitud150102Store.actualizarTotalImportaciones(VALUE);
+    const VALOR = (evento.target as HTMLInputElement).value;
+    this.solicitud150102Store.actualizarTotalImportaciones(VALOR);
     this.calcularReporteAnnual();
   }
 
