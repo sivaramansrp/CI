@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import{AccionBoton} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from 'libs/shared/data-access-user/src/core/models/5701/servicios-extraordinarios.model';
+import { DatosPasos } from '@libs/shared/data-access-user/src';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 
 
