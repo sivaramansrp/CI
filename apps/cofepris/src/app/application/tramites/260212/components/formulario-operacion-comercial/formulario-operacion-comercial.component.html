@@ -1,0 +1,34 @@
+<div class="container">
+    <form [formGroup]="formularioOperacionForm">
+        <div class="row mb-4">
+
+            <div class="col-md-4 mt-5">
+                <label>
+                    <input type="checkbox" (change)="alternarSoloLectura($event)" /> Aviso de funcionamiento:
+                </label>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="noLicenciaSanitaria:">No. de licencia sanitaria:</label>
+                    <input class="form-control" type="text" id="noLicenciaSanitaria" [readonly]="esSoloLectura"
+                        [ngClass]="{'readonly-input': esSoloLectura}" formControlName="noLicenciaSanitaria">
+                </div>
+            </div>
+        </div>
+        <div class="row pb-5 mb-5">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <app-catalogo-select [catalogo]="clave" [label]="'Régimen*:'" [required]="true" name="régimen"
+                        formControlName="regimen" (change)="updateRegimen()">
+                    </app-catalogo-select>
+                </div>
+            </div>
+            <div class="col-md-8 left-align">
+                <app-catalogo-select [catalogo]="clave" [label]="'Aduanas de entradas'" [required]="false" name="clave"
+                    formControlName="entradas" (change)="updateEntradas()">
+                </app-catalogo-select>
+            </div>
+        </div>
+    </form>
+</div>
