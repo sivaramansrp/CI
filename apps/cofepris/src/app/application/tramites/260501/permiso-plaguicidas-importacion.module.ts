@@ -9,9 +9,16 @@ import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramite
 import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
+import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 @NgModule({
-  declarations: [PasoUnoComponent, PasoTresComponent, PasoDosComponent, PlaguicidasComponent],
-  imports: [CommonModule, PermisoPlaguicidasImportacionRoutingModule, BtnContinuarComponent, WizardComponent, SolicitanteComponent],
+  declarations: [PasoUnoComponent, PasoTresComponent, PasoDosComponent, PlaguicidasComponent, TercerosRelacionadosComponent],
+  imports: [
+    CommonModule,
+    PermisoPlaguicidasImportacionRoutingModule,
+    BtnContinuarComponent,
+    WizardComponent,
+    SolicitanteComponent,
+  ],
 })
 export class PermisoPlaguicidasImportacionModule {}
