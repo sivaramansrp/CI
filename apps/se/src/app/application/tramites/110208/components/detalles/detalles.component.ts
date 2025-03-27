@@ -1,11 +1,11 @@
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Catalogo, CatalogoSelectComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
 /**
  * Componente que gestiona los detalles del trámite 110208.
@@ -101,7 +101,7 @@ export class DetallesComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite110208Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

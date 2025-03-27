@@ -1,7 +1,7 @@
-import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy } from '@angular/core';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { ServiciosPantallaService } from 'libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
+import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
 /**
@@ -43,15 +43,15 @@ export class PasoDosComponent implements OnDestroy {
      * @returns {void}
      */
     obtieneFirma(ev: string): void {
-      const firma: string = ev;
+      const FIRMA: string = ev;
 
-      if (firma) {
+      if (FIRMA) {
         // Obtiene el número de trámite y establece el trámite en el store
         this.serviciosExtraordinariosServices
           .obtenerTramite(19)
           .pipe(
             map((tramite) => {
-              this.TramiteStore.establecerTramite(tramite.data, firma);
+              this.TramiteStore.establecerTramite(tramite.data, FIRMA);
               // Redirige a la pantalla de acuse
               this.router.navigate(['servicios-extraordinarios/acuse']);
             }),

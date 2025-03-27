@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosDelDestinatarioComponent } from '../datos-del-destinatario/datos-del-destinatario.component';
-import { DomicilloDelDestinatarioComponent } from '../domicillo-del-destinatario/domicillo-del-destinatario.component';
 import { DetallesComponent } from '../detalles/detalles.component';
+import { DomicilloDelDestinatarioComponent } from '../domicillo-del-destinatario/domicillo-del-destinatario.component';
 
 /**
  * @component

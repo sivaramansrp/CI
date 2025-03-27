@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
 /**
@@ -89,7 +89,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite110208Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

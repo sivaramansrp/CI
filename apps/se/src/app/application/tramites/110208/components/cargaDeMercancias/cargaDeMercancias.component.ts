@@ -1,14 +1,14 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, RespuestaCatalogos, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ALERTA_PARA, FECHA_DE_FACTURA } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
-import { MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
-import { Modal } from 'bootstrap';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-import { map, Subject, takeUntil } from 'rxjs';
+import { MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
 /**
  * Interfaz que representa la respuesta de la tabla.
@@ -314,7 +314,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
     this.formMercancia.get('fechaFactura')?.setValue(nuevo_valor);
     this.formMercancia.get('fechaFactura')?.markAsUntouched();
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -329,7 +329,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite110208Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

@@ -1,14 +1,14 @@
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, RespuestaCatalogos, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
 import { FECHA_FINAL_110208, FECHA_INICIO_110208 } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NICO_TABLA, NicoInfo } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
-import { CargaDeMercanciasComponent } from '../cargaDeMercancias/cargaDeMercancias.component';
-import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CargaDeMercanciasComponent } from '../cargaDeMercancias/cargaDeMercancias.component';
+import { CommonModule } from '@angular/common';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
 /**
  * Interfaz que representa la respuesta de la tabla de certificado.
@@ -179,7 +179,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
     this.formCertificado.get('fechaFinal')?.markAsUntouched();
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -198,7 +198,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
     this.formCertificado.get('fechaInicio')?.markAsUntouched();
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -214,7 +214,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   ): void {
     this.mostrarTercerOperador = true;
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -229,7 +229,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite110208Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite110208Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

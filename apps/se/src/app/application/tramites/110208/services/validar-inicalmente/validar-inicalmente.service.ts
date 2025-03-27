@@ -1,8 +1,8 @@
+import { RespuestaDatos, RespuestaTabla } from '../../components/cargaDeMercancias/cargaDeMercancias.component';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
-import { RespuestaDatos, RespuestaTabla } from '../../components/cargaDeMercancias/cargaDeMercancias.component';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaTablaCertificado } from '../../components/certificado-origen/certificado-origen.component';
 
 /**
