@@ -1,0 +1,79 @@
+<div class="container">
+  <ng-titulo titulo="Montos de inversión"></ng-titulo>
+  <form [formGroup]="montosDeInversionForm">
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="tipoOptions"
+          [label]="'Tipo'"
+          [required]="true"
+          name="tipo"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="cantidad">Cantidad*:</label>
+        <input
+          class="form-control min-hgt"
+          id="cantidad"
+          formControlName="cantidad"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-8">
+        <label class="control-label" for="descripsion">Descripción*:</label>
+        <textarea
+          rows="4"
+          class="form-control h-100"
+          id="descripsion"
+          formControlName="descripsion"
+          placeholder=""
+        ></textarea>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label class="form-label" for="mnx"
+          >Monto de inversión en moneda nacional (mxn)*:</label
+        >
+        <input
+          class="form-control"
+          id="mnx"
+          formControlName="mnx"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-12 container text-end mt-5">
+        <button class="btn btn-default me-2">Limpiar</button>
+        <button class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <h5>Montos de inversión</h5>
+  </div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="montosDeInversionEncabezado"
+      [tipoSeleccionTabla]="montosDeInversionTablaSeleccion"
+      [datos]="montosDeInversionDatos"
+    ></app-tabla-dinamica>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-primary">Editar</button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2" (click)="regrasar()">
+        Regresar a plantas
+      </button>
+    </div>
+  </div>
+</div>

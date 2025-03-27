@@ -15,7 +15,7 @@ import {
 import {
   Solicitud301State,
   Tramite301Store,
-} from '../../../../estados/tramites/tramite301.store';
+} from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
@@ -23,7 +23,7 @@ import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/ca
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Tramite301Query } from '../../../../estados/queries/tramite301.query';
+import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
 import franccionArancelaria from 'libs/shared/theme/assets/json/301/fraccion-arancelaria-options.json';
 import nico from 'libs/shared/theme/assets/json/301/nico-options.json';

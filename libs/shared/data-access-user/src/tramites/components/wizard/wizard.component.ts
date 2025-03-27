@@ -7,7 +7,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { ListaPasosWizard } from '../../../core/models/5701/servicios-extraordinarios.model';
+import { ListaPasosWizard } from '../../../core/models/shared/datos-generales.model';
 import { CommonModule } from '@angular/common';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 
