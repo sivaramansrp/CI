@@ -9,7 +9,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
-import { Sectoresy } from 'libs/shared/data-access-user/src/tramites/constantes/servicios-extraordinarios.enum';
+import { Sectoresy } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.json';
