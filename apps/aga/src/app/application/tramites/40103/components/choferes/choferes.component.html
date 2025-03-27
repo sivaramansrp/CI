@@ -39,69 +39,12 @@
         <div class="row table-responsive">
           <div class="col-md-12">
             <h4 class="extranjeros">Choferes nacionales:</h4>
-            <table class="table w-95 mx-auto mt-3">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>
-                    <input type="checkbox" />
-                  </th>
-                  <th>CURP</th>
-                  <th>Nombre</th>
-                  <th>Calle</th>
-                  <th>Número Exterior</th>
-                  <th>Número Interior</th>
-                  <th>País</th>
-                  <th>Estado</th>
-                  <th>Primer Apellido</th>
-                  <th>Segundo Apellido</th>
-                  <th>RFC</th>
-                  <th>TYPO: Número</th>
-                  <th>Fecha fin de Vigencia Gafete</th>
-                  <th>Municipio o alcaldía</th>
-                  <th>Colonia</th>
-                  <th>País de residencia</th>
-                  <th>Ciudad</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let nacion of choferesList$ | async; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      (change)="toggleRowSelection(nacion)"
-                    />
-                  </td>
-                  <td *ngIf="!isEditing || selectedRow !== nacion">
-                    {{ nacion.curp }}
-                  </td>
-                  <td *ngIf="isEditing && selectedRow === nacion">
-                    <input type="text" [(ngModel)]="selectedRow.curp" />
-                  </td>
-                  <td *ngIf="!isEditing || selectedRow !== nacion">
-                    {{ nacion.nombre }}
-                  </td>
-                  <td *ngIf="isEditing && selectedRow === nacion">
-                    <input type="text" [(ngModel)]="selectedRow.nombre" />
-                  </td>
-                  <td>{{ nacion.calle }}</td>
-                  <td>{{ nacion.numeroExterior }}</td>
-                  <td>{{ nacion.numeroInterior }}</td>
-                  <td>{{ nacion.paisCHN }}</td>
-                  <td>{{ nacion.estado }}</td>
-                  <td>{{ nacion.apelliDoPaterno }}</td>
-                  <td>{{ nacion.apelliDoMaternoChn }}</td>
-                  <td>{{ nacion.rfc }}</td>
-                  <td>{{ nacion.gafete }}</td>
-                  <td>{{ nacion.vigenciaGafete }}</td>
-                  <td>{{ nacion.delegacionCHN }}</td>
-                  <td>{{ nacion.coloniaCHN }}</td>
-                  <td>{{ nacion.paisOrigenCHN }}</td>
-                  <td>{{ nacion.ciudad }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="tipoSeleccionTabla"
+              [configuracionTabla]="configuracionColumnasChofer"
+              [datos]="pagoDerechosLista"
+            >
+            </app-tabla-dinamica>
           </div>
         </div>
 
@@ -133,67 +76,12 @@
         <div class="row table-responsive">
           <div class="col-md-12">
             <h4 class="extranjeros">Alta de choferes extranjeros:</h4>
-            <table class="table w-95 mx-auto mt-3">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>
-                    <input type="checkbox" />
-                  </th>
-                  <th>TYPO: Número</th>
-                  <th>TYPO: Número</th>
-                  <th>Calle</th>
-                  <th>Numero exterior</th>
-                  <th>Numero interior</th>
-                  <th>Estado</th>
-                  <th>TYPO: País</th>
-
-                  <th>Estado</th>
-                  <th>Apellido Paterno</th>
-                  <th>Apellido Materno</th>
-                  <th>RFC</th>
-                  <th>Gafete</th>
-                  <th>Vigencia Gafete</th>
-                  <th>Municipio o alcaldía</th>
-                  <th>Colonia</th>
-                  <th>País de Origen</th>
-                  <th>Ciudad</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  *ngFor="
-                    let exterior of choferesextranjerosList$ | async;
-                    let i = index
-                  "
-                >
-                  <td>{{ i + 1 }}</td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      (change)="toggleRowSelection(exterior)"
-                    />
-                  </td>
-                  <td>{{ exterior.nombres }}</td>
-                  <td>{{ exterior.nombre }}</td>
-                  <td>{{ exterior.calle }}</td>
-                  <td>{{ exterior.numeroExterior }}</td>
-                  <td>{{ exterior.numeroInterior }}</td>
-                  <td>{{ exterior.estado }}</td>
-                  <td>{{ exterior.paisCHN }}</td>
-                  <td>{{ exterior.estado }}</td>
-                  <td>{{ exterior.apelliDoPaterno }}</td>
-                  <td>{{ exterior.apelliDoMaternoChn }}</td>
-                  <td>{{ exterior.rfc }}</td>
-                  <td>{{ exterior.gafete }}</td>
-                  <td>{{ exterior.vigenciaGafete }}</td>
-                  <td>{{ exterior.delegacionCHN }}</td>
-                  <td>{{ exterior.coloniaCHN }}</td>
-                  <td>{{ exterior.paisOrigenCHN }}</td>
-                  <td>{{ exterior.ciudad }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="tipoSeleccionTabla"
+              [configuracionTabla]="configuracionColumnas"
+              [datos]="pagoDerechosLista"
+            >
+            </app-tabla-dinamica>
           </div>
         </div>
 
@@ -260,7 +148,7 @@
                   *ngIf="
                     getFormValues['curp'].invalid &&
                     (getFormValues['curp'].dirty ||
-                    getFormValues['curp'].touched)
+                      getFormValues['curp'].touched)
                   "
                   class="text-danger"
                 >
@@ -324,7 +212,7 @@
                   *ngIf="
                     getFormValues['nombre'].invalid &&
                     (getFormValues['nombre'].dirty ||
-                    getFormValues['nombre'].touched)
+                      getFormValues['nombre'].touched)
                   "
                   class="text-danger"
                 >
@@ -353,7 +241,7 @@
                   *ngIf="
                     getFormValues['apellidoPaterno'].invalid &&
                     (getFormValues['apellidoPaterno'].dirty ||
-                    getFormValues['apellidoPaterno'].touched)
+                      getFormValues['apellidoPaterno'].touched)
                   "
                   class="text-danger"
                 >
@@ -383,7 +271,7 @@
                   *ngIf="
                     getFormValues['apellidoMaternoCHN'].invalid &&
                     (getFormValues['apellidoMaternoCHN'].dirty ||
-                    getFormValues['apellidoMaternoCHN'].touched)
+                      getFormValues['apellidoMaternoCHN'].touched)
                   "
                   class="text-danger"
                 >
@@ -415,7 +303,7 @@
                   *ngIf="
                     getFormValues['gafete'].invalid &&
                     (getFormValues['gafete'].dirty ||
-                    getFormValues['gafete'].touched)
+                      getFormValues['gafete'].touched)
                   "
                   class="text-danger"
                 >
@@ -444,7 +332,7 @@
                   *ngIf="
                     getFormValues['vigenciagafete'].invalid &&
                     (getFormValues['vigenciagafete'].dirty ||
-                    getFormValues['vigenciagafete'].touched)
+                      getFormValues['vigenciagafete'].touched)
                   "
                   class="text-danger"
                 >
@@ -486,7 +374,7 @@
                     *ngIf="
                       getFormValues['calle'].invalid &&
                       (getFormValues['calle'].dirty ||
-                      getFormValues['calle'].touched)
+                        getFormValues['calle'].touched)
                     "
                     class="text-danger"
                   >
@@ -514,7 +402,7 @@
                     *ngIf="
                       getFormValues['numeroExterior'].invalid &&
                       (getFormValues['numeroExterior'].dirty ||
-                      getFormValues['numeroExterior'].touched)
+                        getFormValues['numeroExterior'].touched)
                     "
                     class="text-danger"
                   >
@@ -595,18 +483,15 @@
 
               <div class="row">
                 <div class="col-md-4 mb-3">
-               
                   <div>
-
                     <app-catalogo-select
-                    class="coloniaCHN"
-                    [catalogo]="coloniaCHN"
-                    formControlName="coloniaCHN"
-                    [required]="true"
-                    name="coloniaCHN"
-                    label="Colonia"
-                  ></app-catalogo-select>
-                   
+                      class="coloniaCHN"
+                      [catalogo]="coloniaCHN"
+                      formControlName="coloniaCHN"
+                      [required]="true"
+                      name="coloniaCHN"
+                      label="Colonia"
+                    ></app-catalogo-select>
                   </div>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -638,15 +523,14 @@
                     *ngIf="
                       getFormValues['ciudad'].invalid &&
                       (getFormValues['ciudad'].dirty ||
-                      getFormValues['ciudad'].touched)
+                        getFormValues['ciudad'].touched)
                     "
                     class="text-danger"
                   >
                     <small *ngIf="getFormValues['ciudad'].errors?.['required']"
                       >ciudad es obligatorio.</small
                     >
-                    <small
-                      *ngIf="getFormValues['ciudad'].errors?.['maxLength']"
+                    <small *ngIf="getFormValues['ciudad'].errors?.['maxLength']"
                       >ciudad no puede tener más de 10 caracteres.</small
                     >
                   </div>
@@ -670,7 +554,7 @@
                     *ngIf="
                       getFormValues['localidad'].invalid &&
                       (getFormValues['localidad'].dirty ||
-                      getFormValues['localidad'].touched)
+                        getFormValues['localidad'].touched)
                     "
                     class="text-danger"
                   >
@@ -700,7 +584,7 @@
                     *ngIf="
                       getFormValues['codigoPostal'].invalid &&
                       (getFormValues['codigoPostal'].dirty ||
-                      getFormValues['codigoPostal'].touched)
+                        getFormValues['codigoPostal'].touched)
                     "
                     class="text-danger"
                   >
@@ -719,7 +603,7 @@
               <div class="row">
                 <div class="col-md-8">
                   <div>
-                    <label for="solicitud.correo">Correo electronico:</label>
+                    <label for="solicitud.correo">Correo electrónico:</label>
                   </div>
                   <div>
                     <input
@@ -866,18 +750,15 @@
               <div class="row mt-3">
                 <!-- Nacionalidad -->
                 <div class="col-md-4">
-                
                   <div>
-
                     <app-catalogo-select
-                    class="nacionalidadCHE"
-                    [catalogo]="nacionalidadCHE"
-                    formControlName="nacionalidadCHE"
-                    [required]="true"
-                    name="nacionalidadCHE"
-                    label="Nacionalidad"
-                  ></app-catalogo-select>
-                   
+                      class="nacionalidadCHE"
+                      [catalogo]="nacionalidadCHE"
+                      formControlName="nacionalidadCHE"
+                      [required]="true"
+                      name="nacionalidadCHE"
+                      label="Nacionalidad"
+                    ></app-catalogo-select>
                   </div>
                 </div>
 
@@ -985,16 +866,15 @@
               <div class="row">
                 <!-- País -->
                 <div class="col-md-4">
-                 
                   <div>
                     <app-catalogo-select
-                    class="paisOrigenCHN"
-                    [catalogo]="paisOrigenCHN"
-                    formControlName="paisOrigenCHN"
-                    [required]="true"
-                    name="paisOrigenCHN"
-                    label="País de residencia"
-                  ></app-catalogo-select>
+                      class="paisOrigenCHN"
+                      [catalogo]="paisOrigenCHN"
+                      formControlName="paisOrigenCHN"
+                      [required]="true"
+                      name="paisOrigenCHN"
+                      label="País de residencia"
+                    ></app-catalogo-select>
                   </div>
                 </div>
 
@@ -1099,16 +979,15 @@
               <div class="row mt-3">
                 <!-- País de Origen -->
                 <div class="col-md-4">
-                 
                   <div>
                     <app-catalogo-select
-                    class="paisOrigenCHN"
-                    [catalogo]="paisOrigenCHN"
-                    formControlName="paisOrigenCHN"
-                    [required]="true"
-                    name="paisOrigenCHN"
-                    label="País de residencia"
-                  ></app-catalogo-select>
+                      class="paisOrigenCHN"
+                      [catalogo]="paisOrigenCHN"
+                      formControlName="paisOrigenCHN"
+                      [required]="true"
+                      name="paisOrigenCHN"
+                      label="País de residencia"
+                    ></app-catalogo-select>
                   </div>
                 </div>
 

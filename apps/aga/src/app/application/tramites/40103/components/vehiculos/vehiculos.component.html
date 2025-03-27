@@ -37,61 +37,12 @@
           <div class="row table-responsive">
             <div class="col-md-12">
               <h4 class="extranjeros mt-0">Vehiculos:</h4>
-              <table class="table w-95 mx-auto mt-3">
-                <thead>
-                  <tr>
-                    <th>
-                      <input type="checkbox" />
-                    </th>
-                    <th>ID</th>
-                    <th>Número de identificación vehicular</th>
-                    <th>Tipo de vehículo</th>
-                    <th>ID de vehículo</th>
-                    <th>Número de Placas</th>
-                    <th>País Emisor</th>
-                    <th>Estado o provincia</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Año</th>
-                    <th>Transponder</th>
-                    <th>Color</th>
-                    <th>Número económico</th>
-                    <th>Número 2da Placa</th>
-                    <th>Estado Emisor 2da Placa</th>
-                    <th>País Emisor 2da Placa</th>
-                    <th>Descripción</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let vehiculo of vehiculosList$ | async;
-                      let i = index
-                    "
-                  >
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoVin2 }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoTipoVehiculo }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoIdDeVehiculo }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoNumeroPlacas }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoPaisEmisor }}</td>
-                    <td>{{ vehiculo.solicitudDomicilioEstado }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoMarca }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoModelo }}</td>
-                    <td>{{ vehiculo.anioVehiculoVEH }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoTransponder }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoColor }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoNumeroEconomico }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoNumero2daPlaca }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoEmisor2daPlaca }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoPaisEmisor2daPlaca }}</td>
-                    <td>{{ vehiculo.solicitudVehiculoDesc }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <app-tabla-dinamica
+                [tipoSeleccionTabla]="tipoSeleccionTabla"
+                [configuracionTabla]="ParqueVehicular"
+                [datos]="pagoDerechosLista"
+              >
+              </app-tabla-dinamica>
             </div>
           </div>
 
@@ -173,9 +124,12 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoVin2'].invalid &&
-                                    (getFormValues['solicitudVehiculoVin2'].dirty ||
-                                    getFormValues['solicitudVehiculoVin2'].touched)
+                                    getFormValues['solicitudVehiculoVin2']
+                                      .invalid &&
+                                    (getFormValues['solicitudVehiculoVin2']
+                                      .dirty ||
+                                      getFormValues['solicitudVehiculoVin2']
+                                        .touched)
                                   "
                                   class="text-danger"
                                 >
@@ -250,11 +204,15 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoNumeroPlacas']
-                                      .invalid &&
-                                    (getFormValues['solicitudVehiculoNumeroPlacas'].dirty ||
-                                    getFormValues['solicitudVehiculoNumeroPlacas']
-                                        .touched)
+                                    getFormValues[
+                                      'solicitudVehiculoNumeroPlacas'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoNumeroPlacas'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoNumeroPlacas'
+                                      ].touched)
                                   "
                                   class="text-danger"
                                 >
@@ -304,9 +262,12 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudDomicilioEstado'].invalid &&
-                                    (getFormValues['solicitudDomicilioEstado'].dirty ||
-                                    getFormValues['solicitudDomicilioEstado'].touched)
+                                    getFormValues['solicitudDomicilioEstado']
+                                      .invalid &&
+                                    (getFormValues['solicitudDomicilioEstado']
+                                      .dirty ||
+                                      getFormValues['solicitudDomicilioEstado']
+                                        .touched)
                                   "
                                   class="text-danger"
                                 >
@@ -348,9 +309,12 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoMarca'].invalid &&
-                                    (getFormValues['solicitudVehiculoMarca'].dirty ||
-                                    getFormValues['solicitudVehiculoMarca'].touched)
+                                    getFormValues['solicitudVehiculoMarca']
+                                      .invalid &&
+                                    (getFormValues['solicitudVehiculoMarca']
+                                      .dirty ||
+                                      getFormValues['solicitudVehiculoMarca']
+                                        .touched)
                                   "
                                   class="text-danger"
                                 >
@@ -391,9 +355,12 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoModelo'].invalid &&
-                                    (getFormValues['solicitudVehiculoModelo'].dirty ||
-                                    getFormValues['solicitudVehiculoModelo'].touched)
+                                    getFormValues['solicitudVehiculoModelo']
+                                      .invalid &&
+                                    (getFormValues['solicitudVehiculoModelo']
+                                      .dirty ||
+                                      getFormValues['solicitudVehiculoModelo']
+                                        .touched)
                                   "
                                   class="text-danger"
                                 >
@@ -456,9 +423,15 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoTransponder'].invalid &&
-                                    (getFormValues['solicitudVehiculoTransponder'].dirty ||
-                                    getFormValues['solicitudVehiculoTransponder'].touched)
+                                    getFormValues[
+                                      'solicitudVehiculoTransponder'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoTransponder'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoTransponder'
+                                      ].touched)
                                   "
                                   class="text-danger"
                                 >
@@ -510,12 +483,15 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoNumeroEconomico']
-                                      .invalid &&
-                                    (getFormValues['solicitudVehiculoNumeroEconomico']
-                                      .dirty ||
-                                      getFormValues['solicitudVehiculoNumeroEconomico']
-                                        .touched)
+                                    getFormValues[
+                                      'solicitudVehiculoNumeroEconomico'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoNumeroEconomico'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoNumeroEconomico'
+                                      ].touched)
                                   "
                                   class="text-danger"
                                 >
@@ -580,12 +556,15 @@
                                 </div>
                                 <div
                                   *ngIf="
-                                    getFormValues['solicitudVehiculoEmisor2daPlaca']
-                                      .invalid &&
-                                    (getFormValues['solicitudVehiculoEmisor2daPlaca']
-                                      .dirty ||
-                                      getFormValues['solicitudVehiculoEmisor2daPlaca']
-                                        .touched)
+                                    getFormValues[
+                                      'solicitudVehiculoEmisor2daPlaca'
+                                    ].invalid &&
+                                    (getFormValues[
+                                      'solicitudVehiculoEmisor2daPlaca'
+                                    ].dirty ||
+                                      getFormValues[
+                                        'solicitudVehiculoEmisor2daPlaca'
+                                      ].touched)
                                   "
                                   class="text-danger"
                                 >
@@ -695,41 +674,12 @@
           <div class="row table-responsive">
             <div class="col-md-12">
               <h4 class="extranjeros mt-2">Unidades de arrastre:</h4>
-              <table id="tablaDatosGenerales2" class="table w-95 mx-auto mt-3">
-                <thead>
-                  <tr>
-                    <th>
-                      <input type="checkbox" />
-                    </th>
-                    <th>ID</th>
-                    <th>VIN del vehículo</th>
-                    <th>Tipo de unidad de arrastre</th>
-                    <th>Número económico</th>
-                    <th>Número de Placas</th>
-                    <th>País Emisor</th>
-                    <th>Estado o provincia</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    *ngFor="
-                      let data of unidadesdearrastreList$ | async;
-                      let i = index
-                    "
-                  >
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ data.vin2 }}</td>
-                    <td>{{ data.tipoVehiculoArrastreAGA }}</td>
-                    <td>{{ data.numeroEconomico }}</td>
-                    <td>{{ data.numeroPlacas }}</td>
-                    <td>{{ data.paisEmisor }}</td>
-                    <td>{{ data.estado2 }}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <app-tabla-dinamica
+                [tipoSeleccionTabla]="tipoSeleccionTabla"
+                [configuracionTabla]="unidadesDeArrastre"
+                [datos]="pagoDerechosLista"
+              >
+              </app-tabla-dinamica>
             </div>
           </div>
 
@@ -739,18 +689,27 @@
             <tr>
               <td colspan="4">
                 <div id="acciones">
+                  
                   <button
                     class="btn btn-primary btn-Agregar"
                     (click)="openDialogCapturaSPFisicaValidacion()"
                   >
                     Agregar
                   </button>
+                
                   <button
                     name="EliminarSPMoral"
                     class="btn btn-danger me-2 btn-Agregar"
                   >
                     Eliminar
                   </button>
+                  <button
+                  style="float: right"
+                  class="btn btn-default me-2"
+                  type="button"
+                >
+                  Modificar
+                </button>
 
                   <div
                     class="modal fade"

@@ -69,4 +69,15 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
   getunidadesdearrastre(): string[] {
     return this.getValue().unidadesDeArrastre;
   }
+
+   /**
+   * Observable que selecciona la lista de pago de derechos.
+   */
+   getPagoDerechosLista$ = this.select((state) => state.pagoDerechosLista);
+
+   /**
+    * Obtiene la lista de pago de derechos.
+    * @returns La lista de pago de derechos.
+    */
+  
 }

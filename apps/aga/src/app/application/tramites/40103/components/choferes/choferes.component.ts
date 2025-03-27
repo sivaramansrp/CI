@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import {
   AfterViewInit,
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -15,27 +17,27 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Modal } from 'bootstrap';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import {
-  extranjero,
-} from 'libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { SharedModule } from '@ng-mf/data-access-user';
-import { ToastrService } from 'ngx-toastr';
-import mockData from 'libs/shared/theme/assets/json/40103/director-general-mockdata.json';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { HttpClient } from '@angular/common/http';
+import { Modal } from 'bootstrap';
+import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { Observable, ReplaySubject, takeUntil } from 'rxjs';
+import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
+import { SharedModule } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { ToastrService } from 'ngx-toastr';
+import { choferesEnum } from '../constantes/choferes.enum';
+import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { map } from 'rxjs/operators';
+import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 
 @Component({
   selector: 'app-choferes',
@@ -48,10 +50,10 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/mod
     SharedModule,
     FormsModule,
     CatalogoSelectComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
   ],
 })
-export class ChoferesComponent implements OnInit {
+export class ChoferesComponent implements OnInit, OnDestroy {
   solicitudTituloChoferExtranjero: string = 'Datos del chofer extranjero';
   labelSolicitudPersonaNombre: string = 'Nombre';
   labelSolicitudPersonaPrimerApellido: string = 'Primer Apellido ';
@@ -93,12 +95,177 @@ export class ChoferesComponent implements OnInit {
   colonias: any[] = [];
   paises: any[] = [];
   choferesExtranjero: any[] = [];
+  pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
   choferes: any[] = [];
   formChoferes!: FormGroup;
   choferesList$: Observable<any[]> = new Observable();
+  getPagoDerechosLista$: Observable<any[]> = new Observable();
   choferesextranjerosList$: Observable<any[]> = new Observable();
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   isEditing: boolean = false;
   selectedRow: any;
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración de las columnas de la tabla.
+   * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
+   */
+  configuracionColumnas = [
+    {
+      encabezado: 'Número',
+      clave: (item: PagoDerechosLista) => item.número,
+      orden: 1,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (item: PagoDerechosLista) => item.calle,
+      orden: 2,
+    },
+    {
+      encabezado: 'Estado',
+      clave: (item: PagoDerechosLista) => item.estado,
+      orden: 3,
+    },
+    {
+      encabezado: 'País',
+      clave: (item: PagoDerechosLista) => item.pais,
+      orden: 4,
+    },
+    {
+      encabezado: 'Apellido Paterno',
+      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      orden: 5,
+    },
+    {
+      encabezado: 'Apellido Materno',
+      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      orden: 6,
+    },
+    {
+      encabezado: 'RFC',
+      clave: (item: PagoDerechosLista) => item.rfc,
+      orden: 7,
+    },
+    {
+      encabezado: 'Gafete',
+      clave: (item: PagoDerechosLista) => item.gafete,
+      orden: 8,
+    },
+    {
+      encabezado: 'Vigencia Gafete',
+      clave: (item: PagoDerechosLista) => item.vigenciaGafete,
+      orden: 9,
+    },
+    {
+      encabezado: 'Municipio o Alcaldía',
+      clave: (item: PagoDerechosLista) => item.municipio,
+      orden: 10,
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (item: PagoDerechosLista) => item.colonia,
+      orden: 11,
+    },
+    {
+      encabezado: 'País de Origen',
+      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      orden: 12,
+    },
+    {
+      encabezado: 'Ciudad',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 13,
+    },
+  ];
+
+
+  configuracionColumnasChofer = [
+    {
+      encabezado: 'CURP',
+      clave: (item: PagoDerechosLista) => item.número,
+      orden: 1,
+    },
+    {
+      encabezado: 'Número',
+      clave: (item: PagoDerechosLista) => item.calle,
+      orden: 2,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (item: PagoDerechosLista) => item.estado,
+      orden: 3,
+    },
+    {
+      encabezado: 'Número Exterior',
+      clave: (item: PagoDerechosLista) => item.pais,
+      orden: 4,
+    },
+    {
+      encabezado: 'Número Interior',
+      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      orden: 5,
+    },
+    {
+      encabezado: 'País',
+      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      orden: 6,
+    },
+    {
+      encabezado: 'Estado',
+      clave: (item: PagoDerechosLista) => item.rfc,
+      orden: 7,
+    },
+    {
+      encabezado: 'Primer Apellido',
+      clave: (item: PagoDerechosLista) => item.gafete,
+      orden: 8,
+    },
+    {
+      encabezado: 'Segundo Apellido',
+      clave: (item: PagoDerechosLista) => item.vigenciaGafete,
+      orden: 9,
+    },
+    {
+      encabezado: 'RFC',
+      clave: (item: PagoDerechosLista) => item.municipio,
+      orden: 10,
+    },
+    {
+      encabezado: 'Número',
+      clave: (item: PagoDerechosLista) => item.colonia,
+      orden: 11,
+    },
+    {
+      encabezado: 'Fecha fin de Vigencia Gafete',
+      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      orden: 12,
+    },
+    {
+      encabezado: 'Municipio o alcaldía',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 13,
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 14,
+    },
+    {
+      encabezado: 'País de residencia',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 15,
+    },
+    {
+      encabezado: 'Ciudad',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 16,
+    },
+  ];
+  /**
+   * Lista de pagos de derechos asociados a la solicitud.
+   * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
+   */
+
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   @Input() catalogo: Catalogo[] = [];
   public paisOrigenCHN!: Catalogo[];
@@ -189,20 +356,31 @@ export class ChoferesComponent implements OnInit {
    * 
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
+
   ngOnInit(): void {
+    this.getPagoDerechosLista$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        if (data) {
+          this.pagoDerechosLista = data;
+          console.log('Data loaded:', this.pagoDerechosLista);
+        } else {
+          console.warn('No data available');
+        }
+      });
+
     this.choferesList$ = this.chofer40103Query.getChoferes$;
     this.choferesextranjerosList$ =
       this.chofer40103Query.getchoferesextranjero$;
 
-    // eslint-disable-next-line no-empty-function
-    this.choferesList$.subscribe((_choferes: unknown) => {});
+    this.choferesList$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((_choferes: unknown) => {});
 
-    this.choferesextranjerosList$.subscribe(
-      // eslint-disable-next-line no-empty-function
-      (_choferesextranjeros: unknown) => {}
-    );
+    this.choferesextranjerosList$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((_choferesextranjeros: unknown) => {});
 
-    // Comprobar si la tienda tiene datos sincrónicamente
     this.chofernacionalForm();
     this.loadStoredData();
     this.fetchChoferes();
@@ -242,29 +420,22 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   /**
    * Guarda los datos del formulario del chofer extranjero.
    */
+  extranjeroGuardars(): void {
+    const submittedData = this.pagoDerechosLista.map((item) => ({
+      ...item,
+      clave: item?.calle || '',
+      descripcion: item?.rfc || '',
+    }));
+    console.log('Submitted Data:', submittedData);
 
-  extranjeroGuardar(): void {
-    if (this.formChoferes.invalid) {
-      /* empty */
-    }
-    const NUEVO_MIEMBRO = this.formChoferes.getRawValue();
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      pagoDerechosLista: [...(state.pagoDerechosLista || []), ...submittedData],
+    }));
+    console.log('Updated Store:', this.chofer40103Store);
 
-    if (!NUEVO_MIEMBRO || Object.keys(NUEVO_MIEMBRO).length === 0) {
-      this.toastr.error('Invalid form data. Please try again.');
-      return;
-    }
-    // Utilice el servicio para agregar el nuevo registro a la lista de extranjeros
-    this.chofer40103Service.addChofer(NUEVO_MIEMBRO, true);
-
-    //Restablecer el formulario
-    this.formChoferes.reset();
-    this.toastr.success('Chofer extranjero added successfully');
-    // cerrar el modal
-    this.cerrarModal();
-
-    // Obtener una lista actualizada para garantizar que la tabla se actualice
-    this.choferesextranjerosList$ =
-      this.chofer40103Query.getchoferesextranjero$;
+    this.toastr.success('Data submitted successfully!');
+    this.pagoDerechosLista = [];
   }
 
   /**
@@ -505,36 +676,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       }
     }
   }
-  extranjeroGuardars(): void {
-    if (this.selectedRow) {
-      // Crea un nuevo objeto con los valores actualizados
-      const UPDATE_ROWS = { ...this.selectedRow, ...this.formChoferes.value };
 
-      // Actualizar la fuente de datos (choferesList$)
-      this.choferesextranjerosList$ = this.choferesextranjerosList$.pipe(
-        map((choferesExtranjero: any) => {
-          return choferesExtranjero.map((choferesExtranjero: any) => {
-            if (
-              (choferesExtranjero as any).id === (this.selectedRow as any).id
-            ) {
-              return UPDATE_ROWS;
-            }
-            return choferesExtranjero;
-          });
-        })
-      );
-
-      // Actualizar la mesa
-      this.choferesextranjerosList$.subscribe();
-
-      // cerrar el modal
-      this.isEditing = false;
-      const MODEL = Modal.getInstance(this.modalRef.nativeElement);
-      if (MODEL) {
-        MODEL.hide();
-      }
-    }
-  }
   estadoSeleccion(): void {
     const ESTADO = this.formChoferes.get('estado')?.value;
     this.chofer40103Store.setEstado(ESTADO);
@@ -560,5 +702,9 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.chofer40103Service.getNacionaliDadChe().subscribe((data) => {
       this.nacionalidadCHE = data;
     });
+  }
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

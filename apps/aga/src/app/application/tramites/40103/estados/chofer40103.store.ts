@@ -13,6 +13,7 @@ export interface Choferesnacionales40103State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
+  pagoDerechosLista: any[];
 }
 
 export function createChoferState(): Choferesnacionales40103State {
@@ -28,6 +29,7 @@ export function createChoferState(): Choferesnacionales40103State {
     nombre: '',
     primerApellido: '',
     segundoApellido: '',
+    pagoDerechosLista: [],
   };
 }
 
@@ -70,6 +72,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
       unidadesdearrastre: unidadesdearrastreArray,
     }));
   }
+  
 
   /**
    * Establece el tipo de vehículo de la solicitud.

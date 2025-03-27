@@ -8,18 +8,22 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { FormBuilder } from '@angular/forms';
-import { FormGroup} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
+import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
 import { Subscription } from 'rxjs';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
+import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum';
 import { Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-vehiculos',
   templateUrl: './vehiculos.component.html',
@@ -29,6 +33,8 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+  pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
   public tipoVehiculoArrastreAGA!: Catalogo[];
   public paisEmisor!: Catalogo[];
   public colorAGA!: Catalogo[];
@@ -48,32 +54,48 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   VehiculoVEH: Catalogo[] = [];
   VehiculoColors: Catalogo[] = [];
   PaisEmisor2daPlaca: DatosDelVehículoPaisEmisor[] = [];
-  labelSolicitudVehiculoTipoVehiculo = 'Tipo de vehículo';
-  solicitudTituloDatosVehiculo: string = 'Datos del vehículo';
-  labelSolicitudVehiculoVin: string = 'Número de identificación vehicular';
-  labelPuntos: string = 'Puntos';
-  nonSelectionTextTipoVehiculo: string = 'Selecciona un valor';
-  nonSelectionTextPaisEmisor: string = 'Selecciona un valor';
-  nonSelectionTextColorAGA: string = 'Selecciona un valor';
-  nonSelectionTextAnios: string = 'Selecciona un valor';
-  labelSolicitudVehiculoIdDeVehiculo: string = 'ID de Vehículo';
-  labelSolicitudVehiculoNumeroPlacas: string = 'Número de Placas';
-  labelSolicitudVehiculoPaisEmisor: string = 'País Emisor';
-  labelSolicitudDomicilioEstado: string = 'Estado o provincia';
-  labelSolicitudVehiculoMarca: string = 'Marca';
-  labelSolicitudVehiculoModelo: string = 'Modelo';
-  labelAnioVEH: string = 'Año';
-  labelSolicitudVehiculoTransponder: string = 'Transponder';
-  labelSolicitudVehiculoColor: string = 'Color de vehiculo';
-  labelSolicitudVehiculoNumeroEconomico: string = 'Número económico';
-  labelSolicitudVehiculoNumero2daPlaca: string = 'Número 2da Placa';
-  labelSolicitudVehiculoEmisor2daPlaca: string = 'Estado emisor de 2da Placa';
-  labelSolicitudVehiculoPaisEmisor2daPlaca: string = 'País Emisor 2da Placa';
-  labelDescripcionVehiculo: string = 'Descripción del vehículo';
-  botonLimpiar: string = 'Limpiar';
-  botonCancelar: string = 'Cancelar';
-  botonGuardar: string = 'Guardar';
-
+  labelSolicitudVehiculoTipoVehiculo =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TIPO_VEHICULO;
+  solicitudTituloDatosVehiculo: string =
+    VEHICULO_PAGE.SOLICITUD_TITULO_DATOS_VEHICULO;
+  labelSolicitudVehiculoVin: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_VIN;
+  labelPuntos: string = VEHICULO_PAGE.LABEL_PUNTOS;
+  nonSelectionTextTipoVehiculo: string =
+    VEHICULO_PAGE.NON_SELECTION_TEXT_TIPO_VEHICULO;
+  nonSelectionTextPaisEmisor: string =
+    VEHICULO_PAGE.NON_SELECTION_TEXT_PAIS_EMISOR;
+  nonSelectionTextColorAGA: string = VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
+  nonSelectionTextAnios: string = VEHICULO_PAGE.NON_SELECTION_TEXT_ANIOS;
+  labelSolicitudVehiculoIdDeVehiculo: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_ID_DEVEHICULO;
+  labelSolicitudVehiculoNumeroPlacas: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMEROPLACAS;
+  labelSolicitudVehiculoPaisEmisor: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR;
+  labelSolicitudDomicilioEstado: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_DOMICILIO_ESTADO;
+  labelSolicitudVehiculoMarca: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MARCA;
+  labelSolicitudVehiculoModelo: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MODELO;
+  labelAnioVEH: string = VEHICULO_PAGE.LABEL_ANIO_VEH;
+  labelSolicitudVehiculoTransponder: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TRANSPONDER;
+  labelSolicitudVehiculoColor: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_COLOR;
+  labelSolicitudVehiculoNumeroEconomico: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_ECONOMICO;
+  labelSolicitudVehiculoNumero2daPlaca: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_2DAPLACA;
+  labelSolicitudVehiculoEmisor2daPlaca: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_EMISOR_2DAPLACA;
+  labelSolicitudVehiculoPaisEmisor2daPlaca: string =
+    VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR_2DAPLACA;
+  labelDescripcionVehiculo: string = VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
+  botonLimpiar: string = VEHICULO_PAGE.BOTON_LIMPIAR;
+  botonCancelar: string = VEHICULO_PAGE.BOTON_CANCELAR;
+  botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
@@ -83,6 +105,120 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
       tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
     this.activeTab = tabName;
   }
+  ParqueVehicular = [
+    {
+      encabezado: 'Número de identificación vehicular',
+      clave: (item: PagoDerechosLista) => item.número,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de vehículo',
+      clave: (item: PagoDerechosLista) => item.calle,
+      orden: 2,
+    },
+    {
+      encabezado: 'ID de vehículo',
+      clave: (item: PagoDerechosLista) => item.estado,
+      orden: 3,
+    },
+    {
+      encabezado: 'Número de Placas',
+      clave: (item: PagoDerechosLista) => item.pais,
+      orden: 4,
+    },
+    {
+      encabezado: 'País Emisor',
+      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      orden: 5,
+    },
+    {
+      encabezado: 'Estado o provincia',
+      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      orden: 6,
+    },
+    {
+      encabezado: 'Marca',
+      clave: (item: PagoDerechosLista) => item.rfc,
+      orden: 7,
+    },
+    {
+      encabezado: 'Modelo',
+      clave: (item: PagoDerechosLista) => item.gafete,
+      orden: 8,
+    },
+    {
+      encabezado: 'Año',
+      clave: (item: PagoDerechosLista) => item.vigenciaGafete,
+      orden: 9,
+    },
+    {
+      encabezado: 'Transponder',
+      clave: (item: PagoDerechosLista) => item.municipio,
+      orden: 10,
+    },
+    {
+      encabezado: 'Color',
+      clave: (item: PagoDerechosLista) => item.colonia,
+      orden: 11,
+    },
+    {
+      encabezado: 'Número económico',
+      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      orden: 12,
+    },
+    {
+      encabezado: 'Número 2da Placa',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 13,
+    },
+    {
+      encabezado: 'País Emisor 2da Placa',
+      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      orden: 14,
+    },
+    {
+      encabezado: 'País Emisor 2da Placa',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 15,
+    },
+    {
+      encabezado: 'Descripción',
+      clave: (item: PagoDerechosLista) => item.ciudad,
+      orden: 16,
+    },
+  ];
+  unidadesDeArrastre = [
+    {
+      encabezado: 'VIN del vehículo',
+      clave: (item: PagoDerechosLista) => item.número,
+      orden: 1,
+    },
+    {
+      encabezado: 'Tipo de unidad de arrastre',
+      clave: (item: PagoDerechosLista) => item.calle,
+      orden: 2,
+    },
+    {
+      encabezado: 'Número económico',
+      clave: (item: PagoDerechosLista) => item.estado,
+      orden: 3,
+    },
+    {
+      encabezado: 'Número de Placas',
+      clave: (item: PagoDerechosLista) => item.pais,
+      orden: 4,
+    },
+    {
+      encabezado: 'País Emisor',
+      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      orden: 5,
+    },
+    {
+      encabezado: 'Estado o provincia',
+      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      orden: 6,
+    },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -137,7 +273,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(10),
-          Validators.pattern('^[a-zA-Z0-9]*$')
+          Validators.pattern('^[a-zA-Z0-9]*$'),
         ],
       ],
       solicitudVehiculoColor: ['', Validators.required],

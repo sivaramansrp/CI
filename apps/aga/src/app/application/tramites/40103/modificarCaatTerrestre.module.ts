@@ -33,6 +33,7 @@ import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { TablaDinamicaComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
 @NgModule({
   declarations: [
     SolicitantePageComponent,
@@ -45,7 +46,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
   imports: [
     CommonModule,
     SharedModule,
-    ModificarCaatTerrestreRoutingModule ,
+    ModificarCaatTerrestreRoutingModule,
     RouterModule,
     WizardComponent,
     forwardRef(() => TituloComponent),
@@ -64,7 +65,8 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
     ChoferesComponent,
-  ],
+    TablaDinamicaComponent
+],
   exports: [
     PasoUnoComponent,
     PasoDosComponent,

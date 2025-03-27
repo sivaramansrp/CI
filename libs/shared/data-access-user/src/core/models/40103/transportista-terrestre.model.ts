@@ -6,18 +6,17 @@ export interface Nacional {
     numeroInterior: string;
     paisCHN: string;
     estado: string;
-    apelliDoPaterno: string;
-    apelliDoMaternoChn: string;
+    apellidoPaterno: string;
+    apellidoMaternoChn: string;
     rfc: string;
     gafete: string;
     vigenciaGafete: string;
     entidadFederativaChn: string;
     numeroDelSeguroSocial: string;
     nombres: string;
-  
-    delegacionCHN: string;
-    coloniaCHN: string;
-    paisOrigenCHN: string;
+    delegacionChn: string;
+    coloniaChn: string;
+    paisOrigenChn: string;
     ciudad: string;
   }
   export interface extranjero {
@@ -64,5 +63,5 @@ export interface Nacional {
     dpi?: string;
   }
   export interface Tipos {
-    tiposData: string; // Tipo de documento.
+    tiposData: string; 
   }
