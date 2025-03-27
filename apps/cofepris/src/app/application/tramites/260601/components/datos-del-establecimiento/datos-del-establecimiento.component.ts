@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Va
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
+import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
 import { CATALOGOS_ID, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-enum';
 import { CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Manifiestos, ManifiestosRespuesta } from '../../models/aviso-model';
@@ -12,7 +12,7 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { Modal } from 'bootstrap';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 import productoTable from '@libs/shared/theme/assets/json/260601/producto-table.json';
 import scianTable from '@libs/shared/theme/assets/json/260601/scian-table.json';
 

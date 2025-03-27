@@ -2,12 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
+import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
 import { CATALOGOS_ID, DATOS_CATEGORIAS_TERCEROS, TERCEROS_NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../constantes/aviso-enum';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 
 /**
  * Componente para gestionar el agregar proveedor.

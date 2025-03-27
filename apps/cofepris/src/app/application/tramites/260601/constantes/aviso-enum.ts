@@ -15,11 +15,11 @@ export const TEXTOS_SOLICITUD = `Al dar doble-clic en una Solicitud, se copiará
  * Encabezados de la tabla de solicitudes.  
  */
 export const SOLICITUD_HEADER = {
-  "hSolicitud": [
+  "encabezadoSolicitud": [
     "Fecha Creación",
     "Mercancía",
     "Cantidad",
-    "Proovedor"
+    "Proveedor"
   ]
 }
 

@@ -29,7 +29,7 @@ export class DatosDeLaSolicitudComponent {
   /**
    * Recibe datos del encabezado de la tabla como propiedad de entrada
    */
-  tablaHeadData = SOLICITUD_HEADER.hSolicitud;
+  tablaHeadData = SOLICITUD_HEADER.encabezadoSolicitud;
   /**
    * Recibe la lista de solicitudes como datos de fila de la tabla.
    */

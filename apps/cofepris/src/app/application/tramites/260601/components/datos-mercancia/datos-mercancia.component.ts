@@ -3,12 +3,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { AvisoSanitarioState, Tramite260601Store } from '../../estados/tramites/tramite260601.store';
+import { AvisoSanitarioState, Tramite260601Store } from '../../../../estados/tramites/tramite260601.store';
 import { BOTONS, CATALOGOS_ID, PANELS } from '../../constantes/aviso-enum';
 import { Catalogo, CatalogoSelectComponent, CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { CrossList, MercanciaCrossList } from '../../models/aviso-model';
 import { AvisoSanitarioService } from '../../services/aviso-sanitario.service';
-import { Tramite260601Query } from '../../estados/queries/tramite260601.query';
+import { Tramite260601Query } from '../../../../estados/queries/tramite260601.query';
 
 /**
  * Componente para gestionar el mercancia datos.
