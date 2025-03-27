@@ -102,8 +102,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   }
   initAgregarDatosProductorFormulario(): void {
     this.agregarDatosProductorFormulario = this.fb.group({
-      numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required, Validators.minLength(5)]],
-      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.required, Validators.maxLength(20)]]
+      numeroRegistroFiscal: [this.tramiteState?.agregarDatosProductorFormulario?.numeroRegistroFiscal, [Validators.required]],
+      fax: [this.tramiteState?.agregarDatosProductorFormulario?.fax, [Validators.pattern(/^\d+$/)]]
     });
   }
   cargarProductorPorExportador(): void {

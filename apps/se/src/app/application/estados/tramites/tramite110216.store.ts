@@ -28,8 +28,8 @@ export function createInitialState(): Tramite110216State {
     idioma: null,
     entidadFederativa: null,
     representacionFederal: null,
-    datosConfidencialesProductor: true,
-    productorMismoExportador: true,
+    datosConfidencialesProductor: false,
+    productorMismoExportador: false,
     agregarDatosProductorFormulario: {
       numeroRegistroFiscal: '',
       fax: ''
