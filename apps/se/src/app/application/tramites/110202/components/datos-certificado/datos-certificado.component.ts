@@ -117,48 +117,6 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Verifica si el formulario es válido.
-   * @returns {boolean} Retorna true si el formulario es válido, de lo contrario false.
-   */
-  esFormValido(): boolean {
-    // Recorre todos los controles del formulario para verificar si alguno es inválido.
-    for (const NOMBRE_DEL_CONTROL in this.formDatosCertificado.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.formDatosCertificado.controls, NOMBRE_DEL_CONTROL)) {
-        const CONTROL = this.formDatosCertificado.get(NOMBRE_DEL_CONTROL);
-        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Valida el formulario y actualiza el estado de la sección en el store.
-   */
-  validarFormulario(): void {
-    this.formDatosCertificado.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          const SECCION: number = 2;
-          const FORMAS_VALIDADAS = this.seccion.formaValida;
-          const ES_VALIDO_EL_FORM = this.esFormValido();
-
-          if (this.formDatosCertificado.valid || (ES_VALIDO_EL_FORM)) {
-            FORMAS_VALIDADAS[SECCION] = true;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          } else {
-            FORMAS_VALIDADAS[SECCION] = false;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          }
-        })
-      )
-      .subscribe();
-  }
-
-  /**
    * Método de ciclo de vida de Angular, se ejecuta al inicializar el componente.
    * Se utiliza para cargar los datos y suscribirse a los cambios del formulario.
    */
@@ -173,7 +131,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param estado El estado del idioma seleccionado.
    */
   idiomaSeleccion(estado: Catalogo): void {
-    this.store.setIdiomaDatos([estado]);
+    this.store.setIdiomaSeleccion(estado);
   }
 
   /**
@@ -189,7 +147,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param estado El estado de la entidad federativa seleccionada.
    */
   entidadFederativaSeleccion(estado: Catalogo): void {
-    this.store.setEntidadFederativaDatos([estado]);
+    this.store.setEntidadFederativaSeleccion(estado);
   }
 
   /**
@@ -197,7 +155,7 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param estado El estado de la representación federal seleccionada.
    */
   representacionFederalSeleccion(estado: Catalogo): void {
-    this.store.setRepresentacionFederalDatos([estado]);
+    this.store.setRepresentacionFederalDatosSeleccion(estado);
   }
 
   /**

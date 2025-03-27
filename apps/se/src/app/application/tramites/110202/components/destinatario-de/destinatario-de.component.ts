@@ -136,11 +136,10 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       .pipe(
         takeUntil(this.destroyNotifier$),
         debounceTime(300),
-        filter(() => !this.actualizandoFormulario) // Skip when we're programmatically updating
+        filter(() => !this.actualizandoFormulario)
       )
       .subscribe(value => {
         this.store.setDestinatarioForm(value);
-        this.validarFormulario();
       });
 
     this.tramiteQuery.selectFormDestinatario$
@@ -174,28 +173,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Verifica si el formulario es válido.
-   * @returns `true` si el formulario es válido, de lo contrario `false`.
-   */
-  esFormValido(): boolean {
-    return Object.values(this.destinatarioForm.controls)
-      .filter(control => control.enabled)
-      .every(control => control.valid);
-  }
-
-  /**
-   * Valida el formulario y actualiza el estado de la sección.
-   */
-  validarFormulario(): void {
-    const SECCION = 2;
-    const ES_VALIDO_EL_FORM = this.esFormValido();
-    const FORMAS_VALIDADAS = { ...this.seccion.formaValida };
-
-    FORMAS_VALIDADAS[SECCION] = ES_VALIDO_EL_FORM;
-    this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-  }
-
-  /**
    * Actualiza los valores del formulario de destinatario en el estado.
    * @param e Valores del formulario.
    */
@@ -216,7 +193,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * @param estado Medio de transporte seleccionado.
    */
   medioDeTransporteSeleccion(estado: Catalogo): void {
-    this.store.setMedioDeTransporte([estado]);
+    this.store.setMedioDeTransporteSeleccion(estado);
   }
 
   /**
@@ -224,7 +201,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * @param estado País de destino seleccionado.
    */
   paisDestinSeleccion(estado: Catalogo): void {
-    this.store.setPaisDestinatario([estado]);
+    this.store.setPaisDestinSeleccion(estado);
   }
 
   /**

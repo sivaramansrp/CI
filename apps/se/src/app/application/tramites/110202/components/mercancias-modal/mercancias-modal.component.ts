@@ -161,14 +161,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @param {Catalogo} factura El estado seleccionado.
    */
   tipoFacturasSeleccion(factura: Catalogo): void {
-    this.store.setFactura([factura]);
+    this.store.setFacturasSeleccion(factura);
   }
   /**
     * Establece el estado seleccionado en el store.
     * @param {Catalogo} umc El estado seleccionado.
     */
   tipoUmcSeleccion(umc: Catalogo): void {
-    this.store.setUmc([umc]);
+    this.store.setUmcSeleccion(umc);
   }
 
    /**
@@ -176,7 +176,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     * @param {Catalogo} masaBruta El estado seleccionado.
     */
    tipoMasaBrutaSeleccion(masaBruta: Catalogo): void {
-    this.store.setMasaBruta([masaBruta]);
+    this.store.setMasaBrutaSeleccion(masaBruta);
   }
   /**
    * Carga las facturas desde el servicio y las establece en el store.
@@ -230,13 +230,22 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.mostrarAlerta = true;
   }
 
-  accept(): void {
+  /**
+   * Acepta los datos del formulario, los guarda en el store y cierra el modal si es necesario.
+   * También emite eventos relacionados con la tabla y el cierre del modal.
+   */
+  aceptar(): void {
+    // Emitir los datos del formulario al evento guardarClicado
     this.guardarClicado.emit(this.mercanciaForm.value);
+
+    // Guardar los datos del formulario en el store
     this.store.setmercanciaTabla([this.mercanciaForm.value]);
+
+    // Si la alerta está activa, cerrar el modal y emitir el evento de selección de tabla
     if (this.mostrarAlerta) {
       of(null).pipe(delay(100)).subscribe(() => {
         this.cerrarModal();
-        this.tablaSeleccionEvent.emit(true)
+        this.tablaSeleccionEvent.emit(true);
       });
     }
   }

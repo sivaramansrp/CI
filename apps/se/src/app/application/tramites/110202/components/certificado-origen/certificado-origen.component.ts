@@ -186,22 +186,6 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
     this.store.setFormCertificado(e as { [key: string]: string | number | boolean | object | undefined });
   }
 
-  /**
-   * Verifica si el formulario es válido.
-   * @returns {boolean} Retorna true si el formulario es válido, de lo contrario false.
-   */
-  esFormValido(): boolean {
-    // Recorre todos los controles del formulario para verificar si alguno es inválido.
-    for (const NOMBRE_DEL_CONTROL in this.formCertificado.controls) {
-      if (Object.prototype.hasOwnProperty.call(this.formCertificado.controls, NOMBRE_DEL_CONTROL)) {
-        const CONTROL = this.formCertificado.get(NOMBRE_DEL_CONTROL);
-        if (CONTROL && CONTROL.enabled && CONTROL.invalid) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
 
   /**
    * Método del ciclo de vida ngOnInit. Se utiliza para cargar los datos iniciales
@@ -227,31 +211,6 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
           console.error('Error al cargar los TratadoAcuerdo:', error);
         }
       );
-  }
-
-  /**
-   * Valida el formulario y actualiza el estado de la sección en el store.
-   */
-  validarFormulario(): void {
-    this.formCertificado.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap((_value) => {
-          const SECCION: number = 1;
-          const FORMAS_VALIDADAS = this.seccion.formaValida;
-          const ES_VALIDO_EL_FORM = this.esFormValido();
-
-          if (this.formCertificado.valid || (ES_VALIDO_EL_FORM)) {
-            FORMAS_VALIDADAS[SECCION] = true;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          } else {
-            FORMAS_VALIDADAS[SECCION] = false;
-            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-          }
-        })
-      )
-      .subscribe();
   }
 
   /**
@@ -284,7 +243,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @param {Catalogo} estado El bloque seleccionado.
    */
   tipoSeleccion(estado: Catalogo): void {
-    this.store.setBloque([estado]);
+    this.store.setBloqueSeleccion(estado);
   }
 
   /**

@@ -6,10 +6,15 @@ import { Mercancia } from '../models/configuracio-columna.model';
 // Interfaz que define el estado del trámite.
 export interface TramiteState {
   idiomaDatos: Catalogo[];
+  idiomaDatosSeleccion: Catalogo;
   paisDestin: Catalogo[];
+  paisDestinSeleccion: Catalogo;
   medioDeTransporte: Catalogo[];
+  medioDeTransporteSeleccion: Catalogo;
+  entidadFederativaSeleccion: Catalogo;
   entidadFederativaDatos: Catalogo[];
   representacionFederalDatos: Catalogo[];
+  representacionFederalSeleccion: Catalogo;
   altaPlanta: Catalogo[];
   estado: Catalogo;
   factura: Catalogo[];
@@ -129,12 +134,16 @@ export const INITIAL_STATE: TramiteState = {
     id: -1,
     descripcion: '',
   },
+  idiomaDatosSeleccion: { id: -1, descripcion: '' },
   idiomaDatos: [],
   paisDestin: [],
+  paisDestinSeleccion: { id: -1, descripcion: '' },
   medioDeTransporte: [],
+  medioDeTransporteSeleccion: { id: -1, descripcion: '' },
+  entidadFederativaSeleccion: { id: -1, descripcion: '' },
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
-
+  representacionFederalSeleccion: { id: -1, descripcion: '' },
   formDestinatario: {
     paisDestin: '',
     ciudad: '',
@@ -216,6 +225,55 @@ export class Tramite110202Store extends Store<TramiteState> {
   }
 
   /**
+ * Establece el catálogo de UMCs en el estado de la tienda.
+ *
+ * @param umc - Una lista de objetos de tipo `Catalogo` que representan las UMCs a establecer.
+ */
+  setUmcSeleccion(umc: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      umc,
+    }));
+  }
+
+
+  /**
+* Establece el catálogo de masa en el estado de la tienda.
+*
+* @param masa - Una lista de objetos de tipo `Catalogo` que representan las masa a establecer.
+*/
+  setMasaBrutaSeleccion(masa: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      masa,
+    }));
+  }
+  /**
+* Establece el catálogo de facturas en el estado de la tienda.
+*
+* @param facturas - Una lista de objetos de tipo `Catalogo` que representan las facturas a establecer.
+*/
+  setFacturasSeleccion(facturas: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      facturas,
+    }));
+  }
+
+  /**
+* Establece el catálogo de idiomaDatosSeleccion en el estado de la tienda.
+*
+* @param idiomaDatosSeleccion - Una lista de objetos de tipo `Catalogo` que representan las idiomaDatosSeleccion a establecer.
+*/
+  setIdiomaSeleccion(idiomaDatosSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      idiomaDatosSeleccion,
+    }));
+  }
+
+
+  /**
  * Establece el catálogo de masaBruta en el estado de la tienda.
  *
  * @param masaBruta - Una lista de objetos de tipo `Catalogo` que representan las masaBruta a establecer.
@@ -238,6 +296,75 @@ export class Tramite110202Store extends Store<TramiteState> {
     this.update((state) => ({
       ...state,
       paisBloques,
+    }));
+  }
+
+  /**
+  * Establece los bloques de países en el almacén.
+  * 
+  * @param {Catalogo} paisBloque - Un array de objetos `Catalogo` que representa los paisBloque de países.
+  * 
+  * @returns {void} - No devuelve ningún valor.
+  */
+  setBloqueSeleccion(paisBloque: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      paisBloque,
+    }));
+  }
+
+  /**
+  * Establece los paisDestinSeleccion de países en el almacén.
+  * 
+  * @param {Catalogo} paisDestinSeleccion - Un array de objetos `Catalogo` que representa los paisDestinSeleccion de países.
+  * 
+  * @returns {void} - No devuelve ningún valor.
+  */
+  setPaisDestinSeleccion(paisDestinSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      paisDestinSeleccion,
+    }));
+  }
+  /**
+  * Establece los medioDeTransporteSeleccion de países en el almacén.
+  * 
+  * @param {Catalogo} medioDeTransporteSeleccion - Un array de objetos `Catalogo` que representa los medioDeTransporteSeleccion de países.
+  * 
+  * @returns {void} - No devuelve ningún valor.
+  */
+  setMedioDeTransporteSeleccion(medioDeTransporteSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      medioDeTransporteSeleccion,
+    }));
+  }
+
+
+  /**
+  * Establece los entidadFederativaSeleccion de países en el almacén.
+  * 
+  * @param {Catalogo} entidadFederativaSeleccion - Un array de objetos `Catalogo` que representa los entidadFederativaSeleccion de países.
+  * 
+  * @returns {void} - No devuelve ningún valor.
+  */
+  setEntidadFederativaSeleccion(entidadFederativaSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      entidadFederativaSeleccion,
+    }));
+  }
+  /**
+* Establece los representacionFederalSeleccion de países en el almacén.
+* 
+* @param {Catalogo} representacionFederalSeleccion - Un array de objetos `Catalogo` que representa los representacionFederalSeleccion de países.
+* 
+* @returns {void} - No devuelve ningún valor.
+*/
+  setRepresentacionFederalDatosSeleccion(representacionFederalSeleccion: Catalogo): void {
+    this.update((state) => ({
+      ...state,
+      representacionFederalSeleccion,
     }));
   }
 
@@ -503,12 +630,12 @@ export class Tramite110202Store extends Store<TramiteState> {
   }
 
 
-   /**
-  * Actualiza el estado con una nueva tabla de mercancías.
-  * @param {Mercancia[]} mercanciaTabla - Un arreglo de objetos de tipo Mercancia que representa la tabla de mercancías a establecer.
-  * @returns {void} - No retorna ningún valor.
-  */
-   setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
+  /**
+ * Actualiza el estado con una nueva tabla de mercancías.
+ * @param {Mercancia[]} mercanciaTabla - Un arreglo de objetos de tipo Mercancia que representa la tabla de mercancías a establecer.
+ * @returns {void} - No retorna ningún valor.
+ */
+  setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((state) => ({
       ...state,
       mercanciaTabla,
