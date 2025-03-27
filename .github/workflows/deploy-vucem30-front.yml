@@ -1,484 +1,564 @@
 name: CI/CD VUCEM Microfrontends
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'dev'
-        type: choice
-        options:
-          - dev
-          - staging
-          - prod
-      deployment_mode:
-        description: 'Deployment mode'
-        required: true
-        default: 'changed'
-        type: choice
-        options:
-          - changed
-          - selected
-          - all
-      selected_apps:
-        description: 'Select apps to deploy (comma-separated, only used when deployment_mode is "selected")'
-        required: false
-        default: 'dashboard'
-        type: string
-  push:
-    branches: [ "develop", "main" ]
-    paths:
-      - 'apps/**'
-      - 'libs/**'
-      - 'docker/**'
-      - 'package.json'
-      - 'nx.json'
-      - '.github/workflows/**'
+ workflow_dispatch:
+   inputs:
+     environment:
+       description: 'Deployment environment'
+       required: true
+       default: 'dev'
+       type: choice
+       options:
+         - dev
+         - staging
+         - prod
+     deployment_mode:
+       description: 'Deployment mode'
+       required: true
+       default: 'changed'
+       type: choice
+       options:
+         - changed
+         - selected
+         - all
+         - restart_only
+     selected_apps:
+       description: 'Select apps to deploy (comma-separated, only used when deployment_mode is "selected")'
+       required: false
+       default: 'dashboard'
+       type: string
+ push:
+   branches: [ "develop", "main" ]
+   paths:
+     - 'apps/**'
+     - 'libs/**'
+     - 'docker/**'
+     - 'package.json'
+     - 'nx.json'
+     - '.github/workflows/**'
 
 env:
-  NODE_VERSION: '20'
-  NX_VERSION: '16.10.0'
-  REGISTRY: ghcr.io
-  BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
-  ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
-  # Variables para controlar problemas de NX
-  NX_SKIP_NX_CACHE: 'true'
-  NX_NATIVE_BINDINGS: 'false'
+ NODE_VERSION: '20'
+ NX_VERSION: '16.10.0'
+ REGISTRY: ghcr.io
+ BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
+ ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
+ # Variables para controlar problemas de NX
+ NX_SKIP_NX_CACHE: 'true'
+ NX_NATIVE_BINDINGS: 'false'
 
 jobs:
-  setup:
-    name: Setup and Check Environment
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.set-env.outputs.environment }}
-      changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
-      final_apps: ${{ steps.determine-apps.outputs.final_apps }}
-      apps_matrix: ${{ steps.matrix-prep.outputs.apps_matrix }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+ setup:
+   name: Setup and Check Environment
+   runs-on: ubuntu-latest
+   outputs:
+     environment: ${{ steps.set-env.outputs.environment }}
+     changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
+     final_apps: ${{ steps.determine-apps.outputs.final_apps }}
+     apps_matrix: ${{ steps.matrix-prep.outputs.apps_matrix }}
+     restart_only: ${{ steps.determine-mode.outputs.restart_only }}
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v3
+       with:
+         fetch-depth: 0
 
-      - name: Set environment
-        id: set-env
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "environment=prod" >> $GITHUB_OUTPUT
-          else
-            echo "environment=dev" >> $GITHUB_OUTPUT
-          fi
+     - name: Set environment
+       id: set-env
+       run: |
+         if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+           echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+         elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+           echo "environment=prod" >> $GITHUB_OUTPUT
+         else
+           echo "environment=dev" >> $GITHUB_OUTPUT
+         fi
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+     - name: Determine deployment mode
+       id: determine-mode
+       run: |
+         if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.deployment_mode }}" == "restart_only" ]; then
+           echo "restart_only=true" >> $GITHUB_OUTPUT
+         else
+           echo "restart_only=false" >> $GITHUB_OUTPUT
+         fi
 
-      - name: Install NX globally
-        run: npm install -g nx@${{ env.NX_VERSION }}
+     - name: Setup Node.js
+       if: steps.determine-mode.outputs.restart_only != 'true'
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ env.NODE_VERSION }}
 
-      - name: Detect changed apps
-        id: detect-changes
-        run: |
-          # En caso de workflow_dispatch, no necesitamos detectar cambios si no es modo 'changed'
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.deployment_mode }}" != "changed" ]; then
-            echo "changed_apps=" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          
-          # Para push events, necesitamos encontrar el commit antes
-          BEFORE_COMMIT=""
-          if [ "${{ github.event.before }}" != "" ]; then
-            BEFORE_COMMIT="${{ github.event.before }}"
-          else
-            # Si no hay before commit, usar HEAD~1
-            BEFORE_COMMIT=$(git rev-parse HEAD~1)
-          fi
-          
-          # Detect changes in apps directory
-          CHANGED_FILES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^apps/' || echo "")
-          
-          if [ -z "$CHANGED_FILES" ]; then
-            # Check for changes in shared libs that would affect all apps
-            SHARED_CHANGES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
-            if [ -n "$SHARED_CHANGES" ]; then
-              # If shared libs changed, mark all apps as changed
-              CHANGED_APPS="${{ env.ALL_APPS }}"
-            else
-              CHANGED_APPS=""
-            fi
-          else
-            # Extract the app names from changed files
-            CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
-          
-            # Always include dashboard when any app changes
-            if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
-              CHANGED_APPS="dashboard,$CHANGED_APPS"
-            fi
-          fi
-          
-          echo "Changed apps: $CHANGED_APPS"
-          echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
+     - name: Install NX globally
+       if: steps.determine-mode.outputs.restart_only != 'true'
+       run: npm install -g nx@${{ env.NX_VERSION }}
 
-      - name: Determine apps to deploy
-        id: determine-apps
-        run: |
-          # Default to detected changes
-          FINAL_APPS=""
-          
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            # Handle manual deployment mode selection
-            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
-              FINAL_APPS="${{ env.ALL_APPS }}"
-              echo "Using all apps mode"
-            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
-              FINAL_APPS="${{ github.event.inputs.selected_apps }}"
-              echo "Using selected apps mode: $FINAL_APPS"
-            else
-              # Changed mode - use detected changes or fallback to dashboard
-              if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
-                FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
-                echo "Using detected changed apps: $FINAL_APPS"
-              else
-                FINAL_APPS="dashboard"
-                echo "No changes detected, defaulting to dashboard"
-              fi
-            fi
-          else
-            # Auto mode for push events
-            if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
-              FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
-            else
-              # No changes detected, workflow will skip the build job
-              FINAL_APPS=""
-            fi
-          fi
-          
-          echo "final_apps=$FINAL_APPS" >> $GITHUB_OUTPUT
+     - name: Detect changed apps
+       if: steps.determine-mode.outputs.restart_only != 'true'
+       id: detect-changes
+       run: |
+         # En caso de workflow_dispatch, no necesitamos detectar cambios si no es modo 'changed'
+         if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.deployment_mode }}" != "changed" ]; then
+           echo "changed_apps=" >> $GITHUB_OUTPUT
+           exit 0
+         fi
+         
+         # Para push events, necesitamos encontrar el commit antes
+         BEFORE_COMMIT=""
+         if [ "${{ github.event.before }}" != "" ]; then
+           BEFORE_COMMIT="${{ github.event.before }}"
+         else
+           # Si no hay before commit, usar HEAD~1
+           BEFORE_COMMIT=$(git rev-parse HEAD~1)
+         fi
+         
+         # Detect changes in apps directory
+         CHANGED_FILES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^apps/' || echo "")
+         
+         if [ -z "$CHANGED_FILES" ]; then
+           # Check for changes in shared libs that would affect all apps
+           SHARED_CHANGES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
+           if [ -n "$SHARED_CHANGES" ]; then
+             # If shared libs changed, mark all apps as changed
+             CHANGED_APPS="${{ env.ALL_APPS }}"
+           else
+             CHANGED_APPS=""
+           fi
+         else
+           # Extract the app names from changed files
+           CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
+         
+           # Always include dashboard when any app changes
+           if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
+             CHANGED_APPS="dashboard,$CHANGED_APPS"
+           fi
+         fi
+         
+         echo "Changed apps: $CHANGED_APPS"
+         echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
 
-      - name: Prepare matrix format
-        id: matrix-prep
-        if: steps.determine-apps.outputs.final_apps != ''
-        run: |
-          # Convertir a formato JSON para la matriz
-          APPS_ARRAY=$(echo "${{ steps.determine-apps.outputs.final_apps }}" | tr ',' '\n')
-          APPS_JSON="["
-          
-          # Construir array JSON manualmente para evitar dependencias externas
-          FIRST=true
-          for APP in $APPS_ARRAY; do
-            if [ "$FIRST" = true ]; then
-              FIRST=false
-            else
-              APPS_JSON="${APPS_JSON},"
-            fi
-            APPS_JSON="${APPS_JSON}\"${APP}\""
-          done
-          
-          APPS_JSON="${APPS_JSON}]"
-          echo "Matrix format: $APPS_JSON"
-          echo "apps_matrix=$APPS_JSON" >> $GITHUB_OUTPUT
+     - name: Determine apps to deploy
+       if: steps.determine-mode.outputs.restart_only != 'true'
+       id: determine-apps
+       run: |
+         # Default to detected changes
+         FINAL_APPS=""
+         
+         if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+           # Handle manual deployment mode selection
+           if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
+             FINAL_APPS="${{ env.ALL_APPS }}"
+             echo "Using all apps mode"
+           elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
+             FINAL_APPS="${{ github.event.inputs.selected_apps }}"
+             echo "Using selected apps mode: $FINAL_APPS"
+           else
+             # Changed mode - use detected changes or fallback to dashboard
+             if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+               FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+               echo "Using detected changed apps: $FINAL_APPS"
+             else
+               FINAL_APPS="dashboard"
+               echo "No changes detected, defaulting to dashboard"
+             fi
+           fi
+         else
+           # Auto mode for push events
+           if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+             FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+           else
+             # No changes detected, workflow will skip the build job
+             FINAL_APPS=""
+           fi
+         fi
+         
+         echo "final_apps=$FINAL_APPS" >> $GITHUB_OUTPUT
 
-  build:
-    name: Build Microfrontends
-    needs: setup
-    if: needs.setup.outputs.final_apps != ''
-    runs-on: ubuntu-latest
-    timeout-minutes: 40  # Aumentado para dar más tiempo
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      matrix:
-        app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
-      fail-fast: false  # Permitir que otros jobs continúen si uno falla
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+     - name: Prepare matrix format
+       if: steps.determine-mode.outputs.restart_only != 'true' && steps.determine-apps.outputs.final_apps != ''
+       id: matrix-prep
+       run: |
+         # Convertir a formato JSON para la matriz
+         APPS_ARRAY=$(echo "${{ steps.determine-apps.outputs.final_apps }}" | tr ',' '\n')
+         APPS_JSON="["
+         
+         # Construir array JSON manualmente para evitar dependencias externas
+         FIRST=true
+         for APP in $APPS_ARRAY; do
+           if [ "$FIRST" = true ]; then
+             FIRST=false
+           else
+             APPS_JSON="${APPS_JSON},"
+           fi
+           APPS_JSON="${APPS_JSON}\"${APP}\""
+         done
+         
+         APPS_JSON="${APPS_JSON}]"
+         echo "Matrix format: $APPS_JSON"
+         echo "apps_matrix=$APPS_JSON" >> $GITHUB_OUTPUT
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+ build:
+   name: Build Microfrontends
+   needs: setup
+   if: needs.setup.outputs.restart_only != 'true' && needs.setup.outputs.final_apps != ''
+   runs-on: ubuntu-latest
+   timeout-minutes: 40  # Aumentado para dar más tiempo
+   permissions:
+     contents: read
+     packages: write
+   strategy:
+     matrix:
+       app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
+     fail-fast: false  # Permitir que otros jobs continúen si uno falla
+   steps:
+     - name: Checkout repository
+       uses: actions/checkout@v3
+       with:
+         fetch-depth: 0
 
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
+     - name: Setup Node.js
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ env.NODE_VERSION }}
+         cache: 'npm'
+         cache-dependency-path: package-lock.json
 
-      - name: Set npm and NX environment variables
-        run: |
-          # npm environment variables
-          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
-          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
-          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
-          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
-          
-          # Establecer tiempo de espera de npm más largo
-          echo "npm_config_timeout=600000" >> $GITHUB_ENV
-          
-          # Disable NX native modules to avoid binary compatibility issues
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+     - name: Install build dependencies
+       run: |
+         sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
 
-      - name: Ensure .eslintrc.json exists in root
-        run: |
-          if [ ! -f ".eslintrc.json" ]; then
-            echo "Creating root .eslintrc.json file"
-            echo '{
-              "root": true,
-              "ignorePatterns": ["**/*"],
-              "plugins": ["@nx"],
-              "extends": [
-                "eslint:recommended",
-                "plugin:@typescript-eslint/recommended",
-                "prettier"
-              ],
-              "overrides": [
-                {
-                  "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-                  "rules": {
-                    "@typescript-eslint/no-explicit-any": "off",
-                    "@nx/enforce-module-boundaries": "off"
-                  }
-                }
-              ]
-            }' > .eslintrc.json
-          fi
+     - name: Set npm and NX environment variables
+       run: |
+         # npm environment variables
+         echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
+         echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+         echo "npm_config_build_from_source=false" >> $GITHUB_ENV
+         echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+         
+         # Establecer tiempo de espera de npm más largo
+         echo "npm_config_timeout=600000" >> $GITHUB_ENV
+         
+         # Disable NX native modules to avoid binary compatibility issues
+         echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+         echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            apps/*/node_modules
-            libs/*/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
-          restore-keys: |
-            ${{ runner.os }}-node-
+     - name: Ensure .eslintrc.json exists in root
+       run: |
+         if [ ! -f ".eslintrc.json" ]; then
+           echo "Creating root .eslintrc.json file"
+           echo '{
+             "root": true,
+             "ignorePatterns": ["**/*"],
+             "plugins": ["@nx"],
+             "extends": [
+               "eslint:recommended",
+               "plugin:@typescript-eslint/recommended",
+               "prettier"
+             ],
+             "overrides": [
+               {
+                 "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+                 "rules": {
+                   "@typescript-eslint/no-explicit-any": "off",
+                   "@nx/enforce-module-boundaries": "off"
+                 }
+               }
+             ]
+           }' > .eslintrc.json
+         fi
 
-      - name: Reset NX cache
-        run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
+     - name: Cache Node.js modules
+       uses: actions/cache@v3
+       with:
+         path: |
+           ~/.npm
+           node_modules
+           apps/*/node_modules
+           libs/*/node_modules
+         key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
+         restore-keys: |
+           ${{ runner.os }}-node-
 
-      # Modificación para instalar los paquetes con más opciones de seguridad
-      - name: Install dependencies with specific options
-        run: |
-          # Verificar que npm está correctamente configurado
-          npm config list
-          # Instalar dependencias con más opciones de seguridad
-          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
+     - name: Reset NX cache
+       run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
 
-      - name: Install NX globally with specific version
-        run: |
-          npm install -g nx@${{ env.NX_VERSION }}
-          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
+     # Modificación para instalar los paquetes con más opciones de seguridad
+     - name: Install dependencies with specific options
+       run: |
+         # Verificar que npm está correctamente configurado
+         npm config list
+         # Instalar dependencias con más opciones de seguridad
+         npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
-      - name: Build ${{ matrix.app }}
-        run: |
-          # Crear un script de build temporal sin postinstall hooks
-          echo "Construyendo la aplicación ${{ matrix.app }}..."
-          
-          # Usar comando directo sin npx para evitar problemas de binarios
-          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
+     - name: Install NX globally with specific version
+       run: |
+         npm install -g nx@${{ env.NX_VERSION }}
+         nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
-      - name: Verify build output
-        run: |
-          ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
+     - name: Build ${{ matrix.app }}
+       run: |
+         # Crear un script de build temporal sin postinstall hooks
+         echo "Construyendo la aplicación ${{ matrix.app }}..."
+         
+         # Usar comando directo sin npx para evitar problemas de binarios
+         node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
 
-      # Configuración corregida de Docker Buildx
-      - name: Setup Docker Buildx with increased memory
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver-opts: |
-            image=moby/buildkit:latest
-            network=host
-          buildkitd-flags: --debug
+     - name: Verify build output
+       run: |
+         ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+     # Configuración corregida de Docker Buildx
+     - name: Setup Docker Buildx with increased memory
+       uses: docker/setup-buildx-action@v3
+       with:
+         driver-opts: |
+           image=moby/buildkit:latest
+           network=host
+         buildkitd-flags: --debug
 
-      - name: Extract metadata for Docker
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-${{ matrix.app }}
-          tags: |
-            type=raw,value=${{ needs.setup.outputs.environment }}
-            type=sha,format=short
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-          labels: |
-            org.opencontainers.image.title=${{ matrix.app }}
-            org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
-            org.opencontainers.image.vendor=${{ github.repository_owner }}
+     - name: Log in to GitHub Container Registry
+       uses: docker/login-action@v2
+       with:
+         registry: ${{ env.REGISTRY }}
+         username: ${{ github.actor }}
+         password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Modificado para construir directamente con el Dockerfile optimizado
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./apps/${{ matrix.app }}/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64
-          build-args: |
-            NODE_ENV=production
-            APP_ENV=${{ needs.setup.outputs.environment }}
-            NX_SKIP_NX_CACHE=true
-            NX_NATIVE_BINDINGS=false
-          driver-opts: |
-            network=host
-            memory=4g
-            memory-swap=4g
-          timeout-minutes: 20  # Aumentado
-          no-cache: ${{ contains(matrix.app, 'se') }}
+     - name: Extract metadata for Docker
+       id: meta
+       uses: docker/metadata-action@v4
+       with:
+         images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-${{ matrix.app }}
+         tags: |
+           type=raw,value=${{ needs.setup.outputs.environment }}
+           type=sha,format=short
+           type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+         labels: |
+           org.opencontainers.image.title=${{ matrix.app }}
+           org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
+           org.opencontainers.image.vendor=${{ github.repository_owner }}
 
-  deploy:
-    name: Deploy Microfrontends
-    needs: [setup, build]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.setup.outputs.environment }}
-    steps:
-      - name: Execute remote deployment
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 22
-          script_stop: true
-          script: |
-            echo "Deploying VUCEM Microfrontends to ${{ needs.setup.outputs.environment }}..."
-            cd /home/ubuntu/v30
-            
-            # Create directory for manifests if it doesn't exist
-            mkdir -p k8s
-            
-            # Download the K8s manifest template from repository with updated branch
-            echo "Downloading Kubernetes manifest template from develop branch..."
-            curl -s https://raw.githubusercontent.com/vucem30-dev/frontend/develop/k8s/vucem-microfrontends.yaml -o k8s/vucem-microfrontends.yaml
-            
-            # Verify the download was successful
-            if [ $? -ne 0 ] || [ ! -s k8s/vucem-microfrontends.yaml ]; then
-              echo "ERROR: Failed to download manifest template! Deployment cannot continue."
-              exit 1
-            fi
-            
-            echo "Manifest template downloaded successfully."
-            
-            # Prepare the apps to be included in the deployment
-            APPS_LIST="${{ needs.setup.outputs.final_apps }}"
-            echo "Deploying apps: $APPS_LIST"
-            
-            # Set the replicas based on environment
-            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-              REPLICAS=2
-              MIN_REPLICAS=2
-              MAX_REPLICAS=5
-              echo "Production environment detected - using high availability setup."
-            else
-              REPLICAS=1
-              MIN_REPLICAS=1
-              MAX_REPLICAS=3
-              echo "Non-production environment - using standard setup."
-            fi
-            
-            # Generate module federation manifest
-            echo "Generating module federation manifest..."
-            cat > module-federation.manifest.json << EOF
-            {
-              "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
-              "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga",
-              "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
-              "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
-              "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
-              "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
-              "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
-              "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
-              "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
-              "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
-            }
-            EOF
-            
-            # Replace placeholders with actual values for all parameters
-            echo "Replacing template placeholders..."
-            sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            
-            # Set replica counts based on environment
-            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-              sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
-            else
-              sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
-            fi
-            
-            # Create ConfigMap for Module Federation Manifest
-            echo "Creating/updating module federation ConfigMap..."
-            microk8s kubectl create configmap module-federation-manifest \
-              --from-file=module-federation.manifest.json \
-              -n vucem-${{ needs.setup.outputs.environment }} \
-              --dry-run=client -o yaml | microk8s kubectl apply -f -
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to create ConfigMap. Checking if namespace exists..."
-            
-              # Check if namespace exists and create it if needed
-              microk8s kubectl get namespace vucem-${{ needs.setup.outputs.environment }} || \
-              microk8s kubectl create namespace vucem-${{ needs.setup.outputs.environment }}
-            
-              echo "Retrying ConfigMap creation..."
-              microk8s kubectl create configmap module-federation-manifest \
-                --from-file=module-federation.manifest.json \
-                -n vucem-${{ needs.setup.outputs.environment }} \
-                --dry-run=client -o yaml | microk8s kubectl apply -f -
-            fi
-            
-            echo "ConfigMap created successfully."
-            
-            # Validate YAML syntax (optional but recommended)
-            if command -v yamllint &> /dev/null; then
-              echo "Validating YAML syntax..."
-              yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
-            fi
-            
-            # Apply Kubernetes manifest
-            echo "Applying Kubernetes manifest..."
-            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to apply Kubernetes manifest."
-              exit 1
-            fi
-            
-            echo "Kubernetes manifest applied successfully."
-            
-            # Restart the deployment to pull the latest images
-            echo "Restarting deployment to pull the latest images..."
-            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
-            
-            # Wait for rollout to complete
-            echo "Waiting for rollout to complete (timeout: 5 minutes)..."
-            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
-            
-            if [ $? -eq 0 ]; then
-              echo "✅ Deployment completed successfully!"
-            else
-              echo "⚠️ Deployment timed out, but may still be progressing. Check the status manually."
-            fi
+     # Modificado para construir directamente con el Dockerfile optimizado
+     - name: Build and push Docker image
+       uses: docker/build-push-action@v4
+       with:
+         context: .
+         file: ./apps/${{ matrix.app }}/Dockerfile
+         push: true
+         tags: ${{ steps.meta.outputs.tags }}
+         labels: ${{ steps.meta.outputs.labels }}
+         cache-from: type=gha
+         cache-to: type=gha,mode=max
+         platforms: linux/amd64
+         build-args: |
+           NODE_ENV=production
+           APP_ENV=${{ needs.setup.outputs.environment }}
+           NX_SKIP_NX_CACHE=true
+           NX_NATIVE_BINDINGS=false
+         driver-opts: |
+           network=host
+           memory=4g
+           memory-swap=4g
+         timeout-minutes: 20  # Aumentado
+         no-cache: ${{ contains(matrix.app, 'se') }}
+
+ deploy:
+   name: Deploy Microfrontends
+   needs: [setup, build]
+   if: needs.setup.outputs.restart_only != 'true'
+   runs-on: ubuntu-latest
+   environment: ${{ needs.setup.outputs.environment }}
+   steps:
+     - name: Execute remote deployment
+       uses: appleboy/ssh-action@v0.1.8
+       with:
+         host: ${{ secrets.REMOTE_SRV_IP }}
+         username: ${{ secrets.REMOTE_SRV_USER }}
+         key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+         port: 22
+         script_stop: true
+         script: |
+           echo "Deploying VUCEM Microfrontends to ${{ needs.setup.outputs.environment }}..."
+           cd /home/ubuntu/v30
+           
+           # Create directory for manifests if it doesn't exist
+           mkdir -p k8s
+           
+           # Download the K8s manifest template from repository with updated branch
+           echo "Downloading Kubernetes manifest template from develop branch..."
+           curl -s https://raw.githubusercontent.com/vucem30-dev/frontend/develop/k8s/vucem-microfrontends.yaml -o k8s/vucem-microfrontends.yaml
+           
+           # Verify the download was successful
+           if [ $? -ne 0 ] || [ ! -s k8s/vucem-microfrontends.yaml ]; then
+             echo "ERROR: Failed to download manifest template! Deployment cannot continue."
+             exit 1
+           fi
+           
+           echo "Manifest template downloaded successfully."
+           
+           # Prepare the apps to be included in the deployment
+           APPS_LIST="${{ needs.setup.outputs.final_apps }}"
+           echo "Deploying apps: $APPS_LIST"
+           
+           # Set the replicas based on environment
+           if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+             REPLICAS=2
+             MIN_REPLICAS=2
+             MAX_REPLICAS=5
+             echo "Production environment detected - using high availability setup."
+           else
+             REPLICAS=1
+             MIN_REPLICAS=1
+             MAX_REPLICAS=3
+             echo "Non-production environment - using standard setup."
+           fi
+           
+           # Generate module federation manifest
+           echo "Generating module federation manifest..."
+           cat > module-federation.manifest.json << EOF
+           {
+             "login": "https://front.v30.ultrasist.net/login",
+             "aga": "https://front.v30.ultrasist.net/aga",
+             "agriculture": "https://front.v30.ultrasist.net/agriculture",
+             "se": "https://front.v30.ultrasist.net/se",
+             "semarnat": "https://front.v30.ultrasist.net/semarnat",
+             "agace": "https://front.v30.ultrasist.net/agace",
+             "funcionario": "https://front.v30.ultrasist.net/funcionario",
+             "cofepris": "https://front.v30.ultrasist.net/cofepris",
+             "amecafe": "https://front.v30.ultrasist.net/amecafe",
+             "sener": "https://front.v30.ultrasist.net/sener"
+           }
+           EOF
+           
+           # Replace placeholders with actual values for all parameters
+           echo "Replacing template placeholders..."
+           sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+           sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
+           sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+           
+           # Set replica counts based on environment
+           if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+             sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+             sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+             sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
+           else
+             sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+             sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+             sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
+           fi
+           
+           # Create ConfigMap for Module Federation Manifest
+           echo "Creating/updating module federation ConfigMap..."
+           microk8s kubectl create configmap module-federation-manifest \
+             --from-file=module-federation.manifest.json \
+             -n vucem-${{ needs.setup.outputs.environment }} \
+             --dry-run=client -o yaml | microk8s kubectl apply -f -
+           
+           if [ $? -ne 0 ]; then
+             echo "ERROR: Failed to create ConfigMap. Checking if namespace exists..."
+           
+             # Check if namespace exists and create it if needed
+             microk8s kubectl get namespace vucem-${{ needs.setup.outputs.environment }} || \
+             microk8s kubectl create namespace vucem-${{ needs.setup.outputs.environment }}
+           
+             echo "Retrying ConfigMap creation..."
+             microk8s kubectl create configmap module-federation-manifest \
+               --from-file=module-federation.manifest.json \
+               -n vucem-${{ needs.setup.outputs.environment }} \
+               --dry-run=client -o yaml | microk8s kubectl apply -f -
+           fi
+           
+           echo "ConfigMap created successfully."
+           
+           # Validate YAML syntax (optional but recommended)
+           if command -v yamllint &> /dev/null; then
+             echo "Validating YAML syntax..."
+             yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
+           fi
+           
+           # Apply Kubernetes manifest
+           echo "Applying Kubernetes manifest..."
+           microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
+           
+           if [ $? -ne 0 ]; then
+             echo "ERROR: Failed to apply Kubernetes manifest."
+             exit 1
+           fi
+           
+           echo "Kubernetes manifest applied successfully."
+           
+           # Restart the deployment to pull the latest images
+           echo "Restarting deployment to pull the latest images..."
+           microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
+           
+           # Wait for rollout to complete
+           echo "Waiting for rollout to complete (timeout: 5 minutes)..."
+           microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
+           
+           if [ $? -eq 0 ]; then
+             echo "✅ Deployment completed successfully!"
+             echo "Application is accessible at: https://front.v30.ultrasist.net/"
+           else
+             echo "⚠️ Deployment timed out, but may still be progressing. Check the status manually."
+           fi
+
+ restart:
+   name: Restart Existing Deployment
+   needs: [setup]
+   if: needs.setup.outputs.restart_only == 'true'
+   runs-on: ubuntu-latest
+   environment: ${{ needs.setup.outputs.environment }}
+   steps:
+     - name: Execute remote deployment restart
+       uses: appleboy/ssh-action@v0.1.8
+       with:
+         host: ${{ secrets.REMOTE_SRV_IP }}
+         username: ${{ secrets.REMOTE_SRV_USER }}
+         key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+         port: 22
+         script_stop: true
+         script: |
+           echo "Restarting existing application in environment: ${{ needs.setup.outputs.environment }}..."
+           cd /home/ubuntu/v30
+           
+           # First try to restart the microfront deployment
+           echo "Attempting to restart microfrontend deployment..."
+           if microk8s kubectl get deployment vucem-microfrontends-${{ needs.setup.outputs.environment }} -n vucem-${{ needs.setup.outputs.environment }} &>/dev/null; then
+             echo "Restarting microfrontend deployment..."
+             microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }} -n vucem-${{ needs.setup.outputs.environment }}
+             
+             # Wait for rollout to complete
+             echo "Waiting for microfrontend rollout to complete (timeout: 5 minutes)..."
+             microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} -n vucem-${{ needs.setup.outputs.environment }} --timeout=300s
+           else
+             echo "Microfrontend deployment not found. Trying the original front deployment..."
+             
+             # Try to restart the original deployment
+             if microk8s kubectl get deployment front-vucem30-deployment-${{ needs.setup.outputs.environment }} &>/dev/null; then
+               echo "Restarting original front deployment..."
+               microk8s kubectl rollout restart deployment front-vucem30-deployment-${{ needs.setup.outputs.environment }}
+               
+               # Wait for rollout to complete
+               echo "Waiting for front deployment rollout to complete (timeout: 5 minutes)..."
+               microk8s kubectl rollout status deployment/front-vucem30-deployment-${{ needs.setup.outputs.environment }} --timeout=300s
+             else
+               echo "ERROR: Neither microfrontend nor original front deployment found!"
+               echo "Please check the deployment names and namespaces."
+               exit 1
+             fi
+           fi
+           
+           # Verify deployment status
+           DEPLOYMENT_STATUS=$?
+           if [ $DEPLOYMENT_STATUS -eq 0 ]; then
+             echo "✅ Deployment restart completed successfully!"
+             
+             # Display the URL for easy access
+             echo "Application is accessible at: https://front.v30.ultrasist.net/"
+             
+             # Show pod status
+             echo "Pod status:"
+             microk8s kubectl get pods -o wide | grep -E "vucem-microfrontends|front-vucem30"
+           else
+             echo "⚠️ Deployment restart timed out or encountered issues."
+             echo "Please check the deployment status manually."
+             exit 1
+           fi
