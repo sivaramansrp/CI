@@ -17,6 +17,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
  */
   indice: number = 1;
 
+  
   /**
    * @description 
    * Array de objetos que representan las diferentes secciones del formulario.
