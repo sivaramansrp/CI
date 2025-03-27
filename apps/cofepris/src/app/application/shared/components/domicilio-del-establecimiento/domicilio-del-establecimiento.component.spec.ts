@@ -1,21 +1,205 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { DomicilioDelEstablecimientoComponent } from './domicilio-del-establecimiento.component';
+import { DatosService } from '../../../shared/services/datos.service';
+import { Tramite260603Store } from '../../../shared/estados/tramites260603.store';
+import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+import { PreOperativo, ScianData } from '../../models/datos-modificacion.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 
 describe('DomicilioDelEstablecimientoComponent', () => {
   let component: DomicilioDelEstablecimientoComponent;
   let fixture: ComponentFixture<DomicilioDelEstablecimientoComponent>;
+  let mockDatosService: jest.Mocked<DatosService>;
+  let mockTramiteStore: jest.Mocked<Tramite260603Store>;
+  let mockTramiteQuery: jest.Mocked<Tramite260603Query>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DomicilioDelEstablecimientoComponent],
-    }).compileComponents();
+    mockDatosService = {
+      obtenerEstadoData: jest.fn(),
+      obternerDatosData: jest.fn(),
+      obtenerDatosProducto: jest.fn(),
+      obtenerClaveScian: jest.fn(),
+      obtenerDescripcionScian: jest.fn(),
+      obtenerPreOperativo: jest.fn(),
+      obtenerClasificationProductos: jest.fn(),
+    } as unknown as jest.Mocked<DatosService>;
 
+    mockTramiteStore = {
+      setCodigoPostal: jest.fn(),
+      setEstado: jest.fn(),
+    } as unknown as jest.Mocked<Tramite260603Store>;
+
+    mockTramiteQuery = {
+      selectSolicitud$: of({
+        codigoPostal: '12345',
+        estado: 'Estado1',
+        municipio: 'Municipio1',
+        localidad: 'Localidad1',
+        colonia: 'Colonia1',
+        calle: 'Calle1',
+        lada: '123',
+        telefono: '1234567890',
+        scian: 'SCIAN1',
+        aviso: 'Aviso1',
+        noLicenciaSanitaria: 'Licencia1',
+        regimenDestinado: 'Regimen1',
+        aduana: 'Aduana1',
+        datosProducto: [],
+        autorizacionIVAIEPS: 'Autorizacion1',
+      }),
+    } as unknown as jest.Mocked<Tramite260603Query>;
+
+    await TestBed.configureTestingModule({
+      imports: [
+        DomicilioDelEstablecimientoComponent, // Add the standalone component here
+        ReactiveFormsModule, // Other required modules
+      ],
+      providers: [
+        { provide: DatosService, useValue: mockDatosService },
+        { provide: Tramite260603Store, useValue: mockTramiteStore },
+        { provide: Tramite260603Query, useValue: mockTramiteQuery },
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
     fixture = TestBed.createComponent(DomicilioDelEstablecimientoComponent);
     component = fixture.componentInstance;
+
+    mockDatosService.obtenerEstadoData.mockReturnValue(of([]));
+    mockDatosService.obternerDatosData.mockReturnValue(of([]));
+    mockDatosService.obtenerDatosProducto.mockReturnValue(of([]));
+    mockDatosService.obtenerClaveScian.mockReturnValue(of([]));
+    mockDatosService.obtenerDescripcionScian.mockReturnValue(of([]));
+    mockDatosService.obtenerPreOperativo.mockReturnValue(of([]));
+    mockDatosService.obtenerClasificationProductos.mockReturnValue(of([]));
+
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    if (component && component.ngOnDestroy) {
+      component.ngOnDestroy();
+    }
+  });
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should initialize forms on ngOnInit', () => {
+    component.ngOnInit();
+    expect(component.domicilioForm).toBeDefined();
+    expect(component.claveScianForm).toBeDefined();
+    expect(component.DatosMercanciaForm).toBeDefined();
+  });
+
+  it('should toggle colapsable state', () => {
+    expect(component.colapsable).toBe(false);
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(true);
+  });
+
+  it('should toggle noLicenciaSanitaria field', () => {
+    const event = { target: { checked: true } } as any;
+    component.toggleNoLicenciaSanitaria(event);
+    expect(component.domicilioForm.get('noLicenciaSanitaria')?.disabled).toBe(true);
+
+    event.target.checked = false;
+    component.toggleNoLicenciaSanitaria(event);
+    expect(component.domicilioForm.get('noLicenciaSanitaria')?.disabled).toBe(false);
+  });
+
+  it('should call cargarEstadoData and set estadoData', () => {
+    const mockData = [{ id: 1, descripcion: 'Estado1' }];
+    mockDatosService.obtenerEstadoData.mockReturnValue(of(mockData));
+    component.cargarEstadoData();
+    expect(component.estadoData).toEqual(mockData);
+  });
+
+  it('should call obtenerDatosDescripcion and set descripcionScian', () => {
+    // Adjust mockData to match the expected type of descripcionScian (Catalogo[])
+    const mockData: Catalogo[] = [
+      { id: 1, descripcion: 'Descripcion1' },
+      { id: 2, descripcion: 'Descripcion2' },
+    ];
+  
+    // Mock the service method to return the correct type
+    mockDatosService.obtenerDescripcionScian.mockReturnValue(of(mockData));
+  
+    // Call the method in the component
+    component.obtenerDatosDescripcion();
+  
+    // Assert that the component's descripcionScian is set correctly
+    expect(component.descripcionScian).toEqual(mockData);
+  });
+
+  it('should call cargarDatosTabla and set datosData', () => {
+    // Adjust mockData to match the expected type of datosData (ScianData[])
+    const mockData: ScianData[] = [
+      { clave: '1', descripcion: 'Dato1' },
+      { clave: '2', descripcion: 'Dato2' },
+    ];
+  
+    // Mock the service method to return the correct type
+    mockDatosService.obternerDatosData.mockReturnValue(of(mockData));
+  
+    // Call the method in the component
+    component.cargarDatosTabla();
+  
+    // Assert that the component's datosData is set correctly
+    expect(component.datosData).toEqual(mockData);
+  });
+
+  it('should call obtenerDatosClave and set claveScian', () => {
+    // Adjust mockData to match the expected type of claveScian (Catalogo[])
+    const mockData: Catalogo[] = [
+      { id: 1, descripcion: 'Clave1' },
+      { id: 2, descripcion: 'Clave2' },
+    ];
+  
+    // Mock the service method to return the correct type
+    mockDatosService.obtenerClaveScian.mockReturnValue(of(mockData));
+  
+    // Call the method in the component
+    component.obtenerDatosClave();
+  
+    // Assert that the component's claveScian is set correctly
+    expect(component.claveScian).toEqual(mockData);
+  });
+
+  it('should call obtenerDatosPreOperativo and set radioOptions', () => {
+    // Adjust mockData to match the PreOperativo interface
+    const mockData: PreOperativo[] = [
+      { label: 'PreOperativo1', value: '1' },
+      { label: 'PreOperativo2', value: '2' },
+    ];
+  
+    // Mock the service method to return the correct type
+    mockDatosService.obtenerPreOperativo.mockReturnValue(of(mockData));
+  
+    // Call the method in the component
+    component.obtenerDatosPreOperativo();
+  
+    // Assert that the component's radioOptions are set correctly
+    expect(component.radioOptions).toEqual(mockData);
+  });
+
+  it('should call obtenerclassificacionProductos and set clasificacionProducto', () => {
+    const mockData = [{ id: 1, descripcion: 'Clasificacion1' }];
+    mockDatosService.obtenerClasificationProductos.mockReturnValue(of(mockData));
+    component.obtenerclassificacionProductos();
+    expect(component.clasificacionProducto).toEqual(mockData);
+  });
+
+  it('should show modal when mostrarModeloClave is called', () => {
+    component.mostrarModeloClave();
+    expect(component.modal).toBe('show');
+  });
+
+  it('should show modal when datosDelProducto is called', () => {
+    component.datosDelProducto();
+    expect(component.modal).toBe('show');
   });
 });

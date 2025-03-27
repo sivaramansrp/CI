@@ -145,7 +145,8 @@ this.facturatorForm.get('tipoPersona')?.valueChanges.subscribe((value) => {
 });
 }
 
-static isValid(form: FormGroup, field: string): boolean {
+ // eslint-disable-next-line class-methods-use-this
+ isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramites260604Store): void {
