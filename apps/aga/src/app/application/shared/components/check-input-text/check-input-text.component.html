@@ -1,0 +1,10 @@
+<div [formGroup]="forma">
+  <div class="form-check">
+    <label class="form-check-label" [for]="id">
+      {{ label }}
+    </label>
+    <input class="form-check-input" type="checkbox" title="Checkbox" value="" [id]="id" formControlName="check" (change)="handleChange($event)">   
+  </div>
+
+  <input type="text" class="form-control" formControlName="texto" name="texto" [id]="idInputTexto" placeholder="" title="Texto">
+</div>
