@@ -18,11 +18,15 @@ import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
 import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
+import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { of } from 'rxjs';
+
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum';
 import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-vehiculos',
@@ -34,6 +38,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+  private destroy$ = new Subject<void>();
   pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
   public tipoVehiculoArrastreAGA!: Catalogo[];
   public paisEmisor!: Catalogo[];
@@ -411,9 +416,15 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
         ...DATOS_ACTUALES,
         NEW_UNIDAD,
       ]);
-      this.unidadesdearrastreList$ =
-        this.chofer40103Query.getUnidadesdeArrastre$;
+
+      // Use takeUntil to ensure subscription is cleaned up
+      this.chofer40103Query.getUnidadesdeArrastre$
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((data) => {
+          this.unidadesdearrastreList$ = of(data);
+        });
     }
+
     this.formVehiculo = this.fb.group({
       solicitudVehiculoVin2:
         this.formVehiculo.value.solicitudVehiculoVin2?.trim(),
@@ -458,7 +469,6 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
       desc: ['', [Validators.maxLength(200)]],
     });
   }
-
   /**
    * Obtiene los valores del formulario.
    */
