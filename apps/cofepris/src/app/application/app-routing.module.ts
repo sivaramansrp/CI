@@ -23,6 +23,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
+    path: 'maquila-materias-primas',
+    loadChildren: () =>
+      import(
+        './tramites/260206/maquila-materias-primas.module'
+      ).then((m) => m.MaquilaMateriasPrimasModule),
+  },
+  {
     path: 'permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260211/permiso-sanitario.module').then(
