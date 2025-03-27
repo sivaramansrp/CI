@@ -28,7 +28,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { EstablecimientoService } from '../../services/establecimiento/establecimiento.service';
 import { TablaDinamicaComponent } from '../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { ScianModel } from '../../models/datos-de-la-solicitud.model';
+import { DatosDeLaProductoModel, ScianModel } from '../../models/datos-de-la-solicitud.model';
 import { Modal } from 'bootstrap';
 import { DESPACHO_LDA } from '../../constantes/aviso-de-funcionamiento.enum';
 @Component({
@@ -47,10 +47,14 @@ import { DESPACHO_LDA } from '../../constantes/aviso-de-funcionamiento.enum';
 })
 export class EstablecimientoComponent implements OnInit, OnDestroy , AfterViewInit {
   @ViewChild('establecimientoModal', { static: false }) establecimientoModal!: ElementRef;
+  @ViewChild('datosMercanciaModal', { static: false }) datosMercanciaModal!: ElementRef;
   modalInstance!: Modal;
+  datosModalInstance!: Modal;
   scianForm!: FormGroup;
-
+  datosProductoForm!: FormGroup;
+  datosMercanciaForm!: FormGroup;
   personaparas: ScianModel[] = [];
+  propietarioData : DatosDeLaProductoModel[] = [];
   /** Configuración de columnas para la tabla dinámica */
   scianJson: Catalogo[] = [];
   configuracionTabla: ConfiguracionColumna<ScianModel>[] = [
@@ -64,6 +68,87 @@ export class EstablecimientoComponent implements OnInit, OnDestroy , AfterViewIn
       clave: (item: ScianModel) => item.descripcionScian,
       orden: 2,
     },
+  ];
+
+  
+  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] = [
+    {
+      encabezado: 'Tipo de producto',
+      clave: (item: DatosDeLaProductoModel) => item.tipoDeProducto,
+      orden: 1,
+    },
+    {
+      encabezado: 'Nombre Específico',
+      clave: (item: DatosDeLaProductoModel) => item.nombreEspecifico,
+      orden: 2,
+    },
+    {
+      encabezado: 'Cantidad o Volúmen',
+      clave: (item: DatosDeLaProductoModel) => item.cantidadOVolumen,
+      orden: 3,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (item: DatosDeLaProductoModel) => item.unidadDeMedida,
+      orden: 4,
+    },
+    {
+      encabezado: 'Presentación',
+      clave: (item: DatosDeLaProductoModel) => item.Presentacion,
+      orden: 5,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (item: DatosDeLaProductoModel) => item.fraccionArancelaria,
+      orden: 6,
+    },
+    {
+      encabezado: 'Descripción de la fracción',
+      clave: (item: DatosDeLaProductoModel) => item.descripcionDeLaFraccion,
+      orden: 7,
+    },
+    {
+      encabezado: 'Unidad de medida de tarifa (UMT)',
+      clave: (item: DatosDeLaProductoModel) => item.unidadDeMedidaDeTarifa,
+      orden: 8,
+    },
+    {
+      encabezado: 'Cantidad UMT',
+      clave: (item: DatosDeLaProductoModel) => item.cantidadUMT,
+      orden: 9,
+    },
+    {
+      encabezado: 'Envase primario',
+      clave: (item: DatosDeLaProductoModel) => item.envasePrimario,
+      orden: 10,
+    },
+    {
+      encabezado: 'Envase secundario',
+      clave: (item: DatosDeLaProductoModel) => item.envaseSecundario,
+      orden: 11,
+    },
+    {
+      encabezado: 'País de origen',
+      clave: (item: DatosDeLaProductoModel) => item.paisDeOrigen,
+      orden: 12,
+    },
+    {
+      encabezado: 'País de procedencia',
+      clave: (item: DatosDeLaProductoModel) => item.paisDeProcedencia,
+      orden: 13,
+    },
+    {
+      encabezado: 'País de destino',
+      clave: (item: DatosDeLaProductoModel) => item.paisDeDestino,
+      orden: 14,
+    },
+    {
+      encabezado: 'Uso específico',
+      clave: (item: DatosDeLaProductoModel) => item.usoEpecifico,
+      orden: 15,
+    }
+
+
   ];
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
@@ -83,12 +168,18 @@ export class EstablecimientoComponent implements OnInit, OnDestroy , AfterViewIn
     if (this.establecimientoModal) {
       this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
     }
+    if (this.datosMercanciaModal) {
+      this.datosModalInstance = new Modal(this.datosMercanciaModal.nativeElement);
+    }
   }
   ngOnInit(): void {
     this.loadEstado();
     this.loadScian();
     this.loadRegimen();
     this.loadAduanaDeSalida();
+    this.datosMercanciaForm = this.fb.group({
+      nombreEspecifico: ['', Validators.required],
+    });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
       descripcionScian: ['', Validators.required],
@@ -157,9 +248,12 @@ export class EstablecimientoComponent implements OnInit, OnDestroy , AfterViewIn
     
   }
   closeScianModal(): void {
-    if (this.establecimientoModal) {
+   
       this.modalInstance.hide();
-    }
+    
+  }
+  openDatosMercanciaModal(): void {
+    this.datosModalInstance.show();
   }
   ngOnDestroy(): void {
     this.destroy$.next();

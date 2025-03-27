@@ -20,3 +20,20 @@ export interface ScianModel {
   claveScian: string;
   descripcionScian: string;
 }
+export interface DatosDeLaProductoModel {
+  tipoDeProducto: string;
+  nombreEspecifico : string;
+  cantidadOVolumen : string;
+  unidadDeMedida: string;
+  Presentacion: string;
+  fraccionArancelaria: string;
+  descripcionDeLaFraccion: string;
+  unidadDeMedidaDeTarifa : string;
+  cantidadUMT :string;
+  envasePrimario: string;
+  envaseSecundario: string;
+  paisDeOrigen: string;
+  paisDeProcedencia: string;
+  paisDeDestino: string;
+  usoEpecifico: string;
+}
