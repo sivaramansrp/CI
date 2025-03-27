@@ -9,6 +9,10 @@
           <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
             (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos de la solicitud</a>
         </li>
+        <li [ngClass]="indice === 3 ? 'active' : ''">
+          <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
+            (keydown.space)="seleccionaTab(3)" role="button" tabindex="2">Certificado Kimberley</a>
+        </li>
       </ul>
   
       <ng-container>
@@ -20,7 +24,7 @@
         <app-solicitud [tabindex]="2"></app-solicitud>
         }
         @case (3) {
-          
+
         }
         }
       </ng-container>
