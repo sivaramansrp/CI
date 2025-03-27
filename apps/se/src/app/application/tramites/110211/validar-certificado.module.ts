@@ -6,12 +6,13 @@ import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
     CamCertificadoComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    CertificadoDeOrigenComponent,
+    CertificadoOrigenComponent,
     MercanciaComponent,
     DatosCertificadoComponent,
     DestinatarioComponent
@@ -36,6 +37,8 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
     CatalogoSelectComponent,
     RouterModule,
     InputFechaComponent,
+    CertificadoDeOrigenComponent
+
   ]
 })
 export class ValidarCertificadoModule { }

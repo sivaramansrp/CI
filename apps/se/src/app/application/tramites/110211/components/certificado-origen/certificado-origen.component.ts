@@ -5,4 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './certificado-de-origen.component.html',
   styleUrl: './certificado-de-origen.component.css',
 })
-export class CertificadoDeOrigenComponent {}
+export class CertificadoOrigenComponent {}

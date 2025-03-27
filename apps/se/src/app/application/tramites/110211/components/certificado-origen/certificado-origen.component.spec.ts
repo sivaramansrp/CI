@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CertificadoDeOrigenComponent } from './certificado-de-origen.component';
+import { CertificadoOrigenComponent } from './certificado-origen.component';
 
 describe('CertificadoDeOrigenComponent', () => {
-  let component: CertificadoDeOrigenComponent;
-  let fixture: ComponentFixture<CertificadoDeOrigenComponent>;
+  let component: CertificadoOrigenComponent;
+  let fixture: ComponentFixture<CertificadoOrigenComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CertificadoDeOrigenComponent],
+      imports: [CertificadoOrigenComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CertificadoDeOrigenComponent);
+    fixture = TestBed.createComponent(CertificadoOrigenComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
