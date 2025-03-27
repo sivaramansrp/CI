@@ -24,42 +24,20 @@
             </div>
             <table class="table table-bordered">
                 <tbody>
-                  <tr>
-                    <td class="grey-column">1</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id="donacion"
-                      />
-                    </td>
-                    <td>
-                      Traducción de la carta de donación en caso de que se presente en
-                      idioma distinto al español.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="grey-column">2</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id="persona"
-                      />
-                    </td>
-                    <td>
-                      Cuando el donante sea una persona física, documento que acredite
-                      que es extranjero
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="grey-column">3</td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        id="otro"
-                      />
-                    </td>
-                    <td>Otro</td>
-                  </tr>
+                  @for(datos of documentoDatos; track $index) {
+                    <tr>
+                      <td class="grey-column">{{datos.id}}</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          id="donacion"
+                        />
+                      </td>
+                      <td>
+                        {{datos.name}}
+                      </td>
+                    </tr>
+                  }
                 </tbody>
               </table>
               <div class="d-flex justify-content-end mt-5">

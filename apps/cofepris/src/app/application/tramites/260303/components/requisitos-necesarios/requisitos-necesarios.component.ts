@@ -6,6 +6,7 @@ import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
+import simulacroDeJSON from '@libs/shared/theme/assets/json/260303/documento-datos.json';
 
 /**
  * RequisitosNecesariosComponent es responsable de manejar el primer paso del proceso.
@@ -53,6 +54,8 @@ export class RequisitosNecesariosComponent implements OnInit {
    * de la solicitud dentro del componente.
    */
   public solicitudState!: Solicitud260303State;
+
+  public documentoDatos = JSON.parse(JSON.stringify(simulacroDeJSON));
 
   /**
    * Constructor del componente RequisitosNecesariosComponent.
