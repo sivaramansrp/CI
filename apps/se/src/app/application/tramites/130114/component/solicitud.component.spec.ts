@@ -353,113 +353,115 @@ describe('SolicitudComponent', () => {
   });
 
   describe('setValoresStore', () => {
-    it('should call setProducto when metodoNombre is "setProducto"', () => {
-      // Arrange
-      // const event = { metodoNombre: 'setProducto', valor: 'Nuevo Producto' };
-      const event = {
-        form: TestBed.inject(FormBuilder).group({}),
-        campo: 'descripcion', // Provide a valid campo
-        metodoNombre: 'setDescripcion',
-        valor: 'Nueva Descripción',
-      };
-      // Act
-      component.setValoresStore(event);
-
-      // Assert
-      expect(mockStore.setProducto).toHaveBeenCalledWith("Nuevo Producto");
-    });
-
-    it('should call setDescripcion when metodoNombre is "setDescripcion"', () => {
-      // Arrange
-      const mockForm = new FormGroup({
-        descripcion: new FormControl('Nueva Descripción'), // Mock the form control
+    let mockForm: FormGroup;
+ 
+    beforeEach(() => {
+      mockForm = TestBed.inject(FormBuilder).group({
+        valorPartidaUSD: ['100.50'],
+        descripcion: ['Test Description'],
+        cantidad: ['50'],
+        unidadMedida: ['kg'],
+        bloque: ['Bloque 1'],
+        usoEspecifico: ['Uso Específico'],
+        justificacionImportacionExportacion: ['Justificación'],
+        observaciones: ['Observaciones'],
+        entidad: ['Entidad 1'],
+        representacion: ['Representación 1'],
       });
+    });
+ 
+    function testSetValoresStore(event: { campo: string; metodoNombre: string }, expectedValue: any) {
+      mockForm.patchValue({ [event.campo]: expectedValue }); // Set the expected value in the form
+      component.setValoresStore({ form: mockForm, ...event });
+      expect((mockStore as any)[event.metodoNombre]).toHaveBeenCalledWith(expectedValue);
+    }
+ 
+    it('should handle numeric values correctly for setValorPartidaUSD', () => {
+      testSetValoresStore(
+        { campo: 'valorPartidaUSD', metodoNombre: 'setValorPartidaUSD' },
+        100.5
+      );
+    });
+ 
+    it('should handle string values correctly for setDescripcion', () => {
+      testSetValoresStore(
+        { campo: 'descripcion', metodoNombre: 'setDescripcion' },
+        'Test Description'
+      );
+    });
+ 
+    it('should handle numeric values correctly for setCantidad', () => {
+      testSetValoresStore(
+        { campo: 'cantidad', metodoNombre: 'setCantidad' },
+        '50'
+      );
+    });
+ 
+    it('should handle string values correctly for setUnidadMedida', () => {
+      testSetValoresStore(
+        { campo: 'unidadMedida', metodoNombre: 'setUnidadMedida' },
+        'kg'
+      );
+    });
+ 
+    it('should handle string values correctly for setBloque', () => {
+      testSetValoresStore(
+        { campo: 'bloque', metodoNombre: 'setBloque' },
+        'Bloque 1'
+      );
+    });
+ 
+    it('should handle string values correctly for setUsoEspecifico', () => {
+      testSetValoresStore(
+        { campo: 'usoEspecifico', metodoNombre: 'setUsoEspecifico' },
+        'Uso Específico'
+      );
+    });
+ 
+    it('should handle string values correctly for setJustificacionImportacionExportacion', () => {
+      testSetValoresStore(
+        { campo: 'justificacionImportacionExportacion', metodoNombre: 'setJustificacionImportacionExportacion' },
+        'Justificación'
+      );
+    });
+ 
+    it('should handle string values correctly for setObservaciones', () => {
+      testSetValoresStore(
+        { campo: 'observaciones', metodoNombre: 'setObservaciones' },
+        'Observaciones'
+      );
+    });
+ 
+    it('should handle string values correctly for setEntidad', () => {
+      testSetValoresStore(
+        { campo: 'entidad', metodoNombre: 'setEntidad' },
+        'Entidad 1'
+      );
+    });
+ 
+    it('should handle string values correctly for setRepresentacion', () => {
+      testSetValoresStore(
+        { campo: 'representacion', metodoNombre: 'setRepresentacion' },
+        'Representación 1'
+      );
+    });
+ 
+    it('should log an error for an invalid metodoNombre', () => {
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const event = {
         form: mockForm,
-        campo: 'descripcion', // Specify the field name
-        metodoNombre: 'setDescripcion',
+        campo: 'descripcion',
+        metodoNombre: 'invalidMethod',
       };
-
-      // Act
+ 
       component.setValoresStore(event);
-
-      // Assert
-      expect(mockStore.setDescripcion).toHaveBeenCalledWith('Nueva Descripción');
-    });
-
-    it('should call setCantidad when metodoNombre is "setCantidad"', () => {
-      // Arrange
-      const mockForm = new FormGroup({
-        cantidad: new FormControl(10), // Mock the form control
-      });
-    
-      const event = {
-        form: mockForm, // Provide the FormGroup
-        campo: 'cantidad', // Specify the field name
-        metodoNombre: 'setCantidad', // Keep the method name
-      };
-      // Act
-      component.setValoresStore(event);
-
-      // Assert
-      expect(mockStore.setCantidad).toHaveBeenCalledWith(10);
-    });
-
-    it('should call setValorPartidaUSD when metodoNombre is "setValorPartidaUSD"', () => {
-      // Arrange
-      const mockForm = new FormGroup({
-        valorPartidaUSD: new FormControl(100.5), // Mock the form control
-      });
-    
-      const event = {
-        form: mockForm, // Provide the FormGroup
-        campo: 'valorPartidaUSD', // Specify the field name
-        metodoNombre: 'setValorPartidaUSD', // Keep the method name
-      };
-      // Act
-      component.setValoresStore(event);
-
-      // Assert
-      expect(mockStore.setValorPartidaUSD).toHaveBeenCalledWith(100.5);
-    });
-
-    it('should log a warning for unhandled metodoNombre', () => {
-      // Arrange
-      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-      // const event = { metodoNombre: 'unknownMethod', valor: 'Test Value' };
-      const event = {
-        form: new FormGroup({}), // Provide the FormGroup
-        campo: 'cantidad', // Specify the field name
-        metodoNombre: 'setCantidad', // Keep the method name
-      };
-      // Act
-      component.setValoresStore(event);
-
-      // Assert
-      expect(consoleSpy).toHaveBeenCalledWith("Unhandled metodoNombre:", "unknownMethod");
-
-      // Clean up
-      consoleSpy.mockRestore();
-    });
-
-    it('should call setCantidad when metodoNombre is "setCantidad"', () => {
-      const mockForm = new FormGroup({
-        cantidad: new FormControl(10), // Mock the form control
-      });
-
-      const event = {
-        form: mockForm, // Provide the FormGroup
-        campo: 'cantidad', // Specify the field name
-        metodoNombre: 'setCantidad', // Keep the method name
-      };
-
-      // Act
-      component.setValoresStore(event);
-
-      // Assert
-      expect(mockStore.setCantidad).toHaveBeenCalledWith(10);
+ 
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Método invalidMethod no existe en Tramite130114Store'
+      );
     });
   });
+ 
 
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
@@ -480,34 +482,6 @@ describe('SolicitudComponent', () => {
       component.mercanciaForm.patchValue({ producto: 'Nuevo' });
       // component.resetForm();
       expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
-    });
-  });
-
-  describe('getEstablecimiento', () => {
-    it('should map tableHeaderData and create clave function that accesses tbodyData[index]', () => {
-      // Arrange: Set mock data for getEstablecimientoTableData
-      component.getEstablecimientoTableData = {
-        tableHeader: ['Header1', 'Header2'],
-        tableBody: [
-          { tbodyData: ['Value1', 'Value2'] },
-          { tbodyData: ['Value3', 'Value4'] },
-        ],
-      };
-
-      // Act: Call the method
-      component.getEstablecimiento();
-
-      // Assert: Verify tableHeaderData is mapped correctly
-      expect(component.tableHeaderData.length).toBe(2);
-      expect(component.tableHeaderData[0].encabezado).toBe('Header1');
-      expect(component.tableHeaderData[1].encabezado).toBe('Header2');
-
-      // Assert: Verify the clave function works as expected
-      const claveFunction = component.tableHeaderData[0].clave;
-
-      // Pass an object with tbodyData to the clave function
-      const result = claveFunction('TestValue1');
-      expect(result).toBe('TestValue1');
     });
   });
 

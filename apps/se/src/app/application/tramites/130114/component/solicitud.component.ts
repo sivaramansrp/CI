@@ -440,12 +440,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       (header, index) => ({
         encabezado: header,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        clave: (fila: any): string => fila?.tbodyData[index] ?? null,
+        clave: (fila: any): string => fila.tbodyData[index],
         orden: index,
       })
     );
-    this.tableBodyData = this.getEstablecimientoTableData?.tableBody;
+    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
+
   /**
    * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
    */
@@ -612,7 +613,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.Tramite130114Store.setclasificacion(VALOR);
         break;
       case 'setProducto':
-        this.Tramite130114Store.setProducto(VALOR); // Ensure this is called correctly
+        this.Tramite130114Store.setProducto(VALOR);
         break;
       case 'setDescripcion':
         this.Tramite130114Store.setDescripcion(VALOR);
