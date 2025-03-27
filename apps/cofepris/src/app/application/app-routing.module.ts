@@ -36,6 +36,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoSanitarioImportacionModule
       ),
   },
+  {
+    path: 'avisode-modificacionModule',
+    loadChildren: () =>
+      import('./tramites/260605/pantallas.module').then(
+        (m) => m.Pantallas260605Module
+      ),
+  },
 ];
 
 @NgModule({
