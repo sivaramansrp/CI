@@ -12,3 +12,9 @@ export const PASOS = [
       completado: false,
   },
 ];
+
+export const FECHA = {
+  labelNombre: 'Fecha de pago',
+  required: true,
+  habilitado: false,
+};

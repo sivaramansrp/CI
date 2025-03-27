@@ -5,7 +5,13 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
 import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
-import { BtnContinuarComponent, FirmaElectronicaComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
+import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
+import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 
 
 @NgModule({
@@ -13,15 +19,23 @@ import { BtnContinuarComponent, FirmaElectronicaComponent, SharedModule, Solicit
     CamCertificadoComponent,
     PasoUnoComponent,
     PasoDosComponent,
+    CertificadoDeOrigenComponent,
+    MercanciaComponent,
+    DatosCertificadoComponent,
+    DestinatarioComponent
   ],
   imports: [
     CommonModule,
     ValidarCertificadoRoutingModule,
     SharedModule,
+    ReactiveFormsModule,
     WizardComponent,
     SolicitanteComponent,
     BtnContinuarComponent,
     FirmaElectronicaComponent,
+    CatalogoSelectComponent,
+    RouterModule,
+    InputFechaComponent,
   ]
 })
 export class ValidarCertificadoModule { }
