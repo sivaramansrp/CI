@@ -7,24 +7,27 @@ import { Mercancia } from '../models/configuracio-columna.model';
 export interface TramiteState {
   idiomaDatos: Catalogo[];
   paisDestin: Catalogo[];
+  medioDeTransporte: Catalogo[];
   entidadFederativaDatos: Catalogo[];
   representacionFederalDatos: Catalogo[];
   altaPlanta: Catalogo[];
   estado: Catalogo;
-  factura:Catalogo[];
-  facturas:Catalogo,
-  umc:Catalogo;
-  umcs:Catalogo[],
+  factura: Catalogo[];
+  facturas: Catalogo,
+  umc: Catalogo;
+  umcs: Catalogo[],
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
   formDatosCertificado: { [key: string]: undefined | boolean | string | number | object };
-  mercanciaForm:{ [key: string]: undefined | boolean | string | number | object}
+  mercanciaForm: { [key: string]: undefined | boolean | string | number | object }
   formaValida: { [key: string]: boolean };
-   buscarMercancia: Mercancia[];
-   mercanciaTabla: Mercancia[];
+  buscarMercancia: Mercancia[];
+  mercanciaTabla: Mercancia[];
 
-   destinatarioForm:{ [key: string]: undefined | boolean | string | number | object };
+  destinatarioForm: { [key: string]: undefined | boolean | string | number | object };
+  formDestinatario: { [key: string]: undefined | boolean | string | number | object };
+  formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
 }
 
 // Interfaz que define el estado de la solicitud 110204.
@@ -53,8 +56,8 @@ export interface Solicitud110202State {
   domicilio: string;
   estado: string;
   paisBloque: string;
-  factura:string;
-  umc:string;
+  factura: string;
+  umc: string;
   representacionFederal: string;
 }
 
@@ -68,9 +71,9 @@ export const INITIAL_STATE: TramiteState = {
     id: -1,
     descripcion: '',
   },
-  umc:{id:-1,descripcion:''},
-  umcs:[],
-  factura:[],
+  umc: { id: -1, descripcion: '' },
+  umcs: [],
+  factura: [],
   formaValida: {},
   formCertificado: {
     entidadFederativa: '',
@@ -78,8 +81,8 @@ export const INITIAL_STATE: TramiteState = {
     nombreComercialForm: '',
     registroProductoForm: '',
     fraccionArancelariaForm: '',
-    fechaInicioInput:'',
-    fechaFinalInput:'',
+    fechaInicioInput: '',
+    fechaFinalInput: '',
   },
   formDatosCertificado: {
     observacionesDates: '',
@@ -88,7 +91,7 @@ export const INITIAL_STATE: TramiteState = {
     EntidadFederativaDates: '',
     representacionFederalDates: '',
   },
-  mercanciaForm:{
+  mercanciaForm: {
     fraccionArancelaria: '',
     nombreComercialMercancia: '',
     nombreTecnico: '',
@@ -107,9 +110,9 @@ export const INITIAL_STATE: TramiteState = {
     normaOrigen: '',
     id: '',
     fechaFinalInput: '',
-    nalad: ''    
+    nalad: ''
   },
-  facturas:{
+  facturas: {
     id: -1,
     descripcion: '',
   },
@@ -119,12 +122,31 @@ export const INITIAL_STATE: TramiteState = {
   },
   idiomaDatos: [],
   paisDestin: [],
+  medioDeTransporte: [],
   entidadFederativaDatos: [],
   representacionFederalDatos: [],
 
+  formDestinatario: {
+    paisDestin: '',
+    ciudad: '',
+    celle: '',
+    numeroLetra: '',
+    lada: '',
+    telefono: '',
+    fax: '',
+    correoElectronico: ''
+  },
+
+  formDatosDelDestinatario: {
+    nombres: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeRegistroFiscal: '',
+    razonSocial: ''
+  },
+
   destinatarioForm: {
-    MedioDeTransporte:'',
-    paisDestin:'',
+    medioDeTransporte: '',
   }
 };
 
@@ -141,7 +163,7 @@ export const INITIAL_STATE: TramiteState = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite-110202', resettable: true })
 export class Tramite110202Store extends Store<TramiteState> {
-  
+
   constructor() {
     super(INITIAL_STATE);
   }
@@ -165,7 +187,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    * 
    * @param factura - Lista de objetos de tipo Catalogo que representan las facturas.
    */
-  setFactura(factura: Catalogo[]): void {    
+  setFactura(factura: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       factura,
@@ -177,7 +199,7 @@ export class Tramite110202Store extends Store<TramiteState> {
    *
    * @param umcs - Una lista de objetos de tipo `Catalogo` que representan las UMCs a establecer.
    */
-  setUmc(umcs: Catalogo[]): void {    
+  setUmc(umcs: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       umcs,
@@ -275,7 +297,7 @@ export class Tramite110202Store extends Store<TramiteState> {
       },
     }));
   }
- 
+
   /**
    * Establece el régimen de la mercancía en el almacén.
    * 
@@ -444,42 +466,88 @@ export class Tramite110202Store extends Store<TramiteState> {
     }));
   }
 
-   /**
-     * Establece los datos de la mercancía a buscar en el almacén.
-     * 
-     * @param {Mercancia[]} buscarMercancia - Un array de objetos `Mercancia` con la información de la mercancía a buscar.
-     * 
-     * @returns {void} - No devuelve ningún valor.
-     */
-    setbuscarMercancia(buscarMercancia: Mercancia[]): void {
-      this.update((state) => ({
-        ...state,
-        buscarMercancia,
-      }));
-    }
+  /**
+    * Establece los datos de la mercancía a buscar en el almacén.
+    * 
+    * @param {Mercancia[]} buscarMercancia - Un array de objetos `Mercancia` con la información de la mercancía a buscar.
+    * 
+    * @returns {void} - No devuelve ningún valor.
+    */
+  setbuscarMercancia(buscarMercancia: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      buscarMercancia,
+    }));
+  }
 
 
-    setmer(mercanciaTabla: Mercancia[]): void {
-      this.update((state) => ({
-        ...state,
-        mercanciaTabla,
-      }));
-    }
+  setmer(mercanciaTabla: Mercancia[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTabla,
+    }));
+  }
 
-    public setpaisDestino(paisDestin: Catalogo[]): void {
-      this.update((state) => ({
-        ...state,
-        paisDestin,
-      }));
-    }
+  /**
+   * Actualiza el estado con la lista de países de destino
+   * @param paisDestin Arreglo de catálogos con los países de destino
+   */
+  public setPaisDestinatario(paisDestin: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      paisDestin,
+    }));
+  }
 
-    setDestinatarioForm(values: { [key: string]: undefined | boolean | string | number | object }): void {
-      this.update((state) => ({
-        destinatarioForm: {
-          ...state.destinatarioForm,
-          ...values,
-        },
-      }));
-    }
+  /**
+   * Actualiza el estado con la lista de medios de transporte
+   * @param medioDeTransporte Arreglo de catálogos con los medios de transporte
+   */
+  setMedioDeTransporte(medioDeTransporte: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      medioDeTransporte,
+    }));
+  }
+
+  /**
+   * Actualiza el estado del formulario de destinatario con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
+   */
+  setDestinatarioForm(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    this.update((state) => ({
+      destinatarioForm: {
+        ...state.destinatarioForm,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el estado del formulario de destinatario (sección principal) con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
+   */
+  setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    this.update((state) => ({
+      formDestinatario: {
+        ...state.formDestinatario,
+        ...values,
+      },
+    }));
+  }
+
+  /**
+   * Actualiza el estado del formulario de datos del destinatario con nuevos valores
+   * @param values Objeto con los valores a actualizar en el formulario.
+   */
+  setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+    this.update((state) => ({
+      formDatosDelDestinatario: {
+        ...state.formDatosDelDestinatario,
+        ...values,
+      },
+    }));
+  }
+
 }
 

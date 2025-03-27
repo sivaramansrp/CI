@@ -128,11 +128,43 @@ export class Tramite110202Query extends Query<TramiteState> {
     return state.representacionFederalDatos;
   });
 
+  /**
+   * Observable que emite la lista de países de destino
+   * @returns Observable<Catalogo[]> con los países de destino disponibles
+   */
   selectPaisDestino$ = this.select((state) => {
     return state.paisDestin;
   });
 
-  destinatarioForm$ = this.select((state) => {
+  /**
+   * Observable que emite los valores del formulario de destinatario principal
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectFormDestinatario$ = this.select((state) => {
+    return state.formDestinatario;
+  });
+
+  /**
+   * Observable que emite los valores del formulario de datos del destinatario
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectFormDatosDelDestinatario$ = this.select((state) => {
+    return state.formDatosDelDestinatario;
+  });
+
+  /**
+   * Observable que emite la lista de medios de transporte disponibles
+   * @returns Observable<Catalogo[]> con los medios de transporte
+   */
+  selectMedioDeTransporte$ = this.select((state) => {
+    return state.medioDeTransporte;
+  });
+
+  /**
+   * Observable que emite los valores del formulario de destinatario
+   * @returns Observable<FormValues> con los valores actuales del formulario
+   */
+  selectDestinatarioForm$ = this.select((state) => {
     return state.destinatarioForm;
   });
 

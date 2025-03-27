@@ -1,4 +1,4 @@
-import { Observable,map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,10 +9,16 @@ import { Mercancia } from '../models/configuracio-columna.model';
 })
 export class CertificadoValidacionService {
 
+  /**
+  * URL base para las solicitudes a los archivos JSON de la API.
+  * @private
+  * @type {string}
+  */
   private apiUrl = 'assets/json/110202/';
 
-  // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Obtiene la lista de TratadoAcuerdo desde un archivo JSON local.
@@ -102,12 +108,25 @@ export class CertificadoValidacionService {
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
   }
 
+  /**
+   * Obtiene una lista de países destino desde un archivo JSON.
+   * @returns {Observable<Catalogo[]>} Un Observable que emite un arreglo de objetos Catalogo con la información de los países destino.
+   */
   obtenerPaisDestino(): Observable<Catalogo[]> {
     return this.http
-      .get<{ data: Catalogo[] }>(`${this.apiUrl}pais-destino.json`)
+      .get<{ data: Catalogo[] }>(`${this.apiUrl}pais-destinatario.json`)
       .pipe(map((res) => res.data));
   }
 
-}
+  /**
+  * Obtiene una lista de medios de transporte desde un archivo JSON.
+  * @returns {Observable<Catalogo[]>} Un Observable que emite un arreglo de objetos Catalogo con la información de los medios de transporte.
+  */
+  obtenerMedioDeTransporte(): Observable<Catalogo[]> {
+    return this.http
+      .get<{ data: Catalogo[] }>(`${this.apiUrl}medio-de-transporte.json`)
+      .pipe(map((res) => res.data));
+  }
 
-  
+
+}

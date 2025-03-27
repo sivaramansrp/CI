@@ -4,7 +4,7 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONA
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
-import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
+import { DestinatarioDeComponent } from '../../components/destinatario-de/destinatario-de.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -13,7 +13,7 @@ import { DestinatarioComponent } from '../../components/destinatario/destinatari
     CommonModule,
     SolicitanteComponent,
     CertificadoOrigenComponent,
-    DestinatarioComponent,
+    DestinatarioDeComponent,
     AlertComponent,
     DatosCertificadoComponent
 ],
