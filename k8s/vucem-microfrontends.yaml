@@ -15,6 +15,27 @@ data:
   NODE_ENV: "production"
   API_URL: "https://api-vucem-${ENV}.example.com"
 ---
+# ConfigMap for Module Federation Manifest
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: module-federation-manifest
+  namespace: vucem-${ENV}
+data:
+  module-federation.manifest.json: |
+    {
+      "login": "https://vucem-${ENV}.example.com/login",
+      "aga": "https://vucem-${ENV}.example.com/aga", 
+      "agriculture": "https://vucem-${ENV}.example.com/agriculture",
+      "se": "https://vucem-${ENV}.example.com/se",
+      "semarnat": "https://vucem-${ENV}.example.com/semarnat",
+      "agace": "https://vucem-${ENV}.example.com/agace",
+      "funcionario": "https://vucem-${ENV}.example.com/funcionario",
+      "cofepris": "https://vucem-${ENV}.example.com/cofepris",
+      "amecafe": "https://vucem-${ENV}.example.com/amecafe",
+      "sener": "https://vucem-${ENV}.example.com/sener"
+    }
+---
 # Deployment for VUCEM Microfrontends
 apiVersion: apps/v1
 kind: Deployment
@@ -38,12 +59,21 @@ spec:
     spec:
       imagePullSecrets:
         - name: github-container-registry
+      volumes:
+        - name: module-federation-manifest
+          configMap:
+            name: module-federation-manifest
       containers:
         - name: dashboard
           image: ${REGISTRY}/vucem-front-dashboard:${TAG}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: dashboard
+          volumeMounts:
+            - name: module-federation-manifest
+              mountPath: /usr/share/nginx/html/assets/module-federation.manifest.json
+              subPath: module-federation.manifest.json
           resources:
             requests:
               memory: "128Mi"
@@ -70,6 +100,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: login
           resources:
             requests:
               memory: "128Mi"
@@ -96,6 +127,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: aga
           resources:
             requests:
               memory: "128Mi"
@@ -122,6 +154,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: agriculture
           resources:
             requests:
               memory: "128Mi"
@@ -148,6 +181,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: se
           resources:
             requests:
               memory: "128Mi"
@@ -174,6 +208,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: semarnat
           resources:
             requests:
               memory: "128Mi"
@@ -200,6 +235,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: agace
           resources:
             requests:
               memory: "128Mi"
@@ -226,6 +262,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: funcionario
           resources:
             requests:
               memory: "128Mi"
@@ -252,6 +289,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: cofepris
           resources:
             requests:
               memory: "128Mi"
@@ -278,6 +316,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: amecafe
           resources:
             requests:
               memory: "128Mi"
@@ -304,6 +343,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+              name: sener
           resources:
             requests:
               memory: "128Mi"
@@ -326,16 +366,16 @@ spec:
             timeoutSeconds: 3
             periodSeconds: 10
 ---
-# Service for VUCEM Microfrontends
+# Services for each microfrontend
 apiVersion: v1
 kind: Service
 metadata:
-  name: vucem-frontend-svc-${ENV}
+  name: dashboard-svc-${ENV}
   namespace: vucem-${ENV}
   labels:
     app: vucem-microfrontends
+    component: dashboard
     env: ${ENV}
-    tier: frontend
 spec:
   selector:
     app: vucem-microfrontends
@@ -343,12 +383,197 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 80
-      protocol: TCP
-  sessionAffinity: ClientIP
-  sessionAffinityConfig:
-    clientIP:
-      timeoutSeconds: 10800
+      targetPort: dashboard
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: login-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: login
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: login
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aga-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: aga
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: aga
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agriculture-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: agriculture
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: agriculture
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: se-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: se
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: se
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: semarnat-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: semarnat
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: semarnat
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agace-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: agace
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: agace
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: funcionario-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: funcionario
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: funcionario
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cofepris-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: cofepris
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: cofepris
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: amecafe-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: amecafe
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: amecafe
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sener-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: sener
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: sener
   type: ClusterIP
 ---
 # Ingress for VUCEM Microfrontends
@@ -367,6 +592,22 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      # Add CORS headers
+      add_header 'Access-Control-Allow-Origin' '*' always;
+      add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
+      add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization' always;
+      add_header 'Access-Control-Max-Age' 1728000;
+      # Handle OPTIONS preflight requests
+      if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain charset=UTF-8';
+        add_header 'Content-Length' 0;
+        return 204;
+      }
 spec:
   ingressClassName: nginx
   tls:
@@ -377,34 +618,102 @@ spec:
   - host: vucem-${ENV}.example.com
     http:
       paths:
+      # Dashboard app (Shell)
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: vucem-frontend-svc-${ENV}
+            name: dashboard-svc-${ENV}
             port:
               number: 80
-      - path: /remoteAppEntry.js
-        pathType: Exact
-        backend:
-          service:
-            name: vucem-frontend-svc-${ENV}
-            port:
-              number: 80
-      - path: /auth(/|$)(.*)
+      # Login microfrontend
+      - path: /login
         pathType: Prefix
         backend:
           service:
-            name: vucem-frontend-svc-${ENV}
+            name: login-svc-${ENV}
             port:
               number: 80
-      - path: /login(/|$)(.*)
+      - path: /auth
         pathType: Prefix
         backend:
           service:
-            name: vucem-frontend-svc-${ENV}
+            name: login-svc-${ENV}
             port:
               number: 80
+      # Aga microfrontend
+      - path: /aga
+        pathType: Prefix
+        backend:
+          service:
+            name: aga-svc-${ENV}
+            port:
+              number: 80
+      # Agriculture microfrontend
+      - path: /agriculture
+        pathType: Prefix
+        backend:
+          service:
+            name: agriculture-svc-${ENV}
+            port:
+              number: 80
+      # SE microfrontend
+      - path: /se
+        pathType: Prefix
+        backend:
+          service:
+            name: se-svc-${ENV}
+            port:
+              number: 80
+      # Semarnat microfrontend  
+      - path: /semarnat
+        pathType: Prefix
+        backend:
+          service:
+            name: semarnat-svc-${ENV}
+            port:
+              number: 80
+      # Agace microfrontend
+      - path: /agace
+        pathType: Prefix
+        backend:
+          service:
+            name: agace-svc-${ENV}
+            port:
+              number: 80
+      # Funcionario microfrontend
+      - path: /funcionario
+        pathType: Prefix
+        backend:
+          service:
+            name: funcionario-svc-${ENV}
+            port:
+              number: 80
+      # Cofepris microfrontend
+      - path: /cofepris
+        pathType: Prefix
+        backend:
+          service:
+            name: cofepris-svc-${ENV}
+            port:
+              number: 80
+      # Amecafe microfrontend
+      - path: /amecafe
+        pathType: Prefix
+        backend:
+          service:
+            name: amecafe-svc-${ENV}
+            port:
+              number: 80
+      # Sener microfrontend
+      - path: /sener
+        pathType: Prefix
+        backend:
+          service:
+            name: sener-svc-${ENV}
+            port:
+              number: 80
+      # Backend API
       - path: /api
         pathType: Prefix
         backend:
@@ -412,6 +721,84 @@ spec:
             name: vucem-backend-svc
             port:
               number: 8080
+      # Module Federation specific paths
+      - path: /remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: dashboard-svc-${ENV}
+            port:
+              number: 80
+      - path: /login/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: login-svc-${ENV}
+            port:
+              number: 80
+      - path: /aga/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: aga-svc-${ENV}
+            port:
+              number: 80
+      - path: /agriculture/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: agriculture-svc-${ENV}
+            port:
+              number: 80
+      - path: /se/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: se-svc-${ENV}
+            port:
+              number: 80
+      - path: /semarnat/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: semarnat-svc-${ENV}
+            port:
+              number: 80
+      - path: /agace/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: agace-svc-${ENV}
+            port:
+              number: 80
+      - path: /funcionario/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: funcionario-svc-${ENV}
+            port:
+              number: 80
+      - path: /cofepris/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: cofepris-svc-${ENV}
+            port:
+              number: 80
+      - path: /amecafe/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: amecafe-svc-${ENV}
+            port:
+              number: 80
+      - path: /sener/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: sener-svc-${ENV}
+            port:
+              number: 80
 ---
 # HorizontalPodAutoscaler for VUCEM Microfrontends
 apiVersion: autoscaling/v2
