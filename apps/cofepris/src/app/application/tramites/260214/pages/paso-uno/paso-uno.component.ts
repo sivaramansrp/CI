@@ -1,12 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
 
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent],
+  imports: [CommonModule, SolicitanteComponent,
+    ContenedorDeDatosSolicitudComponent,TercerosRelacionadosVistaComponent,
+    PagoDeDerechosComponent
+  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
