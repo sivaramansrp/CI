@@ -29,6 +29,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'registro-solicitud',
+    loadChildren: () =>
+      import('./tramites/31803/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
 ];
 
 @NgModule({
