@@ -16,6 +16,8 @@ export interface solicitud260604State {
     lada:string;
     telefono:string;
     correoElectronico:string;
+    selectPais:string;
+    tipoPersona:string;
 
 }
 
@@ -33,7 +35,9 @@ export function createInitialState(): solicitud260604State {
         numInterior:'',
         lada:'',
         telefono:'',
-        correoElectronico:''
+        correoElectronico:'',
+        selectPais:'',
+        tipoPersona:''
     }
 
 }
@@ -137,5 +141,19 @@ public setcorreoElectronico(correoElectronico: string) {
       ...state,
       correoElectronico,
     }));
+}
+
+public setselectPais(selectPais: string) {
+  this.update((state) => ({
+    ...state,
+    selectPais,
+  }));
+}
+
+public settipoPersona(tipoPersona: string) {
+  this.update((state) => ({
+    ...state,
+    tipoPersona,
+  }));
 }
   }

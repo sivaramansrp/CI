@@ -19,10 +19,14 @@ import { Tramites260604Store, solicitud260604State } from '../../../shared/estad
 
 import { Tramites260604Query } from '../../../shared/estados/tramites260604.query'
 
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+
+import tipoPersonaradio from 'libs/shared/theme/assets/json/260604/tipoPersonaradio.json';
+
 @Component({
   selector: 'app-terceros-relacionado',
   standalone: true,
-  imports: [CommonModule,AlertComponent , TituloComponent,TablaDinamicaComponent,CatalogoSelectComponent,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule,AlertComponent , TituloComponent,TablaDinamicaComponent,CatalogoSelectComponent,FormsModule,ReactiveFormsModule,InputRadioComponent],
   templateUrl: './tercerosRelacionado.component.html',
   styleUrl: './tercerosRelacionado.component.css',
 })
@@ -34,6 +38,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   public TEXTOS = MENSAJEDEALERTA;
   public infoAlert = 'alert-info';
   public modal = 'modal';
+  tipoPersonaOptions = tipoPersonaradio;
   public localidadList!: Catalogo[];
   TablaSeleccion = TablaSeleccion;
   tercerosProd: PermisoModel[] = [];
@@ -101,12 +106,12 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
 
   getFacturator(): void {
     this.facturatorForm = this.fb.group({
-      tipoPersona: ['fisica', Validators.required], // Default to "fisica"
+      tipoPersona: [ this.solicitudState?.tipoPersona ||'fisica', Validators.required],
       nombre: [ this.solicitudState?.nombre || '', [Validators.required]],
       apellidoPrimer: [ this.solicitudState?.apellidoPrimer || '', Validators.required],
       apellidoSegundo: [this.solicitudState?.apellidoSegundo || ''],
       denominacionRazonSocial:[this.solicitudState?.denominacionRazonSocial || '',[Validators.maxLength(254)]],
-      selectPais: ['', Validators.required],
+      selectPais: [this.solicitudState?.denominacionRazonSocial ||'', Validators.required],
       estadoLocalidad: [this.solicitudState?.estadoLocalidad ||'', Validators.required],
       codPostal1: [this.solicitudState?.codPostal1 ||''],
       coloniaEquiv: [this.solicitudState?.coloniaEquiv ||''],
@@ -117,31 +122,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
       telefono: [this.solicitudState?.telefono ||''],
       correoElectronico: [this.solicitudState?.telefono ||'', [Validators.required, Validators.email]],
     });
-  
-
-// Listen for changes to "tipoPersona" and update field visibility
-this.facturatorForm.get('tipoPersona')?.valueChanges.subscribe((value) => {
-  if (value === 'fisica') {
-    // Show all fields except "destinatariodenominacion"
-    this.facturatorForm.get('nombres')?.setValidators(Validators.required);
-    this.facturatorForm.get('facturatorapellido')?.setValidators(Validators.required);
-    this.facturatorForm.get('facturatorsapellido')?.setValidators(null);
-    this.facturatorForm.get('destinatariodenominacion')?.clearValidators();
-  } else if (value === 'moral') {
-    // Show "destinatariodenominacion" and hide "nombres", "facturatorapellido", "facturatorsapellido"
-    this.facturatorForm.get('nombres')?.clearValidators();
-    this.facturatorForm.get('facturatorapellido')?.clearValidators();
-    this.facturatorForm.get('facturatorsapellido')?.clearValidators();
-    this.facturatorForm.get('destinatariodenominacion')?.setValidators(Validators.required);
   }
-
-  // Update the validity of the fields
-  this.facturatorForm.get('nombres')?.updateValueAndValidity();
-  this.facturatorForm.get('facturatorapellido')?.updateValueAndValidity();
-  this.facturatorForm.get('facturatorsapellido')?.updateValueAndValidity();
-  this.facturatorForm.get('destinatariodenominacion')?.updateValueAndValidity();
-});
-}
 
 isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
@@ -150,7 +131,22 @@ isValid(form: FormGroup, field: string): boolean {
     const VALOR = form.get(campo)?.value;
     (this.tramites260604Store [metodoNombre] as (value: string) => void)(VALOR);
   }
+  public fisica = false;
+  public moral = false;
 
+  public inputChecked(checkBoxName: string) {
+    if (checkBoxName === 'fisica') {
+      this.fisica = true;
+      this.moral = false;
+    } else {
+      this.fisica = false;
+      this.moral = true;
+    }
+  }
+  cambiarRadioFisica(value: string | number) {
+    const VALOR_SELECCIONADO = value as string;
+    this.inputChecked(VALOR_SELECCIONADO);
+  }
  
   ngOnDestroy(): void {
     this.destroyed$.next();

@@ -11,10 +11,10 @@
 [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX">
 </app-tabla-dinamica>
 
-<div  style="text-align: right">
-    <button style="text-align: right"
+<div class="custom-ms-2">
+    <button 
             type="button"
-            class="btn btn-primary ms-2"
+            class="btn btn-primary ms-2 custom-ms-2"
             data-bs-toggle="modal"
             data-bs-target="#modalfacurator"
             (click)="abrirModalfacurator()"
@@ -42,46 +42,25 @@
               <div class="modal-body">
                 <form [formGroup]="facturatorForm" >
                     <h6>Datos generales</h6>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                        <div class="col-md-12">
-                          
+                         <div class="row">
+                          <div class="col-md-6 offset-md-6">
+                            <div>
+                              <h6>Tipo persona*:</h6>
+                              <div class="mt-2">
+                                <app-input-radio
+                                  [radioOptions]="tipoPersonaOptions"
+                                  [isRequired]="true"
+                                  formControlName="tipoPersona"
+                                  [layout]="'vertical'"
+                                  (valueChange)="cambiarRadioFisica($event)"
+                                  (change)="setValoresStore(facturatorForm,'tipoPersona','settipoPersona')"
+                                ></app-input-radio>
+                                </div>
+                            </div>
+                          </div>
                         </div>
-                        
-                        <div class="col-md-12">
-                         
-                        </div>
-                        <div class="col-md-12">
-                          
-                        </div>
-                      </div>
-                  <div class="col-md-6">
-                        <div class="col-md-12">
-                          <label class="form-label" for="tipoPersona">Tipo persona*:</label>
-                        </div>
-                        <div class="col-md-12">
-                            <input
-                            type="radio"
-                            id="fisica"
-                            formControlName="tipoPersona"
-                            value="fisica"
-                          />
-                          <label for="fisica">Física</label>
-  
-                        </div>
-                        <div class="col-md-12">
-                            <input
-                            type="radio"
-                            id="moral"
-                            formControlName="tipoPersona"
-                            value="moral"
-                          />
-                          <label for="moral">Moral</label>
-  
-                        </div>
-                      </div>
-                      </div>
-                       
+                        <hr />
+                  
                   <div *ngIf="facturatorForm.get('tipoPersona')?.value === 'fisica'">
 
                       <div class="row">
@@ -107,7 +86,7 @@
                       
                   <div *ngIf="facturatorForm.get('tipoPersona')?.value === 'moral'">
                       <div class="row">
-                        <div class="col-md-8 mb-3">
+                        <div class="col-md-8">
                           <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
                           <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" [ngClass]="isValid(facturatorForm, 'denominacionRazonSocial') ? 'required' : ''"
                           size="75" maxlength="254" (change)="setValoresStore(facturatorForm,'denominacionRazonSocial','setdenominacionRazonSocial')">
@@ -115,25 +94,25 @@
                       </div>
 </div>
                      <ng-titulo titulo="Domicilio" />
-                  <div class="row">
-                      <div class="col-md-4 ">
+                  <div class="row d-flex domicilio-form-container">
+                      <div class="col-md-4">
                         <app-catalogo-select
                         [catalogo]="localidadList"
                         formControlName="selectPais"
                         [label]="'País*'"
                         [placeholder]="'Seleccione una aduana'"
-                        
+                        (change)="setValoresStore(facturatorForm,'selectPais','setselectPais')"
                       ></app-catalogo-select>
                         
                       </div>
-                      <div class="col-md-4 mb-3">
+                      <div class="col-md-4">
                         
                         <label class="form-label" for="estadoLocalidad">Estado*:</label>
                         <input type="text" class="form-control" id="estadoLocalidad" formControlName="estadoLocalidad" maxlength="255" size="29"
                         (change)="setValoresStore(facturatorForm,'estadoLocalidad','setestadoLocalidad')">
                        </div>
-                      <div class="col-md-4">
-                        <label class="form-label" for="codPostal1">Codigo Postal o equivalente</label>
+                      <div class="col-md-4 custom-mt">
+                        <label class="form-label" for="codPostal1">Código postal o equivalente</label>
                           <input type="text" class="form-control" id="codPostal1" formControlName="codPostal1"
                           (change)="setValoresStore(facturatorForm,'codPostal1','setcodPostal1')">
                       </div>
@@ -144,12 +123,7 @@
                         <input type="text" class="form-control" id="coloniaEquiv" formControlName="coloniaEquiv"  [ngClass]="isValid(facturatorForm, 'coloniaEquiv') ? 'required' : ''"
                         (change)="setValoresStore(facturatorForm,'coloniaEquiv','setcoloniaEquiv')">
                         </div>
-                      <div class="col-md-4 mb-3">
-                       </div>
-                      <div class="col-md-4 ">
-                       </div>
-                    </div>
-                    
+                      </div>
                     <div class="row">
                       <div class="col-md-8">
                         <label class="form-label" for="calle">Calle*:</label>
@@ -169,18 +143,18 @@
                     
                       (change)="setValoresStore(facturatorForm,'numInterior','setnumInterior')">
                     </div>
-                    <div class="col-md-1 mb-3">
+                    <div class="col-md-1 ">
                       <label class="form-label" for="lada">Lada:</label>
                       <input type="text" class="form-control" id="lada" formControlName="lada"
                       (change)="setValoresStore(facturatorForm,'lada','setlada')">
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-3">
                       <label class="form-label" for="telefono">Teléfono:</label>
                       <input type="text" class="form-control" id="telefono" formControlName="telefono"
                       (change)="setValoresStore(facturatorForm,'telefono','settelefono')">
                      
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-4 ">
                       <label class="form-label" for="correoElectronico">Correo electrónico:</label>
                       <div class="input-group">
                         <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico"
