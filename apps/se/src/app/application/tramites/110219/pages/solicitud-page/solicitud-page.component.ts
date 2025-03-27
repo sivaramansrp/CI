@@ -1,8 +1,15 @@
-import { Component, ViewChild } from '@angular/core';
-import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import {
+  BtnContinuarComponent,
+  DatosPasos,
+  ListaPasosWizard,
+  PASOS,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -12,7 +19,7 @@ interface AccionBoton {
    * La acción que se realizará.
    */
   accion: string;
-  
+
   /**
    * El valor asociado a la acción.
    */
@@ -25,27 +32,34 @@ interface AccionBoton {
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
-  standalone:true,
-  imports:[
-    WizardComponent,BtnContinuarComponent,PasoUnoComponent,PasoDosComponent,PasoTresComponent
-  ]
+  standalone: true,
+  imports: [
+    WizardComponent,
+    BtnContinuarComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+    CommonModule,
+  ],
 })
-export class SolicitudPageComponent {
-  /**
-   * Lista de pasos del asistente.
-   */
-  pasos: ListaPasosWizard[] = PASOS;
-
-  /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
-
-  /**
+export class SolicitudPageComponent implements OnInit {
+/**
    * Referencia al componente del asistente.
    */
-  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+@ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+ /**
+   * Lista de pasos del asistente.
+   */
+ pasos: ListaPasosWizard[] = PASOS;
 
+ /**
+  * Índice del paso actual.
+  */
+ indice: number = 1;
+/**
+   * Número del paso actual.
+   */
+nombre!: number;
+ 
   /**
    * Datos de los pasos del asistente.
    */
@@ -55,7 +69,16 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
+/**
+   * Inicializa el componente.
+   * Filtra y mapea los pasos del asistente para excluir y reorganizar pasos específicos.
+   */
+  ngOnInit(): void {
+    this.pasos = this.pasos
+      .filter((step) => step.indice !== 2)
+      .map((step) => (step.indice === 3 ? { ...step, indice: 2 } : step));
+  }
+  
   /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
@@ -69,13 +92,23 @@ export class SolicitudPageComponent {
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
+    this.alEventoHijo(this.nombre);
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
+        this.nombre = 1;
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
     }
+  }
+/**
+   * Maneja el evento emitido por un componente hijo.
+   * 
+   * @param event Número del evento emitido.
+   */
+  alEventoHijo(event: number) {
+    this.nombre = event;
   }
 }
