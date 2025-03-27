@@ -56,3 +56,7 @@ export interface GrupoDeTransporte {
   nombreEmbarcacion: string;
   numeroVuelo: string;
 }
+export interface AccionBoton {
+  accion: string;
+  valor: number;
+}

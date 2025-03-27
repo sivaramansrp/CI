@@ -18,13 +18,16 @@ export interface Tramite110216State {
   grupoReceptor: GrupoReceptor;
   grupoDeDirecciones: GrupoDeDirecciones;
   grupoRepresentativo: GrupoRepresentativo
-  grupoDeTransporte: GrupoDeTransporte
-
+  grupoDeTransporte: GrupoDeTransporte,
+  pasoActivo: number,
+  pestanaActiva: number,
 }
 
 export function createInitialState(): Tramite110216State {
   return {
     observaciones: '',
+    pasoActivo: 1,
+    pestanaActiva: 1,
     idioma: null,
     entidadFederativa: null,
     representacionFederal: null,
@@ -78,7 +81,18 @@ export class Tramite110216Store extends Store<Tramite110216State> {
   constructor() {
     super(createInitialState());
   }
-
+  public setPasoActivo(pasoActivo: number): void {
+    this.update((state) => ({
+      ...state,
+      pasoActivo,
+    }));
+  }
+  public setPestanaActiva(pestanaActiva: number): void {
+    this.update((state) => ({
+      ...state,
+      pestanaActiva,
+    }));
+  }
   public setObservaciones(observaciones: string): void {
     this.update((state) => ({
       ...state,
