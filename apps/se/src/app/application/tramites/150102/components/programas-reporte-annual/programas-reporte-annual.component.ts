@@ -1,7 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { InputFecha } from '@libs/shared/data-access-user/src';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150102Query } from '../../estados/solicitud150102.query';
@@ -13,30 +18,54 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * @description Componente para gestionar el reporte anual de programas.
+ * Se encarga de mostrar, actualizar y administrar datos relacionados
+ * con los programas de reporte y sus configuraciones.
+ */
 @Component({
   selector: 'app-programas-reporte-annual',
   templateUrl: './programas-reporte-annual.component.html',
   styleUrl: './programas-reporte-annual.component.scss',
 })
 export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
+  /** Formulario reactivo para administrar los datos del reporte anual */
   formProgrmasReporte!: FormGroup;
-  configuracionFechaFinVigencia: InputFecha = {
-    labelNombre: 'Fin',
-    required: false,
-    habilitado: false,
+  /**
+   * @description Configuración del componente `BsDatepicker`.
+   * Permite establecer el formato de la fecha y restringir la selección a nivel de mes y año.
+   *
+   * @property {string} dateInputFormat - Define el formato de la fecha mostrada en el campo de entrada (MM/YYYY).
+   * @property {string} minMode - Establece el modo mínimo de selección en el selector (mes).
+   */
+  bsConfig: Partial<BsDatepickerConfig> = {
+    dateInputFormat: 'MM-YYYY', // Formato de entrada: mes-año
+    minMode: 'month', // Solo permite seleccionar mes y año
   };
-  configuracionFechaInicioVigencia: InputFecha = {
-    labelNombre: 'Inicio',
-    required: false,
-    habilitado: false,
-  };
+
+  /** Estado actual de la solicitud */
   solicitud150102State: Solicitud150102State = {} as Solicitud150102State;
+
+  /**
+   * @description Evento que se emite al seleccionar una fila de la tabla.
+   * Emite un valor booleano para indicar si la fila ha sido seleccionada.
+   * @type {EventEmitter<boolean>}
+   */
+  @Output() filaDeInformeSeleccionada = new EventEmitter<boolean>();
+
+  /** Subject para manejar la destrucción de observables */
   private destroyed$ = new Subject<void>();
+
+  /** Selección de tabla para los datos de solicitud (radio) */
   solicitudSeleccionTabla = TablaSeleccion.RADIO;
+
+  /** Datos de la solicitud en forma de arreglo de programas de reporte */
   solicitudDatos: ProgramasReporte[] = [];
+
+  /** Configuración de la tabla para mostrar los datos de solicitud */
   solicitudConfiguracionTabla: ConfiguracionColumna<ProgramasReporte>[] = [
     {
-      encabezado: 'Numero/Registro de programa',
+      encabezado: 'Número/Registro de programa',
       clave: (item: ProgramasReporte) => item.folioPrograma,
       orden: 1,
     },
@@ -56,6 +85,21 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       orden: 4,
     },
   ];
+
+  /**
+   * @description Subject para manejar la destrucción de observables.
+   * Se utiliza para finalizar las suscripciones activas y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @description Constructor que inicializa los servicios y estado necesarios.
+   * @param fb Servicio para crear formularios reactivos.
+   * @param solicitud150102Store Servicio para manejar el estado de la solicitud.
+   * @param solicitud150102Query Servicio para realizar consultas del estado.
+   * @param solicitudService Servicio para realizar solicitudes relacionadas.
+   */
   constructor(
     public fb: FormBuilder,
     public solicitud150102Store: Solicitud150102Store,
@@ -66,6 +110,10 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     this.obtenerProgramasReporte();
   }
 
+  /**
+   * @description Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y sincroniza los datos iniciales con el estado.
+   */
   ngOnInit(): void {
     this.formProgrmasReporte = this.fb.group({
       inicio: [{ value: this.solicitud150102State.inicio, disabled: true }],
@@ -100,32 +148,59 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * @description Método para obtener las fechas de inicio y fin del reporte.
+   * Actualiza el estado con las fechas obtenidas del servicio.
+   */
   obtenerReporteFechas(): void {
-    this.solicitudService.obtenerReporteFechas().subscribe({
-      next: (respuesta: ReporteFechas) => {
-        this.solicitud150102Store.actualizarInicio(respuesta.inicio);
-        this.solicitud150102Store.actualizarFin(respuesta.fin);
-      },
-    });
+    this.solicitudService
+      .obtenerReporteFechas()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: ReporteFechas) => {
+          this.solicitud150102Store.actualizarInicio(respuesta.inicio);
+          this.solicitud150102Store.actualizarFin(respuesta.fin);
+        },
+      });
   }
 
+  /**
+   * @description Método para obtener los datos de programas de reporte.
+   * Actualiza los datos con los resultados obtenidos del servicio.
+   */
   obtenerProgramasReporte(): void {
-    this.solicitudService.obtenerProgramasReporte().subscribe({
-      next: (respuesta: ProgramasReporte[]) => {
-        this.solicitudDatos = respuesta;
-      },
-    });
+    this.solicitudService
+      .obtenerProgramasReporte()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: ProgramasReporte[]) => {
+          this.solicitudDatos = respuesta;
+        },
+      });
   }
 
+  /**
+   * @description Actualiza los datos del programa seleccionado en el estado.
+   * @param evento Objeto que contiene los datos del programa seleccionado.
+   */
   actualizarProgramasReporte(evento: ProgramasReporte): void {
     this.solicitud150102Store.actualizarFolioPrograma(evento.folioPrograma);
     this.solicitud150102Store.actualizarModalidad(evento.modalidad);
     this.solicitud150102Store.actualizarTipoPrograma(evento.tipoPrograma);
     this.solicitud150102Store.actualizarEstatus(evento.estatus);
+    if (evento instanceof Object) {
+      this.filaDeInformeSeleccionada.emit(true);
+    }
   }
 
+  /**
+   * @description Método que se ejecuta al destruir el componente.
+   * Completa las suscripciones activas para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.destroyed$.next(); // Emite una señal para finalizar las suscripciones
+    this.destroyed$.complete(); // Completa el Subject
+    this.destroyNotifier$.next(); // Emite una señal para finalizar las suscripciones
+    this.destroyNotifier$.complete(); // Completa el Subject
   }
 }

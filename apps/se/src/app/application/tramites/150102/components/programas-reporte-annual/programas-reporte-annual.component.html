@@ -4,21 +4,31 @@
 
     <div class="row">
       <div class="col-md-4">
-        <div class="form-group">
-          <input-fecha
-            class="width"
-            [setFecha]="formProgrmasReporte.get('inicio')?.value"
-            [datos]="configuracionFechaInicioVigencia"
-          ></input-fecha>
+        <div class="form-group input-container">
+          <label class="form-label" for="ideGenerica1">Inicio:</label>
+          <input
+            type="text"
+            class="form-control input-date"
+            formControlName="inicio"
+            id="ideGenerica1"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+          />
+          <span class="bi icon bi-calendar2-fill"></span>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="form-group">
-          <input-fecha
-            class="width"
-            [setFecha]="formProgrmasReporte.get('fin')?.value"
-            [datos]="configuracionFechaFinVigencia"
-          ></input-fecha>
+        <div class="form-group input-container">
+          <label class="form-label" for="ideGenerica2">Fin:</label>
+          <input
+            type="text"
+            class="form-control input-date"
+            formControlName="fin"
+            id="ideGenerica2"
+            bsDatepicker
+            [bsConfig]="bsConfig"
+          />
+          <span class="bi icon bi-calendar2-fill"></span>
         </div>
       </div>
       <div class="col-md-4"></div>
@@ -41,6 +51,7 @@
           type="text"
           id="folioPrograma"
           class="form-control"
+          size="30"
           formControlName="folioPrograma"
         />
       </div>
@@ -51,6 +62,7 @@
         <input
           type="text"
           id="modalidad"
+          size="50"
           class="form-control"
           formControlName="modalidad"
         />
@@ -61,6 +73,7 @@
         <input
           type="text"
           id="tipoPrograma"
+          size="30"
           class="form-control"
           formControlName="tipoPrograma"
         />
@@ -70,6 +83,7 @@
         <input
           type="text"
           id="estatus"
+          size="50"
           class="form-control"
           formControlName="estatus"
         />

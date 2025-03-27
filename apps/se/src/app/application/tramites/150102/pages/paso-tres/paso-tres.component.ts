@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 
 /**
  * Componente PasoTresComponent.
- * 
+ *
  * Este componente maneja la lógica para el paso tres de un trámite específico.
- * 
+ *
  * @component
  * @selector app-paso-tres
  * @templateUrl ./paso-tres.component.html
@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 export class PasoTresComponent {
   /**
    * Constructor de la clase PasoTresComponent.
-   * 
+   *
    * @param router - Servicio de Angular Router para la navegación entre rutas.
    */
   constructor(public router: Router) {
@@ -35,8 +35,7 @@ export class PasoTresComponent {
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.router.navigate(['servicios-extraordinarios/acuse']);
+      this.router.navigateByUrl('pago/reporte-anual/acuse');
     }
   }
 }
-
