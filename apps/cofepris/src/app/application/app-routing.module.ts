@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-sanitario-importacion-medicamentos',
+    loadChildren: () =>
+      import(
+        './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
+  },
+  {
     path: 'permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260211/permiso-sanitario.module').then(
