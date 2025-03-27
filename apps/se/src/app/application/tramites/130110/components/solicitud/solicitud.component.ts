@@ -183,27 +183,39 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * @description Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
-  ngOnInit(): void {
+ ngOnInit(): void {
+    // Inicializar formularios
     this.inicializarFormularios();
+    // Configurar suscripciones de formularios
     this.configuracionFormularioSuscripciones();
+    // Obtener opciones de búsqueda
     this.opcionesDeBusqueda();
+    // Contar el total del formulario
     this.formularioTotalCount();
+    // Obtener establecimiento
     this.getEstablecimiento();
+    // Calcular totales
     this.calcularTotales();
+    // Obtener entidad federativa
     this.fetchEntidadFederativa();
+    // Obtener representación federal
     this.fetchRepresentacionFederal();
+    // Listar países disponibles
     this.listaDePaisesDisponibles();
- 
+
+    // Suscribirse a cambios en mostrarTabla
     this.tramite130110Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
       });
- 
+
+    // Suscribirse a cambios en la solicitud seleccionada
     this.tramite130110Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
+          // Actualizar el formulario de partidas de la mercancía con los valores de la sección
           this.partidasDelaMercanciaForm.patchValue({
             cantidadPartidasDeLaMercancia:
               seccionState.cantidadPartidasDeLaMercancia,
@@ -264,7 +276,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
           Validators.maxLength(18),
         ],
       ],
@@ -277,7 +289,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
           Validators.maxLength(20),
         ],
       ],
@@ -298,29 +310,35 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Configura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
+    // Suscribirse a cambios en solicitud
     this.tramite130110Query.solicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((solicitud) => {
+        // Actualizar el formulario con el valor de solicitud
         this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
       });
- 
+
+    // Suscribirse a cambios en régimen
     this.tramite130110Query.regimen$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((regimen) => {
+        // Actualizar el formulario con el valor de régimen
         this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
       });
- 
+
+    // Suscribirse a cambios en clasificación
     this.tramite130110Query.clasificacion$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((clasificacion) => {
-        this.formDelTramite.patchValue(
-          { clasificacion },
-          { emitEvent: false }
-        );
+        // Actualizar el formulario con el valor de clasificación
+        this.formDelTramite.patchValue({ clasificacion }, { emitEvent: false });
       });
+
+    // Suscribirse a cambios en el estado de la mercancía
     this.tramite130110Query.mercanciaState$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
+        // Actualizar el formulario de mercancía con los valores del estado
         this.mercanciaForm.patchValue(
           {
             producto: state.producto,
@@ -335,25 +353,30 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           { emitEvent: false }
         );
       });
- 
+
+    // Suscribirse a cambios en la solicitud seleccionada
     this.tramite130110Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
+          // Actualizar el formulario de país con los valores de la sección
           this.paisForm.patchValue({
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
             justificacionImportacionExportacion:
-            seccionState.justificacionImportacionExportacion,
+              seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
         })
       )
       .subscribe();
+
+    // Suscribirse a cambios en la solicitud seleccionada para representación
     this.tramite130110Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
+          // Actualizar el formulario de representación con los valores de la sección
           this.frmRepresentacionForm.patchValue({
             entidad: seccionState.entidad,
             representacion: seccionState.representacion,
@@ -361,21 +384,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
- 
+
+    // Suscribirse a cambios en el formulario del trámite
     this.formDelTramite.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe((value) => {
+        // Actualizar el estado del store con los valores del formulario
         this.tramite130110Store.updateState({
           solicitud: value.solicitud,
           regimen: value.regimen,
           clasificacion: value.clasificacion,
         });
       });
- 
 
+    // Suscribirse a cambios en el formulario de mercancía
     this.mercanciaForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe((value) => {
+        // Actualizar el estado del store con los valores del formulario de mercancía
         this.tramite130110Store.updateState({
           producto: value.producto,
           descripcion: value.descripcion,
@@ -438,11 +464,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @description Solicita opciones configurables para los formularios desde archivos JSON.
    */
   opcionesDeBusqueda(): void {
+    // Obtener opciones de solicitud
     this.importacionNeumaticosComercializarService
       .getSolicitudeOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
+          // Asignar opciones de solicitud y actualizar el estado
           this.opcionesSolicitud = data.options;
           this.tramite130110Store.updateState({
             solicitud: data.options[0]?.value || '',
@@ -450,14 +478,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           });
         },
         error: (error) =>
-          console.error('Error loading solicitude options:', error),
+          console.error('Error al cargar las opciones de solicitud:', error),
       });
- 
+
+    // Obtener opciones de producto
     this.importacionNeumaticosComercializarService
       .getProductoOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
+          // Asignar opciones de producto y actualizar el estado
           this.productoOpciones = data.options;
           this.tramite130110Store.updateState({
             producto: data.options[0]?.value || 'Nuevo',
@@ -466,6 +496,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         },
       });
   }
+
   /**
    * manejarlaFilaSeleccionada
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
@@ -564,7 +595,10 @@ enCambioDeBloque(bloqueId: number): void {
     campo: string;
     metodoNombre: string;
   }): void {
+    // Obtener el valor del campo del formulario
     const VALOR = event.form.get(event.campo)?.value;
+    
+    // Ejecutar el método correspondiente basado en metodoNombre
     switch (event.metodoNombre) {
       case 'updateSolicitud':
         this.tramite130110Store.updateSolicitud(VALOR);
@@ -584,7 +618,6 @@ enCambioDeBloque(bloqueId: number): void {
       case 'setclasificacion':
         this.tramite130110Store.setclasificacion(VALOR);
         break;
-
       case 'setProducto':
         this.tramite130110Store.setProducto(VALOR);
         break;
@@ -600,7 +633,7 @@ enCambioDeBloque(bloqueId: number): void {
       case 'setUnidadMedida':
         this.tramite130110Store.setUnidadMedida(VALOR);
         break;
-        case 'setBloque':
+      case 'setBloque':
         this.tramite130110Store.setBloque(VALOR);
         break;
       case 'setUsoEspecifico':
