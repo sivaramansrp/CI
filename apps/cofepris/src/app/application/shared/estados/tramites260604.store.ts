@@ -47,42 +47,42 @@ export function createInitialState(): solicitud260604State {
       super(createInitialState());
     }
 
-    public setnombre(nombre: string) {
+    public setnombre(nombre: string): void {
         this.update((state) => ({
           ...state,
           nombre,
         }));
       }
 
-      public setapellidoPrimer(apellidoPrimer: string) {
+      public setapellidoPrimer(apellidoPrimer: string): void {
         this.update((state) => ({
           ...state,
           apellidoPrimer,
         }));
       }
 
-      public setapellidoSegundo(apellidoSegundo: string) {
+      public setapellidoSegundo(apellidoSegundo: string): void {
         this.update((state) => ({
           ...state,
           apellidoSegundo,
         }));
       }
 
-      public setdenominacionRazonSocial(denominacionRazonSocial: string) {
+      public setdenominacionRazonSocial(denominacionRazonSocial: string): void {
         this.update((state) => ({
           ...state,
           denominacionRazonSocial,
         }));
       }
 
-      public setestadoLocalidad(estadoLocalidad: string) {
+      public setestadoLocalidad(estadoLocalidad: string): void {
         this.update((state) => ({
           ...state,
           estadoLocalidad,
         }));
       }
 
-      public setcodPostal1(codPostal1: string) {
+      public setcodPostal1(codPostal1: string): void {
         this.update((state) => ({
           ...state,
           codPostal1,
@@ -90,49 +90,49 @@ export function createInitialState(): solicitud260604State {
 
       }
 
-      public setcoloniaEquiv(coloniaEquiv: string) {
+      public setcoloniaEquiv(coloniaEquiv: string): void {
         this.update((state) => ({
           ...state,
           coloniaEquiv,
         }));
       }
 
-      public setcalle(calle: string) {
+      public setcalle(calle: string): void {
         this.update((state) => ({
           ...state,
           calle,
         }));
 }
 
-public setnumExterior(numExterior: string) {
+public setnumExterior(numExterior: string): void {
     this.update((state) => ({
       ...state,
       numExterior,
     }));
 }
 
-public setnumInterior(numInterior: string) {
+public setnumInterior(numInterior: string): void {
     this.update((state) => ({
       ...state,
       numInterior,
     }));
 }
 
-public setlada(lada: string) {
+public setlada(lada: string): void {
     this.update((state) => ({
       ...state,
       lada,
     }));
 }
 
-public settelefono(telefono: string) {
+public settelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
       telefono,
     }));
 }
 
-public setcorreoElectronico(correoElectronico: string) {
+public setcorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,

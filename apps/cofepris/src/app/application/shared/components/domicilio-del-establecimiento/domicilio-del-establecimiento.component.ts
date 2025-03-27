@@ -1,30 +1,30 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable sort-imports */
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { DatosService } from '../../../shared/services/datos.service';
-import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ScianData } from '../../../shared/models/datos-modificacion.model';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
-import { PreOperativo } from '../../../shared/models/datos-modificacion.model';
-import { DATOS_PRODUCTO } from '../../constantes/datos-scian.enum';
-import { DatosProducto } from '../../../shared/models/datos-modificacion.model';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src';
-import { CROSLISTA_DE_PAISES } from '../../constantes/datos-producto.enum';
-import { CrossListLable } from '@libs/shared/data-access-user/src';
-import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/tramites260603.store';
 
+import { Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { CrossListLable } from '@libs/shared/data-access-user/src';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+
+import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { CROSLISTA_DE_PAISES } from '../../constantes/datos-producto.enum';
+import { DATOS_PRODUCTO } from '../../constantes/datos-scian.enum';
+import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+
+import { DatosProducto } from '../../../shared/models/datos-modificacion.model';
+import { PreOperativo } from '../../../shared/models/datos-modificacion.model';
+import { ScianData } from '../../../shared/models/datos-modificacion.model';
+
+import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/tramites260603.store';
 import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { DatosService } from '../../../shared/services/datos.service';
 
 @Component({
   selector: 'app-domicilio-del-establecimiento',
@@ -76,7 +76,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   configuracionTablaProductoDatos: ConfiguracionColumna<DatosProducto>[] = DATOS_PRODUCTO.map(col => ({
     ...col,
-    clave: (item: DatosProducto) => {
+    clave: (item: DatosProducto): string | number | undefined => {
       const VALUE = col.clave(item);
       return VALUE instanceof Date ? VALUE.toISOString() : VALUE;
     }
@@ -169,13 +169,13 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   toggleNoLicenciaSanitaria(event: any): void {
-    const noLicenciaSanitaria = this.domicilioForm.get('noLicenciaSanitaria');
+    const NO_LICENCIA_SANITARIA = this.domicilioForm.get('noLicenciaSanitaria');
 
     if (event.target.checked) {
-      noLicenciaSanitaria?.disable();
+      NO_LICENCIA_SANITARIA?.disable();
     }
     else{
-      noLicenciaSanitaria?.enable();
+      NO_LICENCIA_SANITARIA?.enable();
     }
   }
   cargarEstadoData(): void {
@@ -239,11 +239,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
-  public mostrarModeloClave() {
+  public mostrarModeloClave(): void {
     this.modal = 'show'; // Muestra el modal
   }
 
-  public datosDelProducto() {
+  public datosDelProducto(): void {
     this.modal = 'show'; 
   }
 

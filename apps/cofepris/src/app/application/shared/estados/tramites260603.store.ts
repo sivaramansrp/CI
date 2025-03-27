@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -91,246 +90,246 @@ export class Tramite260603Store extends Store<Solicitud260603State> {
   }
 
 
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
       denominacion,
     }));
   }
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
 
-  public setCodigoPostal(codigoPostal: string) {
+  public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
       codigoPostal
     }));
   }
 
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
-  public setMunicipio(municipio: string) {
+  public setMunicipio(municipio: string): void {
     this.update((state) => ({
       ...state,
       municipio,
     }));
   }
-  public setLocalidad(localidad: string) {
+  public setLocalidad(localidad: string): void {
     this.update((state) => ({
       ...state,
       localidad,
     }));
   }
-  public setColonia(colonia: string) {
+  public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
       colonia,
     }));
   }
 
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
     }));
   }
 
-  public setLada(lada: string) {
+  public setLada(lada: string): void {
     this.update((state) => ({
       ...state,
       lada,
     }));
   }
 
-  public setTelefono(telefono: string) {
+  public setTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
       telefono,
     }));
   }
 
-  public setScian(scian: string) {
+  public setScian(scian: string): void {
     this.update((state) => ({
       ...state,
       scian,
     }));
   }
 
-  public setAviso(aviso: string) {
+  public setAviso(aviso: string): void {
     this.update((state) => ({
       ...state,
       aviso,
     }));
   }
 
-  public setNoLicenciaSanitaria(noLicenciaSanitaria: string) {
+  public setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
     this.update((state) => ({
       ...state,
       noLicenciaSanitaria,
     }));
   }
 
-  public setRegimenDestinado(regimenDestinado: string) {
+  public setRegimenDestinado(regimenDestinado: string): void {
     this.update((state) => ({
       ...state,
       regimenDestinado,
     }));
   }
 
-  public setAduana(aduana: string) {
+  public setAduana(aduana: string): void {
     this.update((state) => ({
       ...state,
       aduana,
     }));
   }
 
-  public setDatosProducto(datosProducto: string) {
+  public setDatosProducto(datosProducto: string): void {
     this.update((state) => ({
       ...state,
       datosProducto,
     }));
   }
 
-  public setAutorizacionIVAIEPS(autorizacionIVAIEPS: string) {
+  public setAutorizacionIVAIEPS(autorizacionIVAIEPS: string): void {
     this.update((state) => ({
       ...state,
       autorizacionIVAIEPS,
     }));
   }
 
-  public setClaveScian(claveScian: string) {
+  public setClaveScian(claveScian: string): void {
     this.update((state) => ({
       ...state,
       claveScian,
     }));
   }
 
-  public setDescripcionScian(descripcionScian: string) {
+  public setDescripcionScian(descripcionScian: string): void {
     this.update((state) => ({
       ...state,
       descripcionScian,
     }));
   }
-  public setClasificacionProducto(clasificacionProducto: string) {
+  public setClasificacionProducto(clasificacionProducto: string): void {
     this.update((state) => ({
       ...state,
       clasificacionProducto,
     }));
   }
 
-  public setEspecificarClasificacion(especificarClasificacion: string) {
+  public setEspecificarClasificacion(especificarClasificacion: string): void {
     this.update((state) => ({
       ...state,
       especificarClasificacion,
     }));
   }
 
-  public setMarcaComercial(marcaComercial: string) {
+  public setMarcaComercial(marcaComercial: string): void {
     this.update((state) => ({
       ...state,
       marcaComercial,
     }));
   }
 
-  public setDenominacionGenerica(denominacionGenerica: string) {
+  public setDenominacionGenerica(denominacionGenerica: string): void {
     this.update((state) => ({
       ...state,
       denominacionGenerica,
     }));
   }
 
-  public setTipoProducto(tipoProducto: string) {
+  public setTipoProducto(tipoProducto: string): void {
     this.update((state) => ({
       ...state,
       tipoProducto,
     }));
   }
 
-  public setEstadoFisico(estadoFisico: string) {
+  public setEstadoFisico(estadoFisico: string): void {
     this.update((state) => ({
       ...state,
       estadoFisico,
     }));
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria,
     }));
   }
 
-  public setDescripcionFraccionArancelaria(descripcionFraccionArancelaria: string) {
+  public setDescripcionFraccionArancelaria(descripcionFraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       descripcionFraccionArancelaria,
     }));
   }
 
-  public setCantidadUMC(cantidadUMC: string) {
+  public setCantidadUMC(cantidadUMC: string): void {
     this.update((state) => ({
       ...state,
       cantidadUMC,
     }));
   }
 
-  public setUmc(umc: string) {
+  public setUmc(umc: string): void {
     this.update((state) => ({
       ...state,
       umc,
     }));
   }
 
-  public setPorcentajeConcentracion(porcentajeConcentracion: string) {
+  public setPorcentajeConcentracion(porcentajeConcentracion: string): void {
     this.update((state) => ({
       ...state,
       porcentajeConcentracion,
     }));
   }
 
-  public setValorComercial(valorComercial: string) {
+  public setValorComercial(valorComercial: string): void {
     this.update((state) => ({
       ...state,
       valorComercial,
     }));
   }
 
-  public setFechaMovimiento(fechaMovimiento: string) {
+  public setFechaMovimiento(fechaMovimiento: string): void {
     this.update((state) => ({
       ...state,
       fechaMovimiento,
     }));
   }
 
-  public setPresentacionFarmaceutica(presentacionFarmaceutica: string) {
+  public setPresentacionFarmaceutica(presentacionFarmaceutica: string): void {
     this.update((state) => ({
       ...state,
       presentacionFarmaceutica,
     }));
   }
 
-  public setPaisDestino(paisDestino: string) {
+  public setPaisDestino(paisDestino: string): void {
     this.update((state) => ({
       ...state,
       paisDestino,
     }));
   }
 
-  public setPaisProcedencia(paisProcedencia: string) {
+  public setPaisProcedencia(paisProcedencia: string): void {
     this.update((state) => ({
       ...state,
       paisProcedencia,
     }));
   }
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({
       ...state,
       rfc,
@@ -339,7 +338,7 @@ export class Tramite260603Store extends Store<Solicitud260603State> {
   /**
 * Limpia los datos de la solicitud
 */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

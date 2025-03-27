@@ -5,7 +5,6 @@ import { AvisoDeImportacionRoutingModule } from './aviso-de-importacion-routing.
 import {
   BtnContinuarComponent,
   InicioSesionService,
-  ServiciosPantallasService,
   SubirDocumentoService,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';

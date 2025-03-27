@@ -1,11 +1,13 @@
-/* eslint-disable sort-imports */
 import { Component,OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/tramites260603.store';
 import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+
 import { Subject, map, takeUntil } from 'rxjs';
 
 @Component({

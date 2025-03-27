@@ -12,7 +12,7 @@ import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/2606
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ExportacionService } from '../../services/exportacion.service';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 import { Tramites260604Store, solicitud260604State } from '../../../shared/estados/tramites260604.store';
@@ -41,7 +41,9 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
   private service: ExportacionService,
   private tramites260604Store: Tramites260604Store,
-  private tramites260604Query: Tramites260604Query,){}
+  private tramites260604Query: Tramites260604Query,){
+    //constructor
+  }
 
   @ViewChild('closeModal') closeModal!: ElementRef;
 
@@ -94,7 +96,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
       });
   }
 
-  abrirModalfacurator(){
+  abrirModalfacurator(): void {
     this.modal = 'show';
   this.getFacturator()
   }
@@ -143,7 +145,7 @@ this.facturatorForm.get('tipoPersona')?.valueChanges.subscribe((value) => {
 });
 }
 
-isValid(form: FormGroup, field: string): boolean {
+static isValid(form: FormGroup, field: string): boolean {
     return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
   }
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramites260604Store): void {
