@@ -5,8 +5,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
+import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { solicitud260604State } from './tramites260604.store';
+import { solicitud260604State } from '../../estados/stores/tramites260604.store';
 
-import { Tramites260604Store } from './tramites260604.store'
+import { Tramites260604Store } from '../../estados/stores/tramites260604.store'
 
 @Injectable({ providedIn: 'root' })
 export class Tramites260604Query extends Query<solicitud260604State> {

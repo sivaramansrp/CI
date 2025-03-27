@@ -2,8 +2,8 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DatosDelEstablecimientoComponent } from './datos-del-establecimiento.component';
-import { Tramite260603Store } from '../../../shared/estados/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+import { Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
+import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
 
 describe('DatosDelEstablecimientoComponent', () => {
   let component: DatosDelEstablecimientoComponent;

@@ -1,8 +1,6 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { CommonModule } from '@angular/common';
 
-import { Component, ElementRef, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,9 +8,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/tramites260603.store';
 
-import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
+
+import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -67,7 +66,7 @@ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite26060
 /**
    * Método que abre el modal y carga el formulario con los datos predefinidos del representante.
    */
-public abrirModal() {
+public abrirModal(): void {
   this.modal = 'show'; // Muestra el modal
 }
 

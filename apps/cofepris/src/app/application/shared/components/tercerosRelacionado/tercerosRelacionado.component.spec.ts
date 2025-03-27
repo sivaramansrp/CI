@@ -3,8 +3,8 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosRelacionadoComponent } from './tercerosRelacionado.component';
 import { ExportacionService } from '../../services/exportacion.service';
-import { Tramites260604Store } from '../../../shared/estados/tramites260604.store';
-import { Tramites260604Query } from '../../../shared/estados/tramites260604.query';
+import { Tramites260604Store } from '../../../shared/estados/stores/tramites260604.store';
+import { Tramites260604Query } from '../../../shared/estados/queries/tramites260604.query';
 import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
 
 describe('TercerosRelacionadoComponent', () => {

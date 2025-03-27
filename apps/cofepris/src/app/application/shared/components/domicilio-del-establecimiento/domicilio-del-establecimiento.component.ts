@@ -21,8 +21,8 @@ import { DatosProducto } from '../../../shared/models/datos-modificacion.model';
 import { PreOperativo } from '../../../shared/models/datos-modificacion.model';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
-import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
+import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
 
 import { DatosService } from '../../../shared/services/datos.service';
 
@@ -178,7 +178,6 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Referencia al elemento de cierre del modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
-
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
@@ -191,7 +190,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     private datosService: DatosService,
     private tramite260603Store: Tramite260603Store,
     private tramite260603Query: Tramite260603Query
-  ) {}
+  ) {
+    // Constructor
+  }
 
   /**
    * Método del ciclo de vida de Angular que inicializa el componente.

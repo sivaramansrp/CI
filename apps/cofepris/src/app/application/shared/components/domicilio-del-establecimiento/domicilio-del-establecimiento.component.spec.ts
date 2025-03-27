@@ -3,8 +3,8 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DomicilioDelEstablecimientoComponent } from './domicilio-del-establecimiento.component';
 import { DatosService } from '../../../shared/services/datos.service';
-import { Tramite260603Store } from '../../../shared/estados/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/tramites260603.query';
+import { Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
+import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
 import { PreOperativo, ScianData } from '../../models/datos-modificacion.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 

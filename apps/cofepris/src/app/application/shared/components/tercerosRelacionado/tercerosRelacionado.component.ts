@@ -15,9 +15,9 @@ import { ExportacionService } from '../../services/exportacion.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-import { Tramites260604Store, solicitud260604State } from '../../../shared/estados/tramites260604.store';
+import { Tramites260604Store, solicitud260604State } from '../../../shared/estados/stores/tramites260604.store';
 
-import { Tramites260604Query } from '../../../shared/estados/tramites260604.query'
+import { Tramites260604Query } from '../../../shared/estados/queries/tramites260604.query';
 
 @Component({
   selector: 'app-terceros-relacionado',
@@ -27,8 +27,9 @@ import { Tramites260604Query } from '../../../shared/estados/tramites260604.quer
   styleUrl: './tercerosRelacionado.component.css',
 })
 export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
+ 
   private destroyNotifier$: Subject<void> = new Subject();
-    public solicitudState!: solicitud260604State;
+  public solicitudState!: solicitud260604State;
   facturatorForm!:FormGroup;
   private destroyed$ = new Subject<void>();
   public TEXTOS = MENSAJEDEALERTA;
