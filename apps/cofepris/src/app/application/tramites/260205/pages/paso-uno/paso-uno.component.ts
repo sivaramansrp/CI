@@ -44,11 +44,20 @@ export class PasoUnoComponent implements OnDestroy {
         }
       });
   }
+
+  /**
+   * Limpia los recursos observables al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Establece el índice seleccionado en el store.
+   *
+   * @param i - El índice a seleccionar.
+   */
   seleccionaTab(i: number): void {
     this.store.setIndice(i);
   }
