@@ -88,6 +88,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   ) {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
+      denominacionRazon: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
@@ -165,6 +173,24 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.proveedores.push(NUEVO_PROVEEDOR);
     this.tramiteStore.updateProveedorTablaDatos(this.proveedores);
     this.agregarProveedorForm.reset();
+    this.ubicaccion.back();
+  }
+/**
+ * @method limpiarFormulario
+ * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  limpiarFormulario(): void {
+    this.agregarProveedorForm.reset();
+  }
+/**
+ * @method cancelar
+ * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  cancelar():void{
     this.ubicaccion.back();
   }
 }

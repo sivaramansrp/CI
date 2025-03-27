@@ -244,4 +244,22 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+   /**
+ * @method limpiarFormulario
+ * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+   limpiarFormulario(): void {
+    this.agregarFabricanteForm.reset();
+  }
+/**
+ * @method cancelar
+ * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  cancelar():void{
+    this.ubicaccion.back();
+  }
 }
