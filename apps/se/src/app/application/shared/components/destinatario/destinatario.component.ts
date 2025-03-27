@@ -94,12 +94,12 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     private fb: FormBuilder) {
     this.formDestinatario = this.fb.group({
       paisDestin: ['', [Validators.required, Validators.min(0)]],
-      ciudad: ['', [Validators.required]],
+      ciudad: [''],
       celle: ['', [Validators.required]],
       numeroLetra: ['', [Validators.required]],
-      lada: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
-      fax: ['', [Validators.required]],
+      lada: [''],
+      telefono: [''],
+      fax: [''],
       correoElectronico: ['', [Validators.required]],
     });
 
