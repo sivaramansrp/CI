@@ -1,14 +1,16 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import data from '../../../../../../../../libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+// multiple - Import multiple members.
+import { Component, OnInit } from '@angular/core';
+import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
+// multiple - Import multiple members.
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
-import { map, Subject, takeUntil } from 'rxjs';
+import { FuncionarioService } from '@libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
+// multiple - Import multiple members.
+import { Subject, map, takeUntil } from 'rxjs';
+// multiple - Import multiple members.
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
-import { FuncionarioService } from '../../../../../../../../libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
-
+import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
 @Component({
   selector: 'app-capturar-requerimiento',
   standalone: true,
@@ -16,11 +18,12 @@ import { FuncionarioService } from '../../../../../../../../libs/shared/data-acc
   templateUrl: './capturar-requerimiento.component.html',
   styleUrl: './capturar-requerimiento.component.scss',
 })
-export class CapturarRequerimientoComponent {
+export class CapturarRequerimientoComponent implements OnInit {
   /**
    * Declaración de variable para el formulario
    */
   formRequerimiento!: FormGroup;
+  valor!: string;
   /**
     * Catálogo de tipo de requerimiento
     */
@@ -29,19 +32,22 @@ export class CapturarRequerimientoComponent {
    * Notificador para destruir las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
- /**
-   * Estado de la solicitud.
-   */
+  tipoRequerimiento!: string;
+  /**
+    * Estado de la solicitud.
+    */
   public solicitudRequerimientosState!: SolicitudRequerimientosState;
   constructor(
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
     private estadoService: FuncionarioService,
-  ) {  }
-   /**
-   * Método que se ejecuta al inicializar el componente.
-   */
+  ) {
+    // do nothing.
+  }
+  /**
+  * Método que se ejecuta al inicializar el componente.
+  */
   ngOnInit(): void {
     this.catTipoRequerimiento = data;
     this.solicitudRequerimientoQuery.selectSolicitud$
@@ -52,11 +58,11 @@ export class CapturarRequerimientoComponent {
         })
       )
       .subscribe();
-      this.crearFormRequerimiento();
+    this.crearFormRequerimiento();
   }
-/**
-   * Método para crear el formulario de la captura de requerimiento
-   */
+  /**
+     * Método para crear el formulario de la captura de requerimiento
+     */
   crearFormRequerimiento(): void {
     this.formRequerimiento = this.fb.group({
       tipoRequerimiento: [this.solicitudRequerimientosState?.idTipoRequerimiento, [Validators.required]],
@@ -72,8 +78,8 @@ export class CapturarRequerimientoComponent {
    */
   tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates) {
     this.setValoresStore(form, campo, metodoNombre);
-    const tipoRequerimientoId = this.formRequerimiento.get('tipoRequerimiento')?.value;
-    switch (tipoRequerimientoId) {
+    this.tipoRequerimiento = this.formRequerimiento.get('tipoRequerimiento')?.value;
+    switch (this.tipoRequerimiento) {
       case "1":
         this.estadoService.setTabIndex(true);
         break;
@@ -96,7 +102,7 @@ export class CapturarRequerimientoComponent {
     * @returns {void}
     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates): void {
-    const valor = form.get(campo)?.value;
-    (this.requerimientosStates[metodoNombre] as (value: any) => void)(valor);
+    this.valor = form.get(campo)?.value;
+    (this.requerimientosStates[metodoNombre] as (value: string) => void)(this.valor);
   }
 }

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+// multiple - Import multiple members.
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -12,7 +13,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 export class GenerarDictamenComponent {
   
 constructor(private fb: FormBuilder
-) {}
+) {
+    // do nothing.
+}
 
   formDictamen: FormGroup = this.fb.group({
   sentidoDictamen: ['', [Validators.required]],

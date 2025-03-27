@@ -1,9 +1,9 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
-import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FuncionarioService } from '@libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 import { Router } from '@angular/router';
+import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 
 @Component({
   selector: 'app-requerimiento-informacion',
@@ -25,7 +25,9 @@ export class RequerimientoInformacionComponent {
     private router: Router,
     private estadoService: FuncionarioService,
   ) {
-    this.estadoService.tabIndex$.subscribe(valor => this.documentacion = valor);
+    this.estadoService.tabIndex$.subscribe(valor => {
+      this.documentacion = valor;
+    });
   }
   /**
     * Método para seleccionar la pestaña

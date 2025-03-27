@@ -1,11 +1,12 @@
-import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.component';
-import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
-import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
-import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
-import { EncabezadoRequerimientoComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+// multiple - Import multiple members.
+import { EncabezadoRequerimientoComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
+import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.component';
+import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
+import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 
 @Component({
   selector: 'app-solicitud-page',
@@ -25,13 +26,15 @@ export class SolicitudPageComponent {
   public firmarFuncionario: boolean = true;
   constructor(
     private router: Router
-  ) {}
+  ) {
+      // do nothing.
+  }
   /**
    * Método para seleccionar la pestaña
    * @param i indica el número de la pestaña seleccionada
    */
   seleccionaTab(i: number): void {
-    if (i == 2) {
+    if (i === 2) {
       this.firmarFuncionario = false;
     }
     this.indice = i;

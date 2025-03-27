@@ -1,6 +1,6 @@
-import { state } from "@angular/animations";
 import { Injectable } from "@angular/core";
-import { Store, StoreConfig } from '@datorama/akita'
+// multiple - Import multiple members.
+import { Store, StoreConfig } from '@datorama/akita';
 
 export interface SolicitudRequerimientosState {
     idTipoRequerimiento: number ;

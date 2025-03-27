@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+// multiple - Import multiple members.
 import { DocumentosStates, SolicitudDocumentosState } from '../evaluacion-solicitud/documentos.store';
 
 @Injectable({ providedIn: 'root' })
