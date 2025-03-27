@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-imports */
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'registrarIPM',
     component: TodospasosComponent
@@ -12,7 +10,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class CertificadosLicenciasPermisosRoutingModule { }
