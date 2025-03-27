@@ -95,7 +95,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Fechas seleccionadas para país de procedencia.
    */
-  seleccionarPaisProcedencis: string[] = [];
+  seleccionarPaisProcedencia: string[] = [];
 
   /**
    * Fechas seleccionadas para país de origen.
@@ -319,7 +319,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
           this.paisProcedencisCrosslistDatos = respuesta.paisProcedencisCrossList;
           this.usoEspecificoCrosslistDatos = respuesta.usoEspecificoCrossList;
           this.seleccionarUsoEspecifico = respuesta.usoEspecificoCrossList.fechas;
-          this.seleccionarPaisProcedencis = respuesta.paisProcedencisCrossList.fechas;
+          this.seleccionarPaisProcedencia = respuesta.paisProcedencisCrossList.fechas;
           this.seleccionarPaisOrigen = respuesta.paisOrigenCrossList.fechas;
         }
       });
