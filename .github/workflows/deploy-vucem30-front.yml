@@ -384,53 +384,53 @@ jobs:
             fi
             
             # Generate module federation manifest
-            cat > module-federation.manifest.json << 'EOF'
-  {
-    "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
-    "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga",
-    "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
-    "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
-    "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
-    "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
-    "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
-    "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
-    "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
-    "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
-  }
-  EOF
-  
-  # Replace placeholders with actual values for all parameters
-  sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-  sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
-  sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-  
-  # Set replica counts based on environment
-  if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-  sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-  sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-  sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
-  else
-  sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-  sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-  sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
-  fi
-  
-  # Create ConfigMap for Module Federation Manifest
-  microk8s kubectl create configmap module-federation-manifest \
-  --from-file=module-federation.manifest.json \
-  -n vucem-${{ needs.setup.outputs.environment }} \
-  --dry-run=client -o yaml | microk8s kubectl apply -f -
-  
-  # Validate YAML syntax (optional but recommended)
-  if command -v yamllint &> /dev/null; then
-  yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
-  fi
-  
-  # Apply Kubernetes manifest
-  microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
-  
-  # Restart the deployment to pull the latest images
-  microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
-  
-  # Wait for rollout to complete
-  microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
+            cat > module-federation.manifest.json << EOF
+            {
+              "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
+              "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga",
+              "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
+              "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
+              "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
+              "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
+              "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
+              "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
+              "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
+              "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
+            }
+            EOF
+            
+            # Replace placeholders with actual values for all parameters
+            sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+            sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
+            sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+            
+            # Set replica counts based on environment
+            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+              sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
+            else
+              sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
+            fi
+            
+            # Create ConfigMap for Module Federation Manifest
+            microk8s kubectl create configmap module-federation-manifest \
+              --from-file=module-federation.manifest.json \
+              -n vucem-${{ needs.setup.outputs.environment }} \
+              --dry-run=client -o yaml | microk8s kubectl apply -f -
+            
+            # Validate YAML syntax (optional but recommended)
+            if command -v yamllint &> /dev/null; then
+              yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
+            fi
+            
+            # Apply Kubernetes manifest
+            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
+            
+            # Restart the deployment to pull the latest images
+            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
+            
+            # Wait for rollout to complete
+            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
