@@ -145,7 +145,7 @@ export class FederatariosYPlantasComponent {
    * Navega a la ruta de acciones
    * @param accionesPath
    */
-  navigateToAcciones(accionesPath: string): void {
+  irAAcciones(accionesPath: string): void {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });

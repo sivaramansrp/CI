@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -17,20 +26,16 @@ describe('ProyectoImmexComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [FormsModule, ReactiveFormsModule],
 
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        FormBuilder,
-        Location
-      ]
-    }).overrideComponent(ProyectoImmexComponent, {
-
-    }).compileComponents();
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [FormBuilder, Location],
+    })
+      .overrideComponent(ProyectoImmexComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(ProyectoImmexComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -39,7 +44,7 @@ describe('ProyectoImmexComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.crearProyectoForm = jest.fn();
     component.ngOnInit();
-     expect(component.crearProyectoForm).toHaveBeenCalled();
+    expect(component.crearProyectoForm).toHaveBeenCalled();
   });
 
   it('should run #crearProyectoForm()', async () => {
@@ -50,65 +55,72 @@ describe('ProyectoImmexComponent', () => {
     component.proyectoImmexDatos.fechaDeFirma = 'fechaDeFirma';
     component.proyectoImmexDatos.fechaDeVigencia = 'fechaDeVigencia';
     component.crearProyectoForm();
-     expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #setProyectpLista()', async () => {
-    component.obtenerProyectoTablaDevolverLaLlamada = component.obtenerProyectoTablaDevolverLaLlamada || {};
+    component.obtenerProyectoTablaDevolverLaLlamada =
+      component.obtenerProyectoTablaDevolverLaLlamada || {};
     component.obtenerProyectoTablaDevolverLaLlamada.emit = jest.fn();
     component.setProyectpLista({});
-     expect(component.obtenerProyectoTablaDevolverLaLlamada.emit).toHaveBeenCalled();
+    expect(
+      component.obtenerProyectoTablaDevolverLaLlamada.emit
+    ).toHaveBeenCalled();
   });
 
   it('should run #aggregar()', async () => {
     component.seleccionList = component.seleccionList || {};
     component.seleccionList[0] = {
       estatus: {},
-      ENCABEZADO_FRACCION: {}
+      ENCABEZADO_FRACCION: {},
     };
     component.proyectoForm = component.proyectoForm || {};
     component.proyectoForm.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.proyectoForm.reset = jest.fn();
     component.proyectoImmexTablaLista = component.proyectoImmexTablaLista || {};
     component.proyectoImmexTablaLista.findIndex = jest.fn().mockReturnValue([
       {
-        "ENCABEZADO_RFC": {}
-      }
+        ENCABEZADO_RFC: {},
+      },
     ]);
     component.proyectoImmexTablaLista.splice = jest.fn();
     component.proyectoImmexTablaLista.push = jest.fn();
-    component.obtenerProyectoTablaDevolverLaLlamada = component.obtenerProyectoTablaDevolverLaLlamada || {};
+    component.obtenerProyectoTablaDevolverLaLlamada =
+      component.obtenerProyectoTablaDevolverLaLlamada || {};
     component.obtenerProyectoTablaDevolverLaLlamada.emit = jest.fn();
     component.aggregar();
-     expect(component.obtenerProyectoTablaDevolverLaLlamada.emit).toHaveBeenCalled();
+    expect(
+      component.obtenerProyectoTablaDevolverLaLlamada.emit
+    ).toHaveBeenCalled();
   });
 
   it('should run #limpar()', async () => {
     component.proyectoForm = component.proyectoForm || {};
     component.proyectoForm.reset = jest.fn();
     component.limpar();
-     expect(component.proyectoForm.reset).toHaveBeenCalled();
+    expect(component.proyectoForm.reset).toHaveBeenCalled();
   });
 
   it('should run #elimiar()', async () => {
     component.proyectoImmexTablaLista = component.proyectoImmexTablaLista || {};
     component.proyectoImmexTablaLista = ['proyectoImmexTablaLista'];
     component.elimiar();
-
   });
 
   it('should run #eidtar()', async () => {
-    component.proyectoImmexTablaLista = [{
-      ENCABEZADO_DESCRIPCION_OTRO: '',
-      ENCABEZADO_TIPO_DOCUMENT: '',
-      ENCABEZADO_FECHA_FIRMA: '',
-      ENCABEZADO_FECHA_VIGENCIA: '',
-      ENCABEZADO_RFC: '',
-      ENCABEZADO_RAZON_FIRMANTE: '',
-      estatus: true
-    }];
+    component.proyectoImmexTablaLista = [
+      {
+        ENCABEZADO_DESCRIPCION_OTRO: '',
+        ENCABEZADO_TIPO_DOCUMENT: '',
+        ENCABEZADO_FECHA_FIRMA: '',
+        ENCABEZADO_FECHA_VIGENCIA: '',
+        ENCABEZADO_RFC: '',
+        ENCABEZADO_RAZON_FIRMANTE: '',
+        estatus: true,
+      },
+    ];
     component.seleccionList = [];
     component.proyectoForm = component.proyectoForm || {};
     component.proyectoForm.patchValue = jest.fn();
@@ -120,7 +132,6 @@ describe('ProyectoImmexComponent', () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.regresar();
-     expect(component.ubicaccion.back).toHaveBeenCalled();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
   });
-
 });
