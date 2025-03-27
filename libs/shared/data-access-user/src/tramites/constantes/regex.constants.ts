@@ -133,3 +133,21 @@ export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
  * const soloNumeros = cadena.replace(REGEX_NUMEROS, ''); // Resultado: "123456"
  */
 export const REGEX_NUMEROS = /[^0-9]/g;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico.
+ * 
+ * Esta expresión regular permite letras mayúsculas y minúsculas (A-Z, a-z)
+ * y dígitos del 0 al 9. No permite espacios, caracteres especiales ni letras con acentos o diéresis.
+ * 
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "Codigo456"
+ * - "7890"
+ * 
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Código@123" (contiene un carácter especial)
+ * - "mañana" (contiene caracteres con tilde)
+ */
+export const REGEX_ALFANUMERICO = /^[a-zA-Z0-9]+$/;

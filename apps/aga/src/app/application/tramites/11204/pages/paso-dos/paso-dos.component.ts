@@ -1,5 +1,6 @@
 import { CATALOGOS_ID, TEXTOS, Catalogo, CatalogosService } from '@ng-mf/data-access-user';
 import { Component, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'paso-dos',
@@ -32,6 +33,11 @@ export class PasoDosComponent implements OnInit {
    */
   documentosSeleccionados: Catalogo[] = [];
 
+    /**
+     * Sujeto para notificar la destrucción del componente.
+     */
+    public destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos.
@@ -53,8 +59,7 @@ export class PasoDosComponent implements OnInit {
    */
   getTiposDocumentos(): void {
     this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
+      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroyNotifier$)).subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;

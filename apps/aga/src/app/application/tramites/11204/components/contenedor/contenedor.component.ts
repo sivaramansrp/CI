@@ -14,7 +14,7 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 
-import { TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, RespuestaCatalogos, REGEX_REEMPLAZAR, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { REGEX_ALFANUMERICO, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
 
 /**
@@ -130,13 +130,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Sujeto para notificar la destrucción del componente.
    */
   public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Monto de la solicitud.
-   */
-  amount: number = 328.5;
-
-  REGEX_NUMER = /[^0-9]/g;
 
   /**
    * Representa la fecha de inicio ingresada por el usuario.
@@ -277,9 +270,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       aduana: [this.solicitud11204State?.aduana, Validators.required],
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
       vigencia: [this.solicitud11204State?.vigencia, Validators.required],
-      inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern('^[a-zA-Z0-9]+$')]],
-      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
-      digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
+      inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_ALFANUMERICO)]],
+      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_ALFANUMERICO)]],
+      digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_NUMEROS)]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
       aduanaMenuDesplegable: [
         this.solicitud11204State.aduanaMenuDesplegable,
@@ -292,7 +285,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('inicialesContenedor')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(REGEX_REEMPLAZAR).toUpperCase();
+          const SANITIZED = valor.replace(REGEX_ALFANUMERICO).toUpperCase();
           this.solicitudForm
             .get('inicialesContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -308,7 +301,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('numeroContenedor')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(REGEX_REEMPLAZAR);
+          const SANITIZED = valor.replace(REGEX_ALFANUMERICO);
           this.solicitudForm
             .get('numeroContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
@@ -319,7 +312,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .get('digitoDeControl')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
         if (valor) {
-          const SANITIZED = valor.replace(this.REGEX_NUMER);
+          const SANITIZED = valor.replace(REGEX_NUMEROS);
           this.solicitudForm
             .get('digitoDeControl')
             ?.setValue(SANITIZED, { emitEvent: false });
