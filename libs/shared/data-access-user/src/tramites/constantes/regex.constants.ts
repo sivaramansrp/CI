@@ -71,3 +71,65 @@ export const REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
  */
 export const REGEX_FECHA_VALIDA = /^\d{2}\/\d{2}\/\d{4}$/;
 export const REGEX_NUMEROS_DECIMALES = /^[0-9]+(\.[0-9]{1,6})?$/;
+
+/**
+ * Expresión regular para validar que una cadena no tenga espacios en blanco
+ * al principio ni al final.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - (?!\s): Aserción negativa que asegura que no haya un espacio en blanco al inicio.
+ * - (.*\S)?: Coincide con cualquier carácter (incluyendo ninguno) que termine en un carácter no espacio en blanco.
+ * - $: Aserción para el final de la cadena.
+ */
+export const REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL = /^(?!\s)(.*\S)?$/;
+
+/**
+ * Expresión regular para validar que una cadena contenga solo dígitos.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d+: Coincide con uno o más dígitos.
+ * - $: Aserción para el final de la cadena.
+ */
+export const REGEX_SOLO_DIGITOS = /^\d+$/;
+
+/**
+ * Expresión regular para validar un número decimal con hasta 15 dígitos enteros y 4 decimales.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - \d{0,15}: Coincide con entre 0 y 15 dígitos enteros.
+ * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ */
+export const REGEX_PATRON_DECIMAL_15_4=/^\d{0,15}(\.\d{1,4})?$/;
+
+/**
+ * Expresión regular que valida un patrón alfanumérico.
+ * 
+ * Esta expresión regular permite letras mayúsculas y minúsculas (incluyendo la Ñ y ñ) 
+ * y dígitos del 0 al 9. No permite espacios ni caracteres especiales.
+ * 
+ * Ejemplos de cadenas válidas:
+ * - "Hola123"
+ * - "CódigoÑ"
+ * - "12345"
+ * 
+ * Ejemplos de cadenas no válidas:
+ * - "Hola 123" (contiene un espacio)
+ * - "Hola@123" (contiene un carácter especial)
+ */
+export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
+/**
+ * Expresión regular para encontrar caracteres que no sean números.
+ * 
+ * Esta expresión regular se utiliza para identificar y encontrar cualquier carácter
+ * que no sea un dígito numérico (0-9) en una cadena.
+ * 
+ * @example
+ * // Uso de la expresión regular para eliminar caracteres no numéricos de una cadena
+ * const cadena = "abc123def456";
+ * const soloNumeros = cadena.replace(REGEX_NUMEROS, ''); // Resultado: "123456"
+ */
+export const REGEX_NUMEROS = /[^0-9]/g;

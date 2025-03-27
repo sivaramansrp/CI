@@ -1,14 +1,13 @@
 /**
  * Interfaz que representa un catálogo importante de selección.
- * 
+ *
  */
-
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 
 /**
  * Representa una selección importante del catálogo para el registro de muestras de mercancías.
- * 
+ *
  * @property {CatalogosSelect} importadorExportadorPrevio - Selección previa del importador/exportador.
  * @property {CatalogosSelect} fraccionArancelariaAga - Selección de la fracción arancelaria AGA.
  * @property {CatalogosSelect} nico - Selección del NICO.
@@ -18,49 +17,54 @@ import { TableData } from '@ng-mf/data-access-user';
  * @property {TableData} tablaDeTarifasDePago - Tabla de tarifas de pago.
  */
 export interface ImportanteCatalogoSeleccion {
-    /**
-     * Selección previa del importador/exportador.
-     */
-    importadorExportadorPrevio: CatalogosSelect,
+  /**
+   * Selección previa del importador/exportador.
+   */
+  importadorExportadorPrevio: CatalogosSelect;
 
-    /**
-     * Selección de la fracción arancelaria AGA.
-     */
-    fraccionArancelariaAga: CatalogosSelect,
+  /**
+   * Selección de la fracción arancelaria AGA.
+   */
+  fraccionArancelariaAga: CatalogosSelect;
 
-    /**
-     *  Selección del NICO.
-     */
-    nico: CatalogosSelect,
+  /**
+   *  Selección del NICO.
+   */
+  nico: CatalogosSelect;
 
-    /**
-     * Selección de la IDE genérica.
-     */
-    ideGenerica: CatalogosSelect,
-    /**
-     * Selección de la toma de muestra en despacho.
-     */
-    tomaMuestraDespacho: CatalogosSelect,
-    /**
-     * Tabla de requisitos obligatorios.
-     */
-    requisitosObligatoriosTabla: TableData,
+  /**
+   * Selección de la IDE genérica.
+   */
+  ideGenerica: CatalogosSelect;
+  /**
+   * Selección de la toma de muestra en despacho.
+   */
+  tomaMuestraDespacho: CatalogosSelect;
+  /**
+   * Tabla de requisitos obligatorios.
+   */
+  requisitosObligatoriosTabla: TableData;
 
-    /**
-     *  Tabla de tarifas de pago.
-     */
-    tablaDeTarifasDePago: TableData,
+  /**
+   *  Tabla de tarifas de pago.
+   */
+  tablaDeTarifasDePago: TableData;
 
-  /** 
-   * Almacena las fechas de validez de la autorización. 
+  /**
+   * Almacena las fechas de validez de la autorización.
    */
   validezDeLaAutorizacion: ListaDeFechas;
 
-  /** 
-   * Almacena los datos del registro de muestras. 
+  /**
+   * Almacena los datos del registro de muestras.
    */
   registroMuestrasDatos: RegistroMuestras;
 
+  /**
+   * Lista de pagos de derechos asociados a la solicitud.
+   * Contiene información sobre los pagos realizados o pendientes.
+   */
+  pagoDerechosLista: PagoDerechosLista[];
 }
 /**
  * Representa un registro de muestras de mercancías.
@@ -124,7 +128,7 @@ export interface RegistroMuestras {
   /**
    * Identificación genérica de la mercancía.
    */
-  ideGenerica: string;
+  ideGenerica: number;
 
   /**
    * Descripción detallada del producto en formato CLOB (Character Large Object).
@@ -146,50 +150,61 @@ export interface ListaDeFechas {
   fechaFinVigencia: string;
 }
 
-/** 
- * Interfaz que representa el estado de almacenamiento de muestras de mercancías. 
- * Contiene información sobre autorizaciones, registros, pagos y catálogos relacionados 
- * con importaciones y exportaciones. 
+/**
+ * Interfaz que representa el estado de almacenamiento de muestras de mercancías.
+ * Contiene información sobre autorizaciones, registros, pagos y catálogos relacionados
+ * con importaciones y exportaciones.
  */
 export interface MuestrasMercanciasStore {
-  /** 
-   * Almacena las fechas de validez de la autorización. 
+  /**
+   * Almacena las fechas de validez de la autorización.
    */
-  validezDeLaAutorizacion: ListaDeFechas; 
+  validezDeLaAutorizacion: ListaDeFechas;
 
-  /** 
-   * Almacena los registros de muestras y sus renovaciones. 
+  /**
+   * Almacena los registros de muestras y sus renovaciones.
    */
   renovacionesDeRegistro: RegistroMuestras;
 
-  /** 
-   * Almacena los detalles del pago, incluyendo encabezados y datos de la tabla. 
+  /**
+   * Almacena los detalles del pago, incluyendo encabezados y datos de la tabla.
    */
   pagoDeDerechos: TableData;
 
-  /** 
-   * Almacena el catálogo de importadores/exportadores previos. 
+  /**
+   * Almacena el catálogo de importadores/exportadores previos.
    */
   importadorExportadorPrevio: CatalogosSelect;
 
-  /** 
-   * Almacena el catálogo de fracciones arancelarias de la AGA (Aduana General de la Nación). 
+  /**
+   * Almacena el catálogo de fracciones arancelarias de la AGA (Aduana General de la Nación).
    */
   fraccionArancelariaAga: CatalogosSelect;
 
-  /** 
-   * Almacena el catálogo de NICO (Número de Identificación Comercial). 
+  /**
+   * Almacena el catálogo de NICO (Número de Identificación Comercial).
    */
   nico: CatalogosSelect;
 
-  /** 
-   * Almacena el catálogo de IDE genérico (Identificación de Especificaciones). 
+  /**
+   * Almacena el catálogo de IDE genérico (Identificación de Especificaciones).
    */
   ideGenerica: CatalogosSelect;
 
-  /** 
-   * Almacena el catálogo relacionado con la toma de muestras durante el despacho. 
+  /**
+   * Almacena el catálogo relacionado con la toma de muestras durante el despacho.
    */
   tomaMuestraDespacho: CatalogosSelect;
 }
 
+/**
+ * Interfaz que representa la lista de pagos de derechos.
+ * Contiene la información de la línea de captura y el monto correspondiente.
+ */
+export interface PagoDerechosLista {
+  /** Línea de captura del pago. */
+  linea: string;
+
+  /** Monto del pago en la solicitud. */
+  monto: string;
+}
