@@ -1,3 +1,18 @@
 <app-certificado-de-origen 
+    [operador]="operador"
     [tratadoAcuerdo]="estado || []"
-    [paisBloqu]="pais || []" ></app-certificado-de-origen>
+    [paisBloqu]="pais || []"
+    (formCertificadoEvent)="obtenerDatosFormulario($event)"
+    (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
+    (paisBloquEvent)="tipoSeleccion($event)"
+    (setbuscarMercanciaEvent)="conseguirDisponiblesDatos"
+    [tableData]="disponiblesDatos || []"
+    (filaClics)="abrirModificarModal($event)"
+    [tablaSeleccionEvent]="tablaSeleccionEvent"
+    [guardarClicado]="(datosTabla$ | async) ||  []" >
+</app-certificado-de-origen>
+
+<div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+    <app-mercancia [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
+        (cerrarClicado)="cerrarModificarModal()"></app-mercancia>
+</div>

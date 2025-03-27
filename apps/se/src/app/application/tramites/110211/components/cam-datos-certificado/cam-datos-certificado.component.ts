@@ -3,6 +3,8 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
 @Component({
   selector: 'app-cam-datos-certificado',
@@ -19,9 +21,12 @@ export class CamDatosCertificadoComponent {
 
   representacionFederal: Catalogo[] = []
 
+  
+
   constructor(
     private readonly fb: FormBuilder, 
-    private camCertificadoService : CamCertificadoService
+    private camCertificadoService : CamCertificadoService,
+    private store : camCertificadoStore
 ){
   // Constructor logic can be added here if needed
 }
@@ -70,5 +75,21 @@ export class CamDatosCertificadoComponent {
       }
     }
   );
+  }
+
+  obtenerDatosFormulario(e: unknown): void {
+    this.store.setFormDatosCertificado(e as { [key: string]: string | number | boolean | object | undefined });
+  }
+
+  idiomaSeleccion(estado: Catalogo): void {
+    this.store.setIdiomaSeleccion(estado);
+  }
+
+  entidadFederativaSeleccion(estado: Catalogo): void {
+    this.store.setEntidadFederativaSeleccion(estado);
+  }
+
+  representacionFederalSeleccion(estado: Catalogo): void {
+    this.store.setRepresentacionFederalDatosSeleccion(estado);
   }
 }

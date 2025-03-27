@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo, InputFecha } from '@libs/shared/data-access-user/src';
+import { Subject, delay, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FECHA } from '../../constantes/cam-certificado.module';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
 @Component({
   selector: 'app-mercancia',
@@ -14,7 +17,13 @@ export class MercanciaComponent {
 
   mostrarAlerta: boolean = false;
 
+  mensajeDeAlerta: string = 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.';
+
   @Output() cerrarClicado = new EventEmitter();
+  @Output()tablaSeleccionEvent = new EventEmitter(); 
+  @Output() guardarClicado = new EventEmitter();
+
+  @Input() datosSeleccionados!: Mercancia;
 
   mercanciaForm!: FormGroup
 
@@ -24,9 +33,12 @@ export class MercanciaComponent {
 
   fechaFinalInput: InputFecha = FECHA;
 
+  destroyNotifier$: Subject<void> = new Subject();
+
   constructor(
       private readonly fb: FormBuilder, 
-      private camCertificadoService : CamCertificadoService
+      private camCertificadoService : CamCertificadoService,
+      private store: camCertificadoStore,
   ){
     // Constructor logic can be added here if needed
   }
@@ -67,7 +79,7 @@ export class MercanciaComponent {
   }
 
   cerrarModal(): void {
-    // this.cerrarClicado.emit();
+    this.cerrarClicado.emit();
     this.mostrarAlerta = false;
   }
 
@@ -99,6 +111,22 @@ export class MercanciaComponent {
       }
     }
   );
+  }
+
+  aceptar(): void {
+    // Emitir los datos del formulario al evento guardarClicado
+    this.guardarClicado.emit(this.mercanciaForm.value);
+
+    // Guardar los datos del formulario en el store
+    this.store.setmercanciaTabla([this.mercanciaForm.value]);
+
+    // Si la alerta está activa, cerrar el modal y emitir el evento de selección de tabla
+    if (this.mostrarAlerta) {
+      of(null).pipe(delay(100)).subscribe(() => {
+        this.cerrarModal();
+        this.tablaSeleccionEvent.emit(true);
+      });
+    }
   }
 
 }

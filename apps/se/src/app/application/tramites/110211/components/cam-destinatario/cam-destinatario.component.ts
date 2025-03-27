@@ -1,16 +1,22 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
+interface FormValues {
+  [key: string]: string | number | boolean | object | undefined;
+}
 @Component({
   selector: 'app-cam-destinatario',
   templateUrl: './cam-destinatario.component.html',
   styleUrl: './cam-destinatario.component.css',
 })
 export class CamDestinatarioComponent {
+  
   exportadorForm!: FormGroup
 
   constructor(
     private readonly fb: FormBuilder, 
+    private store: camCertificadoStore
   ){
 
   }
@@ -30,5 +36,9 @@ export class CamDestinatarioComponent {
       correo: ['',Validators.required]
     })
 
+  }
+
+  detosDelDestinatarioFunc(e: unknown): void {
+    this.store.setFormDatosDelDestinatario(e as FormValues);
   }
 }

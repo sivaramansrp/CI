@@ -3,4 +3,8 @@
     [idiomaDatos]="idiomaDatos || []" 
     [entidadFederativaDatos]="entidadFederativas || []"
     [representacionFederalDatos]="representacionFederal || []"
+    (formDatosCertificadoEvent)="obtenerDatosFormulario($event)"
+    (idiomaSeleccionEvent)="idiomaSeleccion($event)"
+    (entidadFederativaSeleccionEvent)="entidadFederativaSeleccion($event)"
+    (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
 ></app-daos-certificado>
