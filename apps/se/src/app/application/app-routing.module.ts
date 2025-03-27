@@ -221,6 +221,13 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+  {
+    path: 'importacion',
+    loadChildren: () =>
+      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+        (m) => m.ImportacionNeumaticosComercializarModule
+      ),
+  }
 ];
 
 @NgModule({
