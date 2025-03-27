@@ -1,79 +1,90 @@
-
+import { AgregarDatosProductorFormulario, GrupoOperador } from '../../tramites/110217/models/certificado-origen.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { GrupoDeDirecciones } from '../../tramites/110217/models/certificado-origen.model';
+import { GrupoDeTransporte } from '../../tramites/110217/models/certificado-origen.model';
+import { GrupoReceptor } from '../../tramites/110217/models/certificado-origen.model';
+import { GrupoRepresentativo } from '../../tramites/110217/models/certificado-origen.model';
 export interface Tramite110217State {
- 
-   observaciones: string;
-  idioma: Catalogo;
-  entidadFederativa: Catalogo;
-  representacionFederal: Catalogo;
-  nombre: string;
-  apellidoPrimer: string;
-  apellidoSegundo: string;
-  numeroFiscal: string;
-  razonSocial: string;
-  ciudad: string;
-  calle: string;
-  numeroLetra: string;
-  lada: string;
-  telefono: string;
-  fax: string;
-  correoElectronico: string;
-  nacion: Catalogo[] | null;
-  transporte: Catalogo[] | null;
-  nombreExportador: string;
-  lugar: string;
-  empresa: string;
-  cargo: String;
-  puertoEmbarque: string;
-  puertoDesembarque: string;
-  puertoTransito: string;
-  nombreEmbarcacion: string;
-  numeroVuelo: string;
-  
   
  
+ 
+  observaciones: string;
+  idioma: Catalogo | null;
+  entidadFederativa: Catalogo | null;
+  representacionFederal: Catalogo | null;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean
+  agregarDatosProductorFormulario: AgregarDatosProductorFormulario;
+  grupoReceptor: GrupoReceptor;
+  grupoDeDirecciones: GrupoDeDirecciones;
+  grupoRepresentativo: GrupoRepresentativo
+  grupoDeTransporte: GrupoDeTransporte,
+  grupoOperador: GrupoOperador;
+  tercerOperador: boolean;
+  
   
 }
+  
+
 
 export function createInitialState(): Tramite110217State {
   return {
     observaciones: '',
-    idioma: {} as Catalogo,
-    entidadFederativa: {} as Catalogo,
-    representacionFederal: {} as Catalogo,
-    nombre: '',
-    apellidoPrimer: '',
-    apellidoSegundo: '',
-    numeroFiscal: '',
-    razonSocial: '',
-    ciudad: '',
-    calle: '',
-    numeroLetra: '',
-    lada: '',
-    telefono: '',
-    fax: '',
-    correoElectronico: '',
-    nacion: null,
-    transporte: null,
-    lugar:'',
-    nombreExportador:'',
-    empresa:'',
-    cargo:'',
-    puertoEmbarque:'',
-    puertoDesembarque:'',
-    puertoTransito:'',
-    nombreEmbarcacion:'',
-    numeroVuelo: '',
-  
-  
-
-    
+    idioma: null,
+    entidadFederativa: null,
+    representacionFederal: null,
+    datosConfidencialesProductor: true,
+    productorMismoExportador: true,
+    agregarDatosProductorFormulario: {
+      numeroRegistroFiscal: '',
+      fax: ''
+    },
+    grupoReceptor: {
+      nombre: '',
+      apellidoPrimer: '',
+      apellidoSegundo: '',
+      numeroFiscal: '',
+      razonSocial: '',
+    },
+    grupoDeDirecciones: {
+      ciudad: '',
+      calle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+    grupoRepresentativo: {
+      lugar: '',
+      nombreExportador: '',
+      empresa: '',
+      cargo: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+    },
+    grupoDeTransporte: {
+      puertoEmbarque: '',
+      puertoDesembarque: '',
+      puertoTransito: '',
+      nombreEmbarcacion: '',
+      numeroVuelo: '',
+    },
+    tercerOperador:false,
+    grupoOperador:{
+      nombre: '',
+      apellidoPrimer: '',
+      apellidoSegundo: '',
+      numeroFiscal: '',
+      razonSocial: '',
+    }
   };
 }
-
 @Injectable({
   providedIn: 'root',
 })
@@ -89,259 +100,238 @@ export class Tramite110217Store extends Store<Tramite110217State> {
       observaciones,
     }));
   }
-
   public setIdioma(idioma: Catalogo): void {
     this.update((state) => ({
       ...state,
       idioma,
     }));
   }
-
   public setEntidadFederativa(entidadFederativa: Catalogo): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
     }));
   }
-
   public setRepresentacionFederal(representacionFederal: Catalogo): void {
     this.update((state) => ({
       ...state,
       representacionFederal,
     }));
   }
-
-  /**
-   * Establece el nombre del solicitante.
-   * @param nombre Cadena que representa el nombre del solicitante.
-   */
-  public setNombre(nombre: string) {
+  public setDatosConfidencialesProductor(datosConfidencialesProductor: boolean): void {
     this.update((state) => ({
       ...state,
-      nombre,
+      datosConfidencialesProductor,
     }));
   }
-  /**
-   * Establece el primer apellido del solicitante.
-   * @param apellidoPrimer Cadena que representa el primer apellido del solicitante.
-   */
-  public setApellidoPrimer(apellidoPrimer: string) {
+  public setProductorMismoExportador(productorMismoExportador: boolean): void {
     this.update((state) => ({
       ...state,
-      apellidoPrimer,
+      productorMismoExportador,
     }));
   }
-  /**
-   * Establece el segundo apellido del solicitante.
-   * @param apellidoSegundo Cadena que representa el segundo apellido del solicitante.
-   */
-  public setApellidoSegundo(apellidoSegundo: string) {
+  public setAgregarDatosProductorFax(fax: string): void {
     this.update((state) => ({
       ...state,
-      apellidoSegundo,
+      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, fax },
     }));
   }
-  /**
-   * Establece el número fiscal del solicitante.
-   * @param numeroFiscal Cadena que representa el número fiscal del solicitante.
-   */
-  public setNumeroFiscal(numeroFiscal: string) {
+  public setAgregarDatosProductorNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
     this.update((state) => ({
       ...state,
-      numeroFiscal,
+      agregarDatosProductorFormulario: { ...state.agregarDatosProductorFormulario, numeroRegistroFiscal },
     }));
   }
-  /**
-   * Establece la razón social.
-   * @param razonSocial Cadena que representa la razón social.
-   */
-  public setRazonSocial(razonSocial: string) {
+  public setGrupoReceptorNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
-      razonSocial,
+      grupoReceptor: { ...state.grupoReceptor, nombre },
     }));
   }
-  /**
-   * Establece la ciudad del solicitante.
-   * @param ciudad Cadena que representa la ciudad del solicitante.
-   */
-  public setCiudad(ciudad: string) {
+  public setGrupoReceptorApellidoPrimer(apellidoPrimer: string): void {
     this.update((state) => ({
       ...state,
-      ciudad,
+      grupoReceptor: { ...state.grupoReceptor, apellidoPrimer },
     }));
   }
-  /**
-   * Establece la calle del solicitante.
-   * @param calle Cadena que representa la calle del solicitante.
-   */
-  public setCalle(calle: string) {
+  public setGrupoReceptorApellidoSegundo(apellidoSegundo: string): void {
     this.update((state) => ({
       ...state,
-      calle,
+      grupoReceptor: { ...state.grupoReceptor, apellidoSegundo },
     }));
   }
-  /**
-   * Establece el número o letra de la dirección del solicitante.
-   * @param numeroLetra Cadena que representa el número o letra de la dirección.
-   */
-  public setNumeroLetra(numeroLetra: string) {
+  public setGrupoReceptorNumeroFiscal(numeroFiscal: string): void {
     this.update((state) => ({
       ...state,
-      numeroLetra,
+      grupoReceptor: { ...state.grupoReceptor, numeroFiscal },
     }));
   }
-  /**
-   * Establece la lada del número telefónico.
-   * @param lada Cadena que representa la lada.
-   */
-  public setLada(lada: string) {
+  public setGrupoReceptorRazonSocial(razonSocial: string): void {
     this.update((state) => ({
       ...state,
-      lada,
+      grupoReceptor: { ...state.grupoReceptor, razonSocial },
     }));
   }
-  /**
-   * Establece el número telefónico.
-   * @param telefono Cadena que representa el número telefónico.
-   */
-  public setTelefono(telefono: string) {
+  public setGrupoDeDireccionesCiudad(ciudad: string): void {
     this.update((state) => ({
       ...state,
-      telefono,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, ciudad },
     }));
   }
-  /**
-   * Establece el número de fax.
-   * @param fax Cadena que representa el número de fax.
-   */
-  public setFax(fax: string) {
+  public setGrupoDeDireccionesCalle(calle: string): void {
     this.update((state) => ({
       ...state,
-      fax,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, calle },
     }));
   }
-  /**
-   * Establece el correo electrónico.
-   * @param correoElectronico Cadena que representa el correo electrónico.
-   */
-  public setCorreoElectronico(correoElectronico: string) {
+  public setGrupoDeDireccionesNumeroLetra(numeroLetra: string): void {
     this.update((state) => ({
       ...state,
-      correoElectronico,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, numeroLetra },
     }));
   }
-  /**
-   * Establece el catálogo de naciones.
-   * @param nacion Lista de objetos de tipo `Catalogo` o `null`.
-   */
-  public setNacion(nacion: Catalogo[] | null) {
+  public setGrupoDeDireccionesLada(lada: string): void {
     this.update((state) => ({
       ...state,
-      nacion,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, lada },
     }));
   }
-  /**
-   * Establece el catálogo de transportes.
-   * @param transporte Lista de objetos de tipo `Catalogo` o `null`.
-   */
-  public setTransporte(transporte: Catalogo[] | null) {
+  public setGrupoDeDireccionesTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
-      transporte,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, telefono },
     }));
   }
-  /**
-   * Establece el lugar.
-   * @param lugar Cadena que representa el lugar.
-   */
-  public setLugar(lugar: string) {  
+  public setGrupoDeDireccionesFax(fax: string): void {
     this.update((state) => ({
       ...state,
-      lugar,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, fax },
     }));
   }
-  /**
-   * Establece el nombre del exportador.
-   * @param nombreExportador Cadena que representa el nombre del exportador.
-   */
-  public setNombreExportador(nombreExportador: string) {
+  public setGrupoDeDireccionesCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
-      nombreExportador,
+      grupoDeDirecciones: { ...state.grupoDeDirecciones, correoElectronico },
     }));
   }
-  /**
-   * Establece la empresa.
-   * @param empresa Cadena que representa la empresa.
-   */
-  public setEmpresa(empresa: string) {
+  public setGrupoRepresentativoLugar(lugar: string): void {
     this.update((state) => ({
       ...state,
-      empresa,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lugar },
     }));
   }
-  /**
-   * Establece el cargo.
-   * @param cargo Cadena que representa el cargo.
-   */
-  public setCargo(cargo: string) {
+  public setGrupoRepresentativoNombreExportador(nombreExportador: string): void {
     this.update((state) => ({
       ...state,
-      cargo,
+      grupoRepresentativo: { ...state.grupoRepresentativo, nombreExportador },
     }));
   }
-  /**
-   * Establece el puerto de embarque.
-   * @param puertoEmbarque Cadena que representa el puerto de embarque.
-   */
-  public setPuertoEmbarque(puertoEmbarque: string) {  
+  public setGrupoRepresentativoEmpresa(empresa: string): void {
     this.update((state) => ({
       ...state,
-      puertoEmbarque,
+      grupoRepresentativo: { ...state.grupoRepresentativo, empresa },
+    }));
+  }
+  public setGrupoRepresentativoCargo(cargo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, cargo },
+    }));
+  }
+  public setGrupoRepresentativoLada(lada: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, lada },
+    }));
+  }
+  public setGrupoRepresentativoTelefono(telefono: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, telefono },
+    }));
+  }
+  public setGrupoRepresentativoFax(fax: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, fax },
+    }));
+  }
+  public setGrupoRepresentativoCorreoElectronico(correoElectronico: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo: { ...state.grupoRepresentativo, correoElectronico },
+    }));
+  }
+  public setgrupoDeTransportePuertoEmbarque(puertoEmbarque: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte: { ...state.grupoDeTransporte, puertoEmbarque },
+    }));
+  }
+  public setgrupoDeTransportePuertoDesembarque(puertoDesembarque: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte: { ...state.grupoDeTransporte, puertoDesembarque },
+    }));
+  }
+  public setgrupoDeTransportePuertoTransito(puertoTransito: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte: { ...state.grupoDeTransporte, puertoTransito },
+    }));
+  }
+  public setgrupoDeTransporteNombreEmbarcacion(nombreEmbarcacion: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte: { ...state.grupoDeTransporte, nombreEmbarcacion },
+    }));
+  }
+  public setgrupoDeTransporteNumeroVuelo(numeroVuelo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte: { ...state.grupoDeTransporte, numeroVuelo },
+    }));
+  }
+  public setTercerOperador(tercerOperador: boolean): void {
+    this.update((state) => ({
+      ...state,
+      tercerOperador,
     }));
   }
 
-  /**
-   * Establece el puerto de desembarque.
-   * @param puertoDesembarque Cadena que representa el puerto de desembarque.
-   */
-  public setPuertoDesembarque(puertoDesembarque: string) {  
+  public setGrupoOperadorNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
-      puertoDesembarque,
+      grupoOperador: { ...state.grupoOperador, nombre },
     }));
   }
+  public setGrupoOperadorApellidoPrimer(apellidoPrimer: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador: { ...state.grupoOperador, apellidoPrimer },
+    }));
+  }
+  public setGrupoOperadorSegundo(apellidoSegundo: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador: { ...state.grupoOperador, apellidoSegundo },
+    }));
+  }
+  public setGrupoOperadorNumeroFiscal(numeroFiscal: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador: { ...state.grupoOperador, numeroFiscal },
+    }));
+  }
+  public setGrupoOperadorRazonSocial(razonSocial: string): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador: { ...state.grupoOperador, razonSocial },
+    }));
+  }
+   
 
-  /**
-   * Establece el puerto de tránsito.
-   * @param puertoTransito Cadena que representa el puerto de tránsito.
-   */
-  public setPuertoTransito(puertoTransito: string) {
-    this.update((state) => ({
-      ...state,
-      puertoTransito,
-    }));
-  }
-  /**
-   * Establece el nombre de la embarcación.
-   * @param nombreEmbarcacion Cadena que representa el nombre de la embarcación.
-   */
-  public setNombreEmbarcacion(nombreEmbarcacion: string) {
-    this.update((state) => ({
-      ...state,
-      nombreEmbarcacion,
-    }));
-  }
-  /**
-   * Establece el número de vuelo.
-   * @param numeroVuelo Cadena que representa el número de vuelo.
-   */
-  public setNumeroVuelo(numeroVuelo: string) {  
-    this.update((state) => ({
-      ...state,
-      numeroVuelo,
-    }));
-  }
+
+
 
 }

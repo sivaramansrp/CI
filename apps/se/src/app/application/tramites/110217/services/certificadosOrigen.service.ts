@@ -1,45 +1,32 @@
-import { Observable, map } from 'rxjs';
-import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { CatalogoLista } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ProductorExportador } from '../models/certificado-origen.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificadosOrigenService {
+  // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient) { }
 
 
-  obtenerIdioma(): Observable<Catalogo[]> {
+  obtenerIdioma(): Observable<CatalogoLista> {
     return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110216/idioma.json')
-      .pipe(map((res) => res.data));
+      .get<CatalogoLista>('assets/json/110217/idioma.json')
   }
-  obtenerEntidadFederativa(): Observable<Catalogo[]> {
+  obtenerEntidadFederativa(): Observable<CatalogoLista> {
     return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110216/entidad-federativa.json')
-      .pipe(map((res) => res.data));
+      .get<CatalogoLista>('assets/json/110217/entidad-federativa.json')
   }
 
-  obtenerRepresentacionFederal(): Observable<Catalogo[]> {
+  obtenerRepresentacionFederal(): Observable<CatalogoLista> {
     return this.http
-      .get<{ data: Catalogo[] }>('assets/json/110216/representacion-federal.json')
-      .pipe(map((res) => res.data));
+      .get<CatalogoLista>('assets/json/110217/representacion-federal.json')
   }
-
-    /**
-   * Obtiene el catálogo de países de destino.
-   * @returns Observable con la respuesta del catálogo de países de destino.
-   */
-    getPaisDestino() {
-      return this.http.get<RespuestaCatalogos>('assets/json/110217/pais.json');
-    }
-
-     /**
-   * Obtiene el catálogo de transportes.
-   * @returns Observable con la respuesta del catálogo de transportes.
-   */
-  getTransporte() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110217/pais.json');
+  obtenerProductorPorExportador(): Observable<ProductorExportador> {
+    return this.http
+      .get<ProductorExportador>('assets/json/110217/productor-exportador.json')
   }
 }

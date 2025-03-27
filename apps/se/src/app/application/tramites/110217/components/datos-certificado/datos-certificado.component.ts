@@ -1,11 +1,22 @@
-import { CommonModule } from "@angular/common";
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TituloComponent, CatalogoSelectComponent, Catalogo } from "@libs/shared/data-access-user/src";
-import { CertificadosOrigenService } from "../../services/certificadosOrigen.service";
-import { map, Subject, takeUntil } from "rxjs";
-import { Tramite110217State, Tramite110217Store } from "../../../../estados/tramites/tramite110217.store";
-import { Tramite110217Query } from "../../../../estados/queries/tramite110217.query";
+import { Catalogo } from '../../models/certificado-origen.model';
+import { CatalogoLista } from '../../models/certificado-origen.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CertificadosOrigenService } from '../../services/certificadosOrigen.service';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
+import { Tramite110217State } from '../../../../estados/tramites/tramite110217.store';
+import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 
 @Component({
@@ -40,7 +51,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          console.log(seccionState);
         })
       )
       .subscribe();
@@ -58,6 +68,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       entidadFederativa: [this.tramiteState?.entidadFederativa, [Validators.required, Validators.min(0)]],
       representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
     });
+    this.formDatosCertificado.markAllAsTouched();
   }
 
   cargarIdioma(): void {
@@ -65,8 +76,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       .obtenerIdioma()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (datos: Catalogo[]) => {
-          this.idiomas = datos;
+        (datos: CatalogoLista) => {
+          this.idiomas = datos.datos;
         }
       );
   }
@@ -80,8 +91,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       .obtenerEntidadFederativa()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (datos: Catalogo[]) => {
-          this.entidadFederativas = datos;
+        (datos: CatalogoLista) => {
+          this.entidadFederativas = datos.datos;
         }
       );
   }
@@ -95,8 +106,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       .obtenerRepresentacionFederal()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
-        (datos: Catalogo[]) => {
-          this.representacionFederal = datos;
+        (datos: CatalogoLista) => {
+          this.representacionFederal = datos.datos;
         }
       );
   }

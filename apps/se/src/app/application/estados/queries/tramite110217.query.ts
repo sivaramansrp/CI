@@ -16,14 +16,6 @@ export class Tramite110217Query extends Query<Tramite110217State> {
     protected override store: Tramite110217Store) {
     super(store);
   }
-    /**
-   * Selecciona el catálogo de naciones.
-   */
-    selectNacion$ = this.select((state) => state.nacion);
-
-     /**
-   * Selecciona el catálogo de transportes.
-   */
-  selectTransporte$ = this.select((state) => state.transporte);
+  
 
 }

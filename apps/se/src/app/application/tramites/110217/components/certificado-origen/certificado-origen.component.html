@@ -1,0 +1,59 @@
+<div class="container">
+    <ng-titulo titulo="Validación a posteriori del certificado de circulación de mercancías" />
+    <form [formGroup]="formCertificado">
+        
+        <div class="row">
+            <div class="col-md-12">
+                <label class="form-check-label text-justify" for="tercerOperador">¿La operación se realizó con un tercer operador?</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="checkbox">
+                    <input type="checkbox" id="tercerOperador"
+                        formControlName="tercerOperador"
+                        (change)="setValoresStore(formCertificado,'tercerOperador', 'setTercerOperador')" />
+                    <label for="tercerOperador">&nbsp;si</label>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="solicitudState?.tercerOperador">
+        <ng-container formGroupName="grupoOperador" *ngIf="formCertificado.get('grupoOperador')">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label>Nombre(s):</label>
+                <input type="text" class="form-control" formControlName="nombre"
+                  (change)="setValoresStore(grupoOperador, 'nombre', 'setGrupoOperadorNombre')" />
+              </div>
+              <div class="col-md-4 mb-3">
+                <label>Primer apellido:</label>
+                <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer" (click)="onClick()"
+                  (change)="setValoresStore(grupoOperador, 'apellidoPrimer','setGrupoOperadorApellidoPrimer')" />
+              </div>
+              <div class="col-md-4 mb-3">
+                <label>Segundo apellido:</label>
+                <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)="
+                    setValoresStore(grupoOperador, 'apellidoSegundo', 'setGrupoOperadorSegundo')" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label>Número de registro fiscal*:</label>
+                <input type="text" class="form-control" id="numeroFiscal" formControlName="numeroFiscal"
+                  [ngClass]="isValid(grupoOperador,'numeroFiscal') ? 'required' : ''"
+                  (change)="setValoresStore(grupoOperador, 'numeroFiscal', 'setGrupoOperadorNumeroFiscal')" />
+              </div>
+              <div class="col-md-8 mb-3">
+                <label>Razón social:</label>
+                <input type="text" class="form-control"
+                  [ngClass]="{GrayClass: registroFormulario.get('grupoOperador.apellidoPrimer')?.value !== ''}"
+                  id="denominacion" [readonly]=" registroFormulario.get('grupoOperador.apellidoPrimer')?.value !== ''"
+                  formControlName="razonSocial"
+                  (change)="setValoresStore(grupoOperador, 'razonSocial', 'setGrupoOperadorRazonSocial')" />
+              </div>
+            </div>
+          </ng-container>
+          </div>
+
+    </form>
+</div>
