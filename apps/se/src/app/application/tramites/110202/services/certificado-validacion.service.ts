@@ -9,13 +9,6 @@ import { Mercancia } from '../models/configuracio-columna.model';
 })
 export class CertificadoValidacionService {
 
-  /**
-  * URL base para las solicitudes a los archivos JSON de la API.
-  * @private
-  * @type {string}
-  */
-  private apiUrl = 'assets/json/110202/';
-
   constructor(private http: HttpClient) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -114,7 +107,7 @@ export class CertificadoValidacionService {
    */
   obtenerPaisDestino(): Observable<Catalogo[]> {
     return this.http
-      .get<{ data: Catalogo[] }>(`${this.apiUrl}pais-destinatario.json`)
+      .get<{ data: Catalogo[] }>(`assets/json/110202/pais-destinatario.json`)
       .pipe(map((res) => res.data));
   }
 
@@ -124,7 +117,7 @@ export class CertificadoValidacionService {
   */
   obtenerMedioDeTransporte(): Observable<Catalogo[]> {
     return this.http
-      .get<{ data: Catalogo[] }>(`${this.apiUrl}medio-de-transporte.json`)
+      .get<{ data: Catalogo[] }>(`assets/json/110202/medio-de-transporte.json`)
       .pipe(map((res) => res.data));
   }
 

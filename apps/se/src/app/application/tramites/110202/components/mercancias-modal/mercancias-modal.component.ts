@@ -86,7 +86,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.tramiteQuery?.formMercancia$?.pipe(
       delay(100),
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
-      // eslint-disable-next-line dot-notation
       if (!this.actualizandoFormulario && estado && estado['fraccionArancelaria']) {
         this.actualizandoFormulario = true;
         this.mercanciaForm.patchValue(estado);

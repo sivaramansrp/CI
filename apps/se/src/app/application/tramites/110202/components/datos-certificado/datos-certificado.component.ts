@@ -1,7 +1,7 @@
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { DaosCertificadoComponent } from "../../../../shared/components/daos-certificado/daos-certificado.component";

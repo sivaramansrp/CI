@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
+import { Observable, Subject, delay, map, takeUntil} from 'rxjs';
 import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
 import { CertificadoDeOrigenComponent } from "../../../../shared/components/certificado-de-origen/certificado-de-origen.component";
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
