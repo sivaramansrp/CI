@@ -366,119 +366,834 @@ jobs:
             # Create directory for manifests if it doesn't exist
             mkdir -p k8s
             
-            # Download the K8s manifest template from repository with updated branch
-            echo "Downloading Kubernetes manifest template from develop branch..."
-            curl -s https://raw.githubusercontent.com/vucem30-dev/frontend/develop/k8s/vucem-microfrontends.yaml -o k8s/vucem-microfrontends.yaml
-            
-            # Verify the download was successful
-            if [ $? -ne 0 ] || [ ! -s k8s/vucem-microfrontends.yaml ]; then
-              echo "ERROR: Failed to download manifest template! Deployment cannot continue."
-              exit 1
-            fi
-            
-            echo "Manifest template downloaded successfully."
-            
-            # Prepare the apps to be included in the deployment
-            APPS_LIST="${{ needs.setup.outputs.final_apps }}"
-            echo "Deploying apps: $APPS_LIST"
-            
-            # Set the replicas based on environment
-            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-              REPLICAS=2
-              MIN_REPLICAS=2
-              MAX_REPLICAS=5
-              echo "Production environment detected - using high availability setup."
-            else
-              REPLICAS=1
-              MIN_REPLICAS=1
-              MAX_REPLICAS=3
-              echo "Non-production environment - using standard setup."
-            fi
-            
-            # Generate module federation manifest
-            echo "Generating module federation manifest..."
-            cat > module-federation.manifest.json << EOF
-            {
-              "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
-              "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga",
-              "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
-              "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
-              "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
-              "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
-              "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
-              "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
-              "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
-              "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
-            }
-            EOF
-            
-            # Replace placeholders with actual values for all parameters
-            echo "Replacing template placeholders..."
-            sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            
-            # Set replica counts based on environment
-            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-              sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
-            else
-              sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
-            fi
-            
-            # Create ConfigMap for Module Federation Manifest
-            echo "Creating/updating module federation ConfigMap..."
-            microk8s kubectl create configmap module-federation-manifest \
-              --from-file=module-federation.manifest.json \
-              -n vucem-${{ needs.setup.outputs.environment }} \
-              --dry-run=client -o yaml | microk8s kubectl apply -f -
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to create ConfigMap. Checking if namespace exists..."
-            
-              # Check if namespace exists and create it if needed
-              microk8s kubectl get namespace vucem-${{ needs.setup.outputs.environment }} || \
-              microk8s kubectl create namespace vucem-${{ needs.setup.outputs.environment }}
-            
-              echo "Retrying ConfigMap creation..."
-              microk8s kubectl create configmap module-federation-manifest \
-                --from-file=module-federation.manifest.json \
-                -n vucem-${{ needs.setup.outputs.environment }} \
-                --dry-run=client -o yaml | microk8s kubectl apply -f -
-            fi
-            
-            echo "ConfigMap created successfully."
-            
-            # Validate YAML syntax (optional but recommended)
-            if command -v yamllint &> /dev/null; then
-              echo "Validating YAML syntax..."
-              yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
-            fi
-            
-            # Apply Kubernetes manifest
-            echo "Applying Kubernetes manifest..."
-            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to apply Kubernetes manifest."
-              exit 1
-            fi
-            
-            echo "Kubernetes manifest applied successfully."
-            
-            # Restart the deployment to pull the latest images
-            echo "Restarting deployment to pull the latest images..."
-            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
-            
-            # Wait for rollout to complete
-            echo "Waiting for rollout to complete (timeout: 5 minutes)..."
-            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
-            
-            if [ $? -eq 0 ]; then
-              echo "✅ Deployment completed successfully!"
-            else
-              echo "⚠️ Deployment timed out, but may still be progressing. Check the status manually."
-            fi
+            # Create the K8s manifest directly instead of downloading it
+            # This eliminates dependency on GitHub raw file access
+            echo "Creating Kubernetes manifest template directly..."
+            cat > k8s/vucem-microfrontends.yaml << 'EOL'
+            ---
+            # Namespace for VUCEM Microfrontends
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: vucem-${ENV}
+            ---
+            # ConfigMap for environment variables
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: vucem-frontend-config
+              namespace: vucem-${ENV}
+            data:
+              NODE_ENV: "production"
+              API_URL: "https://api-vucem-${ENV}.example.com"
+            ---
+            # ConfigMap for Module Federation Manifest
+            apiVersion: v1
+            kind: ConfigMap
+            metadata:
+              name: module-federation-manifest
+              namespace: vucem-${ENV}
+            data:
+              module-federation.manifest.json: |
+                {
+                  "login": "https://vucem-${ENV}.example.com/login",
+                  "aga": "https://vucem-${ENV}.example.com/aga", 
+                  "agriculture": "https://vucem-${ENV}.example.com/agriculture",
+                  "se": "https://vucem-${ENV}.example.com/se",
+                  "semarnat": "https://vucem-${ENV}.example.com/semarnat",
+                  "agace": "https://vucem-${ENV}.example.com/agace",
+                  "funcionario": "https://vucem-${ENV}.example.com/funcionario",
+                  "cofepris": "https://vucem-${ENV}.example.com/cofepris",
+                  "amecafe": "https://vucem-${ENV}.example.com/amecafe",
+                  "sener": "https://vucem-${ENV}.example.com/sener"
+                }
+            ---
+            # Deployment for VUCEM Microfrontends
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: vucem-microfrontends-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                env: ${ENV}
+            spec:
+              replicas: ${REPLICAS}
+              selector:
+                matchLabels:
+                  app: vucem-microfrontends
+                  env: ${ENV}
+              template:
+                metadata:
+                  labels:
+                    app: vucem-microfrontends
+                    env: ${ENV}
+                spec:
+                  imagePullSecrets:
+                    - name: github-container-registry
+                  volumes:
+                    - name: module-federation-manifest
+                      configMap:
+                        name: module-federation-manifest
+                  containers:
+                    - name: dashboard
+                      image: ${REGISTRY}/vucem-front-dashboard:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: dashboard
+                      volumeMounts:
+                        - name: module-federation-manifest
+                          mountPath: /usr/share/nginx/html/assets/module-federation.manifest.json
+                          subPath: module-federation.manifest.json
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: login
+                      image: ${REGISTRY}/vucem-front-login:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: login
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: aga
+                      image: ${REGISTRY}/vucem-front-aga:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: aga
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: agriculture
+                      image: ${REGISTRY}/vucem-front-agriculture:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: agriculture
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: se
+                      image: ${REGISTRY}/vucem-front-se:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: se
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: semarnat
+                      image: ${REGISTRY}/vucem-front-semarnat:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: semarnat
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: agace
+                      image: ${REGISTRY}/vucem-front-agace:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: agace
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: funcionario
+                      image: ${REGISTRY}/vucem-front-funcionario:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: funcionario
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: cofepris
+                      image: ${REGISTRY}/vucem-front-cofepris:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: cofepris
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: amecafe
+                      image: ${REGISTRY}/vucem-front-amecafe:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: amecafe
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+                    - name: sener
+                      image: ${REGISTRY}/vucem-front-sener:${TAG}
+                      imagePullPolicy: Always
+                      ports:
+                        - containerPort: 80
+                          name: sener
+                      resources:
+                        requests:
+                          memory: "128Mi"
+                          cpu: "100m"
+                        limits:
+                          memory: "256Mi"
+                          cpu: "500m"
+                      livenessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 30
+                        timeoutSeconds: 3
+                        periodSeconds: 30
+                      readinessProbe:
+                        httpGet:
+                          path: /health.txt
+                          port: 80
+                        initialDelaySeconds: 10
+                        timeoutSeconds: 3
+                        periodSeconds: 10
+            ---
+            # Services for each microfrontend
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: dashboard-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: dashboard
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: dashboard
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: cofepris-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: cofepris
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: cofepris
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: amecafe-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: amecafe
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: amecafe
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: sener-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: sener
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: sener
+              type: ClusterIP
+            ---
+            # Ingress for VUCEM Microfrontends
+            apiVersion: networking.k8s.io/v1
+            kind: Ingress
+            metadata:
+              name: vucem-frontend-ingress-${ENV}
+              namespace: vucem-${ENV}
+              annotations:
+                kubernetes.io/ingress.class: "nginx"
+                nginx.ingress.kubernetes.io/ssl-redirect: "true"
+                nginx.ingress.kubernetes.io/use-regex: "true"
+                cert-manager.io/cluster-issuer: "letsencrypt-prod"
+                nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+                nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+                nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+                nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
+                nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+                nginx.ingress.kubernetes.io/configuration-snippet: |
+                  # Add CORS headers
+                  add_header 'Access-Control-Allow-Origin' '*' always;
+                  add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE' always;
+                  add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization' always;
+                  add_header 'Access-Control-Max-Age' 1728000;
+                  # Handle OPTIONS preflight requests
+                  if ($request_method = 'OPTIONS') {
+                    add_header 'Access-Control-Allow-Origin' '*';
+                    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, PUT, DELETE';
+                    add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+                    add_header 'Access-Control-Max-Age' 1728000;
+                    add_header 'Content-Type' 'text/plain charset=UTF-8';
+                    add_header 'Content-Length' 0;
+                    return 204;
+                  }
+            spec:
+              ingressClassName: nginx
+              tls:
+              - hosts:
+                - vucem-${ENV}.example.com
+                secretName: vucem-tls-cert
+              rules:
+              - host: vucem-${ENV}.example.com
+                http:
+                  paths:
+                  # Dashboard app (Shell)
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: dashboard-svc-${ENV}
+                        port:
+                          number: 80
+                  # Login microfrontend
+                  - path: /login
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: login-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /auth
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: login-svc-${ENV}
+                        port:
+                          number: 80
+                  # Aga microfrontend
+                  - path: /aga
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: aga-svc-${ENV}
+                        port:
+                          number: 80
+                  # Agriculture microfrontend
+                  - path: /agriculture
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: agriculture-svc-${ENV}
+                        port:
+                          number: 80
+                  # SE microfrontend
+                  - path: /se
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: se-svc-${ENV}
+                        port:
+                          number: 80
+                  # Semarnat microfrontend  
+                  - path: /semarnat
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: semarnat-svc-${ENV}
+                        port:
+                          number: 80
+                  # Agace microfrontend
+                  - path: /agace
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: agace-svc-${ENV}
+                        port:
+                          number: 80
+                  # Funcionario microfrontend
+                  - path: /funcionario
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: funcionario-svc-${ENV}
+                        port:
+                          number: 80
+                  # Cofepris microfrontend
+                  - path: /cofepris
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: cofepris-svc-${ENV}
+                        port:
+                          number: 80
+                  # Amecafe microfrontend
+                  - path: /amecafe
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: amecafe-svc-${ENV}
+                        port:
+                          number: 80
+                  # Sener microfrontend
+                  - path: /sener
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: sener-svc-${ENV}
+                        port:
+                          number: 80
+                  # Backend API
+                  - path: /api
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: vucem-backend-svc
+                        port:
+                          number: 8080
+                  # Module Federation specific paths
+                  - path: /remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: dashboard-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /login/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: login-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /aga/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: aga-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /agriculture/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: agriculture-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /se/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: se-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /semarnat/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: semarnat-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /agace/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: agace-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /funcionario/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: funcionario-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /cofepris/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: cofepris-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /amecafe/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: amecafe-svc-${ENV}
+                        port:
+                          number: 80
+                  - path: /sener/remoteAppEntry.js
+                    pathType: Exact
+                    backend:
+                      service:
+                        name: sener-svc-${ENV}
+                        port:
+                          number: 80
+            ---
+            # HorizontalPodAutoscaler for VUCEM Microfrontends
+            apiVersion: autoscaling/v2
+            kind: HorizontalPodAutoscaler
+            metadata:
+              name: vucem-microfrontends-hpa-${ENV}
+              namespace: vucem-${ENV}
+            spec:
+              scaleTargetRef:
+                apiVersion: apps/v1
+                kind: Deployment
+                name: vucem-microfrontends-${ENV}
+              minReplicas: ${MIN_REPLICAS}
+              maxReplicas: ${MAX_REPLICAS}
+              metrics:
+              - type: Resource
+                resource:
+                  name: cpu
+                  target:
+                    type: Utilization
+                    averageUtilization: 80
+              - type: Resource
+                resource:
+                  name: memory
+                  target:
+                    type: Utilization
+                    averageUtilization: 80metadata:
+              name: login-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: login
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: login
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: aga-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: aga
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: aga
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: agriculture-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: agriculture
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: agriculture
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: se-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: se
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: se
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: semarnat-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: semarnat
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: semarnat
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: agace-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: agace
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: agace
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: funcionario-svc-${ENV}
+              namespace: vucem-${ENV}
+              labels:
+                app: vucem-microfrontends
+                component: funcionario
+                env: ${ENV}
+            spec:
+              selector:
+                app: vucem-microfrontends
+                env: ${ENV}
+              ports:
+                - name: http
+                  port: 80
+                  targetPort: funcionario
+              type: ClusterIP
+            ---
+            apiVersion: v1
+            kind: Service
