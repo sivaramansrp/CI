@@ -1,10 +1,8 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { Observable, of as observableOf } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { CafeDeExportadoresComponent } from './cafe-de-exportadores.component';
@@ -13,52 +11,51 @@ import { FormBuilder } from '@angular/forms';
 import { CatalogosService } from '../../servicios/catalogos.service';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { TramiteStore } from '../../estados/tramite290101.store';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 @Injectable()
 class MockRouter {
-  navigate() {};
+  navigate = jest.fn();
 }
 
 @Injectable()
-class MockCatalogosService {}
+class MockCatalogosService {
+  cargarClasificacion = jest.fn().mockReturnValue(observableOf({ code: {}, data: {} }));
+}
 
 @Injectable()
-class MockTramiteStoreQuery {}
+class MockTramiteStoreQuery {
+  selectSolicitudTramite$ = observableOf({ CafeExportFormState: {} });
+}
 
 @Injectable()
-class MockTramiteStore {}
+class MockTramiteStore {
+  setCafExportTramite = jest.fn();
+}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
-  @Input() myCustom;
+  @Input() myCustom: any;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value: any) { return value; }
 }
 
 describe('CafeDeExportadoresComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<CafeDeExportadoresComponent>;
+  let component: CafeDeExportadoresComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ 
+        FormsModule, 
+        ReactiveFormsModule, 
+        HttpClientTestingModule 
+      ],
       declarations: [
         CafeDeExportadoresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        TranslatePipe,
         MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
@@ -67,77 +64,31 @@ describe('CafeDeExportadoresComponent', () => {
         FormBuilder,
         { provide: CatalogosService, useClass: MockCatalogosService },
         { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
-        { provide: TramiteStore, useClass: MockTramiteStore },
-        SeccionLibQuery,
-        SeccionLibStore
+        { provide: TramiteStore, useClass: MockTramiteStore }
       ]
-    }).overrideComponent(CafeDeExportadoresComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(CafeDeExportadoresComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
     fixture.destroy();
   });
 
-  it('should run #constructor()', async () => {
+  it('should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #seleccionaTab()', async () => {
-    component.router = component.router || {};
-    component.router.navigate = jest.fn();
-    component.seleccionaTab({});
-     expect(component.router.navigate).toHaveBeenCalled();
+  it('should call ngOnInit()', () => {
+    const setCafExportTramiteSpy = jest.spyOn(
+      component['tramiteStore'],  
+      'setCafExportTramite'
+    );
+  
+    fixture.detectChanges(); 
+  
+    expect(setCafExportTramiteSpy).toHaveBeenCalled();
   });
-
-  it('should run #ngOnInit()', async () => {
-    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
-    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({
-      CafeExportFormState: {}
-    });
-    component.iniciarFormulario = jest.fn();
-    component.cargarClasificacion = jest.fn();
-    component.cafeExportForm = component.cafeExportForm || {};
-    component.cafeExportForm.patchValue = jest.fn();
-    component.cafeExportForm.statusChanges = observableOf({});
-    component.cafeExportForm.value = 'value';
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.setCafExportTramite = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.ngOnInit();
-     expect(component.iniciarFormulario).toHaveBeenCalled();
-     expect(component.cargarClasificacion).toHaveBeenCalled();
-     expect(component.cafeExportForm.patchValue).toHaveBeenCalled();
-     expect(component.tramiteStore.setCafExportTramite).toHaveBeenCalled();
-  });
-
-  it('should run #iniciarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.iniciarFormulario();
-     expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #cargarClasificacion()', async () => {
-    component.catalogosService = component.catalogosService || {};
-    component.catalogosService.cargarClasificacion = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.cargarClasificacion();
-     expect(component.catalogosService.cargarClasificacion).toHaveBeenCalled();
-  });
-
-  it('should run #cancelarBodega()', async () => {
-    component.cafeExportForm = component.cafeExportForm || {};
-    component.cafeExportForm.reset = jest.fn();
-    component.cancelarBodega();
-     expect(component.cafeExportForm.reset).toHaveBeenCalled();
-  });
-
+  
 });

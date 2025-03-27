@@ -14,6 +14,9 @@ import { CatalogosService } from '../../servicios/catalogos.service';
 import { TramiteStoreQuery } from '../../estados/tramite290101.query';
 import { TramiteStore } from '../../estados/tramite290101.store';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CafeDeExportadoresComponent } from '../../pages/cafe-de-exportadores/cafe-de-exportadores.component';
+
 
 @Injectable()
 class MockRouter {
@@ -54,34 +57,34 @@ describe('BeneficiosComponent', () => {
   let component;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        BeneficiosComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-        { provide: Router, useClass: MockRouter },
-        FormBuilder,
-        { provide: CatalogosService, useClass: MockCatalogosService },
-        { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
-        { provide: TramiteStore, useClass: MockTramiteStore },
-        SeccionLibQuery,
-        SeccionLibStore
-      ]
-    }).overrideComponent(BeneficiosComponent, {
-
-    }).compileComponents();
     fixture = TestBed.createComponent(BeneficiosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+  
+    component.beneficiosForm = new FormBuilder().group({}); 
+    component.destroyNotifier$ = new Subject<void>(); 
+  
+    fixture.detectChanges();
   });
-
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+  
+  
+  
+  
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule], 
+      declarations: [CafeDeExportadoresComponent],
+      providers: [CatalogosService]
+    }).compileComponents();
   });
+  
+  it('should run #ngOnInit()', () => {
+    jest.spyOn(component.tramiteStore, 'setBeneficiosTramite');
+    
+    component.ngOnInit();
+  
+    expect(component.tramiteStore.setBeneficiosTramite).toHaveBeenCalled();
+  });
+  
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -151,6 +154,7 @@ describe('BeneficiosComponent', () => {
     component.cancelarBodega();
     expect(component.beneficiosForm.reset).toHaveBeenCalled();
   });
+  
 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
@@ -160,5 +164,6 @@ describe('BeneficiosComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
+  
 
 });
