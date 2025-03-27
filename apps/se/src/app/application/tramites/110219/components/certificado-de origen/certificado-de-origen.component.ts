@@ -1,16 +1,12 @@
+import { AlertComponent,ConfiguracionColumna, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { ConfiguracionColumna, InputFecha, TablaSeleccion, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { FECHAENCIMIENTO, FECHAEXPEDICIÓN, FECHAFINAL, FECHAINICIAL, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
-import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
-import { CertificadoService } from '../../services/certificado.service';
+import { FECHAENCIMIENTO, FECHAEXPEDICIÓN, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputFechaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
+import { CertificadoService } from '../../services/certificado.service';
+import { CommonModule } from '@angular/common';
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
 /** 
  * Texto de alerta que se muestra para la tabla de mercancías del certificado.
  */

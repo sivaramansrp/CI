@@ -1,4 +1,3 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   BtnContinuarComponent,
   DatosPasos,
@@ -6,9 +5,11 @@ import {
   PASOS,
   WizardComponent,
 } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+
 
 /**
  * Interfaz que define la estructura de una acción de botón.

@@ -1,15 +1,8 @@
+import { ColumnasTabla, MercanciaCertificado} from '../models/certificado.model';
+import { Observable, catchError, throwError } from 'rxjs';
+import { Catalogo} from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  Catalogo,
-  RespuestaCatalogos,
-} from '@libs/shared/data-access-user/src';
-import { catchError, Observable, throwError } from 'rxjs';
-import {
-  ColumnasTabla,
-  MercanciaCertificado,
-} from '../models/certificado.model';
-
 /**
  * Servicio para gestionar las operaciones relacionadas con los certificados.
  */

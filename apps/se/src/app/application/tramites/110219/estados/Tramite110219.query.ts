@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Query } from '@datorama/akita';
 import {
   Solicitud110219State,
   Tramite110219Store,
 } from './Tramite110219.store';
+import { Injectable } from '@angular/core';
+import { Query } from '@datorama/akita';
 
 /**
  * Clase que proporciona consultas reactivas para el estado del trámite 110219.

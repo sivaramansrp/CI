@@ -1,5 +1,3 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   BtnContinuarComponent,
   Catalogo,
@@ -14,15 +12,17 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+import {ColumnasTabla,FECHAFINAL, FECHAINICIAL } from '../../models/certificado.model';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, ReplaySubject, Subscription, takeUntil } from 'rxjs';
-import { CertificadoService } from '../../services/certificado.service';
-import { AlertComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
-import { ColumnasTabla, FECHAFINAL, FECHAINICIAL } from '../../models/certificado.model';
+import { ReplaySubject,map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { CertificadoService } from '../../services/certificado.service';
+import { CommonModule } from '@angular/common';
+import { InputFechaComponent } from "@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
+import { TablaDinamicaComponent } from "@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
 import { Tramite110219Query } from '../../estados/Tramite110219.query';
-import { InputFechaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
 /** 
  * Texto de alerta que se muestra para indicar los certificados disponibles.
  */

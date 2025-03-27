@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { Router } from '@angular/router';
 
 /**
  * Componente para gestionar el paso tres del trámite.
