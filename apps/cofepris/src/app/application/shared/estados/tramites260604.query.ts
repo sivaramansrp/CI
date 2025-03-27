@@ -2,22 +2,30 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { solicitud260604State } from './tramites260604.store';
 
-import { Tramites260604Store } from './tramites260604.store'
+import { Tramites260604Store } from './tramites260604.store';
 
+/**
+ * class Tramites260604Query
+ * description Clase para realizar consultas sobre el estado del trámite 260604.
+ * Extiende la funcionalidad de Akita Query para seleccionar datos del estado.
+ */
 @Injectable({ providedIn: 'root' })
 export class Tramites260604Query extends Query<solicitud260604State> {
-//   selectedEstado$ = this.select((state) => state.selectedEstado);
   /**
-   * Selecciona el estado completo de la solicitud
+   * property selectSolicitud$
+   * description Observable que selecciona el estado completo de la solicitud.
    */
-  
-  /**Guarda el estado completo del formulario de la solicitud */
-
   selectSolicitud$ = this.select((state) => {
     return state;
   });
-  constructor(
-    private tramites260604:Tramites260604Store ) {
+
+  /**
+   * constructor
+   * description Constructor que inicializa la consulta con el almacén de trámites 260604.
+   * param tramites260604 Inyección del almacén de trámites 260604.
+   */
+  constructor(private tramites260604: Tramites260604Store) {
+    // Llama al constructor de la clase base Query con el almacén inyectado.
     super(tramites260604);
   }
 }
