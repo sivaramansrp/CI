@@ -103,7 +103,9 @@
         <div class="row mt-5">
           <div class="col-12 container text-end mt-5">
             <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary" (click)="aggregarDatos()">Agregar</button>
+            <button class="btn btn-primary" (click)="aggregarDatos()">
+              Agregar
+            </button>
           </div>
         </div>
       </div>
@@ -209,9 +211,7 @@
               <div class="p-2">
                 <button
                   class="btn btn-primary"
-                  (click)="
-                    navigateToAcciones('../complementar-plantas-acciones')
-                  "
+                  (click)="irAAcciones('../complementar-plantas-acciones')"
                 >
                   Complementar planta
                 </button>
@@ -219,7 +219,7 @@
               <div class="p-2">
                 <button
                   class="btn btn-primary"
-                  (click)="navigateToAcciones('../montos-inversion-acciones')"
+                  (click)="irAAcciones('../montos-inversion-acciones')"
                 >
                   Montos de inversión
                 </button>
@@ -227,7 +227,7 @@
               <div class="p-2">
                 <button
                   class="btn btn-primary"
-                  (click)="navigateToAcciones('../empleados-acciones')"
+                  (click)="irAAcciones('../empleados-acciones')"
                 >
                   Empleados
                 </button>
@@ -235,18 +235,18 @@
               <div class="p-2">
                 <button
                   class="btn btn-primary"
-                  (click)="
-                    navigateToAcciones('../capacidad-instalada-acciones')
-                  "
+                  (click)="irAAcciones('../capacidad-instalada-acciones')"
                 >
                   Capacidad Instalada
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary"
-                (click)="
-                    navigateToAcciones('../proveedor-por-archivo')
-                  ">Carga por archivo</button>
+                <button
+                  class="btn btn-primary"
+                  (click)="irAAcciones('../proveedor-por-archivo')"
+                >
+                  Carga por archivo
+                </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary">Eliminar plantas</button>
