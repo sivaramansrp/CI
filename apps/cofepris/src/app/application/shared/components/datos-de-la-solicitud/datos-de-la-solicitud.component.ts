@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -87,11 +88,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @Input() public opcionesColapsableState!: boolean;
 
   /**
-   * Controla si se deben ocultar o mostrar ciertas opciones en el componente.
-   * 
-   * @property {boolean} ocultarOpciones
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
    */
-  @Input() ocultarOpciones !: boolean;
+  @Input() public idProcedimiento!: number;
 
   /**
    * @event opcionSeleccionado
@@ -195,6 +198,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public opcionesColapsable = false;
 
   /**
+ * @property {boolean} mostrarElementoColapsable
+ * Controla si se debe mostrar un elemento colapsable en la interfaz de usuario.
+ * 
+ * @description
+ * Este valor se utiliza para determinar si un elemento colapsable debe ser visible
+ * o no, dependiendo de la lógica implementada en el componente.
+ */
+  public mostrarElementoColapsable =true;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -225,6 +238,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
 
     this.opcionesColapsable = this.opcionesColapsableState;
+    this.mostrarElementoColapsable = PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE.includes(this.idProcedimiento) ? false : true;
   }
 
   /**

@@ -239,3 +239,9 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
     proveedor: 'TramitesVUCEM SA de CV',
   },
 ];
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216, 260205]
+
+export enum NUMERO_TRAMITE {
+  TRAMITE_260205 = 260205
+}

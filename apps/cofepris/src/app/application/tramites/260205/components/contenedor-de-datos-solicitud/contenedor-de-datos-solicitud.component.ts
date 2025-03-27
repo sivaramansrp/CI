@@ -39,12 +39,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
   public seleccionadoScianDatos: TablaScianConfig[] = [];
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
-  constructor(private tramite260204Query: Tramite260205Query,
-    private tramite260204Store: Tramite260205Store
+  constructor(private Tramite260205Query: Tramite260205Query,
+    private Tramite260205Store: Tramite260205Store
   ) { }
 
   ngOnInit(): void {
-    this.tramite260204Query.selectTramiteState$
+    this.Tramite260205Query.selectTramiteState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -62,11 +62,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`) 
    *                que representa las opciones seleccionadas.
    * 
-   * Actualiza la configuración de datos en el store `tramite260204Store` 
+   * Actualiza la configuración de datos en el store `Tramite260205Store` 
    * con las opciones seleccionadas.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.tramite260204Store.updateOpcionConfigDatos(event);
+    this.Tramite260205Store.updateOpcionConfigDatos(event);
   }
 
   /**
@@ -78,7 +78,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.tramite260204Store.updateScianConfigDatos(event);    
+    this.Tramite260205Store.updateScianConfigDatos(event);    
   }
 
   /**
@@ -88,7 +88,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.tramite260204Store.updateTablaMercanciasConfigDatos(event);
+    this.Tramite260205Store.updateTablaMercanciasConfigDatos(event);
   }
 
 
@@ -98,18 +98,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.tramite260204Store.updateDatosSolicitudFormState(event);
+    this.Tramite260205Store.updateDatosSolicitudFormState(event);
   }
 
   /**
-   * Actualiza el estado de la tienda `tramite260204Store` con los datos seleccionados
+   * Actualiza el estado de la tienda `Tramite260205Store` con los datos seleccionados
    * provenientes del evento de la tabla.
    *
    * @param event - Objeto que contiene las opciones seleccionadas, los datos SCIAN seleccionados
    * y las mercancías seleccionadas de la tabla.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.tramite260204Store.update((state) => ({
+    this.Tramite260205Store.update((state) => ({
       ...state,
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,

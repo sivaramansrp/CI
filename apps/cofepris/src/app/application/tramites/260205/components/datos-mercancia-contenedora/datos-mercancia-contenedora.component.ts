@@ -43,12 +43,12 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * @constructor
    * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.
    *
-   * @param tramite260204Query - Servicio para observar el estado actual del trámite.
-   * @param tramite260204Store - Store que permite actualizar el estado del trámite.
+   * @param Tramite260205Query - Servicio para observar el estado actual del trámite.
+   * @param Tramite260205Store - Store que permite actualizar el estado del trámite.
    */
   constructor(
-    private tramite260204Query: Tramite260205Query,
-    private tramite260204Store: Tramite260205Store
+    private Tramite260205Query: Tramite260205Query,
+    private Tramite260205Store: Tramite260205Store
   ) {}
 
   /**
@@ -57,7 +57,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
    */
   ngOnInit(): void {
-    this.tramite260204Query.selectTramiteState$
+    this.Tramite260205Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -124,7 +124,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       ];
     }
 
-    this.tramite260204Store.update((state) => ({
+    this.Tramite260205Store.update((state) => ({
       ...state,
       seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
       tablaMercanciasConfigDatos: datosActivos,

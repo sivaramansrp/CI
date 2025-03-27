@@ -1,42 +1,43 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContenedorDeDatosSolicitudComponent } from './contenedor-de-datos-solicitud.component';
-import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
+
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
+import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 
 describe('ContenedorDeDatosSolicitudComponent', () => {
   let component: ContenedorDeDatosSolicitudComponent;
   let fixture: ComponentFixture<ContenedorDeDatosSolicitudComponent>;
-  let mockTramite260204Query: jest.Mocked<Tramite260204Query>;
-  let mockTramite260204Store: jest.Mocked<Tramite260204Store>;
+  let mockTramite260205Query: jest.Mocked<Tramite260205Query>;
+  let mockTramite260205Store: jest.Mocked<Tramite260205Store>;
 
   beforeEach(() => {
-    mockTramite260204Query = {
+    mockTramite260205Query = {
       selectTramiteState$: of({
         opcionConfigDatos: [],
         scianConfigDatos: [],
         tablaMercanciasConfigDatos: [],
       }) as any, // Ensure compatibility with the expected type
-    } as unknown as jest.Mocked<Tramite260204Query>; // Cast to jest.Mocked type
+    } as unknown as jest.Mocked<Tramite260205Query>; // Cast to jest.Mocked type
 
-    mockTramite260204Store = {
+    mockTramite260205Store = {
       updateOpcionConfigDatos: jest.fn() as any, // Ensure compatibility with the expected type
       updateScianConfigDatos: jest.fn() as any,
       updateTablaMercanciasConfigDatos: jest.fn() as any,
       updateDatosSolicitudFormState: jest.fn() as any,
       update: jest.fn() as any,
-    } as unknown as jest.Mocked<Tramite260204Store>; // Cast to jest.Mocked type
+    } as unknown as jest.Mocked<Tramite260205Store>; // Cast to jest.Mocked type
 
     TestBed.configureTestingModule({
       declarations: [],
       imports: [CommonModule, DatosDeLaSolicitudComponent, ContenedorDeDatosSolicitudComponent],
       providers: [
-        { provide: Tramite260204Query, useValue: mockTramite260204Query },
-        { provide: Tramite260204Store, useValue: mockTramite260204Store },
+        { provide: Tramite260205Query, useValue: mockTramite260205Query },
+        { provide: Tramite260205Store, useValue: mockTramite260205Store },
         { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },
       ],
     }).compileComponents();
@@ -60,13 +61,13 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
   it('opcionSeleccionado should call updateOpcionConfigDatos on the store', () => {
     const mockEvent: TablaOpcionConfig[] = [{ fechaCreacion: 'test', mercancia: 'test', cantidad: 'test', proveedor: 'test' }];
     component.opcionSeleccionado(mockEvent);
-    expect(mockTramite260204Store.updateOpcionConfigDatos).toHaveBeenCalledWith(mockEvent);
+    expect(mockTramite260205Store.updateOpcionConfigDatos).toHaveBeenCalledWith(mockEvent);
   });
 
   it('scianSeleccionado should call updateScianConfigDatos on the store', () => {
     const mockEvent: TablaScianConfig[] = [{ descripcion: 'test', clave: 'testClave'}];
     component.scianSeleccionado(mockEvent);
-    expect(mockTramite260204Store.updateScianConfigDatos).toHaveBeenCalledWith(mockEvent);
+    expect(mockTramite260205Store.updateScianConfigDatos).toHaveBeenCalledWith(mockEvent);
   });
 
   it('mercanciasSeleccionado should call updateTablaMercanciasConfigDatos on the store', () => {
@@ -92,7 +93,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
       usoEspecifico: ''
     }];
     component.mercanciasSeleccionado(mockEvent);
-    expect(mockTramite260204Store.updateTablaMercanciasConfigDatos).toHaveBeenCalledWith(mockEvent);
+    expect(mockTramite260205Store.updateTablaMercanciasConfigDatos).toHaveBeenCalledWith(mockEvent);
   });
 
   it('datasolicituActualizar should call updateDatosSolicitudFormState on the store', () => {
@@ -120,7 +121,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
       apellidoMaterno: ''
     };
     component.datasolicituActualizar(mockEvent);
-    expect(mockTramite260204Store.updateDatosSolicitudFormState).toHaveBeenCalledWith(mockEvent);
+    expect(mockTramite260205Store.updateDatosSolicitudFormState).toHaveBeenCalledWith(mockEvent);
   });
 
   it('datosDeTablaSeleccionados should call update on the store with correct data', () => {
@@ -151,7 +152,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
       opcionesColapsableState: false
     };
     component.datosDeTablaSeleccionados(mockEvent);
-    expect(mockTramite260204Store.update).toHaveBeenCalled();
+    expect(mockTramite260205Store.update).toHaveBeenCalled();
   });
 
   it('ngOnDestroy should emit and complete destroyNotifier$', () => {

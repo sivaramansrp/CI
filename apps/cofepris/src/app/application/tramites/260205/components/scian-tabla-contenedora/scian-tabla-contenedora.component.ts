@@ -12,7 +12,7 @@ import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
-  constructor(private tramite260204Store: Tramite260205Store){}
+  constructor(private Tramite260205Store: Tramite260205Store){}
 
   public scianSeleccionado!: TablaScianConfig;
 
@@ -22,7 +22,7 @@ export class ScianTablaContenedoraComponent {
    * @param event - Objeto de tipo `TablaScianConfig` que contiene los datos seleccionados de la tabla.
    */
   obtenerSeleccionado(event: TablaScianConfig): void {
-     this.tramite260204Store.update((state) => ({
+     this.Tramite260205Store.update((state) => ({
       ...state,
       scianConfigDatos: [event]
     }))
