@@ -161,8 +161,9 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Si el formulario es inválido, marca todos los campos como tocados.
    */
   validarDestinatarioFormulario(): void {
+    this.registroFormulario.markAllAsTouched();
     if (this.registroFormulario.invalid) {
-      this.registroFormulario.markAllAsTouched();
+      // formulario válido
     }
   }
 
