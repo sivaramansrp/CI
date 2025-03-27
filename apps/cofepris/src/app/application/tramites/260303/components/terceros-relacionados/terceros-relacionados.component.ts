@@ -1,13 +1,12 @@
 
-/* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { TablaDinamicaComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component";
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
-import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Component, OnInit } from '@angular/core';
+import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
+import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { CommonModule } from '@angular/common';
 import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.

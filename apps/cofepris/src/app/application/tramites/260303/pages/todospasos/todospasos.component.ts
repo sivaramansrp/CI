@@ -1,14 +1,13 @@
-/* eslint-disable sort-imports */
+import { ANEXAR, REQUISITOS } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/forma-render.model';
 import { PANTA_PASOS, PASO_FOUR, PASO_ONE, PASO_THREE, PASO_TWO } from '../../services/certificados-licencias-permisos.enum';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
-import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { ANEXAR, REQUISITOS } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/forma-render.model';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.

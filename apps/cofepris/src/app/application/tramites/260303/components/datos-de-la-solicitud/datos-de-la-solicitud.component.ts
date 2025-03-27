@@ -1,14 +1,13 @@
-/* eslint-disable sort-imports */
-import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, CrossListLable, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CROSLISTA_DE_PAISES, PAISES_DE_ORIGEN, USO_ESPECIFICO } from '../../services/certificados-licencias-permisos.enum';
+import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { CommonModule } from '@angular/common';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
@@ -697,7 +696,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
       const VALOR = form.get(campo)?.value;
-      (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+      (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
 

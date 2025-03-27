@@ -1,12 +1,11 @@
-/* eslint-disable sort-imports */
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, REQUISITOS_OPCIONALES, TituloComponent } from '@libs/shared/data-access-user/src';
-import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
+import { CommonModule } from '@angular/common';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * RequisitosNecesariosComponent es responsable de manejar el primer paso del proceso.
