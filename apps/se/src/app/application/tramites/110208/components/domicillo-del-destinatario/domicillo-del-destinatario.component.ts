@@ -7,10 +7,14 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
+/**
+ * Componente que gestiona el formulario de domicilio del destinatario.
+ */
 @Component({
   selector: 'app-domicillo-del-destinatario',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent
@@ -18,35 +22,57 @@ import { Tramite110208Query } from '../../../../estados/queries/tramite110208.qu
   templateUrl: './domicillo-del-destinatario.component.html',
   styleUrl: './domicillo-del-destinatario.component.css',
 })
-export class DomicilloDelDestinatarioComponent implements OnInit,OnDestroy {
+export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
   /**
-     * Estado de la solicitud obtenido desde el store.
-     */
+   * Estado de la solicitud obtenido desde el store.
+   * @type {Solicitud110208State}
+   */
   public solicitudState!: Solicitud110208State;
 
   /**
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
+   * @private
+   * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  domicilioDestinatario!:FormGroup
 
+  /**
+   * Formulario reactivo para gestionar los datos del domicilio del destinatario.
+   * @type {FormGroup}
+   */
+  domicilioDestinatario!: FormGroup;
+
+  /**
+   * Notificador para destruir observables relacionados con el componente.
+   * @private
+   * @type {Subject<void>}
+   */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Lista de catálogos de estados.
+   * @type {Catalogo[]}
+   */
+  estado: Catalogo[] = [];
+
+  /**
+   * Constructor del componente.
+   * @param {FormBuilder} fb - Constructor de formularios reactivos.
+   * @param {ValidarInicalmenteService} service - Servicio para validar datos iniciales.
+   * @param {Tramite110208Store} tramite110208Store - Store para gestionar el estado del trámite.
+   * @param {Tramite110208Query} tramite110208Query - Query para obtener datos del estado del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private service: ValidarInicalmenteService,
     private tramite110208Store: Tramite110208Store,
     private tramite110208Query: Tramite110208Query
-  ) {
-    // Dependencia inyectada para uso posterior
-  }
+  ) {}
 
-  
-   /**
-   * Lista de catálogos de estados.
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y suscribe al estado de la solicitud.
    */
-   estado: Catalogo[] = [];
-
   ngOnInit(): void {
     this.tramite110208Query.selectSolicitud$
       .pipe(
@@ -56,20 +82,27 @@ export class DomicilloDelDestinatarioComponent implements OnInit,OnDestroy {
         })
       )
       .subscribe();
-      this.obtenerEstadoList()
+
+    this.obtenerEstadoList();
+
     this.domicilioDestinatario = this.fb.group({
-      ciudad:[this.solicitudState?.ciudad,Validators.required],
-      calle:[this.solicitudState?.calle,Validators.required],
-      numeroLetra:[this.solicitudState?.numeroLetra,Validators.required],
-      lada:[this.solicitudState?.lada],
-      telefono:[this.solicitudState?.telefono],
-      fax:[this.solicitudState?.fax],
-      correoElectronico:[this.solicitudState?.correoElectronico,Validators.required],
-      paisDestino:[this.solicitudState?.paisDestino]
-    })
-    
+      ciudad: [this.solicitudState?.ciudad, Validators.required],
+      calle: [this.solicitudState?.calle, Validators.required],
+      numeroLetra: [this.solicitudState?.numeroLetra, Validators.required],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState?.telefono],
+      fax: [this.solicitudState?.fax],
+      correoElectronico: [this.solicitudState?.correoElectronico, Validators.required],
+      paisDestino: [this.solicitudState?.paisDestino]
+    });
   }
 
+  /**
+   * Establece valores en el store a partir de un formulario.
+   * @param {FormGroup} form - Formulario reactivo.
+   * @param {string} campo - Nombre del campo del formulario.
+   * @param {keyof Tramite110208Store} metodoNombre - Método del store para actualizar el valor.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -79,18 +112,22 @@ export class DomicilloDelDestinatarioComponent implements OnInit,OnDestroy {
     (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
-    /**
- * Obtiene la lista de estados desde un archivo JSON.
- */
-    obtenerEstadoList(): void {
-      this.service.obtenerEstadoList()
+  /**
+   * Obtiene la lista de estados desde un archivo JSON.
+   */
+  obtenerEstadoList(): void {
+    this.service.obtenerEstadoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
       });
-    }
+  }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Libera recursos y evita pérdidas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

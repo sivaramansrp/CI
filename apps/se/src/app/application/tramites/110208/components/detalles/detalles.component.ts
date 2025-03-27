@@ -7,10 +7,14 @@ import { map, Subject, takeUntil } from 'rxjs';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
+/**
+ * Componente que gestiona los detalles del trámite 110208.
+ */
 @Component({
   selector: 'app-detalles',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent
@@ -18,7 +22,7 @@ import { Tramite110208Query } from '../../../../estados/queries/tramite110208.qu
   templateUrl: './detalles.component.html',
   styleUrl: './detalles.component.css',
 })
-export class DetallesComponent implements OnInit,OnDestroy{
+export class DetallesComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud obtenido desde el store.
    */
@@ -28,23 +32,44 @@ export class DetallesComponent implements OnInit,OnDestroy{
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Lista de estados obtenida desde un archivo JSON.
+   */
   estado: Catalogo[] = [];
 
+  /**
+   * Notificador para destruir observables activos.
+   */
   private destroyed$ = new Subject<void>();
 
-  detallas!:FormGroup
+  /**
+   * Formulario reactivo para gestionar los detalles del trámite.
+   */
+  detallas!: FormGroup;
 
-    constructor(
-      private fb: FormBuilder,
-      private service: ValidarInicalmenteService,
-      private tramite110208Store: Tramite110208Store,
-      private tramite110208Query: Tramite110208Query
-    ) {
-      // Dependencia inyectada para uso posterior
-    }
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb - Constructor de formularios reactivos.
+   * @param service - Servicio para validar inicialmente y obtener datos.
+   * @param tramite110208Store - Store del trámite 110208.
+   * @param tramite110208Query - Query para obtener datos del trámite 110208.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private service: ValidarInicalmenteService,
+    private tramite110208Store: Tramite110208Store,
+    private tramite110208Query: Tramite110208Query
+  ) {
+    // Dependencia inyectada para uso posterior
+  }
 
-    ngOnInit(): void {
-      this.tramite110208Query.selectSolicitud$
+  /**
+   * Método de inicialización del componente.
+   */
+  ngOnInit(): void {
+    this.tramite110208Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -52,40 +77,52 @@ export class DetallesComponent implements OnInit,OnDestroy{
         })
       )
       .subscribe();
-      this.detallas = this.fb.group({
-        medioTransporte:[this.solicitudState?.medioTransporte],
-        rutaCompleta:[this.solicitudState?.rutaCompleta],
-        puertoDeEmbarque:[this.solicitudState?.puertoDeEmbarque],
-        puertoDeDesembarque:[this.solicitudState?.puertoDeDesembarque]
-      })
-      this.obtenerEstadoList()
-    }
 
-    setValoresStore(
-      form: FormGroup,
-      campo: string,
-      metodoNombre: keyof Tramite110208Store
-    ): void {
-      const VALOR = form.get(campo)?.value;
-      (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
-    }
-  
-    /**
- * Obtiene la lista de estados desde un archivo JSON.
- */
-    obtenerEstadoList(): void {
-      this.service.obtenerEstadoList()
+    this.detallas = this.fb.group({
+      medioTransporte: [this.solicitudState?.medioTransporte],
+      rutaCompleta: [this.solicitudState?.rutaCompleta],
+      puertoDeEmbarque: [this.solicitudState?.puertoDeEmbarque],
+      puertoDeDesembarque: [this.solicitudState?.puertoDeDesembarque]
+    });
+
+    this.obtenerEstadoList();
+  }
+
+  /**
+   * Establece valores en el store del trámite.
+   * 
+   * @param form - Formulario reactivo que contiene los valores.
+   * @param campo - Nombre del campo en el formulario.
+   * @param metodoNombre - Nombre del método en el store para actualizar el valor.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite110208Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Obtiene la lista de estados desde un archivo JSON.
+   */
+  obtenerEstadoList(): void {
+    this.service.obtenerEstadoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
       });
-    }
+  }
 
-    ngOnDestroy(): void {
-      this.destroyed$.next();
-      this.destroyed$.complete();
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  /**
+   * Método para limpiar recursos y evitar pérdidas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
