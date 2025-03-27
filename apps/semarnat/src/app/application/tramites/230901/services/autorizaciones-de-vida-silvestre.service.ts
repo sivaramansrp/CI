@@ -10,6 +10,8 @@ export class AutorizacionesDeVidaSilvestreService {
 
   tiposDeMovimiento: Catalogo[] = [];
   tiposDeRegimen: Catalogo[] = [];
+  entidadesFederativas: Catalogo[] = [];
+  bancos: Catalogo[] = [];
 
 
   /**
@@ -25,6 +27,8 @@ export class AutorizacionesDeVidaSilvestreService {
   public inicializaPasoUnoDatosCatalogos(): void {
     this.obtenerRespuestaPorUrl(this, 'tiposDeMovimiento', '/230901/tiposDeMovimiento.json');
     this.obtenerRespuestaPorUrl(this, 'tiposDeRegimen', '/230901/tiposDeRegimen.json');
+    this.obtenerRespuestaPorUrl(this, 'entidadesFederativas', '230901/entidadesFederativas.json');
+    this.obtenerRespuestaPorUrl(this, 'bancos', '230901/bancos.json');
   }
 
 /**

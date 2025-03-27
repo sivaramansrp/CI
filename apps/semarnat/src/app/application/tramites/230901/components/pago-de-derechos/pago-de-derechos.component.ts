@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import {FormControl, FormGroup, Validators } from '@angular/forms';
+import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
+import { Tramite230901Query } from '../../estados/tramite230901.query';
+import { Tramite230901Store } from '../../estados/tramite230901.store';
 
 @Component({
   selector: 'app-pago-de-derechos',
@@ -9,9 +11,14 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 })
 export class PagoDeDerechosComponent implements OnInit {
   formPagoDerechos!: FormGroup;
-  bancoList: Catalogo[] = [];
+
+  constructor(public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService, private tramite230901Store: Tramite230901Store, private tramite230901Query: Tramite230901Query,
+  ) {
+    // do nothing
+  }
 
   ngOnInit(): void {
+    this.autorizacionesDeVidaSilvestreService.inicializaPasoUnoDatosCatalogos();
     this.crateFormPagoDerechos();
   }
 
@@ -31,6 +38,6 @@ export class PagoDeDerechosComponent implements OnInit {
   }
 
   bancoSeleccion(): void {
-    this.bancoList = [];
+    this.tramite230901Store.setbancoseleccionado(this.formPagoDerechos.get('banco')?.value);
   }
 }

@@ -6,7 +6,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-  Solitud230901State,
+  Solicitud230901State,
   Tramite230901Store,
 } from '../../estados/tramite230901.store';
 import { Subject, takeUntil } from 'rxjs';
@@ -43,7 +43,7 @@ export class DatosSolicitudComponent implements OnInit {
  
 
   private destroyNotifier$: Subject<void> = new Subject();
-  public solicitudState!: Solitud230901State;
+  public solicitudState!: Solicitud230901State;
 
   TablaSeleccion = TablaSeleccion.CHECKBOX;
 
