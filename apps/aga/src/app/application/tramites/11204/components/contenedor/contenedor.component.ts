@@ -160,8 +160,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Numero de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
-    { encabezado: 'Digito Verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
+    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
+    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
     { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
     { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
@@ -174,8 +174,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public csvTabla: ConfiguracionColumna<datosDelCsvArchivo>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Numero de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
-    { encabezado: 'Digito Verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
+    { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
+    { encabezado: 'Dígito verificador', clave: (articulo) => articulo.digitoVerificador, orden: 3 },
     { encabezado: 'Tipo de Documento', clave: (articulo) => articulo.tipoEquipo, orden: 4 },
     { encabezado: 'Fecha Ingreso', clave: (articulo) => articulo.fechaIngreso, orden: 5 },
     { encabezado: 'vigencia', clave: (articulo) => articulo.vigencia, orden: 6 },
@@ -440,7 +440,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Validar el digito verificador y agregar la solicitud.
+   * Validar el Dígito verificador y agregar la solicitud.
    */
   datosCaptura(): void {
     this.solicitudForm.markAllAsTouched();
@@ -494,8 +494,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       'Aduana': 'aduana',
       'Iniciales del equipo': 'inicialesEquipo',
       'Tipo de documento': 'tipoEquipo',
-      'Numero de equipo': 'numeroEquipo',
-      'Digito Verificador': 'digitoVerificador',
+      'Número de equipo': 'numeroEquipo',
+      'Dígito verificador': 'digitoVerificador',
       'Fecha Ingreso': 'fechaIngreso',
       'Vigencia': 'vigencia'
     };

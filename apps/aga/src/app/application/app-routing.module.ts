@@ -101,7 +101,7 @@ const ROUTES: Routes = [
     ),
 },
 {
-  path: 'transfercia-contenedores',
+  path: 'transferencia-contenedores',
   loadChildren: () =>
     import('./tramites/11204/temporal-contenedores.module').then(
       (m) => m.TemporalContenedoresModule

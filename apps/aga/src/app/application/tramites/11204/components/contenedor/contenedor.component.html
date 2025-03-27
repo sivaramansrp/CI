@@ -71,7 +71,7 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroContenedor">Numero de equipo</label>
+                            <label for="numeroContenedor">Número de equipo</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
                                 class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
@@ -102,7 +102,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Digito verificador</label>
+                            <label for="digitoDeControl">Dígito verificador</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
                                 class="form-control">
                         </div>
@@ -151,7 +151,7 @@
                             <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado"
                                 required>
                         </div>
-                        <div class="col-md-4 d-flex justify-content-end" style="width: 100%;margin-bottom: 20px;">
+                        <div class="col-md-4 d-flex justify-content-end cargarbtn">
                             <button type="button" class="btn btn-default" (click)="adjuntarArchivo()">Cargar
                                 Archivo</button>
                         </div>
