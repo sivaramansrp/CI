@@ -39,6 +39,13 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
+ @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+  false
+);  
   /**
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos
@@ -73,6 +80,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe((_) => {
         // Emite los valores actuales del formulario
         this.formDatosDelDestinatarioEvent.emit(this.formDatosDelDestinatario.value);
+        this.formaValida.emit(this.formDatosDelDestinatario.valid);
       });
   }
 

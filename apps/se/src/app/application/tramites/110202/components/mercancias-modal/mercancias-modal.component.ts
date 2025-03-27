@@ -65,6 +65,13 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * @type {Observable<Catalogo[]>}
    */
   umcs$!: Observable<Catalogo[]>;
+
+  /**
+   * Observable que emite la lista de estados disponibles.
+   * @type {Observable<Catalogo[]>}
+   */
+  masaBrutas$!: Observable<Catalogo[]>;
+
   /**
 * Observable que emite la lista de estados disponibles.
 * @type {Observable<Catalogo[]>}
@@ -88,6 +95,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       });
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;
+    this.masaBrutas$ = this.tramiteQuery.selectMasaBruta$;
 
   }
 
@@ -163,6 +171,13 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.store.setUmc([umc]);
   }
 
+   /**
+    * Establece el estado seleccionado en el store.
+    * @param {Catalogo} masaBruta El estado seleccionado.
+    */
+   tipoMasaBrutaSeleccion(masaBruta: Catalogo): void {
+    this.store.setMasaBruta([masaBruta]);
+  }
   /**
    * Carga las facturas desde el servicio y las establece en el store.
    */
@@ -200,6 +215,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setUmc(data)
+          this.store.setMasaBruta(data);
         },
         (error) => {
           console.error('Error al cargar los estados:', error);
@@ -216,7 +232,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
   accept(): void {
     this.guardarClicado.emit(this.mercanciaForm.value);
-    this.store.setmer([this.mercanciaForm.value]);
+    this.store.setmercanciaTabla([this.mercanciaForm.value]);
     if (this.mostrarAlerta) {
       of(null).pipe(delay(100)).subscribe(() => {
         this.cerrarModal();

@@ -1,6 +1,7 @@
 <app-datos-del-destinatario
   [datosForm]="formDatosDelDestinatarioValues"
   (formDatosDelDestinatarioEvent)="detosDelDestinatarioFunc($event)"
+  (formaValida)="setFormValida($event)"
 ></app-datos-del-destinatario>
 
 <app-destinatario
@@ -9,6 +10,7 @@
   [paisDestin]="(paisDestin$ | async) || []"
   (formDestinatarioEvent)="formDestinatarioFunc($event)"
   [datosForm]="formDestinatarioValues"
+  (formaValida)="setFormValidaDestinatario($event)"
 ></app-destinatario>
 
 <div>

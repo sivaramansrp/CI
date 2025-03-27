@@ -68,7 +68,7 @@
               <input type="number" class="form-control" formControlName="masaBruta">
             </div>
             <div class="col-md-6">
-              <app-catalogo-select [catalogo]="(umcs$ | async) || []" [label]="'UMC'" [required]="true" name="estado" formControlName="unidadMedidaMasaBruta" (selectionChange)="tipoUmcSeleccion($event)"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="(masaBrutas$ | async) || []" [label]="'unidad de medida de la masa bruta'" [required]="true" name="estado" formControlName="unidadMedidaMasaBruta" (selectionChange)="tipoMasaBrutaSeleccion($event)"></app-catalogo-select>
             </div>
           </div>
           <div class="row mb-3">

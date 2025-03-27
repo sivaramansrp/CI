@@ -4,4 +4,4 @@
   (representacionFederalSeleccionEvent)="representacionFederalSeleccion($event)"
   [entidadFederativaDatos]="(entidadFederativas$ | async) || []"
   [representacionFederalDatos]="(representacionFederal$ | async) || []"
-  [datosFormCertificado]="formDatosCertificadoValues"></app-daos-certificado>
+  [datosFormCertificado]="formDatosCertificadoValues" (formaValida)="setFormValida($event)"></app-daos-certificado>

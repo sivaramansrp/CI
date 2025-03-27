@@ -3,7 +3,7 @@
     (setbuscarMercanciaEvent)="buscarrMercancia()" [tratadoAcuerdo]="(estados$ | async ) || []"
     [paisBloqu]="(pais$ | async) || []" [tableData]="(datos1$ | async) || []" (filaClics)="abrirModificarModal($event)"
     [datosForm]="formCertificadoValues" [tablaSeleccionEvent]="tablaSeleccionEvent"
-    [guardarClicado]="(datosTabla$ | async) ||  []"></app-certificado-de-origen>
+    [guardarClicado]="(datosTabla$ | async) ||  []" (formaValida)="setFormValida($event)"></app-certificado-de-origen>
 
 
 

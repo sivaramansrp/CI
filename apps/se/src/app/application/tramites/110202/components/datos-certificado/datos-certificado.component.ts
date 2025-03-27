@@ -252,6 +252,14 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Establece el estado de validez del formulario en el store.
+   * @param valida Indica si el formulario es válido o no.
+   */
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ datos: valida });
+  }
+
+  /**
    * Método de ciclo de vida de Angular, se ejecuta al destruir el componente.
    * Cancela todas las suscripciones para evitar fugas de memoria.
    */

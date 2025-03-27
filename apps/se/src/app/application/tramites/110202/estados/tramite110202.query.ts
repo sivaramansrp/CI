@@ -97,6 +97,14 @@ export class Tramite110202Query extends Query<TramiteState> {
   });
 
   /**
+ * Selecciona el estado del umc.
+ * @returns {Observable<any>} - Observable con los umc.
+ */
+  selectMasaBruta$ = this.select((state) => {
+    return state.masaBruta;
+  });
+
+  /**
    * Selecciona los países bloqueados.
    * @returns {Observable<any>} - Observable con los países bloqueados.
    */

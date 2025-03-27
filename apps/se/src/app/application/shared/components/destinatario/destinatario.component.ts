@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './destinatario.component.scss'
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
-  
+
   /**
    * Indica si el país de destino está habilitado
    * @type {boolean}
@@ -80,6 +80,13 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+* Emisor de eventos para indicar si el formulario es válido.
+* @type {EventEmitter<boolean>}
+*/
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+    false
+  );
+  /**
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos
    */
@@ -112,6 +119,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((_) => {
         this.formDestinatarioEvent.emit(this.formDestinatario.value);
+        this.formaValida.emit(this.formDestinatario.valid);
       });
   }
 

@@ -1,9 +1,10 @@
-import { AlertComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, SeccionLibStore, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/modificacion.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { SECCIONES_TRAMITE } from '../../models/permiso-importacion-modification.enum';
+import { Tramite110202Query } from '../../estados/tramite110202.query';
 
 interface AccionBoton {
   /**
@@ -25,7 +26,6 @@ interface AccionBoton {
     BtnContinuarComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    AlertComponent
   ],
   templateUrl: './cartificado-validacion-page.component.html',
   styleUrl: './cartificado-validacion-page.component.scss'
@@ -42,9 +42,21 @@ export class CartificadoValidacionPageComponent {
    * Este valor se utiliza para determinar qué paso está activo en el wizard.
    * Inicialmente se establece en 1, que corresponde al primer paso.
    */
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private seccionStore: SeccionLibStore) {
-    this.asignarSecciones();
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110202Query,
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([res]);
+    });
   }
   indice: number = 1;
 
@@ -113,19 +125,4 @@ export class CartificadoValidacionPageComponent {
     }
   }
 
-
-  private asignarSecciones(): void {
-    const SECCIONES: boolean[] = [];
-    const FORMA_VALIDA: boolean[] = [];
-    const PREDETERMINADO = SECCIONES_TRAMITE
-    for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
-      if (Object.prototype.hasOwnProperty.call(PREDETERMINADO.PASO_1, LLAVE_SECCION)) {
-        // @ts-expect-error - fix this
-        SECCIONES.push(PREDETERMINADO.PASO_1[LLAVE_SECCION]);
-        FORMA_VALIDA.push(false);
-      }
-    }
-    this.seccionStore.establecerSeccion(SECCIONES);
-    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
-  }
 }

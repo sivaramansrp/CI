@@ -258,4 +258,22 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+ * Establece el estado de validación del formulario de destinatario.
+ * 
+ * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+ */
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ destinatrio: valida });
+  }
+
+  /**
+   * Establece el estado de validación del formulario de destinatario.
+   * 
+   * @param valida - Un valor booleano que indica si el formulario de datos del destinatario es válido.
+   */
+  setFormValidaDestinatario(valida: boolean): void {
+    this.store.setFormValida({ datosDestinatario: valida });
+  }
 }

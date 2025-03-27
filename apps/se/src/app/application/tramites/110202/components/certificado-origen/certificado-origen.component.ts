@@ -347,4 +347,12 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
   }
+
+  /**
+   * Establece el estado de validez del formulario en el store.
+   * @param valida Indica si el formulario es válido o no.
+   */
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ certificado: valida });
+  }
 }

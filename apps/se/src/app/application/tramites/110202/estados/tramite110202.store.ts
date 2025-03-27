@@ -16,6 +16,8 @@ export interface TramiteState {
   facturas: Catalogo,
   umc: Catalogo;
   umcs: Catalogo[],
+  masa: Catalogo;
+  masaBruta: Catalogo[],
   paisBloques: Catalogo[];
   paisBloque: Catalogo;
   formCertificado: { [key: string]: undefined | boolean | string | number | object };
@@ -73,8 +75,15 @@ export const INITIAL_STATE: TramiteState = {
   },
   umc: { id: -1, descripcion: '' },
   umcs: [],
+  masa: { id: -1, descripcion: '' },
+  masaBruta: [],
   factura: [],
-  formaValida: {},
+  formaValida: {
+    certificado: false,
+    datos: false,
+    destinatrio: false,
+    datosDestinatario: false,
+  },
   formCertificado: {
     entidadFederativa: '',
     bloque: '',
@@ -205,6 +214,19 @@ export class Tramite110202Store extends Store<TramiteState> {
       umcs,
     }));
   }
+
+  /**
+ * Establece el catálogo de masaBruta en el estado de la tienda.
+ *
+ * @param masaBruta - Una lista de objetos de tipo `Catalogo` que representan las masaBruta a establecer.
+ */
+  setMasaBruta(masaBruta: Catalogo[]): void {
+    this.update((state) => ({
+      ...state,
+      masaBruta,
+    }));
+  }
+
   /**
    * Establece los bloques de países en el almacén.
    * 
@@ -481,7 +503,12 @@ export class Tramite110202Store extends Store<TramiteState> {
   }
 
 
-  setmer(mercanciaTabla: Mercancia[]): void {
+   /**
+  * Actualiza el estado con una nueva tabla de mercancías.
+  * @param {Mercancia[]} mercanciaTabla - Un arreglo de objetos de tipo Mercancia que representa la tabla de mercancías a establecer.
+  * @returns {void} - No retorna ningún valor.
+  */
+   setmercanciaTabla(mercanciaTabla: Mercancia[]): void {
     this.update((state) => ({
       ...state,
       mercanciaTabla,
