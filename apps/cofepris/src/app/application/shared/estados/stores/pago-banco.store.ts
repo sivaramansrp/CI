@@ -2,10 +2,10 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 260502
- * @returns Solicitud260502
+ * Creacion del estado inicial para la interfaz de tramite PagoBanco
+ * @returns SolicitudPagoBanco
  */
-export interface Solicitud260502State {
+export interface SolicitudPagoBancoState {
   /**
    * claveDeReferencia
    * @type {string}
@@ -43,7 +43,7 @@ export interface Solicitud260502State {
   importePago: string;
 }
 
-export function createInitialState(): Solicitud260502State {
+export function createInitialState(): SolicitudPagoBancoState {
   return {
     /**
      * claveDeReferencia
@@ -86,10 +86,10 @@ export function createInitialState(): Solicitud260502State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260502', resettable: true })
-export class Tramite260502Store extends Store<Solicitud260502State> {
+@StoreConfig({ name: 'tramitePagoBanco', resettable: true })
+export class TramitePagoBancoStore extends Store<SolicitudPagoBancoState> {
   /**
-   * Crea una instancia de Tramite260502Store.
+   * Crea una instancia de TramitePagoBancoStore.
    * @constructor
    */
   constructor() {
