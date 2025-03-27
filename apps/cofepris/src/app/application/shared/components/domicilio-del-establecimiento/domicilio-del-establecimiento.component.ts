@@ -26,39 +26,118 @@ import { Tramite260603Query } from '../../../shared/estados/tramites260603.query
 
 import { DatosService } from '../../../shared/services/datos.service';
 
+/**
+ * Componente que gestiona el formulario y las interacciones relacionadas con el domicilio del establecimiento.
+ */
 @Component({
   selector: 'app-domicilio-del-establecimiento',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, InputRadioComponent, CrosslistComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TituloComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    InputRadioComponent,
+    CrosslistComponent,
+  ],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrls: ['./domicilio-del-establecimiento.component.scss'],
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia a los componentes Crosslist.
+   */
   @ViewChild(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+
+  /**
+   * Estado actual de la solicitud.
+   */
   public solicitudState!: Solicitud260603State;
+
+  /**
+   * Notificador para destruir observables relacionados con el estado.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Formulario reactivo para capturar los datos del domicilio.
+   */
   domicilioForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para capturar la clave y descripción SCIAN.
+   */
   claveScianForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para capturar los datos de mercancía.
+   */
   DatosMercanciaForm!: FormGroup;
+
+  /**
+   * Lista de estados cargados dinámicamente.
+   */
   estadoData: Catalogo[] = [];
+
+  /**
+   * Lista de claves SCIAN cargadas dinámicamente.
+   */
   claveScian: Catalogo[] = [];
+
+  /**
+   * Opciones de radio cargadas dinámicamente.
+   */
   radioOptions: PreOperativo[] = [];
+
+  /**
+   * Lista de descripciones SCIAN cargadas dinámicamente.
+   */
   descripcionScian: Catalogo[] = [];
+
+  /**
+   * Lista de clasificaciones de productos cargadas dinámicamente.
+   */
   clasificacionProducto: Catalogo[] = [];
+
+  /**
+   * Notificador para destruir observables relacionados con los servicios.
+   */
   private destroy$ = new Subject<void>();
-  /** Enum para la selección de tablas */
+
+  /**
+   * Enum para la selección de tablas.
+   */
   TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Configuración de columnas para la tabla de datos SCIAN.
+   */
   configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
+
+  /**
+   * Datos cargados dinámicamente para la tabla SCIAN.
+   */
   datosData: ScianData[] = [];
+
+  /**
+   * Controla la visibilidad de una sección colapsable.
+   */
   colapsable: boolean = false;
+
   /**
    * Lista de países para la selección de origen.
    */
   public crosListaDePaises = CROSLISTA_DE_PAISES;
+
   /**
    * Lista de países para seleccionar el origen de la primera sección.
    */
   seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+
+  /**
+   * Etiquetas para la lista cruzada de países.
+   */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Uso específico:',
     derecha: 'Uso específico seleccionado*:',
@@ -74,6 +153,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     { btnNombre: 'Restar todos', class: 'btn-default', funcion: (): void => this.crossList.toArray()[0].quitar('t') },
   ];
 
+  /**
+   * Configuración de columnas para la tabla de datos de productos.
+   */
   configuracionTablaProductoDatos: ConfiguracionColumna<DatosProducto>[] = DATOS_PRODUCTO.map(col => ({
     ...col,
     clave: (item: DatosProducto): string | number | undefined => {
@@ -81,33 +163,48 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       return VALUE instanceof Date ? VALUE.toISOString() : VALUE;
     }
   }));
-  datosProducto: DatosProducto[] = [];
+
   /**
-   * Variable que controla la visibilidad del modal.
+   * Datos cargados dinámicamente para la tabla de productos.
+   */
+  datosProducto: DatosProducto[] = [];
+
+  /**
+   * Controla la visibilidad del modal.
    */
   public modal: string = 'modal';
+
   /**
    * Referencia al elemento de cierre del modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
-  constructor(private fb: FormBuilder,
+  /**
+   * Constructor del componente.
+   * @param fb Constructor de formularios reactivos.
+   * @param datosService Servicio para obtener datos dinámicos.
+   * @param tramite260603Store Store para gestionar el estado de la solicitud.
+   * @param tramite260603Query Query para obtener datos del estado.
+   */
+  constructor(
+    private fb: FormBuilder,
     private datosService: DatosService,
     private tramite260603Store: Tramite260603Store,
     private tramite260603Query: Tramite260603Query
-  ) {
-    //constructor
-  }
+  ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que inicializa el componente.
+   */
   ngOnInit(): void {
-      this.tramite260603Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {  
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe();
+    this.tramite260603Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.domicilioForm = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.maxLength(12)]],
@@ -140,12 +237,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       tipoProducto: [this.solicitudState?.tipoProducto, Validators.required],
       estadoFisico: [this.solicitudState?.estadoFisico, Validators.required],
       fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
-      descripcionFraccionArancelaria: [{value: this.solicitudState?.descripcionFraccionArancelaria, disabled: true}, Validators.required],
+      descripcionFraccionArancelaria: [{ value: this.solicitudState?.descripcionFraccionArancelaria, disabled: true }, Validators.required],
       cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
       umc: [this.solicitudState?.umc, Validators.required],
       porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion, Validators.required],
       valorComercial: [this.solicitudState?.valorComercial, Validators.required],
-      fechaMovimiento: [{value: this.solicitudState?.fechaMovimiento, disabled: true}, Validators.required],
+      fechaMovimiento: [{ value: this.solicitudState?.fechaMovimiento, disabled: true }, Validators.required],
       presentacionFarmaceutica: [this.solicitudState?.presentacionFarmaceutica, Validators.required],
       paisDestino: [this.solicitudState?.paisDestino, Validators.required],
       paisProcedencia: [this.solicitudState?.paisProcedencia, Validators.required],
@@ -160,32 +257,53 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     this.obtenerclassificacionProductos();
   }
 
+  /**
+   * Actualiza el estado del store con los valores del formulario.
+   * @param form Formulario reactivo.
+   * @param campo Campo del formulario.
+   * @param metodoNombre Método del store a invocar.
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260603Store): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260603Store[metodoNombre] as (value: string | number) => void)(VALOR);
   }
+
+  /**
+   * Alterna la visibilidad de la sección colapsable.
+   */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
-  toggleNoLicenciaSanitaria(event: any): void {
+  /**
+   * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
+   * @param event Evento del checkbox.
+   */
+  toggleNoLicenciaSanitaria(event: Event): void {
     const NO_LICENCIA_SANITARIA = this.domicilioForm.get('noLicenciaSanitaria');
 
-    if (event.target.checked) {
+    if ((event.target as HTMLInputElement).checked) {
       NO_LICENCIA_SANITARIA?.disable();
-    }
-    else{
+    } else {
       NO_LICENCIA_SANITARIA?.enable();
     }
   }
+
+  /**
+   * Carga los datos de los estados desde el servicio.
+   */
   cargarEstadoData(): void {
-    this.datosService.obtenerEstadoData()
+    this.datosService
+      .obtenerEstadoData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp: Catalogo[]) => {
         this.estadoData = resp;
       });
   }
 
+  /**
+   * Carga los datos de la tabla SCIAN desde el servicio.
+   */
   cargarDatosTabla(): void {
     this.datosService
       .obternerDatosData()
@@ -195,6 +313,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Carga los datos de la tabla de productos desde el servicio.
+   */
   cargarDatosProductoTabla(): void {
     this.datosService
       .obtenerDatosProducto()
@@ -204,6 +325,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Carga las claves SCIAN desde el servicio.
+   */
   obtenerDatosClave(): void {
     this.datosService
       .obtenerClaveScian()
@@ -212,6 +336,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         this.claveScian = resp;
       });
   }
+
+  /**
+   * Carga las descripciones SCIAN desde el servicio.
+   */
   obtenerDatosDescripcion(): void {
     this.datosService
       .obtenerDescripcionScian()
@@ -221,6 +349,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Carga las opciones de radio desde el servicio.
+   */
   obtenerDatosPreOperativo(): void {
     this.datosService
       .obtenerPreOperativo()
@@ -230,6 +361,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Carga las clasificaciones de productos desde el servicio.
+   */
   obtenerclassificacionProductos(): void {
     this.datosService
       .obtenerClasificationProductos()
@@ -239,16 +373,22 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Muestra el modal para la clave SCIAN.
+   */
   public mostrarModeloClave(): void {
     this.modal = 'show'; // Muestra el modal
   }
 
+  /**
+   * Muestra el modal para los datos del producto.
+   */
   public datosDelProducto(): void {
-    this.modal = 'show'; 
+    this.modal = 'show';
   }
 
-  /*
-   * Método del ciclo de vida de Angular - destruye el componente
+  /**
+   * Método del ciclo de vida de Angular que destruye el componente.
    */
   ngOnDestroy(): void {
     this.destroy$.next();
