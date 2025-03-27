@@ -195,7 +195,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: ValidarInicalmenteService,
-    private tramite110208Store: Tramite110208Store,
+    public tramite110208Store: Tramite110208Store,
     private tramite110208Query: Tramite110208Query
   ) {}
 
@@ -238,8 +238,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
    * Obtiene los datos de la tabla de mercancías.
    */
   obtenerTablaDatos(): void {
-    this.service
-      .obtenerTablaDatos()
+    this.service.obtenerTablaDatos()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         const DATOS = data?.data;

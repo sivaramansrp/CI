@@ -125,7 +125,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
+    this.obtenerTablaDatosCertificado();
 
     this.formCertificado = this.fb.group({
       entidadFederativa: [this.solicitudState?.entidadFederativa, Validators.required],
@@ -154,7 +154,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos de la tabla NICO desde el servicio.
    */
-  obtenerTablaDatos(): void {
+  obtenerTablaDatosCertificado(): void {
     this.service.obtenerTablaDatosCertificado()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
