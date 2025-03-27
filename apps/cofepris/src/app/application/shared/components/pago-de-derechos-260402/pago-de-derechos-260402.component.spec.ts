@@ -1,41 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PagoDeDerechos260402Component } from './pago-de-derechos-260402.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { PagoDeDerechos260402Service } from '../../services/pago-de-derechos-260402.service';
-import { of } from 'rxjs';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechos260402Component;
   let fixture: ComponentFixture<PagoDeDerechos260402Component>;
-  let pagoDeDerechosMockService: any;
 
   beforeEach(async () => {
-    pagoDeDerechosMockService = {
-      getData: jest.fn().mockReturnValue(of([
-        { id: "Banco1", descripcion: "Banco1" },
-        { id: "Banco2", descripcion: "Banco2" },
-        { id: "Banco3", descripcion: "Banco3" },
-      ])),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, PagoDeDerechos260402Component],
-      declarations: [],
-      providers: [
-        { provide: PagoDeDerechos260402Service, useValue: pagoDeDerechosMockService }
-      ]
+      imports: [PagoDeDerechos260402Component],
+    }).compileComponents();
 
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(PagoDeDerechos260402Component);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(PagoDeDerechos260402Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -45,12 +19,42 @@ describe('PagoDeDerechosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form', () => {
-    expect(component.pagoDerechos).toBeDefined();
-    expect(component.pagoDerechos.controls['claveDeReferncia']).toBeDefined();
+  it('should initialize the form with empty values', () => {
+    expect(component.pagoDerechos.get('claveReferencia')?.value).toBe('');
+    expect(component.pagoDerechos.get('cadenaDependencia')?.value).toBe('');
+    expect(component.pagoDerechos.get('estado')?.value).toBe('');
+    expect(component.pagoDerechos.get('llavePago')?.value).toBe('');
+    expect(component.pagoDerechos.get('fechaPago')?.value).toBe('');
+    expect(component.pagoDerechos.get('importePago')?.value).toBe('');
   });
 
-  it('should call getData on init', () => {
-    expect(pagoDeDerechosMockService.getData).toHaveBeenCalled();
+  it('should validate required fields', () => {
+    const form = component.pagoDerechos;
+    expect(form.valid).toBeFalsy();
+    
+    form.controls['claveReferencia'].setValue('123');
+    form.controls['cadenaDependencia'].setValue('abc');
+    form.controls['estado'].setValue('active');
+    form.controls['llavePago'].setValue('key123');
+    form.controls['fechaPago'].setValue('2024-01-01');
+    form.controls['importePago'].setValue('100.00');
+    
+    expect(form.valid).toBeTruthy();
   });
+
+  it('should validate importePago pattern', () => {
+    const importePagoControl = component.pagoDerechos.controls['importePago'];
+    
+    importePagoControl.setValue('abc');
+    expect(importePagoControl.valid).toBeFalsy();
+    
+    importePagoControl.setValue('100.00');
+    expect(importePagoControl.valid).toBeTruthy();
+  });
+
+  it('should reset form on onReset()', () => {
+    component.pagoDerechos.controls['claveReferencia'].setValue('test');
+    expect(component.pagoDerechos.get('claveReferencia')?.value).toBe(null);
+  });
+  
 });

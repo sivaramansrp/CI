@@ -242,10 +242,6 @@ label {
 
 html {
   font-family: "Montserrat";
-
-  /* font-family: sans-serif; */
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
 }
 
 article,
@@ -4267,6 +4263,51 @@ tbody.collapse.in {
         cursor: default;
       }
     }
+  }
+}
+
+.menu-tabs {
+  border-bottom: 1px solid #ddd;
+
+  > li {
+    display: inline-block;
+    margin-bottom: -1px;
+    border: 1px solid #ddd;
+
+    > a {
+      display: block;
+      line-height: 1.428571429;
+      background-color: #ececec;
+      padding: 10px;
+
+      &:hover {
+        background-color: #ddd;
+        border-color: #eee #eee #ddd;
+      }
+    }
+
+    &.active {
+      border-bottom: none;
+      
+      > a {
+        background-color: white;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        cursor: default;
+
+        &:focus,
+        &:hover {
+          background-color: #ddd;
+          border: 1px solid #ddd;
+          border-bottom: none;
+          cursor: default;
+        }
+      }
+    }
+  }
+
+  > li:last-child {
+    border-right: none;
   }
 }
 

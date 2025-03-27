@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { TEXTOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
+import { TEXTOS } from '@libs/shared/data-access-user/src';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;

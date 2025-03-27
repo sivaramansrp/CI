@@ -213,16 +213,11 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
 
    */
 
-    cambioFechaFinal(nuevo_valor: string): void {
-
+    cambioFechaDePago(nuevo_valor: string): void {
       this.pagoDerechos.patchValue({
-  
-        fechaSalida: nuevo_valor,
-  
+        fechaDePago: nuevo_valor,
       });
-  
       this.tramite260402Store.setFechaDePago(nuevo_valor);
-  
     }
 
   /*
