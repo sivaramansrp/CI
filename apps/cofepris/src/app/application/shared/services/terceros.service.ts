@@ -6,6 +6,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
 /**
@@ -22,7 +23,9 @@ export class TercerosService {
    * 
    * @param http Cliente HTTP para realizar peticiones.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+     // Constructor logic can be added here if needed
+   }
 
   /**
    * Obtiene los datos de terceros relacionados desde un archivo JSON local.
@@ -31,5 +34,9 @@ export class TercerosService {
    */
   getData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260212/terceros-relacionados.json');
+  }
+
+  getInformacioDeTabla(){
+    return this.http.get<any>('assets/json/260402/informacio-procedencia.json');
   }
 }

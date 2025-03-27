@@ -9,3 +9,25 @@ export interface TableData {
 }
 
 
+
+export interface TipoMoModel {
+  tipoPersona:boolean;
+  razonSocial:string;
+  pais:string;
+  estado:string;
+  codigoPostal:string;
+  calle:string;
+  numeroExterior:string;
+  numeroInterior:string;
+  lada:string;
+  telefono:string;
+  correoElectronico:string;
+  rfc:string;
+  curp:string;
+  colonia:string;
+  municipio:string;
+  localidad:string;
+  entidadFederativa:string;
+  coloniaEquivalente:string
+  }
+

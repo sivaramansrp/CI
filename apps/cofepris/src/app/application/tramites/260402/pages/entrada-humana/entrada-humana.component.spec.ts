@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PermisoMaquilaComponent } from './permiso-maquila.component';
-import { PERMISO_MAQUILA } from '../../constantes/permiso-maquila.enum';
+import { PERMISO_MAQUILA } from '../../constantes/entrada-humana.enum';
 
 describe('PermisoMaquilaComponent', () => {
   let component: PermisoMaquilaComponent;

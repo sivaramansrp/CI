@@ -15,7 +15,7 @@
 
       <div class="d-flex justify-content-end mt-3">
 
-        <button type="button" class="btn btn-primary" (click)="openModal()">
+        <button type="button" class="btn btn-primary" (click)="abrirProcedencia()">
           Agregar
         </button>
       </div>
@@ -23,6 +23,7 @@
 
   </div>
 
-  <div *ngIf="isModalVisible">
-    <app-datos-generales (close)="closeModal()"></app-datos-generales>
+  <div *ngIf="isDatosGeneralesVisible">
+    <app-datos-generales (cancelDatosGenerales)="cerrarProcedencia()"
+      (formularioGuardar)="agregarTabla($event)"></app-datos-generales>
   </div>

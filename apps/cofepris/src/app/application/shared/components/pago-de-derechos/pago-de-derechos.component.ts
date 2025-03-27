@@ -64,8 +64,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private pagoDeDerechosService: PagoDeDerechosService,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query
-    
-  ) { }
+
+  ) { 
+     // Constructor logic can be added here if needed
+  }
 
   /**
    * Formulario reactivos para el pago de derechos.
@@ -190,6 +192,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     const CORREO = this.pagoDerechos.get('importeDePago')?.value;
     this.tramite260212Store.setImporteDePago(CORREO);
   }
+
   /**
  * Obtiene el estado seleccionado del formulario y lo guarda en el store
  */
@@ -200,7 +203,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /*
   * Método del ciclo de vida de Angular - destruye el componente
-*/
+  */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

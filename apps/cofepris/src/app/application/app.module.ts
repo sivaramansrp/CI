@@ -15,7 +15,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
-import { PagoDeDerechosService } from './tramites/260402/services/pago-de-derechos.service';
+
+import { PagoDeDerechosService } from './shared/services/pago-de-derechos.service';
 
 @NgModule({
   declarations: [
