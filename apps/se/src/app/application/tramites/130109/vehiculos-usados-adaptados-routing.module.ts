@@ -1,27 +1,21 @@
 import { RouterModule, Routes } from '@angular/router';
-import { CargarArchivoComponent } from './components/cargar-archivo/cargar-archivo.component';
-import { ModificarPartidaComponent } from './components/modificar-partida/modificar-partida.component';
 import { NgModule } from '@angular/core';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { VehiculosUsadosAdaptadosComponent } from './pages/vehiculos-usados-adaptados/vehiculos-usados-adaptados.component';
 
-
-
-export const ROUTES_SOLICITUDES: Routes = [
+const ROUTES: Routes = [
   {
     path: 'vehiculos-usados-adaptados',
-    component: SolicitudPageComponent,
+    component :VehiculosUsadosAdaptadosComponent
   },
   {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'vehiculos-usados-adaptados',
-  },
-  { path: 'carger-archivo', component: CargarArchivoComponent },
-  { path: 'modificar-partida', component: ModificarPartidaComponent },
+    path:'',
+    pathMatch:'full',
+    redirectTo: 'vehiculos-usados-adaptados'
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class VehiculosUsadosAdaptadosRoutingModule {}

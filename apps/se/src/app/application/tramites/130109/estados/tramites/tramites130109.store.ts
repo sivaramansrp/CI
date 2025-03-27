@@ -1,21 +1,23 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
-
 export interface Tramite130109State {
-  regimenDestinoMercancia: string;
-  clasificacionDelRegimen:string;
-  opcion:string;
-  filaSeleccionada: null;
-  cantidad: string;
-  valorPartidaUSD: number;
+  producto: string;
   descripcion: string;
   fraccion: string;
-  valorFacturaUSD: string;
-  cantidadMercancia: string;
-  valorPartidaUSDMercancia:string;
-  descripcionMercancia:string;
+  cantidad: string;
+  valorPartidaUSD: number;
   unidadMedida: string;
+  solicitud: string;
+  defaultSelect: string;
+  defaultProducto: string;
+  regimen: string;
+  clasificacion: string;
+  filaSeleccionada: null;
+  cantidadPartidasDeLaMercancia: string;
+  valorPartidaUSDPartidasDeLaMercancia: number;
+  descripcionPartidasDeLaMercancia: string;
+  valorFacturaUSD: string;
   bloque: string;
   usoEspecifico: string;
   justificacionImportacionExportacion: string;
@@ -27,147 +29,152 @@ export interface Tramite130109State {
 
 export function createInitialState(): Tramite130109State {
   return {
-    regimenDestinoMercancia:'',
-    clasificacionDelRegimen:'',
-    opcion:'',
     filaSeleccionada: null,
+    mostrarTabla: false,
+    solicitud: '',
+    fraccion: '',
+    defaultSelect: 'Inicial',
+    producto: '',
+    descripcion: '',
     cantidad: '',
     valorPartidaUSD: 0,
-    descripcion: '',
-    fraccion:'',
-    valorFacturaUSD:'',
-    cantidadMercancia:'',
-    valorPartidaUSDMercancia:'',
-    descripcionMercancia:'',
-    unidadMedida:'',
-    bloque:'',
-    usoEspecifico:'',
-    justificacionImportacionExportacion:'',
-    observaciones:'',
-    entidad:'',
-    representacion:'',
-    mostrarTabla: false
+    unidadMedida: '',
+    defaultProducto: 'Nuevo',
+    regimen: '',
+    clasificacion: '',
+    cantidadPartidasDeLaMercancia: '',
+    valorPartidaUSDPartidasDeLaMercancia: 0,
+    descripcionPartidasDeLaMercancia: '',
+    valorFacturaUSD: '',
+    bloque: '',
+    usoEspecifico: '',
+    justificacionImportacionExportacion: '',
+    observaciones: '',
+    entidad: '',
+    representacion: '',
   };
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'tramite130109', resettable: true })
+@StoreConfig({ name: 'tramite130109' })
 export class Tramite130109Store extends Store<Tramite130109State> {
   constructor() {
     super(createInitialState());
   }
-  public setRegimenDestinoMercancia(regimenDestinoMercancia: string): void { 
-    this.update((state) => ({
-      ...state,
-      regimenDestinoMercancia,
-    }));
-  }
-  public setClasificacionDelRegimen(clasificacionDelRegimen: string): void { 
-    this.update((state) => ({
-      ...state,
-      clasificacionDelRegimen,
-    }));
-  }
-  public setOpcion(opcion: string): void { 
-    this.update((state) => ({
-      ...state,
-      opcion,
-    }));
-  }
-  public setCantidad(cantidad: string): void {
-    this.update((state) => ({
-      ...state,
-      cantidad,
-    }));
-  }
-  public setvalorPartidaUSD(valorPartidaUSD: number) : void {
-    this.update((state) => ({
-      ...state,
-      valorPartidaUSD,
-    }));
-  }
-  public setDescripcion(descripcion: string) : void {
-    this.update((state) => ({
-      ...state,
-      descripcion,
-    }));
-  }
-  public setFraccion(fraccion: string): void { 
+
+  public setFraccion(fraccion: string): void {
     this.update((state) => ({
       ...state,
       fraccion,
     }));
   }
-  public setValorFacturaUSD(valorFacturaUSD: string): void { 
+
+  public updateSolicitud(solicitud: string): void {
+    this.update((state) => ({
+      ...state,
+      solicitud,
+    }));
+  }
+
+  public updateDefaultSelect(defaultSelect: string): void {
+    this.update((state) => ({
+      ...state,
+      defaultSelect,
+    }));
+  }
+  public updateState(updates: Partial<Tramite130109State>): void {
+    this.update(updates);
+  }
+
+  public setProducto(producto: string): void {
+    this.update({ producto });
+  }
+
+  public setDescripcion(descripcion: string): void {
+    this.update({ descripcion });
+  }
+
+  public setCantidad(cantidad: string): void {
+    this.update({ cantidad });
+  }
+
+  public setValorPartidaUSD(valorPartidaUSD: number): void {
+    this.update({ valorPartidaUSD });
+  }
+
+  public setUnidadMedida(unidadMedida: string): void {
+    this.update({ unidadMedida });
+  }
+  public updateDefaultProducto(defaultProducto: string): void {
+    this.update({ defaultProducto });
+  }
+  public setregimen(regimen: string): void {
+    this.update({ regimen });
+  }
+  public setclasificacion(clasificacion: string): void {
+    this.update({ clasificacion });
+  }
+  public setMostrarTabla(mostrar: boolean): void {
+    this.update({ mostrarTabla: mostrar });
+  }
+  public setValorFacturaUSD(valorFacturaUSD: string): void {
     this.update((state) => ({
       ...state,
       valorFacturaUSD,
     }));
   }
-  public setCantidadMercancia(cantidadMercancia: string): void { 
+  public setDescripcionPartidasDeLaMercancia(
+    descripcionPartidasDeLaMercancia: string
+  ): void {
     this.update((state) => ({
       ...state,
-      cantidadMercancia,
+      descripcionPartidasDeLaMercancia,
     }));
   }
-  public setValorPartidaUSDMercancia(valorPartidaUSDMercancia: string): void { 
+
+  public setCantidadPartidasDeLaMercancia(
+    cantidadPartidasDeLaMercancia: string
+  ): void {
     this.update((state) => ({
       ...state,
-      valorPartidaUSDMercancia,
+      cantidadPartidasDeLaMercancia,
     }));
   }
-  public setDescripcionMercancia(descripcionMercancia: string): void { 
+  public setvalorPartidaUSD(valorPartidaUSD: number): void {
     this.update((state) => ({
       ...state,
-      descripcionMercancia,
+      valorPartidaUSD,
     }));
   }
-  public setUnidadMedida(unidadMedida: string): void { 
+  public setValorPartidaUSDPartidasDeLaMercancia(
+    valorPartidaUSDPartidasDeLaMercancia: number
+  ): void {
     this.update((state) => ({
       ...state,
-      unidadMedida,
+      valorPartidaUSDPartidasDeLaMercancia,
     }));
   }
-  public setBloque(bloque: string): void { 
-    this.update((state) => ({
-      ...state,
-      bloque,
-    }));
+  public setBloque(bloque: string): void {
+    this.update({ bloque });
   }
-  public setUsoEspecifico(usoEspecifico: string): void { 
-    this.update((state) => ({
-      ...state,
-      usoEspecifico,
-    }));
+  public setUsoEspecifico(usoEspecifico: string): void {
+    this.update({ usoEspecifico });
   }
-  public setJustificacionImportacionExportacion(justificacionImportacionExportacion: string): void { 
-    this.update((state) => ({
-      ...state,
-      justificacionImportacionExportacion,
-    }));
+  public setJustificacionImportacionExportacion(
+    justificacionImportacionExportacion: string
+  ): void {
+    this.update({ justificacionImportacionExportacion });
   }
-  public setObservaciones(observaciones: string): void { 
-    this.update((state) => ({
-      ...state,
-      observaciones,
-    }));
+  public setObservaciones(observaciones: string): void {
+    this.update({ observaciones });
   }
-  public setEntidad(entidad: string): void { 
-    this.update((state) => ({
-      ...state,
-      entidad,
-    }));
+  public setEntidad(entidad: string): void {
+    this.update({ entidad });
   }
-  public setRepresentacion(representacion: string): void { 
-    this.update((state) => ({
-      ...state,
-      representacion,
-    }));
+  public setRepresentacion(representacion: string): void {
+    this.update({ representacion });
   }
-  setMostrarTabla(mostrar: boolean): void {
-    this.update({ mostrarTabla: mostrar });
-  }
-  storeTableValues(fila: null): void {
+  public storeTableValues(fila: null): void {
     this.update({
       filaSeleccionada: fila,
     });

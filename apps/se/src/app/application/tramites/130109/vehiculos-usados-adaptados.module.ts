@@ -1,56 +1,42 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
+import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { DatosDeLaMercanciaComponent } from './components/datos-de-la-mercancia/datos-de-la-mercancia.component';
-import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
-import { PaisProcendenciaComponent } from './components/pais-procendencia/pais-procendencia.component';
-import { PartidasDeLaMercanciaComponent } from './components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
+import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { RepresentacionComponent } from './components/representacion/representacion.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
-import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import {VehiculosUsadosAdaptadosComponent} from './pages/vehiculos-usados-adaptados/vehiculos-usados-adaptados.component';
 import { VehiculosUsadosAdaptadosRoutingModule } from './vehiculos-usados-adaptados-routing.module';
-
-
 @NgModule({
   declarations: [
+    VehiculosUsadosAdaptadosComponent,
     PasoUnoComponent,
-    SolicitudPageComponent,
-    SolicitudComponent,
-    PasoTresComponent
+    SolicitudComponent
   ],
   imports: [
     CommonModule,
-    RouterModule,
-    FormsModule,
-    ReactiveFormsModule,
     VehiculosUsadosAdaptadosRoutingModule,
+    ReactiveFormsModule,
     WizardComponent,
-    SharedModule,
-    SolicitanteComponent,
     BtnContinuarComponent,
-    InputCheckComponent,
-    InputFechaComponent,
-    InputHoraComponent,
-    CrosslistComponent,
     TituloComponent,
-    SelectPaisesComponent,
-    FirmaElectronicaComponent,
-    AnexarDocumentosComponent,
-    AlertComponent,
-    CatalogoSelectComponent,
-    DatosDeLaMercanciaComponent,
+    InputRadioComponent,
+    SolicitanteComponent, 
+    PasoTresComponent,
+    PasoDosComponent,
     DatosDelTramiteComponent,
+    DatosDeLaMercanciaComponent,
+    PartidasDeLaMercanciaComponent ,
+    TablaDinamicaComponent,
     PaisProcendenciaComponent,
-    PartidasDeLaMercanciaComponent,
-    RepresentacionComponent
-  ],
-  exports: [
-    SolicitudComponent
-  ],
+    RepresentacionComponent,
+    CrosslistComponent
+  ]
 })
 export class VehiculosUsadosAdaptadosModule{}

@@ -10,5 +10,11 @@ export const PASOS = [
         titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
+    },
+    {
+        indice: 3,
+        titulo: 'Firmar solicitud',
+        activo: false,
+        completado: false,
     }
 ];
