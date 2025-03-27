@@ -17,7 +17,7 @@ import { Tramite260402Store } from '../../estados/tramite260402.store';
 import { Tramite260402Query } from '../../estados/tramite260402.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { FECHA_PAGO } from '../../constantes/permiso-maquila.enum';
+import { FECHA_PAGO } from '../../constantes/permiso-maquila-260402.enum';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
