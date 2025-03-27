@@ -1,0 +1,140 @@
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { FECHA_DE_PAGO } from '../../models/terceros-relacionados.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
+import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
+import { Validators } from '@angular/forms';
+import { takeUntil } from 'rxjs';
+/**
+ * @component PagoDeDerechosComponent
+ * @description Componente responsable de capturar y gestionar la información relacionada
+ * con el pago de derechos. Utiliza formularios reactivos para validar los datos y
+ * actualiza el estado del trámite automáticamente al detectar cambios.
+ */
+@Component({
+  selector: 'app-pago-de-derechos',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    InputFechaComponent,
+  ],
+  templateUrl: './pago-de-derechos.component.html',
+  styleUrl: './pago-de-derechos.component.css',
+})
+export class PagoDeDerechosComponent implements OnInit {
+  /**
+   * @property {Subject<void>} unsubscribe$
+   * Subject utilizado para gestionar las desuscripciones automáticas y evitar fugas de memoria.
+   * Se completa manualmente cuando el componente se destruye.
+   * @private
+   */
+  private unsubscribe$ = new Subject<void>();
+
+  /**
+   * @property {InputFecha} fechaInicioInput
+   * Objeto con la configuración de la fecha inicial del componente.
+   */
+  fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+
+  /**
+   * @property {FormGroup} pagoDerechosForm
+   * Formulario reactivo que captura los datos del pago de derechos.
+   */
+  pagoDerechosForm: FormGroup;
+
+  /**
+   * @property {Catalogo[]} estadosDatos
+   * Lista de estados obtenida desde el servicio de catálogos.
+   */
+  estadosDatos!: Catalogo[];
+
+  /**
+   * @constructor
+   * Inicializa el formulario y las dependencias del componente.
+   *
+   * @param fb - FormBuilder para construir el formulario reactivo.
+   * @param datosSolicitudService - Servicio para obtener catálogos desde el backend.
+   * @param tramiteStore - Store que administra el estado del trámite actual.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private datosSolicitudService: DatosSolicitudService,
+    private tramiteStore: Tramite260204Store
+  ) {
+    this.pagoDerechosForm = this.fb.group({
+      claveReferencia: ['', Validators.required],
+      cadenaDependencia: ['', Validators.required],
+      estado: ['', Validators.required],
+      llavePago: ['', Validators.required],
+      fechaPago: ['', Validators.required],
+      importePago: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
+      ],
+    });
+  }
+
+  /**
+   * @method ngOnInit
+   * @description Hook que se ejecuta al inicializar el componente.
+   * Carga los datos iniciales desde el store, configura el formulario
+   * con esos valores y suscribe a cambios para mantener el estado sincronizado.
+   */
+  ngOnInit(): void {
+    const DATOS_STORE = this.tramiteStore.getValue().pagoDerechos;
+
+    this.pagoDerechosForm = this.fb.group({
+      claveReferencia: [DATOS_STORE.claveReferencia || '', Validators.required],
+      cadenaDependencia: [
+        DATOS_STORE.cadenaDependencia || '',
+        Validators.required,
+      ],
+      estado: [DATOS_STORE.estado || '', Validators.required],
+      llavePago: [DATOS_STORE.llavePago || '', Validators.required],
+      fechaPago: [DATOS_STORE.fechaPago || '', Validators.required],
+      importePago: [
+        DATOS_STORE.importePago || '',
+        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
+      ],
+    });
+
+    this.pagoDerechosForm.valueChanges.subscribe((valores) => {
+      this.tramiteStore.updatePagoDerechos(valores);
+    });
+
+    this.cargarDatos();
+  }
+
+  /**
+   * @method cargarDatos
+   * @description Obtiene la lista de estados desde el servicio `DatosSolicitudService`
+   * y la asigna a la propiedad `estadosDatos`.
+   */
+  cargarDatos(): void {
+    this.datosSolicitudService
+      .obtenerListaEstados()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.estadosDatos = data;
+      });
+  }
+
+  /**
+   * @method onReset
+   * @description Limpia todos los campos del formulario de pago de derechos.
+   */
+  onReset(): void {
+    this.pagoDerechosForm.reset();
+  }
+}

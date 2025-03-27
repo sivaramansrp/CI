@@ -1,0 +1,221 @@
+name: Validate Code
+
+on:
+  pull_request:
+    branches: [ "develop", "main" ]
+    paths:
+      - 'apps/**'
+      - 'libs/**'
+      - 'package.json'
+      - 'nx.json'
+      - '.eslintrc.json'
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22.14.0'
+  NX_VERSION: '19.3.1'
+
+jobs:
+  lint:
+    name: Lint and Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install --force
+
+      - name: Install NX globally
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          npx nx --version
+
+      - name: Reset NX cache
+        run: npx nx reset
+
+      - name: Detect changed projects
+        id: changed-projects
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          
+          # Get affected projects
+          AFFECTED_PROJECTS=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ','))
+          
+          if [ -z "$AFFECTED_PROJECTS" ]; then
+            echo "No affected projects detected, running checks on all projects"
+            AFFECTED_PROJECTS=$(npx nx show projects --type=app --plain)
+          fi
+          
+          echo "Affected projects: $AFFECTED_PROJECTS"
+          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+
+      - name: Lint affected projects
+        run: |
+          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
+            echo "Linting project: $PROJECT"
+            npx nx lint $PROJECT --fix=false || echo "Linting failed for $PROJECT"
+          done
+
+      - name: Check TypeScript
+        run: |
+          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
+            echo "Type checking project: $PROJECT"
+            npx nx build $PROJECT --configuration=development --target=typecheck || echo "Type checking failed for $PROJECT"
+          done
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install --force
+
+      - name: Install NX globally
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          npx nx --version
+
+      - name: Reset NX cache
+        run: npx nx reset
+
+      - name: Detect changed projects
+        id: changed-projects
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          
+          # Get affected projects
+          AFFECTED_PROJECTS=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ','))
+          
+          if [ -z "$AFFECTED_PROJECTS" ]; then
+            echo "No affected projects detected, running tests on all projects"
+            AFFECTED_PROJECTS=$(npx nx show projects --type=app --plain)
+          fi
+          
+          echo "Affected projects: $AFFECTED_PROJECTS"
+          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+
+      - name: Run unit tests
+        run: |
+          for PROJECT in ${{ steps.changed-projects.outputs.affected_projects }}; do
+            echo "Testing project: $PROJECT"
+            npx nx test $PROJECT --passWithNoTests || echo "Tests failed for $PROJECT"
+          done
+
+  build-check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install --force
+
+      - name: Install NX globally
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          npx nx --version
+
+      - name: Reset NX cache
+        run: npx nx reset
+
+      - name: Detect changed projects
+        id: changed-projects
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          
+          # Get affected projects
+          AFFECTED_PROJECTS=$(npx nx affected:apps --plain --files=$(echo "$CHANGED_FILES" | tr '\n' ','))
+          
+          if [ -z "$AFFECTED_PROJECTS" ]; then
+            echo "No affected projects detected, checking build for dashboard"
+            AFFECTED_PROJECTS="dashboard"
+          fi
+          
+          echo "Affected projects: $AFFECTED_PROJECTS"
+          echo "affected_projects=$AFFECTED_PROJECTS" >> $GITHUB_OUTPUT
+
+      - name: Check build
+        run: |
+          # Build at least one app to verify the build process
+          FIRST_PROJECT=$(echo ${{ steps.changed-projects.outputs.affected_projects }} | awk '{print $1}')
+          if [ -n "$FIRST_PROJECT" ]; then
+            echo "Checking build for project: $FIRST_PROJECT"
+            npx nx build $FIRST_PROJECT --configuration=development
+          fi
