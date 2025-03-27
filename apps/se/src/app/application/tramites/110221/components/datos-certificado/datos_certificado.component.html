@@ -9,7 +9,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="noRequerido">
       <div class="col-md-4 mb-3">
         <label>Presica*:</label>
         <div class="col-md-12 align-text-area">
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="noRequerido">
       <div class="col-md-4 mb-3">
         <label>Presenta:</label>
         <div class="col-md-12 align-text-area">

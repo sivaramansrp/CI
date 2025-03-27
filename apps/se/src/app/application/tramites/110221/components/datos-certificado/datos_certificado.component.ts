@@ -34,7 +34,7 @@ import { Tramite110221Query } from '../../state/Tramite110221.query';
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
- 
+  noRequerido: boolean = false;
   /**
    * Formulario reactivo para los datos del certificado.
    */

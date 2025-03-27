@@ -61,14 +61,62 @@
         <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="noRequerido">
       <div class="col-md-8 mb-3">
         <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
       </div>
     </div>
-    <ng-titulo titulo="Detalles del transporte" />
-    <div class="col-md-8 mb-3">
+    <ng-titulo titulo="Detalles del transporte" *ngIf="noRequerido"/>
+    <div class="col-md-8 mb-3" *ngIf="noRequerido">
       <app-catalogo-select [catalogo]="options" [label]="'Medio de transporte'" [required]="true" formControlName="transporte" (change)=" setValoresStore(validacionForm, 'transporte', 'setTransporte') "></app-catalogo-select>
+    </div>
+
+    <ng-titulo titulo="Datos del representante legal del exportador" />
+    <div class="row">
+      <div class="col-md-8 mb-3">
+        <label>Lugar*:</label>
+        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 mb-3">
+        <label>Nombre del representante legal del exportador*:</label>
+        <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label>Empresa*:</label>
+        <input type="text" class="form-control" id="nombre" formControlName="calle" (change)="setValoresStore(validacionForm, 'calle', 'setCalle')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Cargo*:</label>
+        <input type="text" class="form-control" id="primerApellido" formControlName="numeroLetra" (change)=" setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra') " />
+      </div>
+      <div class="col-md-1 mb-3">
+        <label>Lada:</label>
+        <input type="text" class="form-control" id="segundoApellido" formControlName="lada" (change)="setValoresStore(validacionForm, 'lada', 'setLada')" />
+      </div>
+      <div class="col-md-3 mb-3">
+        <label>Teléfono*:</label>
+        <input type="text" class="form-control" id="segundoApellido" formControlName="telefono" (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label>Fax*:</label>
+        <input type="text" class="form-control" id="nombre" formControlName="fax" (change)="setValoresStore(validacionForm, 'fax', 'setFax')" />
+      </div>
+      <div class="col-md-4 mb-3">
+        <label>Correo electrónico*:</label>
+        <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
+        <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
+      </div>
+    </div>
+    <div class="mt-5">
+      <div class="mt-5">
+        <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      </div>
     </div>
   </ng-container>
 </form>

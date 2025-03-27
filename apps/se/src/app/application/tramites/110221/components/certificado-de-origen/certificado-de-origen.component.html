@@ -100,7 +100,7 @@
       <div class="row mt-5">
         <ng-alert *ngIf="!cargarArchivo" [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
       </div>
-      <ng-container *ngIf="!cargarArchivo && noRequerido">
+      <ng-container *ngIf="!cargarArchivo">
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
@@ -187,7 +187,7 @@
           <textarea cols="80" rows="3" formControlName="complementoDelaDescripcion" (change)=" setValoresStore( validacionMercanciaForm, 'complementoDelaDescripcion', 'setcomplementodeladescripcion' ) "></textarea>
         </div>
       </div>
-      <div class="row mt-5">
+      <div class="row mt-5" *ngIf="noRequerido">
         <div class="col-md-4">
           <label>Masa bruta*:</label>
           <input type="text" required="true" class="form-control" formControlName="masaBruta" (change)=" setValoresStore( validacionMercanciaForm, 'masaBruta', 'setmasabruta' ) " />

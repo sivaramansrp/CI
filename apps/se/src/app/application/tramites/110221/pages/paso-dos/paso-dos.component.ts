@@ -1,93 +1,73 @@
 import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CATALOGOS_ID,
-  TituloComponent,
+  FirmaElectronicaComponent,
+  TramiteFolioService,
 } from '@ng-mf/data-access-user';
-import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
-
+import { catchError, map, Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { TramiteStore } from '../../../../estados/tramite.store';
 /**
- * Componente que representa el segundo paso del trámite.
- * Permite al usuario anexar documentos necesarios para el trámite.
+ * Componente que representa el paso tres del trámite.
  */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
   standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-  ],
+  imports: [FirmaElectronicaComponent],
 })
-export class PasoDosComponent implements OnInit,OnDestroy {
-  /**
-   * Textos utilizados en el componente.
-   */
-  TEXTOS = TEXTOS;
-
-  /**
-   * Lista de tipos de documentos disponibles para el trámite.
-   */
-  tiposDocumentos: Catalogo[] = [];
-
-  /**
-   * Clase CSS para mostrar una alerta informativa.
-   */
-  claseAlertaInformativa = 'alert-info';
-
-  /**
-   * Catálogo de documentos disponibles.
-   */
-  catalogoDocumentos: Catalogo[] = [];
+export class PasoDosComponent {
    /**
-   * Suscripción para obtener los tipos de documentos.
+   * Suscripción para obtener el trámite.
    */
-   getTiposDocumentosSubscription!: Subscription;
-  /**
-   * Constructor del componente.
-   * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
-   */
-  constructor(private catalogosServices: CatalogosService) {
+   obtienerTramiteSubscriber!: Subscription;
+   /**
+    * Tipo de persona.
+    */
+   tipoPersona!: number;
+ 
+  constructor(
+    private router: Router,
+    private serviciosExtraordinariosServices: TramiteFolioService,
+    private tramiteStore: TramiteStore
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-  
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene los tipos de documentos disponibles y establece los documentos seleccionados por defecto.
+   * Obtiene el tipo de persona.
+   * @param tipo Tipo de persona.
    */
-  ngOnInit(): void {
-    this.getTiposDocumentos();
+  obtenerTipoPersona(tipo: number): void {
+    this.tipoPersona = tipo;
   }
-
   /**
-   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+   * Maneja el evento para obtener la firma y realiza acciones adicionales.
+   * @param ev - La cadena de texto que representa la firma obtenida.
    */
-  getTiposDocumentos(): void {
-    this.catalogosServices
-      .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-          }
-        },
-        error: (_error): void => {
-          // Manejo de error al obtener los tipos de documentos.
-        },
-      });
+  obtieneFirma(ev: string): void {
+    const FIRMA: string = ev;
+    if (FIRMA) {
+      // Obtiene el número de trámite
+      this.serviciosExtraordinariosServices
+        .obtenerTramite(19)
+        .pipe(
+          map((tramite) => {
+            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+            this.router.navigate(['servicios-extraordinarios/acuse']);
+          }),
+          catchError((_error) => {
+            return _error;
+          })
+        )
+        .subscribe();
+    }
   }
- /**
+   /**
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
-  ngOnDestroy(): void {
-    if (this.getTiposDocumentosSubscription) {
-      this.getTiposDocumentosSubscription.unsubscribe();
+   ngOnDestroy(): void {
+    if (this.obtienerTramiteSubscriber) {
+      this.obtienerTramiteSubscriber.unsubscribe();
     }
   }
 

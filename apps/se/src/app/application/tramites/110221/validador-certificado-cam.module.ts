@@ -14,7 +14,6 @@ import { DatosCertificadoComponent } from './components/datos-certificado/datos_
 import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-cam-routing.module';
 import { ToastrService } from 'ngx-toastr';
@@ -33,7 +32,6 @@ import { ToastrService } from 'ngx-toastr';
     TercerosComponent,
     WizardComponent,
     PasoDosComponent,
-    PasoTresComponent,
     PasoUnoComponent,
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,

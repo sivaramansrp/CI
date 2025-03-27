@@ -2,7 +2,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   TituloComponent,
-  ValidacionesFormularioService,
+  ValidacionesFormularioService, PAGO_DE_DERECHOS, AlertComponent
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
@@ -28,6 +28,7 @@ import { Tramite110221Query } from '../../state/Tramite110221.query';
   selector: 'app-destinatario',
   standalone: true,
   imports: [
+    AlertComponent,
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
@@ -37,6 +38,19 @@ import { Tramite110221Query } from '../../state/Tramite110221.query';
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+  noRequerido: boolean = false;
+  /**
+ * 
+ * Una cadena que representa la clase CSS para una alerta de información.
+ * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+ */
+  public infoAlert = 'alert-info';
+  /**
+   * Una constante que contiene el valor del objeto 'PROTESTA'.
+   * Se utiliza para almacenar datos adicionales relacionados con el componente.
+   */
+
+  TEXTOS = PAGO_DE_DERECHOS;
   /**
    * Formulario reactivo para el destinatario.
    */

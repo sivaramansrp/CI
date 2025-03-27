@@ -1,31 +1,48 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { PasoDosComponent } from './paso-dos.component';
-import { Catalogo, CatalogosService } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '../../../../estados/tramite.store';
+import { ToastrService } from 'ngx-toastr';
 
-describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let mockCatalogosService: any;
+describe('PasoTresComponent', () => {
+  let component: PasoTresComponent;
+  let fixture: ComponentFixture<PasoTresComponent>;
+  let mockRouter: any;
+  let mockServiciosExtraordinariosService: any;
+  let mockTramiteStore: any;
 
   beforeEach(async () => {
-    mockCatalogosService = {
-      getCatalogo: jest.fn(),
+    mockRouter = {
+      navigate: jest.fn(),
+    };
+
+    mockServiciosExtraordinariosService = {
+      obtenerTramite: jest.fn(),
+    };
+
+    mockTramiteStore = {
+      establecerTramite: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, PasoDosComponent],
+      imports: [HttpClientTestingModule, PasoTresComponent],
       providers: [
-        { provide: CatalogosService, useValue: mockCatalogosService },
+        { provide: Router, useValue: mockRouter },
+        {
+          provide: ServiciosExtraordinariosService,
+          useValue: mockServiciosExtraordinariosService,
+        },
+        { provide: TramiteStore, useValue: mockTramiteStore },
+        ToastrService,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoDosComponent);
+    fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -38,58 +55,51 @@ describe('PasoDosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize `TEXTOS` with the imported `TEXTOS`', () => {
-    expect(component.TEXTOS).toBeDefined();
-  });
-
-  it('should set `claseAlertaInformativa` to "alert-info"', () => {
-    expect(component.claseAlertaInformativa).toBe('alert-info');
-  });
-
-  it('should call `getTiposDocumentos` on `ngOnInit`', () => {
-    const spy = jest.spyOn(component, 'getTiposDocumentos');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
-
-    describe('getTiposDocumentos', () => {
-    it('should call `catalogosServices.getCatalogo` with `CAT_TIPO_DOCUMENTO`', () => {
-      mockCatalogosService.getCatalogo.mockReturnValue(of([]));
-      component.getTiposDocumentos();
-      expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
-        CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+  describe('obtieneFirma', () => {
+    it('should call `obtenerTramite` and navigate to "servicios-extraordinarios/acuse" when FIRMA is valid', () => {
+      const mockTramite = { data: { id: 1, name: 'Test Tramite' } };
+      mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(
+        of(mockTramite)
       );
+
+      const firma = 'mockFirma';
+      component.obtieneFirma(firma);
+
+      expect(
+        mockServiciosExtraordinariosService.obtenerTramite
+      ).toHaveBeenCalledWith(19);
+      expect(mockTramiteStore.establecerTramite).toHaveBeenCalledWith(
+        mockTramite.data,
+        firma
+      );
+      expect(mockRouter.navigate).toHaveBeenCalledWith([
+        'servicios-extraordinarios/acuse',
+      ]);
     });
 
-    it('should update `catalogoDocumentos` when the service returns a response with data', () => {
-      const mockResponse = [
-        { id: 1, descripcion: 'Documento 1' },
-        { id: 2, descripcion: 'Documento 2' },
-      ];
-      mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
-      component.getTiposDocumentos();
-      expect(component.catalogoDocumentos).toEqual(mockResponse);
-    });
-
-    it('should not update `catalogoDocumentos` when the service response contains no data', () => {
-      const initialData: Catalogo[] = []; 
-      component.catalogoDocumentos = initialData;
-
-      const mockResponse: Catalogo[] = [];
-      mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
-      component.getTiposDocumentos();
-
-      expect(component.catalogoDocumentos).toBe(initialData);
-    });
-
-    it('should handle errors when the service call fails', () => {
+    it('should handle errors when `obtenerTramite` fails', () => {
       const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockCatalogosService.getCatalogo.mockReturnValue(
+      mockServiciosExtraordinariosService.obtenerTramite.mockReturnValue(
         throwError(() => new Error('Service Error'))
       );
 
-      component.getTiposDocumentos();
+      const firma = 'mockFirma';
+      component.obtieneFirma(firma);
+
+      expect(
+        mockServiciosExtraordinariosService.obtenerTramite
+      ).toHaveBeenCalledWith(19);
       expect(errorSpy).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    it('should not call `obtenerTramite` if FIRMA is empty', () => {
+      const firma = '';
+      component.obtieneFirma(firma);
+
+      expect(
+        mockServiciosExtraordinariosService.obtenerTramite
+      ).not.toHaveBeenCalled();
+      expect(mockRouter.navigate).not.toHaveBeenCalled();
     });
   });
 });
