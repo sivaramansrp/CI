@@ -5,6 +5,7 @@ import { Tramite260214State, Tramite260214Store } from '../../estados/tramite260
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 
@@ -40,6 +41,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
   public seleccionadoScianDatos: TablaScianConfig[] = [];
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
+
+  public readonly idProcedimiento = ID_PROCEDIMIENTO;
+
   constructor(private tramite260214Query: Tramite260214Query,
     private tramite260214Store: Tramite260214Store
   ) { }

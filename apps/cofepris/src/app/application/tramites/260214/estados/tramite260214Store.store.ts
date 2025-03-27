@@ -4,7 +4,6 @@ import { Fabricante } from '../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { MercanciaForm } from '../../../shared/models/datos-solicitud.model';
-import { PRODUCTO_TABLA_DATA } from '../../../shared/constantes/datos-solicitud.enum';
 import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
@@ -83,7 +82,7 @@ export function createInitialState(): Tramite260214State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
