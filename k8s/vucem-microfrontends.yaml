@@ -19,22 +19,29 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vucem-microfrontends
+  name: vucem-microfrontends-${ENV}
   namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    env: ${ENV}
 spec:
   replicas: ${REPLICAS}
   selector:
     matchLabels:
       app: vucem-microfrontends
+      env: ${ENV}
   template:
     metadata:
       labels:
         app: vucem-microfrontends
         env: ${ENV}
     spec:
+      imagePullSecrets:
+        - name: github-container-registry
       containers:
         - name: dashboard
           image: ${REGISTRY}/vucem-front-dashboard:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -46,20 +53,21 @@ spec:
               cpu: "500m"
           livenessProbe:
             httpGet:
-              path: /
+              path: /health.txt
               port: 80
             initialDelaySeconds: 30
             timeoutSeconds: 3
             periodSeconds: 30
           readinessProbe:
             httpGet:
-              path: /
+              path: /health.txt
               port: 80
             initialDelaySeconds: 10
             timeoutSeconds: 3
             periodSeconds: 10
         - name: login
           image: ${REGISTRY}/vucem-front-login:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -69,8 +77,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: aga
           image: ${REGISTRY}/vucem-front-aga:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -80,8 +103,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: agriculture
           image: ${REGISTRY}/vucem-front-agriculture:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -91,8 +129,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: se
           image: ${REGISTRY}/vucem-front-se:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -102,8 +155,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: semarnat
           image: ${REGISTRY}/vucem-front-semarnat:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -113,8 +181,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: agace
           image: ${REGISTRY}/vucem-front-agace:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -124,8 +207,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: funcionario
           image: ${REGISTRY}/vucem-front-funcionario:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -135,8 +233,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: cofepris
           image: ${REGISTRY}/vucem-front-cofepris:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -146,8 +259,23 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
         - name: amecafe
           image: ${REGISTRY}/vucem-front-amecafe:${TAG}
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
@@ -157,32 +285,88 @@ spec:
             limits:
               memory: "256Mi"
               cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
+        - name: sener
+          image: ${REGISTRY}/vucem-front-sener:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
 ---
 # Service for VUCEM Microfrontends
 apiVersion: v1
 kind: Service
 metadata:
-  name: vucem-frontend-svc
+  name: vucem-frontend-svc-${ENV}
   namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    env: ${ENV}
+    tier: frontend
 spec:
   selector:
     app: vucem-microfrontends
+    env: ${ENV}
   ports:
     - name: http
       port: 80
       targetPort: 80
+      protocol: TCP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
   type: ClusterIP
 ---
 # Ingress for VUCEM Microfrontends
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: vucem-frontend-ingress
+  name: vucem-frontend-ingress-${ENV}
   namespace: vucem-${ENV}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
 spec:
   ingressClassName: nginx
   tls:
@@ -197,21 +381,28 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: vucem-frontend-svc
+            name: vucem-frontend-svc-${ENV}
             port:
               number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: vucem-backend-svc
+            port:
+              number: 8080
 ---
 # HorizontalPodAutoscaler for VUCEM Microfrontends
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: vucem-microfrontends-hpa
+  name: vucem-microfrontends-hpa-${ENV}
   namespace: vucem-${ENV}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: vucem-microfrontends
+    name: vucem-microfrontends-${ENV}
   minReplicas: ${MIN_REPLICAS}
   maxReplicas: ${MAX_REPLICAS}
   metrics:
