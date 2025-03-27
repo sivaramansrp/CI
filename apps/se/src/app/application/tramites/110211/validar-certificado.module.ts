@@ -5,7 +5,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
 import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
 import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
-import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -14,6 +14,8 @@ import { CertificadoDeOrigenComponent } from '../../shared/components/certificad
 import { CamDatosCertificadoComponent } from './components/cam-datos-certificado/cam-datos-certificado.component';
 import { DaosCertificadoComponent } from '../../shared/components/daos-certificado/daos-certificado.component';
 import { CamDestinatarioComponent } from './components/cam-destinatario/cam-destinatario.component';
+import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 
 
 @NgModule({
@@ -39,8 +41,10 @@ import { CamDestinatarioComponent } from './components/cam-destinatario/cam-dest
     RouterModule,
     InputFechaComponent,
     CertificadoDeOrigenComponent,
-    DaosCertificadoComponent
-    
+    DaosCertificadoComponent,
+    DatosDelDestinatarioComponent,
+    DestinatarioComponent,
+    TituloComponent
   ]
 })
 export class ValidarCertificadoModule { }
