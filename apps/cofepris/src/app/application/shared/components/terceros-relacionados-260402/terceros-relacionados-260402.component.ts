@@ -17,16 +17,16 @@ import { TableData, TipoMoModel } from '../../models/entrada-humana.models';
 
 import { MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila.enum';
 
-import { TercerosService } from '../../services/terceros.service';
+import { Terceros260402Service } from '../../services/terceros-260402.service';
 /**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 @Component({
-  selector: 'app-terceros-relacionados',
+  selector: 'app-terceros-relacionados-260402',
   standalone: true,
-  templateUrl: './terceros-relacionados.component.html',
-  styleUrls: ['./terceros-relacionados.component.scss'],
+  templateUrl: './terceros-relacionados-260402.component.html',
+  styleUrls: ['./terceros-relacionados-260402.component.scss'],
   imports: [
     CommonModule,
     TituloComponent,
@@ -39,7 +39,7 @@ import { TercerosService } from '../../services/terceros.service';
   ],
 })
 
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionados260402Component implements OnInit {
 
   isDatosGeneralesVisible = false;
   fabricanteHeaderData: string[] = [];
@@ -48,7 +48,7 @@ export class TercerosRelacionadosComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder,
-    private tercerosService: TercerosService) {
+    private tercerosService: Terceros260402Service) {
     // Constructor logic can be added here if needed
   }
 

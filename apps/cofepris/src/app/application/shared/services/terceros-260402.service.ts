@@ -1,7 +1,7 @@
 
 /**
- * Servicio para la gestión del pago de derechos.
- * Proporciona métodos para obtener datos relacionados con el pago de derechos.
+ * Servicio para la gestión de terceros relacionados.
+ * Proporciona métodos para obtener datos de terceros.
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -15,7 +15,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 @Injectable({
   providedIn: 'root'
 })
-export class PagoDeDerechosService {
+export class Terceros260402Service {
 
   /**
    * Constructor del servicio.
@@ -23,14 +23,20 @@ export class PagoDeDerechosService {
    * 
    * @param http Cliente HTTP para realizar peticiones.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+     // Constructor logic can be added here if needed
+   }
 
   /**
-   * Obtiene los datos relacionados con el pago de derechos desde un archivo JSON local.
+   * Obtiene los datos de terceros relacionados desde un archivo JSON local.
    * 
    * @returns Observable que emite un arreglo de objetos Catalogo.
    */
   getData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/260402/banco.json');
+    return this.http.get<Catalogo[]>('assets/json/260212/terceros-relacionados.json');
+  }
+
+  getInformacioDeTabla(){
+    return this.http.get<any>('assets/json/260402/informacio-procedencia.json');
   }
 }

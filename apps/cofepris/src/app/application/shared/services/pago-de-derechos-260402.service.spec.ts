@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PagoDeDerechosService } from './pago-de-derechos.service';
+import { PagoDeDerechos260402Service } from './pago-de-derechos-260402.service';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 describe('PagoDeDerechosService', () => {
-  let service: PagoDeDerechosService;
+  let service: PagoDeDerechos260402Service;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -13,7 +13,7 @@ describe('PagoDeDerechosService', () => {
         provideHttpClientTesting() 
       ]
     });
-    service = TestBed.inject(PagoDeDerechosService);
+    service = TestBed.inject(PagoDeDerechos260402Service);
   });
 
   it('should be created', () => {

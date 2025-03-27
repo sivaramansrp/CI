@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PagoDeDerechosComponent } from './pago-de-derechos.component';
+import { PagoDeDerechos260402Component } from './pago-de-derechos-260402.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
+import { PagoDeDerechos260402Service } from '../../services/pago-de-derechos-260402.service';
 import { of } from 'rxjs';
 
 describe('PagoDeDerechosComponent', () => {
-  let component: PagoDeDerechosComponent;
-  let fixture: ComponentFixture<PagoDeDerechosComponent>;
+  let component: PagoDeDerechos260402Component;
+  let fixture: ComponentFixture<PagoDeDerechos260402Component>;
   let pagoDeDerechosMockService: any;
 
   beforeEach(async () => {
@@ -21,22 +21,22 @@ describe('PagoDeDerechosComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, PagoDeDerechosComponent],
+      imports: [CommonModule, ReactiveFormsModule, PagoDeDerechos260402Component],
       declarations: [],
       providers: [
-        { provide: PagoDeDerechosService, useValue: pagoDeDerechosMockService }
+        { provide: PagoDeDerechos260402Service, useValue: pagoDeDerechosMockService }
       ]
 
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PagoDeDerechosComponent);
+    fixture = TestBed.createComponent(PagoDeDerechos260402Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PagoDeDerechosComponent);
+    fixture = TestBed.createComponent(PagoDeDerechos260402Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

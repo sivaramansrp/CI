@@ -17,17 +17,18 @@ import { EntradaHumanaRoutingModule } from './entrada-humana-routing.module';
 
 import { Datos260402Component } from './pages/datos-260402/datos-260402.component';
 import { EntradaHumanaComponent } from './pages/entrada-humana/entrada-humana.component';
-import { TercerosRelacionadosComponent } from '../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { TercerosRelacionados260402Component } from '../../shared/components/terceros-relacionados-260402/terceros-relacionados-260402.component';
 
 
 
 import { DatosGeneralesComponent } from '../../shared/components/datos-generales/datos-generales.component';
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
-import { TercerosService } from '../../shared/services/terceros.service';
+import { Terceros260402Service } from '../../shared/services/terceros-260402.service';
 
-import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos/pago-de-derechos.component';
-import { PagoDeDerechosService } from '../../shared/services/pago-de-derechos.service';
+import { PagoDeDerechos260402Service } from '../../shared/services/pago-de-derechos-260402.service';
+
+import { PagoDeDerechos260402Component } from '../../shared/components/pago-de-derechos-260402/pago-de-derechos-260402.component';
 
 
 @NgModule({
@@ -42,10 +43,10 @@ import { PagoDeDerechosService } from '../../shared/services/pago-de-derechos.se
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
-    TercerosRelacionadosComponent,
+    TercerosRelacionados260402Component,
     DatosGeneralesComponent,
-    PagoDeDerechosComponent
+    PagoDeDerechos260402Component
   ],
-  providers: [provideHttpClient(), ToastrService,PagoDeDerechosService,TercerosService,InicioSesionService,SubirDocumentoService ],
+  providers: [provideHttpClient(), ToastrService,PagoDeDerechos260402Service,Terceros260402Service,InicioSesionService,SubirDocumentoService ],
 })
 export class EntradaHumanaModule { }

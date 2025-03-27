@@ -16,7 +16,7 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
-import { PagoDeDerechosService } from './shared/services/pago-de-derechos.service';
+import { PagoDeDerechos260402Service } from './shared/services/pago-de-derechos-260402.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +42,7 @@ import { PagoDeDerechosService } from './shared/services/pago-de-derechos.servic
     }),
     provideHttpClient(),
     SolicitanteService,
-    PagoDeDerechosService
+    PagoDeDerechos260402Service
   ],
   bootstrap: [AppComponent],
 })
