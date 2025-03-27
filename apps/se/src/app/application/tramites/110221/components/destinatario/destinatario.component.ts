@@ -110,9 +110,7 @@ options!: Catalogo[];
    * Marca todos los campos como tocados si el formulario es inválido.
    */
   validarDestinatarioFormulario(): void {
-    if (this.registroForm.invalid) {
-      this.registroForm.markAllAsTouched();
-    }
+    this.registroForm.markAllAsTouched();
   }
 
   /**

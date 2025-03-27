@@ -510,8 +510,8 @@ optionsTipoFactura!: Catalogo[];
    * Asigna los valores de los encabezados y el cuerpo de la tabla desde los datos obtenidos.
    */
   public mercanciatable(): void {
-    this.mercanciasHeader = this.getMercanciaTable.tableHeader;
-    this.mercanciasBody = this.getMercanciaTable.tableBody;
+    this.mercanciasHeader = this.getMercanciaTable?.tableHeader;
+    this.mercanciasBody = this.getMercanciaTable?.tableBody;
   }
   /**
    * Activa el formulario para cargar un archivo.

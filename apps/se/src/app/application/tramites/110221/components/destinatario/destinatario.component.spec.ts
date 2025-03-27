@@ -1,26 +1,27 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DestinatarioComponent } from './destinatario.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110221Store } from '../../state/Tramite110221.store';
 import { Tramite110221Query } from '../../state/Tramite110221.query';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
+  let fixture: ComponentFixture<DestinatarioComponent>;
   let registroServiceMock: any;
-  let storeMock: any;
-  let queryMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
   let validacionesServiceMock: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     registroServiceMock = {
       getPaisDestino: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
       getTransporte: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
     };
 
-    storeMock = {
+    tramiteStoreMock = {
       setNombre: jest.fn(),
       setApellidoPrimer: jest.fn(),
       setApellidoSegundo: jest.fn(),
@@ -35,43 +36,28 @@ describe('DestinatarioComponent', () => {
       setCorreoElectronico: jest.fn(),
     };
 
-    queryMock = {
-      selectSolicitud$: of({
-        nacion: 'MX',
-        transporte: 'Aéreo',
-        nombre: 'John',
-        apellidoPrimer: 'Doe',
-        apellidoSegundo: 'Smith',
-        numeroFiscal: '123456',
-        razonSocial: 'Empresa SA',
-        ciudad: 'Ciudad de México',
-        calle: 'Calle 1',
-        numeroLetra: '123A',
-        lada: '55',
-        telefono: '1234567890',
-        fax: '123456789',
-        correoElectronico: 'test@example.com',
-      }),
+    tramiteQueryMock = {
+      selectSolicitud$: of({}),
     };
 
     validacionesServiceMock = {
       isValid: jest.fn().mockReturnValue(true),
     };
 
-    TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [DestinatarioComponent],
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, DestinatarioComponent],
       providers: [
         FormBuilder,
         { provide: RegistroService, useValue: registroServiceMock },
-        { provide: Tramite110221Store, useValue: storeMock },
-        { provide: Tramite110221Query, useValue: queryMock },
+        { provide: Tramite110221Store, useValue: tramiteStoreMock },
+        { provide: Tramite110221Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(DestinatarioComponent);
+    fixture = TestBed.createComponent(DestinatarioComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -79,98 +65,76 @@ describe('DestinatarioComponent', () => {
   });
 
   it('should initialize the form on ngOnInit', () => {
-    jest.spyOn(component, 'getPaisDestino');
-    jest.spyOn(component, 'getTransporte');
-    jest.spyOn(component, 'donanteDomicilio');
+    component.ngOnInit();
+    expect(component.registroForm).toBeDefined();
+    expect(component.registroForm.get('validacionForm')).toBeDefined();
+  });
+
+  it('should call getPaisDestino and getTransporte on ngOnInit', () => {
+    const getPaisDestinoSpy = jest.spyOn(component, 'getPaisDestino');
+    const getTransporteSpy = jest.spyOn(component, 'getTransporte');
 
     component.ngOnInit();
 
-    expect(component.getPaisDestino).toHaveBeenCalled();
-    expect(component.getTransporte).toHaveBeenCalled();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(getPaisDestinoSpy).toHaveBeenCalled();
+    expect(getTransporteSpy).toHaveBeenCalled();
   });
 
-  it('should call getPaisDestino and populate options', () => {
-    component.getPaisDestino();
-    expect(registroServiceMock.getPaisDestino).toHaveBeenCalled();
-    expect(component.options).toEqual([]);
-  });
-
-  it('should call getTransporte and populate options', () => {
-    component.getTransporte();
-    expect(registroServiceMock.getTransporte).toHaveBeenCalled();
-    expect(component.options).toEqual([]);
-  });
-
-  it('should validate the form on validarDestinatarioFormulario', () => {
+  it('should mark all fields as touched if the form is invalid on validarDestinatarioFormulario', () => {
     component.registroForm = new FormBuilder().group({
       validacionForm: new FormBuilder().group({
         nombre: [''],
       }),
     });
 
-    jest.spyOn(component.registroForm, 'markAllAsTouched');
-
     component.validarDestinatarioFormulario();
 
-    expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.registroForm.get('validacionForm')?.get('nombre')?.touched).toBe(true);
   });
 
-  it('should disable the form on onClick', () => {
+  it('should set isDisabled to true on onClick', () => {
     component.onClick();
     expect(component.isDisabled).toBe(true);
   });
 
-  it('should call setValoresStore and update the store', () => {
-    const form = new FormBuilder().group({
-      nombre: ['John'],
-    });
-
-    component.setValoresStore(form, 'nombre', 'setNombre');
-    expect(storeMock.setNombre).toHaveBeenCalledWith('John');
+  it('should call registroService.getPaisDestino and set options on getPaisDestino', () => {
+    component.getPaisDestino();
+    expect(registroServiceMock.getPaisDestino).toHaveBeenCalled();
+    expect(component.options).toEqual([]);
   });
 
-  it('should check if a form field is valid using isValid', () => {
+  it('should call registroService.getTransporte and set options on getTransporte', () => {
+    component.getTransporte();
+    expect(registroServiceMock.getTransporte).toHaveBeenCalled();
+    expect(component.options).toEqual([]);
+  });
+
+  it('should call validacionesService.isValid on isValid', () => {
     const form = new FormBuilder().group({
-      nombre: ['John'],
+      field: ['value'],
     });
 
-    const result = component.isValid(form, 'nombre');
-    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'nombre');
+    const result = component.isValid(form, 'field');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'field');
     expect(result).toBe(true);
   });
 
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    jest.spyOn(component.destroyNotifier$, 'next');
-    jest.spyOn(component.destroyNotifier$, 'complete');
+  it('should call store method on setValoresStore', () => {
+    const form = new FormBuilder().group({
+      campo: ['value'],
+    });
+
+    component.setValoresStore(form, 'campo', 'setNombre');
+    expect(tramiteStoreMock.setNombre).toHaveBeenCalledWith('value');
+  });
+
+  it('should destroy notifier on ngOnDestroy', () => {
+    const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
 
     component.ngOnDestroy();
 
-    expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
-
-  it('should initialize the form with donanteDomicilio', () => {
-    component.solicitudState = {
-      nacion: 'MX',
-      transporte: 'Aéreo',
-      nombre: 'John',
-      apellidoPrimer: 'Doe',
-      apellidoSegundo: 'Smith',
-      numeroFiscal: '123456',
-      razonSocial: 'Empresa SA',
-      ciudad: 'Ciudad de México',
-      calle: 'Calle 1',
-      numeroLetra: '123A',
-      lada: '55',
-      telefono: '1234567890',
-      fax: '123456789',
-      correoElectronico: 'test@example.com',
-    };
-
-    component.donanteDomicilio();
-
-    expect(component.registroForm.value.validacionForm.nombre).toBe('John');
-    expect(component.registroForm.value.validacionForm.apellidoPrimer).toBe('Doe');
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 });

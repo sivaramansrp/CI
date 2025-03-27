@@ -15,9 +15,8 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-cam-routing.module';
 import { ToastrService } from 'ngx-toastr';
-
+import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-cam-routing.module';
 @NgModule({
   declarations: [],
   imports: [

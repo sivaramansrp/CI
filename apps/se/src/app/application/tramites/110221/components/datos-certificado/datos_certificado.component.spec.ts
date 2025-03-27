@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { of, Subject } from 'rxjs';
 import { DatosCertificadoComponent } from './datos_certificado.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110221Store } from '../../state/Tramite110221.store';
 import { Tramite110221Query } from '../../state/Tramite110221.query';
@@ -10,151 +10,124 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let registroService: RegistroService;
-  let tramiteStore: Tramite110221Store;
-  let tramiteQuery: Tramite110221Query;
-  let validacionesService: ValidacionesFormularioService;
+  let registroServiceMock: any;
+  let storeMock: any;
+  let queryMock: any;
+  let validacionesServiceMock: any;
 
   beforeEach(async () => {
+    registroServiceMock = {
+      getIdioma: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+      getEntidad: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+      getRepresentacion: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
+    };
+
+    storeMock = {
+      setEntidad: jest.fn(),
+      setIdioma: jest.fn(),
+      setRepresentacion: jest.fn(),
+    };
+
+    queryMock = {
+      selectSolicitud$: of({}),
+    };
+
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, DatosCertificadoComponent],
-      declarations: [],
       providers: [
-        FormBuilder,
-        {
-          provide: RegistroService,
-          useValue: {
-            getIdioma: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
-            getEntidad: jest.fn().mockReturnValue(of({ code: 200, data: [] })),
-            getRepresentacion: jest
-              .fn()
-              .mockReturnValue(of({ code: 200, data: [] })),
-          },
-        },
-        {
-          provide: Tramite110221Store,
-          useValue: {
-            setIdioma: jest.fn(),
-            setEntidad: jest.fn(),
-            setRepresentacion: jest.fn(),
-          },
-        },
-        {
-          provide: Tramite110221Query,
-          useValue: {
-            selectSolicitud$: of({}),
-            selectIdioma$: of([]),
-            selectEntidad$: of([]),
-            selectRepresentacion$: of([]),
-          },
-        },
-        {
-          provide: ValidacionesFormularioService,
-          useValue: {
-            isValid: jest.fn().mockReturnValue(true),
-          },
-        },
+        { provide: RegistroService, useValue: registroServiceMock },
+        { provide: Tramite110221Store, useValue: storeMock },
+        { provide: Tramite110221Query, useValue: queryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
-    registroService = TestBed.inject(RegistroService);
-    tramiteStore = TestBed.inject(Tramite110221Store);
-    tramiteQuery = TestBed.inject(Tramite110221Query);
-    validacionesService = TestBed.inject(ValidacionesFormularioService);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize component and call necessary methods on ngOnInit', () => {
+  it('should initialize catalogs on ngOnInit', () => {
     const getIdiomaSpy = jest.spyOn(component, 'getIdioma');
     const getEntidadSpy = jest.spyOn(component, 'getEntidad');
     const getRepresentacionSpy = jest.spyOn(component, 'getRepresentacion');
-    const donanteDomicilioSpy = jest.spyOn(component, 'donanteDomicilio');
 
     component.ngOnInit();
 
     expect(getIdiomaSpy).toHaveBeenCalled();
     expect(getEntidadSpy).toHaveBeenCalled();
     expect(getRepresentacionSpy).toHaveBeenCalled();
-    expect(donanteDomicilioSpy).toHaveBeenCalled();
   });
 
-  it('should validate destinatario formulario', () => {
+  it('should validate the form and mark all fields as touched if invalid', () => {
     component.registroForm = component.fb.group({
       validacionForm: component.fb.group({
+        observaciones: [''],
         idioma: [''],
+        entidad: [''],
+        representacion: [''],
+        casillaVerificacion: [''],
+        justificacion: [''],
       }),
     });
+
     component.validarDestinatarioFormulario();
-    expect(component.registroForm.touched).toBe(true);
+
+    expect(component.registroForm.touched).toBeTruthy();
   });
 
-  it('should call getIdioma and set idioma in store', () => {
-    const spy = jest.spyOn(registroService, 'getIdioma');
+  it('should call registroService.getIdioma and set optionsIdioma', () => {
     component.getIdioma();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setIdioma).toHaveBeenCalled();
+    expect(registroServiceMock.getIdioma).toHaveBeenCalled();
+    expect(component.optionsIdioma).toEqual([]);
   });
 
-  it('should call getEntidad and set entidad in store', () => {
-    const spy = jest.spyOn(registroService, 'getEntidad');
+  it('should call registroService.getEntidad and set optionsEntidad', () => {
     component.getEntidad();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setEntidad).toHaveBeenCalled();
+    expect(registroServiceMock.getEntidad).toHaveBeenCalled();
+    expect(component.optionsEntidad).toEqual([]);
   });
 
-  it('should call getRepresentacion and set representacion in store', () => {
-    const spy = jest.spyOn(registroService, 'getRepresentacion');
+  it('should call registroService.getRepresentacion and set optionsRepresentacion', () => {
     component.getRepresentacion();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setRepresentacion).toHaveBeenCalled();
+    expect(registroServiceMock.getRepresentacion).toHaveBeenCalled();
+    expect(component.optionsRepresentacion).toEqual([]);
   });
 
-  it('should validate form field', () => {
-    const form = component.fb.group({
-      field: [''],
-    });
-    const isValid = component.isValid(form, 'field');
-    expect(isValid).toBe(true);
+  it('should set isJustificacion to true if conditions are met in setValoresStore', () => {
+    component.entidadFederativaData = 'DURANGO';
+    component.setValoresStore(component.fb.group({ entidad: ['8'] }), 'entidad', 'setEntidad');
+    expect(component.isJustificacion).toBe(true);
   });
 
-  it('should set valores in store', () => {
-    const form = component.fb.group({
-      idioma: ['test'],
-    });
-    component.setValoresStore(form, 'idioma', 'setIdioma');
-    expect(tramiteStore.setIdioma).toHaveBeenCalledWith('test');
+  it('should set isJustificacion to false if conditions are not met in setValoresStore', () => {
+    component.entidadFederativaData = 'OTHER';
+    component.setValoresStore(component.fb.group({ entidad: ['1'] }), 'entidad', 'setEntidad');
+    expect(component.isJustificacion).toBe(false);
   });
 
-  it('should unsubscribe from all subscriptions on ngOnDestroy', () => {
+  it('should destroy subscriptions on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const idiomaUnsubscribeSpy = jest.spyOn(
-      component.getIdiomaSubscripcion,
-      'unsubscribe'
-    );
-    const entidadUnsubscribeSpy = jest.spyOn(
-      component.getEntidadSubscripcion,
-      'unsubscribe'
-    );
-    const representacionUnsubscribeSpy = jest.spyOn(
-      component.getRepresentacionSubscripcion,
-      'unsubscribe'
-    );
+    const destroyNotifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
 
     component.ngOnDestroy();
 
     expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(idiomaUnsubscribeSpy).toHaveBeenCalled();
-    expect(entidadUnsubscribeSpy).toHaveBeenCalled();
-    expect(representacionUnsubscribeSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should validate a form field using isValid', () => {
+    const form = component.fb.group({ field: ['value'] });
+    const result = component.isValid(form, 'field');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(form, 'field');
+    expect(result).toBe(true);
   });
 });
