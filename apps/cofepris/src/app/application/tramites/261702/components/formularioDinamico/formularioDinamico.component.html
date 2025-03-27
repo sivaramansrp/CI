@@ -1,0 +1,88 @@
+<form [formGroup]="forma">
+    @for (item of formularioDatos; track item.campo; let i = $index) {
+            @switch(item.tipo_input) {
+                @case ('text') {
+                    <div [ngClass]="item.class">
+                        <div class="form-group">
+                          <label class="form-label" [for]="item.campo">{{
+                            item.labelNombre
+                          }}</label>
+                          @if (item?.validators?.includes('required')) {
+                            <span>*:</span>
+                          } @else {
+                            <span>:</span>
+                          }
+                          <input
+                            class="form-control"
+                            type="text"
+                            [id]="item.campo"
+                            [placeholder]="item.placeholder"
+                            [formControlName]="item.campo"
+                            [required]="item?.validators?.includes('required') ?? false"
+                            [ngClass]="isValid(item.campo) ? 'required' : ''"
+                          />
+                          <!-- (change)="changeInValoresStore(formargrupo, item.campo)" -->
+                          @if (isValid(item.campo)) {
+                            <div class="mensaje-error">
+                              Este campo es obligatorio.
+                            </div>
+                            }
+                        </div>
+                      </div>
+                }  @case ('number') {
+                    <div [ngClass]="item.class" class="mt-5">
+                        <div class="form-group">
+                          <label class="form-label" [for]="item.campo">{{
+                            item.labelNombre
+                          }}</label>
+                          @if (item?.validators?.includes('required')) {
+                            <span>*:</span>
+                          } @else {
+                            <span>:</span>
+                          }
+                          <input
+                            class="form-control"
+                            type="number"
+                            [id]="item.campo"
+                            [placeholder]="item.placeholder"
+                            [formControlName]="item.campo"
+                            [required]="item?.validators?.includes('required') ?? false"
+                            [ngClass]="isValid(item.campo) ? 'required' : ''"
+                          />
+                          <!-- (change)="changeInValoresStore(formargrupo, item.campo)" -->
+                          @if (isValid(item.campo)) {
+                            <div class="mensaje-error">
+                              Este campo es obligatorio.
+                            </div>
+                            }
+                        </div>
+                      </div>
+                } @case ('textarea') {
+                    <div [ngClass]="item.class" class="mt-5">
+                        <label for="{{ item.campo }}">{{ item.labelNombre }}</label>
+                        @if (item?.validators?.includes('required')) {
+                          <span>*:</span>
+                        } @else {
+                          <span>:</span>
+                        }
+                        <textarea
+                          class="form-control"
+                          name="{{ item.labelNombre }}"
+                          id="{{ item.labelNombre }}"
+                          rows="5"
+                          style="height: 100px !important"
+                          [formControlName]="item.campo"
+                          [required]="item?.validators?.includes('required') ?? false"
+                          [ngClass]="isValid(item.campo) ? 'required' : ''"
+                        ></textarea>
+                        <!-- (change)="changeInValoresStore(formargrupo, item.campo)" -->
+                        @if (isValid(item.campo)) {
+                          <div class="mensaje-error">
+                            Este campo es obligatorio.
+                          </div>
+                          }
+                      </div>
+                  }
+            }
+    }
+  </form>

@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoSanitarioModule
       ),
   },
+  {
+    path: 'retiros-cofepris',
+    loadChildren: () =>
+      import('./tramites/261702/retiros-cofepris.module').then(
+        (m) => m.RetirosCofeprisModule
+      ),
+  }
 ];
 
 @NgModule({
