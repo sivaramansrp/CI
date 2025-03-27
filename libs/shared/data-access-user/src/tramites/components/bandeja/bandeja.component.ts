@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
 import { AMBIENTES } from '../../../core/ambientes';
+import { AcuseComponent } from "../acuse/acuse.component";
 import { BandejaPaso1Component } from "../bandejapaso1/bandeja-paso1.component";
 import { CommonModule } from '@angular/common';
 import { DetallesdictamenComponent } from "../bandeja-detallesDictamen/detallesdictamen.component";
@@ -10,7 +12,7 @@ import { TareasTramiteComponent } from "../bandejaTareasTramite/tareasTramite.co
 @Component({
   selector: 'lib-consulta',
   standalone: true,
-  imports: [CommonModule, RouterModule, BandejaPaso1Component, DocumentosComponent, DetallesdictamenComponent, TareasTramiteComponent],
+  imports: [CommonModule, RouterModule, BandejaPaso1Component, DocumentosComponent, DetallesdictamenComponent, TareasTramiteComponent, AcuseComponent],
   templateUrl: './bandeja.component.html',
   styleUrl: './bandeja.component.scss',
 })
@@ -19,6 +21,9 @@ export class BandejaComponent implements OnInit {
    * Variable para asingar el endpoint de la ruta
    */
   public ruta: string = '';
+  folio!: string;
+  txtAlerta!: string;
+  subtitulo = TITULO_ACUSE;
 
   ngOnInit(): void {
     if (window.location.host.indexOf('localhost') !== -1) {
@@ -26,6 +31,8 @@ export class BandejaComponent implements OnInit {
     } else {
       this.ruta = AMBIENTES.DESARROLLO
     }
+    this.folio = '01010101010101010101010101010101';
+    this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
 
   /**

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TablaTareasTramite } from '../../../core/models/shared/consulta.model';
-import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
-
+import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
 @Component({
   selector: 'lib-tareas-tramite',
   standalone: true,

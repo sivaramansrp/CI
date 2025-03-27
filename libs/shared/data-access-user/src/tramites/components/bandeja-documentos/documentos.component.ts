@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocumentosCargados } from '../../../core/models/shared/components.model';
-import { URL_PRUEBA } from '../../constantes/servicios-extraordinarios.enum';
+import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
 
 @Component({
   selector: 'lib-documentos',

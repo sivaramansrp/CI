@@ -49,6 +49,16 @@
                   <lib-detallesdictamen></lib-detallesdictamen>
               </div>
             }
+            @case (6) {
+              <div class="row rounded p-3 bg-light">
+                  <lib-component-acuse
+                    titulo="Acuse y resoluciones"
+                    [txtAlerta]="txtAlerta"
+                    [subtitulo]="subtitulo"
+                    [folio]="folio"
+                  ></lib-component-acuse>
+              </div>
+            }
             @case (7) {
               <div class="row rounded p-3 bg-light">
                   <lib-tareas-tramite></lib-tareas-tramite>
