@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Tramite130114Store } from '../estados/queries/tramites130114.store';
 import { Tramite130114Query } from '../estados/queries/tramite130114.query';
@@ -79,6 +79,11 @@ describe('SolicitudComponent', () => {
       setObservaciones: jest.fn(),
       setEntidad: jest.fn(),
       setRepresentacion: jest.fn(),
+    } as any;
+
+    mockStore = {
+      ...mockStore,
+      setProducto: jest.fn(),
     } as any;
 
     mockQuery = {
@@ -227,6 +232,30 @@ describe('SolicitudComponent', () => {
     });
   });
 
+  describe('opcionesDeBusqueda', () => {
+    it('should call updateState with correct arguments for solicitud options', () => {
+      // Act: Call the method
+      component.opcionesDeBusqueda();
+
+      // Assert: Verify updateState is called with correct arguments for solicitud
+      expect(mockStore.updateState).toHaveBeenCalledWith({
+        solicitud: 'Nuevo',
+        defaultSelect: 'Inicial',
+      });
+    });
+
+    it('should call updateState with correct arguments for producto options', () => {
+      // Act: Call the method
+      component.opcionesDeBusqueda();
+
+      // Assert: Verify updateState is called with correct arguments for producto
+      expect(mockStore.updateState).toHaveBeenCalledWith({
+        producto: 'Nuevo',
+        defaultProducto: 'Nuevo',
+      });
+    });
+  });
+
   describe('calcularTotales', () => {
     it('Debe calcular los totales a partir de tableBodyData', () => {
       component.tableBodyData = mockPartidasdelaTable.tableBody;
@@ -323,6 +352,115 @@ describe('SolicitudComponent', () => {
     });
   });
 
+  describe('setValoresStore', () => {
+    it('should call setProducto when metodoNombre is "setProducto"', () => {
+      // Arrange
+      // const event = { metodoNombre: 'setProducto', valor: 'Nuevo Producto' };
+      const event = {
+        form: TestBed.inject(FormBuilder).group({}),
+        campo: 'descripcion', // Provide a valid campo
+        metodoNombre: 'setDescripcion',
+        valor: 'Nueva Descripción',
+      };
+      // Act
+      component.setValoresStore(event);
+
+      // Assert
+      expect(mockStore.setProducto).toHaveBeenCalledWith("Nuevo Producto");
+    });
+
+    it('should call setDescripcion when metodoNombre is "setDescripcion"', () => {
+      // Arrange
+      const mockForm = new FormGroup({
+        descripcion: new FormControl('Nueva Descripción'), // Mock the form control
+      });
+      const event = {
+        form: mockForm,
+        campo: 'descripcion', // Specify the field name
+        metodoNombre: 'setDescripcion',
+      };
+
+      // Act
+      component.setValoresStore(event);
+
+      // Assert
+      expect(mockStore.setDescripcion).toHaveBeenCalledWith('Nueva Descripción');
+    });
+
+    it('should call setCantidad when metodoNombre is "setCantidad"', () => {
+      // Arrange
+      const mockForm = new FormGroup({
+        cantidad: new FormControl(10), // Mock the form control
+      });
+    
+      const event = {
+        form: mockForm, // Provide the FormGroup
+        campo: 'cantidad', // Specify the field name
+        metodoNombre: 'setCantidad', // Keep the method name
+      };
+      // Act
+      component.setValoresStore(event);
+
+      // Assert
+      expect(mockStore.setCantidad).toHaveBeenCalledWith(10);
+    });
+
+    it('should call setValorPartidaUSD when metodoNombre is "setValorPartidaUSD"', () => {
+      // Arrange
+      const mockForm = new FormGroup({
+        valorPartidaUSD: new FormControl(100.5), // Mock the form control
+      });
+    
+      const event = {
+        form: mockForm, // Provide the FormGroup
+        campo: 'valorPartidaUSD', // Specify the field name
+        metodoNombre: 'setValorPartidaUSD', // Keep the method name
+      };
+      // Act
+      component.setValoresStore(event);
+
+      // Assert
+      expect(mockStore.setValorPartidaUSD).toHaveBeenCalledWith(100.5);
+    });
+
+    it('should log a warning for unhandled metodoNombre', () => {
+      // Arrange
+      const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+      // const event = { metodoNombre: 'unknownMethod', valor: 'Test Value' };
+      const event = {
+        form: new FormGroup({}), // Provide the FormGroup
+        campo: 'cantidad', // Specify the field name
+        metodoNombre: 'setCantidad', // Keep the method name
+      };
+      // Act
+      component.setValoresStore(event);
+
+      // Assert
+      expect(consoleSpy).toHaveBeenCalledWith("Unhandled metodoNombre:", "unknownMethod");
+
+      // Clean up
+      consoleSpy.mockRestore();
+    });
+
+    it('should call setCantidad when metodoNombre is "setCantidad"', () => {
+      const mockForm = new FormGroup({
+        cantidad: new FormControl(10), // Mock the form control
+      });
+
+      const event = {
+        form: mockForm, // Provide the FormGroup
+        campo: 'cantidad', // Specify the field name
+        metodoNombre: 'setCantidad', // Keep the method name
+      };
+
+      // Act
+      component.setValoresStore(event);
+
+      // Assert
+      expect(mockStore.setCantidad).toHaveBeenCalledWith(10);
+    });
+  });
+
   describe('ngOnDestroy', () => {
     it('Debería completar el tema destruido$', () => {
       const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
@@ -342,6 +480,64 @@ describe('SolicitudComponent', () => {
       component.mercanciaForm.patchValue({ producto: 'Nuevo' });
       // component.resetForm();
       expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
+    });
+  });
+
+  describe('getEstablecimiento', () => {
+    it('should map tableHeaderData and create clave function that accesses tbodyData[index]', () => {
+      // Arrange: Set mock data for getEstablecimientoTableData
+      component.getEstablecimientoTableData = {
+        tableHeader: ['Header1', 'Header2'],
+        tableBody: [
+          { tbodyData: ['Value1', 'Value2'] },
+          { tbodyData: ['Value3', 'Value4'] },
+        ],
+      };
+
+      // Act: Call the method
+      component.getEstablecimiento();
+
+      // Assert: Verify tableHeaderData is mapped correctly
+      expect(component.tableHeaderData.length).toBe(2);
+      expect(component.tableHeaderData[0].encabezado).toBe('Header1');
+      expect(component.tableHeaderData[1].encabezado).toBe('Header2');
+
+      // Assert: Verify the clave function works as expected
+      const claveFunction = component.tableHeaderData[0].clave;
+
+      // Pass an object with tbodyData to the clave function
+      const result = claveFunction('TestValue1');
+      expect(result).toBe('TestValue1');
+    });
+  });
+
+  describe('manejarlaFilaSeleccionada', () => {
+    it('should set filaSeleccionada to null if filasSeleccionadas is empty', () => {
+      // Arrange: Pass an empty array
+      const filasSeleccionadas: any[] = [];
+
+      // Act: Call the method
+      component.manejarlaFilaSeleccionada(filasSeleccionadas);
+
+      // Assert: Verify filaSeleccionada is null
+      expect(component.filaSeleccionada).toBeNull();
+
+      // Assert: Verify storeTableValues is not called
+      expect(mockStore.storeTableValues).not.toHaveBeenCalled();
+    });
+
+    it('should set filaSeleccionada to the first item if filasSeleccionadas is not empty', () => {
+      // Arrange: Pass an array with one selected row
+      const filasSeleccionadas: any[] = [{ tbodyData: ['Value1', 'Value2'] }];
+
+      // Act: Call the method
+      component.manejarlaFilaSeleccionada(filasSeleccionadas);
+
+      // Assert: Verify filaSeleccionada is set to the first item
+      expect(component.filaSeleccionada).toEqual(filasSeleccionadas[0]);
+
+      // Assert: Verify storeTableValues is called with the selected row
+      expect(mockStore.storeTableValues).toHaveBeenCalledWith(filasSeleccionadas[0]);
     });
   });
 });
