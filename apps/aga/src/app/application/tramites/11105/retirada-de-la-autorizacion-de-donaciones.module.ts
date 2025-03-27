@@ -24,6 +24,7 @@ import { RetiradaDeLaAutorizacionDeDonacioneRoutingModule } from './retirada-de-
 import { RetiradaDeLaAutorizacionDeDonacionesService } from './services/retirad-de-la-autorizacion-de-donaciones.service';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { ToastrService } from 'ngx-toastr';
+import { FolioDelTramiteComponent } from './pages/folio-del-trámite/folio-del-trámite.component';
 
 
 @NgModule({
@@ -49,7 +50,8 @@ import { ToastrService } from 'ngx-toastr';
     SolicitantePageComponent,
     PasoTresComponent,
     DatosGeneralesDeLaSolicitudComponent,
-    DesistimientoComponent
+    DesistimientoComponent,
+    FolioDelTramiteComponent
   ],
   exports: [],
   providers: [

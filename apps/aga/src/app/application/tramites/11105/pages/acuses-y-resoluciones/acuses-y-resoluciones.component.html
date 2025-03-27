@@ -1,11 +1,11 @@
-<!-- <div class="container">
+<div class="container">
   <div class="container1">
     <ng-titulo titulo="Acuses y resoluciones" />
     <form [formGroup]="acusesYResolucionesFormGroup">
       <div class="row">
         <div class="col-md-6">
-          <label class="form-label" for="rfc"
-            >RFC:<span
+          <label class="form-label" for="folio"
+            >Folio:<span
               class="bi bi-question-circle-fill fs-4 m-1"
               title="Title"
               ata-bs-toggle="tooltip"
@@ -14,88 +14,96 @@
           <input
             type="text"
             class="form-control"
-            id="rfc"
-            formControlName="rfc"
+            id="folio"
+            formControlName="folio"
             readonly
           />
         </div>
 
         <div class="col-md-6">
-          <label class="form-label" for="denominacion"
+          <label class="form-label" for="fechaInicial"
             >Feach inicio tr&aacute;mite:</label
           >
           <input
             type="text"
             class="form-control"
-            id="denominacion"
-            formControlName="denominacion"
+            id="fechaInicial"
+            formControlName="fechaInicial"
             readonly
           />
         </div>
 
         <div class="col-md-12">
-          <label class="form-label" for="actividad-economica"
+          <label class="form-label" for="dependencia"
             >Dependencia:</label
           >
           <input
             type="text"
             class="form-control"
-            id="actividad-economica"
-            formControlName="actividadEconomica"
+            id="dependecia"
+            formControlName="dependencia"
             readonly
           />
         </div>
 
         <div class="col-md-12">
-          <label class="form-label" for="correo-electronico"
+          <label class="form-label" for="unidadAdministrativaORepresentaciónFederal"
             >Unidad administrativa o representación federal:</label
           >
           <input
             type="text"
             class="form-control"
-            id="correo-electronico"
-            formControlName="correoElectronico"
+            id="unidadAdministrativaORepresentaciónFederal"
+            formControlName="unidadAdministrativaORepresentaciónFederal"
             readonly
           />
         </div>
         <div class="col-md-6">
-          <label class="form-label" for="correo-electronico"
+          <label class="form-label" for="tipoDeSolicitud"
             >Tipo de solicitud:</label
           >
           <input
             type="text"
             class="form-control"
-            id="correo-electronico"
-            formControlName="correoElectronico"
+            id="tipoDeSolicitud"
+            formControlName="tipoDeSolicitud"
             readonly
           />
         </div>
         <div class="col-md-6">
-          <label class="form-label" for="correo-electronico"
+          <label class="form-label" for="estatusDeLaSolicitud"
             >Estatus de la solicitud:</label
           >
           <input
             type="text"
             class="form-control"
-            id="correo-electronico"
-            formControlName="correoElectronico"
+            id="estatusDeLaSolicitud"
+            formControlName="estatusDeLaSolicitud"
             readonly
           />
         </div>
 
         <div class="col-md-6">
-          <label class="form-label" for="correo-electronico"
+          <label class="form-label" for="díasHábilesTranscurridos"
             >Días hábiles transcurridos:</label
           >
           <input
             type="text"
             class="form-control"
-            id="correo-electronico"
-            formControlName="correoElectronico"
+            id="díasHábilesTranscurridos"
+            formControlName="díasHábilesTranscurridos"
             readonly
           />
         </div>
+
+        <div class="row mt-5 mb-5">
+          <div class="col-md-12 d-flex justify-content-end">
+            <button type="button" class="btn btn-default me-3"> Regresar </button>
+            <button type="button" class="btn btn-primary" (click)="continuar()"> Desistir </button>
+          </div>
+        </div>
+        
       </div>
     </form>
   </div>
-</div> -->
+</div> 
