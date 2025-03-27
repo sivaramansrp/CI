@@ -125,7 +125,7 @@ table {
   input[aria-label='Select All'] {
   display: none !important;
 }
-.grisColor{
+.gris-color{
   background-color: lightgrey;
 }
 
