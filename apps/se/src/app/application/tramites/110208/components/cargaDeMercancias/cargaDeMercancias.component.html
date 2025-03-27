@@ -70,13 +70,13 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="marca">Marca:</label>
-                                <input type="text" id="marca" formControlName="marca" class="form-control">
+                                <input type="text" id="marca" formControlName="marca" class="form-control" (change)="setValoresStore(formMercancia,'marca', 'setMarca')">
                               </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="cantidad">Cantidad*:</label>
-                                <input type="text" id="cantidad" formControlName="cantidad" class="form-control">
+                                <input type="text" id="cantidad" formControlName="cantidad" class="form-control" (change)="setValoresStore(formMercancia,'cantidad', 'setCantidad')">
                               </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <app-catalogo-select [catalogo]="estado" [label]="'UMC'"
-                                [required]="true" name="umc" formControlName="umc"
+                                [required]="true" name="umc" formControlName="umc" (change)="setValoresStore(formMercancia,'umc', 'setUmc')"
                                 ></app-catalogo-select>
                             </div>
                         </div>
@@ -93,13 +93,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="valorDeLa">Valor de la mercancía (dólares)*:</label>
-                                <input type="text" id="valorDeLa" formControlName="valorDeLa" class="form-control">
+                                <input type="text" id="valorDeLa" formControlName="valorDeLa" class="form-control" (change)="setValoresStore(formMercancia,'valorDeLa', 'setValorDeLa')">
                               </div>
                         </div>
                         <div class="col-md-8">
                             <div class="form-group">
                                 <label for="complementoDescripcion">Complemento de la descripción*:</label>
-                                <input type="text" id="complementoDescripcion" formControlName="complementoDescripcion" class="form-control h-70">
+                                <input type="text" id="complementoDescripcion" formControlName="complementoDescripcion" class="form-control h-70" (change)="setValoresStore(formMercancia,'complementoDescripcion', 'setComplementoDescripcion')">
                             </div>
                         </div>
                     </div>
@@ -107,13 +107,13 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="nFactura">N° factura*:</label>
-                                <input type="text" id="nFactura" formControlName="nFactura" class="form-control">
+                                <input type="text" id="nFactura" formControlName="nFactura" class="form-control" (change)="setValoresStore(formMercancia,'nFactura', 'setNFactura')">
                               </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <app-catalogo-select [catalogo]="estado" [label]="'Tipo de factura'"
-                                [required]="true" name="umc" formControlName="umc"
+                                [required]="true" name="tipoDeFactura" formControlName="tipoDeFactura" (change)="setValoresStore(formMercancia,'tipoDeFactura', 'setTipoDeFactura')"
                                 ></app-catalogo-select>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <input-fecha [datos]="fechaFacturaInput" [setFecha]="formMercancia.get('fechaFactura')?.value"
-                                (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+                                (valorCambiado)="cambioFechaFactura($event,formMercancia,'fechaFactura', 'setFechaFactura')"></input-fecha>
                             </div>
                         </div>
                     </div>

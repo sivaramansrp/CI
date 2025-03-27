@@ -6,7 +6,9 @@ import { MERCANCIA_TABLA, MercanciasInfo } from '@libs/shared/data-access-user/s
 import { Modal } from 'bootstrap';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
+import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 
 export interface RespuestaTabla {
   /**
@@ -68,6 +70,17 @@ export interface RespuestaDatos {
 export class CargaDeMercanciasComponent implements OnInit,OnDestroy{
 
   formMercancia!: FormGroup
+
+  /**
+   * Estado de la solicitud obtenido desde el store.
+   */
+  public solicitudState!: Solicitud110208State;
+
+  /**
+   * Notificador para destruir observables activos y evitar pérdidas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Referencia al elemento del modal.
    */
@@ -86,11 +99,21 @@ export class CargaDeMercanciasComponent implements OnInit,OnDestroy{
   constructor(
       private fb: FormBuilder,
       private service: ValidarInicalmenteService,
+      private tramite110208Store: Tramite110208Store,
+      private tramite110208Query: Tramite110208Query
     ) {
       // Dependencia inyectada para uso posterior
     }
 
   ngOnInit(): void {
+    this.tramite110208Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.obtenerTablaDatos()
     this.obtenerEstadoList()
     this.obtenerFormDatos()
@@ -100,12 +123,14 @@ export class CargaDeMercanciasComponent implements OnInit,OnDestroy{
       nombreTecnio:[{value:'',disabled:true}],
       nombreEnIngles:[{value:'',disabled:true}],
       criterioPara:[{value:'',disabled:true}],
-      marca:[],
-      umc:[''],
-      cantidad:['',Validators.required],
-      valorDeLa:['',Validators.required],
-      complementoDescripcion:['',Validators.required],
-      nFactura:[]
+      marca:[this.solicitudState?.marca],
+      umc:[this.solicitudState?.umc],
+      cantidad:[this.solicitudState?.cantidad,Validators.required],
+      valorDeLa:[this.solicitudState?.valorDeLa,Validators.required],
+      complementoDescripcion:[this.solicitudState?.complementoDescripcion,Validators.required],
+      nFactura:[this.solicitudState?.nFactura],
+      tipoDeFactura:[this.solicitudState?.tipoDeFactura],
+      fechaFactura:[this.solicitudState?.fechaFactura],
     });
   }
   public alerta = ALERTA_PARA
@@ -136,12 +161,6 @@ export class CargaDeMercanciasComponent implements OnInit,OnDestroy{
           nombreTecnio:this.mercanciasFormaDatos[0].nombreTecnio,
           nombreEnIngles:this.mercanciasFormaDatos[0].nombreEnIngles,
           criterioPara:this.mercanciasFormaDatos[0].criterioPara,
-          marca:this.mercanciasFormaDatos[0].marca,
-          umc:this.mercanciasFormaDatos[0].umc,
-          cantidad:this.mercanciasFormaDatos[0].cantidad,
-          valorDeLa:this.mercanciasFormaDatos[0].valorDeLa,
-          complementoDescripcion:this.mercanciasFormaDatos[0].complementoDescripcion,
-          nFactura:this.mercanciasFormaDatos[0].nFactura
         })
     });
   }
@@ -179,9 +198,22 @@ export class CargaDeMercanciasComponent implements OnInit,OnDestroy{
       this.estado = DATOS;
     });
   }
-  public cambioFechaFactura(nuevo_valor: string): void {
+  public cambioFechaFactura(nuevo_valor: string,form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite110208Store): void {
     this.formMercancia.get('fechaFactura')?.setValue(nuevo_valor);
     this.formMercancia.get('fechaFactura')?.markAsUntouched();
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite110208Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite110208Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
   ngOnDestroy(): void {
