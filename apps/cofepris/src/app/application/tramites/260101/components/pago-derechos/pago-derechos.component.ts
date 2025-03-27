@@ -113,11 +113,14 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de pagos de derechos desde el servicio y actualiza `bancoCatalogo`.
    */
   obtenerPagoDerechos(): void {
-    this.solicitudDatosService.obtenerPagoDerechos().subscribe({
-      next: (respuesta: CatalogosSelect) => {
-        this.bancoCatalogo = respuesta;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerPagoDerechos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: CatalogosSelect) => {
+          this.bancoCatalogo = respuesta;
+        },
+      });
   }
 
   /**

@@ -433,37 +433,47 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Obtiene los datos iniciales de la solicitud y los actualiza en el estado.
    */
   obtenerSolicitud(): void {
-    this.solicitudDatosService.obtenerSolicitud().subscribe({
-      next: (respuesta: Solicitud) => {
-        this.solicitud260101Store.setRazonSocial(respuesta.razonSocial);
-        this.solicitud260101Store.setCorreoElectronico(
-          respuesta.correoElectronico
-        );
-        this.solicitud260101Store.setCodigoPostal(respuesta.codigoPostal);
-        this.solicitud260101Store.setMunicipio(respuesta.municipio);
-        this.solicitud260101Store.setLocalidad(respuesta.localidad);
-        this.solicitud260101Store.setColonia(respuesta.colonia);
-        this.solicitud260101Store.setCalle(respuesta.calle);
-        this.solicitud260101Store.setLada(respuesta.lada);
-        this.solicitud260101Store.setTelefono(respuesta.telefono);
-        this.solicitud260101Store.setLegalRazonSocial(
-          respuesta.legalRazonSocial
-        );
-        this.solicitud260101Store.setApellidoPaterno(respuesta.apellidoPaterno);
-        this.solicitud260101Store.setApellidoMeterno(respuesta.apellidoMeterno);
-      },
-    });
+    this.solicitudDatosService
+      .obtenerSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: Solicitud) => {
+          this.solicitud260101Store.setRazonSocial(respuesta.razonSocial);
+          this.solicitud260101Store.setCorreoElectronico(
+            respuesta.correoElectronico
+          );
+          this.solicitud260101Store.setCodigoPostal(respuesta.codigoPostal);
+          this.solicitud260101Store.setMunicipio(respuesta.municipio);
+          this.solicitud260101Store.setLocalidad(respuesta.localidad);
+          this.solicitud260101Store.setColonia(respuesta.colonia);
+          this.solicitud260101Store.setCalle(respuesta.calle);
+          this.solicitud260101Store.setLada(respuesta.lada);
+          this.solicitud260101Store.setTelefono(respuesta.telefono);
+          this.solicitud260101Store.setLegalRazonSocial(
+            respuesta.legalRazonSocial
+          );
+          this.solicitud260101Store.setApellidoPaterno(
+            respuesta.apellidoPaterno
+          );
+          this.solicitud260101Store.setApellidoMeterno(
+            respuesta.apellidoMeterno
+          );
+        },
+      });
   }
 
   /**
    * Obtiene el catálogo de estados desde el servicio y actualiza la variable `estadoCatalogo`.
    */
   obtenerEstadoCatalogo(): void {
-    this.solicitudDatosService.obtenerEstadoCatalogo().subscribe({
-      next: (respuesta: CatalogosSelect) => {
-        this.estadoCatalogo = respuesta;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerEstadoCatalogo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: CatalogosSelect) => {
+          this.estadoCatalogo = respuesta;
+        },
+      });
   }
 
   /**
@@ -472,46 +482,58 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Actualiza las propiedades correspondientes con los valores obtenidos.
    */
   obtenerDatosDeAplicacion(): void {
-    this.solicitudDatosService.obtenerDatosDeSolicitud().subscribe({
-      next: (respuesta: DatosDeSolicitud) => {
-        this.solicitudDatos = respuesta.tablaFilaDatos;
-        this.hacerlosRadioOptions = respuesta.hacerlosRadioOptions;
-        this.tableDataSCIAN = respuesta.tablaFilaDatos[0]?.SCIANLista;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerDatosDeSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: DatosDeSolicitud) => {
+          this.solicitudDatos = respuesta.tablaFilaDatos;
+          this.hacerlosRadioOptions = respuesta.hacerlosRadioOptions;
+          this.tableDataSCIAN = respuesta.tablaFilaDatos[0]?.SCIANLista;
+        },
+      });
   }
 
   /**
    * Obtiene la lista de mercancías desde el servicio y actualiza el estado en el Store.
    */
   obtenerMercanciaListo(): void {
-    this.solicitudDatosService.obtenerMercanciaListo().subscribe({
-      next: (res: Mercancia[]) => {
-        this.solicitud260101Store.setMercanciasDatos(res);
-      },
-    });
+    this.solicitudDatosService
+      .obtenerMercanciaListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (res: Mercancia[]) => {
+          this.solicitud260101Store.setMercanciasDatos(res);
+        },
+      });
   }
 
   /**
    * Obtiene el catálogo de regímenes desde el servicio y actualiza la variable `regimenCatalogo`.
    */
   obtenerRegimenDestinaraListo(): void {
-    this.solicitudDatosService.obtenerRegimenDestinaraListo().subscribe({
-      next: (respuesta: CatalogosSelect) => {
-        this.regimenCatalogo = respuesta;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerRegimenDestinaraListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: CatalogosSelect) => {
+          this.regimenCatalogo = respuesta;
+        },
+      });
   }
 
   /**
    * Obtiene el catálogo de aduanas desde el servicio y actualiza la variable `aduanaCatalogo`.
    */
   obtenerAduanaListo(): void {
-    this.solicitudDatosService.obtenerAduanaListo().subscribe({
-      next: (respuesta: CatalogosSelect) => {
-        this.aduanaCatalogo = respuesta;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerAduanaListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: CatalogosSelect) => {
+          this.aduanaCatalogo = respuesta;
+        },
+      });
   }
 
   /**

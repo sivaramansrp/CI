@@ -273,12 +273,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * y actualiza los datos en el estado almacenado.
    */
   obtenerDestinatarioListo(): void {
-    this.solicitudDatosService.obtenerDestinatarioListo().subscribe({
-      next: (respuesta: Destinatario[]) => {
-        this.destinatarioDatos = respuesta;
-        this.solicitud260101Store.setDestinatarioDatos(respuesta);
-      },
-    });
+    this.solicitudDatosService
+      .obtenerDestinatarioListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: Destinatario[]) => {
+          this.destinatarioDatos = respuesta;
+          this.solicitud260101Store.setDestinatarioDatos(respuesta);
+        },
+      });
   }
 
   /**
@@ -286,11 +289,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * y almacena los datos en el componente.
    */
   obtenerFabricanteListo(): void {
-    this.solicitudDatosService.obtenerFabricanteListo().subscribe({
-      next: (respuesta: Fabricante[]) => {
-        this.fabricanteDatos = respuesta;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerFabricanteListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: Fabricante[]) => {
+          this.fabricanteDatos = respuesta;
+        },
+      });
   }
 
   /**

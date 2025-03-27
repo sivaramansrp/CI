@@ -304,12 +304,15 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * Obtiene las claves de los lotes desde el servicio y actualiza los datos en el estado.
    */
   obtenerClavesDeLotesListo(): void {
-    this.solicitudDatosService.obtenerClavesDeLotesListo().subscribe({
-      next: (respuesta: ClavesDeLotes[]) => {
-        this.tipos = respuesta;
-        this.solicitud260101Store.setClavesDeLotes(respuesta);
-      },
-    });
+    this.solicitudDatosService
+      .obtenerClavesDeLotesListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: ClavesDeLotes[]) => {
+          this.tipos = respuesta;
+          this.solicitud260101Store.setClavesDeLotes(respuesta);
+        },
+      });
   }
 
   /**
@@ -317,14 +320,17 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * y la unidad de medida de tarifa (UMT) en el estado.
    */
   obtenerMercanciaListo(): void {
-    this.solicitudDatosService.obtenerMercanciaListo().subscribe({
-      next: (respuesta: Mercancia[]) => {
-        this.solicitud260101Store.setDescripcionFraccionArancelaria(
-          respuesta[0].descripcionFraccionArancelaria
-        );
-        this.solicitud260101Store.setUmt(respuesta[0].umt);
-      },
-    });
+    this.solicitudDatosService
+      .obtenerMercanciaListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: Mercancia[]) => {
+          this.solicitud260101Store.setDescripcionFraccionArancelaria(
+            respuesta[0].descripcionFraccionArancelaria
+          );
+          this.solicitud260101Store.setUmt(respuesta[0].umt);
+        },
+      });
   }
 
   /**
@@ -332,13 +338,16 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * y usos específicos desde el servicio y actualiza las propiedades correspondientes.
    */
   obtenerCrosslisto(): void {
-    this.solicitudDatosService.obtenerCrosslisto().subscribe({
-      next: (respuesta: MercanciaCrossList) => {
-        this.paisOrigenCrossList = respuesta.paisOrigenCrossList;
-        this.paisProcedencisCrossList = respuesta.paisProcedencisCrossList;
-        this.usoEspecificoCrossList = respuesta.usoEspecificoCrossList;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerCrosslisto()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: MercanciaCrossList) => {
+          this.paisOrigenCrossList = respuesta.paisOrigenCrossList;
+          this.paisProcedencisCrossList = respuesta.paisProcedencisCrossList;
+          this.usoEspecificoCrossList = respuesta.usoEspecificoCrossList;
+        },
+      });
   }
 
   /**
@@ -346,14 +355,17 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
    * productos, especificación, tipos de productos y UMC (Unidad de Medida de Comercialización).
    */
   obtenerMercanciaCatalogos(): void {
-    this.solicitudDatosService.obtenerMercanciaCatalogos().subscribe({
-      next: (respuesta: MercanciaCatalogos) => {
-        this.productosCatalogo = respuesta.productosCatalogo;
-        this.especificarCatalogo = respuesta.especificarCatalogo;
-        this.tipoProductoCatalogo = respuesta.tipoProductoCatalogo;
-        this.umcCatalogo = respuesta.umcCatalogo;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerMercanciaCatalogos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: MercanciaCatalogos) => {
+          this.productosCatalogo = respuesta.productosCatalogo;
+          this.especificarCatalogo = respuesta.especificarCatalogo;
+          this.tipoProductoCatalogo = respuesta.tipoProductoCatalogo;
+          this.umcCatalogo = respuesta.umcCatalogo;
+        },
+      });
   }
   /**
    * Alterna la visibilidad del panel colapsable para el país de origen.

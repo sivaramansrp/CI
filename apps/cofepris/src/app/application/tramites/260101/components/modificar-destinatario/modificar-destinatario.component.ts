@@ -226,38 +226,47 @@ export class ModificarDestinatarioComponent implements OnInit, OnDestroy {
    * Incluye catálogos de países, estados, municipios, localidades, códigos postales y colonias.
    */
   obtenerDestinatarioCatalogos(): void {
-    this.solicitudDatosService.obtenerDestinatarioCatalogos().subscribe({
-      next: (respuesta: DestinatarioCatalogos) => {
-        this.paisCatalogo = respuesta.paisCatalogo;
-        this.estadoCatalogo = respuesta.estadoCatalogo;
-        this.municipioCatalogo = respuesta.municipioCatalogo;
-        this.localidadCatalogo = respuesta.localidadCatalogo;
-        this.codigoCatalogo = respuesta.codigoCatalogo;
-        this.coloniaCatalogo = respuesta.coloniaCatalogo;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerDestinatarioCatalogos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: DestinatarioCatalogos) => {
+          this.paisCatalogo = respuesta.paisCatalogo;
+          this.estadoCatalogo = respuesta.estadoCatalogo;
+          this.municipioCatalogo = respuesta.municipioCatalogo;
+          this.localidadCatalogo = respuesta.localidadCatalogo;
+          this.codigoCatalogo = respuesta.codigoCatalogo;
+          this.coloniaCatalogo = respuesta.coloniaCatalogo;
+        },
+      });
   }
 
   /**
    * Obtiene las opciones de los botones de selección (radio) para el tipo de persona.
    */
   obtenerDestinatarioRadio(): void {
-    this.solicitudDatosService.obtenerDestinatarioRadio().subscribe({
-      next: (respuesta: { label: string; value: string | number }[]) => {
-        this.tipoPersonaRadioOptions = respuesta;
-      },
-    });
+    this.solicitudDatosService
+      .obtenerDestinatarioRadio()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: { label: string; value: string | number }[]) => {
+          this.tipoPersonaRadioOptions = respuesta;
+        },
+      });
   }
 
   /**
    * Obtiene los datos de destinatarios a imitar y actualiza el estado del país del domicilio.
    */
   obtenerDestinatarioImitar(): void {
-    this.solicitudDatosService.obtenerDestinatarioImitar().subscribe({
-      next: (respuesta: DestinatarioImitar) => {
-        this.solicitud260101Store.setDomicilioPais(respuesta.domicilioPais);
-      },
-    });
+    this.solicitudDatosService
+      .obtenerDestinatarioImitar()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: DestinatarioImitar) => {
+          this.solicitud260101Store.setDomicilioPais(respuesta.domicilioPais);
+        },
+      });
   }
 
   /**
