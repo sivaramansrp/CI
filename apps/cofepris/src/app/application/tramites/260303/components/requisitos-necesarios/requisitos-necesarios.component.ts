@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, REQUISITOS_OPCIONALES, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -24,7 +24,7 @@ import simulacroDeJSON from '@libs/shared/theme/assets/json/260303/documento-dat
   templateUrl: './requisitos-necesarios.component.html',
   styleUrl: './requisitos-necesarios.component.scss',
 })
-export class RequisitosNecesariosComponent implements OnInit {
+export class RequisitosNecesariosComponent implements OnInit,OnDestroy {
 
   /**
    * Una propiedad pública que contiene los requisitos opcionales para el componente.
@@ -133,6 +133,15 @@ export class RequisitosNecesariosComponent implements OnInit {
    */
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
       const VALOR = form.get(campo)?.value;
-      (this.tramite260303Store[metodoNombre] as (value: any) => void)(VALOR);
+      (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

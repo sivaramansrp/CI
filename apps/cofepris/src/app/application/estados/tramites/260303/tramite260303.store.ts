@@ -180,6 +180,25 @@ export interface Solicitud260303State {
     fechaDePago: string;
     importeDePago: string;
     tipoDocumento: string;
+    tercerosRelacionadosDenominacionSocial: string;
+    tercerosRelacionadosTerceroNombre: string;
+    tercerosRelacionadosNacional: string;
+    tercerosRelacionadosExtranjero: string;
+    tercerosRelacionadosFisica: string;
+    tercerosRelacionadosMoral: string;
+    tercerosRelacionadosNoContribuyente: string;
+    tercerosRelacionadosRfc: string;
+    tercerosRelacionadosCurp: string;
+    tercerosRelacionadosRazonSocial: string;
+    tercerosRelacionadosPais: string;
+    tercerosRelacionadosEstado: string;
+    tercerosRelacionadosCodigoPostal: string;
+    tercerosRelacionadosCalle: string;
+    tercerosRelacionadosNumeroExterior: string;
+    tercerosRelacionadosNumeroInterior: string;
+    tercerosRelacionadosLada: string;
+    tercerosRelacionadosTelefono: string;
+    tercerosRelacionadosCorreoElectronico: string;
 }
 /**
  * Función para crear el estado inicial de Solicitud260303State.
@@ -249,7 +268,26 @@ export function createInitialState(): Solicitud260303State {
         laveDePago: '',
         fechaDePago: '',
         importeDePago: '',
-        tipoDocumento: ''
+        tipoDocumento: '',
+        tercerosRelacionadosDenominacionSocial: '',
+        tercerosRelacionadosTerceroNombre: '',
+        tercerosRelacionadosNacional: '',
+        tercerosRelacionadosExtranjero: '',
+        tercerosRelacionadosFisica: '',
+        tercerosRelacionadosMoral: '',
+        tercerosRelacionadosNoContribuyente: '',
+        tercerosRelacionadosRfc: '',
+        tercerosRelacionadosCurp: '',
+        tercerosRelacionadosRazonSocial: '',
+        tercerosRelacionadosPais: '',
+        tercerosRelacionadosEstado: '',
+        tercerosRelacionadosCodigoPostal: '',
+        tercerosRelacionadosCalle: '',
+        tercerosRelacionadosNumeroExterior: '',
+        tercerosRelacionadosNumeroInterior: '',
+        tercerosRelacionadosLada: '',
+        tercerosRelacionadosTelefono: '',
+        tercerosRelacionadosCorreoElectronico: '',
     };
 }
 
@@ -867,6 +905,139 @@ export class Tramite260303Store extends Store<Solicitud260303State>{
         this.update((state) => ({
             ...state,
             tipoDocumento,
+        }));
+    }
+
+    public SetTercerosRelacionadosDenominacionSocial(tercerosRelacionadosDenominacionSocial: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosDenominacionSocial,
+        }));
+    }
+
+    public SetTercerosRelacionadosTerceroNombre(tercerosRelacionadosTerceroNombre: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosTerceroNombre,
+        }));
+    }
+
+    public SetTercerosRelacionadosNacional(tercerosRelacionadosNacional: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNacional,
+        }));
+    }
+
+    public SetTercerosRelacionadosExtranjero(tercerosRelacionadosExtranjero: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosExtranjero,
+        }));
+    }
+
+    public SetTercerosRelacionadosFisica(tercerosRelacionadosFisica: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosFisica,
+        }));
+    }
+
+    public SetTercerosRelacionadosMoral(tercerosRelacionadosMoral: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosMoral,
+        }));
+    }
+
+    public SetTercerosRelacionadosNoContribuyente(tercerosRelacionadosNoContribuyente: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNoContribuyente,
+        }));
+    }
+
+    public SetTercerosRelacionadosRfc(tercerosRelacionadosRfc: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosRfc,
+        }));
+    }
+
+    public SetTercerosRelacionadosCurp(tercerosRelacionadosCurp: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCurp,
+        }));
+    }
+
+    public SetTercerosRelacionadosRazonSocial(tercerosRelacionadosRazonSocial: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosRazonSocial,
+        }));
+    }
+
+    public SetTercerosRelacionadosPais(tercerosRelacionadosPais: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosPais,
+        }));
+    }
+
+    public SetTercerosRelacionadosEstado(tercerosRelacionadosEstado: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosEstado,
+        }));
+    }
+
+    public SetTercerosRelacionadosCodigoPostal(tercerosRelacionadosCodigoPostal: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCodigoPostal,
+        }));
+    }
+
+    public SetTercerosRelacionadosCalle(tercerosRelacionadosCalle: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCalle,
+        }));
+    }
+
+    public SetTercerosRelacionadosNumeroExterior(tercerosRelacionadosNumeroExterior: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNumeroExterior,
+        }));
+    }
+
+    public SetTercerosRelacionadosNumeroInterior(tercerosRelacionadosNumeroInterior: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosNumeroInterior,
+        }));
+    }
+
+    public SetTercerosRelacionadosLada(tercerosRelacionadosLada: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosLada,
+        }));
+    }
+
+    public SetTercerosRelacionadosTelefono(tercerosRelacionadosTelefono: string) {  
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosTelefono,
+        }));
+    }
+
+    public SetTercerosRelacionadosCorreoElectronico(tercerosRelacionadosCorreoElectronico: string) {
+        this.update((state) => ({
+            ...state,
+            tercerosRelacionadosCorreoElectronico,
         }));
     }
 } 

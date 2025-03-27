@@ -419,6 +419,7 @@
                         [label]="'Clasificación del producto'"
                         [required]="true"
                         formControlName="clave"
+                        (change)="setValoresStore(mercanciasForm,'clave', 'setClave')"
                         name="clave">
                     </app-catalogo-select>
                 </div>
@@ -429,6 +430,7 @@
                         <label for="especificar" class="form-label">Especificar clasificación del producto*:</label>
                         <input type="text" id="especificar" 
                             formControlName="especificarClasificacion" 
+                            (change)="setValoresStore(mercanciasForm,'especificarClasificacion', 'setEspecificarClasificacionProducto')"
                             class="form-control">
                     </div>
                 </div>
@@ -437,7 +439,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="dci" class="form-label">Denominación común internacional (DCI)*:</label>
-                        <input type="text" id="dci" formControlName="dci" class="form-control">
+                        <input type="text" id="dci" 
+                        formControlName="dci" 
+                        (change)="setValoresStore(mercanciasForm,'dci', 'setDci')"
+                        class="form-control">
                     </div>
                 </div>
             </div>
@@ -445,7 +450,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="marcaComercialODenominacionDistintiva" class="form-label">Marca comercial o denominación distintiva*:</label>
-                        <input type="text" id="marcaComercialODenominacionDistintiva" formControlName="marcaComercialODenominacionDistintiva" class="form-control">
+                        <input type="text" id="marcaComercialODenominacionDistintiva" 
+                            formControlName="marcaComercialODenominacionDistintiva" 
+                            (change)="setValoresStore(mercanciasForm,'marcaComercialODenominacionDistintiva', 'setMarcaComercialODenominacionDistintiva')"
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -456,6 +464,7 @@
                         [label]="'Tipo de producto'"
                         [required]="true"
                         formControlName="tipoDeProducto"
+                        (change)="setValoresStore(mercanciasForm,'tipoDeProducto', 'setTipoDeProducto')"
                         name="clave">
                     </app-catalogo-select>
                 </div>
@@ -492,7 +501,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="fraccionArancelaria" class="form-label">Fracción arancelaria*: <i class="bi bi-question-circle-fill"></i></label>
-                        <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control">
+                        <input type="text" id="fraccionArancelaria" 
+                            formControlName="fraccionArancelaria" 
+                            (change)="setValoresStore(mercanciasForm,'fraccionArancelaria', 'setFraccionArancelaria')"
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -500,7 +512,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="descripcionDeLa" class="form-label">Descripción de la fracción arancelaria*:</label>
-                        <input type="text" id="descripcionDeLa" formControlName="descripcionDeLaFraccion" class="form-control">
+                        <input type="text" id="descripcionDeLa" 
+                            formControlName="descripcionDeLaFraccion" 
+                            (change)="setValoresStore(mercanciasForm,'descripcionDeLaFraccion', 'setDescripcionDeLaFraccion')"
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -508,13 +523,19 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="cantidadUmt" class="form-label">Cantidad UMT*:</label>
-                        <input type="text" id="cantidadUmt" formControlName="cantidadUmt" class="form-control">
+                        <input type="text" id="cantidadUmt" 
+                            formControlName="cantidadUmt" 
+                            (change)="setValoresStore(mercanciasForm,'cantidadUmt', 'setCantidadUMT')"
+                            class="form-control">
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="umt" class="form-label">UMT*: <i class="bi bi-question-circle-fill"></i></label>
-                        <input type="text" id="umt" formControlName="umt" class="form-control">
+                        <input type="text" id="umt" 
+                            formControlName="umt" 
+                            (change)="setValoresStore(mercanciasForm,'umt', 'setUMT')"
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -525,6 +546,7 @@
                         [label]="'UMC'"
                         [required]="true"
                         formControlName="umc"
+                        (change)="setValoresStore(mercanciasForm,'umc', 'setUMC')"
                         name="umc">
                     </app-catalogo-select>
                 </div>
@@ -533,7 +555,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="numeroCas" class="form-label">Número CAS*:</label>
-                        <input type="text" id="numeroCas" formControlName="numeroCas" class="form-control">
+                        <input type="text" id="numeroCas" 
+                            formControlName="numeroCas"
+                            (change)="setValoresStore(mercanciasForm,'numeroCas', 'setNumeroCas')" 
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -541,7 +566,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="cantidadDeLotes" class="form-label">Cantidad de lotes*:</label>
-                        <input type="text" id="cantidadDeLotes" formControlName="cantidadDeLotes" class="form-control">
+                        <input type="text" id="cantidadDeLotes" 
+                            formControlName="cantidadDeLotes"
+                            (change)="setValoresStore(mercanciasForm,'cantidadDeLotes', 'setCantidadDeLotes')" 
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -549,7 +577,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="kgor" class="form-label">Kg og por lote*:</label>
-                        <input type="text" id="kgor" formControlName="kgOrPorLote" class="form-control">
+                        <input type="text" id="kgor" 
+                            formControlName="kgOrPorLote"
+                            (change)="setValoresStore(mercanciasForm,'kgOrPorLote', 'setKgOrPorLote')" 
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -560,6 +591,7 @@
                     [label]="'País de destino'"
                     [required]="true"
                     formControlName="pais"
+                    (change)="setValoresStore(mercanciasForm,'pais', 'setPais')" 
                     name="pais">
                 </app-catalogo-select>
                 </div>
@@ -599,6 +631,7 @@
                         [label]="'Pais de procedencia'"
                         [required]="true"
                         formControlName="paisDeProcedencia"
+                        (change)="setValoresStore(mercanciasForm,'paisDeProcedencia', 'setPaisDeProcedencia')" 
                         name="paisDeProcedencia">
                     </app-catalogo-select>
                 </div>
@@ -635,7 +668,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="específico" class="form-label">Detallar uso específico:</label>
-                        <input type="text" id="específico" formControlName="detallarUso" class="form-control">
+                        <input type="text" id="específico" 
+                            formControlName="detallarUso" 
+                            (change)="setValoresStore(mercanciasForm,'detallarUso', 'setDetallarUso')" 
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -643,7 +679,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="cantidad" class="form-label">Cantidad UMC*:</label>
-                        <input type="text" id="cantidad" formControlName="cantidadUmc" class="form-control">
+                        <input type="text" id="cantidad" 
+                            formControlName="cantidadUmc" 
+                            (change)="setValoresStore(mercanciasForm,'cantidadUmc', 'setCantidadUMC')" 
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -651,7 +690,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="numeroDePiezas" class="form-label">Número de piezas a fabricar*:</label>
-                        <input type="text" id="numeroDePiezas" formControlName="numeroDePiezas" class="form-control">
+                        <input type="text" id="numeroDePiezas" 
+                            formControlName="numeroDePiezas" 
+                            (change)="setValoresStore(mercanciasForm,'numeroDePiezas', 'setNumeroDePiezas')"
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -659,7 +701,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="descripcionDelNumeroDePiezas" class="form-label">Descripción del número de piezas a fabricar*:</label>
-                        <input type="text" id="descripcionDelNumeroDePiezas" formControlName="descripcionDelNumeroDePiezas" class="form-control">
+                        <input type="text" id="descripcionDelNumeroDePiezas" 
+                            formControlName="descripcionDelNumeroDePiezas"
+                            (change)="setValoresStore(mercanciasForm,'descripcionDelNumeroDePiezas', 'setDescripcionDelNumeroDePiezas')"
+                             class="form-control">
                     </div>
                 </div>
             </div>
@@ -667,7 +712,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="numeroDeRegistro" class="form-label">Número de registro sanitario*:</label>
-                        <input type="text" id="numeroDeRegistro" formControlName="numeroDeRegistro" class="form-control">
+                        <input type="text" id="numeroDeRegistro" 
+                            formControlName="numeroDeRegistro" 
+                            (change)="setValoresStore(mercanciasForm,'numeroDeRegistro', 'setNumeroDeRegistro')"
+                            class="form-control">
                     </div>
                 </div>
             </div>
@@ -675,7 +723,10 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="presentacion" class="form-label">Presentación*:</label>
-                        <input type="text" id="presentacion" formControlName="presentacion" class="form-control">
+                        <input type="text" id="presentacion"
+                         formControlName="presentacion" 
+                        (change)="setValoresStore(mercanciasForm,'presentacion', 'setPresentacion')"
+                         class="form-control">
                     </div>
                 </div>
             </div>

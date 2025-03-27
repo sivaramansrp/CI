@@ -226,8 +226,8 @@ export class TercerosRelacionadosComponent implements OnInit {
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
   private generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
-    const fields: Array<{ encabezado: string, clave: keyof Fabricante }> = datosArray;
-    return fields.map((field, index) => ({
+    const FIELDS: Array<{ encabezado: string, clave: keyof Fabricante }> = datosArray;
+    return FIELDS.map((field, index) => ({
       encabezado: field.encabezado,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       clave: (item: any) => item[field.clave],
@@ -241,12 +241,12 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param titulo - El título que se mostrará en el cuadro de diálogo modal.
    */
   public abrirFabricanteModal(titulo: string): void {
-    const initialState: ModalOptions = {
+    const INITIAL_STATE: ModalOptions = {
       class: 'modal-lg',
       initialState: {
         titulo: titulo
       }
     };
-    this.bsModalRef = this.modalService.show(FabricanteModalComponent, initialState);
+    this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);
   }
 }

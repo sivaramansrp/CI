@@ -17,6 +17,5 @@ export class PasoCuatroComponent {
   */
   public obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
-    // Aquí puedes agregar el código adicional que necesites para manejar la firma
   }
 }
