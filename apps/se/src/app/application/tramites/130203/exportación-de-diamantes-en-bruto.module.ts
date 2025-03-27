@@ -1,3 +1,4 @@
+import { CertificadoKimberleyComponent } from './components/certificado-kimberley/certificado-kimberley.component';
 import { CommonModule } from '@angular/common';
 import { ExportacionDeDiamantesEnBrutoComponent } from './pages/exportacion-de-diamantes-en-bruto/exportacion-de-diamantes-en-bruto.component';
 import { ExportaciónDeDiamantesEnBrutoRoutingModule } from './exportación-de-diamantes-en-bruto-routing.module';
@@ -47,7 +48,8 @@ import { ToastrService } from 'ngx-toastr';
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,
-    CrosslistComponent
+    CrosslistComponent,
+    CertificadoKimberleyComponent
   ],
    providers: [ToastrService],
 })

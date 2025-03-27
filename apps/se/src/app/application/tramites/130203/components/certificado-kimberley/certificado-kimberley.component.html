@@ -1,1 +1,198 @@
-<p>certificado-kimberley works!</p>
+<div class="container mt-5">
+  <form [formGroup]="datosDelExportador">
+    <div>
+      <ng-titulo titulo="Datos del exportador"></ng-titulo>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="nombreExportador"
+              >Nombre exportador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="nombreExportador"
+              formControlName="nombreExportador"
+              libUppercase
+              aria-labelledby="nombreExportador"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="direccionExportador"
+              >Dirección exportador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="direccionExportador"
+              formControlName="direccionExportador"
+              placeholder="PRUEBAS QA CDMX"
+              libUppercase
+              aria-labelledby="direccionExportador"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="datosDelImportador">
+    <div>
+      <ng-titulo titulo="Datos del importador"></ng-titulo>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="nombreImportador"
+              >Nombre importador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="nombreImportador"
+              formControlName="nombreImportador"
+              libUppercase
+              aria-labelledby="nombreImportador"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="direccionImportador"
+              >Dirección importador*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="direccionImportador"
+              formControlName="direccionImportador"
+              placeholder=""
+              libUppercase
+              aria-labelledby="direccionImportador"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="datosDeLaRemesa">
+    <div>
+      <ng-titulo titulo="Datos de la remesa"></ng-titulo>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="numeroEnLetraDeLosLotes"
+              >Número en letra de los lotes*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="numeroEnLetraDeLosLotes"
+              formControlName="numeroEnLetraDeLosLotes"
+              libUppercase
+              aria-labelledby="numeroEnLetraDeLosLotes"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="numeroEnLetraDeLosLotesEnIngles"
+              >Número en letra de los lotes en ingles*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="numeroEnLetraDeLosLotesEnIngles"
+              formControlName="numeroEnLetraDeLosLotesEnIngles"
+              placeholder=""
+              libUppercase
+              aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="numeroDeFactura"
+              >Número de factura*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="numeroDeFactura"
+              formControlName="numeroDeFactura"
+              placeholder=""
+              libUppercase
+              aria-labelledby="numeroDeFactura"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="datosDeLosDiamantes">
+    <div>
+      <ng-titulo titulo="Datos de los diamantes"></ng-titulo>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="cantidadEnQuilates"
+              >Cantidad en Quilates*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="cantidadEnQuilates"
+              formControlName="cantidadEnQuilates"
+              libUppercase
+              aria-labelledby="cantidadEnQuilates"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="valorDeLosDiamantes"
+              >Valor de los diamantes*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="valorDeLosDiamantes"
+              formControlName="valorDeLosDiamantes"
+              placeholder=""
+              libUppercase
+              aria-labelledby="valorDeLosDiamantes"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-6 col-sm-6"></div>
+        <div class="col-md-6 col-sm-6 text-end">
+          <div class="btn-group">
+            <button class="btn btn-primary me-2" type="button">
+              VistaPrevia
+            </button>
+            <button class="btn btn-primary me-2" type="button">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
