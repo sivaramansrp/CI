@@ -79,11 +79,25 @@ const ROUTES: Routes = [
       )
   },
   {
-
     path: 'inspeccion-fitosanitario',
     loadChildren: () =>
       import('./tramites/220702/inspeccion-fitosanitario.module').then(
         (m) => m.InspeccionFitosanitarioModule
+      ),
+  },
+  {
+    path: 'certificado-exportacion',
+    loadChildren: () =>
+      import('./tramites/220403/exportaccion-acuicola.module').then(
+      (m) => m.ExportaccionAcuicolaModule
+      )
+  },
+  {
+
+    path: 'acuicola-fisica',
+    loadChildren: () =>
+      import('./tramites/220703/acuicola-fisica.module').then(
+        (m) => m.AcuicolaFisicaModule
       ),
   },
 ];
