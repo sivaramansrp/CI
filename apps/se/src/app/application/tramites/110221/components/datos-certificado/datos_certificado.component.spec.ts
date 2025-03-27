@@ -3,16 +3,16 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DatosCertificadoComponent } from './datos_certificado.component';
 import { RegistroService } from '../../services/registro.service';
-import { Tramite110201Store } from '../../state/Tramite110201.store';
-import { Tramite110201Query } from '../../state/Tramite110201.query';
+import { Tramite110221Store } from '../../state/Tramite110221.store';
+import { Tramite110221Query } from '../../state/Tramite110221.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
   let registroService: RegistroService;
-  let tramiteStore: Tramite110201Store;
-  let tramiteQuery: Tramite110201Query;
+  let tramiteStore: Tramite110221Store;
+  let tramiteQuery: Tramite110221Query;
   let validacionesService: ValidacionesFormularioService;
 
   beforeEach(async () => {
@@ -32,7 +32,7 @@ describe('DatosCertificadoComponent', () => {
           },
         },
         {
-          provide: Tramite110201Store,
+          provide: Tramite110221Store,
           useValue: {
             setIdioma: jest.fn(),
             setEntidad: jest.fn(),
@@ -40,7 +40,7 @@ describe('DatosCertificadoComponent', () => {
           },
         },
         {
-          provide: Tramite110201Query,
+          provide: Tramite110221Query,
           useValue: {
             selectSolicitud$: of({}),
             selectIdioma$: of([]),
@@ -60,8 +60,8 @@ describe('DatosCertificadoComponent', () => {
     fixture = TestBed.createComponent(DatosCertificadoComponent);
     component = fixture.componentInstance;
     registroService = TestBed.inject(RegistroService);
-    tramiteStore = TestBed.inject(Tramite110201Store);
-    tramiteQuery = TestBed.inject(Tramite110201Query);
+    tramiteStore = TestBed.inject(Tramite110221Store);
+    tramiteQuery = TestBed.inject(Tramite110221Query);
     validacionesService = TestBed.inject(ValidacionesFormularioService);
     fixture.detectChanges();
   });

@@ -59,7 +59,6 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
-  noRequerido: boolean = false;
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -88,11 +87,6 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Catálogo de unidades de medida comercial (UMC).
    */
   umc!: CatalogosSelect;
-
-  /**
-   * Catálogo de unidades de medida.
-   */
-  unidadMedida!: CatalogosSelect;
 
   /**
    * Catálogo de tipos de factura.
@@ -696,7 +690,6 @@ optionsTipoFactura!: Catalogo[];
 
         criterioParaConferir: ['', [Validators.required]],
         nombreEnIngles: ['', [Validators.required]],
-        marca: [this.solicitudState?.marca, [Validators.required]],
         cantidad: [
           this.solicitudState?.cantidad,
           [Validators.required, Validators.pattern(/^\d+$/)],
@@ -708,14 +701,6 @@ optionsTipoFactura!: Catalogo[];
         ],
         complementoDelaDescripcion: [
           this.solicitudState?.complementoDelaDescripcion,
-          [Validators.required],
-        ],
-        masaBruta: [
-          this.solicitudState?.masaBruta,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        unidadMedida: [
-          this.solicitudState?.unidadMedida,
           [Validators.required],
         ],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],

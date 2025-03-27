@@ -34,7 +34,6 @@ import { Tramite110221Query } from '../../state/Tramite110221.query';
   styleUrl: './datos_certificado.component.css',
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
-  noRequerido: boolean = false;
   /**
    * Formulario reactivo para los datos del certificado.
    */
@@ -254,8 +253,6 @@ optionsRepresentacion!: Catalogo[];
           this.solicitudState?.observaciones,
           [Validators.required],
         ],
-        presica: [this.solicitudState?.presica, [Validators.required]],
-        presenta: [this.solicitudState?.presenta, [Validators.required]],
         idioma: [this.solicitudState?.idioma, [Validators.required]],
         entidad: [this.solicitudState?.entidad, [Validators.required]],
         representacion: [

@@ -38,7 +38,6 @@ import { Tramite110221Query } from '../../state/Tramite110221.query';
   styleUrl: './destinatario.component.css',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
-  noRequerido: boolean = false;
   /**
  * 
  * Una cadena que representa la clase CSS para una alerta de información.
@@ -55,16 +54,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Formulario reactivo para el destinatario.
    */
   registroForm!: FormGroup;
-
-  /**
-   * Catálogo de países de destino.
-   */
-  nacion!: CatalogosSelect;
-
-  /**
-   * Catálogo de medios de transporte.
-   */
-  transporte!: CatalogosSelect;
 
   /**
    * Estado actual de la solicitud.
@@ -226,8 +215,6 @@ options!: Catalogo[];
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
-        nacion: [this.solicitudState?.nacion, [Validators.required]],
-        transporte: [this.solicitudState?.transporte, [Validators.required]],
         nombre: [this.solicitudState?.nombre, [Validators.required]],
         apellidoPrimer: [
           this.solicitudState?.apellidoPrimer,

@@ -61,16 +61,6 @@
         <input type="text" class="form-control" id="primerApellido" formControlName="correoElectronico" (change)=" setValoresStore( validacionForm, 'correoElectronico', 'setCorreoElectronico' ) " />
       </div>
     </div>
-    <div class="row" *ngIf="noRequerido">
-      <div class="col-md-8 mb-3">
-        <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
-      </div>
-    </div>
-    <ng-titulo titulo="Detalles del transporte" *ngIf="noRequerido"/>
-    <div class="col-md-8 mb-3" *ngIf="noRequerido">
-      <app-catalogo-select [catalogo]="options" [label]="'Medio de transporte'" [required]="true" formControlName="transporte" (change)=" setValoresStore(validacionForm, 'transporte', 'setTransporte') "></app-catalogo-select>
-    </div>
-
     <ng-titulo titulo="Datos del representante legal del exportador" />
     <div class="row">
       <div class="col-md-8 mb-3">
