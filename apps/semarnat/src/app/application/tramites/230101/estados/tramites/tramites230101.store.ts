@@ -120,7 +120,7 @@ export interface Solicitud230101State {
  */
 export function createInitialSolicitudState(): Solicitud230101State {
   return {
-    regimen: 'definitivos',
+    regimen: '',
     tipoProducto: '',
     paisProcedencia: '',
     selectedOptions: [false, false, false],
@@ -135,12 +135,12 @@ export function createInitialSolicitudState(): Solicitud230101State {
     descripcionProducto: '',
     cantidadUMC: '',
     manifiestosYdesc: false,
-    claveDeReferencia: '084001061',
-    cadenaPagoDependencia: '084001061342',
+    claveDeReferencia: '',
+    cadenaPagoDependencia: '',
     banco: '',
     llaveDePago: '',
     fecPago: '',
-    impPago: '1866'
+    impPago: ''
   };
 }
 

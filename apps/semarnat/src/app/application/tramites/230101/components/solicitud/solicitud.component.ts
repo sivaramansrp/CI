@@ -12,7 +12,6 @@ import { MERCANCIAS } from '../../constantes/disponibles-constante.enum';
 import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
 import { Solicitud } from '../../models/pantallas-captura.model';
 import { Solicitud230101Query } from '../../estados/queries/tramites230101.query';
 import { Solicitud230101State } from '../../estados/tramites/tramites230101.store';
@@ -42,35 +41,51 @@ import { takeUntil } from 'rxjs';
 
 export class SolicitudComponent implements OnInit, OnDestroy{
 
+  /**
+   * Notificador para destruir las suscripciones activas.
+   * Este Subject se utiliza para emitir un evento cuando el componente se destruye,
+   * permitiendo que las suscripciones se cancelen adecuadamente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
+   /**
+   * Lista de checkboxes disponibles para las aduanas.
+   */
   public disponsibleAduanaCheckboxes = DISPONSIBLE_ADUANA_CHECKBOXES;
+  
+  /**
+   * Constante que contiene los textos utilizados en el componente.
+   * Estos textos están definidos en el archivo de constantes correspondiente.
+   */
   public TEXTOS = TEXTOS;
+
+  /**
+   * Lista de mercancías disponibles.
+   * Esta lista contiene las mercancías que se pueden seleccionar en el formulario.
+   */
   public mercanicias = MERCANCIAS;
-  public detalle = DETALLE
+  /**
+   * Detalle de la solicitud.
+   * Esta constante contiene información detallada relacionada con la solicitud.
+   */
+  public detalleDatos = DETALLE;
 
   /**
    * Estado de la solicitud.
    */
   public solicitudState!: Solicitud230101State;
 
+  /**
+   * Lista de aduanas disponibles.
+   * Esta lista contiene las aduanas que se pueden seleccionar en el formulario.
+   */
   public crosListAduanas = ADUANAS_DISPONIBLES;
-
-  // public crosListAduanas = TEST_CROSS_LIST;
 
   /**
  * Arreglo para almacenar el rango de días seleccionables.
  */
   selectRangoDias: string[] = this.crosListAduanas;
-  /**
- * Arreglo para almacenar las fechas seleccionadas por el usuario.
- */
-  // fechasSeleccionadas: string[] = [];
-  /**
-   * Arreglo para almacenar los datos relacionados con las fechas.
-   */
-  // fechasDatos: string[] = [];
+  
   /**
  * Control de formulario para manejar una fecha individual.
  */
@@ -96,16 +111,31 @@ export class SolicitudComponent implements OnInit, OnDestroy{
 
   
 
+  /**
+   * @property {Object} aduanaLabel - Etiquetas utilizadas para las secciones de aduanas en la interfaz de usuario.
+   * @property {string} aduanaLabel.tituluDeLaIzquierda - Texto para la sección de aduanas disponibles.
+   * @property {string} aduanaLabel.derecha - Texto para la sección de aduanas seleccionadas.
+   */
   public aduanaLabel = {
     tituluDeLaIzquierda: 'Aduanas disponibles',
     derecha: 'Aduanas seleccionados',
   };
 
+  /**
+   * @property {Object} paisLabel - Etiquetas utilizadas para las secciones de países en la interfaz de usuario.
+   * @property {string} paisLabel.tituluDeLaIzquierda - Texto para la sección de países disponibles.
+   * @property {string} paisLabel.derecha - Texto para la sección de países seleccionados.
+   */
   public paisLabel = {
-    tituluDeLaIzquierda: 'Paises disponibles',
-    derecha: 'Paises seleccionados',
+    tituluDeLaIzquierda: 'Países disponibles',
+    derecha: 'Países seleccionados',
   };
 
+  /**
+   * @description Etiquetas utilizadas para los encabezados de las listas de entidades en el componente.
+   * @property {string} tituluDeLaIzquierda - Texto para el encabezado de la lista de entidades disponibles.
+   * @property {string} derecha - Texto para el encabezado de la lista de entidades seleccionadas.
+   */
   public destinoLabel = {
     tituluDeLaIzquierda: 'Entidades desponibles',
     derecha: 'Entidades seleccionados',
@@ -158,7 +188,7 @@ export class SolicitudComponent implements OnInit, OnDestroy{
 
     this.mediodetransporteService
       .getMedioDeTransporte()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: Catalogo[]): void => {
         this.options = data as Catalogo[];
       });
@@ -216,12 +246,12 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   }
 
   /**
-  * Obtiene el grupo de formulario 'detelle' del formulario principal 'FormSolicitud'.
+  * Obtiene el grupo de formulario 'detalle' del formulario principal 'FormSolicitud'.
   *
-  * @returns {FormGroup} El grupo de formulario 'detelle'.
+  * @returns {FormGroup} El grupo de formulario 'detalle'.
   */
-  get detelle(): FormGroup {
-    return this.FormSolicitud.get('detelle') as FormGroup;
+  get detalle(): FormGroup {
+    return this.FormSolicitud.get('detalle') as FormGroup;
   }
 
   /**
@@ -253,7 +283,7 @@ export class SolicitudComponent implements OnInit, OnDestroy{
         cantidad: [this.solicitudState?.cantidad, [Validators.required, Validators.maxLength(16)]],
         cantidadLetra: [{ value: this.solicitudState?.cantidadLetra, disabled: true }]
       }),
-      detelle: this.fb.group({
+      detalle: this.fb.group({
         genero: [this.solicitudState?.genero, Validators.required],
         especie: [this.solicitudState?.especie, Validators.required],
         nombreComun: [this.solicitudState?.nombreComun, Validators.required],
@@ -266,7 +296,16 @@ export class SolicitudComponent implements OnInit, OnDestroy{
     });
   }
 
-  onCheckboxChange(event: Event, index: number): void {
+  /**
+   * Cambia el estado de una opción seleccionada y actualiza el almacén de valores.
+   *
+   * @param event - Evento que contiene el elemento de entrada que activó el cambio.
+   * @param index - Índice de la opción seleccionada en el control de formulario.
+   *
+   * Este método se utiliza para manejar cambios en los controles de entrada (checkboxes)
+   * y actualizar tanto el formulario reactivo como el almacén de valores correspondiente.
+   */
+  cambiar(event: Event, index: number): void {
     const INPUT_ELEMENT = event.target as HTMLInputElement;
     this.selectedOptions.controls[index].setValue(INPUT_ELEMENT.checked);
     this.setValoresStore(this.aduanasSalida, 'selectedOptions', 'setSelectedOptions');
@@ -315,8 +354,6 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    * @returns destroyed$
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

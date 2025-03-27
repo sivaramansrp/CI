@@ -139,8 +139,8 @@ export interface CargarDatosIniciales {
   /** Solicitar datos */
   dSolicitud: Solicitud[];
   
-  /** Headers for merchandise */
-  hMerchandise: string[];
+  /** encabezadas para mercancias */
+  hMercancias: string[];
   
   /** encabezados para mercancia */
   dMercancia: DatosDeMercancias[];

@@ -77,7 +77,7 @@
       <div class="row mt-5">
         <div class="col-md-12" *ngFor="let option of disponsibleAduanaCheckboxes; let i = index">
           <label>
-            <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="onCheckboxChange($event, i)" [disabled]="option.disabled" />
+            <input type="checkbox" [checked]="selectedOptions.value[i]" (change)="cambiar($event, i)" [disabled]="option.disabled" />
             {{ option.name }}
           </label>
         </div>
@@ -142,30 +142,30 @@
     </ng-container>
 
     <ng-titulo titulo="Detalle" />
-    <ng-container formGroupName="detelle">
+    <ng-container formGroupName="detalle">
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="genero" [label]="'Gen&eacute;ro'" [required]="true"
-            (change)="setValoresStore(detelle,'genero', 'setGenero')"></app-catalogo-select>
+            (change)="setValoresStore(detalle,'genero', 'setGenero')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="especie" [label]="'Especie'" [required]="true"
-            (change)="setValoresStore(detelle,'especie', 'setEspecie')"></app-catalogo-select>
+            (change)="setValoresStore(detalle,'especie', 'setEspecie')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="nombreComun" [label]="'Nombre com&uacute;n'"
             [required]="true"
-            (change)="setValoresStore(detelle,'nombreComun', 'setNombreComun')"></app-catalogo-select>
+            (change)="setValoresStore(detalle,'nombreComun', 'setNombreComun')"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5">
         <div class="col-md-12 d-flex justify-content-end align-items-end">
           <div class="btn-group">
             <button class="btn btn-default ms-3" type="button" name="aceptar" id="agregarAduana">
-              Eliminar Detelle
+              Eliminar Detalle
             </button>
             <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal">
-              Agregar Detelle
+              Agregar Detalle
             </button>
           </div>
         </div>
@@ -173,8 +173,8 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <label class="form-label mb-5" for="">Detalle</label>
-          <ng-table [commonTableHeader]="detalle.tableHeader"
-            [commonTableBody]="detalle.tableBody"></ng-table>
+          <ng-table [commonTableHeader]="detalleDatos.tableHeader"
+            [commonTableBody]="detalleDatos.tableBody"></ng-table>
         </div>
       </div>
       <div class="row mt-5">
@@ -220,11 +220,11 @@
       <div class="row">
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="options" formControlName="descripcionProducto" [label]="'Descripción del producto'" [required]="true"
-            (change)="setValoresStore(detelle,'descripcionProducto', 'setDescripcionProducto')"></app-catalogo-select>
+            (change)="setValoresStore(detalle,'descripcionProducto', 'setDescripcionProducto')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="cantidadUMC" [label]="'Unidad de medida'" [required]="true"
-            (change)="setValoresStore(detelle,'cantidadUMC', 'setCantidadUMC')"></app-catalogo-select>
+            (change)="setValoresStore(detalle,'cantidadUMC', 'setCantidadUMC')"></app-catalogo-select>
         </div>
       </div>
     </ng-container>

@@ -25,20 +25,63 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derecho.component.scss',
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  
   /**
-     * Estado de la transporte.
-     */
+   * @property {ReplaySubject<boolean>} destroyed$
+   * @description Sujeto que emite un valor booleano para indicar la destrucción del componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * @property {Solicitud230101State} derechoState
+   * @description Estado actual del trámite 230101, que contiene información relevante
+   * para la sección de pago de derechos.
+   */
   public derechoState!: Solicitud230101State;
 
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Sujeto utilizado para notificar la destrucción del componente.
+   * Se emplea para limpiar suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {FormGroup} FormSolicitud
+   * @description Grupo de formularios principal que contiene los controles de formulario
+   * relacionados con el pago de derechos. Este formulario incluye validaciones y se utiliza
+   * para capturar y gestionar los datos del usuario en esta sección.
+   */
   FormSolicitud!: FormGroup;
 
+  /**
+   * @property {string} respuesta
+   * @description Almacena la respuesta obtenida de alguna operación o servicio.
+   * Este campo puede ser utilizado para mostrar mensajes o resultados en la interfaz de usuario.
+   */
   respuesta: string = '';
 
+  /**
+   * @property {Catalogo} bancoSeleccionado
+   * @description Representa el banco seleccionado por el usuario en el formulario de pago de derechos.
+   * Este campo se utiliza para almacenar y gestionar la información del banco seleccionado.
+   */
   bancoSeleccionado!: Catalogo;
 
+  /**
+   * @property {CatalogosSelect} bancoCatalogo - Representa la configuración del catálogo de bancos.
+   * 
+   * @description
+   * Este objeto define las propiedades necesarias para configurar un catálogo de selección
+   * relacionado con los bancos. Incluye el nombre del campo, si es obligatorio, la primera opción
+   * que se muestra al usuario y una lista de catálogos disponibles.
+   * 
+   * @property {string} labelNombre - Etiqueta que describe el nombre del campo (en este caso, "Banco").
+   * @property {boolean} required - Indica si este campo es obligatorio.
+   * @property {string} primerOpcion - Texto que se muestra como la primera opción en el selector.
+   * @property {Array<any>} catalogos - Lista de opciones disponibles en el catálogo.
+   */
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',
     required: true,
@@ -46,6 +89,16 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     catalogos: [],
   };
 
+  /**
+   * Constructor de la clase PagoDeDerechoComponent.
+   * 
+   * @param fb - Servicio `FormBuilder` para la creación y gestión de formularios reactivos.
+   * @param captuaservice - Servicio `CapturaSolicitudeService` para manejar la captura de solicitudes.
+   * @param solicitud230101Store - Almacén `Solicitud230101Store` para gestionar el estado de la solicitud 230101.
+   * @param solicitud230101Query - Consulta `Solicitud230101Query` para obtener datos del estado de la solicitud 230101.
+   * @param validacionesService - Servicio `ValidacionesFormularioService` para realizar validaciones personalizadas en formularios.
+   * @param mediodetransporteService - Servicio `MediodetransporteService` para gestionar datos relacionados con medios de transporte.
+   */
   constructor(
     private fb: FormBuilder,
     private captuaservice: CapturaSolicitudeService,
@@ -142,6 +195,26 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
     return this.FormSolicitud.get('pagodeDerechos') as FormGroup;
   }
 
+  /**
+   * @override
+   * @method
+   * @name ngOnDestroy
+   * @description Este método se ejecuta automáticamente cuando el componente se destruye. 
+   * Se utiliza para limpiar recursos y evitar fugas de memoria.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * ngOnDestroy(): void {
+   *   this.destroyed$.next(true);
+   *   this.destroyed$.complete();
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   * 
+   * @remarks
+   * Este método envía notificaciones a los observables `destroyed$` y `destroyNotifier$` 
+   * para indicar que el componente está siendo destruido, y luego completa ambos observables.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
