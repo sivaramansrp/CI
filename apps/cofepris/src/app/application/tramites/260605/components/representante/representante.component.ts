@@ -134,8 +134,11 @@ export class RepresentanteComponent implements OnInit, OnDestroy {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  public obtenerAduanasDisponiblesDatos(): void {
-    this.modificatNoticeService.ObtenerReprestantanteData().subscribe((response) => {
+  public obtenerAduanasDisponiblesDatos(): void { 
+    this.modificatNoticeService.ObtenerReprestantanteData()
+    .pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((response) => {
       this.representante.patchValue({
         nombre: response.nombre,
         apellidoPaterno: response.apellidoPaterno,
