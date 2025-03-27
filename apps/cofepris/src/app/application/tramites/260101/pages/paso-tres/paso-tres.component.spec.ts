@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
+import { TramiteFolioService } from '@ng-mf/data-access-user';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
   let router: jest.Mocked<Router>;
-  let serviciosExtraordinariosService: jest.Mocked<ServiciosExtraordinariosService>;
+  let serviciosExtraordinariosService: jest.Mocked<TramiteFolioService>;
 
   beforeEach(async () => {
     const routerMock = {
@@ -23,7 +23,7 @@ describe('PasoTresComponent', () => {
       declarations: [PasoTresComponent],
       providers: [
         { provide: Router, useValue: routerMock },
-        { provide: ServiciosExtraordinariosService, useValue: serviciosExtraordinariosServiceMock },
+        { provide: TramiteFolioService, useValue: serviciosExtraordinariosServiceMock },
       ],
     }).compileComponents();
 
@@ -31,7 +31,7 @@ describe('PasoTresComponent', () => {
     component = fixture.componentInstance;
 
     router = TestBed.inject(Router) as jest.Mocked<Router>;
-    serviciosExtraordinariosService = TestBed.inject(ServiciosExtraordinariosService) as jest.Mocked<ServiciosExtraordinariosService>;
+    serviciosExtraordinariosService = TestBed.inject(TramiteFolioService) as jest.Mocked<TramiteFolioService>;
   });
 
   it('should create the component', () => {
