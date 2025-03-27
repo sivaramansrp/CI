@@ -170,4 +170,70 @@ export class SolicitudComponent {
         },
       });
   }
+
+  setValoresStore(event: {
+    form: FormGroup;
+    campo: string;
+    metodoNombre: string;
+  }): void {
+    const VALOR = event.form.get(event.campo)?.value;
+    switch (event.metodoNombre) {
+      case 'updateSolicitud':
+        this.tramite130203Store.updateSolicitud(VALOR);
+        break;
+      case 'setDescripcionPartidasDeLaMercancia':
+        this.tramite130203Store.setDescripcionPartidasDeLaMercancia(VALOR);
+        break;
+      case 'setCantidadPartidasDeLaMercancia':
+        this.tramite130203Store.setCantidadPartidasDeLaMercancia(VALOR);
+        break;
+      case 'setValorPartidaUSDPartidasDeLaMercancia':
+        this.tramite130203Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR);
+        break;
+      case 'setregimen':
+        this.tramite130203Store.setregimen(VALOR);
+        break;
+      case 'setclasificacion':
+        this.tramite130203Store.setclasificacion(VALOR);
+        break;
+
+      case 'setProducto':
+        this.tramite130203Store.setProducto(VALOR);
+        break;
+      case 'setDescripcion':
+        this.tramite130203Store.setDescripcion(VALOR);
+        break;
+      case 'setCantidad':
+        this.tramite130203Store.setCantidad(VALOR);
+        break;
+      case 'setValorPartidaUSD':
+        this.tramite130203Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
+        break;
+      case 'setUnidadMedida':
+        this.tramite130203Store.setUnidadMedida(VALOR);
+        break;
+        case 'setBloque':
+        this.tramite130203Store.setBloque(VALOR);
+        break;
+      case 'setUsoEspecifico':
+        this.tramite130203Store.setUsoEspecifico(VALOR);
+        break;
+      case 'setJustificacionImportacionExportacion':
+        this.tramite130203Store.setJustificacionImportacionExportacion(VALOR);
+        break;
+      case 'setObservaciones':
+        this.tramite130203Store.setObservaciones(VALOR);
+        break;
+      case 'setEntidad':
+        this.tramite130203Store.setEntidad(VALOR);
+        break;
+      case 'setRepresentacion':
+        this.tramite130203Store.setRepresentacion(VALOR);
+        break;
+      default:
+        console.error(
+          `Método ${event.metodoNombre} no existe en Tramite130203Store`
+        );
+    }
+  }
 }
