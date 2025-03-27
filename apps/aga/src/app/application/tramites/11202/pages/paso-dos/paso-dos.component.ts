@@ -1,72 +1,31 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CATALOGOS_ID,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
-import { Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
-
-/**
- * Componente que representa el segundo paso del trámite.
- * Permite al usuario anexar documentos necesarios para el trámite.
- */
+import { Component, OnInit } from '@angular/core';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { TEXTOS } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-  ],
 })
-export class PasoDosComponent implements OnInit,OnDestroy {
-  /**
-   * Textos utilizados en el componente.
-   */
+export class PasoDosComponent implements OnInit {
   TEXTOS = TEXTOS;
-
-  /**
-   * Lista de tipos de documentos disponibles para el trámite.
-   */
   tiposDocumentos: Catalogo[] = [];
-
-  /**
-   * Clase CSS para mostrar una alerta informativa.
-   */
-  claseAlertaInformativa = 'alert-info';
-
-  /**
-   * Catálogo de documentos disponibles.
-   */
+  infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
-   /**
-   * Suscripción para obtener los tipos de documentos.
-   */
-   getTiposDocumentosSubscription!: Subscription;
+  documentosSeleccionados: Catalogo[] = [];
+  constructor(private catalogosServices: CatalogosService) {}
   /**
-   * Constructor del componente.
-   * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
-   */
-  constructor(private catalogosServices: CatalogosService) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
-  
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene los tipos de documentos disponibles y establece los documentos seleccionados por defecto.
+   *
+Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
+   
   }
-
+ 
   /**
-   * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
+   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
    */
   getTiposDocumentos(): void {
     this.catalogosServices
@@ -77,18 +36,6 @@ export class PasoDosComponent implements OnInit,OnDestroy {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => {
-          // Manejo de error al obtener los tipos de documentos.
-        },
       });
   }
- /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
-  ngOnDestroy(): void {
-    if (this.getTiposDocumentosSubscription) {
-      this.getTiposDocumentosSubscription.unsubscribe();
-    }
-  }
-
 }

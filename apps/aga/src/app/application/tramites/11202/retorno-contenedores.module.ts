@@ -18,9 +18,8 @@ import  {TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
     ContenedorComponent,
     PasoUnoComponent,
     SolicitantePageComponent,
-  
-    
-    
+    PasoDosComponent,
+     
   ],
   imports: [
     CommonModule,
@@ -45,7 +44,7 @@ import  {TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
     CatalogoSelectComponent,
     InputRadioComponent,
     PasoTresComponent,
-    PasoDosComponent,
+    
     TablaDinamicaComponent
   ],
   exports: [SolicitanteComponent, ContenedorComponent, PasoUnoComponent],
