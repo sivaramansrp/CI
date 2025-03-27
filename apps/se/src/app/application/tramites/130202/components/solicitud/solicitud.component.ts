@@ -84,6 +84,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * filaSeleccionada
    * Fila seleccionada en la tabla dinámica.
    */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   filaSeleccionada: any = null;
  
   /**

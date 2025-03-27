@@ -16,7 +16,7 @@ export class DiamanteBrutoService {
    * @returns {Observable<Catalogo[]>}
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
+    return this.http.get<Catalogo[]>('/assets/json/130114/pais-procenia.json');
   }
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
@@ -25,7 +25,7 @@ export class DiamanteBrutoService {
    */
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/paises-por-bloque.json'
+      '/assets/json/130114/paises-por-bloque.json'
     );
   }
   /**
@@ -34,7 +34,7 @@ export class DiamanteBrutoService {
    */
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/entidad-federativa.json'
+      '/assets/json/130114/entidad-federativa.json'
     );
   }
   /**
@@ -43,7 +43,7 @@ export class DiamanteBrutoService {
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/representacion-federal.json'
+      '/assets/json/130114/representacion-federal.json'
     );
   }
 
@@ -53,7 +53,7 @@ export class DiamanteBrutoService {
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/solicitude-options.json'
+      'assets/json/130114/solicitude-options.json'
     );
   }
 
@@ -63,7 +63,7 @@ export class DiamanteBrutoService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/producto-otions.json'
+      'assets/json/130114/producto-otions.json'
     );
   }
 }

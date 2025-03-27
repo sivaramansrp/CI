@@ -3,21 +3,28 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { DiamanteBrutoService } from '../../130114/services/diamante-bruto.service'
+import { DiamanteBrutoService } from '../../130114/services/diamante-bruto.service';
 import { HttpClient } from '@angular/common/http';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130114/partidas-de-la.json';
 import { ProductoOpción } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130114Query } from '../../130114/estados/queries/tramite130114.query';
-import { Tramite130114Store } from '../../130114/estados/queries/tramites130114.store'
-import fractionValues from '@libs/shared/theme/assets/json/130202/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130202/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
+import { Tramite130114Store } from '../../130114/estados/queries/tramites130114.store';
+import fractionValues from '@libs/shared/theme/assets/json/130114/fraccion_arancelaria.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130114/solicitud-select.json';
+import unidadOptions from '@libs/shared/theme/assets/json/130114/unidad_da.json';
 
 /**
- * @description Componente para gestionar la solicitud de mercancías.
- * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
+ * Componente para gestionar la solicitud de mercancías de diamantes brutos.
+ * Contiene formularios reactivos para capturar información sobre:
+ * - Datos del trámite
+ * - Detalles de la mercancía
+ * - Partidas de la mercancía
+ * - Selección de países y representación federal
+ * 
+ * Utiliza un store (Tramite130114Store) para gestionar el estado de la solicitud
+ * y servicios para obtener datos de catálogos y opciones configurables.
  */
 @Component({
   selector: 'app-solicitud',
@@ -26,84 +33,100 @@ import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json'
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
   /**
-   * form
-   * Formulario reactivo principal para capturar los datos de la solicitud.
-   */
-  partidasDelaMercanciaForm!: FormGroup;
-  /**
-   * @description Formulario reactivo para los datos del trámite.
+   * Formulario reactivo para los datos principales del trámite.
+   * @type {FormGroup}
    */
   formDelTramite!: FormGroup;
- 
+
   /**
-   * @description Formulario reactivo para los detalles de la mercancía.
+   * Formulario reactivo para los detalles específicos de la mercancía.
+   * @type {FormGroup}
    */
   mercanciaForm!: FormGroup;
+
   /**
-   * formForTotalCount
-   * Formulario reactivo para capturar los totales de las partidas.
+   * Formulario reactivo para las partidas de la mercancía.
+   * @type {FormGroup}
+   */
+  partidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para mostrar los totales calculados.
+   * @type {FormGroup}
    */
   formForTotalCount!: FormGroup;
+
   /**
    * Formulario reactivo para la selección de países.
    * @type {FormGroup}
    */
   paisForm!: FormGroup;
+
   /**
-   * Formulario reactivo para la representación.
+   * Formulario reactivo para la representación federal.
    * @type {FormGroup}
    */
   frmRepresentacionForm!: FormGroup;
+
   /**
-   * tableHeaderData
-   * Configuración de las columnas de la tabla dinámica.
+   * Configuración de las columnas para la tabla de partidas.
+   * @type {ConfiguracionColumna<string>[]}
    */
   tableHeaderData: ConfiguracionColumna<string>[] = [];
+
   /**
-   * tableBodyData
-   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   * Datos para el cuerpo de la tabla de partidas.
+   * @type {{ tbodyData: string[] }[]}
    */
-  tableBodyData: { tbodyData: string[] }[] = []; 
+  tableBodyData: { tbodyData: string[] }[] = [];
+
   /**
-   * mostrarTabla
-   * Bandera para mostrar u ocultar la tabla dinámica.
+   * Indica si la tabla de partidas debe mostrarse.
+   * @type {boolean}
    */
-  mostrarTabla = false; 
+  mostrarTabla = false;
+
   /**
-   * CHECKBOX
-   * Tipo de selección de la tabla dinámica (checkbox).
+   * Tipo de selección para la tabla (checkbox).
+   * @type {TablaSeleccion}
    */
-  checkBox = TablaSeleccion.CHECKBOX; 
+  checkBox = TablaSeleccion.CHECKBOX;
+
   /**
-   * getEstablecimientoTableData
-   * Datos de configuración de la tabla obtenidos de un archivo JSON.
+   * Datos de configuración para la tabla de partidas.
+   * @type {any}
    */
   public getEstablecimientoTableData = PartidasdelaTable;
- 
+
   /**
-   * filaSeleccionada
-   * Fila seleccionada en la tabla dinámica.
+   * Fila seleccionada en la tabla de partidas.
+   * @type {any}
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filaSeleccionada: any = null;
- 
+
   /**
-   * @description Opciones para el campo "producto".
+   * Opciones disponibles para el campo "producto".
+   * @type {ProductoOpción[]}
    */
   productoOpciones: ProductoOpción[] = [];
+
   /**
-   * @description Catálogo con valores de fracción arancelaria.
+   * Catálogo de fracciones arancelarias.
+   * @type {Catalogo[]}
    */
-  
- fraccionCatalogo: Catalogo[] = fractionValues;
- 
+  fraccionCatalogo: Catalogo[] = fractionValues;
+
   /**
-   * @description Catálogo con opciones de unidad de medida.
+   * Catálogo de unidades de medida.
+   * @type {Catalogo[]}
    */
   unidadCatalogo: Catalogo[] = unidadOptions;
+
   /**
-   * @description Campos de entrada configurables para detalles adicionales.
+   * Campos de entrada configurables para el formulario.
+   * @type {Array}
    */
- 
   datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
@@ -118,56 +141,68 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       controlName: 'clasificacion',
     },
   ];
+
   /**
-   * @description Matriz de catálogos adicionales para el formulario.
+   * Matriz de catálogos para opciones de selección.
+   * @type {Catalogo[][]}
    */
   catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
   /**
-   * @description Opciones de solicitud configurables.
+   * Opciones configurables para la solicitud.
+   * @type {ProductoOpción[]}
    */
   opcionesSolicitud: ProductoOpción[] = [];
- 
+
   /**
-   * @description Sujeto para gestionar la destrucción de suscripciones.
+   * Sujeto para gestionar la destrucción de suscripciones.
+   * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
+
   /**
-   * @description Arreglo que almacena un catálogo de elementosDeBloque.
+   * Catálogo de bloques de países.
    * @type {Catalogo[]}
    */
   elementosDeBloque: Catalogo[] = [];
+
   /**
-   * @description Arreglo que contiene un catálogo de países organizados por bloque.
+   * Catálogo de países organizados por bloque.
    * @type {Catalogo[]}
    */
   paisesPorBloque: Catalogo[] = [];
+
   /**
-   * @description Arreglo que guarda un catálogo de entidades federativas.
+   * Catálogo de entidades federativas.
    * @type {Catalogo[]}
    */
   entidadFederativa: Catalogo[] = [];
+
   /**
-   * @description Arreglo que almacena un catálogo de representaciones federales.
+   * Catálogo de representaciones federales.
    * @type {Catalogo[]}
    */
   representacionFederal: Catalogo[] = [];
+
   /**
-   * @description Arreglo de cadenas que representa las opciones seleccionables de rangos de días.
+   * Opciones de rangos de días para selección.
    * @type {string[]}
    */
   selectRangoDias: string[] = [];
+
   /**
-   * @description Objeto o constante que contiene los textos utilizados en la aplicación.
+   * Textos constantes utilizados en el componente.
    * @type {any}
    */
   TEXTOS = TEXTOS;
+
   /**
    * Constructor del componente.
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {HttpClient} http - Servicio para realizar solicitudes HTTP.
-   * @param {Tramite130114Store} Tramite130114Store - Store para gestionar el estado del trámite 130202.
-   * @param {Tramite130114Query} Tramite130114Query - Query para consultar el estado del trámite 130202.
-   * @param {DiamanteBrutoService} DiamanteBrutoService - Servicio para la exportación de minerales de hierro.
+   * @param {FormBuilder} fb - Servicio para construir formularios reactivos
+   * @param {HttpClient} http - Servicio para realizar peticiones HTTP
+   * @param {Tramite130114Store} Tramite130114Store - Store para gestionar el estado del trámite
+   * @param {Tramite130114Query} Tramite130114Query - Query para acceder al estado del trámite
+   * @param {DiamanteBrutoService} DiamanteBrutoService - Servicio para operaciones específicas de diamantes brutos
    */
   constructor(
     private fb: FormBuilder,
@@ -175,11 +210,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private Tramite130114Store: Tramite130114Store,
     private Tramite130114Query: Tramite130114Query,
     private DiamanteBrutoService: DiamanteBrutoService
-  ) {
-    //constructor
-  }
+  ) {}
+
   /**
-   * @description Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
+   * Inicializa el componente:
+   * - Crea los formularios
+   * - Configura suscripciones
+   * - Carga datos iniciales
+   * - Configura la tabla de partidas
    */
   ngOnInit(): void {
     this.inicializarFormularios();
@@ -191,13 +229,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
- 
+
     this.Tramite130114Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
       });
- 
+
     this.Tramite130114Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -214,18 +252,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
- 
+
   /**
-   * @description Inicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
+   * Inicializa todos los formularios reactivos del componente con sus validaciones correspondientes.
    */
-  
-     inicializarFormularios(): void {
+  inicializarFormularios(): void {
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
       regimen: ['', Validators.required],
       clasificacion: ['', Validators.required],
     });
- 
+
     this.mercanciaForm = this.fb.group({
       producto: ['Nuevo'],
       descripcion: [
@@ -245,7 +282,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.min(1),
         ],
       ],
- 
       valorFacturaUSD: [
         '',
         [
@@ -254,9 +290,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           Validators.min(0.01),
         ],
       ],
- 
       unidadMedida: ['', Validators.required],
     });
+
     this.partidasDelaMercanciaForm = this.fb.group({
       cantidadPartidasDeLaMercancia: [
         '',
@@ -280,60 +316,59 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
     });
- 
+
     this.paisForm = this.fb.group({
       bloque: [''],
       usoEspecifico: ['', Validators.required],
       justificacionImportacionExportacion: ['', [Validators.required]],
       observaciones: [''],
     });
+
     this.frmRepresentacionForm = this.fb.group({
       entidad: ['', Validators.required],
       representacion: ['', Validators.required],
     });
   }
+
   /**
-   * @description Configura las suscripciones para actualizar formularios y almacenar estados.
+   * Configura las suscripciones a los cambios en los formularios
+   * para actualizar el store con los nuevos valores.
    */
   configuracionFormularioSuscripciones(): void {
+    // Suscripción a cambios en los datos del trámite
     this.Tramite130114Query.solicitud$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((solicitud) => {
         this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
       });
- 
+
     this.Tramite130114Query.regimen$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((regimen) => {
         this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
       });
- 
+
     this.Tramite130114Query.clasificacion$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((clasificacion) => {
-        this.formDelTramite.patchValue(
-          { clasificacion },
-          { emitEvent: false }
-        );
+        this.formDelTramite.patchValue({ clasificacion }, { emitEvent: false });
       });
+
+    // Suscripción a cambios en los datos de la mercancía
     this.Tramite130114Query.mercanciaState$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((state) => {
-        this.mercanciaForm.patchValue(
-          {
-            producto: state.producto,
-            descripcion: state.descripcion,
-            fraccion: state.fraccion,
-            cantidad: state.cantidad,
-            valorFacturaUSD: state.valorPartidaUSD
-              ? state.valorPartidaUSD.toString()
-              : '',
-            unidadMedida: state.unidadMedida,
-          },
-          { emitEvent: false }
-        );
+        this.mercanciaForm.patchValue({
+          producto: state.producto,
+          descripcion: state.descripcion,
+          fraccion: state.fraccion,
+          cantidad: state.cantidad,
+          valorFacturaUSD: state.valorPartidaUSD?.toString() || '',
+          unidadMedida: state.unidadMedida,
+        }, { emitEvent: false });
       });
- 
+
+    // Suscripción a cambios en los datos de país
     this.Tramite130114Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -342,12 +377,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
             justificacionImportacionExportacion:
-            seccionState.justificacionImportacionExportacion,
+              seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
         })
       )
       .subscribe();
+
+    // Suscripción a cambios en la representación federal
     this.Tramite130114Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -359,7 +396,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
- 
+
+    // Actualización del store cuando cambian los formularios
     this.formDelTramite.valueChanges
       .pipe(takeUntil(this.destroyed$))
       .subscribe((value) => {
@@ -369,7 +407,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           clasificacion: value.clasificacion,
         });
       });
- 
 
     this.mercanciaForm.valueChanges
       .pipe(takeUntil(this.destroyed$))
@@ -384,9 +421,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         });
       });
   }
+
   /**
-   * formularioTotalCount
-   * Crea el formulario reactivo para capturar los totales de las partidas.
+   * Crea el formulario para mostrar los totales calculados.
    */
   formularioTotalCount(): void {
     this.formForTotalCount = this.fb.group({
@@ -394,29 +431,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       valorTotalUSD: [{ value: '', disabled: true }],
     });
   }
- 
+
   /**
-   * getEstablecimiento
-   * Configura los datos de la tabla dinámica a partir de un archivo JSON.
+   * Configura los datos iniciales para la tabla de partidas.
    */
   getEstablecimiento(): void {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
       (header, index) => ({
         encabezado: header,
-        /* eslint-disable @typescript-eslint/no-explicit-any */
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         clave: (fila: any): string => fila.tbodyData[index],
         orden: index,
       })
     );
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
- 
+
   /**
-   * calcularTotales
    * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
    */
   calcularTotales(): void {
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
+    const CANTIDAD_TOTAL = this.tableBodyData.reduce(
       (sum: number, item: { tbodyData: string[] }) =>
         sum + parseFloat(item.tbodyData[0]),
       0
@@ -426,18 +461,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         sum + parseFloat(item.tbodyData[5]),
       0
     );
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-    // eslint-disable-next-line dot-notation
+    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
     this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
   }
- 
+
   /**
-   * @description Solicita opciones configurables para los formularios desde archivos JSON.
+   * Carga las opciones configurables para los formularios desde el servicio.
    */
   opcionesDeBusqueda(): void {
-    this.DiamanteBrutoService
-      .getSolicitudeOptions()
+    this.DiamanteBrutoService.getSolicitudeOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
@@ -447,12 +479,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             defaultSelect: data.defaultSelect || 'Inicial',
           });
         },
-        error: (error) =>
-          console.error('Error loading solicitude options:', error),
+        error: (error) => console.error('Error loading solicitude options:', error),
       });
- 
-    this.DiamanteBrutoService
-      .getProductoOptions()
+
+    this.DiamanteBrutoService.getProductoOptions()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (data) => {
@@ -464,37 +494,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         },
       });
   }
+
   /**
-   * manejarlaFilaSeleccionada
-   * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
-   * Lista de filas seleccionadas.
+   * Maneja la selección de filas en la tabla de partidas.
+   * @param {any[]} filasSeleccionadas - Array de filas seleccionadas
    */
-  /* eslint-disable @typescript-eslint/no-explicit-any */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
+    this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas[0] : null;
     if (this.filaSeleccionada) {
       this.Tramite130114Store.storeTableValues(this.filaSeleccionada);
     }
   }
- 
+
   /**
-   * validarYEnviarFormulario
-   * Valida el formulario y muestra la tabla dinámica si es válido.
+   * Valida el formulario de partidas y muestra la tabla si es válido.
    */
   validarYEnviarFormulario(): void {
-    this.mostrarTabla = true;
     if (this.partidasDelaMercanciaForm.invalid) {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
     }
   }
- 
+
   /**
-   * navegarParaModificarPartida
-   * Navega para modificar una partida específica y actualiza el estado global.
+   * Navega para modificar una partida específica seleccionada en la tabla.
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
@@ -502,60 +527,65 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.Tramite130114Store.storeTableValues(this.filaSeleccionada);
     }
   }
-/**
- * Método para obtener la lista de entidades federativas.
- */
-fetchEntidadFederativa(): void {
-  this.DiamanteBrutoService
-    .getEntidadFederativa()
-    .subscribe((data) => {
-      this.entidadFederativa = data;
-    });
-}
-/**
-* Método para obtener la lista de representaciones federales.
-*/
-fetchRepresentacionFederal(): void {
-  this.DiamanteBrutoService
-    .getRepresentacionFederal()
-    .subscribe((data) => {
-      this.representacionFederal = data;
-    });
-}
-/**
-* Método para obtener la lista de países disponibles.
-*/
-listaDePaisesDisponibles(): void {
-  this.DiamanteBrutoService
-    .getListaDePaisesDisponibles()
-    .subscribe((data) => {
-      this.elementosDeBloque = data;
-    });
-}
-/**
-* Método para obtener la lista de países por bloque.
-* @param {number} _bloqueId - Identificador del bloque.
-*/
-fetchPaisesPorBloque(_bloqueId: number): void {
-  this.DiamanteBrutoService
-    .getPaisesPorBloque(_bloqueId)
-    .subscribe((data) => {
-      this.paisesPorBloque = data;
-      this.selectRangoDias = this.paisesPorBloque.map(
-        (pais: Catalogo) => pais.descripcion
-      );
-    });
-}
-/**
-* Maneja el cambio de bloque seleccionado.
-* @param {number} bloqueId - Identificador del bloque seleccionado.
-*/
-enCambioDeBloque(bloqueId: number): void {
-  this.fetchPaisesPorBloque(bloqueId);
-}
+
   /**
-   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
-   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
+   * Obtiene la lista de entidades federativas desde el servicio.
+   */
+  fetchEntidadFederativa(): void {
+    this.DiamanteBrutoService.getEntidadFederativa()
+      .subscribe((data) => {
+        this.entidadFederativa = data;
+      });
+  }
+
+  /**
+   * Obtiene la lista de representaciones federales desde el servicio.
+   */
+  fetchRepresentacionFederal(): void {
+    this.DiamanteBrutoService.getRepresentacionFederal()
+      .subscribe((data) => {
+        this.representacionFederal = data;
+      });
+  }
+
+  /**
+   * Obtiene la lista de países disponibles desde el servicio.
+   */
+  listaDePaisesDisponibles(): void {
+    this.DiamanteBrutoService.getListaDePaisesDisponibles()
+      .subscribe((data) => {
+        this.elementosDeBloque = data;
+      });
+  }
+
+  /**
+   * Obtiene la lista de países pertenecientes a un bloque específico.
+   * @param {number} _bloqueId - ID del bloque seleccionado
+   */
+  fetchPaisesPorBloque(_bloqueId: number): void {
+    this.DiamanteBrutoService.getPaisesPorBloque(_bloqueId)
+      .subscribe((data) => {
+        this.paisesPorBloque = data;
+        this.selectRangoDias = this.paisesPorBloque.map(
+          (pais: Catalogo) => pais.descripcion
+        );
+      });
+  }
+
+  /**
+   * Maneja el evento de cambio en la selección de bloque.
+   * @param {number} bloqueId - ID del bloque seleccionado
+   */
+  enCambioDeBloque(bloqueId: number): void {
+    this.fetchPaisesPorBloque(bloqueId);
+  }
+
+  /**
+   * Actualiza el store con los valores del formulario según el evento recibido.
+   * @param {Object} event - Objeto con información del evento
+   * @param {FormGroup} event.form - Formulario que generó el evento
+   * @param {string} event.campo - Nombre del campo que cambió
+   * @param {string} event.metodoNombre - Nombre del método del store a llamar
    */
   setValoresStore(event: {
     form: FormGroup;
@@ -582,7 +612,6 @@ enCambioDeBloque(bloqueId: number): void {
       case 'setclasificacion':
         this.Tramite130114Store.setclasificacion(VALOR);
         break;
-
       case 'setProducto':
         this.Tramite130114Store.setProducto(VALOR);
         break;
@@ -598,7 +627,7 @@ enCambioDeBloque(bloqueId: number): void {
       case 'setUnidadMedida':
         this.Tramite130114Store.setUnidadMedida(VALOR);
         break;
-        case 'setBloque':
+      case 'setBloque':
         this.Tramite130114Store.setBloque(VALOR);
         break;
       case 'setUsoEspecifico':
@@ -617,18 +646,15 @@ enCambioDeBloque(bloqueId: number): void {
         this.Tramite130114Store.setRepresentacion(VALOR);
         break;
       default:
-        console.error(
-          `Método ${event.metodoNombre} no existe en Tramite130114Store`
-        );
+        console.error(`Método ${event.metodoNombre} no existe en Tramite130114Store`);
     }
   }
- 
+
   /**
-   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
+   * Limpia las suscripciones al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
 }
- 
