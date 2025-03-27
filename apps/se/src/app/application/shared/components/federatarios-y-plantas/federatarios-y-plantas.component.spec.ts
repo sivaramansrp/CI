@@ -1,6 +1,15 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,7 +21,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 @Injectable()
 class MockRouter {
-  navigate() {};
+  navigate() {}
 }
 
 describe('FederatariosYPlantasComponent', () => {
@@ -21,44 +30,41 @@ describe('FederatariosYPlantasComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Router, useClass: MockRouter },
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            snapshot: { url: 'url', params: {}, queryParams: {}, data: {} },
             url: observableOf('url'),
             params: observableOf({}),
             queryParams: observableOf({}),
             fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        }
-      ]
-    }).overrideComponent(FederatariosYPlantasComponent, {
-
-    }).compileComponents();
+            data: observableOf({}),
+          },
+        },
+      ],
+    })
+      .overrideComponent(FederatariosYPlantasComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(FederatariosYPlantasComponent);
     component = fixture.debugElement.componentInstance;
   });
-
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #initFederatariosFormGroup()', async () => {
-
     component.initFederatariosFormGroup();
-
   });
 
-  it('should run #navigateToAcciones()', async () => {
+  it('should run #irAAcciones()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
-    component.navigateToAcciones({});
+    component.irAAcciones({});
     expect(component.router.navigate).toHaveBeenCalled();
   });
 
@@ -70,5 +76,4 @@ describe('FederatariosYPlantasComponent', () => {
     component.aggregarDatos();
     expect(component.datosFormaFedratario.emit).toHaveBeenCalled();
   });
-
 });
