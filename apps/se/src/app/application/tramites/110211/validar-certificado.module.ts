@@ -10,10 +10,10 @@ import { CertificadoOrigenComponent } from './components/certificado-origen/cert
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CamDatosCertificadoComponent } from './components/cam-datos-certificado/cam-datos-certificado.component';
 import { DaosCertificadoComponent } from '../../shared/components/daos-certificado/daos-certificado.component';
+import { CamDestinatarioComponent } from './components/cam-destinatario/cam-destinatario.component';
 
 
 @NgModule({
@@ -24,7 +24,7 @@ import { DaosCertificadoComponent } from '../../shared/components/daos-certifica
     CertificadoOrigenComponent,
     MercanciaComponent,
     CamDatosCertificadoComponent,
-    DestinatarioComponent
+    CamDestinatarioComponent
   ],
   imports: [
     CommonModule,
