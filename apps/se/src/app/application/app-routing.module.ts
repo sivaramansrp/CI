@@ -180,10 +180,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'ref-procedure',
+    path: 'importacion-material-de-investigacion-cientifica',
     loadChildren: () =>
-      import('./tramites/000000/ref-procedure.module').then(
-        (m) => m.RefProcedureModule
+      import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
+        (m) => m.ImportacionMaterialDeInvestigacionCientificaModule
       )
   },
   {
