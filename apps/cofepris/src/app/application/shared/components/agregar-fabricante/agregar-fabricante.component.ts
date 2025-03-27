@@ -117,7 +117,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     private datosSolicitudService: DatosSolicitudService
   ) {
     this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: ['', Validators.required],
+      nacionalidad: ['Nacional', Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
