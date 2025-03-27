@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 /**
  * @constant ROUTES_PERMISO
- * @description Rutas para el módulo de registro de solicitud IMMEX.
+ * @description Rutas para el módulo Nacional Café Exportadores.
  */
 export const ROUTES_PERMISO: Routes = [
   {
