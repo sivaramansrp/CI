@@ -92,20 +92,19 @@ export class AnexoUnoComponent {
     | AnexoDosEncabezado
     | AnexoUnoEncabezado;
 
-
   /**
- * Constructor de la clase AnexoUnoComponent
- * @param {FormBuilder} fb - Constructor para crear formularios reactivos
- */
+   * Constructor de la clase AnexoUnoComponent
+   * @param {FormBuilder} fb - Constructor para crear formularios reactivos
+   */
   constructor(private fb: FormBuilder) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
   }
 
   /**
- * Crea el formulario del Anexo Uno
- * @returns {void}
- */
+   * Crea el formulario del Anexo Uno
+   * @returns {void}
+   */
   crearFormularioAnexoUno(): void {
     this.anexoUnoFormGroup = this.fb.group({
       fraccionArancelaria: ['', Validators.required],
