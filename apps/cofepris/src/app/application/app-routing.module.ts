@@ -6,7 +6,21 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
+  },
+  {
+    path: 'permiso-maquila',
+    loadChildren: () =>
+      import('./tramites/260212/permiso-maquila.module').then(
+        (m) => m.PermisoMaquilaModule
+      ),
+  },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos',
+    loadChildren: () =>
+      import(
+        './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
     path: 'importacion-psicotropicos',
@@ -20,7 +34,14 @@ const ROUTES: Routes = [
       import('./tramites/260211/permiso-sanitario.module').then(
         (m) => m.PermisoSanitarioModule
       ),
-  }
+  },
+  {
+    path: 'permiso-sanitario-importacion',
+    loadChildren: () =>
+      import('./tramites/260215/permiso-sanitario-importacion.module').then(
+        (m) => m.PermisoSanitarioImportacionModule
+      ),
+  },
 ];
 
 @NgModule({
