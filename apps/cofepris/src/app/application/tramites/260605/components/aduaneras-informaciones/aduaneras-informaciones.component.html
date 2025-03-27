@@ -7,9 +7,9 @@
           <input
             class="form-control"
             id="numeroDPmiso"
-            formControlName="numeroDPmiso"
+            formControlName="numeroDePermiso"
             type="text"
-            (change)="setValoresStore(aduanerasInformacionesForm,'numeroDPmiso', 'setNumeroDPmiso')"
+            (change)="setValoresStore(aduanerasInformacionesForm,'numeroDePermiso', 'setNumeroDPmiso')"
           />
         </div>
       </div>
@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  <ng-container *ngIf="validPlafet">
+  <ng-container *ngIf="esFormularioValido">
     <div class="container">
       <div class="row w-100">
         <!-- Available Items and Buttons -->

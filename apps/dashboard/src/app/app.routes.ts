@@ -104,14 +104,5 @@ export const appRoutes: Route[] = [
             remoteName: 'sener',
             exposedModule: './Module'
         }).then((m) => m.AppSenerModule)
-  },
-  {
-    path: 'cofepris',
-    loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
-            remoteName: 'cofepris',
-            exposedModule: './Module'
-        }).then((m) => m.cofeprisModule)
   }
 ];

@@ -105,7 +105,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @memberof AduanerasInformacionesComponent
    */
-  validPlafet: boolean = false;
+  esFormularioValido: boolean = false;
 
   /**
    * Crea una instancia de AduanerasInformacionesComponent.
@@ -142,8 +142,8 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
     );
 
     this.aduanerasInformacionesForm = this.fb.group({
-      numeroDPmiso: [this.solicitudState?.numeroDPmiso, Validators.required],
-      cstumbresAtuales: [this.solicitudState?.cstumbresAtuales, Validators.required],
+      numeroDePermiso: [this.solicitudState?.numeroDePermiso, Validators.required],
+      cstumbresAtuales: [this.solicitudState?.costumbresActuales, Validators.required],
     });
     this.obteneraduanasDisponiblesdatos();
   }
@@ -164,12 +164,12 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
 
   /**
    * Método ejecutado cuando se envía el formulario.
-   * Establece la variable `validPlafet` a `true`.
+   * Establece la variable `esFormularioValido` a `true`.
    * 
    * @memberof AduanerasInformacionesComponent
    */
   onSubmit(): void {
-    this.validPlafet = true;
+    this.esFormularioValido = true;
   }
 
   /**

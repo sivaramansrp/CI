@@ -11,7 +11,7 @@ export interface Solicitud260605State {
    * @type {string}
    * @memberof Solicitud260605State
    */
-  numeroDPmiso: string;
+  numeroDePermiso: string;
 
   /**
    * Costumbres actuales.
@@ -19,7 +19,7 @@ export interface Solicitud260605State {
    * @type {string}
    * @memberof Solicitud260605State
    */
-  cstumbresAtuales: string;
+  costumbresActuales: string;
 
   /**
    * RFC del solicitante.
@@ -84,8 +84,8 @@ export interface Solicitud260605State {
  */
 export function createInitialState(): Solicitud260605State {
   return {
-    numeroDPmiso: '',
-    cstumbresAtuales: '',
+    numeroDePermiso: '',
+    costumbresActuales: '',
     rfc: '',
     nombre: '',
     apellidoPaterno: '',
@@ -113,10 +113,10 @@ export class Tramite260605Store extends Store<Solicitud260605State> {
    * Establece el numeroDPmiso en el estado.
    * @param {string} numeroDPmiso - El numeroDPmiso a establecer.
    */
-  public setNumeroDPmiso(numeroDPmiso: string):void {
+  public setNumeroDPmiso(numeroDePermiso: string):void {
     this.update((state) => ({
       ...state,
-      numeroDPmiso,
+      numeroDePermiso,
     }));
   }
 

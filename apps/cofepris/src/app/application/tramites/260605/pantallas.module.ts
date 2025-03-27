@@ -14,7 +14,7 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PantallasRoutingModule } from './pantallas-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { ReprestantanteComponent } from './components/represtantante/represtantante.component';
+import { RepresentanteComponent } from './components/representante/representante.component';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
@@ -42,7 +42,7 @@ import { provideHttpClient } from '@angular/common/http';
     AlertComponent,
     FirmaElectronicaComponent,
     BtnContinuarComponent,
-    ReprestantanteComponent,
+    RepresentanteComponent,
     AduanerasInformacionesComponent,
   ],
   providers: [

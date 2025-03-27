@@ -1,11 +1,11 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogosService } from '@libs/shared/data-access-user/src';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
-
+import { takeUntil } from 'rxjs/operators';
 /**  
  * Componente PasoDosComponent que representa el segundo paso del trámite 30901.
  */
@@ -14,7 +14,7 @@ import { TableData } from '@ng-mf/data-access-user';
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit ,OnDestroy {
   /**
    * @description Constante que contiene los textos utilizados en el componente.
    */
@@ -35,7 +35,7 @@ export class PasoDosComponent implements OnInit {
      */
     tableBody: [],
   };
-
+  private destroyNotifier$ = new Subject<void>();
   /**
    * Array para almacenar los documentos del catálogo.
    * Cada documento es de tipo `Catalogo`, representando un ítem en el catálogo.
@@ -74,6 +74,7 @@ export class PasoDosComponent implements OnInit {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
@@ -81,5 +82,14 @@ export class PasoDosComponent implements OnInit {
           }
         },
       });
+  }
+ /**
+   * Método que se ejecuta al destruir el componente.
+   * 
+   * @memberof PasoDosComponent
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
