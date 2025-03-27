@@ -100,7 +100,7 @@
       <div class="row mt-5">
         <ng-alert *ngIf="!cargarArchivo" [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
       </div>
-      <ng-container *ngIf="!cargarArchivo">
+      <ng-container *ngIf="!cargarArchivo && noRequerido">
         <div class="row mt-5">
           <label>Mercancías seleccionadas</label>
         </div>
@@ -162,7 +162,7 @@
         </div>
       </div>
       <div class="row mt-5">
-        <div class="col-md-8" *ngIf="requeridoCertificateRequeridoPanama">
+        <div class="col-md-8" *ngIf="noRequerido">
           <label>Marca:</label>
           <input type="text" required="true" class="form-control" formControlName="marca" (change)=" setValoresStore(validacionMercanciaForm, 'marca', 'setmarca') " />
         </div>
@@ -209,7 +209,7 @@
         </div>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3">Cancelar</button>
+        <button type="button" class="btn btn-default ms-3" (click)="cancelar()">Cancelar</button>
         <button type="button" class="btn btn-primary ms-3" (click)="agregar()"> Agregar </button>
       </div>
     </ng-container>

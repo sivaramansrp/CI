@@ -16,14 +16,14 @@ import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { RegistroRoutingModule } from './registro-routing.module';
+import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-cam-routing.module';
 import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    RegistroRoutingModule,
+    ValidadorCertificadoCamRoutingModule,
     CatalogoSelectComponent,
     AlertComponent,
     AnexarDocumentosComponent,
@@ -42,4 +42,4 @@ import { ToastrService } from 'ngx-toastr';
   ],
   providers:[ToastrService]
 })
-export class RegistroModule {}
+export class ValidadorCertificadoCamModule {}

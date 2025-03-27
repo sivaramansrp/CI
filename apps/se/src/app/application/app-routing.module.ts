@@ -187,10 +187,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro',
+    path: 'validador-certificado-cam',
     loadChildren:() =>
-      import('./tramites/110221/registro.module').then(
-        (m) => m.RegistroModule
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
       )
   },
 ];

@@ -4,7 +4,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 const ROUTES: Routes = [
   {
-    path: 'solicitud',
+    path: '',
     component: SolicitudPageComponent,
   },
     {
@@ -18,4 +18,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
-export class RegistroRoutingModule { }
+export class ValidadorCertificadoCamRoutingModule { }

@@ -59,7 +59,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
-  requeridoCertificateRequeridoPanama: boolean = false;
+  noRequerido: boolean = false;
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -450,9 +450,9 @@ optionsTipoFactura!: Catalogo[];
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
   buscarMercancias() {
-    if (this.registroForm.get('validacionForm.tratado')?.value == 0) {
+    if (this.registroForm.get('validacionForm.tratado')?.value == 0) {console.log("hayMercanciasDisponibles : 453 : ");
       this.hayMercanciasDisponibles = false;
-    } else {
+    } else {console.log("hayMercanciasDisponibles : 455 : ");
       this.hayMercanciasDisponibles = true;
     }
     this.getTratado();
@@ -460,6 +460,10 @@ optionsTipoFactura!: Catalogo[];
     this.getUMC();
     this.getUnidadMedida();
     this.getTipoFactura();
+  }
+  cancelar(){
+    // this.esFormulario = false;
+    // this.esMercanciaEnEdicion = true;
   }
   /**
    * Agrega una mercancía al formulario.
@@ -752,4 +756,6 @@ optionsTipoFactura!: Catalogo[];
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+
 }
