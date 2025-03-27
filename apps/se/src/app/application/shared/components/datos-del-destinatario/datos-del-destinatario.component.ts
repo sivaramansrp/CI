@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -39,17 +39,24 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
+ @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+  false
+);  
   /**
    * Constructor del componente
    * @param {FormBuilder} fb - Servicio para crear formularios reactivos
    */
   constructor(private fb: FormBuilder) {
     this.formDatosDelDestinatario = this.fb.group({
-      nombres: ['', [Validators.required]],
-      primerApellido: ['', [Validators.required]],
-      segundoApellido: ['', [Validators.required]],
-      numeroDeRegistroFiscal: ['', [Validators.required]],
-      razonSocial: ['', [Validators.required]],
+      nombres: [''],
+      primerApellido: [''],
+      segundoApellido: [''],
+      numeroDeRegistroFiscal: [''],
+      razonSocial: [''],
     });
 
     // Parcheo de valores iniciales con retraso para asegurar la renderización
@@ -73,6 +80,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe((_) => {
         // Emite los valores actuales del formulario
         this.formDatosDelDestinatarioEvent.emit(this.formDatosDelDestinatario.value);
+        this.formaValida.emit(this.formDatosDelDestinatario.valid);
       });
   }
 

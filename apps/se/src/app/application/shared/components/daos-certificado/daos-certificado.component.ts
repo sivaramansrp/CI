@@ -24,6 +24,13 @@ export class DaosCertificadoComponent implements OnDestroy, OnInit {
   @Output() entidadFederativaSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
   @Output() representacionFederalSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
   @Input() datosFormCertificado!: { [key: string]: string | number | boolean | object | undefined };
+  /**
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
+ @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+  false
+);  
 
   /**
    * Formulario reactivo que contiene los datos del certificado.
@@ -102,6 +109,7 @@ export class DaosCertificadoComponent implements OnDestroy, OnInit {
     this.formDatosCertificado.valueChanges.subscribe((value) => {
       if (!this.actualizandoFormulario) {
         this.formDatosCertificadoEvent.emit(value);
+        this.formaValida.emit(this.formDatosCertificado.valid);
       }
     });
 

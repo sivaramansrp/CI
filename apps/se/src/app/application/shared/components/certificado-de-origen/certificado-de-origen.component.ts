@@ -191,6 +191,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @type {boolean}
    */
 
+ /**
+   * Emisor de eventos para indicar si el formulario es válido.
+   * @type {EventEmitter<boolean>}
+   */
+ @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+  false
+);  
   /**
    * Constructor del componente. Inicializa el formulario reactivo con los controles necesarios y sus validaciones.
    * @param fb FormBuilder para la creación del formulario reactivo.
@@ -225,6 +232,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((_) => {
         this.formCertificadoEvent.emit(this.formCertificado.value);
+        this.formaValida.emit(this.formCertificado.valid);
       });
   }
 
@@ -301,7 +309,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * 
    * @returns {void}
    */
-  abrirModal(tableData:any): void {
+  abrirModal(tableData: Mercancia): void {
     this.filaClics.emit(tableData);
   }
 }
