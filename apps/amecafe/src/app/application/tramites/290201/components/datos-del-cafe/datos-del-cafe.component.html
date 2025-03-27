@@ -33,25 +33,24 @@
       <td class="text-center">
          <input type="checkbox" (click)="onCheckboxClick($event, i)" />
        </td>
-       <td class="text-center">{{row.envasadoen}}</td>
-       <td class="text-center">{{row.utilizoCafeComo}}</td>
-       <td class="text-center">{{row.cantidadutilizada}}</td>
-       <td class="text-center">{{row.numerodepedimento}}</td>
-       <td class="text-center">{{row.paisdeimportacion}}</td>
-       <td class="text-center">{{row.fraccionarancelaria}}</td>
-       <td class="text-center">{{row.cantidad}}</td>
-       <td class="text-center">{{row.unidaddemedida}}</td>
-       <td class="text-center">{{row.precioapplicable}}</td>
-       <!-- <td class="text-center">{{row.domicilio}}</td> -->
-       <td class="text-center">{{row.dolar}}</td>
-       <td class="text-center">{{row.lote}}</td>
-       <td class="text-center">{{row.otrasmarcas}}</td>
-       <td class="text-center">{{row.elcafe}}</td>
-       <td class="text-center">{{row.fechaexportacion}}</td>
-       <td class="text-center">{{row.paisdetransbordo}}</td>
-       <td class="text-center">{{row.mediodetransporte}}</td>
-       <td class="text-center">{{row.Identificadordel}}</td>
-       <td class="text-center">{{row.observaciones}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.envasadoen}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.utilizoCafeComo}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.cantidadutilizada}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.numerodepedimento}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.paisdeimportacion}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.fraccionarancelaria}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.cantidad}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.unidaddemedida}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.precioapplicable}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.dolar}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.lote}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.otrasmarcas}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.elcafe}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.fechaexportacion}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.paisdetransbordo}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.mediodetransporte}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.Identificadordel}}</td>
+       <td class="text-center">{{row.datosDelTramiteRealizar.observaciones}}</td>
       </tr>
      </tbody>
     </table>
@@ -72,6 +71,7 @@
 <div class="container"  *ngIf="isFormVisible">
     <form [formGroup]="dataCafeForm" (ngSubmit)="onSubmit()">
       <ng-titulo titulo="Datos Del Cafe" />
+      <ng-container formGroupName="datosDelTramiteRealizar"> 
       <div class="row">
         <div class="col-md-4 mb-3">
             <div class="form-group">
@@ -82,6 +82,7 @@
                 [label]="'Envasado en'"
                 [placeholder]="envasadoenData.primerOpcion"
                 [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'envasadoen','setEnvasadoen')"
               ></app-catalogo-select>
             </div>
          </div>
@@ -94,19 +95,23 @@
                 [label]="'Utilizo cafe como materia prima importada para elaborar este producto?'"
                 [placeholder]="utilizoCafeComoData.primerOpcion"
                 [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'utilizoCafeComo','setUtilizoCafeComo')"
               ></app-catalogo-select>
             </div>
          </div>
          <div class="col-md-6 mb-3">
             <div class="form-group">
                <label class="form-label" for="cantidadutilizada">Cantidad utilizada para elaborar este lote de importacion</label>
-               <input class="form-control"  placeholder="" type="text" formControlName="cantidadutilizada" id="cantidadutilizada">
+               <input class="form-control"  placeholder="" type="text" formControlName="cantidadutilizada" id="cantidadutilizada"
+               (change)="setValoresStore(datosDelTramiteRealizar,'cantidadutilizada','setCantidadutilizada')"
+               >
             </div>
          </div>
          <div class="col-md-6 mb-3">
             <div class="form-group">
                <label class="form-label" for="numerodepedimento">Numero de pedimento de importacion</label>
-               <input class="form-control"  placeholder="" type="text" formControlName="numerodepedimento" id="numerodepedimento">
+               <input class="form-control"  placeholder="" type="text" formControlName="numerodepedimento" id="numerodepedimento"
+               (change)="setValoresStore(datosDelTramiteRealizar,'numerodepedimento','setNumerodepedimento')">
             </div>
          </div>
          <div class="col-md-8 mb-3">
@@ -118,6 +123,7 @@
                 [label]="'Pais de importacion'"
                 [placeholder]="paisdeimportacionData.primerOpcion"
                 [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'paisdeimportacion','setPaisdeimportacion')"
               ></app-catalogo-select>
             </div>
          </div>
@@ -130,6 +136,7 @@
                 [label]="'Fraccion arancelaia'"
                 [placeholder]="fraccionarancelariaData.primerOpcion"
                 [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'fraccionarancelaria','setFraccionarancelaria')"
               ></app-catalogo-select>
             </div>
          </div>
@@ -138,7 +145,9 @@
             <div class="col-md-4 mb-3">
                 <div class="form-group">
                    <label class="form-label" for="cantidad">Cantidad</label>
-                   <input class="form-control" required="true" placeholder="" type="text" formControlName="cantidad" id="cantidad">
+                   <input class="form-control" required="true" placeholder="" type="text" formControlName="cantidad" id="cantidad"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'cantidad','setCantidad')"
+                   >
                 </div>
              </div>
              <div class="col-md-4 mb-3">
@@ -150,6 +159,7 @@
                     [label]="'Unidad de medida'"
                     [placeholder]="unidaddemedidaData.primerOpcion"
                     [required]="true"
+                    (change)="setValoresStore(datosDelTramiteRealizar,'unidaddemedida','setUnidaddemedida')"
                   ></app-catalogo-select>
                 </div>
              </div>
@@ -158,7 +168,8 @@
             <div class="col-md-4 mb-3">
                 <div class="form-group">
                    <label class="form-label" for="precioapplicable">Precio applicable</label>
-                   <input class="form-control" required="true" placeholder="" type="text" formControlName="precioapplicable" id="precioapplicable">
+                   <input class="form-control" required="true" placeholder="" type="text" formControlName="precioapplicable" id="precioapplicable"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'precioapplicable','setPrecioapplicable')">
                 </div>
              </div>
              <div class="col-md-4 mb-3">
@@ -170,6 +181,7 @@
                     [label]="''"
                     [placeholder]="dolarData.primerOpcion"
                     [required]="true"
+                    (change)="setValoresStore(datosDelTramiteRealizar,'dolar','setDolar')"
                   ></app-catalogo-select>
                 </div>
              </div>
@@ -178,13 +190,15 @@
                 <div class="col-md-4 mb-3">
                     <div class="form-group">
                        <label class="form-label" for="lote">Lote</label>
-                       <input class="form-control" required="true" placeholder="" type="text" formControlName="lote" id="lote">
+                       <input class="form-control" required="true" placeholder="" type="text" formControlName="lote" id="lote"
+                       (change)="setValoresStore(datosDelTramiteRealizar,'lote','setLote')">
                     </div>
                  </div>
                  <div class="col-md-8 mb-3">
                     <div class="form-group">
                        <label class="form-label" for="otrasmarcas">Otras marcas</label>
-                       <input class="form-control" required="true" placeholder="" type="text" formControlName="otrasmarcas" id="otrasmarcas">
+                       <input class="form-control" required="true" placeholder="" type="text" formControlName="otrasmarcas" id="otrasmarcas"
+                       (change)="setValoresStore(datosDelTramiteRealizar,'otrasmarcas','setOtrasmarcas')">
                     </div>
                  </div>
             </div>
@@ -199,6 +213,7 @@
                         [label]="'EI cafe tiene caracteristicas especiales?'"
                         [placeholder]="elcafeData.primerOpcion"
                         [required]="true"
+                        (change)="setValoresStore(datosDelTramiteRealizar,'elcafe','setElcafe')"
                       ></app-catalogo-select>
                     </div>
                  </div>
@@ -207,7 +222,8 @@
                      <div class="col-md-6 mb-3">
                             <div class="form-group">
                               <label class="form-label" for="fechaexportacion">Fecha exportacion*:</label>
-                              <input class="form-control" id="fechaexportacion" formControlName="fechaexportacion" type="date"/>
+                              <input class="form-control" id="fechaexportacion" formControlName="fechaexportacion" type="date"
+                              (change)="setValoresStore(datosDelTramiteRealizar,'fechaexportacion','setFechaexportacion')"/>
                             </div>
                       </div>
                  </div>
@@ -223,6 +239,7 @@
                                 [label]="'Pais de transbordo'"
                                 [placeholder]="paisdetransbordoData.primerOpcion"
                                 [required]="true"
+                                (change)="setValoresStore(datosDelTramiteRealizar,'paisdetransbordo','setPaisdetransbordo')"
                               ></app-catalogo-select>
                             </div>
                         </div>
@@ -237,6 +254,7 @@
                                 [label]="'Medio de transporte'"
                                 [placeholder]="mediodetransporteData.primerOpcion"
                                 [required]="true"
+                                (change)="setValoresStore(datosDelTramiteRealizar,'mediodetransporte','setMediodetransporte')"
                               ></app-catalogo-select>
                             </div>
                         </div>
@@ -244,7 +262,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                           <label class="form-label" for="Identificadordel">Identificador del medio de transporte:</label>
-                          <input class="form-control" id="Identificadordel" formControlName="Identificadordel"/>
+                          <input class="form-control" id="Identificadordel" formControlName="Identificadordel"
+                          (change)="setValoresStore(datosDelTramiteRealizar,'Identificadordel','setIdentificadordel')"/>
                         </div>
                   </div>
                  </div>
@@ -253,7 +272,8 @@
                     <div class="form-group">
                       <label class="form-label" for="observaciones">Observaciones</label>
                       <textarea class="form-control" id="observaciones" rows="2" height="50"
-                      placeholder="" style="height: 100px" formControlName="observaciones"></textarea>
+                      placeholder="" style="height: 100px" formControlName="observaciones"
+                      (change)="setValoresStore(datosDelTramiteRealizar,'observaciones','setObservaciones')"></textarea>
                     </div>
               </div>
          </div>
@@ -268,6 +288,6 @@
           </div>
         
       </div>
+      </ng-container>
     </form>
  </div>
- <app-datos-de-la-solicitud></app-datos-de-la-solicitud>

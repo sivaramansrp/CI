@@ -1,21 +1,101 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
+import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
+
+@Injectable()
+class MockRegistrarSolicitudService {}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
+
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('DatosDeLaSolicitudComponent', () => {
-  let component: DatosDeLaSolicitudComponent;
-  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudComponent],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,DatosDeLaSolicitudComponent ],
+      declarations: [
+        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
+        MyCustomDirective
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: RegistrarSolicitudService, useClass: MockRegistrarSolicitudService }
+      ]
+    }).overrideComponent(DatosDeLaSolicitudComponent, {
+
     }).compileComponents();
-
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+    component.getSolicitudData = jest.fn();
+    component.ngOnInit();
+    // expect(component.getSolicitudData).toHaveBeenCalled();
+  });
+
+  it('should run #mostrarColapsable()', async () => {
+
+    component.mostrarColapsable();
+
+  });
+
+  it('should run #getSolicitudData()', async () => {
+    component.registrarsolicitud = component.registrarsolicitud || {};
+    component.registrarsolicitud.getSolicitudData = jest.fn().mockReturnValue(observableOf({}));
+    component.getSolicitudData();
+    // expect(component.registrarsolicitud.getSolicitudData).toHaveBeenCalled();
+  });
+
+  it('should run #onClick()', async () => {
+
+    component.onClick();
+
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyed$ = component.destroyed$ || {};
+    component.destroyed$.next = jest.fn();
+    component.destroyed$.complete = jest.fn();
+    component.ngOnDestroy();
+    // expect(component.destroyed$.next).toHaveBeenCalled();
+    // expect(component.destroyed$.complete).toHaveBeenCalled();
+  });
+
 });

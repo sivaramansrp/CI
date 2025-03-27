@@ -16,20 +16,19 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of newDestinatarioData; let i=index">
+        <tr *ngFor="let row of newDestinatarioData; let i=index">
           <td class="text-center">
-            <input type="checkbox" (change)="onSelectRow(item, $event)" />
+            <input type="checkbox" (change)="onSelectRow(row, $event)" />
           </td>
-          <td class="text-center">{{item.tipoPersona}}</td>
-          <td class="text-center">{{item.denominacion}}</td>
-          <td class="text-center">{{item.domicilio}}</td>
-          <td class="text-center">{{item.pais}}</td>
-          <td class="text-center">{{item.codigopostal}}</td>
-          <td class="text-center">{{item.telefono}}</td>
-          <td class="text-center">{{item.correoelectronica}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.tipoPersona}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.denominacion}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.domicilio}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.pais}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.codigopostal}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.telefono}}</td>
+          <td class="text-center">{{row.datosDelTramiteRealizar.correoelectronica}}</td>
         </tr>
       </tbody>
-
     </table>
     <div class="btn-group">
       <button class="btn btn-danger" type="button" [disabled]="!selectedRow" (click)="onModify()">Modificar</button>
@@ -41,28 +40,29 @@
 <div class="container"  *ngIf="isFormVisible">
     <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
         <ng-titulo titulo="Datos personales" />
-        <!-- <ng-container formGroupName="destinatarioForm"> -->
+         <ng-container formGroupName="datosDelTramiteRealizar"> 
             <div class="row mb-3">
               <div class="col-md-12">
                 <label class="form-label" for="tipoPersona">Tipo persona*:</label>
               </div>
               <div class="col-md-12">
                 <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="fisica" id="fisica"/>
+                  value="fisica" id="fisica" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
                 <label for="fisica">Física</label>
               </div>
               <div class="col-md-12">
                 <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
-                value="moral" id="moral"/>
+                value="moral" id="moral"
+                (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
                 <label for="moral">Moral</label>
               </div>
             </div>
-          <!-- </ng-container> -->
-        
             <div class="row">
               <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominación">Denominación/razón social*:</label>
-                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"/>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"/>
               </div>
             </div>
             <div class="row">
@@ -70,11 +70,12 @@
               <div class="form-group">
                 <label class="form-label" for="domicilio">Domicilio</label>
                 <textarea class="form-control" id="domicilio" rows="2" height="50"
-                placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"></textarea>
+                placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"
+                (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" ></textarea>
               </div>
             </div>
             </div>
-          <div class="row">
+           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <app-catalogo-select
@@ -84,26 +85,32 @@
                 [label]="'Pais'"
                 [placeholder]="paisData.primerOpcion"
                 [required]="true"
+                (change)="setValoresStore(datosDelTramiteRealizar,'pais', 'setPais')"
               ></app-catalogo-select>
              </div>
-          </div>
-          </div>
-            <div class="row">
+           </div>
+            </div>
+             <div class="row">
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="codigopostal">Codigo postal:</label>
-                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"/>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
+                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"/>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="telefono">Telefono:</label>
-                <input class="form-control" id="telefono" type="text" formControlName="telefono"/>
+                <input class="form-control" id="telefono" type="text" formControlName="telefono"
+                (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"/>
               </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoelectronica">Correo electronico:</label>
-                  <input class="form-control" id="correoelectronica" type="text" formControlName="correoelectronica"/>
+                  <input class="form-control" id="correoelectronica" type="text" formControlName="correoelectronica"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronica','setCorreoelectronica')"/>
                 </div>
             </div>
+
+          </ng-container> 
             <div class="col-md-12 d-flex justify-content-end">
        
               <div class="btn-group">

@@ -7,18 +7,25 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { ChangeDetectorRef } from '@angular/core';
+import { Solicitud290201State,Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
+import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
   imports: [CommonModule,TableComponent,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
   templateUrl: './terceros-relacionados.component.html',
-  styleUrl: './terceros-relacionados.component.scss',
+  styleUrl: './terceros-relacionados.component.css',
 })
 export class TercerosRelacionadosComponent implements OnInit{
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroyNotifier$: Subject<void> = new Subject();
+
   destinatarioForm!: FormGroup;
   selectedRow: any = null;
   isFormVisible = true;
+  public destinatarioState!: Solicitud290201State;
   tableData = {
     tableBody: [],
     tableHeader: [],
@@ -31,34 +38,56 @@ export class TercerosRelacionadosComponent implements OnInit{
       catalogos: [],
     };
   tipoPersona: any;
-  newDestinatarioData: any = [];
+  newDestinatarioData: Array<any> = [];
     constructor(
       private registrarsolicitud: RegistrarSolicitudService,
       private fb: FormBuilder,
-      private changeDetectorRef: ChangeDetectorRef
+      private changeDetectorRef: ChangeDetectorRef,
+      private solicitud290201Store: Solicitud290201Store,
+      private solicitud290201Query: Solicitud290201Query,
     ){
-      this.destinatarioForm = this.fb.group({
-        tipoPersona: ['', Validators.required],
-        denominacion:['',Validators.required],
-        domicilio:['',Validators.required],
-        pais:['',Validators.required],
-        codigopostal:['',Validators.required],
-        telefono:['',Validators.required],
-        correoelectronica:['',Validators.required]
-
-      })
+      this.getPaisData();
     }
 
+
     ngOnInit(): void {
-      this.getPaisData();
+      this.solicitud290201Query.selectSolicitud$.pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          console.log('seccionState:', seccionState); // Debug log
+          this.destinatarioState = seccionState
+        })
+      )
+      .subscribe();
+     
+      this.createForm();
  }
+ 
+ createForm(){
+  this.destinatarioForm = this.fb.group({
+    datosDelTramiteRealizar: this.fb.group({
+    tipoPersona: [this.destinatarioState?.tipoPersona,[Validators.required]],
+    denominacion:[this.destinatarioState?.denominacion,[Validators.required]],
+    domicilio:[this.destinatarioState?.domicilio,[Validators.required]],
+    pais:[this.destinatarioState?.pais,[Validators.required]],
+    codigopostal:[this.destinatarioState?.codigopostal,[Validators.required]],
+    telefono:[this.destinatarioState?.telefono,[Validators.required]],
+    correoelectronica:[this.destinatarioState?.correoelectronica,[Validators.required]]
+    })
+  })
+  console.log('destinatarioState:', this.destinatarioState); // Debug log
+
+}
   get selectedTipoPersona() {
     return this.destinatarioForm.get('tipoPersona')?.value;
   }
-
+  isPaisDataLoaded = false;
   getPaisData(){
-     this.registrarsolicitud.getPaisData().subscribe((data) => {
+     this.registrarsolicitud.getPaisData()
+     .pipe(takeUntil(this.destroyed$))
+     .subscribe((data) => {
      this.paisData.catalogos = data as Catalogo[];
+     this.isPaisDataLoaded = true;
      })
   }
   onSubmit(){
@@ -67,35 +96,36 @@ export class TercerosRelacionadosComponent implements OnInit{
   // console.log('Form submitted:', this.destinatarioForm.value);
   //   this.isFormVisible = false;
   const formData = this.destinatarioForm.value;
-      
+  console.log('Form Data:', formData); // Debug log
 
-        console.log('Catalogos:', this.paisData.catalogos);
-        console.log('Form pais ID:', formData.pais);
-        // Map the ID to its corresponding value
+  if (!formData || Object.keys(formData).length === 0) {
+    console.error('Form data is null or empty');
+    return;
+  }
+
         const paisDataValue = this.paisData.catalogos.find(
-          (item: Catalogo) => String(item.id) === String(formData.pais)
+          (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.pais)
         )?.descripcion; // Replace 'id' with the correct property from Catalogo
 
         // Replace the ID with the value
-        formData.pais = paisDataValue;
+        formData.datosDelTramiteRealizar.pais = paisDataValue;
       
-        console.log('Form Data:', formData);
   if (this.selectedRow) {
     // Update the selected row with the modified form data
     const index = this.newDestinatarioData.indexOf(this.selectedRow);
     if (index !== -1) {
       this.newDestinatarioData[index] = { ...formData }; 
     }
-    console.log('Row updated:', this.newDestinatarioData[index]);
   } else {
     // Add a new row if no row is selected
     this.newDestinatarioData.push({ ...formData });
-    console.log('New row added:', { ...formData });
   }
+  this.changeDetectorRef.markForCheck(); // Trigger change detection
+
    this.destinatarioForm.reset();
   this.isFormVisible = false;
   this.selectedRow = null;
-
+  console.log('Updated table data:', this.newDestinatarioData); // Debug log
   
   }
   onLimpiar(){
@@ -109,6 +139,10 @@ export class TercerosRelacionadosComponent implements OnInit{
     }
   }
   onModify() {
+    if (!this.isPaisDataLoaded) {
+      console.warn('Pais data not loaded yet');
+      return;
+    }
   if (this.selectedRow) {
     // Find the ID corresponding to the description in the selected row
     const paisId = this.paisData.catalogos.find(
@@ -128,12 +162,23 @@ export class TercerosRelacionadosComponent implements OnInit{
     if (this.selectedRow) {
       const index = this.newDestinatarioData.indexOf(this.selectedRow);
       if (index !== -1) {
-        this.newDestinatarioData.splice(index, 1); // Remove the selected row from the array
+        this.newDestinatarioData.splice(index, 1); 
         console.log('Row deleted:', this.selectedRow);
       }
-      this.selectedRow = null; // Clear the selection
+      this.selectedRow = null; 
     }
   }
+
+  get datosDelTramiteRealizar(): FormGroup {
+    return this.destinatarioForm.get('datosDelTramiteRealizar') as FormGroup;
+  }
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud290201Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
   
-  
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
 }

@@ -1,22 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS;
 
   tiposDocumentos: Catalogo[] = [];
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
   documentosSeleccionados: Catalogo[] = [];
+  destroyed$ = new Subject<boolean>();
 
   constructor(
     private catalogosServices: CatalogosService,
@@ -24,17 +26,11 @@ export class PasoDosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía'
-      },
-      {
-        id: 2,
-        descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)'
-      }
-    ]
+  }
 
+  ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   /**
