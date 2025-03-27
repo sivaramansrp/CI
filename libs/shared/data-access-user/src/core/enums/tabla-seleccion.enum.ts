@@ -4,3 +4,9 @@ export enum TablaSeleccion {
     UNDEFINED = 'undefined',
     DROPDOWN = 'DROPDOWN'
   }
+
+  export enum TablaCampoSeleccion {
+    INPUT = 'INPUT',
+    DROPDOWN = 'DROPDOWN',
+    NONE = 'NONE' 
+  }
