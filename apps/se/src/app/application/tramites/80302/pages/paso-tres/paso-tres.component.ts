@@ -1,8 +1,8 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { TramiteStore } from '../../../../estados/tramite.store';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '../../../../estados/tramite.store';
 
 @Component({
   selector: 'app-paso-tres',

@@ -1,17 +1,17 @@
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
+import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Input } from '@angular/core';
+import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ViewChild } from '@angular/core';
-import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
-import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
-import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 
 @Component({
-  selector: 'paso-uno',
+  selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,

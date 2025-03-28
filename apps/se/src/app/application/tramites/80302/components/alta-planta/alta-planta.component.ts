@@ -1,28 +1,16 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { CONFIGURACION_DOMICILIOS } from '../../../80308/constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
-import { ToastrService } from 'ngx-toastr';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { DomicilioInfo } from '../../../80308/models/plantas-consulta.model';
 import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
-import { CONFIGURACION_DOMICILIOS } from '../../../80308/constantes/modificacion.enum';
-import { Tramite80308Store } from '../../../80308/estados/tramite80308.store';
+import { DomicilioInfo } from '../../../80308/models/plantas-consulta.model';
+import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
+import { ToastrService } from 'ngx-toastr';
 import { Tramite80308Query } from '../../../80308/estados/tramite80308.query';
+import { Tramite80308Store } from '../../../80308/estados/tramite80308.store';
 
 @Component({
   selector: 'app-alta-planta',
@@ -30,9 +18,6 @@ import { Tramite80308Query } from '../../../80308/estados/tramite80308.query';
   styleUrls: ['./alta-planta.component.scss'],
   standalone: true,
   imports: [
-    CatalogoSelectComponent,
-    TituloComponent,
-    TablaDinamicaComponent,
     ComplementariaImmexComponent,
     ReactiveFormsModule,
     CommonModule

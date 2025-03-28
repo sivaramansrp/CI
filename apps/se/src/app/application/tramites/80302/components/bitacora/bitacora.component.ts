@@ -1,13 +1,13 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { Bitacora } from '../../../80308/models/plantas-consulta.model';
+import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
+import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
+import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { ConfiguracionColumna } from '../../../80308/models/configuracio-columna.model';
-import { CONFIGURACION_BITACORA_TABLA } from '../../../80308/constantes/modificacion.enum';
-import { Bitacora } from '../../../80308/models/plantas-consulta.model';
 
 @Component({
   selector: 'app-bitacora',

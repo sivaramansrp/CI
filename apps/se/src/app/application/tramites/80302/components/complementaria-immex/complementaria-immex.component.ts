@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { MontoFactorComponent } from '../monto-factor/monto-factor.component';
-import { DatosComplimentariaComponent } from '../datos-complimentaria/datos-complimentaria.component';
 import { DatosAnexosComponent } from '../datos-anexos/datos-anexos.component';
+import { DatosComplimentariaComponent } from '../datos-complimentaria/datos-complimentaria.component';
+import { MontoFactorComponent } from '../monto-factor/monto-factor.component';
 
 @Component({
   selector: 'app-complementaria-immex',

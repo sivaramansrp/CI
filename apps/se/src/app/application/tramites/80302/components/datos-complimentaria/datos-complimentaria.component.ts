@@ -1,12 +1,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { SolicitudService } from '../../service/solicitud.service';
 import { ToastrService } from 'ngx-toastr';
-import { Complimentaria, Federetarios, Operacions } from '../../../80308/models/plantas-consulta.model';
-import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES } from '../../../80308/constantes/modificacion.enum';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { DatosCertificacionComponent } from '../../../80308/components/datos-certificacion/datos-certificacion.component';
-import { ConfiguracionColumna } from '../../../80208/modelos/cambio-de-modalidad.model';
+import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES } from '../../constantes/modificacion.enum';
+import { ConfiguracionColumna } from '../../estados/models/cambio-de-modalidad.model';
+import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
+import { Complimentaria, Federetarios, Operacions } from '../../estados/models/plantas-consulta.model';
 
 @Component({
   selector: 'app-datos-complimentaria',
@@ -18,7 +18,7 @@ import { ConfiguracionColumna } from '../../../80208/modelos/cambio-de-modalidad
     DatosCertificacionComponent,
     TablaDinamicaComponent,
   ],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [SolicitudService, ToastrService],
 })
 export class DatosComplimentariaComponent implements OnDestroy {
   /**
@@ -69,7 +69,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
   datosComplimentaria: Complimentaria[] = [];
 
   constructor(
-    public modificionService: ModificacionSolicitudeService,
+    public solicitudService: SolicitudService,
     private toastr: ToastrService
   ) {
     this.obtenerFederetarios(); // Carga los federetarios.
@@ -83,7 +83,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Asigna los datos obtenidos a la variable `datosComplimentaria`.
    */
   obtenerComplimentaria(): void {
-    this.modificionService
+    this.solicitudService
       .obtenerComplimentaria() // Llama al servicio para obtener los datos de complimentaria.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
@@ -101,7 +101,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Asigna los datos obtenidos a la variable `datosFederetarios`.
    */
   obtenerFederetarios(): void {
-    this.modificionService
+    this.solicitudService
       .obtenerFederetarios() // Llama al servicio para obtener los datos de federetarios.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
@@ -119,7 +119,7 @@ export class DatosComplimentariaComponent implements OnDestroy {
    * Asigna los datos obtenidos a la variable `datosOperacions`.
    */
   obtenerOperacions(): void {
-    this.modificionService
+    this.solicitudService
       .obtenerOperacion() // Llama al servicio para obtener los datos de operaciones.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(

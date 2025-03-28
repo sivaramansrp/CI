@@ -58,17 +58,17 @@ export interface DatosModificacion {
 }
 
 export interface DatosDelModificacion {
-  id: number;
-  calle: string;
-  numeroExterior: number;
-  numeroInterior: number;
-  codigoPosta: number;
-  colonia: string;
-  municipioOAlcaldia: string;
-  entidadFederativa: string;
-  pais: string;
-  rfc: string;
-  domicilioFiscal: string;
-  razonSocial: string;
-  desEstatus: string;
+  id?: number;
+  calle?: string;
+  numeroExterior?: number;
+  numeroInterior?: number;
+  codigoPosta?: number;
+  colonia?: string;
+  municipioOAlcaldia?: string;
+  entidadFederativa?: string;
+  pais?: string;
+  rfc?: string;
+  domicilioFiscal?: string;
+  razonSocial?: string;
+  desEstatus?: string;
 }

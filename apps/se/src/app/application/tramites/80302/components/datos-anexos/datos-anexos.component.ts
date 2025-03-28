@@ -1,11 +1,11 @@
+import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../../80308/constantes/modificacion.enum';
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import { Anexo } from '../../estados/models/plantas-consulta.model';
+import { SolicitudService } from '../../service/solicitud.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { ModificacionSolicitudeService } from '../../../80308/services/modificacion-solicitude.service';
-import { CONFIGURACION_ANEXOS_IMPORTACION, CONFIGURACION_ANEXOS_TABLA } from '../../../80308/constantes/modificacion.enum';
-import { Anexo } from '../../../80308/models/plantas-consulta.model';
 
 @Component({
   selector: 'app-datos-anexos',
@@ -13,7 +13,7 @@ import { Anexo } from '../../../80308/models/plantas-consulta.model';
   styleUrl: './datos-anexos.component.scss',
   standalone: true,
   imports: [TablaDinamicaComponent, TituloComponent],
-  providers: [ModificacionSolicitudeService, ToastrService],
+  providers: [SolicitudService, ToastrService],
 })
 export class DatosAnexosComponent implements OnDestroy {
   /**
@@ -51,7 +51,7 @@ export class DatosAnexosComponent implements OnDestroy {
   datosImportacion: Anexo[] = [];
 
   constructor(
-    public modificionService: ModificacionSolicitudeService,
+    public solicitudService: SolicitudService,
     private toastr: ToastrService 
   ) {
     this.obteneComplimentaria(); // Carga los anexos complementarios.
@@ -62,7 +62,7 @@ export class DatosAnexosComponent implements OnDestroy {
    * Asigna los datos a las variables `datosAnexo` y `datosImportacion`.
    */
   obteneComplimentaria(): void {
-    this.modificionService
+    this.solicitudService
       .obtenerAnexo() // Llama al servicio para obtener los anexos.
       .pipe(takeUntil(this.destroyNotifier$)) // Se cancela la suscripción cuando el componente se destruye.
       .subscribe(
