@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FECHA_DE_PAGO, PagoDerechosFormState } from '../../models/terceros-relacionados.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { FECHA_DE_PAGO } from '../../models/terceros-relacionados.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
@@ -11,6 +11,7 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -32,9 +33,6 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit {
-  @Input() public pagoDerechoFormState!: PagoDerechosFormState;
-  @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> = new EventEmitter<PagoDerechosFormState>();
-
   /**
    * @property {Subject<void>} unsubscribe$
    * Subject utilizado para gestionar las desuscripciones automáticas y evitar fugas de memoria.
@@ -72,6 +70,7 @@ export class PagoDeDerechosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
+    private tramiteStore: Tramite260204Store
   ) {
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: ['', Validators.required],
@@ -93,23 +92,25 @@ export class PagoDeDerechosComponent implements OnInit {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    const DATOS_STORE = this.tramiteStore.getValue().pagoDerechos;
+
     this.pagoDerechosForm = this.fb.group({
-      claveReferencia: [this.pagoDerechoFormState.claveReferencia || '', Validators.required],
+      claveReferencia: [DATOS_STORE.claveReferencia || '', Validators.required],
       cadenaDependencia: [
-        this.pagoDerechoFormState.cadenaDependencia || '',
+        DATOS_STORE.cadenaDependencia || '',
         Validators.required,
       ],
-      estado: [this.pagoDerechoFormState.estado || '', Validators.required],
-      llavePago: [this.pagoDerechoFormState.llavePago || '', Validators.required],
-      fechaPago: [this.pagoDerechoFormState.fechaPago || '', Validators.required],
+      estado: [DATOS_STORE.estado || '', Validators.required],
+      llavePago: [DATOS_STORE.llavePago || '', Validators.required],
+      fechaPago: [DATOS_STORE.fechaPago || '', Validators.required],
       importePago: [
-        this.pagoDerechoFormState.importePago || '',
+        DATOS_STORE.importePago || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
       ],
     });
 
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
-      this.updatePagoDerechos.emit(valores);
+      this.tramiteStore.updatePagoDerechos(valores);
     });
 
     this.cargarDatos();
