@@ -231,7 +231,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
       numInterior: [this.solicitudState?.numInterior || '', [Validators.maxLength(55)]],
       lada: [this.solicitudState?.lada || '', [Validators.maxLength(5)]],
       telefono: [this.solicitudState?.telefono || ''],
-      correoElectronico: [this.solicitudState?.telefono || '', [Validators.required, Validators.email]],
+      correoElectronico: [this.solicitudState?.correoElectronico || '', [Validators.required, Validators.email]],
     });
   }
 
