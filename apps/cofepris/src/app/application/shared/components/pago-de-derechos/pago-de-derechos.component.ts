@@ -53,7 +53,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @property {FormGroup} pagoDerechosForm
    * Formulario reactivo que captura los datos del pago de derechos.
    */
-  pagoDerechosForm: FormGroup;
+  pagoDerechosForm!: FormGroup;
 
   /**
    * @property {Catalogo[]} estadosDatos
