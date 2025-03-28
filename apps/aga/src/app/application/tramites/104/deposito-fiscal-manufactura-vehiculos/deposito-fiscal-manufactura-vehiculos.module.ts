@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { DatosDelInmuebleComponent } from '../components/datos-del-inmueble/datos-del-inmueble.component';
 import { DepositoFiscalManufacturaVehiculosRoutingModule } from './deposito-fiscal-manufactura-vehiculos-routing.module';
 import { NgModule } from '@angular/core';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
@@ -12,7 +13,8 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     CommonModule,
     DepositoFiscalManufacturaVehiculosRoutingModule,
     WizardComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    DatosDelInmuebleComponent
   ]
 })
 export class DepositoFiscalManufacturaVehiculosModule { }
