@@ -342,7 +342,6 @@ jobs:
             network=host
             memory=4g
             memory-swap=4g
-          timeout-minutes: 20  # Aumentado
           no-cache: ${{ contains(matrix.app, 'se') }}
 
   deploy:
@@ -366,45 +365,45 @@ jobs:
             # Create directory for manifests if it doesn't exist
             mkdir -p k8s
             
-            # Create a consolidated manifest file using a template approach
-            cat > k8s/vucem-microfrontends.yaml << 'EOF'
+            # Create a consolidated manifest file
+            cat > k8s/vucem-microfrontends.yaml << EOF
 ---
 # Namespace for VUCEM Microfrontends
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: vucem-__ENV__
+  name: vucem-${{ needs.setup.outputs.environment }}
 ---
 # ConfigMap for environment variables
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: vucem-frontend-config
-  namespace: vucem-__ENV__
+  namespace: vucem-${{ needs.setup.outputs.environment }}
 data:
   NODE_ENV: "production"
-  API_URL: "https://api-vucem-__ENV__.example.com"
+  API_URL: "https://api-vucem-${{ needs.setup.outputs.environment }}.example.com"
 ---
 # Deployment for VUCEM Microfrontends
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vucem-microfrontends-__ENV__
-  namespace: vucem-__ENV__
+  name: vucem-microfrontends-${{ needs.setup.outputs.environment }}
+  namespace: vucem-${{ needs.setup.outputs.environment }}
   labels:
     app: vucem-microfrontends
-    env: __ENV__
+    env: ${{ needs.setup.outputs.environment }}
 spec:
-  replicas: __REPLICAS__
+  replicas: $REPLICAS
   selector:
     matchLabels:
       app: vucem-microfrontends
-      env: __ENV__
+      env: ${{ needs.setup.outputs.environment }}
   template:
     metadata:
       labels:
         app: vucem-microfrontends
-        env: __ENV__
+        env: ${{ needs.setup.outputs.environment }}
     spec:
       imagePullSecrets:
         - name: github-container-registry
@@ -458,22 +457,22 @@ EOF
             done
             
             # Add service and ingress configurations
-            cat >> k8s/vucem-microfrontends.yaml << 'EOF'
+            cat >> k8s/vucem-microfrontends.yaml << EOF
 ---
 # Service for VUCEM Microfrontends
 apiVersion: v1
 kind: Service
 metadata:
-  name: vucem-frontend-svc-__ENV__
-  namespace: vucem-__ENV__
+  name: vucem-frontend-svc-${{ needs.setup.outputs.environment }}
+  namespace: vucem-${{ needs.setup.outputs.environment }}
   labels:
     app: vucem-microfrontends
-    env: __ENV__
+    env: ${{ needs.setup.outputs.environment }}
     tier: frontend
 spec:
   selector:
     app: vucem-microfrontends
-    env: __ENV__
+    env: ${{ needs.setup.outputs.environment }}
   ports:
     - name: http
       port: 80
@@ -489,8 +488,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: vucem-frontend-ingress-__ENV__
-  namespace: vucem-__ENV__
+  name: vucem-frontend-ingress-${{ needs.setup.outputs.environment }}
+  namespace: vucem-${{ needs.setup.outputs.environment }}
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -505,17 +504,17 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - vucem-__ENV__.example.com
+    - vucem-${{ needs.setup.outputs.environment }}.example.com
     secretName: vucem-tls-cert
   rules:
-  - host: vucem-__ENV__.example.com
+  - host: vucem-${{ needs.setup.outputs.environment }}.example.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: vucem-frontend-svc-__ENV__
+            name: vucem-frontend-svc-${{ needs.setup.outputs.environment }}
             port:
               number: 80
       - path: /api
@@ -530,15 +529,15 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: vucem-microfrontends-hpa-__ENV__
-  namespace: vucem-__ENV__
+  name: vucem-microfrontends-hpa-${{ needs.setup.outputs.environment }}
+  namespace: vucem-${{ needs.setup.outputs.environment }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: vucem-microfrontends-__ENV__
-  minReplicas: __MIN_REPLICAS__
-  maxReplicas: __MAX_REPLICAS__
+    name: vucem-microfrontends-${{ needs.setup.outputs.environment }}
+  minReplicas: $MIN_REPLICAS
+  maxReplicas: $MAX_REPLICAS
   metrics:
   - type: Resource
     resource:
@@ -553,12 +552,6 @@ spec:
         type: Utilization
         averageUtilization: 80
 EOF
-            
-            # Replace placeholders with actual values
-            sed -i "s/__ENV__/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/__REPLICAS__/$REPLICAS/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/__MIN_REPLICAS__/$MIN_REPLICAS/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/__MAX_REPLICAS__/$MAX_REPLICAS/g" k8s/vucem-microfrontends.yaml
             
             # Validate YAML syntax (optional but recommended)
             if command -v yamllint &> /dev/null; then
