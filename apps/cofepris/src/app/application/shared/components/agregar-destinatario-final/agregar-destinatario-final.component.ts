@@ -183,14 +183,7 @@ public mostrarCamposNoContribuyente:boolean = false;
     this.ubicaccion.back();
   }
 
-  /**
-   * Hook del ciclo de vida que se invoca cuando se destruye el componente.
-   * Completa el Subject `unsubscribe$` para desuscribir todos los observables.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+
 
   /**
    * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
@@ -266,5 +259,18 @@ public mostrarCamposNoContribuyente:boolean = false;
  */
   cancelar():void{
     this.ubicaccion.back();
+  }
+
+   /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
