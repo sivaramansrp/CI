@@ -41,9 +41,9 @@ env:
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
-  # Variables para controlar problemas de NX
+  # Variables para evitar problemas con NX y sus binarios nativos
   NX_SKIP_NX_CACHE: 'true'
-  NX_NON_NATIVE_HASHER: 'true'  # Variable añadida para evitar el error con los binarios nativos
+  NX_NON_NATIVE_HASHER: 'true'
   NX_NATIVE_BINDINGS: 'false'
   # Variables adicionales para mejorar estabilidad
   NODE_OPTIONS: '--max-old-space-size=8192'
@@ -52,6 +52,8 @@ env:
   NPM_CONFIG_FETCH_RETRY_FACTOR: '5'
   NPM_CONFIG_FETCH_RETRY_MINTIMEOUT: '20000'
   NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT: '120000'
+  # No omitir dependencias opcionales para asegurar la instalación de binarios específicos
+  NPM_CONFIG_OPTIONAL: 'true'
 
 jobs:
   prepare:
@@ -67,23 +69,73 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Update global npm and set environment variables
+      - name: Configure NX environment variables
         run: |
-          npm install -g npm@latest
           # Establecer variables críticas de NX antes de cualquier instalación
           echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          
+          # Configurar npm para no omitir dependencias opcionales
+          echo "npm_config_optional=true" >> $GITHUB_ENV
 
       - name: Install build essentials
         run: |
           sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
 
-      - name: Install NX globally
-        run: npm install -g nx@${{ env.NX_VERSION }}
-
-      - name: Create main package.json backup
+      - name: Clean node_modules and lock files
         run: |
-          cp package.json package.json.original || echo "No package.json found"
+          rm -rf node_modules || true
+          rm -f package-lock.json || true
+          rm -f yarn.lock || true
+
+      - name: Add optional dependencies to package.json
+        run: |
+          # Verificar si package.json existe
+          if [ -f "package.json" ]; then
+            # Comprobar si ya tiene optionalDependencies
+            if grep -q "optionalDependencies" package.json; then
+              echo "optionalDependencies already exists in package.json"
+            else
+              # Añadir optionalDependencies si no existe
+              cat <<EOF > temp.json
+          {
+            "optionalDependencies": {
+              "@nx/nx-darwin-arm64": "${{ env.NX_VERSION }}",
+              "@nx/nx-darwin-x64": "${{ env.NX_VERSION }}",
+              "@nx/nx-linux-x64-gnu": "${{ env.NX_VERSION }}",
+              "@nx/nx-win32-x64-msvc": "${{ env.NX_VERSION }}"
+            }
+          }
+          EOF
+              # Combinar el package.json con optionalDependencies
+              # Necesitamos jq para esto
+              sudo apt-get install -y jq
+              jq -s '.[0] * .[1]' package.json temp.json > package.json.new
+              mv package.json.new package.json
+            fi
+          else
+            echo "package.json not found"
+          fi
+
+      - name: Install dependencies
+        run: |
+          # Instalar con todas las dependencias opcionales
+          npm install --no-fund
+          
+          # Crear backup
+          cp package.json package.json.original
+          cp package-lock.json package-lock.json.original || echo "No package-lock.json found"
+
+      - name: Install NX globally
+        run: |
+          # Instalar NX con variables de entorno correctamente configuradas
+          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
+          
+          # Verificar que se instaló correctamente
+          nx --version
 
       - name: Upload backups as artifacts
         uses: actions/upload-artifact@v4
@@ -91,10 +143,12 @@ jobs:
           name: config-backups
           path: |
             package.json.original
+            package-lock.json.original
 
   setup:
     name: Setup and Check Environment
     runs-on: ubuntu-latest
+    needs: prepare
     outputs:
       environment: ${{ steps.set-env.outputs.environment }}
       changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
@@ -117,13 +171,22 @@ jobs:
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
 
+      - name: Configure NX environment variables
+        run: |
+          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
-      - name: Install NX globally
-        run: npm install -g nx@${{ env.NX_VERSION }}
+      - name: Install NX globally with correct bindings configuration
+        run: |
+          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
+          nx --version
 
       - name: Detect changed apps
         id: detect-changes
@@ -246,33 +309,76 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set npm and NX environment variables
+        run: |
+          # Variables NX para evitar binarios nativos
+          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          
+          # Variables npm
+          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
+          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
+          echo "npm_config_optional=true" >> $GITHUB_ENV
+          echo "npm_config_legacy_peer_deps=true" >> $GITHUB_ENV
+          echo "npm_config_timeout=600000" >> $GITHUB_ENV
+          
+          # Variable para que las apps sepan su directorio
+          echo "NX_APP_DIR=apps/${{ matrix.app }}" >> $GITHUB_ENV
+          
+          # Variables del sistema
+          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+          echo "NODE_OPTIONS=--max-old-space-size=8192" >> $GITHUB_ENV
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
 
       - name: Install build dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
 
-      - name: Set npm and NX environment variables
+      - name: Clean directories and cache
         run: |
-          # npm environment variables
-          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
-          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
-          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
-          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
-          
-          # Establecer tiempo de espera de npm más largo
-          echo "npm_config_timeout=600000" >> $GITHUB_ENV
-          
-          # Disable NX native modules to avoid binary compatibility issues
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV  # Añadido para solucionar el problema
-          
-          # Variable para que las apps sepan su directorio
-          echo "NX_APP_DIR=apps/${{ matrix.app }}" >> $GITHUB_ENV
+          echo "Limpiando directorios para la app ${{ matrix.app }}..."
+          rm -rf node_modules || true
+          rm -f package-lock.json || true
+          rm -f yarn.lock || true
+          rm -rf apps/${{ matrix.app }}/node_modules || true
+          rm -rf node_modules/.cache || true
+          rm -rf dist/apps/${{ matrix.app }} || true
+
+      - name: Add optional dependencies to package.json
+        run: |
+          # Verificar si package.json existe
+          if [ -f "package.json" ]; then
+            # Comprobar si ya tiene optionalDependencies
+            if grep -q "optionalDependencies" package.json; then
+              echo "optionalDependencies already exists in package.json"
+            else
+              # Añadir optionalDependencies si no existe
+              cat <<EOF > temp.json
+          {
+            "optionalDependencies": {
+              "@nx/nx-darwin-arm64": "${{ env.NX_VERSION }}",
+              "@nx/nx-darwin-x64": "${{ env.NX_VERSION }}",
+              "@nx/nx-linux-x64-gnu": "${{ env.NX_VERSION }}",
+              "@nx/nx-win32-x64-msvc": "${{ env.NX_VERSION }}"
+            }
+          }
+          EOF
+              # Combinar el package.json con optionalDependencies
+              # Necesitamos jq para esto
+              sudo apt-get install -y jq
+              jq -s '.[0] * .[1]' package.json temp.json > package.json.new
+              mv package.json.new package.json
+            fi
+          else
+            echo "package.json not found"
+          fi
 
       - name: Ensure .eslintrc.json exists in root
         run: |
@@ -299,41 +405,34 @@ jobs:
             }' > .eslintrc.json
           fi
 
-      - name: Disable NX native bindings
+      - name: Install dependencies with correct configs
         run: |
-          # Configurar variables de entorno para desactivar los binarios nativos de NX
-          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-          
-          # Configurar variables en el entorno actual
-          export NX_NON_NATIVE_HASHER=true
-          export NX_NATIVE_BINDINGS=false
-          export NX_SKIP_NX_CACHE=true
-          
-          # No intentes usar npm config set para variables de NX, ya que no son opciones válidas de npm
-
-      - name: Clean app directory
-        run: |
-          echo "Limpiando directorios para la app ${{ matrix.app }}..."
-          rm -rf apps/${{ matrix.app }}/node_modules || true
-          rm -rf node_modules/.cache || true
-          rm -rf dist/apps/${{ matrix.app }} || true
-
-      - name: Install dependencies
-        run: |
-          # Configurar variables de entorno antes de la instalación
-          export NX_NON_NATIVE_HASHER=true
-          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
-          
           # Mostrar configuración de npm
           npm config list
           
-          # Modificar npm config para el entorno actual
-          npm config set legacy-peer-deps true
+          # Instalar con todas las dependencias opcionales y configuraciones correctas
+          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install --legacy-peer-deps --no-fund
+
+      - name: Verify NX binaries installation
+        run: |
+          echo "Verificando instalación de binarios NX..."
+          find node_modules/@nx -name "*.node" -type f | sort
           
-          # Intentar instalar con la variable de entorno activada
-          env NX_NON_NATIVE_HASHER=true npm install --legacy-peer-deps --prefer-offline --no-fund
+          # Verificar si el módulo GNU específico está instalado
+          if [ -f "node_modules/@nx/nx-linux-x64-gnu/nx.linux-x64-gnu.node" ]; then
+            echo "✅ Módulo @nx/nx-linux-x64-gnu encontrado correctamente"
+          else
+            echo "⚠️ Módulo @nx/nx-linux-x64-gnu no encontrado, buscando alternativas..."
+            find node_modules -name "*.node" | grep -i nx
+          fi
+
+      - name: Install NX globally with correct configurations
+        run: |
+          # Instalar NX globalmente con las variables de entorno correctas
+          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
+          
+          # Verificar la versión instalada
+          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
       - name: Update TypeScript configuration for app
         run: |
@@ -366,21 +465,18 @@ jobs:
         run: |
           echo "Instalando dependencias específicas para ${{ matrix.app }}..."
           
-          # Asegurar que la variable de entorno está establecida para cada instalación
-          export NX_NON_NATIVE_HASHER=true
-          
           # Dependencias comunes para todas las aplicaciones
-          env NX_NON_NATIVE_HASHER=true npm install webpack@5.75.0 @angular-devkit/build-angular@16.2.10 --save-dev --no-package-lock
+          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install webpack@5.75.0 @angular-devkit/build-angular@16.2.10 --save-dev
           
           # Para aplicaciones con Module Federation
           if [ -f "apps/${{ matrix.app }}/module-federation.config.ts" ]; then
-            env NX_NON_NATIVE_HASHER=true npm install @angular-architects/module-federation@16.0.4 --save-dev --no-package-lock
+            env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install @angular-architects/module-federation@16.0.4 --save-dev
           fi
           
           # Verificar si hay package.json específico para la app e instalar dependencias
           if [ -f "apps/${{ matrix.app }}/package.json" ]; then
             cd apps/${{ matrix.app }}
-            env NX_NON_NATIVE_HASHER=true npm install --legacy-peer-deps --no-package-lock
+            env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install --legacy-peer-deps
             cd ../..
           fi
           
@@ -388,48 +484,32 @@ jobs:
           echo "Versiones de webpack instaladas:"
           find node_modules -path "*/webpack/package.json" -exec grep -l "version" {} \; -exec cat {} \;
 
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.npm
-            node_modules
-            apps/*/node_modules
-            libs/*/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v3-${{ matrix.app }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ matrix.app }}-
-            ${{ runner.os }}-node-
-
-      - name: Reset NX cache
-        run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
-
-      - name: Install NX globally with specific version
+      - name: Reset NX cache and verify configuration
         run: |
-          # Asegurar que las variables de entorno estén establecidas
-          export NX_NON_NATIVE_HASHER=true
-          export NX_NATIVE_BINDINGS=false
+          npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
           
-          # Instalar NX globalmente con las variables de entorno establecidas
-          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
-          
-          # Verificar la versión instalada
-          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
+          # Verificar que las variables de entorno estén correctamente establecidas
+          echo "Variables de entorno NX:"
+          echo "NX_NON_NATIVE_HASHER: $NX_NON_NATIVE_HASHER"
+          echo "NX_NATIVE_BINDINGS: $NX_NATIVE_BINDINGS"
+          echo "NX_SKIP_NX_CACHE: $NX_SKIP_NX_CACHE"
 
       - name: Build ${{ matrix.app }}
         run: |
-          echo "Construyendo la aplicación ${{ matrix.app }} con configuración nativa..."
-          export NODE_OPTIONS="--max-old-space-size=6144"
+          echo "Construyendo la aplicación ${{ matrix.app }} con configuración JS pura..."
+          export NODE_OPTIONS="--max-old-space-size=8192"
           
-          # Asegurar que la variable NX_NON_NATIVE_HASHER está establecida
+          # Asegurar variables de entorno NX
           export NX_NON_NATIVE_HASHER=true
+          export NX_NATIVE_BINDINGS=false
+          export NX_SKIP_NX_CACHE=true
           
-          # Primer intento - construcción estándar nativa
-          NODE_ENV=production node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose || {
+          # Primer intento - construcción con JS puro
+          NODE_ENV=production node --max-old-space-size=8192 node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache || {
             echo "Primer intento falló para ${{ matrix.app }}, intentando con menos optimizaciones..."
             
             # Segundo intento - con menos optimizaciones
-            NODE_ENV=production node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --extractLicenses=false --optimization=false --sourceMap=false
+            NODE_ENV=production node --max-old-space-size=8192 node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --extractLicenses=false --optimization=false --sourceMap=false
           }
           
           # Si sigue fallando, crear un placeholder
