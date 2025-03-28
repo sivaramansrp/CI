@@ -40,6 +40,7 @@
           [radioOptions]="btonDeRadio"
           [layout]="'horizontal'"
           formControlName="btonDeRadio"
+          (change) = "getBtonDeRadio()"
         ></app-input-radio>
       </div>
 
@@ -51,6 +52,7 @@
               class="form-control"
               rows="3"
               formControlName="justificación"
+              (change) = "getJustificacion()"
             ></textarea>
           </div>
         </div>
@@ -66,7 +68,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="toggleFormControls()"
+            (click) = "toggleFormControls()"
           >
             Seleccionar establecimiento
           </button>
@@ -76,7 +78,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="rfcDel"
-              >RFC del responsable sanitario:</label
+              >RFC del responsable sanitario*:</label
             >
             <input
               class="form-control"
@@ -84,6 +86,7 @@
               placeholder=""
               type="text"
               formControlName="rfcDel"
+              (change) = "getRfcDel()"
             />
           </div>
         </div>
@@ -98,6 +101,7 @@
               placeholder=""
               type="text"
               formControlName="denominacion"
+              (change) = "getDenominacion()"
             />
           </div>
         </div>
@@ -119,6 +123,7 @@
               placeholder=""
               type="text"
               formControlName="correo"
+              (change) = "getCorreo()"
             />
           </div>
         </div>
