@@ -31,9 +31,9 @@
 >
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form [formGroup]="formTercerosDatos">
-        <div class="modal-body p-4">
-          <ng-titulo titulo="Agregar propietario"></ng-titulo>
+      <div class="modal-body p-4">
+       <ng-titulo titulo="Agregar propietario"></ng-titulo>
+         <form [formGroup]="propietarioradioForm">
           <label>Datos generales</label>
           <div class="row">
             <div class="col-md-6">
@@ -52,6 +52,7 @@
                 [layout]="'vertical'"
                 [gap]="'50px'"
                 formControlName="tercerosNacionalidad"
+                (valueChange)="onRadioChange($event)"
               ></app-input-radio>
             </div>
             <div class="col-md-6">
@@ -65,7 +66,7 @@
                 <input
                   type="radio"
                   [value]="option.value"
-                  [checked]="selectedValue === option.value"
+                
                   (change)="onSelectionChange(option.value)"
                   formControlName="tercerosTipoPersona"
                 />
@@ -96,11 +97,14 @@
                   class="form-control"
                   maxlength="254"
                 />
-                <div class="mt-4">
-                  <button type="button" class="btn btn-primary mt-2">
-                    Buscar
-                  </button>
-                </div>
+                @if(showBuscarButton){
+                  <div class="mt-4">
+                    <button type="button" class="btn btn-primary mt-2"  (click)="buscarRepresentanteRfc()">
+                      Buscar
+                    </button>
+                  </div>
+                }
+               
               </div>
             </div>
             <div class="col-md-4">
@@ -113,12 +117,15 @@
                   id="tercerosCurp"
                   formControlName="tercerosCurp"
                   class="form-control"
+                 
                 />
               </div>
             </div>
             <div class="col-md-4"></div>
           </div>
-
+         </form>
+      <form [formGroup]="formTercerosDatos">
+        <div *ngIf="showDatosPersonales">
           <div>
             <label>Datos personales </label>
             <div class="row">
@@ -160,24 +167,29 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div id="contenidoRazonSocial" class="col-md-8 mb-3">
-              <label for="tercerosDenominacionRazonSocial"
-                >Denominación/razón social
-                <span class="require">*</span>:</label
-              >
-
-              <div>
-                <input
-                  type="text"
-                  id="terceros_rSocial"
-                  formControlName="tercerosDenominacionRazonSocial"
-                  class="form-control"
-                  maxlength="254"
-                />
+      
+            <div class="row" *ngIf="showValue !== 'Fisica'">
+              <div id="contenidoRazonSocial" class="col-md-8 mb-3">
+                <label for="tercerosDenominacionRazonSocial"
+                  >Denominación/razón social
+                  <span class="require">*</span>:</label
+                >
+  
+                <div>
+                  <input
+                    type="text"
+                    id="terceros_rSocial"
+                    formControlName="tercerosDenominacionRazonSocial"
+                    class="form-control"
+                    maxlength="254"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+         
+         
+        </div>
+          
           <label>Domicillio </label>
           <div class="row">
             <div class="col-md-4">
@@ -288,7 +300,7 @@
           <div class="row">
             <div class="col-md-4">
               <label class="form-label" for="tercerosNumeroInterior"
-                >Número interior<span class="require">*</span>:</label
+                >Número interior:</label
               >
               <input
                 class="form-control"
@@ -300,7 +312,7 @@
             </div>
             <div class="col-md-1">
               <label class="form-label" for="tercerosLada"
-                >Lada<span class="require">*</span>:</label
+                >Lada:</label
               >
               <input
                 class="form-control"
@@ -312,7 +324,7 @@
             </div>
             <div class="col-md-3">
               <label class="form-label" for="tercerosTelefono"
-                >Teléfono<span class="require">*</span>:</label
+                >Teléfono:</label
               >
               <input
                 class="form-control"
@@ -324,7 +336,7 @@
             </div>
             <div class="col-md-4">
               <label class="form-label" for="tercerosCorreoElectronico"
-                >Correo electrónico<span class="require">*</span>:</label
+                >Correo electrónico:</label
               >
               <input
                 class="form-control"
@@ -343,11 +355,12 @@
             >
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary">Limpiar</button>
-            <button type="button" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-primary" (click)="limpiarFormulario()">Limpiar</button>
+            <button type="button" class="btn btn-primary" (click)="guardarPropietario()">Guardar</button>
           </div>
-        </div>
+       
       </form>
+    </div>
     </div>
   </div>
 </div>

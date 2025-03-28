@@ -41,7 +41,7 @@ import { EstablecimientoComponent } from '../establecimiento/establecimiento.com
     TablaDinamicaComponent,
     ReactiveFormsModule,
     FormsModule,
-    EstablecimientoComponent
+    EstablecimientoComponent,
   ],
   templateUrl: './propietario.component.html',
   styleUrl: './propietario.component.scss',
@@ -50,11 +50,15 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
   @ViewChild('propietarioModal', { static: false })
   propietarioModal!: ElementRef;
   formTercerosDatos!: FormGroup;
+  propietarioradioForm!: FormGroup;
   propietarioTipoPersonaData = propietarioTipoPersonaJson;
   propietarioRadioData = propietarioJson;
   modalInstance!: Modal;
   propietarioData: PropietarioModel[] = [];
   selectedValue: string = '';
+  showDatosPersonales = false;
+  showBuscarButton = false;
+  showValue: string = '';
   constructor(private fb: FormBuilder) {}
 
   ngAfterViewInit(): void {
@@ -65,40 +69,32 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
   /** Enum para la selección de tabla */
   TablaSeleccion = TablaSeleccion;
   ngOnInit(): void {
+      this.propietarioradioForm = this.fb.group({
+    tercerosTipoPersona: [null, Validators.required],
+    tercerosCurp: [null, [Validators.required, Validators.maxLength(254)]],
+    tercerosNacionalidad: [null, Validators.required],
+    tercerosRfc: [null, Validators.required],
+  });
+
     this.formTercerosDatos = this.fb.group({
-      tercerosNacionalidad: [
-        { value: null, disabled: false },
-        Validators.required,
-      ],
-      tercerosTipoPersona: [
-        { value: null, disabled: false },
-        Validators.required,
-      ],
-      tercerosRfc: [{ value: null, disabled: true }, Validators.required],
-      tercerosCurp: [
-        { value: null, disabled: true },
-        Validators.required,
-        Validators.maxLength(254),
-      ],
       tercerosDenominacionRazonSocial: [
         { value: null, disabled: true },
         Validators.required,
-        Validators.maxLength(254),
       ],
       tercerosPais: ['', Validators.required],
-      tercerosEstadoLocalidad : ['', Validators.required],
+      tercerosEstadoLocalidad: ['', Validators.required],
       tercerosMunicipioAlcaldia: ['', Validators.required],
       tercerosLocalidad: ['', Validators.required],
       tercerosColonia: ['', Validators.required],
       tercerosCodigoPostal: ['', Validators.required],
       tercerosCalle: ['', Validators.required],
       tercerosNumeroExterior: ['', Validators.required],
-      tercerosNumeroInterior: ['', Validators.required],
-      tercerosTelefono: ['', Validators.required],
-      tercerosCorreoElectronico: ['', Validators.required],
-      tercerosLada: ['', Validators.required],
+      tercerosNumeroInterior: [''],
+      tercerosTelefono: [''],
+      tercerosCorreoElectronico: [''],
+      tercerosLada: [''],
       tercerosNombre: ['', Validators.required],
-      tercerosSegundoApellido: ['', Validators.required],
+      tercerosSegundoApellido: [''],
       tercerosPrimerApellido: ['', Validators.required],
     });
   }
@@ -184,11 +180,64 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
       orden: 15,
     },
   ];
-
+  logInvalidControls(form: FormGroup): void {
+    Object.keys(form.controls).forEach((controlName) => {
+      const control = form.get(controlName);
+      if (control && control.invalid) {
+        console.log(`Control: ${controlName}, Errors:`, control.errors);
+      }
+    });
+  }guardarPropietario(): void {
+    console.log('Form Controls:', this.formTercerosDatos.controls); // Debugging log
+  
+    const PROPIETARIO: PropietarioModel = {
+      NombredenominacionORazonSocial:
+        this.formTercerosDatos.get('tercerosDenominacionRazonSocial')?.value || '',
+      rfc: this.propietarioradioForm.get('tercerosRfc')?.value || '',
+      curp: this.propietarioradioForm.get('tercerosCurp')?.value || '',
+      telefono: this.formTercerosDatos.get('tercerosTelefono')?.value || '',
+      CorreoElectronico:
+        this.formTercerosDatos.get('tercerosCorreoElectronico')?.value || '',
+      calle: this.formTercerosDatos.get('tercerosCalle')?.value || '',
+      numeroExterior:
+        this.formTercerosDatos.get('tercerosNumeroExterior')?.value || '',
+      numeroInterior:
+        this.formTercerosDatos.get('tercerosNumeroInterior')?.value || '',
+      pais: this.formTercerosDatos.get('tercerosPais')?.value || '',
+      colonia: this.formTercerosDatos.get('tercerosColonia')?.value || '',
+      municipioOAlcaldia:
+        this.formTercerosDatos.get('tercerosMunicipioAlcaldia')?.value || '',
+      localidad: this.formTercerosDatos.get('tercerosLocalidad')?.value || '',
+      entidadFederativa:
+        this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value || '',
+      estadoLocalidad:
+        this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value || '',
+      codigoPostal:
+        this.formTercerosDatos.get('tercerosCodigoPostal')?.value || '',
+    };
+  
+    // Check if all fields in the PROPIETARIO object are empty
+    const isEmpty = Object.values(PROPIETARIO).every((value) => value === '');
+  
+    if (isEmpty) {
+      console.log('Empty data, not adding to the table.');
+      return; // Exit the method without adding to the table
+    }
+  
+    // Add the new propietario to the table data
+    this.propietarioData.push(PROPIETARIO);
+    console.log('Propietario saved:', this.propietarioData);
+  
+    // Reset the form
+    this.formTercerosDatos.reset();
+    this.propietarioradioForm.reset();
+    this.closePropietarioModal();
+  }
   openPropietarioModal(): void {
     if (this.propietarioModal) {
       this.modalInstance.show();
     }
+    this.formTercerosDatos.disable();
   }
   closePropietarioModal(): void {
     if (this.propietarioModal) {
@@ -196,8 +245,47 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
     }
   }
   onSelectionChange(value: string): void {
-    this.selectedValue = value;
+    this.showBuscarButton = value !== ''; // Update the showBuscarButton flag
+    this.showValue = value;
 
-    //this.FormInputRadio.get('seleccion')?.setValue(value);
+    // Enable or disable the 'tercerosCurp' form control based on the flag
+    if (this.showBuscarButton) {
+      this.propietarioradioForm.get('tercerosCurp')?.disable();
+    } else {
+      this.propietarioradioForm.get('tercerosCurp')?.enable();
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onRadioChange(value: string | number): void {
+    this.showDatosPersonales = value === 'Nacional';
+  }
+  limpiarFormulario(): void {
+    this.formTercerosDatos.reset(); // Clear all form fields
+  }
+  buscarRepresentanteRfc(): void {
+    const RFC = this.propietarioradioForm.get('tercerosRfc')?.value;
+    if (RFC) {
+      this.propietarioradioForm.patchValue({
+        tercerosCurp: 'GAPM920519HDFNRL02',
+      });
+      this.formTercerosDatos.patchValue({
+        tercerosNombre: 'MIGUEL ANGEL',
+        tercerosPrimerApellido: 'PEREZ',
+        tercerosSegundoApellido: 'AHOME',
+        tercerosDenominacionRazonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
+        tercerosPais: 'ESTADOS UNIDOS MEXICANOS',
+        tercerosEstadoLocalidad: 'SINALOA',
+        tercerosMunicipioAlcaldia: 'CUAUHTEMOC',
+        tercerosLocalidad: 'LOS MOCHIS',
+        tercerosCodigoPostal: '81210',
+        tercerosColonia: 'MIGUEL HIDALGO',
+        tercerosCalle: 'CAMINO VIEJO',
+        tercerosNumeroExterior: '1353',
+        tercerosNumeroInterior: 'A',
+        tercerosLada: '55',
+        tercerosTelefono: '12345678',
+        tercerosCorreoElectronico: 'brpomskyldi@etllpqhpyrpks.zgi',
+      });
+    }
   }
 }

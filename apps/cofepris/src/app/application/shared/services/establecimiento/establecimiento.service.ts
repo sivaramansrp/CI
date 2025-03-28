@@ -24,4 +24,13 @@ export class EstablecimientoService {
   getAduanaDeSalidaData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260401/aduanaDeSalida.json');
   }
+  getTipoDeProductoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260401/tipoDeProducto.json');
+  }
+  getUnidadDeMedidaData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260401/unidadDeMedida.json');
+  }
+  getUsoEspecificoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260401/usoEspecifico.json');
+  }
 }
