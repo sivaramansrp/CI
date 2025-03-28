@@ -36,6 +36,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoSanitarioImportacionModule
       ),
   },
+  {
+    path: 'permiso-sanitario-medicos-uso-personal',
+    loadChildren: () =>
+      import(
+        './tramites/260213/permiso-sanitario-medicos-uso-personal.module'
+      ).then((m) => m.PermisoSanitarioMedicosUsoPersonalModule),
+  },
 ];
 
 @NgModule({
