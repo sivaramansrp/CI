@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 
 import { Query } from '@datorama/akita';
 
-import { Tramite260204State } from '../stores/tramite260204Store.store';
-import { Tramite260204Store } from '../stores/tramite260204Store.store';
+import { Tramite260203State, Tramite260203Store } from '../stores/tramite260203Store.store';
 
 @Injectable({ providedIn: 'root' })
-export class Tramite260204Query extends Query<Tramite260204State> {
+export class Tramite260203Query extends Query<Tramite260203State> {
   /**Guarda el estado completo del formulario de la solicitud */
-  constructor(protected override store: Tramite260204Store) {
+  constructor(protected override store: Tramite260203Store) {
     super(store);
   }
   /**

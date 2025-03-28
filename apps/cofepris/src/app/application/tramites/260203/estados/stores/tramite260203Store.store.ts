@@ -14,7 +14,7 @@ import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.
 import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
-export interface Tramite260204State {
+export interface Tramite260203State {
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
   proveedorTablaDatos: Proveedor[];
@@ -31,7 +31,7 @@ export interface Tramite260204State {
   pagoDerechos: PagoDerechosFormState;
 }
 
-export function createInitialState(): Tramite260204State {
+export function createInitialState(): Tramite260203State {
   return {
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
@@ -102,8 +102,8 @@ export function createInitialState(): Tramite260204State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260204', resettable: true })
-export class Tramite260204Store extends Store<Tramite260204State> {
+@StoreConfig({ name: 'tramite260203', resettable: true })
+export class Tramite260203Store extends Store<Tramite260203State> {
   constructor() {
     super(createInitialState());
   }

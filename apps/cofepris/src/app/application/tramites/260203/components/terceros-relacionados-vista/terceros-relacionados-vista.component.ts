@@ -5,11 +5,13 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
+import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
+import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
+
+
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -26,28 +28,35 @@ import { Tramite260204Store } from '../../estados/stores/tramite260204Store.stor
 })
 export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
-   * @property {Observable<Fabricante[]>} fabricantes$
-   * Observable que emite la lista de fabricantes desde el store.
+   * @property {Fabricante[]} fabricanteTablaDatos
+   * Datos de la tabla de fabricantes.
    */
-  fabricantes$!: Observable<Fabricante[]>;
+  fabricanteTablaDatos: Fabricante[] = [];
 
   /**
-   * @property {Observable<Destinatario[]>} destinatarios$
-   * Observable que emite la lista de destinatarios finales desde el store.
+   * @property {Destinatario[]} destinatarioFinalTablaDatos
+   * Datos de la tabla de destinatarios finales.
    */
-  destinatarios$!: Observable<Destinatario[]>;
+  destinatarioFinalTablaDatos: Destinatario[] = [];
 
   /**
-   * @property {Observable<Proveedor[]>} proveedores$
-   * Observable que emite la lista de proveedores desde el store.
+   * @property {Proveedor[]} proveedorTablaDatos
+   * Datos de la tabla de proveedores.
    */
-  proveedores$!: Observable<Proveedor[]>;
+  proveedorTablaDatos: Proveedor[] = [];
 
   /**
-   * @property {Observable<Facturador[]>} facturadores$
-   * Observable que emite la lista de facturadores desde el store.
+   * @property {Facturador[]} facturadorTablaDatos
+   * Datos de la tabla de facturadores.
    */
-  facturadores$!: Observable<Facturador[]>;
+  facturadorTablaDatos: Facturador[] = [];
+
+    /**
+     * @property {Subject<void>} destroy$
+     * Subject para cancelar suscripciones y evitar fugas de memoria.
+     * @private
+     */
+    private destroy$ = new Subject<void>();
 
   /**
    * @constructor
@@ -57,8 +66,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
    */
   constructor(
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query
+    private tramiteStore: Tramite260203Store,
+    private tramiteQuery: Tramite260203Query
   ) {}
 
   /**
@@ -67,10 +76,29 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * Suscribe los observables para mostrar los datos en la vista.
    */
   ngOnInit(): void {
-    this.fabricantes$ = this.tramiteQuery.getFabricanteTablaDatos$;
-    this.destinatarios$ = this.tramiteQuery.getDestinatarioFinalTablaDatos$;
-    this.proveedores$ = this.tramiteQuery.getProveedorTablaDatos$;
-    this.facturadores$ = this.tramiteQuery.getFacturadorTablaDatos$;
+    this.tramiteQuery.getFabricanteTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.fabricanteTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getDestinatarioFinalTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.destinatarioFinalTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getProveedorTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.proveedorTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getFacturadorTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.facturadorTablaDatos = data;
+         });
   }
 
   /**

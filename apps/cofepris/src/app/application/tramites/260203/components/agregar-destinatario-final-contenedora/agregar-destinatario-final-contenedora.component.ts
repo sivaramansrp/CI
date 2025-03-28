@@ -1,0 +1,22 @@
+import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
+
+@Component({
+  selector: 'app-agregar-destinatario-final-contenedora',
+  standalone: true,
+  imports: [CommonModule, AgregarDestinatarioFinalComponent],
+  templateUrl: './agregar-destinatario-final-contenedora.component.html',
+  styleUrl: './agregar-destinatario-final-contenedora.component.scss',
+})
+export class AgregarDestinatarioFinalContenedoraComponent {
+
+
+  constructor(public tramiteStore: Tramite260203Store) {}
+
+  updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
+    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+  }
+}
