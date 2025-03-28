@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   standalone: true,
   imports: [CommonModule,RouterModule],
-  selector: 'app-but-entry',
+  selector: 'app-sener-entry',
   template: `<router-outlet></router-outlet>`,
 })
 export class RemoteEntryComponent {}
