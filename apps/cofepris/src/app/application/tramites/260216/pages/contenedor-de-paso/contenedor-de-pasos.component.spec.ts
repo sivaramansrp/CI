@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {ContenedorDePasosComponent} from './contenedor-de-pasos.component';
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { HttpClientModule } from '@angular/common/http';
 describe('SolicitudPageComponent', () => {
 
@@ -10,7 +8,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContenedorDePasosComponent],
+      imports: [ContenedorDePasosComponent,HttpClientModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContenedorDePasosComponent);

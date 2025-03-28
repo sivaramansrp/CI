@@ -9,7 +9,8 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TEXTOS_REQUISITOS } from '../../constants/pasos.enum';
+import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
+
 
 @Component({
   selector: 'app-paso-dos',
@@ -43,7 +44,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getTiposDocumentos();
+   // this.getTiposDocumentos();
     this.documentosSeleccionados = [
       {
         id: 1,
