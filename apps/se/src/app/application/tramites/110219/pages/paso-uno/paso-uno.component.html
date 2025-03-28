@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <ul class="nav nav-tabs">
+      <li [ngClass]="indice === 1 ? 'active' : ''">
+        <a (click)="seleccionaTab(1)" (keyup.enter)="seleccionaTab(1)" (keydown.space)="seleccionaTab(1)" tabindex="0"
+          data-toggle="tab">Solicitante</a>
+      </li>
+      <li [ngClass]="indice === 2 ? 'active' : ''">
+        <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="0"
+          data-toggle="tab">Cancelación del certificado de origen</a>
+      </li>
+      <li [ngClass]="indice === 3 ? 'active' : ''">
+        <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="0"
+          data-toggle="tab">Certificado de origen</a>
+      </li>
+    </ul>
+    <ng-container> @switch (indice) { @case (1) { <solicitante #Solicitante></solicitante> } @case (2) {
+      <app-cancelacion-de-certificado (dataEvent)="emitirCancelacion($event)"></app-cancelacion-de-certificado> } @case
+      (3){ <app-certificado-de-origen></app-certificado-de-origen> } } </ng-container>
+  </div>
+</div>
