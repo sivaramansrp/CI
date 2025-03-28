@@ -27,4 +27,7 @@ export class Tramite260214Query extends Query<Tramite260214State> {
   public getFacturadorTablaDatos$ = this.select(
     (state) => state.facturadorTablaDatos
   );
+  public getTabSeleccionado$ = this.select(
+    (state) => state.tabSeleccionado
+  );
 }

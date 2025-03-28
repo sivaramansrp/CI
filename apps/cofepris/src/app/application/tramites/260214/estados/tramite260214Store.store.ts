@@ -28,6 +28,7 @@ export interface Tramite260214State {
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
+  tabSeleccionado?:number;
 }
 
 export function createInitialState(): Tramite260214State {
@@ -95,6 +96,7 @@ export function createInitialState(): Tramite260214State {
       fechaPago: '',
       importePago: '',
     },
+    tabSeleccionado:1
   };
 }
 
@@ -174,6 +176,12 @@ export class Tramite260214Store extends Store<Tramite260214State> {
     this.update((state) => ({
       ...state,
       pagoDerechos: nuevoPagoDerechos,
+    }));
+  }
+  public updateTabSeleccionado(tabSeleccionado: number): void {
+    this.update((state) => ({
+      ...state,
+      tabSeleccionado: tabSeleccionado,
     }));
   }
 }
