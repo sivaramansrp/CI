@@ -17,7 +17,7 @@ describe('CheckInputTextComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('Creación del componente', () => {
     expect(component).toBeTruthy();
   });
 });
