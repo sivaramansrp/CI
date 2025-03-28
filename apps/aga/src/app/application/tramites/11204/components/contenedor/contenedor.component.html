@@ -9,7 +9,7 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                    value="Contenedor" class="form-check-input">
+                                    value="Contenedor" class="form-check-input" (change)="onChange('tipoBusqueda', $event)">
                                 Contenedor
                             </label>
                         </div>
@@ -19,7 +19,7 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                                    class="form-check-input">
+                                    class="form-check-input" (change)="onChange('tipoBusqueda', $event)">
                                 Archivo CSV
                             </label>
                         </div>
@@ -42,7 +42,7 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
                                 [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
-                                (change)="setValoresStore(solicitudForm, 'aduana', 'setAduana')"></app-catalogo-select>
+                                (change)="onChange('aduana', $event)" [ngClass]="isValid('aduana') ? 'required' : ''"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
@@ -64,8 +64,7 @@
                             <label for="inicialesContenedor">Iniciales del equipo</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
-                                maxlength="10" class="form-control"
-                                [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
+                                maxlength="10" class="form-control" (change)="onChange('inicialesContenedor', $event)">
                         </div>
                     </div>
 
@@ -74,7 +73,7 @@
                             <label for="numeroContenedor">Número de equipo</label>
                             <span class="require">*</span>
                             <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
-                                class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
+                                class="form-control" (change)="onChange('numeroContenedor', $event)">
                         </div>
                     </div>
                 </div>
@@ -84,8 +83,7 @@
                         <div class="form-group pull-right">
                             <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
                             <button type="button" class="btn btn-primary ms-2" (click)="datosCapturaModal()"
-                                data-bs-toggle="modal"
-                                data-bs-target="#modalAgregarConstanciaTransferencia">Buscar</button>
+                                data-bs-toggle="modal" data-bs-target="#modalAgregarConstanciaTransferencia">Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -104,7 +102,7 @@
                         <div class="form-group">
                             <label for="digitoDeControl">Dígito verificador</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
-                                class="form-control">
+                                class="form-control" (change)="onChange('digitoDeControl', $event)">
                         </div>
                     </div>
                 </div>

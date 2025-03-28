@@ -14,7 +14,7 @@ import { Solicitud11204State } from '../../estados/tramite11204.store';
 import { Tramite11204Query } from '../../estados/tramite11204.query';
 import { Tramite11204Store } from '../../estados/tramite11204.store';
 
-import { REGEX_ALFANUMERICO, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { REGEX_REEMPLAZAR, REGEX_NUMEROS, TEXTOS, AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
 
 /**
@@ -270,8 +270,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       aduana: [this.solicitud11204State?.aduana, Validators.required],
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
       vigencia: [this.solicitud11204State?.vigencia, Validators.required],
-      inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_ALFANUMERICO)]],
-      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_ALFANUMERICO)]],
+      inicialesContenedor: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
+      numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_NUMEROS)]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
       aduanaMenuDesplegable: [
@@ -281,60 +281,36 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       archivoSeleccionado: [this.solicitud11204State?.archivoSeleccionado, Validators.required]
     });
     this.mostrarCampos();
-    this.solicitudForm
-      .get('inicialesContenedor')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
-        if (valor) {
-          const SANITIZED = valor.replace(REGEX_ALFANUMERICO).toUpperCase();
-          this.solicitudForm
-            .get('inicialesContenedor')
-            ?.setValue(SANITIZED, { emitEvent: false });
-          this.setValoresStore(
-            this.solicitudForm,
-            'inicialesContenedor',
-            'setInicialesContenedor'
-          );
-        }
-      });
-
-    this.solicitudForm
-      .get('numeroContenedor')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
-        if (valor) {
-          const SANITIZED = valor.replace(REGEX_ALFANUMERICO);
-          this.solicitudForm
-            .get('numeroContenedor')
-            ?.setValue(SANITIZED, { emitEvent: false });
-          this.setValoresStore(this.solicitudForm, 'numeroContenedor', 'setNumeroContenedor');
-        }
-      });
-    this.solicitudForm
-      .get('digitoDeControl')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
-        if (valor) {
-          const SANITIZED = valor.replace(REGEX_NUMEROS);
-          this.solicitudForm
-            .get('digitoDeControl')
-            ?.setValue(SANITIZED, { emitEvent: false });
-          this.setValoresStore(this.solicitudForm, 'digitoDeControl', 'setDigitoDeControl');
-        }
-      });
-    // Escuchar cambios en tipoBusqueda para mostrar secciones
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
-      this.mostrarCampos();
-    });
-
-    // Escuchar cambios en tipoTransporte
-    this.solicitudForm.get('aduana')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      this.setValoresStore(this.solicitudForm, 'aduana', 'setAduana');
-      this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
-      this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
-      this.solicitudForm.get('vigencia')?.setValue(moment().format('YYYY-MM-DD'));
-      this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
-    });
   }
 
+  onChange(controlName: string, event: any): void {
+    const value = event.target.value;
+   
+    if (controlName === 'inicialesContenedor') {
+      const sanitized = value.replace(REGEX_REEMPLAZAR,'').toUpperCase();
+      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      this.setValoresStore(this.solicitudForm, controlName, 'setInicialesContenedor');
+    } else if (controlName === 'numeroContenedor') {
+      const sanitized = value.replace(REGEX_REEMPLAZAR, '');
+      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      this.setValoresStore(this.solicitudForm, controlName, 'setNumeroContenedor');
+    } else if (controlName === 'digitoDeControl') {
+      const sanitized = value.replace(REGEX_NUMEROS, '');
+      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      this.setValoresStore(this.solicitudForm, controlName, 'setDigitoDeControl');
+    } else if (controlName === 'tipoBusqueda') {
+      this.setValoresStore(this.solicitudForm, controlName, 'setTipoBusqueda');
+      this.mostrarCampos();
+    } else if (controlName === 'aduana') {
+      this.setValoresStore(this.solicitudForm, controlName, 'setAduana');
+      const currentDate = moment().format('YYYY-MM-DD');
+      this.solicitudForm.get('fechaIngreso')?.setValue(currentDate);
+      this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
+      this.solicitudForm.get('vigencia')?.setValue(currentDate);
+      this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
+    }
+  }
+  
   /**
    * Cargar datos de la tabla.
    */
@@ -442,6 +418,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
+    console.log(INICIALESCONTENEDOR);
     const CONTENEDORES = this.solicitudForm.value.contenedores;
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
       this.agregarSolicitud();

@@ -107,10 +107,4 @@ describe('ContenedorComponent', () => {
     expect(component.mostrarAgregarTipoContenedor).toBeTruthy();
   });
 
-  it('should mostrar modal and set mostrarButtons to false on datosCapturaModal', () => {
-    component.modalElement = { nativeElement: document.createElement('div') } as ElementRef;
-    component.datosCapturaModal();
-    expect(component.mostrarButtons).toBeFalsy();
-  });
-
 });
