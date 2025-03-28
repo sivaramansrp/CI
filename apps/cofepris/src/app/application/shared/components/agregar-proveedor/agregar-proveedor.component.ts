@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -17,9 +17,6 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -69,6 +66,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public paisesDatos: Catalogo[] = [];
 
+  @Output() updateProveedorTablaDatos= new EventEmitter<Proveedor[]>();
   /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
@@ -82,8 +80,6 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query,
     private ubicaccion: Location
   ) {
     this.agregarProveedorForm = this.fb.group({
@@ -171,7 +167,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    this.tramiteStore.updateProveedorTablaDatos(this.proveedores);
+    //this.tramiteStore.updateProveedorTablaDatos(this.proveedores);
+    this.updateProveedorTablaDatos.emit(this.proveedores);
     this.agregarProveedorForm.reset();
     this.ubicaccion.back();
   }
