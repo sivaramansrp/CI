@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [label]="'Estado*:'" [placeholder]="'Seleccione un valor'" [catalogo]="estadoData"
+                <app-catalogo-select [label]="'Estado*:'" [placeholder]="'Seleccione un valor'" [catalogo]="datosEstado"
                     formControlName="estado" (change)="setValoresStore(domicilioForm,'estado', 'setEstado')">
                 </app-catalogo-select>
             </div>
@@ -26,7 +26,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="localidad">Localidad*:</label>
-                    <input class="form-control" id="localidad" formControlName="localidad" type="text" (change)="setValoresStore(domicilioForm,'localidad', 'setLocalidad')"/>
+                    <input class="form-control" id="localidad" formControlName="localidad" type="text" maxlength="120" (change)="setValoresStore(domicilioForm,'localidad', 'setLocalidad')"/>
                 </div>
             </div>
             <div class="col-md-4">
@@ -63,7 +63,7 @@
             <div class="form-group">
                 <label class="form-label" for="scian">S.C.I.A.N.*:</label>
                 <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
-                    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" formcontrolname="scian">
+                    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian">
                 </app-tabla-dinamica>
             </div>
         </div>
@@ -101,13 +101,13 @@
             <div class="col-md-4">
             <div class="form-group btn-space">
                 <app-catalogo-select [label]="'Régimen al que se destinará*:'" [placeholder]="'Seleccione un valor'"
-                [catalogo]="estadoData" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')">
+                [catalogo]="datosEstado" formControlName="regimenDestinado" (change)="setValoresStore(domicilioForm,'regimenDestinado', 'setRegimenDestinado')">
                 </app-catalogo-select>
             </div>
             </div>
             <div class="col-md-8">
             <div class="form-group"> <app-catalogo-select [label]="'Aduana*:'" [placeholder]="'Seleccione un valor'"
-                [catalogo]="estadoData" formControlName="aduana" (change)="setValoresStore(domicilioForm,'aduana', 'setAduana')">
+                [catalogo]="datosEstado" formControlName="aduana" (change)="setValoresStore(domicilioForm,'aduana', 'setAduana')">
                 </app-catalogo-select>
             </div>
             </div>
@@ -117,7 +117,7 @@
             <div class="form-group">
                 <label class="form-label" for="scian">Datos del producto*:</label>
                 <app-tabla-dinamica [configuracionTabla]="configuracionTablaProductoDatos" [datos]="datosProducto"
-                    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" formcontrolname="datosProducto">
+                    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="datosProducto">
                 </app-tabla-dinamica>
             </div>
         </div>

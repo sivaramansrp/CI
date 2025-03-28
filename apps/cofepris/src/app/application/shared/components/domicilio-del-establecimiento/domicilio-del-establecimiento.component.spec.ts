@@ -124,14 +124,17 @@ describe('DomicilioDelEstablecimientoComponent', () => {
       { id: 2, descripcion: 'Descripcion2' },
     ];
   
+  
     mockDatosService.obtenerDescripcionScian.mockReturnValue(of(mockData));
   
+    
     component.obtenerDatosDescripcion();
   
     expect(component.descripcionScian).toEqual(mockData);
   });
 
   it('should call cargarDatosTabla and set datosData', () => {
+   
     const mockData: ScianData[] = [
       { clave: '1', descripcion: 'Dato1' },
       { clave: '2', descripcion: 'Dato2' },
@@ -145,19 +148,18 @@ describe('DomicilioDelEstablecimientoComponent', () => {
   });
 
   it('should call obtenerDatosClave and set claveScian', () => {
-   
     const mockData: Catalogo[] = [
       { id: 1, descripcion: 'Clave1' },
       { id: 2, descripcion: 'Clave2' },
     ];
   
-   
+    
     mockDatosService.obtenerClaveScian.mockReturnValue(of(mockData));
   
-   
+
     component.obtenerDatosClave();
   
-    
+   
     expect(component.claveScian).toEqual(mockData);
   });
 
@@ -168,13 +170,12 @@ describe('DomicilioDelEstablecimientoComponent', () => {
       { label: 'PreOperativo2', value: '2' },
     ];
   
-   
+    
     mockDatosService.obtenerPreOperativo.mockReturnValue(of(mockData));
   
-    
     component.obtenerDatosPreOperativo();
   
-   
+ 
     expect(component.radioOptions).toEqual(mockData);
   });
 

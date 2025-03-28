@@ -95,7 +95,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * property TablaSeleccion
    * description Configuración de la tabla de selección.
    */
-  TablaSeleccion = TablaSeleccion;
+  tipoSeleccionTabla = TablaSeleccion;
 
   /**
    * property tercerosProd
