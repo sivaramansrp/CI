@@ -1,11 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { SOLICITUD_HEADER, TEXTOS_SOLICITUD } from '../../constants/tabla-enum';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud } from '../../models/tabla-model';
-import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+
+import { AlertComponent } from '@libs/shared/data-access-user/src';
+import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
+import { Solicitud } from '../../models/tabla-model';
+import { SOLICITUD_HEADER, TEXTOS_SOLICITUD } from '../../constants/tabla-enum';
 
 /**
  * Componente para gestionar los datos de la solicitud.
