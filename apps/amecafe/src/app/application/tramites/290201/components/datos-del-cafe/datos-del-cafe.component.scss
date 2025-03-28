@@ -1,0 +1,8 @@
+.scrollable-table-container {
+    max-height: 300px; /* Establezca la altura deseada para el contenedor de la mesa */
+    overflow-y: auto; /* Habilitar el desplazamiento vertical */
+    border: 1px solid #ddd; /* Opcional: agregue un borde para una mejor visibilidad*/
+  }
+  table tbody tr {
+    cursor: pointer;
+  }
