@@ -1,9 +1,16 @@
 import {
+  ADUNAS_DE_ENTRADAS_DATOS,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
-  PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
+  REGIMEN_DATOS,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AlertComponent,
+  CATALOGOS_ID,
+  CatalogosService,
+} from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
@@ -23,7 +30,6 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Input } from '@angular/core';
@@ -147,13 +153,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} regimenDatos
    * Lista de regímenes disponibles.
    */
-  public regimenDatos: Catalogo[] = [];
+  public regimenDatos: Catalogo[] = REGIMEN_DATOS;
 
   /**
    * @property {Catalogo[]} adunasDeEntradasDatos
    * Lista de aduanas de entrada disponibles.
    */
-  public adunasDeEntradasDatos: Catalogo[] = [];
+  public adunasDeEntradasDatos: Catalogo[] = ADUNAS_DE_ENTRADAS_DATOS;
 
   /**
    * @property {string} infoAlert
@@ -198,14 +204,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public opcionesColapsable = false;
 
   /**
- * @property {boolean} mostrarElementoColapsable
- * Controla si se debe mostrar un elemento colapsable en la interfaz de usuario.
- * 
- * @description
- * Este valor se utiliza para determinar si un elemento colapsable debe ser visible
- * o no, dependiendo de la lógica implementada en el componente.
- */
-  public mostrarElementoColapsable =true;
+   * @property {boolean} mostrarElementoColapsable
+   * Controla si se debe mostrar un elemento colapsable en la interfaz de usuario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si un elemento colapsable debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarElementoColapsable = true;
 
   /**
    * @constructor
@@ -218,7 +224,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     public router: Router,
-    public activatedRoute: ActivatedRoute
+    public activatedRoute: ActivatedRoute,
+    public catalogosServices: CatalogosService
   ) {}
 
   /**
@@ -228,6 +235,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearDatosSolicitudForm();
+    this.getCatalogoEstado();
 
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
@@ -238,7 +246,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
 
     this.opcionesColapsable = this.opcionesColapsableState;
-    this.mostrarElementoColapsable = PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE.includes(this.idProcedimiento) ? false : true;
+    this.mostrarElementoColapsable =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE.includes(this.idProcedimiento)
+        ? false
+        : true;
   }
 
   /**
@@ -512,6 +523,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         opcionesColapsableState: this.opcionesColapsable,
       });
     }
+  }
+
+  /**
+   * Obtiene el catálogo de estados y lo almacena en `estadoDatos` si hay resultados.
+   * @returns {void} No devuelve ningún valor.
+   */
+  getCatalogoEstado(): void {
+    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ESTADO).subscribe({
+      next: (resp): void => {
+        if (resp.length > 0) {
+          this.estadoDatos = resp;
+        }
+      },
+    });
   }
 
   /**
