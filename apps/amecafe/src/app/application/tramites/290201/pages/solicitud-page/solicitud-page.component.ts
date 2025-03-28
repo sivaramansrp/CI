@@ -6,8 +6,8 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { OCTA_TEMPO } from '../../constants/octova-tempora.enum';
 
 interface AccionBoton {
   accion: string;
@@ -19,7 +19,7 @@ interface AccionBoton {
   styles: ``,
 })
 export class SolicitudPageComponent {
-  pasos: ListaPasosWizard[] = PASOS;
+  pasos: ListaPasosWizard[] = OCTA_TEMPO;
   indice: number = 1;
   public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
@@ -47,6 +47,8 @@ export class SolicitudPageComponent {
         })
       )
       .subscribe();
+      
+    
 
   }
 
