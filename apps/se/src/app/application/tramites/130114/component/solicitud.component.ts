@@ -9,8 +9,8 @@ import PartidasdelaTable from '@libs/shared/theme/assets/json/130114/partidas-de
 import { ProductoOpción } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite130114Query } from '../../130114/estados/queries/tramite130114.query';
-import { Tramite130114Store } from '../../130114/estados/queries/tramites130114.store';
+import { Tramite130114Query } from '../../../estados/queries/tramite130114.query';
+import { Tramite130114Store } from '../../../estados/tramites/tramite130114.store'
 import fractionValues from '@libs/shared/theme/assets/json/130114/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130114/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130114/unidad_da.json';
@@ -195,6 +195,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {any}
    */
   TEXTOS = TEXTOS;
+
+    /**
+ * **Subject para manejar la destrucción de suscripciones**
+ *
+ * - Se utiliza para cancelar las suscripciones activas cuando el componente o servicio es destruido.
+ * - Evita fugas de memoria al asegurarse de que las suscripciones se cancelen correctamente.
+ * - Se emite un valor en `ngOnDestroy` y luego se completa.
+ *
+ * @private
+ */
+  private destroy$ = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -532,7 +543,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Obtiene la lista de entidades federativas desde el servicio.
    */
   fetchEntidadFederativa(): void {
-    this.DiamanteBrutoService.getEntidadFederativa()
+    this.DiamanteBrutoService.getEntidadFederativa().pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.entidadFederativa = data;
       });
@@ -542,7 +553,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Obtiene la lista de representaciones federales desde el servicio.
    */
   fetchRepresentacionFederal(): void {
-    this.DiamanteBrutoService.getRepresentacionFederal()
+    this.DiamanteBrutoService.getRepresentacionFederal().pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.representacionFederal = data;
       });
@@ -552,7 +563,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Obtiene la lista de países disponibles desde el servicio.
    */
   listaDePaisesDisponibles(): void {
-    this.DiamanteBrutoService.getListaDePaisesDisponibles()
+    this.DiamanteBrutoService.getListaDePaisesDisponibles().pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
       });
@@ -563,7 +574,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {number} _bloqueId - ID del bloque seleccionado
    */
   fetchPaisesPorBloque(_bloqueId: number): void {
-    this.DiamanteBrutoService.getPaisesPorBloque(_bloqueId)
+    this.DiamanteBrutoService.getPaisesPorBloque(_bloqueId).pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.paisesPorBloque = data;
         this.selectRangoDias = this.paisesPorBloque.map(
