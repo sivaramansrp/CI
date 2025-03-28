@@ -68,8 +68,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Update global npm
-        run: npm install -g npm@latest
+      - name: Update global npm and set environment variables
+        run: |
+          npm install -g npm@latest
+          # Establecer variables críticas de NX antes de cualquier instalación
+          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
 
       - name: Install build essentials
         run: |
@@ -296,6 +299,23 @@ jobs:
             }' > .eslintrc.json
           fi
 
+      - name: Disable NX native bindings
+        run: |
+          # Configurar variables de entorno para desactivar los binarios nativos de NX
+          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          
+          # Configurar variables en el entorno actual
+          export NX_NON_NATIVE_HASHER=true
+          export NX_NATIVE_BINDINGS=false
+          export NX_SKIP_NX_CACHE=true
+          
+          # Configurar también en npm config global
+          npm config set NX_NON_NATIVE_HASHER true
+          npm config set NX_NATIVE_BINDINGS false
+          npm config set NX_SKIP_NX_CACHE true
+
       - name: Clean app directory
         run: |
           echo "Limpiando directorios para la app ${{ matrix.app }}..."
@@ -305,9 +325,18 @@ jobs:
 
       - name: Install dependencies
         run: |
+          # Configurar variables de entorno antes de la instalación
+          export NX_NON_NATIVE_HASHER=true
+          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
+          
+          # Mostrar configuración de npm
           npm config list
-          # Intentar instalar el paquete binario específico para la plataforma si fallan otras soluciones
-          npm install --legacy-peer-deps --prefer-offline --no-fund
+          
+          # Modificar npm config para el entorno actual
+          npm config set legacy-peer-deps true
+          
+          # Intentar instalar con la variable de entorno activada
+          env NX_NON_NATIVE_HASHER=true npm install --legacy-peer-deps --prefer-offline --no-fund
 
       - name: Update TypeScript configuration for app
         run: |
@@ -340,18 +369,21 @@ jobs:
         run: |
           echo "Instalando dependencias específicas para ${{ matrix.app }}..."
           
+          # Asegurar que la variable de entorno está establecida para cada instalación
+          export NX_NON_NATIVE_HASHER=true
+          
           # Dependencias comunes para todas las aplicaciones
-          npm install webpack@5.75.0 @angular-devkit/build-angular@16.2.10 --save-dev --no-package-lock
+          env NX_NON_NATIVE_HASHER=true npm install webpack@5.75.0 @angular-devkit/build-angular@16.2.10 --save-dev --no-package-lock
           
           # Para aplicaciones con Module Federation
           if [ -f "apps/${{ matrix.app }}/module-federation.config.ts" ]; then
-            npm install @angular-architects/module-federation@16.0.4 --save-dev --no-package-lock
+            env NX_NON_NATIVE_HASHER=true npm install @angular-architects/module-federation@16.0.4 --save-dev --no-package-lock
           fi
           
           # Verificar si hay package.json específico para la app e instalar dependencias
           if [ -f "apps/${{ matrix.app }}/package.json" ]; then
             cd apps/${{ matrix.app }}
-            npm install --legacy-peer-deps --no-package-lock
+            env NX_NON_NATIVE_HASHER=true npm install --legacy-peer-deps --no-package-lock
             cd ../..
           fi
           
@@ -377,7 +409,14 @@ jobs:
 
       - name: Install NX globally with specific version
         run: |
-          npm install -g nx@${{ env.NX_VERSION }}
+          # Asegurar que las variables de entorno estén establecidas
+          export NX_NON_NATIVE_HASHER=true
+          export NX_NATIVE_BINDINGS=false
+          
+          # Instalar NX globalmente con las variables de entorno establecidas
+          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
+          
+          # Verificar la versión instalada
           nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
       - name: Build ${{ matrix.app }}
