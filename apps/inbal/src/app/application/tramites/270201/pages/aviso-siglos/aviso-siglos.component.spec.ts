@@ -8,7 +8,8 @@ describe('AvisoSiglosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AvisoSiglosComponent]
+      declarations: [AvisoSiglosComponent],
+      imports: []
     })
     .compileComponents();
 

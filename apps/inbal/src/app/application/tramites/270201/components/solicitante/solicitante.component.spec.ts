@@ -5,7 +5,6 @@ import { SolicitanteComponent } from './solicitante.component';
 
 describe('SolicitanteComponent', () => {
   let component: SolicitanteComponent;
-  // let fixture: ComponentFixture<SolicitanteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -30,11 +29,7 @@ describe('SolicitanteComponent', () => {
       component,
       'establecerValoresDeFormulario'
     ).and.callThrough();
-
-    // Call ngOnInit
     component.ngOnInit();
-
-    // Assert that establecerValoresDeFormulario was called
     expect(spy).toHaveBeenCalled();
   });
 
@@ -89,8 +84,6 @@ describe('SolicitanteComponent', () => {
     fixture.detectChanges();
   
     const form = component.solicitudForm;
-  
-    // ... Other assertions
   });
   
   it('should call establecerValoresDeFormulario on initialization', () => {
@@ -100,7 +93,7 @@ describe('SolicitanteComponent', () => {
       component,
       'establecerValoresDeFormulario'
     );
-    fixture.detectChanges(); // Trigger initialization
+    fixture.detectChanges();
     expect(spy).toHaveBeenCalledTimes(1);
   });
 });
