@@ -19,7 +19,6 @@ AlertComponent,
 
 import { TercerosRelacionadoComponent } from '../../shared/components/tercerosRelacionado/tercerosRelacionado.component';
 
-
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
 import { ToastrService } from 'ngx-toastr';
@@ -52,7 +51,6 @@ import { DatosService } from '../../shared/services/datos.service';
   TituloComponent,
   WizardComponent,
   TercerosRelacionadoComponent,
- 
   SolicitanteComponent,
   PasoDosComponent,
   PasoTresComponent,
