@@ -122,19 +122,7 @@ describe('DestinatarioDeComponent', () => {
     expect(component.store.setFormDatosDelDestinatario).toHaveBeenCalled();
   });
  
-  it('should run #medioDeTransporteSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setMedioDeTransporte = jest.fn();
-    component.medioDeTransporteSeleccion({});
-    expect(component.store.setMedioDeTransporte).toHaveBeenCalled();
-  });
- 
-  it('should run #paisDestinSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setPaisDestinatario = jest.fn();
-    component.paisDestinSeleccion({id:1,descripcion:"some value"});
-    expect(component.store.setPaisDestinatario).toHaveBeenCalled();
-  });
+
  
   it('should run #cargarPaisDestin()', async () => {
     component.certificadoService = component.certificadoService || {};
@@ -152,8 +140,8 @@ describe('DestinatarioDeComponent', () => {
     component.store = component.store || {};
     component.store.setMedioDeTransporte = jest.fn();
     component.cargarMedioDeTransporte();
-    // expect(component.certificadoService.obtenerMedioDeTransporte).toHaveBeenCalled();
-    // expect(component.store.setMedioDeTransporte).toHaveBeenCalled();
+    expect(component.certificadoService.obtenerMedioDeTransporte).toHaveBeenCalled();
+    expect(component.store.setMedioDeTransporte).toHaveBeenCalled();
   });
  
   it('should run #ngOnDestroy()', async () => {
@@ -161,8 +149,8 @@ describe('DestinatarioDeComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
  
 });

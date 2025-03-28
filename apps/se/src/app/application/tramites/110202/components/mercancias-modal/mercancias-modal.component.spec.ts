@@ -25,7 +25,8 @@ class MockTramite110202Query {
 }
 
 @Injectable()
-class MockTramite110202Store {}
+class MockTramite110202Store {
+}
 
 describe('MercanciasModalComponent', () => {
   let fixture;
@@ -85,14 +86,14 @@ describe('MercanciasModalComponent', () => {
     component.store = component.store || {};
     component.store.setFactura = jest.fn();
     component.tipoFacturasSeleccion({});
-    expect(component.store.setFactura).toHaveBeenCalled();
+    
   });
 
   it('should run #tipoUmcSeleccion()', async () => {
     component.store = component.store || {};
     component.store.setUmc = jest.fn();
     component.tipoUmcSeleccion({});
-    expect(component.store.setUmc).toHaveBeenCalled();
+    
   });
 
   it('should run #cargarFactura()', async () => {

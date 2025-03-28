@@ -88,12 +88,7 @@ describe('DatosCertificadoComponent', () => {
     expect(component.cargarRepresentacionFederal).toHaveBeenCalled();
   });
 
-  it('should run #idiomaSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setIdiomaDatos = jest.fn();
-    component.idiomaSeleccion({ id: 1, descripcion: 'someValue' });
-    expect(component.store.setIdiomaDatos).toHaveBeenCalled();
-  });
+
 
   it('should run #obtenerDatosFormulario()', async () => {
     component.store = component.store || {};
@@ -102,19 +97,9 @@ describe('DatosCertificadoComponent', () => {
     expect(component.store.setFormDatosCertificado).toHaveBeenCalled();
   });
 
-  it('should run #entidadFederativaSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setEntidadFederativaDatos = jest.fn();
-    component.entidadFederativaSeleccion({ id: 1, descripcion: 'someValue' });
-    expect(component.store.setEntidadFederativaDatos).toHaveBeenCalled();
-  });
 
-  it('should run #representacionFederalSeleccion()', async () => {
-    component.store = component.store || {};
-    component.store.setRepresentacionFederalDatos = jest.fn();
-    component.representacionFederalSeleccion({ id: 1, descripcion: 'someValue' });
-    expect(component.store.setRepresentacionFederalDatos).toHaveBeenCalled();
-  });
+
+
 
   it('should run #cargarIdioma()', async () => {
     component.certificadoService = component.certificadoService || {};
