@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CatalogoSelectComponent, FECHA_SALIDA, InputFecha, InputFechaComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoResponse } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -39,21 +39,67 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
-  /** Observable para el estado seleccionado */
+
+
+  /**
+   * @observable selectedBanco$
+   * @description Observable que representa el banco seleccionado en el contexto del componente.
+   * @type {Observable<catalogoResponse | null>}
+   * @remarks Este observable se suscribe al estado del query `tramite260402Query` 
+   * para obtener el banco seleccionado. Puede emitir un valor de tipo `catalogoResponse` 
+   * o `null` si no hay un banco seleccionado.
+   */
   selectedBanco$: Observable<catalogoResponse | null> =
     this.tramite260402Query.selectedBanco$;
-  /** Catálogo de estados cargado desde un archivo JSON */
-
-  claveDeReferncia$ = this.tramite260402Query.selectedClaveDeReferncia$
-  cadenaDeLaDependencia$ = this.tramite260402Query.selectedCadenaDeLaDependencia$
-  llaveDePago$ = this.tramite260402Query.selectedLlaveDePago$
-  fechaDePago$ = this.tramite260402Query.selectedFechaDePago$
-  importeDePago$ = this.tramite260402Query.selectedImporteDePago$
+  
   /**
-   * Datos para el selector de opciones.
+   * @observable claveDeReferncia$
+   * @description Representa un observable que emite la clave de referencia seleccionada
+   * en el contexto del trámite 260402.
+   */
+  claveDeReferncia$ = this.tramite260402Query.selectedClaveDeReferncia$
+
+  /**
+   * @observable cadenaDeLaDependencia$
+   * @description Representa un observable que emite la cadena de la dependencia seleccionada
+   * en el contexto del trámite 260402.
+   */
+  cadenaDeLaDependencia$ = this.tramite260402Query.selectedCadenaDeLaDependencia$
+
+  /**
+   * @observable llaveDePago$
+   * @description Observable que representa la llave de pago seleccionada 
+   * en el contexto del trámite 260402. Este flujo de datos se utiliza 
+   * para rastrear y reaccionar a los cambios en la llave de pago seleccionada.
+   */
+  llaveDePago$ = this.tramite260402Query.selectedLlaveDePago$
+
+  /**
+   * @descripcion Un observable que emite la fecha de pago seleccionada
+   * desde el estado del query `tramite260402Query`.
+   */
+  fechaDePago$ = this.tramite260402Query.selectedFechaDePago$
+
+  /**
+   * @observable importeDePago$
+   * @description Observable que representa el importe de pago seleccionado
+   * en el contexto del trámite 260402. Este observable se utiliza para
+   * rastrear y reaccionar a los cambios en el importe de pago asociado.
+   */
+  importeDePago$ = this.tramite260402Query.selectedImporteDePago$
+
+
+  /**
+   * @descripcion Arreglo que contiene los datos del catálogo para el componente.
+   * @tipo {catalogoResponse[]}
    */
   dropdownData: catalogoResponse[] = [];
 
+  /**
+   * @observable fechaFinalInput
+   * @description Representa un objeto de tipo InputFecha que contiene la fecha final
+   * utilizada en el contexto del trámite 260402.
+   */
   fechaFinalInput: InputFecha = FECHA_PAGO;
 
   /**
@@ -70,7 +116,7 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
     private tramite260402Query: Tramite260402Query
 
   ) { 
-     // Constructor logic can be added here if needed
+     //La lógica del constructor se puede agregar aquí si es necesario
   }
 
   /**
@@ -136,6 +182,7 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
     });
 
   }
+
   /**
    * Actualiza el valor de claveDeReferncia en el tramite260402Store.
    * 
@@ -148,6 +195,7 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
     const CORREO = this.pagoDerechos.get('claveDeReferncia')?.value;
     this.tramite260402Store.setClaveDeReferncia(CORREO);
   }
+
   /**
    * Actualiza el valor de cadenaDeLaDependencia en el tramite260402Store.
    * 
@@ -160,6 +208,7 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
     const CORREO = this.pagoDerechos.get('cadenaDeLaDependencia')?.value;
     this.tramite260402Store.setCadenaDeLaDependencia(CORREO);
   }
+
   /**
    * Actualiza el valor de llaveDePago en el tramite260402Store.
    * 
@@ -172,6 +221,7 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
     const CORREO = this.pagoDerechos.get('llaveDePago')?.value;
     this.tramite260402Store.setLlaveDePago(CORREO);
   }
+
   /**
    * Actualiza el valor de fechaDePago en el tramite260402Store.
    * 
@@ -184,6 +234,7 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
     this.tramite260402Store.setFechaDePago(CORREO);
   }
+  
   /**
    * Actualiza el valor de importeDePago en el tramite260402Store.
    * 
@@ -212,7 +263,6 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
    * @param nuevo_valor Nuevo valor de la fecha final.
 
    */
-
     cambioFechaDePago(nuevo_valor: string): void {
       this.pagoDerechos.patchValue({
         fechaDePago: nuevo_valor,

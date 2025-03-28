@@ -41,34 +41,100 @@ import { Terceros260402Service } from '../../services/terceros-260402.service';
 
 export class TercerosRelacionados260402Component implements OnInit {
 
+  /**
+   * Variable que controla la visibilidad del componente de datos generales.
+   */
   isDatosGeneralesVisible = false;
+
+
+  /**
+   * @comdoc
+   * Encabezados de la tabla para los fabricantes relacionados.
+   * Este arreglo contiene los nombres de las columnas que se mostrarán en la tabla.
+   */
   fabricanteHeaderData: string[] = [];
+  /**
+   * @comdoc
+   * Datos de la tabla para los fabricantes relacionados.
+   * Este arreglo contiene las filas de datos que se mostrarán en la tabla.
+   */
   fabricanteRowData: TableData[] = [];
+  /**
+   * @descripcion Texto de alerta utilizado para mostrar mensajes relacionados con los manifiestos.
+   * @tipo {string}
+   */
   TEXTO_DE_ALERTA: string = MANIFIESTOS_ALERT.DATOS_MANIFIESTOS;
 
-
+  /**
+   * @constructor
+   * @param {FormBuilder} fb - Servicio para construir y gestionar formularios reactivos.
+   * @param {Terceros260402Service} tercerosService - Servicio para manejar la lógica relacionada con terceros en el módulo 260402.
+   * 
+   * La lógica del constructor se puede agregar aquí si es necesario.
+   */
   constructor(private fb: FormBuilder,
     private tercerosService: Terceros260402Service) {
-    // Constructor logic can be added here if needed
+    //La lógica del constructor se puede agregar aquí si es necesario
   }
 
-
+  /**
+   * @override
+   * @method ngOnInit
+   * @description Este método se ejecuta al inicializar el componente. 
+   * Realiza una suscripción al servicio `tercerosService` para obtener 
+   * información de la tabla y asignar los datos de las columnas a la 
+   * propiedad `fabricanteHeaderData`.
+   */
   ngOnInit(): void {
-
     this.tercerosService.getInformacioDeTabla().subscribe((data) => {
       this.fabricanteHeaderData = data.columns
     });
-
   }
 
   abrirProcedencia(): void {
     this.isDatosGeneralesVisible = true;
   }
 
+  /**
+   * Abre la sección de procedencia estableciendo la visibilidad de los datos generales.
+   * 
+   * @remarks
+   * Este método cambia el estado de `isDatosGeneralesVisible` a `true`, 
+   * lo que indica que la sección de datos generales debe mostrarse.
+   */
   cerrarProcedencia(): void {
     this.isDatosGeneralesVisible = false;
   }
 
+  /**
+   * Agrega una nueva fila a la tabla con los datos proporcionados.
+   * 
+   * @param data - Objeto de tipo `TipoMoModel` que contiene la información 
+   *               necesaria para llenar la fila de la tabla.
+   * 
+   * Los campos del objeto `data` se asignan a las columnas de la tabla. 
+   * Si algún campo está vacío o no está definido, se asigna el valor por defecto `'-'`.
+   * 
+   * Campos utilizados:
+   * - `razonSocial`: Nombre o razón social.
+   * - `rfc`: Registro Federal de Contribuyentes.
+   * - `curp`: Clave Única de Registro de Población.
+   * - `telefono`: Número de teléfono.
+   * - `correoElectronico`: Dirección de correo electrónico.
+   * - `calle`: Nombre de la calle.
+   * - `numeroExterior`: Número exterior.
+   * - `numeroInterior`: Número interior.
+   * - `pais`: País.
+   * - `colonia`: Colonia.
+   * - `municipio`: Municipio o alcaldía.
+   * - `localidad`: Localidad.
+   * - `entidadFederativa`: Entidad federativa.
+   * - `estado`: Estado o localidad.
+   * - `codigoPostal`: Código postal.
+   * - `coloniaEquivalente`: Colonia o equivalente.
+   * 
+   * Después de agregar la fila, se cierra el modal o procedimiento relacionado.
+   */
   agregarTabla(data: TipoMoModel): void {
     const TABLE_ROW = {
       "Nombre/denominación o razón social": data.razonSocial || '-',

@@ -9,25 +9,28 @@ export interface TableData {
 }
 
 
-
+/**
+ * Modelo de datos para TipoMo.
+ * Representa los datos de una persona o entidad.
+ */
 export interface TipoMoModel {
-  tipoPersona:boolean;
-  razonSocial:string;
-  pais:string;
-  estado:string;
-  codigoPostal:string;
-  calle:string;
-  numeroExterior:string;
-  numeroInterior:string;
-  lada:string;
-  telefono:string;
-  correoElectronico:string;
-  rfc:string;
-  curp:string;
-  colonia:string;
-  municipio:string;
-  localidad:string;
-  entidadFederativa:string;
-  coloniaEquivalente:string
-  }
+  tipoPersona: boolean; // Indica si es persona física o moral
+  razonSocial: string; // Nombre o razón social
+  pais: string; // País
+  estado: string; // Estado
+  codigoPostal: string; // Código postal
+  calle: string; // Calle
+  numeroExterior: string; // Número exterior
+  numeroInterior: string; // Número interior
+  lada: string; // LADA (clave de área telefónica)
+  telefono: string; // Teléfono
+  correoElectronico: string; // Correo electrónico
+  rfc: string; // Registro Federal de Contribuyentes
+  curp: string; // Clave Única de Registro de Población
+  colonia: string; // Colonia
+  municipio: string; // Municipio
+  localidad: string; // Localidad
+  entidadFederativa: string; // Entidad federativa
+  coloniaEquivalente: string; // Colonia equivalente
+}
 

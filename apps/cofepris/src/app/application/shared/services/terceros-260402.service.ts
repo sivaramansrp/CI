@@ -36,6 +36,11 @@ export class Terceros260402Service {
     return this.http.get<Catalogo[]>('assets/json/260212/terceros-relacionados.json');
   }
 
+  /**
+   * Obtiene información de la tabla desde un archivo JSON local.
+   *
+   * @returns Un observable que emite los datos de la tabla en formato JSON.
+   */
   getInformacioDeTabla(){
     return this.http.get<any>('assets/json/260402/informacio-procedencia.json');
   }

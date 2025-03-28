@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter,OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import TipoPersonaBtn from 'libs/shared/theme/assets/json/260402/tipoPersonaBtn.json'
+
+import { Terceros260402Service } from '../../services/terceros-260402.service';
+
 @Component({
   selector: 'app-datos-generales',
   standalone: true,
@@ -19,20 +22,58 @@ import TipoPersonaBtn from 'libs/shared/theme/assets/json/260402/tipoPersonaBtn.
   styleUrl: './datos-generales.component.scss'
 })
 export class DatosGeneralesComponent implements OnInit {
+  /**
+   * Evento que emite los datos del formulario cuando este es válido.
+   */
   @Output() formularioGuardar = new EventEmitter<any>();
+  /**
+   * Evento que emite cuando se cancela la sección de datos generales.
+   */
   @Output() cancelDatosGenerales = new EventEmitter<void>();
-  radioBtn = TipoPersonaBtn
+  /**
+   * Variable que contiene los datos del botón de tipo de persona.
+   */
+  radioBtn = TipoPersonaBtn;
+  /**
+   * Formulario reactivo que contiene los datos generales.
+   */
   datosGeneralesForm!: FormGroup;
 
+  pais:Catalogo[]=[]
+
+  constructor(
+      private terceros260402Service: Terceros260402Service,){}
+  /**
+   * @comdoc
+   * Cierra el componente de datos generales.
+   * Emite un evento para notificar que se ha cancelado la operación de datos generales.
+   */
   closeDatosGenerales(): void {
     this.cancelDatosGenerales.emit();
   }
 
 
+  /**
+   * @override
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `informacionProcedencia` para cargar la información inicial necesaria.
+   */
   ngOnInit(): void {
-    this.informacionProcedencia()
+    this.informacionProcedencia();
+    
+    this.terceros260402Service.getData().subscribe((data) => {
+      this.pais = data;
+    })
   }
 
+  /**
+   * @method informacionProcedencia
+   * @description Configura y crea un formulario reactivo para capturar información de procedencia.
+   * Este formulario incluye campos como tipo de persona, razón social, dirección, contacto, 
+   * y otros datos personales necesarios.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   informacionProcedencia(): void {
     this.datosGeneralesForm = new FormGroup({
       tipoPersona: new FormControl('', Validators.required),
@@ -52,9 +93,14 @@ export class DatosGeneralesComponent implements OnInit {
     });
   }
 
+  /**
+   * @method enviarFormulario
+   * @description Envía el formulario si es válido. Si el formulario `datosGeneralesForm` pasa la validación,
+   * emite los valores del formulario a través del evento `formularioGuardar`.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   enviarFormulario(): void {
-    if (this.datosGeneralesForm.valid) {
       this.formularioGuardar.emit(this.datosGeneralesForm.value);
-    }
   }
 }

@@ -1,21 +1,91 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TercerosRelacionados260402Component } from './terceros-relacionados-260402.component';
- 
-describe('TercerosRelacionadosComponent', () => {
+import { Terceros260402Service } from '../../services/terceros-260402.service';
+import { of } from 'rxjs';
+import { TableData, TipoMoModel } from '../../models/entrada-humana-260402.models';
+
+describe('TercerosRelacionados260402Component', () => {
   let component: TercerosRelacionados260402Component;
   let fixture: ComponentFixture<TercerosRelacionados260402Component>;
- 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  let tercerosServiceMock: any;
+
+  beforeEach(async () => {
+    tercerosServiceMock = {
+      getInformacioDeTabla: jest.fn(() => of({
+        columns: ['Column1', 'Column2']
+      }))
+    };
+
+    await TestBed.configureTestingModule({
       declarations: [],
       imports: [ReactiveFormsModule,TercerosRelacionados260402Component],
-      providers: [FormBuilder],
+      providers: [{ provide: Terceros260402Service, useValue: tercerosServiceMock }],
     }).compileComponents();
- 
+
     fixture = TestBed.createComponent(TercerosRelacionados260402Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
- 
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize fabricanteHeaderData on ngOnInit', () => {
+    expect(component.fabricanteHeaderData).toEqual(['Column1', 'Column2']);
+  });
+
+  it('should add a table row when agregarTabla is called', () => {
+    const mockData: TipoMoModel = {
+      razonSocial: 'Test Company',
+      rfc: 'TESTRFC123',
+      curp: 'TESTCURP123',
+      telefono: '1234567890',
+      correoElectronico: 'test@example.com',
+      calle: 'Test Street',
+      numeroExterior: '100',
+      numeroInterior: '10A',
+      pais: 'Test Country',
+      colonia: 'Test Colony',
+      municipio: 'Test Municipality',
+      localidad: 'Test Locality',
+      entidadFederativa: 'Test State',
+      estado: 'Test State/Locality',
+      codigoPostal: '123456',
+      coloniaEquivalente: 'Test Colony Equiv',
+      tipoPersona: false,
+      lada: ''
+    };
+
+    component.agregarTabla(mockData);
+
+    expect(component.fabricanteRowData.length).toBe(1);
+    expect(component.fabricanteRowData[0].tbodyData).toEqual(Object.values({
+      "Nombre/denominación o razón social": 'Test Company',
+      "R.F.C": 'TESTRFC123',
+      "CURP": 'TESTCURP123',
+      "Teléfono": '1234567890',
+      "Correo electrónico": 'test@example.com',
+      "Calle": 'Test Street',
+      "Número exterior": '100',
+      "Número interior": '10A',
+      "País": 'Test Country',
+      "Colonia": 'Test Colony',
+      "Municipio o alcaldía": 'Test Municipality',
+      "Localidad": 'Test Locality',
+      "Entidad federativa": 'Test State',
+      "Estado/localidad": 'Test State/Locality',
+      "Código postal": '123456',
+      "Colonia o equivalente": 'Test Colony Equiv'
+    }));
+  });
+
+  it('should update isDatosGeneralesVisible when abrirProcedencia and cerrarProcedencia are called', () => {
+    component.abrirProcedencia();
+    expect(component.isDatosGeneralesVisible).toBeTruthy();
+
+    component.cerrarProcedencia();
+    expect(component.isDatosGeneralesVisible).toBeFalsy();
+  });
 });
