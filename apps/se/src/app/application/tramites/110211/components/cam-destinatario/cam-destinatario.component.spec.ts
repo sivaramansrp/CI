@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CamDestinatarioComponent } from './cam-destinatario.component';
 import { CamState } from '../../estados/cam-certificado.store';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('CamDestinatarioComponent', () => {
   let component: CamDestinatarioComponent;
@@ -9,7 +10,8 @@ describe('CamDestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CamDestinatarioComponent],
+      declarations: [CamDestinatarioComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CamDestinatarioComponent);
@@ -49,7 +51,7 @@ describe('CamDestinatarioComponent', () => {
 
   it('should call store.setFormDatosDelDestinatario with correct value in detosDelDestinatarioFunc', () => {
     const mockData = { key: 'value' };
-    spyOn(component['store'], 'setFormDatosDelDestinatario');
+    jest.spyOn(component['store'], 'setFormDatosDelDestinatario');
 
     component.detosDelDestinatarioFunc(mockData);
 
@@ -57,7 +59,7 @@ describe('CamDestinatarioComponent', () => {
   });
 
   it('should call store.setFormValida with correct value in setFormValida', () => {
-    spyOn(component['store'], 'setFormValida');
+    jest.spyOn(component['store'], 'setFormValida');
 
     component.setFormValida(true);
 
@@ -65,7 +67,7 @@ describe('CamDestinatarioComponent', () => {
   });
 
   it('should call store.setFormValida with correct value in setFormValidaDestinatario', () => {
-    spyOn(component['store'], 'setFormValida');
+    jest.spyOn(component['store'], 'setFormValida');
 
     component.setFormValidaDestinatario(false);
 
@@ -76,7 +78,7 @@ describe('CamDestinatarioComponent', () => {
     const mockForm = new FormGroup({
       testField: new FormBuilder().control('testValue'),
     });
-    spyOn(component['store'], 'setFormValida');
+    jest.spyOn(component['store'], 'setFormValida');
 
     component.setValoresStore(mockForm, 'testField', 'setFormValida');
 
@@ -84,8 +86,8 @@ describe('CamDestinatarioComponent', () => {
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    spyOn(component['destroyNotifier$'], 'next');
-    spyOn(component['destroyNotifier$'], 'complete');
+    jest.spyOn(component['destroyNotifier$'], 'next');
+    jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
