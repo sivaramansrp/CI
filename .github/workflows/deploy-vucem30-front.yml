@@ -37,7 +37,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  NX_VERSION: '16.10.0'
+  NX_VERSION: '19.3.1'
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
@@ -274,18 +274,16 @@ jobs:
           # Instalar dependencias con más opciones de seguridad
           npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
-      - name: Install NX globally with specific version
+      - name: Use locally installed NX
         run: |
-          npm install -g nx@${{ env.NX_VERSION }}
-          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
+          # Usar la versión instalada localmente en lugar de instalar globalmente
+          echo "Usando NX versión local del proyecto"
+          npx nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
       - name: Build ${{ matrix.app }}
         run: |
-          # Crear un script de build temporal sin postinstall hooks
           echo "Construyendo la aplicación ${{ matrix.app }}..."
-          
-          # Usar comando directo sin npx para evitar problemas de binarios
-          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
+          npx nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
 
       - name: Verify build output
         run: |
