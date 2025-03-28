@@ -1,8 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
-import { AgregarFabricanteComponent } from '../../shared/components/agregar-fabricante/agregar-fabricante.component';
-import { AgregarFacturadorComponent } from '../../shared/components/agregar-facturador/agregar-facturador.component';
-import { AgregarProveedorComponent } from '../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarFabricanteContenedoraComponent } from './components/agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
+import { AgregarFacturadorContenedoraComponent } from './components/agregar-facturador-contenedora/agregar-facturador-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
 import { ScianTablaContenedoraComponent } from './components/scian-tabla-contenedora/scian-tabla-contenedora.component';
@@ -26,22 +26,22 @@ const ROUTES: Routes = [
     path: 'mercancia-datos',
     component: DatosMercanciaContenedoraComponent,
   },
-  {
-    path: 'agregar-fabricante',
-    component: AgregarFabricanteComponent,
-  },
-  {
-    path: 'agregar-destinatario-final',
-    component: AgregarDestinatarioFinalComponent,
-  },
-  {
-    path: 'agregar-proveedor',
-    component: AgregarProveedorComponent,
-  },
-  {
-    path: 'agregar-facturador',
-    component: AgregarFacturadorComponent,
-  },
+    {
+      path: 'agregar-fabricante',
+      component: AgregarFabricanteContenedoraComponent,
+    },
+    {
+      path: 'agregar-destinatario-final',
+      component: AgregarDestinatarioFinalContenedoraComponent,
+    },
+    {
+      path: 'agregar-proveedor',
+      component: AgregarProveedorContenedoraComponent,
+    },
+    {
+      path: 'agregar-facturador',
+      component: AgregarFacturadorContenedoraComponent,
+    },
 ];
 
 @NgModule({
