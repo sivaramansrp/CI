@@ -1,54 +1,25 @@
-// import { withModuleFederation } from '@nx/angular/module-federation';
-// import config from './module-federation.config';
+const { withModuleFederation } = require('@nx/angular/module-federation');
 
-// module.exports = withModuleFederation(config);
-
-
-const { ModuleFederationPlugin } = require('webpack').container;
-const mf = require('@angular-architects/module-federation/webpack');
-const path = require('path');
-const share = mf.share;
-
-const sharedMappings = new mf.SharedMappings();
-sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
- /* mapped paths to share */
-]);
-
-module.exports = {
- output: {
-  uniqueName: 'sener',
-  publicPath: 'auto',
-  scriptType: 'text/javascript'
- },
- optimization: {
-  runtimeChunk: false
- },
- resolve: {
-  alias: {
-   ...sharedMappings.getAliases()
-  }
- },
- plugins: [
-  new ModuleFederationPlugin({
-   name: 'sener',
-   filename: 'remoteAppEntry.js',
-   exposes: {
-    './Module': 'apps/sener/src/app/application/app.module.ts',
-   },
-   shared: share({ 
+// Configuración específica de Module Federation para sener
+const moduleFederationConfig = {
+  name: 'sener',
+  exposes: {
+    './Module': './apps/sener/src/app/application/app.module.ts',
+    './Routes': './apps/sener/src/app/remote-entry/entry.routes.ts'
+  },
+  shared: {
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/router': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
-    '@angular-architects/module-federation': {
-     singleton: true,
-     strictVersion: true,
-     requiredVersion: 'auto'
+    '@angular/forms': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular-architects/module-federation': { 
+      singleton: true, 
+      strictVersion: true, 
+      requiredVersion: 'auto' 
     },
-
-    ...sharedMappings.getDescriptors()
-   })
-  }),
-  sharedMappings.getPlugin()
- ]
+  }
 };
+
+// Aplicar la configuración de Module Federation utilizando el wrapper de NX
+module.exports = withModuleFederation(moduleFederationConfig);
