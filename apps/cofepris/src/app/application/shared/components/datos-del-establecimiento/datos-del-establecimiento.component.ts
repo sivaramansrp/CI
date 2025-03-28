@@ -4,8 +4,11 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
+import { Solicitud260603State } from '../../estados/stores/domicilio.store';
+
+import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+
+import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -62,8 +65,8 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite260603Store: Tramite260603Store,
-    private tramite260603Query: Tramite260603Query
+    private domicilioStore: DomicilioStore,
+    private domicilioquery: DomicilioQuery
   ) {
     // Llama al constructor de la clase base Query con el almacén inyectado.
   }
@@ -74,7 +77,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
-    this.tramite260603Query.selectSolicitud$
+    this.domicilioquery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -96,9 +99,9 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @param campo Campo del formulario que se desea actualizar.
    * @param metodoNombre Nombre del método del store que se invocará.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260603Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260603Store[metodoNombre] as (value: string | number) => void)(VALOR);
+    (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
   /**

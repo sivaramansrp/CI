@@ -15,9 +15,11 @@ import { ExportacionService } from '../../services/exportacion.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-import { Tramites260604Store, solicitud260604State } from '../../../shared/estados/stores/tramites260604.store';
+import { solicitud260604State } from '../../estados/stores/exportacion.store';
 
-import { Tramites260604Query } from '../../../shared/estados/queries/tramites260604.query'
+import { ExportacionStore } from '../../estados/stores/exportacion.store'; 
+
+import { ExportacionQuery } from '../../../shared/estados/queries/exportacion.query';
 
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
@@ -135,8 +137,8 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private service: ExportacionService,
-    private tramites260604Store: Tramites260604Store,
-    private tramites260604Query: Tramites260604Query
+    private exportacionStore: ExportacionStore,
+    private exportacionQuery: ExportacionQuery
   ) {
     //constructor
   }
@@ -158,11 +160,11 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * description Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.tramites260604Query.selectSolicitud$
+    this.exportacionQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
+          this.solicitudState = seccionState as solicitud260604State;
         })
       )
       .subscribe();
@@ -242,9 +244,9 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * param campo Nombre del campo del formulario.
    * param metodoNombre Método del almacén a invocar.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramites260604Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ExportacionStore): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramites260604Store[metodoNombre] as (value: string) => void)(VALOR);
+    (this.exportacionStore[metodoNombre] as (value: string) => void)(VALOR);
   }
 
   /**

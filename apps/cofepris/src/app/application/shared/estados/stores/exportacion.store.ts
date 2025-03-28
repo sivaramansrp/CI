@@ -131,7 +131,7 @@ export function createInitialState(): solicitud260604State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramites260604store', resettable: true })
-export class Tramites260604Store extends Store<solicitud260604State> {
+export class ExportacionStore extends Store<solicitud260604State> {
   /**
    * @constructor
    * @description Constructor que inicializa el estado con valores predeterminados.

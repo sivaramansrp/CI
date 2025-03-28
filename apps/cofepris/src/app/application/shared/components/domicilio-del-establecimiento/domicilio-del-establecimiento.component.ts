@@ -21,8 +21,12 @@ import { DatosProducto } from '../../../shared/models/datos-modificacion.model';
 import { PreOperativo } from '../../../shared/models/datos-modificacion.model';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
-import { Solicitud260603State, Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
+
+import { Solicitud260603State } from '../../estados/stores/domicilio.store';
+
+import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+
+import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
 import { DatosService } from '../../../shared/services/datos.service';
 
@@ -182,14 +186,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
    * @param datosService Servicio para obtener datos dinámicos.
-   * @param tramite260603Store Store para gestionar el estado de la solicitud.
+   * @param domicilioStore Store para gestionar el estado de la solicitud.
    * @param tramite260603Query Query para obtener datos del estado.
    */
   constructor(
     private fb: FormBuilder,
     private datosService: DatosService,
-    private tramite260603Store: Tramite260603Store,
-    private tramite260603Query: Tramite260603Query
+    private domicilioStore: DomicilioStore,
+    private domicilioquery: DomicilioQuery
   ) {
     // Constructor
   }
@@ -198,7 +202,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular que inicializa el componente.
    */
   ngOnInit(): void {
-    this.tramite260603Query.selectSolicitud$
+    this.domicilioquery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -264,9 +268,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @param campo Campo del formulario.
    * @param metodoNombre Método del store a invocar.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260603Store): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite260603Store[metodoNombre] as (value: string | number) => void)(VALOR);
+    (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
   /**
