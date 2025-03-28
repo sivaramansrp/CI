@@ -3,9 +3,9 @@ import { DestinatarioComponent } from './destinatario.component';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
-import { Tramite110221Store } from '../../state/Tramite110221.store';
-import { Tramite110221Query } from '../../state/Tramite110221.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
+import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;

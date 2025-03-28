@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CertificadoDeOrigenComponent } from './certificado-de-origen.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { RegistroService } from '../../services/registro.service';
-import { Tramite110221Store } from '../../state/Tramite110221.store';
-import { Tramite110221Query } from '../../state/Tramite110221.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
+import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
+import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
 
 describe('CertificadoDeOrigenComponent', () => {
   let component: CertificadoDeOrigenComponent;

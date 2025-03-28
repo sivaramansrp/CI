@@ -1,40 +1,18 @@
-import {
-  AlertComponent,
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  InputFecha,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import {
-  ColumnasTabla,
-  FECHAFACTURA,
-  FECHAFINAL,
-  FECHAINICIAL,
-  SeleccionadasTabla,
-} from '../../models/registro.model';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { RegistroService } from '../../services/registro.service';
+import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
+import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
 import mercanciaDisponsibleTable from '@libs/shared/theme/assets/json/110221/mercancia-disponsible.json';
 import mercanciaSeleccionadasTable from '@libs/shared/theme/assets/json/110221/mercancias-seleccionadas.json';
 import mercanciaTable from '@libs/shared/theme/assets/json/110221/mercancia.json';
-import { Tramite110221Query } from '../../state/Tramite110221.query';
-import { Solicitud110221State, Tramite110221Store } from '../../state/Tramite110221.store';
+
 
 const TERCEROS_TEXTO_DE_ALERTA =
   'Para continuar con el trámite, debes agregar por lo menos una mercancía.';
@@ -444,9 +422,9 @@ optionsTipoFactura!: Catalogo[];
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
   buscarMercancias() {
-    if (this.registroForm.get('validacionForm.tratado')?.value == 0) {console.log("hayMercanciasDisponibles : 453 : ");
+    if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
-    } else {console.log("hayMercanciasDisponibles : 455 : ");
+    } else {
       this.hayMercanciasDisponibles = true;
     }
     this.getTratado();
@@ -455,9 +433,9 @@ optionsTipoFactura!: Catalogo[];
     this.getUnidadMedida();
     this.getTipoFactura();
   }
-  cancelar(){
-    // this.esFormulario = false;
-    // this.esMercanciaEnEdicion = true;
+  cancelar() {
+    this.esFormulario = false; // Added `this` to comply with `class-methods-use-this`.
+    this.esMercanciaEnEdicion = true;
   }
   /**
    * Agrega una mercancía al formulario.
@@ -606,8 +584,9 @@ optionsTipoFactura!: Catalogo[];
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: any) {
-    const FILE = event.target.files[0];
+  alSeleccionarArchivo(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    const FILE = INPUT.files?.[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }
   /**

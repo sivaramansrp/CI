@@ -1,10 +1,9 @@
-import { enviroment } from '../../../../enviroments/enviroment';
+import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
+import { JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
-import { Observable, catchError, throwError } from 'rxjs';
+import { enviroment } from '../../../../enviroments/enviroment';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110221.

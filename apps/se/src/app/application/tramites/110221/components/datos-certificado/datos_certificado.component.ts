@@ -1,22 +1,12 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  CatalogosSelect,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
-import { Solicitud110221State, Tramite110221Store } from '../../state/Tramite110221.store';
-import { Tramite110221Query } from '../../state/Tramite110221.query';
+import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
+import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
 
 /**
  * Componente que representa el formulario de datos del certificado en el trámite.
@@ -67,7 +57,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Datos de la entidad federativa proporcionados como entrada.
    */
-  @Input() entidadFederativaData: any;
+  @Input() entidadFederativaData: unknown;
 
   /**
    * Indica si se requiere justificación.
@@ -224,13 +214,11 @@ optionsRepresentacion!: Catalogo[];
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
 
-    if (VALOR == 8 && metodoNombre == 'setEntidad' && this.entidadFederativaData === 'DURANGO'
-    ) {
+    if (VALOR === 8 && metodoNombre === 'setEntidad' && this.entidadFederativaData === 'DURANGO') {
       this.isJustificacion = true;
     } else {
       this.isJustificacion = false;
     }
-
 
   }
 

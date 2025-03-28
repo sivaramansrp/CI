@@ -1,25 +1,12 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  TituloComponent,
-  ValidacionesFormularioService, PAGO_DE_DERECHOS, AlertComponent
-} from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  Solicitud110221State,
-  Tramite110221Store,
-} from '../../state/Tramite110221.store';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
-import { Tramite110221Query } from '../../state/Tramite110221.query';
+import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
+import { Tramite110221Query } from '../../../../estados/queries/Tramite110221.query';
+import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.store';
 
 /**
  * Componente que representa el formulario de destinatario en el trámite.

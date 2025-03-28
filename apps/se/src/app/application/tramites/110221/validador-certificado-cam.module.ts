@@ -1,13 +1,4 @@
-import {
-  AlertComponent,
-  AnexarDocumentosComponent,
-  CatalogoSelectComponent,
-  FirmaElectronicaComponent,
-  SolicitanteComponent,
-  TercerosComponent,
-  TituloComponent,
-  WizardComponent,
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, CatalogoSelectComponent, FirmaElectronicaComponent, SolicitanteComponent, TercerosComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoDeOrigenComponent } from './components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from './components/datos-certificado/datos_certificado.component';

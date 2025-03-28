@@ -1,13 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import {
-  SharedModule,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
+import { SharedModule, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
@@ -35,7 +29,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa!: any;
+  entidadFederativa!: { data: string; domicilioFiscal?: { entidadFederativa?: string } };
 
   /**
    * Constructor del componente.
@@ -52,11 +46,10 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.registro.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
-     
+
       const DATA = JSON.parse(this.entidadFederativa.data);
 
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
-     
     });
   }
 
