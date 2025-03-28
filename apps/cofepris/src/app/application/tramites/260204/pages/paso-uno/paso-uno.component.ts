@@ -17,17 +17,13 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
     SolicitanteComponent,
     ContenedorDeDatosSolicitudComponent,
     TercerosRelacionadosVistaComponent,
-    AgregarFabricanteComponent,
-    AgregarDestinatarioFinalComponent,
-    AgregarProveedorComponent,
-    AgregarFacturadorComponent,
     PagoDeDerechosComponent,
   ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent {
-  indice: number = 2;
+  indice: number = 1;
 
   seleccionaTab(i: number): void {
     this.indice = i;

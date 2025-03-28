@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { OPCION_TABLA, PRODUCTO_TABLA, SCIAN_TABLA } from '../../../../shared/constantes/datos-solicitud.enum';
+import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Tramite260206State, Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -18,7 +19,7 @@ import { Tramite260206Query } from '../../estados/queries/tramite260206Query.que
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   private destroyNotifier$: Subject<void> = new Subject();
   public tramiteState!: Tramite260206State;
-
+  public readonly idProcedimiento:number = 260206;
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
     configuracionTabla: OPCION_TABLA,
@@ -39,12 +40,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
   public seleccionadoScianDatos: TablaScianConfig[] = [];
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
-  constructor(private Tramite260206Query: Tramite260206Query,
-    private Tramite260206Store: Tramite260206Store
+  private seccion!: SeccionLibState;
+
+  constructor(private tramite260206Query: Tramite260206Query,
+    private tramite260206Store: Tramite260206Store,
+    private seccionStore: SeccionLibStore, private seccionQuery: SeccionLibQuery
   ) { }
 
   ngOnInit(): void {
-    this.Tramite260206Query.selectTramiteState$
+    this.tramite260206Query.selectTramiteState$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -54,6 +58,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
         this.tablaMercanciasConfig.datos = this.tramiteState.tablaMercanciasConfigDatos;
       })
     ).subscribe();
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -62,11 +75,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * @param event - Un arreglo de configuraciones de opciones de la tabla (`TablaOpcionConfig[]`) 
    *                que representa las opciones seleccionadas.
    * 
-   * Actualiza la configuración de datos en el store `Tramite260206Store` 
+   * Actualiza la configuración de datos en el store `tramite260206Store` 
    * con las opciones seleccionadas.
    */
   opcionSeleccionado(event: TablaOpcionConfig[]): void {
-    this.Tramite260206Store.updateOpcionConfigDatos(event);
+    this.tramite260206Store.updateOpcionConfigDatos(event);
   }
 
   /**
@@ -78,7 +91,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * utilizando el evento proporcionado.
    */
   scianSeleccionado(event: TablaScianConfig[]): void {
-    this.Tramite260206Store.updateScianConfigDatos(event);    
+    this.tramite260206Store.updateScianConfigDatos(event);    
   }
 
   /**
@@ -88,7 +101,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    *                los datos seleccionados en la tabla de mercancías.
    */
   mercanciasSeleccionado(event: TablaMercanciasDatos[]): void {
-    this.Tramite260206Store.updateTablaMercanciasConfigDatos(event);
+    this.tramite260206Store.updateTablaMercanciasConfigDatos(event);
   }
 
 
@@ -98,18 +111,46 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    * @param event - El nuevo estado del formulario de datos de la solicitud de tipo `DatosSolicitudFormState`.
    */
   datasolicituActualizar(event: DatosSolicitudFormState): void {
-    this.Tramite260206Store.updateDatosSolicitudFormState(event);
+    this.tramite260206Store.updateDatosSolicitudFormState(event);
+    const SECCION: number = 1;
+    const FORMAS_VALIDADAS = this.seccion.formaValida;
+    const ES_VALIDO_EL_FORM = this.esFormValido();
+    if (ES_VALIDO_EL_FORM) {
+      FORMAS_VALIDADAS[SECCION] = true;
+      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+    } else {
+      FORMAS_VALIDADAS[SECCION] = false;
+      this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+    }
   }
 
   /**
-   * Actualiza el estado de la tienda `Tramite260206Store` con los datos seleccionados
+ * Verifica si el formulario es válido.
+ * 
+ * Recorre todos los controles del formulario y verifica si alguno de ellos
+ * está habilitado e inválido. Si encuentra un control que cumple con estas
+ * condiciones, retorna `false`. Si todos los controles habilitados son válidos,
+ * retorna `true`.
+ * 
+ * @returns {boolean} `true` si todos los controles habilitados son válidos, 
+ *                    `false` si al menos uno de los controles habilitados es inválido.
+ */
+  esFormValido(): boolean {
+    if (this.tramiteState.datosSolicitudFormState.rfcSanitario) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Actualiza el estado de la tienda `tramite260206Store` con los datos seleccionados
    * provenientes del evento de la tabla.
    *
    * @param event - Objeto que contiene las opciones seleccionadas, los datos SCIAN seleccionados
    * y las mercancías seleccionadas de la tabla.
    */
   datosDeTablaSeleccionados(event: DatosDeTablaSeleccionados): void {
-    this.Tramite260206Store.update((state) => ({
+    this.tramite260206Store.update((state) => ({
       ...state,
       seleccionadoopcionDatos: event.opcionSeleccionados,
       seleccionadoScianDatos: event.scianSeleccionados,

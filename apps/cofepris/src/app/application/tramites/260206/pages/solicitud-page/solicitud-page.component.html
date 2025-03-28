@@ -6,7 +6,6 @@
     <ng-container *ngIf="indice === 2"> </ng-container>
     <app-wizard [listaPasos]="pasos"></app-wizard>
   </div>
-
   <div class="row">
     @switch (indice) { @case (1) {
     <app-paso-uno></app-paso-uno>
@@ -14,12 +13,7 @@
     <app-paso-dos></app-paso-dos>
     } @case (3) {
     <app-paso-tres></app-paso-tres>
-
     } }
-
-    <btn-continuar
-      [datos]="datosPasos"
-      (continuarEvento)="getValorIndice($event)"
-    ></btn-continuar>
+    <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
   </div>
 </div>
