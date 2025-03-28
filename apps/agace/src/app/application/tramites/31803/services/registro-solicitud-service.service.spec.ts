@@ -17,7 +17,7 @@ describe('RegistroSolicitudService', () => {
   });
 
   afterEach(() => {
-    httpMock.verify(); // Ensure no outstanding HTTP requests
+    httpMock.verify(); 
   });
 
   it('should be created', () => {
@@ -31,7 +31,7 @@ describe('RegistroSolicitudService', () => {
         { id: 2, descripcion: 'Banco 2' },
       ];
 
-      service.getBancoData().subscribe((data) => {
+      service.obtenerDatosBanco().subscribe((data) => {
         expect(data).toEqual(mockResponse);
       });
 
@@ -43,7 +43,7 @@ describe('RegistroSolicitudService', () => {
     it('should handle errors when fetching banco data', () => {
       const errorMessage = 'Error fetching banco data';
 
-      service.getBancoData().subscribe(
+      service.obtenerDatosBanco().subscribe(
         () => fail('Expected an error, not banco data'),
         (error) => {
           expect(error).toBeTruthy();

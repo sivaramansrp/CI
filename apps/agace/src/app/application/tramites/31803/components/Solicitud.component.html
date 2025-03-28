@@ -16,10 +16,10 @@
 </div>
 <div class="row mt-5">
   <div class="col-md-4">
-    <input-fecha [datos]="fechaInicialInput" class="gris-color"></input-fecha>
+    <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
   </div>
   <div class="col-md-4">
-    <input-fecha [datos]="fechaFinalInput" class="gris-color"></input-fecha>
+    <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
   </div>
 </div>
 <ng-titulo titulo="Pago de derechos" />
@@ -51,7 +51,7 @@
     (change)=" setValoresStore(registroForm, 'llave', 'setLlave')"/>
   </div>
   <div class="col-md-4">
-    <input-fecha [datos]="fechaPagoInput" (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+    <input-fecha [datos]="fechaPagoInput" (valorCambiado)="cambioFechaPago($event)"></input-fecha>
   </div>
   <div class="col-md-4">
     <label>Importe de pago:</label>

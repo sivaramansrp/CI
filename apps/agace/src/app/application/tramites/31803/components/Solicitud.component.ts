@@ -40,14 +40,16 @@ import { Tramite31803Query } from '../state/Tramite31803.query';
   styleUrl: './Solicitud.component.css',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  public destroyNotifier$: Subject<void> = new Subject();
+  public solicitudState!: Solicitud31803State;
   fechaInicialInput: InputFecha = FECHAINICIAL;
   fechaFinalInput: InputFecha = FECHAFINAL;
   fechaPagoInput: InputFecha = FECHAPAGO;
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  public destroyNotifier$: Subject<void> = new Subject();
   solicitudEnum = Solicitud31803Enum;
   registroForm!: FormGroup;
-  public solicitudState!: Solicitud31803State;
+  
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',
     required: false,
@@ -66,7 +68,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getBancoData();
+    this.obtenerDatosBanco();
 
     this.query.selectSolicitud$
       .pipe(
@@ -79,27 +81,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.donanteDomicilio();
   }
 
-  cambioFechaFactura(nuevo_fechaFin: string): void {
+  cambioFechaPago(nuevo_fechaPago: string): void {
     this.registroForm.patchValue({
-      fechaPago: nuevo_fechaFin,
+      fechaPago: nuevo_fechaPago,
     });
     this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
   }
 
-  getBancoData(): void {
+  obtenerDatosBanco(): void {
     this.registroSolicitud
-      .getBancoData()
+      .obtenerDatosBanco()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp): void => {
         this.bancoCatalogo.catalogos = resp as Catalogo[];
       });
   }
-  onSubmit(): void {
+  enviarFormulario(): void {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
     }
   }
-  isValid(form: FormGroup, field: string): boolean {
+  esValido(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) || false;
   }
   validarDestinatarioFormulario(): void {
@@ -121,10 +123,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       llave: [this.solicitudState?.llave, [Validators.required]],
       manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
       manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      numeroOperacion: [
-        this.solicitudState?.numeroOperacion,
-        [Validators.required],
-      ],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
+      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
     });
   }
   ngOnDestroy(): void {

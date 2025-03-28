@@ -12,7 +12,7 @@ export class RegistroSolicitudService {
      // El constructor se utiliza para la inyección de dependencias.
   }
 
-  getBancoData(): Observable<Catalogo[]> {
+  obtenerDatosBanco(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/31803/banco.json');
   }
 
