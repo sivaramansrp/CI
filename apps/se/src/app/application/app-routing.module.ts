@@ -222,13 +222,6 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'reporte-anual',
-    loadChildren: () =>
-      import('./tramites/150102/reporte-anual.module').then(
-        (m) => m.ReporteAnualModule
-      ),
-  },
-  {
     path: 'registro-solicitud-anual',
     loadChildren: () =>
       import('./tramites/150101/registro-solicitud-anual.module').then(
