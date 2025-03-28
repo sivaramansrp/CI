@@ -24,7 +24,7 @@ export class DatosComponent implements AfterViewInit {
   /**
    * Índice actual del subtítulo seleccionado en la interfaz.
    */
-  indice: number = 2;
+  indice: number = 1;
 
   /**
  * Indica si la fila de informe está seleccionada.
