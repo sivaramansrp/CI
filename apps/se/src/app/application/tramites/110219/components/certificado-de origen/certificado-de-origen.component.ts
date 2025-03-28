@@ -128,7 +128,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
 
   /** Obtiene los datos de la tabla de mercancías del certificado. */
   public getMercanciaCertificadoTabla(): void {
-    this.certificadoService.getMercanciaCertificadoTabla().subscribe((data) => {
+    this.certificadoService.getMercanciaCertificadoTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.mercanciaCertificadoTablaDatos = data;
     });
   }
