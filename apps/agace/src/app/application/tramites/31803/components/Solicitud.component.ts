@@ -6,12 +6,16 @@ import {
   CatalogosSelect,
   InputFecha,
   TituloComponent,
-  InputFechaComponent
+  InputFechaComponent,
+  ValidacionesFormularioService
 } from '@libs/shared/data-access-user/src';
 import { FECHAFINAL, FECHAINICIAL, FETCHAPAGO } from '../models/registro.model';
 import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud31803State, Tramite31803Store } from '../state/Tramite31803.store';
+import { Tramite31803Query } from '../state/Tramite31803.query';
 
 @Component({
   selector: 'app-solicitud',
@@ -21,6 +25,7 @@ import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
     TituloComponent,
     InputFechaComponent,
     CatalogoSelectComponent,
+    ReactiveFormsModule
   ],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
@@ -31,7 +36,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fechaFinalInput: InputFecha = FECHAFINAL;
   fechaPagoInput: InputFecha = FETCHAPAGO;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   public destroyNotifier$: Subject<void> = new Subject();
   solicitudEnum = Solicitud31803Enum;
+  registroForm !: FormGroup;
+  public solicitudState!: Solicitud31803State
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',
     required: false,
@@ -39,10 +47,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     catalogos: [],
   };
 
-  constructor(private registroSolicitud: RegistroSolicitudService) {}
+  constructor(private registroSolicitud: RegistroSolicitudService,
+    public fb: FormBuilder,
+    private store: Tramite31803Store,
+    private query: Tramite31803Query,
+    private validacionesService: ValidacionesFormularioService
+  ) {}
 
   ngOnInit(): void {
     this.getBancoData();
+
+    
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.donanteDomicilio();
+  }
+
+  cambioFechaFactura(nuevo_fechaFin: string): void {
+    this.registroForm.patchValue({      
+        fechaPago: nuevo_fechaFin, });
+    this.setValoresStore(this.registroForm, 'fechaPago', 'setFechaPago');
   }
 
   getBancoData(): void {
@@ -53,7 +83,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.bancoCatalogo.catalogos = resp as Catalogo[];
       });
   }
-
+  onSubmit(): void {
+    if (this.registroForm.valid) {
+      // Aquí se implementará la lógica para manejar el envío del formulario.
+    }
+  }
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
+  }
+  validarDestinatarioFormulario(): void {
+    if (this.registroForm.invalid) {
+      this.registroForm.markAllAsTouched();
+    }
+  }
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite31803Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  donanteDomicilio(): void {
+    this.registroForm = this.fb.group({
+      banco: [this.solicitudState?.banco, [Validators.required]],
+      llave: [this.solicitudState?.llave, [Validators.required]],
+      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
+      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
+    });
+  }
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
