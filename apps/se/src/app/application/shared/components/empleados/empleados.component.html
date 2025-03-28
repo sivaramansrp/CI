@@ -1,0 +1,167 @@
+<div class="container">
+  <ng-titulo titulo="Empleados"></ng-titulo>
+  <form [formGroup]="empleadosForm">
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label" for="totalDeEmpleados"
+          >Total de empleados*:</label
+        >
+        <input
+          class="form-control min-hgt"
+          id="totalDeEmpleados"
+          formControlName="totalDeEmpleados"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="directos"
+            value=""
+            name="directos"
+            formControlName="directos"
+          />
+          <label class="form-check-label" for="regimen_0"> Directos </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="indirectos"
+            value=""
+            name="indirectos"
+            formControlName="indirectos"
+          />
+          <label class="form-check-label" for="indirectos"> Indirectos </label>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <h3>Directios</h3>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label class="form-label" for="directos">Directos:</label>
+        <input
+          class="form-control min-hgt"
+          id="directos"
+          formControlName="directos"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="cedulasOptions"
+          [label]="'Cédulas de determinación de cuotas'"
+          [required]="true"
+          name="cedulasOptions"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input-fecha [datos]="fetchaDeCedula"></input-fecha>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <h3>Indirectos</h3>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label class="form-label" for="directos">Indirectos:</label>
+        <input
+          class="form-control min-hgt"
+          id="directos"
+          formControlName="directos"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="directos"
+          >Contrato de prestación de servicios:</label
+        >
+        <input
+          class="form-control min-hgt"
+          id="directos"
+          formControlName="directos"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="directos"
+          >Objeto del contrato del servicio:</label
+        >
+        <input
+          class="form-control min-hgt"
+          id="directos"
+          formControlName="directos"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class="form-group">
+          <input-fecha [datos]="fetchaDeFirma"></input-fecha>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <input-fecha [datos]="fetchaFinVigencia"></input-fecha>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <label class="form-label" for="directos"
+          >RFC de la empresa prestadora de servicios:</label
+        >
+        <input
+          class="form-control min-hgt"
+          id="directos"
+          formControlName="directos"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-8">
+        <label class="form-label" for="directos"
+          >Razón social de la empresa prestadora de servicios:</label
+        >
+        <input
+          class="form-control min-hgt"
+          id="directos"
+          formControlName="razonSocial"
+          type="text"
+        />
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-12 container text-end mt-5">
+        <button class="btn btn-default me-2">Limpiar</button>
+        <button class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <app-tabla-dinamica
+        [configuracionTabla]="directosEncabezado"
+        [tipoSeleccionTabla]="directosTablaSeleccion"
+        [datos]="directosDatos"
+      ></app-tabla-dinamica>
+    </div>
+  </form>
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button (click)="regrasar()" class="btn btn-default me-2">
+        Regresar a plantas
+      </button>
+    </div>
+  </div>
+</div>
