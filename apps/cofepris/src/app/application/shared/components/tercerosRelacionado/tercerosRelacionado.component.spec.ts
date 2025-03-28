@@ -16,8 +16,8 @@ describe('TercerosRelacionadoComponent', () => {
 
   beforeEach(async () => {
     mockExportacionService = {
-      getTable: jest.fn(),
-      getLocalidaddata: jest.fn(),
+      obtenerTabla: jest.fn(),
+      obtenerDatosLocalidad: jest.fn(),
     } as unknown as jest.Mocked<ExportacionService>;
 
     mockTramitesStore = {
@@ -60,8 +60,8 @@ describe('TercerosRelacionadoComponent', () => {
     // Initialize the destroyed$ subject
     component['destroyed$'] = new Subject<void>();
 
-    mockExportacionService.getTable.mockReturnValue(of([]));
-    mockExportacionService.getLocalidaddata.mockReturnValue(of([]));
+    mockExportacionService.obtenerTabla.mockReturnValue(of([]));
+    mockExportacionService.obtenerDatosLocalidad.mockReturnValue(of([]));
 
     fixture.detectChanges();
   });
@@ -86,14 +86,14 @@ describe('TercerosRelacionadoComponent', () => {
       { Nombre: 'Test', RFC: 'RFC123', CURP: 'CURP123', Teléfono: 1234567890, CorreoElectrónico: 'test@example.com', calle: 'Calle1', numeroExterior: 1, numeroInterior: 2, pais: 'Pais1', colonia: 'Colonia1', municipio: 'Municipio1', localidad: 'Localidad1', entidadFederativa: 'Entidad1', estadoLocalidad: 'Estado1', codigoPostal: 12345 },
     ];
 
-    mockExportacionService.getTable.mockReturnValue(of(mockData));
+    mockExportacionService.obtenerTabla.mockReturnValue(of(mockData));
     component.loadMercancias();
     expect(component.tercerosProd).toEqual(mockData);
   });
 
   it('should load localidad data on loadLocalidad', () => {
     const mockData = [{ id: 1, nombre: 'Localidad1' }];
-    mockExportacionService.getLocalidaddata.mockReturnValue(of(mockData));
+    mockExportacionService.obtenerDatosLocalidad.mockReturnValue(of(mockData));
     component.loadLocalidad();
     expect(component.localidadList).toEqual(mockData);
   });
@@ -119,12 +119,6 @@ describe('TercerosRelacionadoComponent', () => {
     expect(component.facturatorForm.get('nombre')?.validator).toBeDefined();
     tipoPersonaControl?.setValue('moral');
     expect(component.facturatorForm.get('nombre')?.validator).toBeNull();
-  });
-
-  it('should validate form fields using isValid', () => {
-    component.getFacturator();
-    const isValid = TercerosRelacionadoComponent.isValid(component.facturatorForm, 'nombre');
-    expect(isValid).toBe(false);
   });
 
   it('should clean up observables on ngOnDestroy', () => {

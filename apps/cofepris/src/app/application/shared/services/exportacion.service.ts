@@ -4,6 +4,7 @@ import { PermisoModel } from '../../shared/models/aviso-exportacion.model';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+import { PreOperativo } from '../models/datos-modificacion.model';
 /**
  * Servicio que proporciona métodos para obtener datos relacionados con la exportación.
  */
@@ -25,7 +26,7 @@ export class ExportacionService {
    * @returns Un observable que emite los datos de la localidad.
    * En caso de error, lanza un observable con el error capturado.
    */
-  getLocalidaddata(): Observable<unknown> {
+  obtenerDatosLocalidad(): Observable<unknown> {
     return this.http.get('assets/json/260604/exportacion.json').pipe(
       catchError((error: unknown) => {
         return throwError(() => error);
@@ -37,7 +38,12 @@ export class ExportacionService {
    * Obtiene los datos de la tabla de permisos desde un archivo JSON.
    * @returns Un observable que emite una lista de objetos `PermisoModel` con los datos de los permisos.
    */
-  getTable(): Observable<PermisoModel[]> {
+  obtenerTabla(): Observable<PermisoModel[]> {
     return this.http.get<PermisoModel[]>('assets/json/260604/terceros.json');
   }
+
+  obtenerRadio(): Observable<PreOperativo[]> {
+    return this.http.get<PreOperativo[]>('assets/json/260604/tipoPersonaradio.json');
+  }
+
 }

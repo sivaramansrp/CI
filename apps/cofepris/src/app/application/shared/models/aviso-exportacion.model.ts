@@ -92,3 +92,101 @@ export interface PermisoModel {
    */
   codigoPostal: number;
 }
+
+/**
+ * @description
+ * Configuración de la tabla NICO que define las columnas y sus propiedades.
+ * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
+ * en el modelo `PermisoModel` y un orden para su posición en la tabla.
+ */
+export const NICO_TABLA = [
+  /**
+   * @description
+   * Columna que muestra el nombre, denominación o razón social del titular.
+   */
+  { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel): string => item.Nombre, orden: 1 },
+
+  /**
+   * @description
+   * Columna que muestra el Registro Federal de Contribuyentes (RFC) del titular.
+   */
+  { encabezado: 'RFC', clave: (item: PermisoModel): string => item.RFC, orden: 2 },
+
+  /**
+   * @description
+   * Columna que muestra la Clave Única de Registro de Población (CURP) del titular.
+   */
+  { encabezado: 'CURP', clave: (item: PermisoModel): string => item.CURP, orden: 3 },
+
+  /**
+   * @description
+   * Columna que muestra el número de teléfono del titular.
+   */
+  { encabezado: 'Telefono', clave: (item: PermisoModel): number => item.Teléfono, orden: 4 },
+
+  /**
+   * @description
+   * Columna que muestra el correo electrónico del titular.
+   */
+  { encabezado: 'Correo electronico', clave: (item: PermisoModel): string => item.CorreoElectrónico, orden: 5 },
+
+  /**
+   * @description
+   * Columna que muestra el nombre de la calle del domicilio del titular.
+   */
+  { encabezado: 'Calle', clave: (item: PermisoModel): string => item.calle, orden: 6 },
+
+  /**
+   * @description
+   * Columna que muestra el número exterior del domicilio del titular.
+   */
+  { encabezado: 'numeroExterior', clave: (item: PermisoModel): number => item.numeroExterior, orden: 7 },
+
+  /**
+   * @description
+   * Columna que muestra el número interior del domicilio del titular (si aplica).
+   */
+  { encabezado: 'numeroInterior', clave: (item: PermisoModel): number => item.numeroInterior, orden: 8 },
+
+  /**
+   * @description
+   * Columna que muestra el país donde se encuentra el domicilio del titular.
+   */
+  { encabezado: 'pais', clave: (item: PermisoModel): string => item.calle, orden: 9 },
+
+  /**
+   * @description
+   * Columna que muestra la colonia donde se encuentra el domicilio del titular.
+   */
+  { encabezado: 'colonia', clave: (item: PermisoModel): string => item.colonia, orden: 10 },
+
+  /**
+   * @description
+   * Columna que muestra el municipio donde se encuentra el domicilio del titular.
+   */
+  { encabezado: 'municipio', clave: (item: PermisoModel): string => item.municipio, orden: 11 },
+
+  /**
+   * @description
+   * Columna que muestra la localidad donde se encuentra el domicilio del titular.
+   */
+  { encabezado: 'localidad', clave: (item: PermisoModel): string => item.localidad, orden: 12 },
+
+  /**
+   * @description
+   * Columna que muestra la entidad federativa donde se encuentra el domicilio del titular.
+   */
+  { encabezado: 'entidadFederativa', clave: (item: PermisoModel): string => item.entidadFederativa, orden: 13 },
+
+  /**
+   * @description
+   * Columna que muestra el estado o región de la localidad donde se encuentra el domicilio del titular.
+   */
+  { encabezado: 'estadoLocalidad', clave: (item: PermisoModel): string => item.estadoLocalidad, orden: 14 },
+
+  /**
+   * @description
+   * Columna que muestra el código postal del domicilio del titular.
+   */
+  { encabezado: 'codigoPostal', clave: (item: PermisoModel): number => item.codigoPostal, orden: 15 },
+];
