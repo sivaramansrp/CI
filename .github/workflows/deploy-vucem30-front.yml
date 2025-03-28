@@ -204,8 +204,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          # Remover la siguiente línea para evitar conflictos de caché
+          # cache: 'npm'
+          # cache-dependency-path: package-lock.json
 
       - name: Install build dependencies
         run: |
@@ -251,6 +252,15 @@ jobs:
             }' > .eslintrc.json
           fi
 
+      # Instalar primero las dependencias antes de intentar cachear
+      - name: Install dependencies with specific options
+        run: |
+          # Verificar que npm está correctamente configurado
+          npm config list
+          # Instalar dependencias con más opciones de seguridad
+          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
+
+      # Mover el cache después de instalar las dependencias
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -265,14 +275,6 @@ jobs:
 
       - name: Reset NX cache
         run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
-
-      # Modificación para instalar los paquetes con más opciones de seguridad
-      - name: Install dependencies with specific options
-        run: |
-          # Verificar que npm está correctamente configurado
-          npm config list
-          # Instalar dependencias con más opciones de seguridad
-          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
       - name: Install NX globally with specific version
         run: |
@@ -338,147 +340,4 @@ jobs:
             APP_ENV=${{ needs.setup.outputs.environment }}
             NX_SKIP_NX_CACHE=true
             NX_NATIVE_BINDINGS=false
-          driver-opts: |
-            network=host
-            memory=4g
-            memory-swap=4g
-          timeout-minutes: 20  # Aumentado
           no-cache: ${{ contains(matrix.app, 'se') }}
-
-  deploy:
-    name: Deploy Microfrontends
-    needs: [setup, build]
-    runs-on: ubuntu-latest
-    environment: ${{ needs.setup.outputs.environment }}
-    steps:
-      - name: Execute remote deployment
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 22
-          script_stop: true
-          script: |
-            echo "Deploying VUCEM Microfrontends to ${{ needs.setup.outputs.environment }}..."
-            cd /home/ubuntu/v30
-            
-            # Create directory for manifests if it doesn't exist
-            mkdir -p k8s
-            
-            # Download the K8s manifest template from repository with updated branch
-            echo "Downloading Kubernetes manifest template from develop branch..."
-            curl -s https://raw.githubusercontent.com/vucem30-dev/frontend/develop/k8s/vucem-microfrontends.yaml -o k8s/vucem-microfrontends.yaml
-            
-            # Verify the download was successful
-            if [ $? -ne 0 ] || [ ! -s k8s/vucem-microfrontends.yaml ]; then
-              echo "ERROR: Failed to download manifest template! Deployment cannot continue."
-              exit 1
-            fi
-            
-            echo "Manifest template downloaded successfully."
-            
-            # Prepare the apps to be included in the deployment
-            APPS_LIST="${{ needs.setup.outputs.final_apps }}"
-            echo "Deploying apps: $APPS_LIST"
-            
-            # Set the replicas based on environment
-            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-              REPLICAS=2
-              MIN_REPLICAS=2
-              MAX_REPLICAS=5
-              echo "Production environment detected - using high availability setup."
-            else
-              REPLICAS=1
-              MIN_REPLICAS=1
-              MAX_REPLICAS=3
-              echo "Non-production environment - using standard setup."
-            fi
-            
-            # Generate module federation manifest
-            echo "Generating module federation manifest..."
-            cat > module-federation.manifest.json << EOF
-            {
-              "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
-              "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga",
-              "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
-              "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
-              "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
-              "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
-              "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
-              "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
-              "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
-              "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
-            }
-            EOF
-            
-            # Replace placeholders with actual values for all parameters
-            echo "Replacing template placeholders..."
-            sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
-            sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
-            
-            # Set replica counts based on environment
-            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
-              sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
-            else
-              sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
-              sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
-            fi
-            
-            # Create ConfigMap for Module Federation Manifest
-            echo "Creating/updating module federation ConfigMap..."
-            microk8s kubectl create configmap module-federation-manifest \
-              --from-file=module-federation.manifest.json \
-              -n vucem-${{ needs.setup.outputs.environment }} \
-              --dry-run=client -o yaml | microk8s kubectl apply -f -
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to create ConfigMap. Checking if namespace exists..."
-            
-              # Check if namespace exists and create it if needed
-              microk8s kubectl get namespace vucem-${{ needs.setup.outputs.environment }} || \
-              microk8s kubectl create namespace vucem-${{ needs.setup.outputs.environment }}
-            
-              echo "Retrying ConfigMap creation..."
-              microk8s kubectl create configmap module-federation-manifest \
-                --from-file=module-federation.manifest.json \
-                -n vucem-${{ needs.setup.outputs.environment }} \
-                --dry-run=client -o yaml | microk8s kubectl apply -f -
-            fi
-            
-            echo "ConfigMap created successfully."
-            
-            # Validate YAML syntax (optional but recommended)
-            if command -v yamllint &> /dev/null; then
-              echo "Validating YAML syntax..."
-              yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
-            fi
-            
-            # Apply Kubernetes manifest
-            echo "Applying Kubernetes manifest..."
-            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
-            
-            if [ $? -ne 0 ]; then
-              echo "ERROR: Failed to apply Kubernetes manifest."
-              exit 1
-            fi
-            
-            echo "Kubernetes manifest applied successfully."
-            
-            # Restart the deployment to pull the latest images
-            echo "Restarting deployment to pull the latest images..."
-            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
-            
-            # Wait for rollout to complete
-            echo "Waiting for rollout to complete (timeout: 5 minutes)..."
-            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
-            
-            if [ $? -eq 0 ]; then
-              echo "✅ Deployment completed successfully!"
-            else
-              echo "⚠️ Deployment timed out, but may still be progressing. Check the status manually."
-            fi
