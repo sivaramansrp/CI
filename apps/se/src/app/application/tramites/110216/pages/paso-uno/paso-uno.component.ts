@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
@@ -23,7 +24,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
   standalone: true,
-  imports: [CommonModule, SolicitanteComponent, DatosCertificadoComponent, HistoricoProductoresComponent, DestinatarioComponent]
+  imports: [CommonModule, SolicitanteComponent, DatosCertificadoComponent, HistoricoProductoresComponent, DestinatarioComponent, CertificadoOrigenComponent]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**

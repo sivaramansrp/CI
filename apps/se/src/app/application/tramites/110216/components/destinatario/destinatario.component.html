@@ -28,7 +28,7 @@
       <div class="col-md-8 mb-3">
         <label>Razón social:</label>
         <input type="text" class="form-control"
-          [ngClass]="{GrayClass: registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== ''}"
+          [ngClass]="{'gray-glass': registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== ''}"
           id="denominacion" [readonly]=" registroFormulario.get('grupoReceptor.apellidoPrimer')?.value !== ''"
           formControlName="razonSocial"
           (change)="setValoresStore(grupoReceptor, 'razonSocial', 'setGrupoReceptorRazonSocial')" />

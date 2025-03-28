@@ -1,4 +1,4 @@
-import { CatalogoLista } from '../models/certificado-origen.model';
+import { CatalogoLista, DisponiblesTabla, SeleccionadasTabla } from '../models/certificado-origen.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -8,7 +8,8 @@ import { ProductorExportador } from '../models/certificado-origen.model';
  * Servicio para gestionar las operaciones relacionadas con el certificado de origen.
  * 
  * Este servicio proporciona métodos para obtener datos como idiomas, entidades federativas,
- * representaciones federales y productores/exportadores desde archivos JSON.
+ * representaciones federales, productores/exportadores, mercancías disponibles y seleccionadas,
+ * tratados y países desde archivos JSON.
  */
 @Injectable({
   providedIn: 'root'
@@ -67,5 +68,53 @@ export class CertificadosOrigenService {
   obtenerProductorPorExportador(): Observable<ProductorExportador> {
     return this.http
       .get<ProductorExportador>('assets/json/110216/productor-exportador.json');
+  }
+
+  /**
+   * Obtiene la lista de mercancías disponibles.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de mercancías disponibles desde un archivo JSON.
+   * 
+   * @returns {Observable<DisponiblesTabla[]>} Un observable que emite la lista de mercancías disponibles.
+   */
+  obtenerMercanciasDisponibles(): Observable<DisponiblesTabla[]> {
+    return this.http
+      .get<DisponiblesTabla[]>('assets/json/110216/mercancia-disponsible.json');
+  }
+
+  /**
+   * Obtiene la lista de mercancías seleccionadas.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de mercancías seleccionadas desde un archivo JSON.
+   * 
+   * @returns {Observable<SeleccionadasTabla[]>} Un observable que emite la lista de mercancías seleccionadas.
+   */
+  obtenerMercanciasSeleccionadas(): Observable<SeleccionadasTabla[]> {
+    return this.http
+      .get<SeleccionadasTabla[]>('assets/json/110216/mercancias-seleccionadas.json');
+  }
+
+  /**
+   * Obtiene la lista de tratados disponibles.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de tratados desde un archivo JSON.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de tratados.
+   */
+  obtenerTratado(): Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/110216/pais.json');
+  }
+
+  /**
+   * Obtiene la lista de países disponibles.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de países desde un archivo JSON.
+   * 
+   * @returns {Observable<CatalogoLista>} Un observable que emite la lista de países.
+   */
+  obtenerPais(): Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/110216/pais.json');
   }
 }
