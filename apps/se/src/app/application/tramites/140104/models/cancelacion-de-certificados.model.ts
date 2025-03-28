@@ -1,13 +1,9 @@
 export interface Cancelacion {
-    folioTramite: string;
-    tipoDeSolicitud: string;
-    regimen: string;
-    cdr: string;
-    condicionDeLaMercancia: string;
-    fraccionArancelaria: string;
-    umt: string;
-    cantidad: string;
-    usd: string;
+    cupo: string;
+    nombre_de_producto: string;
+    nombre_del_subproducto: string;
+    mecanismo_de_asignación: string;
+    tipo_cupo: string;
 }
 export interface PermisosDatos {
     datos: Cancelacion[];

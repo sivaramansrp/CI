@@ -8,16 +8,16 @@ import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.s
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy{
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
  * @description Índice de la pestaña/paso actual.
  * Este valor indica el paso actual en el proceso de formulario.
  * @type {number}
  * @default 1
  */
-  indice: number = 1;
+  indice: number = 2;
 
-  
+
   /**
    * @description 
    * Array de objetos que representan las diferentes secciones del formulario.
@@ -52,7 +52,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     // Establece la primera sección como activa.
     this.seccionStore.establecerSeccion([false]);
   }
-  
+
   /**
    * @description 
    * Método que se ejecuta al seleccionar una pestaña/paso del formulario.
@@ -83,8 +83,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
  * Envía un mensaje con el valor 'false' al servicio de mensajes para indicar 
  * que se ha cancelado o finalizado la acción relacionada.
  */
-  ngOnDestroy(){
-  this.servicioDeMensajesService.enviarMensaje(false);
+  ngOnDestroy() {
+    this.servicioDeMensajesService.enviarMensaje(false);
   }
-  
+
 }

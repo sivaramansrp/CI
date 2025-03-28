@@ -1,12 +1,204 @@
 <div class="container">
+  <div class="row">
+    <ng-titulo [titulo]="'Buscar cupos'"></ng-titulo>
+  </div>
+  <div class="row">
+    <form   [formGroup]="formularioGrupo">
+    <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="regimenAduaneroList"
+    formControlName="regimenAduanero"
+    [label]="'Régimen aduanero'"
+    [required]="true"
+    name="regimenAduanero"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="mecanismoAsignacionList"
+    formControlName="mecanismoAsignacion"
+    [label]="'Mecanismo de asignación'"
+    [required]="true"
+    name="mecanismoAsignacion"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="tratadoBloqueComercialList"
+    formControlName="tratadoBloqueComercial"
+    [label]="'Tratado o bloque comercial'"
+    [required]="false"
+    name="tratadoBloqueComercial"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="nombreProductoList"
+    formControlName="nombreProducto"
+    [label]="'Nombre de producto'"
+    [required]="false"
+    name="nombreProducto"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="nombreSubproductoList"
+    formControlName="nombreSubproducto"
+    [label]="'Nombre del subproducto'"
+    [required]="false"
+    name="nombreSubproducto"
+  ></app-catalogo-select>
+  </div>
+  <div class="col-md-4">
+    <app-catalogo-select
+    [catalogo]="representacionFederalList"
+    formControlName="representacionFederal"
+    [label]="'Representación federal'"
+    [required]="false"
+    name="representacionFederal"
+  ></app-catalogo-select>
+  </div>
+
+  </form>
+
+  </div>
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-10">
+      <button type="button" class="btn btn-primary">Buscar</button>
+  </div>
+  </div>
     <div class="row">
       <div class="col-md-12">
-        <h5>Permisos a cancelar</h5>
+        <h5>Cupos disponibles</h5>
         <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasSolicitud"
           [datos]="cuerpoTablaCancelacion"></app-tabla-dinamica>
   
       </div>
     </div>
+    <div class="row">
+      <ng-titulo [titulo]="'Detalle del cupo'"></ng-titulo>
+    </div>
+    <div class="row">
+      <form [formGroup]="myForm">
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="regimenAduanero">Régimen aduanero:</label>
+        <input
+          class="form-control"
+          id="regimenAduanero"
+          formControlName="regimenAduanero"
+          placeholder=""
+          name="regimenAduanero"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="descripcionProducto">Descripción del producto:</label>
+        <input
+          class="form-control"
+          id="descripcionProducto"
+          formControlName="descripcionProducto"
+          placeholder=""
+          name="descripcionProducto"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="clasificacionSubproducto">Clasificación del subproducto:</label>
+        <input
+          class="form-control"
+          id="clasificacionSubproducto"
+          formControlName="clasificacionSubproducto"
+          placeholder=""
+          name="clasificacionSubproducto"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="unidadMedida">Unidad de medida:</label>
+        <input
+          class="form-control"
+          id="unidadMedida"
+          formControlName="unidadMedida"
+          placeholder=""
+          name="unidadMedida"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="mecanismoAsignacion">Mecanismo de asignación:</label>
+        <input
+          class="form-control"
+          id="mecanismoAsignacion"
+          formControlName="mecanismoAsignacion"
+          placeholder=""
+          name="mecanismoAsignacion"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="tratadoAcuerdo">Tratado / Acuerdo:</label>
+        <input
+          class="form-control"
+          id="tratadoAcuerdo"
+          formControlName="tratadoAcuerdo"
+          placeholder=""
+          name="tratadoAcuerdo"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-12">
+        <label for="acondicionamiento" class="form-label text-start"
+          >Fracciones arancelarias:</label
+        >
+        <textarea
+          id="fraccionesArancelarias"
+          class="form-control"
+          style="height: 50%; resize: none"
+          formControlName="fraccionesArancelarias"
+        ></textarea>
+      </div>
+      <div class="col-md-12">
+        <label for="paises" class="form-label text-start"
+          >Países:</label
+        >
+        <textarea
+          id="paises"
+          class="form-control"
+          style="height: 50%; resize: none"
+          formControlName="paises"
+        ></textarea>
+      </div>
+      <div class="col-md-12">
+        <label for="observaciones" class="form-label text-start"
+          >Observaciones:</label
+        >
+        <textarea
+          id="observaciones"
+          class="form-control"
+          style="height: 50%; resize: none"
+          formControlName="observaciones"
+        ></textarea>
+      </div>
+      <div class="col-md-12">
+        <label for="fundamentos" class="form-label text-start"
+          >Fundamentos:</label
+        >
+        <textarea
+          id="fundamentos"
+          class="form-control"
+          style="height: 50%; resize: none"
+          formControlName="fundamentos"
+        ></textarea>
+      </div>
+      </form>
+    </div>
+   
     <div class="row mt-2">
       <div class="col-md-12 d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -15,17 +207,6 @@
           aria-controls="offcanvasRight" (click)="busqueda($event)">Búsqueda folio</button>
       </div>
     </div>
-    <div *ngIf="datosDePermiso">
-      <form [formGroup]="cancelacionForm">
-        <div class="row">
-          <div class="col-md-12">
-            <label class="form-label" for="motivoCancelacion">Motivo cancelación*:
-            </label>
-            <textarea rows="3" style="height: 80px" class="form-control" id="motivoCancelacion"
-              formControlName="motivoCancelacion"></textarea>
-          </div>
-  
-        </div>
-      </form>
-  
-    </div>
+</div>
+
+

@@ -45,7 +45,8 @@ import { ToastrService } from 'ngx-toastr';
     TableComponent,
     InputRadioComponent,
     ToastrModule.forRoot(),
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    TituloComponent
   ]
 })
 export class CancelacionDeCertificadosDeCupoModule { }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Cancelacion } from '../../models/cancelacion-de-certificados.model';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -14,13 +14,18 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-cancelacion-de-certificados',
   templateUrl: './cancelacion-de-certificados.component.html',
-  styleUrl: './cancelacion-de-certificados.component.css',
+  styleUrl: './cancelacion-de-certificados.component.scss',
 })
 export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Formulario para capturar los datos de la solicitud.
    */
-  solicitudForm?: FormGroup;
+  regimenAduaneroList: Catalogo[] = [];
+  mecanismoAsignacionList: Catalogo[] = [];
+  tratadoBloqueComercialList: Catalogo[] = [];
+  nombreProductoList: Catalogo[] = [];
+  nombreSubproductoList: Catalogo[] = [];
+  representacionFederalList: Catalogo[] = [];
   /**
    * Sujeto para gestionar la destrucción del componente y evitar fugas de memoria.
    */
@@ -28,20 +33,15 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Formulario para capturar el motivo de cancelación.
    */
-  public cancelacionForm!: FormGroup;
   /**
    * Configuración de las columnas de la tabla de solicitudes de cancelación.
    */
   configuracionColumnasSolicitud: ConfiguracionColumna<Cancelacion>[] = [
-    { encabezado: 'Folio trámite', clave: (fila) => fila.folioTramite, orden: 1 },
-    { encabezado: 'Tipo solicitud', clave: (fila) => fila.tipoDeSolicitud, orden: 2 },
-    { encabezado: 'Régimen', clave: (fila) => fila.regimen, orden: 3 },
-    { encabezado: 'Clasificación régimen', clave: (fila) => fila.cdr, orden: 4 },
-    { encabezado: 'Condición de la mercancía', clave: (fila) => fila.condicionDeLaMercancia, orden: 5 },
-    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 6 },
-    { encabezado: 'Unidad de medida', clave: (fila) => fila.umt, orden: 7 },
-    { encabezado: 'Cantidad solicitada', clave: (fila) => fila.cantidad, orden: 8 },
-    { encabezado: 'Valor solicitado', clave: (fila) => fila.usd, orden: 9 },
+    { encabezado: 'Cupo', clave: (fila) => fila.cupo, orden: 1 },
+    { encabezado: 'Nombre de producto', clave: (fila) => fila.nombre_de_producto, orden: 2 },
+    { encabezado: 'Nombre del subproducto', clave: (fila) => fila.nombre_del_subproducto, orden: 3 },
+    { encabezado: 'Mecanismo de asignación', clave: (fila) => fila.mecanismo_de_asignación, orden: 4 },
+    { encabezado: 'Tipo cupo', clave: (fila) => fila.tipo_cupo, orden: 5 },
   ];
   /**
   * Configuración para la selección de filas en la tabla.
@@ -57,8 +57,33 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   public datosDePermiso: boolean = false;
 
   formularioGrupo!: FormGroup;
+  myForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
+  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) {
+    this.formularioGrupo = new FormGroup({
+      regimenAduanero: new FormControl('', Validators.required),
+      mecanismoAsignacion: new FormControl('', Validators.required),
+      tratadoBloqueComercial: new FormControl(''),
+      nombreProducto: new FormControl(''),
+      nombreSubproducto: new FormControl(''),
+      representacionFederal: new FormControl(''),
+
+    });
+    this.myForm = this.fb.group({
+      regimenAduanero: ['', Validators.required],
+      descripcionProducto: ['', Validators.required],
+      clasificacionSubproducto: [''], // Not required based on the image
+      unidadMedida: ['', Validators.required],
+      mecanismoAsignacion: ['', Validators.required],
+      tratadoAcuerdo: ['', Validators.required],
+      fraccionesArancelarias: ['', Validators.required],
+      paises: [''],
+      fechaInicioVigencia: [''],
+      fechaFinVigencia: [''],
+      observaciones: [''],
+      fundamentos: ['']
+    });
+  }
   /**
   * Método que se ejecuta al iniciar el componente.
   * Inicializa los formularios de solicitud y cancelación, 
@@ -67,14 +92,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   * de la solicitud de cancelación.
   */
   ngOnInit(): void {
-    this.formularioGrupo = new FormGroup({
-      regimenAduanero: new FormControl('', Validators.required),
-      mecanismoAsignacion: new FormControl('', Validators.required),
-      tratadoBloqueComercial: new FormControl(''),
-      nombreProducto: new FormControl(''),
-      nombreSubproducto: new FormControl(''),
-      representacionFederal: new FormControl(''),
-    });
+
   }
 
   /**
