@@ -3,7 +3,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -35,7 +35,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
 })
-export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
+export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -145,7 +145,13 @@ public mostrarCamposNoContribuyente:boolean = false;
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+  }
 
+  /**
+   * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
+   * Llama al método `mostrarCamposNoContribuyente()`.
+   */
+  ngOnChanges(): void {
     this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
