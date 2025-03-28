@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-
+import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
+import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 
@@ -72,7 +73,7 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
    * - telefono
    */
   destinatarioForm!: FormGroup;
-
+  placeholder :Placeholders=mediocatalogo.placeholder;
   /**
    * Estado de la solicitud 110203, que contiene los valores actuales de los campos relacionados con el destinatario.
    */

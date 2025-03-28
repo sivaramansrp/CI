@@ -47,7 +47,22 @@
         { "id": 1, "descripcion": "Manual" },
         { "id": 2, "descripcion": "Electrónica" }
       
-    ]
+    ],
+    "placeholder":
+        {
+            "nombre": "Juan",
+            "primer": "Perez",
+            "segundo": "Perez",
+            "fiscal": "123",
+            "razon": "",
+            "calle": "pruebas1",
+            "letra": "1",
+            "ciudad": "pruebas2",
+            "correo": "correo@correo.com",
+            "fax": "55446778899",
+            "telefono": "2-55446778899"
+          }
+    
     
     
 }
