@@ -161,6 +161,7 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="fraccionesArancelarias"
+          readonly="true"
         ></textarea>
       </div>
       <div class="col-md-12">
@@ -172,6 +173,7 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="paises"
+          readonly="true"
         ></textarea>
       </div>
       <div class="col-md-12">
@@ -183,6 +185,7 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="observaciones"
+          readonly="true"
         ></textarea>
       </div>
       <div class="col-md-12">
@@ -194,11 +197,86 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="fundamentos"
+          readonly="true"
         ></textarea>
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="fechaInicioVigencia">Fecha de inicio de vigencia:</label>
+        <input
+          class="form-control"
+          id="fechaInicioVigencia"
+          formControlName="fechaInicioVigencia"
+          placeholder=""
+          name="fechaInicioVigencia"
+          type="text"
+          readonly=true
+                  />
+      </div>
+      <div class="col-md-4 form-group">
+        <label class="form-label" for="fechaFinVigencia">Fecha de fin de vigencia:</label>
+        <input
+          class="form-control"
+          id="fechaFinVigencia"
+          formControlName="fechaFinVigencia"
+          placeholder=""
+          name="fechaFinVigencia"
+          type="text"
+          readonly=true
+                  />
       </div>
       </form>
     </div>
-   
+    <div class="row">
+      <ng-titulo [titulo]="'Detalle del cupo'"></ng-titulo>
+    </div>
+    <div class="row">
+      <form [formGroup]="montoForm">
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoAsignado">Monto asignado:</label>
+          <input
+            class="form-control"
+            id="montoAsignado"
+            formControlName="montoAsignado"
+            placeholder=""
+            name="montoAsignado"
+            type="text"
+            readonly=true
+                    />
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoAsignado">Monto disponible:</label>
+          <input
+            class="form-control"
+            id="montoDisponible"
+            formControlName="montoDisponible"
+            placeholder=""
+            name="montoDisponible"
+            type="text"
+            readonly=true
+                    />
+        </div>
+        <div class="col-md-4 form-group">
+          <label class="form-label" for="montoExpedido">Monto expedido:</label>
+          <input
+            class="form-control"
+            id="montoExpedido"
+            formControlName="montoExpedido"
+            placeholder=""
+            name="montoExpedido"
+            type="text"
+            readonly=true
+                    />
+        </div>
+        </form>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h5>Cupos disponibles</h5>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasSolicitud"
+          [datos]="cuerpoTablaCancelacion"></app-tabla-dinamica>
+  
+      </div>
+    
     <div class="row mt-2">
       <div class="col-md-12 d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"

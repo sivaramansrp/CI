@@ -58,6 +58,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
 
   formularioGrupo!: FormGroup;
   myForm: FormGroup;
+  montoForm: FormGroup;
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) {
     this.formularioGrupo = new FormGroup({
@@ -82,6 +83,11 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
       fechaFinVigencia: [''],
       observaciones: [''],
       fundamentos: ['']
+    });
+    this.montoForm = this.fb.group({
+      montoAsignado: [''], // Initial value from the image
+      montoDisponible: [''], // Initial value from the image
+      montoExpedido: ['']    // Initial value from the image
     });
   }
   /**
