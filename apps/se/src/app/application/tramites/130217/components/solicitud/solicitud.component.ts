@@ -13,8 +13,8 @@ import PartidasdelaTable from '@libs/shared/theme/assets/json/130217/partidas-de
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite130217Query } from '../../estados/queries/tramite130217.query';
-import { Tramite130217Store } from '../../estados/tramites/tramites130217.store';
+import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
+import { Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
 import fractionValues from '@libs/shared/theme/assets/json/130217/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130217/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130217/unidad_da.json';
@@ -512,6 +512,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fetchEntidadFederativa(): void {
     this.ControlPermisosPreviosExportacionService
       .getEntidadFederativa()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.entidadFederativa = data;
       });
@@ -523,6 +524,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fetchRepresentacionFederal(): void {
     this.ControlPermisosPreviosExportacionService
       .getRepresentacionFederal()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.representacionFederal = data;
       });
@@ -534,6 +536,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   listaDePaisesDisponibles(): void {
     this.ControlPermisosPreviosExportacionService
       .getListaDePaisesDisponibles()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.elementosDeBloque = data;
       });
@@ -546,6 +549,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.ControlPermisosPreviosExportacionService
       .getPaisesPorBloque(_bloqueId)
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.paisesPorBloque = data;
         this.selectRangoDias = this.paisesPorBloque.map(

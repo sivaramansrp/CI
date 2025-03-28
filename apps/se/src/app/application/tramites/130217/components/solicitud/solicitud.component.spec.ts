@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Tramite130217Store } from '../../estados/tramites/tramites130217.store';
-import { Tramite130217Query } from '../../estados/queries/tramite130217.query';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
+import { Tramite130217Query } from '../../../../estados/queries/tramite130217.query';
+import { Tramite130217Store } from '../../../../estados/tramites/tramite130217.store';
 
 @Component({ selector: 'app-partidas-de-la-mercancia', template: '' })
 class PartidasDeLaMercanciaStubComponent {}

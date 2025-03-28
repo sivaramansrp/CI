@@ -1,4 +1,4 @@
-import {Tramite130217State, Tramite130217Store } from '../tramites/tramites130217.store';
+import {Tramite130217State, Tramite130217Store } from '../tramites/tramite130217.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
