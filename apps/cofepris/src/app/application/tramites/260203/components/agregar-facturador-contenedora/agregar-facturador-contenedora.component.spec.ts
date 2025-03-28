@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarFacturadorContenedoraComponent } from './agregar-facturador-contenedora.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AgregarFacturadorContenedoraComponent', () => {
   let component: AgregarFacturadorContenedoraComponent;
@@ -7,7 +8,7 @@ describe('AgregarFacturadorContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgregarFacturadorContenedoraComponent],
+      imports: [AgregarFacturadorContenedoraComponent,HttpClientModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarFacturadorContenedoraComponent);

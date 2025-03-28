@@ -30,5 +30,8 @@ export class Tramite260203Query extends Query<Tramite260203State> {
     (state) => state.facturadorTablaDatos
   );
 
-  public getDetalleMercancia$ = this.select((state) => state.detalleMercanciaTabla)
+  public getDetalleMercancia$ = this.select((state) => state.detalleMercanciaTabla);
+  public indicePrevioRuta$ = this.select((state) => state.indice);
+
+  
 }

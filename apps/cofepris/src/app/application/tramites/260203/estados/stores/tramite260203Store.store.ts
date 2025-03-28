@@ -31,6 +31,8 @@ export interface Tramite260203State {
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
   detalleMercanciaTabla: DetalleMercancia[];
+  indice: number;
+
 }
 
 export function createInitialState(): Tramite260203State {
@@ -99,6 +101,7 @@ export function createInitialState(): Tramite260203State {
       importePago: '',
     },
     detalleMercanciaTabla: [],
+    indice: 1
   };
 }
 
@@ -204,5 +207,12 @@ export class Tramite260203Store extends Store<Tramite260203State> {
         detalleMercanciaTabla: DATOS,
       };
     });
+  }
+
+  public setIndice(indice: number): void {
+    this.update((state) => ({
+      ...state,
+      indice
+    }))
   }
 }

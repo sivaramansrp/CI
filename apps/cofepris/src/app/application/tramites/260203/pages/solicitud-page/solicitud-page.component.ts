@@ -14,6 +14,7 @@ import { PASOS } from '../../models/permiso-sanitario-importacion-medicamentos.m
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación
@@ -39,9 +40,7 @@ export class SolicitudPageComponent {
    * @property {string | null} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
    */
-  tituloMensaje: string | null =
-    'Permiso sanitario de importación de medicamentos con registro sanitario';
-
+  tituloMensaje: string = TITULO_MENSAJE;
   /**
    * @property {ListaPasosWizard[]} pasos
    * Lista de pasos del wizard obtenidos desde una constante externa.
@@ -90,9 +89,7 @@ export class SolicitudPageComponent {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      this.tituloMensaje = SolicitudPageComponent.obtenerNombreDelTítulo(
-        e.valor
-      );
+      this.tituloMensaje = this.obtenerNombreDelTítulo(e.valor);
 
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
@@ -109,17 +106,16 @@ export class SolicitudPageComponent {
    * @param {number} valor - Índice del paso actual.
    * @returns {string} - Título correspondiente.
    */
-  static obtenerNombreDelTítulo(valor: number): string {
+  obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
-        return 'Permiso sanitario de importación de medicamentos con registro sanitario';
+        return TITULO_MENSAJE;
       case 2:
-        return 'Anexar requisitos';
+        return this.pasos[1].titulo;
       case 3:
-        return 'Firmar solicitud';
-
+        return this.pasos[2].titulo;
       default:
-        return 'Permiso sanitario de importación de medicamentos con registro sanitario';
+        return TITULO_MENSAJE;
     }
   }
 }
