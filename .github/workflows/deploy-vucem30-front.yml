@@ -44,9 +44,6 @@ env:
   # Variables para controlar problemas de NX
   NX_SKIP_NX_CACHE: 'true'
   NX_NATIVE_BINDINGS: 'false'
-  # Variables adicionales para control de memoria y compatibilidad
-  NODE_OPTIONS: '--max-old-space-size=8192'
-  FORCE_COLOR: 1
 
 jobs:
   setup:
@@ -189,7 +186,7 @@ jobs:
     needs: setup
     if: needs.setup.outputs.final_apps != ''
     runs-on: ubuntu-latest
-    timeout-minutes: 60  # Aumentado para dar más tiempo
+    timeout-minutes: 40  # Aumentado para dar más tiempo
     permissions:
       contents: read
       packages: write
@@ -207,9 +204,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          # Deshabilitado cache para evitar problemas de compatibilidad
-          # cache: 'npm'
-          # cache-dependency-path: package-lock.json
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install build dependencies
         run: |
@@ -229,13 +225,6 @@ jobs:
           # Disable NX native modules to avoid binary compatibility issues
           echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
           echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-          
-          # Ampliar memoria disponible para Node
-          echo "NODE_OPTIONS=--max-old-space-size=8192" >> $GITHUB_ENV
-          
-          # Aumentar el tiempo de espera del compilador de TypeScript
-          echo "TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling" >> $GITHUB_ENV
-          echo "TSC_NONPOLLING_WATCHER=true" >> $GITHUB_ENV
 
       - name: Ensure .eslintrc.json exists in root
         run: |
@@ -262,141 +251,47 @@ jobs:
             }' > .eslintrc.json
           fi
 
-      # Eliminar caché para forzar reinstalación limpia
-      - name: Clean environment before build
-        run: |
-          echo "Limpiando entorno y caché..."
-          rm -rf node_modules
-          rm -rf ~/.npm
-          npm cache clean --force
-          echo "Entorno limpiado correctamente"
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-      # Reset NX cache
       - name: Reset NX cache
         run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
 
-      # Instalar dependencias con opciones específicas para resolver conflictos
+      # Modificación para instalar los paquetes con más opciones de seguridad
       - name: Install dependencies with specific options
         run: |
           # Verificar que npm está correctamente configurado
           npm config list
-          # Instalar dependencias con opciones específicas para prevenir conflictos
-          npm install --legacy-peer-deps --no-package-lock --force
-          echo "Dependencias instaladas correctamente"
+          # Instalar dependencias con más opciones de seguridad
+          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
-      # Asegurar que la versión específica de NX está instalada
       - name: Install NX globally with specific version
         run: |
           npm install -g nx@${{ env.NX_VERSION }}
           nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
 
-      # Aplicar resoluciones específicas para webpack para evitar duplicados
-      - name: Apply webpack resolutions
-        run: |
-          echo "Aplicando resoluciones específicas para webpack..."
-          if [ -f "package.json" ]; then
-            # Verificar si ya existe la sección "resolutions"
-            if ! grep -q '"resolutions"' package.json; then
-              # Insertar sección de resoluciones antes del último }
-              sed -i '/"dependencies"/,/"devDependencies"/ s/"devDependencies"/  "resolutions": {\n    "webpack": "^5.76.0"\n  },\n  "devDependencies"/' package.json
-            else
-              # Si ya existe, agregar la resolución de webpack
-              sed -i '/"resolutions"/ a\    "webpack": "^5.76.0",' package.json
-            fi
-            echo "Resoluciones aplicadas correctamente"
-            
-            # Reinstalar para aplicar resoluciones
-            npm install --force
-          else
-            echo "package.json no encontrado"
-          fi
-
-      # Ajustar configuración de Module Federation específicamente para sener
-      - name: Fix Module Federation config for sener app
-        if: matrix.app == 'sener'
-        run: |
-          echo "Ajustando configuración de Module Federation para la aplicación sener..."
-          
-          # Buscar y ajustar archivo de configuración de webpack
-          if [ -f "apps/sener/webpack.config.js" ]; then
-            # Realizar ajustes en la configuración específica de sener
-            cat > apps/sener/webpack.fix.js << EOF
-            // Función auxiliar para ajustar la configuración de ModuleFederationPlugin
-            const fixModuleFederationConfig = (webpackConfig) => {
-              if (webpackConfig.plugins) {
-                const mfPluginIndex = webpackConfig.plugins.findIndex(plugin => 
-                  plugin.constructor && plugin.constructor.name === 'ModuleFederationPlugin'
-                );
-                
-                if (mfPluginIndex >= 0) {
-                  const originalPlugin = webpackConfig.plugins[mfPluginIndex];
-                  // Crear una nueva instancia con configuración compatible
-                  const webpack = require('webpack');
-                  webpackConfig.plugins[mfPluginIndex] = new webpack.container.ModuleFederationPlugin({
-                    ...originalPlugin._options,
-                    shared: {
-                      ...originalPlugin._options.shared,
-                      "@angular/core": { singleton: true, eager: true, strictVersion: false },
-                      "@angular/common": { singleton: true, eager: true, strictVersion: false },
-                      "@angular/router": { singleton: true, eager: true, strictVersion: false }
-                    }
-                  });
-                }
-              }
-              return webpackConfig;
-            };
-            
-            // Exportar módulo que ajusta la configuración de webpack
-            module.exports = (webpackConfig) => {
-              return fixModuleFederationConfig(webpackConfig);
-            };
-            EOF
-            
-            # Modificar el webpack.config.js original para usar nuestro ajuste
-            sed -i '1i const webpackFix = require("./webpack.fix.js");' apps/sener/webpack.config.js
-            sed -i 's/module.exports = /const originalConfig = /' apps/sener/webpack.config.js
-            echo 'module.exports = webpackFix(originalConfig);' >> apps/sener/webpack.config.js
-            
-            echo "Configuración de webpack para sener ajustada correctamente"
-          else
-            echo "No se encontró webpack.config.js para sener, intentando buscar en otro lugar..."
-            
-            # Buscar en configuración global de NX
-            if [ -f "webpack.config.js" ]; then
-              echo "Ajustando configuración global de webpack..."
-              sed -i '/ModuleFederationPlugin/ a\            // Fix para el error de compilación en sener\n            if (options.name === "sener") {\n              console.log("Aplicando fix específico para sener...");\n              options.shared = {\n                ...options.shared,\n                "@angular/core": { singleton: true, eager: true, strictVersion: false },\n                "@angular/common": { singleton: true, eager: true, strictVersion: false },\n                "@angular/router": { singleton: true, eager: true, strictVersion: false }\n              };\n            }' webpack.config.js
-              echo "Configuración global ajustada"
-            fi
-          fi
-
-      # Construir con opciones adicionales específicas para cada app
       - name: Build ${{ matrix.app }}
         run: |
+          # Crear un script de build temporal sin postinstall hooks
           echo "Construyendo la aplicación ${{ matrix.app }}..."
           
-          # Configurar opciones específicas para cada app
-          BUILD_OPTIONS="--configuration=production --skip-nx-cache --verbose"
-          
-          # Agregar opciones específicas para sener
-          if [ "${{ matrix.app }}" == "sener" ]; then
-            BUILD_OPTIONS="$BUILD_OPTIONS --no-progress --aot --optimization=false --sourceMap=false"
-          fi
-          
-          # Utilizar comando con memoria aumentada y opciones personalizadas
-          node --max-old-space-size=8192 node_modules/.bin/nx build ${{ matrix.app }} $BUILD_OPTIONS
-          
-          # Verificar resultado del build
-          if [ $? -ne 0 ]; then
-            echo "Error durante la construcción de ${{ matrix.app }}"
-            exit 1
-          fi
+          # Usar comando directo sin npx para evitar problemas de binarios
+          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
 
-      # Verificar la salida del build
       - name: Verify build output
         run: |
           ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
 
-      # Configuración de Docker Buildx con recursos adicionales
+      # Configuración corregida de Docker Buildx
       - name: Setup Docker Buildx with increased memory
         uses: docker/setup-buildx-action@v3
         with:
@@ -405,7 +300,6 @@ jobs:
             network=host
           buildkitd-flags: --debug
 
-      # Login al registro de contenedores
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -413,7 +307,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extraer metadatos para Docker
       - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v4
@@ -428,7 +321,7 @@ jobs:
             org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
             org.opencontainers.image.vendor=${{ github.repository_owner }}
 
-      # Construir y publicar imagen Docker con recursos adicionales
+      # Modificado para construir directamente con el Dockerfile optimizado
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -447,10 +340,10 @@ jobs:
             NX_NATIVE_BINDINGS=false
           driver-opts: |
             network=host
-            memory=8g
-            memory-swap=8g
-          timeout-minutes: 30  # Aumentado
-          no-cache: ${{ contains(matrix.app, 'sener') }}  # Siempre sin caché para sener
+            memory=4g
+            memory-swap=4g
+          timeout-minutes: 20  # Aumentado
+          no-cache: ${{ contains(matrix.app, 'se') }}
 
   deploy:
     name: Deploy Microfrontends
