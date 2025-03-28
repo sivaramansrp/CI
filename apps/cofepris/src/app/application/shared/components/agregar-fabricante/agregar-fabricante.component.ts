@@ -237,14 +237,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       });
   }
 
-  /**
-   * Hook que se ejecuta al destruir el componente.
-   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+ 
    /**
  * @method limpiarFormulario
  * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
@@ -262,5 +255,14 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
  */
   cancelar():void{
     this.ubicaccion.back();
+  }
+
+   /**
+   * Hook que se ejecuta al destruir el componente.
+   * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
+   */
+   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
