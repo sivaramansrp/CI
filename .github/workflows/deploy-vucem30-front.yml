@@ -36,7 +36,8 @@ on:
       - '.github/workflows/**'
 
 env:
-  NODE_VERSION: '20'
+  # Updated to match Angular 18.x compatibility requirements
+  NODE_VERSION: '18.19.1'
   NX_VERSION: '19.3.1'
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
@@ -44,6 +45,8 @@ env:
   # Variables para controlar problemas de NX
   NX_SKIP_NX_CACHE: 'true'
   NX_NATIVE_BINDINGS: 'false'
+  # Added for Webpack compatibility
+  WEBPACK_VERSION: '5.91.0'
 
 jobs:
   setup:
@@ -273,6 +276,21 @@ jobs:
           npm config list
           # Instalar dependencias con más opciones de seguridad
           npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
+          
+          # Verificar versión instalada de webpack y forzar si es necesario
+          echo "Verificando versión de webpack..."
+          CURRENT_WEBPACK=$(node -e "try { console.log(require('webpack/package.json').version) } catch (e) { console.log('not installed') }")
+          if [ "$CURRENT_WEBPACK" != "${{ env.WEBPACK_VERSION }}" ]; then
+            echo "Instalando webpack específico ${{ env.WEBPACK_VERSION }}"
+            npm install webpack@${{ env.WEBPACK_VERSION }} --save-dev --force
+          fi
+          
+          # Verificar que el módulo de Module Federation esté correctamente instalado
+          echo "Verificando @angular-architects/module-federation..."
+          if [ ! -d "node_modules/@angular-architects/module-federation" ]; then
+            echo "Reinstalando @angular-architects/module-federation..."
+            npm install @angular-architects/module-federation --save --force
+          fi
 
       - name: Use locally installed NX
         run: |
@@ -283,6 +301,8 @@ jobs:
       - name: Build ${{ matrix.app }}
         run: |
           echo "Construyendo la aplicación ${{ matrix.app }}..."
+          # Usar --skip-nx-cache para evitar problemas de caché
+          # Añadir --verbose para más información de diagnóstico
           npx nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
 
       - name: Verify build output
@@ -334,6 +354,7 @@ jobs:
           build-args: |
             NODE_ENV=production
             APP_ENV=${{ needs.setup.outputs.environment }}
+            NODE_VERSION=${{ env.NODE_VERSION }}
             NX_SKIP_NX_CACHE=true
             NX_NATIVE_BINDINGS=false
           driver-opts: |
