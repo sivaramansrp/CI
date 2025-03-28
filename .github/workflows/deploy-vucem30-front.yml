@@ -311,10 +311,7 @@ jobs:
           export NX_NATIVE_BINDINGS=false
           export NX_SKIP_NX_CACHE=true
           
-          # Configurar también en npm config global
-          npm config set NX_NON_NATIVE_HASHER true
-          npm config set NX_NATIVE_BINDINGS false
-          npm config set NX_SKIP_NX_CACHE true
+          # No intentes usar npm config set para variables de NX, ya que no son opciones válidas de npm
 
       - name: Clean app directory
         run: |
