@@ -10,28 +10,27 @@ import { ToastrModuled } from 'ngx-toastr';
 import { Component } from '@angular/core';
 import { MercanciasModalComponent } from './mercancias-modal.component';
 import { FormBuilder } from '@angular/forms';
-// import { Tramite110202Store } from '../../estados/Tramite110202.store';
-// import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { ToastrService } from 'ngx-toastr';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
-
+ 
 @Injectable()
 class MockTramite110202Query {
   formMercancia$ = observableOf({});
   selectFactura$ = {};
   selectUmc$ = {};
+  setFacturasSeleccion(){};
+  setUmcSeleccion(){};
 }
-
+ 
 @Injectable()
-class MockTramite110202Store {
-}
-
+class MockTramite110202Store {}
+ 
 describe('MercanciasModalComponent', () => {
   let fixture;
   let component;
-
+ 
   beforeEach(() => {
   TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
@@ -43,22 +42,20 @@ describe('MercanciasModalComponent', () => {
                 }),
         FormBuilder,
         CertificadoValidacionService,
-        // { provide: Tramite110202Store, useClass: MockTramite110202Store },
-        // { provide: Tramite110202Query, useClass: MockTramite110202Query },
         SeccionLibQuery,
         SeccionLibStore
       ]
     }).overrideComponent(MercanciasModalComponent, {
-
+ 
     }).compileComponents();
     fixture = TestBed.createComponent(MercanciasModalComponent);
     component = fixture.debugElement.componentInstance;
   });
-
+ 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-
+ 
   it('should run #ngOnInit()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn().mockReturnValue({
@@ -76,36 +73,34 @@ describe('MercanciasModalComponent', () => {
     expect(component.cargarUmc).toHaveBeenCalled();
     expect(component.store.setFormMercancia).toHaveBeenCalled();
   });
-
+ 
   it('should run #parchearValoresDelFormulario()', async () => {
     component.mercanciaForm = component.mercanciaForm || {};
     component.mercanciaForm.patchValue = jest.fn();
   });
-
+ 
   it('should run #tipoFacturasSeleccion()', async () => {
     component.store = component.store || {};
-    component.store.setFactura = jest.fn();
+    component.store.setFacturasSeleccion = jest.fn();
     component.tipoFacturasSeleccion({});
-    
+    expect(component.store.setFacturasSeleccion).toHaveBeenCalled();
   });
-
+ 
   it('should run #tipoUmcSeleccion()', async () => {
     component.store = component.store || {};
-    component.store.setUmc = jest.fn();
+    component.store.setUmcSeleccion = jest.fn();
     component.tipoUmcSeleccion({});
-    
+    expect(component.store.setUmcSeleccion).toHaveBeenCalled();
   });
-
+ 
   it('should run #cargarFactura()', async () => {
     component.certificadoService = component.certificadoService || {};
     component.certificadoService.obtenerFacturas = jest.fn().mockReturnValue(observableOf({}));
     component.store = component.store || {};
     component.store.setFactura = jest.fn();
     component.cargarFactura();
-    // expect(component.certificadoService.obtenerFacturas).toHaveBeenCalled();
-    // expect(component.store.setFactura).toHaveBeenCalled();
   });
-
+ 
   it('should run #cargarUmc()', async () => {
     component.certificadoService = component.certificadoService || {};
     component.certificadoService.obtenerUmc = jest.fn().mockReturnValue(observableOf({}));
@@ -115,30 +110,27 @@ describe('MercanciasModalComponent', () => {
     expect(component.certificadoService.obtenerUmc).toHaveBeenCalled();
     expect(component.store.setUmc).toHaveBeenCalled();
   });
-
+ 
   it('should run #activarModal()', async () => {
     component.guardarClicado = component.guardarClicado || {};
     component.guardarClicado.emit = jest.fn(); ``
     component.mercanciaForm = component.mercanciaForm || {};
     component.mercanciaForm.value = 'value';
     component.activarModal();
-    // expect(component.guardarClicado.emit).toHaveBeenCalled();
   });
-
+ 
   it('should run #cerrarModal()', async () => {
     component.cerrarClicado = component.cerrarClicado || {};
     component.cerrarClicado.emit = jest.fn();
     component.cerrarModal();
     expect(component.cerrarClicado.emit).toHaveBeenCalled();
   });
-
+ 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
-
+ 
 });

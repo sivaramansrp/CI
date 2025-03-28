@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+ 
 import { CertificadoOrigenComponent } from './certificado-origen.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable, NO_ERRORS_SCHEMA } from '@angular/core';
@@ -10,14 +10,14 @@ import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
+ 
 @Injectable()
 class MockTramite110202Store {
   setBloque() {}
   setaltaPlanta() {}
-  setBloqueSeleccion(){}
+  setBloqueSeleccion() {}
 }
-
+ 
 @Injectable()
 class MockTramite110202Query {
   formCertificado$ = observableOf({});
@@ -25,13 +25,13 @@ class MockTramite110202Query {
   selectPaisBloque$ = {};
   selectBuscarMercancia$ = {};
   selectmercanciaTabla$ = {};
-
+ 
 }
-
+ 
 describe('CertificadoOrigenComponent', () => {
   let component: CertificadoOrigenComponent;
   let fixture: ComponentFixture<CertificadoOrigenComponent>;
-
+ 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule ],
@@ -50,7 +50,7 @@ describe('CertificadoOrigenComponent', () => {
           ]
     })
     .compileComponents();
-
+ 
     fixture = TestBed.createComponent(CertificadoOrigenComponent);
     component = fixture.componentInstance;
     component.datosTabla$ = observableOf([]);
@@ -59,22 +59,22 @@ describe('CertificadoOrigenComponent', () => {
     component.datos1$ = observableOf([])
     fixture.detectChanges();
   });
-
+ 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-
+ 
   it('should run #obtenerDatosFormulario()', async () => {
     component.store = component.store || {};
     component.store.setFormCertificado = jest.fn();
     component.obtenerDatosFormulario({});
   });
-
  
-
+ 
+ 
   it('should run #ngOnInit()', async () => {
     component.cargarTratadoAcuerdo = jest.fn();
     component.cargarBloque = jest.fn();
@@ -82,7 +82,7 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.cargarTratadoAcuerdo).toHaveBeenCalled();
     expect(component.cargarBloque).toHaveBeenCalled();
   });
-
+ 
   it('should run #cargarTratadoAcuerdo()', async () => {
     component.certificadoService = component.certificadoService || {};
     component.certificadoService.obtenerListaTratadoAcuerdo = jest.fn().mockReturnValue(observableOf({}));
@@ -92,9 +92,9 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.certificadoService.obtenerListaTratadoAcuerdo).toHaveBeenCalled();
     expect(component.store.setaltaPlanta).toHaveBeenCalled();
   });
-
-
-
+ 
+ 
+ 
   it('should run #cargarBloque()', async () => {
     component.certificadoService = component.certificadoService || {};
     component.certificadoService.obtenerPaisBloque = jest.fn().mockReturnValue(observableOf({}));
@@ -102,22 +102,22 @@ describe('CertificadoOrigenComponent', () => {
     component.store.setBloque = jest.fn();
     component.cargarBloque();
     expect(component.certificadoService.obtenerPaisBloque).toHaveBeenCalled();
-    // expect(component.store.setBloque).toHaveBeenCalled();
+    expect(component.store.setBloque).toHaveBeenCalled();
   });
-
+ 
   it('should run #tipoEstadoSeleccion()', async () => {
     component.store = component.store || {};
     component.store.setEstado = jest.fn();
     component.tipoSeleccion({id: 1, descripcion: 'someValue'});
   });
-
+ 
   it('should run #tipoSeleccion()', async () => {
     component.store = component.store || {};
-    component.store.setBloque = jest.fn();
+    component.store.setBloqueSeleccion = jest.fn();
     component.tipoSeleccion({id: 1, descripcion: 'someValue'});
-    // expect(component.store.setBloque).toHaveBeenCalled();
+    expect(component.store.setBloqueSeleccion).toHaveBeenCalled();
   });
-
+ 
   it('should run #ngOnDestroy()', async () => {
     component.destroyNotifier$ = component.destroyNotifier$ || {};
     component.destroyNotifier$.next = jest.fn();
@@ -126,7 +126,7 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
-
+ 
   it('should run #buscarrMercancia()', async () => {
     component.certificadoService = component.certificadoService || {};
     component.certificadoService.obtenerMercancia = jest.fn().mockReturnValue(observableOf({}));
@@ -136,7 +136,7 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.certificadoService.obtenerMercancia).toHaveBeenCalled();
     expect(component.store.setbuscarMercancia).toHaveBeenCalled();
   });
-
+ 
   it('should run #abrirModificarModal()', async () => {
     component.store = component.store || {};
     component.store.setFormMercancia = jest.fn();
@@ -161,12 +161,12 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.store.setFormMercancia).toHaveBeenCalled();
     expect(component.modalInstance.show).toHaveBeenCalled();
   });
-
+ 
   it('should run #cerrarModificarModal()', async () => {
     component.modalInstance = component.modalInstance || {};
     component.modalInstance.hide = jest.fn();
     component.cerrarModificarModal();
     expect(component.modalInstance.hide).toHaveBeenCalled();
   });
-
+ 
 });
