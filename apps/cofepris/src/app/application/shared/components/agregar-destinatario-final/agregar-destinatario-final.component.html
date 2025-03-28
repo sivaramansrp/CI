@@ -25,6 +25,17 @@
           />
           Moral
         </div>
+        @if(mostrarCamposNoContribuyente){
+        <div class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            formControlName="tipoPersona"
+            value="Moral"
+          />
+          No Contribyunte
+        </div>
+      }
       </div>
     </div>
 
