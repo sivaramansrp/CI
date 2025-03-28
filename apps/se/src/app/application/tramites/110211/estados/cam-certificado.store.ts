@@ -34,6 +34,8 @@ export interface camState {
     telfono: string,
     fax: string,
     correo: string,
+    formaValida: { [key: string]: boolean },
+    formDestinatario: { [key: string]: undefined | boolean | string | number | object };
 }
 
 export function createInitialState(): camState {
@@ -109,7 +111,23 @@ export function createInitialState(): camState {
           lada: '',
           telfono: '',
           fax: '',
-          correo: ''
+          correo: '',
+          formaValida: {
+            certificado: false,
+            datos: false,
+            destinatrio: false,
+            datosDestinatario: false,
+          },
+          formDestinatario: {
+            paisDestin: '',
+            ciudad: '',
+            celle: '',
+            numeroLetra: '',
+            lada: '',
+            telefono: '',
+            fax: '',
+            correoElectronico: ''
+          },
     }
 }
 
@@ -331,5 +349,24 @@ export class camCertificadoStore extends Store<camState> {
             ...state,
             correo,
         }))
+      }
+
+      setFormValida(formaValida: { [key: string]: boolean }): void {
+        this.update((state) => {
+          const IS_VALID = { ...state.formaValida, ...formaValida };
+          return {
+            ...state,
+            formaValida: IS_VALID,
+          };
+        });
+      }
+
+      setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+        this.update((state) => ({
+          formDestinatario: {
+            ...state.formDestinatario,
+            ...values,
+          },
+        }));
       }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { camCertificadoStore, camState } from '../../estados/cam-certificado.store';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
@@ -13,9 +13,16 @@ interface FormValues {
   templateUrl: './cam-destinatario.component.html',
   styleUrl: './cam-destinatario.component.css',
 })
-export class CamDestinatarioComponent {
+export class CamDestinatarioComponent implements OnInit, OnDestroy {
   
   exportadorForm!: FormGroup
+
+   /** Valores actuales del formulario de destinatario. */
+   formDestinatarioValues!: FormValues;
+
+   /** Valores actuales del formulario de datos del destinatario. */
+   formDatosDelDestinatarioValues!: FormValues;
+ 
 
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -30,6 +37,17 @@ export class CamDestinatarioComponent {
     private seccionStore: SeccionLibStore,
     private seccionQuery: SeccionLibQuery
   ){
+    this.query.selectFormDatosDelDestinatario$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(estado => {
+        this.formDatosDelDestinatarioValues = estado;
+      });
+
+    this.query.selectFormDestinatario$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(estado => {
+      this.formDestinatarioValues = estado;
+    });
 
   }
 
@@ -70,6 +88,14 @@ export class CamDestinatarioComponent {
     this.store.setFormDatosDelDestinatario(e as FormValues);
   }
 
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ destinatrio: valida });
+  }
+
+  setFormValidaDestinatario(valida: boolean): void {
+    this.store.setFormValida({ datosDestinatario: valida });
+  }
+
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -80,5 +106,10 @@ export class CamDestinatarioComponent {
     (this.store[metodoNombre] as (value: any) => void)(
       VALOR
     );
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
@@ -14,7 +14,7 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   templateUrl: './mercancia.component.html',
   styleUrl: './mercancia.component.css',
 })
-export class MercanciaComponent {
+export class MercanciaComponent implements OnInit, OnDestroy {
 
   mostrarAlerta: boolean = false;
 
@@ -163,6 +163,11 @@ export class MercanciaComponent {
       (this.store[metodoNombre] as (value: any) => void)(
         VALOR
       );
+    }
+
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
     }
 
 }

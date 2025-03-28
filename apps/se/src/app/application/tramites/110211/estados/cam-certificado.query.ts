@@ -18,6 +18,21 @@ export class camCertificadoQuery extends Query<camState> {
     return state.mercanciaTabla;
     });
 
+    formCertificado$ = this.select((state) => {
+        return state.formCertificado;
+      });
+
+    formDatosCertificado$ = this.select((state) => {
+      return state.formDatosCertificado;
+    });
+
+    selectFormDatosDelDestinatario$ = this.select((state) => {
+      return state.formDatosDelDestinatario;
+    });
+
+    selectFormDestinatario$ = this.select((state) => {
+      return state.formDestinatario;
+    });
     /**
      * Constructor to inject AutorizacionProsecStore.
      * @param store AutorizacionProsecStore instance

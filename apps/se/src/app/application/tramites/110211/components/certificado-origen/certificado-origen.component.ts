@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Observable } from 'rxjs';
+import { camCertificadoStore, camState } from '../../estados/cam-certificado.store';
+import { Observable, Subject, delay, map, takeUntil  } from 'rxjs';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 @Component({
@@ -14,7 +14,7 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.css',
 })
-export class CertificadoOrigenComponent implements OnInit, AfterViewInit {
+export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
 
   estado: Catalogo[] = []
 
@@ -32,21 +32,51 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit {
 
   datosTabla$: Observable<Mercancia[]> | undefined;
 
+  formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
+
+  private certificadoState!: camState
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  private seccionState!: SeccionLibState
+
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
   constructor(
         private readonly fb: FormBuilder, 
         private camCertificadoService : CamCertificadoService,
         private store : camCertificadoStore,
-        private query : camCertificadoQuery
+        private query : camCertificadoQuery,
+        private seccionStore: SeccionLibStore,
+        private seccionQuery: SeccionLibQuery
     ){
-      // Constructor logic can be added here if needed
+      this.query.formCertificado$.pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(100)
+      ).subscribe(estado => {
+        this.formCertificadoValues = estado;
+      });
     }
 
     ngOnInit(): void {
+      this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    this.query.selectCam$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.certificadoState = state as camState;
+        })
+      )
+      .subscribe();
       this.estadoOpcion();
       this.paisOpcion();
-      this.conseguirDisponiblesDatos();
       this.datosTabla$ = this.query.selectmercanciaTabla$;
     }
 
@@ -121,5 +151,14 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit {
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
+  }
+
+  setFormValida(valida: boolean): void {
+    this.store.setFormValida({ certificado: valida });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
