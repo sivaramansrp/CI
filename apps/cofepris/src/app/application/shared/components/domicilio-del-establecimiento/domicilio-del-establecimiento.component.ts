@@ -78,7 +78,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Lista de estados cargados dinámicamente.
    */
-  estadoData: Catalogo[] = [];
+  datosEstado: Catalogo[] = [];
 
   /**
    * Lista de claves SCIAN cargadas dinámicamente.
@@ -108,7 +108,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Enum para la selección de tablas.
    */
-  TablaSeleccion = TablaSeleccion;
+  tipoSeleccionTabla = TablaSeleccion;
 
   /**
    * Configuración de columnas para la tabla de datos SCIAN.
@@ -298,7 +298,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       .obtenerEstadoData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp: Catalogo[]) => {
-        this.estadoData = resp;
+        this.datosEstado = resp;
       });
   }
 

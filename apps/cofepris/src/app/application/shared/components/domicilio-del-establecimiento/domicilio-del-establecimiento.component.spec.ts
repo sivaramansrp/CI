@@ -53,8 +53,8 @@ describe('DomicilioDelEstablecimientoComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        DomicilioDelEstablecimientoComponent, // Add the standalone component here
-        ReactiveFormsModule, // Other required modules
+        DomicilioDelEstablecimientoComponent, 
+        ReactiveFormsModule, 
       ],
       providers: [
         { provide: DatosService, useValue: mockDatosService },
@@ -119,70 +119,64 @@ describe('DomicilioDelEstablecimientoComponent', () => {
   });
 
   it('should call obtenerDatosDescripcion and set descripcionScian', () => {
-    // Adjust mockData to match the expected type of descripcionScian (Catalogo[])
     const mockData: Catalogo[] = [
       { id: 1, descripcion: 'Descripcion1' },
       { id: 2, descripcion: 'Descripcion2' },
     ];
   
-    // Mock the service method to return the correct type
+  
     mockDatosService.obtenerDescripcionScian.mockReturnValue(of(mockData));
   
-    // Call the method in the component
+    
     component.obtenerDatosDescripcion();
   
-    // Assert that the component's descripcionScian is set correctly
     expect(component.descripcionScian).toEqual(mockData);
   });
 
   it('should call cargarDatosTabla and set datosData', () => {
-    // Adjust mockData to match the expected type of datosData (ScianData[])
+   
     const mockData: ScianData[] = [
       { clave: '1', descripcion: 'Dato1' },
       { clave: '2', descripcion: 'Dato2' },
     ];
   
-    // Mock the service method to return the correct type
     mockDatosService.obternerDatosData.mockReturnValue(of(mockData));
   
-    // Call the method in the component
     component.cargarDatosTabla();
   
-    // Assert that the component's datosData is set correctly
     expect(component.datosData).toEqual(mockData);
   });
 
   it('should call obtenerDatosClave and set claveScian', () => {
-    // Adjust mockData to match the expected type of claveScian (Catalogo[])
+
     const mockData: Catalogo[] = [
       { id: 1, descripcion: 'Clave1' },
       { id: 2, descripcion: 'Clave2' },
     ];
   
-    // Mock the service method to return the correct type
+    
     mockDatosService.obtenerClaveScian.mockReturnValue(of(mockData));
   
-    // Call the method in the component
+
     component.obtenerDatosClave();
   
-    // Assert that the component's claveScian is set correctly
+   
     expect(component.claveScian).toEqual(mockData);
   });
 
   it('should call obtenerDatosPreOperativo and set radioOptions', () => {
-    // Adjust mockData to match the PreOperativo interface
+    
     const mockData: PreOperativo[] = [
       { label: 'PreOperativo1', value: '1' },
       { label: 'PreOperativo2', value: '2' },
     ];
   
-    // Mock the service method to return the correct type
+    
     mockDatosService.obtenerPreOperativo.mockReturnValue(of(mockData));
   
-    // Call the method in the component
     component.obtenerDatosPreOperativo();
   
-    // Assert that the component's radioOptions are set correctly
+ 
     expect(component.radioOptions).toEqual(mockData);
   });
 
