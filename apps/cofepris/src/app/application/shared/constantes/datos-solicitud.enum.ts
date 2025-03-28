@@ -3,6 +3,7 @@ import {
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../models/datos-solicitud.model';
+import { DetalleMercancia } from '../models/detalle-mercancia.model';
 
 export const OPCION_TABLA = [
   {
@@ -270,5 +271,41 @@ export const ADUNAS_DE_ENTRADAS_DATOS = [
   {
     id: 101,
     descripcion: "CD. JUAREZ",  
+  },
+]
+
+
+export const DETALLE_MERCANCIA_TABLA = [
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: DetalleMercancia): string => ele.formaFormaceutica,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: DetalleMercancia): string => ele.numeroDeRegistro,
+    orden: 2,
+  },
+  {
+    encabezado: 'Marcas Distintivas',
+    clave: (ele: DetalleMercancia): string => ele.marcasDistintivas,
+    orden: 3,
+  },
+  {
+    encabezado: 'Presentacion',
+    clave: (ele: DetalleMercancia): string => ele.tipoDeEnvase,
+    orden: 4,
+  },
+];
+
+
+export const FORMA_FORMACEUTICA_DATOS = [
+  {
+    id: 1,
+    descripcion: "Tabletas",  
+  },
+  {
+    id: 2,
+    descripcion: "Gragea",  
   },
 ]
