@@ -25,11 +25,16 @@ export const FECHA_FINAL: InputFecha = {
 @Component({
   selector: 'acuses-y-resoluiones-folio-del-tramite-detalles',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent,RouterModule],
-  templateUrl: './acuses-y-resoluiones-folio-del-tramite-detalles.component.html',
-  styleUrls: ['./acuses-y-resoluiones-folio-del-tramite-detalles.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, RouterModule],
+  templateUrl:
+    './acuses-y-resoluiones-folio-del-tramite-detalles.component.html',
+  styleUrls: [
+    './acuses-y-resoluiones-folio-del-tramite-detalles.component.scss',
+  ],
 })
-export class AcusesYResoluionesFolioDelTramiteDetallesComponent implements OnInit {
+export class AcusesYResoluionesFolioDelTramiteDetallesComponent
+  implements OnInit
+{
   /**
    * Formulario reactivo para acuses y resoluciones.
    */
@@ -50,13 +55,16 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent implements OnIni
    */
   //public router!: Router;
 
-   @Input() public prodecureUrl = '';
+  @Input() public procedureUrl = '';
+
+  @Input() public procedureRegresorUrl = '';
 
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio para construir formularios reactivos.
    */
-  public constructor(protected readonly formBuilder: FormBuilder,
+  public constructor(
+    protected readonly formBuilder: FormBuilder,
     public router: Router
   ) {}
 
@@ -66,13 +74,15 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent implements OnIni
   public ngOnInit(): void {
     this.acusesYResolucionesFormGroup = this.formBuilder.group({
       folio: [{ value: '', disabled: true }],
-      dependencia: [''],
-      fechaInicial: [''],
-      fechaFinal: [''],
-      unidadAdministrativaORepresentaciónFederal: [''],
-      tipoDeSolicitud: [''],
-      estatusDeLaSolicitud: [''],
-      díasHábilesTranscurridos: [''],
+      dependencia: [{ value: '', disabled: true }],
+      fechaInicioDeTramite: [{ value: '', disabled: true }],
+      fechaFinal: [{ value: '', disabled: true }],
+      unidadAdministrativaORepresentaciónFederal: [
+        { value: '', disabled: true },
+      ],
+      tipoDeSolicitud: [{ value: '', disabled: true }],
+      estatusDeLaSolicitud: [{ value: '', disabled: true }],
+      díasHábilesTranscurridos: [{ value: '', disabled: true }],
     });
 
     this.initializeFormValues();
@@ -84,7 +94,9 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent implements OnIni
   public initializeFormValues(): void {
     this.acusesYResolucionesFormGroup.get('folio')?.setValue('11105');
     this.acusesYResolucionesFormGroup.get('dependencia')?.setValue('AGA');
-    this.acusesYResolucionesFormGroup.get('fechaInicial')?.setValue('todayDate');
+    this.acusesYResolucionesFormGroup
+      .get('fechaInicial')
+      ?.setValue('todayDate');
     this.acusesYResolucionesFormGroup.get('fechaFinal')?.setValue('');
     this.acusesYResolucionesFormGroup
       .get('unidadAdministrativaORepresentaciónFederal')
@@ -92,18 +104,22 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent implements OnIni
     this.acusesYResolucionesFormGroup
       .get('tipoDeSolicitud')
       ?.setValue('Retirada de la autorización de donaciones');
-    this.acusesYResolucionesFormGroup.get('estatusDeLaSolicitud')?.setValue('En trámite');
-    this.acusesYResolucionesFormGroup.get('díasHábilesTranscurridos')?.setValue('10');
+    this.acusesYResolucionesFormGroup
+      .get('estatusDeLaSolicitud')
+      ?.setValue('En trámite');
+    this.acusesYResolucionesFormGroup
+      .get('díasHábilesTranscurridos')
+      ?.setValue('10');
   }
 
   /**
    * Navega a la página de acuses y resoluciones.
    */
-  public continuar(): void {
-    console.log(this.prodecureUrl);
-    this.router.navigate([this.prodecureUrl]);
+  public desistir(): void {
+    this.router.navigate([this.procedureUrl]);
+  }
 
-    //this.router.navigate(['/pago/retirada-de-la-autorizacion-de-donaciones/solicitud']);
-
+  regresar(): void{
+    this.router.navigate([this.procedureRegresorUrl]);
   }
 }

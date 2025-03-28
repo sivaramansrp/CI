@@ -38,7 +38,7 @@
     // region alert
     .alert-funcionario {
         background: #F3F9FA;
-        font-family: Roboto;
+        font-family: Montserrat;
     }
     // #endregion
 
@@ -46,7 +46,7 @@
     accordion-item {
         background-color: #ffffff!important;
         border: 0!important;
-        font-family: Roboto;
+        font-family: Montserrat;
     }
 
     accordion-item {
@@ -98,7 +98,7 @@
         display: flex;
         justify-content: right;
         margin-right: 20px;
-        font-family: Roboto;
+        font-family: Montserrat;
     }
 
     .accordion-button.collapsed {
@@ -112,27 +112,27 @@
 
     // #region form
     .form-label {
-        font-family: Roboto;
-        font-weight: 400;
+        font-family: Montserrat;
+        font-weight: bold;
         font-size: 16px;
         line-height: 28px;
         letter-spacing: 0%;
-        color: #6F7271;
+        color: #212529;
     }
 
     .form-control {
-        font-family: Roboto;
+        font-family: Montserrat;
         font-weight: 400;
         font-size: 16px;
         line-height: 28px;
         letter-spacing: 0%;
-        color: #DCE0E0;
+        color: #212529;
     }
 
     .btn {
         margin-top: 40px;
         margin-bottom: 40px;
-        font-family: Roboto;
+        font-family: Montserrat;
         width: 200px;
         height: 48px;
         gap: 10px;

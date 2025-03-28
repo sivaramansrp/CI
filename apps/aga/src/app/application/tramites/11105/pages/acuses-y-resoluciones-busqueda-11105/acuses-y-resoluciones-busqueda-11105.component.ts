@@ -1,13 +1,12 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
-  AcusesYResoluionesFolioDelTramiteBuscarComponent,
+  AcusesYResoluionesFolioDelTramiteBusquedaComponent,
   InputFecha,
   InputFechaComponent,
-  
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 // export const FECHA_INICIO = {
 //   labelNombre: 'Fecha inicial',
 //   required: true,
@@ -21,13 +20,17 @@ import { Router } from "@angular/router";
 // };
 
 @Component({
-  selector: 'acuses-y-resoluciones-buscar-11105',
+  selector: 'acuses-y-resoluciones-busqueda-11105',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent,AcusesYResoluionesFolioDelTramiteBuscarComponent],
-  templateUrl: './acuses-y-resoluciones-buscar-11105.component.html',
-  styleUrl: './acuses-y-resoluciones-buscar-11105.component.scss',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AcusesYResoluionesFolioDelTramiteBusquedaComponent,
+  ],
+  templateUrl: './acuses-y-resoluciones-busqueda-11105.component.html',
+  styleUrl: './acuses-y-resoluciones-busqueda-11105.component.scss',
 })
-export class AcusesYResolucionesBuscar11105Component {
+export class AcusesYResolucionesBusqueda11105Component {
   // public FormBusqueda!: FormGroup;
   // public fechaInicioInput: InputFecha = FECHA_INICIO;
   // public fechaFinalInput: InputFecha = FECHA_FINAL;
@@ -49,7 +52,4 @@ export class AcusesYResolucionesBuscar11105Component {
   //   };
   //   return this.formBuilder.group(CAMPOS_FOMULARIO);
   // }
-
- 
-  
 }

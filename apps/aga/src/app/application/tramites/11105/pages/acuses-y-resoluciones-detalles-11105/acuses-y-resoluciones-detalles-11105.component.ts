@@ -2,11 +2,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   InputFecha,
   InputFechaComponent,
-  
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluiones-folio-del-tramite-detalles/acuses-y-resoluiones-folio-del-tramite-detalles.component';
 // export const FECHA_INICIO = {
 //   labelNombre: 'Fecha inicial',
@@ -23,7 +22,11 @@ import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared
 @Component({
   selector: 'acuses-y-resoluciones-detalles-11105',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent,AcusesYResoluionesFolioDelTramiteDetallesComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    AcusesYResoluionesFolioDelTramiteDetallesComponent,
+  ],
   templateUrl: './acuses-y-resoluciones-detalles-11105.component.html',
   styleUrl: './acuses-y-resoluciones-detalles-11105.component.scss',
 })
@@ -49,7 +52,4 @@ export class AcusesYResolucionesDetalles11105Component {
   //   };
   //   return this.formBuilder.group(CAMPOS_FOMULARIO);
   // }
-
- 
-  
 }
