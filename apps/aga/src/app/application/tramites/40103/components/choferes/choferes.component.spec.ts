@@ -1,14 +1,24 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import {
+  Pipe,
+  PipeTransform,
+  Injectable,
+  CUSTOM_ELEMENTS_SCHEMA,
+  NO_ERRORS_SCHEMA,
+  Directive,
+  Input,
+  Output,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { ChoferesComponent } from './choferes.component';
 import { FormBuilder } from '@angular/forms';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { HttpClient } from '@angular/common/http';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
@@ -16,53 +26,57 @@ import { Chofer40103Query } from '../../estados/chofer40103.query';
 
 @Injectable()
 class MockHttpClient {
-  post() {};
+  post() {}
 }
 
 @Injectable()
-class MockChofer40103Store {
-  setEstado = jest.fn();
-}
+class MockChofer40103Store {}
 
 @Injectable()
 class MockChofer40103Service {}
 
 @Injectable()
-class MockChofer40103Query {
-  getChoferes$ = observableOf([]);
-  getchoferesextranjero$ = observableOf([]);
-}
+class MockChofer40103Query {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
+  transform(value) {
+    return value;
+  }
 }
 
 describe('ChoferesComponent', () => {
-  let fixture: ComponentFixture<ChoferesComponent>;
-  let component: ChoferesComponent;
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, ToastrModule.forRoot(), ChoferesComponent],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        ChoferesComponent,
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
@@ -72,119 +86,113 @@ describe('ChoferesComponent', () => {
         { provide: Chofer40103Store, useClass: MockChofer40103Store },
         { provide: Chofer40103Service, useClass: MockChofer40103Service },
         { provide: Chofer40103Query, useClass: MockChofer40103Query },
-        ChangeDetectorRef
-      ]
-    }).compileComponents();
+        ChangeDetectorRef,
+      ],
+    })
+      .overrideComponent(ChoferesComponent, {})
+      .compileComponents();
     fixture = TestBed.createComponent(ChoferesComponent);
     component = fixture.debugElement.componentInstance;
   });
 
   afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = function() {};
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
+    component.ngOnDestroy = function () {};
+    fixture.destroy();
   });
 
-  /**
-   * Verifica que el componente se haya creado correctamente.
-   */
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Verifica que el getter `f` funcione correctamente.
-   */
-  it('should run GetterDeclaration #f', async () => {
+  it('should run GetterDeclaration #getFormValues', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.controls = 'controls';
-    const f = component.f;
+    const getFormValues = component.getFormValues;
   });
 
-  /**
-   * Verifica que el método `setActiveTab` funcione correctamente.
-   */
+  it('should run #isModalOpen()', async () => {
+    component.isModalOpen({});
+  });
+
   it('should run #setActiveTab()', async () => {
     component.setActiveTab({});
   });
 
-  /**
-   * Verifica que el método `chofernacionalForm` funcione correctamente.
-   */
   it('should run #chofernacionalForm()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
     component.chofernacionalForm();
   });
 
-  /**
-   * Verifica que el método `ngOnInit` funcione correctamente.
-   */
   it('should run #ngOnInit()', async () => {
-    component.chofer40103Query = component.chofer40103Query || new MockChofer40103Query();
-    component.choferesList$ = component.chofer40103Query.getChoferes$;
-    component.choferesextranjerosList$ = component.chofer40103Query.getchoferesextranjero$;
+    component.getPagoDerechosLista$ = component.getPagoDerechosLista$ || {};
+    component.getPagoDerechosLista$.pipe = jest.fn().mockReturnValue(
+      observableOf({
+        length: {},
+      })
+    );
+    component.chofer40103Query = component.chofer40103Query || {};
+    component.chofer40103Query.getChoferes$ = 'getChoferes$';
+    component.chofer40103Query.getchoferesextranjero$ =
+      'getchoferesextranjero$';
+    component.choferesList$ = component.choferesList$ || {};
+    component.choferesList$.pipe = jest.fn().mockReturnValue(observableOf({}));
+    component.choferesextranjerosList$ =
+      component.choferesextranjerosList$ || {};
+    component.choferesextranjerosList$.pipe = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.chofernacionalForm = jest.fn();
     component.loadStoredData = jest.fn();
     component.fetchChoferes = jest.fn();
     component.chofer40103Store = component.chofer40103Store || {};
     component.chofer40103Store._select = jest.fn().mockReturnValue([
       {
-        "estado": {}
-      }
+        estado: {},
+      },
     ]);
- 
+    component.estadoSeleccion = jest.fn();
+    component.setFormValues = jest.fn();
+    component.paisEmisorData = jest.fn();
+    component.delegacionChnData = jest.fn();
+    component.coloniaChnData = jest.fn();
+    component.nacionaliDadChe = jest.fn();
+    component.ngOnInit();
   });
 
-  /**
-   * Verifica que el método `abrirModal` funcione correctamente.
-   */
   it('should run #abrirModal()', async () => {
     component.abrirModal();
   });
 
-  /**
-   * Verifica que el método `cerrarModal` funcione correctamente.
-   */
   it('should run #cerrarModal()', async () => {
     component.modalRef = component.modalRef || {};
     component.modalRef.nativeElement = {
       classList: {
-        remove: function() {}
+        remove: function () {},
       },
       style: {
-        display: {}
-      }
+        display: {},
+      },
     };
     component.cerrarModal();
   });
 
-  /**
-   * Verifica que el método `extranjeroGuardar` funcione correctamente.
-   */
-  it('should run #extranjeroGuardar()', async () => {
-    component.formChoferes = component.formChoferes || {};
-    component.formChoferes.invalid = 'invalid';
-    component.formChoferes.getRawValue = jest.fn();
-    component.formChoferes.reset = jest.fn();
+  it('should run #extranjeroGuardars()', async () => {
+    component.pagoDerechosLista = component.pagoDerechosLista || {};
+    component.pagoDerechosLista = ['pagoDerechosLista'];
     component.toastr = component.toastr || {};
-    component.toastr.error = jest.fn();
+    component.toastr.warning = jest.fn();
     component.toastr.success = jest.fn();
-    component.chofer40103Service = component.chofer40103Service || {};
-    component.chofer40103Service.addChofer = jest.fn();
-    component.cerrarModal = jest.fn();
-    component.chofer40103Query = component.chofer40103Query || {};
-    component.chofer40103Query.getchoferesextranjero$ = 'getchoferesextranjero$';
-    component.extranjeroGuardar();
-
+    component.chofer40103Store = component.chofer40103Store || {};
+    component.chofer40103Store.update = jest.fn().mockReturnValue([
+      {
+        pagoDerechosLista: {},
+      },
+    ]);
+    component.chofer40103Store.getValue = jest.fn();
+    component.extranjeroGuardars();
   });
 
-  /**
-   * Verifica que el método `Guardar` funcione correctamente.
-   */
   it('should run #Guardar()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.invalid = 'invalid';
@@ -199,122 +207,107 @@ describe('ChoferesComponent', () => {
     component.modalRef = component.modalRef || {};
     component.modalRef.nativeElement = {
       classList: {
-        remove: function() {}
+        remove: function () {},
       },
       style: {
-        display: {}
-      }
+        display: {},
+      },
     };
     component.Guardar();
-   
   });
 
-  /**
-   * Verifica que el método `loadStoredData` funcione correctamente.
-   */
   it('should run #loadStoredData()', async () => {
     component.loadStoredData();
   });
 
-  /**
-   * Verifica que el método `fetchChoferes` funcione correctamente.
-   */
   it('should run #fetchChoferes()', async () => {
     component.chofer40103Service = component.chofer40103Service || {};
-    component.chofer40103Service.getChoferNacionalData = jest.fn().mockReturnValue(observableOf({}));
+    component.chofer40103Service.getChoferNacionalData = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.fetchChoferes();
   });
 
-  /**
-   * Verifica que el método `onCurpInput` funcione correctamente.
-   */
   it('should run #onCurpInput()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.buscarChoferNacional = jest.fn();
     component.onCurpInput();
   });
 
-  /**
-   * Verifica que el método `buscarChoferNacional` funcione correctamente.
-   */
   it('should run #buscarChoferNacional()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.patchValue = jest.fn();
     component.onEstadoChange = jest.fn().mockReturnValue({
-      then: function() {}
+      then: function () {},
     });
     component.onMunicipioChange = jest.fn().mockReturnValue({
-      then: function() {}
+      then: function () {},
     });
     component.buscarChoferNacional({});
   });
 
-  /**
-   * Verifica que el método `updateDropdowns` funcione correctamente.
-   */
   it('should run #updateDropdowns()', async () => {
     component.loadMunicipios = jest.fn();
     component.loadColonias = jest.fn();
     component.updateDropdowns({
       datosGenerales: {
         estados: {},
-        municipio: {}
-      }
+        municipio: {},
+      },
     });
   });
 
-  /**
-   * Verifica que el método `loadMunicipios` funcione correctamente.
-   */
+  it('should run #loadEstados()', async () => {
+    component.loadEstados();
+  });
+
   it('should run #loadMunicipios()', async () => {
     component.chofer40103Service = component.chofer40103Service || {};
-    component.chofer40103Service.getMunicipios = jest.fn().mockReturnValue(observableOf({}));
+    component.chofer40103Service.getMunicipios = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.loadMunicipios({});
   });
 
-  /**
-   * Verifica que el método `loadColonias` funcione correctamente.
-   */
   it('should run #loadColonias()', async () => {
     component.chofer40103Service = component.chofer40103Service || {};
-    component.chofer40103Service.getColonias = jest.fn().mockReturnValue(observableOf({}));
+    component.chofer40103Service.getColonias = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
     component.loadColonias({});
   });
 
+  it('should run #onPaisChange()', async () => {
+    component.onPaisChange({
+      target: {
+        value: {},
+      },
+    });
+  });
 
-  /**
-   * Verifica que el método `limpiarFormulario` funcione correctamente.
-   */
   it('should run #limpiarFormulario()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.reset = jest.fn();
     component.limpiarFormulario();
   });
 
-  /**
-   * Verifica que el método `setFormValues` funcione correctamente.
-   */
   it('should run #setFormValues()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.patchValue = jest.fn();
     component.setFormValues();
+    // expect(component.formChoferes.patchValue).toHaveBeenCalled();
   });
 
-  /**
-   * Verifica que el método `toggleRowSelection` funcione correctamente.
-   */
   it('should run #toggleRowSelection()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.patchValue = jest.fn();
     component.toggleRowSelection({});
+    // expect(component.formChoferes.patchValue).toHaveBeenCalled();
   });
 
-  /**
-   * Verifica que el método `editarFilaSeleccionada` funcione correctamente.
-   */
   it('should run #editarFilaSeleccionada()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.patchValue = jest.fn();
@@ -323,16 +316,54 @@ describe('ChoferesComponent', () => {
     component.editarFilaSeleccionada();
   });
 
-  /**
-   * Verifica que el método `estadoSeleccion` funcione correctamente.
-   */
   it('should run #estadoSeleccion()', async () => {
     component.formChoferes = component.formChoferes || {};
     component.formChoferes.get = jest.fn().mockReturnValue({
-      value: {}
+      value: {},
     });
     component.chofer40103Store = component.chofer40103Store || {};
     component.chofer40103Store.setEstado = jest.fn();
     component.estadoSeleccion();
+  });
+
+  it('should run #paisEmisorData()', async () => {
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getPaisOrigenChn = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
+    component.paisEmisorData();
+  });
+
+  it('should run #delegacionChnData()', async () => {
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getDelegacionChn = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
+    component.delegacionChnData();
+  });
+
+  it('should run #coloniaChnData()', async () => {
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getColoniaChn = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
+    component.coloniaChnData();
+    // expect(component.chofer40103Service.getColoniaChn).toHaveBeenCalled();
+  });
+
+  it('should run #nacionaliDadChe()', async () => {
+    component.chofer40103Service = component.chofer40103Service || {};
+    component.chofer40103Service.getNacionaliDadChe = jest
+      .fn()
+      .mockReturnValue(observableOf({}));
+    component.nacionaliDadChe();
+    // expect(component.chofer40103Service.getNacionaliDadChe).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyed$ = component.destroyed$ || {};
+    component.destroyed$.next = jest.fn();
+    component.destroyed$.complete = jest.fn();
+    component.ngOnDestroy();
   });
 });

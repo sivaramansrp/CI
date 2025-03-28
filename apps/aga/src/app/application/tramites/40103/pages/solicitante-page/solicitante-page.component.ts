@@ -50,6 +50,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       }
       return paso;
     });
+  
 
     this.chofer40103Query.selectSeccionState$
       .pipe(
@@ -99,3 +100,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     this.chofer40103Store.establecerFormaValida(FORMA_VALIDA);
   }
 }
+function seleccionaTab(i: any, number: any) {
+  throw new Error('Function not implemented.');
+}
+

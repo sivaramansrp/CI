@@ -56,7 +56,7 @@ const ROUTES: Routes = [
         (m) => m.DonacionesExtranjerasModule)
   },
   {
-    path: 'modificarCaatTerrestre',
+    path: 'modificarcaatterrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule
@@ -117,6 +117,7 @@ const ROUTES: Routes = [
       loadChildren: () =>
         import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
   }
+  
 ];
 
 @NgModule({

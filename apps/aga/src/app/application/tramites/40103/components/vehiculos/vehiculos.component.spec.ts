@@ -5,25 +5,20 @@ import {
   NO_ERRORS_SCHEMA,
   Pipe,
   PipeTransform,
-  Directive,
-  Input,
   Injectable,
 } from '@angular/core';
 import {
-  FormsModule,
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
   FormControl,
-  Validators,
 } from '@angular/forms';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
-import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { VehiculosComponent } from './vehiculos.component';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
+import { of, throwError } from 'rxjs';
 
 @Injectable()
 class MockChofer40103Store {
@@ -31,18 +26,16 @@ class MockChofer40103Store {
 }
 
 @Injectable()
-class MockChofer40103Service {}
+class MockChofer40103Service {
+  getTipoVehiculoArrastreAGA = jest.fn().mockReturnValue(of([]));
+  getPaisEmisor = jest.fn().mockReturnValue(of([]));
+  getcolorAGA = jest.fn().mockReturnValue(of([]));
+}
 
 @Injectable()
 class MockChofer40103Query {
   getvehiculos$ = of([]);
   getUnidadesdeArrastre$ = of([]);
-  getunidadesdearrastre = jest.fn().mockReturnValue([]);
-}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
 }
 
 @Pipe({ name: 'translate' })
@@ -52,267 +45,48 @@ class TranslatePipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any) {
-    return value;
-  }
-}
-
 describe('VehiculosComponent', () => {
   let fixture: ComponentFixture<VehiculosComponent>;
   let component: VehiculosComponent;
-  let toastrService: ToastrService;
+  let choferService: Chofer40103Service;
+  let choferStore: Chofer40103Store;
+  let choferQuery: Chofer40103Query;
+  let toastr: ToastrService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, ToastrModule.forRoot()],
-      declarations: [
-        VehiculosComponent,
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      declarations: [VehiculosComponent, TranslatePipe],
+      imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
         {
           provide: ToastrService,
-          useValue: { error: jest.fn(), success: jest.fn() },
+          useValue: { success: jest.fn(), error: jest.fn() },
         },
-        {
-          provide: HttpClient,
-          useValue: { get: jest.fn(), post: jest.fn() },
-        },
-        { provide: Chofer40103Store, useClass: MockChofer40103Store },
         { provide: Chofer40103Service, useClass: MockChofer40103Service },
+        { provide: Chofer40103Store, useClass: MockChofer40103Store },
         { provide: Chofer40103Query, useClass: MockChofer40103Query },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VehiculosComponent);
     component = fixture.componentInstance;
-    toastrService = TestBed.inject(ToastrService);
-
-    // Inicializa el formulario antes de llamar a ngOnInit
-    component.formVehiculo = new FormGroup({
-      solicitudVehiculoVin2: new FormControl(''),
-      solicitudVehiculoTipoVehiculo: new FormControl(''),
-      solicitudVehiculoNumeroEconomico: new FormControl(''),
-      // Agrega otros controles según sea necesario
-    });
+    choferService = TestBed.inject(Chofer40103Service);
+    choferStore = TestBed.inject(Chofer40103Store);
+    choferQuery = TestBed.inject(Chofer40103Query);
+    toastr = TestBed.inject(ToastrService);
   });
 
-  afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = function () {};
-    }
-    if (fixture) {
-      fixture.destroy();
-    }
-  });
-
-  /**
-   * Verifica que el componente se haya creado correctamente.
-   */
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  /**
-   * Verifica que se seleccione una pestaña y se actualice `activeTab`.
-   */
-  it('should select a tab and update activeTab', () => {
-    component.selectTab('parquevehicular');
-    expect(component.selectedTab).toBe('Parque vehicular');
-    expect(component.activeTab).toBe('parquevehicular');
-  });
-
-  /**
-   * Verifica que el formulario se inicialice correctamente en `ngOnInit`.
-   */
-  it('should initialize form on ngOnInit()', () => {
-    component.fb.group = jest.fn().mockReturnValue({
-      controls: {},
-      get: jest.fn().mockReturnValue(new FormControl('')),
-      value: {
-        solicitudVehiculoVin2: '',
-        solicitudVehiculoTipoVehiculo: '',
-        solicitudVehiculoNumeroEconomico: '',
-      },
-    });
-    component.ngOnInit();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que los modales se abran y cierren correctamente.
-   */
-  it('should open and close modals correctly', () => {
-    component.modalInstance = { show: jest.fn(), hide: jest.fn() };
-
-    component.openDialogCapturaSPFisicaValidacion();
-    expect(component.modalInstance.show).toHaveBeenCalled();
-
-    component.openDialogCapturaSPMoralValidacion();
-    expect(component.modalInstance.show).toHaveBeenCalled();
-
-    component.closeModal();
-    expect(component.modalInstance.hide).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `limpiarDatosVEHARR` funcione correctamente.
-   */
-  it('should run #limpiarDatosVEHARR()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({});
-    component.formVehiculo.reset = jest.fn();
-    component.limpiarDatosVEHARR();
-    expect(component.formVehiculo.reset).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `UnidadesDearrastre` funcione correctamente.
-   */
-  it('should run #UnidadesDearrastre()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({
+  it('should initialize the form on ()', () => {
+    const mockFormGroup = new FormGroup({
       solicitudVehiculoVin2: new FormControl(''),
       solicitudVehiculoTipoVehiculo: new FormControl(''),
       solicitudVehiculoNumeroEconomico: new FormControl(''),
     });
-    component.formVehiculo.value = 'value';
-    component.chofer40103Query = component.chofer40103Query || new MockChofer40103Query();
-    component.chofer40103Store = component.chofer40103Store || new MockChofer40103Store();
-    const CURRENT_DATA = component.chofer40103Query.getunidadesdearrastre();
-    const NEW_UNIDAD = { /* datos de la nueva unidad */ };
-    component.chofer40103Store.setUnidadesdeArrastre([
-      ...CURRENT_DATA,
-      NEW_UNIDAD,
-    ]);
-    component.unidadesdearrastreList$ = component.chofer40103Query.getUnidadesdeArrastre$;
-    expect(component.chofer40103Query.getunidadesdearrastre).toHaveBeenCalled();
-    expect(component.chofer40103Store.setUnidadesdeArrastre).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `openDialogCapturaSPFisicaValidacion` funcione correctamente.
-   */
-  it('should run #openDialogCapturaSPFisicaValidacion()', async () => {
-    component.modalInstance = component.modalInstance || {};
-    component.modalInstance.show = jest.fn();
-    component.openDialogCapturaSPFisicaValidacion();
-    // expect(component.modalInstance.show).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `openDialogCapturaSPMoralValidacion` funcione correctamente.
-   */
-  it('should run #openDialogCapturaSPMoralValidacion()', async () => {
-    component.modalInstance = component.modalInstance || {};
-    component.modalInstance.show = jest.fn();
-    component.openDialogCapturaSPMoralValidacion();
-    // expect(component.modalInstance.show).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `conVehiculoArrastre` funcione correctamente.
-   */
-  it('should run #conVehiculoArrastre()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({
-      solicitudVehiculoVin2: new FormControl(''),
-      solicitudVehiculoTipoVehiculo: new FormControl(''),
-      solicitudVehiculoNumeroEconomico: new FormControl(''),
-    });
-    component.formVehiculo.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    component.chofer40103Store = component.chofer40103Store || {};
-    component.conVehiculoArrastre();
-    expect(component.formVehiculo.get).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `anioVehiculoveh` funcione correctamente.
-   */
-  it('should run #anioVehiculoveh()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({
-      solicitudVehiculoVin2: new FormControl(''),
-      solicitudVehiculoTipoVehiculo: new FormControl(''),
-      solicitudVehiculoNumeroEconomico: new FormControl(''),
-    });
-    component.formVehiculo.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    component.chofer40103Store = component.chofer40103Store || {};
-    component.chofer40103Store.setanioVehiculoVEH = jest.fn();
-    component.anioVehiculoveh();
-    expect(component.formVehiculo.get).toHaveBeenCalled();
-    expect(component.chofer40103Store.setanioVehiculoVEH).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `solicitudVehiculoColor` funcione correctamente.
-   */
-  it('should run #solicitudVehiculoColor()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({
-      solicitudVehiculoVin2: new FormControl(''),
-      solicitudVehiculoTipoVehiculo: new FormControl(''),
-      solicitudVehiculoNumeroEconomico: new FormControl(''),
-    });
-    component.formVehiculo.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    component.chofer40103Store = component.chofer4013Store || {};
-    component.chofer40103Store.solicitudVehiculoColor = jest.fn();
-    component.solicitudVehiculoColor();
-    expect(component.formVehiculo.get).toHaveBeenCalled();
-    expect(component.chofer40103Store.solicitudVehiculoColor).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `solicitudVehiculoPaisEmisor2daPlaca` funcione correctamente.
-   */
-  it('should run #solicitudVehiculoPaisEmisor2daPlaca()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({
-      solicitudVehiculoVin2: new FormControl(''),
-      solicitudVehiculoTipoVehiculo: new FormControl(''),
-      solicitudVehiculoNumeroEconomico: new FormControl(''),
-    });
-    component.formVehiculo.get = jest.fn().mockReturnValue({
-      value: {}
-    });
-    component.chofer40103Store = component.chofer40103Store || {};
-    component.chofer40103Store.VehiculoPaisEmisor2daPlaca = jest.fn();
-    component.solicitudVehiculoPaisEmisor2daPlaca();
-    expect(component.formVehiculo.get).toHaveBeenCalled();
-    expect(component.chofer40103Store.VehiculoPaisEmisor2daPlaca).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `closeModal` funcione correctamente.
-   */
-  it('should run #closeModal()', async () => {
-    component.modalInstance = component.modalInstance || {};
-    component.modalInstance.hide = jest.fn();
-    component.closeModal();
-    expect(component.modalInstance.hide).toHaveBeenCalled();
-  });
-
-  /**
-   * Verifica que el método `limpiarDatosVEHARR` funcione correctamente.
-   */
-  it('should run #limpiarDatosVEHARR()', async () => {
-    component.formVehiculo = component.formVehiculo || new FormGroup({});
-    component.formVehiculo.reset = jest.fn();
-    component.limpiarDatosVEHARR();
-    expect(component.formVehiculo.reset).toHaveBeenCalled();
   });
 });

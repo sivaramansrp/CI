@@ -21,7 +21,6 @@ import { PagoDerechosLista } from '../../../40103/models/registro-muestras-merca
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { of } from 'rxjs';
-
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum';

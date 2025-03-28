@@ -1,5 +1,5 @@
 /* eslint-disable no-empty-function */
-import { Component,OnDestroy, OnInit, } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
@@ -12,10 +12,18 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./director-general.component.scss'],
 })
 export class DirectorGeneralComponent implements OnInit, OnDestroy {
+  /**
+   * Crea el formulario para el director general.
+   */
+
   directorGeneralForm!: FormGroup;
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private chofer40103Query: Chofer40103Query, private chofer40103Store: Chofer40103Store) {}
+  constructor(
+    private fb: FormBuilder,
+    private chofer40103Query: Chofer40103Query,
+    private chofer40103Store: Chofer40103Store
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
@@ -33,8 +41,6 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
       });
     this.actualizarTienda(this.directorGeneralForm.value);
   }
-
-
 
   /**
    * Crea el formulario para el director general.
@@ -70,12 +76,12 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     const DATOS_EXISTENTES = this.chofer40103Query.getValue().choferes;
     // Aquí puedes agregar la lógica para actualizar la tienda con los datos actualizados
   }
-    /**
+  /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Libera la suscripción a los cambios del formulario.
    */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
