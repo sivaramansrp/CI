@@ -1,0 +1,278 @@
+<div class="container">
+  <ng-titulo titulo="Datos de los federatarios" />
+  <form [formGroup]="federatariosFormGroup">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="nombre">Nombre(s)*:</label>
+                  <input
+                    class="form-control min-hgt"
+                    id="nombre"
+                    formControlName="nombre"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="primerApellido"
+                    >Primer apellido*</label
+                  >
+                  <input
+                    class="form-control min-hgt"
+                    id="primerApellido"
+                    formControlName="primerApellido"
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label" for="segundoApellido"
+                    >Segundo apellido:</label
+                  >
+                  <input
+                    class="form-control min-hgt"
+                    id="segundoApellido"
+                    formControlName="segundoApellido"
+                    type="text"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="numeroDeActa"
+                >Número de acta*:</label
+              >
+              <input
+                class="form-control min-hgt"
+                id="numeroDeActa"
+                formControlName="numeroDeActa"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <input-fecha [datos]="fechaInicioInput"></input-fecha>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label" for="numeroDeNotaria"
+                >Número de notaría*:</label
+              >
+              <input
+                class="form-control min-hgt"
+                id="numeroDeNotaria"
+                formControlName="numeroDeNotaria"
+                type="text"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="estadoOptions"
+              formControlName="estado"
+              [label]="'Estado'"
+              [required]="true"
+              name="estado"
+            ></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="estadoOptions"
+              formControlName="estadoOptions"
+              [label]="'Municipio o alcaldía'"
+              [required]="true"
+              name="estado"
+            ></app-catalogo-select>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-12 container text-end mt-5">
+            <button class="btn btn-default me-2">Eliminar</button>
+            <button class="btn btn-primary" (click)="aggregarDatos()">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <h5>Datos de los federatarios:</h5>
+      </div>
+      <div class="row">
+        <div class="col">
+          <app-tabla-dinamica
+            [configuracionTabla]="federatariosConfig.TablaEncabezado"
+            [tipoSeleccionTabla]="federatariosConfig.TablaSeleccion"
+            [datos]="federatariosDatos"
+          ></app-tabla-dinamica>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="row">
+        <div class="col">
+          <ng-titulo
+            titulo="Datos de las plantas donde se realizaran las operaciones IMMEX"
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <div class="col-md-4">
+              <app-catalogo-select
+                [catalogo]="estadoOptions"
+                [label]="'Estado'"
+                [required]="true"
+                name="estado"
+              ></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="pull-right ms-2">
+                <button class="btn btn-primary">Buscar plantas IMMEX</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <div class="col">
+              <div class="row">
+                <div class="col"><h5>Plantas disponibles:</h5></div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <app-tabla-dinamica
+                    [configuracionTabla]="
+                      plantasDisponiblesConfig.TablaEncabezado
+                    "
+                    [tipoSeleccionTabla]="
+                      plantasDisponiblesConfig.TablaSeleccion
+                    "
+                    [datos]="plantasDisponiblesDatos"
+                  ></app-tabla-dinamica>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <ng-alert [CONTENIDO]="textodAlerta"></ng-alert>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="pull-right ms-2">
+                    <button class="btn btn-primary">Agregar plantas</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row">
+              <div class="col"><h5>Plantas Immex:</h5></div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <app-tabla-dinamica
+                  [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
+                  [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion"
+                  [datos]="plantasImmexDatos"
+                ></app-tabla-dinamica>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="d-flex flex-row flex-wrap">
+              <div class="p-2">
+                <button
+                  class="btn btn-primary"
+                  (click)="irAAcciones('../complementar-plantas-acciones')"
+                >
+                  Complementar planta
+                </button>
+              </div>
+              <div class="p-2">
+                <button
+                  class="btn btn-primary"
+                  (click)="irAAcciones('../montos-inversion-acciones')"
+                >
+                  Montos de inversión
+                </button>
+              </div>
+              <div class="p-2">
+                <button
+                  class="btn btn-primary"
+                  (click)="irAAcciones('../empleados-acciones')"
+                >
+                  Empleados
+                </button>
+              </div>
+              <div class="p-2">
+                <button
+                  class="btn btn-primary"
+                  (click)="irAAcciones('../capacidad-instalada-acciones')"
+                >
+                  Capacidad Instalada
+                </button>
+              </div>
+              <div class="p-2">
+                <button
+                  class="btn btn-primary"
+                  (click)="irAAcciones('../proveedor-por-archivo')"
+                >
+                  Carga por archivo
+                </button>
+              </div>
+              <div class="p-2">
+                <button class="btn btn-primary">Eliminar plantas</button>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-4">
+              <app-catalogo-select
+                [catalogo]="estadoOptions"
+                [label]="'Representación federal*'"
+                [required]="true"
+                name="estado"
+              ></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+              <app-catalogo-select
+                [catalogo]="estadoOptions"
+                [label]="'Actividad productiva'"
+                [required]="true"
+                name="estado"
+              ></app-catalogo-select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

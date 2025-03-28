@@ -1,0 +1,40 @@
+<div class="container">
+<form [formGroup]="personaForm">
+    <div class="col-md-12 p-0">
+      <label for="losDatos" class="form-label">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+      <app-input-radio  [radioOptions]="losDatos" [selectedValue]="valorSeleccionado" [isRequired]="true"
+        [layout]="'horizontal'" ></app-input-radio>
+    </div>
+
+  <div class="row pt-5">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label for="rfc" class="form-label">RFC *:</label>
+        <input type="text" id="rfc" formControlName="rfc" class="form-control" />
+      </div>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <div class="form-group">
+        <button type="button" class="btn btn-primary">Buscar</button>
+      </div>
+    </div>
+  </div>
+  <div class="row pt-5">
+    <div class="col-md-4 form-group">
+      <label class="control-label" for="nombre">Nombre(s):</label>
+      <input class="form-control" id="nombre" placeholder="" type="text" formControlName="nombre"
+        [ngClass]="esValido('nombre') ? 'required' : ''">
+    </div>
+    <div class="col-md-4 form-group">
+      <label class="control-label" for="primerApellido">Apellido paterno:</label>
+      <input class="form-control" id="primerApellido" placeholder="" type="text" formControlName="primerApellido"
+        [ngClass]="esValido('primerApellido') ? 'required' : ''">
+    </div>
+    <div class="col-md-4 form-group">
+      <label class="control-label" for="segundoApellido">Apellido materno:</label>
+      <input class="form-control" id="segundoApellido" placeholder="" type="text" formControlName="segundoApellido"
+        [ngClass]="esValido('segundoApellido') ? 'required' : ''">
+    </div>
+  </div>
+</form>
+</div>
