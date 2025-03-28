@@ -14,17 +14,35 @@ export class VehiculosUsadosAdaptadosComponent {
   * Índice del paso actual en el asistente.
   */
   indice: number = 1;
-
+  /**
+  * @module
+  * @description
+  * Módulo que contiene la definición de la variable tabIndex.
+  */
   tabIndex: number = 1;
+  /**
+  * @module
+  * @description
+  * Módulo que contiene la definición del componente MiComponente y su uso de @ViewChild.
+  */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
- datosPasos: DatosPasos = {
+  /**
+  * @module
+  * @description
+  * Módulo que contiene la definición de la variable datosPasos.
+  */
+  datosPasos: DatosPasos = {
    nroPasos: this.pasos.length,
    indice: this.indice,
    txtBtnAnt: 'Anterior',
    txtBtnSig: 'Continuar',
- };
- getValorIndice(e: AccionBoton): void {
+  };
+  /**
+  * @module
+  * @description
+  * Módulo que contiene la definición del método getValorIndice.
+  */
+  getValorIndice(e: AccionBoton): void {
    if (e.valor > 0 && e.valor < 4) {
      this.indice = e.valor;
      if (e.accion === 'cont') {

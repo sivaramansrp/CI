@@ -8,8 +8,8 @@ import PartidasdelaTable from '@libs/shared/theme/assets/json/130109/partidas-de
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite130109Query } from '../../estados/queries/tramite130109.query';
-import { Tramite130109Store } from '../../estados/tramites/tramites130109.store';
+import { Tramite130109Query } from '../../../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../../../estados/tramites/tramites130109.store';
 import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
 import fractionValues from '@libs/shared/theme/assets/json/130109/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130109/solicitud-select.json';
@@ -541,16 +541,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 fetchEntidadFederativa(): void {
   this.vehiculosUsadosAdaptadosService
     .getEntidadFederativa()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.entidadFederativa = data;
     });
-}
+  }
 /**
 * Método para obtener la lista de representaciones federales.
 */
 fetchRepresentacionFederal(): void {
   this.vehiculosUsadosAdaptadosService
     .getRepresentacionFederal()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -561,6 +563,7 @@ fetchRepresentacionFederal(): void {
 listaDePaisesDisponibles(): void {
   this.vehiculosUsadosAdaptadosService
     .getListaDePaisesDisponibles()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.elementosDeBloque = data;
     });
@@ -572,6 +575,7 @@ listaDePaisesDisponibles(): void {
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.vehiculosUsadosAdaptadosService
     .getPaisesPorBloque(_bloqueId)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.paisesPorBloque = data;
       this.selectRangoDias = this.paisesPorBloque.map(
