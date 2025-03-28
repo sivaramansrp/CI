@@ -15,6 +15,25 @@ export interface camState {
     entidadFederativaSeleccion: Catalogo;
     representacionFederalSeleccion: Catalogo;
     formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
+    fraccionArancelaria: string;
+    nombreComercialMercancia: string;
+    nombreTecnico: string;
+    nombreIngles: string;
+    criterioClasificacion: string;
+    cantidad: string;
+    umc: Catalogo[];
+    valorMercancia: string;
+    complementoClasificacion: string;
+    numeroFactura: string,
+    tipoFactura: Catalogo[],
+    lugar: string,
+    exportador: string,
+    empresa: string,
+    cargo: string,
+    lada: string,
+    telfono: string,
+    fax: string,
+    correo: string,
 }
 
 export function createInitialState(): camState {
@@ -72,6 +91,25 @@ export function createInitialState(): camState {
             numeroDeRegistroFiscal: '',
             razonSocial: ''
           },
+          fraccionArancelaria: '',
+          nombreComercialMercancia: '',
+          nombreTecnico: '',
+          nombreIngles: '',
+          criterioClasificacion: '',
+          cantidad: '',
+          umc: [],
+          valorMercancia: '',
+          complementoClasificacion: '',
+          numeroFactura: '',
+          tipoFactura: [],
+          lugar: '',
+          exportador: '',
+          empresa: '',
+          cargo: '',
+          lada: '',
+          telfono: '',
+          fax: '',
+          correo: ''
     }
 }
 
@@ -152,7 +190,7 @@ export class camCertificadoStore extends Store<camState> {
           representacionFederalSeleccion,
         }));
       }
-      
+
       setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
         this.update((state) => ({
           formDatosDelDestinatario: {
@@ -160,5 +198,138 @@ export class camCertificadoStore extends Store<camState> {
             ...values,
           },
         }));
+      }
+
+      setFraccionArancelaria(fraccionArancelaria: string) {
+        this.update((state) => ({
+            ...state,
+            fraccionArancelaria,
+        }));
+      }
+
+      setNombreComercialMercancia(nombreComercialMercancia: string){
+        this.update((state) => ({
+            ...state,
+            nombreComercialMercancia
+        }))
+      }
+
+      setNombreTecnico(nombreTecnico: string){
+        this.update((state) => ({
+            ...state,
+            nombreTecnico
+        }))
+      }
+
+      setNombreIngles(nombreIngles: string){
+        this.update((state) => ({
+            ...state,
+            nombreIngles
+        }))
+      }
+
+      setCriterioClasificacion(criterioClasificacion: string){
+        this.update((state) => ({
+            ...state,
+            criterioClasificacion,
+        }))
+      }
+
+      setCantidad(cantidad: string){
+        this.update((state) => ({
+            ...state,
+            cantidad,
+        }))
+      }
+
+      setUmc(umc: Catalogo[]){
+        this.update((state) => ({
+            ...state,
+            umc,
+        }))
+      }
+
+      setValorMercancia(valorMercancia: string){
+        this.update((state) => ({
+            ...state,
+            valorMercancia,
+        }))
+      }
+
+      setComplementoClasificacion(complementoClasificacion: string){
+        this.update((state) => ({
+            ...state,
+            complementoClasificacion,
+        }))
+      }
+
+      setNumeroFactura(numeroFactura: string){
+        this.update((state) => ({
+            ...state,
+            numeroFactura,
+        }))
+      }
+
+      setTipoFactura(tipoFactura: Catalogo[]){
+        this.update((state) => ({
+            ...state,
+            tipoFactura,
+        }))
+      }
+
+      setLugar(lugar: string){
+        this.update((state) => ({
+            ...state,
+            lugar,
+        }))
+      }
+
+      setExportador(exportador: string){
+        this.update((state) => ({
+            ...state,
+            exportador,
+        }))
+      }
+
+      setEmpresa(empresa: string){
+        this.update((state) => ({
+            ...state,
+            empresa,
+        }))
+      }
+
+      setCargo(cargo: string){
+        this.update((state) => ({
+            ...state,
+            cargo
+        }))
+      }
+
+      setLada(lada: string){
+        this.update((state) => ({
+            ...state,
+            lada
+        }))
+      }
+
+      setTelfono(telfono: string){
+        this.update((state) => ({
+            ...state,
+            telfono,
+        }))
+      }
+
+      setFax(fax: string){
+        this.update((state) => ({
+            ...state,
+            fax,
+        }))
+      }
+
+      setCorreo(correo: string){
+        this.update((state) => ({
+            ...state,
+            correo,
+        }))
       }
 }
