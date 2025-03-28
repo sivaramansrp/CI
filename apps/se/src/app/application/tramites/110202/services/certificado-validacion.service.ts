@@ -2,7 +2,7 @@ import { Observable, map } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/configuracio-columna.model';
+import { Mercancia } from '../models/configuracion-columna.model';
 
 @Injectable({
   providedIn: 'root'

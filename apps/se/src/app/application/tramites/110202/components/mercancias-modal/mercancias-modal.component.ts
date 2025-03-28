@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Observable, Subject, delay, of, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
-import { Mercancia } from '../../models/configuracio-columna.model';
+import { Mercancia } from '../../models/configuracion-columna.model';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 /**
@@ -40,7 +40,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    */
   mensajeDeAlerta: string = 'La lista de mercancías mostrada solamente contiene aquellas mercancías que tienen un registro de productos vigente para el tratado/acuerdo-país/bloque y cuya fracción arancelaria no está asociada a un cupo.';
   mercanciaForm!: FormGroup;
-  @Output()tablaSeleccionEvent = new EventEmitter(); 
+  @Output()tablaSeleccionEvent = new EventEmitter();
   @Output() guardarClicado = new EventEmitter();
   @Output() cerrarClicado = new EventEmitter();
 
@@ -86,11 +86,11 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.tramiteQuery?.formMercancia$?.pipe(
       delay(100),
       takeUntil(this.destroyNotifier$)).subscribe((estado) => {
-      if (!this.actualizandoFormulario && estado && estado['fraccionArancelaria']) {
-        this.actualizandoFormulario = true;
-        this.mercanciaForm.patchValue(estado);
-        this.actualizandoFormulario = false;
-      }
+        if (!this.actualizandoFormulario && estado && estado['fraccionArancelaria']) {
+          this.actualizandoFormulario = true;
+          this.mercanciaForm.patchValue(estado);
+          this.actualizandoFormulario = false;
+        }
       });
     this.facturas$ = this.tramiteQuery.selectFactura$;
     this.umcs$ = this.tramiteQuery.selectUmc$;
@@ -120,12 +120,17 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.parchearValoresDelFormulario();
     this.cargarFactura();
     this.cargarUmc();
-    this.mercanciaForm.valueChanges.subscribe(value => {
-      if (!this.actualizandoFormulario) {
-        this.store.setFormMercancia(value);
-      }
-    });
+    this.mercanciaForm.valueChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe(value => {
+        if (!this.actualizandoFormulario) {
+          this.store.setFormMercancia(value);
+        }
+      });
   }
+
   /**
    * @method parchearValoresDelFormulario
    * @description Este método parcha los valores del formulario `mercanciaForm` con los datos seleccionados (`datosSeleccionados`).
@@ -170,11 +175,11 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.store.setUmcSeleccion(umc);
   }
 
-   /**
-    * Establece el estado seleccionado en el store.
-    * @param {Catalogo} masaBruta El estado seleccionado.
-    */
-   tipoMasaBrutaSeleccion(masaBruta: Catalogo): void {
+  /**
+   * Establece el estado seleccionado en el store.
+   * @param {Catalogo} masaBruta El estado seleccionado.
+   */
+  tipoMasaBrutaSeleccion(masaBruta: Catalogo): void {
     this.store.setMasaBrutaSeleccion(masaBruta);
   }
   /**

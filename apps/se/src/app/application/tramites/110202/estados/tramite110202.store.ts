@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../models/configuracio-columna.model';
+import { Mercancia } from '../models/configuracion-columna.model';
 
 // Interfaz que define el estado del trámite.
 export interface TramiteState {

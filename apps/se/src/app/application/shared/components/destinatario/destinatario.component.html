@@ -4,7 +4,7 @@
       <ng-titulo titulo="Domicilio del destinatario" />
       <div class="col-md-8 form-group">
         <label class="form-label" for="ciudad"
-          >Ciudad (poblacion, estado o provincia)*:</label
+          >Ciudad (población, estado o provincia)*:</label
         >
         <input type="text" id="ciudad" class="form-control" formControlName="ciudad" />
       </div>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-md-3 form-group">
-          <label class="form-label" for="telefono">Telefono:</label>
+          <label class="form-label" for="telefono">Teléfono:</label>
           <input type="text" id="telefono" class="form-control" formControlName="telefono" />
         </div>
 
@@ -37,7 +37,7 @@
 
         <div class="col-md-4 form-group">
           <label class="form-label" for="correoElectronico"
-            >Correo electronico*:</label
+            >Correo electrónico*:</label
           >
           <input type="text" id="correoElectronico" class="form-control" formControlName="correoElectronico" />
         </div>
@@ -46,7 +46,7 @@
         <div class="col-md-8 form-group">
           <app-catalogo-select
             [catalogo]="paisDestin || []"
-            [label]="'Pais Destino'"
+            [label]="'País Destino'"
             [required]="true"
             name="estado"
             formControlName="paisDestin"

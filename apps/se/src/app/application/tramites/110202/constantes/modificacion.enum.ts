@@ -1,6 +1,6 @@
 import {
   Mercancia,
-} from '../models/configuracio-columna.model';
+} from '../models/configuracion-columna.model';
 
 /**
  * Paso del proceso de captura y firma de solicitud.
