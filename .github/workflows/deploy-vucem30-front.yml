@@ -204,8 +204,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          # Remover la siguiente línea para evitar conflictos de caché
+          # cache: 'npm'
+          # cache-dependency-path: package-lock.json
 
       - name: Install build dependencies
         run: |
@@ -251,6 +252,15 @@ jobs:
             }' > .eslintrc.json
           fi
 
+      # Instalar primero las dependencias antes de intentar cachear
+      - name: Install dependencies with specific options
+        run: |
+          # Verificar que npm está correctamente configurado
+          npm config list
+          # Instalar dependencias con más opciones de seguridad
+          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
+
+      # Mover el cache después de instalar las dependencias
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -265,14 +275,6 @@ jobs:
 
       - name: Reset NX cache
         run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
-
-      # Modificación para instalar los paquetes con más opciones de seguridad
-      - name: Install dependencies with specific options
-        run: |
-          # Verificar que npm está correctamente configurado
-          npm config list
-          # Instalar dependencias con más opciones de seguridad
-          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
       - name: Install NX globally with specific version
         run: |
@@ -338,9 +340,4 @@ jobs:
             APP_ENV=${{ needs.setup.outputs.environment }}
             NX_SKIP_NX_CACHE=true
             NX_NATIVE_BINDINGS=false
-          driver-opts: |
-            network=host
-            memory=4g
-            memory-swap=4g
-          timeout-minutes: 20  # Aumentado
           no-cache: ${{ contains(matrix.app, 'se') }}
