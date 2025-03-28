@@ -1,10 +1,21 @@
-
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 
-import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import {
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 /**
  * InputRadioComponent es un componente reutilizable que renderiza un grupo de botones de radio.
@@ -20,9 +31,9 @@ import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validat
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => InputRadioComponent), // ✅ FIX: Wrap with forwardRef()
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class InputRadioComponent implements OnInit {
   @Input() description!: string; // Optional description
@@ -35,7 +46,11 @@ export class InputRadioComponent implements OnInit {
   /**
    * Array de opciones de radio, cada una con una etiqueta y un valor.
    */
-  @Input() radioOptions: { label: string; value: string | number }[] = [];
+  @Input() radioOptions: {
+    label: string;
+    value: string | number;
+    hint?: string;
+  }[] = [];
   /**
    * El valor actualmente seleccionado.
    * @example 'option1'
@@ -51,6 +66,13 @@ export class InputRadioComponent implements OnInit {
    * @default 'vertical'
    */
   @Input() layout: 'vertical' | 'horizontal' = 'vertical';
+
+  /**
+   * Indica si se debe mostrar un tooltip con la descripción del campo.
+   * @default false
+   */
+  @Input() showTooltip: boolean = false;
+
   /**
    * Evento emitido cuando el valor seleccionado cambia.
    */
@@ -71,8 +93,8 @@ export class InputRadioComponent implements OnInit {
       seleccion: [this.selectedValue || '', validators],
     });
   }
-  private onChange: (value: any) => void = () => { };
-  private onTouched: () => void = () => { };
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.

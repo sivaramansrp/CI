@@ -1,0 +1,109 @@
+<div class="container">
+    <ng-titulo titulo="Datos mercancía" />
+    <form [formGroup]="datosMercanciaForm">
+        <div class="row">
+            <div class="col-md-8 ml">
+                <app-catalogo-select [catalogo]="clasificacionProducto" [label]="'Clasificación del producto*:'" [required]="true"
+                    name="clasificacionProducto" formControlName="clasificacion">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-8 ">
+                <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto*:'"
+                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getEspecificar()">
+                </app-catalogo-select>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="específicaDelProducto">Denominación específica del producto*:</label>
+                    <input class="form-control" type="text" id="específicaDelProducto"
+                        formControlName="especificaDelProducto">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="denominaciónDistintiva">Denominación distintiva*:</label>
+                    <input class="form-control" type="text" id="denominaciónDistintiva"
+                        formControlName="denominacionDistintiva">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="nombreCientífico">Denominación o nombre científico*:</label>
+                    <input class="form-control" type="text" id="nombreCientífico" formControlName="nombreCientifico">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="tipoDeProducto">Tipo de producto*:</label>
+                    <input class="form-control" type="text" id="tipoDeProducto" formControlName="tipoDeProducto">
+                </div>
+            </div>
+            <div class="col-md-8 ml">
+                <div class="form-group">
+                    <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico*:'" [required]="true"
+                    name="estadoFisico" formControlName="estadoFisico">
+                </app-catalogo-select>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="fracciónArancelaria">Fracción arancelaria*:</label>
+                    <input class="form-control" type="text" id="fracciónArancelaria"
+                        formControlName="fraccionArancelaria">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="form-label" for="descripcionFraccion">Descripción de la fracción arancelaria*:</label>
+                    <input class="form-control" type="text" id="descripcionFraccion"
+                        formControlName="descripcionFraccion">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="cantidadUMT">Cantidad UMT*:</label>
+                    <input class="form-control" type="text" id="cantidadUMT" formControlName="cantidadUMT">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="UMT"> UMT*:</label>
+                    <input class="form-control" type="text" id="UMT" formControlName="UMT">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="cantidadUMC">Cantidad UMC*:</label>
+                    <input class="form-control" type="text" id="cantidadUMC" formControlName="cantidadUMC">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="UMC"> UMC*:</label>
+                    <input class="form-control" type="text" id="UMC" formControlName="UMC">
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <label for="tipoDeEnvase" class="form-label">Presentación farmacéutica o tipo de envase*:</label>
+                <textarea id="tipoDeEnvase" class="form-control mb-4" placeholder=""
+                    formControlName="tipoDeEnvase"></textarea>
+            </div>
+        </div>
+
+        <app-pais-de-origen></app-pais-de-origen>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" (click)="cerrarMercanciasTableForm()">
+                Cancelar
+            </button>
+            <button class="btn btn-default ms-2">Agregar</button>
+            <button class="btn btn-default ms-2">Limpiar</button>
+        </div>
+    </form>
+</div>
