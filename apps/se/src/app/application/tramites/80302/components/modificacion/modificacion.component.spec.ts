@@ -88,9 +88,6 @@ describe('ModificacionComponent', () => {
     component.loadDatosModificacion = jest.fn();
     component.loadDatosTablaData = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.loadDatosModificacion).toHaveBeenCalled();
-    // expect(component.loadDatosTablaData).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -98,8 +95,6 @@ describe('ModificacionComponent', () => {
     component.destroyNotifier$.next = jest.fn();
     component.destroyNotifier$.unsubscribe = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyNotifier$.next).toHaveBeenCalled();
-    // expect(component.destroyNotifier$.unsubscribe).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -108,7 +103,6 @@ describe('ModificacionComponent', () => {
     component.derechoState = component.derechoState || {};
     component.derechoState.datosModificacion = 'datosModificacion';
     component.inicializarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #loadDatosModificacion()', async () => {
@@ -118,16 +112,12 @@ describe('ModificacionComponent', () => {
     component.tramite80302Store.setDatosModificacion = jest.fn();
     component.setFormValues = jest.fn();
     component.loadDatosModificacion();
-    // expect(component.solicitudService.getDatosModificacion).toHaveBeenCalled();
-    // expect(component.tramite80302Store.setDatosModificacion).toHaveBeenCalled();
-    // expect(component.setFormValues).toHaveBeenCalled();
   });
 
   it('should run #loadDatosTablaData()', async () => {
     component.solicitudService = component.solicitudService || {};
     component.solicitudService.getDatosTableData = jest.fn().mockReturnValue(observableOf({}));
     component.loadDatosTablaData();
-    // expect(component.solicitudService.getDatosTableData).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', async () => {
@@ -165,7 +155,6 @@ describe('ModificacionComponent', () => {
         };
       }
     }, {}, {});
-    // expect(component.tramite80302Store.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #valorDeAlternancia()', async () => {
