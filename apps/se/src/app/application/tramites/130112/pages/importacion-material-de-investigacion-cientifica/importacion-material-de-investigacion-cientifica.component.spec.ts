@@ -38,7 +38,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     component.wizardComponent = wizardComponentSpy;
 
     const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
-    // component.getValorIndice(accionBoton);
+    component.getValorIndice(accionBoton);
 
     expect(component.indice).toBe(2);
     expect(wizardComponentSpy.siguiente).toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     component.wizardComponent = wizardComponentSpy;
 
     const accionBoton: AccionBoton = { accion: 'prev', valor: 1 };
-    // component.getValorIndice(accionBoton);
+    component.getValorIndice(accionBoton);
 
     expect(component.indice).toBe(1);
     expect(wizardComponentSpy.atras).toHaveBeenCalled();
@@ -62,7 +62,7 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
     component.wizardComponent = wizardComponentSpy;
 
     const accionBoton: AccionBoton = { accion: 'cont', valor: 5 }; // Out of range
-    // component.getValorIndice(accionBoton);
+    component.getValorIndice(accionBoton);
 
     expect(component.indice).toBe(1); // Default value
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
@@ -75,14 +75,14 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
   
     // Test case for "cont" action
     const accionBotonCont: AccionBoton = { accion: 'cont', valor: 2 };
-    // component.getValorIndice(accionBotonCont);
+    component.getValorIndice(accionBotonCont);
     expect(component.indice).toBe(2);
     expect(wizardComponentSpy.siguiente).toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
   
     // Test case for "prev" action
     const accionBotonPrev: AccionBoton = { accion: 'prev', valor: 1 };
-    // component.getValorIndice(accionBotonPrev);
+    component.getValorIndice(accionBotonPrev);
     expect(component.indice).toBe(1);
     expect(wizardComponentSpy.atras).toHaveBeenCalled();
     expect(wizardComponentSpy.siguiente).toHaveBeenCalledTimes(1); // No additional calls
@@ -94,14 +94,14 @@ describe('ImportacionMaterialDeInvestigacionCientificaComponent', () => {
   
     // Test case for invalid value (out of range)
     const accionBotonInvalid: AccionBoton = { accion: 'cont', valor: 5 };
-    // component.getValorIndice(accionBotonInvalid);
+    component.getValorIndice(accionBotonInvalid);
     expect(component.indice).toBe(1); // Default value remains unchanged
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
   
     // Test case for another invalid value (negative)
     const accionBotonNegative: AccionBoton = { accion: 'prev', valor: -1 };
-    // component.getValorIndice(accionBotonNegative);
+    component.getValorIndice(accionBotonNegative);
     expect(component.indice).toBe(1); // Default value remains unchanged
     expect(wizardComponentSpy.siguiente).not.toHaveBeenCalled();
     expect(wizardComponentSpy.atras).not.toHaveBeenCalled();
