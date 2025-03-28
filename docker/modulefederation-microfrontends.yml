@@ -5,14 +5,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/dashboard/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-dashboard
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4200'
     ports:
       - "4200:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-login-microfront:
@@ -20,8 +37,10 @@ services:
     build: 
       context: ./../
       dockerfile: apps/login/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-login-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4201'
     ports:
@@ -30,6 +49,21 @@ services:
       - modulefederation-dashboard
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-aga-microfront:
@@ -37,8 +71,10 @@ services:
     build: 
       context: ./../
       dockerfile: apps/aga/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-aga-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4202'
     ports:
@@ -47,6 +83,21 @@ services:
       - modulefederation-login-microfront
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-agriculture-microfront:
@@ -54,14 +105,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/agriculture/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-agriculture-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4204'
     ports:
       - "4204:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-se-microfront:
@@ -69,14 +137,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/se/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-se-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4205'
     ports:
       - "4205:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-semarnat-microfront:
@@ -84,14 +169,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/semarnat/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-semarnat-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4206'
     ports:
       - "4206:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-agace-microfront:
@@ -99,14 +201,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/agace/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-agace-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4209'
     ports:
       - "4209:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-funcionario-microfront:
@@ -114,14 +233,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/funcionario/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-funcionario-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4210'
     ports:
       - "4210:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-cofepris-microfront:
@@ -129,14 +265,31 @@ services:
     build: 
       context: ./../
       dockerfile: apps/cofepris/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-cofepris-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4211'
     ports:
       - "4211:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
   modulefederation-amecafe-microfront:
@@ -144,15 +297,68 @@ services:
     build: 
       context: ./../
       dockerfile: apps/amecafe/Dockerfile
+      args:
+        - NODE_ENV=production
     container_name: modulefederation-amecafe-microfront
-    restart: on-failure
+    restart: unless-stopped
     expose:
       - '4212'
     ports:
       - "4212:80"
     networks:
       - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+#----------------------------------------------------------------
+  modulefederation-inbal-microfront:
+    image: modulefederation-inbal-microfront:1.0.0
+    build: 
+      context: ./../
+      dockerfile: apps/inbal/Dockerfile
+      args:
+        - NODE_ENV=production
+    container_name: modulefederation-inbal-microfront
+    restart: unless-stopped
+    expose:
+      - '4218'
+    ports:
+      - "4218:80"
+    networks:
+      - modulefederation-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nginx_logs:/var/log/nginx
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 #----------------------------------------------------------------
 networks:
   modulefederation-network:
+    driver: bridge
+
+volumes:
+  nginx_logs:
