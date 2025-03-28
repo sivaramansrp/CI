@@ -32,22 +32,50 @@ import { Observable } from 'rxjs';
   styleUrl: './detalle-mercancia.component.scss',
 })
 export class DetalleMercanciaComponent implements OnInit {
+  /**
+   * Formulario reactivo para el detalle de la mercancía.
+   */
   formaDetalleMercancia!: FormGroup;
 
+  /**
+   * Datos de detalle de la mercancía recibidos como entrada.
+   */
   @Input() datosDetalleMercancia!: DetalleMercancia;
 
+  /**
+   * Configuración de la tabla para mostrar los detalles de las mercancías.
+   */
   tablaDetalleMercancia = DETALLE_MERCANCIA_TABLA;
 
+  /**
+   * Tipo de selección de la tabla (en este caso, selección por checkbox).
+   */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Observable que emite la lista de detalles de mercancías.
+   */
   @Input() datosTablaDetalleMercancia!: Observable<DetalleMercancia[]>;
 
+  /**
+   * Datos para la forma farmacéutica.
+   */
   datosFormFormaceutica = FORMA_FORMACEUTICA_DATOS;
 
+  /**
+   * Lista de mercancías seleccionadas o detalladas.
+   */
   tablaMercanciasLista: DetalleMercancia[] = [];
 
+  /**
+   * Emite el evento cuando se agrega una mercancía.
+   */
   @Output() aggregarMercancia: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
+
+  /**
+   * Emite el evento cuando se elimina una lista de mercancías.
+   */
   @Output() eliminarMercancia: EventEmitter<DetalleMercancia[]> =
     new EventEmitter<DetalleMercancia[]>(true);
 
@@ -79,16 +107,34 @@ export class DetalleMercanciaComponent implements OnInit {
     return control.errors && control.touched;
   }
 
+  /**
+   * Elimina las mercancías de la lista y emite el evento con los datos.
+   */
   eliminarMercancias(): void {
     if (this.tablaMercanciasLista) {
       this.eliminarMercancia.emit(this.tablaMercanciasLista);
-
     }
   }
 
+  /**
+   * Valida el formulario, agrega los datos de la mercancía y emite el evento con la información.
+   * Luego, restablece el formulario.
+   */
   agregarMercancias(): void {
     if (this.formaDetalleMercancia.valid) {
-      this.aggregarMercancia.emit(this.formaDetalleMercancia.value);
+      const DATOS = {
+        ...this.formaDetalleMercancia.value,
+        formaFormaceutica: this.datosFormFormaceutica.find(
+          (ele) =>
+            ele.id.toString() ===
+            this.formaDetalleMercancia.value.formaFormaceutica
+        )?.descripcion,
+      };
+
+      this.aggregarMercancia.emit(DATOS);
+      this.formaDetalleMercancia.reset();
+      //Es necesario restablecer el cuadro de selección a -1 para restablecer el formulario
+      this.formaDetalleMercancia.patchValue({formaFormaceutica: -1})
     }
   }
 }
