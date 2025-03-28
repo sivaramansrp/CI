@@ -1,4 +1,7 @@
-export const PASOS_EXPORTACION = [
+/**
+ * Enumerado con los pasos de la importación de material de investigación científica
+ */
+export const PASOS_IMPORTACION = [
     {
         indice: 1,
         titulo: 'Capturar solicitud',

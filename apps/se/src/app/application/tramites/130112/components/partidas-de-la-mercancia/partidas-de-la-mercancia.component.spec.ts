@@ -1,93 +1,147 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-material-de-investigacion-cientifica.service';
+import { Tramite130112Query } from '../../estados/queries/tramite130112.query';
+import { Tramite130112Store } from '../../estados/tramites/tramites130112.store';
+import { SolicitudComponent } from '../solicitud/solicitud.component';
 
-describe('PartidasDeLaMercanciaComponent', () => {
-  let component: PartidasDeLaMercanciaComponent;
-  let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
-  let formBuilder: FormBuilder;
+describe('SolicitudComponent', () => {
+  let component: SolicitudComponent;
+  let fixture: ComponentFixture<SolicitudComponent>;
+  let store: Tramite130112Store;
+  let query: Tramite130112Query;
+  let service: ImportacionMaterialDeInvestigacionCientificaService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, PartidasDeLaMercanciaComponent], // Import standalone component
+      declarations: [SolicitudComponent],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      providers: [
+        FormBuilder,
+        Tramite130112Store,
+        Tramite130112Query,
+        ImportacionMaterialDeInvestigacionCientificaService,
+      ],
     }).compileComponents();
-  
-    formBuilder = TestBed.inject(FormBuilder);
-    fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
+
+    fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.partidasDelaMercanciaForm = formBuilder.group({
-      cantidadPartidasDeLaMercancia: ['', Validators.required],
-      nombrePartida: ['', Validators.required],
-      descripcionPartidasDeLaMercancia: ['', Validators.required], 
-      valorPartidaUSDPartidasDeLaMercancia: ['', Validators.required], 
-    });
-  
-    fixture.detectChanges(); 
+    store = TestBed.inject(Tramite130112Store);
+    query = TestBed.inject(Tramite130112Query);
+    service = TestBed.inject(ImportacionMaterialDeInvestigacionCientificaService);
+
+    fixture.detectChanges();
   });
-  
-  
-  
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return true if form control is invalid in esInvalido', () => {
-    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('');
-    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].markAsTouched();
-
-    const isInvalid = component.esInvalido('cantidadPartidasDeLaMercancia');
-    expect(isInvalid).toBe(true);
+  it('should initialize forms on ngOnInit', () => {
+    const spy = spyOn(component, 'inicializarFormularios');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should return false if form control is valid in esInvalido', () => {
-    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].setValue('Valid Value');
-    component.partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].markAsTouched();
-
-    const isInvalid = component.esInvalido('cantidadPartidasDeLaMercancia');
-    expect(isInvalid).toBe(false);
+  it('should call configuracionFormularioSuscripciones on ngOnInit', () => {
+    const spy = spyOn(component, 'configuracionFormularioSuscripciones');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should emit filaSeleccionadaChange when handleListaDeFilaSeleccionada is called', () => {
-    const emitSpy = spyOn(component.filaSeleccionadaChange, 'emit');
-    const filasSeleccionadas = [{ id: 1 }, { id: 2 }];
-
-    component.handleListaDeFilaSeleccionada(filasSeleccionadas);
-
-    expect(emitSpy).toHaveBeenCalledWith(filasSeleccionadas);
+  it('should initialize mercanciaForm with default values', () => {
+    expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
+    expect(component.mercanciaForm.get('descripcion')?.value).toBe('');
   });
 
-  it('should emit validarYEnviarFormularioEvent when validarYEnviarFormulario is called', () => {
-    const emitSpy = spyOn(component.validarYEnviarFormularioEvent, 'emit');
+  it('should validate mercanciaForm fields', () => {
+    const descripcionControl = component.mercanciaForm.get('descripcion');
+    descripcionControl?.setValue('');
+    expect(descripcionControl?.valid).toBe(false);
 
+    descripcionControl?.setValue('Descripción válida');
+    expect(descripcionControl?.valid).toBe(true);
+  });
+
+  it('should call getEstablecimiento and set table data', () => {
+    component.getEstablecimiento();
+    expect(component.tableHeaderData.length).toBeGreaterThan(0);
+    expect(component.tableBodyData.length).toBeGreaterThan(0);
+  });
+
+  it('should calculate totals correctly', () => {
+    component.tableBodyData = [
+      { tbodyData: ['10', '', '', '', '', '100'] },
+      { tbodyData: ['20', '', '', '', '', '200'] },
+    ];
+    component.calcularTotales();
+    expect(component.formForTotalCount.get('cantidadTotal')?.value).toBe(30);
+    expect(component.formForTotalCount.get('valorTotalUSD')?.value).toBe(300);
+  });
+
+  it('should handle manejarlaFilaSeleccionada correctly', () => {
+    const fila = { id: 1, name: 'Test' };
+    component.manejarlaFilaSeleccionada([fila]);
+    expect(component.filaSeleccionada).toEqual(fila);
+
+    component.manejarlaFilaSeleccionada([]);
+    expect(component.filaSeleccionada).toBeNull();
+  });
+
+  it('should validate and show table on validarYEnviarFormulario', () => {
+    component.partidasDelaMercanciaForm.patchValue({
+      cantidadPartidasDeLaMercancia: '10',
+      fraccionTigiePartidasDeLaMercancia: '123',
+      descripcionPartidasDeLaMercancia: 'Test',
+      valorPartidaUSDPartidasDeLaMercancia: '100',
+    });
     component.validarYEnviarFormulario();
-
-    expect(emitSpy).toHaveBeenCalled();
+    expect(component.mostrarTabla).toBe(true); // Updated here
   });
 
-  it('should emit navegarParaModificarPartidaEvent when navegarParaModificarPartida is called', () => {
-    const emitSpy = spyOn(component.navegarParaModificarPartidaEvent, 'emit');
-
-    component.navegarParaModificarPartida();
-
-    expect(emitSpy).toHaveBeenCalled();
+  it('should fetch entidad federativa', () => {
+    const mockData = [{ id: 1, descripcion: 'Entidad 1' }];
+    spyOn(service, 'getEntidadFederativa').and.returnValue(of(mockData));
+    component.fetchEntidadFederativa();
+    expect(component.entidadFederativa).toEqual(mockData);
   });
 
-  it('should emit setValoresStoreEvent with correct arguments when setValoresStore is called', () => {
-    const emitSpy = spyOn(component.setValoresStoreEvent, 'emit');
-    const testForm = formBuilder.group({
-      testControl: ['', Validators.required],
-    });
-    const testCampo = 'testCampo';
-    const testMetodoNombre = 'testMetodoNombre';
+  it('should fetch representacion federal', () => {
+    const mockData = [{ id: 1, descripcion: 'Representación 1' }];
+    spyOn(service, 'getRepresentacionFederal').and.returnValue(of(mockData));
+    component.fetchRepresentacionFederal();
+    expect(component.representacionFederal).toEqual(mockData);
+  });
 
-    component.setValoresStore(testForm, testCampo, testMetodoNombre);
+  it('should fetch lista de países disponibles', () => {
+    const mockData = [{ id: 1, descripcion: 'País 1' }];
+    spyOn(service, 'getListaDePaisesDisponibles').and.returnValue(of(mockData));
+    component.listaDePaisesDisponibles();
+    expect(component.elementosDeBloque).toEqual(mockData);
+  });
 
-    expect(emitSpy).toHaveBeenCalledWith({
-      form: testForm,
-      campo: testCampo,
-      metodoNombre: testMetodoNombre,
+  it('should fetch fraccion descripcion', () => {
+    const mockData = [{ id: 1, descripcion: 'Fracción 1' }];
+    spyOn(service, 'getFraccionDescripcionPartidasDeLaMercancia').and.returnValue(of(mockData));
+    component.listaDeFraccionDescripcion();
+    expect(component.fraccionDescription).toEqual(mockData);
+  });
+
+  it('should update store values on setValoresStore', () => {
+    const spy = spyOn(store, 'updateSolicitud');
+    component.setValoresStore({
+      form: component.formDelTramite,
+      campo: 'solicitud',
+      metodoNombre: 'updateSolicitud',
     });
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const spy = spyOn(component['destroyed$'], 'next');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
   });
 });

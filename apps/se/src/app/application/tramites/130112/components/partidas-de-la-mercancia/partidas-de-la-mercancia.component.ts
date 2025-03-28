@@ -2,7 +2,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
@@ -65,6 +65,12 @@ export class PartidasDeLaMercanciaComponent {
    * Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
+
+  
+  /**
+   * Lista de elementos del catálogo de fracciones arancelarias.
+   */
+  @Input() fraccionDescripcionPartidasDeLaMercancia: Catalogo[] = [];
 
   /**
    * filaSeleccionadaChange
