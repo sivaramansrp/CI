@@ -256,7 +256,7 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getCatalogoPaises();
-    this.getCatalogoEstado();
+    this.getCatalogoEstado(); 
 
     this.formaComplimentos.valueChanges
       .pipe(delay(100))
