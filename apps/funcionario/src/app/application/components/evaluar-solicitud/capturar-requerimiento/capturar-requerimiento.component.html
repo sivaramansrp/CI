@@ -1,16 +1,16 @@
-<div class="container rounded p-3 bg-light">
+<div class="container">
     <div class="row padding-top">
         <form [formGroup]="formRequerimiento">
             <div class="row">
               <div class="col-md-12">
                 <div class="col-md-4">
-                  <app-catalogo-select [catalogo]="catTipoRequerimiento" formControlName="tipoRequerimiento" [label]="'Tipo requerimiento'"
+                  <div class="row">
+                    <app-catalogo-select [catalogo]="catTipoRequerimiento" formControlName="tipoRequerimiento" [label]="'Tipo requerimiento'"
                     [required]="true" name="tipoRequerimiento" 
                     (change)="tipoRequerimientoSeleccionado(formRequerimiento,'tipoRequerimiento', 'settipoRequerimientoValue')"></app-catalogo-select>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
               <div class="col-md-12">
                 <label for="justificacionRequerimiento" class="form-label">Justificación requerimiento :</label>
                 <textarea name="justificacionRequerimiento" 

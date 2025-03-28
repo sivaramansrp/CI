@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 // multiple - Import multiple members.
-import { EncabezadoRequerimientoComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { EncabezadoRequerimientoComponent, FirmaPageComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.component';
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
@@ -11,7 +11,7 @@ import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
-  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent], // <-- Importa los componentes aquí
+  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent, TituloComponent], // <-- Importa los componentes aquí
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })

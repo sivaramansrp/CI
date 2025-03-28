@@ -1,8 +1,9 @@
-import { Catalogo, CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, RespuestaDocuemntosRequeridos } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 // multiple - Import multiple members.
 import { Component, OnInit } from '@angular/core';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
+import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
 // multiple - Import multiple members.
 import { DocumentosStates, SolicitudDocumentosState } from '../../../estados/evaluacion-solicitud/documentos.store';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -25,6 +26,10 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
    * Catálogo documento requerido
    */
   catTipoDocumento!: Catalogo[];
+  /**
+   * Lista documentos requeridos
+   */
+  exampleDocumentosRequeridos!: RespuestaDocuemntosRequeridos[];
   /**
    * Lista de documentos agregados a la tabla
    */
@@ -69,6 +74,7 @@ export class SolicitarDocumentosEvaluacionComponent implements OnInit {
      */
   ngOnInit(): void {
     this.catTipoDocumento = data;
+    this.exampleDocumentosRequeridos = dataDocuemtos;
     this.solicitudRequerimientoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
