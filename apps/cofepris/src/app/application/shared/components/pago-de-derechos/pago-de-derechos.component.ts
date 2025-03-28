@@ -53,7 +53,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @property {FormGroup} pagoDerechosForm
    * Formulario reactivo que captura los datos del pago de derechos.
    */
-  pagoDerechosForm: FormGroup;
+  pagoDerechosForm!: FormGroup;
 
   /**
    * @property {Catalogo[]} estadosDatos
@@ -72,19 +72,7 @@ export class PagoDeDerechosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-  ) {
-    this.pagoDerechosForm = this.fb.group({
-      claveReferencia: ['', Validators.required],
-      cadenaDependencia: ['', Validators.required],
-      estado: ['', Validators.required],
-      llavePago: ['', Validators.required],
-      fechaPago: ['', Validators.required],
-      importePago: [
-        '',
-        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
-      ],
-    });
-  }
+  ) {}
 
   /**
    * @method ngOnInit
@@ -107,6 +95,7 @@ export class PagoDeDerechosComponent implements OnInit {
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
       ],
     });
+
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
