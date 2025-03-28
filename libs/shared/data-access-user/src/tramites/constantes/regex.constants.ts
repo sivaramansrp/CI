@@ -123,3 +123,15 @@ export const REGEX_PATRON_DECIMAL_15_4=/^\d{0,15}(\.\d{1,4})?$/;
 export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
 
 export const REGEX_NUMERO_DECIMAL_ENTERO = /^[0-9]+(\\.[0-9]{1,2})?$/;
+/**
+ * Expresión regular para encontrar caracteres que no sean números.
+ * 
+ * Esta expresión regular se utiliza para identificar y encontrar cualquier carácter
+ * que no sea un dígito numérico (0-9) en una cadena.
+ * 
+ * @example
+ * // Uso de la expresión regular para eliminar caracteres no numéricos de una cadena
+ * const cadena = "abc123def456";
+ * const soloNumeros = cadena.replace(REGEX_NUMEROS, ''); // Resultado: "123456"
+ */
+export const REGEX_NUMEROS = /[^0-9]/g;
