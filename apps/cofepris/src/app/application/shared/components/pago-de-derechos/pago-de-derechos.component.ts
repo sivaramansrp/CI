@@ -137,4 +137,14 @@ export class PagoDeDerechosComponent implements OnInit {
   onReset(): void {
     this.pagoDerechosForm.reset();
   }
+
+  /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.pagoDerechosForm.patchValue({ fechaPago: fecha });
+  }
 }
