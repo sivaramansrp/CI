@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -115,7 +115,7 @@ jobs:
           fi
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -157,7 +157,7 @@ jobs:
           buildkitd-flags: --debug
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -372,12 +372,9 @@ jobs:
           cat kubernetes/ingress.yaml >> kubernetes/combined.yaml
           echo "---" >> kubernetes/combined.yaml
           cat kubernetes/hpa.yaml >> kubernetes/combined.yaml
-          
-          # Upload manifests as artifacts
-          echo "::set-output name=manifest_path::kubernetes/combined.yaml"
 
       - name: Upload Kubernetes Manifests
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: kubernetes-manifests
           path: kubernetes/combined.yaml
