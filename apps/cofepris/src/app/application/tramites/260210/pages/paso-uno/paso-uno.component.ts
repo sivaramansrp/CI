@@ -1,13 +1,12 @@
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
-import { AgregarFabricanteComponent } from '../../../../shared/components/agregar-fabricante/agregar-fabricante.component';
-import { AgregarFacturadorComponent } from '../../../../shared/components/agregar-facturador/agregar-facturador.component';
-import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
+import { Tramite260210Query } from '../../estados/tramite260210Query.query';
+import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 
 @Component({
   selector: 'app-paso-uno',
@@ -17,19 +16,44 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
     SolicitanteComponent,
     ContenedorDeDatosSolicitudComponent,
     TercerosRelacionadosVistaComponent,
-    AgregarFabricanteComponent,
-    AgregarDestinatarioFinalComponent,
-    AgregarProveedorComponent,
-    AgregarFacturadorComponent,
-    PagoDeDerechosComponent,
+    PagoDeDerechosContenedoraComponent,
   ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent {
-  indice: number = 2;
+export class PasoUnoComponent implements OnDestroy, OnInit {
+  indice: number | undefined = 1;
+
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(
+    private Tramite260210Query: Tramite260210Query,
+    private tramite260214Store: Tramite260214Store
+  ) {}
+
+  ngOnInit(): void {
+    this.Tramite260210Query.getTabSeleccionado$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((tab) => {
+        this.indice = tab;
+      });
+  }
 
   seleccionaTab(i: number): void {
-    this.indice = i;
+    //this.indice = i;
+    this.tramite260214Store.updateTabSeleccionado(i);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

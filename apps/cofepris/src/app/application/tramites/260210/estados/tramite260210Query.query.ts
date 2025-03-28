@@ -1,14 +1,14 @@
+import {
+  Tramite260210State,
+  Tramite260214Store,
+} from './tramite260210Store.store';
 import { Injectable } from '@angular/core';
-
 import { Query } from '@datorama/akita';
 
-import { Tramite260204State } from '../stores/tramite260204Store.store';
-import { Tramite260204Store } from '../stores/tramite260204Store.store';
-
 @Injectable({ providedIn: 'root' })
-export class Tramite260204Query extends Query<Tramite260204State> {
+export class Tramite260210Query extends Query<Tramite260210State> {
   /**Guarda el estado completo del formulario de la solicitud */
-  constructor(protected override store: Tramite260204Store) {
+  constructor(protected override store: Tramite260214Store) {
     super(store);
   }
   /**
@@ -30,4 +30,5 @@ export class Tramite260204Query extends Query<Tramite260204State> {
   public getFacturadorTablaDatos$ = this.select(
     (state) => state.facturadorTablaDatos
   );
+  public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
 }

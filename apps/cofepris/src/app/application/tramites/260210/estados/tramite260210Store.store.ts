@@ -1,20 +1,19 @@
-import { DatosSolicitudFormState } from '../../../../shared/models/datos-solicitud.model';
-import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
-import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
-import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
+import { DatosSolicitudFormState } from '../../../shared/models/datos-solicitud.model';
+import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
+import { Fabricante } from '../../../shared/models/terceros-relacionados.model';
+import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
-import { MercanciaForm } from '../../../../shared/models/datos-solicitud.model';
-import { PRODUCTO_TABLA_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { MercanciaForm } from '../../../shared/models/datos-solicitud.model';
+import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
+import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { TABLA_OPCION_DATA } from '../../../../shared/constantes/datos-solicitud.enum';
-import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
-import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.model';
-import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
+import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';
+import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
+import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
+import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
-export interface Tramite260204State {
+export interface Tramite260210State {
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
   proveedorTablaDatos: Proveedor[];
@@ -29,9 +28,10 @@ export interface Tramite260204State {
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
+  tabSeleccionado?: number;
 }
 
-export function createInitialState(): Tramite260204State {
+export function createInitialState(): Tramite260210State {
   return {
     destinatarioFinalTablaDatos: [],
     facturadorTablaDatos: [],
@@ -83,7 +83,7 @@ export function createInitialState(): Tramite260204State {
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
+    tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
     seleccionadoTablaMercanciasDatos: [],
@@ -96,14 +96,15 @@ export function createInitialState(): Tramite260204State {
       fechaPago: '',
       importePago: '',
     },
+    tabSeleccionado: 1,
   };
 }
 
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260204', resettable: true })
-export class Tramite260204Store extends Store<Tramite260204State> {
+@StoreConfig({ name: 'tramite260214', resettable: true })
+export class Tramite260214Store extends Store<Tramite260210State> {
   constructor() {
     super(createInitialState());
   }
@@ -175,6 +176,12 @@ export class Tramite260204Store extends Store<Tramite260204State> {
     this.update((state) => ({
       ...state,
       pagoDerechos: nuevoPagoDerechos,
+    }));
+  }
+  public updateTabSeleccionado(tabSeleccionado: number): void {
+    this.update((state) => ({
+      ...state,
+      tabSeleccionado: tabSeleccionado,
     }));
   }
 }

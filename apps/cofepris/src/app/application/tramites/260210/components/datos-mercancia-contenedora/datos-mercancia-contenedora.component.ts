@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+
 import {
-  Tramite260204State,
-  Tramite260204Store,
-} from '../../estados/stores/tramite260204Store.store';
+  Tramite260210State,
+  Tramite260214Store,
+} from '../../estados/tramite260210Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
-import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
+import { Tramite260210Query } from '../../estados/tramite260210Query.query';
+
 /**
  * @component DatosMercanciaContenedoraComponent
  * @description Componente encargado de gestionar y actualizar la información de una mercancía seleccionada.
@@ -37,21 +39,21 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * @property {Tramite260204State} tramiteState
+   * @property {Tramite260210State} tramiteState
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
-  public tramiteState!: Tramite260204State;
+  public tramiteState!: Tramite260210State;
 
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.
    *
-   * @param tramite260204Query - Servicio para observar el estado actual del trámite.
-   * @param tramite260204Store - Store que permite actualizar el estado del trámite.
+   * @param Tramite260210Query - Servicio para observar el estado actual del trámite.
+   * @param tramite260214Store - Store que permite actualizar el estado del trámite.
    */
   constructor(
-    private tramite260204Query: Tramite260204Query,
-    private tramite260204Store: Tramite260204Store
+    private Tramite260210Query: Tramite260210Query,
+    private tramite260214Store: Tramite260214Store
   ) {}
 
   /**
@@ -60,7 +62,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
    */
   ngOnInit(): void {
-    this.tramite260204Query.selectTramiteState$
+    this.Tramite260210Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -127,7 +129,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       ];
     }
 
-    this.tramite260204Store.update((state) => ({
+    this.tramite260214Store.update((state) => ({
       ...state,
       seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
       tablaMercanciasConfigDatos: datosActivos,
