@@ -9,8 +9,8 @@ import PartidasdelaTable from '@libs/shared/theme/assets/json/130110/partidas-de
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite130110Query } from '../../estados/queries/tramite130110.query';
-import { Tramite130110Store } from '../../estados/tramites/tramites130110.store';
+import { Tramite130110Query } from '../../../../estados/queries/tramite130110.query';
+import { Tramite130110Store } from '../../../../estados/tramites/tramites130110.store';
 import fractionValues from '@libs/shared/theme/assets/json/130110/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130110/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130110/unidad_da.json';
@@ -541,16 +541,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 fetchEntidadFederativa(): void {
   this.importacionNeumaticosComercializarService
     .getEntidadFederativa()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.entidadFederativa = data;
     });
-}
+  }
 /**
 * Método para obtener la lista de representaciones federales.
 */
 fetchRepresentacionFederal(): void {
   this.importacionNeumaticosComercializarService
     .getRepresentacionFederal()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -561,6 +563,7 @@ fetchRepresentacionFederal(): void {
 listaDePaisesDisponibles(): void {
   this.importacionNeumaticosComercializarService
     .getListaDePaisesDisponibles()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.elementosDeBloque = data;
     });
@@ -572,6 +575,7 @@ listaDePaisesDisponibles(): void {
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.importacionNeumaticosComercializarService
     .getPaisesPorBloque(_bloqueId)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.paisesPorBloque = data;
       this.selectRangoDias = this.paisesPorBloque.map(
