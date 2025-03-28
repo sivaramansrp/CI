@@ -25,6 +25,24 @@ export interface Tramite130203State {
   entidad: string;
   representacion: string;
   mostrarTabla: boolean;
+  nombreExportador: string;
+  direccionExportador: string;
+  nombreImportador: string;
+  direccionImportador: string;
+  numeroEnLetraDeLosLotes: string;
+  numeroEnLetraDeLosLotesEnIngles: string;
+  numeroDeFactura: string;
+  cantidadEnQuilates: string;
+  valorDeLosDiamantes: string;
+
+  state: string;
+  mixed: boolean;
+  paisOrigen: number | null;
+  especifique: number;
+  numero: string;
+  tipoEmpresa: string;
+  lineaCheckbox: boolean;
+  nombre: string;
 }
 
 export function createInitialState(): Tramite130203State {
@@ -52,6 +70,24 @@ export function createInitialState(): Tramite130203State {
     observaciones: '',
     entidad: '',
     representacion: '',
+    nombreExportador: '',
+    direccionExportador: '',
+    nombreImportador: '',
+    direccionImportador: '',
+    numeroEnLetraDeLosLotes: '',
+    numeroEnLetraDeLosLotesEnIngles: '',
+    numeroDeFactura: '',
+    cantidadEnQuilates: '',
+    valorDeLosDiamantes: '',
+
+    numero: '',
+    state: '',
+    mixed: false,
+    paisOrigen: null,
+    especifique: 0,
+    tipoEmpresa: '',
+    lineaCheckbox: false,
+    nombre: '',
   };
 }
 
@@ -178,5 +214,92 @@ export class Tramite130203Store extends Store<Tramite130203State> {
     this.update({
       filaSeleccionada: fila,
     });
+  }
+  public setNombreExportador(nombreExportador: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreExportador,
+    }));
+  }
+
+  public setDireccionExportador(direccionExportador: string): void {
+    this.update((state) => ({
+      ...state,
+      direccionExportador,
+    }));
+  }
+
+  public setNombreImportador(nombreImportador: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreImportador,
+    }));
+  }
+
+  public setDireccionImportador(direccionImportador: string): void {
+    this.update((state) => ({
+      ...state,
+      direccionImportador,
+    }));
+  }
+
+  public setNumeroEnLetraDeLosLotes(numeroEnLetraDeLosLotes: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroEnLetraDeLosLotes,
+    }));
+  }
+
+  public setNumeroEnLetraDeLosLotesEnIngles(
+    numeroEnLetraDeLosLotesEnIngles: string
+  ): void {
+    this.update((state) => ({
+      ...state,
+      numeroEnLetraDeLosLotesEnIngles,
+    }));
+  }
+
+  public setNumeroDeFactura(numeroDeFactura: string): void {
+    this.update((state) => ({
+      ...state,
+      numeroDeFactura,
+    }));
+  }
+
+  public setCantidadEnQuilates(cantidadEnQuilates: string): void {
+    this.update((state) => ({
+      ...state,
+      cantidadEnQuilates,
+    }));
+  }
+
+  public setValorDeLosDiamantes(valorDeLosDiamantes: string): void {
+    this.update((state) => ({
+      ...state,
+      valorDeLosDiamantes,
+    }));
+  }
+
+  public setEspecifique(especifique: number): void {
+    this.update({ especifique });
+  }
+
+  public setNumero(numero: string): void {
+    this.update({ numero });
+  }
+
+  public setTipoEmpresa(tipoEmpresa: string): void {
+    this.update({ tipoEmpresa });
+  }
+
+  public setLineaCheckbox(lineaCheckbox: boolean): void {
+    this.update({ lineaCheckbox });
+  }
+
+  public setPaisOrigen(paisOrigen: number | null): void {
+    this.update({ paisOrigen });
+  }
+  public setNombre(nombre: string): void {
+    this.update({ nombre });
   }
 }

@@ -1,4 +1,120 @@
 <div class="container mt-5">
+  <form class="container" [formGroup]="formularioEmpresa">
+    <!-- Title -->
+    <ng-titulo titulo="Capturar certificado Kimberley"></ng-titulo>
+  
+    <!-- Certificado emitidos aprobados -->
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <label for="especifique" class="form-label"
+          >Certificado emitidos aprobados:</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          id="especifique"
+          formControlName="especifique"
+          readonly
+          [disabled]="true"
+        />
+      </div>
+    </div>
+  
+    <div class="row mb-3">
+      <ng-titulo titulo="Datos generales del certificado Kimberley"></ng-titulo>
+      <div class="col-md-6">
+        <label class="form-label" for="numero"
+          >Número del certificado Kimberley:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="numero"
+          formControlName="numero"
+          [ngClass]="{ 'is-invalid': isInvalid('numero') }"
+          (change)="setValoresStore(formularioEmpresa, 'numero', 'setNumero')"
+        />
+        <div *ngIf="isInvalid('numero')" class="invalid-feedback">
+          Este campo es obligatorio.
+        </div>
+      </div>
+    </div>
+  
+    <!-- País emisor del certificado Kimberley -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <app-catalogo-select
+          [catalogo]="paisesEmisores"
+          [label]="'País emisor del certificado Kimberley:'"
+          [required]="true"
+          formControlName="tipoEmpresa"
+          (change)="
+            setValoresStore(formularioEmpresa, 'tipoEmpresa', 'setTipoEmpresa')
+          "
+        ></app-catalogo-select>
+        <div *ngIf="isInvalid('tipoEmpresa')" class="invalid-feedback">
+          Debe seleccionar un tipo de empresa.
+        </div>
+      </div>
+    </div>
+  
+    <!-- Nombre en inglés del país emisor del certificado Kimberley -->
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <label class="form-label" for="nombre"
+          >Nombre en inglés del país emisor del certificado Kimberley:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          formControlName="nombre"
+          [ngClass]="{ 'is-invalid': isInvalid('nombre') }"
+        />
+        <div *ngIf="isInvalid('nombre')" class="invalid-feedback">
+          Este campo es obligatorio.
+        </div>
+      </div>
+    </div>
+  
+    <!-- Mixed Checkbox -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="lineaCheckbox"
+            formControlName="lineaCheckbox"
+            [ngClass]="{ 'is-invalid': isInvalid('lineaCheckbox') }"
+          />
+          <label class="form-check-label" for="lineaCheckbox">
+            <span>Mixed</span>
+          </label>
+          <div *ngIf="isInvalid('lineaCheckbox')" class="invalid-feedback">
+            Debe seleccionar esta opción.
+          </div>
+        </div>
+      </div>
+  
+      <!-- País de origen -->
+      <div class="col-md-6">
+        <app-catalogo-select
+          [catalogo]="paisesEmisores"
+          [label]="'País de origen:'"
+          [required]="true"
+          formControlName="paisOrigen"
+          (change)="
+            setValoresStore(formularioEmpresa, 'paisOrigen', 'setPaisOrigen')
+          "
+        ></app-catalogo-select>
+        <div *ngIf="isInvalid('paisOrigen')" class="invalid-feedback">
+          Debe seleccionar un país de origen.
+        </div>
+      </div>
+    </div>
+  </form>
+  
   <form [formGroup]="datosDelExportador">
     <div>
       <ng-titulo titulo="Datos del exportador"></ng-titulo>
@@ -15,6 +131,7 @@
               formControlName="nombreExportador"
               libUppercase
               aria-labelledby="nombreExportador"
+              (change) = "getNombreExportador()"
             />
           </div>
         </div>
@@ -34,6 +151,7 @@
               placeholder="PRUEBAS QA CDMX"
               libUppercase
               aria-labelledby="direccionExportador"
+              (change) = "getDireccionExportador()"
             />
           </div>
         </div>
@@ -57,6 +175,7 @@
               formControlName="nombreImportador"
               libUppercase
               aria-labelledby="nombreImportador"
+              (change) = "getNombreImportador()"
             />
           </div>
         </div>
@@ -76,6 +195,7 @@
               placeholder=""
               libUppercase
               aria-labelledby="direccionImportador"
+              (change) = "getDireccionImportador()"
             />
           </div>
         </div>
@@ -99,6 +219,7 @@
               formControlName="numeroEnLetraDeLosLotes"
               libUppercase
               aria-labelledby="numeroEnLetraDeLosLotes"
+              (change) = "getNumeroEnLetraDeLosLotes()"
             />
           </div>
         </div>
@@ -118,6 +239,7 @@
               placeholder=""
               libUppercase
               aria-labelledby="numeroEnLetraDeLosLotesEnIngles"
+              (change) = "getNumeroEnLetraDeLosLotesEnIngles()"
             />
           </div>
         </div>
@@ -137,6 +259,7 @@
               placeholder=""
               libUppercase
               aria-labelledby="numeroDeFactura"
+              (change) = "getNumeroDeFactura()"
             />
           </div>
         </div>
@@ -160,6 +283,7 @@
               formControlName="cantidadEnQuilates"
               libUppercase
               aria-labelledby="cantidadEnQuilates"
+              (change) = "getCantidadEnQuilates()"
             />
           </div>
         </div>
@@ -177,6 +301,7 @@
               placeholder=""
               libUppercase
               aria-labelledby="valorDeLosDiamantes"
+              (change) = "getValorDeLosDiamantes()"
             />
           </div>
         </div>

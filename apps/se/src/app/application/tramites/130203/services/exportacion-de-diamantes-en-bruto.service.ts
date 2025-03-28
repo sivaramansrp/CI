@@ -66,4 +66,12 @@ export class ExportacionDeDiamantesEnBrutoService {
       'assets/json/130202/producto-otions.json'
     );
   }
+
+  getPaisesEmisores(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/130203/pais-emisor-del.json');
+  }
+
+  getNombresIngles(): Observable<{ nombre: string; codigo: string }[]> {
+    return this.http.get<{ nombre: string; codigo: string }[]>('assets/json/130203/nomber-en-ingles-del.json');
+  }
 }

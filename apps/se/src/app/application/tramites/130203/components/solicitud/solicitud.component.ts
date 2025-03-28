@@ -24,18 +24,46 @@ import { Validators } from '@angular/forms';
 import fractionValues from '@libs/shared/theme/assets/json/130203/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130202/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130203/unidad_da.json';
+
+/**
+ * @description
+ * Componente para gestionar la solicitud del trámite 130203.
+ * Este componente incluye formularios reactivos y suscripciones para manejar el estado del trámite.
+ */
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario principal del trámite.
+   */
   formDelTramite!: FormGroup;
+
+  /**
+   * Formulario para los datos de la mercancía.
+   */
   mercanciaForm!: FormGroup;
+
+  /**
+   * Formulario para las partidas de la mercancía.
+   */
   partidasDelaMercanciaForm!: FormGroup;
+
+  /**
+   * Formulario para los datos del país.
+   */
   paisForm!: FormGroup;
+
+  /**
+   * Formulario para la representación federal.
+   */
   frmRepresentacionForm!: FormGroup;
 
+  /**
+   * Campos de entrada para los datos del formulario.
+   */
   datosInputFields = [
     {
       label: 'Régimen al que se destinará la mercancía',
@@ -51,25 +79,105 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Catálogos de valores para los selectores.
+   */
   catalogosArray: Catalogo[][] = solicitudeSelectVal;
+
+  /**
+   * Opciones disponibles para la solicitud.
+   */
   opcionesSolicitud: ProductoOpción[] = [];
+
+  /**
+   * Observable para manejar la destrucción del componente.
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Opciones de productos disponibles.
+   */
   productoOpciones: ProductoOpción[] = [];
+
+  /**
+   * Indica si se debe mostrar la tabla.
+   */
   mostrarTabla = false;
+
+  /**
+   * Catálogo de fracciones arancelarias.
+   */
   fraccionCatalogo: Catalogo[] = fractionValues;
+
+  /**
+   * Catálogo de unidades de medida.
+   */
   unidadCatalogo: Catalogo[] = unidadOptions;
+
+  /**
+   * Formulario para el conteo total.
+   */
   formForTotalCount!: FormGroup;
+
+  /**
+   * Datos del cuerpo de la tabla.
+   */
   tableBodyData: { tbodyData: string[] }[] = [];
+
+  /**
+   * Datos del encabezado de la tabla.
+   */
   tableHeaderData: ConfiguracionColumna<string>[] = [];
+
+  /**
+   * Datos de establecimiento para la tabla.
+   */
   public getEstablecimientoTableData = PartidasdelaTable;
+
+  /**
+   * Fila seleccionada en la tabla.
+   */
   filaSeleccionada = null;
+
+  /**
+   * Elementos del bloque seleccionados.
+   */
   elementosDeBloque: Catalogo[] = [];
+
+  /**
+   * Lista de países por bloque.
+   */
   paisesPorBloque: Catalogo[] = [];
+
+  /**
+   * Rango de días seleccionados.
+   */
   selectRangoDias: string[] = [];
+
+  /**
+   * Lista de entidades federativas.
+   */
   entidadFederativa: Catalogo[] = [];
+
+  /**
+   * Lista de representaciones federales.
+   */
   representacionFederal: Catalogo[] = [];
+
+  /**
+   * Textos constantes para la representación federal.
+   */
   TEXTOS = TEXTOS;
 
+  /**
+   * @description
+   * Constructor del componente.
+   * @param fb FormBuilder para la creación de formularios reactivos.
+   * @param http Servicio HTTP para realizar solicitudes.
+   * @param exportacionDeDiamantesEnBrutoService Servicio para obtener datos relacionados con la exportación.
+   * @param tramite130203Store Store para gestionar el estado del trámite.
+   * @param tramite130203Query Query para obtener datos del estado del trámite.
+   */
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -80,6 +188,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     //constructor
   }
 
+  /**
+   * @description
+   * Método de inicialización del componente.
+   */
   ngOnInit(): void {
     this.inicializarFormularios();
     this.opcionesDeBusqueda();
@@ -115,11 +227,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description
+   * Método para limpiar las suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
 
+  /**
+   * @description
+   * Inicializa los formularios del componente.
+   */
   inicializarFormularios(): void {
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
@@ -196,6 +316,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description
+   * Configura las opciones de búsqueda para los formularios.
+   * Obtiene las opciones de solicitud y producto desde el servicio.
+   */
   opcionesDeBusqueda(): void {
     this.exportacionDeDiamantesEnBrutoService
       .getSolicitudeOptions()
@@ -226,6 +351,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description
+   * Actualiza los valores en el store según el formulario y el campo proporcionados.
+   * @param event Objeto que contiene el formulario, el campo y el método del store.
+   */
   setValoresStore(event: {
     form: FormGroup;
     campo: string;
@@ -292,6 +422,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description
+   * Configura las suscripciones para los formularios y actualiza el estado del store.
+   */
   configuracionFormularioSuscripciones(): void {
     this.tramite130203Query.solicitud$
       .pipe(takeUntil(this.destroyed$))
@@ -378,6 +512,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description
+   * Valida y envía el formulario, mostrando la tabla si es válido.
+   */
   validarYEnviarFormulario(): void {
     this.mostrarTabla = true;
     if (this.partidasDelaMercanciaForm.invalid) {
@@ -387,6 +525,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description
+   * Inicializa el formulario para el conteo total.
+   */
   formularioTotalCount(): void {
     this.formForTotalCount = this.fb.group({
       cantidadTotal: [{ value: '', disabled: true }],
@@ -394,6 +536,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description
+   * Calcula los totales de cantidad y valor en USD de la tabla.
+   */
   calcularTotales(): void {
     const CANTITAD_TOTAL = this.tableBodyData.reduce(
       (sum: number, item: { tbodyData: string[] }) =>
@@ -411,6 +557,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
   }
 
+  /**
+   * @description
+   * Obtiene los datos de establecimiento para la tabla.
+   */
   getEstablecimiento(): void {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
       (header, index) => ({
@@ -423,6 +573,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tableBodyData = this.getEstablecimientoTableData.tableBody;
   }
 
+  /**
+   * @description
+   * Navega para modificar una partida seleccionada en la tabla.
+   */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
       this.tramite130203Store.setMostrarTabla(true);
@@ -430,6 +584,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description
+   * Maneja la fila seleccionada en la tabla.
+   * @param filasSeleccionadas Lista de filas seleccionadas.
+   */
   manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
       ? filasSeleccionadas[0]
@@ -439,6 +598,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description
+   * Obtiene la lista de países disponibles desde el servicio.
+   */
   listaDePaisesDisponibles(): void {
     this.exportacionDeDiamantesEnBrutoService
       .getListaDePaisesDisponibles()
@@ -447,6 +610,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description
+   * Obtiene los países por bloque desde el servicio.
+   * @param _bloqueId ID del bloque seleccionado.
+   */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.exportacionDeDiamantesEnBrutoService
       .getPaisesPorBloque(_bloqueId)
@@ -458,10 +626,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description
+   * Maneja el cambio de bloque y actualiza los países correspondientes.
+   * @param bloqueId ID del bloque seleccionado.
+   */
   enCambioDeBloque(bloqueId: number): void {
     this.fetchPaisesPorBloque(bloqueId);
   }
 
+  /**
+   * @description
+   * Obtiene la lista de entidades federativas desde el servicio.
+   */
   fetchEntidadFederativa(): void {
     this.exportacionDeDiamantesEnBrutoService
       .getEntidadFederativa()
@@ -470,6 +647,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @description
+   * Obtiene la lista de representaciones federales desde el servicio.
+   */
   fetchRepresentacionFederal(): void {
     this.exportacionDeDiamantesEnBrutoService
       .getRepresentacionFederal()
