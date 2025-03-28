@@ -94,20 +94,19 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.pagoDerechosForm = this.fb.group({
-      claveReferencia: [this.pagoDerechoFormState.claveReferencia || '', Validators.required],
+      claveReferencia: [this.pagoDerechoFormState?.claveReferencia || '', Validators.required],
       cadenaDependencia: [
-        this.pagoDerechoFormState.cadenaDependencia || '',
+        this.pagoDerechoFormState?.cadenaDependencia || '',
         Validators.required,
       ],
-      estado: [this.pagoDerechoFormState.estado || '', Validators.required],
-      llavePago: [this.pagoDerechoFormState.llavePago || '', Validators.required],
-      fechaPago: [this.pagoDerechoFormState.fechaPago || '', Validators.required],
+      estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
+      llavePago: [this.pagoDerechoFormState?.llavePago || '', Validators.required],
+      fechaPago: [this.pagoDerechoFormState?.fechaPago || '', Validators.required],
       importePago: [
-        this.pagoDerechoFormState.importePago || '',
+        this.pagoDerechoFormState?.importePago || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
       ],
     });
-
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });

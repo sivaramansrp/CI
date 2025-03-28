@@ -1,7 +1,7 @@
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Facturador } from '../../models/terceros-relacionados.model';
 import { FormBuilder } from '@angular/forms';
@@ -12,8 +12,6 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -21,6 +19,7 @@ import { takeUntil } from 'rxjs';
  * Permite capturar datos generales y de contacto, y actualiza el store con el nuevo registro.
  */
 @Component({
+  selector: 'app-agregar-facturador',
   standalone: true,
   imports: [
     CommonModule,
@@ -58,6 +57,12 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
   facturadores: Facturador[] = [];
 
   /**
+   * Evento de salida que emite la lista de facturadores actualizada.
+   * @property {EventEmitter<Facturador[]>} updateFacturadorTablaDatos
+   */
+  @Output() updateFacturadorTablaDatos = new EventEmitter<Facturador[]>();
+
+  /**
    * Constructor que inicializa el formulario y servicios necesarios.
    *
    * @param {FormBuilder} fb - FormBuilder para construir el formulario reactivo.
@@ -69,8 +74,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query,
     private ubicaccion: Location
   ) {
     this.agregarFacturadorForm = this.fb.group({
@@ -147,7 +150,7 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     };
 
     this.facturadores.push(NUEVO_FACTURADOR);
-    this.tramiteStore.updateFacturadorTablaDatos(this.facturadores);
+   this.updateFacturadorTablaDatos.emit(this.facturadores);
     this.agregarFacturadorForm.reset();
     this.ubicaccion.back();
   }
