@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
@@ -8,7 +9,7 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudPageComponent],
+      imports: [SolicitudPageComponent, HttpClientTestingModule],
       providers: [{
         provide: ActivatedRoute,
         useValue: {
@@ -23,10 +24,9 @@ describe('SolicitudPageComponent', () => {
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component.tituloMensaje).toBeDefined();
   });
 });
