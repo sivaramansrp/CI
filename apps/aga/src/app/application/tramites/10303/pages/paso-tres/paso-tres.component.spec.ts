@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasoTresComponent } from './paso-tres.component';
 import { TramiteStore } from '../../../../estados/tramite.store';
-import { FirmaElectronicaComponent, ServiciosExtraordinariosService } from '@libs/shared/data-access-user/src';
+import { FirmaElectronicaComponent, TramiteFolioService } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,7 +14,7 @@ fdescribe('PasoTresComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [PasoTresComponent],
       imports: [FirmaElectronicaComponent, HttpClientTestingModule],
-      providers: [ServiciosExtraordinariosService, TramiteStore, ToastrService]
+      providers: [TramiteFolioService, TramiteStore, ToastrService]
     })
     .compileComponents();
     
