@@ -36,6 +36,13 @@ const ROUTES: Routes = [
         (m) => m.PermisoSanitarioImportacionModule
       ),
   },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos-pruebas',
+    loadChildren: () =>
+      import(
+        './tramites/260210/permiso-sanitario-importacion-medicamentos-pruebas.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosPruebasModule),
+  },
 ];
 
 @NgModule({
