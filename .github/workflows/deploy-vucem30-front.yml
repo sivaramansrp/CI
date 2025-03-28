@@ -11,6 +11,20 @@ on:
           - dev
           - staging
           - prod
+      deployment_mode:
+        description: 'Deployment mode'
+        required: true
+        default: 'changed'
+        type: choice
+        options:
+          - changed
+          - selected
+          - all
+      selected_apps:
+        description: 'Select apps to deploy (comma-separated, only used when deployment_mode is "selected")'
+        required: false
+        default: 'dashboard'
+        type: string
   push:
     branches: [ "develop", "main" ]
     paths:
@@ -35,15 +49,69 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set environment
+      - name: Set environment and determine apps to deploy
         id: set-env
         run: |
+          # Set environment
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "DEPLOY_ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "DEPLOY_ENV=prod" >> $GITHUB_ENV
           else
             echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+          fi
+          
+          # Determine which apps to deploy
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
+              echo "DEPLOY_APPS=${{ env.ALL_APPS }}" >> $GITHUB_ENV
+              echo "Deploying all apps"
+            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
+              echo "DEPLOY_APPS=${{ github.event.inputs.selected_apps }}" >> $GITHUB_ENV
+              echo "Deploying selected apps: ${{ github.event.inputs.selected_apps }}"
+            else
+              # Changed mode - detect changed apps
+              CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
+              if [ -z "$CHANGED_APPS" ]; then
+                # Check for changes in shared libs that would affect all apps
+                SHARED_CHANGES=$(git diff --name-only HEAD~1 HEAD | grep -E '^libs/shared/' || echo "")
+                if [ -n "$SHARED_CHANGES" ]; then
+                  echo "DEPLOY_APPS=${{ env.ALL_APPS }}" >> $GITHUB_ENV
+                  echo "Shared libs changed, deploying all apps"
+                else
+                  echo "DEPLOY_APPS=dashboard" >> $GITHUB_ENV
+                  echo "No changes detected, defaulting to dashboard"
+                fi
+              else
+                # Always include dashboard when any app changes
+                if [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
+                  CHANGED_APPS="dashboard,$CHANGED_APPS"
+                fi
+                echo "DEPLOY_APPS=$CHANGED_APPS" >> $GITHUB_ENV
+                echo "Deploying changed apps: $CHANGED_APPS"
+              fi
+            fi
+          else
+            # Auto mode for push events
+            CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
+            if [ -z "$CHANGED_APPS" ]; then
+              # Check for changes in shared libs that would affect all apps
+              SHARED_CHANGES=$(git diff --name-only HEAD~1 HEAD | grep -E '^libs/shared/' || echo "")
+              if [ -n "$SHARED_CHANGES" ]; then
+                echo "DEPLOY_APPS=${{ env.ALL_APPS }}" >> $GITHUB_ENV
+                echo "Shared libs changed, deploying all apps"
+              else
+                echo "DEPLOY_APPS=dashboard" >> $GITHUB_ENV
+                echo "No changes detected, defaulting to dashboard"
+              fi
+            else
+              # Always include dashboard when any app changes
+              if [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
+                CHANGED_APPS="dashboard,$CHANGED_APPS"
+              fi
+              echo "DEPLOY_APPS=$CHANGED_APPS" >> $GITHUB_ENV
+              echo "Deploying changed apps: $CHANGED_APPS"
+            fi
           fi
 
       - name: Setup Node.js
@@ -76,9 +144,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build all microfrontends
+      - name: Build microfrontends
         run: |
-          for app in $(echo "${{ env.ALL_APPS }}" | tr ',' ' '); do
+          for app in $(echo "${{ env.DEPLOY_APPS }}" | tr ',' ' '); do
             echo "Building $app..."
             npx ng build $app --configuration=production
           done
@@ -95,9 +163,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker images for all apps
+      - name: Build and push Docker images for selected apps
         run: |
-          for app in $(echo "${{ env.ALL_APPS }}" | tr ',' ' '); do
+          for app in $(echo "${{ env.DEPLOY_APPS }}" | tr ',' ' '); do
             echo "Building and pushing Docker image for $app..."
           
             # Build and push Docker image
@@ -167,8 +235,8 @@ jobs:
                   - name: github-container-registry
                 containers:" > kubernetes/deployment.yaml
           
-          # Generate container definitions
-          for app in $(echo "${{ env.ALL_APPS }}" | tr ',' ' '); do
+          # Generate container definitions for selected apps
+          for app in $(echo "${{ env.DEPLOY_APPS }}" | tr ',' ' '); do
             echo "  - name: $app
                 image: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/vucem-front-$app:${{ env.DEPLOY_ENV }}
                 imagePullPolicy: Always
@@ -334,19 +402,33 @@ jobs:
           key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
           port: 22
           script_stop: true
+          envs: DEPLOY_ENV,DEPLOY_APPS
           script: |
-            echo "Deploying VUCEM Microfrontends to ${{ env.DEPLOY_ENV }}..."
+            echo "Deploying VUCEM Microfrontends to $DEPLOY_ENV..."
+            echo "Apps being deployed: $DEPLOY_APPS"
             cd /home/ubuntu/v30
             
             # Create namespace if it doesn't exist
-            microk8s kubectl get namespace vucem-${{ env.DEPLOY_ENV }} > /dev/null 2>&1 || \
-            microk8s kubectl create namespace vucem-${{ env.DEPLOY_ENV }}
+            microk8s kubectl get namespace vucem-$DEPLOY_ENV > /dev/null 2>&1 || \
+            microk8s kubectl create namespace vucem-$DEPLOY_ENV
             
             # Apply Kubernetes manifest
             microk8s kubectl apply -f k8s/combined.yaml
             
-            # Restart the deployment to pull the latest images
-            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ env.DEPLOY_ENV }}
+            # Check if deployment exists before trying to restart it
+            if microk8s kubectl get deployment vucem-microfrontends-$DEPLOY_ENV -n vucem-$DEPLOY_ENV > /dev/null 2>&1; then
+              # Restart the deployment to pull the latest images
+              echo "Restarting deployment..."
+              microk8s kubectl rollout restart deployment vucem-microfrontends-$DEPLOY_ENV -n vucem-$DEPLOY_ENV
             
-            # Wait for rollout to complete
-            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ env.DEPLOY_ENV }} --timeout=300s
+              # Wait for rollout to complete
+              microk8s kubectl rollout status deployment/vucem-microfrontends-$DEPLOY_ENV -n vucem-$DEPLOY_ENV --timeout=300s
+            else
+              echo "Deployment not found - it will be created by the apply command"
+            fi
+            
+            # Print summary of deployment
+            echo "Deployment summary:"
+            echo "Environment: $DEPLOY_ENV"
+            echo "Apps deployed: $DEPLOY_APPS"
+            microk8s kubectl get pods -n vucem-$DEPLOY_ENV -l app=vucem-microfrontends
