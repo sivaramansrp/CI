@@ -1,7 +1,7 @@
-
+import { Solicitud31803State, Tramite31803Store } from './Tramite31803.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud31803State, Tramite31803Store } from './Tramite31803.store';
+
 
 /**
  * Clase que proporciona consultas reactivas para el estado del trámite 31803.

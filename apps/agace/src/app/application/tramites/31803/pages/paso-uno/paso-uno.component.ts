@@ -1,15 +1,9 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import {
-  DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-  PERSONA_MORAL_NACIONAL,
-} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { AfterViewInit, Component, ViewChild } from '@angular/core'; 
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum'; 
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
-import {
-  SharedModule,
-  SolicitanteComponent,
-} from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { SolicitudComponent } from "../../components/Solicitud.component";
+ import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src'; 
+ import { CommonModule } from '@angular/common'; 
+ import { SolicitudComponent } from "../../components/Solicitud.component";
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -21,18 +15,12 @@ import { SolicitudComponent } from "../../components/Solicitud.component";
   standalone: true,
   imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent],
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit{
   constructor() {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
-   */
-  ngOnInit(): void {}
-
-  /**
+    /**
    * Referencia al componente de solicitante.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;

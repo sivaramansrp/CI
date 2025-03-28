@@ -12,7 +12,7 @@ export const FECHAINICIAL = {
     
   };
 
- export const FETCHAPAGO = {
+ export const FECHAPAGO = {
     labelNombre: 'Fecha de pago', 
     required: false,
     habilitado: false, 
