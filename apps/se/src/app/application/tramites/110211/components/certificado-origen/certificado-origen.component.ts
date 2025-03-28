@@ -6,60 +6,130 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { camCertificadoStore, camState } from '../../estados/cam-certificado.store';
-import { Observable, Subject, delay, map, takeUntil  } from 'rxjs';
+import { Observable, Subject, delay, map, takeUntil } from 'rxjs';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
+/**
+ * @descripcion
+ * El componente `CertificadoOrigenComponent` es responsable de gestionar los datos y las interacciones
+ * relacionadas con el formulario de certificado de origen en el módulo CAM.
+ */
 @Component({
   selector: 'app-certificado-origen',
   templateUrl: './certificado-origen.component.html',
   styleUrl: './certificado-origen.component.css',
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * @descripcion
+   * Lista de estados disponibles.
+   */
+  estado: Catalogo[] = [];
 
-  estado: Catalogo[] = []
+  /**
+   * @descripcion
+   * Lista de países disponibles.
+   */
+  pais: Catalogo[] = [];
 
-  pais: Catalogo[] = []
+  /**
+   * @descripcion
+   * Lista de datos disponibles relacionados con mercancías.
+   */
+  disponiblesDatos: Mercancia[] = [];
 
-  disponiblesDatos: Mercancia[] = []
+  /**
+   * @descripcion
+   * Indica si el operador está activo.
+   */
+  operador: boolean = true;
 
-  operador: boolean = true
+  /**
+   * @descripcion
+   * Datos seleccionados para modificación.
+   */
+  datosSeleccionados!: Mercancia;
 
-  datosSeleccionados!: Mercancia
-
+  /**
+   * @descripcion
+   * Instancia del modal de modificación.
+   */
   modalInstance!: Modal;
 
+  /**
+   * @descripcion
+   * Evento para indicar si se seleccionó una fila en la tabla.
+   */
   tablaSeleccionEvent: boolean = false;
 
+  /**
+   * @descripcion
+   * Observable para los datos de la tabla.
+   */
   datosTabla$: Observable<Mercancia[]> | undefined;
 
+  /**
+   * @descripcion
+   * Valores actuales del formulario de certificado.
+   */
   formCertificadoValues!: { [key: string]: string | number | boolean | object | undefined };
 
-  private certificadoState!: camState
+  /**
+   * @descripcion
+   * Estado actual del certificado.
+   */
+  private certificadoState!: camState;
 
+  /**
+   * @descripcion
+   * Notificador para gestionar la destrucción de suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  private seccionState!: SeccionLibState
+  /**
+   * @descripcion
+   * Estado actual de la sección.
+   */
+  private seccionState!: SeccionLibState;
 
+  /**
+   * @descripcion
+   * Referencia al elemento del modal de modificación.
+   */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
+  /**
+   * @descripcion
+   * Constructor que inicializa los servicios y dependencias requeridas.
+   * @param fb - Instancia de FormBuilder para gestionar formularios.
+   * @param camCertificadoService - Servicio para obtener datos relacionados con el certificado.
+   * @param store - Almacén para gestionar el estado del formulario de certificado.
+   * @param query - Consulta para obtener el estado del formulario.
+   * @param seccionStore - Almacén para gestionar el estado de la sección.
+   * @param seccionQuery - Consulta para obtener el estado de la sección.
+   */
   constructor(
-        private readonly fb: FormBuilder, 
-        private camCertificadoService : CamCertificadoService,
-        private store : camCertificadoStore,
-        private query : camCertificadoQuery,
-        private seccionStore: SeccionLibStore,
-        private seccionQuery: SeccionLibQuery
-    ){
-      this.query.formCertificado$.pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(100)
-      ).subscribe(estado => {
+    private readonly fb: FormBuilder,
+    private camCertificadoService: CamCertificadoService,
+    private store: camCertificadoStore,
+    private query: camCertificadoQuery,
+    private seccionStore: SeccionLibStore,
+    private seccionQuery: SeccionLibQuery
+  ) {
+    this.query.formCertificado$
+      .pipe(takeUntil(this.destroyNotifier$), delay(100))
+      .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
-    }
+  }
 
-    ngOnInit(): void {
-      this.seccionQuery.selectSeccionState$
+  /**
+   * @descripcion
+   * Hook del ciclo de vida que se llama después de inicializar el componente.
+   * Obtiene los datos iniciales para el formulario.
+   */
+  ngOnInit(): void {
+    this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -67,6 +137,7 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         })
       )
       .subscribe();
+
     this.query.selectCam$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -75,62 +146,93 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         })
       )
       .subscribe();
-      this.estadoOpcion();
-      this.paisOpcion();
-      this.datosTabla$ = this.query.selectmercanciaTabla$;
-    }
 
-    estadoOpcion(): void {
-      this.camCertificadoService.obtenerMenuDesplegable('estados.json').subscribe({
-            next: (data) => {
-              this.estado = data as Catalogo[];
-            },
-            error: (error: HttpErrorResponse) => {
-              console.error('Error al obtener los datos:', error);
-              this.estado = [];
-            }
-          }
-        );
-    }
-
-    paisOpcion(): void {
-      this.camCertificadoService.obtenerMenuDesplegable('pais.json').subscribe({
-        next: (data) => {
-          this.pais = data as Catalogo[];
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-          this.pais = [];
-        }
-      }
-    );
+    this.estadoOpcion();
+    this.paisOpcion();
+    this.datosTabla$ = this.query.selectmercanciaTabla$;
   }
 
+  /**
+   * @descripcion
+   * Obtiene la lista de estados disponibles.
+   */
+  estadoOpcion(): void {
+    this.camCertificadoService.obtenerMenuDesplegable('estados.json').subscribe({
+      next: (data) => {
+        this.estado = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+        this.estado = [];
+      },
+    });
+  }
+
+  /**
+   * @descripcion
+   * Obtiene la lista de países disponibles.
+   */
+  paisOpcion(): void {
+    this.camCertificadoService.obtenerMenuDesplegable('pais.json').subscribe({
+      next: (data) => {
+        this.pais = data as Catalogo[];
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al obtener los datos:', error);
+        this.pais = [];
+      },
+    });
+  }
+
+  /**
+   * @descripcion
+   * Obtiene los datos disponibles relacionados con mercancías.
+   */
   conseguirDisponiblesDatos(): void {
     this.camCertificadoService.obtenerTablaDatos('disponibles-datos.json').subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response)) {
-          this.disponiblesDatos = response
-        } 
+          this.disponiblesDatos = response;
+        }
       },
       error: (error: HttpErrorResponse) => {
         console.error('Error al obtener los datos:', error);
-      }
+      },
     });
   }
 
+  /**
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario.
+   * @param e - Los datos del formulario a almacenar.
+   */
   obtenerDatosFormulario(e: unknown): void {
     this.store.setFormCertificado(e as { [key: string]: string | number | boolean | object | undefined });
   }
 
+  /**
+   * @descripcion
+   * Actualiza el almacén con el estado seleccionado.
+   * @param estado - El estado seleccionado.
+   */
   tipoEstadoSeleccion(estado: Catalogo): void {
     this.store.setEstado(estado);
   }
 
+  /**
+   * @descripcion
+   * Actualiza el almacén con el bloque seleccionado.
+   * @param estado - El bloque seleccionado.
+   */
   tipoSeleccion(estado: Catalogo): void {
     this.store.setBloque([estado]);
   }
 
+  /**
+   * @descripcion
+   * Abre el modal de modificación con los datos seleccionados.
+   * @param disponiblesDatos - Los datos seleccionados para modificación.
+   */
   abrirModificarModal(disponiblesDatos: Mercancia): void {
     this.datosSeleccionados = disponiblesDatos;
     this.store.setFormMercancia({ ...disponiblesDatos });
@@ -139,6 +241,10 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
+  /**
+   * @descripcion
+   * Cierra el modal de modificación.
+   */
   cerrarModificarModal(): void {
     if (this.modalInstance) {
       this.tablaSeleccionEvent = true;
@@ -146,17 +252,31 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
+  /**
+   * @descripcion
+   * Hook del ciclo de vida que se llama después de que la vista del componente se haya inicializado.
+   * Inicializa el modal de modificación.
+   */
   ngAfterViewInit(): void {
-    // Inicializa el modal de modificación
     if (this.modifyModal) {
       this.modalInstance = new Modal(this.modifyModal.nativeElement);
     }
   }
 
+  /**
+   * @descripcion
+   * Actualiza el almacén con el estado de validación del formulario.
+   * @param valida - El estado de validación del formulario.
+   */
   setFormValida(valida: boolean): void {
     this.store.setFormValida({ certificado: valida });
   }
 
+  /**
+   * @descripcion
+   * Hook del ciclo de vida que se llama cuando el componente se destruye.
+   * Limpia los recursos y suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
