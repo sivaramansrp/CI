@@ -181,7 +181,6 @@ describe('ModificacionComponent', () => {
     component.valorDeAlternancia({
       id: {}
     });
-    // expect(component.datosTabla.findIndex).toHaveBeenCalled();
   });
 
 });
