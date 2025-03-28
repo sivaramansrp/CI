@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard, PASOS } from '@libs/shared/data-access-user/src';
-
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 interface AccionBoton {
   accion: string;
@@ -26,7 +25,7 @@ export class PlaguicidasComponent {
     txtBtnSig: 'Continuar',
   };
 
-  getValorIndice(e: AccionBoton): void{
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

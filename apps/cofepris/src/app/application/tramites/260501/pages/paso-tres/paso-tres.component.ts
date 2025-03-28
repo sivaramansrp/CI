@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
+/**
+ * Componente PasoTresComponent
+ * @description Este componente es parte del proceso de firma electrónica en el trámite 260501.
+ *              Se encarga de recibir la firma electrónica y redirigir al usuario a la página de acuse.
+ */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',

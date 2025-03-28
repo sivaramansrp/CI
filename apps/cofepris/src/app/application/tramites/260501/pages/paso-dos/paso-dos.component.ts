@@ -6,6 +6,10 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnInit } from '@angular/core';
 
+/**
+ * Componente que representa el segundo paso del proceso de solicitud.
+
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',

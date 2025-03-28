@@ -13,8 +13,8 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { INPUT_FECHA_CONFIG } from '../../constantes/permiso-plaguicidas-datos.enum';
-import { PermisoPlaguicidasDatosService } from '../../services/permiso-plaguicidas-datos.service';
+import { INPUT_FECHA_CONFIG } from '../../constantes/pago-banco.enum';
+import { PagoBancoService } from '../../services/pago-banco.service';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 
 @Component({
@@ -58,8 +58,8 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramitePagoBancoStore: TramitePagoBancoStore,
     private tramitePagoBancoQuery: TramitePagoBancoQuery,
-    @Inject(PermisoPlaguicidasDatosService)
-    private permisoPlaguicidasDatosService: PermisoPlaguicidasDatosService
+    @Inject(PagoBancoService)
+    private service: PagoBancoService
   ) {
     this.fetchBancoData();
   }
@@ -105,7 +105,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   fetchBancoData(): void {
-    this.permisoPlaguicidasDatosService
+    this.service
       .getBancoData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
