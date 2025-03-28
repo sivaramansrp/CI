@@ -7,6 +7,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
 import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
+import { PagoDeDerechosContenedoraComponent } from "../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component";
 
 @Component({
   selector: 'app-paso-uno',
@@ -17,7 +18,8 @@ import { Tramite260205Store } from '../../estados/stores/tramite260205.store';
     ContenedorDeDatosSolicitudComponent,
     TercerosRelacionadosVistaComponent,
     PagoDeDerechosComponent,
-  ],
+    PagoDeDerechosContenedoraComponent
+],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
