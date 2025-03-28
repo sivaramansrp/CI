@@ -2,13 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Tramite130114Store } from '../estados/queries/tramites130114.store';
-import { Tramite130114Query } from '../estados/queries/tramite130114.query';
+import { Tramite130114Store } from '../../../estados/tramites/tramite130114.store';
+import { Tramite130114Query } from '../../../estados/queries/tramite130114.query';
 import { DiamanteBrutoService } from '../services/diamante-bruto.service';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
+
 
 
 @Component({ selector: 'app-partidas-de-la-mercancia', template: '' })
