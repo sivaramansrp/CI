@@ -7,21 +7,21 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="operacionData" [label]="'Tipo de operacíon'"
                                 [required]="true" for="tipoDeOperacion" id="tipoDeOperacion"
-                                formControlName="tipoDeOperacion"></app-catalogo-select>
+                                formControlName="tipoDeOperacion" (change)="actualizarOperacion()"></app-catalogo-select>
                         </div>
                     </div>
                     <div class="col-md-4 ms-5">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="movimientoData" [label]="'Tipo de movimiento'"
                                 [required]="true" for="tipoDeMovimiento" id="tipoDeMovimiento"
-                                formControlName="tipoDeMovimiento"></app-catalogo-select>
+                                formControlName="tipoDeMovimiento"  (change)="actualizarMovimiento()"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
 
                 <div class="obra-De-Arte-table mt-5">
-                    <label class="form-label" for="ciudad">Informacion obra de arte*:</label>
+                    <label class="form-label" for="obraDeArteInformacion">Informacion obra de arte*:</label>
                     <div class="table-responsive">
                         <ng-table [commonTableHeader]="obraDeArteHeader" [commonTableBody]="obraDeArteRowData"></ng-table>
                     </div>
@@ -38,7 +38,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="motivoData" [label]="'Motivo'" [required]="true" for="motivo"
-                            id="motivo" formControlName="motivo"></app-catalogo-select>
+                            id="motivo" formControlName="motivo"  (change)="actualizarMotivo()"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" for="pais"
-                                id="pais" formControlName="pais"></app-catalogo-select>
+                                id="pais" formControlName="pais"  (change)="actualizarPais()"></app-catalogo-select>
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="transporteData" [label]="'Medio de transporte'"
                                 [required]="true" for="medioTransporte" id="medioTransporte"
-                                formControlname="medioTransporte"></app-catalogo-select>
+                                formControlname="medioTransporte" (change)="actualizarTransporte()"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Aduana de entrada'" [required]="true"
                             for="aduanaEntrada" id="aduanaEntrada"
-                            formControlname="aduanaEntrada" name="aduanaData"></app-catalogo-select>
+                            formControlname="aduanaEntrada" name="aduanaData" (change)="actualizarAduana()"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -101,20 +101,20 @@
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="autor">Autor*:</label>
-                    <input type="text" class="form-control" id="autor" formControlName="autor" name="autor"
+                    <input type="text" class="form-control" id="autor" formControlName="autor" name="autor" (input)="actualizarAutor()"
                         placeholder="Inserta autor" [required]=true>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="titulo">Título*:</label>
-                    <input type="text" class="form-control" id="titulo" formControlName="titulo" name="titulo"
+                    <input type="text" class="form-control" id="titulo" formControlName="titulo" name="titulo" (input)="actualizarTitulo()"
                         placeholder="Inserta titulo">
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="tecnicaDeRealizacion">Técnica de realización*:</label>
                     <input type="text" class="form-control" id="tecnicaDeRealizacion"
-                        formControlName="tecnicaDeRealizacion" name="tecnicaDeRealizacion"
+                        formControlName="tecnicaDeRealizacion" name="tecnicaDeRealizacion" (input)="actualizarTecnica()"
                         placeholder="Inserta tecnica de realizacion">
                 </div>
 
@@ -126,31 +126,31 @@
 
                 <div class="col-md-4">
                     <label class="form-label" for="alto">Alto (centímetros):</label>
-                    <input type="text" class="form-control" id="alto" formControlName="alto" name="alto"
+                    <input type="text" class="form-control" id="alto" formControlName="alto" name="alto" (input)="actualizarAlto()"
                         placeholder="0.00">
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="ancho">Ancho (centímetros):</label>
-                    <input type="text" class="form-control" id="ancho" formControlName="ancho" name="ancho"
+                    <input type="text" class="form-control" id="ancho" formControlName="ancho" name="ancho" (input)="actualizarAncho()"
                         placeholder="0.00">
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="profundidad">Profundidad (centímetros):</label>
                     <input type="text" class="form-control" id="profundidad" formControlName="profundidad"
-                        name="profundidad" placeholder="0.00">
+                        name="profundidad" (input)="actualizarProfundidad()" placeholder="0.00">
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="diametro">Diametro (centímetros):</label>
-                    <input type="text" class="form-control" id="diametro" formControlName="diametro" name="diametro"
+                    <input type="text" class="form-control" id="diametro" formControlName="diametro" name="diametro" (input)="actualizarDiametro()"
                         placeholder="0.00">
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="variables">Variables:</label>
-                    <input type="text" class="form-control" id="variables" formControlName="variables" name="variables"
+                    <input type="text" class="form-control" id="variables" formControlName="variables" name="variables" (input)="actualizarVariables()"
                         placeholder="Inserta variables">
                 </div>
 
@@ -161,26 +161,26 @@
                 <div class="col-md-4">
                     <label class="form-label" for="anoDeCreacion">Año de creación*:</label>
                     <input type="text" class="form-control" id="anoDeCreacion" formControlName="anoDeCreacion"
-                        name="anoDeCreacion" placeholder="aaaa">
+                        name="anoDeCreacion" (input)="actualizarAnoDeCreacion()" placeholder="aaaa">
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="avaluo">Avalúo*:</label>
-                    <input type="text" class="form-control" id="avaluo" formControlName="avaluo" name="avaluo"
+                    <input type="text" class="form-control" id="avaluo" formControlName="avaluo" name="avaluo" (input)="actualizarAvaluo()"
                         placeholder="0">
                 </div>
 
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="monedaData" [label]="'Moneda'" [required]="true" for="moneda"
-                            id="moneda" formControlName="moneda" name="moneda"></app-catalogo-select>
+                            id="moneda" formControlName="moneda" name="moneda"  (change)="actualizarMoneda()"></app-catalogo-select>
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label" for="propietario">Propietario*:</label>
                     <input type="text" class="form-control" id="propietario" formControlName="propietario"
-                        name="propietario" placeholder="Inserta propietario">
+                        name="propietario" (input)="actualizarPropietario()" placeholder="Inserta propietario">
                 </div>
 
                 <div class="clearfix"></div>
@@ -189,7 +189,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="arancelariaData" [label]="'Fracción arancelaria'"
                             [required]="true" for="fraccionArancelaria" id="fraccionArancelaria"
-                            formControlName="fraccionArancelaria" name="fraccionArancelaria"></app-catalogo-select>
+                            formControlName="fraccionArancelaria" name="fraccionArancelaria"  (change)="actualizarFraccionArancelaria()"></app-catalogo-select>
                     </div>
                 </div>
 
@@ -197,7 +197,7 @@
                     <label class="form-label" for="descripcionArancelaria">Descripción de la fracción
                         arancelaria:</label>
                     <input type="text" class="form-control" id="descripcionArancelaria"
-                        formControlName="descripcionArancelaria" name="descripcionArancelaria">
+                        formControlName="descripcionArancelaria" name="descripcionArancelaria" (input)="actualizarDescArancelaria()">
                 </div>
 
                 <div class="row mt-5 mb-5">

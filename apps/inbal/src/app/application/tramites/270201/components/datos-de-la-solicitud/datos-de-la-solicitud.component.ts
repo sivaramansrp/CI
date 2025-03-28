@@ -176,6 +176,115 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     });
   }
 
+  actualizarOperacion(): void {
+    const OPERACION = this.solicitudFormGroup.get('tipoDeOperacion')?.value;
+    this.tramite270201Store.setOperacion(OPERACION);
+  }
+
+  actualizarMovimiento(): void {
+    const MOVIMIENTO = this.solicitudFormGroup.get('tipoDeMovimiento')?.value;
+    this.tramite270201Store.setOperacion(MOVIMIENTO);
+  }
+
+  actualizarMotivo(): void {
+    const MOTIVO = this.solicitudFormGroup.get('motivo')?.value;
+    this.tramite270201Store.setOperacion(MOTIVO);
+  }
+
+  actualizarPais(): void {
+    const PAIS = this.solicitudFormGroup.get('pais')?.value;
+    this.tramite270201Store.setOperacion(PAIS);
+  }
+
+  actualizarCiudad(): void {
+    const CIUDAD = this.solicitudFormGroup.get('ciudad')?.value;
+    this.tramite270201Store.setOperacion(CIUDAD);
+  }
+
+  actualizarTransporte(): void {
+    const TRANSPORTE = this.solicitudFormGroup.get('medioTransporte')?.value;
+    this.tramite270201Store.setOperacion(TRANSPORTE);
+  }
+
+  actualizarAduana(): void {
+    const ADUANA = this.solicitudFormGroup.get('aduanaEntrada')?.value;
+    this.tramite270201Store.setOperacion(ADUANA);
+  }
+
+  actualizarAutor(): void {
+    const AUTOR = this.solicitudFormGroup.get('autor')?.value;
+    this.tramite270201Store.setOperacion(AUTOR);
+  }
+
+  actualizarTitulo(): void {
+    const TITULO = this.solicitudFormGroup.get('titulo')?.value;
+    this.tramite270201Store.setOperacion(TITULO);
+  }
+
+  actualizarTecnica(): void {
+    const TECNICA = this.solicitudFormGroup.get('tecnicaDeRealizacion')?.value;
+    this.tramite270201Store.setOperacion(TECNICA);
+  }
+
+  actualizarAlto(): void {
+    const ALTO = this.solicitudFormGroup.get('alto')?.value;
+    this.tramite270201Store.setOperacion(ALTO);
+  }
+
+  actualizarAncho(): void {
+    const ANCHO = this.solicitudFormGroup.get('ancho')?.value;
+    this.tramite270201Store.setOperacion(ANCHO);
+  }
+
+  actualizarProfundidad(): void {
+    const PROFUNDIDAD = this.solicitudFormGroup.get('profundidad')?.value;
+    this.tramite270201Store.setOperacion(PROFUNDIDAD);
+  }
+
+  actualizarDiametro(): void {
+    const DIAMETRO = this.solicitudFormGroup.get('diametro')?.value;
+    this.tramite270201Store.setOperacion(DIAMETRO);
+  }
+
+  actualizarVariables(): void {
+    const VARIABLES = this.solicitudFormGroup.get('variables')?.value;
+    this.tramite270201Store.setOperacion(VARIABLES);
+  }
+
+  actualizarAnoDeCreacion(): void {
+    const ANO_DE_CREACION = this.solicitudFormGroup.get('anoDeCreacion')?.value;
+    this.tramite270201Store.setOperacion(ANO_DE_CREACION);
+  }
+
+  actualizarAvaluo(): void {
+    const AVALUO = this.solicitudFormGroup.get('avaluo')?.value;
+    this.tramite270201Store.setOperacion(AVALUO);
+  }
+
+  actualizarMoneda(): void {
+    const MONEDA = this.solicitudFormGroup.get('moneda')?.value;
+    this.tramite270201Store.setOperacion(MONEDA);
+  }
+
+  actualizarPropietario(): void {
+    const PROPIETARIO = this.solicitudFormGroup.get('propietario')?.value;
+    this.tramite270201Store.setOperacion(PROPIETARIO);
+  }
+
+  actualizarFraccionArancelaria(): void {
+    const FRACCION_ARANCELARIA = this.solicitudFormGroup.get(
+      'fraccionArancelaria'
+    )?.value;
+    this.tramite270201Store.setOperacion(FRACCION_ARANCELARIA);
+  }
+
+  actualizarDescArancelaria(): void {
+    const DESCRIPCION_ARANCELARIA = this.solicitudFormGroup.get(
+      'descripcionArancelaria'
+    )?.value;
+    this.tramite270201Store.setOperacion(DESCRIPCION_ARANCELARIA);
+  }
+
   obraDeArteRowData: TableData[] = [];
 
   toggleObraDeArte(): void {
@@ -189,7 +298,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     )?.label;
 
     const ARANCELARIA_VALUE = this.arancelariaData.find(
-      (item: Catalogo) => item.id === this.obraDeArteFormgroup.value.fraccionArancelaria
+      (item: Catalogo) =>
+        item.id === this.obraDeArteFormgroup.value.fraccionArancelaria
     )?.descripcion;
 
     const MONEDA_VALUE = this.monedaData.find(
