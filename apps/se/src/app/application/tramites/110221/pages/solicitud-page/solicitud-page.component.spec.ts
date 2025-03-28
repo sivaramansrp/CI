@@ -14,35 +14,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-
 import { Component } from '@angular/core';
 import { SolicitudPageComponent } from './solicitud-page.component';
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
 
 describe('SolicitudPageComponent', () => {
   let fixture;
@@ -51,12 +24,6 @@ describe('SolicitudPageComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, SolicitudPageComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [],
     })

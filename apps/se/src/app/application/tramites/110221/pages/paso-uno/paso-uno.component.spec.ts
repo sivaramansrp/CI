@@ -22,32 +22,6 @@ import { RegistroService } from '../../services/registro.service';
 @Injectable()
 class MockRegistroService {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
 describe('PasoUnoComponent', () => {
   let fixture;
   let component;
@@ -55,12 +29,6 @@ describe('PasoUnoComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [{ provide: RegistroService, useClass: MockRegistroService }],
     })

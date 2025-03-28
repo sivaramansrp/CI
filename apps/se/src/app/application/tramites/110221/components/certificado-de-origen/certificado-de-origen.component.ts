@@ -139,12 +139,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   /**
    * Tabla de selección de mercancías.
    */
-  TablaSeleccion = TablaSeleccion;
-
-  /**
-   * Descripciones de los tratados.
-   */
-  Tratadodescripcion: unknown[] = [];
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Valores de las unidades de medida.
