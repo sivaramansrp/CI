@@ -12,13 +12,16 @@ import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import {
+  DatosDelVehículo,
+  DatosDelVehículoPaisEmisor,
+} from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
+import { ReplaySubject, Subject } from 'rxjs';
 import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
-import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { of } from 'rxjs';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -38,6 +41,12 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
   private destroy$ = new Subject<void>();
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * Emite una señal para limpiar las suscripciones cuando se destruye el componente.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
   public tipoVehiculoArrastreAGA!: Catalogo[];
   public paisEmisor!: Catalogo[];
@@ -300,7 +309,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
           Validators.pattern('^[a-zA-Z0-9]*$'),
         ],
       ],
-      solicitudVehiculoPaisEmisor2daPlaca: [''],
+      solicitudVehiculoPaisEmisorSegundaPlaca: [''],
       solicitudVehiculoDesc: [''],
 
       vin2: ['', [Validators.required, Validators.minLength(5)]],
@@ -375,8 +384,8 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
         this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
       solicitudVehiculoEmisor2daPlaca:
         this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
-      solicitudVehiculoPaisEmisor2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisor2daPlaca?.trim(),
+      solicitudVehiculoPaisEmisorSegundaPlaca:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisorSegundaPlaca?.trim(),
       solicitudVehiculoDesc:
         this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
     };
@@ -388,7 +397,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     );
 
     if (VIN_EXISTS) {
-      this.toastr.error('⚠️ ¡Este VIN ya existe!');
+      this.toastr.error('¡Este VIN ya existe!');
       return;
     }
 
@@ -400,7 +409,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     // Actualizar el estado de Akita
     this.chofer40103Store.setVehiculos([...this.vehiculos, NEW_VEHICULO]);
     this.formVehiculo.reset();
-    this.toastr.success('🚗 ¡Vehículo añadido exitosamente!');
+    this.toastr.success('¡Vehículo añadido exitosamente!');
     this.closeModal();
   }
 
@@ -409,11 +418,11 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   unidadesDearrastre(): void {
     if (this.formVehiculo.valid) {
-      const NEW_UNIDAD = this.formVehiculo.value;
+      const NUEVA_UNIDAD = this.formVehiculo.value;
       const DATOS_ACTUALES = this.chofer40103Query.getunidadesdearrastre();
       this.chofer40103Store.setUnidadesdeArrastre([
         ...DATOS_ACTUALES,
-        NEW_UNIDAD,
+        NUEVA_UNIDAD,
       ]);
 
       // Use takeUntil to ensure subscription is cleaned up
@@ -450,8 +459,8 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
         this.formVehiculo.value.solicitudVehiculoNumero2daPlaca?.trim(),
       solicitudVehiculoEmisor2daPlaca:
         this.formVehiculo.value.solicitudVehiculoEmisor2daPlaca?.trim(),
-      solicitudVehiculoPaisEmisor2daPlaca:
-        this.formVehiculo.value.solicitudVehiculoPaisEmisor2daPlaca?.trim(),
+      solicitudVehiculoPaisEmisorSegundaPlaca:
+        this.formVehiculo.value.solicitudVehiculoPaisEmisorSegundaPlaca?.trim(),
       solicitudVehiculoDesc:
         this.formVehiculo.value.solicitudVehiculoDesc?.trim(),
       vin2: ['', [Validators.required, Validators.maxLength(17)]],
@@ -588,6 +597,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Libera las suscripciones.
    */
   ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

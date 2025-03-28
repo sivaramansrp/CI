@@ -348,7 +348,6 @@ describe('ChoferesComponent', () => {
       .fn()
       .mockReturnValue(observableOf({}));
     component.coloniaChnData();
-    // expect(component.chofer40103Service.getColoniaChn).toHaveBeenCalled();
   });
 
   it('should run #nacionaliDadChe()', async () => {
@@ -357,7 +356,6 @@ describe('ChoferesComponent', () => {
       .fn()
       .mockReturnValue(observableOf({}));
     component.nacionaliDadChe();
-    // expect(component.chofer40103Service.getNacionaliDadChe).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

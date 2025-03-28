@@ -56,7 +56,7 @@ const ROUTES: Routes = [
         (m) => m.DonacionesExtranjerasModule)
   },
   {
-    path: 'modificarcaatterrestre',
+    path: 'modificar-caat-terrestre',
     loadChildren: () =>
       import('./tramites/40103/modificarCaatTerrestre.module').then(
         (m) => m.ModificarCaatTerrestreModule

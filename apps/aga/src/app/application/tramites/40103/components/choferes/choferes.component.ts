@@ -438,8 +438,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.pagoDerechosLista = [];
   }
 
-  /**
-   * Guarda los datos del formulario de selección.
+ /**
+   * @method Guardar
+   * @description
+   * Guarda los datos del formulario de chofer nacional.
+   * Valida el formulario, llama al servicio y muestra notificaciones.
    */
   Guardar(): void {
     if (this.formChoferes.invalid) {
@@ -478,7 +481,9 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   }
 
   /**
-   * Obtiene datos de los choferes del servicio.
+   * @method fetchChoferes
+   * @description
+   * Obtiene la lista de choferes nacionales desde el servicio.
    */
   fetchChoferes(): void {
     this.chofer40103Service.getChoferNacionalData().subscribe((response) => {
@@ -527,7 +532,8 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.formChoferes.patchValue(CHOFER_DATA);
   }
 
-  updateDropdowns(choferData: any): void {
+  
+  actualizarDesplegables(choferData: any): void {
     const ESTADO_CLAVE = choferData.datosGenerales.estados;
     const MUNICIPIO_CLAVE = choferData.datosGenerales.municipio;
 
@@ -658,6 +664,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       this.nacionalidadCHE = data;
     });
   }
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Completa los observables y realiza limpieza de recursos.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
