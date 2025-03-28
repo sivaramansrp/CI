@@ -5,11 +5,13 @@
     (formCertificadoEvent)="obtenerDatosFormulario($event)"
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)"
     (paisBloquEvent)="tipoSeleccion($event)"
-    (setbuscarMercanciaEvent)="conseguirDisponiblesDatos"
+    (setbuscarMercanciaEvent)="conseguirDisponiblesDatos()"
     [tableData]="disponiblesDatos || []"
     (filaClics)="abrirModificarModal($event)"
     [tablaSeleccionEvent]="tablaSeleccionEvent"
-    [guardarClicado]="(datosTabla$ | async) ||  []" >
+    [guardarClicado]="(datosTabla$ | async) ||  []"
+    (formaValida)="setFormValida($event)"
+    [datosForm]="formCertificadoValues" >
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">

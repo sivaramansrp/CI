@@ -15,6 +15,27 @@ export interface CamState {
     entidadFederativaSeleccion: Catalogo;
     representacionFederalSeleccion: Catalogo;
     formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
+    fraccionArancelaria: string;
+    nombreComercialMercancia: string;
+    nombreTecnico: string;
+    nombreIngles: string;
+    criterioClasificacion: string;
+    cantidad: string;
+    umc: Catalogo[];
+    valorMercancia: string;
+    complementoClasificacion: string;
+    numeroFactura: string,
+    tipoFactura: Catalogo[],
+    lugar: string,
+    exportador: string,
+    empresa: string,
+    cargo: string,
+    lada: string,
+    telfono: string,
+    fax: string,
+    correo: string,
+    formaValida: { [key: string]: boolean },
+    formDestinatario: { [key: string]: undefined | boolean | string | number | object };
 }
 
 export function createInitialState(): CamState {
@@ -71,6 +92,41 @@ export function createInitialState(): CamState {
             segundoApellido: '',
             numeroDeRegistroFiscal: '',
             razonSocial: ''
+          },
+          fraccionArancelaria: '',
+          nombreComercialMercancia: '',
+          nombreTecnico: '',
+          nombreIngles: '',
+          criterioClasificacion: '',
+          cantidad: '',
+          umc: [],
+          valorMercancia: '',
+          complementoClasificacion: '',
+          numeroFactura: '',
+          tipoFactura: [],
+          lugar: '',
+          exportador: '',
+          empresa: '',
+          cargo: '',
+          lada: '',
+          telfono: '',
+          fax: '',
+          correo: '',
+          formaValida: {
+            certificado: false,
+            datos: false,
+            destinatrio: false,
+            datosDestinatario: false,
+          },
+          formDestinatario: {
+            paisDestin: '',
+            ciudad: '',
+            celle: '',
+            numeroLetra: '',
+            lada: '',
+            telefono: '',
+            fax: '',
+            correoElectronico: ''
           },
     }
 }
@@ -152,11 +208,163 @@ export class camCertificadoStore extends Store<CamState> {
           representacionFederalSeleccion,
         }));
       }
-      
+
       setFormDatosDelDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
         this.update((state) => ({
           formDatosDelDestinatario: {
             ...state.formDatosDelDestinatario,
+            ...values,
+          },
+        }));
+      }
+
+      setFraccionArancelaria(fraccionArancelaria: string): void {
+        this.update((state) => ({
+            ...state,
+            fraccionArancelaria,
+        }));
+      }
+
+      setNombreComercialMercancia(nombreComercialMercancia: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreComercialMercancia
+        }))
+      }
+
+      setNombreTecnico(nombreTecnico: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreTecnico
+        }))
+      }
+
+      setNombreIngles(nombreIngles: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreIngles
+        }))
+      }
+
+      setCriterioClasificacion(criterioClasificacion: string): void {
+        this.update((state) => ({
+            ...state,
+            criterioClasificacion,
+        }))
+      }
+
+      setCantidad(cantidad: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidad,
+        }))
+      }
+
+      setUmc(umc: Catalogo[]): void {
+        this.update((state) => ({
+            ...state,
+            umc,
+        }))
+      }
+
+      setValorMercancia(valorMercancia: string): void {
+        this.update((state) => ({
+            ...state,
+            valorMercancia,
+        }))
+      }
+
+      setComplementoClasificacion(complementoClasificacion: string): void {
+        this.update((state) => ({
+            ...state,
+            complementoClasificacion,
+        }))
+      }
+
+      setNumeroFactura(numeroFactura: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroFactura,
+        }))
+      }
+
+      setTipoFactura(tipoFactura: Catalogo[]): void {
+        this.update((state) => ({
+            ...state,
+            tipoFactura,
+        }))
+      }
+
+      setLugar(lugar: string): void {
+        this.update((state) => ({
+            ...state,
+            lugar,
+        }))
+      }
+
+      setExportador(exportador: string): void {
+        this.update((state) => ({
+            ...state,
+            exportador,
+        }))
+      }
+
+      setEmpresa(empresa: string): void {
+        this.update((state) => ({
+            ...state,
+            empresa,
+        }))
+      }
+
+      setCargo(cargo: string): void {
+        this.update((state) => ({
+            ...state,
+            cargo
+        }))
+      }
+
+      setLada(lada: string): void {
+        this.update((state) => ({
+            ...state,
+            lada
+        }))
+      }
+
+      setTelfono(telfono: string): void {
+        this.update((state) => ({
+            ...state,
+            telfono,
+        }))
+      }
+
+      setFax(fax: string): void {
+        this.update((state) => ({
+            ...state,
+            fax,
+        }))
+      }
+
+      setCorreo(correo: string): void {
+        this.update((state) => ({
+            ...state,
+            correo,
+        }))
+      }
+
+      setFormValida(formaValida: { [key: string]: boolean }): void {
+        this.update((state) => {
+          const IS_VALID = { ...state.formaValida, ...formaValida };
+          return {
+            ...state,
+            formaValida: IS_VALID,
+          };
+        });
+      }
+
+      setFormDestinatario(values: { [key: string]: undefined | boolean | string | number | object }): void {
+        this.update((state) => ({
+          formDestinatario: {
+            ...state.formDestinatario,
             ...values,
           },
         }));
