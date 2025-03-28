@@ -1,32 +1,54 @@
-const { withModuleFederation } = require('@nx/angular/module-federation');
+// import { withModuleFederation } from '@nx/angular/module-federation';
+// import config from './module-federation.config';
 
-module.exports = withModuleFederation({
-  name: 'sener',
-  exposes: {
-    './Module': './apps/sener/src/app/application/app.module.ts',
-    './Routes': './apps/sener/src/app/remote-entry/entry.routes.ts'
-  },
-  shared: (libraryName, sharedConfig) => {
-    // Lista de bibliotecas que se compartirán con configuración singleton
-    const libraries = [
-      '@angular/core',
-      '@angular/common',
-      '@angular/common/http',
-      '@angular/router',
-      '@angular/forms',
-      '@angular-architects/module-federation'
-    ];
-    
-    // Determina si la biblioteca debe compartirse y con qué configuración
-    if (libraries.includes(libraryName)) {
-      return {
-        singleton: true,
-        strictVersion: true,
-        requiredVersion: sharedConfig.requiredVersion
-      };
-    }
-    
-    // No compartir bibliotecas que no están en la lista
-    return false;
+// module.exports = withModuleFederation(config);
+
+
+const { ModuleFederationPlugin } = require('webpack').container;
+const mf = require('@angular-architects/module-federation/webpack');
+const path = require('path');
+const share = mf.share;
+
+const sharedMappings = new mf.SharedMappings();
+sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
+ /* mapped paths to share */
+]);
+
+module.exports = {
+ output: {
+  uniqueName: 'sener',
+  publicPath: 'auto',
+  scriptType: 'text/javascript'
+ },
+ optimization: {
+  runtimeChunk: false
+ },
+ resolve: {
+  alias: {
+   ...sharedMappings.getAliases()
   }
-});
+ },
+ plugins: [
+  new ModuleFederationPlugin({
+   name: 'sener',
+   filename: 'remoteAppEntry.js',
+   exposes: {
+    './Module': 'apps/sener/src/app/application/app.module.ts',
+   },
+   shared: share({ 
+    '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/router': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular-architects/module-federation': {
+     singleton: true,
+     strictVersion: true,
+     requiredVersion: 'auto'
+    },
+
+    ...sharedMappings.getDescriptors()
+   })
+  }),
+  sharedMappings.getPlugin()
+ ]
+};
