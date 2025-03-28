@@ -1,19 +1,43 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DatosProducto, ScianData } from "../models/datos-modificacion.model";
 
+/**
+ * @const SCIAN_DATA
+ * @description Constante que define una lista de objetos que representan los datos del SCIAN (Sistema de Clasificación Industrial de América del Norte).
+ * Cada objeto contiene información sobre el encabezado, la clave (función que obtiene el valor de una propiedad de un objeto `ScianData`),
+ * y el orden en el que se deben mostrar los datos.
+ * 
+ * @componente Utilizado en la aplicación Cofepris para gestionar la información relacionada con el SCIAN.
+ * 
+ * @propiedad {string} encabezado - El título o descripción del dato del SCIAN.
+ * @propiedad {(item: ScianData) => any} clave - Función que devuelve el valor de una propiedad específica del objeto `ScianData`.
+ * @propiedad {number} orden - El orden en el que se debe mostrar el dato en la interfaz de usuario.
+ */
 export const SCIAN_DATA = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (item: ScianData ) => item.clave,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción del S.C.I.A.N.',
-      clave: (item: ScianData ) => item.descripcion,
-      orden: 2,
-    }
+  {
+    encabezado: 'Clave S.C.I.A.N.',
+    clave: (item: ScianData ) => item.clave,
+    orden: 1,
+  },
+  {
+    encabezado: 'Descripción del S.C.I.A.N.',
+    clave: (item: ScianData ) => item.descripcion,
+    orden: 2,
+  }
   ];
 
+  /**
+   * @const DATOS_PRODUCTO
+   * @description Constante que define una lista de objetos que representan los datos de un producto.
+   * Cada objeto contiene información sobre el encabezado, la clave (función que obtiene el valor de una propiedad de un objeto `DatosProducto`),
+   * y el orden en el que se deben mostrar los datos.
+   * 
+   * @componente Utilizado en la aplicación Cofepris para gestionar la información de productos.
+   * 
+   * @propiedad {string} encabezado - El título o descripción del dato del producto.
+   * @propiedad {(item: DatosProducto) => any} clave - Función que devuelve el valor de una propiedad específica del objeto `DatosProducto`.
+   * @propiedad {number} orden - El orden en el que se debe mostrar el dato en la interfaz de usuario.
+   */
   export const DATOS_PRODUCTO = [
     {
       encabezado: 'Clasificación del producto',

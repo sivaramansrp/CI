@@ -21,7 +21,7 @@ import { Tramites260604Query } from '../../../shared/estados/queries/tramites260
 
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
-import tipoPersonaradio from 'libs/shared/theme/assets/json/260604/tipoPersonaradio.json';
+import { PreOperativo } from '../../../shared/models/datos-modificacion.model';
 
 import { NICO_TABLA } from '../../models/aviso-exportacion.model';
 
@@ -84,8 +84,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * property tipoPersonaOptions
    * description Opciones para el tipo de persona (física o moral).
    */
-  tipoPersonaOptions = tipoPersonaradio;
-
+  tipoPersonaOptions: PreOperativo[] = [];
   /**
    * property localidadList
    * description Lista de localidades cargadas desde el servicio.
@@ -170,14 +169,22 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
     this.loadMercancias();
     this.loadLocalidad();
     this.getFacturator();
+    this.cargarRadio();
   }
 
+  cargarRadio(): void {
+    this.service.obtenerRadio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp) => {
+        this.tipoPersonaOptions = resp;
+      });
+  }
   /**
    * method loadMercancias
    * description Carga los datos de mercancías desde el servicio.
    */
   loadMercancias(): void {
-    this.service.getTable()
+    this.service.obtenerTabla()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         this.tercerosProd = resp;
@@ -189,7 +196,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * description Carga los datos de localidades desde el servicio.
    */
   loadLocalidad(): void {
-    this.service.getLocalidaddata()
+    this.service.obtenerDatosLocalidad()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
