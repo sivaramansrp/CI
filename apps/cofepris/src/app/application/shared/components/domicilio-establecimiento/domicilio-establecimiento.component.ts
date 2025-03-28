@@ -98,7 +98,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @param service
    */
   constructor(
-    private readonly fb: FormBuilder,
+    public readonly fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private service: DatosDomicilioLegalService

@@ -7,6 +7,7 @@ import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/compo
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src/tramites/components/anexar-documentos/anexar-documentos.component';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
+import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosBancoComponent } from '../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
@@ -21,7 +22,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { provideHttpClient } from '@angular/common/http';
-import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
 
 @NgModule({
   declarations: [

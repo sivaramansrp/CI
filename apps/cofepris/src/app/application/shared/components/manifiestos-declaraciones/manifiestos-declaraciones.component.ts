@@ -61,7 +61,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @param DatosDomicilioLegalQuery
    */
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
   ) {
