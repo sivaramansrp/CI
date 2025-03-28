@@ -43,6 +43,7 @@ env:
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
   # Variables para controlar problemas de NX
   NX_SKIP_NX_CACHE: 'true'
+  NX_NON_NATIVE_HASHER: 'true'  # Variable añadida para evitar el error con los binarios nativos
   NX_NATIVE_BINDINGS: 'false'
   # Variables adicionales para mejorar estabilidad
   NODE_OPTIONS: '--max-old-space-size=8192'
@@ -265,6 +266,7 @@ jobs:
           # Disable NX native modules to avoid binary compatibility issues
           echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
           echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV  # Añadido para solucionar el problema
           
           # Variable para que las apps sepan su directorio
           echo "NX_APP_DIR=apps/${{ matrix.app }}" >> $GITHUB_ENV
@@ -304,6 +306,7 @@ jobs:
       - name: Install dependencies
         run: |
           npm config list
+          # Intentar instalar el paquete binario específico para la plataforma si fallan otras soluciones
           npm install --legacy-peer-deps --prefer-offline --no-fund
 
       - name: Update TypeScript configuration for app
@@ -381,6 +384,9 @@ jobs:
         run: |
           echo "Construyendo la aplicación ${{ matrix.app }} con configuración nativa..."
           export NODE_OPTIONS="--max-old-space-size=6144"
+          
+          # Asegurar que la variable NX_NON_NATIVE_HASHER está establecida
+          export NX_NON_NATIVE_HASHER=true
           
           # Primer intento - construcción estándar nativa
           NODE_ENV=production node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose || {
@@ -465,6 +471,7 @@ jobs:
             APP_ENV=${{ needs.setup.outputs.environment }}
             NX_SKIP_NX_CACHE=true
             NX_NATIVE_BINDINGS=false
+            NX_NON_NATIVE_HASHER=true
             BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
             VCS_REF=${{ github.sha }}
             BUILD_VERSION=${{ github.run_number }}
