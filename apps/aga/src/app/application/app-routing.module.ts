@@ -118,6 +118,13 @@ const ROUTES: Routes = [
     path: 'certi-registro',
       loadChildren: () =>
         import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+  },
+  {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40101/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
   }
 ];
 
