@@ -21,6 +21,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 import { provideHttpClient } from '@angular/common/http';
+import { DatosDeLaComponent } from '../../shared/components/datos-solicitud/datos-solicitud.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { provideHttpClient } from '@angular/common/http';
     SolicitanteComponent,
     PagoDeDerechosBancoComponent,
     TercerosRelacionadosComponent,
+    DatosDeLaComponent,
     FirmaElectronicaComponent,
     TituloComponent,
     AlertComponent,

@@ -25,8 +25,8 @@ import {
   MUNICIPIOSELECTDATA,
   PAISSELECTDATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
-} from '../../constantes/permiso-plaguicidas-datos.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+} from '../../constantes/terceros-fabricante.enum';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
@@ -37,7 +37,7 @@ import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
-
+import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -234,16 +234,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
    *
    * @param fb Constructor de formularios para crear los formularios reactivos.
-   * @param tercerosFabricanteStore Store del trámite 260501.
+   * @param tercerosFabricanteStore Store del trámite.
    * @param service Servicio que proporciona datos de terceros.
    */
   constructor(
-    private fb: FormBuilder,
-    private tercerosFabricanteStore: TercerosFabricanteStore,
-    private service: PermisoPlaguicidasDatosService
-  ) {
-    // Inicializa el store del trámite 260501.
-  }
+      private fb: FormBuilder,
+      private tercerosFabricanteStore: TercerosFabricanteStore,
+      @Inject(TercerosFabricanteService) private service: TercerosFabricanteService
+    ) {
+      // Inicializa el store del trámite.
+    }
 
   /**
    * Notificador para destruir observables.
