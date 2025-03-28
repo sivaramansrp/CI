@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-md-4 mb-3">
         <label>Nombre(s):</label>
-        <input type="text" class="form-control" formControlName="nombre"
+        <input type="text" class="form-control" formControlName="nombre" id="nombre"
           (change)="setValoresStore(grupoReceptor, 'nombre', 'setGrupoReceptorNombre')" />
       </div>
       <div class="col-md-4 mb-3">
@@ -123,15 +123,17 @@
           (change)="setValoresStore(grupoRepresentativo, 'lada', 'setGrupoRepresentativoLada')" />
       </div>
       <div class="col-md-3 mb-3">
-        <label>Teléfono:</label>
+        <label>Teléfono*:</label>
         <input type="text" class="form-control" id="telefono" formControlName="telefono"
+          [ngClass]="isValid(grupoRepresentativo,'telefono') ? 'required' : ''"
           (change)="setValoresStore(grupoRepresentativo, 'telefono', 'setGrupoRepresentativoTelefono')" />
       </div>
 
       <div class="row">
         <div class="col-md-4 mb-3">
-          <label>Fax:</label>
+          <label>Fax*:</label>
           <input type="text" class="form-control" id="fax" formControlName="fax"
+            [ngClass]="isValid(grupoRepresentativo,'fax') ? 'required' : ''"
             (change)="setValoresStore(grupoRepresentativo, 'fax', 'setGrupoRepresentativoFax')" />
         </div>
         <div class="col-md-4 mb-3">

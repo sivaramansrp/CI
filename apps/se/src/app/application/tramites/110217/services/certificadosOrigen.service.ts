@@ -8,6 +8,21 @@ import { ProductorExportador } from '../models/certificado-origen.model';
   providedIn: 'root'
 })
 export class CertificadosOrigenService {
+  
+  getTratado() {
+    return this.http
+    .get<CatalogoLista>('assets/json/110217/pais.json');
+  }
+   /**
+   * Obtiene el catálogo de países.
+   * @returns Observable con la respuesta del catálogo de países.
+   */
+   getPais() {
+    return this.http
+    .get<CatalogoLista>('assets/json/110217/pais.json');
+  }
+
+ 
   // eslint-disable-next-line no-empty-function
   constructor(private http: HttpClient) { }
 

@@ -64,3 +64,42 @@ export interface GrupoOperador {
   numeroFiscal: string;
   razonSocial: string;
 }
+
+export interface GrupoDeDomicilio {
+  ciudad: string,
+  calle: string,
+  numeroLetra: string,
+  lada: string,
+  telefono: string,
+  fax: string,
+  correoElectronico: string,
+}
+
+export interface GrupoTratado {
+  tratado: string;
+  pais: string;
+  fraccionArancelaria: string;
+  numeroRegistro: string;
+  nombreComercial: string;
+  fechaFinalInput: string;
+  fechaInicialInput: string;
+
+}
+
+export const FECHAINICIAL = {
+  labelNombre: 'Fecha inicio',
+  required: false,
+  habilitado: true,
+};
+
+export const FECHAFINAL = {
+  labelNombre: 'Fecha fin',
+  required: false,
+  habilitado: true,
+};
+
+export const FECHAFACTURA={
+  labelNombre: 'Fecha de factura',
+  required: false,
+  habilitado: true,
+}
