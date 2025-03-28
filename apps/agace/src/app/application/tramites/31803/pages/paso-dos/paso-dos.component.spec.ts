@@ -6,21 +6,32 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 import { Catalogo, CatalogosService } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { Toast } from 'bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
   let mockCatalogosService: any;
+  let mockToastrService: any;
 
   beforeEach(async () => {
     mockCatalogosService = {
       getCatalogo: jest.fn(),
     };
 
+    mockToastrService = {
+      success: jest.fn(),
+      error: jest.fn(),
+      warning: jest.fn(),
+      info: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, PasoDosComponent],
       providers: [
-        { provide: CatalogosService, useValue: mockCatalogosService },
+        { provide: CatalogosService, useValue: mockCatalogosService},
+        { provide: ToastrService, useValue: mockToastrService },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
