@@ -136,24 +136,12 @@ export class CrosslistComponent implements OnInit, OnChanges {
     this.fechasSeleccionadasChange.emit(this.fechasSeleccionadas);
   }
 
+
   /**
-   * Elimina elementos de las listas de fechas según el tipo especificado.
-   *
-   * @param type - Un string que indica el tipo de operación a realizar.
-   *               Si es 't', se restablecen las listas de fechas a su estado inicial.
-   *               Si es cualquier otro valor, se elimina una fecha seleccionada y se agrega de nuevo a la lista de fechas disponibles.
-   *
-   * - Cuando `type` es 't':
-   *   - Se restablece la lista `fechasDatos` con los valores originales de `fechas`.
-   *   - Se vacía la lista `fechasSeleccionadas`.
-   *
-   * - En otros casos:
-   *   - Se obtiene el índice de la fecha seleccionada desde `fechaSeleccionada`.
-   *   - Se mueve la fecha correspondiente de `fechasSeleccionadas` a `fechasDatos`.
-   *   - Se actualizan las listas eliminando y agregando los elementos correspondientes.
-   *
-   * Además, actualiza el estado en el `crosslistStore` y emite un evento para notificar
-   * los cambios en la lista de fechas seleccionadas.
+   * Quita elementos de las listas según el tipo especificado.
+   * 
+   * @param type - Tipo de operación ('t' para reiniciar fechas, otro valor para modificar las listas).
+   * @returns void
    */
   quitar(type: string = ''): void {
     if (type === 't') {

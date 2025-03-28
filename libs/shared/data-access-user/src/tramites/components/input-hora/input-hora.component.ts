@@ -1,13 +1,11 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable no-empty-function */
 import {
   Component,
-  EventEmitter,
-  forwardRef,
-  input,
   Input,
   OnChanges,
-  OnInit,
-  Output,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -19,7 +17,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
-import { InputHora } from '../../../core/models/shared/components.model';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
@@ -44,8 +41,10 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   forma: FormGroup;
   value: string = '';
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  // eslint-disable-next-line class-methods-use-this
+  private onChange: (value: string) => void = () => { };
+  // eslint-disable-next-line class-methods-use-this
+  private onTouched: () => void = () => { };
 
   constructor(private validacionesService: ValidacionesFormularioService) {
     this.forma = new FormGroup({
@@ -55,7 +54,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['required']) {
       if (this.required) {
         this.forma
@@ -72,8 +71,8 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   }
 
   handleChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.onChange(value);
+    const VALUE = (event.target as HTMLSelectElement).value;
+    this.onChange(VALUE);
   }
   writeValue(value: string): void {
     this.forma.controls['hora'].setValue(value);
@@ -88,7 +87,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  get isValid() {
+  get isValid(): boolean | null | undefined {
     return this.forma.get('hora')?.errors && this.forma.get('hora')?.touched;
   }
-}
+} 

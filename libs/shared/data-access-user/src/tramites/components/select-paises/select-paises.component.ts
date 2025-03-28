@@ -40,7 +40,10 @@ export class SelectPaisesComponent implements OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  private onChange: (value: string) => void = () => { };
+  private onTouched: () => void = () => { };
+
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes['required']) {
       if (this.required) {
         this.formSelect
@@ -53,12 +56,12 @@ export class SelectPaisesComponent implements OnChanges {
     }
 
     if (changes['isDisabled']) {
-      const control = this.formSelect.get('selectControl');
-      if (control) {
+      const CONTROL = this.formSelect.get('selectControl');
+      if (CONTROL) {
         if (this.isDisabled) {
-          control.disable();
+          CONTROL.disable();
         } else {
-          control.enable();
+          CONTROL.enable();
         }
       }
     }
@@ -66,12 +69,10 @@ export class SelectPaisesComponent implements OnChanges {
 
   value: string = '';
   handleChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.onChange(value);
+    const VALUE = (event.target as HTMLSelectElement).value;
+    this.onChange(VALUE);
   }
 
-  private onChange: (value: string) => void = () => { };
-  private onTouched: () => void = () => { };
 
   writeValue(value: string): void {
     if (value) {
@@ -80,8 +81,8 @@ export class SelectPaisesComponent implements OnChanges {
   }
 
   isInvalid(): boolean | null {
-    const control = this.formSelect.get('selectControl');
-    return control ? control.invalid && control.touched : null;
+    const CONTROL = this.formSelect.get('selectControl');
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
   registerOnChange(fn: (_value: string) => void): void {

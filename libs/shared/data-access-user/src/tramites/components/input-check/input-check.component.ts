@@ -1,75 +1,149 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable class-methods-use-this */
 import {
   Component,
-  EventEmitter,
   Input,
-  Output,
+  OnChanges,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
 import {
-  FormBuilder,
+  ControlValueAccessor,
+  FormControl,
   FormGroup,
+  NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
-import {
-  DatosInputCheck,
-  InputCheck,
-} from '../../../core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
-  selector: 'input-check',
+  selector: 'lib-input-check',
   standalone: true,
-  imports: [ReactiveFormsModule],
   templateUrl: './input-check.component.html',
   styleUrl: './input-check.component.scss',
+  imports: [CommonModule, ReactiveFormsModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputCheckComponent),
+      multi: true,
+    },
+  ]
 })
-export class InputCheckComponent {
-  @Input({ required: true }) datos!: InputCheck;
 
-  @Output() valores = new EventEmitter<DatosInputCheck>();
+export class InputCheckComponent implements OnChanges, ControlValueAccessor {
 
-  labelNombre: string = 'Programa de fomento';
-  FormInput!: FormGroup;
+  /**
+   * Identificador único requerido para el checkbox del componente.
+   * @required
+   * @type {string}
+   */
+  @Input({ required: true }) id!: string;
 
-  constructor(private fb: FormBuilder) {}
-  ngOnInit() {
-    this.crearFormInput();
+  /**
+   * Etiqueta para mostrar junto al componente.
+   * @required
+   * @type {string}
+   */
+  @Input({ required: true }) label!: string;
 
-    this.FormInput.get('seleccion')?.valueChanges.subscribe((checked) => {
-      if (checked) {
-        this.FormInput.get('valorInput')?.enable();
+  /**
+   * Indica si el checkbox es obligatorio.
+   * @required
+   * @type {boolean}
+   */
+  @Input({ required: true }) required!: boolean;
+
+  forma: FormGroup;
+
+  
+  constructor() {
+    this.forma = new FormGroup({
+      check: new FormControl(false)
+    });
+  }
+
+  /**
+   * Función de callback que se ejecuta cuando el valor cambia.
+   * @param value Indica el nuevo valor booleano.
+   */
+  private onChange: (value: boolean) => void = () => {};
+
+  /**
+   * Función que se llama cuando el control es marcado como "tocado".
+   * @returns void
+   */
+  private onTouched: () => void = () => {};
+
+
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza las validaciones del control de formulario 'checkbox'.
+   * 
+   * @param changes - Cambios detectados en las propiedades de entrada.
+   * @returns void
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['required']) {
+      const CONTROL = this.forma.get('checkbox');
+      if (this.required) {
+        CONTROL?.setValidators([
+          Validators.requiredTrue,
+        ]);
       } else {
-        this.FormInput.get('valorInput')?.disable();
+        CONTROL?.clearValidators();
       }
-    });
-  }
-
-  crearFormInput() {
-    this.FormInput = this.fb.group({
-      seleccion: [false],
-      valorInput: [
-        { value: '', disabled: true },
-        [
-          Validators.maxLength(this.datos.maxlength),
-          Validators.minLength(this.datos.minlenght),
-        ],
-      ],
-    });
-  }
-
-  seleccion(){
-    const checkSeleccionado = this.FormInput.get('seleccion')?.value;
-    if( !checkSeleccionado ) {
-      this.FormInput.get('valorInput')?.setValue('');
+      CONTROL?.updateValueAndValidity();
     }
-    this.onBlurEvent();
   }
 
-  onBlurEvent() {
-    const valores: DatosInputCheck = {
-      check: this.FormInput.get('seleccion')?.value,
-      valor: this.FormInput.get('valorInput')?.value,
-    };
-    this.valores.emit(valores);
+  /**
+   * Maneja el evento de cambio de un input tipo checkbox.
+   * 
+   * @param event - Evento de cambio del checkbox.
+   * @returns void
+   */
+  handleChange(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).checked;
+    this.onChange(VALUE);
+  }
+
+  /**
+   * Escribe un valor booleano en el control de formulario 'check'.
+   * 
+   * @param value - Valor booleano a establecer en el control.
+   * @returns void
+   */
+  writeValue(value: boolean): void {
+    this.forma.controls['check'].setValue(value);
+  }
+
+  /**
+   * Registra una función de callback que se ejecutará cuando el valor del control cambie.
+   * @param fn - Función que recibe el nuevo valor booleano del control.
+   * @returns void
+   */
+  registerOnChange(fn: (value: boolean) => void): void {
+    this.onChange = fn;
+    this.forma.get('check')?.valueChanges.subscribe(fn);
+  }
+
+  /**
+   * Registra una función que se ejecutará cuando el control sea marcado como "tocado".
+   * @param fn - Función que se invoca al marcar el control como tocado.
+   * @returns void
+   */
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  /**
+   * Verifica si el campo 'check' del formulario tiene errores y ha sido tocado.
+   * @returns {boolean | null | undefined} `true` si tiene errores y ha sido tocado, de lo contrario `false`, `null` o `undefined`.
+   */
+  get isValid(): boolean | null | undefined {
+    return this.forma.get('check')?.errors && this.forma.get('check')?.touched;
   }
 }

@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../../core/enums/constantes-alertas.enum';
 import { AlertComponent } from '../alert/alert.component';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../titulo/titulo.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -51,7 +51,7 @@ export class AcuseComponent implements OnChanges {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  verPdf(url: string): void {
+  static verPdf(url: string): void {
     window.open(url, '_blank');
   }
 

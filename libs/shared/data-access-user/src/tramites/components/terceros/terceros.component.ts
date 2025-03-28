@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../titulo/titulo.component';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'terceros',
@@ -33,17 +33,15 @@ export class TercerosComponent {
 
   agregaPersona(): void {
     if (this.personas.length < 5 && this.FormPersona.valid) {
-      const datos = this.FormPersona.value;
-      this.personas.push(datos);
+      const DATOS = this.FormPersona.value;
+      this.personas.push(DATOS);
       this.FormPersona.reset();
     } else {
-      console.log(
-        'No puede agregar mas de cinco personas o el formato de la dirección correo no es valido'
-      );
+      // Aqui se dispara un modal de confirmacion
     }
   }
 
-  eliminar(i: number) {
+  eliminar(i: number): void {
     this.personas.splice(i, 1);
   }
 }

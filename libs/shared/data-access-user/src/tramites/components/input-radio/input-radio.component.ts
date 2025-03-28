@@ -1,10 +1,7 @@
 
-import { CommonModule } from '@angular/common';
-
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-
+import { Component, EventEmitter, Input, OnInit, Output, forwardRef, } from '@angular/core';
 import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { CommonModule } from '@angular/common';
 
 /**
  * InputRadioComponent es un componente reutilizable que renderiza un grupo de botones de radio.
@@ -24,6 +21,7 @@ import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validat
     }
   ]
 })
+
 export class InputRadioComponent implements OnInit {
   @Input() description!: string; // Optional description
   @Input() showDescription: boolean = false;
@@ -59,25 +57,26 @@ export class InputRadioComponent implements OnInit {
     //constructor
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.createFormRadio();
   }
   /**
    * Crea el grupo de formulario para los botones de radio con los validadores apropiados.
    */
-  createFormRadio() {
-    const validators = this.isRequired ? [Validators.required] : [];
+  createFormRadio(): void {
+    const VALIDATORS = this.isRequired ? [Validators.required] : [];
     this.FormInputRadio = this.fb.group({
-      seleccion: [this.selectedValue || '', validators],
+      seleccion: [this.selectedValue || '', VALIDATORS],
     });
   }
-  private onChange: (value: any) => void = () => { };
+  
+  private onChange: (value: string | number | null) => void = () => { };
   private onTouched: () => void = () => { };
   /**
    * Maneja el evento de cambio de selección y emite el nuevo valor.
    * @param value - El nuevo valor seleccionado.
    */
-  onSelectionChange(value: string | number) {
+  onSelectionChange(value: string | number) : void {
     this.selectedValue = value;
     this.valueChange.emit(value);
     this.onChange(value);
@@ -85,18 +84,18 @@ export class InputRadioComponent implements OnInit {
   }
 
   // ✅ Implement `ControlValueAccessor`
-  writeValue(value: any): void {
+  writeValue(value: string | number | null): void {
     this.selectedValue = value;
     if (this.FormInputRadio) {
       this.FormInputRadio.patchValue({ seleccion: value });
     }
   }
 
-  registerOnChange(fn: any): void {
+  registerOnChange(fn: (value: string | number | null) => void): void {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any): void {
+  registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
 
