@@ -7,12 +7,12 @@ import { BreadcrumbComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { FooterComponent } from '@ng-mf/data-access-user';
 import { HeaderComponent } from '@ng-mf/data-access-user';
-import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";
+import { InformacionUsuarioComponent } from '@ng-mf/data-access-user';
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { SolicitanteService } from '@ng-mf/data-access-user';
-import { TituloComponent } from "@ng-mf/data-access-user";
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 
@@ -33,13 +33,13 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
     NavComponent,
     TituloComponent,
     ToastrModule.forRoot(),
-],
+  ],
   providers: [
     provideToastr({
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
-    SolicitanteService
+    SolicitanteService,
   ],
   bootstrap: [AppComponent],
 })
