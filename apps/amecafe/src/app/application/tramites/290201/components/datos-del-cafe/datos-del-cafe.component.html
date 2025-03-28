@@ -2,7 +2,7 @@
    <ng-titulo titulo="Lotes" />
  </div>
  <div class="col-md-12 scrollable-table-container">
-   <table class="table table-responsive">
+   <!-- <table class="table table-responsive">
    <thead>
      <tr>
        <th><input type="checkbox"></th>
@@ -51,7 +51,12 @@
        <td class="text-center">{{row.datosDelTramiteRealizar.observaciones}}</td>
       </tr>
      </tbody>
-    </table>
+    </table> -->
+    <app-tabla-dinamica (filaClic)="onRowClick($event)"
+    [configuracionTabla]="configuracionColumnasoli"
+    [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+     [datos]="tableData">
+</app-tabla-dinamica>
  </div>
  <div class="col-md-12 d-flex justify-content-end">
    <div class="btn-group">
@@ -287,3 +292,4 @@
       </ng-container>
     </form>
  </div>
+             

@@ -4,11 +4,11 @@
  * Permite al usuario agregar, editar, eliminar y visualizar datos en una tabla.
  */
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
-import { AcuseComponent } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect, ConfiguracionColumna, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -18,11 +18,12 @@ import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-l
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
 import { Solicitud290201State, Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
-
+import { FilaData } from '../../models/fila-model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-del-cafe',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent],
   templateUrl: './datos-del-cafe.component.html',
   styleUrl: './datos-del-cafe.component.scss',
 })
@@ -40,7 +41,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   /**
    * Datos que se muestran en la tabla.
    */
-  tableData: any[] = [];
+  tableData: FilaData[] = [];
 
   /**
    * Formulario reactivo para gestionar los datos del café.
@@ -169,6 +170,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     private fb: FormBuilder,
     private solicitud290201Store: Solicitud290201Store,
     private solicitud290201Query: Solicitud290201Query,
+    private cdr: ChangeDetectorRef
   ) {
     this.getEnvasadoenData();
     this.getUtilicoCafeComoData();
@@ -180,6 +182,105 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     this.getPaisDeTransbordoData();
     this.getMediaDeTransporte();
   }
+  tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  
+ 
+// cuerpoTabla: InstrumentoCupoTPLForm[] = [];
+//     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+
+  configuracionColumnasoli: ConfiguracionColumna<FilaData>[] = [
+    {
+      encabezado: 'Envasado',
+      clave: (fila) => fila.datosDelTramiteRealizar.envasadoen,
+      orden: 1,
+    },
+    {
+      encabezado: 'Utilizo cafe como materia prima?',
+      clave: (fila) => fila.datosDelTramiteRealizar.utilizoCafeComo,
+      orden: 2,
+    },
+    {
+      encabezado: 'Cantidad utilizada',
+      clave: (fila) => fila.datosDelTramiteRealizar.cantidadutilizada,
+      orden: 3,
+    },
+    {
+      encabezado: 'No.pedimento',
+      clave: (fila) => fila.datosDelTramiteRealizar.numerodepedimento,
+      orden: 4,
+    },
+    {
+      encabezado: 'Pais',
+      clave: (fila) => fila.datosDelTramiteRealizar.paisdeimportacion,
+      orden: 5,
+    },
+    {
+      encabezado: 'Fraccion arancelaria',
+      clave: (fila) => fila.datosDelTramiteRealizar.fraccionarancelaria,
+      orden: 6,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (fila) => fila.datosDelTramiteRealizar.cantidad,
+      orden: 7,
+    },
+    {
+      encabezado: 'Precio aplicable',
+      clave: (fila) => fila.datosDelTramiteRealizar.unidaddemedida,
+      orden: 8,
+    },
+    {
+      encabezado: 'Moneda',
+      clave: (fila) => fila.datosDelTramiteRealizar.precioapplicable,
+      orden: 9,
+    },
+    {
+      encabezado: 'Lote',
+      clave: (fila) => fila.datosDelTramiteRealizar.dolar,
+      orden: 10,
+    },
+    {
+      encabezado: 'Pais',
+      clave: (fila) => fila.datosDelTramiteRealizar.lote,
+      orden: 11,
+    },
+    {
+      encabezado: 'Otras marcas',
+      clave: (fila) => fila.datosDelTramiteRealizar.otrasmarcas,
+      orden: 12,
+    },
+{
+      encabezado: 'EI cafe tiene caracteristicas especiales?',
+      clave: (fila) => fila.datosDelTramiteRealizar.elcafe,
+      orden: 13,
+    },
+    {
+      encabezado: 'Fecha de exportacion',
+      clave: (fila) => fila.datosDelTramiteRealizar.fechaexportacion,
+      orden: 14,
+    },
+    {
+      encabezado: 'Pais de transbordo',
+      clave: (fila) => fila.datosDelTramiteRealizar.paisdetransbordo,
+      orden: 15,
+    },
+    {
+      encabezado: 'Medio de transporte',
+      clave: (fila) => fila.datosDelTramiteRealizar.mediodetransporte,
+      orden: 16,
+    },
+    {
+      encabezado: 'Identificador transporte',
+      clave: (fila) => fila.datosDelTramiteRealizar.Identificadordel,
+      orden: 17,
+    },
+    {
+      encabezado: 'Observaciones',
+      clave: (fila) => fila.datosDelTramiteRealizar.observaciones,
+      orden: 18,
+    },
+  ];
+
 
   /**
    * Crea el formulario reactivo con los campos necesarios y sus validaciones.
@@ -343,12 +444,35 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     )?.descripcion;
 
     this.tableData.push(formData);
+    
   }
+transformedData = this.tableData.map(row => ({
+envasadoen: row['datosDelTramiteRealizar'].envasadoen,
+utilizoCafeComo: row['datosDelTramiteRealizar'].utilizoCafeComo,
+cantidadutilizada: row['datosDelTramiteRealizar'].cantidadutilizada,
+numerodepedimento: row['datosDelTramiteRealizar'].numerodepedimento,
+paisdeimportacion: row['datosDelTramiteRealizar'].paisdeimportacion,
+fraccionarancelaria: row['datosDelTramiteRealizar'].fraccionarancelaria,
+cantidad: row['datosDelTramiteRealizar'].cantidad,
+unidaddemedida: row['datosDelTramiteRealizar'].unidaddemedida,
+precioapplicable: row['datosDelTramiteRealizar'].precioapplicable,
+dolar: row['datosDelTramiteRealizar'].dolar,
+lote: row['datosDelTramiteRealizar'].lote,
+otrasmarcas: row['datosDelTramiteRealizar'].otrasmarcas,
+elcafe: row['datosDelTramiteRealizar'].elcafe,
+fechaexportacion: row['datosDelTramiteRealizar'].fechaexportacion,
+paisdetransbordo: row['datosDelTramiteRealizar'].paisdetransbordo,
+mediodetransporte: row['datosDelTramiteRealizar'].mediodetransporte,
+Identificadordel: row['datosDelTramiteRealizar'].Identificadordel,
+observaciones: (row as any).datosDelTramiteRealizar.observaciones
+
+}));
+
 
   onAgregar() {
     this.esFormularioVisible = true;
   }
-
+  
   onRowClick(rowData: any) {
     this.dataCafeForm.patchValue({
       envasadoen: this.envasadoenData.catalogos.find(
@@ -383,21 +507,24 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     this.esFormularioVisible = true;
   }
 
-  onCheckboxClick(event: Event, index: number): void {
-    event.stopPropagation();
-
-    if (this.selectedRows.has(index)) {
-      this.selectedRows.delete(index);
+  onCheckboxClick(event: Event, row: FilaData): void {
+    // event.stopPropagation();
+    this.esFormularioVisible = false;
+    if (this.selectedRows.has(row.id)) {
+      this.selectedRows.delete(row.id);
     } else {
-      this.selectedRows.add(index);
+      this.selectedRows.add(row.id);
     }
+    console.log('Selected Rows:', Array.from(this.selectedRows)); // Debug log
+    
   }
+  
 
   onDeleteSelectedRows(): void {
-    this.tableData = this.tableData.filter((_, index) => !this.selectedRows.has(index)); // Filtra las filas no seleccionadas
+    this.tableData = this.tableData.filter(row => !this.selectedRows.has(row.id)); // Filtra las filas no seleccionadas
     this.selectedRows.clear();
     this.dataCafeForm.reset();
-    this.esFormularioVisible = false;
+    
   }
 
   get datosDelTramiteRealizar(): FormGroup {
