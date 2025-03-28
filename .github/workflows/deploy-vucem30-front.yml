@@ -41,114 +41,14 @@ env:
   REGISTRY: ghcr.io
   BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
-  # Variables para evitar problemas con NX y sus binarios nativos
+  # Variables para controlar problemas de NX
   NX_SKIP_NX_CACHE: 'true'
-  NX_NON_NATIVE_HASHER: 'true'
   NX_NATIVE_BINDINGS: 'false'
-  # Variables adicionales para mejorar estabilidad
-  NODE_OPTIONS: '--max-old-space-size=8192'
-  NPM_CONFIG_LEGACY_PEER_DEPS: 'true'
-  NPM_CONFIG_FETCH_RETRIES: '5'
-  NPM_CONFIG_FETCH_RETRY_FACTOR: '5'
-  NPM_CONFIG_FETCH_RETRY_MINTIMEOUT: '20000'
-  NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT: '120000'
-  # No omitir dependencias opcionales para asegurar la instalación de binarios específicos
-  NPM_CONFIG_OPTIONAL: 'true'
 
 jobs:
-  prepare:
-    name: Prepare Environment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Configure NX environment variables
-        run: |
-          # Establecer variables críticas de NX antes de cualquier instalación
-          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-          
-          # Configurar npm para no omitir dependencias opcionales
-          echo "npm_config_optional=true" >> $GITHUB_ENV
-
-      - name: Install build essentials
-        run: |
-          sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
-
-      - name: Clean node_modules and lock files
-        run: |
-          rm -rf node_modules || true
-          rm -f package-lock.json || true
-          rm -f yarn.lock || true
-
-      - name: Add optional dependencies to package.json
-        run: |
-          # Verificar si package.json existe
-          if [ -f "package.json" ]; then
-            # Comprobar si ya tiene optionalDependencies
-            if grep -q "optionalDependencies" package.json; then
-              echo "optionalDependencies already exists in package.json"
-            else
-              # Añadir optionalDependencies si no existe
-              cat <<EOF > temp.json
-          {
-            "optionalDependencies": {
-              "@nx/nx-darwin-arm64": "${{ env.NX_VERSION }}",
-              "@nx/nx-darwin-x64": "${{ env.NX_VERSION }}",
-              "@nx/nx-linux-x64-gnu": "${{ env.NX_VERSION }}",
-              "@nx/nx-win32-x64-msvc": "${{ env.NX_VERSION }}"
-            }
-          }
-          EOF
-              # Combinar el package.json con optionalDependencies
-              # Necesitamos jq para esto
-              sudo apt-get install -y jq
-              jq -s '.[0] * .[1]' package.json temp.json > package.json.new
-              mv package.json.new package.json
-            fi
-          else
-            echo "package.json not found"
-          fi
-
-      - name: Install dependencies
-        run: |
-          # Instalar con todas las dependencias opcionales
-          npm install --no-fund
-          
-          # Crear backup
-          cp package.json package.json.original
-          cp package-lock.json package-lock.json.original || echo "No package-lock.json found"
-
-      - name: Install NX globally
-        run: |
-          # Instalar NX con variables de entorno correctamente configuradas
-          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
-          
-          # Verificar que se instaló correctamente
-          nx --version
-
-      - name: Upload backups as artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: config-backups
-          path: |
-            package.json.original
-            package-lock.json.original
-
   setup:
     name: Setup and Check Environment
     runs-on: ubuntu-latest
-    needs: prepare
     outputs:
       environment: ${{ steps.set-env.outputs.environment }}
       changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
@@ -171,22 +71,13 @@ jobs:
             echo "environment=dev" >> $GITHUB_OUTPUT
           fi
 
-      - name: Configure NX environment variables
-        run: |
-          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
 
-      - name: Install NX globally with correct bindings configuration
-        run: |
-          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
-          nx --version
+      - name: Install NX globally
+        run: npm install -g nx@${{ env.NX_VERSION }}
 
       - name: Detect changed apps
         id: detect-changes
@@ -292,93 +183,48 @@ jobs:
 
   build:
     name: Build Microfrontends
-    needs: [setup, prepare]
+    needs: setup
     if: needs.setup.outputs.final_apps != ''
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 40  # Aumentado para dar más tiempo
     permissions:
       contents: read
       packages: write
     strategy:
       matrix:
         app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
-      fail-fast: false
+      fail-fast: false  # Permitir que otros jobs continúen si uno falla
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Set npm and NX environment variables
-        run: |
-          # Variables NX para evitar binarios nativos
-          echo "NX_NON_NATIVE_HASHER=true" >> $GITHUB_ENV
-          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
-          
-          # Variables npm
-          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
-          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
-          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
-          echo "npm_config_optional=true" >> $GITHUB_ENV
-          echo "npm_config_legacy_peer_deps=true" >> $GITHUB_ENV
-          echo "npm_config_timeout=600000" >> $GITHUB_ENV
-          
-          # Variable para que las apps sepan su directorio
-          echo "NX_APP_DIR=apps/${{ matrix.app }}" >> $GITHUB_ENV
-          
-          # Variables del sistema
-          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
-          echo "NODE_OPTIONS=--max-old-space-size=8192" >> $GITHUB_ENV
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install build dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
 
-      - name: Clean directories and cache
+      - name: Set npm and NX environment variables
         run: |
-          echo "Limpiando directorios para la app ${{ matrix.app }}..."
-          rm -rf node_modules || true
-          rm -f package-lock.json || true
-          rm -f yarn.lock || true
-          rm -rf apps/${{ matrix.app }}/node_modules || true
-          rm -rf node_modules/.cache || true
-          rm -rf dist/apps/${{ matrix.app }} || true
-
-      - name: Add optional dependencies to package.json
-        run: |
-          # Verificar si package.json existe
-          if [ -f "package.json" ]; then
-            # Comprobar si ya tiene optionalDependencies
-            if grep -q "optionalDependencies" package.json; then
-              echo "optionalDependencies already exists in package.json"
-            else
-              # Añadir optionalDependencies si no existe
-              cat <<EOF > temp.json
-          {
-            "optionalDependencies": {
-              "@nx/nx-darwin-arm64": "${{ env.NX_VERSION }}",
-              "@nx/nx-darwin-x64": "${{ env.NX_VERSION }}",
-              "@nx/nx-linux-x64-gnu": "${{ env.NX_VERSION }}",
-              "@nx/nx-win32-x64-msvc": "${{ env.NX_VERSION }}"
-            }
-          }
-          EOF
-              # Combinar el package.json con optionalDependencies
-              # Necesitamos jq para esto
-              sudo apt-get install -y jq
-              jq -s '.[0] * .[1]' package.json temp.json > package.json.new
-              mv package.json.new package.json
-            fi
-          else
-            echo "package.json not found"
-          fi
+          # npm environment variables
+          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
+          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
+          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+          
+          # Establecer tiempo de espera de npm más largo
+          echo "npm_config_timeout=600000" >> $GITHUB_ENV
+          
+          # Disable NX native modules to avoid binary compatibility issues
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
 
       - name: Ensure .eslintrc.json exists in root
         run: |
@@ -405,140 +251,47 @@ jobs:
             }' > .eslintrc.json
           fi
 
-      - name: Install dependencies with correct configs
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Reset NX cache
+        run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
+
+      # Modificación para instalar los paquetes con más opciones de seguridad
+      - name: Install dependencies with specific options
         run: |
-          # Mostrar configuración de npm
+          # Verificar que npm está correctamente configurado
           npm config list
-          
-          # Instalar con todas las dependencias opcionales y configuraciones correctas
-          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install --legacy-peer-deps --no-fund
+          # Instalar dependencias con más opciones de seguridad
+          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
 
-      - name: Verify NX binaries installation
+      - name: Install NX globally with specific version
         run: |
-          echo "Verificando instalación de binarios NX..."
-          find node_modules/@nx -name "*.node" -type f | sort
-          
-          # Verificar si el módulo GNU específico está instalado
-          if [ -f "node_modules/@nx/nx-linux-x64-gnu/nx.linux-x64-gnu.node" ]; then
-            echo "✅ Módulo @nx/nx-linux-x64-gnu encontrado correctamente"
-          else
-            echo "⚠️ Módulo @nx/nx-linux-x64-gnu no encontrado, buscando alternativas..."
-            find node_modules -name "*.node" | grep -i nx
-          fi
-
-      - name: Install NX globally with correct configurations
-        run: |
-          # Instalar NX globalmente con las variables de entorno correctas
-          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install -g nx@${{ env.NX_VERSION }}
-          
-          # Verificar la versión instalada
+          npm install -g nx@${{ env.NX_VERSION }}
           nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
-
-      - name: Update TypeScript configuration for app
-        run: |
-          # Buscar el tsconfig.json de la app
-          TSCONFIG_PATH="apps/${{ matrix.app }}/tsconfig.app.json"
-          if [ -f "$TSCONFIG_PATH" ]; then
-            # Actualizar la configuración de target
-            sed -i 's/"target": ".*"/"target": "ES2022"/' "$TSCONFIG_PATH"
-            echo "Actualizado tsconfig para usar ES2022 en ${{ matrix.app }}"
-          fi
-          
-          # Actualizar también el tsconfig.json principal
-          if [ -f "apps/${{ matrix.app }}/tsconfig.json" ]; then
-            sed -i 's/"target": ".*"/"target": "ES2022"/' "apps/${{ matrix.app }}/tsconfig.json"
-          fi
-
-      - name: Backup original app configurations
-        run: |
-          echo "Haciendo backup de configuraciones originales para ${{ matrix.app }}..."
-          mkdir -p backups/apps/${{ matrix.app }}
-          
-          # Guardar copias de seguridad de archivos de configuración originales
-          for CONFIG_FILE in webpack.config.ts webpack.prod.config.ts module-federation.config.ts; do
-            if [ -f "apps/${{ matrix.app }}/$CONFIG_FILE" ]; then
-              cp "apps/${{ matrix.app }}/$CONFIG_FILE" "backups/apps/${{ matrix.app }}/$CONFIG_FILE.bak"
-            fi
-          done
-
-      - name: Install app-specific dependencies
-        run: |
-          echo "Instalando dependencias específicas para ${{ matrix.app }}..."
-          
-          # Dependencias comunes para todas las aplicaciones
-          env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install webpack@5.75.0 @angular-devkit/build-angular@16.2.10 --save-dev
-          
-          # Para aplicaciones con Module Federation
-          if [ -f "apps/${{ matrix.app }}/module-federation.config.ts" ]; then
-            env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install @angular-architects/module-federation@16.0.4 --save-dev
-          fi
-          
-          # Verificar si hay package.json específico para la app e instalar dependencias
-          if [ -f "apps/${{ matrix.app }}/package.json" ]; then
-            cd apps/${{ matrix.app }}
-            env NX_NON_NATIVE_HASHER=true NX_NATIVE_BINDINGS=false npm install --legacy-peer-deps
-            cd ../..
-          fi
-          
-          # Verificar versiones instaladas
-          echo "Versiones de webpack instaladas:"
-          find node_modules -path "*/webpack/package.json" -exec grep -l "version" {} \; -exec cat {} \;
-
-      - name: Reset NX cache and verify configuration
-        run: |
-          npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
-          
-          # Verificar que las variables de entorno estén correctamente establecidas
-          echo "Variables de entorno NX:"
-          echo "NX_NON_NATIVE_HASHER: $NX_NON_NATIVE_HASHER"
-          echo "NX_NATIVE_BINDINGS: $NX_NATIVE_BINDINGS"
-          echo "NX_SKIP_NX_CACHE: $NX_SKIP_NX_CACHE"
 
       - name: Build ${{ matrix.app }}
         run: |
-          echo "Construyendo la aplicación ${{ matrix.app }} con configuración JS pura..."
-          export NODE_OPTIONS="--max-old-space-size=8192"
+          # Crear un script de build temporal sin postinstall hooks
+          echo "Construyendo la aplicación ${{ matrix.app }}..."
           
-          # Asegurar variables de entorno NX
-          export NX_NON_NATIVE_HASHER=true
-          export NX_NATIVE_BINDINGS=false
-          export NX_SKIP_NX_CACHE=true
-          
-          # Primer intento - construcción con JS puro
-          NODE_ENV=production node --max-old-space-size=8192 node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache || {
-            echo "Primer intento falló para ${{ matrix.app }}, intentando con menos optimizaciones..."
-            
-            # Segundo intento - con menos optimizaciones
-            NODE_ENV=production node --max-old-space-size=8192 node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --extractLicenses=false --optimization=false --sourceMap=false
-          }
-          
-          # Si sigue fallando, crear un placeholder
-          if [ ! -d "dist/apps/${{ matrix.app }}" ]; then
-            echo "Creando directorio de construcción placeholder para ${{ matrix.app }}..."
-            mkdir -p dist/apps/${{ matrix.app }}
-            echo "<html><body>Placeholder para microfrontend ${{ matrix.app }}</body></html>" > dist/apps/${{ matrix.app }}/index.html
-            echo "ERROR: Esta es una versión placeholder para mantener el pipeline. Revisar logs para detalles." > dist/apps/${{ matrix.app }}/BUILD_FAILED.txt
-          fi
+          # Usar comando directo sin npx para evitar problemas de binarios
+          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
 
       - name: Verify build output
         run: |
           ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
-          
-          # Crear directorio de construcción manualmente si no existe
-          if [ ! -d "dist/apps/${{ matrix.app }}" ]; then
-            echo "Creando manualmente el directorio de construcción para ${{ matrix.app }}..."
-            mkdir -p dist/apps/${{ matrix.app }}
-            echo "<html><body>Placeholder para microfrontend ${{ matrix.app }}</body></html>" > dist/apps/${{ matrix.app }}/index.html
-            echo "ERROR: Esta es una versión placeholder. Revisar logs para detalles." > dist/apps/${{ matrix.app }}/BUILD_FAILED.txt
-          fi
 
-      - name: Upload build artifacts for debugging
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.app }}-build-output
-          path: dist/apps/${{ matrix.app }}
-          retention-days: 3
-
+      # Configuración corregida de Docker Buildx
       - name: Setup Docker Buildx with increased memory
         uses: docker/setup-buildx-action@v3
         with:
@@ -563,15 +316,13 @@ jobs:
             type=raw,value=${{ needs.setup.outputs.environment }}
             type=sha,format=short
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value=${{ needs.setup.outputs.environment }}-${{ github.run_number }}
           labels: |
             org.opencontainers.image.title=${{ matrix.app }}
             org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
             org.opencontainers.image.vendor=${{ github.repository_owner }}
-            org.opencontainers.image.created={{ date }}
-            org.opencontainers.image.revision=${{ github.sha }}
 
-      - name: Build and push Docker image to GitHub Packages
+      # Modificado para construir directamente con el Dockerfile optimizado
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -587,9 +338,99 @@ jobs:
             APP_ENV=${{ needs.setup.outputs.environment }}
             NX_SKIP_NX_CACHE=true
             NX_NATIVE_BINDINGS=false
-            NX_NON_NATIVE_HASHER=true
-            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-            VCS_REF=${{ github.sha }}
-            BUILD_VERSION=${{ github.run_number }}
+          driver-opts: |
+            network=host
+            memory=4g
+            memory-swap=4g
+          timeout-minutes: 20  # Aumentado
           no-cache: ${{ contains(matrix.app, 'se') }}
-          outputs: type=registry,registry.insecure=false
+
+  deploy:
+    name: Deploy Microfrontends
+    needs: [setup, build]
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.environment }}
+    steps:
+      - name: Execute remote deployment
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            echo "Deploying VUCEM Microfrontends to ${{ needs.setup.outputs.environment }}..."
+            cd /home/ubuntu/v30
+            
+            # Create directory for manifests if it doesn't exist
+            mkdir -p k8s
+            
+            # Download the K8s manifest template from repository
+            curl -s https://raw.githubusercontent.com/vucem30-dev/frontend/fix/cicd/k8s/vucem-microfrontends.yaml -o k8s/vucem-microfrontends.yaml
+            
+            # Prepare the apps to be included in the deployment
+            APPS_LIST="${{ needs.setup.outputs.final_apps }}"
+            
+            # Set the replicas based on environment
+            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+              REPLICAS=2
+              MIN_REPLICAS=2
+              MAX_REPLICAS=5
+            else
+              REPLICAS=1
+              MIN_REPLICAS=1
+              MAX_REPLICAS=3
+            fi
+            
+            # Generate module federation manifest
+            cat > module-federation.manifest.json << EOF
+            {
+              "login": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/login",
+              "aga": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/aga",
+              "agriculture": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agriculture",
+              "se": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/se",
+              "semarnat": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/semarnat",
+              "agace": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/agace",
+              "funcionario": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/funcionario",
+              "cofepris": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/cofepris",
+              "amecafe": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/amecafe",
+              "sener": "https://vucem-${{ needs.setup.outputs.environment }}.example.com/sener"
+            }
+            EOF
+            
+            # Replace placeholders with actual values for all parameters
+            sed -i "s/\${ENV}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+            sed -i "s/\${REGISTRY}/${{ env.REGISTRY }}/g" k8s/vucem-microfrontends.yaml
+            sed -i "s/\${TAG}/${{ needs.setup.outputs.environment }}/g" k8s/vucem-microfrontends.yaml
+            
+            # Set replica counts based on environment
+            if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+              sed -i "s/\${REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MIN_REPLICAS}/2/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MAX_REPLICAS}/5/g" k8s/vucem-microfrontends.yaml
+            else
+              sed -i "s/\${REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MIN_REPLICAS}/1/g" k8s/vucem-microfrontends.yaml
+              sed -i "s/\${MAX_REPLICAS}/3/g" k8s/vucem-microfrontends.yaml
+            fi
+            
+            # Create ConfigMap for Module Federation Manifest
+            microk8s kubectl create configmap module-federation-manifest \
+              --from-file=module-federation.manifest.json \
+              -n vucem-${{ needs.setup.outputs.environment }} \
+              --dry-run=client -o yaml | microk8s kubectl apply -f -
+            
+            # Validate YAML syntax (optional but recommended)
+            if command -v yamllint &> /dev/null; then
+              yamllint -d relaxed k8s/vucem-microfrontends.yaml || echo "YAML validation warning (continuing anyway)"
+            fi
+            
+            # Apply Kubernetes manifest
+            microk8s kubectl apply -f k8s/vucem-microfrontends.yaml
+            
+            # Restart the deployment to pull the latest images
+            microk8s kubectl rollout restart deployment vucem-microfrontends-${{ needs.setup.outputs.environment }}
+            
+            # Wait for rollout to complete
+            microk8s kubectl rollout status deployment/vucem-microfrontends-${{ needs.setup.outputs.environment }} --timeout=300s
