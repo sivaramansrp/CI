@@ -1,4 +1,4 @@
-import { Catalogo, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_NUMERO_DECIMAL_ENTERO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -8,13 +8,17 @@ import PartidasdelaTable from '@libs/shared/theme/assets/json/130111/partidas-de
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { Tramite130111Query } from '../../estados/queries/tramite130111.query';
-import { Tramite130111Store } from '../../estados/tramites/tramites130111.store';
 import fractionValues from '@libs/shared/theme/assets/json/130111/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130111/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130111/unidad_da.json';
 
 import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
+
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
+
+import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
 
 /**
  * jest.spyOnComponente para gestionar la solicitud de mercancías.
@@ -57,12 +61,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
-  tableBodyData: { tbodyData: string[] }[] = []; 
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
   /**
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
@@ -83,8 +87,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * filaSeleccionada
    * Fila seleccionada en la tabla dinámica.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filaSeleccionada: any = null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
  
   /**
    * jest.spyOnOpciones para el campo "producto".
@@ -155,6 +158,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnObjeto o constante que contiene los textos utilizados en la aplicación.
    */
   TEXTOS = TEXTOS;
+
+  /**
+ * Sujeto para gestionar la destrucción de suscripciones.
+ * Este campo se utiliza para emitir un evento que indica la destrucción del componente,
+ * permitiendo limpiar las suscripciones activas y evitar fugas de memoria.
+ */
+  destroyNotifier$ = new Subject<void>();
+
   /**
    * Constructor del componente.
    */
@@ -175,12 +186,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.getEstablecimiento();
-    this.calcularTotales();
+    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
- 
+
     this.tramite130111Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((mostrarTabla) => {
@@ -251,7 +261,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
           Validators.maxLength(18),
         ],
       ],
@@ -264,7 +274,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
           Validators.maxLength(20),
         ],
       ],
@@ -385,43 +395,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * getEstablecimiento
-   * Configura los datos de la tabla dinámica a partir de un archivo JSON.
-   */
-  getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
-      (header, index) => ({
-        encabezado: header,
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        clave: (fila: any): string => fila.tbodyData[index],
-        orden: index,
-      })
-    );
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
- 
-  /**
-   * calcularTotales
-   * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
-   */
-  calcularTotales(): void {
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
-      0
-    );
-    const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
-  }
- 
-  /**
    * jest.spyOnSolicita opciones configurables para los formularios desde archivos JSON.
    */
   opcionesDeBusqueda(): void {
@@ -458,14 +431,32 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
    * Lista de filas seleccionadas.
    */
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
+  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
+      ? filasSeleccionadas
+      : [];
     if (this.filaSeleccionada) {
       this.tramite130111Store.storeTableValues(this.filaSeleccionada);
     }
+  }
+/**
+ * Método para obtener los datos de la tabla dinámica.
+ * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
+ * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+ * 
+ * - Actualiza `tableBodyData` con los datos obtenidos.
+ * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+ * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+ * 
+ */
+  obtenerTablaDatos(): void {
+      this.importaciondeVehiculosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+        this.tableBodyData = data;
+        this.formForTotalCount.patchValue({
+          cantidadTotal:data[0].cantidad,
+          valorTotalUSD:data[0].totalUSD
+        });
+      });
   }
  
   /**
@@ -473,11 +464,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    this.mostrarTabla = true;
     if (this.partidasDelaMercanciaForm.invalid) {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
+      this.tramite130111Store.setMostrarTabla(true);
+
     }
   }
  
@@ -497,6 +489,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 fetchEntidadFederativa(): void {
   this.importaciondeVehiculosService
     .getEntidadFederativa()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.entidadFederativa = data;
     });
@@ -507,6 +500,7 @@ fetchEntidadFederativa(): void {
 fetchRepresentacionFederal(): void {
   this.importaciondeVehiculosService
     .getRepresentacionFederal()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -517,6 +511,7 @@ fetchRepresentacionFederal(): void {
 listaDePaisesDisponibles(): void {
   this.importaciondeVehiculosService
     .getListaDePaisesDisponibles()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.elementosDeBloque = data;
     });
@@ -528,6 +523,7 @@ listaDePaisesDisponibles(): void {
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.importaciondeVehiculosService
     .getPaisesPorBloque(_bloqueId)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.paisesPorBloque = data;
       this.selectRangoDias = this.paisesPorBloque.map(
@@ -612,6 +608,18 @@ enCambioDeBloque(bloqueId: number): void {
     }
   }
  
+/**
+ * Determina si el botón "Modificar" debe estar deshabilitado.
+ * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
+ * 
+ */
+  disabledModificar() : boolean {
+    let disabled = false;
+    if(this.filaSeleccionada.length === 0){
+      disabled = true
+    }
+    return disabled;
+  }
   /**
    * jest.spyOnCiclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */

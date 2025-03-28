@@ -1,22 +1,12 @@
-{
-    "tableHeader": [
-      "Cantidad",
-      "Unidad de medida",
-      "Fracción arancelaria",
-      "Descripción",
-      "Precio unitario USD",
-      "Total USD"
-    ],
-    "tableBody": [
-      {
-        "tbodyData": [
-          "1",
-          "Kilogramo",
-          "98020018",
-          "Descripción",
-          "1.000",
-          "1"
-        ]
+
+  
+    [  {
+        "cantidad" :"100",
+        "unidadDeMedida" :"Pieza",
+        "fraccionFrancelaria" :"98020018",
+        "descripcion":"Descripción",
+        "precioUnitarioUSD" :"1.000",
+        "totalUSD":"100"
       }
     ]
-  }
+

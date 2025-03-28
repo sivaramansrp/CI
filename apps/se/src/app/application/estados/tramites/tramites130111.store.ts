@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PartidasDeLaMercanciaModelo } from '../../shared/models/partidas-de-la-mercancia.model';
 
 export interface Tramite130111State {
   producto: string;
@@ -13,7 +14,7 @@ export interface Tramite130111State {
   defaultProducto: string;
   regimen: string;
   clasificacion: string;
-  filaSeleccionada: null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[];
   cantidadPartidasDeLaMercancia: string;
   valorPartidaUSDPartidasDeLaMercancia: number;
   descripcionPartidasDeLaMercancia: string;
@@ -29,7 +30,7 @@ export interface Tramite130111State {
 
 export function createInitialState(): Tramite130111State {
   return {
-    filaSeleccionada: null,
+    filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
@@ -174,7 +175,7 @@ export class Tramite130111Store extends Store<Tramite130111State> {
   public setRepresentacion(representacion: string): void {
     this.update({ representacion });
   }
-  public storeTableValues(fila: null): void {
+  public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
       filaSeleccionada: fila,
     });

@@ -1,8 +1,13 @@
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map } from 'rxjs';
+
 import { Observable } from 'rxjs';
+
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * Servicio para gestionar la importación de vehículos.
@@ -77,6 +82,15 @@ export class ImportacionDeVehiculosService {
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
       'assets/json/130111/producto-otions.json'
+    );
+  }
+
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+    return (
+      this.http
+        .get<PartidasDeLaMercanciaModelo[]>(
+          'assets/json/130111/partidas-de-la.json'
+        )
     );
   }
 }

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PartidasDeLaMercanciaComponent } from './partidas-de-la-mercancia.component';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { PartidasDeLaMercanciaModelo } from '../../models/partidas-de-la-mercancia.model';
 
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;
@@ -38,7 +38,24 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
   it('should emit filaSeleccionadaChange when handleListaDeFilaSeleccionada is called', () => {
     const emitSpy = jest.spyOn(component.filaSeleccionadaChange, 'emit');
-    const filasSeleccionadas = [{ id: 1 }, { id: 2 }];
+    const filasSeleccionadas: PartidasDeLaMercanciaModelo[]=[
+      {
+        cantidad: '10',
+        unidadDeMedida: 'kg',
+        fraccionFrancelaria: '1234.56.78',
+        descripcion: 'Producto A',
+        precioUnitarioUSD: '100',
+        totalUSD: '1000',
+      },
+      {
+        cantidad: '5',
+        unidadDeMedida: 'kg',
+        fraccionFrancelaria: '8765.43.21',
+        descripcion: 'Producto B',
+        precioUnitarioUSD: '100',
+        totalUSD: '1000',
+      }
+    ];
 
     component.handleListaDeFilaSeleccionada(filasSeleccionadas);
 
