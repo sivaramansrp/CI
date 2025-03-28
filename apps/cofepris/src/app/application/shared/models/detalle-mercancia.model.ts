@@ -3,4 +3,5 @@ export interface DetalleMercancia {
     numeroDeRegistro: string;
     marcasDistintivas: string;
     tipoDeEnvase: string;
+    id?: string
 }
