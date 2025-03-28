@@ -1,6 +1,5 @@
 {
-  "code": 200,
-  "data": [
+  "datos": [
     {
       "id": 0,
       "descripcion": "ALEMANIA (REPUBLICA FEDERAL DE)"
@@ -45,6 +44,5 @@
       "id": 10,
       "descripcion": "ESTONIA (REPUBLICA DE)"
     }
-  ],
-  "message": "Success"
+  ]
 }

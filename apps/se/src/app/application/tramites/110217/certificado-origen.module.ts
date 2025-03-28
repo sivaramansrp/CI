@@ -1,36 +1,29 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { AnexarDocumentosComponent, AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, InputRadioComponent, RepresentanteFiscalComponent, SelectCatalogosComponent, SelectPaisesComponent, SharedModule, TituloComponent, WizardComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { CertificadoOrigenRoutingModule } from './certificado-origen-routing.module';
-import { DatosCertificadoComponent } from './components/datos-certificado/datos-certificado.component';
-import { DestinatarioComponent } from './components/destinatario/destinatario.component';
+import { AlertComponent, BtnContinuarComponent, WizardComponent } from "@libs/shared/data-access-user/src";
+import { CommonModule } from "@angular/common";
+import { CertificadoOrigenRoutingModule } from "./certificado-origen-routing.module";
+import { NgModule } from "@angular/core";
+import { PasoTresComponent } from "./pages/paso-tres/paso-tres.component";
+import { PasoUnoComponent } from "./pages/paso-uno/paso-uno.component";
+import { RouterModule } from "@angular/router";
+import { SolicitantePageComponent } from "./pages/solicitante-page/solicitante-page.component";
+import { ToastrService } from "ngx-toastr";
 
 @NgModule({
   declarations: [
-            SolicitantePageComponent,
-            
+    SolicitantePageComponent,
   ],
   imports: [
+    CommonModule,
     BtnContinuarComponent,
     CertificadoOrigenRoutingModule,
     RouterModule,
     WizardComponent,
     PasoUnoComponent,
-    PasoDosComponent,
-    DatosCertificadoComponent,
-    DestinatarioComponent
-   
-  
-   
+    PasoTresComponent,
+    AlertComponent
   ],
   exports: [],
-  providers: [],
+  providers: [ToastrService]
 })
 export class CertificadoOrigenModule{
 

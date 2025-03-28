@@ -2,20 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of } from 'rxjs';
 import { DatosCertificadoComponent } from './datos-certificado.component';
-import { CertificadosOrigenService } from '../../services/certificadosOrigen.service';
-import { Tramite110217Store } from '../../../../estados/tramites/tramite110217.store';
-import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
+import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
+import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { provideToastr, ToastrService } from 'ngx-toastr';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;
   let fixture: ComponentFixture<DatosCertificadoComponent>;
   let certificadosOrigenServiceMock: any;
-  let tramite110217StoreMock: any;
-  let tramite110217QueryMock: any;
+  let tramite110216StoreMock: any;
+  let tramite110216QueryMock: any;
 
   beforeEach(async () => {
     certificadosOrigenServiceMock = {
@@ -24,13 +24,13 @@ describe('DatosCertificadoComponent', () => {
       obtenerRepresentacionFederal: jest.fn().mockReturnValue(of({ datos: [{ id: 1, descripcion: 'Representación 1' }] }))
     };
 
-    tramite110217StoreMock = {
+    tramite110216StoreMock = {
       setIdioma: jest.fn(),
       setEntidadFederativa: jest.fn(),
       setRepresentacionFederal: jest.fn()
     };
 
-    tramite110217QueryMock = {
+    tramite110216QueryMock = {
       selectSolicitud$: of({
         observaciones: 'Observaciones de prueba',
         idioma: 1,
@@ -55,8 +55,8 @@ describe('DatosCertificadoComponent', () => {
         }),
         FormBuilder,
         { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110217Store, useValue: tramite110217StoreMock },
-        { provide: Tramite110217Query, useValue: tramite110217QueryMock }
+        { provide: Tramite110216Store, useValue: tramite110216StoreMock },
+        { provide: Tramite110216Query, useValue: tramite110216QueryMock }
       ]
     }).compileComponents();
 
@@ -120,5 +120,34 @@ describe('DatosCertificadoComponent', () => {
     component.cargarRepresentacionFederal();
     expect(certificadosOrigenServiceMock.obtenerRepresentacionFederal).toHaveBeenCalled();
     expect(component.representacionFederal).toEqual([{ id: 1, descripcion: 'Representación 1' }]);
+  });
+  it('should call setValoresStore for representacionFederalSeleccion', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.representacionFederalSeleccion();
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'representacionFederal', 'setRepresentacionFederal');
+  });
+
+  it('should call setValoresStore for entidadFederativaSeleccion', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.entidadFederativaSeleccion();
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'entidadFederativa', 'setEntidadFederativa');
+  });
+
+  it('should call setValoresStore for idiomaSeleccion', () => {
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+    component.idiomaSeleccion();
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formDatosCertificado, 'idioma', 'setIdioma');
+  });
+
+  it('should load idiomas on cargarIdioma', () => {
+    component.cargarIdioma();
+    expect(certificadosOrigenServiceMock.obtenerIdioma).toHaveBeenCalled();
+    expect(component.idiomas).toEqual([{ id: 1, descripcion: 'Español' }]);
+  });
+
+  it('should load entidadFederativas on cargarEntidadFederativa', () => {
+    component.cargarEntidadFederativa();
+    expect(certificadosOrigenServiceMock.obtenerEntidadFederativa).toHaveBeenCalled();
+    expect(component.entidadFederativas).toEqual([{ id: 1, descripcion: 'Entidad 1' }]);
   });
 });

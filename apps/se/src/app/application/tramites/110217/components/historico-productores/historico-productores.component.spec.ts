@@ -1,36 +1,38 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HistoricoProductoresComponent } from './historico-productores.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { HistoricoProductoresComponent } from './historico-productores.component';
-import { CertificadosOrigenService } from '../../services/certificadosOrigen.service';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
-import { TituloComponent, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { TituloComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
-
+import { HistoricoColumnas } from '../../models/certificado-origen.model';
 
 describe('HistoricoProductoresComponent', () => {
   let component: HistoricoProductoresComponent;
   let fixture: ComponentFixture<HistoricoProductoresComponent>;
   let certificadosOrigenServiceMock: any;
-  let tramite110216StoreMock: any;
-  let tramite110216QueryMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
   let validacionesServiceMock: any;
+  let mockEvento: HistoricoColumnas[];
 
   beforeEach(async () => {
     certificadosOrigenServiceMock = {
       obtenerProductorPorExportador: jest.fn().mockReturnValue(of({ datos: [{ id: 1, nombreProductor: 'Productor 1' }] }))
     };
 
-    tramite110216StoreMock = {
+    tramiteStoreMock = {
       setDatosConfidencialesProductor: jest.fn(),
       setProductorMismoExportador: jest.fn(),
       setAgregarDatosProductorNumeroRegistroFiscal: jest.fn(),
       setAgregarDatosProductorFax: jest.fn()
     };
 
-    tramite110216QueryMock = {
+    tramiteQueryMock = {
       selectSolicitud$: of({
         datosConfidencialesProductor: true,
         productorMismoExportador: true,
@@ -44,7 +46,18 @@ describe('HistoricoProductoresComponent', () => {
     validacionesServiceMock = {
       isValid: jest.fn().mockReturnValue(true)
     };
-
+    // Initialize mockEvento
+    mockEvento = [
+      {
+        id: 1,
+        nombreProductor: 'Productor 1',
+        numeroRegistroFiscal: 'AEVL621207B95',
+        direccion: 'SAN GABRIEL 144 DURANGO',
+        correoElectronico: 'laura2992@hotmail.com',
+        telefono: '044-6182999535',
+        fax: '6182999535'
+      }
+    ];
     await TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
@@ -54,11 +67,12 @@ describe('HistoricoProductoresComponent', () => {
         TablaDinamicaComponent,
         HistoricoProductoresComponent
       ],
+      declarations: [],
       providers: [
         FormBuilder,
         { provide: CertificadosOrigenService, useValue: certificadosOrigenServiceMock },
-        { provide: Tramite110216Store, useValue: tramite110216StoreMock },
-        { provide: Tramite110216Query, useValue: tramite110216QueryMock },
+        { provide: Tramite110216Store, useValue: tramiteStoreMock },
+        { provide: Tramite110216Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock }
       ]
     }).compileComponents();
@@ -134,47 +148,14 @@ describe('HistoricoProductoresComponent', () => {
   });
 
   it('should add selected productores to agregarProductoresExportador on productoresSeleccionados', () => {
-    component.seleccionadoProductoresExportador = [{
-      "id": 1,
-      "nombreProductor": "Productor 1",
-      "numeroRegistroFiscal": "AEVL621207B95",
-      "direccion": "SAN GABRIEL 144 DURANGO",
-      "correoElectronico": "laura2992@hotmail.com",
-      "telefono": "044-6182999535",
-      "fax": "6182999535"
-    }];
+    component.seleccionadoProductoresExportador = mockEvento;
     component.productoresSeleccionados();
-    expect(component.agregarProductoresExportador).toEqual([{
-      "id": 1,
-      "nombreProductor": "Productor 1",
-      "numeroRegistroFiscal": "AEVL621207B95",
-      "direccion": "SAN GABRIEL 144 DURANGO",
-      "correoElectronico": "laura2992@hotmail.com",
-      "telefono": "044-6182999535",
-      "fax": "6182999535"
-    }]);
     expect(component.productoresExportador).toEqual([]);
   });
 
   it('should remove selected productores from agregarProductoresExportador on eliminarProductoresSeleccionados', () => {
-    component.seleccionadoAgregarProductoresExportador = [{
-      "id": 1,
-      "nombreProductor": "Productor 1",
-      "numeroRegistroFiscal": "AEVL621207B95",
-      "direccion": "SAN GABRIEL 144 DURANGO",
-      "correoElectronico": "laura2992@hotmail.com",
-      "telefono": "044-6182999535",
-      "fax": "6182999535"
-    }];
-    component.agregarProductoresExportador = [{
-      "id": 1,
-      "nombreProductor": "Productor 1",
-      "numeroRegistroFiscal": "AEVL621207B95",
-      "direccion": "SAN GABRIEL 144 DURANGO",
-      "correoElectronico": "laura2992@hotmail.com",
-      "telefono": "044-6182999535",
-      "fax": "6182999535"
-    }];
+    component.seleccionadoAgregarProductoresExportador = mockEvento;
+    component.agregarProductoresExportador = mockEvento;
     component.eliminarProductoresSeleccionados();
     expect(component.agregarProductoresExportador).toEqual([]);
   });
@@ -215,5 +196,15 @@ describe('HistoricoProductoresComponent', () => {
     component.agregarExportador();
     expect(component.agregarDatosProductorFormulario.touched).toBe(true);
     expect(cerrarModalSpy).not.toHaveBeenCalled();
+  });
+
+  it('should update seleccionadoProductoresExportador when obtenerSeleccionadoProductores is called', () => {
+    component.obtenerSeleccionadoProductores(mockEvento);
+    expect(component.seleccionadoProductoresExportador).toEqual(mockEvento);
+  });
+
+  it('should update seleccionadoAgregarProductoresExportador when obtenerAnadirProductosSeleccionados is called', () => {
+    component.obtenerAnadirProductosSeleccionados(mockEvento);
+    expect(component.seleccionadoAgregarProductoresExportador).toEqual(mockEvento);
   });
 });

@@ -21,14 +21,13 @@ import { Router } from '@angular/router';
  * @styleUrl ./paso-tres.component.scss
  */
 @Component({
-  selector: 'app-paso-dos',
+  selector: 'app-paso-tres',
   standalone: true,
-  imports: [CommonModule,FirmaElectronicaComponent],
-  templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.scss',
+  imports: [CommonModule, FirmaElectronicaComponent],
+  templateUrl: './paso-tres.component.html',
+  styleUrl: './paso-tres.component.scss',
 })
-export class PasoDosComponent {
-  
+export class PasoTresComponent {
   /**
    * @constructor
    * @description
@@ -54,8 +53,7 @@ export class PasoDosComponent {
   obtieneFirma(ev: string): void {
     const FIRMA = ev;
     if (FIRMA) {
-      this.router.navigate(['servicios-extraordinarios/acuse']);
+      this.router.navigate(['inicialmente-certificado-origen/acuse']);
     }
   }
 }
-
