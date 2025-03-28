@@ -5,20 +5,20 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  DatosDomicilioLegalState,
+  DatosDomicilioLegalStore,
+} from '../../estados/stores/datos-domicilio-legal.store';
+import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  DatosDomicilioLegalState,
-  DatosDomicilioLegalStore,
-} from '../../estados/stores/datos-domicilio-legal.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import CumplimientoOptions from '@libs/shared/theme/assets/json/260501/cumplimiento-options.json';
-import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
 
 /**
  * Componente principal para gestionar el formulario de manifiestos.

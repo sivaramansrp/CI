@@ -1,7 +1,9 @@
-
+import {
+  DatosDomicilioLegalState,
+  DatosDomicilioLegalStore,
+} from '../stores/datos-domicilio-legal.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../stores/datos-domicilio-legal.store';
 
 @Injectable({ providedIn: 'root' })
 export class DatosDomicilioLegalQuery extends Query<DatosDomicilioLegalState> {

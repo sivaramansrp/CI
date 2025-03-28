@@ -1,21 +1,21 @@
-import {
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  DatosDomicilioLegalState,
+  DatosDomicilioLegalStore,
+} from '../../estados/stores/datos-domicilio-legal.store';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
-import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
  * incluyendo domicilio, manifiestos y representante legal.

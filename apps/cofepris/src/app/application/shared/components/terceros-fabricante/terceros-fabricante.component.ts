@@ -33,10 +33,10 @@ import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
+import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
-import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -237,12 +237,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @param service Servicio que proporciona datos de terceros.
    */
   constructor(
-      private fb: FormBuilder,
-      private tercerosFabricanteStore: TercerosFabricanteStore,
-      @Inject(TercerosFabricanteService) private service: TercerosFabricanteService
-    ) {
-      // Inicializa el store del trámite.
-    }
+    private fb: FormBuilder,
+    private tercerosFabricanteStore: TercerosFabricanteStore,
+    @Inject(TercerosFabricanteService)
+    private service: TercerosFabricanteService
+  ) {
+    // Inicializa el store del trámite.
+  }
 
   /**
    * Notificador para destruir observables.

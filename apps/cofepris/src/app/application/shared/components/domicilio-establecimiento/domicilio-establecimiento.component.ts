@@ -8,7 +8,6 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  InputFechaComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -20,6 +19,10 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import {
+  DatosDomicilioLegalState,
+  DatosDomicilioLegalStore,
+} from '../../estados/stores/datos-domicilio-legal.store';
 import {
   FormBuilder,
   FormControl,
@@ -33,11 +36,9 @@ import {
   NICO_TABLA,
   NicoInfo,
 } from '../../models/datos-domicilio-legal.model';
-
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
-import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 
 export interface RespuestaTabla {
@@ -100,7 +101,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
-    private service: DatosDomicilioLegalService,
+    private service: DatosDomicilioLegalService
   ) {
     // constructor
   }
@@ -275,7 +276,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
-
   }
 
   /**
@@ -367,10 +367,10 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       funcion: () => this.crossList.toArray()[2].quitar('t'),
     },
   ];
-   /**
+  /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
-   readonly paisDeProcedenciaBotonesCuatro = [
+  readonly paisDeProcedenciaBotonesCuatro = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',

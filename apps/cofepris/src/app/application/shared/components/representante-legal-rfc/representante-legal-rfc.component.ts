@@ -1,18 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  DatosDomicilioLegalState,
+  DatosDomicilioLegalStore,
+} from '../../estados/stores/datos-domicilio-legal.store';
+import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  DatosDomicilioLegalState,
-  DatosDomicilioLegalStore,
-} from '../../estados/stores/datos-domicilio-legal.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente principal para gestionar el formulario de representante.
@@ -98,9 +98,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     metodoNombre: keyof DatosDomicilioLegalStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.DatosDomicilioLegalStore[metodoNombre] as (value: string | number) => void)(
-      VALOR
-    );
+    (
+      this.DatosDomicilioLegalStore[metodoNombre] as (
+        value: string | number
+      ) => void
+    )(VALOR);
   }
 
   /**
