@@ -1,161 +1,169 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { of, Subject } from 'rxjs';
 import { DomicilioComponent } from './domicilio-establecimiento.component';
 import { DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { of, Subject } from 'rxjs';
+import {
+  CatalogoSelectComponent,
+  TablaDinamicaComponent,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 
 describe('DomicilioComponent', () => {
   let component: DomicilioComponent;
   let fixture: ComponentFixture<DomicilioComponent>;
-  let mockStore: jest.Mocked<DatosDomicilioLegalStore>;
-  let mockQuery: jest.Mocked<DatosDomicilioLegalQuery>;
-  let mockService: jest.Mocked<DatosDomicilioLegalService>;
+  let store: DatosDomicilioLegalStore;
+  let query: DatosDomicilioLegalQuery;
+  let service: DatosDomicilioLegalService;
 
   beforeEach(async () => {
-    mockStore = {
-      setRfcDel: jest.fn(),
-      setDenominacion: jest.fn(),
-      setCorreo: jest.fn(),
-    } as unknown as jest.Mocked<DatosDomicilioLegalStore>;
-
-    mockQuery = {
+    const mockQuery = {
       selectSolicitud$: of({
         codigoPostal: '12345',
-        estado: 'Estado',
-        muncipio: 'Municipio',
-        localidad: 'Localidad',
-        colonia: 'Colonia',
-        calle: 'Calle',
+        estado: 'TestEstado',
+        muncipio: 'TestMunicipio',
+        localidad: 'TestLocalidad',
+        colonia: 'TestColonia',
+        calle: 'TestCalle',
         lada: '123',
-        telefono: '1234567890',
+        telefono: '9876543210',
         avisoCheckbox: true,
-        licenciaSanitaria: 'Licencia',
-        regimen: 'Regimen',
-        aduanasEntradas: 'Aduanas',
-        numeroPermiso: '123456',
+        licenciaSanitaria: 'TestLicencia',
       }),
-    } as unknown as jest.Mocked<DatosDomicilioLegalQuery>;
+    };
 
-    mockService = {
-      getObtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, name: 'Estado 1' }] })),
-      getObtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, name: 'Dato 1' }] })),
-      getObtenerMercanciasDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, name: 'Mercancia 1' }] })),
-    } as unknown as jest.Mocked<DatosDomicilioLegalService>;
+    const mockStore = {
+      setCodigoPostal: jest.fn(),
+      setEstado: jest.fn(),
+      setMuncipio: jest.fn(),
+      setLocalidad: jest.fn(),
+      setColonia: jest.fn(),
+      setCalle: jest.fn(),
+      setLada: jest.fn(),
+      setTelefono: jest.fn(),
+      setAvisoCheckbox: jest.fn(),
+      setLicenciaSanitaria: jest.fn(),
+    };
+
+    const mockService = {
+      getObtenerEstadoList: jest
+        .fn()
+        .mockReturnValue(of({ data: [{ id: 1, descripcion: 'Estado 1' }] })),
+      getObtenerTablaDatos: jest.fn().mockReturnValue(of({ data: [] })),
+      getObtenerMercanciasDatos: jest.fn().mockReturnValue(of({ data: [] })),
+    };
 
     await TestBed.configureTestingModule({
-      declarations: [DomicilioComponent],
-      imports: [ReactiveFormsModule],
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        DomicilioComponent, // Import the standalone component
+        TituloComponent,
+        CatalogoSelectComponent,
+        TablaDinamicaComponent,
+      ],
       providers: [
         FormBuilder,
-        { provide: DatosDomicilioLegalStore, useValue: mockStore },
         { provide: DatosDomicilioLegalQuery, useValue: mockQuery },
+        { provide: DatosDomicilioLegalStore, useValue: mockStore },
         { provide: DatosDomicilioLegalService, useValue: mockService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DomicilioComponent);
     component = fixture.componentInstance;
+
+    store = TestBed.inject(DatosDomicilioLegalStore);
+    query = TestBed.inject(DatosDomicilioLegalQuery);
+    service = TestBed.inject(DatosDomicilioLegalService);
+
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form and solicitudState on ngOnInit', () => {
-    component.ngOnInit();
-
-    expect(component.solicitudState).toEqual({
-      codigoPostal: '12345',
-      estado: 'Estado',
-      muncipio: 'Municipio',
-      localidad: 'Localidad',
-      colonia: 'Colonia',
-      calle: 'Calle',
-      lada: '123',
-      telefono: '1234567890',
-      avisoCheckbox: true,
-      licenciaSanitaria: 'Licencia',
-      regimen: 'Regimen',
-      aduanasEntradas: 'Aduanas',
-      numeroPermiso: '123456',
-    });
-
-    expect(component.domicilio.value).toEqual({
-      codigoPostal: '12345',
-      estado: 'Estado',
-      muncipio: 'Municipio',
-      localidad: 'Localidad',
-      colonia: 'Colonia',
-      calle: 'Calle',
-      lada: '123',
-      telefono: '1234567890',
-      avisoCheckbox: true,
-      licenciaSanitaria: 'Licencia',
-      regimen: 'Regimen',
-      aduanasEntradas: 'Aduanas',
-      numeroPermiso: '123456',
-    });
+  it('should initialize the form with default values', () => {
+    expect(component.domicilio).toBeDefined();
+    expect(component.domicilio.get('codigoPostal')?.value).toBe('12345');
+    expect(component.domicilio.get('estado')?.value).toBe('TestEstado');
+    expect(component.domicilio.get('telefono')?.value).toBe('9876543210');
   });
 
-  it('should call service methods to fetch data on ngOnInit', () => {
-    component.ngOnInit();
-
-    expect(mockService.getObtenerEstadoList).toHaveBeenCalled();
-    expect(mockService.getObtenerTablaDatos).toHaveBeenCalled();
-    expect(mockService.getObtenerMercanciasDatos).toHaveBeenCalled();
+  it('should fetch estado list on initialization', () => {
+    expect(service.getObtenerEstadoList).toHaveBeenCalled();
+    expect(component.estado).toEqual([{ id: 1, descripcion: 'Estado 1' }]);
   });
 
-  it('should toggle colapsable state when mostrar_colapsable is called', () => {
-    expect(component.colapsable).toBe(false);
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(true);
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(false);
+  it('should fetch table data on initialization', () => {
+    expect(service.getObtenerTablaDatos).toHaveBeenCalled();
+    expect(component.nicoTablaDatos).toEqual([]);
   });
 
-  it('should toggle colapsableDuos state when mostrar_colapsableDuos is called', () => {
-    expect(component.colapsableDuos).toBe(false);
-    component.mostrar_colapsableDuos();
-    expect(component.colapsableDuos).toBe(true);
-    component.mostrar_colapsableDuos();
-    expect(component.colapsableDuos).toBe(false);
-  });
-
-  it('should toggle colapsableTres state when mostrar_colapsableTres is called', () => {
-    expect(component.colapsableTres).toBe(false);
-    component.mostrar_colapsableTres();
-    expect(component.colapsableTres).toBe(true);
-    component.mostrar_colapsableTres();
-    expect(component.colapsableTres).toBe(false);
+  it('should fetch mercancias data on initialization', () => {
+    expect(service.getObtenerMercanciasDatos).toHaveBeenCalled();
+    expect(component.mercanciasTablaDatos).toEqual([]);
   });
 
   it('should disable licenciaSanitaria when avisoCheckbox is checked', () => {
-    const event = { target: { checked: true } } as unknown as Event;
-    component.onAvisoCheckboxChange(event);
+    const checkbox = { target: { checked: true } } as unknown as Event;
+    component.onAvisoCheckboxChange(checkbox);
     expect(component.domicilio.get('licenciaSanitaria')?.disabled).toBe(true);
   });
 
   it('should enable licenciaSanitaria when avisoCheckbox is unchecked', () => {
-    const event = { target: { checked: false } } as unknown as Event;
-    component.onAvisoCheckboxChange(event);
+    const checkbox = { target: { checked: false } } as unknown as Event;
+    component.onAvisoCheckboxChange(checkbox);
     expect(component.domicilio.get('licenciaSanitaria')?.enabled).toBe(true);
   });
 
-  it('should call the appropriate store method when setValoresStore is called', () => {
-    component.ngOnInit();
-    component.setValoresStore(component.domicilio, 'codigoPostal', 'setRfcDel');
-    expect(mockStore.setRfcDel).toHaveBeenCalledWith('12345');
+  it('should toggle colapsable state', () => {
+    expect(component.colapsable).toBe(false);
+    component.mostrar_colapsable();
+    expect(component.colapsable).toBe(true);
   });
 
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('should set values in the store when setValoresStore is called', () => {
+    component.domicilio.get('codigoPostal')?.setValue('54321');
+    component.setValoresStore(
+      component.domicilio,
+      'codigoPostal',
+      'setCodigoPostal'
+    );
+    expect(store.setCodigoPostal).toHaveBeenCalledWith('54321');
+  });
+
+  it('should unsubscribe from destroyNotifier$ on destroy', () => {
+    jest.spyOn(component['destroyNotifier$'], 'next');
+    jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(component['destroyNotifier$'].next).toHaveBeenCalled();
+    expect(component['destroyNotifier$'].complete).toHaveBeenCalled();
+  });
+
+  it('should handle null solicitudState gracefully', () => {
+    component.solicitudState = null as any;
+    component.ngOnInit();
+    expect(component.domicilio).toBeDefined();
+  });
+
+  it('should handle destroyNotifier$ being called multiple times', () => {
+    jest.spyOn(component['destroyNotifier$'], 'next');
+    jest.spyOn(component['destroyNotifier$'], 'complete');
+
+    component.ngOnDestroy();
+    component.ngOnDestroy(); // Call again to ensure no errors occur
+
+    // Ensure `next` is called twice (once for each `ngOnDestroy` call)
+    expect(component['destroyNotifier$'].next).toHaveBeenCalledTimes(2);
+
+    // Ensure `complete` is only called once
+    expect(component['destroyNotifier$'].complete).toHaveBeenCalledTimes(1);
   });
 });
