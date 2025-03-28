@@ -221,6 +221,13 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+  {
+    path: 'registro-solicitud-anual',
+    loadChildren: () =>
+      import('./tramites/150101/registro-solicitud-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  }
 ];
 
 @NgModule({
