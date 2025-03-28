@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
 import { Cancelacion } from '../../models/cancelacion-de-certificados.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -16,7 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './cancelacion-de-certificados.component.html',
   styleUrl: './cancelacion-de-certificados.component.css',
 })
-export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy{
+export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Formulario para capturar los datos de la solicitud.
    */
@@ -43,9 +43,9 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy{
     { encabezado: 'Cantidad solicitada', clave: (fila) => fila.cantidad, orden: 8 },
     { encabezado: 'Valor solicitado', clave: (fila) => fila.usd, orden: 9 },
   ];
-   /**
-   * Configuración para la selección de filas en la tabla.
-   */
+  /**
+  * Configuración para la selección de filas en la tabla.
+  */
   tipoSeleccionSolicitud: TablaSeleccion = TablaSeleccion.CHECKBOX;
   /**
    * Almacena los registros de cancelación para mostrar en la tabla.
@@ -56,50 +56,25 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy{
    */
   public datosDePermiso: boolean = false;
 
+  formularioGrupo!: FormGroup;
+
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
-   /**
-   * Método que se ejecuta al iniciar el componente.
-   * Inicializa los formularios de solicitud y cancelación, 
-   * así como sus validaciones. También suscribe a los datos 
-   * del servicio de mensajes para actualizar la tabla y los datos
-   * de la solicitud de cancelación.
-   */
+  /**
+  * Método que se ejecuta al iniciar el componente.
+  * Inicializa los formularios de solicitud y cancelación, 
+  * así como sus validaciones. También suscribe a los datos 
+  * del servicio de mensajes para actualizar la tabla y los datos
+  * de la solicitud de cancelación.
+  */
   ngOnInit(): void {
-    this.solicitudForm = this.fb.group({
-      folioTramite: ['', Validators.required],
-      tipoSolicitud: ['', Validators.required],
-      regimen: ['', Validators.required],
-      clasificacionRegimen: ['', Validators.required],
-      condicionMercancia: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      unidadMedida: ['', Validators.required],
-      cantidadSolicitada: ['', [Validators.required]],
-      valorSolicitado: ['', [Validators.required]],
+    this.formularioGrupo = new FormGroup({
+      regimenAduanero: new FormControl('', Validators.required),
+      mecanismoAsignacion: new FormControl('', Validators.required),
+      tratadoBloqueComercial: new FormControl(''),
+      nombreProducto: new FormControl(''),
+      nombreSubproducto: new FormControl(''),
+      representacionFederal: new FormControl(''),
     });
-    this.cancelacionForm = this.fb.group({
-      motivoCancelacion: ['', Validators.required],
-    });
-
-    this.servicioDeMensajesService.datos$.subscribe((datos) => {
-      this.datosDePermiso = datos;
-      if (this.datosDePermiso) {
-        this.cuerpoTablaCancelacion = [formData as Cancelacion];
-        this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
-      }
-    });
-
-     // Suscripción a los datos del servicio para llenar la tabla
-    this.servicioDeMensajesService.obtenerDatos()
-      .pipe(takeUntil(this.destroyNotificationSubject$))
-      .subscribe(data => {
-        if (Array.isArray(data?.datos)) {
-          this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
-        } else {
-          console.error("Expected an array but received:", data?.datos);
-          this.cuerpoTablaCancelacion = [];
-        }
-      });
-
   }
 
   /**
@@ -124,13 +99,13 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy{
   public busqueda(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
-   /**
-   * Método que se ejecuta al eliminar un registro de la tabla.
-   * Limpia el contenido de la tabla de cancelación y actualiza los datos 
-   * en el servicio de mensajes.
-   * 
-   * @param event Evento que desencadena la eliminación.
-   */
+  /**
+  * Método que se ejecuta al eliminar un registro de la tabla.
+  * Limpia el contenido de la tabla de cancelación y actualiza los datos 
+  * en el servicio de mensajes.
+  * 
+  * @param event Evento que desencadena la eliminación.
+  */
   public eliminarRegistro(event: Event): void {
     this.cuerpoTablaCancelacion = [];
     this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
