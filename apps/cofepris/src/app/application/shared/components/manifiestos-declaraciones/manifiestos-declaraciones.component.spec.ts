@@ -99,7 +99,7 @@ describe('ManifiestosComponent', () => {
     jest.spyOn(component['destroyNotifier$'], 'complete');
 
     component.ngOnDestroy();
-    component.ngOnDestroy(); // Call again to ensure no errors occur
+    component.ngOnDestroy();
 
     expect(component['destroyNotifier$'].next).toHaveBeenCalledTimes(1);
     expect(component['destroyNotifier$'].complete).toHaveBeenCalledTimes(1);
