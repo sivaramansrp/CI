@@ -5,8 +5,8 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260214Query } from '../../estados/tramite260214Query.query';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
@@ -27,28 +27,35 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 })
 export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
-   * @property {Observable<Fabricante[]>} fabricantes$
-   * Observable que emite la lista de fabricantes desde el store.
+   * @property {Fabricante[]} fabricanteTablaDatos
+   * Datos de la tabla de fabricantes.
    */
-  fabricantes$!: Observable<Fabricante[]>;
+  fabricanteTablaDatos: Fabricante[] = [];
 
   /**
-   * @property {Observable<Destinatario[]>} destinatarios$
-   * Observable que emite la lista de destinatarios finales desde el store.
+   * @property {Destinatario[]} destinatarioFinalTablaDatos
+   * Datos de la tabla de destinatarios finales.
    */
-  destinatarios$!: Observable<Destinatario[]>;
+  destinatarioFinalTablaDatos: Destinatario[] = [];
 
   /**
-   * @property {Observable<Proveedor[]>} proveedores$
-   * Observable que emite la lista de proveedores desde el store.
+   * @property {Proveedor[]} proveedorTablaDatos
+   * Datos de la tabla de proveedores.
    */
-  proveedores$!: Observable<Proveedor[]>;
+  proveedorTablaDatos: Proveedor[] = [];
 
   /**
-   * @property {Observable<Facturador[]>} facturadores$
-   * Observable que emite la lista de facturadores desde el store.
+   * @property {Facturador[]} facturadorTablaDatos
+   * Datos de la tabla de facturadores.
    */
-  facturadores$!: Observable<Facturador[]>;
+  facturadorTablaDatos: Facturador[] = [];
+
+    /**
+     * @property {Subject<void>} destroy$
+     * Subject para cancelar suscripciones y evitar fugas de memoria.
+     * @private
+     */
+    private destroy$ = new Subject<void>();
 
   /**
    * @constructor
@@ -68,10 +75,29 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * Suscribe los observables para mostrar los datos en la vista.
    */
   ngOnInit(): void {
-    this.fabricantes$ = this.tramiteQuery.getFabricanteTablaDatos$;
-    this.destinatarios$ = this.tramiteQuery.getDestinatarioFinalTablaDatos$;
-    this.proveedores$ = this.tramiteQuery.getProveedorTablaDatos$;
-    this.facturadores$ = this.tramiteQuery.getFacturadorTablaDatos$;
+    this.tramiteQuery.getFabricanteTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.fabricanteTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getDestinatarioFinalTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.destinatarioFinalTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getProveedorTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.proveedorTablaDatos = data;
+         });
+   
+       this.tramiteQuery.getFacturadorTablaDatos$
+         .pipe(takeUntil(this.destroy$))
+         .subscribe((data) => {
+           this.facturadorTablaDatos = data;
+         });
   }
 
   /**

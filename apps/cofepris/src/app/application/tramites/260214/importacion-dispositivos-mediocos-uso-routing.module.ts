@@ -1,8 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AgregarDestinatarioFinalComponent } from '../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
-import { AgregarFabricanteComponent } from '../../shared/components/agregar-fabricante/agregar-fabricante.component';
-import { AgregarFacturadorComponent } from '../../shared/components/agregar-facturador/agregar-facturador.component';
-import { AgregarProveedorComponent } from '../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarFabricanteContenedoraComponent } from './components/agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
+import { AgregarFacturadorContenedoraComponent } from './components/agregar-facturador-contenedora/agregar-facturador-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
 import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
@@ -24,19 +24,19 @@ const ROUTES: Routes = [
     },
     {
       path: 'agregar-fabricante',
-      component: AgregarFabricanteComponent,
+      component: AgregarFabricanteContenedoraComponent,
     },
     {
       path: 'agregar-destinatario-final',
-      component: AgregarDestinatarioFinalComponent,
+      component: AgregarDestinatarioFinalContenedoraComponent,
     },
     {
       path: 'agregar-proveedor',
-      component: AgregarProveedorComponent,
+      component: AgregarProveedorContenedoraComponent,
     },
     {
       path: 'agregar-facturador',
-      component: AgregarFacturadorComponent,
+      component: AgregarFacturadorContenedoraComponent,
     },
   {
     path: '',
