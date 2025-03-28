@@ -4,7 +4,12 @@ import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-d
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260214Store } from '../../../estados/tramite260214Store.store';
 
-
+/**
+ * @component PagoDeDerechosContenedoraComponent
+ * @description Componente contenedor que utiliza el componente `PagoDeDerechosComponent`
+ * para gestionar la funcionalidad relacionada con el pago de derechos.
+ * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
+ */
 @Component({
   selector: 'app-pago-de-derechos-contenedora',
   standalone: true,
@@ -13,31 +18,31 @@ import { Tramite260214Store } from '../../../estados/tramite260214Store.store';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
- public pagoDerechos: PagoDerechosFormState;
-  constructor(public tramiteStore: Tramite260214Store){
-   this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
-  }
-  
   /**
-   * Actualiza la información de pago de derechos en el store del trámite.
-   *
-   * Este método toma un objeto `PagoDerechosFormState` que contiene los datos actualizados
-   * del formulario de pago de derechos y llama al método `updatePagoDerechos` del `tramiteStore`
-   * para persistir los cambios.
-   *
-   * @param event Un objeto `PagoDerechosFormState` con los datos actualizados del formulario de pago.
-   * @returns void.
-   *
-   * @example
-   * ```typescript
-   * const pagoActualizado: PagoDerechosFormState = {
-   * // ... datos del formulario
-   * };
-   * this.updatePagoDerechos(pagoActualizado);
-   * ```
+   * @property {PagoDerechosFormState} pagoDerechos
+   * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.
    */
-  updatePagoDerechos(event: PagoDerechosFormState): void{
-    this.tramiteStore.updatePagoDerechos(event);
+
+  public pagoDerechos: PagoDerechosFormState;
+  /**
+   * @constructor
+   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * Inicializa la propiedad `pagoDerechos` con el valor actual del store.
+   *
+   * @param tramiteStore - Store que administra el estado del trámite 260214.
+   */
+  constructor(public tramiteStore: Tramite260214Store) {
+    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
 
+  /**
+   * @method updatePagoDerechos
+   * @description Actualiza los datos del formulario de pago de derechos en el store del trámite.
+   *
+   * @param {PagoDerechosFormState} event - Estado actualizado del formulario de pago de derechos.
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  updatePagoDerechos(event: PagoDerechosFormState): void {
+    this.tramiteStore.updatePagoDerechos(event);
+  }
 }

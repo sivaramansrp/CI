@@ -4,6 +4,13 @@ import { Component } from '@angular/core';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260214Store } from '../../estados/tramite260214Store.store';
 
+/**
+ * @component AgregarFacturadorContenedoraComponent
+ * @description Componente contenedor que utiliza el componente `AgregarFacturadorComponent` 
+ * para gestionar la funcionalidad relacionada con los facturadores. 
+ * Este componente interactúa con el estado del trámite a través del store `Tramite260214Store`.
+ */
+
 @Component({
   selector: 'app-agregar-facturador-contenedora',
   standalone: true,
@@ -12,10 +19,24 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   styleUrl: './agregar-facturador-contenedora.component.scss',
 })
 export class AgregarFacturadorContenedoraComponent {
+    
+  /**
+   * @constructor
+   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * 
+   * @param tramite260214Store - Store que administra el estado del trámite 260214.
+   */
     constructor(
         public tramite260214Store: Tramite260214Store){
     }
 
+    /**
+   * @method updateFacturadorTablaDatos
+   * @description Actualiza los datos de la tabla de facturadores en el store del trámite.
+   * 
+   * @param {Facturador[]} event - Lista de facturadores que se actualizarán en el store.
+   * @returns {void} Este método no retorna ningún valor.
+   */
     updateFacturadorTablaDatos(event:Facturador[]): void {
         this.tramite260214Store.updateFacturadorTablaDatos(event);
     }

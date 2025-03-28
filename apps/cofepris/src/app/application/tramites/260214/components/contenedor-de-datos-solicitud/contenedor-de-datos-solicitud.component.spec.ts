@@ -7,6 +7,7 @@ import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos
 import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ContenedorDeDatosSolicitudComponent', () => {
   let component: ContenedorDeDatosSolicitudComponent;
@@ -33,7 +34,7 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [],
-      imports: [CommonModule, DatosDeLaSolicitudComponent, ContenedorDeDatosSolicitudComponent],
+      imports: [CommonModule, DatosDeLaSolicitudComponent, ContenedorDeDatosSolicitudComponent,HttpClientModule],
       providers: [
         { provide: Tramite260214Query, useValue: mockTramite260214Query },
         { provide: Tramite260214Store, useValue: mockTramite260214Store },
