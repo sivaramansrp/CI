@@ -221,6 +221,11 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
 ];
 
 @NgModule({
