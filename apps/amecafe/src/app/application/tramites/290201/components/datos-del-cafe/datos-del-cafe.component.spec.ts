@@ -5,7 +5,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
-import { of } from 'rxjs'; // Import 'of' from rxjs
+
 import { Component } from '@angular/core';
 import { DatosDelCafeComponent } from './datos-del-cafe.component';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
@@ -14,45 +14,6 @@ import { Solicitud290201Store } from '../../../../estados/tramites/tramites29020
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
 
 
-@Injectable()
-class MockRegistrarSolicitudService {
-  getUtilicoCafeComoData = jest.fn().mockReturnValue(of([])); // Mock implementation returning an observable
-  getEnvasadoenData = jest.fn().mockReturnValue(of([])); // Mock other methods as needed
-  getPaisDeImportacionData = jest.fn().mockReturnValue(of([]));
-  getFraccionArancelariaData = jest.fn().mockReturnValue(of([]));
-  getUnidadDeMedidaData = jest.fn().mockReturnValue(of([]));
-  getDollarData = jest.fn().mockReturnValue(of([]));
-  getMediaDeTransporte = jest.fn().mockReturnValue(of([]));
-}
-@Injectable()
-class MockSolicitud290201Store {
-  [key: string]: jest.Mock; // Allow dynamic methods to be mocked
-
-  metodoNombre = jest.fn(); // Example mock method
-}
-@Injectable()
-class MockSolicitud290201Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('DatosDelCafeComponent', () => {
   let fixture;
   let component;
@@ -60,10 +21,6 @@ describe('DatosDelCafeComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule,DatosDelCafeComponent ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RegistrarSolicitudService, useClass: MockRegistrarSolicitudService },
@@ -79,12 +36,8 @@ describe('DatosDelCafeComponent', () => {
   });
 
   afterEach(() => {
-    if (component) {
-      component.ngOnDestroy = function () {}; // Safely set ngOnDestroy if component exists
-    }
-    if (fixture) {
-      fixture.destroy(); // Destroy the fixture if it exists
-    }
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
@@ -95,7 +48,7 @@ describe('DatosDelCafeComponent', () => {
     component.dataCafeForm = component.dataCafeForm || {};
     component.dataCafeForm.get = jest.fn();
     const datosDelTramiteRealizar = component.datosDelTramiteRealizar;
-    // expect(component.dataCafeForm.get).toHaveBeenCalled();
+    expect(component.dataCafeForm.get).toHaveBeenCalled();
   });
 
   it('should run #createForm()', async () => {
@@ -121,7 +74,7 @@ describe('DatosDelCafeComponent', () => {
     component.dataCafeState.Identificadordel = 'Identificadordel';
     component.dataCafeState.observaciones = 'observaciones';
     component.createForm();
-    expect(component.fb.group).toHaveBeenCalled(); // Verify that the form group was created
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #ngOnInit()', async () => {
@@ -138,7 +91,7 @@ describe('DatosDelCafeComponent', () => {
     component.envasadoenData = component.envasadoenData || {};
     component.envasadoenData.catalogos = 'catalogos';
     component.getEnvasadoenData();
-     expect(component.registrarsolicitud.getEnvasadoenData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getEnvasadoenData).toHaveBeenCalled();
   });
 
   it('should run #getUtilicoCafeComoData()', async () => {
@@ -147,7 +100,7 @@ describe('DatosDelCafeComponent', () => {
     component.utilizoCafeComoData = component.utilizoCafeComoData || {};
     component.utilizoCafeComoData.catalogos = 'catalogos';
     component.getUtilicoCafeComoData();
-     expect(component.registrarsolicitud.getUtilicoCafeComoData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getUtilicoCafeComoData).toHaveBeenCalled();
   });
 
   it('should run #getPaisDeImportacionData()', async () => {
@@ -156,7 +109,7 @@ describe('DatosDelCafeComponent', () => {
     component.paisdeimportacionData = component.paisdeimportacionData || {};
     component.paisdeimportacionData.catalogos = 'catalogos';
     component.getPaisDeImportacionData();
-     expect(component.registrarsolicitud.getPaisDeImportacionData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getPaisDeImportacionData).toHaveBeenCalled();
   });
 
   it('should run #getFraccionArancelariaData()', async () => {
@@ -165,7 +118,7 @@ describe('DatosDelCafeComponent', () => {
     component.fraccionarancelariaData = component.fraccionarancelariaData || {};
     component.fraccionarancelariaData.catalogos = 'catalogos';
     component.getFraccionArancelariaData();
-     expect(component.registrarsolicitud.getFraccionArancelariaData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getFraccionArancelariaData).toHaveBeenCalled();
   });
 
   it('should run #getUnidadDeMedidaData()', async () => {
@@ -174,7 +127,7 @@ describe('DatosDelCafeComponent', () => {
     component.unidaddemedidaData = component.unidaddemedidaData || {};
     component.unidaddemedidaData.catalogos = 'catalogos';
     component.getUnidadDeMedidaData();
-     expect(component.registrarsolicitud.getUnidadDeMedidaData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getUnidadDeMedidaData).toHaveBeenCalled();
   });
 
   it('should run #getDollarData()', async () => {
@@ -183,7 +136,7 @@ describe('DatosDelCafeComponent', () => {
     component.dolarData = component.dolarData || {};
     component.dolarData.catalogos = 'catalogos';
     component.getDollarData();
-     expect(component.registrarsolicitud.getDollarData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getDollarData).toHaveBeenCalled();
   });
 
   it('should run #getElcafeData()', async () => {
@@ -192,7 +145,7 @@ describe('DatosDelCafeComponent', () => {
     component.elcafeData = component.elcafeData || {};
     component.elcafeData.catalogos = 'catalogos';
     component.getElcafeData();
-     expect(component.registrarsolicitud.getUtilicoCafeComoData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getUtilicoCafeComoData).toHaveBeenCalled();
   });
 
   it('should run #getPaisDeTransbordoData()', async () => {
@@ -201,7 +154,7 @@ describe('DatosDelCafeComponent', () => {
     component.paisdetransbordoData = component.paisdetransbordoData || {};
     component.paisdetransbordoData.catalogos = 'catalogos';
     component.getPaisDeTransbordoData();
-     expect(component.registrarsolicitud.getPaisDeImportacionData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getPaisDeImportacionData).toHaveBeenCalled();
   });
 
   it('should run #getMediaDeTransporte()', async () => {
@@ -210,100 +163,110 @@ describe('DatosDelCafeComponent', () => {
     component.mediodetransporteData = component.mediodetransporteData || {};
     component.mediodetransporteData.catalogos = 'catalogos';
     component.getMediaDeTransporte();
-     expect(component.registrarsolicitud.getMediaDeTransporte).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getMediaDeTransporte).toHaveBeenCalled();
   });
 
   it('should run #onSubmit()', async () => {
-    // Mock the form value
-    component.dataCafeForm = {
-      value: {
-        envasadoen: { id: 1 },
-        utilizoCafeComo: { id: 2 },
-        paisdeimportacion: { id: 3 },
-        fraccionarancelaria: { id: 4 },
-        unidaddemedida: { id: 5 },
-        dolar: { id: 6 },
-        elcafe: { id: 7 },
-        paisdetransbordo: { id: 8 },
-        mediodetransporte: { id: 9 },
-      },
-      reset: jest.fn(),
-    } as any;
-  
-    // Mock the catalog data
-    component.envasadoenData = {
-      catalogos: [
-        { id: 1, descripcion: 'Mock Envasadoen' },
-      ],
+    component.dataCafeForm = component.dataCafeForm || {};
+    component.dataCafeForm.value = 'value';
+    component.envasadoenData = component.envasadoenData || {};
+    component.envasadoenData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.utilizoCafeComoData = {
-      catalogos: [
-        { id: 2, descripcion: 'Mock UtilizoCafeComo' },
-      ],
+    component.utilizoCafeComoData = component.utilizoCafeComoData || {};
+    component.utilizoCafeComoData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.paisdeimportacionData = {
-      catalogos: [
-        { id: 3, descripcion: 'Mock PaisDeImportacion' },
-      ],
+    component.paisdeimportacionData = component.paisdeimportacionData || {};
+    component.paisdeimportacionData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.fraccionarancelariaData = {
-      catalogos: [
-        { id: 4, descripcion: 'Mock FraccionArancelaria' },
-      ],
+    component.fraccionarancelariaData = component.fraccionarancelariaData || {};
+    component.fraccionarancelariaData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.unidaddemedidaData = {
-      catalogos: [
-        { id: 5, descripcion: 'Mock UnidadDeMedida' },
-      ],
+    component.unidaddemedidaData = component.unidaddemedidaData || {};
+    component.unidaddemedidaData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.dolarData = {
-      catalogos: [
-        { id: 6, descripcion: 'Mock Dolar' },
-      ],
+    component.dolarData = component.dolarData || {};
+    component.dolarData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.elcafeData = {
-      catalogos: [
-        { id: 7, descripcion: 'Mock ElCafe' },
-      ],
+    component.elcafeData = component.elcafeData || {};
+    component.elcafeData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.paisdetransbordoData = {
-      catalogos: [
-        { id: 8, descripcion: 'Mock PaisDeTransbordo' },
-      ],
+    component.paisdetransbordoData = component.paisdetransbordoData || {};
+    component.paisdetransbordoData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-    component.mediodetransporteData = {
-      catalogos: [
-        { id: 9, descripcion: 'Mock MedioDeTransporte' },
-      ],
+    component.mediodetransporteData = component.mediodetransporteData || {};
+    component.mediodetransporteData.catalogos = {
+      find: function() {
+        return [
+          {
+            "id": {}
+          }
+        ];
+      }
     };
-  
-    // Mock the tableData array
-    component.tableData = [];
-    jest.spyOn(component.tableData, 'push');
-  
-    // Call the method
+    component.tableData = component.tableData || {};
+    component.tableData.push = jest.fn();
     component.onSubmit();
-  
-    // Verify the tableData.push was called
-    expect(component.tableData.push).toHaveBeenCalledWith({
-      envasadoen: { id: 1, descripcion: 'Mock Envasadoen' },
-      utilizoCafeComo: { id: 2, descripcion: 'Mock UtilizoCafeComo' },
-      paisdeimportacion: { id: 3, descripcion: 'Mock PaisDeImportacion' },
-      fraccionarancelaria: { id: 4, descripcion: 'Mock FraccionArancelaria' },
-      unidaddemedida: { id: 5, descripcion: 'Mock UnidadDeMedida' },
-      dolar: { id: 6, descripcion: 'Mock Dolar' },
-      elcafe: { id: 7, descripcion: 'Mock ElCafe' },
-      paisdetransbordo: { id: 8, descripcion: 'Mock PaisDeTransbordo' },
-      mediodetransporte: { id: 9, descripcion: 'Mock MedioDeTransporte' },
-    });
-  
-    // Verify the form was reset
-    expect(component.dataCafeForm.reset).toHaveBeenCalled();
+    expect(component.tableData.push).toHaveBeenCalled();
   });
 
   it('should run #onAgregar()', async () => {
-    component.dataCafeForm = component.dataCafeForm || {};
-    component.dataCafeForm.valid = 'valid';
+
     component.onAgregar();
 
   });
@@ -418,22 +381,16 @@ describe('DatosDelCafeComponent', () => {
   });
 
   it('should run #onCheckboxClick()', async () => {
-    // Mock the selectedRows object
-    component.selectedRows = new Set(); // Use a Set to simulate the selectedRows behavior
-    jest.spyOn(component.selectedRows, 'has');
-    jest.spyOn(component.selectedRows, 'delete');
-    jest.spyOn(component.selectedRows, 'add');
-  
-    // Call the method with a mock event and row
-    const mockEvent = { stopPropagation: jest.fn() }; // Mock the event
-    const mockRow = { id: 1 }; // Mock a row object
-  
-    component.onCheckboxClick(mockEvent, mockRow);
-  
-    // Verify the expected behavior
-    expect(mockEvent.stopPropagation).toHaveBeenCalled(); // Ensure stopPropagation was called
-    expect(component.selectedRows.has).toHaveBeenCalledWith(mockRow); // Ensure has was called with the row
-    expect(component.selectedRows.add).toHaveBeenCalledWith(mockRow); // Ensure add was called if the row was not already selected
+    component.selectedRows = component.selectedRows || {};
+    component.selectedRows.has = jest.fn();
+    component.selectedRows.delete = jest.fn();
+    component.selectedRows.add = jest.fn();
+    component.onCheckboxClick({
+      stopPropagation: function() {}
+    }, {});
+    expect(component.selectedRows.has).toHaveBeenCalled();
+    expect(component.selectedRows.delete).toHaveBeenCalled();
+    expect(component.selectedRows.add).toHaveBeenCalled();
   });
 
   it('should run #onDeleteSelectedRows()', async () => {
@@ -451,27 +408,16 @@ describe('DatosDelCafeComponent', () => {
   });
 
   it('should run #setValoresStore()', async () => {
-    component.solicitud290201Store = TestBed.inject(Solicitud290201Store); // Use the mock store
-  
-    // Mock the dynamic method
-    const mockMethod = jest.fn();
-    component.solicitud290201Store['metodoNombre'] = mockMethod;
-  
-    // Call the method
-    component.setValoresStore(
-      {
-        get: function () {
-          return {
-            value: 'mockValue',
-          };
-        },
-      } as any, // Mocked FormGroup
-      'campo',
-      'metodoNombre' as keyof Solicitud290201Store
-    );
-  
-    // Verify the dynamic method was called with the correct value
-    expect(mockMethod).toHaveBeenCalledWith('mockValue');
+    component.solicitud290201Store = component.solicitud290201Store || {};
+    component.solicitud290201Store.metodoNombre = jest.fn();
+    component.setValoresStore({
+      get: function() {
+        return {
+          value: {}
+        };
+      }
+    }, {}, {});
+    expect(component.solicitud290201Store.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {

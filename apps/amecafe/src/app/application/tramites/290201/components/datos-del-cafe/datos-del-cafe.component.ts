@@ -3,7 +3,6 @@
  * Este componente es responsable de gestionar los datos relacionados con el café en un formulario interactivo.
  * Permite al usuario agregar, editar, eliminar y visualizar datos en una tabla.
  */
-
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -146,7 +145,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   /**
    * Indica si el formulario es visible o no.
    */
-  isFormVisible: boolean = false;
+  esFormularioVisible: boolean = false;
 
   /**
    * Contiene los datos de la fila seleccionada en la tabla.
@@ -303,7 +302,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   }
 
   onSubmit() {
-    this.isFormVisible = false;
+    this.esFormularioVisible = false;
 
     const formData = { ...this.dataCafeForm.value };
 
@@ -347,10 +346,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   }
 
   onAgregar() {
-    if (this.dataCafeForm.valid) {
-     
-    }
-    this.isFormVisible = true;
+    this.esFormularioVisible = true;
   }
 
   onRowClick(rowData: any) {
@@ -384,7 +380,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       )?.id || '',
     });
 
-    this.isFormVisible = true;
+    this.esFormularioVisible = true;
   }
 
   onCheckboxClick(event: Event, index: number): void {
@@ -401,7 +397,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     this.tableData = this.tableData.filter((_, index) => !this.selectedRows.has(index)); // Filtra las filas no seleccionadas
     this.selectedRows.clear();
     this.dataCafeForm.reset();
-    this.isFormVisible = false;
+    this.esFormularioVisible = false;
   }
 
   get datosDelTramiteRealizar(): FormGroup {

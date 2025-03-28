@@ -2,8 +2,8 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 220402
- * @returns Solicitud220402
+ * Creacion del estado inicial para la interfaz de tramite 290201
+ * @returns Solicitud290201
  */
 export interface Solicitud290201State {
   formasdelcafe: string;

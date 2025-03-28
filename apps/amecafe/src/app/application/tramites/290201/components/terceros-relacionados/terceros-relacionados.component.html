@@ -1,6 +1,5 @@
 <div class="col-md-12">
     <ng-titulo titulo="Destinatario (destino final)" />
-    <!-- <ng-table [commonTableHeader]="tableData.tableHeader" [commonTableBody]="tableData.tableBody"></ng-table> -->
     <table class="table table-responsive">
       <thead>
         <tr>
@@ -37,7 +36,7 @@
     </div>
 </div>
 
-<div class="container"  *ngIf="isFormVisible">
+<div class="container"  *ngIf="esFormularioVisible">
     <form [formGroup]="destinatarioForm" (ngSubmit)="onSubmit()">
         <ng-titulo titulo="Datos personales" />
          <ng-container formGroupName="datosDelTramiteRealizar"> 
@@ -47,13 +46,13 @@
               </div>
               <div class="col-md-12">
                 <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
-                  value="fisica" id="fisica" 
+                  id="fisica" 
                   (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
                 <label for="fisica">Física</label>
               </div>
               <div class="col-md-12">
                 <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
-                value="moral" id="moral"
+               id="moral"
                 (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
                 <label for="moral">Moral</label>
               </div>

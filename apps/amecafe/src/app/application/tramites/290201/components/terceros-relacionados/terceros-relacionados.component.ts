@@ -51,7 +51,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Bandera para mostrar u ocultar el formulario.
    */
-  isFormVisible = true;
+  esFormularioVisible = true;
 
   /**
    * Estado actual del trámite obtenido del store.
@@ -159,7 +159,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Bandera para verificar si los datos del catálogo de países están cargados.
    */
-  isPaisDataLoaded = false;
+  isPaisdatoscargados = false;
 
   /**
    * Método para obtener los datos del catálogo de países.
@@ -170,7 +170,7 @@ export class TercerosRelacionadosComponent implements OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.paisData.catalogos = data as Catalogo[];
-        this.isPaisDataLoaded = true;
+        this.isPaisdatoscargados = true;
       });
   }
 
@@ -203,7 +203,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     this.changeDetectorRef.markForCheck();
 
     this.destinatarioForm.reset();
-    this.isFormVisible = false;
+    this.esFormularioVisible = false;
     this.selectedRow = null;
   }
 
@@ -231,7 +231,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Método para modificar los datos de una fila seleccionada.
    */
   onModify() {
-    if (!this.isPaisDataLoaded) {
+    if (!this.isPaisdatoscargados) {
       console.warn('Los datos del catálogo de países aún no están cargados');
       return;
     }
@@ -245,7 +245,7 @@ export class TercerosRelacionadosComponent implements OnInit {
         pais: paisId,
       });
 
-      this.isFormVisible = true;
+      this.esFormularioVisible = true;
     }
   }
 

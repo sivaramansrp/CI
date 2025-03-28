@@ -28,7 +28,7 @@ import { Solicitud290201State, Solicitud290201Store } from '../../../estados/tra
     DatosDeLaSolicitudComponent,
   ],
   templateUrl: './datosTramite.component.html',
-  styleUrl: './datosTramite.component.scss',
+  styleUrl: './datosTramite.component.css',
 })
 export class DatosTramiteComponent implements OnDestroy, OnInit {
   /** Formulario para la información del café */

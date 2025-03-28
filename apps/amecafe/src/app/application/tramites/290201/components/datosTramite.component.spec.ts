@@ -14,34 +14,6 @@ import { FormBuilder } from '@angular/forms';
 import { Solicitud290201Store } from '../../../estados/tramites/tramites290201.store';
 import { Solicitud290201Query } from '../../../estados/queries/tramites290201.query';
 
-@Injectable()
-class MockRegistrarSolicitudService {}
-
-@Injectable()
-class MockSolicitud290201Store {}
-
-@Injectable()
-class MockSolicitud290201Query {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('DatosTramiteComponent', () => {
   let fixture;
@@ -49,12 +21,7 @@ describe('DatosTramiteComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        DatosTramiteComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      imports: [ FormsModule, ReactiveFormsModule,DatosTramiteComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: RegistrarSolicitudService, useClass: MockRegistrarSolicitudService },
@@ -82,7 +49,7 @@ describe('DatosTramiteComponent', () => {
     component.informationCafeForm = component.informationCafeForm || {};
     component.informationCafeForm.get = jest.fn();
     const datosDelTramiteRealizar = component.datosDelTramiteRealizar;
-    // expect(component.informationCafeForm.get).toHaveBeenCalled();
+    expect(component.informationCafeForm.get).toHaveBeenCalled();
   });
 
   it('should run #createForm()', async () => {
@@ -114,14 +81,14 @@ describe('DatosTramiteComponent', () => {
     component.getEntidadDeProcedenciaData = jest.fn();
     component.getCiclocafetaleroData = jest.fn();
     component.ngOnInit();
-    // expect(component.createForm).toHaveBeenCalled();
-    // expect(component.getTiposData).toHaveBeenCalled();
-    // expect(component.getFormasdelcafeData).toHaveBeenCalled();
-    // expect(component.getCalidadData).toHaveBeenCalled();
-    // expect(component.getProcesosData).toHaveBeenCalled();
-    // expect(component.getAduanadesalidaData).toHaveBeenCalled();
-    // expect(component.getEntidadDeProcedenciaData).toHaveBeenCalled();
-    // expect(component.getCiclocafetaleroData).toHaveBeenCalled();
+    expect(component.createForm).toHaveBeenCalled();
+    expect(component.getTiposData).toHaveBeenCalled();
+    expect(component.getFormasdelcafeData).toHaveBeenCalled();
+    expect(component.getCalidadData).toHaveBeenCalled();
+    expect(component.getProcesosData).toHaveBeenCalled();
+    expect(component.getAduanadesalidaData).toHaveBeenCalled();
+    expect(component.getEntidadDeProcedenciaData).toHaveBeenCalled();
+    expect(component.getCiclocafetaleroData).toHaveBeenCalled();
   });
 
   it('should run #getTiposData()', async () => {
@@ -130,7 +97,7 @@ describe('DatosTramiteComponent', () => {
     component.tiposData = component.tiposData || {};
     component.tiposData.catalogos = 'catalogos';
     component.getTiposData();
-    // expect(component.registrarsolicitud.getTiposData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getTiposData).toHaveBeenCalled();
   });
 
   it('should run #getFormasdelcafeData()', async () => {
@@ -139,7 +106,7 @@ describe('DatosTramiteComponent', () => {
     component.formasdelcafeData = component.formasdelcafeData || {};
     component.formasdelcafeData.catalogos = 'catalogos';
     component.getFormasdelcafeData();
-    // expect(component.registrarsolicitud.getFormasdelcafeData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getFormasdelcafeData).toHaveBeenCalled();
   });
 
   it('should run #getCalidadData()', async () => {
@@ -148,7 +115,7 @@ describe('DatosTramiteComponent', () => {
     component.calidadData = component.calidadData || {};
     component.calidadData.catalogos = 'catalogos';
     component.getCalidadData();
-    // expect(component.registrarsolicitud.getCalidadData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getCalidadData).toHaveBeenCalled();
   });
 
   it('should run #getProcesosData()', async () => {
@@ -157,7 +124,7 @@ describe('DatosTramiteComponent', () => {
     component.procesosData = component.procesosData || {};
     component.procesosData.catalogos = 'catalogos';
     component.getProcesosData();
-    // expect(component.registrarsolicitud.getProcesosData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getProcesosData).toHaveBeenCalled();
   });
 
   it('should run #getAduanadesalidaData()', async () => {
@@ -166,7 +133,7 @@ describe('DatosTramiteComponent', () => {
     component.adunadesalidaData = component.adunadesalidaData || {};
     component.adunadesalidaData.catalogos = 'catalogos';
     component.getAduanadesalidaData();
-    // expect(component.registrarsolicitud.getAduanadesalidaData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getAduanadesalidaData).toHaveBeenCalled();
   });
 
   it('should run #getEntidadDeProcedenciaData()', async () => {
@@ -175,7 +142,7 @@ describe('DatosTramiteComponent', () => {
     component.entidaddeprocedenciaData = component.entidaddeprocedenciaData || {};
     component.entidaddeprocedenciaData.catalogos = 'catalogos';
     component.getEntidadDeProcedenciaData();
-    // expect(component.registrarsolicitud.getEntidadDeProcedenciaData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getEntidadDeProcedenciaData).toHaveBeenCalled();
   });
 
   it('should run #getCiclocafetaleroData()', async () => {
@@ -184,7 +151,7 @@ describe('DatosTramiteComponent', () => {
     component.ciclocafetaleroData = component.ciclocafetaleroData || {};
     component.ciclocafetaleroData.catalogos = 'catalogos';
     component.getCiclocafetaleroData();
-    // expect(component.registrarsolicitud.getCiclocafetaleroData).toHaveBeenCalled();
+    expect(component.registrarsolicitud.getCiclocafetaleroData).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', async () => {
@@ -197,7 +164,7 @@ describe('DatosTramiteComponent', () => {
         };
       }
     }, {}, {});
-    // expect(component.solicitud290201Store.metodoNombre).toHaveBeenCalled();
+    expect(component.solicitud290201Store.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -205,8 +172,8 @@ describe('DatosTramiteComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyed$.next).toHaveBeenCalled();
-    // expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(component.destroyed$.next).toHaveBeenCalled();
+    expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });

@@ -12,33 +12,7 @@ import { Router } from '@angular/router';
 import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
 import { TramiteStore } from '../../estados/tramite.store';
 import { HttpClientModule } from '@angular/common/http'; 
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
 
-@Injectable()
-class MockTramiteStore {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('PasoTresComponent', () => {
   let fixture;
@@ -46,12 +20,7 @@ describe('PasoTresComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientModule ],
-      declarations: [
-        PasoTresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientModule,PasoTresComponent ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useClass: MockRouter },
@@ -82,9 +51,9 @@ describe('PasoTresComponent', () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.obtieneFirma({});
-    // expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
-    // expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
-    // expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.serviciosExtraordinariosServices.obtenerTramite).toHaveBeenCalled();
+    expect(component.tramiteStore.establecerTramite).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
 });

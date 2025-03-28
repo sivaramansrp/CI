@@ -1,5 +1,3 @@
-
-
 <div class="row">
    <ng-titulo titulo="Lotes" />
  </div>
@@ -68,7 +66,7 @@
      type="button">Continuar</button>
    </div>
 </div>
-<div class="container"  *ngIf="isFormVisible">
+<div class="container"  *ngIf="esFormularioVisible">
     <form [formGroup]="dataCafeForm" (ngSubmit)="onSubmit()">
       <ng-titulo titulo="Datos Del Cafe" />
       <ng-container formGroupName="datosDelTramiteRealizar"> 
@@ -247,7 +245,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="form-group">
-                                <app-catalogo-select
+                               <app-catalogo-select
                                 id="mediodetransporteData"
                                 formControlName="mediodetransporte"
                                 [catalogo]="mediodetransporteData.catalogos"
@@ -278,15 +276,13 @@
               </div>
          </div>
      </div>  
-     <div class="col-md-12 d-flex justify-content-end">
-       
+     <div class="col-md-12 d-flex justify-content-end">      
           <div class="btn-group">
             <button class="btn btn-danger"
               type="button">Cancelar</button>
               <button class="btn btn-primary me-2"
               type="button" (click)="onSubmit()">Agregar</button>
-          </div>
-        
+          </div>    
       </div>
       </ng-container>
     </form>
