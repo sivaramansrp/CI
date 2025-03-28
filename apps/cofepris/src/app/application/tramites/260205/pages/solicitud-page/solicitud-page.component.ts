@@ -14,7 +14,7 @@ import { PASOS } from '../../models/permiso-sanitario-importacion-medicamentos.m
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { TITULOMENSAJE } from '../../constantes/materias-primas.enum';
+import { TITULO_MENSAJE } from '../../constantes/materias-primas.enum';
 /**
  * @component SolicitudPageComponent
  * @description Componente principal de la página de solicitud. Controla la navegación
@@ -40,7 +40,7 @@ export class SolicitudPageComponent {
    * @property {string} tituloMensaje
    * Título principal mostrado en la parte superior según el paso actual.
    */
-  tituloMensaje: string = TITULOMENSAJE;
+  tituloMensaje: string = TITULO_MENSAJE;
 
   /**
    * @property {ListaPasosWizard[]} pasos
@@ -112,14 +112,14 @@ export class SolicitudPageComponent {
   obtenerNombreDelTítulo(valor: number): string {
     switch (valor) {
       case 1:
-        return TITULOMENSAJE;
+        return TITULO_MENSAJE;
       case 2:
         return this.pasos[1].titulo;
       case 3:
         return this.pasos[2].titulo;
 
       default:
-        return TITULOMENSAJE;
+        return TITULO_MENSAJE;
     }
   }
 }

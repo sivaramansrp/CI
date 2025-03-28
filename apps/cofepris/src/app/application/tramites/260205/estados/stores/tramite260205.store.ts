@@ -104,7 +104,7 @@ export function createInitialState(): Tramite260205State {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260204', resettable: true })
+@StoreConfig({ name: 'tramite260205', resettable: true })
 export class Tramite260205Store extends Store<Tramite260205State> {
   constructor() {
     super(createInitialState());
