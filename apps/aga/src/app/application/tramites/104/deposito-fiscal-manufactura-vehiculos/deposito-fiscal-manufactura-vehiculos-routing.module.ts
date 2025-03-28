@@ -1,7 +1,18 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { SolicitudPageComponent } from '../pages/solicitud-page.component';
 
-const ROUTES: Routes = [];
+const ROUTES: Routes = [
+   {
+      path: 'solicitud',
+      component: SolicitudPageComponent,
+    },
+    {
+      path: '',
+      pathMatch: 'full',
+      redirectTo: 'solicitud',
+    },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],

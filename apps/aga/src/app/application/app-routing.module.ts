@@ -48,8 +48,8 @@ const ROUTES: Routes = [
       import('./tramites/10301/importador-exportador.module').then(
         (m) => m.ImportadorExportadorModule
       ),
-    },
-    {
+  },
+  {
     path: 'donaciones-extranjeras',
     loadChildren: () =>
       import('./tramites/10303/donaciones-extranjeras.module').then(
@@ -107,9 +107,17 @@ const ROUTES: Routes = [
   },
   {
     path: 'certi-registro',
-      loadChildren: () =>
-        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
-  }
+    loadChildren: () =>
+      import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+  },
+  {
+    path: 'deposito-fiscal',
+    loadChildren: () =>
+      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
+        (m) => m.DepositoFiscalManufacturaVehiculosModule
+      ),
+  },
+
 ];
 
 @NgModule({
