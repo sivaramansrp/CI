@@ -37,6 +37,7 @@ export class AcusePageComponent implements OnInit {
 
   /** Código de folio asociado al acuse */
   folio!: string;
+  
 
   /**
    * Constructor del componente AcusePageComponent
