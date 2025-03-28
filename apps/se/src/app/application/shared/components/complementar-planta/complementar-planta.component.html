@@ -1,0 +1,54 @@
+<div class="container">
+  <ng-titulo [titulo]="'Complemento de planta'"></ng-titulo>
+
+  <div class="row">
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="permaneceraMercanciaProgramaOptions"
+        [label]="'Permanecerá mercancía al amparo del programa'"
+        [required]="true"
+        name="estado"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select
+        [catalogo]="documentoOptions"
+        [label]="'Tipo de documento'"
+        [required]="true"
+        name="estado"
+      ></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <input-fecha [datos]="fetchaDeFirma"></input-fecha>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="form-group">
+        <input-fecha [datos]="fetchaDeFinDeVigencia"></input-fecha>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2">Limpiar</button>
+      <button class="btn btn-primary">Agregar Complemento</button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <app-tabla-dinamica
+      [configuracionTabla]="complementoDePlantaEncabezado"
+      [tipoSeleccionTabla]="complecomplementoDePlantaTableSelection"
+      [datos]="complementoDePlantaDatos"
+    ></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 container text-end mt-5">
+      <button class="btn btn-default me-2" (click)="regrasar()">
+        Regresar a plantas
+      </button>
+    </div>
+  </div>
+</div>
