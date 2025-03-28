@@ -1,5 +1,6 @@
 import { DatosSolicitudFormState } from '../../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
+import { DetalleMercancia } from '../../../../shared/models/detalle-mercancia.model';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
@@ -29,6 +30,7 @@ export interface Tramite260203State {
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
+  detalleMercanciaTabla: DetalleMercancia[];
 }
 
 export function createInitialState(): Tramite260203State {
@@ -96,6 +98,7 @@ export function createInitialState(): Tramite260203State {
       fechaPago: '',
       importePago: '',
     },
+    detalleMercanciaTabla: [],
   };
 }
 
@@ -176,5 +179,30 @@ export class Tramite260203Store extends Store<Tramite260203State> {
       ...state,
       pagoDerechos: nuevoPagoDerechos,
     }));
+  }
+
+  aggregarDetalleMercancia(detalleMercancia: DetalleMercancia): void {
+    this.update((state) => {
+      const DATOS = {
+        ...detalleMercancia,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        detalleMercanciaTabla: [...state.detalleMercanciaTabla, DATOS],
+      };
+    });
+  }
+
+  eliminarDetalleMercancia(detalleMercancia: DetalleMercancia[]): void {
+    this.update((state) => {
+      const DATOS = [...state.detalleMercanciaTabla].filter((ele) =>
+        detalleMercancia.some((datos) => ele.id !== datos.id)
+      );
+      return {
+        ...state,
+        detalleMercanciaTabla: DATOS,
+      };
+    });
   }
 }

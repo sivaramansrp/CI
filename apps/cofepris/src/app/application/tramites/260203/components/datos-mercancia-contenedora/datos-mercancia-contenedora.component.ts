@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, map, takeUntil } from 'rxjs';
 import {
   Tramite260203State,
   Tramite260203Store,
 } from '../../estados/stores/tramite260203Store.store';
-import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { DetalleMercancia } from '../../../../shared/models/detalle-mercancia.model';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260203Query } from '../../estados/queries/tramite260203Query.query';
@@ -41,17 +42,18 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Estado completo del trámite, que contiene información como la tabla de mercancías.
    */
   public tramiteState!: Tramite260203State;
+  detalleMercancia$!: Observable<DetalleMercancia[]>;
 
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y modificar el estado del trámite.
    *
-   * @param Tramite260203Query - Servicio para observar el estado actual del trámite.
-   * @param Tramite260203Store - Store que permite actualizar el estado del trámite.
+   * @param tramite260203Query - Servicio para observar el estado actual del trámite.
+   * @param tramite260203Store - Store que permite actualizar el estado del trámite.
    */
   constructor(
-    private Tramite260203Query: Tramite260203Query,
-    private Tramite260203Store: Tramite260203Store
+    private tramite260203Query: Tramite260203Query,
+    private tramite260203Store: Tramite260203Store
   ) {}
 
   /**
@@ -60,14 +62,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
    */
   ngOnInit(): void {
-    this.Tramite260203Query.selectTramiteState$
+    this.tramite260203Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
+        map((seccionState: Tramite260203State) => {
           this.tramiteState = seccionState;
         })
       )
       .subscribe();
+    this.detalleMercancia$ = this.tramite260203Query.getDetalleMercancia$;
   }
 
   /**
@@ -127,10 +130,18 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       ];
     }
 
-    this.Tramite260203Store.update((state) => ({
+    this.tramite260203Store.update((state) => ({
       ...state,
       seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
       tablaMercanciasConfigDatos: datosActivos,
     }));
+  }
+
+  aggregarMercancia(datos: DetalleMercancia) : void {
+    this.tramite260203Store.aggregarDetalleMercancia(datos)
+  }
+
+  eliminarMercancia(datos: DetalleMercancia[]) : void {
+    this.tramite260203Store.eliminarDetalleMercancia(datos)
   }
 }
