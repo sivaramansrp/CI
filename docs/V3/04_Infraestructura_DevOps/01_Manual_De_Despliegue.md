@@ -43,6 +43,7 @@ El sistema gestiona las siguientes aplicaciones:
 - funcionario
 - cofepris
 - amecafe
+- inbal
 
 ## Modos de Despliegue
 
