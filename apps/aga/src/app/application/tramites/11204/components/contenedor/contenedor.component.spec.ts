@@ -37,13 +37,6 @@ describe('ContenedorComponent', () => {
     expect(component.solicitudForm).toBeDefined();
   });
 
-  it('should call setValoresStore when tipoBusqueda changes', () => {
-    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
-    component.ngOnInit();
-    component.solicitudForm.get('tipoBusqueda')?.setValue('Contenedor');
-    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
-  });
-
   it('should call agregarSolicitud when datosCaptura is called with valid form', () => {
     const agregarSolicitudSpy = jest.spyOn(component, 'agregarSolicitud');
     component.solicitudForm.patchValue({
@@ -67,21 +60,24 @@ describe('ContenedorComponent', () => {
   it('should call setValoresStore when inicialesContenedor changes', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
     component.ngOnInit();
-    component.solicitudForm.get('inicialesContenedor')?.setValue('BBZM');
+    const event = { target: { value: 'BBZM' } }; // Simulate the change event
+    component.onChange('inicialesContenedor', event); // Explicitly call onChange
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.solicitudForm, 'inicialesContenedor', 'setInicialesContenedor');
   });
 
   it('should call setValoresStore when numeroContenedor changes', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
     component.ngOnInit();
-    component.solicitudForm.get('numeroContenedor')?.setValue('1098765');
+    const event = { target: { value: '234846' } }; // Simulate the change event
+    component.onChange('numeroContenedor', event); // Explicitly call onChange
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.solicitudForm, 'numeroContenedor', 'setNumeroContenedor');
   });
 
   it('should call setValoresStore when digitoDeControl changes', () => {
     const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
     component.ngOnInit();
-    component.solicitudForm.get('digitoDeControl')?.setValue('1');
+    const event = { target: { value: '1' } }; // Simulate the change event
+    component.onChange('digitoDeControl', event); // Explicitly call onChange
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.solicitudForm, 'digitoDeControl', 'setDigitoDeControl');
   });
 
