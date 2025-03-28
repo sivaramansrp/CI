@@ -1,10 +1,5 @@
+import { Anexo, Bitacora, Complimentaria, DomicilioInfo, Federetarios, Operacions } from "../estados/models/plantas-consulta.model";
 import { DatosDelModificacion } from "../estados/models/datos-tramite.model";
-import { Anexo,
-  Bitacora,
-  Complimentaria,
-  DomicilioInfo,
-  Federetarios,
-  Operacions, } from "../estados/models/plantas-consulta.model";
 
 export const PASOS = [
   {

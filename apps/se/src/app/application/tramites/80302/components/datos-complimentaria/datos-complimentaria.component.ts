@@ -1,12 +1,12 @@
+import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES } from '../../constantes/modificacion.enum';
+import { Complimentaria, Federetarios, Operacions } from '../../estados/models/plantas-consulta.model';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { SolicitudService } from '../../service/solicitud.service';
-import { ToastrService } from 'ngx-toastr';
-import { CONFIGURACION_ACCIONISTAS, CONFIGURACION_FEDERETARIOS, CONFIGURACION_OPERACIONES } from '../../constantes/modificacion.enum';
 import { ConfiguracionColumna } from '../../estados/models/cambio-de-modalidad.model';
 import { DatosCertificacionComponent } from '../datos-certificacion/datos-certificacion.component';
-import { Complimentaria, Federetarios, Operacions } from '../../estados/models/plantas-consulta.model';
+import { SolicitudService } from '../../service/solicitud.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-datos-complimentaria',

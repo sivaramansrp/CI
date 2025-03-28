@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
+import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
 import { SolicitudService } from '../../service/solicitud.service';
 import { Tramite80302Query } from '../../../../estados/queries/tramite80302.query';
-import { CONFIGURACION_MODIFICACION } from '../../constantes/modificacion.enum';
 
 @Component({
   selector: 'app-modificacion',
@@ -173,7 +173,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * ```
    */
   valorDeAlternancia(row: any){
-    const index = this.datosTabla.findIndex((x) => x.id === row.id);
-    this.datosTabla[index].desEstatus = this.datosTabla[index].desEstatus === 'Baja' ? 'Activada' : 'Baja';
+    const INDEX = this.datosTabla.findIndex((x) => x.id === row.id);
+    this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
   }
 }
