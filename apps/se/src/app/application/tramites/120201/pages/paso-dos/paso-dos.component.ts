@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 
-import { TramiteStore } from '../../../../estados/tramite.store';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { TramiteStore } from '../../../../estados/tramite.store';
 
 /**
  * Componente para gestionar el paso tres del trámite.
@@ -11,7 +11,7 @@ import { TramiteFolioService } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styles: ``,
+  styleUrl: './paso-dos.component.scss'
 })
 export class PasoDosComponent implements OnDestroy {
 
