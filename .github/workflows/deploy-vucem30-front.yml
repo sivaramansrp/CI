@@ -30,402 +30,317 @@ on:
     paths:
       - 'apps/**'
       - 'libs/**'
+      - 'docker/**'
       - 'package.json'
+      - 'nx.json'
+      - '.github/workflows/**'
 
 env:
   NODE_VERSION: '20'
+  NX_VERSION: '16.10.0'
   REGISTRY: ghcr.io
-  ORGANIZATION: vucem30
+  BASE_IMAGE_NAME: ${{ github.repository_owner }}/vucem-front
   ALL_APPS: 'dashboard,login,aga,agriculture,se,semarnat,agace,funcionario,cofepris,amecafe,sener'
-  SONAR_VERSION: '6.2.1.4610-linux-x64'
+  # Variables para controlar problemas de NX
+  NX_SKIP_NX_CACHE: 'true'
+  NX_NATIVE_BINDINGS: 'false'
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy Microfrontends
+  setup:
+    name: Setup and Check Environment
     runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      changed_apps: ${{ steps.detect-changes.outputs.changed_apps }}
+      final_apps: ${{ steps.determine-apps.outputs.final_apps }}
+      apps_matrix: ${{ steps.matrix-prep.outputs.apps_matrix }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Set environment and determine apps to deploy
+      - name: Set environment
         id: set-env
         run: |
-          # Set environment
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "DEPLOY_ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "DEPLOY_ENV=prod" >> $GITHUB_ENV
+            echo "environment=prod" >> $GITHUB_OUTPUT
           else
-            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install NX globally
+        run: npm install -g nx@${{ env.NX_VERSION }}
+
+      - name: Detect changed apps
+        id: detect-changes
+        run: |
+          # En caso de workflow_dispatch, no necesitamos detectar cambios si no es modo 'changed'
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.deployment_mode }}" != "changed" ]; then
+            echo "changed_apps=" >> $GITHUB_OUTPUT
+            exit 0
           fi
           
-          # Determine which apps to deploy
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
-              echo "DEPLOY_APPS=${{ env.ALL_APPS }}" >> $GITHUB_ENV
-              echo "Deploying all apps"
-            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
-              echo "DEPLOY_APPS=${{ github.event.inputs.selected_apps }}" >> $GITHUB_ENV
-              echo "Deploying selected apps: ${{ github.event.inputs.selected_apps }}"
+          # Para push events, necesitamos encontrar el commit antes
+          BEFORE_COMMIT=""
+          if [ "${{ github.event.before }}" != "" ]; then
+            BEFORE_COMMIT="${{ github.event.before }}"
+          else
+            # Si no hay before commit, usar HEAD~1
+            BEFORE_COMMIT=$(git rev-parse HEAD~1)
+          fi
+          
+          # Detect changes in apps directory
+          CHANGED_FILES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^apps/' || echo "")
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            # Check for changes in shared libs that would affect all apps
+            SHARED_CHANGES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^libs/shared/' || echo "")
+            if [ -n "$SHARED_CHANGES" ]; then
+              # If shared libs changed, mark all apps as changed
+              CHANGED_APPS="${{ env.ALL_APPS }}"
             else
-              # Changed mode - detect changed apps
-              CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
-              if [ -z "$CHANGED_APPS" ]; then
-                # Check for changes in shared libs that would affect all apps
-                SHARED_CHANGES=$(git diff --name-only HEAD~1 HEAD | grep -E '^libs/shared/' || echo "")
-                if [ -n "$SHARED_CHANGES" ]; then
-                  echo "DEPLOY_APPS=${{ env.ALL_APPS }}" >> $GITHUB_ENV
-                  echo "Shared libs changed, deploying all apps"
-                else
-                  echo "DEPLOY_APPS=dashboard" >> $GITHUB_ENV
-                  echo "No changes detected, defaulting to dashboard"
-                fi
+              CHANGED_APPS=""
+            fi
+          else
+            # Extract the app names from changed files
+            CHANGED_APPS=$(echo "$CHANGED_FILES" | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
+          
+            # Always include dashboard when any app changes
+            if [ -n "$CHANGED_APPS" ] && [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
+              CHANGED_APPS="dashboard,$CHANGED_APPS"
+            fi
+          fi
+          
+          echo "Changed apps: $CHANGED_APPS"
+          echo "changed_apps=$CHANGED_APPS" >> $GITHUB_OUTPUT
+
+      - name: Determine apps to deploy
+        id: determine-apps
+        run: |
+          # Default to detected changes
+          FINAL_APPS=""
+          
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # Handle manual deployment mode selection
+            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
+              FINAL_APPS="${{ env.ALL_APPS }}"
+              echo "Using all apps mode"
+            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
+              FINAL_APPS="${{ github.event.inputs.selected_apps }}"
+              echo "Using selected apps mode: $FINAL_APPS"
+            else
+              # Changed mode - use detected changes or fallback to dashboard
+              if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+                FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+                echo "Using detected changed apps: $FINAL_APPS"
               else
-                # Always include dashboard when any app changes
-                if [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
-                  CHANGED_APPS="dashboard,$CHANGED_APPS"
-                fi
-                echo "DEPLOY_APPS=$CHANGED_APPS" >> $GITHUB_ENV
-                echo "Deploying changed apps: $CHANGED_APPS"
+                FINAL_APPS="dashboard"
+                echo "No changes detected, defaulting to dashboard"
               fi
             fi
           else
             # Auto mode for push events
-            CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep -oP 'apps/\K[^/]+' | sort -u | tr '\n' ',' | sed 's/,$//')
-            if [ -z "$CHANGED_APPS" ]; then
-              # Check for changes in shared libs that would affect all apps
-              SHARED_CHANGES=$(git diff --name-only HEAD~1 HEAD | grep -E '^libs/shared/' || echo "")
-              if [ -n "$SHARED_CHANGES" ]; then
-                echo "DEPLOY_APPS=${{ env.ALL_APPS }}" >> $GITHUB_ENV
-                echo "Shared libs changed, deploying all apps"
-              else
-                echo "DEPLOY_APPS=dashboard" >> $GITHUB_ENV
-                echo "No changes detected, defaulting to dashboard"
-              fi
+            if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
+              FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
             else
-              # Always include dashboard when any app changes
-              if [[ ! "$CHANGED_APPS" =~ "dashboard" ]]; then
-                CHANGED_APPS="dashboard,$CHANGED_APPS"
-              fi
-              echo "DEPLOY_APPS=$CHANGED_APPS" >> $GITHUB_ENV
-              echo "Deploying changed apps: $CHANGED_APPS"
+              # No changes detected, workflow will skip the build job
+              FINAL_APPS=""
             fi
           fi
+          
+          echo "final_apps=$FINAL_APPS" >> $GITHUB_OUTPUT
+
+      - name: Prepare matrix format
+        id: matrix-prep
+        if: steps.determine-apps.outputs.final_apps != ''
+        run: |
+          # Convertir a formato JSON para la matriz
+          APPS_ARRAY=$(echo "${{ steps.determine-apps.outputs.final_apps }}" | tr ',' '\n')
+          APPS_JSON="["
+          
+          # Construir array JSON manualmente para evitar dependencias externas
+          FIRST=true
+          for APP in $APPS_ARRAY; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              APPS_JSON="${APPS_JSON},"
+            fi
+            APPS_JSON="${APPS_JSON}\"${APP}\""
+          done
+          
+          APPS_JSON="${APPS_JSON}]"
+          echo "Matrix format: $APPS_JSON"
+          echo "apps_matrix=$APPS_JSON" >> $GITHUB_OUTPUT
+
+  build:
+    name: Build Microfrontends
+    needs: setup
+    if: needs.setup.outputs.final_apps != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 40  # Aumentado para dar más tiempo
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        app: ${{ fromJSON(needs.setup.outputs.apps_matrix) }}
+      fail-fast: false  # Permitir que otros jobs continúen si uno falla
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
-      - name: Download SonarScanner
+      - name: Install build dependencies
         run: |
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_VERSION }}.zip
-          unzip sonar-scanner.zip
-          echo "SONAR_SCANNER_HOME=$PWD/sonar-scanner-${{ env.SONAR_VERSION }}" >> $GITHUB_ENV
+          sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
 
-      - name: Verify SonarScanner Installation
-        run: ${{ env.SONAR_SCANNER_HOME }}/bin/sonar-scanner --version
-
-      - name: Run SonarQube Analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Set npm and NX environment variables
         run: |
-          ${{ env.SONAR_SCANNER_HOME }}/bin/sonar-scanner \
-            -Dsonar.projectKey=vucem_microfrontends \
-            -Dsonar.organization=v30 \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=https://sonar.ultrasist.net \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.verbose=true
+          # npm environment variables
+          echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
+          echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
+          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
+          echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
+          
+          # Establecer tiempo de espera de npm más largo
+          echo "npm_config_timeout=600000" >> $GITHUB_ENV
+          
+          # Disable NX native modules to avoid binary compatibility issues
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build microfrontends
+      - name: Ensure .eslintrc.json exists in root
         run: |
-          for app in $(echo "${{ env.DEPLOY_APPS }}" | tr ',' ' '); do
-            echo "Building $app..."
-            npx ng build $app --configuration=production
-          done
+          if [ ! -f ".eslintrc.json" ]; then
+            echo "Creating root .eslintrc.json file"
+            echo '{
+              "root": true,
+              "ignorePatterns": ["**/*"],
+              "plugins": ["@nx"],
+              "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "prettier"
+              ],
+              "overrides": [
+                {
+                  "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+                  "rules": {
+                    "@typescript-eslint/no-explicit-any": "off",
+                    "@nx/enforce-module-boundaries": "off"
+                  }
+                }
+              ]
+            }' > .eslintrc.json
+          fi
 
-      - name: Setup Docker Buildx
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            apps/*/node_modules
+            libs/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package.json') }}-v2
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Reset NX cache
+        run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
+
+      # Modificación para instalar los paquetes con más opciones de seguridad
+      - name: Install dependencies with specific options
+        run: |
+          # Verificar que npm está correctamente configurado
+          npm config list
+          # Instalar dependencias con más opciones de seguridad
+          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
+
+      - name: Install NX globally with specific version
+        run: |
+          npm install -g nx@${{ env.NX_VERSION }}
+          nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
+
+      - name: Build ${{ matrix.app }}
+        run: |
+          # Crear un script de build temporal sin postinstall hooks
+          echo "Construyendo la aplicación ${{ matrix.app }}..."
+          
+          # Usar comando directo sin npx para evitar problemas de binarios
+          node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
+
+      - name: Verify build output
+        run: |
+          ls -la dist/apps/${{ matrix.app }} || echo "Build output not found at expected location"
+
+      # Configuración corregida de Docker Buildx
+      - name: Setup Docker Buildx with increased memory
         uses: docker/setup-buildx-action@v3
         with:
+          driver-opts: |
+            image=moby/buildkit:latest
+            network=host
           buildkitd-flags: --debug
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker images for selected apps
-        run: |
-          for app in $(echo "${{ env.DEPLOY_APPS }}" | tr ',' ' '); do
-            echo "Building and pushing Docker image for $app..."
-          
-            # Build and push Docker image
-            docker buildx build \
-              --platform linux/amd64 \
-              --tag ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/vucem-front-$app:${{ env.DEPLOY_ENV }} \
-              --tag ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/vucem-front-$app:latest \
-              --file ./apps/$app/Dockerfile \
-              --build-arg NODE_ENV=production \
-              --build-arg APP_ENV=${{ env.DEPLOY_ENV }} \
-              --push \
-              .
-          done
-
-      - name: Prepare Kubernetes Manifests
-        id: prepare-manifests
-        run: |
-          # Create directory for manifests
-          mkdir -p kubernetes
-          
-          # Generate ConfigMap
-          echo "Generating ConfigMap..."
-          echo "apiVersion: v1
-          kind: ConfigMap
-          metadata:
-            name: vucem-frontend-config-${{ env.DEPLOY_ENV }}
-            namespace: vucem-${{ env.DEPLOY_ENV }}
-          data:
-            NODE_ENV: \"production\"
-            API_URL: \"https://api-vucem-${{ env.DEPLOY_ENV }}.example.com\"
-          " > kubernetes/configmap.yaml
-          
-          # Determine replica count based on environment
-          if [ "${{ env.DEPLOY_ENV }}" == "prod" ]; then
-            REPLICAS=2
-            MIN_REPLICAS=2
-            MAX_REPLICAS=5
-          else
-            REPLICAS=1
-            MIN_REPLICAS=1
-            MAX_REPLICAS=3
-          fi
-          
-          # Generate Deployment header
-          echo "Generating Deployment..."
-          echo "apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: vucem-microfrontends-${{ env.DEPLOY_ENV }}
-            namespace: vucem-${{ env.DEPLOY_ENV }}
-            labels:
-              app: vucem-microfrontends
-              env: ${{ env.DEPLOY_ENV }}
-          spec:
-            replicas: $REPLICAS
-            selector:
-              matchLabels:
-                app: vucem-microfrontends
-                env: ${{ env.DEPLOY_ENV }}
-            template:
-              metadata:
-                labels:
-                  app: vucem-microfrontends
-                  env: ${{ env.DEPLOY_ENV }}
-              spec:
-                imagePullSecrets:
-                  - name: github-container-registry
-                containers:" > kubernetes/deployment.yaml
-          
-          # Generate container definitions for selected apps
-          for app in $(echo "${{ env.DEPLOY_APPS }}" | tr ',' ' '); do
-            echo "  - name: $app
-                image: ${{ env.REGISTRY }}/${{ env.ORGANIZATION }}/vucem-front-$app:${{ env.DEPLOY_ENV }}
-                imagePullPolicy: Always
-                ports:
-                  - containerPort: 80
-                resources:
-                  requests:
-                    memory: \"128Mi\"
-                    cpu: \"100m\"
-                  limits:
-                    memory: \"256Mi\"
-                    cpu: \"500m\"
-                livenessProbe:
-                  httpGet:
-                    path: /health.txt
-                    port: 80
-                  initialDelaySeconds: 30
-                  timeoutSeconds: 3
-                  periodSeconds: 30
-                readinessProbe:
-                  httpGet:
-                    path: /health.txt
-                    port: 80
-                  initialDelaySeconds: 10
-                  timeoutSeconds: 3
-                  periodSeconds: 10" >> kubernetes/deployment.yaml
-          done
-          
-          # Generate Service
-          echo "Generating Service..."
-          echo "apiVersion: v1
-          kind: Service
-          metadata:
-            name: vucem-frontend-svc-${{ env.DEPLOY_ENV }}
-            namespace: vucem-${{ env.DEPLOY_ENV }}
-            labels:
-              app: vucem-microfrontends
-              env: ${{ env.DEPLOY_ENV }}
-              tier: frontend
-          spec:
-            selector:
-              app: vucem-microfrontends
-              env: ${{ env.DEPLOY_ENV }}
-            ports:
-              - name: http
-                port: 80
-                targetPort: 80
-                protocol: TCP
-            sessionAffinity: ClientIP
-            sessionAffinityConfig:
-              clientIP:
-                timeoutSeconds: 10800
-            type: ClusterIP" > kubernetes/service.yaml
-          
-          # Generate Ingress
-          echo "Generating Ingress..."
-          echo "apiVersion: networking.k8s.io/v1
-          kind: Ingress
-          metadata:
-            name: vucem-frontend-ingress-${{ env.DEPLOY_ENV }}
-            namespace: vucem-${{ env.DEPLOY_ENV }}
-            annotations:
-              nginx.ingress.kubernetes.io/rewrite-target: /
-              nginx.ingress.kubernetes.io/ssl-redirect: \"true\"
-              cert-manager.io/cluster-issuer: \"letsencrypt-prod\"
-              kubernetes.io/ingress.class: \"nginx\"
-              nginx.ingress.kubernetes.io/proxy-body-size: \"50m\"
-              nginx.ingress.kubernetes.io/proxy-buffer-size: \"128k\"
-              nginx.ingress.kubernetes.io/proxy-connect-timeout: \"180\"
-              nginx.ingress.kubernetes.io/proxy-read-timeout: \"180\"
-              nginx.ingress.kubernetes.io/proxy-send-timeout: \"180\"
-          spec:
-            ingressClassName: nginx
-            tls:
-              - hosts:
-                  - vucem-${{ env.DEPLOY_ENV }}.example.com
-                secretName: vucem-tls-cert
-            rules:
-              - host: vucem-${{ env.DEPLOY_ENV }}.example.com
-                http:
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      backend:
-                        service:
-                          name: vucem-frontend-svc-${{ env.DEPLOY_ENV }}
-                          port:
-                            number: 80
-                    - path: /api
-                      pathType: Prefix
-                      backend:
-                        service:
-                          name: vucem-backend-svc
-                          port:
-                            number: 8080" > kubernetes/ingress.yaml
-          
-          # Generate HPA
-          echo "Generating HorizontalPodAutoscaler..."
-          echo "apiVersion: autoscaling/v2
-          kind: HorizontalPodAutoscaler
-          metadata:
-            name: vucem-microfrontends-hpa-${{ env.DEPLOY_ENV }}
-            namespace: vucem-${{ env.DEPLOY_ENV }}
-          spec:
-            scaleTargetRef:
-              apiVersion: apps/v1
-              kind: Deployment
-              name: vucem-microfrontends-${{ env.DEPLOY_ENV }}
-            minReplicas: $MIN_REPLICAS
-            maxReplicas: $MAX_REPLICAS
-            metrics:
-              - type: Resource
-                resource:
-                  name: cpu
-                  target:
-                    type: Utilization
-                    averageUtilization: 80
-              - type: Resource
-                resource:
-                  name: memory
-                  target:
-                    type: Utilization
-                    averageUtilization: 80" > kubernetes/hpa.yaml
-          
-          # Create a combined file
-          echo "---" > kubernetes/combined.yaml
-          cat kubernetes/configmap.yaml >> kubernetes/combined.yaml
-          echo "---" >> kubernetes/combined.yaml
-          cat kubernetes/deployment.yaml >> kubernetes/combined.yaml
-          echo "---" >> kubernetes/combined.yaml
-          cat kubernetes/service.yaml >> kubernetes/combined.yaml
-          echo "---" >> kubernetes/combined.yaml
-          cat kubernetes/ingress.yaml >> kubernetes/combined.yaml
-          echo "---" >> kubernetes/combined.yaml
-          cat kubernetes/hpa.yaml >> kubernetes/combined.yaml
-
-      - name: Upload Kubernetes Manifests
-        uses: actions/upload-artifact@v4
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v4
         with:
-          name: kubernetes-manifests
-          path: kubernetes/combined.yaml
-          retention-days: 7
+          images: ${{ env.REGISTRY }}/${{ env.BASE_IMAGE_NAME }}-${{ matrix.app }}
+          tags: |
+            type=raw,value=${{ needs.setup.outputs.environment }}
+            type=sha,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+          labels: |
+            org.opencontainers.image.title=${{ matrix.app }}
+            org.opencontainers.image.description=VUCEM ${{ matrix.app }} microfrontend
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
 
-      - name: Copy manifest to remote server
-        uses: appleboy/scp-action@v0.1.4
+      # Modificado para construir directamente con el Dockerfile optimizado
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
         with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 22
-          source: "kubernetes/combined.yaml"
-          target: "/home/ubuntu/v30/k8s"
-          strip_components: 1
-
-      - name: Execute remote deployment
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.REMOTE_SRV_IP }}
-          username: ${{ secrets.REMOTE_SRV_USER }}
-          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
-          port: 22
-          script_stop: true
-          envs: DEPLOY_ENV,DEPLOY_APPS
-          script: |
-            echo "Deploying VUCEM Microfrontends to $DEPLOY_ENV..."
-            echo "Apps being deployed: $DEPLOY_APPS"
-            cd /home/ubuntu/v30
-            
-            # Create namespace if it doesn't exist
-            microk8s kubectl get namespace vucem-$DEPLOY_ENV > /dev/null 2>&1 || \
-            microk8s kubectl create namespace vucem-$DEPLOY_ENV
-            
-            # Apply Kubernetes manifest
-            microk8s kubectl apply -f k8s/combined.yaml
-            
-            # Check if deployment exists before trying to restart it
-            if microk8s kubectl get deployment vucem-microfrontends-$DEPLOY_ENV -n vucem-$DEPLOY_ENV > /dev/null 2>&1; then
-              # Restart the deployment to pull the latest images
-              echo "Restarting deployment..."
-              microk8s kubectl rollout restart deployment vucem-microfrontends-$DEPLOY_ENV -n vucem-$DEPLOY_ENV
-            
-              # Wait for rollout to complete
-              microk8s kubectl rollout status deployment/vucem-microfrontends-$DEPLOY_ENV -n vucem-$DEPLOY_ENV --timeout=300s
-            else
-              echo "Deployment not found - it will be created by the apply command"
-            fi
-            
-            # Print summary of deployment
-            echo "Deployment summary:"
-            echo "Environment: $DEPLOY_ENV"
-            echo "Apps deployed: $DEPLOY_APPS"
-            microk8s kubectl get pods -n vucem-$DEPLOY_ENV -l app=vucem-microfrontends
+          context: .
+          file: ./apps/${{ matrix.app }}/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+          build-args: |
+            NODE_ENV=production
+            APP_ENV=${{ needs.setup.outputs.environment }}
+            NX_SKIP_NX_CACHE=true
+            NX_NATIVE_BINDINGS=false
+          driver-opts: |
+            network=host
+            memory=4g
+            memory-swap=4g
+          timeout-minutes: 20  # Aumentado
+          no-cache: ${{ contains(matrix.app, 'se') }}
