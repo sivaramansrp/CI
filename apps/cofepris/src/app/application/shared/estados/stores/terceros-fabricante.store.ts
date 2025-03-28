@@ -1,7 +1,7 @@
 import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { TablaDatos } from '../../models/permiso-plaguicidas-datos.model';
+import { TablaDatos } from '../../models/terceros-fabricante.model';
 
 export interface TercerosFabricanteState {
   selectedEstado: catalogoResponse | null;
