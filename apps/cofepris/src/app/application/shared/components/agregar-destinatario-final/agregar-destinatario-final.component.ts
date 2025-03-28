@@ -3,7 +3,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,8 +15,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -93,6 +91,14 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
    */
   destinatarios: Destinatario[] = [];
 
+
+  /**
+   * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
+   * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTabla
+   **/
+
+  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<Destinatario[]>();
+
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -102,10 +108,9 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
    * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
    */
+  
   constructor(
     private fb: FormBuilder,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query,
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
@@ -120,6 +125,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
         ],
       ],
       nombres: ['', Validators.required],
+      denominacionRazon:['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       pais: ['', Validators.required],
@@ -166,7 +172,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(this.destinatarios);
+   this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
   }
@@ -235,5 +241,24 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
       .subscribe((data) => {
         this.coloniasDatos = data;
       });
+  }
+
+  /**
+ * @method limpiarFormulario
+ * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  limpiarFormulario(): void {
+    this.agregarDestinatarioFinal.reset();
+  }
+/**
+ * @method cancelar
+ * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  cancelar():void{
+    this.ubicaccion.back();
   }
 }
