@@ -15,7 +15,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 @Injectable({
   providedIn: 'root'
 })
-export class Terceros260402Service {
+export class TercerosProcedenciaService {
 
   /**
    * Constructor del servicio.

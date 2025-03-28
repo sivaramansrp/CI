@@ -6,7 +6,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import TipoPersonaBtn from 'libs/shared/theme/assets/json/260402/tipoPersonaBtn.json'
 
-import { Terceros260402Service } from '../../services/terceros-260402.service';
+import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 
 @Component({
   selector: 'app-datos-generales',
@@ -42,7 +42,7 @@ export class DatosGeneralesComponent implements OnInit {
   pais:Catalogo[]=[]
 
   constructor(
-      private terceros260402Service: Terceros260402Service,){}
+      private tercerosProcedenciaService: TercerosProcedenciaService,){}
   /**
    * @comdoc
    * Cierra el componente de datos generales.
@@ -61,7 +61,7 @@ export class DatosGeneralesComponent implements OnInit {
   ngOnInit(): void {
     this.informacionProcedencia();
     
-    this.terceros260402Service.getData().subscribe((data) => {
+    this.tercerosProcedenciaService.getData().subscribe((data) => {
       this.pais = data;
     })
   }

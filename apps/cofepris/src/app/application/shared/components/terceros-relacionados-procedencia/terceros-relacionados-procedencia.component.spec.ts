@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TercerosRelacionados260402Component } from './terceros-relacionados-260402.component';
-import { Terceros260402Service } from '../../services/terceros-260402.service';
+import { TercerosRelacionadosProcedenciaComponent } from './terceros-relacionados-procedencia.component';
+import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 import { of } from 'rxjs';
 import { TableData, TipoMoModel } from '../../models/entrada-humana-260402.models';
 
-describe('TercerosRelacionados260402Component', () => {
-  let component: TercerosRelacionados260402Component;
-  let fixture: ComponentFixture<TercerosRelacionados260402Component>;
+describe('TercerosRelacionadosProcedenciaComponent', () => {
+  let component: TercerosRelacionadosProcedenciaComponent;
+  let fixture: ComponentFixture<TercerosRelacionadosProcedenciaComponent>;
   let tercerosServiceMock: any;
 
   beforeEach(async () => {
@@ -19,11 +19,11 @@ describe('TercerosRelacionados260402Component', () => {
 
     await TestBed.configureTestingModule({
       declarations: [],
-      imports: [ReactiveFormsModule,TercerosRelacionados260402Component],
-      providers: [{ provide: Terceros260402Service, useValue: tercerosServiceMock }],
+      imports: [ReactiveFormsModule,TercerosRelacionadosProcedenciaComponent],
+      providers: [{ provide: TercerosProcedenciaService, useValue: tercerosServiceMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TercerosRelacionados260402Component);
+    fixture = TestBed.createComponent(TercerosRelacionadosProcedenciaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

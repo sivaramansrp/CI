@@ -17,18 +17,18 @@ import { EntradaHumanaRoutingModule } from './entrada-humana-routing.module';
 
 import { Datos260402Component } from './pages/datos-260402/datos-260402.component';
 import { EntradaHumanaComponent } from './pages/entrada-humana/entrada-humana.component';
-import { TercerosRelacionados260402Component } from '../../shared/components/terceros-relacionados-260402/terceros-relacionados-260402.component';
+import { TercerosRelacionadosProcedenciaComponent } from '../../shared/components/terceros-relacionados-procedencia/terceros-relacionados-procedencia.component';
 
 
 
 import { DatosGeneralesComponent } from '../../shared/components/datos-generales/datos-generales.component';
 import { PasoDosComponent } from './components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './components/paso-tres/paso-tres.component';
-import { Terceros260402Service } from '../../shared/services/terceros-260402.service';
+import { TercerosProcedenciaService } from '../../shared/services/terceros-procedencia.service';
 
-import { PagoDeDerechos260402Service } from '../../shared/services/pago-de-derechos-260402.service';
+import { PagoDeDerechosEntradaService } from '../../shared/services/pago-de-derechos-entrada.service';
 
-import { PagoDeDerechos260402Component } from '../../shared/components/pago-de-derechos-260402/pago-de-derechos-260402.component';
+import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 
 
 @NgModule({
@@ -43,10 +43,10 @@ import { PagoDeDerechos260402Component } from '../../shared/components/pago-de-d
     PasoDosComponent,
     PasoTresComponent,
     BtnContinuarComponent,
-    TercerosRelacionados260402Component,
+    TercerosRelacionadosProcedenciaComponent,
     DatosGeneralesComponent,
-    PagoDeDerechos260402Component
+    PagoDeDerechosEntradaComponent
   ],
-  providers: [provideHttpClient(), ToastrService,PagoDeDerechos260402Service,Terceros260402Service,InicioSesionService,SubirDocumentoService ],
+  providers: [provideHttpClient(), ToastrService,PagoDeDerechosEntradaService,TercerosProcedenciaService,InicioSesionService,SubirDocumentoService ],
 })
 export class EntradaHumanaModule { }

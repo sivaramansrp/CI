@@ -11,7 +11,7 @@ import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoRespo
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { PagoDeDerechos260402Service } from '../../services/pago-de-derechos-260402.service';
+import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
 import { Tramite260402Store } from '../../estados/tramite260402.store';
 
 import { Tramite260402Query } from '../../estados/tramite260402.query';
@@ -23,7 +23,7 @@ import { FECHA_PAGO } from '../../constantes/permiso-maquila-260402.enum';
  * Utiliza un formulario reactivos para recopilar datos del usuario.
  */
 @Component({
-  selector: 'app-pago-de-derechos-260402',
+  selector: 'app-pago-de-derechos-entrada',
   standalone: true,
   imports: [
     CommonModule,
@@ -32,10 +32,10 @@ import { FECHA_PAGO } from '../../constantes/permiso-maquila-260402.enum';
     CatalogoSelectComponent,
     InputFechaComponent
   ],
-  templateUrl: './pago-de-derechos-260402.component.html',
-  styleUrls: ['./pago-de-derechos-260402.component.scss',],
+  templateUrl: './pago-de-derechos-entrada.component.html',
+  styleUrls: ['./pago-de-derechos-entrada.component.scss',],
 })
-export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
+export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
@@ -107,11 +107,11 @@ export class PagoDeDerechos260402Component implements OnInit, OnDestroy {
  * Inyecta el FormBuilder y el servicio de pago de derechos.
  * 
  * @param fb Constructor de formularios para crear el formulario reactivos.
- * @param pagoDeDerechos260402Service Servicio que proporciona datos para el componente.
+ * @param pagoDeDerechosEntradaService Servicio que proporciona datos para el componente.
  */
   constructor(
     private fb: FormBuilder,
-    private pagoDeDerechosService: PagoDeDerechos260402Service,
+    private pagoDeDerechosService: PagoDeDerechosEntradaService,
     private tramite260402Store: Tramite260402Store,
     private tramite260402Query: Tramite260402Query
 

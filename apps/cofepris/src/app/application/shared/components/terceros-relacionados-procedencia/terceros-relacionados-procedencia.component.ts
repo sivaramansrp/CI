@@ -17,16 +17,16 @@ import { TableData, TipoMoModel } from '../../models/entrada-humana-260402.model
 
 import { MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila-260402.enum';
 
-import { Terceros260402Service } from '../../services/terceros-260402.service';
+import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 /**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 @Component({
-  selector: 'app-terceros-relacionados-260402',
+  selector: 'app-terceros-relacionados-procedencia',
   standalone: true,
-  templateUrl: './terceros-relacionados-260402.component.html',
-  styleUrls: ['./terceros-relacionados-260402.component.scss'],
+  templateUrl: './terceros-relacionados-procedencia.component.html',
+  styleUrls: ['./terceros-relacionados-procedencia.component.scss'],
   imports: [
     CommonModule,
     TituloComponent,
@@ -39,13 +39,12 @@ import { Terceros260402Service } from '../../services/terceros-260402.service';
   ],
 })
 
-export class TercerosRelacionados260402Component implements OnInit {
+export class TercerosRelacionadosProcedenciaComponent implements OnInit {
 
   /**
    * Variable que controla la visibilidad del componente de datos generales.
    */
   isDatosGeneralesVisible = false;
-
 
   /**
    * @comdoc
@@ -68,12 +67,12 @@ export class TercerosRelacionados260402Component implements OnInit {
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir y gestionar formularios reactivos.
-   * @param {Terceros260402Service} tercerosService - Servicio para manejar la lógica relacionada con terceros en el módulo 260402.
+   * @param {tercerosProcedenciaService} TercerosProcedenciaService - Servicio para manejar la lógica relacionada con terceros en el módulo 260402.
    * 
    * La lógica del constructor se puede agregar aquí si es necesario.
    */
   constructor(private fb: FormBuilder,
-    private tercerosService: Terceros260402Service) {
+    private tercerosProcedenciaService: TercerosProcedenciaService) {
     //La lógica del constructor se puede agregar aquí si es necesario
   }
 
@@ -81,16 +80,20 @@ export class TercerosRelacionados260402Component implements OnInit {
    * @override
    * @method ngOnInit
    * @description Este método se ejecuta al inicializar el componente. 
-   * Realiza una suscripción al servicio `tercerosService` para obtener 
+   * Realiza una suscripción al servicio `TercerosProcedenciaService` para obtener 
    * información de la tabla y asignar los datos de las columnas a la 
    * propiedad `fabricanteHeaderData`.
    */
   ngOnInit(): void {
-    this.tercerosService.getInformacioDeTabla().subscribe((data) => {
+    this.tercerosProcedenciaService.getInformacioDeTabla().subscribe((data) => {
       this.fabricanteHeaderData = data.columns
     });
   }
 
+  /**
+   * Abre la sección de "Procedencia" estableciendo la visibilidad de los datos generales.
+   * Cambia el estado de `isDatosGeneralesVisible` a `true`.
+   */
   abrirProcedencia(): void {
     this.isDatosGeneralesVisible = true;
   }
