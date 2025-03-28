@@ -4,7 +4,7 @@
       <li [ngClass]="indice === 1 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(1)" (keydown.enter)="seleccionaTab(1)"
           (keydown.space)="seleccionaTab(1)" role="button" tabindex="1">Solicitante</a>
-        
+
       </li>
       <li [ngClass]="indice === 2 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
@@ -13,7 +13,8 @@
       </li>
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
-          (keydown.space)="seleccionaTab(3)" role="button" tabindex="3">Datos de reporte
+          (keydown.space)="seleccionaTab(3)" role="button" tabindex="3"
+          [ngClass]="!estaHabilitado ? 'disabled-link':''">Datos de reporte
           annual</a>
       </li>
     </ul>
@@ -21,7 +22,7 @@
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
       } @case (2) {
-      <app-programas-reporte-annual> </app-programas-reporte-annual>
+      <app-programas-reporte-annual (filaDeInformeSeleccionada)="getFilaDeInformeSeleccionada($event)"> </app-programas-reporte-annual>
       } @case (3) {
       <app-datos-de-reporte-annual> </app-datos-de-reporte-annual>
       } }
