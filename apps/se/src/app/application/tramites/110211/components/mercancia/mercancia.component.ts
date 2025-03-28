@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo, InputFecha } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
+import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { FECHA } from '../../constantes/cam-certificado.module';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
@@ -13,7 +13,7 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
   templateUrl: './mercancia.component.html',
   styleUrl: './mercancia.component.css',
 })
-export class MercanciaComponent {
+export class MercanciaComponent implements OnInit {
 
   mostrarAlerta: boolean = false;
 

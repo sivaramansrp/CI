@@ -1,10 +1,10 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 
-export interface camState {
+export interface CamState {
     formCertificado: { [key: string]: undefined | boolean | string | number | object };
     estado: Catalogo;
     paisBloques: Catalogo[];
@@ -17,7 +17,7 @@ export interface camState {
     formDatosDelDestinatario: { [key: string]: undefined | boolean | string | number | object };
 }
 
-export function createInitialState(): camState {
+export function createInitialState(): CamState {
     return {
         formCertificado: {
             entidadFederativa: '',
@@ -79,7 +79,7 @@ export function createInitialState(): camState {
     providedIn: 'root',
 })
 @StoreConfig({ name: 'seccion', resettable: true })
-export class camCertificadoStore extends Store<camState> {
+export class camCertificadoStore extends Store<CamState> {
     constructor() {
         super(createInitialState());
     }

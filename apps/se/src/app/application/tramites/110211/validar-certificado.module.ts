@@ -1,21 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
-import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
-import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
-import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
 import { BtnContinuarComponent, CatalogoSelectComponent, FirmaElectronicaComponent, InputFechaComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
-import { MercanciaComponent } from './components/mercancia/mercancia.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CamCertificadoComponent } from './page/cam-certificado/cam-certificado.component';
 import { CamDatosCertificadoComponent } from './components/cam-datos-certificado/cam-datos-certificado.component';
-import { DaosCertificadoComponent } from '../../shared/components/daos-certificado/daos-certificado.component';
 import { CamDestinatarioComponent } from './components/cam-destinatario/cam-destinatario.component';
+import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
+import { DaosCertificadoComponent } from '../../shared/components/daos-certificado/daos-certificado.component';
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
+import { MercanciaComponent } from './components/mercancia/mercancia.component';
+import { PasoDosComponent } from './page/paso-dos/paso-dos.component';
+import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
 
 
 @NgModule({

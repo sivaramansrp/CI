@@ -18,3 +18,13 @@ export interface AccionBoton {
   /** Value associated with the action */
   valor: number;
 }
+
+export interface TablaDatosModal {
+  id: number,
+  fraccionArancelaria: number,
+  nombreTecnico: string,
+  numeroDeRegistrodeProductos: number,
+  fechaExpedicion: string,
+  fechaVencimiento: string,
+  nombreComercial: string
+}

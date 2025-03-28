@@ -1,13 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { Mercancia } from '../../../110204/models/plantas-consulta.model';
 import { Modal } from 'bootstrap';
-import { camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Observable } from 'rxjs';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
 @Component({
   selector: 'app-certificado-origen',
@@ -47,7 +47,9 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit {
       this.estadoOpcion();
       this.paisOpcion();
       this.conseguirDisponiblesDatos();
-      this.datosTabla$ = this.query.selectmercanciaTabla$;
+      this.query.selectmercanciaTabla$.subscribe(data => {
+        this.datosTabla$ = data as unknown as Observable<Mercancia[]>;
+      });
     }
 
     estadoOpcion(): void {
@@ -78,7 +80,16 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit {
 
   conseguirDisponiblesDatos(): void {
     this.camCertificadoService.obtenerTablaDatos('disponibles-datos.json').subscribe({
-      next: (response: any) => {
+      next: (response: Mercancia[]) => {
+        // this.disponiblesDatos = response.map(item =>
+        // ({
+        //   ...item,
+        //   fraccionArancelaria: item.fraccionArancelaria || '',
+        //   numeroDeRegistrodeProductos: item.numeroDeRegistrodeProductos || '',
+        //   fechaExpedicion: item.fechaExpedicion || '',
+        //   fechaVencimiento: item.fechaVencimiento || ''
+        // })
+        // );
         if (response && Array.isArray(response)) {
           this.disponiblesDatos = response
         } 

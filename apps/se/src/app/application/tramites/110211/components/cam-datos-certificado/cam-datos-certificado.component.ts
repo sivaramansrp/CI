@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Mercancia } from '../../../../shared/models/modificacion.enum';
+// import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
 @Component({
@@ -11,7 +11,7 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
   templateUrl: './cam-datos-certificado.component.html',
   styleUrl: './cam-datos-certificado.component.css',
 })
-export class CamDatosCertificadoComponent {
+export class CamDatosCertificadoComponent implements OnInit {
 
   idioma: boolean = true;
 

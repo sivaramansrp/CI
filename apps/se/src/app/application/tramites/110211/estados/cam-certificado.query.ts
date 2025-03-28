@@ -1,14 +1,14 @@
-import { camCertificadoStore } from "../estados/cam-certificado.store";
+import { CamState } from "../estados/cam-certificado.store";
 import { Injectable } from "@angular/core";
-import { camState } from "../estados/cam-certificado.store";
 import { Query } from "@datorama/akita";
+import { camCertificadoStore } from "../estados/cam-certificado.store";
 
 
 /**
  * Query to manage the state of Prosec authorization.
  */
 @Injectable({ providedIn: 'root' })
-export class camCertificadoQuery extends Query<camState> {
+export class camCertificadoQuery extends Query<CamState> {
 
     selectCam$ = this.select((state) => {
         return state;

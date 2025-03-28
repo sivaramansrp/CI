@@ -1,11 +1,13 @@
+import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Mercancia } from '../../110204/models/plantas-consulta.model';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class CamCertificadoService {
   url: string = '../../../../../assets/json/110211/';
 
@@ -21,8 +23,8 @@ export class CamCertificadoService {
     );
   }
 
-  obtenerTablaDatos(fileName: string): Observable<any[]> {
+  obtenerTablaDatos(fileName: string): Observable<Mercancia[]> {
     const JSON_URL = this.url + fileName;
-      return this.http.get<any[]>(JSON_URL);
+      return this.http.get<Mercancia[]>(JSON_URL);
   }
 }

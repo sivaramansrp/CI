@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { camCertificadoStore } from '../../estados/cam-certificado.store';
 
@@ -10,7 +10,7 @@ interface FormValues {
   templateUrl: './cam-destinatario.component.html',
   styleUrl: './cam-destinatario.component.css',
 })
-export class CamDestinatarioComponent {
+export class CamDestinatarioComponent implements OnInit {
   
   exportadorForm!: FormGroup
 

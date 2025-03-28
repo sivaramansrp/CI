@@ -9,11 +9,11 @@
  * @import { PASOS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
+import { AccionBoton, ListaPasoWizard } from '../../models/cam-certificado.module';
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constantes/cam-certificado.module';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { AccionBoton, ListaPasoWizard } from '../../models/cam-certificado.module';
 
 @Component({
   selector: 'app-cam-certificado',
