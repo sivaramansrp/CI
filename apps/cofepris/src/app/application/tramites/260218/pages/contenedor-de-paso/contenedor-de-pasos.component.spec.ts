@@ -1,16 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {ContenedorDePasosComponent} from './contenedor-de-pasos.component';
-import { BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { HttpClientModule } from '@angular/common/http';
-describe('SolicitudPageComponent', () => {
+import { ContenedorDePasosComponent } from './contenedor-de-pasos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
+
+describe('ContenedorDePasosComponent', () => {
 
   let component: ContenedorDePasosComponent;
   let fixture: ComponentFixture<ContenedorDePasosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContenedorDePasosComponent],
+      imports: [HttpClientTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({ id: '123' }), // Mock params if needed
+            snapshot: {
+              paramMap: {
+                get: (key: string) => '123' // Mock paramMap if needed
+              }
+            }
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContenedorDePasosComponent);

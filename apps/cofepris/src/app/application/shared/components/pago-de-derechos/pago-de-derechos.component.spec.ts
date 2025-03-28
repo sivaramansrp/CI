@@ -13,7 +13,6 @@ describe('PagoDeDerechosComponent', () => {
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
