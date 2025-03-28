@@ -62,33 +62,33 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
+      
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-
+      
       - name: Update global npm
         run: npm install -g npm@latest
-
+      
       - name: Install build essentials
         run: |
           sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
-
+      
       - name: Install NX globally
         run: npm install -g nx@${{ env.NX_VERSION }}
-
+      
       - name: Create main package.json backup
         run: |
           cp package.json package.json.original || echo "No package.json found"
-
+      
       - name: Upload backups as artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: config-backups
           path: |
             package.json.original
-
+            
   setup:
     name: Setup and Check Environment
     runs-on: ubuntu-latest
@@ -341,7 +341,7 @@ jobs:
           # Crear un backup del archivo de configuración de Module Federation si existe
           if [ -f "apps/${{ matrix.app }}/module-federation.config.ts" ]; then
             cp apps/${{ matrix.app }}/module-federation.config.ts apps/${{ matrix.app }}/module-federation.config.ts.bak
-          
+            
             # Para sener, aplicamos una corrección específica
             if [ "${{ matrix.app }}" == "sener" ]; then
               echo "Aplicando corrección específica para sener..."
@@ -382,20 +382,20 @@ jobs:
           # Primer intento - construcción estándar
           node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose || {
             echo "Primer intento falló para ${{ matrix.app }}, intentando estrategia alternativa..."
-          
+            
             # Verificar si existe angular.json y modificarlo temporalmente
             if [ -f "angular.json" ]; then
               echo "Modificando configuración de angular.json para app ${{ matrix.app }}..."
-          
+              
               # Hacer backup
               cp angular.json angular.json.bak
-          
+              
               # Desactivar temporalmente remoteEntry para solucionar problemas de Module Federation
               sed -i 's/"mf:default": true/"mf:default": false/g' angular.json
-          
+              
               # Intento alternativo con optimizaciones desactivadas
               NODE_ENV=production node node_modules/.bin/nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose --extractLicenses=false --optimization=false --sourceMap=false
-          
+              
               # Restaurar angular.json
               mv angular.json.bak angular.json
             else
@@ -423,9 +423,9 @@ jobs:
             echo "<html><body>Placeholder para microfrontend ${{ matrix.app }}</body></html>" > dist/apps/${{ matrix.app }}/index.html
             echo "ERROR: Esta es una versión placeholder. Revisar logs para detalles." > dist/apps/${{ matrix.app }}/BUILD_FAILED.txt
           fi
-
+          
       - name: Upload build artifacts for debugging
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.app }}-build-output
           path: dist/apps/${{ matrix.app }}
