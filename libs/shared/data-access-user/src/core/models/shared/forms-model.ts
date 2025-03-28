@@ -1,3 +1,4 @@
+import { Catalogo } from './catalogos.model';
 import { FormGroup } from '@angular/forms';
 
 export interface CampoForm {
@@ -25,4 +26,5 @@ export interface FormularioDinamico {
   tooltipTxt?: string;
   placeholder?: string;
   AvailableRadioOptions?: string[];
+  listaDesplegable?: Catalogo[];
 }

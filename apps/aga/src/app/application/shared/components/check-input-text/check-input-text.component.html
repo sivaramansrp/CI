@@ -1,0 +1,16 @@
+<div [formGroup]="forma">
+  <div class="form-group">
+    <div [ngClass]="{'form-check-custome': reverse === true }">
+      <label class="form-label" [for]="idCheckbox">
+        {{ label }}
+      </label>
+      <input class="form-check-input ms-2" type="checkbox" title="Checkbox" value="" [id]="idCheckbox"
+        formControlName="checkbox" (change)="cambioInputTexto()">
+    </div>
+  </div>
+
+  @if(!hidden) {
+  <input type="text" class="form-control" formControlName="texto" name="texto" [id]="idInputTexto" placeholder=""
+    title="Texto">
+  }
+</div>

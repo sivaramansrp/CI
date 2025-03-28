@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AMBIENTES } from '@ng-mf/data-access-user';
 
 @Component({
-  selector: 'seleccion-tramite',
+  selector: 'app-seleccion-tramite',
   templateUrl: './seleccion-tramite.component.html',
 })
 export class SeleccionTramiteComponent implements OnInit {
