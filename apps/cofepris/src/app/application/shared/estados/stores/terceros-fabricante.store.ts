@@ -1,357 +1,126 @@
+import { Catalogo, catalogoResponse } from '@libs/shared/data-access-user/src';
 import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { TablaDatos } from '../../models/permiso-plaguicidas-datos.model';
 
-/**
- * Creacion del estado inicial para la interfaz de tramite 301
- * @returns Solicitud301
- */
-export interface Solicitud301State {
+export interface TercerosFabricanteState {
+  selectedEstado: catalogoResponse | null;
+  setClave: catalogoResponse | null;
+  setDescripcion: catalogoResponse | null;
+  setDespecificarClasificacion: Catalogo | null;
   /**
-   * linea
-   * @type {string}
+   * Datos del fabricante.
    */
-  linea: string;
-
+  Fabricante: TablaDatos[];
   /**
-   * linea checkbox
-   * @type {string}
+   * Datos del destinatario.
    */
-  lineaCheckbox: string;
-
+  Destinatario: TablaDatos[];
   /**
-   * Nombre quimico
-   * @type {string}
+   * Datos del proveedor.
    */
-  nombreQuimico: string;
-
+  Proveedor: TablaDatos[];
   /**
-   * Nombre comercial
-   * @type {string}
+   * Datos del facturador.
    */
-  nombreComercial: string;
-
-  /**
-   * Numero CAS
-   * @type {string}
-   */
-  numeroCAS: string;
-
-  /**
-   * Acondicionamiento
-   * @type {string}
-   */
-  acondicionamiento: string;
-
-  /**
-   * Estado fisico
-   * @type {string}
-   */
-  estadoFisico: string;
-
-  /**
-   * Fraccion arancelaria
-   * @type {string}
-   */
-  fraccionArancelaria: string;
-
-  /**
-   * Descripcion fraccion
-   * @type {string}
-   */
-  descripcionFraccion: string;
-
-  /**
-   * Nico
-   * @type {string}
-   */
-  nico: string;
-
-  /**
-   * Descripcion nico
-   * @type {string}
-   */
-  descripcionNico: string;
-
-  /**
-   * Mercancia
-   * @type {string}
-   */
-  mercancia: string;
-
-  /**
-   * Folio
-   * @type {string}
-   */
-  folio: string;
-
-  /**
-   * Registro
-   * @type {string}
-   */
-  registro: string;
+  Facturador: TablaDatos[];
 }
 
-export function createInitialState(): Solicitud301State {
+export function createInitialState(): TercerosFabricanteState {
   return {
-    /**
-     * linea
-     * @type {string}
-     */
-    linea: '',
-
-    /**
-     * linea checkbox
-     * @type {string}
-     * */
-    lineaCheckbox: '',
-
-    /**
-     * Nombre quimico
-     * @type {string}
-     */
-    nombreQuimico: '',
-
-    /**
-     * Nombre comercial
-     * @type {string}
-     */
-    nombreComercial: '',
-
-    /**
-     * Numero CAS
-     * @type {string}
-     */
-    numeroCAS: '',
-
-    /**
-     * Acondicionamiento
-     * @type {string}
-     */
-    acondicionamiento: '',
-
-    /**
-     * Estado fisico
-     * @type {string}
-     */
-    estadoFisico: '',
-
-    /**
-     * Fraccion arancelaria
-     * @type {string}
-     */
-    fraccionArancelaria: '',
-
-    /**
-     * Descripcion fraccion
-     * @type {string}
-     */
-    descripcionFraccion: '',
-
-    /**
-     * Nico
-     * @type {string}
-     */
-    nico: '',
-
-    /**
-     * Descripcion nico
-     * @type {string}
-     * */
-    descripcionNico: '',
-
-    /**
-     * Mercancia
-     * @type {string}
-     */
-    mercancia: '',
-
-    /**
-     * Folio
-     * @type {string}
-     */
-    folio: '',
-
-    /**
-     * Registro
-     * @type {string}
-     */
-    registro: '',
+    selectedEstado: null,
+    setClave: null,
+    setDescripcion: null,
+    setDespecificarClasificacion: null,
+    Fabricante: [],
+    Destinatario: [],
+    Proveedor: [],
+    Facturador: [],
   };
 }
-
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite301', resettable: true })
-export class Tramite301Store extends Store<Solicitud301State> {
-  /**
-   * Crea una instancia de Tramite301Store.
-   * @constructor
-   */
+@StoreConfig({ name: 'estadoState', resettable: true })
+export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
   constructor() {
     super(createInitialState());
   }
 
-  /**
-   * Guarda la línea en el estado.
-   * @param linea
-   */
-  public setLinea(linea: string) {
+  public setSelectedEstado(selectedEstado: catalogoResponse): void {
     this.update((state) => ({
       ...state,
-      linea,
+      selectedEstado,
+    }));
+  }
+
+  public setClave(selectedClave: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      selectedClave,
+    }));
+  }
+
+  public setDescripcion(selectedDescripcion: catalogoResponse): void {
+    this.update((state) => ({
+      ...state,
+      selectedDescripcion,
+    }));
+  }
+
+  public setDespecificarClasificacion(
+    selectedDespecificarClasificacion: catalogoResponse
+  ): void {
+    this.update((state) => ({
+      ...state,
+      selectedDespecificarClasificacion,
+    }));
+  }
+  /**
+   * Establece los datos del fabricante en el estado del store.
+   *
+   * @param fabricante Arreglo de datos del fabricante.
+   */
+  public setFabricante(fabricante: TablaDatos[]) {
+    this.update((state) => ({
+      ...state,
+      Fabricante: fabricante,
     }));
   }
 
   /**
-   * Guarda el tipo de solicitud en el estado.
-   * @param lineaCheckbox
+   * Establece los datos del destinatario en el estado del store.
+   *
+   * @param destinatario Arreglo de datos del destinatario.
    */
-  public setLineaCheckbox(lineaCheckbox: string) {
+  public setDestinatario(destinatario: TablaDatos[]) {
     this.update((state) => ({
       ...state,
-      lineaCheckbox,
+      Destinatario: destinatario,
     }));
   }
 
   /**
-   * Guarda el nombre químico en el estado.
-   * @param nombreQuimico
+   * Establece los datos del proveedor en el estado del store.
+   *
+   * @param proveedor Arreglo de datos del proveedor.
    */
-  public setNombreQuimico(nombreQuimico: string) {
+  public setProveedor(proveedor: TablaDatos[]) {
     this.update((state) => ({
       ...state,
-      nombreQuimico,
+      Proveedor: proveedor,
     }));
   }
 
   /**
-   * Guarda el nombre comercial en el estado.
-   * @param nombreComercial
+   * Establece los datos del facturador en el estado del store.
+   *
+   * @param facturador Arreglo de datos del facturador.
    */
-  public setNombreComercial(nombreComercial: string) {
+  public setFacturador(facturador: TablaDatos[]) {
     this.update((state) => ({
       ...state,
-      nombreComercial,
+      Facturador: facturador,
     }));
-  }
-
-  /**
-   * Guarda el número CAS en el estado.
-   * @param numeroCAS
-   */
-  public setNumeroCAS(numeroCAS: string) {
-    this.update((state) => ({
-      ...state,
-      numeroCAS,
-    }));
-  }
-
-  /**
-   * Guarda el acondicionamiento en el estado.
-   * @param acondicionamiento
-   */
-  public setAcondicionamiento(acondicionamiento: string) {
-    this.update((state) => ({
-      ...state,
-      acondicionamiento,
-    }));
-  }
-
-  /**
-   * Guarda el estado físico en el estado.
-   * @param estadoFisico
-   */
-  public setEstadoFisico(estadoFisico: string) {
-    this.update((state) => ({
-      ...state,
-      estadoFisico,
-    }));
-  }
-
-  /**
-   * Guarda la fracción arancelaria en el estado.
-   * @param fraccionArancelaria
-   */
-  public setFraccionArancelaria(fraccionArancelaria: string) {
-    this.update((state) => ({
-      ...state,
-      fraccionArancelaria,
-    }));
-  }
-
-  /**
-   * Guarda la descripción de la fracción arancelaria en el estado.
-   * @param descripcionFraccion
-   */
-  public setNico(nico: string) {
-    this.update((state) => ({
-      ...state,
-      nico,
-    }));
-  }
-
-  /**
-   * Guarda el nico en el estado.
-   * @param nico
-   */
-  public setMercancia(mercancia: string) {
-    this.update((state) => ({
-      ...state,
-      mercancia,
-    }));
-  }
-
-  /**
-   * Guarda la descripción del nico en el estado.
-   * @param descripcionNico
-   */
-  public setFolio(folio: string) {
-    this.update((state) => ({
-      ...state,
-      folio,
-    }));
-  }
-
-  /**
-   * Guarda el folio en el estado.
-   * @param folio
-   */
-  public setRegistro(registro: string) {
-    this.update((state) => ({
-      ...state,
-      registro,
-    }));
-  }
-
-  /**
-   * Guarda el registro en el estado.
-   * @param registro
-   */
-  public setDescripcionFraccion(descripcionFraccion: string) {
-    this.update((state) => ({
-      ...state,
-      descripcionFraccion,
-    }));
-  }
-
-  /**
-   * Guarda la descripción de la fracción arancelaria en el estado.
-   * @param descripcion
-   */
-  public setDescripcionNico(descripcionNico: string) {
-    this.update((state) => ({
-      ...state,
-      descripcionNico,
-    }));
-  }
-
-  /**
-   * Limpia los datos de la solicitud
-   */
-  public limpiarSolicitud() {
-    this.reset();
   }
 }

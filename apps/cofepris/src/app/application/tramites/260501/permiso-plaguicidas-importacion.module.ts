@@ -9,6 +9,7 @@ import { PermisoPlaguicidasImportacionRoutingModule } from './permiso-plaguicida
 import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { TercerosRelacionadosComponent } from "../../shared/components/terceros-fabricante/terceros-fabricante.component";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
     WizardComponent,
     SolicitanteComponent,
     PagoDeDerechosBancoComponent,
-  ],
+    TercerosRelacionadosComponent
+],
 })
 export class PermisoPlaguicidasImportacionModule {}

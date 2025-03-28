@@ -25,17 +25,18 @@ import {
   MUNICIPIOSELECTDATA,
   PAISSELECTDATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
-} from '../../enum/permiso.enum';
+} from '../../constantes/permiso-plaguicidas-datos.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
-import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260215/nacionalidad-options.json';
-import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
-import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
-import { TablaDatos } from '../../models/permiso-sanitario.model';
+import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
+import { TablaDatos } from '../../models/permiso-plaguicidas-datos.model';
 import { TableComponent } from '@ng-mf/data-access-user';
-import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260215/tipo-persona-options.json';
+import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
+import { PermisoPlaguicidasDatosService } from '../../services/permiso-plaguicidas-datos.service';
+import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
+import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
 
 /**
  * Texto de alerta para los terceros relacionados.
@@ -49,10 +50,10 @@ const TERCEROS_TEXTO_DE_ALERTA =
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
  */
 @Component({
-  selector: 'app-terceros-relacionados',
+  selector: 'app-terceros-fabricante',
   standalone: true,
-  templateUrl: './terceros-relacionados.component.html',
-  styleUrls: ['./terceros-relacionados.component.scss'],
+  templateUrl: './terceros-fabricante.component.html',
+  styleUrls: ['./terceros-fabricante.component.scss'],
   imports: [
     CommonModule,
     TituloComponent,
@@ -245,19 +246,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   tipoPersonaOptions = TipoPersonaRadioOptions;
 
   /**
+   * Opciones para el radio de tipo de persona.
+   * Utiliza los datos predefinidos en `TipoPersonaTresRadioOptions`.
+   *
+   * @description Este arreglo almacena las opciones para el selector de tipo de persona.
+   */
+  tipoPersonaTresOptions = TipoPersonaTresRadioOptions;
+
+  /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
    *
    * @param fb Constructor de formularios para crear los formularios reactivos.
-   * @param sanitario260215Store Store del trámite 260215.
+   * @param tercerosFabricanteStore Store del trámite 260501.
    * @param service Servicio que proporciona datos de terceros.
    */
   constructor(
     private fb: FormBuilder,
-    private sanitario260215Store: Sanitario260215Store,
-    private service: ServiciosPermisoSanitarioService
+    private tercerosFabricanteStore: TercerosFabricanteStore,
+    private service: PermisoPlaguicidasDatosService
   ) {
-    // Inicializa el store del trámite 260215.
+    // Inicializa el store del trámite 260501.
   }
 
   /**
@@ -449,79 +458,123 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     this.agregarDestinatarioFormGroup = this.fb.group({
       /**
+       * Nacionalidad del tercero.
+       */
+      tercerosNacionalidad: new FormControl('', [Validators.required]),
+      /**
        * Tipo de persona (física o moral).
        */
       tipoPersona: new FormControl('', [Validators.required]),
       /**
-       * RFC del destinatario.
+       * RFC del tercero.
+       * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [Validators.required]),
+      rfc: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.rfcValidator,
+      ]),
       /**
-       * CURP del destinatario.
+       * CURP del tercero.
+       * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [Validators.required]),
+      curp: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.curpValidator,
+      ]),
       /**
-       * Denominación o razón social del destinatario.
+       * Control del formulario para el nombre del usuario.
+       * Este campo es obligatorio.
+       */
+      nombre: new FormControl('', [Validators.required]),
+      /**
+       * Control del formulario para el primer apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      primerApellido: new FormControl('', [Validators.required]),
+      /**
+       * Control del formulario para el segundo apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      segundoApellido: new FormControl('', [Validators.required]),
+      /**
+       * Denominación o razón social del tercero.
        */
       denominacionRazonSocial: new FormControl('', [Validators.required]),
       /**
-       * País del destinatario.
+       * País del tercero.
+       * Requiere validación adicional mediante `requiredPaisValidator`.
        */
-      pais: new FormControl('', [Validators.required]),
+      pais: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.requiredPaisValidator,
+      ]),
       /**
-       * Estado o localidad del destinatario.
+       * Estado o localidad del tercero.
        */
       estadoLocalidad: new FormControl('', [Validators.required]),
       /**
-       * Municipio o alcaldía del destinatario.
+       * Municipio o alcaldía del tercero.
        */
       municipioAlcaldia: new FormControl('', [Validators.required]),
       /**
-       * Localidad del destinatario.
+       * Localidad del tercero.
        */
       localidad: new FormControl(''),
       /**
-       * Entidad federativa del destinatario.
+       * Entidad federativa del tercero.
        */
       entidadFederativa: new FormControl('', [Validators.required]),
       /**
-       * Código postal del destinatario.
+       * Código postal del tercero.
        */
       codigoPostaloEquivalente: new FormControl('', [Validators.required]),
       /**
-       * Colonia del destinatario.
+       * Colonia del tercero.
        */
       colonia: new FormControl(''),
       /**
-       * Colonia equivalente del destinatario.
+       * Colonia equivalente del tercero.
        */
       coloniaoEquivalente: new FormControl(''),
       /**
-       * Calle del destinatario.
+       * Calle del tercero.
        */
       calle: new FormControl('', [Validators.required]),
       /**
-       * Número exterior del destinatario.
+       * Número exterior del tercero.
        */
       numeroExterior: new FormControl('', [Validators.required]),
       /**
-       * Número interior del destinatario.
+       * Número interior del tercero.
        */
       numeroInterior: new FormControl(''),
       /**
-       * Lada del destinatario.
+       * Lada del tercero.
        */
       lada: new FormControl(''),
       /**
-       * Teléfono del destinatario.
+       * Teléfono del tercero.
+       * Requiere validación adicional mediante `telefonoValidator`.
        */
       telefono: new FormControl('', [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
-       * Correo electrónico del destinatario.
+       * Correo electrónico del tercero.
        */
       correoElectronico: new FormControl(''),
+      /**
+       * Código del extranjero.
+       */
+      extranjeroCodigo: new FormControl('', [Validators.required]),
+      /**
+       * Estado del extranjero.
+       */
+      extranjeroEstado: new FormControl('', [Validators.required]),
+      /**
+       * Colonia del extranjero.
+       */
+      extranjeroColonia: new FormControl('', [Validators.required]),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
@@ -552,6 +605,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * Cada campo tiene sus propias validaciones.
      */
     this.agregarProveedorFormGroup = this.fb.group({
+
+       /**
+       * Nacionalidad del tercero.
+       */
+       tercerosNacionalidad: new FormControl('', [Validators.required]),
       /**
        * Tipo de persona (física o moral).
        */
@@ -768,6 +826,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   public extranjero = false;
 
+  public noContribuyente = false;
+
   /**
    * Indicador para determinar si se ha seleccionado una persona física.
    * Inicialmente establecido en `false`.
@@ -826,9 +886,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
-    } else {
+      this.noContribuyente = false;
+    } else if (checkBoxName === 'moral') {
       this.fisica = false;
       this.moral = true;
+      this.noContribuyente = false;
+    } else {
+      this.noContribuyente = true;
+      this.fisica = false;
+      this.moral = false;
     }
   }
 
@@ -1036,7 +1102,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Actualiza el estado del store con los nuevos datos del fabricante.
      */
-    this.sanitario260215Store.setFabricante(this.fabricanteRowData);
+    this.tercerosFabricanteStore.setFabricante(this.fabricanteRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1189,7 +1255,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Actualiza el estado del store con los nuevos datos del destinatario.
      */
-    this.sanitario260215Store.setDestinatario(this.destinatarioRowData);
+    this.tercerosFabricanteStore.setDestinatario(this.destinatarioRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1239,7 +1305,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Actualiza el estado del store con los nuevos datos del proveedor.
      */
-    this.sanitario260215Store.setProveedor(this.proveedorRowData);
+    this.tercerosFabricanteStore.setProveedor(this.proveedorRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1289,7 +1355,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     /**
      * Actualiza el estado del store con los nuevos datos del facturador.
      */
-    this.sanitario260215Store.setFacturador(this.facturadorRowData);
+    this.tercerosFabricanteStore.setFacturador(this.facturadorRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
@@ -1362,7 +1428,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cambia el valor del radio button seleccionado.
+   * Cambia el valor del radio button seleccionado. 
    *
    * @param value Valor seleccionado del radio button.
    */
