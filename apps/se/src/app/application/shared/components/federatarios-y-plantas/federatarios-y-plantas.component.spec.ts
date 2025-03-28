@@ -61,10 +61,10 @@ describe('FederatariosYPlantasComponent', () => {
     component.initFederatariosFormGroup();
   });
 
-  it('should run #navigateToAcciones()', async () => {
+  it('should run #irAAcciones()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
-    component.navigateToAcciones({});
+    component.irAAcciones({});
     expect(component.router.navigate).toHaveBeenCalled();
   });
 
