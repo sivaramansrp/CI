@@ -256,6 +256,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Guarda los datos del formulario de selección.
    */
   Guardar(): void {
+    localStorage.clear();
     const nuevoMiembro = this.formChoferes.getRawValue();
     if (!nuevoMiembro || Object.keys(nuevoMiembro).length === 0) {
       this.toastr.error(
@@ -542,7 +543,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.tramite40101Store.setEstado(ESTADO);
   }
 
-  agregarMiembro() {}
+  agregarMiembro() {
+    /**
+     * agregarMiembro
+     */
+  }
 
   ngOnDestroy(): void {
     this.destroyed$.next(true);
