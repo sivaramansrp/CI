@@ -12,7 +12,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {ColumnasTabla,FECHAFINAL, FECHAINICIAL } from '../../models/certificado.model';
+import {ColumnasTabla,FECHA_FINAL, FECHAI_NICIAL } from '../../models/certificado.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject,map, takeUntil } from 'rxjs';
@@ -64,10 +64,10 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
 
   /** Fecha inicial para el formulario. */
-  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaInicialInput: InputFecha = FECHAI_NICIAL;
 
   /** Fecha final para el formulario. */
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /** Estado de la solicitud actual. */
   public solicitudState!: Solicitud110219State;
@@ -219,7 +219,7 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
 
   /** Obtiene los datos de la tabla de solicitudes. */
   public getSolicitudesTabla(): void {
-    this.certificadoService.getSolicitudesTabla().subscribe((data) => {
+    this.certificadoService.getSolicitudesTabla().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       this.certificadoDisponsiblesTablaDatos = data;
     });
   }

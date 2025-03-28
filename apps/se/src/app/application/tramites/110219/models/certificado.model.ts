@@ -29,25 +29,25 @@ export interface ProductoresAsociados {
   razonSocial: string;
 }
 
-export const FECHAINICIAL = {
+export const FECHAI_NICIAL = {
   labelNombre: 'Fecha incial',
   required: false,
   habilitado: true,
 };
 
-export const FECHAFINAL = {
+export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: false,
   habilitado: true,
 };
 
-export const FECHAEXPEDICIÓN = {
+export const FECHA_EXPEDICION = {
   labelNombre: 'Fecha de expedición',
   required: false,
   habilitado: true,
 };
 
-export const FECHAENCIMIENTO = {
+export const FECHA_VENCIMIENTO = {
   labelNombre: 'Fecha de vencimiento',
   required: false,
   habilitado: true,

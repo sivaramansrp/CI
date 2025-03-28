@@ -1,6 +1,6 @@
 import { AlertComponent,ConfiguracionColumna, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHAENCIMIENTO, FECHAEXPEDICIÓN, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
+import { FECHA_VENCIMIENTO, FECHA_EXPEDICION, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
@@ -47,10 +47,10 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   TEXTO_DE_ALERTA_PRODUCTORES = TEXTO_DE_ALERTA_PRODUCTORES;
 
   /** Fecha inicial para el formulario. */
-  fechaInicialInput: InputFecha = FECHAEXPEDICIÓN;
+  fechaInicialInput: InputFecha = FECHA_EXPEDICION;
 
   /** Fecha final para el formulario. */
-  fechaFinalInput: InputFecha = FECHAENCIMIENTO;
+  fechaFinalInput: InputFecha = FECHA_VENCIMIENTO;
 
   /** Estado de la solicitud actual. */
   public solicitudState!: Solicitud110219State;
