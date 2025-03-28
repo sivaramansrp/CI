@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy,OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -25,7 +25,7 @@ import { Tramite260214Store } from '../../estados/tramite260214Store.store';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.css',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit {
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -138,5 +138,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+   /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
