@@ -58,6 +58,11 @@ export class RepresentanteFiscalComponent implements OnInit {
     private formServices: FormulariosService
   ) { }
 
+  /**
+   * @inheritdoc
+   * @description Inicializa el componente creando el formulario de representante legal.
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.crearRepresentanteLegalForm();
   }

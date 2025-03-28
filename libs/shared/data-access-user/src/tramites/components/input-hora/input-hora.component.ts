@@ -54,6 +54,12 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
     });
   }
 
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza las validaciones del campo 'hora'.
+   * 
+   * @param changes - Cambios detectados en las propiedades de entrada.
+   * @returns void
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['required']) {
       if (this.required) {
@@ -70,6 +76,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
     }
   }
 
+  // ✅ Implement `ControlValueAccessor`
   handleChange(event: Event): void {
     const VALUE = (event.target as HTMLSelectElement).value;
     this.onChange(VALUE);

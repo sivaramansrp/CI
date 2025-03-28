@@ -61,6 +61,12 @@ export class SolicitanteComponent implements OnInit {
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
+  /**
+   * @inheritdoc
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama a la función `getDatosGenerales` para obtener datos iniciales.
+   * @returns {void} No retorna ningún valor.
+   */
   ngOnInit(): void {
     this.getDatosGenerales();
   }

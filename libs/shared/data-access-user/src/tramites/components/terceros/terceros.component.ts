@@ -4,7 +4,6 @@ import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
 import { TituloComponent } from '../titulo/titulo.component';
-
 @Component({
   selector: 'terceros',
   templateUrl: './terceros.component.html',
@@ -25,12 +24,17 @@ export class TercerosComponent {
 
   personas: PersonaTerceros[] = [];
 
-
   constructor(
     private fb: FormBuilder,
   ) {}
 
-
+  /**
+   * Agrega una persona al arreglo `personas` si el formulario es válido y hay menos de 5 personas.
+   * Resetea el formulario después de agregar.
+   * Si no se cumplen las condiciones, se dispara un modal de confirmación.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   agregaPersona(): void {
     if (this.personas.length < 5 && this.FormPersona.valid) {
       const DATOS = this.FormPersona.value;
@@ -41,6 +45,11 @@ export class TercerosComponent {
     }
   }
 
+  /**
+   * Elimina una persona de la lista en el índice especificado.
+   * @param i - Índice de la persona a eliminar.
+   * @returns void
+   */
   eliminar(i: number): void {
     this.personas.splice(i, 1);
   }

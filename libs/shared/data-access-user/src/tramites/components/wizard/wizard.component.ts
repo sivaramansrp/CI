@@ -30,8 +30,13 @@ export class WizardComponent implements OnChanges {
 
   wizardService = inject(WizardService);
 
-
-
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza las validaciones
+   * o el estado del control del formulario según corresponda.
+   *
+   * @param changes - Objeto que contiene los cambios en las propiedades de entrada.
+   * @returns void
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes['listaPasos'].currentValue !== undefined &&
@@ -53,8 +58,13 @@ export class WizardComponent implements OnChanges {
     }
   }
 
-  siguiente(activo: boolean = true) : void {
-
+  /**
+   * Avanza al siguiente índice en la lista y actualiza su estado.
+   * 
+   * @param activo - Indica si el elemento actual debe estar activo (por defecto `true`).
+   * @returns void
+   */
+  siguiente(activo: boolean = true): void {
     this.indiceActual = this.indiceActual === this.maximo ? this.indiceActual : this.indiceActual + 1;
     this.lista[this.indiceActual].activo = activo;
 
@@ -63,6 +73,12 @@ export class WizardComponent implements OnChanges {
     }
   }
 
+  /**
+   * Retrocede al paso anterior en la lista de trámites.
+   * Marca el paso actual como inactivo y no completado.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   atras(): void {
     this.lista[this.indiceActual].activo = false;
     this.lista[this.indiceActual].completado = false;
