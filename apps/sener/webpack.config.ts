@@ -1,4 +1,4 @@
 const { withModuleFederation } = require('@nx/angular/module-federation');
-const config = require('./module-federation.config');
 
-module.exports = withModuleFederation(config);
+// Importar directamente el archivo de configuración
+module.exports = withModuleFederation(require('./module-federation.config'));
