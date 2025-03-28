@@ -95,13 +95,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   regionesTabla: ConfiguracionColumna<RegionesInfo>[] = REGIONES_SERVICIO;
 
-  /**
-   * Datos de las regiones cargados en la tabla.
-   * Contiene la información de las regiones asociadas al trámite.
-   * @type {RegionesInfo[]}
+  /**  
+   * Datos procesados para la tabla de regiones.  
+   * Contiene la información de las regiones asociadas al trámite,  
+   * listos para su visualización en la interfaz de usuario.  
+   * @type {RegionesInfo[]}  
    */
   regionesTableDatos: RegionesInfo[] = [];
+
+  /**  
+   * Datos obtenidos desde la API relacionados con las regiones de compra.  
+   * Se almacenan antes de ser procesados para su presentación en la tabla.  
+   * @type {RegionesInfo[]}  
+   */
   regionesCompraApiDatos: RegionesInfo[] = [];
+
 
   /**
    * Configuración de las columnas de la tabla para la lista de beneficios.
@@ -110,12 +118,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   beneficiosTabla: ConfiguracionColumna<BeneficiosInfo>[] = BENEFICIOS_SERVICIO;
 
-  /**
-   * Datos de los beneficios cargados en la tabla.
-   * Contiene la información de los beneficios asociados al trámite.
-   * @type {BeneficiosInfo[]}
+  /**  
+   * Datos procesados para la tabla de beneficios.  
+   * Contiene la información de los beneficios asociados al trámite,  
+   * listos para su visualización en la interfaz de usuario.  
+   * @type {BeneficiosInfo[]}  
    */
   beneficiosTableDatos: BeneficiosInfo[] = [];
+
+  /**  
+   * Datos obtenidos desde la API relacionados con los beneficios.  
+   * Se almacenan antes de ser procesados para su presentación en la tabla.  
+   * @type {BeneficiosInfo[]}  
+   */
   beneficiosApiDatos: BeneficiosInfo[] = [];
 
   /**
@@ -125,13 +140,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   bodegasTabla: ConfiguracionColumna<BodegasInfo>[] = BODEGAS_SERVICIO;
 
-  /**
-   * Datos de las bodegas cargados en la tabla.
-   * Contiene la información de las bodegas asociadas al trámite.
-   * @type {BodegasInfo[]}
+  /** 
+   * Datos procesados para la tabla de bodegas.  
+   * Se utilizan para mostrar la información en la interfaz de usuario.  
    */
   bodegasTableDatos: BodegasInfo[] = [];
+
+  /** 
+   * Datos obtenidos desde la API relacionados con las bodegas.  
+   * Se almacenan antes de ser procesados para su visualización en la tabla.  
+   */
   bodegasApiDatos: BodegasInfo[] = [];
+
 
   /**
    * Configuración de las columnas de la tabla para la lista de café de exportación.
@@ -140,26 +160,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   cafeExporacionTabla: ConfiguracionColumna<CafeExporacionInfo>[] = CAFE_EXPORTADORES;
 
-  /**
-   * Datos del café de exportación cargados en la tabla.
-   * Contiene la información del café de exportación asociado al trámite.
-   * @type {CafeExporacionInfo[]}
+  /** 
+   * Datos procesados para la tabla de exportación de café.  
+   * Se utiliza para mostrar la información en la interfaz de usuario.  
    */
   cafeExporacionTableDatos: CafeExporacionInfo[] = [];
+
+  /** 
+   * Datos obtenidos desde la API relacionados con la exportación de café.  
+   * Se almacenan antes de ser procesados para su visualización en la tabla.  
+   */
   cafeExportacionApiDatos: CafeExporacionInfo[] = [];
+
 
   /**
    * Suscripciones activas en el componente.
    * @type {Subscription[]}
    */
   private subscriptions: Subscription[] = [];
-
-  /**
- * Subject para manejar la desuscripción de observables.
- * Utilizado para evitar fugas de memoria.
- * @type {Subject<void>}
- */
-  private unsubscribe$ = new Subject<void>();
 
   /**
    * Estado de la sección actual.
@@ -344,7 +362,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Método para limpiar las suscripciones al destruir el componente.
    */
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

@@ -3,7 +3,7 @@
 /**
  * @module TramiteStore
  * @description
- * Este servicio administra el estado de `TramiteState` utilizando Akita.
+ * Administra el estado del proceso de aplicación de exportadores de café utilizando Akita.
  */
 import { Store, StoreConfig } from '@datorama/akita';
 import { DatosSolicitudFormaInt, BeneficiosFormaInt, BodegasFormaInt, CafExportFormaInt } from '../modelos/datos-de-interfaz.model';
@@ -16,10 +16,34 @@ import { Injectable } from '@angular/core';
  * Representa el estado de la modalidad de cambio.
  */
 export interface TramiteState {
+    /**
+     * Estado de la solicitud.
+     * @type {DatosSolicitudFormaInt}
+     */
     SolicitudState: DatosSolicitudFormaInt;
+
+    /**
+     * Estado del formulario de regiones.
+     * @type {RegionFormaInt}
+     */
     RegionFormatState: RegionFormaInt;
+
+    /**
+     * Estado del formulario de beneficios.
+     * @type {BeneficiosFormaInt}
+     */
     BeneficiosFormaState: BeneficiosFormaInt;
+
+    /**
+     * Estado del formulario de bodegas.
+     * @type {BodegasFormaInt}
+     */
     BodegasFormaState: BodegasFormaInt;
+
+    /**
+     * Estado del formulario de café de exportadores.
+     * @type {CafExportFormaInt}
+     */
     CafeExportFormState: CafExportFormaInt;
 }
 
@@ -78,11 +102,15 @@ export function createInitialState(): TramiteState {
 /**
  * @class TramiteStore
  * @description
- * Administra el estado de la modalidad de cambio utilizando Akita.
+ * Administra el estado del proceso de aplicación de exportadores de café utilizando Akita.
  */
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'cambio-modalidad' })
+@StoreConfig({ name: 'cafe-exportadores' })
 export class TramiteStore extends Store<TramiteState> {
+    /**
+     * Constructor de la clase TramiteStore.
+     * Inicializa el estado con valores predeterminados.
+     */
     constructor() {
         super(createInitialState());
     }
@@ -91,7 +119,7 @@ export class TramiteStore extends Store<TramiteState> {
      * @method setSolicitudTramite
      * @description
      * Actualiza el estado de `SolicitudState` con nuevos valores.
-     * @param {DatosSolicitudFormaInt} SolicitudState - Datos del formulario de cambio de modalidad.
+     * @param {DatosSolicitudFormaInt} SolicitudState - Datos del formulario de solicitud.
      */
     public setSolicitudTramite(SolicitudState: DatosSolicitudFormaInt): void {
         this.update((state) => ({
@@ -101,11 +129,11 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
- * @method RegionFormatState
- * @description
- * Actualiza el estado de `RegionFormaInt` con nuevos valores.
- * @param {RegionFormaInt} RegionFormatState - Datos del formulario de cambio de modalidad.
- */
+     * @method setRegionTramite
+     * @description
+     * Actualiza el estado de `RegionFormatState` con nuevos valores.
+     * @param {RegionFormaInt} RegionFormatState - Datos del formulario de regiones.
+     */
     public setRegionTramite(RegionFormatState: RegionFormaInt): void {
         this.update((state) => ({
             ...state,
@@ -114,11 +142,11 @@ export class TramiteStore extends Store<TramiteState> {
     }
 
     /**
-    * @method BeneficiosFormaState
-    * @description
-    * Actualiza el estado de `BeneficiosFormaInt` con nuevos valores.
-    * @param {BeneficiosFormaInt} BeneficiosFormaState - Datos del formulario de cambio de modalidad.
-    */
+     * @method setBeneficiosTramite
+     * @description
+     * Actualiza el estado de `BeneficiosFormaState` con nuevos valores.
+     * @param {BeneficiosFormaInt} BeneficiosFormaState - Datos del formulario de beneficios.
+     */
     public setBeneficiosTramite(BeneficiosFormaState: BeneficiosFormaInt): void {
         this.update((state) => ({
             ...state,
@@ -129,8 +157,8 @@ export class TramiteStore extends Store<TramiteState> {
     /**
      * @method setBodegasTramite
      * @description
-     * Actualiza el estado de `BodegaFormaInt` con nuevos valores.
-     * @param {BodegaFormaInt} BodegasFormaState - Datos del formulario de cambio de modalidad.
+     * Actualiza el estado de `BodegasFormaState` con nuevos valores.
+     * @param {BodegasFormaInt} BodegasFormaState - Datos del formulario de bodegas.
      */
     public setBodegasTramite(BodegasFormaState: BodegasFormaInt): void {
         this.update((state) => ({
@@ -139,12 +167,11 @@ export class TramiteStore extends Store<TramiteState> {
         }));
     }
 
-
     /**
      * @method setCafExportTramite
      * @description
-     * Actualiza el estado de `CafExportFormaInt` con nuevos valores.
-     * @param {CafExportFormaInt} CafeExportFormState - Datos del formulario de cambio de modalidad.
+     * Actualiza el estado de `CafeExportFormState` con nuevos valores.
+     * @param {CafExportFormaInt} CafeExportFormState - Datos del formulario de café de exportadores.
      */
     public setCafExportTramite(CafeExportFormState: CafExportFormaInt): void {
         this.update((state) => ({
