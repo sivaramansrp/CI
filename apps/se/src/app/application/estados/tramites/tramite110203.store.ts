@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 90201
@@ -64,7 +65,7 @@ export function createInitialState(): Solicitud110203State {
      * Valor predeterminado seleccionado en el control de radio.
      * Representa la opción "Por número de certificado".
      */
-     valorSeleccionado: 'Por número de certificado',
+     valorSeleccionado: radioOpciones.radioOptions[0].label,
 
      /**
       * Valor inicial vacío para el número de certificado.
