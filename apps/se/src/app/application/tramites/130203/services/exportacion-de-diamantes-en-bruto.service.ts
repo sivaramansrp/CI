@@ -71,7 +71,9 @@ export class ExportacionDeDiamantesEnBrutoService {
     return this.http.get<Catalogo[]>('assets/json/130203/pais-emisor-del.json');
   }
 
-  getNombresIngles(): Observable<{ nombre: string; codigo: string }[]> {
-    return this.http.get<{ nombre: string; codigo: string }[]>('assets/json/130203/nomber-en-ingles-del.json');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getNombresIngles(): Observable<any[]> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return this.http.get<any[]>('assets/json/130203/nomber-en-ingles-del.json');
   }
 }

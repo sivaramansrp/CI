@@ -50,25 +50,26 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   public formularioEmpresa!: FormGroup;
 
-/**
+  /**
    * @description
    * Estado actual del trámite.
    */
   public solicitudState!: Tramite130203State;
 
- /**
+  /**
    * @description
    * Lista de países emisores.
    */
   public paisesEmisores: Catalogo[] = [];
 
- /**
+  /**
    * @description
    * Lista de nombres en inglés.
    */
-  private nombresIngles: { idDelPais: number; name: string }[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private nombresIngles: any[] = [];
 
-    /**
+  /**
    * @description
    * Formulario para los datos del exportador.
    */
@@ -80,32 +81,32 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   datosDelImportador!: FormGroup;
 
-   /**
+  /**
    * @description
    * Formulario para los datos de la remesa.
    */
   datosDeLaRemesa!: FormGroup;
 
-    /**
+  /**
    * @description
    * Formulario para los datos de los diamantes.
    */
   datosDeLosDiamantes!: FormGroup;
 
-    /**
+  /**
    * @description
    * Observable para manejar la destrucción del componente.
    */
   private destroyed$ = new Subject<void>();
 
- /**
+  /**
    * @description
    * Observable que proporciona el nombre del exportador desde el estado del trámite.
    */
   nombreExportador$: Observable<string | null> =
     this.tramite130203Query.nombreExportador$;
 
- /**
+  /**
    * @description
    * Observable que proporciona la dirección del exportador desde el estado del trámite.
    */
@@ -152,7 +153,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   cantidadEnQuilates$: Observable<string | null> =
     this.tramite130203Query.cantidadEnQuilates$;
 
-   /**
+  /**
    * @description
    * Observable que proporciona el valor de los diamantes desde el estado del trámite.
    */
@@ -311,7 +312,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @description
    * Inicializa el formulario principal.
    */
-  private inicializarFormulario(): void {
+  public inicializarFormulario(): void {
     this.formularioEmpresa = this.fb.group({
       especifique: [
         { value: this.solicitudState?.especifique || '', disabled: true },
@@ -334,6 +335,16 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       .get('tipoEmpresa')
       ?.valueChanges.subscribe((value) => {
         this.updateNombreIngles(value);
+      });
+
+    this.formularioEmpresa
+      .get('lineaCheckbox')
+      ?.valueChanges.subscribe((value) => {
+        this.setValoresStore(
+          this.formularioEmpresa,
+          'lineaCheckbox',
+          'setLineaCheckbox'
+        );
       });
   }
 
