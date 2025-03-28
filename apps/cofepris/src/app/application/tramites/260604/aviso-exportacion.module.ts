@@ -6,8 +6,9 @@ import { AvisoExportacionRoutingModule } from './aviso-exportacion-routing.modul
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
 import { DatosComponent } from './pages/datos/datos.component';
+
 import {
-  AlertComponent,
+AlertComponent,
   BtnContinuarComponent,
   InicioSesionService,
   ServiciosPantallasService,
@@ -48,7 +49,7 @@ import { DatosService } from '../../shared/services/datos.service';
   AvisoExportacionRoutingModule,
   AlertComponent,
   BtnContinuarComponent,
-  // TituloComponent,
+  TituloComponent,
   WizardComponent,
   TercerosRelacionadoComponent,
  

@@ -67,12 +67,12 @@
                         <h6>Datos Personales</h6>
                         <div class="col-md-4">
                           <label class="form-label" for="nombre">Nombre(s)*</label>
-                          <input type="text" class="form-control" id="nombre" formControlName="nombre"  [ngClass]="isValid(facturatorForm, 'nombre') ? 'required' : ''"
+                          <input type="text" class="form-control" id="nombre" formControlName="nombre" 
                           maxlength="200" size="29"  (change)="setValoresStore(facturatorForm,'nombre','setnombre')">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label" for="apellidoPrimer">Primer apellido*:</label>
-                          <input type="text" class="form-control" id="apellidoPrimer" formControlName="apellidoPrimer" [ngClass]="isValid(facturatorForm, 'apellidoPrimer') ? 'required' : ''"
+                          <input type="text" class="form-control" id="apellidoPrimer" formControlName="apellidoPrimer"
                           (change)="setValoresStore(facturatorForm,'apellidoPrimer','setapellidoPrimer')" >
                         </div>
                         <div class="col-md-4">
@@ -88,11 +88,11 @@
                       <div class="row">
                         <div class="col-md-8">
                           <label class="form-label" for="denominacionRazonSocial">Denominación/razón social*:</label>
-                          <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" [ngClass]="isValid(facturatorForm, 'denominacionRazonSocial') ? 'required' : ''"
+                          <input type="text" class="form-control" id="denominacionRazonSocial" formControlName="denominacionRazonSocial" 
                           size="75" maxlength="254" (change)="setValoresStore(facturatorForm,'denominacionRazonSocial','setdenominacionRazonSocial')">
                          </div>
                       </div>
-</div>
+                   </div>
                      <ng-titulo titulo="Domicilio" />
                   <div class="row d-flex domicilio-form-container">
                       <div class="col-md-4">
@@ -118,13 +118,6 @@
                       </div>
                     </div>
                   <div class="row">
-                      <div class="col-md-4 ">
-                        <label class="form-label" for="rfc">Colonia o equivalente</label>
-                        <input type="text" class="form-control" id="coloniaEquiv" formControlName="coloniaEquiv"  [ngClass]="isValid(facturatorForm, 'coloniaEquiv') ? 'required' : ''"
-                        (change)="setValoresStore(facturatorForm,'coloniaEquiv','setcoloniaEquiv')">
-                        </div>
-                      </div>
-                    <div class="row">
                       <div class="col-md-8">
                         <label class="form-label" for="calle">Calle*:</label>
                         <input type="text" class="form-control" id="calle" formControlName="calle" maxlength="300"

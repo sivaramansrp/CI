@@ -12,12 +12,12 @@ import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/2606
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ExportacionService } from '../../services/exportacion.service';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-import { Tramites260604Store, solicitud260604State } from '../../../shared/estados/tramites260604.store';
+import { Tramites260604Store, solicitud260604State } from '../../../shared/estados/stores/tramites260604.store';
 
-import { Tramites260604Query } from '../../../shared/estados/tramites260604.query'
+import { Tramites260604Query } from '../../../shared/estados/queries/tramites260604.query'
 
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 
@@ -138,7 +138,9 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
     private service: ExportacionService,
     private tramites260604Store: Tramites260604Store,
     private tramites260604Query: Tramites260604Query
-  ) {}
+  ) {
+    //constructor
+  }
 
   /**
    * property closeModal
@@ -217,7 +219,6 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
       selectPais: [this.solicitudState?.denominacionRazonSocial || '', Validators.required],
       estadoLocalidad: [this.solicitudState?.estadoLocalidad || '', Validators.required],
       codPostal1: [this.solicitudState?.codPostal1 || ''],
-      coloniaEquiv: [this.solicitudState?.coloniaEquiv || ''],
       calle: [this.solicitudState?.calle || '', [Validators.maxLength(300)]],
       numExterior: [this.solicitudState?.numExterior || '', [Validators.maxLength(55)]],
       numInterior: [this.solicitudState?.numInterior || '', [Validators.maxLength(55)]],
@@ -227,18 +228,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * method isValid
-   * description Verifica si un campo del formulario es válido.
-   * param form Formulario reactivo.
-   * param field Nombre del campo a verificar.
-   * returns true si el campo es inválido y ha sido modificado o tocado.
-   */
-  isValid(form: FormGroup, field: string): boolean {
-    return form.controls[field].invalid && (form.controls[field].dirty || form.controls[field].touched);
-  }
-
-  /**
+   /**
    * method setValoresStore
    * description Establece valores en el almacén de trámites.
    * param form Formulario reactivo.

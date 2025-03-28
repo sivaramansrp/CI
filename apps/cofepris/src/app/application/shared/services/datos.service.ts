@@ -1,10 +1,14 @@
-/* eslint-disable sort-imports */
+
 import { Injectable } from '@angular/core';
+
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ScianData } from '../models/datos-modificacion.model';
+
 import { PreOperativo } from '../models/datos-modificacion.model';
+
 import { DatosProducto } from '../models/datos-modificacion.model';
 
 @Injectable({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PermisoModel } from '../../shared/models/aviso-exportacion.model'
 
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -9,7 +9,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ExportacionService {
 
-  constructor( private http: HttpClient) { }
+  
+  constructor( private http: HttpClient) {
+    //constructor
+  }
 
   getLocalidaddata(): Observable<unknown> {
     return this.http.get('assets/json/260604/exportacion.json').pipe(
