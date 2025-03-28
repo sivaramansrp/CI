@@ -241,3 +241,31 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
 ];
 
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216]
+
+
+export const REGIMEN_DATOS = [
+  {
+    id: 101,
+    descripcion: "Definitivos",  
+  },
+  {
+    id: 101,
+    descripcion: "Depósito Fiscal",  
+  },
+  {
+    id: 102,
+    descripcion: "Temporales",  
+  },
+ 
+]
+
+export const ADUNAS_DE_ENTRADAS_DATOS = [
+  {
+    id: 101,
+    descripcion: "ALTAMIRA",  
+  },
+  {
+    id: 101,
+    descripcion: "CD. JUAREZ",  
+  },
+]
