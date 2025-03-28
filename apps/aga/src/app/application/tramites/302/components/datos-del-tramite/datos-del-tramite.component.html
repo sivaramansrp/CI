@@ -1,0 +1,65 @@
+<div class="container">
+    <!---FORM 1--->
+    <formularios-de-certi-registro [formargrupo]="form" [formularioDatos]="mercancia" [menuDesplegableDatos]="listaDeOficinasDeAduanas" (emitirValorCambiado)="setValoresStore($event)"></formularios-de-certi-registro>
+  
+    <div class="row">
+        <ng-titulo titulo="Mercancías" />
+        <app-tabla-dinamica  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionTabla" [datos]="detallesDelProducto"></app-tabla-dinamica>
+    </div>
+  
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6"> 
+            <div class="btn-group d-flex align-items-rigth">
+            <button type="button" class="btn btn-default ms-2"  >Modificar</button>
+            <button type="button" class="btn btn-default ms-2" >Eliminar</button>
+            <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregarProductos" (click)="abrirModal()">
+                Agregar
+            </button>
+            
+            </div>
+        </div>
+    </div>
+  <!---FORM 2--->
+  <formularios-de-certi-registro [formularioTitulo]="'Datos del donante'" [formargrupo]="formDatosDelDonante" [menuDesplegableDatos]="[]" [formularioDatos]="datosDelDonante" (emitirValorCambiado)="setValoresStore($event)"></formularios-de-certi-registro>
+<!---FORM 3--->
+  <formularios-de-certi-registro [formularioTitulo]="'Domicilio fiscal'" [formargrupo]="formDomicilioFiscal" [menuDesplegableDatos]="[]" [formularioDatos]="domicilioFiscal" (emitirValorCambiado)="setValoresStore($event)"></formularios-de-certi-registro>
+  
+  </div>
+  
+  <div class="modal fade" id="modalAgregarProductos" tabindex="-1" aria-labelledby="modalAgregarProductosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div style="padding: 1rem;">
+          <ng-titulo titulo="Datos de la mercancía" />
+        </div>
+        <div class="modal-body">
+          <ng-alert [CONTENIDO]="DATOS_ALERT"></ng-alert>
+          <!---FORM 4--->
+          <formularios-de-certi-registro [formargrupo]="formAgregarProductos" [menuDesplegableDatos]="[]" [formularioDatos]="productos" (emitirValorCambiado)="setValoresStore($event)"></formularios-de-certi-registro>
+        </div>
+        <div class="modal-footer custom-footer">
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="agregarProductos()">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+          <p>La mercancía fue agregada correctamente</p>
+          <div class="modal-footer custom-footer">
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Acceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  
