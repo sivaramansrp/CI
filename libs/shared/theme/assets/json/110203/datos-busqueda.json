@@ -26,5 +26,15 @@
             "id": 4,
             "descripcion": "SUIZA (CONFEDERACION)"
         }
+    ],
+    "radioOptions": [
+        {
+            "label": "Por número de certificado",
+            "value": "Por número de certificado"
+        },
+        {
+            "label": "Por Tratado/Acuerdo País/Bloque",
+            "value": "Por Tratado/Acuerdo País/Bloque"
+        }
     ]
 }

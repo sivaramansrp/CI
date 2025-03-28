@@ -15,7 +15,7 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
-
+import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 
 
 
@@ -98,16 +98,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    *
    * @property {RadioOpcion[]} radioOptions - Opciones de radio disponibles.
    */
-  radioOptions: RadioOpcion[] = [
-    {
-      "label": "Por número de certificado",
-      "value": "Por número de certificado"
-    },
-    {
-      "label": "Por Tratado/Acuerdo País/Bloque",
-      "value": "Por Tratado/Acuerdo País/Bloque"
-    }
-  ];
+  radioOptions: RadioOpcion[] = radioOpciones?.radioOptions;
 
   /**
    * Encabezados de la tabla para el establecimiento.
