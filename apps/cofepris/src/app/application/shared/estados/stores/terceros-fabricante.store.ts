@@ -13,17 +13,13 @@ export interface TercerosFabricanteState {
    */
   Fabricante: TablaDatos[];
   /**
-   * Datos del destinatario.
+   * Datos del formulador.
    */
-  Destinatario: TablaDatos[];
+  Formulador: TablaDatos[];
   /**
    * Datos del proveedor.
    */
   Proveedor: TablaDatos[];
-  /**
-   * Datos del facturador.
-   */
-  Facturador: TablaDatos[];
 }
 
 export function createInitialState(): TercerosFabricanteState {
@@ -33,9 +29,8 @@ export function createInitialState(): TercerosFabricanteState {
     setDescripcion: null,
     setDespecificarClasificacion: null,
     Fabricante: [],
-    Destinatario: [],
+    Formulador: [],
     Proveedor: [],
-    Facturador: [],
   };
 }
 @Injectable({
@@ -89,14 +84,14 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
   }
 
   /**
-   * Establece los datos del destinatario en el estado del store.
+   * Establece los datos del formulador en el estado del store.
    *
-   * @param destinatario Arreglo de datos del destinatario.
+   * @param formulador Arreglo de datos del formulador.
    */
-  public setDestinatario(destinatario: TablaDatos[]) {
+  public setFormulador(formulador: TablaDatos[]) {
     this.update((state) => ({
       ...state,
-      Destinatario: destinatario,
+      Formulador: formulador,
     }));
   }
 
@@ -109,18 +104,6 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,
-    }));
-  }
-
-  /**
-   * Establece los datos del facturador en el estado del store.
-   *
-   * @param facturador Arreglo de datos del facturador.
-   */
-  public setFacturador(facturador: TablaDatos[]) {
-    this.update((state) => ({
-      ...state,
-      Facturador: facturador,
     }));
   }
 }

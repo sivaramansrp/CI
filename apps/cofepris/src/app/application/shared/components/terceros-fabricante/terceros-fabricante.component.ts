@@ -31,11 +31,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
+import { PermisoPlaguicidasDatosService } from '../../services/permiso-plaguicidas-datos.service';
 import { TablaDatos } from '../../models/permiso-plaguicidas-datos.model';
 import { TableComponent } from '@ng-mf/data-access-user';
-import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
-import { PermisoPlaguicidasDatosService } from '../../services/permiso-plaguicidas-datos.service';
 import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
+import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
 
 /**
@@ -89,12 +89,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   showFabricante = false;
 
   /**
-   * Indicador de visibilidad para la sección del formulario de destinatario.
+   * Indicador de visibilidad para la sección del formulario de formulador.
    * Inicialmente no visible (`false`).
    *
-   * @description Controla si se muestra o no el formulario para agregar un destinatario.
+   * @description Controla si se muestra o no el formulario para agregar un formulador.
    */
-  showDestinatario = false;
+  showFormulador = false;
 
   /**
    * Indicador de visibilidad para la sección del formulario de proveedor.
@@ -105,14 +105,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   showProveedor = false;
 
   /**
-   * Indicador de visibilidad para la sección del formulario de facturador.
-   * Inicialmente no visible (`false`).
-   *
-   * @description Controla si se muestra o no el formulario para agregar un facturador.
-   */
-  showFacturador = false;
-
-  /**
    * Indicador de visibilidad para los botones del formulario de fabricante.
    * Inicialmente no visible (`false`).
    *
@@ -121,12 +113,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   showFabricanteButtons = false;
 
   /**
-   * Indicador de visibilidad para los botones del formulario de destinatario.
+   * Indicador de visibilidad para los botones del formulario de formulador.
    * Inicialmente no visible (`false`).
    *
-   * @description Controla si se muestran o no los botones para el formulario de destinatario.
+   * @description Controla si se muestran o no los botones para el formulario de formulador.
    */
-  showDestinatarioButtons = false;
+  showFormuladorButtons = false;
 
   /**
    * Indicador de visibilidad para los botones del formulario de proveedor.
@@ -135,14 +127,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Controla si se muestran o no los botones para el formulario de proveedor.
    */
   showProveedorButtons = false;
-
-  /**
-   * Indicador de visibilidad para los botones del formulario de facturador.
-   * Inicialmente no visible (`false`).
-   *
-   * @description Controla si se muestran o no los botones para el formulario de facturador.
-   */
-  showFacturadorButtons = false;
 
   /**
    * Selección del tipo de persona.
@@ -206,12 +190,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   agregarFabricanteFormGroup!: FormGroup;
 
   /**
-   * Formulario reactivo para agregar un destinatario.
-   * Este formulario contiene los campos necesarios para ingresar los datos de un destinatario.
+   * Formulario reactivo para agregar un formulador.
+   * Este formulario contiene los campos necesarios para ingresar los datos de un formulador.
    *
-   * @description Se utiliza para validar y procesar los datos del destinatario.
+   * @description Se utiliza para validar y procesar los datos del formulador.
    */
-  agregarDestinatarioFormGroup!: FormGroup;
+  agregarFormuladorFormGroup!: FormGroup;
 
   /**
    * Formulario reactivo para agregar un proveedor.
@@ -220,14 +204,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Se utiliza para validar y procesar los datos del proveedor.
    */
   agregarProveedorFormGroup!: FormGroup;
-
-  /**
-   * Formulario reactivo para agregar un facturador.
-   * Este formulario contiene los campos necesarios para ingresar los datos de un facturador.
-   *
-   * @description Se utiliza para validar y procesar los datos del facturador.
-   */
-  agregarFacturadorFormGroup!: FormGroup;
 
   /**
    * Opciones para el radio de nacionalidad.
@@ -294,9 +270,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * Inicializa los formularios reactivos para agregar terceros.
      */
     this.initializeAgregarFabricanteFormGroup();
-    this.initializeAgregarDestinatarioFormGroup();
+    this.initializeAgregarFormuladorFormGroup();
     this.initializeAgregarProveedorFormGroup();
-    this.initializeAgregarFacturadorFormGroup();
   }
 
   /**
@@ -448,15 +423,15 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario para agregar un destinatario.
+   * Inicializa el formulario para agregar un formulador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup() {
+  initializeAgregarFormuladorFormGroup() {
     /**
-     * Crea el formulario reactivos para agregar un destinatario.
+     * Crea el formulario reactivos para agregar un formulador.
      * Cada campo tiene sus propias validaciones.
      */
-    this.agregarDestinatarioFormGroup = this.fb.group({
+    this.agregarFormuladorFormGroup = this.fb.group({
       /**
        * Nacionalidad del tercero.
        */
@@ -578,18 +553,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarDestinatarioFormGroup.get('rfc')?.disable();
-    this.agregarDestinatarioFormGroup.get('curp')?.disable();
-    this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
+    this.agregarFormuladorFormGroup.get('rfc')?.disable();
+    this.agregarFormuladorFormGroup.get('curp')?.disable();
+    this.agregarFormuladorFormGroup.get('denominacionRazonSocial')?.disable();
 
     // Habilita campos al cambiar el tipo de persona
-    this.agregarDestinatarioFormGroup
+    this.agregarFormuladorFormGroup
       .get('tipoPersona')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
       .subscribe(() => {
-        this.agregarDestinatarioFormGroup.get('rfc')?.enable();
-        this.agregarDestinatarioFormGroup.get('curp')?.enable();
-        this.agregarDestinatarioFormGroup
+        this.agregarFormuladorFormGroup.get('rfc')?.enable();
+        this.agregarFormuladorFormGroup.get('curp')?.enable();
+        this.agregarFormuladorFormGroup
           .get('denominacionRazonSocial')
           ?.enable();
       });
@@ -605,125 +580,51 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * Cada campo tiene sus propias validaciones.
      */
     this.agregarProveedorFormGroup = this.fb.group({
-
-       /**
+      /**
        * Nacionalidad del tercero.
        */
-       tercerosNacionalidad: new FormControl('', [Validators.required]),
+      tercerosNacionalidad: new FormControl('', [Validators.required]),
       /**
        * Tipo de persona (física o moral).
        */
       tipoPersona: new FormControl('', [Validators.required]),
       /**
-       * Nombre del proveedor.
+       * RFC del tercero.
+       * Requiere validación adicional mediante `rfcValidator`.
        */
-      nombre: new FormControl('', [Validators.required]),
-      /**
-       * Primer apellido del proveedor.
-       */
-      primerApellido: new FormControl('', [Validators.required]),
-      /**
-       * Denominación o razón social del proveedor.
-       */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
-      /**
-       * Segundo apellido del proveedor (opcional).
-       */
-      segundoApellido: new FormControl(''),
-      /**
-       * País del proveedor.
-       */
-      pais: new FormControl('', [Validators.required]),
-      /**
-       * Estado del proveedor.
-       */
-      estado: new FormControl('', [Validators.required]),
-      /**
-       * Código postal del proveedor (opcional).
-       */
-      codigoPostaloEquivalente: new FormControl(''),
-      /**
-       * Colonia equivalente del proveedor (opcional).
-       */
-      coloniaoEquivalente: new FormControl(''),
-      /**
-       * Calle del proveedor.
-       */
-      calle: new FormControl('', [Validators.required]),
-      /**
-       * Número exterior del proveedor.
-       */
-      numeroExterior: new FormControl('', [Validators.required]),
-      /**
-       * Número interior del proveedor (opcional).
-       */
-      numeroInterior: new FormControl(''),
-      /**
-       * Lada del proveedor (opcional).
-       */
-      lada: new FormControl(''),
-      /**
-       * Teléfono del proveedor (opcional).
-       */
-      telefono: new FormControl('', [
-        TercerosRelacionadosComponent.telefonoValidator,
+      rfc: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.rfcValidator,
       ]),
       /**
-       * Correo electrónico del proveedor (opcional).
+       * CURP del tercero.
+       * Requiere validación adicional mediante `curpValidator`.
        */
-      correoElectronico: new FormControl(''),
-    });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarProveedorFormGroup.get('nombre')?.disable();
-    this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
-    this.agregarProveedorFormGroup.get('primerApellido')?.disable();
-    this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarProveedorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarProveedorFormGroup.get('nombre')?.enable();
-        this.agregarProveedorFormGroup.get('primerApellido')?.enable();
-        this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
-        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
-      });
-  }
-
-  /**
-   * Inicializa el formulario para agregar un facturador.
-   * Configura los campos del formulario con validaciones y comportamientos específicos.
-   */
-  initializeAgregarFacturadorFormGroup() {
-    /**
-     * Crea el formulario reactivos para agregar un facturador.
-     * Cada campo tiene sus propias validaciones.
-     */
-    this.agregarFacturadorFormGroup = this.fb.group({
+      curp: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.curpValidator,
+      ]),
       /**
-       * Tipo de persona (física o moral).
-       */
-      tipoPersona: new FormControl('', [Validators.required]),
-      /**
-       * Nombre del facturador.
+       * Control del formulario para el nombre del usuario.
+       * Este campo es obligatorio.
        */
       nombre: new FormControl('', [Validators.required]),
       /**
-       * Primer apellido del facturador.
+       * Control del formulario para el primer apellido del usuario.
+       * Este campo es obligatorio.
        */
       primerApellido: new FormControl('', [Validators.required]),
       /**
-       * Denominación o razón social del facturador.
+       * Control del formulario para el segundo apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      segundoApellido: new FormControl('', [Validators.required]),
+      /**
+       * Denominación o razón social del tercero.
        */
       denominacionRazonSocial: new FormControl('', [Validators.required]),
       /**
-       * Segundo apellido del facturador (opcional).
-       */
-      segundoApellido: new FormControl(''),
-      /**
-       * País del facturador.
+       * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
        */
       pais: new FormControl('', [
@@ -731,63 +632,105 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
       /**
-       * Estado del facturador.
+       * Estado o localidad del tercero.
        */
-      estado: new FormControl('', [Validators.required]),
+      estadoLocalidad: new FormControl('', [Validators.required]),
       /**
-       * Código postal del facturador (opcional).
+       * Municipio o alcaldía del tercero.
        */
-      codigoPostaloEquivalente: new FormControl(''),
+      municipioAlcaldia: new FormControl('', [Validators.required]),
       /**
-       * Colonia equivalente del facturador (opcional).
+       * Localidad del tercero.
+       */
+      localidad: new FormControl(''),
+      /**
+       * Entidad federativa del tercero.
+       */
+      entidadFederativa: new FormControl('', [Validators.required]),
+      /**
+       * Código postal del tercero.
+       */
+      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      /**
+       * Colonia del tercero.
+       */
+      colonia: new FormControl(''),
+      /**
+       * Colonia equivalente del tercero.
        */
       coloniaoEquivalente: new FormControl(''),
       /**
-       * Calle del facturador.
+       * Calle del tercero.
        */
       calle: new FormControl('', [Validators.required]),
       /**
-       * Número exterior del facturador.
+       * Número exterior del tercero.
        */
       numeroExterior: new FormControl('', [Validators.required]),
       /**
-       * Número interior del facturador (opcional).
+       * Número interior del tercero.
        */
       numeroInterior: new FormControl(''),
       /**
-       * Lada del facturador (opcional).
+       * Lada del tercero.
        */
       lada: new FormControl(''),
       /**
-       * Teléfono del facturador (opcional).
+       * Teléfono del tercero.
+       * Requiere validación adicional mediante `telefonoValidator`.
        */
       telefono: new FormControl('', [
         TercerosRelacionadosComponent.telefonoValidator,
       ]),
       /**
-       * Correo electrónico del facturador (opcional).
+       * Correo electrónico del tercero.
        */
       correoElectronico: new FormControl(''),
+      /**
+       * Código del extranjero.
+       */
+      extranjeroCodigo: new FormControl('', [Validators.required]),
+      /**
+       * Estado del extranjero.
+       */
+      extranjeroEstado: new FormControl('', [Validators.required]),
+      /**
+       * Colonia del extranjero.
+       */
+      extranjeroColonia: new FormControl('', [Validators.required]),
     });
 
     // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFacturadorFormGroup.get('nombre')?.disable();
-    this.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
-    this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
-    this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
+    this.agregarProveedorFormGroup.get('rfc')?.disable();
+    this.agregarProveedorFormGroup.get('curp')?.disable();
+    this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
 
     // Habilita campos al cambiar el tipo de persona
-    this.agregarFacturadorFormGroup
+    this.agregarProveedorFormGroup
       .get('tipoPersona')
       ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
       .subscribe(() => {
-        this.agregarFacturadorFormGroup.get('nombre')?.enable();
-        this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
-        this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
-        this.agregarFacturadorFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
+        this.agregarProveedorFormGroup.get('rfc')?.enable();
+        this.agregarProveedorFormGroup.get('curp')?.enable();
+        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
       });
+
+    // // Deshabilita campos hasta que se seleccione el tipo de persona
+    // this.agregarProveedorFormGroup.get('nombre')?.disable();
+    // this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
+    // this.agregarProveedorFormGroup.get('primerApellido')?.disable();
+    // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
+
+    // // Habilita campos al cambiar el tipo de persona
+    // this.agregarProveedorFormGroup
+    //   .get('tipoPersona')
+    //   ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe(() => {
+    //     this.agregarProveedorFormGroup.get('nombre')?.enable();
+    //     this.agregarProveedorFormGroup.get('primerApellido')?.enable();
+    //     this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
+    //     this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
+    //   });
   }
 
   /**
@@ -799,12 +742,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
   /**
-   * Encabezados para la tabla de destinatarios.
+   * Encabezados para la tabla de formuladors.
    * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
    *
-   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de destinatarios.
+   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de formuladors.
    */
-  destinatarioHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  formuladorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
   /**
    * Encabezados para la tabla de proveedores.
@@ -813,14 +756,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de proveedores.
    */
   proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
-
-  /**
-   * Encabezados para la tabla de facturadores.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
-   *
-   * @description Estos encabezados definen las columnas que se mostrarán en la tabla de facturadores.
-   */
-  facturadorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
 
   public nacional = false;
 
@@ -853,12 +788,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   fabricanteRowData: TablaDatos[] = [];
 
   /**
-   * Datos de las filas para la tabla de destinatarios.
+   * Datos de las filas para la tabla de formuladors.
    * Inicialmente vacío, se llenará con los datos agregados por el usuario.
    *
-   * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
+   * @description Este arreglo almacena las filas que se mostrarán en la tabla de formuladors.
    */
-  destinatarioRowData: TablaDatos[] = [];
+  formuladorRowData: TablaDatos[] = [];
 
   /**
    * Datos de las filas para la tabla de proveedores.
@@ -867,14 +802,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
    */
   proveedorRowData: TablaDatos[] = [];
-
-  /**
-   * Datos de las filas para la tabla de facturadores.
-   * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-   *
-   * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
-   */
-  facturadorRowData: TablaDatos[] = [];
 
   /**
    * Maneja el cambio en los checkboxes para seleccionar el tipo de persona.
@@ -920,14 +847,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cambia la visibilidad del formulario de Destinatario.
+   * Cambia la visibilidad del formulario de Formulador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivDestinatario() {
+  toggleDivFormulador() {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
-    this.showDestinatario = !this.showDestinatario;
+    this.showFormulador = !this.showFormulador;
   }
 
   /**
@@ -939,17 +866,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
-  }
-
-  /**
-   * Cambia la visibilidad del formulario de Facturador.
-   * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
-   */
-  toggleDivFacturador() {
-    this.fisica = false;
-    this.moral = false;
-    this.showTableDiv = !this.showTableDiv;
-    this.showFacturador = !this.showFacturador;
   }
 
   /**
@@ -1086,11 +1002,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
          * Código postal del fabricante.
          */
         CODIGO_POSTAL_VALOR,
-
-        /**
-         * Colonia equivalente del fabricante.
-         */
-        this.agregarFabricanteFormGroup.value.coloniaoEquivalente,
       ],
     };
 
@@ -1112,18 +1023,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía el formulario de Destinatario y actualiza los datos en el store.
+   * Envía el formulario de Formulador y actualiza los datos en el store.
    * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
    *
-   * @description Este método es llamado al enviar el formulario de agregar un destinatario.
+   * @description Este método es llamado al enviar el formulario de agregar un formulador.
    */
-  submitDestinatarioForm() {
+  submitFormuladorForm() {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
     const LOCALIDAD_VALOR = this.localidadDropdownData.find(
       (item: Catalogo) =>
-        item.id === this.agregarDestinatarioFormGroup.value.localidad
+        item.id === this.agregarFormuladorFormGroup.value.localidad
     )?.descripcion;
 
     /**
@@ -1131,7 +1042,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     const MUNICIPIO_VALOR = this.municipioDropdownData.find(
       (item: Catalogo) =>
-        item.id === this.agregarDestinatarioFormGroup.value.municipioAlcaldia
+        item.id === this.agregarFormuladorFormGroup.value.municipioAlcaldia
     )?.descripcion;
 
     /**
@@ -1140,7 +1051,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
       (item: Catalogo) =>
         item.id ===
-        this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente
+        this.agregarFormuladorFormGroup.value.codigoPostaloEquivalente
     )?.descripcion;
 
     /**
@@ -1148,120 +1059,115 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     const COLONIA_VALOR = this.coloniaDropdownData.find(
       (item: Catalogo) =>
-        item.id === this.agregarDestinatarioFormGroup.value.colonia
+        item.id === this.agregarFormuladorFormGroup.value.colonia
     )?.descripcion;
 
     /**
-     * Crea una nueva fila para la tabla de destinatarios.
-     * Esta fila contiene los datos del formulario de agregar un destinatario.
+     * Crea una nueva fila para la tabla de formuladors.
+     * Esta fila contiene los datos del formulario de agregar un formulador.
      *
-     * @description Esta fila se agrega a la lista de filas del destinatario.
+     * @description Esta fila se agrega a la lista de filas del formulador.
      */
-    const DESTINATARIO_FILA = {
+    const FORMULADOR_FILA = {
       /**
        * Datos de la fila que se mostrarán en la tabla.
        * Cada elemento del arreglo corresponde a una columna de la tabla.
        */
       tbodyData: [
         /**
-         * Denominación o razón social del destinatario.
+         * Denominación o razón social del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.denominacionRazonSocial,
+        this.agregarFormuladorFormGroup.value.denominacionRazonSocial,
 
         /**
-         * RFC del destinatario.
+         * RFC del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.rfc,
+        this.agregarFormuladorFormGroup.value.rfc,
 
         /**
-         * CURP del destinatario.
+         * CURP del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.curp,
+        this.agregarFormuladorFormGroup.value.curp,
 
         /**
-         * Teléfono del destinatario, incluyendo lada.
+         * Teléfono del formulador, incluyendo lada.
          */
-        this.agregarDestinatarioFormGroup.value.lada +
+        this.agregarFormuladorFormGroup.value.lada +
           '-' +
-          this.agregarDestinatarioFormGroup.value.telefono,
+          this.agregarFormuladorFormGroup.value.telefono,
 
         /**
-         * Correo electrónico del destinatario.
+         * Correo electrónico del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.correoElectronico,
+        this.agregarFormuladorFormGroup.value.correoElectronico,
 
         /**
-         * Calle del destinatario.
+         * Calle del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.calle,
+        this.agregarFormuladorFormGroup.value.calle,
 
         /**
-         * Número exterior del destinatario.
+         * Número exterior del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.numeroExterior,
+        this.agregarFormuladorFormGroup.value.numeroExterior,
 
         /**
-         * Número interior del destinatario.
+         * Número interior del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.numeroInterior,
+        this.agregarFormuladorFormGroup.value.numeroInterior,
 
         /**
-         * País del destinatario.
+         * País del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.pais,
+        this.agregarFormuladorFormGroup.value.pais,
 
         /**
-         * Colonia del destinatario.
+         * Colonia del formulador.
          */
         COLONIA_VALOR,
 
         /**
-         * Municipio del destinatario.
+         * Municipio del formulador.
          */
         MUNICIPIO_VALOR,
 
         /**
-         * Localidad del destinatario.
+         * Localidad del formulador.
          */
         LOCALIDAD_VALOR,
 
         /**
-         * Entidad federativa del destinatario.
+         * Entidad federativa del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.entidadFederativa,
+        this.agregarFormuladorFormGroup.value.entidadFederativa,
 
         /**
-         * Estado o localidad del destinatario.
+         * Estado o localidad del formulador.
          */
-        this.agregarDestinatarioFormGroup.value.estadoLocalidad,
+        this.agregarFormuladorFormGroup.value.estadoLocalidad,
 
         /**
-         * Código postal del destinatario.
+         * Código postal del formulador.
          */
         CODIGO_POSTAL_VALOR,
-
-        /**
-         * Colonia equivalente del destinatario.
-         */
-        this.agregarDestinatarioFormGroup.value.coloniaoEquivalente,
       ],
     };
 
     /**
-     * Agrega la nueva fila a la lista de filas del destinatario.
+     * Agrega la nueva fila a la lista de filas del formulador.
      */
-    this.destinatarioRowData.push(DESTINATARIO_FILA);
+    this.formuladorRowData.push(FORMULADOR_FILA);
 
     /**
-     * Actualiza el estado del store con los nuevos datos del destinatario.
+     * Actualiza el estado del store con los nuevos datos del formulador.
      */
-    this.tercerosFabricanteStore.setDestinatario(this.destinatarioRowData);
+    this.tercerosFabricanteStore.setFormulador(this.formuladorRowData);
 
     /**
      * Cambia la visibilidad de las secciones del componente.
      */
     this.showTableDiv = !this.showTableDiv;
-    this.showDestinatario = !this.showDestinatario;
+    this.showFormulador = !this.showFormulador;
   }
 
   /**
@@ -1272,28 +1178,126 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   submitProveedorForm() {
     /**
-     * Crea una nueva fila para la tabla con los datos del formulario.
+     * Obtiene el valor de la localidad seleccionada en el formulario.
+     */
+    const LOCALIDAD_VALOR = this.localidadDropdownData.find(
+      (item: Catalogo) =>
+        item.id === this.agregarProveedorFormGroup.value.localidad
+    )?.descripcion;
+
+    /**
+     * Obtiene el valor del municipio seleccionado en el formulario.
+     */
+    const MUNICIPIO_VALOR = this.municipioDropdownData.find(
+      (item: Catalogo) =>
+        item.id === this.agregarProveedorFormGroup.value.municipioAlcaldia
+    )?.descripcion;
+
+    /**
+     * Obtiene el valor del código postal seleccionado en el formulario.
+     */
+    const CODIGO_POSTAL_VALOR = this.codigoPostalDropdownData.find(
+      (item: Catalogo) =>
+        item.id ===
+        this.agregarProveedorFormGroup.value.codigoPostaloEquivalente
+    )?.descripcion;
+
+    /**
+     * Obtiene el valor de la colonia seleccionada en el formulario.
+     */
+    const COLONIA_VALOR = this.coloniaDropdownData.find(
+      (item: Catalogo) =>
+        item.id === this.agregarProveedorFormGroup.value.colonia
+    )?.descripcion;
+
+    /**
+     * Crea una nueva fila para la tabla de proveedor.
+     * Esta fila contiene los datos del formulario de agregar un proveedor.
+     *
+     * @description Esta fila se agrega a la lista de filas del proveedor.
      */
     const PROVEEDOR_FILA = {
+      /**
+       * Datos de la fila que se mostrarán en la tabla.
+       * Cada elemento del arreglo corresponde a una columna de la tabla.
+       */
       tbodyData: [
+        /**
+         * Denominación o razón social del proveedor.
+         */
         this.agregarProveedorFormGroup.value.denominacionRazonSocial,
+
+        /**
+         * RFC del proveedor.
+         */
         this.agregarProveedorFormGroup.value.rfc,
+
+        /**
+         * CURP del proveedor.
+         */
         this.agregarProveedorFormGroup.value.curp,
+
+        /**
+         * Teléfono del proveedor, incluyendo lada.
+         */
         this.agregarProveedorFormGroup.value.lada +
           '-' +
           this.agregarProveedorFormGroup.value.telefono,
+
+        /**
+         * Correo electrónico del proveedor.
+         */
         this.agregarProveedorFormGroup.value.correoElectronico,
+
+        /**
+         * Calle del proveedor.
+         */
         this.agregarProveedorFormGroup.value.calle,
+
+        /**
+         * Número exterior del proveedor.
+         */
         this.agregarProveedorFormGroup.value.numeroExterior,
+
+        /**
+         * Número interior del proveedor.
+         */
         this.agregarProveedorFormGroup.value.numeroInterior,
+
+        /**
+         * País del proveedor.
+         */
         this.agregarProveedorFormGroup.value.pais,
-        this.agregarProveedorFormGroup.value.colonia,
-        this.agregarProveedorFormGroup.value.municipioAlcaldia,
-        this.agregarProveedorFormGroup.value.localidad,
+
+        /**
+         * Colonia del proveedor.
+         */
+        COLONIA_VALOR,
+
+        /**
+         * Municipio del proveedor.
+         */
+        MUNICIPIO_VALOR,
+
+        /**
+         * Localidad del proveedor.
+         */
+        LOCALIDAD_VALOR,
+
+        /**
+         * Entidad federativa del proveedor.
+         */
         this.agregarProveedorFormGroup.value.entidadFederativa,
+
+        /**
+         * Estado o localidad del proveedor.
+         */
         this.agregarProveedorFormGroup.value.estadoLocalidad,
-        this.agregarProveedorFormGroup.value.codigoPostaloEquivalente,
-        this.agregarProveedorFormGroup.value.coloniaoEquivalente,
+
+        /**
+         * Código postal del proveedor.
+         */
+        CODIGO_POSTAL_VALOR,
       ],
     };
 
@@ -1312,56 +1316,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      */
     this.showTableDiv = !this.showTableDiv;
     this.showProveedor = !this.showProveedor;
-  }
-
-  /**
-   * Envía el formulario de Facturador y actualiza los datos en el store.
-   * Crea una nueva fila para la tabla con los datos del formulario.
-   *
-   * @description Este método es llamado al enviar el formulario de agregar un facturador.
-   */
-  submitFacturadorForm() {
-    /**
-     * Crea una nueva fila para la tabla con los datos del formulario.
-     */
-    const FACTURADOR_FILA = {
-      tbodyData: [
-        this.agregarFacturadorFormGroup.value.denominacionRazonSocial,
-        this.agregarFacturadorFormGroup.value.rfc,
-        this.agregarFacturadorFormGroup.value.curp,
-        this.agregarFacturadorFormGroup.value.lada +
-          '-' +
-          this.agregarFacturadorFormGroup.value.telefono,
-        this.agregarFacturadorFormGroup.value.correoElectronico,
-        this.agregarFacturadorFormGroup.value.calle,
-        this.agregarFacturadorFormGroup.value.numeroExterior,
-        this.agregarFacturadorFormGroup.value.numeroInterior,
-        this.agregarFacturadorFormGroup.value.pais,
-        this.agregarFacturadorFormGroup.value.colonia,
-        this.agregarFacturadorFormGroup.value.municipioAlcaldia,
-        this.agregarFacturadorFormGroup.value.localidad,
-        this.agregarFacturadorFormGroup.value.entidadFederativa,
-        this.agregarFacturadorFormGroup.value.estadoLocalidad,
-        this.agregarFacturadorFormGroup.value.codigoPostaloEquivalente,
-        this.agregarFacturadorFormGroup.value.coloniaoEquivalente,
-      ],
-    };
-
-    /**
-     * Agrega la nueva fila a la lista de filas del facturador.
-     */
-    this.facturadorRowData.push(FACTURADOR_FILA);
-
-    /**
-     * Actualiza el estado del store con los nuevos datos del facturador.
-     */
-    this.tercerosFabricanteStore.setFacturador(this.facturadorRowData);
-
-    /**
-     * Cambia la visibilidad de las secciones del componente.
-     */
-    this.showTableDiv = !this.showTableDiv;
-    this.showFacturador = !this.showFacturador;
   }
 
   /**
@@ -1428,7 +1382,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cambia el valor del radio button seleccionado. 
+   * Cambia el valor del radio button seleccionado.
    *
    * @param value Valor seleccionado del radio button.
    */
