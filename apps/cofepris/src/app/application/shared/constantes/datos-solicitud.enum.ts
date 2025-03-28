@@ -243,6 +243,8 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
 
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216, 260205]
 
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE=[260216]
+
 export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205
 }
@@ -309,3 +311,4 @@ export const FORMA_FORMACEUTICA_DATOS = [
     descripcion: "Gragea",  
   },
 ]
+

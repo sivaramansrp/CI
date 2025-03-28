@@ -3,7 +3,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,6 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -91,6 +92,9 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
    */
   destinatarios: Destinatario[] = [];
 
+@Input() idProcedimiento!:number;
+
+public mostrarCamposNoContribuyente:boolean = false;
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
@@ -141,6 +145,8 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+
+    this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**

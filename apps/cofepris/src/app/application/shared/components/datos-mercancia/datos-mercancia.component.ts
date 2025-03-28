@@ -20,6 +20,9 @@ import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
+import { DetalleMercancia } from '../../models/detalle-mercancia.model';
+import { DetalleMercanciaComponent } from '../detalle-mercancia/detalle-mercancia.component';
+import { Observable } from 'rxjs';
 /**
  * @component DatosMercanciaComponent
  * @description Componente encargado de capturar y emitir los datos de una mercancía.
@@ -34,12 +37,17 @@ import { DatosSolicitudService } from '../../services/datos-solicitud.service';
     TituloComponent,
     CatalogoSelectComponent,
     CrosslistComponent,
+    DetalleMercanciaComponent
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaComponent implements OnInit {
+
+  @Input() detalleMercancia = false;
+
+  @Input() datosTablaDetalleMercancia!: Observable<DetalleMercancia[]>;
   /**
    * @property {FormGroup} mercanciaForm
    * Formulario reactivo principal para capturar los datos de la mercancía.
@@ -58,6 +66,9 @@ export class DatosMercanciaComponent implements OnInit {
    */
   @Output() mercanciaSeleccionado: EventEmitter<TablaMercanciasDatos> =
     new EventEmitter<TablaMercanciasDatos>();
+
+  @Output() aggregarMercanciaDatos: EventEmitter<DetalleMercancia> = new EventEmitter<DetalleMercancia>(true);
+  @Output() eliminarMercanciaDatos: EventEmitter<DetalleMercancia[]> = new EventEmitter<DetalleMercancia[]>(true);
 
   /** Catálogos de datos para los diferentes campos del formulario */
   public clasificacionProductoDatos!: Catalogo[];
@@ -291,6 +302,11 @@ export class DatosMercanciaComponent implements OnInit {
         Validators.required,
       ],
     });
+
+    if(this.detalleMercancia) {
+      this.mercanciaForm.removeControl('formaFarmaceutica', {emitEvent: false})
+      this.mercanciaForm.removeControl('denominacionDistintiva', {emitEvent: false})
+    }
   }
 
   /**
@@ -396,5 +412,13 @@ export class DatosMercanciaComponent implements OnInit {
    */
   cancelar(): void {
     this.ubicaccion.back();
+  }
+
+  aggregarMercancia(datos: DetalleMercancia) : void {
+    this.aggregarMercanciaDatos.emit(datos)
+  }
+
+  eliminarMercancia(datos: DetalleMercancia[]) : void {
+    this.eliminarMercanciaDatos.emit(datos)
   }
 }
