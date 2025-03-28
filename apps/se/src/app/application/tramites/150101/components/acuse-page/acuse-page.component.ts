@@ -50,7 +50,7 @@ export class AcusePageComponent implements OnInit {
    * Folio del trámite.
    * @type {string}
    */
-  folio!: string;
+  folio: string = '';
 
   constructor() {
     // Constructor vacío
@@ -62,7 +62,6 @@ export class AcusePageComponent implements OnInit {
    * En este método, se obtiene el folio del trámite y se genera un mensaje de alerta.
    */
   ngOnInit(): void {
-    this.folio = '01010101010101010101010101010101';
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
 }
