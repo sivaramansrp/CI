@@ -151,7 +151,9 @@
         </div>
       </div>
       <div class="row mt-3">
-        <label style="margin-left: 338px">Periodo</label>
+        <div class="col-md-8 text-center">
+          <label>Periodo</label>
+        </div>
       </div>
       <div class="row mt-5">
         <div class="col-md-4">
@@ -213,6 +215,8 @@
                 <div>
                   <label class="control-label"> Archivo: </label>
                 </div>
+                <input class="visually-hidden-file" type="file" formControlName="archivo" id="archivoAdjuntar" size="60"
+                  (change)="alSeleccionarArchivo($event);" />
                 <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
                   style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
                 <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>

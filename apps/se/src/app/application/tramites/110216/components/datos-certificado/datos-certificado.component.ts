@@ -1,7 +1,7 @@
 import { Catalogo } from '../../models/certificado-origen.model';
 import { CatalogoLista } from '../../models/certificado-origen.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';

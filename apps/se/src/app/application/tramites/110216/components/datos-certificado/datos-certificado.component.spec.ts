@@ -8,7 +8,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { provideToastr, ToastrService } from 'ngx-toastr';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 
 describe('DatosCertificadoComponent', () => {
   let component: DatosCertificadoComponent;

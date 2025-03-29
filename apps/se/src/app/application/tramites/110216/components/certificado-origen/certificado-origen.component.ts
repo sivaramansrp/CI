@@ -2,7 +2,7 @@ import { AlertComponent } from "@libs/shared/data-access-user/src";
 import { Catalogo } from "../../models/certificado-origen.model.js";
 import { CatalogoLista, } from "../../models/certificado-origen.model.js";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
-import { CertificadosOrigenService } from "../../services/certificado-origen.service.ts";
+import { CertificadosOrigenService } from "../../services/certificado-origen.service";
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
@@ -455,7 +455,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
  */
   inicializarFormularioArchivo(): void {
     this.formularioArchivo = this.fb.group({
-      archivo: [this.solicitudState?.tercerOperador, [Validators.required]],
+      archivo: ['', [Validators.required]],
     });
   }
 

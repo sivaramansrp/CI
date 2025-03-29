@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';

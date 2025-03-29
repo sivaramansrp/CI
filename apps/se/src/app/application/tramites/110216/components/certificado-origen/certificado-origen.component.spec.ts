@@ -5,7 +5,7 @@ import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.s
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { DisponiblesTabla, SeleccionadasTabla } from '../../models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 

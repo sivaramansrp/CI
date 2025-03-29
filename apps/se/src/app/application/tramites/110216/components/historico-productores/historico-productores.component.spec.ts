@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HistoricoProductoresComponent } from './historico-productores.component';
 import { ReactiveFormsModule, FormsModule, FormBuilder, Validators } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
+import { CertificadosOrigenService } from '../../services/certificado-origen.service';
 import { Tramite110216Store } from '../../../../estados/tramites/tramite110216.store';
 import { Tramite110216Query } from '../../../../estados/queries/tramite110216.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
