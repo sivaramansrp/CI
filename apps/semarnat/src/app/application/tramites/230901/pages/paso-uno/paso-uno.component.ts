@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { Tramite230401Store } from '../../../230401/estados/tramite230401.store';
-import { Tramite230901Query } from '../../estados/tramite230901.query';
+import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
@@ -19,7 +18,7 @@ export class PasoUnoComponent implements OnInit{
   isTablDisabled: boolean = false;
   destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private tramite230901Store: Tramite230401Store, private tramite230901Query:Tramite230901Query){
+  constructor(private tramite230901Query:Tramite230901Query){
     //do nothing
   }
 

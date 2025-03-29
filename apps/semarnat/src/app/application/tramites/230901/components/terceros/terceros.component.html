@@ -1,8 +1,8 @@
 <div class="container">
-    <ng-titulo titulo="Datos de la solicitud" />
+    <ng-titulo titulo="Destinatarios" />
     <form [formGroup]="destinatarioForm">
         <div class="row">
-            <app-catalogo-select [catalogo]="autorizacionesDeVidaSilvestreService.entidadesFederativas" formControlName="entidadFederativa" class="col-md-4" [label]="'Entidad federativa'" (change)="onEntidadFederativaChange()"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="autorizacionesDeVidaSilvestreService.entidadFederativa" formControlName="entidadFederativa" class="col-md-4" [label]="'Entidad federativa'" (change)="onEntidadFederativaChange()"></app-catalogo-select>
         </div>
         <label class="row mt-5">destinatarios*:</label>
         <div class="row mt-4">

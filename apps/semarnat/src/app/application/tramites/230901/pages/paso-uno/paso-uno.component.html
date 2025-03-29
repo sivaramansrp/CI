@@ -24,7 +24,15 @@
         >
       </li>
       <li [ngClass]="indice === 3 ? 'active' : ''" [class.disabled]="isTablDisabled">
-        <a
+        @if(isTablDisabled){
+          <a
+          data-toggle="tab"
+          role="button"
+          tabindex="4"
+          >Terceros</a
+        >
+        }@else {
+          <a
           data-toggle="tab"
           (click)="seleccionaTab(3)"
           (keydown.enter)="seleccionaTab(3)"
@@ -33,6 +41,7 @@
           tabindex="4"
           >Terceros</a
         >
+        }
       </li>
       <li [ngClass]="indice === 4 ? 'active' : ''">
         <a

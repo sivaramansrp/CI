@@ -12,7 +12,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { TercerosComponent } from './components/terceros/terceros.component';
-import { InputCheckComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
+import { InputFechaComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
 
 
 
@@ -34,7 +34,7 @@ import { InputCheckComponent } from "../../../../../../../libs/shared/data-acces
     AlertComponent,
     CrosslistComponent,
     TableComponent,
-    InputCheckComponent
+    InputFechaComponent
 ],
 })
 export class AutorizacionesDeVidaSilvestreModule {}

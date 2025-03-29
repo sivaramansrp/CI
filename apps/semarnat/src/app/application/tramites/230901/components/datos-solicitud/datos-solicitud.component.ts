@@ -1,3 +1,8 @@
+import { ALERTA_MERCANCIA, AQUANDAS_LABEL, MOVIMIENTO_LABEL } from '../../enum/autorizaciones-constants';
+import {
+  CONFIGURACION_TABLA_MERCANCIA,
+  ConfiguracionItem,
+} from '../../enum/mercancia-table-constants';
 import { Component, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
@@ -5,28 +10,14 @@ import {
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import {
   Solicitud230901State,
   Tramite230901Store,
-} from '../../estados/tramite230901.store';
+} from '../../estados/store/tramite230901.store';
 import { Subject, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
-import { CONTINUAR } from '../../enum/autorizaciones-constants';
-import { Tramite230901Query } from '../../estados/tramite230901.query';
-
-interface ConfiguracionItem {
-  fraccionArancelaria: string;
-  otraFraccion: string;
-  descripcion: string;
-  rendimientoProducto: string;
-  nombreCientifico: string;
-  nombreComun: string;
-  marca: string;
-  cantidad: number;
-  unidadMedida: string;
-  paisOrigen: string;
-  paisProcedencia: string;
-}
+import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -34,132 +25,86 @@ interface ConfiguracionItem {
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosSolicitudComponent implements OnInit {
-
-
-  public infoAlert = 'alert-info';
-  FormSolicitud!: FormGroup;
+  formSolicitud!: FormGroup;
+  formMercancia!: FormGroup;
   tipoMovimientoSeleccionada!: number;
-  public titulo: string = '';
- 
+  otraFraccionSeleccionada!: boolean;
 
-  private destroyNotifier$: Subject<void> = new Subject();
-  public solicitudState!: Solicitud230901State;
+  solicitud230901State!: Solicitud230901State;
 
-  TablaSeleccion = TablaSeleccion.CHECKBOX;
-
-  aquandasLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'Aduanas disponibles',
-    derecha: 'Aduanas seleccionadas',
-  };
+  aquandasLabel: CrossListLable = AQUANDAS_LABEL;
   aduanasBotons = [
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregar(CONTINUAR),
+      btnNombre: 'Agregar todos',
+        class: 'btn-default',
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        funcion: () => this.agregar(CONTINUAR),
     },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar(CONTINUAR),
-    },
-  ];
+      {
+        btnNombre: 'Agregar selección',
+        class: 'btn-default',
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        funcion: () => this.agregar(CONTINUAR),
+      },
+      {
+        btnNombre: 'Restar selección',
+        class: 'btn-primary',
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        funcion: () => this.quitar(''),
+      },
+      {
+        btnNombre: 'Restar todos',
+        class: 'btn-default',
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        funcion: () => this.quitar(CONTINUAR),
+      },
+    ];
   aduanaSeleccion: string[] = [];
-  seleccionarOrigenDelAduana: string[] = ['Tanishk', 'Shashikant', 'kalaskar'];
-  seleccionarOrigenDelMovimiento: string[] = ['Tony', 'Howard', 'Stark'];
-  movimientoSeleccion: string[] = [];
+  seleccionarOrigenDelAduana: string[] = [];
+
+  movimientoLabel: CrossListLable = MOVIMIENTO_LABEL;
   movimientoBotons = [
     {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.agregar(CONTINUAR),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.quitar(CONTINUAR),
-    },
+          btnNombre: 'Agregar todos',
+          class: 'btn-primary',
+          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+          funcion: () => this.agregar(''),
+        },
+        {
+          btnNombre: 'Agregar selección',
+          class: 'btn-default',
+          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+          funcion: () => this.agregar(CONTINUAR),
+        },
+        {
+          btnNombre: 'Restar selección',
+          class: 'btn-danger',
+          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+          funcion: () => this.quitar(''),
+        },
+        {
+          btnNombre: 'Restar todos',
+          class: 'btn-default',
+          // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+          funcion: () => this.quitar(CONTINUAR),
+        },
   ];
+  movimientoSeleccion: string[] = [];
+  seleccionarOrigenDelMovimiento: string[] = [];
 
-  tablaDatos = [];
-  configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (item: ConfiguracionItem) => item.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Otra fracción',
-      clave: (item: ConfiguracionItem) => item.otraFraccion,
-      orden: 2,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (item: ConfiguracionItem) => item.descripcion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Rendimiento del producto',
-      clave: (item: ConfiguracionItem) => item.rendimientoProducto,
-      orden: 4,
-    },
-    {
-      encabezado: 'Nombre científico',
-      clave: (item: ConfiguracionItem) => item.nombreCientifico,
-      orden: 5,
-    },
-    {
-      encabezado: 'Nombre común',
-      clave: (item: ConfiguracionItem) => item.nombreComun,
-      orden: 6,
-    },
-    {
-      encabezado: 'Marca (marcaje)',
-      clave: (item: ConfiguracionItem) => item.marca,
-      orden: 7,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (item: ConfiguracionItem) => item.cantidad,
-      orden: 8,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (item: ConfiguracionItem) => item.unidadMedida,
-      orden: 9,
-    },
-    {
-      encabezado: 'País de orígen',
-      clave: (item: ConfiguracionItem) => item.paisOrigen,
-      orden: 10,
-    },
-    {
-      encabezado: 'País de procedencia',
-      clave: (item: ConfiguracionItem) => item.paisProcedencia,
-      orden: 11,
-    },
-  ];
+  configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] =
+    CONFIGURACION_TABLA_MERCANCIA;
+  tablaSeleccion = TablaSeleccion.CHECKBOX;
+  tablaDatos:ConfiguracionItem[] = [];
+  filaSeleccionada!: ConfiguracionItem;
 
-  showDatosMercanciaModal:boolean = false;
-  formMercancia!: FormGroup;
-  ALERTA_MERCANCIA = 'De no existir marca anotar "sin marca". En su caso el sistema de marca con las especificaciones correspondientes'
-  tempData!: string[];
-  target!: string;
+  showDatosMercanciaModal: boolean = false;
+
+  private destroyNotifier$: Subject<void> = new Subject();
+  public alert_message: string = ALERTA_MERCANCIA;
+
+  fname = 'Angular';
+  lname = '8';
 
   constructor(
     public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService,
@@ -171,93 +116,138 @@ export class DatosSolicitudComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.autorizacionesDeVidaSilvestreService.inicializaPasoUnoDatosCatalogos();
+    this.autorizacionesDeVidaSilvestreService.inicializaDatosSolicitudDatosCatalogos();
 
     this.tramite230901Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$))
-      .subscribe(state => {this.solicitudState = state});
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state) => {
+        this.solicitud230901State = state;
+      });
 
     this.createFormSolitude();
-    this.createFormMercancia();
 
     this.onTipoMovimientoChange();
     this.onTipoRegimenChange();
   }
-  
 
   createFormSolitude(): void {
-    this.FormSolicitud = this.formBuilder.group({
+    this.formSolicitud = this.formBuilder.group({
       tipodemovimiento: [
-        this.solicitudState.tipoDeMovimiento,
+        this.solicitud230901State.tipoDeMovimiento,
         Validators.required,
       ],
-      tipoderegimen: [this.solicitudState.tipoDeRegimen, Validators.required],
+      tipoderegimen: [
+        this.solicitud230901State.tipoDeRegimen,
+        Validators.required,
+      ],
     });
   }
 
-  createFormMercancia():void {
+  createFormMercancia(data?: Partial<ConfiguracionItem>): void {
     this.formMercancia = this.formBuilder.group({
-      fraccionArancelaria: ['', Validators.required],
-      fraccionDescripcion: ['', Validators.required],
-      otraFraccion: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      rendimientoProducto: ['', Validators.required],
-      clasificacionTaxonomica: ['', Validators.required],
-      nombreCientifico: ['', Validators.required],
-      nombreComun: ['', Validators.required],
-      marca: ['', Validators.required],
-      cantidad: ['', Validators.required],
-      unidadMedida: ['', Validators.required],
-      paisOrigen: ['', Validators.required],
-      paisProcedencia: ['', Validators.required],
+      fraccionArancelaria: [data?.fraccionArancelaria || '', Validators.required],
+      fraccionDescripcion: [data?.descripcion || '', Validators.required],
+      otraFraccion: [data?.otraFraccion || false, Validators.required],
+      descripcion: [data?.descripcion || '', Validators.required],
+      clasificacionTaxonomica: [data?.clasificacionTaxonomica || '', Validators.required],
+      rendimientoProducto: [data?.rendimientoProducto || '', Validators.required],
+      nombreCientifico: [data?.nombreCientifico || '', Validators.required],
+      nombreComun: [data?.nombreComun || '', Validators.required],
+      marca: [data?.marca || '', Validators.required],
+      cantidad: [data?.cantidad || '', Validators.required],
+      unidadMedida: [data?.unidadMedida || '', Validators.required],
+      paisOrigen: [data?.paisOrigen || '', Validators.required],
+      paisProcedencia: [data?.paisProcedencia || '', Validators.required],
     });
-
     this.formMercancia.get('fraccionDescripcion')?.disable();
+    this.formMercancia.get('otraFraccion')?.valueChanges.subscribe((checked) => {
+      if (checked) {
+        this.formMercancia.addControl(
+          'fraccionVigenteTIGIE',
+          this.formBuilder.control('', Validators.required)
+        );
+        this.formMercancia.get('fraccionArancelaria')?.reset();
+        this.formMercancia.get('fraccionDescripcion')?.reset();
+        this.otraFraccionSeleccionada = true;
+      } else {
+        this.formMercancia.removeControl('fraccionVigenteTIGIE');
+        this.otraFraccionSeleccionada = false;
+      }
+    });
   }
 
   onTipoMovimientoChange(): void {
-    const TIPO_DE_MOVIMIENTO = this.FormSolicitud.get('tipodemovimiento')?.value
-    this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO,10);
-    this.tramite230901Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
+    const TIPO_DE_MOVIMIENTO =
+      this.formSolicitud.get('tipodemovimiento')?.value;
+      this.tramite230901Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
+      if(TIPO_DE_MOVIMIENTO === '1') {
+        this.aduanasBotons = ADUANA_BOTONS.slice(1);
+      }else{
+        this.aduanasBotons = ADUANA_BOTONS;
+      }
+      this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
   }
 
   onTipoRegimenChange(): void {
-    this.tramite230901Store.setTipoDeRegimen(this.FormSolicitud.get('tipoderegimen')?.value);
+    this.tramite230901Store.setTipoDeRegimen(
+      this.formSolicitud.get('tipoderegimen')?.value
+    );
   }
-
 
   agregar(tipo: string): void {
-    if (tipo === CONTINUAR) {
-      this.aduanaSeleccion = [...this.seleccionarOrigenDelAduana];
-      this.aduanaSeleccion = [];
+      if (tipo === CONTINUAR) {
+        this.paisDeProcedenciaSeleccionadas = [...this.seleccionarOrigenDelPais];
+        this.paisDeProcedenciaDatos = [];
+      } else {
+        const FECHAVALOR = this.paisDeProcedenciaFecha.value.map(Number);
+        this.paisDeProcedenciaSeleccionadas.push(
+          this.paisDeProcedenciaDatos[FECHAVALOR]
+        );
+        this.paisDeProcedenciaDatos.splice(FECHAVALOR, 1);
+      }
     }
-  }
 
   quitar(tipo: string = ''): void {
-    if (tipo === CONTINUAR) {
-      this.aduanaSeleccion = [...this.seleccionarOrigenDelAduana];
-      this.aduanaSeleccion = [];
-    }
-  }
-
-  nextTabla(): void {
-    this.tablaDatos = [];
-    // do nothing.
-  }
-
-  cambiarRadio(value: string | number):void {
-    this.target = value as string
+      if (tipo === CONTINUAR) {
+        this.paisDeProcedenciaDatos = [...this.paisDeProcedenciaSeleccionadas];
+        this.paisDeProcedenciaSeleccionadas = [];
+      } else {
+        const FECHAVALOR =
+          this.paisDeProcedenciaFechaSeleccionada.value.map(Number);
+        this.paisDeProcedenciaDatos.push(
+          this.paisDeProcedenciaSeleccionadas[FECHAVALOR]
+        );
+        this.paisDeProcedenciaSeleccionadas.splice(FECHAVALOR, 1);
+      }
     }
 
-  toggleDivMercancia():void {
+  toggleDivMercancia(): void {
     this.showDatosMercanciaModal = !this.showDatosMercanciaModal;
   }
-  submitMercanciaForm():void {
-    this.tempData = [];
+
+  showMercanciaFormModal():void {
+    this.autorizacionesDeVidaSilvestreService.inicializaMercanciaDatosCatalogos()
+    this.createFormMercancia();
+    this.toggleDivMercancia();
   }
 
-  seleccionOtraFraccion():void{
-    const TEMP = this.formMercancia.get('ortraFraccion')?.value;
-}
+  submitMercanciaForm(): void {
+    const TABLA_ROW:ConfiguracionItem = {
+      fraccionArancelaria: this.autorizacionesDeVidaSilvestreService.fraccionArancelaria[(this.formMercancia.get('fraccionArancelaria')?.value)].descripcion,
+      otraFraccion: this.formMercancia.get('otraFraccion')?.value,
+      descripcion: this.formMercancia.get('descripcion')?.value,
+      rendimientoProducto: this.formMercancia.get('rendimientoProducto')?.value,
+      clasificacionTaxonomica: this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica[(this.formMercancia.get('clasificacionTaxonomica')?.value)-1].descripcion,
+      nombreCientifico: this.autorizacionesDeVidaSilvestreService.nombreCientifico[(this.formMercancia.get('nombreCientifico')?.value)-1].descripcion,
+      nombreComun: this.autorizacionesDeVidaSilvestreService.nombreComun[(this.formMercancia.get('nombreComun')?.value)-1].descripcion,
+      marca: this.formMercancia.get('marca')?.value,
+      cantidad:  this.formMercancia.get('cantidad')?.value,
+      unidadMedida: this.autorizacionesDeVidaSilvestreService.unidadMedida[(this.formMercancia.get('unidadMedida')?.value)-1].descripcion,
+      paisOrigen: this.autorizacionesDeVidaSilvestreService.paisOrigen[(this.formMercancia.get('paisOrigen')?.value)-1].descripcion,
+      paisProcedencia: this.autorizacionesDeVidaSilvestreService.paisProcedencia[(this.formMercancia.get('paisProcedencia')?.value)-1].descripcion,
+    }
+    this.tablaDatos.push(TABLA_ROW);
+    this.formMercancia.reset();
+    this.showDatosMercanciaModal = !this.showDatosMercanciaModal;
+  }
 }

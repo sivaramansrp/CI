@@ -10,7 +10,16 @@ export class AutorizacionesDeVidaSilvestreService {
 
   tiposDeMovimiento: Catalogo[] = [];
   tiposDeRegimen: Catalogo[] = [];
-  entidadesFederativas: Catalogo[] = [];
+
+  fraccionArancelaria: Catalogo[] = [];
+  clasificacionTaxonomica: Catalogo[] = [];
+  nombreCientifico: Catalogo[] = [];
+  nombreComun: Catalogo[] = [];
+  unidadMedida: Catalogo[] = [];
+  paisOrigen: Catalogo[] = [];
+  paisProcedencia: Catalogo[] = [];
+  
+  entidadFederativa: Catalogo[] = [];
   bancos: Catalogo[] = [];
 
 
@@ -24,11 +33,32 @@ export class AutorizacionesDeVidaSilvestreService {
   }
 
 
-  public inicializaPasoUnoDatosCatalogos(): void {
+  public inicializaDatosSolicitudDatosCatalogos(): void {
     this.obtenerRespuestaPorUrl(this, 'tiposDeMovimiento', '/230901/tiposDeMovimiento.json');
     this.obtenerRespuestaPorUrl(this, 'tiposDeRegimen', '/230901/tiposDeRegimen.json');
-    this.obtenerRespuestaPorUrl(this, 'entidadesFederativas', '230901/entidadesFederativas.json');
-    this.obtenerRespuestaPorUrl(this, 'bancos', '230901/bancos.json');
+    
+  }
+
+  // public inicializeMercanciaModalDatosCatalogos(): void {
+
+  // }
+
+  public inicializaTercerosDatosCatalogos():void {
+    this.obtenerRespuestaPorUrl(this, 'entidadFederativa', '/230901/entidadFederativa.json');
+  }
+
+  public inicializaPagoDeDerechosDatosCatalogos():void {
+    this.obtenerRespuestaPorUrl(this, 'bancos', '/230901/bancos.json');
+  }
+
+  public inicializaMercanciaDatosCatalogos():void {
+    this.obtenerRespuestaPorUrl(this, 'fraccionArancelaria', '/230901/fraccionArancelaria.json');
+    this.obtenerRespuestaPorUrl(this, 'clasificacionTaxonomica', '/230901/clasificacionTaxonomica.json');
+    this.obtenerRespuestaPorUrl(this, 'nombreCientifico', '/230901/nombreCientifico.json');
+    this.obtenerRespuestaPorUrl(this, 'nombreComun', '/230901/nombreComun.json');
+    this.obtenerRespuestaPorUrl(this, 'unidadMedida', '/230901/unidadMedida.json');
+    this.obtenerRespuestaPorUrl(this, 'paisOrigen', '/230901/paisOrigen.json');
+    this.obtenerRespuestaPorUrl(this, 'paisProcedencia', '/230901/paisProcedencia.json');
   }
 
 /**

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
@@ -6,5 +6,4 @@ import { Component, Input } from '@angular/core';
   styleUrl: './modal.component.css',
 })
 export class ModalComponent {
-  @Input() active!:boolean;
 }
