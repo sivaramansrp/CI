@@ -7,7 +7,7 @@ import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
-import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+import {PermisoModel } from '../../models/aviso-exportacion.model'
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ExportacionService } from '../../services/exportacion.service';
@@ -106,28 +106,6 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   tercerosProd: PermisoModel[] = [];
 
   /**
-   * property tableHeaderData
-   * description Encabezados de la tabla de datos.
-   */
-  tableHeaderData: string[] = [
-    'Nombre/denominación o razón social',
-    'RFC',
-    'CURP',
-    'Teléfono',
-    'Correo electrónico',
-    'Calle',
-    'Número exterior',
-    'Número interior',
-    'País',
-    'Colonia',
-    'Municipio o alcaldía',
-    'Localidad',
-    'Entidad federativa',
-    'Estado/localidad',
-    'Código postal'
-  ];
-
-  /**
    * constructor
    * param fb FormBuilder para crear formularios reactivos.
    * param service Servicio para manejar datos de exportación.
@@ -154,6 +132,8 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * description Configuración de las columnas de la tabla.
    */
   configuracionTabla: ConfiguracionColumna<PermisoModel>[] = NICO_TABLA;
+
+
 
   /**
    * method ngOnInit

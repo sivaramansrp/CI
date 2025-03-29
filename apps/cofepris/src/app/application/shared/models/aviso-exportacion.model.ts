@@ -20,17 +20,17 @@ export interface PermisoModel {
   /**
    * Nombre del titular del permiso.
    */
-  Nombre: string;
+  nombre: string;
 
   /**
    * Registro Federal de Contribuyentes (RFC) del titular.
    */
-  RFC: string;
+  rfc: string;
 
   /**
    * Clave Única de Registro de Población (CURP) del titular.
    */
-  CURP: string;
+  curp: string;
 
   /**
    * Número de teléfono del titular.
@@ -104,19 +104,19 @@ export const NICO_TABLA = [
    * @description
    * Columna que muestra el nombre, denominación o razón social del titular.
    */
-  { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel): string => item.Nombre, orden: 1 },
+  { encabezado: 'Nombre/denominacion o razon social', clave: (item: PermisoModel): string => item.nombre, orden: 1 },
 
   /**
    * @description
    * Columna que muestra el Registro Federal de Contribuyentes (RFC) del titular.
    */
-  { encabezado: 'RFC', clave: (item: PermisoModel): string => item.RFC, orden: 2 },
+  { encabezado: 'RFC', clave: (item: PermisoModel): string => item.rfc, orden: 2 },
 
   /**
    * @description
    * Columna que muestra la Clave Única de Registro de Población (CURP) del titular.
    */
-  { encabezado: 'CURP', clave: (item: PermisoModel): string => item.CURP, orden: 3 },
+  { encabezado: 'CURP', clave: (item: PermisoModel): string => item.curp, orden: 3 },
 
   /**
    * @description

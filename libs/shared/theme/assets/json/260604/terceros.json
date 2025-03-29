@@ -1,8 +1,8 @@
 [
     {
-        "Nombre":  "QAS",
-        "RFC":"AALO409235E6",
-        "CURP":"---",
+        "nombre":  "QAS",
+        "rfc":"AALO409235E6",
+        "curp":"---",
        "Teléfono": "123-456-7890",
         "CorreoElectrónico":"QAS@GMAIL.COM",
        "calle":"av revolucion",
