@@ -216,7 +216,6 @@ describe('DatosDeLaSolicitudComponent', () => {
   it('should submit obra de arte form', () => {
     fixture.detectChanges();
 
-    // Mock form values
     component.obraDeArteFormgroup.setValue({
       autor: 'Author',
       titulo: 'Title',
@@ -240,7 +239,6 @@ describe('DatosDeLaSolicitudComponent', () => {
   });
 
   it('should retrieve data from solicitudService', () => {
-    // Mock service responses
     solicitudServiceMock.getOperacionData.mockReturnValue(of([{ id: 1, descripcion: 'Operation' }]));
     solicitudServiceMock.getMovimientoData.mockReturnValue(of([{ id: 1, descripcion: 'Movement' }]));
     solicitudServiceMock.getPaisData.mockReturnValue(of([{ id: 1, descripcion: 'Country' }]));

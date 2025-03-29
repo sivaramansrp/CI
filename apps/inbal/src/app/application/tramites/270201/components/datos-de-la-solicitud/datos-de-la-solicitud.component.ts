@@ -24,14 +24,9 @@ import { TableComponent } from '@libs/shared/data-access-user/src';
 
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 
-import {
-  OBRA_DE_ARTE_HEADER_DATA,
-  OPCIONES_DE_BOTON_DE_RADIO,
-} from '../../constantes/aviso-siglos.enum';
+import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
 
-import {
-  AlertComponent
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 
 import { ModalComponent } from '../modal/modal.component';
 
@@ -41,6 +36,10 @@ import { SolicitudService } from '../../services/solicitud.service';
 import { TablaDatos } from '../../models/aviso-siglos.models';
 
 import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
+
+export interface ObraTablaDatos {
+columns : string[];
+}
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).
@@ -166,13 +165,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   arancelariaData: Catalogo[] = [];
 
   /**
-   * @property {string[]} obraDeArteHeader
-   * @description
-   * Contiene los encabezados de la tabla para las obras de arte.
-   */
-  obraDeArteHeader = OBRA_DE_ARTE_HEADER_DATA;
-
-  /**
    * @property {string} TEXTO_MANIFIESTO_ALERT
    * @description
    * Contiene el texto del manifiesto de alerta.
@@ -208,11 +200,13 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   obraDeArteFormgroup!: FormGroup;
 
   /**
-   * @method ngOnInit
+   * @property {string[]} tablaObraDeArteData
    * @description
-   * Método de inicialización del ciclo de vida del componente. Se ejecuta cuando el componente
-   * es cargado.
+   * Esta propiedad es un arreglo que almacena datos relacionados con las obras de arte.
+   * Se utiliza para manejar y mostrar información sobre diferentes obras de arte en la aplicación.
+   * Inicialmente, el arreglo está vacío y puede ser llenado con datos en tiempo de ejecución.
    */
+  tablaObraDeArteData: string[] = [];
 
   /**
    * @constructor
@@ -252,6 +246,15 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    * ```
    */
   ngOnInit(): void {
+    /**
+     * @description
+     * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
+     * Actualiza la propiedad `tablaObraDeArteData` con los datos recibidos.
+     */
+    this.solicitudService.getObraDeArteTabla().subscribe((data: ObraTablaDatos) => {
+      this.tablaObraDeArteData = data.columns;
+    });
+
     /**
      * Obtiene los datos de operación desde el servicio y los asigna a `operacionData`.
      */
@@ -405,7 +408,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      ciudad: new FormControl('', [Validators.required,Validators.maxLength(250)]),
+      ciudad: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(250),
+      ]),
 
       /**
        * @control medioTransporte
@@ -475,7 +481,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // autor: new FormControl('', [Validators.required, Validators.maxLength(250)]),
       autor: ['', [Validators.required, Validators.maxLength(250)]],
 
       /**
@@ -485,7 +490,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // titulo: new FormControl('', [Validators.required, Validators.maxLength(250)]),
       titulo: ['', [Validators.required, Validators.maxLength(250)]],
 
       /**
@@ -495,8 +499,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // tecnicaDeRealizacion: new FormControl('', [Validators.required, Validators.maxLength(250)]),
-      tecnicaDeRealizacion: ['', [Validators.required, Validators.maxLength(250)]],
+      tecnicaDeRealizacion: [
+        '',
+        [Validators.required, Validators.maxLength(250)],
+      ],
 
       /**
        * @control medidas
@@ -505,8 +511,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // medidas: new FormControl('', [Validators.required]),
-      medidas: ['', [Validators.required]],
+      medidas: ['1', [Validators.required]],
 
       /**
        * @control alto
@@ -515,8 +520,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // alto: new FormControl('', [Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]),
-      alto: ['',[ Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]],
+      alto: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+      ],
 
       /**
        * @control ancho
@@ -525,8 +532,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // ancho: new FormControl('', [Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]),
-      ancho:['',[ Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]],
+      ancho: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+      ],
 
       /**
        * @control profundidad
@@ -535,8 +544,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // profundidad: new FormControl('', [Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]),
-      profundidad: ['',[ Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]],
+      profundidad: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+      ],
 
       /**
        * @control diametro
@@ -545,8 +556,10 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // diametro: new FormControl('', [Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]),
-      diametro: ['',[ Validators.required,Validators.pattern('^[0-9]*\\.?[0-9]+$')]],
+      diametro: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+      ],
 
       /**
        * @control variables
@@ -555,8 +568,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // variables: new FormControl('', [Validators.required,Validators.maxLength(150)]),
-      variables:['', [Validators.required,Validators.maxLength(150)]],
+      variables: ['', [Validators.required, Validators.maxLength(150)]],
 
       /**
        * @control anoDeCreacion
@@ -565,8 +577,14 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // anoDeCreacion: new FormControl('', [Validators.required,Validators.maxLength(4), Validators.pattern('^[0-9]{4}$')]),
-      anoDeCreacion:['', [Validators.required,Validators.maxLength(4), Validators.pattern('^[0-9]{4}$')]],
+      anoDeCreacion: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(4),
+          Validators.pattern('^[0-9]{4}$'),
+        ],
+      ],
 
       /**
        * @control avaluo
@@ -575,8 +593,14 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // avaluo: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.pattern('^[0-9]*\\.?[0-9]+$')]),
-      avaluo: ['',[ Validators.required, Validators.maxLength(10), Validators.pattern('^[0-9]*\\.?[0-9]+$')]],
+      avaluo: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.pattern('^[0-9]*\\.?[0-9]+$'),
+        ],
+      ],
 
       /**
        * @control moneda
@@ -585,7 +609,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // moneda: new FormControl('', [Validators.required]),
       moneda: ['', [Validators.required]],
 
       /**
@@ -595,8 +618,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      // propietario: new FormControl('', [Validators.required,Validators.maxLength(250)]),
-      propietario: ['', [Validators.required,Validators.maxLength(250)]],
+      propietario: ['', [Validators.required, Validators.maxLength(250)]],
 
       /**
        * @control fraccionArancelaria
@@ -614,7 +636,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
        * Es obligatorio y debe ser completado.
        * @default ''
        */
-      descripcionArancelaria:  ['', [Validators.required]],
+      descripcionArancelaria: ['', [Validators.required]],
     });
   }
 
@@ -633,7 +655,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
    */
   actualizarOperacion(): void {
     const OPERACION = this.solicitudFormGroup.get('tipoDeOperacion')?.value;
-    if(OPERACION !== null){
+    if (OPERACION !== null) {
       this.tramite270201Store.setOperacion(OPERACION);
     }
   }
@@ -979,7 +1001,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     const FRACCION_ARANCELARIA = this.solicitudFormGroup.get(
       'fraccionArancelaria'
     )?.value;
-    if(FRACCION_ARANCELARIA !== null && FRACCION_ARANCELARIA !== undefined){
+    if (FRACCION_ARANCELARIA !== null && FRACCION_ARANCELARIA !== undefined) {
       this.tramite270201Store.setOperacion(FRACCION_ARANCELARIA);
     }
   }
@@ -1023,74 +1045,73 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
 
   /**
- * Función que maneja el envío del formulario de obra de arte.
- * Esta función procesa los datos del formulario, crea un objeto con los datos de la obra de arte,
- * y actualiza la lista de obras de arte en la tabla.
- * 
- * @returns {void}
- */
-submitDeArteForm(): void {
-  /**
-   * Obtiene el valor de la etiqueta de las medidas seleccionadas en el formulario.
+   * Función que maneja el envío del formulario de obra de arte.
+   * Esta función procesa los datos del formulario, crea un objeto con los datos de la obra de arte,
+   * y actualiza la lista de obras de arte en la tabla.
+   *
+   * @returns {void}
    */
-  const MEDIDAS_VALUE = OPCIONES_DE_BOTON_DE_RADIO.find(
-    (option) => option.value === this.obraDeArteFormgroup.value.medidas
-  )?.label;
+  submitDeArteForm(): void {
+    /**
+     * Obtiene el valor de la etiqueta de las medidas seleccionadas en el formulario.
+     */
+    const MEDIDAS_VALUE = OPCIONES_DE_BOTON_DE_RADIO.find(
+      (option) => option.value === this.obraDeArteFormgroup.value.medidas
+    )?.label;
 
-  /**
-   * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario.
-   */
-  const ARANCELARIA_VALUE = this.arancelariaData.find(
-    (item: Catalogo) =>
-      item.id === this.obraDeArteFormgroup.value.fraccionArancelaria
-  )?.descripcion;
+    /**
+     * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario.
+     */
+    const ARANCELARIA_VALUE = this.arancelariaData.find(
+      (item: Catalogo) =>
+        item.id === this.obraDeArteFormgroup.value.fraccionArancelaria
+    )?.descripcion;
 
-  /**
-   * Obtiene la descripción de la moneda seleccionada en el formulario.
-   */
-  const MONEDA_VALUE = this.monedaData.find(
-    (item: Catalogo) => item.id === this.obraDeArteFormgroup.value.moneda
-  )?.descripcion;
+    /**
+     * Obtiene la descripción de la moneda seleccionada en el formulario.
+     */
+    const MONEDA_VALUE = this.monedaData.find(
+      (item: Catalogo) => item.id === this.obraDeArteFormgroup.value.moneda
+    )?.descripcion;
 
-  /**
-   * Crea un objeto que representa una fila en la tabla de obras de arte.
-   * Este objeto contiene los datos relevantes de la obra de arte.
-   */
-  const OBRA_DE_ARTE_ROW = {
-    tbodyData: [
-      this.obraDeArteFormgroup.value.autor,
-      this.obraDeArteFormgroup.value.titulo,
-      this.obraDeArteFormgroup.value.tecnicaDeRealizacion,
-      MEDIDAS_VALUE,
-      this.obraDeArteFormgroup.value.ancho,
-      this.obraDeArteFormgroup.value.alto,
-      this.obraDeArteFormgroup.value.profundidad,
-      this.obraDeArteFormgroup.value.diametro,
-      this.obraDeArteFormgroup.value.variables,
-      this.obraDeArteFormgroup.value.anoDeCreacion,
-      this.obraDeArteFormgroup.value.avaluo,
-      MONEDA_VALUE,
-      this.obraDeArteFormgroup.value.propietario,
-      ARANCELARIA_VALUE,
-      this.obraDeArteFormgroup.value.descripcionArancelaria,
-    ],
-  };
+    /**
+     * Crea un objeto que representa una fila en la tabla de obras de arte.
+     * Este objeto contiene los datos relevantes de la obra de arte.
+     */
+    const OBRA_DE_ARTE_ROW = {
+      tbodyData: [
+        this.obraDeArteFormgroup.value.autor,
+        this.obraDeArteFormgroup.value.titulo,
+        this.obraDeArteFormgroup.value.tecnicaDeRealizacion,
+        MEDIDAS_VALUE,
+        this.obraDeArteFormgroup.value.ancho,
+        this.obraDeArteFormgroup.value.alto,
+        this.obraDeArteFormgroup.value.profundidad,
+        this.obraDeArteFormgroup.value.diametro,
+        this.obraDeArteFormgroup.value.variables,
+        this.obraDeArteFormgroup.value.anoDeCreacion,
+        this.obraDeArteFormgroup.value.avaluo,
+        MONEDA_VALUE,
+        this.obraDeArteFormgroup.value.propietario,
+        ARANCELARIA_VALUE,
+        this.obraDeArteFormgroup.value.descripcionArancelaria,
+      ],
+    };
 
-  /**
-   * Agrega la nueva obra de arte a la lista de obras de arte.
-   */
-  this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+    /**
+     * Agrega la nueva obra de arte a la lista de obras de arte.
+     */
+    this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
 
-  /**
-   * Actualiza el almacenamiento de obras de arte en la tienda.
-   */
-  this.tramite270201Store.setObraDeArte(this.obraDeArteRowData);
+    /**
+     * Actualiza el almacenamiento de obras de arte en la tienda.
+     */
+    this.tramite270201Store.setObraDeArte(this.obraDeArteRowData);
 
-  /**
-   * Alterna la visibilidad del div de la tabla y el modal de obras de arte.
-   */
-  this.showTableDiv = !this.showTableDiv;
-  this.showObraDeArteModal = !this.showObraDeArteModal;
-}
-
+    /**
+     * Alterna la visibilidad del div de la tabla y el modal de obras de arte.
+     */
+    this.showTableDiv = !this.showTableDiv;
+    this.showObraDeArteModal = !this.showObraDeArteModal;
+  }
 }

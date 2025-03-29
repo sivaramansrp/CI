@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
+
+import { ObraTablaDatos } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 /**
  * @class SolicitudService
  * @description
@@ -102,5 +104,15 @@ export class SolicitudService {
    */
   getArancelariaData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/270201/arancelaria.json');
+  }
+
+  /**
+ * @method getObraDeArteTabla
+ * @description
+ * Obtiene los datos de las columnas para la tabla de obras de arte desde un archivo JSON localizado en 'assets/json/270201/obra-de-arte.json'.
+ * @returns {Observable<string[]>} Un observable que emite un arreglo de cadenas (`string[]`) representando los datos de las columnas.
+ */
+  getObraDeArteTabla(): Observable<ObraTablaDatos> {
+    return this.http.get<ObraTablaDatos>('assets/json/270201/obra-de-arte.json');
   }
 }
