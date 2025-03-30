@@ -1,10 +1,25 @@
+/**
+ * PERMISO_A_DESISTIR es una constante que define la estructura de los campos
+ * utilizados en el formulario para gestionar el desistimiento de un permiso.
+ * 
+ * Cada objeto dentro del arreglo representa un campo del formulario, con las siguientes propiedades:
+ * - `labelNombre`: Etiqueta que describe el campo.
+ * - `campo`: Nombre del campo utilizado como identificador.
+ * - `class`: Clase CSS aplicada al campo para definir su diseño.
+ * - `tipo_input`: Tipo de entrada del campo (por ejemplo, número, texto, área de texto).
+ * - `disabled`: Indica si el campo está deshabilitado.
+ * - `validators`: Validaciones aplicadas al campo (por ejemplo, requerido).
+ * - `placeholder`: Texto de marcador de posición para el campo.
+ * - `tooltip`: Información adicional que se muestra como un tooltip (opcional).
+ */
 export const PERMISO_A_DESISTIR = [
   {
     labelNombre: 'Folio',
-    campo: 'aduana',
+    campo: 'folio',
     class: 'col-md-12',
     tipo_input: 'number',
-    disabled: true,
+    disabled: false,
+    readonly: true,
     validators: [''],
     placeholder: '',
   },
@@ -13,7 +28,8 @@ export const PERMISO_A_DESISTIR = [
     campo: 'tipoDeSolicitud',
     class: 'col-md-12',
     tipo_input: 'textarea',
-    disabled: true,
+    disabled: false,
+    readonly: true,
     validators: [''],
     placeholder: '',
   },
@@ -23,6 +39,7 @@ export const PERMISO_A_DESISTIR = [
     class: 'col-md-12',
     tipo_input: 'textarea',
     disabled: false,
+    readonly: false,
     tooltip: '',
     validators: ['required'],
     placeholder: '',
@@ -54,6 +71,15 @@ export const MANIFIESTOS_ALERT = {
     `,
 };
 
+/**
+ * AVISO_DE_PRIVACIDAD_SIMPLIFICADO:
+ * Contiene el mensaje del aviso de privacidad simplificado que se muestra al usuario.
+ *
+ * - message: Mensaje en formato HTML que describe el tratamiento de los datos personales
+ *   recabados a través de la Ventanilla Digital Mexicana de Comercio Exterior (VUCEM).
+ *   Incluye información sobre el uso, transferencia y protección de los datos personales,
+ *   así como la posibilidad de consultar el aviso de privacidad integral.
+ */
 export const AVISO_DE_PRIVACIDAD_SIMPLIFICADO = {
   message: `
     <div class="row">

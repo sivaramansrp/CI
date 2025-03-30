@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PermisoSanitarioModule } from '../260211/permiso-sanitario.module';
 import { RetirosCofeprisRoutingModule } from './retiros-cofepris-routing.module';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
 
@@ -20,7 +21,8 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     TituloComponent,
     SolicitanteComponent,
     SolicitudComponent,
-    AlertComponent
+    AlertComponent,
+    PermisoSanitarioModule
   ]
 })
 export class RetirosCofeprisModule { }

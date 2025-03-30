@@ -19,9 +19,10 @@
                             [placeholder]="item.placeholder"
                             [formControlName]="item.campo"
                             [required]="item?.validators?.includes('required') ?? false"
+                            [readonly]="item.readonly"
                             [ngClass]="isValid(item.campo) ? 'required' : ''"
+                            (change)="changeInValoresStore(forma, item.campo)"
                           />
-                          <!-- (change)="changeInValoresStore(formargrupo, item.campo)" -->
                           @if (isValid(item.campo)) {
                             <div class="mensaje-error">
                               Este campo es obligatorio.
@@ -47,9 +48,10 @@
                             [placeholder]="item.placeholder"
                             [formControlName]="item.campo"
                             [required]="item?.validators?.includes('required') ?? false"
+                            [readonly]="item.readonly"
                             [ngClass]="isValid(item.campo) ? 'required' : ''"
+                            (change)="changeInValoresStore(forma, item.campo)"
                           />
-                          <!-- (change)="changeInValoresStore(formargrupo, item.campo)" -->
                           @if (isValid(item.campo)) {
                             <div class="mensaje-error">
                               Este campo es obligatorio.
@@ -73,9 +75,10 @@
                           style="height: 100px !important"
                           [formControlName]="item.campo"
                           [required]="item?.validators?.includes('required') ?? false"
+                          [readonly]="item.readonly"
                           [ngClass]="isValid(item.campo) ? 'required' : ''"
+                          (change)="changeInValoresStore(forma, item.campo)"
                         ></textarea>
-                        <!-- (change)="changeInValoresStore(formargrupo, item.campo)" -->
                         @if (isValid(item.campo)) {
                           <div class="mensaje-error">
                             Este campo es obligatorio.
