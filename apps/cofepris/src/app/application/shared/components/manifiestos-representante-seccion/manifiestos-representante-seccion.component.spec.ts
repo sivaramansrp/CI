@@ -25,8 +25,8 @@ describe('ManifiestosRepresentanteSeccionComponent', () => {
     } as unknown as jest.Mocked<DatosDelSolicituteSeccionStateStore>;
 
     await TestBed.configureTestingModule({
-      declarations: [ManifiestosRepresentanteSeccionComponent],
-      imports: [CommonModule, ReactiveFormsModule, FormsModule],
+     
+      imports: [CommonModule, ReactiveFormsModule, FormsModule,ManifiestosRepresentanteSeccionComponent],
       providers: [
         { provide: DatosDelSolicituteSeccionQuery, useValue: mockQuery },
         { provide: DatosDelSolicituteSeccionStateStore, useValue: mockStore },
@@ -46,12 +46,12 @@ describe('ManifiestosRepresentanteSeccionComponent', () => {
 
   it('should initialize the form on ngOnInit', () => {
     const mockState = {
-      representanteRfc: 'RFC123456',
-      manifests: 'Manifest Test',
-      informacionConfidencialRadio: 'Yes',
-      representanteNombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
+      representanteRfc: '',
+      manifests: '',
+      informacionConfidencialRadio: '',
+      representanteNombre: '',
+      apellidoPaterno: '',
+      apellidoMaterno: '',
       establecimientoDenominacionRazonSocial: '',
       establecimientoCorreoElectronico: '',
       establecimientoDomicilioCodigoPostal: '',

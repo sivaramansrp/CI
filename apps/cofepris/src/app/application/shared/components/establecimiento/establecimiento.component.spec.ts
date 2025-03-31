@@ -6,7 +6,7 @@ import { ElementRef, QueryList } from '@angular/core';
 import { Modal } from 'bootstrap';
 
 import { EstablecimientoComponent } from './establecimiento.component';
-import { EstablecimientoService } from '../../services/establecimiento/establecimiento.service';
+import { EstablecimientoService } from '../../services/establecimiento.service';
 import { Catalogo, CrosslistComponent } from '@libs/shared/data-access-user/src';
 
 describe('EstablecimientoComponent', () => {
@@ -23,8 +23,8 @@ describe('EstablecimientoComponent', () => {
     } as unknown as jest.Mocked<EstablecimientoService>;
 
     await TestBed.configureTestingModule({
-      declarations: [EstablecimientoComponent],
-      imports: [CommonModule, ReactiveFormsModule, FormsModule],
+   
+      imports: [CommonModule, ReactiveFormsModule, FormsModule,EstablecimientoComponent],
       providers: [{ provide: EstablecimientoService, useValue: mockEstablecimientoService }],
     }).compileComponents();
   });
@@ -152,6 +152,14 @@ describe('EstablecimientoComponent', () => {
       almacenamientoEnvasePrimario: null,
       presentacionaFrmaceutica: null,
     });
+  });
+
+  it('should not add a new mercancia entry if the form is empty', () => {
+    component.datosMercanciaForm.reset();
+
+    component.guardarDatosMercancia();
+
+    expect(component.propietarioData.length).toBe(0);
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

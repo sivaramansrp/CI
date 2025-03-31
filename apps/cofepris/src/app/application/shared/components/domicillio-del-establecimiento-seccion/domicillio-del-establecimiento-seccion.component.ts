@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Componente `DomicillioDelEstablecimientoSeccionComponent`
+ * Este componente gestiona el formulario relacionado con el domicilio del establecimiento,
+ * incluyendo datos como el estado, código postal, municipio, localidad, colonia, calle, teléfono,
+ * y otros datos relacionados. También permite la gestión de datos SCIAN y la interacción con un modal.
+ */
+
 import {
   AfterViewInit,
   Component,
@@ -26,12 +33,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { EstablecimientoService } from '../../services/establecimiento/establecimiento.service';
+import { EstablecimientoService } from '../../services/establecimiento.service';
 
 import { Subject, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
+
 @Component({
   selector: 'app-domicillio-del-establecimiento-seccion',
   standalone: true,
@@ -49,11 +57,29 @@ import { Modal } from 'bootstrap';
 export class DomicillioDelEstablecimientoSeccionComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+  /**
+   * Referencia al modal del establecimiento.
+   */
   @ViewChild('establecimientoModal', { static: false })
   establecimientoModal!: ElementRef;
+
+  /**
+   * Formulario para gestionar los datos SCIAN.
+   */
   scianForm!: FormGroup;
+
+  /**
+   * Enumeración para la selección de tablas.
+   */
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para inicializar formularios reactivos.
+   * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
+   * @param domicilioEstablecimientoStore Store para gestionar el estado del domicilio del establecimiento.
+   * @param domicilioEstablecimientoQuery Query para obtener el estado inicial del domicilio del establecimiento.
+   */
   constructor(
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
@@ -61,15 +87,49 @@ export class DomicillioDelEstablecimientoSeccionComponent
     private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
   ) {}
 
-  /** Subject para destruir el componente */
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Instancia del modal de Bootstrap.
+   */
   modalInstance!: Modal;
+
+  /**
+   * Datos del catálogo de régimen al que se destinará la mercancía.
+   */
   regimenQueDestinara: Catalogo[] = [];
+
+  /**
+   * Datos del catálogo de aduanas de salida.
+   */
   aduanaDeSalida: Catalogo[] = [];
+
+  /**
+   * Formulario para gestionar los datos del domicilio del establecimiento.
+   */
   domicilioEstablecimiento!: FormGroup;
+
+  /**
+   * Datos del catálogo de estados.
+   */
   estadoJson: Catalogo[] = [];
+
+  /**
+   * Datos SCIAN agregados por el usuario.
+   */
   personaparas: ScianModel[] = [];
+
+  /**
+   * Datos del catálogo SCIAN.
+   */
   scianJson: Catalogo[] = [];
+
+  /**
+   * Configuración de las columnas de la tabla dinámica para los datos SCIAN.
+   */
   configuracionTabla: ConfiguracionColumna<ScianModel>[] = [
     {
       encabezado: 'Clave S.C.I.A.N.',
@@ -82,17 +142,27 @@ export class DomicillioDelEstablecimientoSeccionComponent
       orden: 2,
     },
   ];
+
+  /**
+   * Ciclo de vida `AfterViewInit`.
+   * Inicializa la instancia del modal de Bootstrap.
+   */
   ngAfterViewInit(): void {
     if (this.establecimientoModal) {
       this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
     }
   }
 
+  /**
+   * Ciclo de vida `OnInit`.
+   * Inicializa los formularios y carga los datos iniciales.
+   */
   ngOnInit(): void {
     this.loadAduanaDeSalida();
     this.loadRegimen();
     this.loadEstado();
     this.loadScian();
+
     this.domicilioEstablecimiento = this.fb.group({
       establecimientoDomicilioEstado: ['', Validators.required],
       establecimientoDomicilioCodigoPostal: ['', Validators.required],
@@ -109,25 +179,31 @@ export class DomicillioDelEstablecimientoSeccionComponent
       aduanaDeSalida: [''],
       avisoDeFuncionamiento: [false],
     });
+
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
       descripcionScian: ['', Validators.required],
     });
-    // Load the state into the form
+
+    // Cargar el estado inicial en el formulario
     this.domicilioEstablecimientoQuery
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
-        this.domicilioEstablecimiento.patchValue(state);
+        this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
 
-    // Update the store whenever the form changes
+    // Actualizar el estado global cuando cambien los valores del formulario
     this.domicilioEstablecimiento.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.domicilioEstablecimientoStore.update(value);
       });
   }
+
+  /**
+   * Carga los datos del catálogo de régimen.
+   */
   loadRegimen(): void {
     this.establecimientoService
       .getRegimenData()
@@ -136,6 +212,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.regimenQueDestinara = resp;
       });
   }
+
+  /**
+   * Carga los datos del catálogo de aduanas de salida.
+   */
   loadAduanaDeSalida(): void {
     this.establecimientoService
       .getAduanaDeSalidaData()
@@ -144,6 +224,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.aduanaDeSalida = resp;
       });
   }
+
+  /**
+   * Carga los datos del catálogo de estados.
+   */
   loadEstado(): void {
     this.establecimientoService
       .getEstadoData()
@@ -152,6 +236,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.estadoJson = resp;
       });
   }
+
+  /**
+   * Carga los datos del catálogo SCIAN.
+   */
   loadScian(): void {
     this.establecimientoService
       .getSciandata()
@@ -160,15 +248,31 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.scianJson = resp;
       });
   }
+
+  /**
+   * Abre el modal SCIAN.
+   */
   openScianModal(): void {
     this.modalInstance.show();
   }
+
+  /**
+   * Cierra el modal SCIAN.
+   */
   closeScianModal(): void {
     this.modalInstance.hide();
   }
+
+  /**
+   * Limpia el formulario SCIAN.
+   */
   limpiarScianForm(): void {
     this.scianForm.reset();
   }
+
+  /**
+   * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
+   */
   guardarScian(): void {
     if (this.scianForm.valid) {
       const SCIAN_DATA: ScianModel = {
@@ -176,20 +280,29 @@ export class DomicillioDelEstablecimientoSeccionComponent
         descripcionScian: this.scianForm.get('descripcionScian')?.value,
       };
 
-      // Add the new data to the table
+      // Agregar el nuevo dato a la tabla
       this.personaparas.push(SCIAN_DATA);
 
-      // Reset the form
+      // Limpiar el formulario
       this.scianForm.reset();
 
-      // Close the modal
+      // Cerrar el modal
       this.closeScianModal();
     }
   }
 
+  /**
+   * Verifica si el checkbox de aviso de funcionamiento está marcado.
+   * @returns `true` si está marcado, de lo contrario `false`.
+   */
   isCheckboxChecked(): boolean {
     return this.domicilioEstablecimiento.get('avisoDeFuncionamiento')?.value;
   }
+
+  /**
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

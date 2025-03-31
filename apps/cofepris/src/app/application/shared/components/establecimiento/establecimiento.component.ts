@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Componente `EstablecimientoComponent`
+ * Este componente gestiona el formulario relacionado con los datos del establecimiento,
+ * incluyendo información sobre productos, países de origen, países de procedencia,
+ * y otros datos relacionados. También permite la interacción con modales y listas cruzadas.
+ */
+
 import {
   AfterViewInit,
   Component,
@@ -35,19 +42,20 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
 
 import {
   DatosDeLaProductoModel,
-
 } from '../../models/datos-de-la-solicitud.model';
 
-import { EstablecimientoService } from '../../services/establecimiento/establecimiento.service';
+import { EstablecimientoService } from '../../services/establecimiento.service';
+
+import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
+import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
 
 import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecimiento-seccion/datos-del-establecimiento-seccion.component';
-import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
-import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
 @Component({
   selector: 'app-establecimiento',
   standalone: true,
@@ -59,10 +67,10 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    DatosDelEstablecimientoSeccionComponent,
+    DomicillioDelEstablecimientoSeccionComponent,
     InputRadioComponent,
     ManifiestosRepresentanteSeccionComponent,
-    DomicillioDelEstablecimientoSeccionComponent,
+    DatosDelEstablecimientoSeccionComponent
   ],
   templateUrl: './establecimiento.component.html',
   styleUrl: './establecimiento.component.scss',
@@ -70,19 +78,48 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 export class EstablecimientoComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
+ 
+  public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+  public paisDeOriginLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de origen',
+    derecha: 'País(es) seleccionado(s)',
+  };
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionados',
+  };
+  public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+  /**
+   * Referencia al modal de datos de mercancía.
+   */
   @ViewChild('datosMercanciaModal', { static: false })
   datosMercanciaModal!: ElementRef;
 
+  /**
+   * Referencias a los componentes de listas cruzadas.
+   */
   @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
   @ViewChildren(CrosslistComponent) crossList1!: QueryList<CrosslistComponent>;
 
+  /**
+   * Instancia del modal de Bootstrap.
+   */
   datosModalInstance!: Modal;
 
+  /**
+   * Formularios para gestionar los datos del producto y de la mercancía.
+   */
   datosProductoForm!: FormGroup;
   datosMercanciaForm!: FormGroup;
 
+  /**
+   * Datos de los productos agregados.
+   */
   propietarioData: DatosDeLaProductoModel[] = [];
 
+  /**
+   * Configuración de las columnas de la tabla dinámica para los datos del producto.
+   */
   configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] =
     [
       {
@@ -161,29 +198,71 @@ export class EstablecimientoComponent
         orden: 15,
       },
     ];
-  /** Subject para destruir el componente */
+
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Enumeración para la selección de tablas.
+   */
   TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Datos del catálogo de estados.
+   */
   estadoJson: Catalogo[] = [];
 
+  /**
+   * Datos del catálogo de tipo de producto.
+   */
   catalogoTipoProducto: Catalogo[] = [];
+
+  /**
+   * Datos del catálogo de unidad de medida.
+   */
   unidadDeMedida: Catalogo[] = [];
+
+  /**
+   * Datos del catálogo de uso específico.
+   */
   usoEspecifico: Catalogo[] = [];
+
+  /**
+   * Estado del colapsable para países de procedencia.
+   */
   colapsable_procedencia: boolean = false;
 
   /**
-   * @property {string[]} seleccionadasPaisDeProcedenciaDatos
    * Lista de países seleccionados como procedencia.
    */
   public seleccionadasPaisDeProcedenciaDatos: string[] = [];
+
+  /**
+   * Estado del colapsable para países de origen.
+   */
   colapsable: boolean = false;
-  public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+
+  /**
+   * Lista de países seleccionados como origen.
+   */
+  public seleccionadasPaisDeOriginDatos: string[] = [];
+
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para inicializar formularios reactivos.
+   * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
+   */
   constructor(
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService
-  ) {
-    //constructor
-  }
+  ) {}
+
+  /**
+   * Ciclo de vida `AfterViewInit`.
+   * Inicializa la instancia del modal de Bootstrap.
+   */
   ngAfterViewInit(): void {
     if (this.datosMercanciaModal) {
       this.datosModalInstance = new Modal(
@@ -193,19 +272,9 @@ export class EstablecimientoComponent
   }
 
   /**
-   * @property {string[]} seleccionadasPaisDeOriginDatos
-   * Lista de países seleccionados como origen.
+   * Ciclo de vida `OnInit`.
+   * Inicializa los formularios y carga los datos iniciales.
    */
-  public seleccionadasPaisDeOriginDatos: string[] = [];
-  public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
-  public paisDeOriginLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de origen',
-    derecha: 'País(es) seleccionado(s)',
-  };
-  public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
-  };
   ngOnInit(): void {
     this.loadEstado();
     this.loadTipoProducto();
@@ -233,6 +302,10 @@ export class EstablecimientoComponent
     });
   }
 
+  /**
+   * Maneja el cambio de selección de países de origen.
+   * @param events Lista de países seleccionados.
+   */
   paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
     this.datosMercanciaForm.patchValue({
@@ -240,15 +313,22 @@ export class EstablecimientoComponent
     });
   }
 
+  /**
+   * Maneja el cambio de selección de países de procedencia.
+   * @param events Lista de países seleccionados.
+   */
   paisDeProcedenciaSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeProcedenciaDatos = events;
     this.datosMercanciaForm.patchValue({
       paisDeProcedenciaDatos: events,
     });
   }
+
+  /**
+   * Guarda los datos de la mercancía y los agrega a la tabla.
+   */
   guardarDatosMercancia(): void {
     if (this.datosMercanciaForm) {
-      // Map the form data to the expected structure
       const MERCANCIA_DATA: DatosDeLaProductoModel = {
         tipoDeProducto: this.datosMercanciaForm.get('tipoDeProducto')?.value,
         nombreEspecifico:
@@ -276,30 +356,28 @@ export class EstablecimientoComponent
         paisDeDestino: this.datosMercanciaForm.get('paisDeDestino')?.value,
         usoEpecifico: this.datosMercanciaForm.get('usoEspecifico')?.value,
       };
-      // Check if all fields in the PROPIETARIO object are empty
+
       const IS_EMPTY = Object.values(MERCANCIA_DATA).every((value) => !value);
 
       if (IS_EMPTY) {
-        return; // Exit the method without adding to the table
+        return;
       }
 
-      // Add the mapped data to the table's data source
       this.propietarioData.push(MERCANCIA_DATA);
-
-      // Reset the form
       this.datosMercanciaForm.reset();
-
-      // Close the modal
       this.closeDatosMercanciaModal();
     }
   }
+
+  /**
+   * Maneja el evento blur en el campo RFC del representante.
+   */
   onRepresentanteRfcBlur(): void {
     const FRACCION_ARANCELARIA = this.datosMercanciaForm.get(
       'fraccionArancelaria'
     )?.value;
 
     if (FRACCION_ARANCELARIA) {
-      // Patch the form controls with the fetched data
       this.datosMercanciaForm.patchValue({
         descripcionFraccionArancelaria:
           'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
@@ -307,9 +385,17 @@ export class EstablecimientoComponent
       });
     }
   }
+
+  /**
+   * Limpia todos los campos del formulario.
+   */
   limpiarFormulario(): void {
-    this.datosMercanciaForm.reset(); // Clear all form fields
+    this.datosMercanciaForm.reset();
   }
+
+  /**
+   * Carga los datos del catálogo de estados.
+   */
   loadEstado(): void {
     this.establecimientoService
       .getEstadoData()
@@ -319,6 +405,9 @@ export class EstablecimientoComponent
       });
   }
 
+  /**
+   * Carga los datos del catálogo de tipo de producto.
+   */
   loadTipoProducto(): void {
     this.establecimientoService
       .getTipoDeProductoData()
@@ -327,6 +416,10 @@ export class EstablecimientoComponent
         this.catalogoTipoProducto = resp;
       });
   }
+
+  /**
+   * Carga los datos del catálogo de unidad de medida.
+   */
   loadUnidadDeMedida(): void {
     this.establecimientoService
       .getUnidadDeMedidaData()
@@ -335,6 +428,10 @@ export class EstablecimientoComponent
         this.unidadDeMedida = resp;
       });
   }
+
+  /**
+   * Carga los datos del catálogo de uso específico.
+   */
   loadUsoEspecifico(): void {
     this.establecimientoService
       .getUsoEspecificoData()
@@ -343,6 +440,10 @@ export class EstablecimientoComponent
         this.usoEspecifico = resp;
       });
   }
+
+  /**
+   * Botones para gestionar la lista cruzada de países de procedencia.
+   */
   paisDeProcedenciaBotons = [
     {
       btnNombre: 'Agregar todos',
@@ -365,6 +466,10 @@ export class EstablecimientoComponent
       funcion: (): void => this.crossList.toArray()[0].quitar('t'),
     },
   ];
+
+  /**
+   * Botones para gestionar la lista cruzada de países de origen.
+   */
   paisDeOriginBotons = [
     {
       btnNombre: 'Agregar todos',
@@ -388,19 +493,38 @@ export class EstablecimientoComponent
     },
   ];
 
+  /**
+   * Abre el modal de datos de mercancía.
+   */
   openDatosMercanciaModal(): void {
     this.datosModalInstance.show();
   }
+
+  /**
+   * Cierra el modal de datos de mercancía.
+   */
   closeDatosMercanciaModal(): void {
     this.datosModalInstance.hide();
   }
+
+  /**
+   * Alterna el estado del colapsable para países de origen.
+   */
   mostrar_colapsable_pais(): void {
     this.colapsable = !this.colapsable;
   }
+
+  /**
+   * Alterna el estado del colapsable para países de procedencia.
+   */
   mostrar_colapsable_pais_procedencia(): void {
     this.colapsable_procedencia = !this.colapsable_procedencia;
   }
 
+  /**
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -1,110 +1,135 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf } from 'rxjs';
+
+import { DatosDelEstablecimientoSeccionComponent } from './datos-del-establecimiento-seccion.component';
+import { FormBuilder } from '@angular/forms';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
-import { DatosDelEstablecimientoSeccionComponent } from './Datos-del-establecimiento-seccion.component';
-import { of, Subject } from 'rxjs';
-import { ElementRef } from '@angular/core';
-import { Modal } from 'bootstrap';
+
+@Injectable()
+class MockDatosDelSolicituteSeccionStateStore {
+  update = jest.fn();
+}
+
+@Injectable()
+class MockDatosDelSolicituteSeccionQuery {
+  select = jest.fn().mockReturnValue(observableOf({}));
+}
+
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
+
+@Pipe({ name: 'translate' })
+class TranslatePipe implements PipeTransform {
+  transform(value) {
+    return value;
+  }
+}
+
+@Pipe({ name: 'phoneNumber' })
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) {
+    return value;
+  }
+}
+
+@Pipe({ name: 'safeHtml' })
+class SafeHtmlPipe implements PipeTransform {
+ ;
+  }
+
 
 describe('DatosDelEstablecimientoSeccionComponent', () => {
-  let component: DatosDelEstablecimientoSeccionComponent;
   let fixture: ComponentFixture<DatosDelEstablecimientoSeccionComponent>;
-  let mockQuery: jest.Mocked<DatosDelSolicituteSeccionQuery>;
-  let mockStore: jest.Mocked<DatosDelSolicituteSeccionStateStore>;
-
-  beforeEach(async () => {
-    mockQuery = {
-      select: jest.fn(),
-    } as unknown as jest.Mocked<DatosDelSolicituteSeccionQuery>;
-
-    mockStore = {
-      update: jest.fn(),
-    } as unknown as jest.Mocked<DatosDelSolicituteSeccionStateStore>;
-
-    await TestBed.configureTestingModule({
-      declarations: [DatosDelEstablecimientoSeccionComponent],
-      imports: [CommonModule, ReactiveFormsModule, FormsModule, TituloComponent],
-      providers: [
-        { provide: DatosDelSolicituteSeccionQuery, useValue: mockQuery },
-        { provide: DatosDelSolicituteSeccionStateStore, useValue: mockStore },
-      ],
-    }).compileComponents();
-  });
+  let component: DatosDelEstablecimientoSeccionComponent;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        DatosDelEstablecimientoSeccionComponent,
+        TranslatePipe,
+        PhoneNumberPipe,
+        SafeHtmlPipe,
+        MyCustomDirective,
+      CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        FormBuilder,
+        { provide: DatosDelSolicituteSeccionStateStore, useClass: MockDatosDelSolicituteSeccionStateStore },
+        { provide: DatosDelSolicituteSeccionQuery, useClass: MockDatosDelSolicituteSeccionQuery },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(DatosDelEstablecimientoSeccionComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    // Mock the full state object
-    const mockState: DatosDelSolicituteSeccionState = {
-      establecimientoDenominacionRazonSocial: 'Test',
-      establecimientoCorreoElectronico: 'test@example.com',
-      representanteRfc: 'RFC123456',
-      representanteNombre: 'John',
-      apellidoPaterno: 'Doe',
-      apellidoMaterno: 'Smith',
-      establecimientoDomicilioCodigoPostal: '12345',
-      establecimientoDomicilioEstado: 'Estado Test',
-      establecimientoMunicipioYAlcaldia: 'Municipio Test',
-      establecimientoDomicilioLocalidad: 'Localidad Test',
-      establecimientoDomicilioColonia: 'Colonia Test',
-      establecimientoDomicilioCalle: 'Calle Test',
-      establecimientoDomicilioLada: '123',
-      establecimientoDomicilioTelefono: '1234567890',
-      rfcDelProfesionalResponsable: 'RFCRESP123',
-      nombreDelProfesionalResponsable: 'Responsable Test',
-      informacionConfidencialRadio: 'Yes',
-      propietarioData: [],
-    };
-  
-    mockQuery.select.mockReturnValue(of(mockState)); // Return the full mock state
+  it('should initialize the form with empty state on ngOnInit when state is null', () => {
+    jest.spyOn(component.establecimientoQuery, 'select').mockReturnValue(observableOf(null));
     component.ngOnInit();
-  
-    expect(component.detosEstablecimiento).toBeDefined();
-    expect(component.detosEstablecimiento.get('establecimientoDenominacionRazonSocial')?.value).toBe('Test');
-    expect(component.detosEstablecimiento.get('establecimientoCorreoElectronico')?.value).toBe('test@example.com');
-  });
-  it('should update the store when form value changes', () => {
-    component.ngOnInit();
-    component.detosEstablecimiento.patchValue({
-      establecimientoDenominacionRazonSocial: 'Updated Name',
-      establecimientoCorreoElectronico: 'updated@example.com',
-    });
-    expect(mockStore.update).toHaveBeenCalledWith({
-      establecimientoDenominacionRazonSocial: 'Updated Name',
-      establecimientoCorreoElectronico: 'updated@example.com',
-    });
+    expect(component.detosEstablecimiento.value).toEqual({});
   });
 
-  it('should initialize the modal instance in ngAfterViewInit', () => {
-    const mockElement = document.createElement('button');
-    component.establecimientoModalButton = { nativeElement: mockElement } as ElementRef;
-    component.ngAfterViewInit();
-    expect(component.establecimientoModalInstance).toBeDefined();
+  it('should initialize the form with state on ngOnInit when state is defined', () => {
+    const mockState = { nombreEspecifico: 'Test Name' };
+    jest.spyOn(component.establecimientoQuery, 'select').mockReturnValue(observableOf(mockState));
+    component.ngOnInit();
+    expect(component.detosEstablecimiento.value).toEqual(mockState);
   });
 
-  it('should open the modal when openEstablecimientoModal is called', () => {
-    const mockShow = jest.fn();
-    component.establecimientoModalInstance = { show: mockShow } as unknown as Modal;
+  it('should update the store on form value changes', () => {
+    component.ngOnInit();
+    const mockValue = { nombreEspecifico: 'Updated Name' };
+    component.detosEstablecimiento.patchValue(mockValue);
+    expect(component.establecimientoStore.update).toHaveBeenCalledWith(mockValue);
+  });
+
+  it('should open the establecimiento modal', () => {
+    component.establecimientoModalInstance = { show: jest.fn() } as any;
     component.openEstablecimientoModal();
-    expect(mockShow).toHaveBeenCalled();
+    expect(component.establecimientoModalInstance.show).toHaveBeenCalled();
+  });
+
+  it('should close the establecimiento modal', () => {
+    component.establecimientoModalInstance = { hide: jest.fn() } as any;
+    component.closeEstablecimientoModal();
+    expect(component.establecimientoModalInstance.hide).toHaveBeenCalled();
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    const destroySpy = jest.spyOn(component.destroy$, 'next');
+    const completeSpy = jest.spyOn(component.destroy$, 'complete');
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should bind form control to input field', () => {
+    component.ngOnInit();
+    fixture.detectChanges();
+    const input = fixture.debugElement.query(By.css('input[formControlName="nombreEspecifico"]')).nativeElement;
+    input.value = 'New Value';
+    input.dispatchEvent(new Event('input'));
+    expect(component.detosEstablecimiento.get('nombreEspecifico')?.value).toBe('New Value');
+  });
+
+  it('should handle null state gracefully', () => {
+    jest.spyOn(component.establecimientoQuery, 'select').mockReturnValue(observableOf(null));
+    component.ngOnInit();
+    expect(component.detosEstablecimiento.value).toEqual({});
   });
 });

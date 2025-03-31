@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BreadcrumbComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { EstablecimientoService } from './shared/services/establecimiento/establecimiento.service';
+import { EstablecimientoService } from './shared/services/establecimiento.service';
 import { FooterComponent } from '@ng-mf/data-access-user';
 import { HeaderComponent } from '@ng-mf/data-access-user';
 import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";

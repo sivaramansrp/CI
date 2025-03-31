@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Componente `PropietarioComponent`
+ * Este componente gestiona el formulario relacionado con los datos del propietario,
+ * incluyendo información personal, dirección, y otros datos relevantes. También permite
+ * la interacción con un modal para agregar o editar propietarios, y la actualización del estado global.
+ */
+
 import { CommonModule } from '@angular/common';
 
 import {
@@ -37,6 +44,7 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
 
 import { EstablecimientoComponent } from '../establecimiento/establecimiento.component';
+
 @Component({
   selector: 'app-propietario',
   standalone: true,
@@ -52,39 +60,105 @@ import { EstablecimientoComponent } from '../establecimiento/establecimiento.com
   templateUrl: './propietario.component.html',
   styleUrl: './propietario.component.scss',
 })
-export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
+export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
+  /**
+   * Referencia al modal de propietario.
+   */
   @ViewChild('propietarioModal', { static: false }) propietarioModal!: ElementRef;
+
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Formulario para gestionar los datos personales del propietario.
+   */
   formTercerosDatos!: FormGroup;
+
+  /**
+   * Formulario para gestionar los datos del radio de propietario.
+   */
   propietarioradioForm!: FormGroup;
+
+  /**
+   * Datos del catálogo de tipo de persona.
+   */
   propietarioTipoPersonaData = propietarioTipoPersonaJson;
+
+  /**
+   * Datos del catálogo de opciones de radio.
+   */
   propietarioRadioData = propietarioJson;
+
+  /**
+   * Instancia del modal de Bootstrap.
+   */
   modalInstance!: Modal;
+
+  /**
+   * Datos de los propietarios agregados.
+   */
   propietarioData: PropietarioModel[] = [];
+
+  /**
+   * Valor seleccionado en el formulario.
+   */
   selectedValue: string = '';
+
+  /**
+   * Indicador para mostrar los datos personales.
+   */
   showDatosPersonales = false;
+
+  /**
+   * Indicador para mostrar el botón de búsqueda.
+   */
   showBuscarButton = false;
+
+  /**
+   * Valor mostrado en el formulario.
+   */
   showValue: string = '';
-  constructor(private fb: FormBuilder,
+
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para inicializar formularios reactivos.
+   * @param propietarioStore Store para gestionar el estado del propietario.
+   * @param propietarioQuery Query para obtener el estado inicial del propietario.
+   */
+  constructor(
+    private fb: FormBuilder,
     private propietarioStore: DatosDelSolicituteSeccionStateStore,
     private propietarioQuery: DatosDelSolicituteSeccionQuery
   ) {}
 
+  /**
+   * Ciclo de vida `AfterViewInit`.
+   * Inicializa la instancia del modal de Bootstrap.
+   */
   ngAfterViewInit(): void {
     if (this.propietarioModal) {
       this.modalInstance = new Modal(this.propietarioModal.nativeElement);
     }
   }
-  /** Enum para la selección de tabla */
+
+  /**
+   * Enum para la selección de tabla.
+   */
   TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Ciclo de vida `OnInit`.
+   * Inicializa los formularios y carga los datos iniciales.
+   */
   ngOnInit(): void {
-   
-      this.propietarioradioForm = this.fb.group({
-    tercerosTipoPersona: [null, Validators.required],
-    tercerosCurp: [null, [Validators.required, Validators.maxLength(254)]],
-    tercerosNacionalidad: [null, Validators.required],
-    tercerosRfc: [null, Validators.required],
-  });
+    this.propietarioradioForm = this.fb.group({
+      tercerosTipoPersona: [null, Validators.required],
+      tercerosCurp: [null, [Validators.required, Validators.maxLength(254)]],
+      tercerosNacionalidad: [null, Validators.required],
+      tercerosRfc: [null, Validators.required],
+    });
 
     this.formTercerosDatos = this.fb.group({
       tercerosDenominacionRazonSocial: [
@@ -108,18 +182,17 @@ export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
       tercerosPrimerApellido: ['', Validators.required],
     });
 
-   // Subscribe to the store to get the propietario data
-   this.propietarioQuery
-   .select('propietarioData')
-   .pipe(takeUntil(this.destroy$))
-   .subscribe((data) => {
-     this.propietarioData = data;
-   });
+    // Suscribirse al store para obtener los datos del propietario
+    this.propietarioQuery
+      .select('propietarioData')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.propietarioData = data;
+      });
   }
 
   /**
-   * Configuración de columnas de la tabla
-   * @type {ConfiguracionColumna<any>[]}
+   * Configuración de columnas de la tabla.
    */
   configuracionTabla: ConfiguracionColumna<PropietarioModel>[] = [
     {
@@ -163,7 +236,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
       orden: 8,
     },
     {
-      encabezado: 'Pais',
+      encabezado: 'País',
       clave: (item: PropietarioModel) => item.pais,
       orden: 9,
     },
@@ -198,7 +271,10 @@ export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
       orden: 15,
     },
   ];
- 
+
+  /**
+   * Guarda un nuevo propietario y actualiza el estado global.
+   */
   guardarPropietario(): void {
     const PROPIETARIO: PropietarioModel = {
       NombredenominacionORazonSocial:
@@ -224,58 +300,79 @@ export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
         this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value,
       codigoPostal:
         this.formTercerosDatos.get('tercerosCodigoPostal')?.value,
-  
-      };
-  
-    // Check if all fields in the PROPIETARIO object are empty
-    const IS_EMPTY = Object.values(PROPIETARIO).every((value) => !value);
-  
-    if (IS_EMPTY) {
-     
-      return; // Exit the method without adding to the table
-    }
-  
-   // Create a new array with the new propietario
-   const UPDATED_DATA = [...this.propietarioData, PROPIETARIO];
+    };
 
-   // Update the store with the new propietario data
-   this.propietarioStore.update({ propietarioData: UPDATED_DATA });
-    // Reset the form
+    // Verificar si todos los campos están vacíos
+    const IS_EMPTY = Object.values(PROPIETARIO).every((value) => !value);
+
+    if (IS_EMPTY) {
+      return;
+    }
+
+    // Crear un nuevo array con el nuevo propietario
+    const UPDATED_DATA = [...this.propietarioData, PROPIETARIO];
+
+    // Actualizar el store con los nuevos datos del propietario
+    this.propietarioStore.update({ propietarioData: UPDATED_DATA });
+
+    // Limpiar los formularios
     this.formTercerosDatos.reset();
     this.propietarioradioForm.reset();
     this.closePropietarioModal();
-  
-
   }
+
+  /**
+   * Abre el modal de propietario.
+   */
   openPropietarioModal(): void {
     if (this.propietarioModal) {
       this.modalInstance.show();
     }
     this.formTercerosDatos.disable();
   }
+
+  /**
+   * Cierra el modal de propietario.
+   */
   closePropietarioModal(): void {
     if (this.propietarioModal) {
       this.modalInstance.hide();
     }
   }
+
+  /**
+   * Maneja el cambio de selección en el formulario.
+   * @param value Valor seleccionado.
+   */
   onSelectionChange(value: string): void {
-    this.showBuscarButton = value !== ''; // Update the showBuscarButton flag
+    this.showBuscarButton = value !== '';
     this.showValue = value;
 
-    // Enable or disable the 'tercerosCurp' form control based on the flag
     if (this.showBuscarButton) {
       this.propietarioradioForm.get('tercerosCurp')?.disable();
     } else {
       this.propietarioradioForm.get('tercerosCurp')?.enable();
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  /**
+   * Maneja el cambio de radio en el formulario.
+   * @param value Valor seleccionado.
+   */
   onRadioChange(value: string | number): void {
     this.showDatosPersonales = value === 'Nacional';
   }
+
+  /**
+   * Limpia todos los campos del formulario.
+   */
   limpiarFormulario(): void {
-    this.formTercerosDatos.reset(); // Clear all form fields
+    this.formTercerosDatos.reset();
   }
+
+  /**
+   * Busca los datos del representante por RFC y los actualiza en el formulario.
+   */
   buscarRepresentanteRfc(): void {
     const RFC = this.propietarioradioForm.get('tercerosRfc')?.value;
     if (RFC) {
@@ -302,6 +399,11 @@ export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
       });
     }
   }
+
+  /**
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

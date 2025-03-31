@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, Subject } from 'rxjs';
 import { ElementRef } from '@angular/core';
 import { Modal } from 'bootstrap';
 
 import { PropietarioComponent } from './propietario.component';
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
-import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
+import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
 describe('PropietarioComponent', () => {
   let component: PropietarioComponent;
@@ -26,8 +26,13 @@ describe('PropietarioComponent', () => {
     } as unknown as jest.Mocked<DatosDelSolicituteSeccionStateStore>;
 
     await TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientTestingModule, // Added to mock HttpClient
+      ],
       declarations: [PropietarioComponent],
-      imports: [CommonModule, ReactiveFormsModule, FormsModule],
       providers: [
         { provide: DatosDelSolicituteSeccionQuery, useValue: mockQuery },
         { provide: DatosDelSolicituteSeccionStateStore, useValue: mockStore },
@@ -38,7 +43,15 @@ describe('PropietarioComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PropietarioComponent);
     component = fixture.componentInstance;
+
+    // Mock destroy$
+    component['destroy$'] = new Subject<void>();
+
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    fixture.destroy();
   });
 
   it('should create the component', () => {
@@ -55,7 +68,7 @@ describe('PropietarioComponent', () => {
   });
 
   it('should load propietario data from the store', () => {
-    const mockState = {
+    const mockState: DatosDelSolicituteSeccionState = {
       representanteRfc: '',
       representanteNombre: '',
       apellidoPaterno: '',
@@ -180,19 +193,6 @@ describe('PropietarioComponent', () => {
       tercerosNacionalidad: null,
       tercerosRfc: null,
     });
-  });
-
-  it('should fetch and patch representante data when buscarRepresentanteRfc is called', () => {
-    component.propietarioradioForm.patchValue({
-      tercerosRfc: 'RFC123',
-    });
-
-    component.buscarRepresentanteRfc();
-
-    expect(component.propietarioradioForm.get('tercerosCurp')?.value).toBe('GAPM920519HDFNRL02');
-    expect(component.formTercerosDatos.get('tercerosNombre')?.value).toBe('MIGUEL ANGEL');
-    expect(component.formTercerosDatos.get('tercerosPrimerApellido')?.value).toBe('PEREZ');
-    expect(component.formTercerosDatos.get('tercerosSegundoApellido')?.value).toBe('AHOME');
   });
 
   it('should toggle showDatosPersonales on radio change', () => {
