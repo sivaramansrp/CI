@@ -1,4 +1,4 @@
-<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color:#00000052 ;">
+<div class="modal fade show d-block background" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content p-5">
             <div class="border-0">
@@ -49,13 +49,13 @@
                     <div class="mb-3">
                         <label class="form-label">Domicilio</label>
                         <div class="row">
-                            <div class="col-md-4" style="padding-left: 28px;padding-right: 27px;">
+                            <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="pais" [label]="'País'" [required]="false" name="País"
                                      formControlName="pais">
                                 </app-catalogo-select>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label" for="estado">Estado:</label>
+                                <label class="form-label" for="estado">Estado*:</label>
                                 <input type="text" class="form-control" id="estado" formControlName="estado">
                             </div>
                             <div class="col-md-4">
@@ -63,7 +63,7 @@
                                 <input type="text" class="form-control" id="codigoPostal"
                                     formControlName="codigoPostal" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-8">
                                 <label class="form-label">Calle*:</label>
                                 <input type="text" class="form-control" id="calle" formControlName="calle" />
                             </div>
@@ -77,16 +77,16 @@
                                 <input type="text" class="form-control" id="numeroInterior"
                                     formControlName="numeroInterior" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-1">
                                 <label class="form-label">Lada:</label>
                                 <input type="text" class="form-control" id="lada" formControlName="lada" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="form-label">Teléfono:</label>
                                 <input type="text" class="form-control" id="telefono" formControlName="telefono" />
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Correo electrónico:</label>
+                                <label class="form-label">Correo electrónico*:</label>
                                 <input type="text" class="form-control" id="correo-electronico"
                                     formControlName="correoElectronico" />
                             </div>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter,OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -39,10 +39,10 @@ export class DatosGeneralesComponent implements OnInit {
    */
   datosGeneralesForm!: FormGroup;
 
-  pais:Catalogo[]=[]
+  pais: Catalogo[] = []
 
   constructor(
-      private tercerosProcedenciaService: TercerosProcedenciaService,){}
+    private tercerosProcedenciaService: TercerosProcedenciaService,) { }
   /**
    * @comdoc
    * Cierra el componente de datos generales.
@@ -60,7 +60,7 @@ export class DatosGeneralesComponent implements OnInit {
    */
   ngOnInit(): void {
     this.informacionProcedencia();
-    
+
     this.tercerosProcedenciaService.getData().subscribe((data) => {
       this.pais = data;
     })
@@ -101,6 +101,6 @@ export class DatosGeneralesComponent implements OnInit {
    * @returns {void} No retorna ningún valor.
    */
   enviarFormulario(): void {
-      this.formularioGuardar.emit(this.datosGeneralesForm.value);
+    this.formularioGuardar.emit(this.datosGeneralesForm.value);
   }
 }
