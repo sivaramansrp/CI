@@ -3,6 +3,7 @@ import { Component,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
+import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
 import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
 
 @Component({
@@ -30,7 +31,13 @@ export class DatosDelInmuebleComponent implements OnInit{
   }
 
   ngOnInit(): void {
+
+    this.destinatarioTableData.encabezadoDeTabla = destinatarioTableData?.encabezadoDeTabla;
+    this.destinatarioTableData.cuerpoTabla = destinatarioTableData?.cuerpoTabla;
+
     this.getEstableCimiento();
+
+
   }
 
 
