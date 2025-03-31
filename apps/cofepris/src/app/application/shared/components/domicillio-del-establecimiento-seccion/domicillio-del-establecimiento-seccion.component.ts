@@ -1,7 +1,24 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
 import {
   FormBuilder,
   FormGroup,
@@ -15,7 +32,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
-
 @Component({
   selector: 'app-domicillio-del-establecimiento-seccion',
   standalone: true,
@@ -25,22 +41,24 @@ import { Modal } from 'bootstrap';
     ReactiveFormsModule,
     FormsModule,
     CatalogoSelectComponent,
-     TablaDinamicaComponent,
-    
+    TablaDinamicaComponent,
   ],
   templateUrl: './domicillio-del-establecimiento-seccion.component.html',
   styleUrl: './domicillio-del-establecimiento-seccion.component.scss',
 })
 export class DomicillioDelEstablecimientoSeccionComponent
-  implements OnInit, OnDestroy , AfterViewInit
+  implements OnInit, OnDestroy, AfterViewInit
 {
-  @ViewChild('establecimientoModal', { static: false }) establecimientoModal!: ElementRef;
+  @ViewChild('establecimientoModal', { static: false })
+  establecimientoModal!: ElementRef;
   scianForm!: FormGroup;
-   TablaSeleccion = TablaSeleccion;
-    
+  TablaSeleccion = TablaSeleccion;
+
   constructor(
     private fb: FormBuilder,
-    private establecimientoService: EstablecimientoService
+    private establecimientoService: EstablecimientoService,
+    private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
+    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
   ) {}
 
   /** Subject para destruir el componente */
@@ -52,23 +70,24 @@ export class DomicillioDelEstablecimientoSeccionComponent
   estadoJson: Catalogo[] = [];
   personaparas: ScianModel[] = [];
   scianJson: Catalogo[] = [];
-   configuracionTabla: ConfiguracionColumna<ScianModel>[] = [
-      {
-        encabezado: 'Clave S.C.I.A.N.',
-        clave: (item: ScianModel) => item.claveScian,
-        orden: 1,
-      },
-      {
-        encabezado: 'Descripción del S.C.I.A.N.',
-        clave: (item: ScianModel) => item.descripcionScian,
-        orden: 2,
-      },
-    ];
-    ngAfterViewInit(): void {
-      if (this.establecimientoModal) {
-        this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
-      }}
-      
+  configuracionTabla: ConfiguracionColumna<ScianModel>[] = [
+    {
+      encabezado: 'Clave S.C.I.A.N.',
+      clave: (item: ScianModel) => item.claveScian,
+      orden: 1,
+    },
+    {
+      encabezado: 'Descripción del S.C.I.A.N.',
+      clave: (item: ScianModel) => item.descripcionScian,
+      orden: 2,
+    },
+  ];
+  ngAfterViewInit(): void {
+    if (this.establecimientoModal) {
+      this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
+    }
+  }
+
   ngOnInit(): void {
     this.loadAduanaDeSalida();
     this.loadRegimen();
@@ -93,9 +112,21 @@ export class DomicillioDelEstablecimientoSeccionComponent
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
       descripcionScian: ['', Validators.required],
-  
-      
     });
+    // Load the state into the form
+    this.domicilioEstablecimientoQuery
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.domicilioEstablecimiento.patchValue(state);
+      });
+
+    // Update the store whenever the form changes
+    this.domicilioEstablecimiento.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        this.domicilioEstablecimientoStore.update(value);
+      });
   }
   loadRegimen(): void {
     this.establecimientoService
@@ -130,37 +161,35 @@ export class DomicillioDelEstablecimientoSeccionComponent
       });
   }
   openScianModal(): void {
-
     this.modalInstance.show();
-  
-}
-closeScianModal(): void {
- 
-    this.modalInstance.hide();
-  
-}
-limpiarScianForm(): void {
-  this.scianForm.reset();
-}
-guardarScian(): void {
-  if (this.scianForm.valid) {
-    const SCIAN_DATA: ScianModel = {
-      claveScian: this.scianForm.get('scian')?.value,
-      descripcionScian: this.scianForm.get('descripcionScian')?.value,
-    };
-
-    // Add the new data to the table
-    this.personaparas.push(SCIAN_DATA);
-
-    // Reset the form
-    this.scianForm.reset();
-
-    // Close the modal
-    this.closeScianModal();
-  } else {
-    console.log('Form is invalid');
   }
-}
+  closeScianModal(): void {
+    this.modalInstance.hide();
+  }
+  limpiarScianForm(): void {
+    this.scianForm.reset();
+  }
+  guardarScian(): void {
+    if (this.scianForm.valid) {
+      const SCIAN_DATA: ScianModel = {
+        claveScian: this.scianForm.get('scian')?.value,
+        descripcionScian: this.scianForm.get('descripcionScian')?.value,
+      };
+
+      // Add the new data to the table
+      this.personaparas.push(SCIAN_DATA);
+
+      // Reset the form
+      this.scianForm.reset();
+
+      // Close the modal
+      this.closeScianModal();
+    }
+  }
+
+  isCheckboxChecked(): boolean {
+    return this.domicilioEstablecimiento.get('avisoDeFuncionamiento')?.value;
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

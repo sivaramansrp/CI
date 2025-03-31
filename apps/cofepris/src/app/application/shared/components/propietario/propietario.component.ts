@@ -1,19 +1,13 @@
+import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-
-import {
-  ConfiguracionColumna,
-  InputRadioComponent,
-  TablaSeleccion,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
@@ -21,16 +15,28 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Modal } from 'bootstrap';
+
+import { Subject, takeUntil } from 'rxjs';
+
+import {
+  ConfiguracionColumna,
+  InputRadioComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import propietarioJson from 'libs/shared/theme/assets/json/260401/propietario.json';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import propietarioTipoPersonaJson from 'libs/shared/theme/assets/json/260401/propietarioTipoPersona.json';
+
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
 
-import propietarioJson from 'libs/shared/theme/assets/json/260401/propietario.json';
-
-import propietarioTipoPersonaJson from 'libs/shared/theme/assets/json/260401/propietarioTipoPersona.json';
-import { Modal } from 'bootstrap';
 import { EstablecimientoComponent } from '../establecimiento/establecimiento.component';
-
 @Component({
   selector: 'app-propietario',
   standalone: true,
@@ -46,9 +52,9 @@ import { EstablecimientoComponent } from '../establecimiento/establecimiento.com
   templateUrl: './propietario.component.html',
   styleUrl: './propietario.component.scss',
 })
-export class PropietarioComponent implements AfterViewInit, OnInit {
-  @ViewChild('propietarioModal', { static: false })
-  propietarioModal!: ElementRef;
+export class PropietarioComponent implements AfterViewInit, OnInit,OnDestroy {
+  @ViewChild('propietarioModal', { static: false }) propietarioModal!: ElementRef;
+  private destroy$ = new Subject<void>();
   formTercerosDatos!: FormGroup;
   propietarioradioForm!: FormGroup;
   propietarioTipoPersonaData = propietarioTipoPersonaJson;
@@ -59,7 +65,10 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
   showDatosPersonales = false;
   showBuscarButton = false;
   showValue: string = '';
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private propietarioStore: DatosDelSolicituteSeccionStateStore,
+    private propietarioQuery: DatosDelSolicituteSeccionQuery
+  ) {}
 
   ngAfterViewInit(): void {
     if (this.propietarioModal) {
@@ -69,6 +78,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
   /** Enum para la selección de tabla */
   TablaSeleccion = TablaSeleccion;
   ngOnInit(): void {
+   
       this.propietarioradioForm = this.fb.group({
     tercerosTipoPersona: [null, Validators.required],
     tercerosCurp: [null, [Validators.required, Validators.maxLength(254)]],
@@ -97,6 +107,14 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
       tercerosSegundoApellido: [''],
       tercerosPrimerApellido: ['', Validators.required],
     });
+
+   // Subscribe to the store to get the propietario data
+   this.propietarioQuery
+   .select('propietarioData')
+   .pipe(takeUntil(this.destroy$))
+   .subscribe((data) => {
+     this.propietarioData = data;
+   });
   }
 
   /**
@@ -180,58 +198,54 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
       orden: 15,
     },
   ];
-  logInvalidControls(form: FormGroup): void {
-    Object.keys(form.controls).forEach((controlName) => {
-      const control = form.get(controlName);
-      if (control && control.invalid) {
-        console.log(`Control: ${controlName}, Errors:`, control.errors);
-      }
-    });
-  }guardarPropietario(): void {
-    console.log('Form Controls:', this.formTercerosDatos.controls); // Debugging log
-  
+ 
+  guardarPropietario(): void {
     const PROPIETARIO: PropietarioModel = {
       NombredenominacionORazonSocial:
-        this.formTercerosDatos.get('tercerosDenominacionRazonSocial')?.value || '',
-      rfc: this.propietarioradioForm.get('tercerosRfc')?.value || '',
-      curp: this.propietarioradioForm.get('tercerosCurp')?.value || '',
-      telefono: this.formTercerosDatos.get('tercerosTelefono')?.value || '',
+        this.formTercerosDatos.get('tercerosDenominacionRazonSocial')?.value,
+      rfc: this.propietarioradioForm.get('tercerosRfc')?.value,
+      curp: this.propietarioradioForm.get('tercerosCurp')?.value,
+      telefono: this.formTercerosDatos.get('tercerosTelefono')?.value,
       CorreoElectronico:
-        this.formTercerosDatos.get('tercerosCorreoElectronico')?.value || '',
-      calle: this.formTercerosDatos.get('tercerosCalle')?.value || '',
+        this.formTercerosDatos.get('tercerosCorreoElectronico')?.value,
+      calle: this.formTercerosDatos.get('tercerosCalle')?.value,
       numeroExterior:
-        this.formTercerosDatos.get('tercerosNumeroExterior')?.value || '',
+        this.formTercerosDatos.get('tercerosNumeroExterior')?.value,
       numeroInterior:
-        this.formTercerosDatos.get('tercerosNumeroInterior')?.value || '',
-      pais: this.formTercerosDatos.get('tercerosPais')?.value || '',
-      colonia: this.formTercerosDatos.get('tercerosColonia')?.value || '',
+        this.formTercerosDatos.get('tercerosNumeroInterior')?.value,
+      pais: this.formTercerosDatos.get('tercerosPais')?.value,
+      colonia: this.formTercerosDatos.get('tercerosColonia')?.value,
       municipioOAlcaldia:
-        this.formTercerosDatos.get('tercerosMunicipioAlcaldia')?.value || '',
-      localidad: this.formTercerosDatos.get('tercerosLocalidad')?.value || '',
+        this.formTercerosDatos.get('tercerosMunicipioAlcaldia')?.value,
+      localidad: this.formTercerosDatos.get('tercerosLocalidad')?.value,
       entidadFederativa:
-        this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value || '',
+        this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value,
       estadoLocalidad:
-        this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value || '',
+        this.formTercerosDatos.get('tercerosEstadoLocalidad')?.value,
       codigoPostal:
-        this.formTercerosDatos.get('tercerosCodigoPostal')?.value || '',
-    };
+        this.formTercerosDatos.get('tercerosCodigoPostal')?.value,
+  
+      };
   
     // Check if all fields in the PROPIETARIO object are empty
-    const isEmpty = Object.values(PROPIETARIO).every((value) => value === '');
+    const IS_EMPTY = Object.values(PROPIETARIO).every((value) => !value);
   
-    if (isEmpty) {
-      console.log('Empty data, not adding to the table.');
+    if (IS_EMPTY) {
+     
       return; // Exit the method without adding to the table
     }
   
-    // Add the new propietario to the table data
-    this.propietarioData.push(PROPIETARIO);
-    console.log('Propietario saved:', this.propietarioData);
-  
+   // Create a new array with the new propietario
+   const UPDATED_DATA = [...this.propietarioData, PROPIETARIO];
+
+   // Update the store with the new propietario data
+   this.propietarioStore.update({ propietarioData: UPDATED_DATA });
     // Reset the form
     this.formTercerosDatos.reset();
     this.propietarioradioForm.reset();
     this.closePropietarioModal();
+  
+
   }
   openPropietarioModal(): void {
     if (this.propietarioModal) {
@@ -287,5 +301,9 @@ export class PropietarioComponent implements AfterViewInit, OnInit {
         tercerosCorreoElectronico: 'brpomskyldi@etllpqhpyrpks.zgi',
       });
     }
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

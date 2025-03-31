@@ -120,23 +120,25 @@
     <div class="col-md-8"></div>
   </div>
 
-  <label> S.C.I.A.N. </label>
-  <app-tabla-dinamica
-    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-    [configuracionTabla]="configuracionTabla"
-    [datos]="personaparas"
-  >
-  </app-tabla-dinamica>
-  <div class="col-md-12 mt-5 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary">Eliminar</button>
-    <button
-      type="button"
-      class="btn btn-primary ms-3"
-      (click)="openScianModal()"
+    <label class="mt-5"> S.C.I.A.N. </label>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+      [configuracionTabla]="configuracionTabla"
+      [datos]="personaparas"
     >
-      Agregar
-    </button>
-  </div>
+    </app-tabla-dinamica>
+    <div class="col-md-12 mt-5 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary">Eliminar</button>
+      <button
+        type="button"
+        class="btn btn-primary ms-3"
+        (click)="openScianModal()"
+      >
+        Agregar
+      </button>
+    </div>
+
+ 
   <div class="row">
     <div id="rfcDelProfesionalResponsable" class="col-md-4">
       <label for="rfcDelProfesionalResponsable"
@@ -167,7 +169,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row mt-5">
     <div class="col-md-4">
       <div class="form-check">
         <input
@@ -193,7 +195,7 @@
         />
 
         <div class="mt-4">
-          <button type="button" class="btn btn-primary mt-2">Buscar</button>
+          <button type="button" [disabled]="isCheckboxChecked()" class="btn btn-primary mt-2">Agregar</button>
         </div>
         <div class="col-md-12 row mt-4">
           <textarea
@@ -204,7 +206,7 @@
           ></textarea>
         </div>
         <div>
-          <button type="button" class="btn btn-primary">Buscar</button>
+          <button type="button" class="btn btn-primary" [disabled]="isCheckboxChecked()" >Eliminar</button>
         </div>
       </div>
     </div>
