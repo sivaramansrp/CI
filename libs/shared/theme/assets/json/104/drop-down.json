@@ -1,0 +1,11 @@
+{
+    "tipoPrograma": [
+      { "id": 1, "descripcion": "Autorización Expedida por Economía como empresa productora de vehículos automotores nuevos" },
+      { "id": 2, "descripcion": "PROSEC" }
+    ],
+    
+    "folioAutorizacion": [
+      { "id": 1, "descripcion": "2024-9419" }
+    ]
+}
+  

@@ -1,0 +1,25 @@
+<ng-titulo titulo="Programa de fomento a la exportación" />
+<form [formGroup]="fomentoExportacionForm">
+    <div class="row">
+        <div class="col-md-10">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="tipoPrograma"
+                [label]="'Tipo de programa/Autorización'" [required]="true"
+                name="Tipo de programa/Autorización"></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="folioAutorizacion"
+                [label]="'Folio del programa/Autorización'" [required]="true"
+                name="Folio del programa/Autorización"></app-catalogo-select>
+        </div>
+    </div>
+</form>
+
+<h6 class="fs-4">Pais/bloque-tratado/acuerdo seleccionados por el solicitante</h6>
+
+<!-- <ng-table [commonTableHeader]="encabezadosComunesTabla" [commonTableBody]="cuerpoTabla"></ng-table> -->
+
+<div class=" text-end mt-5">
+    <button class="btn btn-primary  me-2">Agregar</button>
+    <button class="btn btn-default me-2">Modificar</button>
+    <button class="btn btn-primary">Eliminar</button>
+</div>
