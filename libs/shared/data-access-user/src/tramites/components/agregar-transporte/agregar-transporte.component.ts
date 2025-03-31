@@ -15,7 +15,6 @@ import { CatalogosSelect } from '../../../core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
-import { Subject } from 'rxjs';
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
@@ -306,7 +305,7 @@ export class AgregarTransporteComponent implements OnChanges {
    * @param event - Evento que contiene el estado del checkbox principal.
    * @returns void
    */
-  static seleccionarTodos(event: Event): void {
+  seleccionarTodos(event: Event): void {
     const CHECKBOXES = document.querySelectorAll('.check-transporte');
     CHECKBOXES.forEach((checkbox) => {
       (checkbox as HTMLInputElement).checked = (event.target as HTMLInputElement).checked;

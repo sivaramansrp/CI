@@ -51,7 +51,7 @@ export class AcuseComponent implements OnChanges {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  static verPdf(url: string): void {
+  verPdf(url: string): void {
     window.open(url, '_blank');
   }
 

@@ -166,7 +166,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
     if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
-      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+      this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
         this.solicitudState.fechaInicio,
         this.solicitudState.fechaFinal,
         this.solicitudState.horaInicio,
