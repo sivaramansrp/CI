@@ -1,7 +1,7 @@
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FuncionarioService } from '@libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
+import { EvaluarSolicitudService } from '../../../core/service/evaluar-solicitud.service';
 import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 
@@ -23,9 +23,9 @@ export class RequerimientoInformacionComponent {
   documentacion: boolean = false;
   constructor(
     private router: Router,
-    private estadoService: FuncionarioService,
+    private estadoService: EvaluarSolicitudService,
   ) {
-    this.estadoService.tabIndex$.subscribe(valor => {
+    this.estadoService.buttonStatus$.subscribe(valor => {
       this.documentacion = valor;
     });
   }

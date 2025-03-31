@@ -1,16 +1,18 @@
-import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 // multiple - Import multiple members.
+import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+// multiple - Import multiple members.
 import { Component, OnInit } from '@angular/core';
+import { EvaluarSolicitudService } from '../../../core/service/evaluar-solicitud.service';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 // multiple - Import multiple members.
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FuncionarioService } from '@libs/shared/data-access-user/src/core/services/shared/funcionario/funcionario.service';
 // multiple - Import multiple members.
 import { Subject, map, takeUntil } from 'rxjs';
 // multiple - Import multiple members.
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
 import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
+
 @Component({
   selector: 'app-capturar-requerimiento',
   standalone: true,
@@ -23,6 +25,9 @@ export class CapturarRequerimientoComponent implements OnInit {
    * Declaración de variable para el formulario
    */
   formRequerimiento!: FormGroup;
+  /**
+   * variable del valor del campo
+   */
   valor!: string;
   /**
     * Catálogo de tipo de requerimiento
@@ -41,7 +46,7 @@ export class CapturarRequerimientoComponent implements OnInit {
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
-    private estadoService: FuncionarioService,
+    private estadoService: EvaluarSolicitudService,
   ) {
     // do nothing.
   }
@@ -81,13 +86,13 @@ export class CapturarRequerimientoComponent implements OnInit {
     this.tipoRequerimiento = this.formRequerimiento.get('tipoRequerimiento')?.value;
     switch (this.tipoRequerimiento) {
       case "1":
-        this.estadoService.setTabIndex(true);
+        this.estadoService.setButtonStatus(true);
         break;
       case "2":
-        this.estadoService.setTabIndex(true);
+        this.estadoService.setButtonStatus(true);
         break;
       case "3":
-        this.estadoService.setTabIndex(false);
+        this.estadoService.setButtonStatus(false);
         break;
       default:
         break;
