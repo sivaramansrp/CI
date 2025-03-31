@@ -1,14 +1,12 @@
 import { Catalogo, CatalogoSelectComponent, RespuestaDocuemntosRequeridos } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-// multiple - Import multiple members.
 import { Component, OnInit } from '@angular/core';
-import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
-import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
-// multiple - Import multiple members.
 import { DocumentosStates, SolicitudDocumentosState } from '../../../estados/evaluacion-solicitud/documentos.store';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { SolicitudDocumentosQuery } from '../../../estados/queries/documentos.query';
+import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-documento.json';
+import dataDocuemtos from '@libs/shared/theme/assets/json/funcionario/lista-documentos-requeridos.json'
 
 @Component({
   selector: 'app-solicitar-documentos',

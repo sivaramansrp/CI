@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-// multiple - Import multiple members.
 import { EncabezadoRequerimientoComponent, FirmaPageComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.component';
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
+import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 
 @Component({

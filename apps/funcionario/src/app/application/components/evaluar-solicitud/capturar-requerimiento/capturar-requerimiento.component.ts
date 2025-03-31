@@ -1,17 +1,12 @@
-import { CommonModule } from '@angular/common';
-// multiple - Import multiple members.
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-// multiple - Import multiple members.
 import { Component, OnInit } from '@angular/core';
-import { EvaluarSolicitudService } from '../../../core/service/evaluar-solicitud.service';
-import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
-// multiple - Import multiple members.
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// multiple - Import multiple members.
-import { Subject, map, takeUntil } from 'rxjs';
-// multiple - Import multiple members.
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { EvaluarSolicitudService } from '../../../core/service/evaluar-solicitud.service';
 import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
+import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 
 @Component({
   selector: 'app-capturar-requerimiento',
