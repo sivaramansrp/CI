@@ -40,7 +40,7 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 
 import { FechasService } from '@ng-mf/data-access-user';
 import { FormulariosService } from '@ng-mf/data-access-user';
-import { datosAgregarFormulario } from '@ng-mf/data-access-user';
+import { DatosAgregarFormulario } from '@ng-mf/data-access-user';
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
@@ -347,12 +347,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private obtenerPatente(): void {
     // Busqueda de la patente a algun endpoint
-    const DATOS_PATENTE: datosAgregarFormulario = {
+    const DATOS_PATENTE: DatosAgregarFormulario = {
       form: this.despacho,
       field: 'patente',
       valor: '3061',
     };
-    this.formulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
+    FormulariosService.agregarValorCamposDesactivados(DATOS_PATENTE);
   }
 
   /**
@@ -608,11 +608,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
     this.validacionPedimento = true;
 
-    const PATENTE = this.formulariosService.convertirValorANumero(
+    const PATENTE = FormulariosService.convertirValorANumero(
       this.despacho,
       'patente'
     );
-    const ID_ADUANA = this.formulariosService.convertirValorANumero(
+    const ID_ADUANA = FormulariosService.convertirValorANumero(
       this.despacho,
       'idAduana'
     );
@@ -740,7 +740,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
 
-    this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+    this.selectRangoDias = FechasService.obtenerDiasEntreFechas(
       FECHA_INICIAL,
       FECHA_FINAL,
       HORA_INICIO,

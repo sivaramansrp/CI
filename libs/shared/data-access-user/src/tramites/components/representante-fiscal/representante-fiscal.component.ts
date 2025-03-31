@@ -147,14 +147,14 @@ export class RepresentanteFiscalComponent implements OnInit {
     };
 
     // Obtenemos los campos deactivados de la formulario para el Representante Legal por RFC
-    const CAMPOS_DISABLED = this.formServices.obtenerCamposDisabled(
+    const CAMPOS_DISABLED = FormulariosService.obtenerCamposDisabled(
       this.representanteLegalForm
     );
     if (RFC) {
       //Agregamos los valores a los campos desactivados
       CAMPOS_DISABLED.forEach((campo) => {
         if (campo in DATOS_REPRESENTANTE) {
-          this.formServices.agregarValorCampoDesactivados(
+          FormulariosService.agregarValorCampoDesactivado(
             this.representanteLegalForm,
             campo,
             DATOS_REPRESENTANTE[campo as keyof DatosRfcResponse]

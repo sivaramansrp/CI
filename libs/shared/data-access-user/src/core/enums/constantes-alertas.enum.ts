@@ -36,7 +36,6 @@ export const TEXTOS = {
   DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`
 };
 
-
 export const IMMEX = {
   labelNombre: 'IMMEX (Número/aaaa)',
   maxlength: 25,
@@ -80,7 +79,6 @@ export const SEMANA_D = [
   'Sabado',
 ];
 
-
 export const MENSAJEDEALERTA = {
   ADJUNTAR: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro</p>`,
 };
@@ -109,7 +107,7 @@ export const FECHA_SALIDA = {
   habilitado: true,
 }
 
-export const TXT_ALERTA_ACUSE = (folio: string) => {
+export const TXT_ALERTA_ACUSE = (folio: string): string => {
   return `Tu solicitud ha sido registrada con el siguiente número de folio:  < ${folio} >`;
 }
 
