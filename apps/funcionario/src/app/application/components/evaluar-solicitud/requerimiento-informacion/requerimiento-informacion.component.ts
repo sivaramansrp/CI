@@ -18,7 +18,7 @@ export class RequerimientoInformacionComponent {
   */
   indiceDictamen: number = 1;
   /**
-   * Índice para activar la pestaña requerimientos de documentación
+   * Variable para activar la pestaña requerimientos de documentación
    */
   documentacion: boolean = false;
   constructor(

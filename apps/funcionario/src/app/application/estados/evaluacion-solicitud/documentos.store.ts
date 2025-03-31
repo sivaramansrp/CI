@@ -3,20 +3,18 @@ import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from '@datorama/akita';
 
 export interface SolicitudDocumentosState {
+    /**
+     * Parametro de la lista de documentos seleccionados
+     */
     documentosSeleccionados: string[];
-    solicitudFirma: boolean;
-    firmar: boolean;
   }
-  
   /**
    * Creación del estado inicial para la interfaz de solicitud de documentos
    * @returns SolicitudDocumentosState
    */
   export function createInitialState(): SolicitudDocumentosState {
     return {
-        solicitudFirma: false,
-        documentosSeleccionados: [],
-        firmar: true
+        documentosSeleccionados: []
     };
   }
 
@@ -26,11 +24,17 @@ export class DocumentosStates extends Store<SolicitudDocumentosState>{
     constructor(){
        super( createInitialState());
     }
+    /**
+     * Resetear valores
+     */
     resetStore(){
         this.reset();
     }
-
-    setSolicitudDocumentos( documentosSeleccionados : string[]){
+    /**
+     * Guarda la lista de documentos requeridos
+     * @param documentosSeleccionados 
+     */
+    setSolicitudDocumentos(documentosSeleccionados : string[]){
         this.update(state => ({... state, documentosSeleccionados}));
     }
 }

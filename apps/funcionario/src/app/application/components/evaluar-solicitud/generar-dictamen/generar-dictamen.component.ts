@@ -16,7 +16,6 @@ constructor(private fb: FormBuilder
 ) {
     // do nothing.
 }
-
   formDictamen: FormGroup = this.fb.group({
   sentidoDictamen: ['', [Validators.required]],
   justificacionDictamen:['', [Validators.required]]

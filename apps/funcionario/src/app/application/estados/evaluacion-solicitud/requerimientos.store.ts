@@ -3,32 +3,45 @@ import { Injectable } from "@angular/core";
 import { Store, StoreConfig } from '@datorama/akita';
 
 export interface SolicitudRequerimientosState {
-    idTipoRequerimiento: number ;
+    /**
+     * Parametro del tipo de requerimieto
+     */
+    idTipoRequerimiento: number;
+    /**
+     * Parametro justificación de evaluación
+     */
     justificacionRequerimiento: string;
-  }
-  export function createInitialState(): SolicitudRequerimientosState {
+}
+export function createInitialState(): SolicitudRequerimientosState {
     return {
         idTipoRequerimiento: 0,
         justificacionRequerimiento: ''
     };
-  }
-
-@Injectable({providedIn: 'root'})
-@StoreConfig({name: 'RequerimientosStates', resettable: true})
-export class RequerimientosStates extends Store<SolicitudRequerimientosState>{
-    constructor(){
-       super( createInitialState());
+}
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'RequerimientosStates', resettable: true })
+export class RequerimientosStates extends Store<SolicitudRequerimientosState> {
+    constructor() {
+        super(createInitialState());
     }
-    
-    resetStore(){
+    /**
+     * Método para resetear valores
+     */
+    resetStore() {
         this.reset();
     }
-
-    settipoRequerimientoValue( idTipoRequerimiento : number){
-        this.update(state => ({... state, idTipoRequerimiento}));
+    /**
+     * Guarda el tipo de requerimiento seleccionado 
+     * @param idTipoRequerimiento parametro del tipo de requerimieto
+     */
+    settipoRequerimientoValue(idTipoRequerimiento: number) {
+        this.update(state => ({ ...state, idTipoRequerimiento }));
     }
-
-    setjustificacionRequerimientoValue( justificacionRequerimiento : string){
-        this.update(state => ({... state, justificacionRequerimiento}));
+    /**
+     * Guardar la justificación de a evaluación 
+     * @param justificacionRequerimiento parametro 
+     */
+    setjustificacionRequerimientoValue(justificacionRequerimiento: string) {
+        this.update(state => ({ ...state, justificacionRequerimiento }));
     }
 }
