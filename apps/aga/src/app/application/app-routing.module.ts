@@ -116,14 +116,21 @@ const ROUTES: Routes = [
   },
   {
     path: 'certi-registro',
-      loadChildren: () =>
-        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+    loadChildren: () =>
+      import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
   },
   {
     path: 'transportista-terrestre',
     loadChildren: () =>
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
+    path: 'deposito-fiscal',
+    loadChildren: () =>
+      import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
+        (m) => m.DepositoFiscalManufacturaVehiculosModule
       ),
   }
 ];
