@@ -15,6 +15,7 @@ import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
+import { EstablecimientoService } from './shared/services/establecimiento.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
-    SolicitanteService
+    SolicitanteService,
+    EstablecimientoService
   ],
   bootstrap: [AppComponent],
 })

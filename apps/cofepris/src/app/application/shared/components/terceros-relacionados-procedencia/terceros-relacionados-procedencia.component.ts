@@ -12,10 +12,10 @@ import {
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { TableData, TipoMoModel } from '../../models/entrada-humana-260402.models';
+import { TableData, TipoMoModel } from '../../models/entrada-humana.models';
 
 
-import { MANIFIESTOS_ALERT } from '../../constantes/permiso-maquila-260402.enum';
+import { MANIFIESTOS_ALERT } from '../../constantes/entrada-humana.enum';
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 /**

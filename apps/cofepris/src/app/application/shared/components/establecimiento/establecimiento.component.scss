@@ -1,0 +1,10 @@
+textarea {
+    width: 100%; /* Takes the full width of the container */
+    min-height: 120px; /* Minimum height */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical; /* Allow only vertical resizing */
+    box-sizing: border-box; /* Includes padding and border in the element's total width/height */
+  }
+ 

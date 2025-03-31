@@ -29,6 +29,7 @@ import { TercerosProcedenciaService } from '../../shared/services/terceros-proce
 import { PagoDeDerechosEntradaService } from '../../shared/services/pago-de-derechos-entrada.service';
 
 import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
+import { PropietarioComponent } from '../../shared/components/propietario/propietario.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { PagoDeDerechosEntradaComponent } from '../../shared/components/pago-de-
     BtnContinuarComponent,
     TercerosRelacionadosProcedenciaComponent,
     DatosGeneralesComponent,
-    PagoDeDerechosEntradaComponent
+    PagoDeDerechosEntradaComponent,
+    PropietarioComponent
   ],
   providers: [provideHttpClient(), ToastrService,PagoDeDerechosEntradaService,TercerosProcedenciaService,InicioSesionService,SubirDocumentoService ],
 })
