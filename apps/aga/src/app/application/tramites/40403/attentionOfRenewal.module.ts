@@ -28,20 +28,25 @@ import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ContenidoTabsWizardComponent } from './components/contenidoTabsWizard/contenido-tabs-wizard.component';
+import { DatosTramiteRenovacionComponent } from './components/datosTramiteRenovacion/datosTramiteRenovacion.component';
+import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 @NgModule({
   declarations: [
     SolicitantePageComponent,
     PasoUnoComponent,
-    PasoDosComponent
-   
+    PasoDosComponent,
+    ContenidoTabsWizardComponent,
+    DatosTramiteRenovacionComponent,
   ],
   imports: [
+    SolicitanteComponent,
     CommonModule,
     SharedModule,
     AttentionOfRenewalRoutingModule,
     RouterModule,
     WizardComponent,
-    forwardRef(() => TituloComponent),
+    TituloComponent,
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
@@ -56,13 +61,8 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     forwardRef(() => RepresentanteFiscalComponent),
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
-    
   ],
-  exports: [
-    PasoUnoComponent,
-    PasoDosComponent,
-   
-  ],
+  exports: [PasoUnoComponent, PasoDosComponent],
   providers: [ToastrService, CatalogosService],
 })
 export class AttentionOfRenewalModule {}

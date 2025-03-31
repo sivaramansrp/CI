@@ -25,7 +25,14 @@
         >
       </li>
     </ul>
-
-    <ng-container> </ng-container>
+    <ng-container>
+      @switch (indice) { @case (1) {
+      <app-solicitante #Solicitante></app-solicitante>
+      } @case (2) {
+      <app-contenido-tabs-wizard></app-contenido-tabs-wizard>
+      } @case (3) {
+      <app-datos-tramite-renovacion> </app-datos-tramite-renovacion>
+      }  }
+    </ng-container>
   </div>
 </div>
