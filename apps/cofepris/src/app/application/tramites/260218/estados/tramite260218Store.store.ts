@@ -14,30 +14,32 @@ import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.mod
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
+// Definición de la interfaz que representa el estado completo de la solicitud.
 export interface Tramite260218State {
-  destinatarioFinalTablaDatos: Destinatario[];
-  facturadorTablaDatos: Facturador[];
-  proveedorTablaDatos: Proveedor[];
-  fabricanteTablaDatos: Fabricante[];
-  datosSolicitudFormState: DatosSolicitudFormState;
-  mercanciaForm: MercanciaForm;
-  opcionConfigDatos: TablaOpcionConfig[];
-  scianConfigDatos: TablaScianConfig[];
-  tablaMercanciasConfigDatos: TablaMercanciasDatos[];
-  seleccionadoopcionDatos: TablaOpcionConfig[];
-  seleccionadoScianDatos: TablaScianConfig[];
-  seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
-  opcionesColapsableState: boolean;
-  pagoDerechos: PagoDerechosFormState;
+  destinatarioFinalTablaDatos: Destinatario[]; // Datos de destinatarios finales.
+  facturadorTablaDatos: Facturador[]; // Datos de facturadores.
+  proveedorTablaDatos: Proveedor[]; // Datos de proveedores.
+  fabricanteTablaDatos: Fabricante[]; // Datos de fabricantes.
+  datosSolicitudFormState: DatosSolicitudFormState; // Datos generales de la solicitud.
+  mercanciaForm: MercanciaForm; // Información de las mercancías.
+  opcionConfigDatos: TablaOpcionConfig[]; // Configuración de las opciones.
+  scianConfigDatos: TablaScianConfig[]; // Datos de SCIAN (Sistema de Clasificación de Actividades Económicas).
+  tablaMercanciasConfigDatos: TablaMercanciasDatos[]; // Configuración de las mercancías.
+  seleccionadoopcionDatos: TablaOpcionConfig[]; // Opciones seleccionadas.
+  seleccionadoScianDatos: TablaScianConfig[]; // Datos seleccionados de SCIAN.
+  seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[]; // Datos seleccionados de las mercancías.
+  opcionesColapsableState: boolean; // Estado de las opciones colapsables en la interfaz.
+  pagoDerechos: PagoDerechosFormState; // Datos de pago de derechos.
 }
 
+// Función que inicializa el estado de la solicitud.
 export function createInitialState(): Tramite260218State {
   return {
-    destinatarioFinalTablaDatos: [],
-    facturadorTablaDatos: [],
-    proveedorTablaDatos: [],
-    fabricanteTablaDatos: [],
-    datosSolicitudFormState: {
+    destinatarioFinalTablaDatos: [], // Lista vacía de destinatarios.
+    facturadorTablaDatos: [], // Lista vacía de facturadores.
+    proveedorTablaDatos: [], // Lista vacía de proveedores.
+    fabricanteTablaDatos: [], // Lista vacía de fabricantes.
+    datosSolicitudFormState: { // Datos iniciales del formulario de solicitud.
       rfcSanitario: '',
       denominacionRazon: '',
       correoElectronico: '',
@@ -60,7 +62,7 @@ export function createInitialState(): Tramite260218State {
       apellidoPaterno: '',
       apellidoMaterno: '',
     },
-    mercanciaForm: {
+    mercanciaForm: { // Datos iniciales para la mercancía.
       clasificacionProducto: '',
       especificarClasificacionProducto: '',
       denominacionEspecificaProducto: '',
@@ -81,14 +83,14 @@ export function createInitialState(): Tramite260218State {
       paisDeOriginDatos: [],
       paisDeProcedenciaDatos: [],
     },
-    opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [], // SCIAN_TABLA_DATA
-    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA,
-    seleccionadoopcionDatos: [],
-    seleccionadoScianDatos: [],
-    seleccionadoTablaMercanciasDatos: [],
-    opcionesColapsableState: false,
-    pagoDerechos: {
+    opcionConfigDatos: TABLA_OPCION_DATA, // Datos iniciales de la tabla de opciones.
+    scianConfigDatos: [], // Datos vacíos de la tabla SCIAN.
+    tablaMercanciasConfigDatos: PRODUCTO_TABLA_DATA, // Datos iniciales de las mercancías.
+    seleccionadoopcionDatos: [], // Opciones seleccionadas vacías.
+    seleccionadoScianDatos: [], // Datos seleccionados de SCIAN vacíos.
+    seleccionadoTablaMercanciasDatos: [], // Datos seleccionados de mercancías vacíos.
+    opcionesColapsableState: false, // Estado inicial de las opciones colapsables.
+    pagoDerechos: { // Datos iniciales del pago de derechos.
       claveReferencia: '',
       cadenaDependencia: '',
       estado: '',
@@ -104,10 +106,20 @@ export function createInitialState(): Tramite260218State {
 })
 @StoreConfig({ name: 'tramite260218', resettable: true })
 export class Tramite260218Store extends Store<Tramite260218State> {
+  /**
+   * @constructor
+   * Inicializa el store `Tramite260218Store` con el estado inicial de la solicitud.
+   */
   constructor() {
     super(createInitialState());
   }
 
+  /**
+   * @method updateDatosSolicitudFormState
+   * @description Actualiza el estado del formulario de solicitud en el store.
+   *
+   * @param datosSolicitudFormState - Nuevo estado del formulario de solicitud.
+   */
   public updateDatosSolicitudFormState(
     datosSolicitudFormState: DatosSolicitudFormState
   ): void {
@@ -116,6 +128,14 @@ export class Tramite260218Store extends Store<Tramite260218State> {
       datosSolicitudFormState,
     }));
   }
+
+  /**
+   * @method updateFabricanteTablaDatos
+   * @description Actualiza los datos de los fabricantes en el estado del store.
+   * Agrega los nuevos fabricantes a la lista existente.
+   *
+   * @param newFabricantes - Lista de nuevos fabricantes a agregar.
+   */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
@@ -123,6 +143,13 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     }));
   }
 
+  /**
+   * @method updateDestinatarioFinalTablaDatos
+   * @description Actualiza los datos de los destinatarios finales en el estado del store.
+   * Agrega los nuevos destinatarios a la lista existente.
+   *
+   * @param newDestinatarios - Lista de nuevos destinatarios a agregar.
+   */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: Destinatario[]
   ): void {
@@ -135,6 +162,13 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     }));
   }
 
+  /**
+   * @method updateProveedorTablaDatos
+   * @description Actualiza los datos de los proveedores en el estado del store.
+   * Agrega los nuevos proveedores a la lista existente.
+   *
+   * @param newProveedores - Lista de nuevos proveedores a agregar.
+   */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
@@ -142,6 +176,13 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     }));
   }
 
+  /**
+   * @method updateFacturadorTablaDatos
+   * @description Actualiza los datos de los facturadores en el estado del store.
+   * Agrega los nuevos facturadores a la lista existente.
+   *
+   * @param newFacturadores - Lista de nuevos facturadores a agregar.
+   */
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
@@ -149,6 +190,12 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     }));
   }
 
+  /**
+   * @method updateOpcionConfigDatos
+   * @description Actualiza los datos de configuración de las opciones en el estado del store.
+   *
+   * @param opcionConfigDatos - Nueva configuración de las opciones.
+   */
   public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -156,6 +203,12 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     }));
   }
 
+  /**
+   * @method updateScianConfigDatos
+   * @description Actualiza los datos de configuración de SCIAN en el estado del store.
+   *
+   * @param scianConfigDatos - Nueva configuración de SCIAN.
+   */
   public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -163,6 +216,12 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     }));
   }
 
+  /**
+   * @method updateTablaMercanciasConfigDatos
+   * @description Actualiza los datos de configuración de mercancías en el estado del store.
+   *
+   * @param tablaMercanciasConfigDatos - Nueva configuración de las mercancías.
+   */
   public updateTablaMercanciasConfigDatos(
     tablaMercanciasConfigDatos: TablaMercanciasDatos[]
   ): void {
@@ -171,6 +230,13 @@ export class Tramite260218Store extends Store<Tramite260218State> {
       tablaMercanciasConfigDatos,
     }));
   }
+
+  /**
+   * @method updatePagoDerechos
+   * @description Actualiza los datos de pago de derechos en el estado del store.
+   *
+   * @param nuevoPagoDerechos - Nuevos datos de pago de derechos.
+   */
   public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
     this.update((state) => ({
       ...state,

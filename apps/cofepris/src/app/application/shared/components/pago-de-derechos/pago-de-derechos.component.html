@@ -56,7 +56,6 @@
       <!-- Fecha de pago -->
       <div class="col-md-4">
         <input-fecha [datos]="fechaInicioInput"
-        formControlName="fechaPago"
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"

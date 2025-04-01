@@ -1,7 +1,3 @@
-import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
-import { AgregarFabricanteComponent } from '../../../../shared/components/agregar-fabricante/agregar-fabricante.component';
-import { AgregarFacturadorComponent } from '../../../../shared/components/agregar-facturador/agregar-facturador.component';
-import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
@@ -23,9 +19,15 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent {
+  // Variable que mantiene el índice de la pestaña seleccionada.
   indice: number = 2;
 
-  seleccionaTab(i: number): void {
-    this.indice = i;
+  /**
+   * Método para seleccionar la pestaña activa según el índice proporcionado.
+   * @param indice El índice de la pestaña que se desea seleccionar.
+   */
+  seleccionaTab(indice: number): void {
+    // Asigna el valor del índice seleccionado a la propiedad 'indice'.
+    this.indice = indice;
   }
 }

@@ -16,10 +16,10 @@ describe('PasoTresComponent', () => {
           {
             provide: ActivatedRoute,
             useValue: {
-              params: of({ id: '123' }), // Mock params if needed
+              params: of({ id: '123' }), 
               snapshot: {
                 paramMap: {
-                  get: (key: string) => '123' // Mock paramMap if needed
+                  get: (key: string) => '123'
                 }
               }
             }

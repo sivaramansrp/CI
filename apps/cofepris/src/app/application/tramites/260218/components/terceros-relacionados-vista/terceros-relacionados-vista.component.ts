@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query'; 
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
+
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -28,26 +29,36 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
    * @property {Observable<Fabricante[]>} fabricantes$
    * Observable que emite la lista de fabricantes desde el store.
+   * Se utiliza para renderizar la tabla de fabricantes.
    */
   fabricantes$!: Observable<Fabricante[]>;
 
   /**
    * @property {Observable<Destinatario[]>} destinatarios$
    * Observable que emite la lista de destinatarios finales desde el store.
+   * Se utiliza para renderizar la tabla de destinatarios finales.
    */
   destinatarios$!: Observable<Destinatario[]>;
 
   /**
    * @property {Observable<Proveedor[]>} proveedores$
    * Observable que emite la lista de proveedores desde el store.
+   * Se utiliza para renderizar la tabla de proveedores.
    */
   proveedores$!: Observable<Proveedor[]>;
 
   /**
    * @property {Observable<Facturador[]>} facturadores$
    * Observable que emite la lista de facturadores desde el store.
+   * Se utiliza para renderizar la tabla de facturadores.
    */
   facturadores$!: Observable<Facturador[]>;
+
+  /**
+   * @property {boolean} estaOculto
+   * Variable booleana que controla si el componente debe estar oculto o no.
+   */
+  estaOculto: boolean = true;
 
   /**
    * @constructor
@@ -56,7 +67,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
    */
-  estaOculto:boolean = true;
   constructor(
     private tramiteStore: Tramite260218Store,
     private tramiteQuery: Tramite260218Query
@@ -66,6 +76,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    * @method ngOnInit
    * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe los observables para mostrar los datos en la vista.
+   * Inicializa los observables de fabricantes, destinatarios, proveedores y facturadores.
    */
   ngOnInit(): void {
     this.fabricantes$ = this.tramiteQuery.getFabricanteTablaDatos$;
@@ -77,6 +88,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
    * @method addFabricantes
    * @description Agrega nuevos fabricantes a la tabla de datos del trámite.
+   * 
+   * Este método llama al store para actualizar los datos de la tabla de fabricantes
+   * con la lista de nuevos fabricantes proporcionados.
    *
    * @param newFabricantes - Lista de objetos `Fabricante` a agregar.
    */
@@ -87,6 +101,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
    * @method addDestinatarios
    * @description Agrega nuevos destinatarios a la tabla de datos del destinatario final.
+   * 
+   * Este método llama al store para actualizar los datos de la tabla de destinatarios
+   * con la lista de nuevos destinatarios proporcionados.
    *
    * @param newDestinatarios - Lista de objetos `Destinatario` a agregar.
    */
@@ -97,6 +114,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
    * @method addProveedores
    * @description Agrega nuevos proveedores a la tabla de datos del trámite.
+   * 
+   * Este método llama al store para actualizar los datos de la tabla de proveedores
+   * con la lista de nuevos proveedores proporcionados.
    *
    * @param newProveedores - Lista de objetos `Proveedor` a agregar.
    */
@@ -107,6 +127,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   /**
    * @method addFacturadores
    * @description Agrega nuevos facturadores a la tabla de datos del trámite.
+   * 
+   * Este método llama al store para actualizar los datos de la tabla de facturadores
+   * con la lista de nuevos facturadores proporcionados.
    *
    * @param newFacturadores - Lista de objetos `Facturador` a agregar.
    */

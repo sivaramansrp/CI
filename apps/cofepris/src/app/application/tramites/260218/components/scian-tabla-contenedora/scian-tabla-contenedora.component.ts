@@ -12,19 +12,38 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
-  constructor(private tramite260218Store: Tramite260218Store){}
-
+  /**
+   * @property {TablaScianConfig} scianSeleccionado
+   * Contiene la configuración seleccionada de la tabla SCIAN.
+   * Este objeto es utilizado para almacenar la información de la selección actual en la tabla.
+   */
   public scianSeleccionado!: TablaScianConfig;
 
   /**
-   * Método que actualiza el estado del store con la configuración seleccionada de la tabla SCIAN.
+   * @constructor
+   * Inyecta el servicio `Tramite260218Store` para actualizar el estado del store
+   * con los datos seleccionados de la tabla SCIAN.
+   *
+   * @param tramite260218Store - Store que maneja el estado de la información del trámite.
+   */
+  constructor(private tramite260218Store: Tramite260218Store) {}
+
+  /**
+   * @method obtenerSeleccionado
+   * @description Este método se llama cuando se selecciona un nuevo elemento en la tabla SCIAN.
    * 
-   * @param event - Objeto de tipo `TablaScianConfig` que contiene los datos seleccionados de la tabla.
+   * Actualiza el estado del store con la configuración seleccionada de la tabla SCIAN.
+   * El estado `scianConfigDatos` se actualiza con el objeto `event`, que contiene la
+   * configuración de la tabla seleccionada.
+   *
+   * @param {TablaScianConfig} event - Objeto que contiene los datos seleccionados de la tabla SCIAN.
+   * El objeto `event` es de tipo `TablaScianConfig` y contiene la configuración actual seleccionada.
    */
   obtenerSeleccionado(event: TablaScianConfig): void {
-     this.tramite260218Store.update((state) => ({
+    // Actualiza el estado del store con la configuración seleccionada de la tabla SCIAN
+    this.tramite260218Store.update((state) => ({
       ...state,
-      scianConfigDatos: [event]
-    }))
+      scianConfigDatos: [event] // Asigna el nuevo valor de la configuración seleccionada
+    }));
   }
 }

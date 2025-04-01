@@ -9,6 +9,7 @@ import { DatosMercanciaComponent } from '../../../../shared/components/datos-mer
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query';
+
 /**
  * @component DatosMercanciaContenedoraComponent
  * @description Componente encargado de gestionar y actualizar la información de una mercancía seleccionada.
@@ -58,13 +59,14 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * @method ngOnInit
    * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Se suscribe al estado del trámite y guarda su valor localmente para uso posterior.
+   * Utiliza `takeUntil` para limpiar la suscripción cuando el componente sea destruido.
    */
   ngOnInit(): void {
     this.tramite260218Query.selectTramiteState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyNotifier$), // Limpiar la suscripción cuando el componente sea destruido
         map((seccionState) => {
-          this.tramiteState = seccionState;
+          this.tramiteState = seccionState; // Guarda el estado del trámite
         })
       )
       .subscribe();
@@ -73,19 +75,20 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   /**
    * @method mercanciaSeleccionado
    * @description Maneja la selección de una mercancía en la tabla de datos.
-   *
+   * 
    * Este método:
    * - Asigna el objeto seleccionado a `SeleccionadoDatos`.
    * - Crea una versión simplificada de la mercancía.
    * - Verifica si ya existe en la tabla.
    * - La reemplaza o la agrega según sea el caso.
-   * - Finalmente, actualiza el estado del store.
-   *
+   * - Finalmente, actualiza el estado del store con los nuevos datos.
+   * 
    * @param {TablaMercanciasDatos} event - Objeto de tipo `TablaMercanciasDatos` que representa la mercancía seleccionada.
    */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
-    this.SeleccionadoDatos = event;
+    this.SeleccionadoDatos = event; // Asigna la mercancía seleccionada
 
+    // Crea una versión simplificada de la mercancía
     const SELECCIONADO_MERCANCIA = {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
@@ -108,6 +111,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       usoEspecifico: event.usoEspecifico,
     };
 
+    // Verifica si la mercancía ya existe en la tabla
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(
       (idx) =>
         idx.clasificacionProducto ===
@@ -116,21 +120,23 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
 
     let datosActivos = [];
 
+    // Si la mercancía existe, reemplaza la existente; si no, la agrega a la tabla
     if (INDICES !== -1) {
       const TABLE_MERCANCIA_DATA = this.tramiteState.tablaMercanciasConfigDatos;
-      TABLE_MERCANCIA_DATA.splice(INDICES, 1, SELECCIONADO_MERCANCIA);
+      TABLE_MERCANCIA_DATA.splice(INDICES, 1, SELECCIONADO_MERCANCIA); // Reemplaza la mercancía existente
       datosActivos = TABLE_MERCANCIA_DATA;
     } else {
       datosActivos = [
         ...this.tramiteState.tablaMercanciasConfigDatos,
-        SELECCIONADO_MERCANCIA,
+        SELECCIONADO_MERCANCIA, // Agrega la nueva mercancía
       ];
     }
 
+    // Actualiza el estado del store con la nueva tabla de mercancías
     this.tramite260218Store.update((state) => ({
       ...state,
-      seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA],
-      tablaMercanciasConfigDatos: datosActivos,
+      seleccionadoTablaMercanciasDatos: [SELECCIONADO_MERCANCIA], // Actualiza la mercancía seleccionada
+      tablaMercanciasConfigDatos: datosActivos, // Actualiza la lista de mercancías
     }));
   }
 }

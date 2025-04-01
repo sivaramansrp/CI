@@ -4,8 +4,10 @@ import {
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { PAGO_DE_DERECHOS } from '../../constants/pasos.enum';
 import { PASOS } from '../../constants/pasos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -21,8 +23,9 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    BtnContinuarComponent
-  ],
+    BtnContinuarComponent,
+    AlertComponent
+],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
@@ -32,8 +35,16 @@ export class ContenedorDePasosComponent {
      * Título principal mostrado en la parte superior según el paso actual.
      */
     tituloMensaje: string | null =
-      'Permiso sanitario de importación de medicamentos con registro sanitario';
-  
+      'Permiso sanitario de importación de dispositivos médicos destinados a pruebas de laboratorio.';
+      TEXTOS: string = PAGO_DE_DERECHOS.ADJUNTAR;
+      /**
+       *
+       * Una cadena que representa la clase CSS para una alerta de información.
+       * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+       */
+      public infoAlert = 'alert-info';
+    
+
     /**
      * @property {ListaPasosWizard[]} pasos
      * Lista de pasos del wizard obtenidos desde una constante externa.
