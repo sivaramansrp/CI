@@ -50,6 +50,13 @@ const ROUTES: Routes = [
         (m) => m.ServiciosExtraordinariosModule
       ),
   },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
