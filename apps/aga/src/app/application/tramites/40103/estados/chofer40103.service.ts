@@ -24,6 +24,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class Chofer40103Service {
+  url = '../../../../../assets/json/40103/';
   /**
    * URL base del servidor para realizar solicitudes HTTP.
    */
@@ -231,5 +232,9 @@ export class Chofer40103Service {
    */
   getChoferData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/chofer.json');
+  }
+  obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
+    const JSONURL = this.url + fileName;
+      return this.http.get<T[]>(JSONURL);
   }
 }

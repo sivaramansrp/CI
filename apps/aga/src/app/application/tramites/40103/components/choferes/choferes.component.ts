@@ -25,11 +25,15 @@ import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { Observable, ReplaySubject, takeUntil } from 'rxjs';
-import { PagoDerechosLista } from '../../../40103/models/registro-muestras-mercancias.model';
+import {
+  choferesExtranjeros,
+  datosDelChoferNacional,
+} from '../../../40103/models/registro-muestras-mercancias.model';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
@@ -91,7 +95,8 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   Choferesextranjeros: string = 'Choferes extranjeros';
   estado$!: Observable<Catalogo[]>;
   entidadFederativaCHN: Catalogo[] = [];
-  pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
+  datosDelChoferNacional: datosDelChoferNacional[] =
+    [] as datosDelChoferNacional[];
   municipios: any[] = [];
   colonias: any[] = [];
   paises: any[] = [];
@@ -99,7 +104,8 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   choferes: any[] = [];
   formChoferes!: FormGroup;
   choferesList$: Observable<any[]> = new Observable();
-  getPagoDerechosLista$: Observable<any[]> = new Observable();
+  getdatosDelChoferNacional$: Observable<any[]> = new Observable();
+  getchoferesExtranjeros$: Observable<any[]> = new Observable();
   choferesextranjerosList$: Observable<any[]> = new Observable();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   isEditing: boolean = false;
@@ -110,159 +116,159 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
    */
-  configuracionColumnas = [
+  tableColumns: ConfiguracionColumna<datosDelChoferNacional>[] = [
     {
-      encabezado: 'Número',
-      clave: (item: PagoDerechosLista) => item.número,
+      encabezado: 'CURP',
+      clave: (item: datosDelChoferNacional) => item.curp,
       orden: 1,
     },
     {
-      encabezado: 'Calle',
-      clave: (item: PagoDerechosLista) => item.calle,
+      encabezado: 'RFC',
+      clave: (item: datosDelChoferNacional) => item.rfc,
       orden: 2,
     },
     {
-      encabezado: 'Estado',
-      clave: (item: PagoDerechosLista) => item.estado,
+      encabezado: 'Número',
+      clave: (item: datosDelChoferNacional) => item.nombre,
       orden: 3,
     },
     {
       encabezado: 'País',
-      clave: (item: PagoDerechosLista) => item.pais,
+      clave: (item: datosDelChoferNacional) => item.pais,
       orden: 4,
     },
     {
       encabezado: 'Apellido Paterno',
-      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      clave: (item: datosDelChoferNacional) => item.apellidoPaterno,
       orden: 5,
     },
     {
       encabezado: 'Apellido Materno',
-      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      clave: (item: datosDelChoferNacional) => item.apellidoMaterno,
       orden: 6,
     },
     {
       encabezado: 'RFC',
-      clave: (item: PagoDerechosLista) => item.rfc,
+      clave: (item: datosDelChoferNacional) => item.rfc,
       orden: 7,
     },
     {
       encabezado: 'Gafete',
-      clave: (item: PagoDerechosLista) => item.gafete,
+      clave: (item: datosDelChoferNacional) => item.gafete,
       orden: 8,
     },
     {
       encabezado: 'Vigencia Gafete',
-      clave: (item: PagoDerechosLista) => item.vigenciaGafete,
+      clave: (item: datosDelChoferNacional) => item.vigenciaGafete,
       orden: 9,
     },
     {
       encabezado: 'Municipio o Alcaldía',
-      clave: (item: PagoDerechosLista) => item.municipio,
+      clave: (item: datosDelChoferNacional) => item.municipio,
       orden: 10,
     },
     {
       encabezado: 'Colonia',
-      clave: (item: PagoDerechosLista) => item.colonia,
+      clave: (item: datosDelChoferNacional) => item.colonia,
       orden: 11,
     },
     {
       encabezado: 'País de Origen',
-      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      clave: (item: datosDelChoferNacional) => item.paisOrigen,
       orden: 12,
     },
     {
       encabezado: 'Ciudad',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: datosDelChoferNacional) => item.ciudad,
       orden: 13,
     },
   ];
 
-  configuracionColumnasChofer = [
+  choferesextranjeros: ConfiguracionColumna<choferesExtranjeros>[] = [
     {
-      encabezado: 'CURP',
-      clave: (item: PagoDerechosLista) => item.número,
+      encabezado: 'Número del seguro social',
+      clave: (item: choferesExtranjeros) => item.númeroDelSeguroSocial,
       orden: 1,
     },
     {
       encabezado: 'Número',
-      clave: (item: PagoDerechosLista) => item.calle,
+      clave: (item: choferesExtranjeros) => item.número,
       orden: 2,
     },
     {
       encabezado: 'Calle',
-      clave: (item: PagoDerechosLista) => item.estado,
+      clave: (item: choferesExtranjeros) => item.calle,
       orden: 3,
     },
     {
       encabezado: 'Número Exterior',
-      clave: (item: PagoDerechosLista) => item.pais,
+      clave: (item: choferesExtranjeros) => item.númeroExterior,
       orden: 4,
     },
     {
       encabezado: 'Número Interior',
-      clave: (item: PagoDerechosLista) => item.apellidoPaterno,
+      clave: (item: choferesExtranjeros) => item.númeroInterior,
       orden: 5,
     },
     {
       encabezado: 'País',
-      clave: (item: PagoDerechosLista) => item.apellidoMaterno,
+      clave: (item: choferesExtranjeros) => item.país,
       orden: 6,
     },
     {
       encabezado: 'Estado',
-      clave: (item: PagoDerechosLista) => item.rfc,
+      clave: (item: choferesExtranjeros) => item.estado,
       orden: 7,
     },
     {
       encabezado: 'Primer Apellido',
-      clave: (item: PagoDerechosLista) => item.gafete,
+      clave: (item: choferesExtranjeros) => item.primerApellido,
       orden: 8,
     },
     {
       encabezado: 'Segundo Apellido',
-      clave: (item: PagoDerechosLista) => item.vigenciaGafete,
+      clave: (item: choferesExtranjeros) => item.segundoApellido,
       orden: 9,
     },
     {
       encabezado: 'RFC',
-      clave: (item: PagoDerechosLista) => item.municipio,
+      clave: (item: choferesExtranjeros) => item.rfc,
       orden: 10,
     },
     {
       encabezado: 'Número de gafete del chofer',
-      clave: (item: PagoDerechosLista) => item.colonia,
+      clave: (item: choferesExtranjeros) => item.númeroDeGafete,
       orden: 11,
     },
     {
       encabezado: 'Fecha fin de Vigencia Gafete',
-      clave: (item: PagoDerechosLista) => item.paisOrigen,
+      clave: (item: choferesExtranjeros) => item.fechaFindDeVigencia,
       orden: 12,
     },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: choferesExtranjeros) => item.municipioAlcaldía,
       orden: 13,
     },
     {
       encabezado: 'Colonia',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: choferesExtranjeros) => item.colonia,
       orden: 14,
     },
     {
       encabezado: 'País de residencia',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: choferesExtranjeros) => item.PaísDeResidencia,
       orden: 15,
     },
     {
       encabezado: 'Ciudad',
-      clave: (item: PagoDerechosLista) => item.ciudad,
+      clave: (item: choferesExtranjeros) => item.ciudad,
       orden: 16,
     },
   ];
   /**
    * Lista de pagos de derechos asociados a la solicitud.
-   * Se inicializa como un array vacío con la estructura de `PagoDerechosLista`.
+   * Se inicializa como un array vacío con la estructura de `datosDelChoferNacional`.
    */
 
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
@@ -272,6 +278,16 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   public coloniaCHN!: Catalogo[];
   public nacionalidadCHE!: Catalogo[];
 
+  /**
+   * @property {any[]} facturasDisponible - Array de datos de facturas disponibles.
+   */
+  facturasDisponible: datosDelChoferNacional[] = [];
+  ConfiguracionColumna!: ConfiguracionColumna<datosDelChoferNacional>[];
+  /**
+   * @property {any[]} facturasAsociadas - Array de datos de facturas asociadas.
+   */
+  facturasAsociadas: choferesExtranjeros[] = [];
+  
   /**
    * Establece la pestaña activa.
    * @param tab La pestaña que se establecerá como activa.
@@ -356,11 +372,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    */
 
   ngOnInit(): void {
-    this.getPagoDerechosLista$
+    this.getdatosDelChoferNacional$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         if (data && data.length > 0) {
-          this.pagoDerechosLista = data;
+          this.datosDelChoferNacional = data;
         }
       });
 
@@ -388,6 +404,8 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.delegacionChnData();
     this.coloniaChnData();
     this.nacionaliDadChe();
+    this.recuperarDatos();
+    this.ConfiguracionColumna = this.tableColumns;
   }
   /**
    * Obtiene los controles de formulario del formulario choferes.
@@ -414,12 +432,15 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Guarda los datos del formulario del chofer extranjero.
    */
   extranjeroGuardars(): void {
-    if (!this.pagoDerechosLista || this.pagoDerechosLista.length === 0) {
+    if (
+      !this.datosDelChoferNacional ||
+      this.datosDelChoferNacional.length === 0
+    ) {
       this.toastr.warning('No data to submit.');
       return;
     }
 
-    const submittedData = this.pagoDerechosLista.map((item) => ({
+    const submittedData = this.datosDelChoferNacional.map((item) => ({
       ...item,
       clave: item?.calle || '',
       descripcion: item?.rfc || '',
@@ -427,18 +448,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.chofer40103Store.update((state) => {
       return {
         ...state,
-        pagoDerechosLista: [
-          ...(state.pagoDerechosLista || []),
+        datosDelChoferNacional: [
+          ...(state.datosDelChoferNacional || []),
           ...submittedData,
         ],
       };
     });
 
     this.toastr.success('Data submitted successfully!');
-    this.pagoDerechosLista = [];
+    this.datosDelChoferNacional = [];
   }
 
- /**
+  /**
    * @method Guardar
    * @description
    * Guarda los datos del formulario de chofer nacional.
@@ -532,7 +553,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.formChoferes.patchValue(CHOFER_DATA);
   }
 
-  
   actualizarDesplegables(choferData: any): void {
     const ESTADO_CLAVE = choferData.datosGenerales.estados;
     const MUNICIPIO_CLAVE = choferData.datosGenerales.municipio;
@@ -636,6 +656,20 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         MODEL.hide();
       }
     }
+  }
+
+  recuperarDatos(): void {
+    this.chofer40103Service
+      .obtenerTablaDatos<datosDelChoferNacional>('facturasDisponible.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (response) => {
+          this.datosDelChoferNacional = response;
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   estadoSeleccion(): void {

@@ -39,12 +39,14 @@
         <div class="row table-responsive">
           <div class="col-md-12">
             <h4 class="extranjeros">Choferes nacionales:</h4>
+            <form [formGroup]="formChoferes">
             <app-tabla-dinamica
               [tipoSeleccionTabla]="tipoSeleccionTabla"
-              [configuracionTabla]="configuracionColumnasChofer"
-              [datos]="pagoDerechosLista"
+              [configuracionTabla]="ConfiguracionColumna"
+              [datos]="datosDelChoferNacional"
             >
             </app-tabla-dinamica>
+          </form>
           </div>
         </div>
 
@@ -78,8 +80,8 @@
             <h4 class="extranjeros">Alta de choferes extranjeros:</h4>
             <app-tabla-dinamica
               [tipoSeleccionTabla]="tipoSeleccionTabla"
-              [configuracionTabla]="configuracionColumnas"
-              [datos]="pagoDerechosLista"
+              [configuracionTabla]="ConfiguracionColumna"
+              [datos]="datosDelChoferNacional"
             >
             </app-tabla-dinamica>
           </div>
@@ -338,11 +340,11 @@
                 >
                   <small
                     *ngIf="getFormValues['vigenciagafete'].errors?.['required']"
-                    >Should be 'La vigencia del gafete.</small
+                    >La vigencia del gafete es obligatoria.</small
                   >
                   <small
                     *ngIf="getFormValues['vigenciagafete'].errors?.['maxLength']"
-                    >Should be 'La vigencia del gafete.</small
+                    >La vigencia del gafete no puede tener más de 10 caracteres.</small
                   >
                 </div>
               </div>

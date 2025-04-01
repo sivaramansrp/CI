@@ -64,7 +64,7 @@ export interface ImportanteCatalogoSeleccion {
    * Lista de pagos de derechos asociados a la solicitud.
    * Contiene información sobre los pagos realizados o pendientes.
    */
-  pagoDerechosLista: PagoDerechosLista[];
+  datosDelChoferNacional: datosDelChoferNacional[];
 }
 /**
  * Representa un registro de muestras de mercancías.
@@ -201,6 +201,61 @@ export interface MuestrasMercanciasStore {
  * Interfaz que representa la lista de pagos de derechos.
  * Contiene la información de la línea de captura y el monto correspondiente.
  */
+export interface datosDelChoferNacional {
+  /** Línea de captura del pago. */
+  curp?: string;
+  rfc?: string;
+  número?: string;
+  nombre?:string;
+  calle?: string;
+  númeroExterior?: string;
+  númeroInterior?: string;
+  pais?: string;
+  estado?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  númeroDeGafete?: string;
+  vigenciaGafete?: string;
+  municipio?: string;
+  colonia?: string;
+  paisOrigen?: string;
+  ciudad?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  gafete?: string;
+  país?: string;
+  fechaFindDeVigencia?: string;
+  municipioAlcaldía?: string;
+  PaísDeResidencia?: string;
+}
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface choferesExtranjeros {
+  /** Línea de captura del pago. */
+  númeroDelSeguroSocial?: string;
+  número?:string;
+  calle?: string;
+  estado?: string;
+  pais?: string;
+  apellidoPaterno?: string;
+  apellidoMaterno?: string;
+  rfc?: string;
+  gafete?: string;
+  vigenciaGafete?: string;
+  municipio?: string;
+  colonia?: string;
+  paisOrigen?: string;
+  ciudad?: string;
+  curp?: string;
+  númeroExterior?: string;
+  númeroInterior?: string;
+  país?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  númeroDeGafete?: string;
+  fechaFindDeVigencia?: string;
+  municipioAlcaldía?: string;
+  PaísDeResidencia?: string;
+}
 export interface PagoDerechosLista {
   /** Línea de captura del pago. */
   número?: string;
@@ -216,4 +271,14 @@ export interface PagoDerechosLista {
   colonia?: string;
   paisOrigen?: string;
   ciudad?: string;
+  curp?: string;
+  númeroExterior?: string;
+  númeroInterior?: string;
+  país?: string;
+  primerApellido?: string;
+  segundoApellido?: string;
+  númeroDeGafete?: string;
+  fechaFindDeVigencia?: string;
+  municipioAlcaldía?: string;
+  PaísDeResidencia?: string;
 }

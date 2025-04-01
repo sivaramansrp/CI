@@ -13,7 +13,8 @@ export interface Choferesnacionales40103State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  pagoDerechosLista: any[];
+  datosDelChoferNacional: any[];
+  PagoDerechosLista:any[];
 }
 
 export function createChoferState(): Choferesnacionales40103State {
@@ -29,7 +30,8 @@ export function createChoferState(): Choferesnacionales40103State {
     nombre: '',
     primerApellido: '',
     segundoApellido: '',
-    pagoDerechosLista: [],
+    datosDelChoferNacional: [],
+    PagoDerechosLista:[]
   };
 }
 
