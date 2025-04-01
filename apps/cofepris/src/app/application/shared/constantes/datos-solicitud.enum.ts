@@ -276,7 +276,6 @@ export const ADUNAS_DE_ENTRADAS_DATOS = [
   },
 ]
 
-
 export const DETALLE_MERCANCIA_TABLA = [
   {
     encabezado: 'Forma farmacéutica',
