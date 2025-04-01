@@ -215,6 +215,10 @@ export const Todospasos = {
   efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`,
 };
 
+export const TERCEROS = {
+  alerta: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`,
+}
+
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 
 export const PASOS_REQUERIMIENTOS = [

@@ -13,6 +13,7 @@ import { SanitarioService } from '../../260211/services/sanitario.service';
 import { CertificadosLicenciasService } from '../services/certificados-licencias.service';
 import { TramitesAsociadosComponent } from '../components/tramites-asociados/tramites-asociados.component';
 import { PagoDeDerechosComponent } from '../components/pago-de-derechos/pago-de-derechos.component';
+import { TercerosRelacionadosComponent } from '../components/terceros-relacionados/terceros-relacionados.component';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { PagoDeDerechosComponent } from '../components/pago-de-derechos/pago-de-
     AnexarDocumentosComponent,
     TramitesAsociadosComponent,
     PagoDeDerechosComponent,
+    TercerosRelacionadosComponent,
     ToastrModule.forRoot()
   ],
   providers: [
