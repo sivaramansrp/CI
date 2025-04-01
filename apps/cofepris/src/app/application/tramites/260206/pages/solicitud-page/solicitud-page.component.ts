@@ -36,7 +36,7 @@ export class SolicitudPageComponent {
    * Título principal mostrado en la parte superior según el paso actual.
    */
   tituloMensaje: string | null =
-    'Permiso sanitario de importación de medicamentos con registro sanitario';
+    'Permiso sanitario de importación de medicamentos y materias primas destinados a maquila';
 
   /**
    * @property {ListaPasosWizard[]} pasos
