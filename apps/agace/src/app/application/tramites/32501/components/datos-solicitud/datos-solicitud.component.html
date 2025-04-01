@@ -1,0 +1,224 @@
+<div class="container">
+  <form [formGroup]="formAviso">
+    <div class="row">
+      <div class="col-md-4 mt-5">
+        <label for="adace">ADACE:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="adace"
+          id="adace"
+          [readonly]="true"
+          size="15"
+        />
+      </div>
+      <div class="col-md-8"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ng-titulo titulo="Tipo de aviso" />
+      </div>
+      <div class="col-md-2">
+        <label for="adace">Tipo de Aviso*:</label>
+      </div>
+      <div class="col-md-10">
+        <app-input-radio
+          [radioOptions]="avisoOpcionesDeRadio.radioOptions"
+          [isRequired]="avisoOpcionesDeRadio.required"
+          [selectedValue]="formAviso.get('ideGenerica1')?.value"
+          [layout]="'horizontal'"
+          (valueChange)="setTipoDeAviso($event)"
+        ></app-input-radio>
+      </div>
+
+      @if (tipoAviso === '') {
+      <div class="col-md-12 mt-5">
+        <ng-titulo
+          titulo=" Datos del aviso de importación previa relacionado"
+        />
+      </div>
+      <div class="col-md-12 alert alert-warning" role="alert">
+        <strong>¡Precaución!</strong>
+        El campo ID de transacción de VUCEM debe ser tomado de un previo
+        registro de destrucción de desperdicios.
+      </div>
+      <div class="col-md-12">
+        <label for="idTransaccionVU">
+          Identificador de transacción de VUCEM correspondiente al aviso de
+          importación previa relacionado
+        </label>
+        <input
+          id="idTransaccionVU"
+          formControlName="idTransaccionVU"
+          (blur)="busquedaImportacionPorFolio()"
+          (keyup)="onKeyUpIdTransaccionVU($event)"
+          class="form-control"
+          type="text"
+        />
+      </div>
+
+      <div class="col-md-12">
+        <ng-titulo titulo="Fecha de inicio de uso de la mercancía importada" />
+      </div>
+      <div class="col-md-8">
+        <div class="form-group">
+          <label for="fechaIniExposicion">
+            Fecha en la que se empezará a utilizar la mercancía montada
+          </label>
+          <span class="text-danger">*</span>
+          <input
+            id="fechaInicioUsoMerc"
+            formControlName="fechaIniExposicion"
+            class="form-control"
+            type="text"
+          />
+        </div>
+      </div>
+      } @else if(tipoAviso === 'TAV.IMP') {
+      <div class="col-md-12 mt-5">
+        <ng-titulo
+          titulo="Datos de la
+					mercanc&iacute;a completa que se importar&aacute; desmontada"
+        />
+      </div>
+      <div class="col-md-4 mt-3">
+        <app-catalogo-select
+          formControlName="cveFraccionArancelaria"
+          [catalogo]="opcionFraccionArancelaria.catalogos"
+          [label]="opcionFraccionArancelaria.labelNombre"
+          [required]="opcionFraccionArancelaria.required"
+          name="cveFraccionArancelaria"
+          (selectionChange)="mostrarDescFraccArancelaria($event)"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="nico">NICO</label>
+        <span class="text-danger">*</span>
+        <input
+          id="nico"
+          formControlName="nico"
+          (keyup)="onKeyUpNico($event)"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="peso">Peso (Kg)</label>
+        <span class="text-danger">*</span>
+        <input
+          id="peso"
+          formControlName="peso"
+          (keyup)="onKeyUpPeso($event)"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="valorUSD">Valor USD</label>
+        <span class="text-danger">*</span>
+        <input
+          id="valorUSD"
+          formControlName="valorUSD"
+          (keyup)="onKeyUpValorUSD($event)"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-8 mt-3">
+        <label for="descripcionMercancia"> Descripción de la mercancía </label>
+        <span class="text-danger">*</span>
+        <textarea
+          id="descripcionMercancia"
+          formControlName="descripcionMercancia"
+          rows="3"
+          class="form-control"
+        ></textarea>
+      </div>
+
+      <div class="col-md-12 mt-5">
+        <ng-titulo titulo="Datos del domicilio donde se montará la mercancía" />
+      </div>
+      <div class="col-md-8 mt-3">
+        <label for="nombreComercial"> Nombre comercial </label>
+        <input
+          id="nombreComercial"
+          formControlName="nombreComercial"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4 mt-3"></div>
+      <div class="col-md-4 mt-3">
+        <app-catalogo-select
+          formControlName="entidadFederativa"
+          [catalogo]="opcionEntidadFederativa.catalogos"
+          [label]="opcionEntidadFederativa.labelNombre"
+          [required]="opcionEntidadFederativa.required"
+          name="entidadFederativa"
+          (selectionChange)="mostrarDescFraccArancelaria($event)"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 mt-3">
+        <app-catalogo-select
+          formControlName="delegacionMunicipio"
+          [catalogo]="opcionDelegacionMunicipio.catalogos"
+          [label]="opcionDelegacionMunicipio.labelNombre"
+          [required]="opcionDelegacionMunicipio.required"
+          name="delegacionMunicipio"
+          (selectionChange)="mostrarDescFraccArancelaria($event)"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 mt-3">
+        <app-catalogo-select
+          formControlName="colonia"
+          [catalogo]="opcionColonia.catalogos"
+          [label]="opcionColonia.labelNombre"
+          [required]="opcionColonia.required"
+          name="colonia"
+          (selectionChange)="mostrarDescFraccArancelaria($event)"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="calle">Calle</label>
+        <span class="text-danger">*</span>
+        <input
+          id="calle"
+          formControlName="calle"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="numeroExterior">No. Exterior</label>
+        <span class="text-danger">*</span>
+        <input
+          id="numeroExterior"
+          formControlName="numeroExterior"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="numeroInterior">No. Interior</label>
+        <input
+          id="numeroInterior"
+          formControlName="numeroInterior"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      <div class="col-md-4 mt-3">
+        <label for="codigoPostal">Código postal</label>
+        <span class="text-danger">*</span>
+        <input
+          id="codigoPostal"
+          formControlName="codigoPostal"
+          (keyup)="onKeyUpCodigoPostal($event)"
+          class="form-control"
+          type="text"
+        />
+      </div>
+      }
+    </div>
+  </form>
+</div>

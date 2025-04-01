@@ -1,0 +1,78 @@
+{
+    "cveFraccionArancelaria": {
+        "catalogos": [
+            {
+                "id": "01031001-Reproductors de raza..",
+                "descripcion": "01031001-Reproductors de raza.."
+            },
+            {
+                "id": "01031002-Reproductors de raza..",
+                "descripcion": "01031002-Reproductors de raza.."
+            },
+            {
+                "id": "01031003-Reproductors de raza..",
+                "descripcion": "01031003-Reproductors de raza.."
+            }
+        ],
+        "labelNombre": "Fracción arancelaria",
+        "required": true,
+        "primerOpcion": "Seleccione un valor"
+    },
+    "entidadFederativa": {
+        "catalogos": [
+            {
+                "id": "MEXICO-1",
+                "descripcion": "MEXICO-1"
+            },
+            {
+                "id": "MEXICO-2",
+                "descripcion": "MEXICO-2"
+            },
+            {
+                "id": "MEXICO-3",
+                "descripcion": "MEXICO-3"
+            }
+        ],
+        "labelNombre": "Entidad federativa",
+        "required": true,
+        "primerOpcion": "Seleccione un valor"
+    },
+    "delegacionMunicipio": {
+        "catalogos": [
+            {
+                "id": "ATENCO-1",
+                "descripcion": "ATENCO-1"
+            },
+            {
+                "id": "ATENCO-2",
+                "descripcion": "ATENCO-2"
+            },
+            {
+                "id": "ATENCO-3",
+                "descripcion": "ATENCO-3"
+            }
+        ],
+        "labelNombre": "Alcaldía o municipio",
+        "required": true,
+        "primerOpcion": "Seleccione un valor"
+    },
+    "colonia": {
+        "catalogos": [
+            {
+                "id": "LA NORIA-1",
+                "descripcion": "LA NORIA-1"
+            },
+            {
+                "id": "LA NORIA-2",
+                "descripcion": "LA NORIA-2"
+            },
+            {
+                "id": "LA NORIA-3",
+                "descripcion": "LA NORIA-3"
+            }
+        ],
+        "labelNombre": "Colonia",
+        "required": true,
+        "primerOpcion": "Seleccione un valor"
+    }
+}
