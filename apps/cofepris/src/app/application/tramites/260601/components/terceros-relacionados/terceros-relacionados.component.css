@@ -1,0 +1,11 @@
+.modal-dialog {
+    max-width: 1000px;
+}
+
+.modal-body, .modal-footer {
+    padding: 2rem;
+}
+
+.modal-header {
+    justify-content: left;
+}

@@ -1,9 +1,12 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  FECHA_DE_PAGO,
+  PagoDerechosFormState,
+} from '../../models/terceros-relacionados.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { FECHA_DE_PAGO } from '../../models/terceros-relacionados.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@ng-mf/data-access-user';
@@ -11,7 +14,6 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 /**
@@ -34,6 +36,25 @@ import { takeUntil } from 'rxjs';
 })
 export class PagoDeDerechosComponent implements OnInit {
   /**
+   * @method eliminarMercancia
+   * @description Emits an event to delete one or more merchandise items.
+   * This method is used to notify the parent component about the deletion of selected merchandise items.
+   *
+   * @param {DetalleMercancia[]} datos - An array of merchandise details to be deleted.
+   * @returns {void} This method does not return any value.
+   */
+  @Input() public pagoDerechoFormState!: PagoDerechosFormState;
+
+  /**
+   * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
+   * @description Output property that emits the updated state of the payment form whenever changes occur.
+   * This allows the parent component to stay synchronized with the form's state.
+   */
+
+  @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> =
+    new EventEmitter<PagoDerechosFormState>();
+
+  /**
    * @property {Subject<void>} unsubscribe$
    * Subject utilizado para gestionar las desuscripciones automáticas y evitar fugas de memoria.
    * Se completa manualmente cuando el componente se destruye.
@@ -51,7 +72,7 @@ export class PagoDeDerechosComponent implements OnInit {
    * @property {FormGroup} pagoDerechosForm
    * Formulario reactivo que captura los datos del pago de derechos.
    */
-  pagoDerechosForm: FormGroup;
+  pagoDerechosForm!: FormGroup;
 
   /**
    * @property {Catalogo[]} estadosDatos
@@ -69,21 +90,8 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore: Tramite260204Store
-  ) {
-    this.pagoDerechosForm = this.fb.group({
-      claveReferencia: ['', Validators.required],
-      cadenaDependencia: ['', Validators.required],
-      estado: ['', Validators.required],
-      llavePago: ['', Validators.required],
-      fechaPago: ['', Validators.required],
-      importePago: [
-        '',
-        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
-      ],
-    });
-  }
+    private datosSolicitudService: DatosSolicitudService
+  ) {}
 
   /**
    * @method ngOnInit
@@ -92,25 +100,32 @@ export class PagoDeDerechosComponent implements OnInit {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
-    const DATOS_STORE = this.tramiteStore.getValue().pagoDerechos;
-
     this.pagoDerechosForm = this.fb.group({
-      claveReferencia: [DATOS_STORE.claveReferencia || '', Validators.required],
-      cadenaDependencia: [
-        DATOS_STORE.cadenaDependencia || '',
+      claveReferencia: [
+        this.pagoDerechoFormState?.claveReferencia || '',
         Validators.required,
       ],
-      estado: [DATOS_STORE.estado || '', Validators.required],
-      llavePago: [DATOS_STORE.llavePago || '', Validators.required],
-      fechaPago: [DATOS_STORE.fechaPago || '', Validators.required],
+      cadenaDependencia: [
+        this.pagoDerechoFormState?.cadenaDependencia || '',
+        Validators.required,
+      ],
+      estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
+      llavePago: [
+        this.pagoDerechoFormState?.llavePago || '',
+        Validators.required,
+      ],
+      fechaPago: [
+        this.pagoDerechoFormState?.fechaPago || '',
+        Validators.required,
+      ],
       importePago: [
-        DATOS_STORE.importePago || '',
+        this.pagoDerechoFormState?.importePago || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
       ],
     });
 
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
-      this.tramiteStore.updatePagoDerechos(valores);
+      this.updatePagoDerechos.emit(valores);
     });
 
     this.cargarDatos();
@@ -136,5 +151,15 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   onReset(): void {
     this.pagoDerechosForm.reset();
+  }
+
+  /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.pagoDerechosForm.patchValue({ fechaPago: fecha });
   }
 }
