@@ -10,9 +10,7 @@ import { InicioSesionService } from '@libs/shared/data-access-user/src/core/serv
 import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from '../components/pago-de-derechos/pago-de-derechos.component';
 import { PasoCuatroComponent } from '../pages/paso-cuatro/paso-cuatro.component';
-import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
-import { RequisitosNecesariosComponent } from '../components/requisitos-necesarios/requisitos-necesarios.component';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TercerosRelacionadosComponent } from '../components/terceros-relacionados/terceros-relacionados.component';
 import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
@@ -21,7 +19,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 
 @NgModule({
-  declarations: [TodospasosComponent,PasoUnoComponent,PasoDosComponent,PasoCuatroComponent],
+  declarations: [TodospasosComponent,PasoUnoComponent,PasoCuatroComponent],
   imports: [
     CommonModule,
     CertificadosLicenciasPermisosRoutingModule,
@@ -33,7 +31,6 @@ import { provideHttpClient } from '@angular/common/http';
     TercerosRelacionadosComponent,
     AlertComponent,
     FabricanteModalComponent,
-    RequisitosNecesariosComponent,
     AnexarDocumentosComponent,
     ToastrModule.forRoot(),
     FirmaElectronicaComponent

@@ -1,8 +1,9 @@
 
 import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
@@ -19,7 +20,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
@@ -87,6 +88,10 @@ export class TercerosRelacionadosComponent implements OnInit {
   public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = this.generateConfiguracionTabla(this.configuracionOtros);
 
+  /**
+   * Notificador para destruir observables activos.
+   */
+  private destroyed$ = new Subject<void>();
   
 
   /**
@@ -143,7 +148,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns {void}
    */
   public getFabricanteTablaDatos(): void {
-    this.certificadosLicenciasSvc.getFabricanteDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getFabricanteDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATA = this.deepCopy(response);
       this.fabricanteTablaDatos = DATA;
     });
@@ -159,7 +164,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * directa de los datos originales.
    */
   public getFacturadorTablaDatos(): void {
-    this.certificadosLicenciasSvc.getFacturadorDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getFacturadorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATA = this.deepCopy(response);
       this.facturadorTablaDatos = DATA;
     });
@@ -175,7 +180,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   public getProveedorTablaDatos(): void {
-    this.certificadosLicenciasSvc.getProveedorDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getProveedorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATA = this.deepCopy(response);
       this.proveedorTablaDatos = DATA;
     });
@@ -190,7 +195,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   public getCertificadoAnaliticoTablaDatos(): void {
-    this.certificadosLicenciasSvc.getCertificadoDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATA = this.deepCopy(response);
       this.certificadoAnaliticoTablaDatos = DATA;
     });
@@ -205,7 +210,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   public getOtrosTablaDatos(): void {
-    this.certificadosLicenciasSvc.getOtrosDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getOtrosDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATA = this.deepCopy(response);
       this.otrosTablaDatos = DATA;
     });
@@ -249,4 +254,13 @@ export class TercerosRelacionadosComponent implements OnInit {
     };
     this.bsModalRef = this.modalService.show(FabricanteModalComponent, INITIAL_STATE);
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+    ngOnDestroy(): void {
+      this.destroyed$.next();
+      this.destroyed$.complete();
+    }
 }

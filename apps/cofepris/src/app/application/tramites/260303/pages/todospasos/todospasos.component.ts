@@ -1,6 +1,7 @@
 import { ANEXAR, REQUISITOS } from '@libs/shared/data-access-user/src/core/enums/constantes-alertas.enum';
-import { Component, ViewChild } from '@angular/core';
-import { PANTA_PASOS, PASO_FOUR, PASO_ONE, PASO_THREE, PASO_TWO } from '../../services/certificados-licencias-permisos.enum';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { PANTA_PASOS, PASO_DOS, PASO_TRES, PASO_UNO } from '../../services/certificados-licencias-permisos.enum';
+import { Subject, takeUntil } from 'rxjs';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -8,7 +9,6 @@ import { CatalogosService } from '@libs/shared/data-access-user/src/core/service
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src/core/models/forma-render.model';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
-
 /**
  * PasoUnoComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -17,7 +17,7 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
   selector: 'app-todospasos',
   templateUrl: './todospasos.component.html',
 })
-export class TodospasosComponent {
+export class TodospasosComponent implements OnDestroy {
 
   /**
 * Esta variable se utiliza para almacenar la lista de pasos.
@@ -28,7 +28,17 @@ export class TodospasosComponent {
   */
  indice: number = 1;
 
- titulo: string = PASO_ONE;
+/**
+ * Representa el título del paso actual en el proceso.
+ * El valor se inicializa como `PASO_UNO`, que probablemente
+ * corresponde al primer paso en un flujo de trabajo de múltiples pasos.
+ */
+ titulo: string = PASO_UNO;
+
+   /**
+    * Notificador para destruir observables activos.
+    */
+   private destroyed$ = new Subject<void>();
 
 
    /**
@@ -61,8 +71,16 @@ export class TodospasosComponent {
      txtBtnSig: 'Continuar',
    };
 
+  /**
+   * Una propiedad pública que contiene el texto de los requisitos para la aplicación.
+   * Se inicializa con el valor de la constante `REQUISITOS`.
+   */
    public TEXTOS = REQUISITOS;
 
+  /**
+   * Una propiedad pública que contiene el texto de los ANEXAR para la aplicación.
+   * Se inicializa con el valor de la constante `ANEXAR`.
+   */
    public TEXTOS2 = ANEXAR;
 /**
  * Un array de objetos Catalogo que representa el catálogo de documentos.
@@ -95,27 +113,22 @@ export class TodospasosComponent {
    * 
    * El método utiliza una declaración `switch` para determinar el valor apropiado
    * de `titulo` según los siguientes casos:
-   * - `indice` igual a 1: Establece `titulo` como `PASO_TWO`.
-   * - `indice` igual a 2: Establece `titulo` como `PASO_THREE`.
-   * - `indice` igual a 3: Establece `titulo` como `PASO_FOUR`.
-   * - Caso por defecto: Establece `titulo` como `PASO_ONE`.
+   * - `indice` igual a 1: Establece `titulo` como `PASO_DOS`.
+   * - `indice` igual a 2: Establece `titulo` como `PASO_TRES`.
+   * - Caso por defecto: Establece `titulo` como `PASO_UNO`.
    */
   public getHeaderDatos() {
     switch (this.indice) {
       case 1: {
-        this.titulo = PASO_TWO;
+        this.titulo = PASO_DOS;
         break;
       }
       case 2: {
-        this.titulo = PASO_THREE;
-        break;
-      }
-      case 3: {
-        this.titulo = PASO_FOUR;
+        this.titulo = PASO_TRES;
         break;
       }
       default: {
-        this.titulo = PASO_ONE;
+        this.titulo = PASO_UNO;
         break;
       }
     }
@@ -133,7 +146,7 @@ export class TodospasosComponent {
    public getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
-      .subscribe({
+      .pipe(takeUntil(this.destroyed$)).subscribe({
         next: (resp): void => {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
@@ -144,5 +157,14 @@ export class TodospasosComponent {
         },
       });
   }
+
+    /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+    ngOnDestroy(): void {
+      this.destroyed$.next();
+      this.destroyed$.complete();
+    }
 
 }

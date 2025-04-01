@@ -50,6 +50,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * aplicación para el componente "Pago de Derechos".
    */
    public solicitudState!: Solicitud260303State;
+     /**
+   * Notificador para destruir observables activos.
+   */
+  private destroyed$ = new Subject<void>();
 
   /**
    * Constructor del componente PagoDeDerechosComponent.
@@ -124,7 +128,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * que luego se asigna a la propiedad `bancoCatalogo`.
    */
   public getBancoCatalogDatos(): void {
-    this.certificadosLicenciasSvc.getBancoDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getBancoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const API_DATOS = JSON.parse(JSON.stringify(response));
       this.bancoCatalogo = API_DATOS.data;
     });
@@ -161,6 +165,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

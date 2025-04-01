@@ -1,14 +1,15 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CROSLISTA_DE_PAISES, PAISES_DE_ORIGEN, USO_ESPECIFICO } from '../../services/certificados-licencias-permisos.enum';
 import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
+import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista_de_paises.json';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_origen.json';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-
+import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
 /**
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -132,22 +133,22 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     /**
    * Lista de países para la selección de origen.
    */
-    public crosListaDePaises = CROSLISTA_DE_PAISES;
+    public crosListaDePaises = this.deepCopy(CROSLISTA_DE_PAISES);
     /**
      * Una propiedad pública que contiene la lista de países de origen.
      * Se inicializa con la constante `PAISES_DE_ORIGEN`.
      */
-    public seleccionarPais = PAISES_DE_ORIGEN;
+    public seleccionarPais = this.deepCopy(PAISES_DE_ORIGEN);
     /**
      * Una propiedad pública que contiene las opciones de uso específico para la aplicación.
      * Se inicializa con la constante `USO_ESPECIFICO`.
      */
-    public seleccionarUsoEspecifico = USO_ESPECIFICO;
+    public seleccionarUsoEspecifico = this.deepCopy(USO_ESPECIFICO);
 
   /**
    * Lista de países para seleccionar el origen de la primera sección.
    */
-  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+  seleccionarOrigenDelPais = this.crosListaDePaises;
 
   /** Configuración de la tabla de sectores */
   public configuracionTabla: ConfiguracionColumna<ScianDatos>[] = [
@@ -198,7 +199,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
      * @property derecha - La etiqueta que se muestra en el lado derecho, mostrando el país o países seleccionados.
      */
     public paisDeOrigenLabel: CrossListLable = {
-      tituluDeLaIzquierda: 'Pais de origen',
+      tituluDeLaIzquierda: 'País de origen',
       derecha: 'País(es) seleccionado(s)*:',
     };
 
@@ -253,6 +254,11 @@ public TEXTOS = MANIFIESTOS;
  * Notificador para destruir los observables al finalizar.
  */
 private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Notificador para destruir observables activos.
+   */
+  private destroyed$ = new Subject<void>();
 
 
 /**
@@ -522,7 +528,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   public getEstadoCatalogDatos(): void {
-    this.certificadosLicenciasSvc.getEstadoDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getEstadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.estadoCatalogo = DATOS.data;
     });
@@ -537,7 +543,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * La respuesta se procesa y almacena en el componente para su uso posterior.
    */
   public getscianTabla(): void {
-    this.certificadosLicenciasSvc.getScianDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.scianTablaDatos = DATOS;
     });
@@ -553,7 +559,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getClaveCatalogDatos():void {
-    this.certificadosLicenciasSvc.getClaveDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.claveCatalogo = DATOS.data;
     });
@@ -569,7 +575,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getRegimenCatalogDatos():void {
-    this.certificadosLicenciasSvc.getRegimenDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.regimenCatalogo = DATOS.data;
     });
@@ -595,7 +601,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getMercanciasTabla(): void {
-    this.certificadosLicenciasSvc.getMercanciasDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getMercanciasDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.mercanciasTablaDatos = DATOS;
     });
@@ -608,7 +614,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void}
    */
   public getTipoDeProductoCatalogDatos(): void {
-    this.certificadosLicenciasSvc.getTipoDeProductoDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getTipoDeProductoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.tipoDeProductoCatalogo = DATOS.data;
     });
@@ -666,7 +672,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getPaisDeProcedenciaCatalogoDatos(): void {
-    this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().subscribe((response) => {
+    this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.paisDeProcedenciaCatalogo = DATOS.data;
     });
@@ -705,6 +711,8 @@ public inicializarTablaYCatalogoDatos(): void {
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

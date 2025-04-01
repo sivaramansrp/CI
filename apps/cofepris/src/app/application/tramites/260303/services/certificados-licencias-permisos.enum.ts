@@ -6,78 +6,18 @@ export const PANTA_PASOS = [
       completado: false,
     },
     {
-      indice: 2,
-      titulo: 'Requisitos necesarios',
-      activo: false,
-      completado: false,
-    },
-    {
-        indice: 3,
+        indice: 2,
         titulo: 'Anexar requisitos',
         activo: false,
         completado: false,
     },
     {
-        indice: 4,
+        indice: 3,
         titulo: 'Firmar solicitud',
         activo: false,
         completado: false,
     },
 ];
-
-export const CROSLISTA_DE_PAISES: string[] = [
-  "JARABE",
-  "LAMINILLA",
-  "LINIMENTO LOCIÓN",
-  "OBLEA",
-  "OTROS",
-  "PARCHES",
-  "PASTA",
-  "PASTILLA",
-  "POLVO",
-  "SISTEMA DE LIBERACIÓN",
-  "SOLUCIÓN",
-];
-
-
-export const PAISES_DE_ORIGEN: string[] = [
-  "AFGANISTÁN (EMIRATO ISLÁMICO)",
-  "ALBANIA (REPÚBLICA DE)",
-  "ALEMANIA (REPÚBLICA FEDERAL DE)",
-  "ANDORRA (PRINCIPADO DE)",
-  "ANGOLA (REPÚBLICA DE)",
-  "ANGUILLA",
-  "ANTIGUA Y BARBUDA",
-  "ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)",
-  "ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)",
-  "ARGENTINA (REPÚBLICA)",
-  "AUSTRALIA (COMMONWEALTH OF)",
-  "AUSTRIA (REPUBLIC OF)",
-  "BAHAMAS (COMMONWEALTH OF THE)",
-  "BAHRAIN (KINGDOM OF)",
-  "BANGLADESH (PEOPLE'S REPUBLIC OF)",
-  "BARBADOS",
-  "BELGIUM (KINGDOM OF)",
-  "BELIZE",
-  "BENIN (REPUBLIC OF)",
-  "BHUTAN (KINGDOM OF)"
-];
-
-
-export const USO_ESPECIFICO: string[] = [
-  "ACONDICIONAMIENTO",
-  "ALMACENAMIENTO",
-  "ANÁLISIS",
-  "CONSERVACIÓN",
-  "DISTRIBUCIÓN",
-  "DONACIONES",
-  "ELABORACIÓN",
-  "ENVASADO",
-  "EXPORTACIÓN",
-  "FABRICACIÓN",
-  "FORMULACIÓN"
-];
-
 export const FABRICANTE_TABLA = [
     { encabezado: 'Nombre/denominación o razón social', clave: 'nombre' },
     { encabezado: 'R.F.C', clave: 'rfc' },
@@ -116,10 +56,9 @@ export const OTROS_TABLA = [
   { encabezado: 'Código postal.', clave: 'cp' },
 ];
 
-export const PASO_ONE = 'Solicitud Importación de Medicamentos que sean o contengan Estupefacientes O Psicotrópicos';
-export const PASO_TWO = 'Cargar archivos';
-export const PASO_THREE = 'Cargar archivos';
-export const PASO_FOUR = 'Firmar';
+export const PASO_UNO = 'Solicitud de Importación de Medicamentos que sean o contengan Estupefacientes o Psicotrópicos';
+export const PASO_DOS = 'Cargar archivos';
+export const PASO_TRES = 'Firmar';
 
 export const FECHA_PAGO = {
   labelNombre: 'Fecha de pago',
