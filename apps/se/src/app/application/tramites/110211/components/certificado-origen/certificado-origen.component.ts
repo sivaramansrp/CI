@@ -149,7 +149,6 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
     this.estadoOpcion();
     this.paisOpcion();
-    // this.datosTabla$ =
     this.query.selectmercanciaTabla$.subscribe((data) => {
       this.datosTabla$ = data as unknown as Observable<Mercancia[]>;
     });
