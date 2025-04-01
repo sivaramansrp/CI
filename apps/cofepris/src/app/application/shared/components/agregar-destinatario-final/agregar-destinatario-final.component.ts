@@ -1,4 +1,4 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
@@ -85,6 +85,13 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
    * @property {Catalogo[]} codigosPostalesDatos
    */
   public codigosPostalesDatos: Catalogo[] = [];
+  
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
 
   /**
    * Arreglo que almacena la lista de destinatarios.
@@ -92,9 +99,20 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
    */
   destinatarios: Destinatario[] = [];
 
-@Input() idProcedimiento!:number;
-
-public mostrarCamposNoContribuyente:boolean = false;
+  /**
+    * @property idProcedimiento
+    * @description Identificador del procedimiento asociado a este componente.
+    * @type {number}
+    */
+  @Input() idProcedimiento!: number;
+  
+  /**
+   * @property mostrarCamposNoContribuyente
+   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * @type {boolean}
+   * @default false
+   */
+  public mostrarCamposNoContribuyente: boolean = false;
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
@@ -112,7 +130,6 @@ public mostrarCamposNoContribuyente:boolean = false;
    * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
    */
-  
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,

@@ -12,7 +12,7 @@
             type="radio"
             class="form-check-input"
             formControlName="tipoPersona"
-            value="Fisica"
+            [value]="tipoPersona.FISICA"
           />
           Física
         </div>
@@ -63,7 +63,7 @@
     }
 
     <!-- Datos Personales -->
-    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === 'Fisica') {
+    @if(agregarDestinatarioFinal.get('tipoPersona')?.value === tipoPersona.FISICA) {
     <div class="row mt-3">
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
