@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { TramiteEntradaHumanaState, TramiteEntradaHumanaStore } from './tramite260402.store';
+import { TramiteEntradaHumanaState, TramiteEntradaHumanaStore } from './tramite-entrada-humana.store';
 
 
 @Injectable({ providedIn: 'root' })

@@ -12,9 +12,9 @@ import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoRespo
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { TramiteEntradaHumanaStore } from '../../estados/tramite260402.store';
+import { TramiteEntradaHumanaStore } from '../../estados/tramite-entrada-humana.store';
 
-import { TramiteEntradaHumanaQuery } from '../../estados/tramite260402.query';
+import { TramiteEntradaHumanaQuery } from '../../estados/tramite-entrada-humana.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { FECHA_PAGO } from '../../constantes/entrada-humana.enum';
