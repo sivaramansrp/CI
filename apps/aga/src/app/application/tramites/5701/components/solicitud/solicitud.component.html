@@ -132,26 +132,33 @@
         </div>
 
         <div class="col-md-6">
-          <app-input-radio [radioOptions]="radioOpciones" (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')" id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
+          <app-input-radio [radioOptions]="radioOpciones"
+            (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')"
+            id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
           </app-input-radio>
         </div>
 
         <div class="col-md-6">
-          <lib-input-check [id]="'socioComercial'" [label]="'Socio comercial'" [required]="false" formControlName="socioComercial" (change)="checkIdSocioComercial()"></lib-input-check>
+          <lib-input-check [id]="'socioComercial'" [label]="'Socio comercial'" [required]="false"
+            formControlName="socioComercial" (change)="checkIdSocioComercial()"></lib-input-check>
 
-          <lib-input-check [id]="'certificacionOEA'" [label]="'Operador económico autorizado'" [required]="false" formControlName="certificacionOEA" (change)="setValoresStore(datosImportadorExportador,'certificacionOEA', 'setCertificacionOEA')"></lib-input-check>
+          <lib-input-check [id]="'certificacionOEA'" [label]="'Operador económico autorizado'" [required]="false"
+            formControlName="certificacionOEA"
+            (change)="setValoresStore(datosImportadorExportador,'certificacionOEA', 'setCertificacionOEA')"></lib-input-check>
 
-          <lib-input-check [id]="'revision'" [label]="'Revisión en origen'" [required]="false" formControlName="revision" (change)="setValoresStore(datosImportadorExportador,'revision', 'setRevision')"></lib-input-check>
+          <lib-input-check [id]="'revision'" [label]="'Revisión en origen'" [required]="false"
+            formControlName="revision"
+            (change)="setValoresStore(datosImportadorExportador,'revision', 'setRevision')"></lib-input-check>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="idSocioComercial">ID socio comercial 
+            <label class="form-label" for="idSocioComercial">ID socio comercial
               @if (solicitudState.socioComercial) {*}:</label>
-            <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial"
-              placeholder="" type="text"/>
+            <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial" placeholder=""
+              type="text"
+              (change)="setValoresStore(datosImportadorExportador, 'idSocioComercial', 'setIdSocioComercial')" />
           </div>
-
         </div>
       </div>
 
@@ -241,6 +248,7 @@
     <div formGroupName="despachoSeleccion">
       <div class="row">
         <div class="col-md-4">
+        
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="lda" (change)="showConfirmDialogLDA_DD('lda')"
               formControlName="lda">
@@ -254,7 +262,6 @@
               formControlName="dd">
             <label class="form-check-label" for="dd">Despacho DD:</label>
           </div>
-
         </div>
       </div>
 

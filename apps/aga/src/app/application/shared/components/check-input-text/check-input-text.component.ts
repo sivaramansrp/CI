@@ -74,6 +74,7 @@ export class CheckInputTextComponent implements OnChanges {
 
   @Input() checkboxValor!: boolean;
   @Input() textoValor!: string;
+  @Input() labelText!: string;
 
   @Output() checkboxChange = new EventEmitter<DatosCheckInputText>();
 
@@ -132,10 +133,10 @@ export class CheckInputTextComponent implements OnChanges {
 
     if (this.tipo === 'invisible' && !this.hidden) {
       this.hidden = true;
-      this.activarInputTexto();
+      // this.activarInputTexto();
     } else if (this.tipo === 'invisible' && this.hidden) {
       this.hidden = false;
-      this.desactivarInputTexto();
+      // this.desactivarInputTexto();
     }
 
     if (CHECKBOX) {
