@@ -36,14 +36,26 @@ const ROUTES: Routes = [
         (m) => m.PermisoSanitarioImportacionModule
       ),
   },
-
+  {
+    path: 'importacion-productos',
+    loadChildren: () =>
+      import('./tramites/260101/importacion-productos.module').then(
+        (m) => m.ServiciosExtraordinariosModule
+      ),
+  },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
+      ),
+  },
   {
     path: 'materias-primas-destinados',
     loadChildren: () =>
       import('./tramites/260205/materias-primas-destinados.module').then(
-        (m) => m.MateriasPrimasDestinadosModule
-      ),
-  },
+        (m) => m.MateriasPrimasDestinadosModule)
+  }
 ];
 
 @NgModule({
