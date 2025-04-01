@@ -22,6 +22,11 @@ const ROUTES: Routes = [
     path:'autorizaciones-de-vida-silvestre',
     loadChildren:()=>
       import('./tramites/230901/autorizaciones-de-vida-silvestre.module').then((m)=>m.AutorizacionesDeVidaSilvestreModule)
+  },
+  {
+    path: 'tramites-disponibles',
+    loadChildren: () =>
+      import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
   }
 ];
 

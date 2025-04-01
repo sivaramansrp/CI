@@ -4,6 +4,7 @@ import { AMBIENTES } from '@ng-mf/data-access-user';
 @Component({
   selector: 'seleccion-tramite',
   templateUrl: './seleccion-tramite.component.html',
+  styleUrl: './seleccion-tramite.component.scss',
 })
 export class SeleccionTramiteComponent implements OnInit {
 
