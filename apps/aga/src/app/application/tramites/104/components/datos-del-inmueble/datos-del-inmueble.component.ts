@@ -92,4 +92,12 @@ export class DatosDelInmuebleComponent implements OnInit {
       codigoPostal: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
     });
   }
+
+  configuracionesFormularioDropdown = [
+    { catalogos: dropDown.pais },
+    { catalogos: dropDown.entidadFederativa },
+    { catalogos: dropDown.municipioDelegacion },
+    { catalogos: dropDown.entidadFederativa },
+    { catalogos: dropDown.localidad}
+  ];
 }
