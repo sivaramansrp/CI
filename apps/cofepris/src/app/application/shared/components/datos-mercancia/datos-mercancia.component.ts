@@ -174,32 +174,32 @@ export class DatosMercanciaComponent implements OnInit {
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'clasificacionProductoDatos',
-      '/260204/mercanciaClasificacionProducto.json'
+      '/cofepris/mercanciaClasificacionProducto.json'
     );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'especificarClasificacionProductoDatos',
-      '/260204/especificarClasificacionProducto.json'
+      '/cofepris/especificarClasificacionProducto.json'
     );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'tipoProductoDatos',
-      '/260204/tipoProductoDatos.json'
+      '/cofepris/tipoProductoDatos.json'
     );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'formaFarmaceuticaDatos',
-      '/260204/formaFarmaceutica.json'
+      '/cofepris/formaFarmaceutica.json'
     );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'estadoFisicoDatos',
-      '/260204/estadoFisicoDatos.json'
+      '/cofepris/estadoFisicoDatos.json'
     );
     this.datosSolicitudService.obtenerRespuestaPorUrl(
       this,
       'cantidadUmcDatos',
-      '/260204/cantidadUmcDatos.json'
+      '/cofepris/cantidadUmcDatos.json'
     );
   }
 
