@@ -66,6 +66,12 @@ const ROUTES: Routes = [
       ),
   },
 
+  {
+    path: 'materias-primas-destinados',
+    loadChildren: () =>
+      import('./tramites/260205/materias-primas-destinados.module').then(
+        (m) => m.MateriasPrimasDestinadosModule)
+  }
 ];
 
 @NgModule({
