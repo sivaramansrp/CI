@@ -235,6 +235,13 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+    {
+            path: 'certificado-origen',
+        loadChildren: () =>
+          import('./tramites/110217/certificado-origen.module').then(
+            (m) => m.CertificadoOrigenModule
+          ),
+      },
 ];
 
 @NgModule({
