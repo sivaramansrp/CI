@@ -31,9 +31,12 @@ export interface Solicitud260303State {
     */
     colonia:string;
     /**
-     * El valor de calle.
+     * El valor de calleYNumero.
     */
     calleYNumero:string;
+    /**
+     * El valor de correoElecronico.
+    */
     correoElecronico:string;
     /**
      * El valor de lada.
