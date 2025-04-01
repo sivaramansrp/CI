@@ -43,6 +43,27 @@ const ROUTES: Routes = [
         './tramites/260210/permiso-sanitario-importacion-medicamentos-pruebas.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosPruebasModule),
   },
+  {
+    path: 'aviso-de-modificacion-module',
+    loadChildren: () =>
+      import('./tramites/260605/pantallas.module').then(
+        (m) => m.Pantallas260605Module
+      ),
+  },
+  {
+    path: 'importacion-productos',
+    loadChildren: () =>
+      import('./tramites/260101/importacion-productos.module').then(
+        (m) => m.ServiciosExtraordinariosModule
+      ),
+  },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
