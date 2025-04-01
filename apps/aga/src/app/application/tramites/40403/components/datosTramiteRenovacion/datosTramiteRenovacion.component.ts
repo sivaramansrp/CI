@@ -1,23 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { Subject } from 'rxjs';
+import { Tramite40403Service } from '../../estados/tramite40403.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-tramite-renovacion',
   templateUrl: './datos-tramite-renovacion.component.html',
   styleUrls: ['./datos-tramite-renovacion.component.scss'],
 })
-export class DatosTramiteRenovacionComponent implements OnInit {
+export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo utilizado para capturar los datos del trámite.
+   */
   formulario!: FormGroup;
+  /**
+   * Lista de códigos de transportación obtenidos desde el servicio.
+   */
   codigoTransportacion: any[] = [];
+  /**
+   * Lista de tipos de CAAT aéreo obtenidos desde el servicio.
+   */
   tipoCaatAereo: any[] = [];
+  /**
+   * Catálogo de tipos de CAAT aéreo.
+   */
   public tipoDeCaatAerea!: Catalogo[];
+  /**
+   * Catálogo de códigos de transportación aérea.
+   */
   public ideCodTransportacionAerea!: Catalogo[];
+  /**
+   * Notificador para gestionar la destrucción de suscripciones activas.
+   */
+
+  private destroyNotifier$ = new Subject<void>();
+  /**
+   * Constructor del componente.
+   * @param fb - FormBuilder para inicializar el formulario reactivo.
+   * @param tramite40403Service - Servicio para interactuar con la API relacionada con el trámite.
+   */
+
   constructor(
     private fb: FormBuilder,
-    private chofer40103Service: Chofer40103Service
+    private tramite40403Service: Tramite40403Service
   ) {}
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   */
 
   ngOnInit(): void {
     this.inicializarFormulario();
@@ -26,6 +57,9 @@ export class DatosTramiteRenovacionComponent implements OnInit {
     this.tipoDeCaatAereaData();
     this.ideCodTransportacionAereaData();
   }
+  /**
+   * Inicializa el formulario reactivo con los campos necesarios.
+   */
 
   private inicializarFormulario(): void {
     this.formulario = this.fb.group({
@@ -42,36 +76,49 @@ export class DatosTramiteRenovacionComponent implements OnInit {
       fechaFinVigencia: [''],
     });
   }
+  /**
+   * Obtiene un FormArray de solicitudes CAAT del formulario.
+   */
 
   get caatSolicitudes(): FormArray {
     return this.formulario.get('solicitud.caatSolicitudes') as FormArray;
   }
+  /**
+   * Convierte el valor del campo `claveFolioCAAT` a mayúsculas.
+   * @param event - Evento que contiene el valor ingresado por el usuario.
+   */
   caatConMayusculas(event: any): void {
-    const valor = event.target.value;
-    this.formulario.get('claveFolioCAAT')?.setValue(valor.toUpperCase());
+    const VALOR = event.target.value;
+    this.formulario.get('claveFolioCAAT')?.setValue(VALOR.toUpperCase());
   }
-  private cargarCodigoTransportacion(): void {
-    this.chofer40103Service.getideCodTransportacionAerea().subscribe(
-      (datos) => {
-        this.codigoTransportacion = datos;
-      },
-      (error) => {
-        console.error('Error al cargar codigoTransportacion', error);
-      }
-    );
-  }
+  /**
+   * Carga los códigos de transportación desde el servicio.
+   */
 
-  private cargarTipoCaatAereo(): void {
-    this.chofer40103Service.gettipoDeCaatAerea().subscribe(
-      (datos) => {
-        this.tipoCaatAereo = datos;
-      },
-      (error) => {
-        console.error('Error al cargar tipoCaatAereo', error);
-      }
-    );
+  private cargarCodigoTransportacion(): void {
+    this.tramite40403Service
+      .getideCodTransportacionAerea()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.codigoTransportacion = datos;
+      });
   }
-  markFormGroupTouched(formGroup: FormGroup) {
+  /**
+   * Carga los tipos de CAAT aéreo desde el servicio.
+   */
+  private cargarTipoCaatAereo(): void {
+    this.tramite40403Service
+      .gettipoDeCaatAerea()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.tipoCaatAereo = datos;
+      });
+  }
+  /**
+   * Marca todos los controles del formulario como tocados para mostrar errores.
+   * @param formGroup - Grupo de formulario a marcar como tocado.
+   */
+  markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach((control) => {
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
@@ -80,21 +127,17 @@ export class DatosTramiteRenovacionComponent implements OnInit {
       }
     });
   }
+  /**
+   * Busca una solicitud utilizando el valor de `claveFolioCAAT` proporcionado en el formulario.
+   */
   buscarSolicitudPorCAAT(): void {
     if (this.formulario.valid) {
       const claveFolio = this.formulario.get('claveFolioCAAT')?.value;
-      if (!claveFolio) {
-        console.error('Clave Folio CAAT is required!');
-        return;
-      }
-
-      console.log('Sending API Request with claveFolioCAAT:', claveFolio);
-
-      this.chofer40103Service.buscarSolicitudPorCAATe(claveFolio).subscribe(
-        (respuesta) => {
-          console.log('API Response Received:', respuesta);
+      this.tramite40403Service
+        .buscarSolicitudPorCAATe(claveFolio)
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((respuesta) => {
           if (respuesta) {
-            console.log('Populating Form with:', respuesta);
             this.formulario.patchValue({
               idSolicitud: respuesta.idSolicitud || '',
               idPersonaSolicitud: respuesta.idPersonaSolicitud || '',
@@ -109,32 +152,39 @@ export class DatosTramiteRenovacionComponent implements OnInit {
               fechaInicioVigencia: respuesta.fechaInicioVigencia || '',
               fechaFinVigencia: respuesta.fechaFinVigencia || '',
             });
-          } else {
-            console.error('No data found for CAAT:', claveFolio);
           }
-        },
-        (error) => {
-          console.error('API Error Details:', {
-            status: error.status,
-            message: error.message,
-            error: error.error,
-          });
-        }
-      );
-    } else {
-      console.error('Form is not valid. Errors:', this.formulario.errors);
+        });
     }
   }
+  /**
+   * Carga los datos del catálogo de tipos de CAAT aéreo desde el servicio.
+   */
 
   tipoDeCaatAereaData(): void {
-    this.chofer40103Service.gettipoDeCaatAerea().subscribe((data) => {
-      this.tipoDeCaatAerea = data;
-    });
+    this.tramite40403Service
+      .gettipoDeCaatAerea()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.tipoDeCaatAerea = data;
+      });
   }
-
+  /**
+   * Carga los datos del catálogo de códigos de transportación aérea desde el servicio.
+   */
   ideCodTransportacionAereaData(): void {
-    this.chofer40103Service.getideCodTransportacionAerea().subscribe((data) => {
-      this.ideCodTransportacionAerea = data;
-    });
+    this.tramite40403Service
+      .getideCodTransportacionAerea()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.ideCodTransportacionAerea = data;
+      });
+  }
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

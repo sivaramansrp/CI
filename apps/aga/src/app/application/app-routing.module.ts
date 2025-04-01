@@ -103,7 +103,7 @@ const ROUTES: Routes = [
   },
 
   {
-    path: 'attentionOfRenewal',
+    path: 'attention-Of-Renewal',
     loadChildren: () =>
       import('./tramites/40403/attentionOfRenewal.module').then((m) => m.AttentionOfRenewalModule
       ),

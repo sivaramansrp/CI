@@ -25,11 +25,19 @@ import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * Directiva personalizada para pruebas.
+ * @selector [myCustom]
+ */
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
+/**
+ * Pipe de traducción ficticio para pruebas.
+ * @name translate
+ */
 @Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value) {
@@ -37,6 +45,10 @@ class TranslatePipe implements PipeTransform {
   }
 }
 
+/**
+ * Pipe ficticio para el formateo de números telefónicos.
+ * @name phoneNumber
+ */
 @Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
   transform(value) {
@@ -44,6 +56,10 @@ class PhoneNumberPipe implements PipeTransform {
   }
 }
 
+/**
+ * Pipe ficticio para mostrar contenido HTML seguro.
+ * @name safeHtml
+ */
 @Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
   transform(value) {
@@ -51,6 +67,9 @@ class SafeHtmlPipe implements PipeTransform {
   }
 }
 
+/**
+ * Módulo de prueba para la configuración del componente Solicitante.
+ */
 @NgModule({
   declarations: [
     SolicitanteComponent,
@@ -64,19 +83,34 @@ class SafeHtmlPipe implements PipeTransform {
 })
 class TestModule {}
 
+/**
+ * Conjunto de pruebas para el componente Solicitante.
+ */
 describe('SolicitanteComponent', () => {
   let fixture: ComponentFixture<SolicitanteComponent>;
   let component: SolicitanteComponent;
 
+  /**
+   * Configuración inicial antes de cada prueba.
+   */
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TestModule], // Importa el módulo de prueba
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        TituloComponent,
+        SolicitanteComponent, 
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [FormBuilder],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
+
+    /**
+     * Inicializa el formulario solicitudForm con controles vacíos.
+     */
     component.solicitudForm = new FormGroup({
       rfc: new FormControl(''),
       denominacion: new FormControl(''),
@@ -85,6 +119,9 @@ describe('SolicitanteComponent', () => {
     });
   });
 
+  /**
+   * Limpieza después de cada prueba.
+   */
   afterEach(() => {
     if (component) {
       component.ngOnDestroy = function () {};
@@ -95,14 +132,14 @@ describe('SolicitanteComponent', () => {
   });
 
   /**
-   * Verifica que el componente se haya creado correctamente.
+   * Prueba para verificar si el componente se crea correctamente.
    */
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   /**
-   * Verifica que el método `ngOnInit` funcione correctamente.
+   * Prueba para verificar el método ngOnInit().
    */
   it('should run #ngOnInit()', async () => {
     component.fb = component.fb || {};

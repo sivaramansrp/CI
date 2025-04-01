@@ -11,12 +11,12 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { of as observableOf } from 'rxjs';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { Chofer40103Query } from '../../estados/chofer40103.query';
+import { Tramite40403Store } from '../../estados/tramite40403.store';
+import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockChofer40103Store {
+class MockTramite40403Store {
   establecerSeccion = jest.fn();
   establecerFormaValida = jest.fn();
 }
@@ -50,17 +50,17 @@ class SafeHtmlPipe implements PipeTransform {
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
   let component: SolicitantePageComponent;
-  let Chofer40103QueryMock: jest.Mocked<Chofer40103Query>;
-  let chofer40103StoreMock: MockChofer40103Store;
+  let Tramite40403QueryMock: jest.Mocked<Tramite40403Query>;
+  let tramite40403StoreMock: MockTramite40403Store;
 
   beforeEach(async () => {
-    Chofer40103QueryMock = {
+    Tramite40403QueryMock = {
       selectSeccionState$: observableOf({
         pasos: [],
         currentStep: 1,
       }),
-    } as unknown as jest.Mocked<Chofer40103Query>;
-    chofer40103StoreMock = new MockChofer40103Store();
+    } as unknown as jest.Mocked<Tramite40403Query>;
+    tramite40403StoreMock = new MockTramite40403Store();
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -72,8 +72,8 @@ describe('SolicitantePageComponent', () => {
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
-        { provide: Chofer40103Query, useValue: Chofer40103QueryMock },
-        { provide: Chofer40103Store, useValue: chofer40103StoreMock },
+        { provide: Tramite40403Query, useValue: Tramite40403QueryMock },
+        { provide: Tramite40403Store, useValue: tramite40403StoreMock },
       ],
     }).compileComponents();
 
@@ -105,18 +105,6 @@ describe('SolicitantePageComponent', () => {
   });
 
   /**
-   * Verifica que el método `seleccionaTab` se llame con un valor dado.
-   */
-  it('should call seleccionaTab() with a given value', () => {
-    const tabMock = 1;
-    jest.spyOn(component, 'seleccionaTab');
-
-    component.seleccionaTab(tabMock);
-
-    expect(component.seleccionaTab).toHaveBeenCalledWith(tabMock);
-  });
-
-  /**
    * Verifica que el método `getValorIndice` se llame y active la navegación del asistente.
    */
   it('should call getValorIndice() and trigger wizard navigation', () => {
@@ -136,7 +124,7 @@ describe('SolicitantePageComponent', () => {
    */
   it('should assign sections correctly using asignarSecciones()', () => {
     (component as any).asignarSecciones();
-    expect(chofer40103StoreMock.establecerSeccion).toHaveBeenCalled();
-    expect(chofer40103StoreMock.establecerFormaValida).toHaveBeenCalled();
+    expect(tramite40403StoreMock.establecerSeccion).toHaveBeenCalled();
+    expect(tramite40403StoreMock.establecerFormaValida).toHaveBeenCalled();
   });
 });

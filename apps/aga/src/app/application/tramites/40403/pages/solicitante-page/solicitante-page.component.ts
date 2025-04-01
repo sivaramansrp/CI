@@ -1,17 +1,19 @@
 /* eslint-disable no-empty-function */
+
 import {
-  Chofer40103Store,
-  Choferesnacionales40103State,
-} from '../../estados/chofer40103.store';
-import { Component,OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Chofer40103Query } from '../../estados/chofer40103.query';
+  Tramite40403Store,
+  Tramitenacionales40403State,
+} from '../../estados/tramite40403.store';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40403 } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
+import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { map, takeUntil } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -25,7 +27,7 @@ interface AccionBoton {
 export class SolicitantePageComponent implements OnInit, OnDestroy {
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
   indice: number = 1;
-  public seccion!: Choferesnacionales40103State;
+  public seccion!: Tramitenacionales40403State;
   private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -38,8 +40,8 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   };
 
   constructor(
-    private chofer40103Query: Chofer40103Query,
-    private chofer40103Store: Chofer40103Store
+    private tramite40403Query: Tramite40403Query,
+    private tramite40403Store: Tramite40403Store
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +52,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return paso;
     });
 
-    this.chofer40103Query.selectSeccionState$
+    this.tramite40403Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -88,13 +90,15 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
     const FORMA_VALIDA: boolean[] = [];
-    
-    for (const LLAVE_SECCION of Object.keys(SECCIONES_TRAMITE_40403.PASO_1) as Array<keyof typeof SECCIONES_TRAMITE_40403.PASO_1>) {
+
+    for (const LLAVE_SECCION of Object.keys(
+      SECCIONES_TRAMITE_40403.PASO_1
+    ) as Array<keyof typeof SECCIONES_TRAMITE_40403.PASO_1>) {
       SECCIONES.push(SECCIONES_TRAMITE_40403.PASO_1[LLAVE_SECCION]);
       FORMA_VALIDA.push(false);
     }
 
-    this.chofer40103Store.establecerSeccion(SECCIONES);
-    this.chofer40103Store.establecerFormaValida(FORMA_VALIDA);
+    this.tramite40403Store.establecerSeccion(SECCIONES);
+    this.tramite40403Store.establecerFormaValida(FORMA_VALIDA);
   }
 }
