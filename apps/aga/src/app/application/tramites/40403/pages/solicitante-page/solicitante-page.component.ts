@@ -8,7 +8,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_40403 } from '@ng-mf/data-access-user';
+import { SECCIONES_TRAMITE_40403 } from '../../constants/solicitud.enums';
 import { Subject } from 'rxjs';
 import { Tramite40403Query } from '../../estados/tramite40403.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
