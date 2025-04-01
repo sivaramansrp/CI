@@ -249,34 +249,6 @@ export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205
 }
 
-export const REGIMEN_DATOS = [
-  {
-    id: 101,
-    descripcion: "Definitivos",  
-  },
-  {
-    id: 101,
-    descripcion: "Depósito Fiscal",  
-  },
-  {
-    id: 102,
-    descripcion: "Temporales",  
-  },
- 
-]
-
-export const ADUNAS_DE_ENTRADAS_DATOS = [
-  {
-    id: 101,
-    descripcion: "ALTAMIRA",  
-  },
-  {
-    id: 101,
-    descripcion: "CD. JUAREZ",  
-  },
-]
-
-
 export const DETALLE_MERCANCIA_TABLA = [
   {
     encabezado: 'Forma farmacéutica',
