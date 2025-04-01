@@ -328,138 +328,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
-      /**
-       * País del tercero.
-       * Requiere validación adicional mediante `requiredPaisValidator`.
-       */
-      pais: new FormControl('', [
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
         Validators.required,
-        TercerosRelacionadosComponent.requiredPaisValidator,
       ]),
-      /**
-       * Estado o localidad del tercero.
-       */
-      estadoLocalidad: new FormControl('', [Validators.required]),
-      /**
-       * Municipio o alcaldía del tercero.
-       */
-      municipioAlcaldia: new FormControl('', [Validators.required]),
-      /**
-       * Localidad del tercero.
-       */
-      localidad: new FormControl(''),
-      /**
-       * Entidad federativa del tercero.
-       */
-      entidadFederativa: new FormControl('', [Validators.required]),
-      /**
-       * Código postal del tercero.
-       */
-      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
-      /**
-       * Colonia del tercero.
-       */
-      colonia: new FormControl(''),
-      /**
-       * Colonia equivalente del tercero.
-       */
-      coloniaoEquivalente: new FormControl(''),
-      /**
-       * Calle del tercero.
-       */
-      calle: new FormControl('', [Validators.required]),
-      /**
-       * Número exterior del tercero.
-       */
-      numeroExterior: new FormControl('', [Validators.required]),
-      /**
-       * Número interior del tercero.
-       */
-      numeroInterior: new FormControl(''),
-      /**
-       * Lada del tercero.
-       */
-      lada: new FormControl(''),
-      /**
-       * Teléfono del tercero.
-       * Requiere validación adicional mediante `telefonoValidator`.
-       */
-      telefono: new FormControl('', [
-        TercerosRelacionadosComponent.telefonoValidator,
-      ]),
-      /**
-       * Correo electrónico del tercero.
-       */
-      correoElectronico: new FormControl(''),
-      /**
-       * Código del extranjero.
-       */
-      extranjeroCodigo: new FormControl('', [Validators.required]),
-      /**
-       * Estado del extranjero.
-       */
-      extranjeroEstado: new FormControl('', [Validators.required]),
-      /**
-       * Colonia del extranjero.
-       */
-      extranjeroColonia: new FormControl('', [Validators.required]),
-    });    
-  }
-
-  /**
-   * Inicializa el formulario para agregar un formulador.
-   * Configura los campos del formulario con validaciones y comportamientos específicos.
-   */
-  initializeAgregarFormuladorFormGroup() {
-    /**
-     * Crea el formulario reactivos para agregar un formulador.
-     * Cada campo tiene sus propias validaciones.
-     */
-    this.agregarFormuladorFormGroup = this.fb.group({
-      /**
-       * Nacionalidad del tercero.
-       */
-      tercerosNacionalidad: new FormControl('', [Validators.required]),
-      /**
-       * Tipo de persona (física o moral).
-       */
-      tipoPersona: new FormControl('', [Validators.required]),
-      /**
-       * RFC del tercero.
-       * Requiere validación adicional mediante `rfcValidator`.
-       */
-      rfc: new FormControl({ value: '', disabled: true }, [
-        Validators.required,
-        TercerosRelacionadosComponent.rfcValidator,
-      ]),
-      /**
-       * CURP del tercero.
-       * Requiere validación adicional mediante `curpValidator`.
-       */
-      curp: new FormControl({ value: '', disabled: true }, [
-        Validators.required,
-        TercerosRelacionadosComponent.curpValidator,
-      ]),
-      /**
-       * Control del formulario para el nombre del usuario.
-       * Este campo es obligatorio.
-       */
-      nombre: new FormControl('', [Validators.required]),
-      /**
-       * Control del formulario para el primer apellido del usuario.
-       * Este campo es obligatorio.
-       */
-      primerApellido: new FormControl('', [Validators.required]),
-      /**
-       * Control del formulario para el segundo apellido del usuario.
-       * Este campo es obligatorio.
-       */
-      segundoApellido: new FormControl('', [Validators.required]),
-      /**
-       * Denominación o razón social del tercero.
-       */
-      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
@@ -536,11 +407,152 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       extranjeroColonia: new FormControl('', [Validators.required]),
     });
-
   }
+
+  /**
+   * Inicializa el formulario para agregar un formulador.
+   * Configura los campos del formulario con validaciones y comportamientos específicos.
+   */
+  initializeAgregarFormuladorFormGroup() {
+    /**
+     * Crea el formulario reactivos para agregar un formulador.
+     * Cada campo tiene sus propias validaciones.
+     */
+    this.agregarFormuladorFormGroup = this.fb.group({
+      /**
+       * Nacionalidad del tercero.
+       */
+      tercerosNacionalidad: new FormControl('', [Validators.required]),
+      /**
+       * Tipo de persona (física o moral).
+       */
+      tipoPersona: new FormControl('', [Validators.required]),
+      /**
+       * RFC del tercero.
+       * Requiere validación adicional mediante `rfcValidator`.
+       */
+      rfc: new FormControl({ value: '', disabled: true }, [
+        Validators.required,
+        TercerosRelacionadosComponent.rfcValidator,
+      ]),
+      /**
+       * CURP del tercero.
+       * Requiere validación adicional mediante `curpValidator`.
+       */
+      curp: new FormControl({ value: '', disabled: true }, [
+        Validators.required,
+        TercerosRelacionadosComponent.curpValidator,
+      ]),
+      /**
+       * Control del formulario para el nombre del usuario.
+       * Este campo es obligatorio.
+       */
+      nombre: new FormControl('', [Validators.required]),
+      /**
+       * Control del formulario para el primer apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      primerApellido: new FormControl('', [Validators.required]),
+      /**
+       * Control del formulario para el segundo apellido del usuario.
+       * Este campo es obligatorio.
+       */
+      segundoApellido: new FormControl('', [Validators.required]),
+      /**
+       * Denominación o razón social del tercero.
+       */
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
+        Validators.required,
+      ]),
+      /**
+       * País del tercero.
+       * Requiere validación adicional mediante `requiredPaisValidator`.
+       */
+      pais: new FormControl('', [
+        Validators.required,
+        TercerosRelacionadosComponent.requiredPaisValidator,
+      ]),
+      /**
+       * Estado o localidad del tercero.
+       */
+      estadoLocalidad: new FormControl('', [Validators.required]),
+      /**
+       * Municipio o alcaldía del tercero.
+       */
+      municipioAlcaldia: new FormControl('', [Validators.required]),
+      /**
+       * Localidad del tercero.
+       */
+      localidad: new FormControl(''),
+      /**
+       * Entidad federativa del tercero.
+       */
+      entidadFederativa: new FormControl('', [Validators.required]),
+      /**
+       * Código postal del tercero.
+       */
+      codigoPostaloEquivalente: new FormControl('', [Validators.required]),
+      /**
+       * Colonia del tercero.
+       */
+      colonia: new FormControl(''),
+      /**
+       * Colonia equivalente del tercero.
+       */
+      coloniaoEquivalente: new FormControl(''),
+      /**
+       * Calle del tercero.
+       */
+      calle: new FormControl('', [Validators.required]),
+      /**
+       * Número exterior del tercero.
+       */
+      numeroExterior: new FormControl('', [Validators.required]),
+      /**
+       * Número interior del tercero.
+       */
+      numeroInterior: new FormControl(''),
+      /**
+       * Lada del tercero.
+       */
+      lada: new FormControl(''),
+      /**
+       * Teléfono del tercero.
+       * Requiere validación adicional mediante `telefonoValidator`.
+       */
+      telefono: new FormControl('', [
+        TercerosRelacionadosComponent.telefonoValidator,
+      ]),
+      /**
+       * Correo electrónico del tercero.
+       */
+      correoElectronico: new FormControl(''),
+      /**
+       * Código del extranjero.
+       */
+      extranjeroCodigo: new FormControl('', [Validators.required]),
+      /**
+       * Estado del extranjero.
+       */
+      extranjeroEstado: new FormControl('', [Validators.required]),
+      /**
+       * Colonia del extranjero.
+       */
+      extranjeroColonia: new FormControl('', [Validators.required]),
+    });
+  }
+
+  /**
+   * Valida el RFC del tercero.
+   * Utiliza expresiones regulares para verificar el formato correcto.
+   *
+   * @param control Control del formulario que contiene el RFC.
+   * @returns Un objeto de error si el RFC es inválido, o `null` si es válido.
+   */
   onTipoPersonaChange(formGroup: FormGroup): void {
-    const tipoPersonaControl = formGroup.get('tipoPersona');
-    if (tipoPersonaControl?.value) {
+    this.tipoPersonaSelection = formGroup.get('tipoPersona')?.value || '';
+    const TIPO_PERSONA_CONTROL = formGroup.get('tipoPersona');
+    if (TIPO_PERSONA_CONTROL?.value) {
       formGroup.get('rfc')?.enable();
       formGroup.get('curp')?.enable();
       formGroup.get('denominacionRazonSocial')?.enable();
@@ -603,7 +615,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [
+        Validators.required,
+      ]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
