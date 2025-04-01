@@ -97,7 +97,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
 
   private cargarCodigoTransportacion(): void {
     this.tramite40403Service
-      .getideCodTransportacionAerea()
+      .geTideCodTransportacionAerea()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.codigoTransportacion = datos;
@@ -108,7 +108,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    */
   private cargarTipoCaatAereo(): void {
     this.tramite40403Service
-      .gettipoDeCaatAerea()
+      .getTipoDeCaatAerea ()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.tipoCaatAereo = datos;
@@ -162,7 +162,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
 
   tipoDeCaatAereaData(): void {
     this.tramite40403Service
-      .gettipoDeCaatAerea()
+      .getTipoDeCaatAerea ()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.tipoDeCaatAerea = data;
@@ -173,7 +173,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    */
   ideCodTransportacionAereaData(): void {
     this.tramite40403Service
-      .getideCodTransportacionAerea()
+      .geTideCodTransportacionAerea()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.ideCodTransportacionAerea = data;

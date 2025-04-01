@@ -30,7 +30,7 @@ export class Tramite40403Service {
    * Obtiene el catálogo de tipos de CAAT aéreo desde un archivo JSON local.
    * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
    */
-  gettipoDeCaatAerea(): Observable<Catalogo[]> {
+  getTipoDeCaatAerea(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40403/tipo-CAAT-aéreo.json');
   }
 
@@ -38,7 +38,7 @@ export class Tramite40403Service {
    * Obtiene el catálogo de códigos de transportación aérea desde un archivo JSON local.
    * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
    */
-  getideCodTransportacionAerea(): Observable<Catalogo[]> {
+  geTideCodTransportacionAerea(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40403/codigo.json');
   }
 
@@ -51,7 +51,6 @@ export class Tramite40403Service {
     const baseUrl = `/api/solicitud/buscarPorCAAT?claveFolioCAAT=${claveFolioCAAT}`;
     return this.http.get<any>(baseUrl).pipe(
       catchError((error) => {
-        console.error('Error fetching solicitud data:', error);
         return throwError(() => error);
       })
     );

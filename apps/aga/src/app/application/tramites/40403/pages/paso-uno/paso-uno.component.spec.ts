@@ -8,26 +8,6 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('PasoUnoComponent', () => {
   let fixture: ComponentFixture<PasoUnoComponent>;
   let component: PasoUnoComponent;
@@ -36,9 +16,7 @@ describe('PasoUnoComponent', () => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [
-        PasoUnoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        PasoUnoComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

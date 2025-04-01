@@ -21,31 +21,6 @@ class MockTramite40403Store {
   establecerFormaValida = jest.fn();
 }
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom: any;
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value: any): any {
-    return value;
-  }
-}
 
 describe('SolicitantePageComponent', () => {
   let fixture: ComponentFixture<SolicitantePageComponent>;
@@ -64,11 +39,7 @@ describe('SolicitantePageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
-        SolicitantePageComponent,
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
+        SolicitantePageComponent
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [

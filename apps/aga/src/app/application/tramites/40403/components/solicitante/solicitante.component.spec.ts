@@ -26,57 +26,11 @@ import { SolicitanteComponent } from './solicitante.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
- * Directiva personalizada para pruebas.
- * @selector [myCustom]
- */
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-/**
- * Pipe de traducción ficticio para pruebas.
- * @name translate
- */
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-/**
- * Pipe ficticio para el formateo de números telefónicos.
- * @name phoneNumber
- */
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-/**
- * Pipe ficticio para mostrar contenido HTML seguro.
- * @name safeHtml
- */
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-/**
  * Módulo de prueba para la configuración del componente Solicitante.
  */
 @NgModule({
   declarations: [
-    SolicitanteComponent,
-    TranslatePipe,
-    PhoneNumberPipe,
-    SafeHtmlPipe,
-    MyCustomDirective,
+    SolicitanteComponent
   ],
   imports: [FormsModule, ReactiveFormsModule, TituloComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
