@@ -1,5 +1,5 @@
 import { CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MENSAJEDEALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
@@ -19,7 +19,13 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
 })
 export class DatosDelInmuebleComponent implements OnInit {
 
+  @Output() cerrarClicado = new EventEmitter();
+
   fomentoExportacionForm!: FormGroup;
+
+  mostrarAlerta: boolean = false;
+
+  mensajeDeAlerta = '';
 
   public establecimientoHeaderData: string[] = [];
 
@@ -38,6 +44,13 @@ export class DatosDelInmuebleComponent implements OnInit {
     this.destinatarioTableData.cuerpoTabla = destinatarioTableData?.cuerpoTabla;
 
     this.getEstableCimiento();
+
+    this.fomentoExportacionForm.get('tipoPrograma')?.valueChanges.subscribe(value => {
+      if (value === '1') {
+        this.mostrarAlerta = true;
+        this.mensajeDeAlerta = MENSAJEDEALERTA.ADJUNTAR;
+      }
+    });
   }
 
 
@@ -60,4 +73,8 @@ export class DatosDelInmuebleComponent implements OnInit {
     this.establecimientoBodyData = this.destinatarioTableData?.cuerpoTabla;
   }
 
+  cerrarModal(): void {
+    this.cerrarClicado.emit();
+    this.mostrarAlerta = false;
+  }
 }
