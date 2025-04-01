@@ -312,3 +312,4 @@ export const FORMA_FORMACEUTICA_DATOS = [
   },
 ]
 
+export const STR_NACIONAL = "Nacional";

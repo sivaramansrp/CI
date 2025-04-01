@@ -1,5 +1,5 @@
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
@@ -60,7 +61,13 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} paisesDatos
    */
   public paisesDatos: Catalogo[] = [];
-
+  
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
   /**
    * Datos de catálogo de estados.
    * @property {Catalogo[]} estadosDatos
@@ -72,6 +79,14 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} municipiosDatos
    */
   public municipiosDatos: Catalogo[] = [];
+
+  /**
+   * @property nacionalStr
+   * @description Almacena la cadena de texto para "Nacional" para su uso en la interfaz de usuario.
+   * @type {string}
+   * @default STR_NACIONAL
+   */
+  public nacionalStr = STR_NACIONAL;
 
   /**
    * Datos de catálogo de localidades.
