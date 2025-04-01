@@ -44,18 +44,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   // this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
+    this.getTiposDocumentos();
   }
 
   /**

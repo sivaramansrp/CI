@@ -32,7 +32,7 @@ const ROUTES: Routes = [
   {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
-      import('./tramites/260214/importacion-dispositivos-mediocos-uso.module').then(
+      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
         (m) => m.ImportacionDispositivosMedicosUsoModule)
   },
   {
