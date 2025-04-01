@@ -23,16 +23,19 @@
           >Datos de la solicitud</a
         >
       </li>
-      <li [ngClass]="indice === 3 ? 'active' : ''" [class.disabled]="isTablDisabled">
+      <!--
+  @description
+  Este elemento de la lista (li) está deshabilitado hasta que el usuario complete la sección "Datos de la solicitud".
+  Una vez que se hayan respondido los datos requeridos, el usuario podrá interactuar con esta pestaña.
+-->
+      <li
+        [ngClass]="indice === 3 ? 'active' : ''"
+        [class.disabled]="isTablDisabled"
+      >
         @if(isTablDisabled){
-          <a
-          data-toggle="tab"
-          role="button"
-          tabindex="4"
-          >Terceros</a
-        >
+        <a data-toggle="tab" role="button" tabindex="4">Terceros</a>
         }@else {
-          <a
+        <a
           data-toggle="tab"
           (click)="seleccionaTab(3)"
           (keydown.enter)="seleccionaTab(3)"
@@ -64,7 +67,7 @@
       } @case (3) {
       <app-terceros [tabindex]="3"></app-terceros>
       } @case (4) {
-        <app-pago-de-derechos [tabindex]="5"></app-pago-de-derechos>
+      <app-pago-de-derechos [tabindex]="5"></app-pago-de-derechos>
       } }
     </ng-container>
   </div>

@@ -1,47 +1,77 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { ConfiguracionItem } from '../../enum/mercancia-table-constants';
 import { Injectable } from '@angular/core';
+import { MercanciaConfiguracionItem } from '../../enum/mercancia-tabla.enum';
+
 
 /**
  * Interfaz que define el estado de la solicitud "Trámite 230901".
+ * Contiene las propiedades necesarias para gestionar el estado del trámite,
+ * incluyendo información sobre el movimiento, régimen, mercancías, y datos de pago.
  */
 export interface Solicitud230901State {
+  /**
+   * Tipo de movimiento seleccionado en el trámite.
+   */
   tipoDeMovimiento: string;
+
+  /**
+   * Tipo de régimen seleccionado en el trámite.
+   */
   tipoDeRegimen: string;
-  mercanciaTablaDatos: ConfiguracionItem[];
+
+  /**
+   * Datos de la tabla de mercancías asociadas al trámite.
+   */
+  mercanciaTablaDatos: MercanciaConfiguracionItem[];
+
+  /**
+   * Estado del popup de terceros (abierto o cerrado).
+   */
+  terecerosPopupState: boolean;
+
+  /**
+   * Entidad federativa seleccionada en el trámite.
+   */
   entidadFederativa: string;
-  claveDeReferencia: string;
-  cadenaDeLaDependencia: string;
+
+  /**
+   * Banco seleccionado para el pago de derechos.
+   */
   bancoseleccionado: string;
+
+  /**
+   * Llave de pago proporcionada para el trámite.
+   */
   llaveDePago: string;
-  fechaDePago: string;
-  importeDePago: Date | null;
+
+  /**
+   * Fecha de pago registrada en el trámite.
+   */
+  fechaDePago: Date | null;
 }
 
 /**
- * @description
+ * 
  * Función que crea el estado inicial de la solicitud "Trámite 230901".
  * Se utiliza para inicializar el estado del almacén.
  *
- * @returns {Solicitud230901State} El estado inicial de la solicitud.
+ * {Solicitud230901State} El estado inicial de la solicitud.
  */
 export function createInitialState(): Solicitud230901State {
   return {
     tipoDeMovimiento: '',
     tipoDeRegimen: '',
     entidadFederativa: '',
+    terecerosPopupState: false,
     mercanciaTablaDatos: [],
-    claveDeReferencia: '',
-    cadenaDeLaDependencia: '',
     bancoseleccionado: '',
     llaveDePago: '',
-    fechaDePago: '',
-    importeDePago: null,
+    fechaDePago: null,
   };
 }
 
 /**
- * @description
+ * 
  * Clase que representa el almacén (store) para gestionar el estado del "Trámite 230901".
  * Utiliza Akita para proporcionar un manejo reactivo del estado.
  */
@@ -50,8 +80,9 @@ export function createInitialState(): Solicitud230901State {
 })
 @StoreConfig({ name: 'tramite230901', resettable: true })
 export class Tramite230901Store extends Store<Solicitud230901State> {
+
   /**
-   * @description
+   * 
    * Constructor que inicializa el almacén con el estado inicial.
    */
   constructor() {
@@ -59,10 +90,10 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
   }
 
   /**
-   * @description
+   * 
    * Actualiza el estado con el tipo de movimiento seleccionado.
    *
-   * @param {string} tipoDeMovimiento - El tipo de movimiento seleccionado.
+   * {string} tipoDeMovimiento - El tipo de movimiento seleccionado.
    */
   public setTipoDeMovimiento(tipoDeMovimiento: string): void {
     this.update((state) => ({
@@ -72,10 +103,10 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
   }
 
   /**
-   * @description
+   *
    * Actualiza el estado con el tipo de régimen seleccionado.
    *
-   * @param {string} tipoDeRegimen - El tipo de régimen seleccionado.
+   * {string} tipoDeRegimen - El tipo de régimen seleccionado.
    */
   public setTipoDeRegimen(tipoDeRegimen: string): void {
     this.update((state) => ({
@@ -85,10 +116,10 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
   }
 
   /**
-   * @description
+   * 
    * Actualiza el estado con la entidad federativa seleccionada.
    *
-   * @param {string} entidadFederativa - La entidad federativa seleccionada.
+   * {string} entidadFederativa - La entidad federativa seleccionada.
    */
   public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
@@ -98,36 +129,24 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
   }
 
   /**
-   * @description
-   * Actualiza el estado con la clave de referencia proporcionada.
+   * 
+   * Actualiza el estado con el estado del popup de terceros.
    *
-   * @param {string} caveDeReferencia - La clave de referencia.
+   * {boolean} tercerosPopupState - El estado del popup de terceros.
    */
-  public setlCaveDeReferencia(caveDeReferencia: string): void {
+
+  public setTercerosPopupState(tercerosPopupState: boolean): void {
     this.update((state) => ({
       ...state,
-      caveDeReferencia,
+      tercerosPopupState,
     }));
   }
-
+  
   /**
-   * @description
-   * Actualiza el estado con la cadena de la dependencia proporcionada.
-   *
-   * @param {string} cadenaDeLaDependencia - La cadena de la dependencia.
-   */
-  public setCadenaDeLaDependencia(cadenaDeLaDependencia: string): void {
-    this.update((state) => ({
-      ...state,
-      cadenaDeLaDependencia,
-    }));
-  }
-
-  /**
-   * @description
+   * 
    * Actualiza el estado con el banco seleccionado.
    *
-   * @param {string} bancoseleccionado - El banco seleccionado.
+   * {string} bancoseleccionado - El banco seleccionado.
    */
   public setbancoseleccionado(bancoseleccionado: string): void {
     this.update((state) => ({
@@ -137,10 +156,10 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
   }
 
   /**
-   * @description
+   * 
    * Actualiza el estado con la llave de pago proporcionada.
    *
-   * @param {string} llaveDePago - La llave de pago.
+   * {string} llaveDePago - La llave de pago.
    */
   public setLlaveDePago(llaveDePago: string): void {
     this.update((state) => ({
@@ -150,38 +169,26 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
   }
 
   /**
-   * @description
+   * 
    * Actualiza el estado con la fecha de pago proporcionada.
    *
-   * @param {string} fechaDePago - La fecha de pago.
+   *  {string} fechaDePago - La fecha de pago.
    */
-  public setFechaDePago(fechaDePago: string): void {
+  public setFechaDePago(fechaDePago: Date): void {
     this.update((state) => ({
       ...state,
       fechaDePago,
     }));
   }
 
-  /**
-   * @description
-   * Actualiza el estado con el importe de pago proporcionado.
-   *
-   * @param {Date} importeDePago - El importe de pago.
-   */
-  public setImporteDePago(importeDePago: Date): void {
-    this.update((state) => ({
-      ...state,
-      importeDePago,
-    }));
-  }
 
   /**
-   * @description
+   * 
    * Actualiza el estado con los datos de la tabla de mercancía proporcionados.
    *
-   * @param {ConfiguracionItem[]} mercanciaTablaDatos - Los datos de la tabla de mercancía.
+   * {ConfiguracionItem[]} mercanciaTablaDatos - Los datos de la tabla de mercancía.
    */
-  public setMercanciaTablaDatos(mercanciaTablaDatos: ConfiguracionItem[]): void {
+  public setMercanciaTablaDatos(mercanciaTablaDatos: MercanciaConfiguracionItem[]): void {
     this.update((state) => ({
       ...state,
       mercanciaTablaDatos,

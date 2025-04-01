@@ -1,28 +1,83 @@
 <div class="container">
-    <ng-titulo titulo="Destinatarios" />
-    <form [formGroup]="destinatarioForm">
-        <div class="row">
-            <app-catalogo-select [catalogo]="autorizacionesDeVidaSilvestreService.entidadFederativa" formControlName="entidadFederativa" class="col-md-4" [label]="'Entidad federativa'" (change)="onEntidadFederativaChange()"></app-catalogo-select>
-        </div>
-        <label class="row mt-5">destinatarios*:</label>
-        <div class="row mt-4">
-            <app-tabla-dinamica
-            [configuracionTabla]="configuracionTabla"
-            [datos]="tablaDatos"
-            [tipoSeleccionTabla]="TablaSeleccion"
-          ></app-tabla-dinamica>
-        </div>
-        <div class="row" style="padding-bottom: 20px; text-align: right">
-            <div>
-              <button type="button" class="btn btn-default me-2">Eliminar Seleccionados</button>
-              <button type="button" class="btn btn-danger me-2">Eliminar no seleccioonados</button>
-              <button
-                type="button"
-                class="btn btn-primary me-2"
-              >
-                Modificar
-              </button>
-            </div>
+  <ng-titulo titulo="Destinatarios" />
+  <form [formGroup]="destinatarioForm">
+    <div class="row">
+      <app-catalogo-select
+        [catalogo]="autorizacionesDeVidaSilvestreService.entidadFederativa"
+        formControlName="entidadFederativa"
+        class="col-md-4"
+        [label]="'Entidad federativa'"
+        (change)="onEntidadFederativaChange()"
+      ></app-catalogo-select>
+    </div>
+    <label class="row mt-5">Destinatarios*:</label>
+    <div class="row mt-4">
+      <app-tabla-dinamica
+        [configuracionTabla]="configuracionTabla"
+        [datos]="tablaDatos"
+        [tipoSeleccionTabla]="TablaSeleccion"
+      ></app-tabla-dinamica>
+    </div>
+
+    <div
+      class="row"
+      style="padding-bottom: 20px; text-align: right"
+      *ngIf="tablaDatos.length > 0"
+    >
+      <div>
+        <button type="button" class="btn btn-default me-2">
+          Eliminar Seleccionados
+        </button>
+        <button type="button" class="btn btn-danger me-2">
+          Eliminar no seleccionados
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary me-2"
+          (click)="openPopup()"
+        >
+          Modificar
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="row justify-content-end"
+      style="padding-bottom: 20px; text-align: right"
+      *ngIf="tablaDatos.length === 0"
+    >
+      <div class="col-md-6">
+        <button type="button" class="btn btn-primary">Agregar</button>
+      </div>
+    </div>
+    <div
+      class="modal"
+      tabindex="-1"
+      role="dialog"
+      [ngClass]="{ show: isPopupOpen }"
+      [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
+    >
+      <div class="modal-dialog" role="document">
+        <div
+          class="modal-content"
+          style="width: fit-content; margin-left: 115px"
+        >
+          <div style="background-color: black; height: 55px"></div>
+          <div class="modal-body">
+            <p>No se pueden modificar los datos agregados por el sistema</p>
           </div>
-    </form>
+          <div class="modal-footer" style="justify-content: center">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="closePopup()"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
+  </form>
 </div>

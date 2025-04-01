@@ -1,57 +1,52 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Store } from '../../estados/store/tramite230901.store';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
+import { CatalogoSelectComponent, InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let tramite230901Store: Tramite230901Store;
-  let tramite230901Query: Tramite230901Query;
-  let autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService;
+  let tramite230901StoreMock: any;
+  let tramite230901QueryMock: any;
+  let autorizacionesDeVidaSilvestreServiceMock: any;
 
   beforeEach(async () => {
     // Mock dependencies
-    const tramite230901StoreMock = {
+    tramite230901StoreMock = {
       setbancoseleccionado: jest.fn(),
       setLlaveDePago: jest.fn(),
       setFechaDePago: jest.fn(),
     };
 
-    const tramite230901QueryMock = {
+    tramite230901QueryMock = {
       selectSolicitud$: of({
-        claveDeReferencia: '12345',
-        cadenaDeLaDependencia: 'Dependencia',
         bancoseleccionado: 'Banco 1',
         llaveDePago: 'Llave123',
-        importeDePago: 1000,
         fechaDePago: '2025-03-27',
       }),
     };
 
-    const autorizacionesDeVidaSilvestreServiceMock = {
+    autorizacionesDeVidaSilvestreServiceMock = {
       inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
     };
 
     await TestBed.configureTestingModule({
       declarations: [PagoDeDerechosComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule,TituloComponent,
+        CatalogoSelectComponent, InputFechaComponent],
       providers: [
         { provide: Tramite230901Store, useValue: tramite230901StoreMock },
         { provide: Tramite230901Query, useValue: tramite230901QueryMock },
         { provide: AutorizacionesDeVidaSilvestreService, useValue: autorizacionesDeVidaSilvestreServiceMock },
-        FormBuilder,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    tramite230901Store = TestBed.inject(Tramite230901Store);
-    tramite230901Query = TestBed.inject(Tramite230901Query);
-    autorizacionesDeVidaSilvestreService = TestBed.inject(AutorizacionesDeVidaSilvestreService);
     fixture.detectChanges();
   });
 
@@ -62,49 +57,82 @@ describe('PagoDeDerechosComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.formularioPagoDerechos).toBeDefined();
-    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('12345');
-    expect(component.formularioPagoDerechos.get('cadenaDeLaDependencia')?.value).toBe('Dependencia');
+    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('084000966');
+    expect(component.formularioPagoDerechos.get('cadenaDeLaDependencia')?.value).toBe('00130090940161');
     expect(component.formularioPagoDerechos.get('banco')?.value).toBe('Banco 1');
     expect(component.formularioPagoDerechos.get('llaveDePago')?.value).toBe('Llave123');
-    expect(component.formularioPagoDerechos.get('importeDePago')?.value).toBe(1000);
     expect(component.formularioPagoDerechos.get('fechaDePago')?.value).toBe('2025-03-27');
+    expect(component.formularioPagoDerechos.get('importeDePago')?.value).toBe(672);
   });
 
   it('should disable specific form controls', () => {
     component.ngOnInit();
-    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.disabled).toBe(true);
-    expect(component.formularioPagoDerechos.get('cadenaDeLaDependencia')?.disabled).toBe(true);
-    expect(component.formularioPagoDerechos.get('importeDePago')?.disabled).toBe(true);
+    expect(component.formularioPagoDerechos.get('claveDeReferencia')?.disabled).toBeTruthy();
+    expect(component.formularioPagoDerechos.get('cadenaDeLaDependencia')?.disabled).toBeTruthy();
+    expect(component.formularioPagoDerechos.get('importeDePago')?.disabled).toBeTruthy();
+  });
+
+  it('should validate form banco', () => {
+    const BANCO = component.formularioPagoDerechos.get('banco');
+    BANCO?.setValue('');
+    BANCO?.updateValueAndValidity();
+    expect(BANCO?.valid).toBeFalsy();
+
+    BANCO?.setValue('Bancomer');
+    BANCO?.updateValueAndValidity();
+    expect(BANCO?.valid).toBeTruthy();
+  });
+
+  it('should validate form llaveDePago', () => {
+    const LLAVE = component.formularioPagoDerechos.get('llaveDePago');
+    LLAVE?.setValue('');
+    LLAVE?.updateValueAndValidity();
+    expect(LLAVE?.valid).toBeFalsy();
+
+    LLAVE?.setValue('Llave456');
+    LLAVE?.updateValueAndValidity();
+    expect(LLAVE?.valid).toBeTruthy();
+  });
+
+  it('should validate form fechaDePago', () => {
+    const FECHA = component.formularioPagoDerechos.get('fechaDePago');
+    FECHA?.setValue('');
+    FECHA?.updateValueAndValidity();
+    expect(FECHA?.valid).toBeFalsy();
+
+    FECHA?.setValue('2025-03-28');
+    FECHA?.updateValueAndValidity();
+    expect(FECHA?.valid).toBeTruthy();
   });
 
   it('should call setbancoseleccionado when seleccionarBanco is triggered', () => {
     component.ngOnInit();
     component.formularioPagoDerechos.get('banco')?.setValue('Banco 2');
     component.seleccionarBanco();
-    expect(tramite230901Store.setbancoseleccionado).toHaveBeenCalledWith('Banco 2');
+    expect(tramite230901StoreMock.setbancoseleccionado).toHaveBeenCalledWith('Banco 2');
   });
 
   it('should call setLlaveDePago when cambiarLlaveDePago is triggered', () => {
     component.ngOnInit();
     component.formularioPagoDerechos.get('llaveDePago')?.setValue('Llave456');
     component.cambiarLlaveDePago();
-    expect(tramite230901Store.setLlaveDePago).toHaveBeenCalledWith('Llave456');
+    expect(tramite230901StoreMock.setLlaveDePago).toHaveBeenCalledWith('Llave456');
   });
 
   it('should call setFechaDePago when cambiarFechaDePago is triggered', () => {
     component.ngOnInit();
     component.cambiarFechaDePago('2025-03-28');
-    expect(tramite230901Store.setFechaDePago).toHaveBeenCalledWith('2025-03-28');
+    expect(tramite230901StoreMock.setFechaDePago).toHaveBeenCalledWith('2025-03-28');
   });
 
   it('should call inicializaPagoDeDerechosDatosCatalogos on ngOnInit', () => {
     component.ngOnInit();
-    expect(autorizacionesDeVidaSilvestreService.inicializaPagoDeDerechosDatosCatalogos).toHaveBeenCalled();
+    expect(autorizacionesDeVidaSilvestreServiceMock.inicializaPagoDeDerechosDatosCatalogos).toHaveBeenCalled();
   });
 
-  it('should call ngOnDestroy and complete notificadorDestruccion$', () => {
-    const destroyNotifierSpy = spyOn(component['notificadorDestruccion$'], 'next');
-    const destroyNotifierCompleteSpy = spyOn(component['notificadorDestruccion$'], 'complete');
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();

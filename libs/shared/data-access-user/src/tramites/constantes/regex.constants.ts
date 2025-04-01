@@ -133,3 +133,5 @@ export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
  * const soloNumeros = cadena.replace(REGEX_NUMEROS, ''); // Resultado: "123456"
  */
 export const REGEX_NUMEROS = /[^0-9]/g;
+
+export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;

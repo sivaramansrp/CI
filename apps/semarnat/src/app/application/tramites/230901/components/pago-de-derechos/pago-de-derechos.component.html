@@ -6,14 +6,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="claveDeReferencia"
-              >Clave de referencia</label
+              >Clave de referencia*:</label
             >
             <input
+            id="claveDeReferencia"
+            type="number"
               class="form-control"
-              id="claveDeReferencia"
-              type="number"
-              placeholder="084000966"
               formControlName="claveDeReferencia"
+              placeholder="084000966"
               [required]="true"
             />
           </div>
@@ -21,14 +21,14 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="cadenaDeLaDependencia"
-              >Cadena de la dependencia</label
+              >Cadena de la dependencia*:</label
             >
             <input
-              class="form-control"
-              id="cadenaDeLaDependencia"
-              type="number"
+            id="cadenaDeLaDependencia"
+            type="number"
+            class="form-control"
+            formControlName="cadenaDeLaDependencia"
               placeholder="00130090940161"
-              formControlName="cadenaDeLaDependencia"
               [required]="true"
             />
           </div>
@@ -36,11 +36,11 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select
+            formControlName="banco"
+            name="banco"
               [catalogo]="this.servicioVidaSilvestre.bancos"
-              formControlName="banco"
               [label]="'Banco'"
               [required]="true"
-              name="banco"
               (change)="seleccionarBanco()"
             ></app-catalogo-select>
           </div>
@@ -50,7 +50,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="llaveDePago">Llave de pago</label>
+            <label class="control-label" for="llaveDePago">Llave de pago*:</label>
             <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true"
               [class.is-invalid]="formularioPagoDerechos.get('llaveDePago')?.touched && formularioPagoDerechos.get('llaveDePago')?.invalid"
               (change)="cambiarLlaveDePago()">
@@ -74,13 +74,12 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="control-label" for="importeDePago"
-              >Importe de pago</label
+              >Importe de pago*:</label
             >
             <input
               class="form-control"
               id="importeDePago"
               type="number"
-              placeholder="672"
               formControlName="importeDePago"
               [required]="true"
             />

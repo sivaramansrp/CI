@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent,TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent,TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { AutorizacionesDeVidaSilvestreRoutingModule } from './autorizaciones-de-vida-silvestre-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
@@ -12,7 +12,6 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { TercerosComponent } from './components/terceros/terceros.component';
-import { InputFechaComponent } from "../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component";
 
 
 

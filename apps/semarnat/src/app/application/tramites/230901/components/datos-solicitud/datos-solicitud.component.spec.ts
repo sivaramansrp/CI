@@ -1,53 +1,58 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of } from 'rxjs';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Store } from '../../estados/store/tramite230901.store';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
-import { ConfiguracionItem } from '../../enum/mercancia-table-constants';
+import { CatalogoSelectComponent, CrosslistComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
   let fixture: ComponentFixture<DatosSolicitudComponent>;
-  let tramite230901Store: Tramite230901Store;
-  let tramite230901Query: Tramite230901Query;
-  let autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService;
+  let tramite230901StoreMock: any;
+  let tramite230901QueryMock: any;
+  let autorizacionesDeVidaSilvestreServiceMock: any;
 
   beforeEach(async () => {
     // Mock dependencies
-    const tramite230901StoreMock = {
+    tramite230901StoreMock = {
       setTipoDeMovimiento: jest.fn(),
       setTipoDeRegimen: jest.fn(),
     };
 
-    const tramite230901QueryMock = {
+    tramite230901QueryMock = {
       selectSolicitud$: of({
         tipoDeMovimiento: '1',
-        tipoDeRegimen: '2',
+        tipoDeRegimen: 'A',
       }),
     };
 
-    const autorizacionesDeVidaSilvestreServiceMock = {
+    autorizacionesDeVidaSilvestreServiceMock = {
       inicializaDatosSolicitudDatosCatalogos: jest.fn(),
       inicializaMercanciaDatosCatalogos: jest.fn(),
+      fraccionArancelaria: [{ descripcion: 'Fracción 1' }],
+      clasificacionTaxonomica: [{ descripcion: 'Clasificación 1' }],
+      nombreCientifico: [{ descripcion: 'Nombre Científico 1' }],
+      nombreComun: [{ descripcion: 'Nombre Común 1' }],
+      unidadMedida: [{ descripcion: 'Unidad 1' }],
+      paisOrigen: [{ descripcion: 'País Origen 1' }],
+      paisProcedencia: [{ descripcion: 'País Procedencia 1' }],
     };
 
     await TestBed.configureTestingModule({
       declarations: [DatosSolicitudComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, CrosslistComponent, TituloComponent, TablaDinamicaComponent, CatalogoSelectComponent],
       providers: [
         { provide: Tramite230901Store, useValue: tramite230901StoreMock },
         { provide: Tramite230901Query, useValue: tramite230901QueryMock },
         { provide: AutorizacionesDeVidaSilvestreService, useValue: autorizacionesDeVidaSilvestreServiceMock },
+        FormBuilder,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosSolicitudComponent);
     component = fixture.componentInstance;
-    tramite230901Store = TestBed.inject(Tramite230901Store);
-    tramite230901Query = TestBed.inject(Tramite230901Query);
-    autorizacionesDeVidaSilvestreService = TestBed.inject(AutorizacionesDeVidaSilvestreService);
     fixture.detectChanges();
   });
 
@@ -59,60 +64,95 @@ describe('DatosSolicitudComponent', () => {
     component.ngOnInit();
     expect(component.formSolicitud).toBeDefined();
     expect(component.formSolicitud.get('tipodemovimiento')?.value).toBe('1');
-    expect(component.formSolicitud.get('tipoderegimen')?.value).toBe('2');
+    expect(component.formSolicitud.get('tipoderegimen')?.value).toBe('A');
   });
 
   it('should call inicializaDatosSolicitudDatosCatalogos on ngOnInit', () => {
     component.ngOnInit();
-    expect(autorizacionesDeVidaSilvestreService.inicializaDatosSolicitudDatosCatalogos).toHaveBeenCalled();
+    expect(autorizacionesDeVidaSilvestreServiceMock.inicializaDatosSolicitudDatosCatalogos).toHaveBeenCalled();
   });
 
-  it('should call setTipoDeMovimiento when onTipoMovimientoChange is triggered', () => {
+  it('should handle changes in tipoDeMovimiento and update the store', () => {
+    component.ngOnInit();
     component.formSolicitud.get('tipodemovimiento')?.setValue('2');
     component.onTipoMovimientoChange();
-    expect(tramite230901Store.setTipoDeMovimiento).toHaveBeenCalledWith('2');
+    expect(tramite230901StoreMock.setTipoDeMovimiento).toHaveBeenCalledWith('2');
+    expect(component.tipoMovimientoSeleccionada).toBe(2);
   });
 
-  it('should call setTipoDeRegimen when onTipoRegimenChange is triggered', () => {
-    component.formSolicitud.get('tipoderegimen')?.setValue('3');
+  it('should handle changes in tipoDeRegimen and update the store', () => {
+    component.ngOnInit();
+    component.formSolicitud.get('tipoderegimen')?.setValue('B');
     component.onTipoRegimenChange();
-    expect(tramite230901Store.setTipoDeRegimen).toHaveBeenCalledWith('3');
+    expect(tramite230901StoreMock.setTipoDeRegimen).toHaveBeenCalledWith('B');
+  });
+
+  it('should create formMercancia with default values', () => {
+    component.createFormMercancia();
+    expect(component.formMercancia).toBeDefined();
+    expect(component.formMercancia.get('fraccionArancelaria')?.value).toBe('');
+    expect(component.formMercancia.get('descripcion')?.value).toBe('');
   });
 
   it('should toggle showDatosMercanciaModal when toggleDivMercancia is called', () => {
     component.showDatosMercanciaModal = false;
     component.toggleDivMercancia();
-    expect(component.showDatosMercanciaModal).toBe(true);
+    expect(component.showDatosMercanciaModal).toBeTruthy();
 
     component.toggleDivMercancia();
     expect(component.showDatosMercanciaModal).toBeFalsy();
   });
 
-  it('should call inicializaMercanciaDatosCatalogos and createFormMercancia when toggleDivMercancia is called with "open"', () => {
-    const createFormMercanciaSpy = jest.spyOn(component, 'createFormMercancia');
-    component.toggleDivMercancia('open');
-    expect(autorizacionesDeVidaSilvestreService.inicializaMercanciaDatosCatalogos).toHaveBeenCalled();
-    expect(createFormMercanciaSpy).toHaveBeenCalledWith(component.filaSeleccionada);
+  it('should call inicializaMercanciaDatosCatalogos and toggle modal on showMercanciaFormModal', () => {
+    component.showMercanciaFormModal();
+    expect(autorizacionesDeVidaSilvestreServiceMock.inicializaMercanciaDatosCatalogos).toHaveBeenCalled();
+    expect(component.showDatosMercanciaModal).toBeTruthy();
   });
 
-  it('should update filaSeleccionada when onFilaSeleccionada is called', () => {
-    const mockEvent = {
-      fraccionArancelaria: '123456',
-      descripcion: 'Test Description',
-    } as ConfiguracionItem;
-    component.onFilaSeleccionada(mockEvent);
-    expect(component.filaSeleccionada).toEqual(mockEvent);
-  });
+  it('should add a new row to tablaDatos on submitMercanciaForm', () => {
+    component.createFormMercancia();
+    component.formMercancia.get('fraccionArancelaria')?.setValue(0);
+    component.formMercancia.get('descripcion')?.setValue('Descripción');
+    component.formMercancia.get('clasificacionTaxonomica')?.setValue(1);
+    component.formMercancia.get('nombreCientifico')?.setValue(1);
+    component.formMercancia.get('nombreComun')?.setValue(1);
+    component.formMercancia.get('unidadMedida')?.setValue(1);
+    component.formMercancia.get('paisOrigen')?.setValue(1);
+    component.formMercancia.get('paisProcedencia')?.setValue(1);
+    component.formMercancia.get('marca')?.setValue('Marca');
+    component.formMercancia.get('cantidad')?.setValue(10);
 
-  it('should clear lname when seleccionOtraFraccion is called', () => {
-    component.lname = 'Test';
-    component.seleccionOtraFraccion();
-    expect(component.lname).toBe('');
-  });
-
-  it('should clear fname when submitMercanciaForm is called', () => {
-    component.fname = 'Test';
     component.submitMercanciaForm();
-    expect(component.fname).toBe('');
+    expect(component.tablaDatos.length).toBe(2); // Default row + new row
   });
+
+  it('should handle fila seleccionada and show modal', () => {
+    const mockRow = {
+      fraccionArancelaria: '12345678',
+      otraFraccion: false,
+      descripcion: 'Descripción de la mercancía',
+      rendimientoProducto: 'Rendimiento del producto',
+      clasificacionTaxonomica: 'Clasificación taxonómica',
+      nombreCientifico: 'Nombre científico',
+      nombreComun: 'Nombre común',
+      marca: 'Marca de la mercancía',
+      cantidad: 10,
+      unidadMedida: 'Unidad de medida',
+      paisOrigen: 'País de origen',
+      paisProcedencia: 'País de procedencia',
+    };
+    component.hadleFilaSeleccionada(mockRow);
+    expect(component.filaSeleccionada).toEqual(mockRow);
+    expect(component.showDatosMercanciaModal).toBeTruthy();
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
+
+  
 });
