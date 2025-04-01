@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FirmaElectronicaComponent, TramiteFolioService } from '@ng-mf/data-access-user';
-import { Subscription, catchError, map } from 'rxjs';
+import { Subject, catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { TramiteStore } from '../../../../estados/tramite.store';
 
@@ -15,10 +15,8 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   imports: [FirmaElectronicaComponent],
 })
 export class PasoDosComponent implements OnDestroy {
-  /**
-   * Suscripción para obtener el trámite.
-   */
-  obtienerTramiteSubscriber!: Subscription;
+  private destroy$: Subject<void> = new Subject<void>();
+  
   /**
    * Tipo de persona.
    */
@@ -57,7 +55,8 @@ export class PasoDosComponent implements OnDestroy {
           }),
           catchError((_error) => {
             return _error;
-          })
+          }),
+          takeUntil(this.destroy$)
         )
         .subscribe();
     }
@@ -67,8 +66,7 @@ export class PasoDosComponent implements OnDestroy {
    * Método de limpieza que se ejecuta cuando el componente se destruye.
    */
   ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

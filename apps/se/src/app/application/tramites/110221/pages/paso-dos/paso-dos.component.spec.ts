@@ -60,13 +60,4 @@ describe('PasoDosComponent', () => {
     component.obtieneFirma('valid-signature');
     expect(mockRouter.navigate).not.toHaveBeenCalled();
   });
-
-  it('should unsubscribe from obtienerTramiteSubscriber on ngOnDestroy', () => {
-    const unsubscribeSpy = jest.fn();
-    component.obtienerTramiteSubscriber = { unsubscribe: unsubscribeSpy } as unknown as Subscription;
-
-    component.ngOnDestroy();
-
-    expect(unsubscribeSpy).toHaveBeenCalled();
-  });
 });
