@@ -16,6 +16,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'consumo-personal',
+    loadChildren: () =>
+      import('./tramites/260102/consumo-personal.module').then(
+        (m) => m.ConsumoPersonalModule
+      ),
+  },
+  {
     path: 'permiso-sanitario-importacion-medicamentos',
     loadChildren: () =>
       import(
