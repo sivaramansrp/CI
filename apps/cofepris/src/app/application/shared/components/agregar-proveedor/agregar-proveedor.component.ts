@@ -159,7 +159,6 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    //this.tramiteStore.updateProveedorTablaDatos(this.proveedores);
     this.updateProveedorTablaDatos.emit(this.proveedores);
     this.agregarProveedorForm.reset();
     this.ubicaccion.back();
