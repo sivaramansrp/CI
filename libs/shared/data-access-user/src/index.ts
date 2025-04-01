@@ -161,3 +161,4 @@ export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
 
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
+export * from './core/models/260701/certificados-licencias.model';
