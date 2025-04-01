@@ -13,17 +13,84 @@ import { Subject } from 'rxjs';
   styleUrl: './datos-certificado-de.component.scss'
 })
 export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
+  /**
+   * Datos de los menús desplegables.
+   * @type {MenusDesplegables[]}
+   * @input
+   */
   @Input() data!: MenusDesplegables[];
+
+  /**
+   * Bandera que indica el idioma (true/false para español/inglés u otro par de idiomas).
+   * @type {boolean}
+   * @input
+   */
   @Input() idioma!: boolean;
-  @Input() precisa!: boolean
+
+  /**
+   * Bandera que indica si se requiere precisión en los datos.
+   * @type {boolean}
+   * @input
+   */
+  @Input() precisa!: boolean;
+
+  /**
+   * Catálogo de datos de idiomas disponibles.
+   * @type {Catalogo[]}
+   * @input
+   */
   @Input() idiomaDatos!: Catalogo[];
+
+  /**
+   * Catálogo de datos de entidades federativas disponibles.
+   * @type {Catalogo[]}
+   * @input
+   */
   @Input() entidadFederativaDatos!: Catalogo[];
+
+  /**
+   * Catálogo de datos de representaciones federales disponibles.
+   * @type {Catalogo[]}
+   * @input
+   */
   @Input() representacionFederalDatos!: Catalogo[];
+
+  /**
+   * Evento que emite cuando se completan los datos del certificado.
+   * @type {EventEmitter<undefined>}
+   * @output
+   */
   @Output() formDatosCertificadoEvent: EventEmitter<undefined> = new EventEmitter<undefined>();
+
+  /**
+   * Evento que emite cuando se selecciona un idioma.
+   * @type {EventEmitter<Catalogo>}
+   * @output
+   */
   @Output() idiomaSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
+
+  /**
+   * Evento que emite cuando se selecciona una entidad federativa.
+   * @type {EventEmitter<Catalogo>}
+   * @output
+   */
   @Output() entidadFederativaSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
+
+  /**
+   * Evento que emite cuando se selecciona una representación federal.
+   * @type {EventEmitter<Catalogo>}
+   * @output
+   */
   @Output() representacionFederalSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
+
+  /**
+   * Objeto que contiene los datos del formulario del certificado.
+   * @type {{ [key: string]: string | number | boolean | object | undefined }}
+   * @input
+   */
   @Input() datosFormCertificado!: { [key: string]: string | number | boolean | object | undefined };
+
+
   /**
    * Emisor de eventos para indicar si el formulario es válido.
    * @type {EventEmitter<boolean>}

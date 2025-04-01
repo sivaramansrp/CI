@@ -95,7 +95,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.formDestinatario = this.fb.group({
       paisDestin: ['', [Validators.required, Validators.min(0)]],
       ciudad: [''],
-      celle: ['', [Validators.required]],
+      calle: ['', [Validators.required]],
       numeroLetra: ['', [Validators.required]],
       lada: [''],
       telefono: [''],
@@ -127,7 +127,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Maneja la selección de un país de destino
    * @param {Catalogo} estado - El país de destino seleccionado
    */
-  paisDestinSeleccion(estado: Catalogo): void {
+  paisDestionSeleccion(estado: Catalogo): void {
     this.paisDestinSeleccionEvent.emit(estado)
   }
 

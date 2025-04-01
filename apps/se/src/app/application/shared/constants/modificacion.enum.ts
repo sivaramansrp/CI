@@ -57,7 +57,7 @@ export const CONFIGURACION_MERCANCIA = [
       orden: 3, // Orden en que se mostrará la columna
     },
     {
-      encabezado: 'Valor mercancia', // Título de la columna
+      encabezado: 'Valor mercancía', // Título de la columna
       clave: (ele: Mercancia): string | undefined => ele.valorMercancia, // Función que devuelve la fracción Naladi SA02
       orden: 4, // Orden en que se mostrará la columna
     },
@@ -72,12 +72,38 @@ export const CONFIGURACION_MERCANCIA = [
       orden: 5, // Orden en que se mostrará la columna
     }
   ];
-export const ENTIDAD_FEDERATIVA = 'entidadFederativa'
+  
+/**
+ * Clave para identificar la entidad federativa.
+ * @type {string}
+ * @constant
+ */
+export const ENTIDAD_FEDERATIVA = 'entidadFederativa';
 
-export const BLOQUE = 'bloque'
+/**
+ * Clave para identificar el bloque de datos.
+ * @type {string}
+ * @constant
+ */
+export const BLOQUE = 'bloque';
 
-export const IDIOMA_DATES = 'idiomaDates'
+/**
+ * Clave para identificar los datos de idiomas.
+ * @type {string}
+ * @constant
+ */
+export const IDIOMA_DATES = 'idiomaDates';
 
-export const ENTIDAD_FEDREATIVE_DATES = 'EntidadFederativaDates'
+/**
+ * Clave para identificar los datos de entidades federativas.
+ * @type {string}
+ * @constant
+ */
+export const ENTIDAD_FEDREATIVE_DATES = 'EntidadFederativaDates';
 
-export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates'
+/**
+ * Clave para identificar los datos de representación federal.
+ * @type {string}
+ * @constant
+ */
+export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates';

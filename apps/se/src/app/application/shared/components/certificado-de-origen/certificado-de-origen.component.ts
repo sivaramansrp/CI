@@ -271,7 +271,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   /**
    * Método que emite un evento para buscar la mercancia.
    */
-  buscarrMercancia(): void {
+  buscarMercancia(): void {
     this.setbuscarMercanciaEvent.emit(true);
   }
 

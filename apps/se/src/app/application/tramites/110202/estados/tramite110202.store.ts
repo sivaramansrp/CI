@@ -147,7 +147,7 @@ export const INITIAL_STATE: TramiteState = {
   formDestinatario: {
     paisDestin: '',
     ciudad: '',
-    celle: '',
+    calle: '',
     numeroLetra: '',
     lada: '',
     telefono: '',

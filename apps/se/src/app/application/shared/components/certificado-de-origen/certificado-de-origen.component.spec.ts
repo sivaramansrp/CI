@@ -74,10 +74,10 @@ describe('CertificadoDeOrigenComponent', () => {
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
 
-  it('should run #buscarrMercancia()', async () => {
+  it('should run #buscarMercancia()', async () => {
     component.setbuscarMercanciaEvent = component.setbuscarMercanciaEvent || {};
     component.setbuscarMercanciaEvent.emit = jest.fn();
-    component.buscarrMercancia();
+    component.buscarMercancia();
     expect(component.setbuscarMercanciaEvent.emit).toHaveBeenCalled();
   });
 
