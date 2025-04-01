@@ -1,10 +1,16 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
-
+/**
+ * **Componente Paso Tres**  
+ * 
+ * Representa el tercer paso dentro de un flujo de pasos en la aplicación.  
+ * Este componente maneja la lógica y la interfaz de usuario para la tercera sección del proceso.
+ */
 @Component({
-  selector: 'app-paso-tres',
-  templateUrl: './paso-tres.component.html',
+  selector: 'app-paso-tres', // Nombre del selector que se usará en el HTML para invocar este componente.
+  templateUrl: './paso-tres.component.html', // Ruta del archivo de la plantilla HTML asociada.
 })
+
 export class PasoTresComponent {
   /**
    * **Catálogo de documentos**  
