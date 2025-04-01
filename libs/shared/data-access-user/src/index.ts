@@ -28,7 +28,6 @@ export * from './core/services/120602/empresa-frontera-solicitud.enum';
 export * from './core/services/130118/pexim/pexim.service';
 export { PANTAPASOS } from './core/services/220471/servicios-pantallas.enum';
 export * from './core/services/220471/servicios-pantallas.service';
-export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './tramites/constantes/constantes';
 
 export * from './tramites/components/crosslist/crosslist.component';
