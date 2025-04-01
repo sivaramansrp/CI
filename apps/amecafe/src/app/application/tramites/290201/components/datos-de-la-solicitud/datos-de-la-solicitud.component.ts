@@ -25,11 +25,6 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Observable adicional para notificar la destrucción del componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Contiene los textos de enumeración definidos en `TEXTOS_SOLICITUD`.
    */
   TEXTOS = TEXTOS_SOLICITUD;
@@ -81,17 +76,8 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.tablaFilaDatos = data as Solicitud[];
-        console.log(this.tablaFilaDatos);
       });
   }
-
-  /**
-   * Método de prueba que imprime un mensaje en la consola cuando se hace clic.
-   */
-  onClick() {
-    console.log('hi this is clicked');
-  }
-
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Completa los observables para evitar fugas de memoria.

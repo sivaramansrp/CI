@@ -20,4 +20,17 @@ export interface FilaData {
     Identificadordel: string,
     observaciones: string,
 }
+
+}
+export interface FilaData2{
+    id: number;
+    datosDelTramiteRealizar: {
+    tipoPersona: string,
+    denominacion: string,
+    domicilio: string,
+    pais: string,
+    codigopostal: number,
+    telefono: number,
+    correoelectronico: string
+}
 }

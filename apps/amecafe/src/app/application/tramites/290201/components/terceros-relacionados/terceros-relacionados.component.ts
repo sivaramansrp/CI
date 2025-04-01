@@ -4,12 +4,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogosSelect, TableComponent } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  CatalogosSelect,
+  ConfiguracionColumna,
+  TablaSeleccion,
+  TableComponent,
+} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
-import { Solicitud290201State, Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
+import {
+  Solicitud290201State,
+  Solicitud290201Store,
+} from '../../../../estados/tramites/tramites290201.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { FilaData, FilaData2 } from '../../models/fila-model';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente: TercerosRelacionadosComponent
  * Descripción: Componente para gestionar los datos de terceros relacionados en el trámite 290201.
@@ -23,6 +34,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     TituloComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
@@ -61,16 +73,13 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Datos de la tabla, incluyendo encabezados y cuerpo.
    */
-  tableData = {
-    tableBody: [],
-    tableHeader: [],
-  };
+  tableData: FilaData2[] = [];
 
   /**
    * Datos del catálogo de países.
    */
   public paisData: CatalogosSelect = {
-    labelNombre: 'Pais',
+    labelNombre: 'País',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -80,6 +89,16 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Tipo de persona seleccionada.
    */
   tipoPersona: any;
+
+  /**
+   * Método para manejar el cambio de selección de tipo de persona.
+   */
+  selectedRows: Set<number> = new Set();
+
+  /**
+   * Método para manejar el cambio de selección de tipo de persona.
+   */
+  tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Lista que almacena los datos de los destinatarios registrados.
@@ -103,6 +122,47 @@ export class TercerosRelacionadosComponent implements OnInit {
   ) {
     this.getPaisData();
   }
+
+  /**
+   * Configuración de la tabla para mostrar los datos de los destinatarios.
+   */
+  configuracionColumnasoli: ConfiguracionColumna<FilaData2>[] = [
+    {
+      encabezado: 'Tipo persona',
+      clave: (fila) => fila.datosDelTramiteRealizar.tipoPersona,
+      orden: 1,
+    },
+    {
+      encabezado: 'Denominación/razón social',
+      clave: (fila) => fila.datosDelTramiteRealizar.denominacion,
+      orden: 2,
+    },
+    {
+      encabezado: 'Domicilio',
+      clave: (fila) => fila.datosDelTramiteRealizar.domicilio,
+      orden: 3,
+    },
+    {
+      encabezado: 'País',
+      clave: (fila) => fila.datosDelTramiteRealizar.pais,
+      orden: 4,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (fila) => fila.datosDelTramiteRealizar.codigopostal,
+      orden: 5,
+    },
+    {
+      encabezado: 'Teléfono',
+      clave: (fila) => fila.datosDelTramiteRealizar.telefono,
+      orden: 6,
+    },
+    {
+      encabezado: 'Correo electrónico',
+      clave: (fila) => fila.datosDelTramiteRealizar.correoelectronico,
+      orden: 7,
+    },
+  ];
 
   /**
    * Método de inicialización del componente.
@@ -141,8 +201,8 @@ export class TercerosRelacionadosComponent implements OnInit {
           [Validators.required],
         ],
         telefono: [this.destinatarioState?.telefono, [Validators.required]],
-        correoelectronica: [
-          this.destinatarioState?.correoelectronica,
+        correoelectronico: [
+          this.destinatarioState?.correoelectronico,
           [Validators.required],
         ],
       }),
@@ -177,7 +237,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Método para manejar el envío del formulario.
    */
-  onSubmit() {
+  enEnviar() {
     const formData = this.destinatarioForm.value;
 
     if (!formData || Object.keys(formData).length === 0) {
@@ -200,8 +260,8 @@ export class TercerosRelacionadosComponent implements OnInit {
     } else {
       this.newDestinatarioData.push({ ...formData });
     }
+    this.tableData = [...this.newDestinatarioData];
     this.changeDetectorRef.markForCheck();
-
     this.destinatarioForm.reset();
     this.esFormularioVisible = false;
     this.selectedRow = null;
@@ -212,37 +272,54 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   onLimpiar() {
     this.destinatarioForm.reset();
+    this.destinatarioForm.patchValue({
+      datosDelTramiteRealizar: {
+        pais: 'Selecciona un medio de transporte',
+      },
+    });
   }
-
   /**
    * Método para seleccionar una fila de la tabla.
    * @param item Fila seleccionada.
    * @param event Evento del checkbox.
    */
-  onSelectRow(item: any, event: any) {
-    if (event.target.checked) {
-      this.selectedRow = item;
-    } else {
-      this.selectedRow = null;
-    }
+
+  onSelectedRowsChange(selectedRows: FilaData2[]): void {
+    this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
+    this.esFormularioVisible = false;
   }
 
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
-  onModify() {
+  enModificar() {
     if (!this.isPaisdatoscargados) {
       console.warn('Los datos del catálogo de países aún no están cargados');
       return;
     }
+    /**
+     * Método para modificar los datos de una fila seleccionada.
+     * @param item Fila seleccionada.
+     * @param event Evento del checkbox.
+     * @returns void
+     */
+
     if (this.selectedRow) {
       const paisId = this.paisData.catalogos.find(
-        (item: Catalogo) => item.descripcion === this.selectedRow.pais
+        (item: Catalogo) =>
+          item.descripcion === this.selectedRow.datosDelTramiteRealizar.pais
       )?.id;
-
       this.destinatarioForm.patchValue({
-        ...this.selectedRow,
-        pais: paisId,
+        datosDelTramiteRealizar: {
+          tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
+          denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
+          domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
+          pais: paisId || '', // Use the `paisId` or an empty string if not found
+          codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
+          telefono: this.selectedRow.datosDelTramiteRealizar.telefono,
+          correoelectronico:
+            this.selectedRow.datosDelTramiteRealizar.correoelectronico,
+        },
       });
 
       this.esFormularioVisible = true;
@@ -252,14 +329,38 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Método para eliminar una fila seleccionada.
    */
-  onDelete() {
-    if (this.selectedRow) {
-      const index = this.newDestinatarioData.indexOf(this.selectedRow);
-      if (index !== -1) {
-        this.newDestinatarioData.splice(index, 1);
-      }
-      this.selectedRow = null;
+  onDeleteSelectedRows(): void {
+    if (this.selectedRows && this.selectedRows.size > 0) {
+      this.tableData = this.tableData.filter(
+        (row: { id: number }) => !this.selectedRows.has(row.id)
+      );
+      this.selectedRows.clear();
+      this.destinatarioForm.reset();
+      this.esFormularioVisible = false;
     }
+  }
+  /**
+   * Método para manejar el clic en una fila de la tabla.
+   * @param rowData Fila seleccionada.
+   */
+  onRowClick(rowData: any) {
+    this.destinatarioForm.patchValue({
+      datosDelTramiteRealizar: {
+        tipoPersona: rowData.datosDelTramiteRealizar.tipoPersona,
+        denominacion: rowData.datosDelTramiteRealizar.denominacion,
+        domicilio: rowData.datosDelTramiteRealizar.domicilio,
+        pais:
+          this.paisData.catalogos.find(
+            (item: Catalogo) =>
+              item.descripcion === rowData.datosDelTramiteRealizar.pais
+          )?.id || '',
+        codigopostal: rowData.datosDelTramiteRealizar.codigopostal,
+        telefono: rowData.datosDelTramiteRealizar.telefono,
+        correoelectronico: rowData.datosDelTramiteRealizar.correoelectronico,
+      },
+    });
+    this.selectedRow = rowData;
+    this.esFormularioVisible = true;
   }
 
   /**

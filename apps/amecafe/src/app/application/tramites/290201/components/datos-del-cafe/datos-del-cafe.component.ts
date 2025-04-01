@@ -25,7 +25,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent],
   templateUrl: './datos-del-cafe.component.html',
-  styleUrl: './datos-del-cafe.component.scss',
+  styleUrl: './datos-del-cafe.component.css',
 })
 export class DatosDelCafeComponent implements OnDestroy, OnInit {
   /**
@@ -33,10 +33,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /**
-   * Notificador para cancelar suscripciones activas al destruir el componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Datos que se muestran en la tabla.
@@ -67,7 +64,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Datos del catálogo para el campo "¿Utilizó café como materia prima importada?".
    */
   public utilizoCafeComoData: CatalogosSelect = {
-    labelNombre: 'Utilizo cafe como materia prima importada para elaborar este producto?',
+    labelNombre: 'Utilizó cafe como materia prima importada para elaborar este producto?',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -77,7 +74,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Datos del catálogo para el campo "País de importación".
    */
   public paisdeimportacionData: CatalogosSelect = {
-    labelNombre: 'Pais de importacion',
+    labelNombre: 'País de importación',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -87,7 +84,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Datos del catálogo para el campo "Fracción arancelaria".
    */
   public fraccionarancelariaData: CatalogosSelect = {
-    labelNombre: 'Fraccion arancelaria',
+    labelNombre: 'Fracción arancelaria',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -117,7 +114,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Datos del catálogo para el campo "¿El café tiene características especiales?".
    */
   public elcafeData: CatalogosSelect = {
-    labelNombre: 'EI cafe tiene caracteristicas especiales?',
+    labelNombre: 'El café tiene características especiales?',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -127,7 +124,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Datos del catálogo para el campo "País de transbordo".
    */
   public paisdetransbordoData: CatalogosSelect = {
-    labelNombre: 'Pais de transbordo',
+    labelNombre: 'País de transbordo',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -147,11 +144,6 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Indica si el formulario es visible o no.
    */
   esFormularioVisible: boolean = false;
-
-  /**
-   * Contiene los datos de la fila seleccionada en la tabla.
-   */
-  selectedRow: any = null;
 
   /**
    * Contiene los índices de las filas seleccionadas en la tabla.
@@ -183,10 +175,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     this.getMediaDeTransporte();
   }
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
-  
- 
-// cuerpoTabla: InstrumentoCupoTPLForm[] = [];
-//     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+
+  /**
+   * Configuración de las columnas de la tabla `configuracionColumnasoli`.
+ */
 
   configuracionColumnasoli: ConfiguracionColumna<FilaData>[] = [
     {
@@ -195,7 +187,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 1,
     },
     {
-      encabezado: 'Utilizo cafe como materia prima?',
+      encabezado: 'Utilizó café como materia prima?',
       clave: (fila) => fila.datosDelTramiteRealizar.utilizoCafeComo,
       orden: 2,
     },
@@ -210,12 +202,12 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 4,
     },
     {
-      encabezado: 'Pais',
+      encabezado: 'País',
       clave: (fila) => fila.datosDelTramiteRealizar.paisdeimportacion,
       orden: 5,
     },
     {
-      encabezado: 'Fraccion arancelaria',
+      encabezado: 'Fracción arancelaria',
       clave: (fila) => fila.datosDelTramiteRealizar.fraccionarancelaria,
       orden: 6,
     },
@@ -240,7 +232,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 10,
     },
     {
-      encabezado: 'Pais',
+      encabezado: 'País',
       clave: (fila) => fila.datosDelTramiteRealizar.lote,
       orden: 11,
     },
@@ -250,17 +242,17 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 12,
     },
 {
-      encabezado: 'EI cafe tiene caracteristicas especiales?',
+      encabezado: 'El café  tiene características especiales?',
       clave: (fila) => fila.datosDelTramiteRealizar.elcafe,
       orden: 13,
     },
     {
-      encabezado: 'Fecha de exportacion',
+      encabezado: 'Fecha de exportación',
       clave: (fila) => fila.datosDelTramiteRealizar.fechaexportacion,
       orden: 14,
     },
     {
-      encabezado: 'Pais de transbordo',
+      encabezado: 'País de transbordo',
       clave: (fila) => fila.datosDelTramiteRealizar.paisdetransbordo,
       orden: 15,
     },
@@ -316,9 +308,8 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.solicitud290201Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
-          console.log('seccionState:', seccionState);
           this.dataCafeState = seccionState;
         }),
       )
@@ -401,7 +392,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
         this.mediodetransporteData.catalogos = data as Catalogo[];
       });
   }
-
+/**
+ * Este método se ejecuta al enviar el formulario. Su propósito es procesar los datos ingresados
+ * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
+ */
   onSubmit() {
     this.esFormularioVisible = false;
 
@@ -446,33 +440,16 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     this.tableData.push(formData);
     
   }
-transformedData = this.tableData.map(row => ({
-envasadoen: row['datosDelTramiteRealizar'].envasadoen,
-utilizoCafeComo: row['datosDelTramiteRealizar'].utilizoCafeComo,
-cantidadutilizada: row['datosDelTramiteRealizar'].cantidadutilizada,
-numerodepedimento: row['datosDelTramiteRealizar'].numerodepedimento,
-paisdeimportacion: row['datosDelTramiteRealizar'].paisdeimportacion,
-fraccionarancelaria: row['datosDelTramiteRealizar'].fraccionarancelaria,
-cantidad: row['datosDelTramiteRealizar'].cantidad,
-unidaddemedida: row['datosDelTramiteRealizar'].unidaddemedida,
-precioapplicable: row['datosDelTramiteRealizar'].precioapplicable,
-dolar: row['datosDelTramiteRealizar'].dolar,
-lote: row['datosDelTramiteRealizar'].lote,
-otrasmarcas: row['datosDelTramiteRealizar'].otrasmarcas,
-elcafe: row['datosDelTramiteRealizar'].elcafe,
-fechaexportacion: row['datosDelTramiteRealizar'].fechaexportacion,
-paisdetransbordo: row['datosDelTramiteRealizar'].paisdetransbordo,
-mediodetransporte: row['datosDelTramiteRealizar'].mediodetransporte,
-Identificadordel: row['datosDelTramiteRealizar'].Identificadordel,
-observaciones: (row as any).datosDelTramiteRealizar.observaciones
 
-}));
-
-
+/**
+ * Este método se utiliza para mostrar el formulario al usuario.
+ */
   onAgregar() {
     this.esFormularioVisible = true;
   }
-  
+  /**
+   * Este método se ejecuta cuando el usuario selecciona una fila de la tabla. Su propósito es
+ */
   onRowClick(rowData: any) {
     this.dataCafeForm.patchValue({
       envasadoen: this.envasadoenData.catalogos.find(
@@ -506,36 +483,44 @@ observaciones: (row as any).datosDelTramiteRealizar.observaciones
 
     this.esFormularioVisible = true;
   }
-
-  onCheckboxClick(event: Event, row: FilaData): void {
-    // event.stopPropagation();
-    this.esFormularioVisible = false;
-    if (this.selectedRows.has(row.id)) {
-      this.selectedRows.delete(row.id);
-    } else {
-      this.selectedRows.add(row.id);
-    }
-    console.log('Selected Rows:', Array.from(this.selectedRows)); // Debug log
-    
-  }
-  
-
+ /**
+  * Este método se utiliza para eliminar las filas seleccionadas de la tabla.
+  *  */ 
   onDeleteSelectedRows(): void {
-    this.tableData = this.tableData.filter(row => !this.selectedRows.has(row.id)); // Filtra las filas no seleccionadas
-    this.selectedRows.clear();
-    this.dataCafeForm.reset();
+    if (this.selectedRows && this.selectedRows.size > 0) {
+      this.tableData = this.tableData.filter(row => !this.selectedRows.has(row.id));
+      this.selectedRows.clear();
+      this.dataCafeForm.reset();
+      this.esFormularioVisible = false;
+    }
     
   }
-
+  /**
+   * 
+   * @param selectedRows Este método se utiliza para actualizar las filas seleccionadas en la tabla.
+   */
+  onSelectedRowsChange(selectedRows: FilaData[]): void {
+    this.selectedRows = new Set(selectedRows.map(row => row.id)); // Update selected rows
+    this.esFormularioVisible = false;
+  }
   get datosDelTramiteRealizar(): FormGroup {
     return this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
   }
 
+  /**
+   * Este método se utiliza para actualizar un valor específico en el store de la solicitud.
+   * @param form 
+   * @param campo 
+   * @param metodoNombre 
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud290201Store): void {
     const VALOR = form.get(campo)?.value;
     (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
   }
-
+/**
+ * Este método forma parte del ciclo de vida de los componentes en Angular y se ejecuta
+ * cuando el componente está a punto de ser destruido.
+ */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();

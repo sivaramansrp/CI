@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud290201
  */
 export interface Solicitud290201State {
+  [x: string]: any;
   formasdelcafe: string;
   tipos: string;
   calidad: string;
@@ -39,7 +40,7 @@ export interface Solicitud290201State {
   pais: string;
   codigopostal: string;
   telefono: string;
-  correoelectronica: string;
+  correoelectronico: string;
 }
 export function createInitialSolicitudState(): Solicitud290201State {
     return {
@@ -76,7 +77,7 @@ export function createInitialSolicitudState(): Solicitud290201State {
   pais: '',
   codigopostal: '',
   telefono: '',
-  correoelectronica: '',
+  correoelectronico: '',
 
     }
 }
@@ -173,7 +174,7 @@ export function createInitialSolicitudState(): Solicitud290201State {
         paisdeimportacion
       }));
     }
-    public setFraccionarancelaria(fraccionarancelaria:  []) {
+    public setFraccionarancelaria(fraccionarancelaria: []) {
       this.update((state) => ({
         ...state,
         fraccionarancelaria
@@ -287,10 +288,10 @@ export function createInitialSolicitudState(): Solicitud290201State {
         telefono
       }));
     }
-    public setCorreoelectronica(correoelectronica: string) {
+    public setCorreoelectronico(correoelectronico: string) {
       this.update((state) => ({
         ...state,
-        correoelectronica
+        correoelectronico
       }));
     }
 

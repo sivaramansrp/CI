@@ -46,9 +46,6 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   /** Sujeto para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  /** Notificador para manejar la destrucción de observables */
-  private destroyNotifier$: Subject<void> = new Subject();
-
   /** Configuración de datos para el campo "Tipos" */
   public tiposData: CatalogosSelect = {
     labelNombre: 'Tipos',
@@ -59,7 +56,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
 
   /** Configuración de datos para el campo "Formas del café" */
   public formasdelcafeData: CatalogosSelect = {
-    labelNombre: 'Formas del cafe',
+    labelNombre: 'Formas del café',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -135,6 +132,8 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     private solicitud290201Query: Solicitud290201Query
   ) {}
 
+  
+
   /** Crea el formulario para la información del café */
   createForm() {
     this.informationCafeForm = this.fb.group({
@@ -156,9 +155,8 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.solicitud290201Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
-          console.log('seccionState:', seccionState); // Registro de depuración
           this.informationCafeState = seccionState;
         })
       )

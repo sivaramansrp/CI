@@ -2,66 +2,19 @@
    <ng-titulo titulo="Lotes" />
  </div>
  <div class="col-md-12 scrollable-table-container">
-   <!-- <table class="table table-responsive">
-   <thead>
-     <tr>
-       <th><input type="checkbox"></th>
-       <th>Envasado en</th>
-       <th>Utilizo cafe como materia prima?</th>
-       <th>Cantidad utilizada</th>
-       <th>No.pedimento</th>
-       <th>Pais</th>
-       <th>Fraccion arancelaria</th>
-       <th>Cantidad</th>
-       <th>Unidad de medida</th>
-       <th>Precio aplicable</th>
-       <th>Moneda</th>
-       <th>Lote</th>
-       <th>Otras marcas</th>
-       <th>EI cafe tiene caracteristicas especiales?</th>
-       <th>Fecha de exportacion</th>
-       <th>Pais de transbordo</th>
-       <th>Medio de transporte</th>
-       <th>Identificador transporte</th>
-       <th>Observaciones</th>
-     </tr>
-   </thead>
-   <tbody>
-     <tr *ngFor="let row of tableData; let i = index"   (click)="onRowClick(row)" >
-      <td class="text-center">
-         <input type="checkbox" (click)="onCheckboxClick($event, i)" />
-       </td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.envasadoen}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.utilizoCafeComo}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.cantidadutilizada}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.numerodepedimento}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.paisdeimportacion}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.fraccionarancelaria}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.cantidad}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.unidaddemedida}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.precioapplicable}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.dolar}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.lote}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.otrasmarcas}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.elcafe}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.fechaexportacion}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.paisdetransbordo}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.mediodetransporte}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.Identificadordel}}</td>
-       <td class="text-center">{{row.datosDelTramiteRealizar.observaciones}}</td>
-      </tr>
-     </tbody>
-    </table> -->
-    <app-tabla-dinamica (filaClic)="onRowClick($event)"
+    <app-tabla-dinamica
+     (filaClic)="onRowClick($event)"
     [configuracionTabla]="configuracionColumnasoli"
     [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-     [datos]="tableData">
+     [datos]="tableData"
+     (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+     >
 </app-tabla-dinamica>
  </div>
  <div class="col-md-12 d-flex justify-content-end">
    <div class="btn-group">
      <button class="btn btn-danger"
-       type="button" (click)="onDeleteSelectedRows()">Borrar</button>
+       type="button" [disabled]="!selectedRows" (click)="onDeleteSelectedRows()">Borrar</button>
        <button class="btn btn-primary"
        type="button" (click)="onAgregar()">Agregar</button>
      
@@ -95,7 +48,7 @@
                 id="utilizoCafeComoData"
                 formControlName="utilizoCafeComo"
                 [catalogo]="utilizoCafeComoData.catalogos"
-                [label]="'Utilizo cafe como materia prima importada para elaborar este producto?'"
+                [label]="'Utilizó cafe como materia prima importada para elaborar este producto?'"
                 [placeholder]="utilizoCafeComoData.primerOpcion"
                 [required]="true"
                 (change)="setValoresStore(datosDelTramiteRealizar,'utilizoCafeComo','setUtilizoCafeComo')"
@@ -123,7 +76,7 @@
                 id="paisdeimportacionData"
                 formControlName="paisdeimportacion"
                 [catalogo]="paisdeimportacionData.catalogos"
-                [label]="'Pais de importacion'"
+                [label]="'País de importación'"
                 [placeholder]="paisdeimportacionData.primerOpcion"
                 [required]="true"
                 (change)="setValoresStore(datosDelTramiteRealizar,'paisdeimportacion','setPaisdeimportacion')"
