@@ -180,9 +180,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Si el formulario es válido, se implementará la lógica para manejar el envío.
    */
   onSubmit(): void {
-    if (this.registroFormulario.valid) {
-      // Aquí se implementará la lógica para manejar el envío del formulario.
-    }
+   
   }
 
   /**
