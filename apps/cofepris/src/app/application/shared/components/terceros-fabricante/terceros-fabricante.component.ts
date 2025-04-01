@@ -714,23 +714,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         this.agregarProveedorFormGroup.get('curp')?.enable();
         this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
       });
-
-    // // Deshabilita campos hasta que se seleccione el tipo de persona
-    // this.agregarProveedorFormGroup.get('nombre')?.disable();
-    // this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
-    // this.agregarProveedorFormGroup.get('primerApellido')?.disable();
-    // this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // // Habilita campos al cambiar el tipo de persona
-    // this.agregarProveedorFormGroup
-    //   .get('tipoPersona')
-    //   ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe(() => {
-    //     this.agregarProveedorFormGroup.get('nombre')?.enable();
-    //     this.agregarProveedorFormGroup.get('primerApellido')?.enable();
-    //     this.agregarProveedorFormGroup.get('segundoApellido')?.enable();
-    //     this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
-    //   });
   }
 
   /**
