@@ -42,5 +42,9 @@ import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/compo
     FirmaElectronicaComponent,
     BtnContinuarComponent,
   ],
+  exports: [
+    PasoDosComponent,
+    PasoTresComponent
+  ]
 })
 export class Pantallas301Module {}
