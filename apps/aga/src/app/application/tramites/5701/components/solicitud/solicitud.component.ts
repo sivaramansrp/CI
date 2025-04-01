@@ -1,6 +1,7 @@
 import {
   ADV_LIMPIA_CAMPOS,
   DESPACHO_DD, DESPACHO_LDA,
+  EMPRESAS_CERTIFICADAS,
   FECHA_FINAL,
   FECHA_INICIO,
   FUNCION_STORE_DD,
@@ -56,6 +57,8 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { Modal } from 'bootstrap';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+
+import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
 
 
 
@@ -126,6 +129,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   funcionStoreAutorizacion!: keyof Tramite5701Store;
 
   idTipoDespacho!: string;
+  radioOpciones = EMPRESAS_CERTIFICADAS;
 
   private destroyNotifier$: Subject<void> = new Subject();
   private seccion!: SeccionLibState;
@@ -210,24 +214,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
 
-
-    // Verifica que si los campos con check e input estan seleccionados y tienen valor.
-    this.verificaDatosCheckInput('socioComercial', 'idSocioComercial', this.datosImportadorExportador);
-    this.verificaDatosCheckInput('lda', 'despachoSeleccion', this.despachoSeleccion);
-    this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
-
-
-    if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
-      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
-        this.solicitudState.fechaInicio,
-        this.solicitudState.fechaFinal,
-        this.solicitudState.horaInicio,
-        this.solicitudState.horaFinal
-      );
-      this.mostrarRangoFechas = true;
-    }
-
-    this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0) ? true : false;
+    this.verificarDatosExistentesStore();
   }
 
   /**
@@ -546,7 +533,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         desProgramaFomento: [{ value: this.solicitudState?.desProgramaFomento, disabled: true }, [Validators.maxLength(300)]],
 
         checkIMMEX: [this.solicitudState?.checkIMMEX],
-        desImmex: [{ value: this.solicitudState?.desImmex, disabled: true }, [Validators.maxLength(300)]],
+        desImmex: [this.solicitudState?.desImmex],
 
         industriaAutomotriz: [this.solicitudState?.industriaAutomotriz],
         desIndustrialAutomotriz: [{ value: this.solicitudState?.desIndustrialAutomotriz, disabled: true }, [Validators.maxLength(25)]],
@@ -1140,55 +1127,27 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       );
   }
 
-  checkPrograma(): void {
-    const PROGRAMA = this.datosImportadorExportador.get('programa')?.value;
-    if (PROGRAMA) {
-      this.datosImportadorExportador.get('desProgramaFomento')?.enable();
-      this.datosImportadorExportador.get('desProgramaFomento')?.setValidators([Validators.required, Validators.maxLength(300)]);
-      this.datosImportadorExportador.get('desProgramaFomento')?.updateValueAndValidity();
-    } else {
-      this.datosImportadorExportador.get('desProgramaFomento')?.clearValidators();
-      this.datosImportadorExportador.get('desProgramaFomento')?.updateValueAndValidity();
-      this.datosImportadorExportador.get('desProgramaFomento')?.reset();
-      this.datosImportadorExportador.get('desProgramaFomento')?.disable();
-    }
-
+  checkPrograma(valores: DatosCheckInputText): void {
+    this.datosImportadorExportador.get('programa')?.setValue(valores.checkbox);
+    this.datosImportadorExportador.get('desProgramaFomento')?.setValue(valores.texto);
     this.setValoresStore(this.datosImportadorExportador, 'programa', 'setPrograma');
+    this.setValoresStore(this.datosImportadorExportador, 'desProgramaFomento', 'setDesProgramaFomento');
   }
 
-
-  checkImmex(): void {
-    const IMMEX = this.datosImportadorExportador.get('checkIMMEX')?.value;
-    if (IMMEX) {
-      this.datosImportadorExportador.get('desImmex')?.enable();
-      this.datosImportadorExportador.get('desImmex')?.setValidators([Validators.required, Validators.maxLength(300)]);
-      this.datosImportadorExportador.get('desImmex')?.updateValueAndValidity();
-    } else {
-      this.datosImportadorExportador.get('desImmex')?.clearValidators();
-      this.datosImportadorExportador.get('desImmex')?.updateValueAndValidity();
-      this.datosImportadorExportador.get('desImmex')?.reset();
-      this.datosImportadorExportador.get('desImmex')?.disable();
-    }
-
-    this.setValoresStore(
-      this.datosImportadorExportador, 'checkIMMEX', 'setCheckIMMEX')
+  checkImmex(valores: DatosCheckInputText): void {
+    this.datosImportadorExportador.get('checkIMMEX')?.setValue(valores.checkbox);
+    this.datosImportadorExportador.get('desImmex')?.setValue(valores.texto);
+    this.setValoresStore(this.datosImportadorExportador, 'checkIMMEX', 'setCheckIMMEX');
+    this.setValoresStore(this.datosImportadorExportador, 'desImmex', 'setDesImmex');
   }
 
-  checkAutomotriz(): void {
-    const AUTOMOTRIZ = this.datosImportadorExportador.get('industriaAutomotriz')?.value;
-    if (AUTOMOTRIZ) {
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.enable();
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.setValidators([Validators.required, Validators.maxLength(25)]);
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.updateValueAndValidity();
-    } else {
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.clearValidators();
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.updateValueAndValidity();
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.reset();
-      this.datosImportadorExportador.get('desIndustrialAutomotriz')?.disable();
-    }
-
+  checkAutomotriz(valores: DatosCheckInputText): void {
+    this.datosImportadorExportador.get('industriaAutomotriz')?.setValue(valores.checkbox);
+    this.datosImportadorExportador.get('desIndustrialAutomotriz')?.setValue(valores.texto);
     this.setValoresStore(this.datosImportadorExportador, 'industriaAutomotriz', 'setIndustriaAutomotriz');
+    this.setValoresStore(this.datosImportadorExportador, 'desIndustrialAutomotriz', 'setDesIndustriaAutomotriz');
   }
+
 
 
   verificaDatosCheckInput(campoId: string, campoDescripcion: string, form: FormGroup): void {
@@ -1222,20 +1181,64 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Actualiza la lista de fechas seleccionadas y sincroniza el estado en el store.
- *
- * @param fechas - Un arreglo de cadenas que representan las fechas seleccionadas.
- * 
- * Este método recorre el arreglo de fechas proporcionado, crea una nueva instancia
- * de `FormControl` para cada fecha y la agrega a la lista `fechasSeleccionadas`.
- * Posteriormente, actualiza el estado de las fechas seleccionadas en el store
- * `tramite5701Store` llamando al método `setFechasSeleccionadas`.
- */
+   * Actualiza la lista de fechas seleccionadas y las almacena en el estado.
+   * 
+   * @param fechas - Arreglo de fechas a agregar.
+   * @returns void
+   */
   changeCrosslist(fechas: string[]): void {
     fechas.forEach((fecha) => {
       this.fechasSeleccionadas.push(new FormControl(fecha));
     });
     this.tramite5701Store.setFechasSeleccionadas(fechas);
   }
+
+  verificarDatosExistentesStore(): void {
+    //Verifica si programa fomento esta habilitado y si tiene valor.
+    if (this.solicitudState.programa) {
+      const DATOS_PROGRAMA: DatosCheckInputText = {
+        checkbox: this.solicitudState.programa,
+        texto: this.solicitudState.desProgramaFomento,
+      }
+      this.checkPrograma(DATOS_PROGRAMA)
+    }
+
+    // Verifica si el check de IMMEX esta habilitado y si tiene valor.
+    if (this.solicitudState.checkIMMEX) {
+      const DATOS_IMMEX: DatosCheckInputText = {
+        checkbox: this.solicitudState.checkIMMEX,
+        texto: this.solicitudState.desImmex,
+      }
+      this.checkImmex(DATOS_IMMEX)
+    }
+
+    // Verifica si el check de industria automotriz esta habilitado y si tiene valor.
+    if (this.solicitudState.industriaAutomotriz) {
+      const DATOS_AUTOMOTRIZ: DatosCheckInputText = {
+        checkbox: this.solicitudState.industriaAutomotriz,
+        texto: this.solicitudState.desIndustrialAutomotriz,
+      }
+      this.checkAutomotriz(DATOS_AUTOMOTRIZ);
+    }
+
+    // Verifica que si los campos con check e input estan seleccionados y tienen valor.
+    this.verificaDatosCheckInput('socioComercial', 'idSocioComercial', this.datosImportadorExportador);
+    this.verificaDatosCheckInput('lda', 'despachoSeleccion', this.despachoSeleccion);
+    this.verificaDatosCheckInput('dd', 'despachoSeleccion', this.despachoSeleccion);
+
+    if (this.solicitudState.horaFinal && this.solicitudState.horaInicio && this.solicitudState.fechaInicio && this.solicitudState.fechaFinal) {
+      this.selectRangoDias = this.fechaService.obtenerDiasEntreFechas(
+        this.solicitudState.fechaInicio,
+        this.solicitudState.fechaFinal,
+        this.solicitudState.horaInicio,
+        this.solicitudState.horaFinal
+      );
+      this.mostrarRangoFechas = true;
+    }
+
+    this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0) ? true : false;
+
+  }
+
 
 }

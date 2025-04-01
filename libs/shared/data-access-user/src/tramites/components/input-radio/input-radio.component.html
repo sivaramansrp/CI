@@ -4,6 +4,7 @@
       <input
         type="radio"
         [value]="option.value"
+        [id]="option.value"
         [checked]="selectedValue === option.value"
         (change)="onSelectionChange(option.value)"
         formControlName="seleccion"

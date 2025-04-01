@@ -103,57 +103,26 @@
 
       <div class="row">
         <div class="col-md-4">
-          <div class="form-group">
-            <div class="form-check-custome">
-              <label class="form-label" for="programa">Programa de fomento:</label>
-              <input class="form-check-input check-ms" type="checkbox" id="programa" formControlName="programa"
-                (change)="checkPrograma()" />
-            </div>
-            <input class="form-control" id="desProgramaFomento" placeholder="" type="text"
-              formControlName="desProgramaFomento" (change)="
-                setValoresStore(
-                  datosImportadorExportador,
-                  'desProgramaFomento',
-                  'setDesProgramaFomento'
-                )
-              " />
-          </div>
+          <lib-check-input-text [checkboxValor]="solicitudState.programa"
+            [textoValor]="solicitudState.desProgramaFomento" [idCheckbox]="'programa'"
+            [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento'" [required]="false" [reverse]="true"
+            [hidden]="false" [maxLengthValidacion]="300"
+            (checkboxChange)="checkPrograma($event)"></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
-          <div class="form-group">
-            <div class="form-check-custome">
-              <label class="form-label" for="checkIMMEX">Immex (Número/aaaa):</label>
-              <input class="form-check-input check-ms" type="checkbox" id="checkIMMEX" formControlName="checkIMMEX"
-                (change)="checkImmex()" />
-
-            </div>
-            <input class="form-control" id="desImmex" placeholder="" type="text" formControlName="desImmex" (change)="
-                setValoresStore(
-                  datosImportadorExportador,
-                  'desImmex',
-                  'setDesImmex'
-                )
-              " />
-          </div>
+          <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX" [textoValor]="solicitudState.desImmex"
+            [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'" [label]="'Immex (Número/aaaa)'" [required]="false"
+            [reverse]="true" [hidden]="false" [maxLengthValidacion]="300"
+            (checkboxChange)="checkImmex($event)"></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
-          <div class="form-group">
-            <div class="form-check-custome">
-              <label class="form-label" for="industriaAutomotriz">Industria Automotriz:</label>
-              <input class="form-check-input check-ms" type="checkbox" id="industriaAutomotriz"
-                formControlName="industriaAutomotriz" (change)="checkAutomotriz()" />
-            </div>
-            <input class="form-control" id="desIndustrialAutomotriz" placeholder="" type="text"
-              formControlName="desIndustrialAutomotriz" (change)="
-                setValoresStore(
-                  datosImportadorExportador,
-                  'desIndustrialAutomotriz',
-                  'setDesIndustriaAutomotriz'
-                )
-              " />
-          </div>
+          <lib-check-input-text [checkboxValor]="solicitudState.industriaAutomotriz"
+            [textoValor]="solicitudState.desIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
+            [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz'" [required]="false"
+            [reverse]="true" [hidden]="false" [maxLengthValidacion]="25"
+            (checkboxChange)="checkAutomotriz($event)"></lib-check-input-text>
         </div>
       </div>
 
@@ -161,31 +130,28 @@
         <div class="col-md-12">
           <label for="tipoEmpresa">Tipo de empresa certificada</label>
         </div>
+
         <div class="col-md-6">
-          <div class="col">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="a" id="certificacion_a"
-                formControlName="tipoEmpresaCertificada"
-                (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
-              <label class="form-check-label" for="certificacion_a">I.V.A e I.E.P.S Certificación A:</label>
-            </div>
+          <app-input-radio [radioOptions]="radioOpciones" (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')" id="tipoEmpresaCertificada" formControlName="tipoEmpresaCertificada">
+          </app-input-radio>
+        </div>
+
+        <div class="col-md-6">
+          <lib-input-check [id]="'socioComercial'" [label]="'Socio comercial'" [required]="false" formControlName="socioComercial" (change)="checkIdSocioComercial()"></lib-input-check>
+
+          <lib-input-check [id]="'certificacionOEA'" [label]="'Operador económico autorizado'" [required]="false" formControlName="certificacionOEA" (change)="setValoresStore(datosImportadorExportador,'certificacionOEA', 'setCertificacionOEA')"></lib-input-check>
+
+          <lib-input-check [id]="'revision'" [label]="'Revisión en origen'" [required]="false" formControlName="revision" (change)="setValoresStore(datosImportadorExportador,'revision', 'setRevision')"></lib-input-check>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="idSocioComercial">ID socio comercial 
+              @if (solicitudState.socioComercial) {*}:</label>
+            <input class="form-control" id="idSocioComercial" formControlName="idSocioComercial"
+              placeholder="" type="text"/>
           </div>
-          <div class="col">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="aa"
-                id="certificacion_aa" formControlName="tipoEmpresaCertificada"
-                (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
-              <label class="form-check-label" for="certificacion_aa">I.V.A e I.E.P.S Certificación AA:</label>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="tipoEmpresaCertificada" value="oea"
-                id="certificacion_oea" formControlName="tipoEmpresaCertificada"
-                (change)="setValoresStore(datosImportadorExportador,'tipoEmpresaCertificada', 'setTipoEmpresaCertificada')">
-              <label class="form-check-label" for="certificacion_oea">I.V.A e I.E.P.S Certificación AAA:</label>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -436,7 +402,8 @@
       @if (vehiculo.get('tipoTransporte')?.value) {
       <div class="row">
         <lib-agregar-transporte [tipo]="vehiculo.get('tipoTransporte')?.value"
-          (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')" [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
+          (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
+          [tablaTransporte]="itemsVehiculo.value"></lib-agregar-transporte>
       </div>
       }
     </div>
@@ -453,7 +420,8 @@
       </div>
       @if (transporteArriboSalida.get('tipoTransporte')?.value) {
       <div class="row">
-        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value" (datosTabla)="changeAgregarVehiculo($event, 'transporte')" ></lib-agregar-transporte>
+        <lib-agregar-transporte [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"
+          (datosTabla)="changeAgregarVehiculo($event, 'transporte')"></lib-agregar-transporte>
       </div>
       }
     </div>

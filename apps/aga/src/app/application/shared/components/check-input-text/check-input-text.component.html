@@ -11,6 +11,7 @@
 
   @if(!hidden) {
   <input type="text" class="form-control" formControlName="texto" name="texto" [id]="idInputTexto" placeholder=""
-    title="Texto">
+    title="Texto" (change)="enviarValoresCheckboxInput()">
   }
+  
 </div>
