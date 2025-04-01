@@ -6,6 +6,13 @@ import { Component } from '@angular/core';
   templateUrl: './paso-tres.component.html',
 })
 export class PasoTresComponent {
-    catalogoDocumentos: Catalogo[] = [];
-  
+  /**
+   * **Catálogo de documentos**  
+   * 
+   * Contiene una lista de documentos disponibles en el sistema.  
+   * Se llena con los valores obtenidos desde una fuente de datos externa.
+   */
+  catalogoDocumentos: Catalogo[] = [];
+
+
 }
