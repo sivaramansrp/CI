@@ -37,9 +37,10 @@ TEXTOS = TEXTOS;
   documentosSeleccionados: Catalogo[] = [];
 
   constructor(
-    private catalogosServices: CatalogosService,
-  // eslint-disable-next-line no-empty-function
-  ) { }
+    private catalogosServices: CatalogosService
+  ) { 
+    //Necesito inyectar los servicios a través del constructor, de modo que el constructor esté vacío.
+  }
 
   ngOnInit(): void {
     this.getTiposDocumentos();
@@ -68,8 +69,6 @@ TEXTOS = TEXTOS;
             this.catalogoDocumentos = resp;
           }
         },
-        // eslint-disable-next-line no-empty-function
-        error: (_error): void => { },
       });
   }
 

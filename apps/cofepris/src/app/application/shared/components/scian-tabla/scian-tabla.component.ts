@@ -24,7 +24,7 @@ export class ScianTablaComponent implements OnInit{
   constructor(private fb: FormBuilder, private ubicaccion: Location,
     public datosSolicitudService: DatosSolicitudService
   ) {
-    this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'scianLista', '/260204/scianTabla.json');
+    this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'scianLista', '/cofepris/scianTabla.json');
    }
 
   ngOnInit(): void {

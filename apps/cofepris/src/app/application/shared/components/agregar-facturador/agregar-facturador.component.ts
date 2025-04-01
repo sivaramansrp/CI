@@ -101,13 +101,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     this.cargarDatos();
   }
 
-  /**
-   * Hook de destrucción del componente. Libera recursos y detiene suscripciones.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
 
   /**
    * Carga los países desde el servicio y los almacena en `paisesDatos`.
@@ -172,4 +165,12 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
   cancelar():void{
     this.ubicaccion.back();
   }
+
+    /**
+   * Hook de destrucción del componente. Libera recursos y detiene suscripciones.
+   */
+    ngOnDestroy(): void {
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
+    }
 }
