@@ -118,12 +118,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
    */
   @Output() updateFabricanteTablaDatos = new EventEmitter<Fabricante[]>();
-  /**
+    /**
    * Indica si el componente debe estar oculto o visible.
    * @type {boolean}
    * @input
    */
-  @Input() estaOculto!:boolean;
+    @Input() estaOculto!:boolean;
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
