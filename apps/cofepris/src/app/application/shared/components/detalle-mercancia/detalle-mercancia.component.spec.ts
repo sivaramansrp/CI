@@ -9,6 +9,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DetalleMercanciaComponent } from './detalle-mercancia.component';
 import { FormBuilder } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DetalleMercanciaComponent', () => {
   let fixture;
@@ -16,7 +17,7 @@ describe('DetalleMercanciaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule ,HttpClientModule],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder

@@ -1,5 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FECHA_DE_PAGO, PagoDerechosFormState } from '../../models/terceros-relacionados.model';
+import {
+  FECHA_DE_PAGO,
+  PagoDerechosFormState,
+} from '../../models/terceros-relacionados.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -32,8 +35,24 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit {
+  /**
+   * @method eliminarMercancia
+   * @description Emits an event to delete one or more merchandise items.
+   * This method is used to notify the parent component about the deletion of selected merchandise items.
+   *
+   * @param {DetalleMercancia[]} datos - An array of merchandise details to be deleted.
+   * @returns {void} This method does not return any value.
+   */
   @Input() public pagoDerechoFormState!: PagoDerechosFormState;
-  @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> = new EventEmitter<PagoDerechosFormState>();
+
+  /**
+   * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
+   * @description Output property that emits the updated state of the payment form whenever changes occur.
+   * This allows the parent component to stay synchronized with the form's state.
+   */
+
+  @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> =
+    new EventEmitter<PagoDerechosFormState>();
 
   /**
    * @property {Subject<void>} unsubscribe$
@@ -71,7 +90,7 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private datosSolicitudService: DatosSolicitudService,
+    private datosSolicitudService: DatosSolicitudService
   ) {}
 
   /**
@@ -82,14 +101,23 @@ export class PagoDeDerechosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.pagoDerechosForm = this.fb.group({
-      claveReferencia: [this.pagoDerechoFormState?.claveReferencia || '', Validators.required],
+      claveReferencia: [
+        this.pagoDerechoFormState?.claveReferencia || '',
+        Validators.required,
+      ],
       cadenaDependencia: [
         this.pagoDerechoFormState?.cadenaDependencia || '',
         Validators.required,
       ],
       estado: [this.pagoDerechoFormState?.estado || '', Validators.required],
-      llavePago: [this.pagoDerechoFormState?.llavePago || '', Validators.required],
-      fechaPago: [this.pagoDerechoFormState?.fechaPago || '', Validators.required],
+      llavePago: [
+        this.pagoDerechoFormState?.llavePago || '',
+        Validators.required,
+      ],
+      fechaPago: [
+        this.pagoDerechoFormState?.fechaPago || '',
+        Validators.required,
+      ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')],
