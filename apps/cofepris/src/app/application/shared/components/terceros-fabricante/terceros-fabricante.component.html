@@ -124,6 +124,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"
               ></app-input-radio>
               } @else {
               <app-input-radio
@@ -133,6 +134,8 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFabricanteFormGroup)"
+
               ></app-input-radio>
 
               }
@@ -696,6 +699,8 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFormuladorFormGroup)"
+
               ></app-input-radio>
               } @else {
               <app-input-radio
@@ -705,6 +710,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarFormuladorFormGroup)"
               ></app-input-radio>
 
               }
@@ -1265,6 +1271,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarProveedorFormGroup)"
               ></app-input-radio>
               } @else {
               <app-input-radio
@@ -1274,6 +1281,7 @@
                 [layout]="'vertical'"
                 (valueChange)="cambiarRadioFisica($event)"
                 [showTooltip]="true"
+                (change)="onTipoPersonaChange(agregarProveedorFormGroup)"
               ></app-input-radio>
 
               }

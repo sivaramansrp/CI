@@ -298,7 +298,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [
+      rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.rfcValidator,
       ]),
@@ -306,7 +306,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [
+      curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.curpValidator,
       ]),
@@ -328,7 +328,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
@@ -404,24 +404,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * Colonia del extranjero.
        */
       extranjeroColonia: new FormControl('', [Validators.required]),
-    });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFabricanteFormGroup.get('rfc')?.disable();
-    this.agregarFabricanteFormGroup.get('curp')?.disable();
-    this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarFabricanteFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarFabricanteFormGroup.get('rfc')?.enable();
-        this.agregarFabricanteFormGroup.get('curp')?.enable();
-        this.agregarFabricanteFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
+    });    
   }
 
   /**
@@ -446,7 +429,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [
+      rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.rfcValidator,
       ]),
@@ -454,7 +437,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [
+      curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.curpValidator,
       ]),
@@ -476,7 +459,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
@@ -554,22 +537,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       extranjeroColonia: new FormControl('', [Validators.required]),
     });
 
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarFormuladorFormGroup.get('rfc')?.disable();
-    this.agregarFormuladorFormGroup.get('curp')?.disable();
-    this.agregarFormuladorFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarFormuladorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarFormuladorFormGroup.get('rfc')?.enable();
-        this.agregarFormuladorFormGroup.get('curp')?.enable();
-        this.agregarFormuladorFormGroup
-          .get('denominacionRazonSocial')
-          ?.enable();
-      });
+  }
+  onTipoPersonaChange(formGroup: FormGroup): void {
+    const tipoPersonaControl = formGroup.get('tipoPersona');
+    if (tipoPersonaControl?.value) {
+      formGroup.get('rfc')?.enable();
+      formGroup.get('curp')?.enable();
+      formGroup.get('denominacionRazonSocial')?.enable();
+    } else {
+      formGroup.get('rfc')?.disable();
+      formGroup.get('curp')?.disable();
+      formGroup.get('denominacionRazonSocial')?.disable();
+    }
   }
 
   /**
@@ -594,7 +573,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * RFC del tercero.
        * Requiere validación adicional mediante `rfcValidator`.
        */
-      rfc: new FormControl('', [
+      rfc: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.rfcValidator,
       ]),
@@ -602,7 +581,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        * CURP del tercero.
        * Requiere validación adicional mediante `curpValidator`.
        */
-      curp: new FormControl('', [
+      curp: new FormControl({ value: '', disabled: true }, [
         Validators.required,
         TercerosRelacionadosComponent.curpValidator,
       ]),
@@ -624,7 +603,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       /**
        * Denominación o razón social del tercero.
        */
-      denominacionRazonSocial: new FormControl('', [Validators.required]),
+      denominacionRazonSocial: new FormControl({ value: '', disabled: true }, [Validators.required]),
       /**
        * País del tercero.
        * Requiere validación adicional mediante `requiredPaisValidator`.
@@ -701,21 +680,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
        */
       extranjeroColonia: new FormControl('', [Validators.required]),
     });
-
-    // Deshabilita campos hasta que se seleccione el tipo de persona
-    this.agregarProveedorFormGroup.get('rfc')?.disable();
-    this.agregarProveedorFormGroup.get('curp')?.disable();
-    this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
-
-    // Habilita campos al cambiar el tipo de persona
-    this.agregarProveedorFormGroup
-      .get('tipoPersona')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
-      .subscribe(() => {
-        this.agregarProveedorFormGroup.get('rfc')?.enable();
-        this.agregarProveedorFormGroup.get('curp')?.enable();
-        this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.enable();
-      });
   }
 
   /**
