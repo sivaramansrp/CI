@@ -1,7 +1,8 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 
-import { AVISO_PRIVACIDAD, CUPOS_PASOS } from '../../constantes/cupos-constantes.enum';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { CUPOS_PASOS } from '../../constantes/cupos-constantes.enum';
 
 /**
  * Componente principal para la gestión de pantallas en el wizard de cupos.
@@ -42,7 +43,7 @@ export class PantallasComponent {
   /**
    * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
    */
-  TEXTOS = AVISO_PRIVACIDAD;
+  TEXTOS = AVISO.Aviso;
 
   /**
    * Datos utilizados para el control del wizard.
