@@ -54,10 +54,12 @@
         <label class="form-label">R.F.C.*:</label>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
+      @if (!estaOculto) {
       <div class="col-md-6">
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
       </div>
+    }
     </div>
     }
 
