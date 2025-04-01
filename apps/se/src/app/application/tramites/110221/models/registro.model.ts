@@ -18,19 +18,19 @@ export interface ColumnasTabla {
     fechaFactura: string;
   }
   
-  export const FECHAINICIAL = {
+  export const FECHA_INICIAL = {
     labelNombre: 'Fecha inicio',
     required: false,
     habilitado: true,
   };
   
-  export const FECHAFINAL = {
+  export const FECHA_FINAL = {
     labelNombre: 'Fecha fin',
     required: false,
     habilitado: true,
   };
   
-  export const FECHAFACTURA = {
+  export const FECHA_FACTURA = {
     labelNombre: 'Fecha fin',
     required: true,
     habilitado: true,

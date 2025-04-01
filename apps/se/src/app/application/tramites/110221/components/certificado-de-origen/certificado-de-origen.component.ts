@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, TablaDinamicaComponent, TablaSeleccion, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { ColumnasTabla, FECHAFACTURA, FECHAFINAL, FECHAINICIAL, SeleccionadasTabla } from '../../models/registro.model';
+import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
@@ -159,19 +159,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Configuración de la fecha inicial.
    * Representa la configuración del campo de entrada para la fecha inicial en el formulario.
    */
-  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaInicialInput: InputFecha = FECHA_INICIAL;
 
   /**
    * Configuración de la fecha final.
    * Representa la configuración del campo de entrada para la fecha final en el formulario.
    */
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
    * Configuración de la fecha de la factura.
    * Representa la configuración del campo de entrada para la fecha de la factura en el formulario.
    */
-  fechaFacturaInput: InputFecha = FECHAFACTURA;
+  fechaFacturaInput: InputFecha = FECHA_FACTURA;
   /**
    * Indica si se está mostrando el formulario.
    */
