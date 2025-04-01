@@ -33,6 +33,7 @@
                 </div>
             </div>
         </div>
+        @if(!detalleMercancia) {   
         <div class="row">
             <div class="col-md-10">
                 <div class="form-group">
@@ -43,6 +44,7 @@
                 </div>
             </div>
         </div>
+    }
         <div class="row">
             <div class="col-md-10">
                 <div class="form-group">
@@ -59,6 +61,8 @@
                     name="tipoProducto"></app-catalogo-select>
             </div>
         </div>
+        @if(!detalleMercancia) {
+
         <div class="row">
             <div class="col-md-10 ml-2">
                 <app-catalogo-select [catalogo]="formaFarmaceuticaDatos" formControlName="formaFarmaceutica"
@@ -66,6 +70,7 @@
                     name="formaFarmaceutica"></app-catalogo-select>
             </div>
         </div>
+    }
         <div class="row">
             <div class="col-md-10 ml-2">
                 <app-catalogo-select [catalogo]="estadoFisicoDatos" formControlName="estadoFisico"
@@ -236,6 +241,13 @@
           </div>
     </form>
     
+    @if(detalleMercancia) {
+
+        <div class="row mt-3">
+            <app-detalle-mercancia [datosTablaDetalleMercancia]="datosTablaDetalleMercancia" (aggregarMercancia)="aggregarMercancia($event)" (eliminarMercancia)="eliminarMercancia($event)"></app-detalle-mercancia>
+        </div>
+    }
+
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="pull-right ml-2">
@@ -254,4 +266,6 @@
             </div>
         </div>
     </div>
+
+   
 </div>

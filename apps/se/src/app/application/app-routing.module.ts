@@ -241,6 +241,18 @@ const ROUTES: Routes = [
       import('./tramites/110221/validador-certificado-cam.module').then(
         (m) => m.ValidadorCertificadoCamModule
       )
+  },
+  {
+    path: 'registro-solicitud-anual',
+    loadChildren: () =>
+      import('./tramites/150101/registro-solicitud-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   }
 ];
 
