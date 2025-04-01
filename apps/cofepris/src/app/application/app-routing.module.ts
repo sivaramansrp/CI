@@ -42,6 +42,20 @@ const ROUTES: Routes = [
       import('./tramites/260401/territorio-nacional-solicitude.module').then(
         (m) => m.TerritorioNacionalSolicitudeModule
       ),
+    },
+    {
+    path: 'importacion-productos',
+    loadChildren: () =>
+      import('./tramites/260101/importacion-productos.module').then(
+        (m) => m.ServiciosExtraordinariosModule
+      ),
+  },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
+      ),
   },
 ];
 
