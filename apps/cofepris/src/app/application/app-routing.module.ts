@@ -6,8 +6,57 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
-  }
+    component: SeleccionTramiteComponent,
+  },
+  {
+    path: 'permiso-maquila',
+    loadChildren: () =>
+      import('./tramites/260212/permiso-maquila.module').then(
+        (m) => m.PermisoMaquilaModule
+      ),
+  },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos',
+    loadChildren: () =>
+      import(
+        './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
+  },
+  {
+    path: 'permiso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260211/permiso-sanitario.module').then(
+        (m) => m.PermisoSanitarioModule
+      ),
+  },
+  {
+    path: 'permiso-sanitario-importacion',
+    loadChildren: () =>
+      import('./tramites/260215/permiso-sanitario-importacion.module').then(
+        (m) => m.PermisoSanitarioImportacionModule
+      ),
+  },
+  {
+    path: 'aviso-de-modificacion-module',
+    loadChildren: () =>
+      import('./tramites/260605/pantallas.module').then(
+        (m) => m.Pantallas260605Module
+      ),
+  },
+  {
+    path: 'importacion-productos',
+    loadChildren: () =>
+      import('./tramites/260101/importacion-productos.module').then(
+        (m) => m.ServiciosExtraordinariosModule
+      ),
+  },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({
