@@ -23,6 +23,8 @@ export class DatosDelInmuebleComponent implements OnInit {
 
   fomentoExportacionForm!: FormGroup;
 
+  formularioDireccion!: FormGroup;
+
   mostrarAlerta: boolean = false;
 
   mensajeDeAlerta = '';
@@ -40,11 +42,10 @@ export class DatosDelInmuebleComponent implements OnInit {
   ngOnInit(): void {
 
     this.inicializarFormularioTratados();
+    this.inicializarFormulario();
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTableData?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTableData?.cuerpoTabla;
-
     this.getEstableCimiento();
-
     this.fomentoExportacionForm.get('tipoPrograma')?.valueChanges.subscribe(value => {
       if (value === '1') {
         this.mostrarAlerta = true;
@@ -76,5 +77,19 @@ export class DatosDelInmuebleComponent implements OnInit {
   cerrarModal(): void {
     this.cerrarClicado.emit();
     this.mostrarAlerta = false;
+  }
+
+  private inicializarFormulario(): void {
+    this.formularioDireccion = this.fb.group({
+      calle: ['', Validators.required],
+      numeroExterior: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z]+$')]],
+      numeroInterior: ['', Validators.pattern('^[0-9a-zA-Z]*$')], // No es obligatorio
+      pais: ['', Validators.required],
+      entidadFederativa: ['', Validators.required],
+      municipioDelegacion: ['', Validators.required],
+      colonia: ['', Validators.required],
+      localidad: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
+    });
   }
 }

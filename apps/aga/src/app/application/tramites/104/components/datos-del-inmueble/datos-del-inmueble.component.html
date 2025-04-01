@@ -30,7 +30,7 @@
 </div>
 
 <div class=" text-end mt-5">
-    <button class="btn btn-primary  me-2">Agregar</button>
+    <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar">Agregar</button>
     <button class="btn btn-default me-2">Modificar</button>
     <button class="btn btn-primary">Eliminar</button>
 </div>
@@ -51,4 +51,125 @@
         </div>
     </div>
 </div>
+<div class="container mt-4">
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar Dirección</h4>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="formularioDireccion">
+                        <!-- Calle -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="calleInput" class="form-label">Calle</label>
+                                    <input type="text" class="form-control" id="calleInput" formControlName="calle"
+                                           placeholder="Ingrese Calle" />
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Número Exterior -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="numeroExteriorInput" class="form-label">Número Exterior</label>
+                                    <input type="text" class="form-control" id="numeroExteriorInput"
+                                           formControlName="numeroExterior" placeholder="Ingrese Número Exterior" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Número Interior (Optional) -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="numeroInteriorInput" class="form-label">Número Interior</label>
+                                    <input type="text" class="form-control" id="numeroInteriorInput"
+                                           formControlName="numeroInterior" placeholder="Ingrese Número Interior (Opcional)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- País -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="paisInput" class="form-label">País</label>
+                                    <input type="text" class="form-control" id="paisInput" formControlName="pais"
+                                           placeholder="Ingrese País" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Entidad Federativa -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="entidadFederativaInput" class="form-label">Entidad Federativa</label>
+                                    <input type="text" class="form-control" id="entidadFederativaInput"
+                                           formControlName="entidadFederativa" placeholder="Ingrese Entidad Federativa" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Municipio o Delegación -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="municipioDelegacionInput" class="form-label">Municipio o Delegación</label>
+                                    <input type="text" class="form-control" id="municipioDelegacionInput"
+                                           formControlName="municipioDelegacion" placeholder="Ingrese Municipio o Delegación" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonia -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="coloniaInput" class="form-label">Colonia</label>
+                                    <input type="text" class="form-control" id="coloniaInput" formControlName="colonia"
+                                           placeholder="Ingrese Colonia" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Localidad -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="localidadInput" class="form-label">Localidad</label>
+                                    <input type="text" class="form-control" id="localidadInput" formControlName="localidad"
+                                           placeholder="Ingrese Localidad" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Código Postal -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codigoPostalInput" class="form-label">Código Postal</label>
+                                    <input type="text" class="form-control" id="codigoPostalInput"
+                                           formControlName="codigoPostal" placeholder="Ingrese Código Postal" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer custom-footer justify-content-center">
+                    <button type="button" class="btn btn-primary">Agregar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</div>
