@@ -100,4 +100,8 @@ export class DatosDelInmuebleComponent implements OnInit {
     { catalogos: dropDown.entidadFederativa },
     { catalogos: dropDown.localidad}
   ];
+
+  onLimpiar(): void {
+    this.formularioDireccion.reset(); // This will reset all form fields to their initial state
+  }
 }
