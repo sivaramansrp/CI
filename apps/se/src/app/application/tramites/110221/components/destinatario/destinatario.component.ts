@@ -1,7 +1,7 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
@@ -68,12 +68,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
  */
 options!: Catalogo[];
 
-/**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
@@ -132,7 +126,7 @@ options!: Catalogo[];
    */
   getPaisDestino(): void {
     this.registroService
-      .getPaisDestino().pipe(takeUntil(this.destroyed$))
+      .getPaisDestino().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
@@ -145,7 +139,7 @@ options!: Catalogo[];
    */
   getTransporte(): void {
     this.registroService
-      .getTransporte().pipe(takeUntil(this.destroyed$))
+      .getTransporte().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];

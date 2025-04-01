@@ -1,7 +1,7 @@
 import { Catalogo, CatalogoSelectComponent, CatalogosSelect, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Solicitud110221State } from '../../../../estados/tramites/Tramite110221.store';
@@ -68,11 +68,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Descripciones de las entidades federativas.
    */
   entidadDescripcion: unknown[] = [];
-/**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
 /**
  * Opciones del catálogo de idiomas.
@@ -154,7 +149,7 @@ optionsRepresentacion!: Catalogo[];
    */
   getIdioma(): void {
    this.registroService
-      .getIdioma().pipe(takeUntil(this.destroyed$))
+      .getIdioma().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsIdioma = resp.data as Catalogo [];
@@ -168,7 +163,7 @@ optionsRepresentacion!: Catalogo[];
    */
   getEntidad(): void {
     this.registroService
-      .getEntidad().pipe(takeUntil(this.destroyed$))
+      .getEntidad().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsEntidad = resp.data as Catalogo [];
@@ -182,7 +177,7 @@ optionsRepresentacion!: Catalogo[];
   getRepresentacion(): void {
     
     this.registroService
-      .getRepresentacion().pipe(takeUntil(this.destroyed$))
+      .getRepresentacion().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           this.optionsRepresentacion = resp.data= resp.data as Catalogo [];
