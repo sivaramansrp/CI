@@ -34,16 +34,19 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import propietarioJson from 'libs/shared/theme/assets/json/260401/propietario.json';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import propietarioTipoPersonaJson from 'libs/shared/theme/assets/json/260401/propietarioTipoPersona.json';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
-import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
+
+import { PropietarioModel, PropietarioRadio, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
 
 import { EstablecimientoComponent } from '../establecimiento/establecimiento.component';
+import { EstablecimientoService } from '../../services/establecimiento.service';
+
+import { ESTABLECIMIENTO_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
+
+
 /*
 * @description
 */ 
@@ -86,12 +89,12 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Datos del catálogo de tipo de persona.
    */
-  propietarioTipoPersonaData = propietarioTipoPersonaJson;
+  propietarioTipoPersonaData : PropietarioTipoPersona[]=[];
 
   /**
    * Datos del catálogo de opciones de radio.
    */
-  propietarioRadioData = propietarioJson;
+  propietarioRadioData: PropietarioRadio[] = [];
 
   /**
    * Instancia del modal de Bootstrap.
@@ -132,7 +135,8 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private propietarioStore: DatosDelSolicituteSeccionStateStore,
-    private propietarioQuery: DatosDelSolicituteSeccionQuery
+    private propietarioQuery: DatosDelSolicituteSeccionQuery,
+    private establecimientoService : EstablecimientoService
   ) {}
 
   /**
@@ -191,88 +195,27 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       .subscribe((data) => {
         this.propietarioData = data;
       });
+      this.establecimientoService
+      .getPropietarioRadioData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: PropietarioRadio[]) => {
+        this.propietarioRadioData = data; // Bind the fetched data
+        
+      });
+
+      this.establecimientoService
+      .getPropietarioTipoPersonaData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: PropietarioTipoPersona[]) => {
+        this.propietarioTipoPersonaData = data; // Bind the fetched data
+       
+      });
   }
 
   /**
    * Configuración de columnas de la tabla.
    */
-  configuracionTabla: ConfiguracionColumna<PropietarioModel>[] = [
-    {
-      encabezado: 'Nombre/denominación o razón social',
-      clave: (item: PropietarioModel) => item.NombredenominacionORazonSocial,
-      orden: 1,
-    },
-    {
-      encabezado: 'R.F.C.',
-      clave: (item: PropietarioModel) => item.rfc,
-      orden: 2,
-    },
-    {
-      encabezado: 'CURP',
-      clave: (item: PropietarioModel) => item.curp,
-      orden: 3,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (item: PropietarioModel) => item.telefono,
-      orden: 4,
-    },
-    {
-      encabezado: 'Correo electrónico',
-      clave: (item: PropietarioModel) => item.CorreoElectronico,
-      orden: 5,
-    },
-    {
-      encabezado: 'Calle',
-      clave: (item: PropietarioModel) => item.calle,
-      orden: 6,
-    },
-    {
-      encabezado: 'Número exterior',
-      clave: (item: PropietarioModel) => item.numeroExterior,
-      orden: 7,
-    },
-    {
-      encabezado: 'Número interior',
-      clave: (item: PropietarioModel) => item.numeroInterior,
-      orden: 8,
-    },
-    {
-      encabezado: 'País',
-      clave: (item: PropietarioModel) => item.pais,
-      orden: 9,
-    },
-    {
-      encabezado: 'Colonia',
-      clave: (item: PropietarioModel) => item.colonia,
-      orden: 10,
-    },
-    {
-      encabezado: 'Municipio o alcaldía',
-      clave: (item: PropietarioModel) => item.municipioOAlcaldia,
-      orden: 11,
-    },
-    {
-      encabezado: 'Localidad',
-      clave: (item: PropietarioModel) => item.localidad,
-      orden: 12,
-    },
-    {
-      encabezado: 'Entidad federativa',
-      clave: (item: PropietarioModel) => item.entidadFederativa,
-      orden: 13,
-    },
-    {
-      encabezado: 'Estado/localidad',
-      clave: (item: PropietarioModel) => item.estadoLocalidad,
-      orden: 14,
-    },
-    {
-      encabezado: 'Código postal',
-      clave: (item: PropietarioModel) => item.codigoPostal,
-      orden: 15,
-    },
-  ];
+  configuracionTabla: ConfiguracionColumna<PropietarioModel>[] =ESTABLECIMIENTO_TABLE_CONFIG;
 
   /**
    * Guarda un nuevo propietario y actualiza el estado global.
@@ -376,32 +319,41 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    * Busca los datos del representante por RFC y los actualiza en el formulario.
    */
   buscarRepresentanteRfc(): void {
-    const RFC = this.propietarioradioForm.get('tercerosRfc')?.value;
+    const RFC = this.propietarioradioForm.get('tercerosRfc')?.value; // Get the RFC entered by the user
+  
     if (RFC) {
-      this.propietarioradioForm.patchValue({
-        tercerosCurp: 'GAPM920519HDFNRL02',
-      });
-      this.formTercerosDatos.patchValue({
-        tercerosNombre: 'MIGUEL ANGEL',
-        tercerosPrimerApellido: 'PEREZ',
-        tercerosSegundoApellido: 'AHOME',
-        tercerosDenominacionRazonSocial: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
-        tercerosPais: 'ESTADOS UNIDOS MEXICANOS',
-        tercerosEstadoLocalidad: 'SINALOA',
-        tercerosMunicipioAlcaldia: 'CUAUHTEMOC',
-        tercerosLocalidad: 'LOS MOCHIS',
-        tercerosCodigoPostal: '81210',
-        tercerosColonia: 'MIGUEL HIDALGO',
-        tercerosCalle: 'CAMINO VIEJO',
-        tercerosNumeroExterior: '1353',
-        tercerosNumeroInterior: 'A',
-        tercerosLada: '55',
-        tercerosTelefono: '12345678',
-        tercerosCorreoElectronico: 'brpomskyldi@etllpqhpyrpks.zgi',
-      });
-    }
+      // Fetch the data from the JSON file or API
+      this.establecimientoService
+        .getRepresentanteByRfc(RFC) // Service method to fetch data
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((representante) => {
+          if (representante) {
+            // Patch the form with the fetched data
+            this.propietarioradioForm.patchValue({
+              tercerosCurp: representante.curp,
+            });
+            this.formTercerosDatos.patchValue({
+              tercerosNombre: representante.nombre,
+              tercerosPrimerApellido: representante.primerApellido,
+              tercerosSegundoApellido: representante.segundoApellido,
+              tercerosDenominacionRazonSocial: representante.denominacionRazonSocial,
+              tercerosPais: representante.pais,
+              tercerosEstadoLocalidad: representante.estadoLocalidad,
+              tercerosMunicipioAlcaldia: representante.municipioAlcaldia,
+              tercerosLocalidad: representante.localidad,
+              tercerosCodigoPostal: representante.codigoPostal,
+              tercerosColonia: representante.colonia,
+              tercerosCalle: representante.calle,
+              tercerosNumeroExterior: representante.numeroExterior,
+              tercerosNumeroInterior: representante.numeroInterior,
+              tercerosLada: representante.lada,
+              tercerosTelefono: representante.telefono,
+              tercerosCorreoElectronico: representante.correoElectronico,
+            });
+          } 
+        });
+    } 
   }
-
   /**
    * Ciclo de vida `OnDestroy`.
    * Limpia las suscripciones para evitar fugas de memoria.

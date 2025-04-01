@@ -8,6 +8,9 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { EstablecimientoService } from '../../services/establecimiento.service';
+
 import {
   FormBuilder,
   FormGroup,
@@ -22,13 +25,13 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import radioJson from 'libs/shared/theme/assets/json/260401/radioSiNo.json';
 
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
+import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
 
 @Component({
   selector: 'app-manifiestos-representante-seccion',
@@ -43,7 +46,9 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
   templateUrl: './manifiestos-representante-seccion.component.html',
   styleUrl: './manifiestos-representante-seccion.component.scss',
 })
-export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestroy {
+export class ManifiestosRepresentanteSeccionComponent
+  implements OnInit, OnDestroy
+{
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -52,7 +57,7 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
   /**
    * Opciones para el radio de información confidencial.
    */
-  informacionConfidencialRadioOption = radioJson;
+  informacionConfidencialRadioOption: PropietarioTipoPersona[]=[];
 
   /**
    * Texto de los manifiestos.
@@ -73,7 +78,8 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
   constructor(
     private fb: FormBuilder,
     private representanteStore: DatosDelSolicituteSeccionStateStore,
-    private representanteQuery: DatosDelSolicituteSeccionQuery
+    private representanteQuery: DatosDelSolicituteSeccionQuery,
+    private establecimientoService :EstablecimientoService
   ) {}
 
   /**
@@ -97,7 +103,9 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
-        this.manifiestosRepresentanteForm.patchValue(state);
+        this.manifiestosRepresentanteForm.patchValue(state, {
+          emitEvent: false,
+        });
       });
 
     // Actualizar el estado global cuando cambien los valores del formulario
@@ -105,6 +113,14 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.representanteStore.update(value);
+      });
+
+      this.establecimientoService
+      .getInformacionConfidencialRadioOptions()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: PropietarioTipoPersona[]) => {
+        this.informacionConfidencialRadioOption = data; // Bind the fetched data
+       
       });
   }
 
@@ -114,11 +130,22 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
   buscarRepresentanteRfc(): void {
     const RFC = this.manifiestosRepresentanteForm.get('representanteRfc')?.value;
     if (RFC) {
-      this.manifiestosRepresentanteForm.patchValue({
-        representanteNombre: 'EUROFOODS DE MEXICO',
-        apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL',
-      });
+      this.establecimientoService
+        .getManifiestosByRfc(RFC)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((representante: Manifiestistos | null) => {
+          if (representante) {
+            this.manifiestosRepresentanteForm.patchValue({
+              representanteNombre: representante.representanteNombre,
+              apellidoPaterno: representante.apellidoPaterno,
+              apellidoMaterno: representante.apellidoMaterno,
+            });
+          } else {
+            console.error(`No representante found for RFC: ${RFC}`);
+          }
+        });
+    } else {
+      console.warn('Please enter a valid RFC.');
     }
   }
 

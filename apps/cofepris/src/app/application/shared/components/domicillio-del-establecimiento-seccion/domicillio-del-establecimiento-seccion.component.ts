@@ -40,6 +40,9 @@ import { Subject, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
+import { SCIAN_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
+
+
 /* 
 * @description
 * Componente que gestiona el domicilio del establecimiento.
@@ -134,18 +137,7 @@ export class DomicillioDelEstablecimientoSeccionComponent
   /**
    * Configuración de las columnas de la tabla dinámica para los datos SCIAN.
    */
-  configuracionTabla: ConfiguracionColumna<ScianModel>[] = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (item: ScianModel) => item.claveScian,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción del S.C.I.A.N.',
-      clave: (item: ScianModel) => item.descripcionScian,
-      orden: 2,
-    },
-  ];
+  configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
 
   /**
    * Ciclo de vida `AfterViewInit`.

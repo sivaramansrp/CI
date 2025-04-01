@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
+
+import { DatosDeLaProductoModel, PropietarioModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Store, StoreConfig } from '@datorama/akita';
 
@@ -23,6 +24,7 @@ export interface DatosDelSolicituteSeccionState {
   nombreDelProfesionalResponsable: string;
   informacionConfidencialRadio: string;
   propietarioData: PropietarioModel[];
+  establecimientoData :DatosDeLaProductoModel[];
 }
 
 export function createInitialState(): DatosDelSolicituteSeccionState {
@@ -45,6 +47,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     nombreDelProfesionalResponsable: '',
     informacionConfidencialRadio: '',
     propietarioData: [],
+    establecimientoData: [],
   };
 }
 

@@ -37,3 +37,39 @@ export interface DatosDeLaProductoModel {
   paisDeDestino: string;
   usoEpecifico: string;
 }
+export interface Representante {
+  rfc: string;
+  curp: string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  denominacionRazonSocial: string;
+  pais: string;
+  estadoLocalidad: string;
+  municipioAlcaldia: string;
+  localidad: string;
+  codigoPostal: string;
+  colonia: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  lada: string;
+  telefono: string;
+  correoElectronico: string;
+}
+export interface Manifiestistos {
+  rfc: string;
+  representanteNombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+}
+
+export interface PropietarioRadio {
+  id: number;
+  label: string; 
+  value: string; 
+}
+export interface PropietarioTipoPersona {
+  label: string;
+  value: string;
+}

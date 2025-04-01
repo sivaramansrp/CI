@@ -37,7 +37,6 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -45,9 +44,7 @@ import {
 
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
 
-import {
-  DatosDeLaProductoModel,
-} from '../../models/datos-de-la-solicitud.model';
+import { DatosDeLaProductoModel } from '../../models/datos-de-la-solicitud.model';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
@@ -56,6 +53,11 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
 
 import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecimiento-seccion/datos-del-establecimiento-seccion.component';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+
+import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
 /**
  * Componente `EstablecimientoComponent`
  * Componente que gestiona los datos del establecimiento.
@@ -72,21 +74,19 @@ import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecim
     TablaDinamicaComponent,
     CrosslistComponent,
     DomicillioDelEstablecimientoSeccionComponent,
-    InputRadioComponent,
     ManifiestosRepresentanteSeccionComponent,
-    DatosDelEstablecimientoSeccionComponent
+    DatosDelEstablecimientoSeccionComponent,
   ],
   templateUrl: './establecimiento.component.html',
   styleUrl: './establecimiento.component.scss',
 })
 /**
  * compo doc
-* @description
-*/
+ * @description
+ */
 export class EstablecimientoComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
- 
   public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
   public paisDeOriginLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
@@ -123,90 +123,13 @@ export class EstablecimientoComponent
   /**
    * Datos de los productos agregados.
    */
-  propietarioData: DatosDeLaProductoModel[] = [];
+  establecimientoData: DatosDeLaProductoModel[] = [];
 
   /**
    * Configuración de las columnas de la tabla dinámica para los datos del producto.
    */
-  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] =
-    [
-      {
-        encabezado: 'Tipo de producto',
-        clave: (item: DatosDeLaProductoModel) => item.tipoDeProducto,
-        orden: 1,
-      },
-      {
-        encabezado: 'Nombre Específico',
-        clave: (item: DatosDeLaProductoModel) => item.nombreEspecifico,
-        orden: 2,
-      },
-      {
-        encabezado: 'Cantidad o Volúmen',
-        clave: (item: DatosDeLaProductoModel) => item.cantidadOVolumen,
-        orden: 3,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (item: DatosDeLaProductoModel) => item.unidadDeMedida,
-        orden: 4,
-      },
-      {
-        encabezado: 'Presentación',
-        clave: (item: DatosDeLaProductoModel) => item.Presentacion,
-        orden: 5,
-      },
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (item: DatosDeLaProductoModel) => item.fraccionArancelaria,
-        orden: 6,
-      },
-      {
-        encabezado: 'Descripción de la fracción',
-        clave: (item: DatosDeLaProductoModel) => item.descripcionDeLaFraccion,
-        orden: 7,
-      },
-      {
-        encabezado: 'Unidad de medida de tarifa (UMT)',
-        clave: (item: DatosDeLaProductoModel) => item.unidadDeMedidaDeTarifa,
-        orden: 8,
-      },
-      {
-        encabezado: 'Cantidad UMT',
-        clave: (item: DatosDeLaProductoModel) => item.cantidadUMT,
-        orden: 9,
-      },
-      {
-        encabezado: 'Envase primario',
-        clave: (item: DatosDeLaProductoModel) => item.envasePrimario,
-        orden: 10,
-      },
-      {
-        encabezado: 'Envase secundario',
-        clave: (item: DatosDeLaProductoModel) => item.envaseSecundario,
-        orden: 11,
-      },
-      {
-        encabezado: 'País de origen',
-        clave: (item: DatosDeLaProductoModel) => item.paisDeOrigen,
-        orden: 12,
-      },
-      {
-        encabezado: 'País de procedencia',
-        clave: (item: DatosDeLaProductoModel) => item.paisDeProcedencia,
-        orden: 13,
-      },
-      {
-        encabezado: 'País de destino',
-        clave: (item: DatosDeLaProductoModel) => item.paisDeDestino,
-        orden: 14,
-      },
-      {
-        encabezado: 'Uso específico',
-        clave: (item: DatosDeLaProductoModel) => item.usoEpecifico,
-        orden: 15,
-      },
-    ];
-
+  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] =DATOS_DE_LA_PRODUCTO_MODEL;
+   
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -264,7 +187,9 @@ export class EstablecimientoComponent
    */
   constructor(
     private fb: FormBuilder,
-    private establecimientoService: EstablecimientoService
+    private establecimientoService: EstablecimientoService,
+    private establecimientoStore: DatosDelSolicituteSeccionStateStore,
+    private establecimientoQuery: DatosDelSolicituteSeccionQuery
   ) {}
 
   /**
@@ -289,7 +214,6 @@ export class EstablecimientoComponent
     this.loadUnidadDeMedida();
     this.loadUsoEspecifico();
 
-
     this.datosMercanciaForm = this.fb.group({
       nombreEspecifico: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
@@ -308,6 +232,13 @@ export class EstablecimientoComponent
       usoEspecifico: ['', Validators.required],
       almacenamientoEnvasePrimario: [''],
       presentacionaFrmaceutica: ['', Validators.required],
+    });
+
+    this.establecimientoQuery
+    .select('establecimientoData')
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+this.establecimientoData = data;
     });
   }
 
@@ -371,8 +302,12 @@ export class EstablecimientoComponent
       if (IS_EMPTY) {
         return;
       }
+  // Crear un nuevo array con el nuevo propietario
+  const UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
 
-      this.propietarioData.push(MERCANCIA_DATA);
+  // Actualizar el store con los nuevos datos del propietario
+  this.establecimientoStore.update({ establecimientoData: UPDATED_DATA });
+     
       this.datosMercanciaForm.reset();
       this.closeDatosMercanciaModal();
     }
