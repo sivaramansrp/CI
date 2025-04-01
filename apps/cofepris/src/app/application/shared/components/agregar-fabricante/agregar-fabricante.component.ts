@@ -1,7 +1,7 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados.model';
 import { FormBuilder } from '@angular/forms';
@@ -11,10 +11,9 @@ import { Location } from '@angular/common';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { STR_NACIONAL } from '../../constantes/datos-solicitud.enum';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 import { Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 
@@ -64,6 +63,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
+  /**
    * Datos de catálogo de estados.
    * @property {Catalogo[]} estadosDatos
    */
@@ -74,6 +79,14 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} municipiosDatos
    */
   public municipiosDatos: Catalogo[] = [];
+
+  /**
+   * @property nacionalStr
+   * @description Almacena la cadena de texto para "Nacional" para su uso en la interfaz de usuario.
+   * @type {string}
+   * @default STR_NACIONAL
+   */
+  public nacionalStr = STR_NACIONAL;
 
   /**
    * Datos de catálogo de localidades.
@@ -101,6 +114,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   private unsubscribe$ = new Subject<void>();
 
   /**
+   * Emite un evento con la lista de fabricantes actualizada.
+   * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
+   */
+  @Output() updateFabricanteTablaDatos = new EventEmitter<Fabricante[]>();
+
+  /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
    *
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -111,13 +130,11 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query,
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
     this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: ['', Validators.required],
+      nacionalidad: [this.nacionalStr, Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
@@ -180,8 +197,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     // Agregar el nuevo fabricante al arreglo
     this.fabricantes.push(NUEVO_FABRICANTE);
 
-    // Actualizar datos en el store
-    this.tramiteStore.updateFabricanteTablaDatos(this.fabricantes);
+    this.updateFabricanteTablaDatos.emit(this.fabricantes);
 
     // Regresar a la vista anterior
     this.ubicaccion.back();
@@ -234,6 +250,25 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       .subscribe((data) => {
         this.coloniasDatos = data;
       });
+  }
+
+  /**
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    this.agregarFabricanteForm.reset();
+  }
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
+    this.ubicaccion.back();
   }
 
   /**

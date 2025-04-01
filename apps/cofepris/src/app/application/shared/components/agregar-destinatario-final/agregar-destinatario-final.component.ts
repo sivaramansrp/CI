@@ -1,9 +1,9 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,9 +14,8 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -36,7 +35,7 @@ import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tram
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
 })
-export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
+export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -86,12 +85,41 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} codigosPostalesDatos
    */
   public codigosPostalesDatos: Catalogo[] = [];
+  
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
 
   /**
    * Arreglo que almacena la lista de destinatarios.
    * @property {Destinatario[]} destinatarios
    */
   destinatarios: Destinatario[] = [];
+
+  /**
+    * @property idProcedimiento
+    * @description Identificador del procedimiento asociado a este componente.
+    * @type {number}
+    */
+  @Input() idProcedimiento!: number;
+  
+  /**
+   * @property mostrarCamposNoContribuyente
+   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * @type {boolean}
+   * @default false
+   */
+  public mostrarCamposNoContribuyente: boolean = false;
+
+  /**
+   * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
+   * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTabla
+   **/
+
+  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<Destinatario[]>();
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -104,8 +132,6 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query,
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService
   ) {
@@ -120,6 +146,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
         ],
       ],
       nombres: ['', Validators.required],
+      denominacionRazon:['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       pais: ['', Validators.required],
@@ -135,6 +162,14 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+  }
+
+  /**
+   * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
+   * Llama al método `mostrarCamposNoContribuyente()`.
+   */
+  ngOnChanges(): void {
+    this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
@@ -166,19 +201,12 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(this.destinatarios);
+   this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
   }
 
-  /**
-   * Hook del ciclo de vida que se invoca cuando se destruye el componente.
-   * Completa el Subject `unsubscribe$` para desuscribir todos los observables.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+
 
   /**
    * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
@@ -235,5 +263,37 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
       .subscribe((data) => {
         this.coloniasDatos = data;
       });
+  }
+
+  /**
+ * @method limpiarFormulario
+ * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  limpiarFormulario(): void {
+    this.agregarDestinatarioFinal.reset();
+  }
+/**
+ * @method cancelar
+ * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+ * 
+ * @returns {void} Este método no retorna ningún valor.
+ */
+  cancelar():void{
+    this.ubicaccion.back();
+  }
+
+   /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
