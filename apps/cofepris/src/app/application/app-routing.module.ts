@@ -37,10 +37,17 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'permiso-certificados',
+    path: 'importacion-productos',
     loadChildren: () =>
-      import('./tramites/260701/certificados/certificados.module').then(
-        (m) => m.CertificadosModule
+      import('./tramites/260101/importacion-productos.module').then(
+        (m) => m.ServiciosExtraordinariosModule
+      ),
+  },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
       ),
   },
 ];
