@@ -1,0 +1,16 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
+
+const ROUTES: Routes = [
+  {
+    path: 'asignar-caat-maritimo',
+    component: PantallasComponent,
+  }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(ROUTES)],
+  exports: [RouterModule]
+})
+export class TransportacionMaritimaRoutingModule { }

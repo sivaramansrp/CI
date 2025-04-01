@@ -125,6 +125,13 @@ const ROUTES: Routes = [
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
       ),
+  },
+  {
+    path: 'transportacion-maritima',
+    loadChildren: () =>
+      import('./tramites/40201/transportacion-maritima.module').then(
+        (m) => m.TransportacionMaritimaModule
+      ),
   }
 ];
 
