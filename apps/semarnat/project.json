@@ -29,7 +29,13 @@
             "output": "./assets/"
           }
         ],
-        "styles": ["apps/semarnat/src/styles.scss"],
+        "styles": [
+          "apps/semarnat/src/styles.scss",
+          "node_modules/bootstrap/scss/bootstrap.scss",
+          "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "libs/shared/theme/assets/styles/main.scss"
+        ],
         "scripts": [],
         "customWebpackConfig": {
           "path": "apps/semarnat/webpack.config.ts"
