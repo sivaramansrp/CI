@@ -25,11 +25,26 @@ import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
   styleUrl: './paso-dos.component.css',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  /**
+   * Texto utilizado en el componente.
+   * @type {typeof TEXTOS}
+   */
   TEXTOS = TEXTOS_REQUISITOS;
+  /**
+   * Texto utilizado para mostrar el mensaje de requisitos.
+   * @type {string}
+   */
   tiposDocumentos: Catalogo[] = [];
+  /**
+   * Tipo de alerta utilizada.
+   * @type {string}
+   */
   infoAlert = 'alert-info';
+  /**
+   * Texto utilizado para mostrar el mensaje de requisitos.
+   * @type {string}
+   */
   catalogoDocumentos: Catalogo[] = [];
-  documentosSeleccionados: Catalogo[] = [];
 
   /**
    * Notificador utilizado para manejar la destrucción o desuscripción de observables.
@@ -44,18 +59,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-   // this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
+    this.getTiposDocumentos();
   }
 
   /**

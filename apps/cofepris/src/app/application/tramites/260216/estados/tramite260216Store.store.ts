@@ -12,7 +12,13 @@ import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.en
 import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.model';
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
-
+/**
+ * @interface
+ * @name Tramite260216State
+ * @description
+ * Representa el estado de la tienda para el trámite 260216. Contiene datos relacionados
+ * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
+ */
 export interface Tramite260216State {
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
@@ -28,9 +34,16 @@ export interface Tramite260216State {
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
   opcionesColapsableState: boolean;
   pagoDerechos: PagoDerechosFormState;
-  tabSeleccionado?:number;
+  tabSeleccionado?: number;
 }
 
+/**
+ * @function
+ * @name createInitialState
+ * @description
+ * Crea el estado inicial para la tienda del trámite 260216.
+ * @returns {Tramite260216State} Estado inicial.
+ */
 export function createInitialState(): Tramite260216State {
   return {
     destinatarioFinalTablaDatos: [],
@@ -96,7 +109,7 @@ export function createInitialState(): Tramite260216State {
       fechaPago: '',
       importePago: '',
     },
-    tabSeleccionado:1
+    tabSeleccionado: 1,
   };
 }
 
@@ -104,11 +117,24 @@ export function createInitialState(): Tramite260216State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite260216', resettable: true })
+/**
+ * @class
+ * @name Tramite260216Store
+ * @description
+ * Tienda para manejar el estado del trámite 260216. Proporciona métodos para actualizar
+ * diferentes partes del estado.
+ * @extends {Store<Tramite260216State>}
+ */
 export class Tramite260216Store extends Store<Tramite260216State> {
   constructor() {
     super(createInitialState());
   }
 
+  /**
+   * @method updateDatosSolicitudFormState
+   * @description Actualiza el estado del formulario de datos de la solicitud.
+   * @param {DatosSolicitudFormState} datosSolicitudFormState - Nuevo estado del formulario.
+   */
   public updateDatosSolicitudFormState(
     datosSolicitudFormState: DatosSolicitudFormState
   ): void {
@@ -117,6 +143,12 @@ export class Tramite260216Store extends Store<Tramite260216State> {
       datosSolicitudFormState,
     }));
   }
+
+  /**
+   * @method updateFabricanteTablaDatos
+   * @description Agrega nuevos fabricantes a la lista existente.
+   * @param {Fabricante[]} newFabricantes - Lista de nuevos fabricantes.
+   */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
@@ -124,6 +156,11 @@ export class Tramite260216Store extends Store<Tramite260216State> {
     }));
   }
 
+  /**
+   * @method updateDestinatarioFinalTablaDatos
+   * @description Agrega nuevos destinatarios finales a la lista existente.
+   * @param {Destinatario[]} newDestinatarios - Lista de nuevos destinatarios.
+   */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: Destinatario[]
   ): void {
@@ -136,6 +173,11 @@ export class Tramite260216Store extends Store<Tramite260216State> {
     }));
   }
 
+  /**
+   * @method updateProveedorTablaDatos
+   * @description Agrega nuevos proveedores a la lista existente.
+   * @param {Proveedor[]} newProveedores - Lista de nuevos proveedores.
+   */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
@@ -143,6 +185,11 @@ export class Tramite260216Store extends Store<Tramite260216State> {
     }));
   }
 
+  /**
+   * @method updateFacturadorTablaDatos
+   * @description Agrega nuevos facturadores a la lista existente.
+   * @param {Facturador[]} newFacturadores - Lista de nuevos facturadores.
+   */
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
@@ -150,6 +197,13 @@ export class Tramite260216Store extends Store<Tramite260216State> {
     }));
   }
 
+  /**
+   * @method updateOpcionConfigDatos
+   * @description
+   * Actualiza la configuración de opciones de la tabla en el estado.
+   *
+   * @param {TablaOpcionConfig[]} opcionConfigDatos - Nueva configuración de opciones de la tabla.
+   */
   public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -157,13 +211,23 @@ export class Tramite260216Store extends Store<Tramite260216State> {
     }));
   }
 
+  /**
+   * @method updateSeleccionadoOpcionDatos
+   * @description Actualiza la opción seleccionada en el estado.
+   * @param {TablaOpcionConfig[]} seleccionadoOpcionDatos - Nueva opción seleccionada.
+   */
   public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
     this.update((state) => ({
       ...state,
       scianConfigDatos,
     }));
   }
-
+  
+  /**
+   * @method updateSeleccionadoOpcionDatos
+   * @description Actualiza la opción seleccionada en el estado.
+   * @param {TablaOpcionConfig[]} seleccionadoOpcionDatos - Nueva opción seleccionada.
+   */
   public updateTablaMercanciasConfigDatos(
     tablaMercanciasConfigDatos: TablaMercanciasDatos[]
   ): void {
@@ -172,12 +236,23 @@ export class Tramite260216Store extends Store<Tramite260216State> {
       tablaMercanciasConfigDatos,
     }));
   }
+  /**
+   * @method updatePagoDerechos
+   * @description Actualiza el estado del formulario de pago de derechos.
+   * @param {PagoDerechosFormState} nuevoPagoDerechos - Nuevo estado del formulario.
+   */
   public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
     this.update((state) => ({
       ...state,
       pagoDerechos: nuevoPagoDerechos,
     }));
   }
+
+  /**
+   * @method updateTabSeleccionado
+   * @description Actualiza el índice de la pestaña seleccionada.
+   * @param {number} tabSeleccionado - Nuevo índice de la pestaña.
+   */
   public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
       ...state,

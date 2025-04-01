@@ -40,7 +40,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   seleccionaTab(i: number): void {
-    //this.indice = i;
     this.tramite260216Store.updateTabSeleccionado(i);
   }
 
