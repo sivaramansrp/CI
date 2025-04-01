@@ -283,10 +283,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     this.exportacionDeDiamantesEnBrutoService
       .getNombresIngles()
       .subscribe((nombres) => {
-        this.nombresIngles = nombres.map((nombre) => ({
-          idDelPais: parseInt(nombre.codigo, 10),
-          name: nombre.nombre,
-        }));
+        this.nombresIngles = nombres;
       });
   }
 
@@ -315,7 +312,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   public inicializarFormulario(): void {
     this.formularioEmpresa = this.fb.group({
       especifique: [
-        { value: this.solicitudState?.especifique || '', disabled: true },
+        { value: this.solicitudState?.especifique || '0', disabled: true },
         Validators.maxLength(20),
       ],
       numero: [this.solicitudState?.numero || '', [Validators.required]],
@@ -353,7 +350,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Actualiza el nombre en inglés basado en el ID del país.
    * @param paisId ID del país seleccionado.
    */
-  private updateNombreIngles(paisId: number): void {
+  public updateNombreIngles(paisId: number): void {
     const MATCHING_ITEMS = this.nombresIngles.filter(
       (item) => item.idDelPais === paisId
     );

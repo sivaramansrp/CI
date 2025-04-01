@@ -70,6 +70,8 @@
           id="nombre"
           formControlName="nombre"
           [ngClass]="{ 'is-invalid': isInvalid('nombre') }"
+          (change)="setValoresStore(formularioEmpresa, 'nombre', 'setNombre')"
+
         />
         <div *ngIf="isInvalid('nombre')" class="invalid-feedback">
           Este campo es obligatorio.
