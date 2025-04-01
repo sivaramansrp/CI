@@ -79,7 +79,7 @@ export class ComplementarPlantaComponent {
    * @property {Array} complementoDePlantaDatos
    */
   complementoDePlantaDatos = [];
-  
+
   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
    * @returns {void}

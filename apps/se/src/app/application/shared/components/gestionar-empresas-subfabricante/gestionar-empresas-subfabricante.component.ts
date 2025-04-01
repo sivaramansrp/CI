@@ -8,7 +8,10 @@ import {
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { DatosSubcontratista, PlantasSubfabricante } from '../../models/empresas-subfabricanta.model';
+import {
+  DatosSubcontratista,
+  PlantasSubfabricante,
+} from '../../models/empresas-subfabricanta.model';
 import {
   FormBuilder,
   FormGroup,
@@ -25,7 +28,7 @@ import { Router } from '@angular/router';
     ReactiveFormsModule,
     CommonModule,
     CatalogoSelectComponent,
-    TituloComponent
+    TituloComponent,
   ],
   templateUrl: './gestionar-empresas-subfabricante.component.html',
   styleUrl: './gestionar-empresas-subfabricante.component.scss',
@@ -84,7 +87,7 @@ export class GestionarEmpresasSubfabricantesComponent {
    */
   private _formularioDatosSubcontratista!: FormGroup;
 
-  @Input() tabIndex:number=0;
+  @Input() tabIndex: number = 0;
 
   /**
    * Establece el estado del catálogo de las plantas subfabricantes.
@@ -192,8 +195,6 @@ export class GestionarEmpresasSubfabricantesComponent {
     return this._formularioDatosSubcontratista;
   }
 
-
-
   /**
    * Evento emitido cuando cambia el RFC del subcontratista.
    * @event alCambiarRFC
@@ -260,7 +261,7 @@ export class GestionarEmpresasSubfabricantesComponent {
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder,private router:Router) {
+  constructor(private fb: FormBuilder, private router: Router) {
     this.inicializarFormularioDatosSubcontratista();
   }
 
@@ -350,18 +351,18 @@ export class GestionarEmpresasSubfabricantesComponent {
    * @description Este método emite el evento `plantasPorEliminar` con las plantas seleccionadas para ser eliminadas.
    */
   eliminarPlantas(): void {
-    if(this.plantasSeleccionadas.length>0){
-    this.plantasPorEliminar.emit(this.plantasSeleccionadas);
+    if (this.plantasSeleccionadas.length > 0) {
+      this.plantasPorEliminar.emit(this.plantasSeleccionadas);
     }
   }
 
-/**
- * Emite el evento para complementar las plantas seleccionadas.
- * @returns {void}
- */
-  complementarPlantas():void{
-    if(this.plantasSeleccionadas.length>0){
-    this.plantasPorComplementar.emit(this.plantasSeleccionadas);
+  /**
+   * Emite el evento para complementar las plantas seleccionadas.
+   * @returns {void}
+   */
+  complementarPlantas(): void {
+    if (this.plantasSeleccionadas.length > 0) {
+      this.plantasPorComplementar.emit(this.plantasSeleccionadas);
     }
   }
 }
