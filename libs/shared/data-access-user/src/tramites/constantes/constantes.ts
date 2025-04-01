@@ -27,7 +27,7 @@ export const CATALOGOS_ID = {
   CAT_PAIS_ORIGEN: 'pais-origen',
   CAT_PAIS_DESTINO: 'pais-destino',
   CAT_MOLINO: 'molino',
-  CAT_ESTADO: 'estado', 
+  CAT_ESTADO: 'estado',
   CAT_BIMESTRE_UNO: 'bimestre-catalogo-uno',
   CAT_BIMESTRE_DOS: 'bimestre-catalogo-dos',
   CAT_BIMESTRE_TRES: 'bimestre-catalogo-tres',
