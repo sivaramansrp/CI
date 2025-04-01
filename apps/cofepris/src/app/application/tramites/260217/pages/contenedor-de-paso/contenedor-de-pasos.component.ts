@@ -4,7 +4,8 @@ import {
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
-import { PASOS, TITULOMENSAJE } from '../../constants/pasos.enum';
+
+import { PASOS, TITULOMENSAJE } from '../../constants/medicos-uso.enum';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
@@ -27,7 +28,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   styleUrl: './contenedor-de-paso.component.scss',
 })
 export class ContenedorDePasosComponent {
-  tituloMensaje: string | null =TITULOMENSAJE
+  tituloMensaje: string | null = TITULOMENSAJE
   pasos: ListaPasosWizard[] = PASOS;
 
   indice: number = 1;

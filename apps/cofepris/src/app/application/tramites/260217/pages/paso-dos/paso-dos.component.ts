@@ -9,7 +9,8 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TEXTOS_REQUISITOS } from '../../constants/pasos.enum';
+import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
+
 
 @Component({
   selector: 'app-paso-dos',
@@ -21,7 +22,7 @@ import { TEXTOS_REQUISITOS } from '../../constants/pasos.enum';
     AnexarDocumentosComponent,
   ],
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.css',
+  styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS_REQUISITOS;
