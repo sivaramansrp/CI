@@ -236,6 +236,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'validador-certificado-cam',
+    loadChildren:() =>
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
+      )
+  },
+  {
     path: 'registro-solicitud-anual',
     loadChildren: () =>
       import('./tramites/150101/registro-solicitud-anual.module').then(
