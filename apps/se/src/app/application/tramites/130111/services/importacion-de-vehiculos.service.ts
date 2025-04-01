@@ -86,11 +86,8 @@ export class ImportacionDeVehiculosService {
   }
 
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-    return (
-      this.http
-        .get<PartidasDeLaMercanciaModelo[]>(
+    return this.http.get<PartidasDeLaMercanciaModelo[]>(
           'assets/json/130111/partidas-de-la.json'
-        )
-    );
+        );
   }
 }
