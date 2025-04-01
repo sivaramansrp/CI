@@ -64,6 +64,12 @@ const ROUTES: Routes = [
         (m) => m.AvisoSanitarioModule
       ),
   },
+  {
+    path: 'materias-primas-destinados',
+    loadChildren: () =>
+      import('./tramites/260205/materias-primas-destinados.module').then(
+        (m) => m.MateriasPrimasDestinadosModule)
+  }
 ];
 
 @NgModule({
