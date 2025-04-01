@@ -108,10 +108,10 @@ export const appRoutes: Route[] = [
   {
     path: 'cofepris',
     loadChildren: () =>
-        loadRemoteModule({
-            remoteEntry: 'http://localhost:4211/remoteAppEntry.js',
-            remoteName: 'cofepris',
-            exposedModule: './Module'
-        }).then((m) => m.AppCofeprisModule)
-  }
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4211/remoteAppEntry.js',
+        remoteName: 'cofepris',
+        exposedModule: './Module'
+      }).then((m) => m.AppCofeprisModule)
+  },
 ];
