@@ -188,7 +188,9 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Obtiene la lista de unidades de medida y clasificación (UMC) disponibles.
    */
   umcOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('umc.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('umc.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
       next: (data) => {
         this.umc = data as Catalogo[];
       },
@@ -204,7 +206,9 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Obtiene la lista de facturas disponibles.
    */
   facturasOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('factura.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('factura.json')
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe({
       next: (data) => {
         this.factura = data as Catalogo[];
       },
@@ -225,7 +229,9 @@ export class MercanciaComponent implements OnInit, OnDestroy {
 
     if (this.mostrarAlerta) {
       of(null)
-        .pipe(delay(100))
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          delay(100))
         .subscribe(() => {
           this.cerrarModal();
           this.tablaSeleccionEvent.emit(true);

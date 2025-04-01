@@ -134,7 +134,7 @@ export function createInitialState(): CamState {
 @Injectable({
     providedIn: 'root',
 })
-@StoreConfig({ name: 'seccion', resettable: true })
+@StoreConfig({ name: 'camstore', resettable: true })
 export class camCertificadoStore extends Store<CamState> {
     constructor() {
         super(createInitialState());
