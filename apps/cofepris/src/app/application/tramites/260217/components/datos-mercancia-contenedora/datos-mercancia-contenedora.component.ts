@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { Tramite260217State, Tramite260217Store } from '../../estados/tramite260217Store.store';
 import { map, takeUntil } from 'rxjs';
@@ -21,7 +21,7 @@ import { Tramite260217Query } from '../../estados/tramite260217Query.query';
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent implements OnInit {
+export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
   /**
    * @property {TablaMercanciasDatos} SeleccionadoDatos
    * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
@@ -84,7 +84,6 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    */
   mercanciaSeleccionado(event: TablaMercanciasDatos): void {
     this.SeleccionadoDatos = event;
-
     const SELECCIONADO_MERCANCIA = {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
@@ -132,4 +131,15 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       tablaMercanciasConfigDatos: datosActivos,
     }));
   }
+
+    /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se llama antes de destruir el componente.
+   * Libera recursos y completa el observable `destroyNotifier$`.
+   */
+    ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }

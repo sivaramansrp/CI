@@ -2,7 +2,7 @@ import { AgregarDestinatarioFinalComponent } from '../../../../shared/components
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Destinatario } from '../../../../shared/models/terceros-relacionados.model';
-import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { Tramite260217Store } from '../../estados/tramite260217Store.store';
 
 /**

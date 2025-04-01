@@ -23,15 +23,39 @@ import { Tramite260217Store } from '../../estados/tramite260217Store.store';
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+  
+  /**
+   * Índice de la pestaña/tab actualmente seleccionada.
+   * Puede ser undefined si no hay pestaña seleccionada.
+   * @type {number | undefined}
+   * @default 1
+   */
   indice: number | undefined = 1;
 
+  /**
+   * Subject utilizado para manejar la desuscripción de observables
+   * cuando el componente es destruido.
+   * @type {Subject<void>}
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor que inyecta las dependencias necesarias para el manejo del estado del trámite.
+   * @constructor
+   * @param {Tramite260217Query} tramite260217Query - Query para acceder al estado del trámite
+   * @param {Tramite260217Store} tramite260217Store - Store para actualizar el estado del trámite
+   */
   constructor(
     private tramite260217Query: Tramite260217Query,
     private tramite260217Store: Tramite260217Store
-  ) {}
+  ) { }
 
+  /**
+   * Método del ciclo de vida OnInit de Angular.
+   * Se suscribe a los cambios en la pestaña seleccionada del trámite.
+   * @method ngOnInit
+   */
   ngOnInit(): void {
     this.tramite260217Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -40,17 +64,20 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       });
   }
 
+  /**
+   * Actualiza la pestaña seleccionada en el store del trámite.
+   * @method seleccionaTab
+   * @param {number} i - Índice de la nueva pestaña a seleccionar
+   */
   seleccionaTab(i: number): void {
     this.tramite260217Store.updateTabSeleccionado(i);
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
+   * Método del ciclo de vida OnDestroy de Angular.
+   * Limpia las suscripciones activas emitiendo un valor al destroyNotifier$
+   * y completando el subject.
+   * @method ngOnDestroy
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

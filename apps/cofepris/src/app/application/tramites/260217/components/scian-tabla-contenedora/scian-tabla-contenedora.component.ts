@@ -13,8 +13,19 @@ import { Tramite260217Store } from '../../estados/tramite260217Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
-  constructor(private tramite260217Store: Tramite260217Store){}
+  
+  /**
+   * Constructor que inyecta el store del trámite 260217.
+   * @constructor
+   * @param {Tramite260217Store} tramite260217Store - Store que maneja el estado del trámite 260217.
+   */
+  constructor(private tramite260217Store: Tramite260217Store) {}
 
+  /**
+   * Configuración del SCIAN (Sistema de Clasificación Industrial de América del Norte) seleccionado.
+   * @type {TablaScianConfig}
+   * @public
+   */
   public scianSeleccionado!: TablaScianConfig;
 
   /**

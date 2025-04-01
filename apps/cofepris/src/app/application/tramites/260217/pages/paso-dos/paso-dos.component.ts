@@ -9,7 +9,7 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
+import { TEXTOS_REQUISITOS } from '../../constants/medicos-sin-registrar.enum';
 
 
 @Component({
@@ -25,41 +25,64 @@ import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
   styleUrl: './paso-dos.component.scss',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  
+  /**
+    * Texto que contiene los requisitos y mensajes informativos.
+    * @type {string}
+    */
   TEXTOS = TEXTOS_REQUISITOS;
+
+  /**
+   * Lista de tipos de documentos disponibles.
+   * @type {Catalogo[]}
+   */
   tiposDocumentos: Catalogo[] = [];
+
+  /**
+   * Clase CSS para estilizar alertas informativas.
+   * @type {string}
+   */
   infoAlert = 'alert-info';
+
+  /**
+   * Catálogo completo de documentos disponibles.
+   * @type {Catalogo[]}
+   */
   catalogoDocumentos: Catalogo[] = [];
+
+  /**
+   * Documentos seleccionados por el usuario.
+   * @type {Catalogo[]}
+   */
   documentosSeleccionados: Catalogo[] = [];
 
   /**
-   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
-   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
-   *
-   * @property {Subject<void>} destroyNotifier$
+   * Subject utilizado para manejar la destrucción de observables.
+   * @type {Subject<void>}
+   * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private catalogosServices: CatalogosService) {
-    // Necesito inyectar los servicios a través del constructor, de modo que el constructor esté vacío.
-  }
+  /**
+   * Constructor que inyecta el servicio de catálogos.
+   * @constructor
+   * @param {CatalogosService} catalogosServices - Servicio para obtener catálogos
+   */
+  constructor(private catalogosServices: CatalogosService) { }
 
+  /**
+   * Método del ciclo de vida OnInit de Angular.
+   * Inicializa los datos del componente:
+   * @method ngOnInit
+   */
   ngOnInit(): void {
     this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
   }
 
   /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   * Obtiene el catálogo de tipos de documentos disponibles para el trámite.
+   * Se suscribe al servicio de catálogos y maneja la respuesta.
+   * @method getTiposDocumentos
    */
   getTiposDocumentos(): void {
     this.catalogosServices
@@ -73,9 +96,10 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         },
       });
   }
+
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * Método del ciclo de vida OnDestroy de Angular.
+   * Limpia las suscripciones activas:
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {

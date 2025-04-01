@@ -61,7 +61,7 @@ const ROUTES: Routes = [
   {
     path: 'dispositivos-medicos-sin-registrar',
     loadChildren: () =>
-      import('./tramites/260217/importacion-dispositivos-mediocos-sin-registrar.module').then(
+      import('./tramites/260217/importacion-dispositivos-medicos-sin-registrar.module').then(
         (m) => m.ImportacionDispositivosMedicosSinRegistrarModule
       ),
   },

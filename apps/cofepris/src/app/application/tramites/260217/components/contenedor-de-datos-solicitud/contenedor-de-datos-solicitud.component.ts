@@ -19,7 +19,7 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
+import { ID_PROCEDIMIENTO } from '../../constants/medicos-sin-registrar.enum';
 import { Subject } from 'rxjs';
 import { Tramite260217Query } from '../../estados/tramite260217Query.query';
 
