@@ -189,7 +189,7 @@ export const CONFIGURACION_FEDERETARIOS = [
     orden: 4,
   },
   {
-    encabezado: 'Fetcha acta',
+    encabezado: 'Fecha acta',
     clave: (ele: Federetarios) : string | undefined => ele.fetchActa,
     orden: 5,
   },
