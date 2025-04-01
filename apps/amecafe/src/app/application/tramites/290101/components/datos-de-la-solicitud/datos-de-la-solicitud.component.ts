@@ -339,6 +339,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   buscarDatos(): void {
     this.productoTablaServicios.obtenerDatos()
+    .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: { regionesCompraApiDatos: RegionesInfo[]; beneficiosApiDatos: BeneficiosInfo[]; bodegasApiDatos: BodegasInfo[]; cafeExportacionApiDatos: CafeExporacionInfo[] }) => {
           if (response && Array.isArray(response.regionesCompraApiDatos) &&
