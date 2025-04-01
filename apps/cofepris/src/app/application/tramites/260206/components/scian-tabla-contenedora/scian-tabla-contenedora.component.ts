@@ -14,6 +14,11 @@ import { Tramite260206Store } from '../../estados/stores/tramite260206Store.stor
 export class ScianTablaContenedoraComponent {
   constructor(private Tramite260206Store: Tramite260206Store){}
 
+  /**
+   * @property scianSeleccionado
+   * @description Almacena la configuración SCIAN seleccionada actualmente.
+   * @type {TablaScianConfig}
+   */
   public scianSeleccionado!: TablaScianConfig;
 
   /**

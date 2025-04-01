@@ -139,8 +139,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
 
-  ngOnDestroy(): void{
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Aquí se emiten señales para completar y limpiar cualquier suscripción o recurso que el componente
+   * haya estado utilizando, evitando posibles fugas de memoria.
+   *
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }
