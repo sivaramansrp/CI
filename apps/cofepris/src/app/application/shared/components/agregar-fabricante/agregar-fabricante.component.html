@@ -11,7 +11,7 @@
             type="radio"
             class="form-check-input"
             formControlName="nacionalidad"
-            value="Nacional"
+            [value]="nacionalStr"
           />
           Nacional
         </div>
@@ -32,7 +32,7 @@
             type="radio"
             class="form-check-input"
             formControlName="tipoPersona"
-            value="Fisica"
+            [value]="tipoPersona.FISICA"
           />
           Física
         </div>
@@ -48,6 +48,7 @@
       </div>
     </div>
 
+    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
       <div class="col-md-6">
         <label class="form-label">R.F.C.*:</label>
@@ -58,10 +59,12 @@
         <input type="text" class="form-control" formControlName="curp" />
       </div>
     </div>
+    }
 
     <!-- Datos Personales -->
-    <h4 class="mt-5">Datos personales</h4>
+    @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA){
     <div class="row mt-3">
+      <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
@@ -83,13 +86,14 @@
         />
       </div>
     </div>
-
+    } @if(agregarFabricanteForm.get('tipoPersona')?.value === 'Moral') {
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label">Denominación/razón social*:</label>
         <input type="text" class="form-control" formControlName="razonSocial" />
       </div>
     </div>
+    }
 
     <!-- Domicilio -->
     <h4 class="mt-5">Domicilio</h4>
@@ -196,6 +200,7 @@
             type="button"
             name="modificarMercancias"
             class="btn btn-default"
+            (click)="cancelar()"
           >
             Cancelar
           </button>
@@ -203,6 +208,7 @@
             type="button"
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
+            (click)="limpiarFormulario()"
           >
             Limpar
           </button>

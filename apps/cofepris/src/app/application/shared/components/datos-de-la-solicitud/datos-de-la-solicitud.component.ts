@@ -1,6 +1,7 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -22,9 +23,12 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
-import { AlertComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent
+} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ScianConfig } from '../../models/datos-solicitud.model';
@@ -85,6 +89,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Estado colapsable inicial para mostrar u ocultar ciertas secciones.
    */
   @Input() public opcionesColapsableState!: boolean;
+
+  /**
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
+  @Input() public idProcedimiento!: number;
 
   /**
    * @event opcionSeleccionado
@@ -188,6 +201,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   public opcionesColapsable = false;
 
   /**
+   * @property {boolean} mostrarElementoColapsable
+   * Controla si se debe mostrar un elemento colapsable en la interfaz de usuario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si un elemento colapsable debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarElementoColapsable = true;
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
    *
@@ -198,8 +221,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     public router: Router,
-    public activatedRoute: ActivatedRoute
-  ) {}
+    public activatedRoute: ActivatedRoute,
+     public datosSolicitudService: DatosSolicitudService
+      ) {
+        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'regimenDatos', '/cofepris/regimenDatos.json');
+        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'adunasDeEntradasDatos', '/cofepris/adunasDeEntradasDatos.json');
+        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'estadoDatos', '/cofepris/estadoDatos.json');
+
+      }
 
   /**
    * @method ngOnInit
@@ -218,6 +247,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
 
     this.opcionesColapsable = this.opcionesColapsableState;
+    this.mostrarElementoColapsable =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE.includes(this.idProcedimiento)
+        ? false
+        : true;
   }
 
   /**

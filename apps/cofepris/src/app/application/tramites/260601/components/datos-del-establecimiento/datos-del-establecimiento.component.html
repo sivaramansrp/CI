@@ -1,0 +1,280 @@
+<!--Datos del establecimiento-->
+<ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+
+<div [formGroup]="datosDelEstablecimientoForm">
+    <div class="text-end">
+        <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento"
+            title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal"
+            data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
+    </div>
+
+    <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su
+                        establecimiento.</p>
+                </div>
+                <div class="modal-footer custom-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal
+                        (click)="aceptar()">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <label for="rfc" class="form-label">RFC del responsable sanitario:</label>
+            <input type="text" class="form-control" formControlName="RFCResponsableSanitario"
+                id="RFCResponsableSanitario"
+                (change)="setValoresStore(datosDelEstablecimientoForm,'RFCResponsableSanitario', 'setRFCResponsableSanitario')">
+        </div>
+        <div class="col-md-8">
+            <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
+            <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" size="68"
+                (change)="setValoresStore(datosDelEstablecimientoForm,'razonSocial', 'setRazonSocial')">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="correoElectronico" class="form-label">Correo electrónico: <span
+                    class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
+                    data-bs-toggle="tooltip"></span></label>
+            <input type="text" class="form-control" formControlName="correoElectronico" id="correoElectronico"
+                maxlength="320"
+                (change)="setValoresStore(datosDelEstablecimientoForm,'correoElectronico', 'setCorreoElectronico')">
+        </div>
+    </div>
+</div>
+
+<!--Domicillo del establecimiento-->
+<ng-titulo titulo="Domicillo del establecimiento"></ng-titulo>
+
+<div [formGroup]="domicilloDelEstablecimientoForm">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="codigoPostal" class="form-label">Código postal*:</label>
+            <input type="text" name="codigoPostal" id="codigoPostal" class="form-control" formControlName="codigoPostal"
+                maxlength="12"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'codigoPostal', 'setCodigoPostal')">
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'" [required]="true"
+                name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="habilitarEstado"></app-catalogo-select>
+            <input type="hidden" name="clave" id="idClaveEntidadFederativa">
+        </div>
+        <div class="col-md-4">
+            <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
+            <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control"
+                formControlName="descripcionMunicipio" maxlength="120"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionMunicipio', 'setDescripcionMunicipio')">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="informacionExtra" class="form-label">Localidad*:</label>
+            <input type="text" name="informacionExtra" id="informacionExtra" class="form-control"
+                formControlName="informacionExtra" maxlength="120"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'informacionExtra', 'setInformacionExtra')">
+        </div>
+        <div class="col-md-4">
+            <label for="descripcionColonia" class="form-label">Colonia*:</label>
+            <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control"
+                formControlName="descripcionColonia" maxlength="120"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'descripcionColonia', 'setDescripcionColonia')">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill"
+                    title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote"
+                    data-bs-toggle="tooltip"></span></label>
+            <input type="text" name="calle" id="calle" class="form-control" formControlName="calle" maxlength="90"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'calle', 'setCalle')">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <label for="lada" class="form-label">Lada:</label>
+            <input type="text" name="lada" id="lada" class="form-control" formControlName="lada"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'lada', 'setLada')">
+        </div>
+        <div class="col-md-3">
+            <label for="telefono" class="form-label">Teléfono:</label>
+            <input type="text" name="telefono" id="telefono" class="form-control" formControlName="telefono"
+                maxlength="30" (change)="setValoresStore(domicilloDelEstablecimientoForm,'telefono', 'setTelefono')">
+        </div>
+    </div>
+    <div class="row">
+        <input type="hidden" id="original" name="original" />
+    </div>
+
+
+    <!--Datos S.C.I.A.N.-->
+
+    <label class="form-label scian">S.C.I.A.N.*:</label>
+
+    <ng-table [commonTableHeader]="scianHeaderData" [commonTableBody]="scianBodyData"></ng-table>
+
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 text-end">
+            <div class="btn-group">
+                <button class="btn btn-default me-1" type="button" id="btnScianEliminar">Eliminar</button>
+                <button type="button" class="btn btn-primary ms-2" id="btnScianAgregar" data-bs-toggle="modal"
+                    data-bs-target="#modalAddSCIAN" (click)="abrirDialogoAgregarDatosSCIAN()">
+                    Agregar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAddSCIAN" tabindex="-1" aria-labelledby="modalAddSCIANLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Clave S.C.I.A.N.</h4>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="scianForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <app-catalogo-select [catalogo]="claveScian" formControlName="cveSCIAN"
+                                    [label]="'Clave S.C.I.A.N.'" [required]="true" name="cveSCIAN"
+                                    (change)="claveScianSeleccion()"></app-catalogo-select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <app-catalogo-select [catalogo]="descripcionScian" formControlName="cveSCIANDescripcion" class="seleccion-solo-lectura"
+                                    [label]="'Descripción del S.C.I.A.N.'" name="cveSCIANDescripcion"></app-catalogo-select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer custom-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <button type="button" name="cancelar" class="btn btn-default" data-bs-dismiss="modal"
+                                    #closeModal>
+                                    Cancelar
+                                </button>
+                                <button type="button" name="limpiarSCIAN" class="btn btn-danger ms-2"
+                                    (click)="limpiarDatosSCIAN()">
+                                    Limpiar
+                                </button>
+                                <button type="button" name="agregar" class="btn btn-primary ms-2"
+                                    (click)="agregarDatosSCIAN()">
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="avisoFuncionamiento"
+                formControlName="avisoFuncionamiento"
+                (change)="setValoresStore(domicilloDelEstablecimientoForm,'avisoFuncionamiento', 'setAvisoFuncionamiento')">
+            <label class="form-check-label" for="avisoFuncionamiento">Aviso de funcionamiento:</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select [catalogo]="regimenes" formControlName="cveRegimenes"
+                [label]="'Régimen al que se destinará'" [required]="true" name="cveRegimenes"
+                (change)="regimenesSeleccion()"></app-catalogo-select>
+        </div>
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="aduanas" formControlName="cveAduanas" [label]="'Aduana'" [required]="true"
+                name="cveAduanas" (change)="aduanaSeleccion()"></app-catalogo-select>
+        </div>
+    </div>
+
+    <label class="form-label scian">Datos del producto*:</label>
+
+    <ng-table [commonTableHeader]="productoHeaderData" [commonTableBody]="productoBodyData"></ng-table>
+
+    <div class="row">
+        <div class="col-md-12 text-end">
+            <button type="button" class="btn btn-primary ms-2" name="agregarAduana" id="btnagregarAduana"
+                data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid2606()">
+                Agregar
+            </button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Datos mercancía</h4>
+                </div>
+                <div class="modal-body">
+                    <app-datos-mercancia></app-datos-mercancia>
+                </div>
+                <div class="modal-footer custom-footer">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <button type="button" name="limpiarSCIAN" class="btn btn-danger">
+                                    Limpiar
+                                </button>
+                                <button type="button" name="cancelar" class="btn btn-default ms-2"
+                                    data-bs-dismiss="modal" #closeModal>
+                                    Cancelar
+                                </button>
+                                <button type="button" name="agregar" class="btn btn-primary ms-2">
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Manifiestos y declaraciones-->
+<ng-titulo titulo="Manifiestos y declaraciones"></ng-titulo>
+
+<ng-container [formGroup]="manifiestosForm">
+    @for (manifiesto of manifiestos; let i = $index; track i) {
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info">
+                <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
+                    [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]" class="required"
+                    (change)="onManifiestoCheckboxCambiar($event, i)" />
+                <div class="manifiesto-descripcion">
+                    <label>* {{manifiesto.declaracion.descripcion}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <label class="form-label" for="informacionConfidencial">Los datos o anexos pueden contener información
+                confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'horizontal'"
+                formControlName="informacionConfidencial"
+                (change)="setValoresStore(manifiestosForm,'informacionConfidencial', 'setInformacionConfidencial')"
+                (valueChange)="enCambioDeValor()"></app-input-radio>
+        </div>
+    </div>
+</ng-container>
+
+<!--Representante legal-->
+<app-representante-legal></app-representante-legal>

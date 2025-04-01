@@ -14,7 +14,7 @@ export class DatosSolicitudService {
    * Usado para cargar información desde el frontend (assets).
    * @private
    */
-  private jsonUrl = 'assets/json/260204/domicilio.json';
+  private jsonUrl = 'assets/json/cofepris/domicilio.json';
 
   constructor(public httpServicios: HttpClient) {}
   /**
