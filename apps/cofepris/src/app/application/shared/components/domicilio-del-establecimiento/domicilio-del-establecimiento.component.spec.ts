@@ -3,8 +3,8 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DomicilioDelEstablecimientoComponent } from './domicilio-del-establecimiento.component';
 import { DatosService } from '../../../shared/services/datos.service';
-import { Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
+import { DomicilioStore } from '../../estados/stores/domicilio.store';
+import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 import { PreOperativo, ScianData } from '../../models/datos-modificacion.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
@@ -12,8 +12,8 @@ describe('DomicilioDelEstablecimientoComponent', () => {
   let component: DomicilioDelEstablecimientoComponent;
   let fixture: ComponentFixture<DomicilioDelEstablecimientoComponent>;
   let mockDatosService: jest.Mocked<DatosService>;
-  let mockTramiteStore: jest.Mocked<Tramite260603Store>;
-  let mockTramiteQuery: jest.Mocked<Tramite260603Query>;
+  let mockTramiteStore: jest.Mocked<DomicilioStore>;
+  let mockTramiteQuery: jest.Mocked<DomicilioQuery>;
 
   beforeEach(async () => {
     mockDatosService = {
@@ -29,7 +29,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     mockTramiteStore = {
       setCodigoPostal: jest.fn(),
       setEstado: jest.fn(),
-    } as unknown as jest.Mocked<Tramite260603Store>;
+    } as unknown as jest.Mocked<DomicilioStore>;
 
     mockTramiteQuery = {
       selectSolicitud$: of({
@@ -49,7 +49,7 @@ describe('DomicilioDelEstablecimientoComponent', () => {
         datosProducto: [],
         autorizacionIVAIEPS: 'Autorizacion1',
       }),
-    } as unknown as jest.Mocked<Tramite260603Query>;
+    } as unknown as jest.Mocked<DomicilioQuery>;
 
     await TestBed.configureTestingModule({
       imports: [
@@ -58,8 +58,8 @@ describe('DomicilioDelEstablecimientoComponent', () => {
       ],
       providers: [
         { provide: DatosService, useValue: mockDatosService },
-        { provide: Tramite260603Store, useValue: mockTramiteStore },
-        { provide: Tramite260603Query, useValue: mockTramiteQuery },
+        { provide: DomicilioStore, useValue: mockTramiteStore },
+        { provide: DomicilioQuery, useValue: mockTramiteQuery },
       ],
     }).compileComponents();
   });

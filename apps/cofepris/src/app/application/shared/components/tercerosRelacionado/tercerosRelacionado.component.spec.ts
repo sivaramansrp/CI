@@ -3,16 +3,16 @@ import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { TercerosRelacionadoComponent } from './tercerosRelacionado.component';
 import { ExportacionService } from '../../services/exportacion.service';
-import { Tramites260604Store } from '../../../shared/estados/stores/tramites260604.store';
-import { Tramites260604Query } from '../../../shared/estados/queries/tramites260604.query';
+import { ExportacionStore } from '../../estados/stores/exportacion.store';
+import { ExportacionQuery } from '../../../shared/estados/queries/exportacion.query';
 import { PermisoModel } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
 
 describe('TercerosRelacionadoComponent', () => {
   let component: TercerosRelacionadoComponent;
   let fixture: ComponentFixture<TercerosRelacionadoComponent>;
   let mockExportacionService: jest.Mocked<ExportacionService>;
-  let mockTramitesStore: jest.Mocked<Tramites260604Store>;
-  let mockTramitesQuery: jest.Mocked<Tramites260604Query>;
+  let mockTramitesStore: jest.Mocked<ExportacionStore>;
+  let mockTramitesQuery: jest.Mocked<ExportacionQuery>;
 
   beforeEach(async () => {
     mockExportacionService = {
@@ -22,7 +22,7 @@ describe('TercerosRelacionadoComponent', () => {
 
     mockTramitesStore = {
       setNombre: jest.fn(),
-    } as unknown as jest.Mocked<Tramites260604Store>;
+    } as unknown as jest.Mocked<ExportacionStore>;
 
     mockTramitesQuery = {
       selectSolicitud$: of({
@@ -40,15 +40,15 @@ describe('TercerosRelacionadoComponent', () => {
         telefono: '1234567890',
         correoElectronico: 'test@example.com',
       }),
-    } as unknown as jest.Mocked<Tramites260604Query>;
+    } as unknown as jest.Mocked<ExportacionQuery>;
 
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadoComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
         { provide: ExportacionService, useValue: mockExportacionService },
-        { provide: Tramites260604Store, useValue: mockTramitesStore },
-        { provide: Tramites260604Query, useValue: mockTramitesQuery },
+        { provide: ExportacionStore, useValue: mockTramitesStore },
+        { provide: ExportacionQuery, useValue: mockTramitesQuery },
       ],
     }).compileComponents();
   });
