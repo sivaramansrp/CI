@@ -43,6 +43,27 @@ const ROUTES: Routes = [
         './tramites/260213/permiso-sanitario-medicos-uso-personal.module'
       ).then((m) => m.PermisoSanitarioMedicosUsoPersonalModule),
   },
+  {
+    path: 'aviso-de-modificacion-module',
+    loadChildren: () =>
+      import('./tramites/260605/pantallas.module').then(
+        (m) => m.Pantallas260605Module
+      ),
+  },
+  {
+    path: 'importacion-productos',
+    loadChildren: () =>
+      import('./tramites/260101/importacion-productos.module').then(
+        (m) => m.ServiciosExtraordinariosModule
+      ),
+  },
+  {
+    path: 'aviso-sanitario',
+    loadChildren: () =>
+      import('./tramites/260601/aviso-sanitario.module').then(
+        (m) => m.AvisoSanitarioModule
+      ),
+  },
 ];
 
 @NgModule({

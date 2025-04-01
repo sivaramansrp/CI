@@ -1,16 +1,10 @@
-// import { withModuleFederation } from '@nx/angular/module-federation';
-// import config from './module-federation.config';
-
-// module.exports = withModuleFederation(config);
-
-
 const { ModuleFederationPlugin } = require('webpack').container;
 const mf = require('@angular-architects/module-federation/webpack');
 const path = require('path');
 const share = mf.share;
 const sharedMappings = new mf.SharedMappings();
 sharedMappings.register(path.join(__dirname, '../../tsconfig.base.json'), [
- /* mapped paths to share */
+ /* rutas mapeadas para compartir */
 ]);
 module.exports = {
  output: {
@@ -33,7 +27,7 @@ module.exports = {
    exposes: {
     './Module': 'apps/cofepris/src/app/application/app.module.ts',
    },
-   shared: share({ 
+   shared: share({
     '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
     '@angular/common/http': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
