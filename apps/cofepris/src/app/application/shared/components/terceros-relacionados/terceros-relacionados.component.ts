@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -23,11 +21,7 @@ import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.mo
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
  * @component TercerosRelacionadosComponent
@@ -47,7 +41,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosComponent {
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
@@ -88,12 +82,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   configuracionTablaFacturador: ConfiguracionColumna<Facturador>[] =
     FACTURADOR_ENCABEZADO_DE_TABLA;
 
-  /**
-   * @property {Subject<void>} destroy$
-   * Subject para cancelar suscripciones y evitar fugas de memoria.
-   * @private
-   */
-  private destroy$ = new Subject<void>();
+
 
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
@@ -113,64 +102,31 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query
   ) {}
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
    */
-  fabricanteTablaDatos: Fabricante[] = [];
+   @Input() fabricanteTablaDatos: Fabricante[]=[];
 
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
    * Datos de la tabla de destinatarios finales.
    */
-  destinatarioFinalTablaDatos: Destinatario[] = [];
+  @Input() destinatarioFinalTablaDatos: Destinatario[]=[];
 
   /**
    * @property {Proveedor[]} proveedorTablaDatos
    * Datos de la tabla de proveedores.
    */
-  proveedorTablaDatos: Proveedor[] = [];
+  @Input() proveedorTablaDatos: Proveedor[]=[];
 
   /**
    * @property {Facturador[]} facturadorTablaDatos
    * Datos de la tabla de facturadores.
    */
-  facturadorTablaDatos: Facturador[] = [];
-
-  /**
-   * @method ngOnInit
-   * @description Hook de ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe a los observables de cada tipo de tabla del store.
-   */
-  ngOnInit(): void {
-    this.tramiteQuery.getFabricanteTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.fabricanteTablaDatos = data;
-      });
-
-    this.tramiteQuery.getDestinatarioFinalTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.destinatarioFinalTablaDatos = data;
-      });
-
-    this.tramiteQuery.getProveedorTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.proveedorTablaDatos = data;
-      });
-
-    this.tramiteQuery.getFacturadorTablaDatos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.facturadorTablaDatos = data;
-      });
-  }
+  @Input() facturadorTablaDatos: Facturador[]=[];
 
   /**
    * @method irAAcciones
@@ -184,13 +140,5 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @method ngOnDestroy
-   * @description Hook de ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones activas.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+
 }
