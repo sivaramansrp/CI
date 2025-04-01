@@ -109,7 +109,14 @@ const ROUTES: Routes = [
     path: 'certi-registro',
       loadChildren: () =>
         import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
-  }
+  },
+  {
+    path: 'exencion-impuestos',
+    loadChildren: () =>
+      import('./tramites/10302/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  },
 ];
 
 @NgModule({
