@@ -71,7 +71,7 @@ describe('MercanciasModalComponent', () => {
     expect(component.parchearValoresDelFormulario).toHaveBeenCalled();
     expect(component.cargarFactura).toHaveBeenCalled();
     expect(component.cargarUmc).toHaveBeenCalled();
-    expect(component.store.setFormMercancia).toHaveBeenCalled();
+
   });
  
   it('should run #parchearValoresDelFormulario()', async () => {

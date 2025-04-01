@@ -6,13 +6,13 @@ import { MenusDesplegables } from '../../models/modificacion.enum';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-daos-certificado',
+  selector: 'app-datos-certificado-de',
   standalone: true,
   imports: [TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, CommonModule],
-  templateUrl: './daos-certificado.component.html',
-  styleUrl: './daos-certificado.component.scss'
+  templateUrl: './datos-certificado-de.component.html',
+  styleUrl: './datos-certificado-de.component.scss'
 })
-export class DaosCertificadoComponent implements OnDestroy, OnInit {
+export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   @Input() data!: MenusDesplegables[];
   @Input() idioma!: boolean;
   @Input() precisa!: boolean

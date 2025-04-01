@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DaosCertificadoComponent } from './daos-certificado.component';
+
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { ToastrService, provideToastr } from 'ngx-toastr';
+import { DatosCertificadoDeComponent } from './datos-certificado-de.component';
 
-describe('DaosCertificadoComponent', () => {
-  let component: DaosCertificadoComponent;
-  let fixture: ComponentFixture<DaosCertificadoComponent>;
+describe('DatosCertificadoDeComponent', () => {
+  let component: DatosCertificadoDeComponent;
+  let fixture: ComponentFixture<DatosCertificadoDeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -24,7 +25,7 @@ describe('DaosCertificadoComponent', () => {
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(DaosCertificadoComponent);
+    fixture = TestBed.createComponent(DatosCertificadoDeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angul
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
-import { DaosCertificadoComponent } from "../../../../shared/components/daos-certificado/daos-certificado.component";
+import { DatosCertificadoDeComponent } from "../../../../shared/components/datos-certificado-de/datos-certificado-de.component";
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
@@ -12,7 +12,7 @@ import { Tramite110202Store } from '../../estados/tramite110202.store';
 @Component({
   selector: 'app-datos-certificado',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, DaosCertificadoComponent],
+  imports: [ReactiveFormsModule, CommonModule, DatosCertificadoDeComponent],
   templateUrl: './datos-certificado.component.html',
   styleUrl: './datos-certificado.component.scss'
 })

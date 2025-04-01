@@ -98,6 +98,11 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario `mercanciaForm` con sus campos y validaciones.
+   * También parcha los valores del formulario con los datos seleccionados y carga las facturas y UMC.
+   */
   ngOnInit(): void {
     this.mercanciaForm = this.fb.group({
       fraccionArancelaria: [{ value: '', }],
@@ -117,18 +122,14 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       fechaFinal: ['', Validators.required]
     });
 
+    // Parchea los valores del formulario con los datos seleccionados
     this.parchearValoresDelFormulario();
+
+    // Carga las facturas disponibles
     this.cargarFactura();
+
+    // Carga las UMC disponibles
     this.cargarUmc();
-    this.mercanciaForm.valueChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe(value => {
-        if (!this.actualizandoFormulario) {
-          this.store.setFormMercancia(value);
-        }
-      });
   }
 
   /**
@@ -239,9 +240,10 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
    * También emite eventos relacionados con la tabla y el cierre del modal.
    */
   aceptar(): void {
+    // Guardar los datos del formulario en el store
+    this.store.setFormMercancia(this.mercanciaForm.value);
     // Emitir los datos del formulario al evento guardarClicado
     this.guardarClicado.emit(this.mercanciaForm.value);
-
     // Guardar los datos del formulario en el store
     this.store.setmercanciaTabla([this.mercanciaForm.value]);
 
