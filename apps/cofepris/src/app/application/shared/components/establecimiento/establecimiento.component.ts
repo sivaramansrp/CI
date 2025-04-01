@@ -1,4 +1,5 @@
 /**
+ * compodoc
  * @fileoverview Componente `EstablecimientoComponent`
  * Este componente gestiona el formulario relacionado con los datos del establecimiento,
  * incluyendo información sobre productos, países de origen, países de procedencia,
@@ -55,7 +56,10 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
 
 import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecimiento-seccion/datos-del-establecimiento-seccion.component';
-
+/**
+ * Componente `EstablecimientoComponent`
+ * Componente que gestiona los datos del establecimiento.
+ */
 @Component({
   selector: 'app-establecimiento',
   standalone: true,
@@ -75,6 +79,10 @@ import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecim
   templateUrl: './establecimiento.component.html',
   styleUrl: './establecimiento.component.scss',
 })
+/**
+ * compo doc
+* @description
+*/
 export class EstablecimientoComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
@@ -280,6 +288,7 @@ export class EstablecimientoComponent
     this.loadTipoProducto();
     this.loadUnidadDeMedida();
     this.loadUsoEspecifico();
+
 
     this.datosMercanciaForm = this.fb.group({
       nombreEspecifico: ['', Validators.required],

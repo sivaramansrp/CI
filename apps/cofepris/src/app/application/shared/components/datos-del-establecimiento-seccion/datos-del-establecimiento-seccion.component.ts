@@ -47,6 +47,12 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
   templateUrl: './Datos-del-establecimiento-seccion.component.html',
   styleUrl: './Datos-del-establecimiento-seccion.component.scss',
 })
+/*
+  * @description
+  * Clase que representa el componente de datos del establecimiento.
+  * Este componente gestiona la visualización y edición de los datos del establecimiento,
+  * incluyendo su denominación, razón social y correo electrónico.
+  */
 export class DatosDelEstablecimientoSeccionComponent
   implements OnInit, AfterViewInit, OnDestroy
 {

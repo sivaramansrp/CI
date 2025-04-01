@@ -1,4 +1,5 @@
 /**
+ * compodoc
  * @fileoverview Componente `DomicillioDelEstablecimientoSeccionComponent`
  * Este componente gestiona el formulario relacionado con el domicilio del establecimiento,
  * incluyendo datos como el estado, código postal, municipio, localidad, colonia, calle, teléfono,
@@ -39,7 +40,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
-
+/* 
+* @description
+* Componente que gestiona el domicilio del establecimiento.
+*/
 @Component({
   selector: 'app-domicillio-del-establecimiento-seccion',
   standalone: true,

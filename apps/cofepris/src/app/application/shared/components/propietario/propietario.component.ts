@@ -44,7 +44,9 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 import { PropietarioModel } from '../../models/datos-de-la-solicitud.model';
 
 import { EstablecimientoComponent } from '../establecimiento/establecimiento.component';
-
+/*
+* @description
+*/ 
 @Component({
   selector: 'app-propietario',
   standalone: true,
