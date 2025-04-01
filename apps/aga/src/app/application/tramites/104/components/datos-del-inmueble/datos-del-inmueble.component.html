@@ -56,33 +56,27 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Agregar Dirección</h4>
+                    <h4 class="modal-title">Agregar</h4>
                 </div>
                 <div class="modal-body">
                     <form [formGroup]="formularioDireccion">
 
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="calleInput" class="form-label">Calle</label>
                                     <input type="text" class="form-control" id="calleInput" formControlName="calle"
                                         placeholder="Ingrese Calle" />
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="numeroExteriorInput" class="form-label">Número Exterior</label>
                                     <input type="text" class="form-control" id="numeroExteriorInput"
                                         formControlName="numeroExterior" placeholder="Ingrese Número Exterior" />
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="numeroInteriorInput" class="form-label">Número Interior</label>
                                     <input type="text" class="form-control" id="numeroInteriorInput"
@@ -100,9 +94,6 @@
                                     </app-catalogo-select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[1].catalogos"
@@ -122,31 +113,22 @@
                                     </app-catalogo-select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[3].catalogos" formControlName="colonia"
-                                        [label]="'Colonia'" [required]="true">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[3].catalogos"
+                                        formControlName="colonia" [label]="'Colonia'" [required]="true">
                                     </app-catalogo-select>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Localidad (Dropdown using app-catalogo-select) -->
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[4].catalogos" formControlName="localidad"
-                                        [label]="'Localidad'" [required]="true">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[4].catalogos"
+                                        formControlName="localidad" [label]="'Localidad'" [required]="true">
                                     </app-catalogo-select>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Código Postal -->
-                        <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="codigoPostalInput" class="form-label">Código Postal</label>
@@ -155,7 +137,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </form>
                 </div>
                 <div class="modal-footer custom-footer justify-content-center">
