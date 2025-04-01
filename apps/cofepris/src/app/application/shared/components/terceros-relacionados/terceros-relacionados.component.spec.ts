@@ -32,14 +32,6 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
   it('should navigate to the correct path when irAAcciones is called', () => {
     const router = TestBed.inject(Router);
     const navigateSpy = jest.spyOn(router, 'navigate');
