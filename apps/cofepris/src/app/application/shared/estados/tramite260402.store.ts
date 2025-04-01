@@ -4,7 +4,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 import { catalogoResponse } from '@libs/shared/data-access-user/src';
 
-export interface Tramite260402State {
+export interface TramiteEntradaHumanaState {
   selectedEstado: catalogoResponse | null;
   setClave: catalogoResponse | null,
   setBanco:catalogoResponse|null,
@@ -15,7 +15,7 @@ export interface Tramite260402State {
   setImporteDePago:string
 }
 
-export function createInitialState(): Tramite260402State {
+export function createInitialState(): TramiteEntradaHumanaState {
   return {
     selectedEstado: null,
     setClave: null,
@@ -31,7 +31,7 @@ export function createInitialState(): Tramite260402State {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'estadoState', resettable: true })
-export class Tramite260402Store extends Store<Tramite260402State> {
+export class TramiteEntradaHumanaStore extends Store<TramiteEntradaHumanaState> {
   constructor() {
     super(createInitialState());
   }

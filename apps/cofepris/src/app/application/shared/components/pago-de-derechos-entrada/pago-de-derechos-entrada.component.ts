@@ -12,9 +12,9 @@ import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoRespo
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { Tramite260402Store } from '../../estados/tramite260402.store';
+import { TramiteEntradaHumanaStore } from '../../estados/tramite260402.store';
 
-import { Tramite260402Query } from '../../estados/tramite260402.query';
+import { TramiteEntradaHumanaQuery } from '../../estados/tramite260402.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { FECHA_PAGO } from '../../constantes/entrada-humana.enum';
@@ -45,26 +45,26 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * @observable selectedBanco$
    * @description Observable que representa el banco seleccionado en el contexto del componente.
    * @type {Observable<catalogoResponse | null>}
-   * @remarks Este observable se suscribe al estado del query `tramite260402Query` 
+   * @remarks Este observable se suscribe al estado del query `tramiteEntradaHumanaQuery` 
    * para obtener el banco seleccionado. Puede emitir un valor de tipo `catalogoResponse` 
    * o `null` si no hay un banco seleccionado.
    */
   selectedBanco$: Observable<catalogoResponse | null> =
-    this.tramite260402Query.selectedBanco$;
+    this.tramiteEntradaHumanaQuery.selectedBanco$;
   
   /**
    * @observable claveDeReferncia$
    * @description Representa un observable que emite la clave de referencia seleccionada
    * en el contexto del trámite 260402.
    */
-  claveDeReferncia$ = this.tramite260402Query.selectedClaveDeReferncia$
+  claveDeReferncia$ = this.tramiteEntradaHumanaQuery.selectedClaveDeReferncia$
 
   /**
    * @observable cadenaDeLaDependencia$
    * @description Representa un observable que emite la cadena de la dependencia seleccionada
    * en el contexto del trámite 260402.
    */
-  cadenaDeLaDependencia$ = this.tramite260402Query.selectedCadenaDeLaDependencia$
+  cadenaDeLaDependencia$ = this.tramiteEntradaHumanaQuery.selectedCadenaDeLaDependencia$
 
   /**
    * @observable llaveDePago$
@@ -72,13 +72,13 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * en el contexto del trámite 260402. Este flujo de datos se utiliza 
    * para rastrear y reaccionar a los cambios en la llave de pago seleccionada.
    */
-  llaveDePago$ = this.tramite260402Query.selectedLlaveDePago$
+  llaveDePago$ = this.tramiteEntradaHumanaQuery.selectedLlaveDePago$
 
   /**
    * @descripcion Un observable que emite la fecha de pago seleccionada
-   * desde el estado del query `tramite260402Query`.
+   * desde el estado del query `tramiteEntradaHumanaQuery`.
    */
-  fechaDePago$ = this.tramite260402Query.selectedFechaDePago$
+  fechaDePago$ = this.tramiteEntradaHumanaQuery.selectedFechaDePago$
 
   /**
    * @observable importeDePago$
@@ -86,7 +86,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * en el contexto del trámite 260402. Este observable se utiliza para
    * rastrear y reaccionar a los cambios en el importe de pago asociado.
    */
-  importeDePago$ = this.tramite260402Query.selectedImporteDePago$
+  importeDePago$ = this.tramiteEntradaHumanaQuery.selectedImporteDePago$
 
 
   /**
@@ -112,8 +112,8 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private pagoDeDerechosService: PagoDeDerechosEntradaService,
-    private tramite260402Store: Tramite260402Store,
-    private tramite260402Query: Tramite260402Query
+    private tramiteEntradaHumanaStore: TramiteEntradaHumanaStore,
+    private tramiteEntradaHumanaQuery: TramiteEntradaHumanaQuery
 
   ) { 
      //La lógica del constructor se puede agregar aquí si es necesario
@@ -184,68 +184,68 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza el valor de claveDeReferncia en el tramite260402Store.
+   * Actualiza el valor de claveDeReferncia en el tramiteEntradaHumanaStore.
    * 
    * Este método obtiene el valor de 'claveDeReferncia' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260402Store'.
+   * 'pagoDerechos' y lo establece en el 'tramiteEntradaHumanaStore'.
    * 
    * @comdoc
    */
   updateClaveDeReferncia(): void {
     const CORREO = this.pagoDerechos.get('claveDeReferncia')?.value;
-    this.tramite260402Store.setClaveDeReferncia(CORREO);
+    this.tramiteEntradaHumanaStore.setClaveDeReferncia(CORREO);
   }
 
   /**
-   * Actualiza el valor de cadenaDeLaDependencia en el tramite260402Store.
+   * Actualiza el valor de cadenaDeLaDependencia en el tramiteEntradaHumanaStore.
    * 
    * Este método obtiene el valor de 'cadenaDeLaDependencia' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260402Store'.
+   * 'pagoDerechos' y lo establece en el 'tramiteEntradaHumanaStore'.
    * 
    * @comdoc
    */
   updateCadenaDeLaDependencia(): void {
     const CORREO = this.pagoDerechos.get('cadenaDeLaDependencia')?.value;
-    this.tramite260402Store.setCadenaDeLaDependencia(CORREO);
+    this.tramiteEntradaHumanaStore.setCadenaDeLaDependencia(CORREO);
   }
 
   /**
-   * Actualiza el valor de llaveDePago en el tramite260402Store.
+   * Actualiza el valor de llaveDePago en el tramiteEntradaHumanaStore.
    * 
    * Este método obtiene el valor de 'llaveDePago' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260402Store'.
+   * 'pagoDerechos' y lo establece en el 'tramiteEntradaHumanaStore'.
    * 
    * @comdoc
    */
   updateLlaveDePago(): void {
     const CORREO = this.pagoDerechos.get('llaveDePago')?.value;
-    this.tramite260402Store.setLlaveDePago(CORREO);
+    this.tramiteEntradaHumanaStore.setLlaveDePago(CORREO);
   }
 
   /**
-   * Actualiza el valor de fechaDePago en el tramite260402Store.
+   * Actualiza el valor de fechaDePago en el tramiteEntradaHumanaStore.
    * 
    * Este método obtiene el valor de 'fechaDePago' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260402Store'.
+   * 'pagoDerechos' y lo establece en el 'tramiteEntradaHumanaStore'.
    * 
    * @comdoc
    */
   updateFechaDePago(): void {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
-    this.tramite260402Store.setFechaDePago(CORREO);
+    this.tramiteEntradaHumanaStore.setFechaDePago(CORREO);
   }
   
   /**
-   * Actualiza el valor de importeDePago en el tramite260402Store.
+   * Actualiza el valor de importeDePago en el tramiteEntradaHumanaStore.
    * 
    * Este método obtiene el valor de 'importeDePago' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260402Store'.
+   * 'pagoDerechos' y lo establece en el 'tramiteEntradaHumanaStore'.
    * 
    * @comdoc
    */
   updateImporteDePago(): void {
     const CORREO = this.pagoDerechos.get('importeDePago')?.value;
-    this.tramite260402Store.setImporteDePago(CORREO);
+    this.tramiteEntradaHumanaStore.setImporteDePago(CORREO);
   }
 
   /**
@@ -253,7 +253,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
  */
   getMunicipios(): void {
     const SELECTED_BANCO = this.pagoDerechos.get('banco')?.value;
-    this.tramite260402Store.setBanco(SELECTED_BANCO);
+    this.tramiteEntradaHumanaStore.setBanco(SELECTED_BANCO);
   }
 
     /**
@@ -267,7 +267,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       this.pagoDerechos.patchValue({
         fechaDePago: nuevo_valor,
       });
-      this.tramite260402Store.setFechaDePago(nuevo_valor);
+      this.tramiteEntradaHumanaStore.setFechaDePago(nuevo_valor);
     }
 
   /*
