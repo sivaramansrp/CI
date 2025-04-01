@@ -5,6 +5,9 @@
         @if(tipoSeleccionTabla === TablaSeleccion.RADIO) {
           <th></th>
         }
+        @if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
+          <th></th>
+        }
         @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
           <th>
             <input 
@@ -55,6 +58,17 @@
             />
           </td>
   
+         }
+
+         @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
+          <td>
+          <button id="button" class="cursor-pointer btn btn-primary"
+              type="button" 
+              name="filaSeleccionada" 
+              [value]="i" 
+              (click)="cambiarValor(fila)"
+              aria-label="Seleccionar">BAJA</button>
+          </td>
          }
         
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
