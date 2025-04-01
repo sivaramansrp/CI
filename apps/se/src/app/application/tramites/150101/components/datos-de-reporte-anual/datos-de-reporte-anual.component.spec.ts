@@ -7,7 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
-import { DatosDeReporteAnnualComponent } from './datos-de-reporte-annual.component';
+import { DatosDeReporteAnnualComponent } from './datos-de-reporte-anual.component';
 import { FormBuilder } from '@angular/forms';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';

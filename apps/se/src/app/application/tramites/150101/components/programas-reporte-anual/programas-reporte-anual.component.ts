@@ -32,9 +32,9 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
  * @implements OnInit, OnDestroy
  */
 @Component({
-  selector: 'app-programas-reporte-annual',
-  templateUrl: './programas-reporte-annual.component.html',
-  styleUrl: './programas-reporte-annual.component.scss',
+  selector: 'app-programas-reporte-anual',
+  templateUrl: './programas-reporte-anual.component.html',
+  styleUrl: './programas-reporte-anual.component.scss',
 })
 export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
@@ -88,7 +88,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    */
   solicitudConfiguracionTabla: ConfiguracionColumna<ProgramasReporte>[] = [
     {
-      encabezado: 'Numero/Registro de programa',
+      encabezado: 'Número/Registro de programa',
       clave: (item: ProgramasReporte) => item.folioPrograma,
       orden: 1,
     },
@@ -191,7 +191,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerProgramasReporte(): void {
-    this.solicitudService.obtenerProgramasReporte().subscribe({
+    this.solicitudService.obtenerProgramasReporte().pipe(takeUntil(this.destroyed$)).subscribe({
       next: (respuesta: ProgramasReporte[]) => {
         this.solicitudDatos = respuesta;
       },

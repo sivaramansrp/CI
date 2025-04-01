@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProgramasReporteAnnualComponent } from './programas-reporte-annual.component';
+import { ProgramasReporteAnnualComponent } from './programas-reporte-anual.component';
 import { FormBuilder } from '@angular/forms';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';

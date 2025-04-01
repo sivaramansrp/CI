@@ -12,9 +12,9 @@ import { map, takeUntil } from 'rxjs';
  * @description Este componente es responsable de manejar los datos y el formulario del reporte anual.
  */
 @Component({
-  selector: 'app-datos-de-reporte-annual',
-  templateUrl: './datos-de-reporte-annual.component.html',
-  styleUrl: './datos-de-reporte-annual.component.scss',
+  selector: 'app-datos-de-reporte-anual',
+  templateUrl: './datos-de-reporte-anual.component.html',
+  styleUrl: './datos-de-reporte-anual.component.scss',
 })
 export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /**

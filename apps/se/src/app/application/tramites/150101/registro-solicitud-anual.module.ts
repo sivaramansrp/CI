@@ -3,11 +3,11 @@ import { AcusePageComponent } from './components/acuse-page/acuse-page.component
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosDeReporteAnnualComponent } from './components/datos-de-reporte-annual/datos-de-reporte-annual.component';
+import { DatosDeReporteAnnualComponent } from './components/datos-de-reporte-anual/datos-de-reporte-anual.component';
 import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { ProgramasReporteAnnualComponent } from './components/programas-reporte-annual/programas-reporte-annual.component';
+import { ProgramasReporteAnnualComponent } from './components/programas-reporte-anual/programas-reporte-anual.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ReporteAnualRoutingModule } from './registro-solicitud-anual-routing.module';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
