@@ -1,7 +1,11 @@
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component,OnDestroy, OnInit } from '@angular/core';
+
+import { Subject } from 'rxjs';
+
+import { takeUntil } from 'rxjs';
 
 import {
   FormBuilder,
@@ -38,7 +42,7 @@ import { TablaDatos } from '../../models/aviso-siglos.models';
 import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
 
 export interface ObraTablaDatos {
-columns : string[];
+  columns: string[];
 }
 
 /**
@@ -83,7 +87,10 @@ const OBRA_DE_ARTE_ALERT =
  * Componente que gestiona los datos relacionados con la solicitud de trámite.
  * Proporciona funcionalidad para mostrar información de tablas, modales y formularios.
  */
-export class DatosDeLaSolicitudComponent implements OnInit {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  /** Subject para destruir el componente */
+  private destroy$ = new Subject<void>();
+
   /**
    * @property {boolean} showTableDiv
    * @description
@@ -251,63 +258,82 @@ export class DatosDeLaSolicitudComponent implements OnInit {
      * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
      * Actualiza la propiedad `tablaObraDeArteData` con los datos recibidos.
      */
-    this.solicitudService.getObraDeArteTabla().subscribe((data: ObraTablaDatos) => {
-      this.tablaObraDeArteData = data.columns;
-    });
+    this.solicitudService
+      .getObraDeArteTabla()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: ObraTablaDatos) => {
+        this.tablaObraDeArteData = data.columns;
+      });
 
     /**
      * Obtiene los datos de operación desde el servicio y los asigna a `operacionData`.
      */
-    this.solicitudService.getOperacionData().subscribe((data) => {
+    this.solicitudService.getOperacionData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.operacionData = data;
     });
 
     /**
      * Obtiene los datos de movimiento desde el servicio y los asigna a `movimientoData`.
      */
-    this.solicitudService.getMovimientoData().subscribe((data) => {
+    this.solicitudService.getMovimientoData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.movimientoData = data;
     });
 
     /**
      * Obtiene los datos de país desde el servicio y los asigna a `paisData`.
      */
-    this.solicitudService.getPaisData().subscribe((data) => {
+    this.solicitudService.getPaisData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.paisData = data;
     });
 
     /**
      * Obtiene los datos de transporte desde el servicio y los asigna a `transporteData`.
      */
-    this.solicitudService.getTransporteData().subscribe((data) => {
+    this.solicitudService.getTransporteData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.transporteData = data;
     });
 
     /**
      * Obtiene los datos de aduana desde el servicio y los asigna a `aduanaData`.
      */
-    this.solicitudService.getAduanaData().subscribe((data) => {
+    this.solicitudService.getAduanaData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.aduanaData = data;
     });
 
     /**
      * Obtiene los datos de motivo desde el servicio y los asigna a `motivoData`.
      */
-    this.solicitudService.getMotivoData().subscribe((data) => {
+    this.solicitudService.getMotivoData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.motivoData = data;
     });
 
     /**
      * Obtiene los datos de moneda desde el servicio y los asigna a `monedaData`.
      */
-    this.solicitudService.getMonedaData().subscribe((data) => {
+    this.solicitudService.getMonedaData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.monedaData = data;
     });
 
     /**
      * Obtiene los datos de fracciones arancelarias desde el servicio y los asigna a `arancelariaData`.
      */
-    this.solicitudService.getArancelariaData().subscribe((data) => {
+    this.solicitudService.getArancelariaData()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
       this.arancelariaData = data;
     });
 
@@ -1113,5 +1139,12 @@ export class DatosDeLaSolicitudComponent implements OnInit {
      */
     this.showTableDiv = !this.showTableDiv;
     this.showObraDeArteModal = !this.showObraDeArteModal;
+  }
+  /*
+   * Método del ciclo de vida de Angular - destruye el componente
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
