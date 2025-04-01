@@ -4,7 +4,7 @@ import { Query } from '@datorama/akita';
 import { Solicitud110208State, Tramite110208Store } from '../tramites/tramite110208.store';
 
 /**
- * Service to query the state of Solicitud31601.
+ * Servicio para consultar el estado de la Solicitud31601.
  */
 @Injectable({ providedIn: 'root' })
 export class Tramite110208Query extends Query<Solicitud110208State> {
@@ -18,7 +18,7 @@ export class Tramite110208Query extends Query<Solicitud110208State> {
   });
 
   /**
-   * Constructor for Tramite110208Store.
+   * Constructor para Tramite110208Store.
    * @param {Tramite110208Store} store - The store that holds the state of Solicitud110208.
    */
   constructor(

@@ -101,4 +101,117 @@ export const MERCANCIA_TABLA = [
         orden: 6,
     },
 ];
+
+export interface RespuestaTabla {
+    /**
+     * Código de respuesta.
+     */
+    code: number;
+    /**
+     * Datos de la tabla NICO.
+     */
+    data: MercanciasInfo[];
+    /**
+     * Mensaje de la respuesta.
+     */
+    message: string;
+}
+
+
+/**
+ * Interfaz que representa la información del formulario de mercancías.
+ */
+export interface MercanciasFormInfo {
+    /**
+     * Fracción arancelaria de la mercancía.
+     */
+    fraccionArancelaria: string;
+  
+    /**
+     * Nombre comercial de la mercancía.
+     */
+    nombreComercial: string;
+  
+    /**
+     * Nombre técnico de la mercancía.
+     */
+    nombreTecnio: string;
+  
+    /**
+     * Nombre en inglés de la mercancía.
+     */
+    nombreEnIngles: string;
+  
+    /**
+     * Criterio para la mercancía.
+     */
+    criterioPara: string;
+  
+    /**
+     * Marca de la mercancía.
+     */
+    marca: string;
+  
+    /**
+     * Unidad de medida comercial (UMC) de la mercancía.
+     */
+    umc: string;
+  
+    /**
+     * Cantidad de la mercancía.
+     */
+    cantidad: string;
+  
+    /**
+     * Valor de la mercancía.
+     */
+    valorDeLa: string;
+  
+    /**
+     * Descripción complementaria de la mercancía.
+     */
+    complementoDescripcion: string;
+  
+    /**
+     * Número de factura asociado a la mercancía.
+     */
+    nFactura: string;
+}
+
+/**
+ * Interfaz que representa la respuesta de los datos.
+ */
+export interface RespuestaDatos {
+    /**
+     * Código de respuesta.
+     */
+    code: number;
+    /**
+     * Datos de la tabla NICO.
+     */
+    data: MercanciasFormInfo[];
+    /**
+     * Mensaje de la respuesta.
+     */
+    message: string;
+}
+
+
+/**
+ * Interfaz que representa la respuesta de la tabla de certificado.
+ */
+export interface RespuestaTablaCertificado {
+    /**
+     * Código de respuesta.
+     */
+    code: number;
+    /**
+     * Datos de la tabla NICO.
+     */
+    data: NicoInfo[];
+    /**
+     * Mensaje de la respuesta.
+     */
+    message: string;
+  }
    

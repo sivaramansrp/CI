@@ -11,24 +11,6 @@ import { Tramite110208Query } from '../../../../estados/queries/tramite110208.qu
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
 /**
- * Interfaz que representa la respuesta de la tabla de certificado.
- */
-export interface RespuestaTablaCertificado {
-  /**
-   * Código de respuesta.
-   */
-  code: number;
-  /**
-   * Datos de la tabla NICO.
-   */
-  data: NicoInfo[];
-  /**
-   * Mensaje de la respuesta.
-   */
-  message: string;
-}
-
-/**
  * Componente que gestiona el formulario y la lógica del certificado de origen.
  */
 @Component({

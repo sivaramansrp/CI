@@ -1,9 +1,8 @@
-import { RespuestaDatos, RespuestaTabla } from '../../components/cargaDeMercancias/cargaDeMercancias.component';
+import { RespuestaDatos, RespuestaTabla, RespuestaTablaCertificado } from '@libs/shared/data-access-user/src/core/models/110208/certificado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RespuestaTablaCertificado } from '../../components/certificado-origen/certificado-origen.component';
 
 /**
  * Servicio para validar inicialmente los datos relacionados con el trámite 110208.
