@@ -71,8 +71,9 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
   public constructor(
     protected readonly formBuilder: FormBuilder,
     public router: Router
-  ) {// El constructor se utiliza para la inyección de dependencias.
-    }
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
