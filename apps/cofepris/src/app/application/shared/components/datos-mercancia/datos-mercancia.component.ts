@@ -37,16 +37,24 @@ import { Observable } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
     CrosslistComponent,
-    DetalleMercanciaComponent
+    DetalleMercanciaComponent,
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
   providers: [DatosSolicitudService],
 })
 export class DatosMercanciaComponent implements OnInit {
-
+  /**
+   * @property {boolean} detalleMercancia
+   * Indica si el componente debe mostrar detalles de mercancía.
+   * Se utiliza para determinar la configuración del formulario y la tabla.
+   */
   @Input() detalleMercancia = false;
 
+  /**
+   * @property {DetalleMercancia} datosDetalleMercancia
+   * Datos de detalle de la mercancía recibidos como entrada.
+   */
   @Input() datosTablaDetalleMercancia!: Observable<DetalleMercancia[]>;
   /**
    * @property {FormGroup} mercanciaForm
@@ -67,15 +75,56 @@ export class DatosMercanciaComponent implements OnInit {
   @Output() mercanciaSeleccionado: EventEmitter<TablaMercanciasDatos> =
     new EventEmitter<TablaMercanciasDatos>();
 
-  @Output() aggregarMercanciaDatos: EventEmitter<DetalleMercancia> = new EventEmitter<DetalleMercancia>(true);
-  @Output() eliminarMercanciaDatos: EventEmitter<DetalleMercancia[]> = new EventEmitter<DetalleMercancia[]>(true);
+  /**
+   * @event aggregarMercanciaDatos
+   * @description EventEmitter that emits a single merchandise item to be added.
+   * This is used to notify the parent component about the addition of a new merchandise item.
+   */
+  @Output() aggregarMercanciaDatos: EventEmitter<DetalleMercancia> =
+    new EventEmitter<DetalleMercancia>(true);
 
-  /** Catálogos de datos para los diferentes campos del formulario */
+  /**
+   * @event eliminarMercanciaDatos
+   * @description EventEmitter that emits an array of merchandise items to be deleted.
+   * This is used to notify the parent component about the deletion of selected merchandise items.
+   */
+  @Output() eliminarMercanciaDatos: EventEmitter<DetalleMercancia[]> =
+    new EventEmitter<DetalleMercancia[]>(true);
+
+  /**
+   * @property {Catalogo[]} clasificacionProductoDatos
+   * @description Catalog of product classifications used to populate the form.
+   */
   public clasificacionProductoDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} especificarClasificacionProductoDatos
+   * @description Catalog of specific product classifications used to populate the form.
+   */
   public especificarClasificacionProductoDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} tipoProductoDatos
+   * @description Catalog of product types used to populate the form.
+   */
   public tipoProductoDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} formaFarmaceuticaDatos
+   * @description Catalog of pharmaceutical forms used to populate the form.
+   */
   public formaFarmaceuticaDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} estadoFisicoDatos
+   * @description Catalog of physical states used to populate the form.
+   */
   public estadoFisicoDatos!: Catalogo[];
+
+  /**
+   * @property {Catalogo[]} cantidadUmcDatos
+   * @description Catalog of commercial unit quantities used to populate the form.
+   */
   public cantidadUmcDatos!: Catalogo[];
 
   /**
@@ -303,9 +352,13 @@ export class DatosMercanciaComponent implements OnInit {
       ],
     });
 
-    if(this.detalleMercancia) {
-      this.mercanciaForm.removeControl('formaFarmaceutica', {emitEvent: false})
-      this.mercanciaForm.removeControl('denominacionDistintiva', {emitEvent: false})
+    if (this.detalleMercancia) {
+      this.mercanciaForm.removeControl('formaFarmaceutica', {
+        emitEvent: false,
+      });
+      this.mercanciaForm.removeControl('denominacionDistintiva', {
+        emitEvent: false,
+      });
     }
   }
 
@@ -413,12 +466,28 @@ export class DatosMercanciaComponent implements OnInit {
   cancelar(): void {
     this.ubicaccion.back();
   }
+  /**
+   * @method aggregarMercancia
+   * @description Emits an event to add a new merchandise item.
+   * This method is used to notify the parent component about the addition of a new merchandise item.
+   *
+   * @param {DetalleMercancia} datos - The details of the merchandise to be added.
+   * @returns {void} This method does not return any value.
+   */
 
-  aggregarMercancia(datos: DetalleMercancia) : void {
-    this.aggregarMercanciaDatos.emit(datos)
+  aggregarMercancia(datos: DetalleMercancia): void {
+    this.aggregarMercanciaDatos.emit(datos);
   }
 
-  eliminarMercancia(datos: DetalleMercancia[]) : void {
-    this.eliminarMercanciaDatos.emit(datos)
+  /**
+   * @method eliminarMercancia
+   * @description Emits an event to delete one or more merchandise items.
+   * This method is used to notify the parent component about the deletion of selected merchandise items.
+   *
+   * @param {DetalleMercancia[]} datos - An array of merchandise details to be deleted.
+   * @returns {void} This method does not return any value.
+   */
+  eliminarMercancia(datos: DetalleMercancia[]): void {
+    this.eliminarMercanciaDatos.emit(datos);
   }
 }

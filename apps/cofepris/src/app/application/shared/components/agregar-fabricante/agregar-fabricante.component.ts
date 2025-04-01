@@ -61,7 +61,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {Catalogo[]} paisesDatos
    */
   public paisesDatos: Catalogo[] = [];
-  
+
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -117,7 +117,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * Emite un evento con la lista de fabricantes actualizada.
    * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
    */
-  @Output() updateFabricanteTablaDatos= new EventEmitter<Fabricante[]>();
+  @Output() updateFabricanteTablaDatos = new EventEmitter<Fabricante[]>();
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.
@@ -134,7 +134,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
     private datosSolicitudService: DatosSolicitudService
   ) {
     this.agregarFabricanteForm = this.fb.group({
-      nacionalidad: ['Nacional', Validators.required],
+      nacionalidad: [this.nacionalStr, Validators.required],
       tipoPersona: ['', Validators.required],
       rfc: ['', Validators.required],
       curp: ['', Validators.required],
@@ -252,31 +252,30 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
       });
   }
 
- 
-   /**
- * @method limpiarFormulario
- * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
-   limpiarFormulario(): void {
+  /**
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  limpiarFormulario(): void {
     this.agregarFabricanteForm.reset();
   }
-/**
- * @method cancelar
- * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
-  cancelar():void{
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
     this.ubicaccion.back();
   }
 
-   /**
+  /**
    * Hook que se ejecuta al destruir el componente.
    * Envía un valor al Subject `unsubscribe$` y lo completa para liberar suscripciones.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
