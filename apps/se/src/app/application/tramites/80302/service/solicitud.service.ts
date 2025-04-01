@@ -50,20 +50,42 @@ export class SolicitudService {
     );
   }
 
+    /**
+     * Obtiene una lista de objetos de tipo `Complimentaria` desde un archivo JSON local.
+     * 
+     * @returns Un observable que emite un arreglo de objetos `Complimentaria`.
+     */
     obtenerComplimentaria(): Observable<Complimentaria[]> {
     return this.http
       .get<Complimentaria[]>('assets/json/80302/complimentaria.json').pipe(map((res: any) => res.data));
   }
 
+  /**
+   * Obtiene una lista de anexos desde un archivo JSON localizado en los activos.
+   *
+   * @returns {Observable<Anexo[]>} Un observable que emite un arreglo de objetos de tipo Anexo.
+   */
   obtenerAnexo(): Observable<Anexo[]> {
     return this.http
       .get<Anexo[]>('assets/json/80302/anexo.json').pipe(map((res: any) => res.data));
   }
 
+  /**
+   * Obtiene la lista de federatarios desde un archivo JSON local.
+   * 
+   * @returns Un observable que emite un arreglo de objetos de tipo `Federetarios`.
+   */
   obtenerFederetarios(): Observable<Federetarios[]> {
     return this.http
       .get<Federetarios[]>('assets/json/80302/federetarios.json').pipe(map((res: any) => res.data));
   }
+  
+  /**
+   * Obtiene una lista de operaciones desde un archivo JSON local.
+   *
+   * @returns Un observable que emite un arreglo de objetos de tipo `Operacions`.
+   * El archivo JSON se encuentra en la ruta `assets/json/80302/operacion.json`.
+   */
   obtenerOperacion(): Observable<Operacions[]> {
     return this.http
       .get<Operacions[]>('assets/json/80302/operacion.json').pipe(map((res: any) => res.data));
