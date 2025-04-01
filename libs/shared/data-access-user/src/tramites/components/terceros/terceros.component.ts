@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TercerosState, TercerosStore } from '../../../core/estados/terceros.store';
@@ -16,7 +16,7 @@ import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directi
   imports: [CommonModule, ReactiveFormsModule, FormsModule, TituloComponent, UppercaseDirective],
   styleUrl: './terceros.component.scss',
 })
-export class TercerosComponent implements OnInit {
+export class TercerosComponent implements OnInit, OnDestroy {
   @Input({ required: true }) tabindex!: number;
 
   public FormPersona: FormGroup = this.fb.group({
@@ -71,5 +71,10 @@ export class TercerosComponent implements OnInit {
   eliminar(i: number) {
     this.personas.splice(i, 1);
     this.tercerosStore.setTerceros(this.personas);
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

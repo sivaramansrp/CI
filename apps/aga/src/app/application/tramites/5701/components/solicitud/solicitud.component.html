@@ -4,7 +4,7 @@
   <form [formGroup]="FormSolicitud">
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
+        <app-catalogo-select [catalogo]="tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo de solicitud'"
           [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
       </div>
     </div>
@@ -62,19 +62,19 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="rfcImportExport">RFC*:</label>
-            <input class="form-control" id="rfcImportExport" placeholder="RFC" type="text"
-              formControlName="rfcImportExport" [ngClass]="
-                  isValid(datosImportadorExportador, 'rfcImportExport')
+            <label class="form-label" for="RFCImpExp">RFC*:</label>
+            <input class="form-control" id="RFCImpExp" placeholder="RFC" type="text"
+              formControlName="RFCImpExp" [ngClass]="
+                  isValid(datosImportadorExportador, 'RFCImpExp')
                     ? 'required'
                     : ''
-                " libUppercase (blur)="busqueda_rfc()" />
+                " libUppercase (blur)="busquedaRfc()" />
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="nombreImportExport">Nombre:</label>
-            <input class="form-control" id="nombreImportExport" formControlName="nombreImportExport"
+            <label class="form-label" for="nombre">Nombre:</label>
+            <input class="form-control" id="nombre" formControlName="nombre"
               placeholder="Nombre" type="text" appUppercase />
           </div>
         </div>
@@ -105,14 +105,14 @@
         <div class="col-md-4">
           <lib-check-input-text [checkboxValor]="solicitudState.programa"
             [textoValor]="solicitudState.desProgramaFomento" [idCheckbox]="'programa'"
-            [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento'" [required]="false" [reverse]="true"
+            [idInputTexto]="'desProgramaFomento'" [label]="'Programa de fomento:'" [required]="false" [reverse]="true"
             [hidden]="false" [maxLengthValidacion]="300"
             (checkboxChange)="checkPrograma($event)"></lib-check-input-text>
         </div>
 
         <div class="col-md-4">
           <lib-check-input-text [checkboxValor]="solicitudState.checkIMMEX" [textoValor]="solicitudState.desImmex"
-            [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'" [label]="'Immex (Número/aaaa)'" [required]="false"
+            [idCheckbox]="'checkIMMEX'" [idInputTexto]="'desImmex'" [label]="'Immex (Número/aaaa):'" [required]="false"
             [reverse]="true" [hidden]="false" [maxLengthValidacion]="300"
             (checkboxChange)="checkImmex($event)"></lib-check-input-text>
         </div>
@@ -120,7 +120,7 @@
         <div class="col-md-4">
           <lib-check-input-text [checkboxValor]="solicitudState.industriaAutomotriz"
             [textoValor]="solicitudState.desIndustrialAutomotriz" [idCheckbox]="'industriaAutomotriz'"
-            [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz'" [required]="false"
+            [idInputTexto]="'desIndustrialAutomotriz'" [label]="'Industria Automotriz:'" [required]="false"
             [reverse]="true" [hidden]="false" [maxLengthValidacion]="25"
             (checkboxChange)="checkAutomotriz($event)"></lib-check-input-text>
         </div>
@@ -128,7 +128,7 @@
 
       <div class="row mt-2">
         <div class="col-md-12">
-          <label for="tipoEmpresa">Tipo de empresa certificada</label>
+          <label for="tipoEmpresa">Tipo de empresa certificada:</label>
         </div>
 
         <div class="col-md-6">
@@ -252,7 +252,7 @@
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="lda" (change)="showConfirmDialogLDA_DD('lda')"
               formControlName="lda">
-            <label class="form-check-label" for="lda">Despacho LDA:</label>
+            <label class="form-check-label" for="lda">Despacho LDA</label>
           </div>
 
         </div>
@@ -260,7 +260,7 @@
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="dd" (change)="showConfirmDialogLDA_DD('dd')"
               formControlName="dd">
-            <label class="form-check-label" for="dd">Despacho DD:</label>
+            <label class="form-check-label" for="dd">Despacho DD</label>
           </div>
         </div>
       </div>
@@ -401,7 +401,7 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="tipoVehiculo" formControlName="tipoTransporte" [label]="'Tipo de transporte'"
-            [required]="true" (change)="
+            [required]="false" (change)="
               setValoresStore(vehiculo, 'tipoTransporte', 'setTipoTransporte')
             "></app-catalogo-select>
         </div>
@@ -420,7 +420,7 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="tipoTransporte" formControlName="tipoTransporte"
-            [label]="'Tipo de transporte'" [required]="true" (change)="
+            [label]="'Tipo de transporte'" [required]="false" (change)="
             setValoresStore(transporteArriboSalida, 'tipoTransporte', 'setTipoTransporteArriboSalida')
           "></app-catalogo-select>
         </div>

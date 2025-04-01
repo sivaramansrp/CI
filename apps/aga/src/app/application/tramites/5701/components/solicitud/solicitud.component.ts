@@ -1,13 +1,8 @@
 import {
   ADV_LIMPIA_CAMPOS,
-  DESPACHO_DD, DESPACHO_LDA,
   EMPRESAS_CERTIFICADAS,
-  FECHA_FINAL,
-  FECHA_INICIO,
   FUNCION_STORE_DD,
   FUNCION_STORE_LDA,
-  HORA_FINAL,
-  HORA_INICIO,
   ID_NAME_DD,
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
@@ -19,8 +14,6 @@ import {
 import {
   Catalogo,
   CatalogoPaises,
-  InputFecha,
-  InputHora,
 } from '@ng-mf/data-access-user';
 import {
   DatosAgregarFormulario,
@@ -156,10 +149,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si se debe mostrar el rango de fechas.
    */
   mostrarRangoFechas: boolean = false;
-  
-  isApoderado: boolean = true;
-  masDeUnaPatente: boolean = true;
-  masDeUnaEmpresa: boolean = true;
+
+  isApoderado: boolean = false;
+  masDeUnaPatente: boolean = false;
+  masDeUnaEmpresa: boolean = false;
 
   patentes: string[] = ['3061', '3062', '3063'];
 
@@ -782,7 +775,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * 
    * @returns {void} No retorna ningún valor.
    */
-  busqueda_rfc(): void {
+  busquedaRfc(): void {
     if (this.datosImportadorExportador.get('RFCImpExp')?.valid) {
       const RFC_IMP_EXP =
         this.datosImportadorExportador.get('RFCImpExp')?.value;
@@ -991,7 +984,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.mostrarRangoFechas = true;
     }
   }
-
 
   /**
    * Calcula el rango de días entre dos fechas y horas, 
@@ -1245,8 +1237,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.datosImportadorExportador, 'desIndustrialAutomotriz', 'setDesIndustriaAutomotriz');
   }
 
-
-
   /**
    * Verifica y actualiza el estado de los campos de un formulario según el valor de un campo específico.
    * 
@@ -1360,6 +1350,4 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.colapsable = (this.solicitudState.fechasSeleccionadas.length > 0 || this.selectRangoDias.length > 0) ? true : false;
 
   }
-
-
 }
