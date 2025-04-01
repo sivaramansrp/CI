@@ -37,6 +37,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'aviso-de-modificacion-module',
+    loadChildren: () =>
+      import('./tramites/260605/pantallas.module').then(
+        (m) => m.Pantallas260605Module
+      ),
+  },
+  {
     path: 'importacion-productos',
     loadChildren: () =>
       import('./tramites/260101/importacion-productos.module').then(

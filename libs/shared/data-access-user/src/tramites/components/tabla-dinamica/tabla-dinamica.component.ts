@@ -64,6 +64,20 @@ export class TablaDinamicaComponent<T> {
     true
   );
 
+  
+  /**
+   * Evento de salida que emite un objeto con información sobre una fila y una columna.
+   * 
+   * Este evento se utiliza para alternar o cambiar un valor asociado a una fila y columna específica
+   * en una tabla dinámica. El objeto emitido contiene:
+   * - `row`: La fila afectada.
+   * - `column`: El nombre de la columna afectada.
+   * 
+   * @event
+   */
+  @Output() alternarValor: EventEmitter<{ row: any; column: string }> = new EventEmitter();
+
+
   /**
    * Almacena el ID de la fila seleccionada.
    * Este valor se establece cuando el usuario selecciona una fila en la tabla.
@@ -164,5 +178,14 @@ export class TablaDinamicaComponent<T> {
    */
   onFilaClic(data: T): void {    
     this.filaClic.emit(data);
+  }
+
+  /**
+   * Cambia el valor de una fila específica y emite un evento con la fila modificada.
+   *
+   * @param row - La fila cuyos valores se desean cambiar.
+   */
+  cambiarValor(row: any): void {
+    this.alternarValor.emit(row);
   }
 }
