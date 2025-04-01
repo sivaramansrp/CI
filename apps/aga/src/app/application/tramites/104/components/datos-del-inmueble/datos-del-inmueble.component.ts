@@ -1,7 +1,10 @@
 import { CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {Subject, distinctUntilChanged,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormularioQuery } from '../../../../core/queries/tramite104.query';
+import { FormularioStore } from '../../../../core/estados/tramites/tramite104.store';
 import { MENSAJEDEALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
 import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
@@ -17,7 +20,7 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   templateUrl: './datos-del-inmueble.component.html',
   styleUrl: './datos-del-inmueble.component.css',
 })
-export class DatosDelInmuebleComponent implements OnInit {
+export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
 
   /**
    * **Evento de cierre**  
@@ -40,6 +43,8 @@ export class DatosDelInmuebleComponent implements OnInit {
    * Almacena los datos de dirección asociados a la solicitud.
    */
   formularioDireccion!: FormGroup;
+
+  private destroy$ = new Subject<void>();
 
   /**
    * **Indicador de alerta**  
@@ -84,7 +89,7 @@ export class DatosDelInmuebleComponent implements OnInit {
    * - Inicializa el `FormBuilder` para la creación de formularios reactivos.
    */
   // eslint-disable-next-line no-empty-function
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private formularioStore: FormularioStore, private formularioQuery: FormularioQuery) {
   }
 
   /**
@@ -110,6 +115,8 @@ export class DatosDelInmuebleComponent implements OnInit {
         this.mensajeDeAlerta = MENSAJEDEALERTA.ADJUNTAR; // Asigna el mensaje de alerta correspondiente.
       }
     });
+    this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
+    this.escucharCambiosFormulario();
   }
 
 
@@ -204,6 +211,55 @@ export class DatosDelInmuebleComponent implements OnInit {
     { catalogos: dropDown.entidadFederativa }, // Repetido para entidad federativa, ¿es necesario?
     { catalogos: dropDown.localidad } // Dropdown para seleccionar la localidad.
   ];
+
+
+
+ /**
+   * **Carga los valores guardados en Akita en el formulario**
+   */
+ cargarDatosGuardados(): void {
+  this.formularioQuery.fomentoExportacion$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      if (data){this.fomentoExportacionForm.patchValue(data, { emitEvent: false });
+    }
+    });
+
+  this.formularioQuery.direccion$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      if (data) {this.formularioDireccion.patchValue(data, { emitEvent: false });
+    }
+    });
+}
+
+/**
+ * **Escucha cambios en los formularios y almacena en Akita automáticamente**
+ */
+escucharCambiosFormulario(): void {
+  this.fomentoExportacionForm.valueChanges
+    .pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged() // 🔹 Evita actualizaciones innecesarias
+    )
+    .subscribe((formData) => {
+      this.formularioStore.setFomentoExportacion(formData);
+    });
+
+  this.formularioDireccion.valueChanges
+    .pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged() // 🔹 Evita actualizaciones innecesarias
+    )
+    .subscribe((formData) => {
+      this.formularioStore.setDireccion(formData);
+    });
+}
+
+ngOnDestroy(): void {
+ this.destroy$.next();
+ this.destroy$.complete();
+}
 
 
 }
