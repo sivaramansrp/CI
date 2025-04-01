@@ -38,56 +38,6 @@ export const INPUT_FECHA_CADUCIDAD_CONFIG = {
 };
 
 /**
- * Opciones para el selector de códigos postales.
- * Cada objeto contiene un ID y una descripción del código postal.
- */
-export const CODIGOPOSTALSELECTDATA = [
-  { id: 1, descripcion: '42377' },
-  { id: 2, descripcion: '42378' },
-  { id: 3, descripcion: '42379' },
-];
-
-/**
- * Opciones para el selector de colonias.
- * Cada objeto contiene un ID y una descripción de la colonia.
- */
-export const COLONIASELECTDATA = [
-  { id: 1, descripcion: 'CENTRO' },
-  { id: 2, descripcion: 'CERRO COLORADO' },
-  { id: 3, descripcion: 'EL BONDHO' },
-];
-
-/**
- * Opciones para el selector de localidades.
- * Cada objeto contiene un ID y una descripción de la localidad.
- */
-export const LOCALIDADSELECTDATA = [
-  { id: 1, descripcion: 'AGUA NUEVA' },
-  { id: 2, descripcion: 'AGUACATLAN' },
-  { id: 3, descripcion: 'BAXCAJAY' },
-];
-
-/**
- * Opciones para el selector de municipios.
- * Cada objeto contiene un ID y una descripción del municipio.
- */
-export const MUNICIPIOSELECTDATA = [
-  { id: 1, descripcion: 'ACATLAN' },
-  { id: 2, descripcion: 'ACAXOCHITLAN' },
-  { id: 3, descripcion: 'ACTOPAN' },
-];
-
-/**
- * Opciones para el selector de países.
- * Cada objeto contiene un ID y una descripción del país.
- */
-export const PAISSELECTDATA = [
-  { id: 1, descripcion: 'MUESTRA1 (ESTADOS UNIDOS MEXICANO)' },
-  { id: 2, descripcion: 'MUESTRA2' },
-  { id: 3, descripcion: 'MUESTRA3' },
-];
-
-/**
  * Encabezados para la tabla de terceros relacionados.
  * Cada cadena representa una columna en la tabla.
  */
@@ -108,4 +58,3 @@ export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
   'Estado/localidad',
   'Código postal',
 ];
-

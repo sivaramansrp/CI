@@ -16,27 +16,28 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
+  REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import {
-  CODIGOPOSTALSELECTDATA,
-  COLONIASELECTDATA,
-  LOCALIDADSELECTDATA,
-  MUNICIPIOSELECTDATA,
-  PAISSELECTDATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
-} from '../../constantes/terceros-fabricante.enum';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  REGEX_CURP,
+  REGEX_RFC_FISICA,
+  REGEX_RFC_MORAL,
+} from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
+import SELECT_OPTIONS_DATA from 'libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
+import { TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/terceros-fabricante.enum';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
+
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -142,43 +143,44 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Datos para el dropdown de países.
-   * Utiliza los datos predefinidos en `PAISSELECTDATA`.
+   * Utiliza los datos predefinidos en `paisSelectData`.
    *
    * @description Este arreglo almacena las opciones para el selector de países.
    */
-  paisDropdownData: Catalogo[] = PAISSELECTDATA;
+  paisDropdownData: Catalogo[] = SELECT_OPTIONS_DATA.paisSelectData;
 
   /**
    * Datos para el dropdown de localidades.
-   * Utiliza los datos predefinidos en `LOCALIDADSELECTDATA`.
+   * Utiliza los datos predefinidos en `localidadSelectData`.
    *
    * @description Este arreglo almacena las opciones para el selector de localidades.
    */
-  localidadDropdownData: Catalogo[] = LOCALIDADSELECTDATA;
+  localidadDropdownData: Catalogo[] = SELECT_OPTIONS_DATA.localidadSelectData;
 
   /**
    * Datos para el dropdown de municipios.
-   * Utiliza los datos predefinidos en `MUNICIPIOSELECTDATA`.
+   * Utiliza los datos predefinidos en `municipioSelectData`.
    *
    * @description Este arreglo almacena las opciones para el selector de municipios.
    */
-  municipioDropdownData: Catalogo[] = MUNICIPIOSELECTDATA;
+  municipioDropdownData: Catalogo[] = SELECT_OPTIONS_DATA.municipioSelectData;
 
   /**
    * Datos para el dropdown de códigos postales.
-   * Utiliza los datos predefinidos en `CODIGOPOSTALSELECTDATA`.
+   * Utiliza los datos predefinidos en `codigoPostalSelectData`.
    *
    * @description Este arreglo almacena las opciones para el selector de códigos postales.
    */
-  codigoPostalDropdownData: Catalogo[] = CODIGOPOSTALSELECTDATA;
+  codigoPostalDropdownData: Catalogo[] =
+    SELECT_OPTIONS_DATA.codigoPostalSelectData;
 
   /**
    * Datos para el dropdown de colonias.
-   * Utiliza los datos predefinidos en `COLONIASELECTDATA`.
+   * Utiliza los datos predefinidos en `coloniaSelectData`.
    *
    * @description Este arreglo almacena las opciones para el selector de colonias.
    */
-  coloniaDropdownData: Catalogo[] = COLONIASELECTDATA;
+  coloniaDropdownData: Catalogo[] = SELECT_OPTIONS_DATA.coloniaSelectData;
 
   /**
    * Formulario reactivo para agregar un fabricante.
@@ -1323,9 +1325,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
    */
   static rfcValidator(control: AbstractControl): ValidationErrors | null {
-    const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
-    const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
-    return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
+    return REGEX_RFC_FISICA.test(control.value) ||
+      REGEX_RFC_MORAL.test(control.value)
       ? null
       : { invalidRFC: true };
   }
@@ -1338,8 +1339,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
    */
   static curpValidator(control: AbstractControl): ValidationErrors | null {
-    const PATTERN = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
-    return PATTERN.test(control.value) ? null : { invalidCURP: true };
+    return REGEX_CURP.test(control.value) ? null : { invalidCURP: true };
   }
 
   /**
@@ -1350,7 +1350,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
    */
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
-    const PATTERN = /^([0-9A-Za-z\-() ])*$/;
+    const PATTERN = REGEX_SOLO_NUMEROS;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }
 
