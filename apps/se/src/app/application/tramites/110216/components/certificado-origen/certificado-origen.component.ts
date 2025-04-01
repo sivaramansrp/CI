@@ -1,4 +1,4 @@
-import { AlertComponent } from "@libs/shared/data-access-user/src";
+import { AlertComponent, REGEX_PATRON_DECIMAL_2 } from "@libs/shared/data-access-user/src";
 import { Catalogo } from "../../models/certificado-origen.model.js";
 import { CatalogoLista, } from "../../models/certificado-origen.model.js";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -438,9 +438,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       nombreEnIngles: [this.solicitudState?.formularioMercancia?.nombreEnIngles, []],
       otrasInstancias: [this.solicitudState?.formularioMercancia?.otrasInstancias, []],
       criterioParaConferir: [this.solicitudState?.formularioMercancia?.criterioParaConferir, []],
-      cantidad: [this.solicitudState?.formularioMercancia?.cantidad, [Validators.required, Validators.pattern(/^\d+$/)]],
+      cantidad: [this.solicitudState?.formularioMercancia?.cantidad, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       pais: ['', [Validators.required]],
-      valorDelaMercancia: [this.solicitudState?.formularioMercancia?.valorDelaMercancia, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      valorDelaMercancia: [this.solicitudState?.formularioMercancia?.valorDelaMercancia, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
       complementoDelaDescripcion: [this.solicitudState?.formularioMercancia?.complementoDelaDescripcion, [Validators.required]],
       fecha: [this.solicitudState?.formularioMercancia?.fecha, []],
       numeroFactura: [this.solicitudState?.formularioMercancia?.numeroFactura, []],
