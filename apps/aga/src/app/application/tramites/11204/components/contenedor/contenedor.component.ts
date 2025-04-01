@@ -418,7 +418,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const VIGENCIA = this.solicitudForm.value.vigencia;
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
-    console.log(INICIALESCONTENEDOR);
     const CONTENEDORES = this.solicitudForm.value.contenedores;
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && FECHAINGRESO && VIGENCIA && CONTENEDORES) {
       this.agregarSolicitud();

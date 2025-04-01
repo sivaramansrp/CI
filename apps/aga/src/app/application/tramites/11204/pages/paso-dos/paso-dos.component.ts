@@ -61,8 +61,10 @@ export class PasoDosComponent implements OnInit {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO).pipe(takeUntil(this.destroyNotifier$)).subscribe({
         next: (resp): void => {
-          if (resp.length > 0) {
+          if (Array.isArray(resp) && resp.length > 0) {
             this.catalogoDocumentos = resp;
+          } else {
+            console.error('Unexpected response format for tipos de documentos', resp);
           }
         },
         error: (_error): void => {
