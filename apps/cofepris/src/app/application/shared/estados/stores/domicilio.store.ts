@@ -188,7 +188,7 @@ export function createInitialState(): Solicitud260603State {
  * Clase que representa el store para gestionar el estado de la solicitud 260603.
  * Extiende la clase base `Store` para manejar el estado de tipo `Solicitud260603State`.
  */
-export class Tramite260603Store extends Store<Solicitud260603State> {
+export class DomicilioStore extends Store<Solicitud260603State> {
   /**
    * Constructor de la clase que inicializa el estado con valores predeterminados.
    */
