@@ -150,13 +150,6 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
     ];
 
   /**
-   * @description Subject para manejar la destrucción de observables.
-   * Se utiliza para finalizar las suscripciones activas y evitar fugas de memoria.
-   * @type {Subject<void>}
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * @description Constructor que inicializa las dependencias necesarias.
    * @param fb Instancia del FormBuilder para la creación de formularios reactivos.
    * @param solicitud150102Store Store que maneja el estado de la solicitud.
@@ -232,7 +225,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   obtenerProducidosDatos(): void {
     this.solicitudService
       .obtenerProducidosDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyed$))
       .subscribe({
         next: (respuesta: BienesProducidos[]) => {
           const MATRIZ_JSON = [
@@ -340,7 +333,5 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(); // Notifica a las suscripciones que deben finalizar
     this.destroyed$.complete(); // Completa el Subject para evitar fugas de memoria
-    this.destroyNotifier$.next(); // Notifica a las suscripciones que deben finalizar
-    this.destroyNotifier$.complete(); // Completa el Subject para evitar fugas de memoria
   }
 }
