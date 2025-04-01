@@ -194,6 +194,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-modificacion',
+    loadChildren: () =>
+      import('./tramites/80302/modificacion.module').then(
+        (m) => m.ModificacionModule
+      ),
+  },
+  {
     path: 'importacion-material-de-investigacion-cientifica',
     loadChildren: () =>
       import('./tramites/130112/importacion-material-de-investigacion-cientifica.module').then(
@@ -207,6 +214,13 @@ const ROUTES: Routes = [
         (m) => m.CancelacionesModule
       ),
   },
+  {
+    path: 'certificado',
+    loadChildren:() =>
+      import('./tramites/110219/certificado.module').then(
+        (m) => m.CertificadoModule
+      )
+  }, 
   {
     path: 'nuevo-programa-industrial',
     loadChildren: () =>
