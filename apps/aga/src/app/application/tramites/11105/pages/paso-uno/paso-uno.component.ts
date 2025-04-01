@@ -1,13 +1,11 @@
 
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-//import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-//import { TIPO_PERSONA } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -19,7 +17,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
   imports:[SolicitanteComponent,CommonModule,DatosGeneralesDeLaSolicitudComponent, FormsModule, ReactiveFormsModule,DesistimientoComponent]
   
 })
-export class PasoUnoComponent  {
+export class PasoUnoComponent {
   /**
    * Referencia al componente de solicitante.
    */

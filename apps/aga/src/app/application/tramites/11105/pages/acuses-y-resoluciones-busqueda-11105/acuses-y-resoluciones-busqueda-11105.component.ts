@@ -1,24 +1,11 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  AcusesYResoluionesFolioDelTramiteBusquedaComponent,
-  InputFecha,
-  InputFechaComponent,
-} from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AcusesYResoluionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-// export const FECHA_INICIO = {
-//   labelNombre: 'Fecha inicial',
-//   required: true,
-//   habilitado: true,
-// };
 
-// export const FECHA_FINAL = {
-//   labelNombre: 'Fecha final',
-//   required: true,
-//   habilitado: true,
-// };
-
+/**
+ * Componente para gestionar la búsqueda de acuses y resoluciones del trámite 11105.
+ */
 @Component({
   selector: 'acuses-y-resoluciones-busqueda-11105',
   standalone: true,
@@ -31,25 +18,11 @@ import { Router } from '@angular/router';
   styleUrl: './acuses-y-resoluciones-busqueda-11105.component.scss',
 })
 export class AcusesYResolucionesBusqueda11105Component {
-  // public FormBusqueda!: FormGroup;
-  // public fechaInicioInput: InputFecha = FECHA_INICIO;
-  // public fechaFinalInput: InputFecha = FECHA_FINAL;
-  // public router!: Router;
-
-  public constructor(protected readonly formBuilder: FormBuilder) {
-    //this.FormBusqueda = this.inicializaFormulario();
-  }
-
   /**
-   * Método para crear el formulario y sus campos
-   * @returns Un form group con los campos necesarios
+   * Constructor de la clase.
+   * @param formBuilder Servicio para construir formularios reactivos.
    */
-  // private inicializaFormulario(): FormGroup {
-  //   const CAMPOS_FOMULARIO = {
-  //     folio: [],
-  //     fechaInicial: [],
-  //     fechaFinal: [],
-  //   };
-  //   return this.formBuilder.group(CAMPOS_FOMULARIO);
-  // }
+  public constructor(protected readonly formBuilder: FormBuilder) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 }

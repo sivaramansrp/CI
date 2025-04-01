@@ -1,23 +1,94 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
+import {
+  TramiteFolioService,
+  TramiteFolioStore,
+} from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
-  let fixture: ComponentFixture<PasoTresComponent>;
+  let fixture: any;
+  let routerMock: any;
+  let tramiteFolioServiceMock: any;
+  let tramiteStoreMock: any;
 
   beforeEach(async () => {
+    routerMock = {
+      navigate: jest.fn(),
+    };
+
+    tramiteFolioServiceMock = {
+      obtenerTramite: jest.fn(),
+    };
+
+    tramiteStoreMock = {
+      establecerTramite: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [PasoTresComponent]
-    })
-    .compileComponents();
-    
+      imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FirmaElectronicaComponent,
+        PasoTresComponent,
+        HttpClientTestingModule
+      ],
+      declarations: [],
+      providers: [
+        { provide: Router, useValue: routerMock },
+        { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
+        { provide: TramiteFolioStore, useValue: tramiteStoreMock },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call tramiteFolioService.obtenerTramite and tramiteStore.establecerTramite when obtieneFirma is called with a valid signature', () => {
+    const mockTramiteData = { data: { id: 19, name: 'Test Tramite' } };
+    tramiteFolioServiceMock.obtenerTramite.mockReturnValue(of(mockTramiteData));
+
+    component.obtieneFirma('valid-signature');
+
+    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
+      mockTramiteData.data,
+      'valid-signature'
+    );
+    expect(routerMock.navigate).toHaveBeenCalledWith([
+      'servicios-extraordinarios/acuse',
+    ]);
+  });
+
+  it('should handle errors when tramiteFolioService.obtenerTramite fails', () => {
+    tramiteFolioServiceMock.obtenerTramite.mockReturnValue(
+      throwError(() => new Error('Error'))
+    );
+
+    component.obtieneFirma('valid-signature');
+
+    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
+    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
+  });
+
+  it('should not call tramiteFolioService.obtenerTramite if no signature is provided', () => {
+    component.obtieneFirma('');
+
+    expect(tramiteFolioServiceMock.obtenerTramite).not.toHaveBeenCalled();
+    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
+    expect(routerMock.navigate).not.toHaveBeenCalled();
   });
 });

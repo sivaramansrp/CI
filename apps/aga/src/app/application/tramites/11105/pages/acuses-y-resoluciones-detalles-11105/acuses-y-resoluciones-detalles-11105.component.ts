@@ -1,24 +1,11 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {
-  InputFecha,
-  InputFechaComponent,
-} from '@libs/shared/data-access-user/src';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluiones-folio-del-tramite-detalles/acuses-y-resoluiones-folio-del-tramite-detalles.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluiones-folio-del-tramite-detalles/acuses-y-resoluiones-folio-del-tramite-detalles.component';
-// export const FECHA_INICIO = {
-//   labelNombre: 'Fecha inicial',
-//   required: true,
-//   habilitado: true,
-// };
 
-// export const FECHA_FINAL = {
-//   labelNombre: 'Fecha final',
-//   required: true,
-//   habilitado: true,
-// };
-
+/**
+ * Componente para gestionar los detalles de acuses y resoluciones del trámite 11105.
+ */
 @Component({
   selector: 'acuses-y-resoluciones-detalles-11105',
   standalone: true,
@@ -31,25 +18,11 @@ import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared
   styleUrl: './acuses-y-resoluciones-detalles-11105.component.scss',
 })
 export class AcusesYResolucionesDetalles11105Component {
-  // public FormBusqueda!: FormGroup;
-  // public fechaInicioInput: InputFecha = FECHA_INICIO;
-  // public fechaFinalInput: InputFecha = FECHA_FINAL;
-  // public router!: Router;
-
-  public constructor(protected readonly formBuilder: FormBuilder) {
-    //this.FormBusqueda = this.inicializaFormulario();
-  }
-
   /**
-   * Método para crear el formulario y sus campos
-   * @returns Un form group con los campos necesarios
+   * Constructor de la clase.
+   * @param formBuilder Servicio para construir formularios reactivos.
    */
-  // private inicializaFormulario(): FormGroup {
-  //   const CAMPOS_FOMULARIO = {
-  //     folio: [],
-  //     fechaInicial: [],
-  //     fechaFinal: [],
-  //   };
-  //   return this.formBuilder.group(CAMPOS_FOMULARIO);
-  // }
+  public constructor(public formBuilder: FormBuilder) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 }

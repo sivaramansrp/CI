@@ -1,38 +1,28 @@
 <div class="container">
-  <div class="container1">
-    <ng-titulo titulo="Desistimiento" />
-    <form [formGroup]="desisitimientoForm">
-      <div class="row">
-        <div class="col-md-8">
-          <label class="form-label" for="rfc"
-            >Folio original:<span
-              class="bi bi-question-circle-fill fs-4 m-1"
-              title="Title"
-              ata-bs-toggle="tooltip"
-            ></span>
-          </label>
-          <input
-            type="text"
-            class="form-control"
-            id="rfc"
-            formControlName="rfc"
-            readonly
-          />
-        </div>
-
-        <div class="col-md-8">
-          <label class="form-label" for="denominacion"
-            >Justificación de desistimiento:</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="denominacion"
-            formControlName="denominacion"
-            readonly
-          />
-        </div>
+  <ng-titulo titulo="Desistimiento" />
+  <form [formGroup]="desisitimientoForm">
+    <div class="row">
+      <div class="col-md-8">
+        <label>Folio original: </label>
+        <input
+          type="text"
+          required="true"
+          class="form-control"
+          id="folioOriginal"
+          formControlName="folioOriginal"
+        />
       </div>
-    </form>
-  </div>
+
+      <div class="col-md-8">
+        <label>Justificación de desistimiento:</label>
+        <input
+          type="text"
+          required="true"
+          class="form-control"
+          id="justificacionDelDesistimiento"
+          formControlName="justificacionDelDesistimiento"
+        />
+      </div>
+    </div>
+  </form>
 </div>

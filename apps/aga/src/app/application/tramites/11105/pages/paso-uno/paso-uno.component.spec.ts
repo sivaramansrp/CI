@@ -1,74 +1,53 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
+import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let component: PasoUnoComponent;
+  let fixture: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [
-        PasoUnoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientTestingModule, 
+        DatosGeneralesDeLaSolicitudComponent,
+        DesistimientoComponent,
+        SolicitanteComponent,
+        PasoUnoComponent
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [
-
-      ]
-    }).overrideComponent(PasoUnoComponent, {
-
+      declarations: [],
     }).compileComponents();
+
     fixture = TestBed.createComponent(PasoUnoComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-
-    component.ngAfterViewInit();
-
+  it('should initialize with default values', () => {
+    expect(component.indice).toBe(1);
+    expect(component.tipoPersona).toBeUndefined();
+    expect(component.persona).toEqual([]);
+    expect(component.domicilioFiscal).toEqual([]);
   });
 
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
+  it('should update the selected tab index when seleccionaTab is called', () => {
+    component.seleccionaTab(2);
+    expect(component.indice).toBe(2);
   });
 
+  it('should have a reference to the SolicitanteComponent', () => {
+    expect(component.solicitante).toBeUndefined(); // Initially undefined until the view is initialized
+  });
 });

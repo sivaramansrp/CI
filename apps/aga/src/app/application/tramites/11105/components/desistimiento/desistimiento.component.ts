@@ -1,36 +1,51 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import mockData from 'libs/shared/theme/assets/json/11105/solicitante-mockdata.json';
+import { CommonModule } from '@angular/common';
+import { DESISTIMIENTO } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
- * Componente para gestionar el formulario del solicitante.
+ * Componente para gestionar el formulario de desistimiento.
  */
 @Component({
   standalone: true,
-  imports: [CommonModule,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   selector: 'app-desistimiento',
   templateUrl: './desistimiento.component.html',
   styleUrl: './desistimiento.component.scss',
 })
 export class DesistimientoComponent implements OnInit {
   /**
-   * Grupo de formulario para el formulario de solicitud.
+   * Grupo de formulario para gestionar los datos del desistimiento.
    */
   desisitimientoForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  /**
+   * Constructor de la clase.
+   * @param formBuilder Servicio FormBuilder para construir formularios reactivos.
+   */
+  constructor(public formBuilder: FormBuilder) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   */
   ngOnInit(): void {
-    this.desisitimientoForm = this.fb.group({
-      folioOriginal: [''],
-      justificacionDelDesistimiento: ['']
+    this.desisitimientoForm = this.formBuilder.group({
+      folioOriginal: [{ value: '', disabled: true }],
+      justificacionDelDesistimiento: [''],
     });
     this.setFormValues();
   }
-  setFormValues() {
-    this.desisitimientoForm.get('rfc')?.setValue(mockData.folioOriginal);
-    this.desisitimientoForm.get('denominacion')?.setValue(mockData.justificacionDelDesistimiento);
+
+  /**
+   * Establece los valores iniciales del formulario.
+   */
+  setFormValues(): void {
+    this.desisitimientoForm.get(DESISTIMIENTO.FOLIO_ORIGINAL)?.setValue('');
+    this.desisitimientoForm
+      .get(DESISTIMIENTO.JUSTIFICACION_DEL_DESISTIMIENTO)
+      ?.setValue('');
   }
 }

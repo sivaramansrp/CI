@@ -1,76 +1,62 @@
 <div class="page">
   <div class="container">
-    <div class="card card-funcionario">
+    <div class="row">
+      <div class="col-md p-2">
+        <h1>Acuses y Resoluciones</h1>
+      </div>
+    </div>
+    <div class="card-body">
       <div class="row">
-        <div class="col-md">
-          <h1>Acuses y Resoluciones</h1>
+        <div class="col-md-6 form-group">
+          <span class="texto_resaltado">Solicitante: </span>
+          <span class="texto"
+            >INTEGRADORA DE URBANIZACIONES SIGNUM,S DE RL DE CV</span
+          >
         </div>
       </div>
-      <div class="card-body">
-        <div class="alert alert-funcionario">
-          <div class="row1">
-            <div class="col-md-6 form-group">
-              <span class="texto_resaltado">Solicitante: </span>
-              <span class="texto"
-                >INTEGRADORA DE URBANIZACIONES SIGNUM,S DE RL DE CV</span
-              >
-            </div>
-          </div>
+
+      <div class="row">
+        <div class="col-md-4 form-group">
+          <span class="texto_resaltado">RFC: </span>
+          <span class="texto"> LEQI8101314S7 </span>
         </div>
-        <div class="alert alert-funcionario">
-          <div class="row2">
-            <div class="col-md-4 form-group">
-              <span class="texto_resaltado">RFC: </span>
-              <span class="texto"> LEQI8101314S7 </span>
-            </div>
-          </div>
-        </div>
-        <div class="accordion accordion-flush" id="accordionExample">
-          <div class="accordion-item">
-            <div
-              id="collapseOne"
-              class="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample"
-            >
-              <div class="accordion-body">
-                <form [formGroup]="formBusqueda">
-                  <div class="row3">
-                    <div class="col-md-4 form-group">
-                      <label class="form-label" for="folio"
-                        >Folio del trámite:</label
-                      >
-                      <input
-                        class="form-control"
-                        id="folio"
-                        placeholder="Ingrese un folio"
-                        type="text"
-                        formControlName="folio"
-                      />
-                    </div>
-                    <div class="col-md-4 form-group">
-                      <input-fecha
-                        [datos]="fechaInicioInput"
-                        (valorCambiado)="cambioFechaInicio($event)"
-                      ></input-fecha>
-                    </div>
-                    <div class="col-md-4">
-                      <input-fecha
-                        [datos]="fechaFinalInput"
-                        (valorCambiado)="cambioFechaFinal($event)"
-                      ></input-fecha>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md" (click)="folioTramite()">
-                      <button type="button" class="btn boton-buscar">
-                        Buscar
-                      </button>
-                    </div>
-                  </div>
-                </form>
+      </div>
+      <div class="accordion accordion-flush" id="accordionExample">
+        <div class="accordion-item-folio-tramite">
+          <div class="accordion-body p-0">
+            <form [formGroup]="formBusqueda">
+              <div class="row3">
+                <div class="col-md-4 form-group">
+                  <label class="form-label" for="folio"
+                    >Folio del trámite:</label
+                  >
+                  <input
+                    class="form-control"
+                    id="folio"
+                    placeholder="Ingrese un folio"
+                    type="text"
+                    formControlName="folio"
+                  />
+                </div>
+                <div class="col-md-4 form-group">
+                  <input-fecha
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="cambioFechaInicio($event)"
+                  ></input-fecha>
+                </div>
+                <div class="col-md-4">
+                  <input-fecha
+                    [datos]="fechaFinalInput"
+                    (valorCambiado)="cambioFechaFinal($event)"
+                  ></input-fecha>
+                </div>
               </div>
-            </div>
+              <div class="row">
+                <div class="col-md" (click)="folioTramite()">
+                  <button type="button" class="btn boton-buscar">Buscar</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>

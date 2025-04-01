@@ -1,56 +1,39 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { DetallesDelMercancía } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
- * Servicio para obtener datos relacionados con importadores y exportadores.
+ * Servicio para gestionar las operaciones relacionadas con la retirada de la autorización de donaciones.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class RetiradaDeLaAutorizacionDeDonacionesService {
   /**
-   * Constructor que se utiliza para la inyección de dependencias.
-   * @param http Servicio HTTP para realizar solicitudes.
-   * @param store Store de Akita para gestionar el estado.
+   * Constructor de la clase.
+   * @param http Cliente HTTP para realizar peticiones a servicios externos.
    */
   constructor(private http: HttpClient) {
     // El constructor se utiliza para la inyección de dependencias.
   }
+
   /**
    * Obtiene el catálogo de aduanas por las que ingresará la mercancía.
-   * @returns Observable con la respuesta del catálogo de aduanas.
+   * @returns Un observable que emite un arreglo de objetos del tipo `Catalogo`.
    */
-  getAduanaIngresara(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/10301/aduanaIngresara.json'
+  getAduanaIngresara(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/11105/aduanaIngresara.json');
+  }
+
+  /**
+   * Obtiene los detalles de la mercancía relacionados con la solicitud.
+   * @returns Un observable que emite un objeto del tipo `DetallesDelMercancía`.
+   */
+  getDetallesDelMercanciaDatos(): Observable<DetallesDelMercancía> {
+    return this.http.get<DetallesDelMercancía>(
+      'assets/json/11105/detalles-del-mercancia-datos.json'
     );
-  }
-
-  /**
-   * Obtiene el catálogo de años.
-   * @returns Observable con la respuesta del catálogo de años.
-   */
-  getAno(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/10301/ano.json');
-  }
-
-  /**
-   * Obtiene el catálogo de condiciones.
-   * @returns Observable con la respuesta del catálogo de condiciones.
-   */
-  getCondicion(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/10301/condicion.json'
-    );
-  }
-
-  /**
-   * Obtiene el catálogo de países.
-   * @returns Observable con la respuesta del catálogo de países.
-   */
-  getPais(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json');
   }
 }

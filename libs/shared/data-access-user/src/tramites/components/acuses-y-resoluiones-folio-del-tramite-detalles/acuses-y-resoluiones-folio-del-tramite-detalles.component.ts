@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 /**
  * Configuración para el campo de fecha inicial.
@@ -22,6 +22,9 @@ export const FECHA_FINAL: InputFecha = {
   habilitado: true,
 };
 
+/**
+ * Componente para gestionar los detalles de acuses y resoluciones por folio de trámite.
+ */
 @Component({
   selector: 'acuses-y-resoluiones-folio-del-tramite-detalles',
   standalone: true,
@@ -36,7 +39,7 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
   implements OnInit
 {
   /**
-   * Formulario reactivo para acuses y resoluciones.
+   * Formulario reactivo para gestionar los datos de acuses y resoluciones.
    */
   public acusesYResolucionesFormGroup!: FormGroup;
 
@@ -51,31 +54,35 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
   public fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
-   * Servicio de enrutamiento.
+   * URL del procedimiento para la navegación.
    */
-  //public router!: Router;
-
   @Input() public procedureUrl = '';
 
+  /**
+   * URL para regresar al procedimiento anterior.
+   */
   @Input() public procedureRegresorUrl = '';
 
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio para construir formularios reactivos.
+   * @param router Servicio para la navegación entre rutas.
    */
   public constructor(
     protected readonly formBuilder: FormBuilder,
     public router: Router
-  ) {}
+  ) {// El constructor se utiliza para la inyección de dependencias.
+    }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo con campos deshabilitados.
    */
   public ngOnInit(): void {
     this.acusesYResolucionesFormGroup = this.formBuilder.group({
       folio: [{ value: '', disabled: true }],
       dependencia: [{ value: '', disabled: true }],
-      fechaInicioDeTramite: [{ value: '', disabled: true }],
+      fechaInicial: [{ value: '', disabled: true }],
       fechaFinal: [{ value: '', disabled: true }],
       unidadAdministrativaORepresentaciónFederal: [
         { value: '', disabled: true },
@@ -84,32 +91,6 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
       estatusDeLaSolicitud: [{ value: '', disabled: true }],
       díasHábilesTranscurridos: [{ value: '', disabled: true }],
     });
-
-    this.initializeFormValues();
-  }
-
-  /**
-   * Inicializa los valores del formulario.
-   */
-  public initializeFormValues(): void {
-    this.acusesYResolucionesFormGroup.get('folio')?.setValue('11105');
-    this.acusesYResolucionesFormGroup.get('dependencia')?.setValue('AGA');
-    this.acusesYResolucionesFormGroup
-      .get('fechaInicial')
-      ?.setValue('todayDate');
-    this.acusesYResolucionesFormGroup.get('fechaFinal')?.setValue('');
-    this.acusesYResolucionesFormGroup
-      .get('unidadAdministrativaORepresentaciónFederal')
-      ?.setValue('Shekhar K');
-    this.acusesYResolucionesFormGroup
-      .get('tipoDeSolicitud')
-      ?.setValue('Retirada de la autorización de donaciones');
-    this.acusesYResolucionesFormGroup
-      .get('estatusDeLaSolicitud')
-      ?.setValue('En trámite');
-    this.acusesYResolucionesFormGroup
-      .get('díasHábilesTranscurridos')
-      ?.setValue('10');
   }
 
   /**
@@ -119,7 +100,10 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
     this.router.navigate([this.procedureUrl]);
   }
 
-  regresar(): void{
+  /**
+   * Navega a la página anterior del procedimiento.
+   */
+  public regresar(): void {
     this.router.navigate([this.procedureRegresorUrl]);
   }
 }

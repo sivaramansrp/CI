@@ -1,23 +1,29 @@
-import { Component, ViewChild } from '@angular/core';
 import {
-  AlertComponent,
   BtnContinuarComponent,
   DatosPasos,
 } from '@ng-mf/data-access-user';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
+import { PasoTresComponent } from '../../../11105/pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../../../11105/pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../../../11105/pages/paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../../../11105/pages/paso-tres/paso-tres.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
  */
 interface AccionBoton {
+  /**
+   * Acción a realizar (e.g., 'cont' para continuar, 'ant' para retroceder).
+   */
   accion: string;
+
+  /**
+   * Valor del índice asociado a la acción.
+   */
   valor: number;
 }
 
@@ -38,7 +44,7 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent {
+export class SolicitantePageComponent implements OnInit {
   /**
    * Lista de pasos del wizard.
    */
@@ -69,12 +75,18 @@ export class SolicitantePageComponent {
     txtBtnSig: 'Continuar',
   };
 
-  constructor() {}
+  /**
+   * Constructor de la clase.
+   */
+  constructor() {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
+   * Configura los pasos del wizard y ajusta el título de un paso específico si es necesario.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.pasos = PASOS.slice(0, 2);
     this.pasos = this.pasos.map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
@@ -94,9 +106,10 @@ export class SolicitantePageComponent {
 
   /**
    * Obtiene el valor del índice del evento de acción del botón.
+   * Navega hacia adelante o hacia atrás en el wizard según la acción especificada.
    * @param e - Evento de acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

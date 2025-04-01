@@ -1,32 +1,40 @@
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, Input,OnDestroy, OnInit} from '@angular/core';
 import {
   ConfiguracionColumna,
   InputFecha,
   InputFechaComponent,
 } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
-
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-//import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { ReplaySubject, takeUntil } from 'rxjs';
 import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/shared/acuses-y-resolucions-folio-tramite/acuses-y-resoluciones-folio-tramite.service';
+import { CommonModule } from '@angular/common';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Configuración para el campo de fecha inicial.
+ */
 export const FECHA_INICIO = {
   labelNombre: 'Fecha inicial',
   required: true,
   habilitado: true,
 };
 
+/**
+ * Configuración para el campo de fecha final.
+ */
 export const FECHA_FINAL = {
   labelNombre: 'Fecha final',
   required: true,
   habilitado: true,
 };
 
+/**
+ * Componente para gestionar la búsqueda de acuses y resoluciones por folio de trámite.
+ */
 @Component({
   selector: 'acuses-y-resoluiones-folio-del-tramite-busqueda',
   standalone: true,
@@ -44,27 +52,70 @@ export const FECHA_FINAL = {
 export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
   implements OnInit, OnDestroy
 {
+  /**
+   * Formulario para la búsqueda de acuses y resoluciones.
+   */
   public formBusqueda!: FormGroup;
+
+  /**
+   * Configuración del campo de fecha inicial.
+   */
   public fechaInicioInput: InputFecha = FECHA_INICIO;
+
+  /**
+   * Configuración del campo de fecha final.
+   */
   public fechaFinalInput: InputFecha = FECHA_FINAL;
+
+  /**
+   * URL del procedimiento para la navegación.
+   */
   @Input() public procedureUrl!: string;
-  //public configuracionTabla = [];
+
+  /**
+   * Datos configurados para la tabla.
+   */
   public configuracionTablaDatos: AcuseYResolucionesFolioTramite[] = [];
+
+  /**
+   * Notificador para destruir las suscripciones.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Servicio para mostrar notificaciones.
+   */
   public toasterService!: ToastrService;
+
+  /**
+   * Indica si se deben mostrar los datos de acuses y resoluciones.
+   */
   public espectaculoAcuseYResolucionesFolioTramiteDatos = false;
 
+  /**
+   * Ruta para la navegación.
+   */
+  public ruta: string = '';
+
+  /**
+   * Constructor de la clase.
+   * @param formBuilder Servicio para construir formularios reactivos.
+   * @param acuseYResolucionesFolioTramiteService Servicio para obtener datos de acuses y resoluciones.
+   * @param router Servicio para la navegación entre rutas.
+   */
   public constructor(
     protected readonly formBuilder: FormBuilder,
     public acuseYResolucionesFolioTramiteService: AcuseYResolucionesFolioTramiteService,
     public router: Router
   ) {
-    //this.formBusqueda = this.inicializaFormulario();
+    // El constructor se utiliza para la inyección de dependencias.
   }
-  public ruta: string = '';
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y obtiene los datos iniciales.
+   */
   ngOnInit(): void {
-    //this.formBusqueda = this.inicializaFormulario();
     this.getAucesYResolucionesFolioTramiteDatos();
 
     this.formBusqueda = this.formBuilder.group({
@@ -77,31 +128,41 @@ export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
   }
 
   /**
-   * Método para crear el formulario y sus campos
-   * @returns Un form group con los campos necesarios
+   * Inicializa el formulario con valores predeterminados.
    */
-  private inicializaFormulario() {
+  public inicializaFormulario(): void {
     this.formBusqueda.get('folio')?.setValue('0100001000320251005000002');
   }
 
-  public cambioFechaInicio(nuevo_valor: string) {
+  /**
+   * Maneja el cambio en el campo de fecha inicial.
+   * @param nuevo_valor Nuevo valor para la fecha inicial.
+   */
+  public cambioFechaInicio(nuevo_valor: string): void {
     this.formBusqueda.get('fechaInicio')?.setValue(nuevo_valor);
     this.formBusqueda.get('fechaInicio')?.markAsUntouched();
   }
 
-  public cambioFechaFinal(nuevo_valor: string) {
+  /**
+   * Maneja el cambio en el campo de fecha final.
+   * @param nuevo_valor Nuevo valor para la fecha final.
+   */
+  public cambioFechaFinal(nuevo_valor: string): void {
     this.formBusqueda.get('fechaFinal')?.setValue(nuevo_valor);
     this.formBusqueda.get('fechaFinal')?.markAsUntouched();
   }
 
+  /**
+   * Configuración de las columnas de la tabla.
+   */
   configuracionTabla: ConfiguracionColumna<AcuseYResolucionesFolioTramite>[] = [
     {
-      encabezado: 'Folio tramite',
+      encabezado: 'Folio trámite',
       clave: (artículo) => artículo.folioTramite,
       orden: 1,
     },
     {
-      encabezado: 'Tipo de tramite',
+      encabezado: 'Tipo de trámite',
       clave: (artículo) => artículo.tipoDeTramite,
       orden: 2,
     },
@@ -111,12 +172,15 @@ export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
       orden: 3,
     },
     {
-      encabezado: 'Fecha inicio tramite',
+      encabezado: 'Fecha inicio trámite',
       clave: (artículo) => artículo.fechInicioTramite,
       orden: 4,
     },
   ];
 
+  /**
+   * Obtiene los datos de acuses y resoluciones por folio de trámite.
+   */
   getAucesYResolucionesFolioTramiteDatos(): void {
     this.acuseYResolucionesFolioTramiteService
       .getAcuseYResolucionesFolioTramite()
@@ -126,19 +190,33 @@ export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
       });
   }
 
+  /**
+   * Navega a la URL del procedimiento.
+   */
   continuar(): void {
     this.router.navigate([this.procedureUrl]);
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Libera los recursos y completa las suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
   }
 
-  onFilaClic() {
+  /**
+   * Maneja el evento de clic en una fila de la tabla.
+   * Navega a la URL del procedimiento.
+   */
+  onFilaClic(): void {
     this.router.navigate([this.procedureUrl]);
   }
 
+  /**
+   * Muestra los datos de acuses y resoluciones por folio de trámite.
+   */
   folioTramite(): void {
     this.espectaculoAcuseYResolucionesFolioTramiteDatos = true;
   }

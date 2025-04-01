@@ -1,9 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AcusesYResolucionesBusqueda11105Component } from './pages/acuses-y-resoluciones-busqueda-11105/acuses-y-resoluciones-busqueda-11105.component';
+import { AcusesYResolucionesDetalles11105Component } from './pages/acuses-y-resoluciones-detalles-11105/acuses-y-resoluciones-detalles-11105.component';
 import { NgModule } from '@angular/core';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import {} from '@libs/shared/data-access-user/src';
-import { AcusesYResolucionesDetalles11105Component } from './pages/acuses-y-resoluciones-detalles-11105/acuses-y-resoluciones-detalles-11105.component';
-import { AcusesYResolucionesBusqueda11105Component } from './pages/acuses-y-resoluciones-busqueda-11105/acuses-y-resoluciones-busqueda-11105.component';
 
 export const ROUTES_TERRESTRE: Routes = [
   {

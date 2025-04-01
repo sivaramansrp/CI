@@ -28,183 +28,45 @@
               [required]="true"
               id="aduana"
               formControlName="aduana"
+              [isDisabled]="true"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+
+        <ng-titulo titulo="Mercancías" />
+        <div class="row mt-5">
+          <div class="col-md-8">
+            <app-catalogo-select
+              [catalogo]="propositoDeLaMercancia.catalogos"
+              [label]="propositoDeLaMercancia.labelNombre"
+              [placeholder]="propositoDeLaMercancia.primerOpcion"
+              [required]="true"
+              id="aduana"
+              formControlName="aduana"
+              [isDisabled]="true"
             >
             </app-catalogo-select>
           </div>
         </div>
       </ng-container>
-      <ng-titulo titulo="Mercancía" />
       <div class="row">
-        <div class="col-md-6">
-          <label for="mercancia">Mercancías*:</label>
-        </div>
-        <div class="table-container">
-          <ng-table [commonTableHeader]="encabezadosTabla"> </ng-table>
-        </div>
-        <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Modificar</button>
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
-          <button
-            type="button"
-            class="btn btn-primary ms-3"
-            (click)="nextTabla()"
-          >
-            Agregar
-          </button>
-        </div>
+        <ng-titulo titulo="Mercancías" />
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+          [configuracionTabla]="configuracionTabla"
+          [datos]="configuracionTablaDatos"
+        ></app-tabla-dinamica>
       </div>
-
-      <!--<ng-container *ngIf="!showTabla && isPopupClose">
-        <div class="row mt-5">
-          <ng-alert [CONTENIDO]="TEXTO_DE_ADJUNTAR"></ng-alert>
-        </div>
-        <ng-titulo titulo="Datos de la mercancía" />
-        <crosslist
-          [fechas]="selectRangoDias"
-          [showSearchInput1]="true"
-          [showSearchInput2]="true"
-          [botonField]="botonField"
-        ></crosslist>
-        <ng-container formGroupName="importadorExportador">
-          <div class="row mt-5">
-            <div class="col-md-12">
-              <label>Tipo de mercancía*:</label>
-              <input
-                type="text"
-                width:140
-                required="true"
-                class="form-control"
-                id="tipoMercancia"
-                formControlName="tipoMercancia"
-                [ngClass]="
-                  isValid(importadorExportador, 'tipoMercancia')
-                    ? 'required'
-                    : ''
-                "
-              />
-            </div>
-          </div>
-        </ng-container>
-        <ng-container formGroupName="importadorExportador">
-          <div class="row mt-3">
-            <div class="col-md-4">
-              <label>Uso específico de la mercancía*:</label>
-              <input
-                type="text"
-                required="true"
-                class="form-control"
-                id="usoEspecifico"
-                formControlName="usoEspecifico"
-                [ngClass]="
-                  isValid(importadorExportador, 'usoEspecifico')
-                    ? 'required'
-                    : ''
-                "
-              />
-            </div>
-            <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="condicion.catalogos"
-                [label]="condicion.labelNombre"
-                [placeholder]="condicion.primerOpcion"
-                [required]="true"
-                id="condicion"
-                formControlName="condicion"
-              ></app-catalogo-select>
-            </div>
-            <div class="col-md-4">
-              <label>Marca:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="marca"
-                formControlName="marca"
-                [ngClass]="
-                  isValid(importadorExportador, 'marca') ? 'required' : ''
-                "
-              />
-            </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-md-4">
-              <app-catalogo-select
-                [catalogo]="ano.catalogos"
-                [label]="ano.labelNombre"
-                [placeholder]="ano.primerOpcion"
-                [required]="false"
-                id="ano"
-                formControlName="ano"
-              ></app-catalogo-select>
-            </div>
-            <div class="col-md-4">
-              <label>Modelo:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="modelo"
-                formControlName="modelo"
-                [ngClass]="
-                  isValid(importadorExportador, 'modelo') ? 'required' : ''
-                "
-              />
-            </div>
-            <div class="col-md-4">
-              <label>Número de serie:</label>
-              <input
-                type="text"
-                class="form-control"
-                id="serie"
-                formControlName="serie"
-                [ngClass]="
-                  isValid(importadorExportador, 'serie') ? 'required' : ''
-                "
-              />
-            </div>
-          </div>
-        </ng-container>
-
-        <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Limpiar</button>
-          <button type="button" class="btn btn-default ms-3">Cancelar</button>
-          <button
-            type="button"
-            class="btn btn-primary ms-3"
-            (click)="openPopup()"
-          >
-            Agregar
-          </button>
-        </div>
-        <div
-          class="modal"
-          tabindex="-1"
-          role="dialog"
-          [ngClass]="{ show: isPopupOpen }"
-          [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
+      <div class="col-md-12 mt-5 d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-primary ms-3"
+          (click)="nextTabla()"
         >
-          <div class="modal-dialog" role="document">
-            <div
-              class="modal-content"
-              style="width: fit-content; margin-left: 115px"
-            >
-              <div style="background-color: black; height: 55px"></div>
-              <div class="modal-body">
-                <p>La mercancía fue <br />agregada correctamente.</p>
-              </div>
-              <div class="modal-footer" style="justify-content: center">
-                <button
-                  type="button"
-                  class="btn btn-primary"
-                  (click)="closePopup()"
-                >
-                  Acceptar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
-      </ng-container>-->
+          Agregar
+        </button>
+      </div>
 
       <ng-titulo titulo="Datos del donante extrajero" />
       <ng-container formGroupName="importadorExportador">
@@ -241,9 +103,8 @@
           <div class="col-md-4">
             <label>Número exterior*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
-              maxlength="55"
               class="form-control"
               id="numeroExterior"
               formControlName="numeroExterior"
@@ -259,9 +120,8 @@
           <div class="col-md-4">
             <label>Número interior:</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
-              maxlength="55"
               id="numeroInterior"
               formControlName="numeroInterior"
               [ngClass]="
@@ -275,7 +135,7 @@
           <div class="col-md-4">
             <label>Teléfono:</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               id="telefono"
               formControlName="telefono"
@@ -288,9 +148,8 @@
           <div class="col-md-4">
             <label>Correo electrónico:</label>
             <input
-              type="email"
+              type="text"
               class="form-control"
-              maxlength="50"
               id="correoElectronico"
               formControlName="correoElectronico"
               [ngClass]="
@@ -303,19 +162,21 @@
         </div>
         <div class="row mt-3">
           <div class="col-md-4">
-            <app-catalogo-select
-              [catalogo]="pais.catalogos"
-              [label]="pais.labelNombre"
-              [placeholder]="pais.primerOpcion"
-              [required]="true"
+            <label>País:</label>
+            <input
+              type="text"
+              class="form-control"
               id="pais"
               formControlName="pais"
-            ></app-catalogo-select>
+              [ngClass]="
+                isValid(importadorExportador, 'pais') ? 'required' : ''
+              "
+            />
           </div>
           <div class="col-md-4">
             <label>Código postal*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               class="form-control"
               id="codigoPostal"
@@ -328,7 +189,7 @@
           <div class="col-md-4">
             <label>Estado*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               class="form-control"
               id="estado"
@@ -343,7 +204,7 @@
           <div class="col-md-4">
             <label>Colonia*:</label>
             <input
-              type="number"
+              type="text"
               required="true"
               class="form-control"
               id="colonia"
