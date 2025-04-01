@@ -71,6 +71,11 @@ export const REGEX_REEMPLAZAR = /[^a-zA-Z0-9]/g;
  * - $: Aserción para el final de la cadena.
  */
 export const REGEX_FECHA_VALIDA = /^\d{2}\/\d{2}\/\d{4}$/;
+/**
+ * Expresión regular para validar números decimales.
+ * Permite valores con hasta 6 dígitos decimales después del punto.
+ * Ejemplo válido: 123.456789
+ */
 export const REGEX_NUMEROS_DECIMALES = /^[0-9]+(\.[0-9]{1,6})?$/;
 
 /**
@@ -134,3 +139,18 @@ export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
  * const soloNumeros = cadena.replace(REGEX_NUMEROS, ''); // Resultado: "123456"
  */
 export const REGEX_NUMEROS = /[^0-9]/g;
+
+
+/**
+ * Expresión regular para validar correos electrónicos.
+ * Admite múltiples correos separados por comas.
+ * Ejemplo válido: ejemplo@correo.com,otro@correo.com
+ */
+export const REGEX_CORREO_ELECTRONICO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
+
+/**
+ * Expresión regular para validar números de teléfono.
+ * Admite números, letras, guiones, paréntesis y espacios.
+ * Ejemplo válido: (123) 456-7890
+ */
+export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;

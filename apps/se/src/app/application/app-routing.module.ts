@@ -201,6 +201,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'certificado',
+    loadChildren:() =>
+      import('./tramites/110219/certificado.module').then(
+        (m) => m.CertificadoModule
+      )
+  }, 
+  {
     path: 'nuevo-programa-industrial',
     loadChildren: () =>
       import('./tramites/80101/nuevo-programa-industrial.module').then(
