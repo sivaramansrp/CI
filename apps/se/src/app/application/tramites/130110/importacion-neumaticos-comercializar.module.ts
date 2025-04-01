@@ -1,5 +1,6 @@
-import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { CrosslistNewComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist-new/crosslist-new.component';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { ImportacionNeumaticosComercializarComponent } from './pages/importacion-neumaticos-comercializar/importacion-neumaticos-comercializar.component';
@@ -13,6 +14,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +39,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     TablaDinamicaComponent,
     PaisProcendenciaComponent,
     RepresentacionComponent,
-    CrosslistComponent
+    CrosslistNewComponent
   ]
 })
 export class ImportacionNeumaticosComercializarModule { }
