@@ -5,7 +5,7 @@ import { Observable, Subject, delay, map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Mercancia } from '../../../110204/models/plantas-consulta.model';
+import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { Modal } from 'bootstrap';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
@@ -194,17 +194,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   conseguirDisponiblesDatos(): void {
     this.camCertificadoService.obtenerTablaDatos('disponibles-datos.json').subscribe({
       next: (response: Mercancia[]) => {
-        // this.disponiblesDatos = response.map(item =>
-        // ({
-        //   ...item,
-        //   fraccionArancelaria: item.fraccionArancelaria || '',
-        //   numeroDeRegistrodeProductos: item.numeroDeRegistrodeProductos || '',
-        //   fechaExpedicion: item.fechaExpedicion || '',
-        //   fechaVencimiento: item.fechaVencimiento || ''
-        // })
-        // );
         if (response && Array.isArray(response)) {
-          this.disponiblesDatos = response;
+          this.disponiblesDatos = response as Mercancia[];
+        }
+        else {
+          this.disponiblesDatos = [];
         }
       },
       error: (error: HttpErrorResponse) => {

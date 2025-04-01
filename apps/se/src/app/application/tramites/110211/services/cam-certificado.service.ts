@@ -2,7 +2,7 @@ import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Mercancia } from '../../110204/models/plantas-consulta.model';
+import { Mercancia } from '../../../shared/models/modificacion.enum';
 
 @Injectable({
   providedIn: 'root'
