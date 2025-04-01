@@ -139,12 +139,6 @@ export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
  */
 export const REGEX_NUMEROS = /[^0-9]/g;
 
-/**
- * Expresión regular para validar una cadena que contenga solo números enteros
- * separados por comas y espacios opcionales.
- * Ejemplo válido: 123, 456, 789
- */
-export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
 
 /**
  * Expresión regular para validar correos electrónicos.
@@ -159,3 +153,10 @@ export const REGEX_CORREO_ELECTRONICO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+
+/**
+ * Expresión regular para validar una cadena que contenga solo números enteros
+ * separados por comas y espacios opcionales.
+ * Ejemplo válido: 123, 456, 789
+ */
+export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
