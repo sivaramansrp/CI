@@ -116,14 +116,6 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.cargarDatos();
   }
 
-  /**
-   * @method ngOnDestroy
-   * @description Hook de destrucción del componente. Libera las suscripciones activas.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
 
   /**
    * @method cargarDatos
@@ -189,5 +181,14 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
  */
   cancelar():void{
     this.ubicaccion.back();
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook de destrucción del componente. Libera las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

@@ -3,7 +3,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -14,6 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados.model';
+import { PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constantes/datos-solicitud.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -34,7 +35,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
 })
-export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
+export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnChanges {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -91,6 +92,9 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
    */
   destinatarios: Destinatario[] = [];
 
+@Input() idProcedimiento!:number;
+
+public mostrarCamposNoContribuyente:boolean = false;
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
@@ -144,6 +148,14 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
   }
 
   /**
+   * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
+   * Llama al método `mostrarCamposNoContribuyente()`.
+   */
+  ngOnChanges(): void {
+    this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+  }
+
+  /**
    * Guarda un nuevo destinatario en el arreglo local `destinatarios`
    * y actualiza la información en el store. Finalmente, resetea el formulario
    * y navega hacia atrás en el historial.
@@ -177,14 +189,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
     this.ubicaccion.back();
   }
 
-  /**
-   * Hook del ciclo de vida que se invoca cuando se destruye el componente.
-   * Completa el Subject `unsubscribe$` para desuscribir todos los observables.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
+
 
   /**
    * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
@@ -260,5 +265,18 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit {
  */
   cancelar():void{
     this.ubicaccion.back();
+  }
+
+   /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+   ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
