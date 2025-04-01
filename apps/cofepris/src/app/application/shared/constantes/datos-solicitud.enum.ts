@@ -144,7 +144,7 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Presentación',
-    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.presentacion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 14,
   },
   {
@@ -189,7 +189,7 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
     cantidadUMC: '',
     unidadMedidaTarifa: '',
     cantidadUMT: '',
-    presentacion: '',
+    presentacion:'',
     numeroRegistroSanitario: '',
     paisOrigen: '',
     paisProcedencia: '',
@@ -266,22 +266,10 @@ export const DETALLE_MERCANCIA_TABLA = [
     orden: 3,
   },
   {
-    encabezado: 'Presentacion',
+    encabezado: 'Presentación',
     clave: (ele: DetalleMercancia): string => ele.tipoDeEnvase,
     orden: 4,
   },
 ];
-
-
-export const FORMA_FORMACEUTICA_DATOS = [
-  {
-    id: 1,
-    descripcion: "Tabletas",  
-  },
-  {
-    id: 2,
-    descripcion: "Gragea",  
-  },
-]
 
 export const STR_NACIONAL = "Nacional";
