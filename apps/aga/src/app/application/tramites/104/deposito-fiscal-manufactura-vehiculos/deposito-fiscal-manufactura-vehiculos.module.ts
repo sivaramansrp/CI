@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { DatosDelInmuebleComponent } from '../components/datos-del-inmueble/datos-del-inmueble.component';
 import { DepositoFiscalManufacturaVehiculosRoutingModule } from './deposito-fiscal-manufactura-vehiculos-routing.module';
 import { NgModule } from '@angular/core';
-import { PasoCuatroComponent } from '../pages/paso-cuatro/paso-cuatro.component';
+import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from '../pages/solicitud-page/solicitud-page.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 @NgModule({
-  declarations: [SolicitudPageComponent,PasoUnoComponent,PasoTresComponent,PasoCuatroComponent],
+  declarations: [SolicitudPageComponent,PasoUnoComponent,PasoDosComponent,PasoTresComponent],
   imports: [
     CommonModule,
     DepositoFiscalManufacturaVehiculosRoutingModule,

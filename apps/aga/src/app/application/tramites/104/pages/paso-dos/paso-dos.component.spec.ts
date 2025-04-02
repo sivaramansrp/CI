@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PasoCuatroComponent } from './paso-cuatro.component';
+import { PasoDosComponent } from './paso-dos.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-describe('PasoCuatroComponent', () => {
-  let component: PasoCuatroComponent;
-  let fixture: ComponentFixture<PasoCuatroComponent>;
+describe('PasoDosComponent', () => {
+  let component: PasoDosComponent;
+  let fixture: ComponentFixture<PasoDosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoCuatroComponent);
+    fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
