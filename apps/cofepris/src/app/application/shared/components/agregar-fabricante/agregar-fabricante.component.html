@@ -11,7 +11,7 @@
             type="radio"
             class="form-check-input"
             formControlName="nacionalidad"
-            value="Nacional"
+            [value]="nacionalStr"
           />
           Nacional
         </div>
@@ -32,7 +32,7 @@
             type="radio"
             class="form-check-input"
             formControlName="tipoPersona"
-            value="Fisica"
+            [value]="tipoPersona.FISICA"
           />
           Física
         </div>
@@ -48,20 +48,25 @@
       </div>
     </div>
 
+    @if(agregarFabricanteForm.get('nacionalidad')?.value === nacionalStr){
     <div class="row mt-3">
       <div class="col-md-6">
         <label class="form-label">R.F.C.*:</label>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
+      @if (!estaOculto) {
       <div class="col-md-6">
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
       </div>
+    }
     </div>
+    }
 
     <!-- Datos Personales -->
-    <h4 class="mt-5">Datos personales</h4>
+    @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.FISICA){
     <div class="row mt-3">
+      <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)*:</label>
         <input type="text" class="form-control" formControlName="nombres" />
@@ -83,13 +88,14 @@
         />
       </div>
     </div>
-
+    } @if(agregarFabricanteForm.get('tipoPersona')?.value === 'Moral') {
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label">Denominación/razón social*:</label>
         <input type="text" class="form-control" formControlName="razonSocial" />
       </div>
     </div>
+    }
 
     <!-- Domicilio -->
     <h4 class="mt-5">Domicilio</h4>
@@ -98,7 +104,7 @@
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
-          [label]="'País*'"
+          [label]="'País'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -106,7 +112,7 @@
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
-          [label]="'Estado/localidad*'"
+          [label]="'Estado/localidad'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -114,7 +120,7 @@
         <app-catalogo-select
           [catalogo]="municipiosDatos"
           formControlName="municipio"
-          [label]="'Municipio/alcaldía*'"
+          [label]="'Municipio/alcaldía'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -125,7 +131,7 @@
         <app-catalogo-select
           [catalogo]="localidadesDatos"
           formControlName="localidad"
-          [label]="'Localidad*'"
+          [label]="'Localidad'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -133,7 +139,7 @@
         <app-catalogo-select
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
-          [label]="'Código postal o equivalente*'"
+          [label]="'Código postal o equivalente'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -141,7 +147,7 @@
         <app-catalogo-select
           [catalogo]="coloniasDatos"
           formControlName="colonia"
-          [label]="'Colonia*'"
+          [label]="'Colonia'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -196,6 +202,7 @@
             type="button"
             name="modificarMercancias"
             class="btn btn-default"
+            (click)="cancelar()"
           >
             Cancelar
           </button>
@@ -203,6 +210,7 @@
             type="button"
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
+            (click)="limpiarFormulario()"
           >
             Limpar
           </button>
