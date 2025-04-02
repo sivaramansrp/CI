@@ -50,11 +50,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
   nicoTablaDatos: NicoInfo[] = [];
 
   /**
-   * Notificador para destruir observables activos y evitar pérdidas de memoria.
-   */
-  private destroyed$ = new Subject<void>();
-
-  /**
    * Estado de la solicitud obtenido desde el store.
    */
   public solicitudState!: Solicitud110208State;
@@ -126,7 +121,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   obtenerEstadoList(): void {
     this.service.obtenerEstadoList()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
@@ -138,7 +133,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   obtenerTablaDatosCertificado(): void {
     this.service.obtenerTablaDatosCertificado()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.nicoTablaDatos = DATOS;
@@ -219,8 +214,6 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Libera recursos y evita pérdidas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

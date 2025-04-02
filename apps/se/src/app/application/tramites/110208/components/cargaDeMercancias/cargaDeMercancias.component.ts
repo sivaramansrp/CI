@@ -60,11 +60,6 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   public fechaFacturaInput: InputFecha = FECHA_DE_FACTURA;
 
   /**
-   * Notificador para destruir observables activos.
-   */
-  private destroyed$ = new Subject<void>();
-
-  /**
    * Alerta para el componente.
    */
   public alerta = ALERTA_PARA;
@@ -143,7 +138,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerTablaDatos(): void {
     this.service.obtenerTablaDatos()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.mercanciasTablaDatos = DATOS;
@@ -156,7 +151,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   obtenerFormDatos(): void {
     this.service
       .obtenerFormDatos()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.mercanciasFormaDatos = data?.data;
         this.formMercancia.patchValue({
@@ -194,7 +189,7 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
   obtenerEstadoList(): void {
     this.service
       .obtenerEstadoList()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
@@ -239,8 +234,6 @@ export class CargaDeMercanciasComponent implements OnInit, OnDestroy {
    * Método que se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

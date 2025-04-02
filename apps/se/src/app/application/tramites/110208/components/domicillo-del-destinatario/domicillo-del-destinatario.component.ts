@@ -43,13 +43,6 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
   domicilioDestinatario!: FormGroup;
 
   /**
-   * Notificador para destruir observables relacionados con el componente.
-   * @private
-   * @type {Subject<void>}
-   */
-  private destroyed$ = new Subject<void>();
-
-  /**
    * Lista de catálogos de estados.
    * @type {Catalogo[]}
    */
@@ -117,7 +110,7 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
    */
   obtenerEstadoList(): void {
     this.service.obtenerEstadoList()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
@@ -129,8 +122,6 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
    * Libera recursos y evita pérdidas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

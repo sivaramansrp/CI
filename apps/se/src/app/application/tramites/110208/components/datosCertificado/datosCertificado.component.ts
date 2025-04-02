@@ -39,11 +39,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   formDatosCertificado!: FormGroup;
 
   /**
-   * Notificador para destruir observables relacionados con el componente.
-   */
-  private destroyed$ = new Subject<void>();
-
-  /**
    * Lista de catálogos de estados.
    */
   estado: Catalogo[] = [];
@@ -110,7 +105,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   obtenerEstadoList(): void {
     this.service.obtenerEstadoList()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
@@ -122,8 +117,6 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Libera los recursos y completa los observables.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

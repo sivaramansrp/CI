@@ -39,11 +39,6 @@ export class DetallesComponent implements OnInit, OnDestroy {
   estado: Catalogo[] = [];
 
   /**
-   * Notificador para destruir observables activos.
-   */
-  private destroyed$ = new Subject<void>();
-
-  /**
    * Formulario reactivo para gestionar los detalles del trámite.
    */
   detallas!: FormGroup;
@@ -109,7 +104,7 @@ export class DetallesComponent implements OnInit, OnDestroy {
    */
   obtenerEstadoList(): void {
     this.service.obtenerEstadoList()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         const DATOS = data?.data;
         this.estado = DATOS;
@@ -120,8 +115,6 @@ export class DetallesComponent implements OnInit, OnDestroy {
    * Método para limpiar recursos y evitar pérdidas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
