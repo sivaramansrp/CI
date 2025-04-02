@@ -37,6 +37,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-psicotropicos',
+    loadChildren: () =>
+      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
+        (m) => m.CertificadosLicenciasPermisosModule),
+  },
+  {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
       import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
