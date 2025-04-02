@@ -89,6 +89,11 @@ export class TercerosRelacionadosComponent {
    * Tipo de selección que utiliza la tabla dinámica (por ejemplo, checkbox).
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+   /**
+   * Indica si el componente debe estar oculto o visible.
+   * @input estaOculto - Valor booleano que determina la visibilidad del componente.
+   */
+   @Input() estaOculto!:boolean;
 
   /**
    * @constructor
