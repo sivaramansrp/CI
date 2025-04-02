@@ -86,29 +86,31 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <label class="form-label" for="correoElectronico"
-            >Correo electrónico:</label
-          >
-          <span
-            class="bi bi-question-circle-fill"
-            title="Correo electrónico"
-            data-bs-toggle="tooltip"
-          ></span>
-          <input
-            class="form-control"
-            id="correoElectronico"
-            type="text"
-            formControlName="correoElectronico"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
-            "
-          />
+    @if(mostrarCorreoElectronico){
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="correoElectronico"
+              >Correo electrónico:</label
+            >
+            <span
+              class="bi bi-question-circle-fill"
+              title="Correo electrónico"
+              data-bs-toggle="tooltip"
+            ></span>
+            <input
+              class="form-control"
+              id="correoElectronico"
+              type="text"
+              formControlName="correoElectronico"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
+              "
+            />
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
 
