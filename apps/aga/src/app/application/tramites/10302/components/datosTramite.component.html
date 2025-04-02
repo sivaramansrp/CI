@@ -5,7 +5,7 @@
     class="row mt-5"
   >
     <div class="col-md-12">
-      <ng-container formGroupName="importadorExportador">
+      <ng-container formGroupName="exencionImpuestos">
         <div class="row mt-5">
           <div class="col-md-8">
             <app-catalogo-select
@@ -16,7 +16,7 @@
               id="aduana"
               formControlName="aduana"
               (change)="
-                setValoresStore(importadorExportador, 'aduana', 'setAduana')
+                setValoresStore(exencionImpuestos, 'aduana', 'setAduana')
               "
             >
             </app-catalogo-select>
@@ -31,7 +31,7 @@
                 id="organismoPublico"
                 (change)="
                   setValoresStore(
-                    importadorExportador,
+                    exencionImpuestos,
                     'organismoPublico',
                     'setOrganismoPublico'
                   )
@@ -61,7 +61,7 @@
                 formControlName="usoEspecifico"
                 (change)="
                   setValoresStore(
-                    importadorExportador,
+                    exencionImpuestos,
                     'usoEspecifico',
                     'setUsoEspecifico'
                   )"

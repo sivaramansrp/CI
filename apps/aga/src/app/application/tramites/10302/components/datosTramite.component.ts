@@ -20,7 +20,7 @@ import {
   Tramite10302Store,
 } from '../estados/tramite10302.store';
 import { Tramite10302Query } from '../estados/tramite10302.query';
-import { ImportadorExportadorService } from '../services/importador-exportador.service';
+import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
 import { map, Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
@@ -76,7 +76,7 @@ export class DatosTramiteComponent {
   ];
 
   constructor(
-    private importarExportar: ImportadorExportadorService,
+    private exencionImpuesto: ExencionImpuestosService,
     private store: Tramite10302Store,
     private query: Tramite10302Query,
     private fb: FormBuilder,
@@ -120,7 +120,7 @@ export class DatosTramiteComponent {
    */
   donanteDomicilio(): void {
     this.tramiteForm = this.fb.group({
-      importadorExportador: this.fb.group({
+      exencionImpuestos: this.fb.group({
         aduana: [this.solicitudState?.aduana, [Validators.required]],
         organismoPublico: [this.solicitudState?.organismoPublico, Validators.required],
         // nombre: [
@@ -188,7 +188,7 @@ export class DatosTramiteComponent {
   }
 
   getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.importarExportar
+    this.getAduanaIngresaraSubscription = this.exencionImpuesto
       .getAduanaIngresara()
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -203,8 +203,8 @@ export class DatosTramiteComponent {
    *
    * @returns {FormGroup} - El grupo de formulario de importador/exportador.
    */
-  get importadorExportador(): FormGroup {
-    return this.tramiteForm.get('importadorExportador') as FormGroup;
+  get exencionImpuestos(): FormGroup {
+    return this.tramiteForm.get('exencionImpuestos') as FormGroup;
   }
 
   /**

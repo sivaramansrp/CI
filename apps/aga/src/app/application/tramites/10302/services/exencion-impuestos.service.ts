@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Tramite10302Store} from '../../10302/estados/tramite10302.store'
+import { Tramite10302Store} from '../estados/tramite10302.store'
 import { tap } from 'rxjs/operators';
 
 /**
@@ -11,7 +11,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 
-export class ImportadorExportadorService {
+export class ExencionImpuestosService {
   /**
    * Constructor que se utiliza para la inyección de dependencias.
    * @param http Servicio HTTP para realizar solicitudes.
