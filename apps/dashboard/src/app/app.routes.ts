@@ -114,4 +114,13 @@ export const appRoutes: Route[] = [
         exposedModule: './Module'
       }).then((m) => m.AppCofeprisModule)
   },
+  {
+  path: 'amecafe',
+  loadChildren: () =>
+      loadRemoteModule({
+          remoteEntry: 'http://localhost:4212/remoteAppEntry.js',
+          remoteName: 'amecafe',
+          exposedModule: './Module'
+      }).then((m) => m.AppAmecafeModule)
+}              
 ];

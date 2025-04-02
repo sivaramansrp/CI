@@ -1,16 +1,9 @@
 import {
-  ADUNAS_DE_ENTRADAS_DATOS,
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
-  REGIMEN_DATOS,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  AlertComponent,
-  CATALOGOS_ID,
-  CatalogosService,
-} from '@libs/shared/data-access-user/src';
 import {
   Catalogo,
   DatosDeTablaSeleccionados,
@@ -30,8 +23,12 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
+import {
+  AlertComponent
+} from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ScianConfig } from '../../models/datos-solicitud.model';
@@ -153,13 +150,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @property {Catalogo[]} regimenDatos
    * Lista de regímenes disponibles.
    */
-  public regimenDatos: Catalogo[] = REGIMEN_DATOS;
+  public regimenDatos: Catalogo[] = [];
 
   /**
    * @property {Catalogo[]} adunasDeEntradasDatos
    * Lista de aduanas de entrada disponibles.
    */
-  public adunasDeEntradasDatos: Catalogo[] = ADUNAS_DE_ENTRADAS_DATOS;
+  public adunasDeEntradasDatos: Catalogo[] = [];
 
   /**
    * @property {string} infoAlert
@@ -225,8 +222,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-    public catalogosServices: CatalogosService
-  ) {}
+     public datosSolicitudService: DatosSolicitudService
+      ) {
+        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'regimenDatos', '/cofepris/regimenDatos.json');
+        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'adunasDeEntradasDatos', '/cofepris/adunasDeEntradasDatos.json');
+        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'estadoDatos', '/cofepris/estadoDatos.json');
+
+      }
 
   /**
    * @method ngOnInit
@@ -235,7 +237,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearDatosSolicitudForm();
-    this.getCatalogoEstado();
 
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
@@ -523,20 +524,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         opcionesColapsableState: this.opcionesColapsable,
       });
     }
-  }
-
-  /**
-   * Obtiene el catálogo de estados y lo almacena en `estadoDatos` si hay resultados.
-   * @returns {void} No devuelve ningún valor.
-   */
-  getCatalogoEstado(): void {
-    this.catalogosServices.getCatalogo(CATALOGOS_ID.CAT_ESTADO).subscribe({
-      next: (resp): void => {
-        if (resp.length > 0) {
-          this.estadoDatos = resp;
-        }
-      },
-    });
   }
 
   /**
