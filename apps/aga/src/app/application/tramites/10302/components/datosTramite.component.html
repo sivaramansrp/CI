@@ -43,27 +43,50 @@
             </div>
           </div>
         </div>
+        <ng-titulo titulo="Mercancía" />
+        <div class="row">
+          <div class="col-md-6">
+            <label for="usoEspecifico"
+              >Fin al cual se destinará la mercancía</label
+            >
+            <span class="require">*</span>
+          </div>
+          <div class="col-md-12">
+            <div class="form-group">
+              <!-- <label>Puntos</label> -->
+              <textarea
+                class="form-control form-check-input"
+                id="usoEspecifico"
+                required="true"
+                formControlName="usoEspecifico"
+                (change)="
+                  setValoresStore(
+                    importadorExportador,
+                    'usoEspecifico',
+                    'setUsoEspecifico'
+                  )"
+                cols="110"
+                rows="4"
+              ></textarea>
+            </div>
+          </div>
+          <br/><br/>
+          <div class="table-container">
+            <ng-table [commonTableHeader]="encabezadosTabla"></ng-table>
+          </div>
+          <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-default">Modificar</button>
+            <button type="button" class="btn btn-default ms-3">Eliminar</button>
+            <button
+              type="button"
+              class="btn btn-primary ms-3"
+              (click)="nextTabla()"
+            >
+              Agregar
+            </button>
+          </div>
+        </div>
       </ng-container>
-      <ng-titulo titulo="Mercancía" />
-      <div class="row">
-        <div class="col-md-6">
-          <label for="mercancia">Mercancías*:</label>
-        </div>
-        <div class="table-container">
-          <ng-table [commonTableHeader]="encabezadosTabla"> </ng-table>
-        </div>
-        <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default">Modificar</button>
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
-          <button
-            type="button"
-            class="btn btn-primary ms-3"
-            (click)="nextTabla()"
-          >
-            Agregar
-          </button>
-        </div>
-      </div>
     </div>
   </form>
 </div>

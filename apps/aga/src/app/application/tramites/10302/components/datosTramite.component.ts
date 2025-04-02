@@ -131,10 +131,10 @@ export class DatosTramiteComponent {
         //   this.solicitudState?.tipoMercancia,
         //   [Validators.required, Validators.maxLength(100)],
         // ],
-        // usoEspecifico: [
-        //   this.solicitudState?.usoEspecifico,
-        //   [Validators.required, Validators.maxLength(512)],
-        // ],
+        usoEspecifico: [
+          this.solicitudState?.usoEspecifico,
+          [Validators.required, Validators.maxLength(512)],
+        ],
         // condicion: [this.solicitudState?.condicion, Validators.required],
         // marca: [
         //   this.solicitudState?.marca,
