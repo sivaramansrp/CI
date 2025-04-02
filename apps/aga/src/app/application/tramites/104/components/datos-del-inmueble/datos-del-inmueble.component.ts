@@ -144,8 +144,8 @@ export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
    * - `folioAutorizacion`: Opciones disponibles para el folio de autorización.
    */
   configuracionesDropdown = [
-    { catalogos: dropDown.tipoPrograma }, // Dropdown para el tipo de programa.
-    { catalogos: dropDown.folioAutorizacion }, // Dropdown para el folio de autorización.
+    { catalogos: dropDown?.tipoPrograma }, // Dropdown para el tipo de programa.
+    { catalogos: dropDown?.folioAutorizacion }, // Dropdown para el folio de autorización.
   ];
 
   /**
@@ -205,11 +205,11 @@ export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
    * de las variables `dropDown.pais`, `dropDown.entidadFederativa`, etc.
    */
   configuracionesFormularioDropdown = [
-    { catalogos: dropDown.pais }, // Dropdown para seleccionar el país.
-    { catalogos: dropDown.entidadFederativa }, // Dropdown para seleccionar la entidad federativa.
-    { catalogos: dropDown.municipioDelegacion }, // Dropdown para seleccionar el municipio o delegación.
-    { catalogos: dropDown.entidadFederativa }, // Repetido para entidad federativa, ¿es necesario?
-    { catalogos: dropDown.localidad } // Dropdown para seleccionar la localidad.
+    { catalogos: dropDown?.pais }, // Dropdown para seleccionar el país.
+    { catalogos: dropDown?.entidadFederativa }, // Dropdown para seleccionar la entidad federativa.
+    { catalogos: dropDown?.municipioDelegacion }, // Dropdown para seleccionar el municipio o delegación.
+    { catalogos: dropDown?.entidadFederativa }, // Repetido para entidad federativa, ¿es necesario?
+    { catalogos: dropDown?.localidad } // Dropdown para seleccionar la localidad.
   ];
 
 
