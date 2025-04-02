@@ -1,6 +1,5 @@
 <div class="container">
   <ng-titulo titulo="Tipo de servicio extraordinario" />
-
   <form [formGroup]="FormSolicitud">
     <div class="row">
       <div class="col-md-4">
@@ -217,15 +216,6 @@
     <ng-titulo titulo="Datos del despacho para el servicio extraordinario" />
     <div formGroupName="despacho">
       <div class="row">
-        <!-- <div class="col-md-4">
-            <input-check [datos]="despachoLDA"></input-check>
-          </div>
-          <div class="col-md-4">
-            <input-check [datos]="despachoDD"></input-check>
-          </div> -->
-      </div>
-
-      <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduanas" formControlName="idAduana" [label]="'Aduana'" [required]="true"
             (change)="setValoresStore(despacho,'idAduana', 'setIdAduana')"></app-catalogo-select>
@@ -240,32 +230,44 @@
             [label]="'Nombre del recinto'" [required]="false" [isDisabled]="true"></app-catalogo-select>
         </div>
       </div>
-
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipo de operacion'"
-            [required]="true"
-            (change)="setValoresStore(despacho,'tipoOperacion', 'setTipoOperacion')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="idSeccionAduanera"
+            [label]="'Sección aduanera'" [required]="true"
+            (change)="setValoresStore(despacho,'idSeccionAduanera', 'setIdSeccionAduanera')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <label for="patente" class="form-label">Patente/Número de autorización:</label>
-          <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
-        </div>
-        <div class="col-md-4">
-          <div class="form-check">
-            <div>
-              <label class="form-label" for="relacionSociedad">Relación de sociedad: </label>
-              <input class="form-check-input ms-3" type="checkbox" value="" id="relacionSociedad">
-            </div>
-            <div>
-              <label class="form-label" for="encargoConferido">Encargo conferido:</label>
-              <input class="form-check-input ms-3" type="checkbox" value="" id="encargoConferido">
-            </div>
-          </div>
-
+          <app-catalogo-select [catalogo]="seccionAduanera" formControlName="nombreRecinto"
+            [label]="'Nombre del recinto'" [required]="false" [isDisabled]="true"></app-catalogo-select>
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select [catalogo]="tipoOperacion" formControlName="tipoOperacion" [label]="'Tipo de operacion'"
+          [required]="true"
+          (change)="setValoresStore(despacho,'tipoOperacion', 'setTipoOperacion')"></app-catalogo-select>
+      </div>
+      <div class="col-md-4">
+        <label for="patente" class="form-label">Patente/Número de autorización:</label>
+        <input class="form-control" type="text" name="patente" id="patente" formControlName="patente">
+      </div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <div>
+            <label class="form-label" for="relacionSociedad">Relación de sociedad: </label>
+            <input class="form-check-input ms-3" type="checkbox" value="" id="relacionSociedad">
+          </div>
+          <div>
+            <label class="form-label" for="encargoConferido">Encargo conferido:</label>
+            <input class="form-check-input ms-3" type="checkbox" value="" id="encargoConferido">
+          </div>
+        </div>
+
+      </div>
+    </div>
+
 
     @if (individual()) {
     <ng-titulo titulo="Datos del pedimento" />

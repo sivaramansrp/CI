@@ -1,7 +1,21 @@
-
-import { Component, EventEmitter, Input, OnInit, Output, forwardRef, } from '@angular/core';
-import { FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  forwardRef,
+} from '@angular/core';
+
+import {
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 /**
  * InputRadioComponent es un componente reutilizable que renderiza un grupo de botones de radio.
@@ -17,9 +31,9 @@ import { CommonModule } from '@angular/common';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => InputRadioComponent), // ✅ FIX: Wrap with forwardRef()
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 
 export class InputRadioComponent implements OnInit {
@@ -33,7 +47,11 @@ export class InputRadioComponent implements OnInit {
   /**
    * Array de opciones de radio, cada una con una etiqueta y un valor.
    */
-  @Input() radioOptions: { label: string; value: string | number }[] = [];
+  @Input() radioOptions: {
+    label: string;
+    value: string | number;
+    hint?: string;
+  }[] = [];
   /**
    * El valor actualmente seleccionado.
    * @example 'option1'
@@ -49,6 +67,13 @@ export class InputRadioComponent implements OnInit {
    * @default 'vertical'
    */
   @Input() layout: 'vertical' | 'horizontal' = 'vertical';
+
+  /**
+   * Indica si se debe mostrar un tooltip con la descripción del campo.
+   * @default false
+   */
+  @Input() showTooltip: boolean = false;
+
   /**
    * Evento emitido cuando el valor seleccionado cambia.
    */

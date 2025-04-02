@@ -18,7 +18,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 @Component({
   selector: 'lib-input-check',
   standalone: true,
