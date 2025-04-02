@@ -20,14 +20,14 @@
             type="radio"
             class="form-check-input"
             formControlName="tipoPersona"
-            value="Moral"
+            [value]="tipoPersona.MORAL"
           />
           Moral <i class="fas fa-info-circle"></i>
         </div>
       </div>
     </div>
 
-    @if(agregarProveedorForm.get('tipoPersona')?.value === 'Moral') {
+    @if(agregarProveedorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
     <div class="row">
       <div class="form-group">
         <label class="form-label row mt-3 mover-izquierda fs-2" for="denominacionRazon"
