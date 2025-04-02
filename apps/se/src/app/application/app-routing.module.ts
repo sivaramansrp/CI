@@ -194,6 +194,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-modificacion',
+    loadChildren: () =>
+      import('./tramites/80302/modificacion.module').then(
+        (m) => m.ModificacionModule
+      ),
+  },
+  {
     path: 'cancelaciones-ministerio',
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
@@ -228,6 +235,25 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+  {
+    path: 'validador-certificado-cam',
+    loadChildren:() =>
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
+      )
+  },
+  {
+    path: 'registro-solicitud-anual',
+    loadChildren: () =>
+      import('./tramites/150101/registro-solicitud-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  }
 ];
 
 @NgModule({
