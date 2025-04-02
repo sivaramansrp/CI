@@ -21,15 +21,15 @@
     "entidadFederativa": {
         "catalogos": [
             {
-                "id": "MEXICO-1",
+                "id": 1,
                 "descripcion": "MEXICO-1"
             },
             {
-                "id": "MEXICO-2",
+                "id": 2,
                 "descripcion": "MEXICO-2"
             },
             {
-                "id": "MEXICO-3",
+                "id": 3,
                 "descripcion": "MEXICO-3"
             }
         ],
@@ -40,15 +40,15 @@
     "delegacionMunicipio": {
         "catalogos": [
             {
-                "id": "ATENCO-1",
+                "id": 1,
                 "descripcion": "ATENCO-1"
             },
             {
-                "id": "ATENCO-2",
+                "id": 2,
                 "descripcion": "ATENCO-2"
             },
             {
-                "id": "ATENCO-3",
+                "id": 3,
                 "descripcion": "ATENCO-3"
             }
         ],
@@ -59,19 +59,38 @@
     "colonia": {
         "catalogos": [
             {
-                "id": "LA NORIA-1",
+                "id": 1,
                 "descripcion": "LA NORIA-1"
             },
             {
-                "id": "LA NORIA-2",
+                "id": 2,
                 "descripcion": "LA NORIA-2"
             },
             {
-                "id": "LA NORIA-3",
+                "id": 3,
                 "descripcion": "LA NORIA-3"
             }
         ],
         "labelNombre": "Colonia",
+        "required": true,
+        "primerOpcion": "Seleccione un valor"
+    },
+    "aduanaDeImportacion": {
+        "catalogos": [
+            {
+                "id": 1,
+                "descripcion": "Test-1"
+            },
+            {
+                "id": 2,
+                "descripcion": "Test-2"
+            },
+            {
+                "id": 3,
+                "descripcion": "Test-3"
+            }
+        ],
+        "labelNombre": "Aduana de importación",
         "required": true,
         "primerOpcion": "Seleccione un valor"
     }

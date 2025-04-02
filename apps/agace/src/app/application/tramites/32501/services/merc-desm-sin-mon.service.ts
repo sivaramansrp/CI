@@ -1,5 +1,5 @@
 import {Observable, catchError, throwError } from 'rxjs';
-import { AvisoCatalogo } from '../models/aviso-catalogo.model';
+import { AvisoCatalogo, OperacionDeImportacion } from '../models/aviso-catalogo.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -21,4 +21,14 @@ export class MercDesmSinMonService {
       })
     );
   }
+
+  obtenerOperacionDeImportacion(): Observable<OperacionDeImportacion[]> {
+    return this.http.get<OperacionDeImportacion[]>('assets/json/32501/operacion-de-importacion.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  
 }

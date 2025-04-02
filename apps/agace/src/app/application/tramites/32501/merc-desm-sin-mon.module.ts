@@ -1,4 +1,4 @@
-import { AlertComponent, InputRadioComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, InputRadioComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -21,6 +21,7 @@ import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { MercDesmSinMonService } from './services/merc-desm-sin-mon.service';
+import { ModalOperacionComponent } from './components/modal-operacion/modal-operacion.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MercDesmSinMonService } from './services/merc-desm-sin-mon.service';
     SolicitudPageComponent,
     PasoDosComponent,
     PasoTresComponent,
-    DatosSolicitudComponent
+    DatosSolicitudComponent,
+    ModalOperacionComponent
     // SolicitudComponent,
   ],
   imports: [
@@ -55,7 +57,8 @@ import { MercDesmSinMonService } from './services/merc-desm-sin-mon.service';
     AnexarDocumentosComponent,
     AlertComponent,
     CatalogoSelectComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    TablaDinamicaComponent
     // AnexarRequisitosComponent
   ],
   exports: [

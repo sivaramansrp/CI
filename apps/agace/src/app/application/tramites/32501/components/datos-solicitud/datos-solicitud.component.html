@@ -1,5 +1,6 @@
 <div class="container">
   <form [formGroup]="formAviso">
+    <!-- ADACE -->
     <div class="row">
       <div class="col-md-4 mt-5">
         <label for="adace">ADACE:</label>
@@ -14,6 +15,8 @@
       </div>
       <div class="col-md-8"></div>
     </div>
+
+    <!-- Tipo de aviso -->
     <div class="row">
       <div class="col-md-12">
         <ng-titulo titulo="Tipo de aviso" />
@@ -30,12 +33,13 @@
           (valueChange)="setTipoDeAviso($event)"
         ></app-input-radio>
       </div>
+    </div>
 
-      @if (tipoAviso === '') {
+    @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.MON') {
+    <!-- Datos del aviso de importación previa relacionado -->
+    <div class="row">
       <div class="col-md-12 mt-5">
-        <ng-titulo
-          titulo=" Datos del aviso de importación previa relacionado"
-        />
+        <ng-titulo titulo="Datos del aviso de importación previa relacionado" />
       </div>
       <div class="col-md-12 alert alert-warning" role="alert">
         <strong>¡Precaución!</strong>
@@ -50,31 +54,31 @@
         <input
           id="idTransaccionVU"
           formControlName="idTransaccionVU"
-          (blur)="busquedaImportacionPorFolio()"
-          (keyup)="onKeyUpIdTransaccionVU($event)"
+          (blur)="actualizarIdTransaccionVU($event)"
+          (keyup)="actualizarIdTransaccionVU($event)"
           class="form-control"
           type="text"
         />
       </div>
-
+    </div>
+    } @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.MON') {
+    <!-- Fecha de inicio de uso de la mercancía importada -->
+    <div class="row">
       <div class="col-md-12">
         <ng-titulo titulo="Fecha de inicio de uso de la mercancía importada" />
       </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label for="fechaIniExposicion">
-            Fecha en la que se empezará a utilizar la mercancía montada
-          </label>
-          <span class="text-danger">*</span>
-          <input
-            id="fechaInicioUsoMerc"
-            formControlName="fechaIniExposicion"
-            class="form-control"
-            type="text"
-          />
+          <input-fecha
+            [setFecha]="formAviso.get('fechaIniExposicion')?.value"
+            [datos]="fechaInicioInput"
+          ></input-fecha>
         </div>
       </div>
-      } @else if(tipoAviso === 'TAV.IMP') {
+    </div>
+    } @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.IMP') {
+    <!-- Datos de la mercanc&iacute;a completa que se importar&aacute; desmontada -->
+    <div class="row">
       <div class="col-md-12 mt-5">
         <ng-titulo
           titulo="Datos de la
@@ -88,53 +92,77 @@
           [label]="opcionFraccionArancelaria.labelNombre"
           [required]="opcionFraccionArancelaria.required"
           name="cveFraccionArancelaria"
-          (selectionChange)="mostrarDescFraccArancelaria($event)"
+          (selectionChange)="actualizarCveFraccionArancelaria($event)"
         ></app-catalogo-select>
+        <div *ngIf="noEsValido('cveFraccionArancelaria')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <label for="nico">NICO</label>
-        <span class="text-danger">*</span>
+        <span class="text-danger">*:</span>
         <input
           id="nico"
           formControlName="nico"
-          (keyup)="onKeyUpNico($event)"
+          (keyup)="actualizarNico($event)"
           class="form-control"
-          type="text"
+          type="number"
+          [ngClass]="esValido('nico') ? 'required' : ''"
         />
+        <div *ngIf="noEsValido('nico')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <label for="peso">Peso (Kg)</label>
-        <span class="text-danger">*</span>
+        <span class="text-danger">*:</span>
         <input
           id="peso"
           formControlName="peso"
-          (keyup)="onKeyUpPeso($event)"
+          (keyup)="actualizarPeso($event)"
           class="form-control"
           type="text"
+          [ngClass]="esValido('peso') ? 'required' : ''"
         />
+        <div *ngIf="noEsValido('peso')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
-        <label for="valorUSD">Valor USD</label>
+        <label for="valorUSD">Valor USD:</label>
         <span class="text-danger">*</span>
         <input
           id="valorUSD"
           formControlName="valorUSD"
-          (keyup)="onKeyUpValorUSD($event)"
+          (keyup)="actualizarValorUSD($event)"
           class="form-control"
           type="text"
+          [ngClass]="esValido('valorUSD') ? 'required' : ''"
         />
+        <div *ngIf="noEsValido('valorUSD')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-8 mt-3">
-        <label for="descripcionMercancia"> Descripción de la mercancía </label>
+        <label for="descripcionMercancia"> Descripción de la mercancía: </label>
         <span class="text-danger">*</span>
         <textarea
           id="descripcionMercancia"
           formControlName="descripcionMercancia"
           rows="3"
+          (change)="actualizarDescripcionMercancia($event)"
           class="form-control"
+          [ngClass]="esValido('descripcionMercancia') ? 'required' : ''"
         ></textarea>
+        <div *ngIf="noEsValido('descripcionMercancia')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
-
+    </div>
+    } @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.IMP' || tipoAviso
+    === 'TAV.MON') {
+    <!-- Datos del domicilio donde se montará la mercancía -->
+    <div class="row">
       <div class="col-md-12 mt-5">
         <ng-titulo titulo="Datos del domicilio donde se montará la mercancía" />
       </div>
@@ -145,6 +173,7 @@
           formControlName="nombreComercial"
           class="form-control"
           type="text"
+          (change)="actualizarNombreComercial($event)"
         />
       </div>
       <div class="col-md-4 mt-3"></div>
@@ -155,8 +184,11 @@
           [label]="opcionEntidadFederativa.labelNombre"
           [required]="opcionEntidadFederativa.required"
           name="entidadFederativa"
-          (selectionChange)="mostrarDescFraccArancelaria($event)"
+          (selectionChange)="actualizarEntidadFederativa($event)"
         ></app-catalogo-select>
+        <div *ngIf="noEsValido('entidadFederativa')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <app-catalogo-select
@@ -165,8 +197,11 @@
           [label]="opcionDelegacionMunicipio.labelNombre"
           [required]="opcionDelegacionMunicipio.required"
           name="delegacionMunicipio"
-          (selectionChange)="mostrarDescFraccArancelaria($event)"
+          (selectionChange)="actualizarDelegacionMunicipio($event)"
         ></app-catalogo-select>
+        <div *ngIf="noEsValido('delegacionMunicipio')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <app-catalogo-select
@@ -175,8 +210,11 @@
           [label]="opcionColonia.labelNombre"
           [required]="opcionColonia.required"
           name="colonia"
-          (selectionChange)="mostrarDescFraccArancelaria($event)"
+          (selectionChange)="actualizarColonia($event)"
         ></app-catalogo-select>
+        <div *ngIf="noEsValido('colonia')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <label for="calle">Calle</label>
@@ -186,7 +224,12 @@
           formControlName="calle"
           class="form-control"
           type="text"
+          (change)="actualizarCalle($event)"
+          [ngClass]="esValido('calle') ? 'required' : ''"
         />
+        <div *ngIf="noEsValido('calle')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <label for="numeroExterior">No. Exterior</label>
@@ -196,7 +239,12 @@
           formControlName="numeroExterior"
           class="form-control"
           type="text"
+          [ngClass]="esValido('numeroExterior') ? 'required' : ''"
+          (change)="actualizarNumeroExterior($event)"
         />
+        <div *ngIf="noEsValido('numeroExterior')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
       <div class="col-md-4 mt-3">
         <label for="numeroInterior">No. Interior</label>
@@ -205,6 +253,7 @@
           formControlName="numeroInterior"
           class="form-control"
           type="text"
+          (change)="actualizarNumeroInterior($event)"
         />
       </div>
       <div class="col-md-4 mt-3">
@@ -213,12 +262,74 @@
         <input
           id="codigoPostal"
           formControlName="codigoPostal"
-          (keyup)="onKeyUpCodigoPostal($event)"
           class="form-control"
           type="text"
+          [ngClass]="esValido('codigoPostal') ? 'required' : ''"
+          (change)="actualizarCodigoPostal($event)"
         />
+        <div *ngIf="noEsValido('codigoPostal')" class="text-danger">
+          Este campo es obligatorio
+        </div>
       </div>
-      }
     </div>
+    } @if (tipoAviso === 'por defecto' || tipoAviso === 'TAV.MON') {
+    <!-- Datos de la operación de importación -->
+    <div class="row">
+      <div class="col-md-12 mt-5">
+        <ng-titulo titulo="Datos de la operación de importación" />
+      </div>
+      <div class="col-md-12 mt-3">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [configuracionTabla]="configuracionColumnas"
+          [datos]="operacionDeImportacionLista"
+        >
+        </app-tabla-dinamica>
+      </div>
+      <div class="col-md-12">
+        <div class="d-flex justify-content-end">
+          <button
+            id="idEliminarOperacionImp"
+            class="btn btn-secondary me-3"
+            (click)="eliminarOperacionImp()"
+          >
+            Eliminar
+          </button>
+          <button
+            id="idModificarOperacionImp"
+            class="btn btn-danger me-3"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+            (click)="modificarOperacionImp()"
+          >
+            Modificar
+          </button>
+          <button
+            id="idAgregarOperacionImp"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#modalAgregarMercancias"
+            (click)="agregarOperacionImp()"
+          >
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+    }
   </form>
+</div>
+
+<div
+  class="modal fade"
+  id="modalAgregarMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAgregarMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-modal-operacion></app-modal-operacion>
+    </div>
+  </div>
 </div>
