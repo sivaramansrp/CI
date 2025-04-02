@@ -5,6 +5,7 @@ import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DatosTramiteComponent } from '../../components/datosTramite.component';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -13,7 +14,7 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONA
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   standalone:true,
-  imports:[SolicitanteComponent,CommonModule, FormsModule, ReactiveFormsModule]
+  imports:[SolicitanteComponent, DatosTramiteComponent, CommonModule, FormsModule, ReactiveFormsModule]
   
 })
 export class PasoUnoComponent implements AfterViewInit {

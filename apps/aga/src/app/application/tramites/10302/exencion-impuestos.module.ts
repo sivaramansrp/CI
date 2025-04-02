@@ -6,6 +6,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DatosTramiteComponent } from './components/datosTramite.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     WizardComponent,
     BtnContinuarComponent,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DatosTramiteComponent
   ]
 })
 export class ExencionImpuestosModule { }
