@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Tramite260206State,
   Tramite260206Store,
@@ -22,7 +22,7 @@ import { Tramite260206Query } from '../../estados/queries/tramite260206Query.que
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
-export class DatosMercanciaContenedoraComponent implements OnInit {
+export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
   /**
    * @property {TablaMercanciasDatos} SeleccionadoDatos
    * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
@@ -133,4 +133,17 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       tablaMercanciasConfigDatos: datosActivos,
     }));
   }
+
+     /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   *
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+     ngOnDestroy(): void {
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
+    }
 }
