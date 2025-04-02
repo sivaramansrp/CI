@@ -22,6 +22,11 @@ const ROUTES: Routes = [
     path: 'permiso-cites',
     loadChildren: ()=>
       import('./tramites/230902/permiso-cites.module').then((m)=>m.PermisoCitesModule)
+  },
+  {
+    path: 'tramites-disponibles',
+    loadChildren: () =>
+      import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
   }
  
 ];
