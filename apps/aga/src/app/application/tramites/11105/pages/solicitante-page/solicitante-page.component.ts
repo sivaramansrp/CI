@@ -1,15 +1,11 @@
-import {
-  BtnContinuarComponent,
-  DatosPasos,
-} from '@ng-mf/data-access-user';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { PasoTresComponent } from '../../../11105/pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../../../11105/pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 /**
@@ -44,21 +40,16 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent implements OnInit {
+export class SolicitantePageComponent {
   /**
    * Lista de pasos del wizard.
    */
-  pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
+  pasos: ListaPasosWizard[] = PASOS.slice(0, 2);
 
   /**
    * Índice del paso actual.
    */
   indice: number = 1;
-
-  /**
-   * Notificador para destruir las suscripciones.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Referencia al componente del wizard.
@@ -80,20 +71,6 @@ export class SolicitantePageComponent implements OnInit {
    */
   constructor() {
     // El constructor se utiliza para la inyección de dependencias.
-  }
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura los pasos del wizard y ajusta el título de un paso específico si es necesario.
-   */
-  ngOnInit(): void {
-    this.pasos = PASOS.slice(0, 2);
-    this.pasos = this.pasos.map((paso) => {
-      if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
-        return { ...paso, titulo: 'Firmar solicitud' };
-      }
-      return paso;
-    });
   }
 
   /**

@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DESISTIMIENTO } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -34,7 +39,7 @@ export class DesistimientoComponent implements OnInit {
   ngOnInit(): void {
     this.desisitimientoForm = this.formBuilder.group({
       folioOriginal: [{ value: '', disabled: true }],
-      justificacionDelDesistimiento: [''],
+      justificacionDelDesistimiento: [{ value: '' }, Validators.maxLength(200)],
     });
     this.setFormValues();
   }

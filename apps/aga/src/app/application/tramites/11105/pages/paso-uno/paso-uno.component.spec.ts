@@ -48,6 +48,6 @@ describe('PasoUnoComponent', () => {
   });
 
   it('should have a reference to the SolicitanteComponent', () => {
-    expect(component.solicitante).toBeUndefined(); // Initially undefined until the view is initialized
+    expect(component.solicitante).toBeUndefined(); 
   });
 });

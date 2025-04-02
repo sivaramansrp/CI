@@ -66,7 +66,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Indica si la tabla debe mostrarse.
    */
-  showTabla = true;
+  mostrarTabla = true;
 
   /**
    * Indica si el popup está abierto.
@@ -262,7 +262,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Muestra la siguiente tabla.
    */
   nextTabla(): void {
-    this.showTabla = false;
+    this.mostrarTabla = false;
   }
 
   /**

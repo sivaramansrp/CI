@@ -1,30 +1,26 @@
 <div class="page">
   <div class="container">
-    <div class="row">
-      <div class="col-md p-2">
-        <h1>Acuses y Resoluciones</h1>
-      </div>
-    </div>
-    <div class="card-body">
+    <form [formGroup]="formBusqueda">
       <div class="row">
-        <div class="col-md-6 form-group">
-          <span class="texto_resaltado">Solicitante: </span>
-          <span class="texto"
-            >INTEGRADORA DE URBANIZACIONES SIGNUM,S DE RL DE CV</span
-          >
+        <div class="col-md p-2">
+          <h1>Acuses y Resoluciones</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8 form-group">
+          <label class="form-label" for="solicitante">Solicitante:</label>
+          <p>{{ formBusqueda.get('solicitante')?.value }}</p>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4 form-group">
-          <span class="texto_resaltado">RFC: </span>
-          <span class="texto"> LEQI8101314S7 </span>
+          <label>RFC:</label>
+          <p>{{ formBusqueda.get('rfc')?.value }}</p>
         </div>
-      </div>
-      <div class="accordion accordion-flush" id="accordionExample">
-        <div class="accordion-item-folio-tramite">
-          <div class="accordion-body p-0">
-            <form [formGroup]="formBusqueda">
+        <div class="accordion accordion-flush" id="accordionExample">
+          <div class="accordion-item-folio-tramite">
+            <div class="accordion-body p-0">
               <div class="row3">
                 <div class="col-md-4 form-group">
                   <label class="form-label" for="folio"
@@ -56,22 +52,22 @@
                   <button type="button" class="btn boton-buscar">Buscar</button>
                 </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="row" *ngIf="espectaculoAcuseYResolucionesFolioTramiteDatos">
-      <div class="col-md">
-        <h1>Acuses y resoluciones</h1>
-        <app-tabla-dinamica
-          [configuracionTabla]="configuracionTabla"
-          [datos]="configuracionTablaDatos"
-          (filaClic)="onFilaClic()"
-        >
-        </app-tabla-dinamica>
+      <div class="row" *ngIf="espectaculoAcuseYResolucionesFolioTramiteDatos">
+        <div class="col-md">
+          <h1>Acuses y resoluciones</h1>
+          <app-tabla-dinamica
+            [configuracionTabla]="configuracionTabla"
+            [datos]="configuracionTablaDatos"
+            (filaClic)="onFilaClic()"
+          >
+          </app-tabla-dinamica>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 </div>

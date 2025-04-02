@@ -1,10 +1,15 @@
-import { Component, Input,OnDestroy, OnInit} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   InputFecha,
   InputFechaComponent,
 } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
@@ -117,21 +122,13 @@ export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
    */
   ngOnInit(): void {
     this.getAucesYResolucionesFolioTramiteDatos();
-
     this.formBusqueda = this.formBuilder.group({
-      folio: [{ value: '', disabled: false }],
+      solicitante: '',
+      rfc: '',
+      folio: [{ value: '0100001000320251005000002', disabled: false }],
       fechaInicial: [{ value: '', disabled: false }],
       fechaFinal: [{ value: '', disabled: false }],
     });
-
-    this.inicializaFormulario();
-  }
-
-  /**
-   * Inicializa el formulario con valores predeterminados.
-   */
-  public inicializaFormulario(): void {
-    this.formBusqueda.get('folio')?.setValue('0100001000320251005000002');
   }
 
   /**
