@@ -5,6 +5,7 @@ import { Component,OnDestroy, OnInit } from '@angular/core';
 
 import { Subject } from 'rxjs';
 
+import { REGEX_ALTO, REGEX_ANCHO, REGEX_ANO_DE_CREACION, REGEX_AVALUO, REGEX_DIAMETRO, REGEX_PROFUNDIDAD } from '@libs/shared/data-access-user/src';
 import { takeUntil } from 'rxjs';
 
 import {
@@ -548,7 +549,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       alto: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+        [Validators.required, Validators.pattern(REGEX_ALTO)],
       ],
 
       /**
@@ -560,7 +561,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       ancho: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+        [Validators.required, Validators.pattern(REGEX_ANCHO)],
       ],
 
       /**
@@ -572,7 +573,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       profundidad: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+        [Validators.required, Validators.pattern(REGEX_PROFUNDIDAD)],
       ],
 
       /**
@@ -584,7 +585,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       diametro: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]*\\.?[0-9]+$')],
+        [Validators.required, Validators.pattern(REGEX_DIAMETRO)],
       ],
 
       /**
@@ -608,7 +609,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(4),
-          Validators.pattern('^[0-9]{4}$'),
+          Validators.pattern(REGEX_ANO_DE_CREACION),
         ],
       ],
 
@@ -624,7 +625,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.maxLength(10),
-          Validators.pattern('^[0-9]*\\.?[0-9]+$'),
+          Validators.pattern(REGEX_AVALUO),
         ],
       ],
 
