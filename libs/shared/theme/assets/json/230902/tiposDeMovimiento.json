@@ -8,11 +8,16 @@
         },
         {
           "id": 2,
-          "descripcion": "Exportación"
+          "descripcion": " Exportación"
         },
         {
           "id": 3,
+          "descripcion": "Diversas Importaciones"
+        },
+        {
+          "id": 4,
           "descripcion": "Reexportación"
         }
+         
       ]
     }

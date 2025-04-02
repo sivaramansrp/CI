@@ -2,20 +2,24 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputCheckComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 
 import { DatosComponent } from './pages/datos/datos.component';
-import { DatosSolicitudComponent } from './components/datos-solicitud.component';
+
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
+import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
+import { ModalComponent } from './components/modal/modal.component';
+import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
+import { TercerosComponent } from './components/terceros/terceros.component';
 
 
 
 
 @NgModule({
-  declarations: [DatosComponent, PasoUnoComponent, DatosSolicitudComponent,],
+  declarations: [DatosComponent, PasoUnoComponent, DatosSolicitudComponent, ModalComponent, PagoDeDerechosComponent,PagoDeDerechosComponent,TercerosComponent],
   imports: [
     CommonModule,
     PermisoCitesRoutingModule,
@@ -30,6 +34,9 @@ import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
     PasoTresComponent,
     AlertComponent,
     CrosslistComponent,
+    TableComponent,
+    InputCheckComponent,
+    InputFechaComponent
     
    
 ],

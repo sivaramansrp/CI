@@ -1,0 +1,39 @@
+<div class="container">
+  <ng-titulo titulo="Destinatarios" />
+  <form [formGroup]="destinatarioForm">
+    <div class="row">
+      <app-catalogo-select [catalogo]="permisoCitesService.entidadFederativa" formControlName="entidadFederativa"
+        class="col-md-4" [label]="'Entidad federativa'" (change)="onEntidadFederativaChange()"></app-catalogo-select>
+    </div>
+    <label class="row mt-5">destinatarios*:</label>
+    <div class="row mt-4">
+      <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tablaDatos"
+        [tipoSeleccionTabla]="TablaSeleccion"></app-tabla-dinamica>
+    </div>
+    <div class="row" class="text-end pb-3" >
+      <div>
+        <button type="button" class="btn btn-default me-2">Eliminar Seleccionados</button>
+        <button type="button" class="btn btn-danger me-2">Eliminar no seleccioonados</button>
+        <button type="button" class="btn btn-primary me-2" (click)="openPopup()">
+          Modificar
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ show: isPopupOpen }"
+  [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="model-div"></div>
+      <div class="modal-body">
+        <p>No se pueden modificar los <br /> datos agregados por el <br> sistema agregada correctamente.</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center">
+        <button type="button" class="btn btn-primary" (click)="closePopup()">
+          Acceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

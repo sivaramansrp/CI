@@ -1,14 +1,14 @@
 {
     "code": 200,
-    "message": "Tipo de régimen",
+    "message": "Nombre comun",
       "data": [
         {
           "id": 1,
-          "descripcion": "Definitivos"
+          "descripcion": "ORQUIDEA"
         },
         {
           "id": 2,
-          "descripcion": "Temporales"
+          "descripcion": "Otro"
         }
       ]
     }

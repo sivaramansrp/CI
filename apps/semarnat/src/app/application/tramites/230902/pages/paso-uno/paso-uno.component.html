@@ -9,9 +9,13 @@
           <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)"
             (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Datos de la solicitud</a>
         </li>
-        <li [ngClass]="indice === 3 ? 'active' : ''">
+        <li [ngClass]="indice === 3 ? 'active' : ''" [class.disabled]="isTablDisabled">
+          @if(isTablDisabled){
+          <a data-toggle="tab" role="button" tabindex="4">Terceros</a>
+          }@else {
           <a data-toggle="tab" (click)="seleccionaTab(3)" (keydown.enter)="seleccionaTab(3)"
             (keydown.space)="seleccionaTab(3)" role="button" tabindex="4">Terceros</a>
+          }
         </li>
         <li [ngClass]="indice === 4 ? 'active' : ''">
           <a data-toggle="tab" (click)="seleccionaTab(4)" (keydown.enter)="seleccionaTab(4)"
@@ -20,20 +24,15 @@
       </ul>
   
       <ng-container>
-        @switch (indice) {
-        @case (1) {
+        @switch (indice) { @case (1) {
         <solicitante [tabindex]="1"></solicitante>
-        }
-        @case (2) {
-          <app-datos-solicitud></app-datos-solicitud>
-        }
-        @case (3) {
-          <!-- <app-datos-empresa [tabindex]="2"></app-datos-empresa> -->
-          }
-          @case (4) {
-            <!-- <app-datos-empresa [tabindex]="2"></app-datos-empresa> -->
-            }
-        }
+        } @case (2) {
+        <app-datos-solicitud [tabindex]="3"></app-datos-solicitud>
+        } @case (3) {
+        <app-terceros [tabindex]="3"></app-terceros>
+        } @case (4) {
+          <app-pago-de-derechos [tabindex]="5"></app-pago-de-derechos>
+        } }
       </ng-container>
     </div>
 </div>
