@@ -255,11 +255,6 @@ public TEXTOS = MANIFIESTOS;
  */
 private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Notificador para destruir observables activos.
-   */
-  private destroyed$ = new Subject<void>();
-
 
 /**
  * Constructor para el componente DatosDeLaSolicitudComponent.
@@ -528,7 +523,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   public getEstadoCatalogDatos(): void {
-    this.certificadosLicenciasSvc.getEstadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getEstadoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.estadoCatalogo = DATOS.data;
     });
@@ -543,7 +538,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * La respuesta se procesa y almacena en el componente para su uso posterior.
    */
   public getscianTabla(): void {
-    this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.scianTablaDatos = DATOS;
     });
@@ -559,7 +554,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getClaveCatalogDatos():void {
-    this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.claveCatalogo = DATOS.data;
     });
@@ -575,7 +570,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getRegimenCatalogDatos():void {
-    this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.regimenCatalogo = DATOS.data;
     });
@@ -601,7 +596,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getMercanciasTabla(): void {
-    this.certificadosLicenciasSvc.getMercanciasDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getMercanciasDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.mercanciasTablaDatos = DATOS;
     });
@@ -614,7 +609,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void}
    */
   public getTipoDeProductoCatalogDatos(): void {
-    this.certificadosLicenciasSvc.getTipoDeProductoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getTipoDeProductoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.tipoDeProductoCatalogo = DATOS.data;
     });
@@ -672,7 +667,7 @@ public inicializarTablaYCatalogoDatos(): void {
    * @returns {void} Este método no retorna un valor.
    */
   public getPaisDeProcedenciaCatalogoDatos(): void {
-    this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+    this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = this.deepCopy(response);
       this.paisDeProcedenciaCatalogo = DATOS.data;
     });
@@ -711,8 +706,6 @@ public inicializarTablaYCatalogoDatos(): void {
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
