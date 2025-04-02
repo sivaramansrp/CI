@@ -163,5 +163,5 @@ export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
 export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260303/certificados-licencias-permisos.model';
-
+export {TramiteStore} from './core/estados/tramite.store';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
