@@ -1,6 +1,13 @@
 # Stage 1: Build the Angular app
-FROM node:20-slim AS node
+FROM node:20-alpine AS node
 WORKDIR /app
+
+# Instalar glibc en Alpine
+RUN apk add --no-cache ca-certificates wget && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
+    apk add glibc-2.35-r0.apk && \
+    rm glibc-2.35-r0.apk
 
 # Install necessary dependencies for compilation
 RUN apk add --no-cache python3 make g++ git
