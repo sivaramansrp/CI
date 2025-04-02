@@ -194,12 +194,26 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'solicitud-modificacion',
+    loadChildren: () =>
+      import('./tramites/80302/modificacion.module').then(
+        (m) => m.ModificacionModule
+      ),
+  },
+  {
     path: 'cancelaciones-ministerio',
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
       ),
   },
+  {
+    path: 'certificado',
+    loadChildren:() =>
+      import('./tramites/110219/certificado.module').then(
+        (m) => m.CertificadoModule
+      )
+  }, 
   {
     path: 'nuevo-programa-industrial',
     loadChildren: () =>
@@ -224,7 +238,40 @@ const ROUTES: Routes = [
   {
     path: 'exportar-diamantes',
     loadChildren: () => import('./tramites/130203/exportación-de-diamantes-en-bruto.module').then((m) => m.ExportaciónDeDiamantesEnBrutoModule)
-  }
+  },
+  {
+    path: 'inicialmente-certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110216/inicialmente-certificado-origen.module').then(
+        (m) => m.InicialmenteCertificadoOrigenModule
+      ),
+  },
+  {
+    path: 'validador-certificado-cam',
+    loadChildren:() =>
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
+      )
+  },
+  {
+    path: 'registro-solicitud-anual',
+    loadChildren: () =>
+      import('./tramites/150101/registro-solicitud-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'reporte-anual',
+    loadChildren: () =>
+      import('./tramites/150102/reporte-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
 ];
 
 @NgModule({
