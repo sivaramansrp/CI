@@ -137,7 +137,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Fila seleccionada en la tabla.
    */
-  filaSeleccionada = null;
+  filaSeleccionada: any = null;
 
   /**
    * Elementos del bloque seleccionados.

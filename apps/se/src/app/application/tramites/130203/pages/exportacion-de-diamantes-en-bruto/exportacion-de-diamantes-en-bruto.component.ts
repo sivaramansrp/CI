@@ -30,7 +30,7 @@ export class ExportacionDeDiamantesEnBrutoComponent {
   };
 
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 4) {
+    if (e.valor >= 1 && e.valor <= this.datosPasos.nroPasos) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();

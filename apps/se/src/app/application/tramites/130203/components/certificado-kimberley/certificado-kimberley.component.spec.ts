@@ -21,15 +21,17 @@ describe('CertificadoKimberleyComponent', () => {
 
     mockTramiteQuery = {
       select: jest.fn(),
-      nombreExportador$: of('Test Exporter'),
-      direccionExportador$: of('Test Address'),
-      nombreImportador$: of('Test Importer'),
-      direccionImportador$: of('Importer Address'),
-      numeroEnLetraDeLosLotes$: of('One'),
-      numeroEnLetraDeLosLotesEnIngles$: of('One (English)'),
-      numeroDeFactura$: of('12345'),
-      cantidadEnQuilates$: of('100'),
-      valorDeLosDiamantes$: of('5000'),
+      nombreExportador$: of('Test Exporter') as Observable<string | null>,
+      direccionExportador$: of('Test Address') as Observable<string | null>,
+      nombreImportador$: of('Test Importer') as Observable<string | null>,
+      direccionImportador$: of('Importer Address') as Observable<string | null>,
+      numeroEnLetraDeLosLotes$: of('One') as Observable<string | null>,
+      numeroEnLetraDeLosLotesEnIngles$: of('One (English)') as Observable<string | null>,
+      numeroDeFactura$: of('12345') as Observable<string | null>,
+      cantidadEnQuilates$: of('100') as Observable<string | null>,
+      valorDeLosDiamantes$: of('5000') as Observable<string | null>,
+      someMissingObservable$: of(null) as Observable<any>,
+      anotherMissingObservable$: of(null) as Observable<any>,
     } as unknown as jest.Mocked<Tramite130203Query>;
 
     mockTramiteStore = {
@@ -45,10 +47,13 @@ describe('CertificadoKimberleyComponent', () => {
     } as unknown as jest.Mocked<Tramite130203Store>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [CertificadoKimberleyComponent],
+      imports: [ReactiveFormsModule, CertificadoKimberleyComponent],
+      declarations: [],
       providers: [
-        { provide: ExportacionDeDiamantesEnBrutoService, useValue: mockExportacionService },
+        {
+          provide: ExportacionDeDiamantesEnBrutoService,
+          useValue: mockExportacionService,
+        },
         { provide: Tramite130203Query, useValue: mockTramiteQuery },
         { provide: Tramite130203Store, useValue: mockTramiteStore },
       ],
@@ -57,8 +62,12 @@ describe('CertificadoKimberleyComponent', () => {
     fixture = TestBed.createComponent(CertificadoKimberleyComponent);
     component = fixture.componentInstance;
 
-    mockExportacionService.getPaisesEmisores.mockReturnValue(of([{ id: 1, descripcion: 'Country1' }]));
-    mockExportacionService.getNombresIngles.mockReturnValue(of([{ codigo: '1', nombre: 'Country1' }]));
+    mockExportacionService.getPaisesEmisores.mockReturnValue(
+      of([{ id: 1, descripcion: 'Country1' }])
+    );
+    mockExportacionService.getNombresIngles.mockReturnValue(
+      of([{ codigo: '1', nombre: 'Country1' }])
+    );
   });
 
   it('should create the component', () => {
@@ -92,20 +101,36 @@ describe('CertificadoKimberleyComponent', () => {
       lineaCheckbox: false,
       paisOrigen: null,
     });
-    expect(component.datosDelExportador.get('nombreExportador')?.value).toBe('Test Exporter');
-    expect(component.datosDelExportador.get('direccionExportador')?.value).toBe('Test Address');
+    expect(component.datosDelExportador.get('nombreExportador')?.value).toBe(
+      'Test Exporter'
+    );
+    expect(component.datosDelExportador.get('direccionExportador')?.value).toBe(
+      'Test Address'
+    );
   });
-
   it('should call store methods when form values change', () => {
     component.ngOnInit();
-    component.datosDelExportador.get('nombreExportador')?.setValue('New Exporter');
+    
+    // Ensure that the observables are set up correctly before interacting with the form
+    mockTramiteQuery.nombreExportador$ = of('Test Exporter');
+    mockTramiteQuery.direccionExportador$ = of('Test Address');
+    
+    // Simulate form value change
+    component.datosDelExportador
+      .get('nombreExportador')
+      ?.setValue('New Exporter');
+    
     component.getNombreExportador();
     expect(mockTramiteStore.setNombreExportador).toHaveBeenCalledWith('New Exporter');
-
-    component.datosDelExportador.get('direccionExportador')?.setValue('New Address');
+    
+    component.datosDelExportador
+      .get('direccionExportador')
+      ?.setValue('New Address');
+    
     component.getDireccionExportador();
     expect(mockTramiteStore.setDireccionExportador).toHaveBeenCalledWith('New Address');
   });
+  
 
   it('should update nombre in English when tipoEmpresa changes', () => {
     component.ngOnInit();
@@ -130,7 +155,11 @@ describe('CertificadoKimberleyComponent', () => {
 
   it('should set values in the store when setValoresStore is called', () => {
     component.ngOnInit();
-    component.setValoresStore(component.formularioEmpresa, 'nombre', 'setNombreExportador');
+    component.setValoresStore(
+      component.formularioEmpresa,
+      'nombre',
+      'setNombreExportador'
+    );
     expect(mockTramiteStore.setNombreExportador).toHaveBeenCalledWith('');
   });
 
@@ -150,10 +179,14 @@ describe('CertificadoKimberleyComponent', () => {
   });
 
   it('should handle null values in observables', () => {
-    mockTramiteQuery.nombreExportador$ = of(null as unknown) as Observable<string>;
-    mockTramiteQuery.direccionExportador$ = of(null as unknown as string);
+    mockTramiteQuery.nombreExportador$ = of(null as string | null) as Observable<string>;
+    mockTramiteQuery.direccionExportador$ = of(null as string | null) as Observable<string>;
     component.ngOnInit();
-    expect(component.datosDelExportador.get('nombreExportador')?.value).toBeNull();
-    expect(component.datosDelExportador.get('direccionExportador')?.value).toBeNull();
+    expect(
+      component.datosDelExportador.get('nombreExportador')?.value
+    ).toBeNull();
+    expect(
+      component.datosDelExportador.get('direccionExportador')?.value
+    ).toBeNull();
   });
 });

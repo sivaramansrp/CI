@@ -67,7 +67,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Lista de nombres en inglés.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private nombresIngles: any[] = [];
+  public nombresIngles: any[] = [];
 
   /**
    * @description
