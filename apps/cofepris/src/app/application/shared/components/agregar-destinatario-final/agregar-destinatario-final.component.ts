@@ -162,6 +162,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+    this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
