@@ -1,11 +1,16 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { AcusePageComponent } from '@ng-mf/data-access-user';
 
 const ROUTES: Routes = [
   {
     path: 'solicitud',
     component: SolicitudPageComponent,
+  },
+  {
+    path: 'acuse',
+    component: AcusePageComponent,
   },
     {
     path: '',

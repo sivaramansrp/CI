@@ -50,7 +50,7 @@ export class PasoTresComponent implements OnDestroy {
         .pipe(
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-            this.router.navigate(['servicios-extraordinarios/acuse']);
+            this.router.navigate(['pago/registro-solicitud/acuse']);
           }),
           catchError((_error) => {
             return _error;
