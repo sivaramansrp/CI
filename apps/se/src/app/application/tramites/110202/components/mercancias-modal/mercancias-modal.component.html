@@ -49,7 +49,7 @@
           </div>
           <div class="row mt-3 mb-3">
             <div class="col-md-7">
-              <app-catalogo-select [catalogo]="(umcs$ | async) || []" [label]="'UMC'" [required]="true" name="estado" formControlName="umc" (selectionChange)="tipoUmcSeleccion($event)"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="(umcs$ | async) || []" [label]="'UMC'" [required]="true" name="umc" formControlName="umc" (selectionChange)="tipoUmcSeleccion($event)"></app-catalogo-select>
             </div>
           </div>
           <div class="row mb-3">
@@ -68,7 +68,7 @@
               <input type="number" class="form-control" formControlName="masaBruta">
             </div>
             <div class="col-md-6">
-              <app-catalogo-select [catalogo]="(masaBrutas$ | async) || []" [label]="'Unidad de medida de la masa bruta'" [required]="true" name="estado" formControlName="unidadMedidaMasaBruta" (selectionChange)="tipoMasaBrutaSeleccion($event)"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="(masaBrutas$ | async) || []" [label]="'Unidad de medida de la masa bruta'" [required]="true" name="masaBruta" formControlName="unidadMedidaMasaBruta" (selectionChange)="tipoMasaBrutaSeleccion($event)"></app-catalogo-select>
             </div>
           </div>
           <div class="row mb-3">

@@ -263,7 +263,7 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
     this.cerrarClicado.emit();
     this.mostrarAlerta = false;
   }
-
+  
   /**
    * Cancela las suscripciones al destruir el componente.
    */
