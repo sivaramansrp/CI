@@ -230,15 +230,21 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.mostrarTabla = mostrarTabla;
       });
 
-    this.partidasDelaMercanciaForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130121Store.updateState({
-          cantidadPartidasDeLaMercancia: value.cantidadPartidasDeLaMercancia,
-          valorPartidaUSDPartidasDeLaMercancia: value.valorPartidaUSDPartidasDeLaMercancia,
-          descripcionPartidasDeLaMercancia: value.descripcionPartidasDeLaMercancia,
-        });
-      });
+    this.tramite130121Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.partidasDelaMercanciaForm.patchValue({
+            cantidadPartidasDeLaMercancia:
+              seccionState.cantidadPartidasDeLaMercancia,
+            valorPartidaUSDPartidasDeLaMercancia:
+              seccionState.valorPartidaUSDPartidasDeLaMercancia,
+            descripcionPartidasDeLaMercancia:
+              seccionState.descripcionPartidasDeLaMercancia,
+          });
+        })
+      )
+      .subscribe();
 
     this.tramite130121Query.fraccion$
       .pipe(takeUntil(this.destroyed$))
@@ -520,7 +526,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.tramite130121Store.storeTableValues(this.filaSeleccionada);
     }
   }
-  
+
 
   /**
   * validarYEnviarFormulario
@@ -596,39 +602,84 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   enCambioDeBloque(bloqueId: number): void {
     this.fetchPaisesPorBloque(bloqueId);
   }
+
   /**
-   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
-   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
-   */
-  setValoresStore(event: { form: FormGroup; campo: string; metodoNombre: string; }): void {
+ * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
+ * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
+ */
+  // eslint-disable-next-line complexity
+  setValoresStore(event: {
+    form: FormGroup;
+    campo: string;
+    metodoNombre: string;
+  }): void {
     const VALOR = event.form.get(event.campo)?.value;
+    switch (event.metodoNombre) {
+      case 'updateSolicitud':
+        this.tramite130121Store.updateSolicitud(VALOR);
+        break;
+      case 'setDescripcionPartidasDeLaMercancia':
+        this.tramite130121Store.setDescripcionPartidasDeLaMercancia(VALOR);
+        break;
+      case 'setCantidadPartidasDeLaMercancia':
+        this.tramite130121Store.setCantidadPartidasDeLaMercancia(VALOR);
+        break;
+      case 'setValorPartidaUSDPartidasDeLaMercancia':
+        this.tramite130121Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR);
+        break;
+      case 'setregimen':
+        this.tramite130121Store.setregimen(VALOR);
+        break;
+      case 'setclasificacion':
+        this.tramite130121Store.setclasificacion(VALOR);
+        break;
 
-    const METHOD_MAPPING: Record<string, (valor: any) => void> = {
-      updateSolicitud: this.tramite130121Store.updateSolicitud,
-      setFraccion: this.tramite130121Store.setFraccion,
-      setUmt: this.tramite130121Store.setUmt,
-      setNico: this.tramite130121Store.setNico,
-      setDescripcionPartidasDeLaMercancia: this.tramite130121Store.setDescripcionPartidasDeLaMercancia,
-      setCantidadPartidasDeLaMercancia: this.tramite130121Store.setCantidadPartidasDeLaMercancia,
-      setValorPartidaUSDPartidasDeLaMercancia: this.tramite130121Store.setValorPartidaUSDPartidasDeLaMercancia,
-      setregimen: this.tramite130121Store.setregimen,
-      setclasificacion: this.tramite130121Store.setclasificacion,
-      setProducto: this.tramite130121Store.setProducto,
-      setDescripcion: this.tramite130121Store.setDescripcion,
-      setCantidad: this.tramite130121Store.setCantidad,
-      setUnidadMedida: this.tramite130121Store.setUnidadMedida,
-      setBloque: this.tramite130121Store.setBloque,
-      setUsoEspecifico: this.tramite130121Store.setUsoEspecifico,
-      setJustificacionImportacionExportacion: this.tramite130121Store.setJustificacionImportacionExportacion,
-      setObservaciones: this.tramite130121Store.setObservaciones,
-      setEntidad: this.tramite130121Store.setEntidad,
-      setRepresentacion: this.tramite130121Store.setRepresentacion,
-    };
-
-    if (event.metodoNombre === 'setValorPartidaUSD') {
-      this.tramite130121Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
-    } else if (METHOD_MAPPING[event.metodoNombre]) {
-      METHOD_MAPPING[event.metodoNombre](VALOR);
+      case 'setProducto':
+        this.tramite130121Store.setProducto(VALOR);
+        break;
+      case 'setDescripcion':
+        this.tramite130121Store.setDescripcion(VALOR);
+        break;
+      case 'setCantidad':
+        this.tramite130121Store.setCantidad(VALOR);
+        break;
+      case 'setValorPartidaUSD':
+        this.tramite130121Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
+        break;
+      case 'setUnidadMedida':
+        this.tramite130121Store.setUnidadMedida(VALOR);
+        break;
+      case 'setBloque':
+        this.tramite130121Store.setBloque(VALOR);
+        break;
+      case 'setUsoEspecifico':
+        this.tramite130121Store.setUsoEspecifico(VALOR);
+        break;
+      case 'setJustificacionImportacionExportacion':
+        this.tramite130121Store.setJustificacionImportacionExportacion(VALOR);
+        break;
+      case 'setObservaciones':
+        this.tramite130121Store.setObservaciones(VALOR);
+        break;
+      case 'setEntidad':
+        this.tramite130121Store.setEntidad(VALOR);
+        break;
+      case 'setRepresentacion':
+        this.tramite130121Store.setRepresentacion(VALOR);
+        break;
+      case 'setUmt':
+        this.tramite130121Store.setUmt(VALOR);
+        break;
+      case 'setNico':
+        this.tramite130121Store.setNico(VALOR);
+        break;
+      case 'setFraccion':
+        this.tramite130121Store.setFraccion(VALOR);
+        break;
+      default:
+        console.error(
+          `Método ${event.metodoNombre} no existe en Tramite130202Store`
+        );
     }
   }
 
