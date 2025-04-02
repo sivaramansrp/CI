@@ -51,7 +51,7 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
    */
   @Input()
-  idProcedimiento!: string;
+  idProcedimiento!: number;
 
   /**
    * FormGroup para el formulario de agregar fabricante.

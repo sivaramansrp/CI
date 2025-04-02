@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnInit } from '@angular/core';
 
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -10,6 +12,9 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+
+import { OCULTAR_FACTURADOR } from '../../constantes/datos-solicitud.enum';
+import { OCULTAR_PROVEEDOR } from '../../constantes/datos-solicitud.enum';
 
 import { DESTINATARIO_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Destinatario } from '../../models/terceros-relacionados.model';
@@ -39,7 +44,15 @@ import { Proveedor } from '../../models/terceros-relacionados.model';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent {
+export class TercerosRelacionadosComponent implements OnInit {
+  /**
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
+  @Input() public idProcedimiento!: number;
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
@@ -95,13 +108,13 @@ export class TercerosRelacionadosComponent {
    * Indica si el formulario del proveedor debe estar habilitado.
    * @input habilitarProveedor - Valor booleano que habilita o deshabilita la sección del proveedor.
    */
-  @Input() habilitarProveedor!: boolean;
+  public habilitarProveedor = true;
 
   /**
    * Indica si el formulario del facturador debe estar habilitado.
    * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
    */
-  @Input() habilitarFacturador!: boolean;
+  public habilitarFacturador = true;
 
   /**
    * @constructor
@@ -148,5 +161,18 @@ export class TercerosRelacionadosComponent {
     this.router.navigate([accionesPath], {
       relativeTo: this.activatedRoute,
     });
+  }
+  /**
+   * @method ngOnInit
+   * @description Hook que se ejecuta al inicializar el componente.
+   * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
+   */
+  ngOnInit(): void {
+    this.habilitarFacturador = OCULTAR_FACTURADOR.includes(this.idProcedimiento)
+      ? false
+      : true;
+    this.habilitarProveedor = OCULTAR_PROVEEDOR.includes(this.idProcedimiento)
+      ? false
+      : true;
   }
 }

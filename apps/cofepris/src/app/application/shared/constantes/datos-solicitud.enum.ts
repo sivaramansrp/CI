@@ -57,7 +57,7 @@ export const DATOS_MERCANCIA_CLAVE_TABLA = [
     encabezado: 'Fecha de caducidad',
     clave: (ele: TablaMercanciaClaveConfig): string => ele.caducidad,
     orden: 1,
-  }
+  },
 ];
 
 export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
@@ -209,7 +209,7 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
     cantidadUMC: '',
     unidadMedidaTarifa: '',
     cantidadUMT: '',
-    presentacion:'',
+    presentacion: '',
     numeroRegistroSanitario: '',
     paisOrigen: '',
     paisProcedencia: '',
@@ -261,14 +261,20 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   },
 ];
 
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [260214, 260216, 260205, 260217, 260218, 260102]
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
+  260214, 260216, 260205, 260217, 260218, 260102,
+];
 
-export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE=[260216]
+export const OCULTAR_PROVEEDOR = [260102];
+
+export const OCULTAR_FACTURADOR = [260102];
+
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
 
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102];
 
 export enum NUMERO_TRAMITE {
-  TRAMITE_260205 = 260205
+  TRAMITE_260205 = 260205,
 }
 
 export const DETALLE_MERCANCIA_TABLA = [
@@ -294,4 +300,4 @@ export const DETALLE_MERCANCIA_TABLA = [
   },
 ];
 
-export const STR_NACIONAL = "Nacional";
+export const STR_NACIONAL = 'Nacional';
