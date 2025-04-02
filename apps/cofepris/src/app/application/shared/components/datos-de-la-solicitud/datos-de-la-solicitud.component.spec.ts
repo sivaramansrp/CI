@@ -9,6 +9,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
@@ -25,6 +26,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         AlertComponent,
         ReactiveFormsModule,
         FormsModule,
+        HttpClientModule
       ],
       providers: [
         {
