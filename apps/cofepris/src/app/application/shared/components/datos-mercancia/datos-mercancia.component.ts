@@ -617,7 +617,7 @@ validarElementos(): void {
     this.ubicaccion.back();
   }
   /**
-   * @method aggregarMercancia
+   * @method agregarMercanciaSellecion
    * @description Emits an event to add a new merchandise item.
    * This method is used to notify the parent component about the addition of a new merchandise item.
    *
@@ -625,7 +625,7 @@ validarElementos(): void {
    * @returns {void} This method does not return any value.
    */
 
-  aggregarMercancia(datos: DetalleMercancia): void {
+  agregarMercanciaSellecion(datos: DetalleMercancia): void {
     this.aggregarMercanciaDatos.emit(datos);
   }
 
