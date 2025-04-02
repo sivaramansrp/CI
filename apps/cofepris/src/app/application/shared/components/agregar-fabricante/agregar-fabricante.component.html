@@ -54,10 +54,12 @@
         <label class="form-label">R.F.C.*:</label>
         <input type="text" class="form-control" formControlName="rfc" />
       </div>
+      @if (!estaOculto) {
       <div class="col-md-6">
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
       </div>
+    }
     </div>
     }
 
@@ -102,7 +104,7 @@
         <app-catalogo-select
           [catalogo]="paisesDatos"
           formControlName="pais"
-          [label]="'País*'"
+          [label]="'País'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -110,7 +112,7 @@
         <app-catalogo-select
           [catalogo]="estadosDatos"
           formControlName="estado"
-          [label]="'Estado/localidad*'"
+          [label]="'Estado/localidad'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -118,7 +120,7 @@
         <app-catalogo-select
           [catalogo]="municipiosDatos"
           formControlName="municipio"
-          [label]="'Municipio/alcaldía*'"
+          [label]="'Municipio/alcaldía'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -129,7 +131,7 @@
         <app-catalogo-select
           [catalogo]="localidadesDatos"
           formControlName="localidad"
-          [label]="'Localidad*'"
+          [label]="'Localidad'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -137,7 +139,7 @@
         <app-catalogo-select
           [catalogo]="codigosPostalesDatos"
           formControlName="codigoPostal"
-          [label]="'Código postal o equivalente*'"
+          [label]="'Código postal o equivalente'"
           [required]="true"
         ></app-catalogo-select>
       </div>
@@ -145,7 +147,7 @@
         <app-catalogo-select
           [catalogo]="coloniasDatos"
           formControlName="colonia"
-          [label]="'Colonia*'"
+          [label]="'Colonia'"
           [required]="true"
         ></app-catalogo-select>
       </div>
