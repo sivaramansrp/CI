@@ -23,11 +23,24 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
+    path: 'permiso-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
+        (m) => m.PermisoPlaguicidasImportacionModule
+      ),
+  },
+  {
     path: 'permiso-sanitario',
     loadChildren: () =>
       import('./tramites/260211/permiso-sanitario.module').then(
         (m) => m.PermisoSanitarioModule
       ),
+  },
+  {
+    path: 'importacion-psicotropicos',
+    loadChildren: () =>
+      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
+        (m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'importacion-dispositivos-medicos-uso',
