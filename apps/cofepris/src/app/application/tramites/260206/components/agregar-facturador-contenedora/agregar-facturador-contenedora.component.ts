@@ -16,6 +16,14 @@ export class AgregarFacturadorContenedoraComponent {
         public tramiteStore: Tramite260206Store){
     }
 
+    /**
+     * Actualiza los datos de la tabla de facturadores en el almacén de trámites.
+     * 
+     * @param event - Una lista de objetos de tipo `Facturador` que contiene los datos actualizados de los facturadores.
+     * 
+     * @remarks
+     * Este método se utiliza para sincronizar los datos de facturadores con el almacén de trámites.
+     */
     updateFacturadorTablaDatos(event:Facturador[]): void {
         this.tramiteStore.updateFacturadorTablaDatos(event);
     }

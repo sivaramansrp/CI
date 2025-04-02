@@ -16,32 +16,118 @@ import { Tramite260206Query } from '../../estados/queries/tramite260206Query.que
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
+/**
+ * Componente Angular que gestiona la lógica y el estado relacionado con los datos de la solicitud
+ * en el trámite 260206. Este componente interactúa con el estado global de la aplicación a través
+ * de `Tramite260206Store` y `SeccionLibStore`, y maneja eventos relacionados con la selección de datos
+ * en tablas y la validación de formularios.
+ * 
+ * @implements {OnInit} - Implementa el ciclo de vida `OnInit` para inicializar el estado del componente.
+ * @implements {OnDestroy} - Implementa el ciclo de vida `OnDestroy` para limpiar recursos al destruir el componente.
+ * 
+ * @class
+ */
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
+  /**
+   * @private
+   * Sujeto utilizado como notificador para la destrucción del componente.
+   * Se emite un valor cuando el componente se destruye, permitiendo la limpieza de suscripciones
+   * y otros recursos para evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @public
+   * @type {Tramite260206State}
+   * @description Representa el estado actual del trámite 260206.
+   */
   public tramiteState!: Tramite260206State;
+  /**
+   * Identificador único del procedimiento asociado a este componente.
+   * Este valor es de solo lectura y se utiliza para referenciar el procedimiento específico.
+   */
   public readonly idProcedimiento:number = 260206;
+  /**
+   * Configuración de opciones para la tabla.
+   * 
+   * @property {string | undefined} tipoSeleccionTabla - Define el tipo de selección en la tabla. Puede ser indefinido.
+   * @property {any} configuracionTabla - Configuración específica de la tabla, basada en la constante OPCION_TABLA.
+   * @property {TablaOpcionConfig[]} datos - Arreglo de datos que contiene la configuración de las opciones de la tabla.
+   */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
     configuracionTabla: OPCION_TABLA,
     datos: [] as TablaOpcionConfig[],
   }
+  /**
+   * Configuración para la tabla SCIAN en el componente.
+   * 
+   * @property {TablaSeleccion} tipoSeleccionTabla - Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
+   * @property {any} configuracionTabla - Configuración específica de la tabla SCIAN.
+   * @property {TablaScianConfig[]} datos - Arreglo que contiene los datos de configuración para la tabla SCIAN.
+   */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: SCIAN_TABLA,
     datos: [] as TablaScianConfig[],
   }
+  /**
+   * Configuración para la tabla de mercancías.
+   * 
+   * @property {TablaSeleccion} tipoSeleccionTabla - Define el tipo de selección en la tabla, en este caso, un checkbox.
+   * @property {any} configuracionTabla - Configuración específica de la tabla, basada en la constante `PRODUCTO_TABLA`.
+   * @property {TablaMercanciasDatos[]} datos - Arreglo que contiene los datos de la tabla, inicialmente vacío.
+   */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PRODUCTO_TABLA,
     datos: [] as TablaMercanciasDatos[],
   }
+  /**
+   * Configuración de la tabla SCIAN.
+   * 
+   * Esta propiedad almacena un arreglo de configuraciones para la tabla SCIAN,
+   * que se utiliza para gestionar y mostrar datos relacionados con el SCIAN 
+   * (Sistema de Clasificación Industrial de América del Norte).
+   */
   public scianConfigDatos: TablaScianConfig[] = [];
+  /**
+   * Configuración de datos para la tabla de mercancías.
+   * 
+   * Esta propiedad almacena un arreglo de objetos de tipo `TablaMercanciasDatos`,
+   * que representan los datos necesarios para configurar y mostrar la tabla
+   * de mercancías en el componente.
+   */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
+  /**
+   * Arreglo que almacena la configuración de opciones de la tabla.
+   * 
+   * Este arreglo se utiliza para gestionar las opciones seleccionadas
+   * en la tabla dentro del componente. Cada elemento del arreglo es 
+   * de tipo `TablaOpcionConfig`, que define la estructura de las opciones.
+   */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
+  /**
+   * Arreglo que almacena la configuración de la tabla SCIAN seleccionada.
+   * 
+   * Este arreglo se utiliza para gestionar los datos relacionados con la selección
+   * de elementos en la tabla SCIAN dentro del componente.
+   */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
+  /**
+   * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
+   * 
+   * Este arreglo se utiliza para gestionar y manipular los datos seleccionados
+   * en la tabla de mercancías dentro del componente.
+   */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
+  
+  /* @property {SeccionLibState} seccion
+  * @description Representa el estado de la sección en el componente. 
+  * Se utiliza para manejar y almacenar datos relacionados con la sección específica.
+  */
   private seccion!: SeccionLibState;
 
+  
   constructor(private tramite260206Query: Tramite260206Query,
     private tramite260206Store: Tramite260206Store,
     private seccionStore: SeccionLibStore, private seccionQuery: SeccionLibQuery

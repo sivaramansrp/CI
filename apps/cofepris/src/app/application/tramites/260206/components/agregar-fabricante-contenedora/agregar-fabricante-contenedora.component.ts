@@ -16,6 +16,15 @@ export class AgregarFabricanteContenedoraComponent {
         public tramiteStore: Tramite260206Store){
     }
 
+    /**
+     * Actualiza los datos de la tabla de fabricantes en el estado del trámite.
+     *
+     * @param event - Una lista de objetos de tipo `Fabricante` que contiene los datos actualizados de los fabricantes.
+     * 
+     * @remarks
+     * Este método se utiliza para sincronizar los datos de los fabricantes con el estado del trámite
+     * a través del `tramiteStore`.
+     */
     updateFabricanteTablaDatos(event:Fabricante[]): void {
         this.tramiteStore.updateFabricanteTablaDatos(event);
     }

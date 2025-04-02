@@ -15,6 +15,12 @@ export class AgregarDestinatarioFinalContenedoraComponent {
   
   constructor(public tramiteStore: Tramite260206Store) {}
 
+  /**
+   * Actualiza la tabla de datos de destinatarios finales con los datos proporcionados.
+   *
+   * @param event - Una lista de objetos de tipo `Destinatario` que contiene los datos actualizados
+   *                para los destinatarios finales.
+   */
   updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
