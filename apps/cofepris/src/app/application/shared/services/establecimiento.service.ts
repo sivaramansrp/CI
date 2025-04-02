@@ -3,16 +3,14 @@
  * Este servicio proporciona métodos para interactuar con los datos relacionados con el establecimiento,
  * incluyendo catálogos, datos de representantes, manifiestos, y propietarios.
  */
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { Observable ,map} from 'rxjs';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
-import { map, Observable } from 'rxjs';
-
 import { Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante } from '../models/datos-de-la-solicitud.model';
-
 /**
  * @class EstablecimientoService
  * @description
