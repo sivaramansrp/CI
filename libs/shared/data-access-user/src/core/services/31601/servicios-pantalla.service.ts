@@ -24,7 +24,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreUnoCatalogo(_catalogo: string):unknown {
+  getBimestreUnoCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-one.json'
     );
@@ -35,7 +35,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreDosCatalogo(_catalogo: string):unknown {
+  getBimestreDosCatalogo(catalogo: string) {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-two.json'
     );
@@ -46,20 +46,20 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreTresCatalogo(_catalogo: string):unknown {
+  getBimestreTresCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-three.json'
     );
   }
-  getTipoCatalog(_catalogo: string):unknown {
+  getTipoCatalog(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/tipo-catalog.json'
     );
   }
-  getPersonapara():unknown {
+  getPersonapara():Observable<Personas[]> {
     return this.http.get<Personas[]>('assets/json/31601/personapara.json');
   }
-  getTiposCatalog():unknown {
+  getTiposCatalog():Observable<Tipos[]> {
     return this.http.get<Tipos[]>('assets/json/31601/tipo-di-document.json');
   }
   /**

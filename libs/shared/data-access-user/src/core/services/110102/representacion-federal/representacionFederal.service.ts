@@ -24,7 +24,7 @@ export class RepresentacionfederalService {
    *  Obtiene los datos de la entidad federativa desde un archivo JSON.
    * @returns {Observable<any>} Un observable que emite los datos obtenidos.
    */
-  getEntidadFederativa(): Observable<unknown> {
+  getEntidadFederativa(): Observable<any> {
     return this.http.get('./assets/json/110102/entidadfederativa.json');
   }
 
@@ -34,7 +34,7 @@ export class RepresentacionfederalService {
    * @param {string} _entidadFederativa - La entidad federativa para la cual se obtienen los datos.
    * @returns {Observable<any>} Un observable que emite los datos obtenidos.
    */
-  getRepresentacionfederal(_entidadFederativa: string): Observable<unknown> {
+  getRepresentacionfederal(_entidadFederativa: string): Observable<any> {
     return this.http.get('./assets/json/110102/representacionfederal.json');
   }
 }

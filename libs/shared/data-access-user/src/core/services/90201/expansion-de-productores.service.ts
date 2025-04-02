@@ -24,7 +24,7 @@ export class ExpansionDeProductoresService {
    }
 
 
-  getSectorCatalog():unknown {
+  getSectorCatalog() {
     return this.http.get<RespuestaCatalogos>('assets/json/90201/sector.json');
   }
 

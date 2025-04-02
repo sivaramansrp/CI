@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '../../../models/shared/catalogos.model';
 
 @Injectable({
@@ -13,47 +14,47 @@ export class PeximService {
     // Lógica de inicialización si es necesario
    }
 
-  getRegimenMercancia(_catalogo: string):unknown {
+  getRegimenMercancia(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/regimen-mercancia.json');
   }
 
-  getClasifiRegimen(_catalogo: string):unknown {
+  getClasifiRegimen(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/clasifi-regimen.json');
   }
 
-  getFraccionArancelariaCatalogo(_catalogo: string):unknown {
+  getFraccionArancelariaCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/fraccion-arancelaria-catalogo.json');
   }
 
-  getNicoCatalogo(_catalogo: string):unknown {
+  getNicoCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/nico-catalogo.json');
   }
 
-  getPaisOrigenCatalogo(_catalogo: string):unknown {
+  getPaisOrigenCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/pais-origen-catalogo.json');
   }
 
-  getPaisDestinoCatalogo(_catalogo: string):unknown {
+  getPaisDestinoCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/pais-destino-catalogo.json');
   }
 
-  getEstadoCatalogo(_catalogo: string):unknown {
+  getEstadoCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/estado.json');
   }
 
-  getMolinoCatalogo(_catalogo: string):unknown {
+  getMolinoCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/molino.json');
   }
 
-  getUnidadMedidaTarifariaCatalogo(_catalogo: string):unknown {
+  getUnidadMedidaTarifariaCatalogo(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/unidad-medida-tarifaria.json');
   }
 
-  getRepresentacionFederal(_catalogo: string):unknown {
+  getRepresentacionFederal(_catalogo: string):Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/representacion-federal.json');
   }
 
-  obtenerDocumentosSeleccionados():unknown {
+  obtenerDocumentosSeleccionados():Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/130118/documentos-seleccionados.json');
   }
 }
