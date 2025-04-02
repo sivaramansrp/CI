@@ -72,12 +72,27 @@ export const CONFIGURACION_MERCANCIA = [
       orden: 5, // Orden en que se mostrará la columna
     }
   ];
+/**
+ * Constante que representa la entidad federativa.
+ */
 export const ENTIDAD_FEDERATIVA = 'entidadFederativa'
 
+/**
+ * Constante que representa el bloque.
+ */
 export const BLOQUE = 'bloque'
 
+/**
+ * Constante que representa el idioma de las fechas.
+ */
 export const IDIOMA_DATES = 'idiomaDates'
 
+/**
+ * Constante que representa las fechas de la entidad federativa.
+ */
 export const ENTIDAD_FEDREATIVE_DATES = 'EntidadFederativaDates'
 
+/**
+ * Constante que representa las fechas de la representación federal.
+ */
 export const REPRESENTACION_FEDERALDATES = 'representacionFederalDates'

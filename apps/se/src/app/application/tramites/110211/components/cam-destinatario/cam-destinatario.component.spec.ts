@@ -49,11 +49,11 @@ describe('CamDestinatarioComponent', () => {
     });
   });
 
-  it('should call store.setFormDatosDelDestinatario with correct value in detosDelDestinatarioFunc', () => {
+  it('should call store.setFormDatosDelDestinatario with correct value in datosDelDestinatarioFunc', () => {
     const mockData = { key: 'value' };
     jest.spyOn(component['store'], 'setFormDatosDelDestinatario');
 
-    component.detosDelDestinatarioFunc(mockData);
+    component.datosDelDestinatarioFunc(mockData);
 
     expect(component['store'].setFormDatosDelDestinatario).toHaveBeenCalledWith(mockData);
   });

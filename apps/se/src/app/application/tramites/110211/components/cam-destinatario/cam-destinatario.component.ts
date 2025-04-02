@@ -133,7 +133,7 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
    * Actualiza el almacén con los datos del destinatario.
    * @param e - Los datos del destinatario a almacenar.
    */
-  detosDelDestinatarioFunc(e: unknown): void {
+  datosDelDestinatarioFunc(e: unknown): void {
     this.store.setFormDatosDelDestinatario(e as FormValues);
   }
 

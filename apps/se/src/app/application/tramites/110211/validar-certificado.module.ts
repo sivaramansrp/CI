@@ -16,6 +16,7 @@ import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
+import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     RouterModule,
     InputFechaComponent,
     CertificadoDeOrigenComponent,
-    DaosCertificadoComponent,
+    DatosCertificadoDeComponent,
     DatosDelDestinatarioComponent,
     DestinatarioComponent,
     TituloComponent
