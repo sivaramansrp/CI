@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
 import {AccionBoton,DatosPasos,ListaPasosWizard,SeccionLibState,} from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { PASOS } from '@ng-mf/data-access-user'
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
