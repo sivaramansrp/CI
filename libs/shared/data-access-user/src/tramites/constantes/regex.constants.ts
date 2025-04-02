@@ -42,9 +42,21 @@ export const REGEX_DESCRIPCION_ESPECIALES =
 export const REGEX_RFC = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
 
 /**
+ * Expresión regular para validar RFC de personas físicas.
+ * Formato: 4 letras, 6 dígitos (fecha AAMMDD), y 3 caracteres alfanuméricos.
+ */
+export const REGEX_RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
+
+/**
+ * Expresión regular para validar RFC de personas morales.
+ * Formato: 3 letras, 6 dígitos (fecha AAMMDD), y 3 caracteres alfanuméricos.
+ */
+export const REGEX_RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
+
+/**
  * Expresión regular para reemplazar caracteres que no sean
  * letras (a-z, A-Z) ni números (0-9).
- * 
+ *
  * - `[^a-zA-Z0-9]`: Coincide con cualquier carácter que no sea una letra o un número.
  * - `g`: Bandera global que asegura que se reemplacen todas las coincidencias.
  */
@@ -108,30 +120,30 @@ export const REGEX_SOLO_DIGITOS = /^\d+$/;
  * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
  * - $: Aserción para el final de la cadena.
  */
-export const REGEX_PATRON_DECIMAL_15_4=/^\d{0,15}(\.\d{1,4})?$/;
+export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
 
 /**
  * Expresión regular que valida un patrón alfanumérico.
- * 
- * Esta expresión regular permite letras mayúsculas y minúsculas (incluyendo la Ñ y ñ) 
+ *
+ * Esta expresión regular permite letras mayúsculas y minúsculas (incluyendo la Ñ y ñ)
  * y dígitos del 0 al 9. No permite espacios ni caracteres especiales.
- * 
+ *
  * Ejemplos de cadenas válidas:
  * - "Hola123"
  * - "CódigoÑ"
  * - "12345"
- * 
+ *
  * Ejemplos de cadenas no válidas:
  * - "Hola 123" (contiene un espacio)
  * - "Hola@123" (contiene un carácter especial)
  */
-export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
+export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
 /**
  * Expresión regular para encontrar caracteres que no sean números.
- * 
+ *
  * Esta expresión regular se utiliza para identificar y encontrar cualquier carácter
  * que no sea un dígito numérico (0-9) en una cadena.
- * 
+ *
  * @example
  * // Uso de la expresión regular para eliminar caracteres no numéricos de una cadena
  * const cadena = "abc123def456";
@@ -139,13 +151,13 @@ export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
  */
 export const REGEX_NUMEROS = /[^0-9]/g;
 
-
 /**
  * Expresión regular para validar correos electrónicos.
  * Admite múltiples correos separados por comas.
  * Ejemplo válido: ejemplo@correo.com,otro@correo.com
  */
-export const REGEX_CORREO_ELECTRONICO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
+export const REGEX_CORREO_ELECTRONICO =
+  /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4}(\,[[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,4})*$/i;
 
 /**
  * Expresión regular para validar números de teléfono.
@@ -167,3 +179,21 @@ export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
  * - abc (no es un número)
  */
 export const REGEX_PATRON_DECIMAL_2 = /^\d+(\.\d{1,2})?$/;
+
+/**
+ * Expresión regular para validar que una cadena contenga solo números.
+ * Permite únicamente dígitos del 0 al 9.
+ */
+export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
+
+/**
+ * Expresión regular para validar el formato de la CURP.
+ * El formato consta de:
+ * - 4 letras iniciales (mayúsculas o minúsculas).
+ * - 6 dígitos para la fecha de nacimiento (AAMMDD).
+ * - 1 letra que indica el género (H o M, mayúscula o minúscula).
+ * - 5 letras para la entidad federativa.
+ * - 2 dígitos al final.
+ */
+export const REGEX_CURP =
+  /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
