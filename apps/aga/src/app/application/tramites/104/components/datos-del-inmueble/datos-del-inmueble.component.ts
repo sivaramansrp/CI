@@ -1,7 +1,7 @@
 import { CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {Subject, distinctUntilChanged,takeUntil } from 'rxjs';
+import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormularioQuery } from '../../../../core/queries/tramite104.query';
 import { FormularioStore } from '../../../../core/estados/tramites/tramite104.store';
@@ -20,7 +20,7 @@ import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
   templateUrl: './datos-del-inmueble.component.html',
   styleUrl: './datos-del-inmueble.component.css',
 })
-export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
+export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
 
   /**
    * **Evento de cierre**  
@@ -181,15 +181,15 @@ export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
    */
   private inicializarFormulario(): void {
     this.formularioDireccion = this.fb.group({
-      calle: ['', [Validators.required, Validators.maxLength(100)]], 
-      numeroExterior: ['', [Validators.required, Validators.maxLength(10)]], 
-      numeroInterior: ['', [Validators.maxLength(10)]], 
-      pais: ['', Validators.required], 
-      entidadFederativa: ['', Validators.required], 
+      calle: ['', [Validators.required, Validators.maxLength(100)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(10)]],
+      numeroInterior: ['', [Validators.maxLength(10)]],
+      pais: ['', Validators.required],
+      entidadFederativa: ['', Validators.required],
       municipioDelegacion: ['', Validators.required],
-      colonia: ['', Validators.required], 
-      localidad: ['', Validators.required], 
-      codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]], 
+      colonia: ['', Validators.required],
+      localidad: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
     });
   }
 
@@ -213,53 +213,70 @@ export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
   ];
 
 
-
- /**
-   * **Carga los valores guardados en Akita en el formulario**
+  /**
+   * **Carga los datos guardados en el store y los aplica a los formularios**  
+   * 
+   * - Se suscribe a los valores almacenados en `fomentoExportacion$` y `direccion$` dentro del store.  
+   * - Si existen datos en el estado, se actualizan los formularios sin disparar eventos (`emitEvent: false`).  
+   * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria cuando el componente se destruye.
    */
- cargarDatosGuardados(): void {
-  this.formularioQuery.fomentoExportacion$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      if (data){this.fomentoExportacionForm.patchValue(data, { emitEvent: false });
-    }
-    });
+  cargarDatosGuardados(): void {
+    this.formularioQuery.fomentoExportacion$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        if (data) {
+          this.fomentoExportacionForm.patchValue(data, { emitEvent: false });
+        }
+      });
 
-  this.formularioQuery.direccion$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      if (data) {this.formularioDireccion.patchValue(data, { emitEvent: false });
-    }
-    });
-}
+    this.formularioQuery.direccion$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        if (data) {
+          this.formularioDireccion.patchValue(data, { emitEvent: false });
+        }
+      });
+  }
 
-/**
- * **Escucha cambios en los formularios y almacena en Akita automáticamente**
- */
-escucharCambiosFormulario(): void {
-  this.fomentoExportacionForm.valueChanges
-    .pipe(
-      takeUntil(this.destroy$),
-      distinctUntilChanged() // 🔹 Evita actualizaciones innecesarias
-    )
-    .subscribe((formData) => {
-      this.formularioStore.setFomentoExportacion(formData);
-    });
+  /**
+   * **Escucha cambios en los formularios y actualiza el store**  
+   * 
+   * - Se suscribe a `valueChanges` de ambos formularios (`fomentoExportacionForm` y `formularioDireccion`).  
+   * - Utiliza `distinctUntilChanged()` para evitar actualizaciones innecesarias cuando los valores no cambian.  
+   * - Al detectar cambios, actualiza los valores en el store.  
+   * - `takeUntil(this.destroy$)` asegura que la suscripción se cancele cuando el componente se destruya.  
+   */
+  escucharCambiosFormulario(): void {
+    this.fomentoExportacionForm.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        distinctUntilChanged()
+      )
+      .subscribe((formData) => {
+        this.formularioStore.setFomentoExportacion(formData);
+      });
 
-  this.formularioDireccion.valueChanges
-    .pipe(
-      takeUntil(this.destroy$),
-      distinctUntilChanged() // 🔹 Evita actualizaciones innecesarias
-    )
-    .subscribe((formData) => {
-      this.formularioStore.setDireccion(formData);
-    });
-}
+    this.formularioDireccion.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        distinctUntilChanged()
+      )
+      .subscribe((formData) => {
+        this.formularioStore.setDireccion(formData);
+      });
+  }
 
-ngOnDestroy(): void {
- this.destroy$.next();
- this.destroy$.complete();
-}
+  /**
+   * **Limpia las suscripciones al destruir el componente**  
+   * 
+   * - `this.destroy$.next();` emite un valor para completar las suscripciones activas.  
+   * - `this.destroy$.complete();` marca el `Subject` como completo, evitando nuevas emisiones.  
+   * - Esto previene fugas de memoria al asegurarse de que las suscripciones se finalizan correctamente.  
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
 
 }
