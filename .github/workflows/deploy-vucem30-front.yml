@@ -30,9 +30,13 @@ jobs:
       - name: Instalar NX globalmente
         run: npm install -g nx@19.3.1
         
-        # Instala el módulo nativo requerido para Linux.
+      # Instala el módulo nativo requerido para Linux.
       - name: Install native binding for Nx on Linux
         run: npm install @nx/nx-linux-x64-gnu
+        
+      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+      - name: Install SWC native binding for Linux
+        run: npm install @swc/core-linux-x64-gnu
         
 
       # 3. Instala las dependencias usando --force, tal como lo haces localmente.
