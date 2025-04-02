@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import {
   AfterViewInit,
   Component,
@@ -26,21 +24,23 @@ import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 
+import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
 import { HttpClient } from '@angular/common/http';
 import { Modal } from 'bootstrap';
 import { Nacional } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { Observable, ReplaySubject, takeUntil } from 'rxjs';
-import {
-  choferesExtranjeros,
-  datosDelChoferNacional,
-} from '../../../40103/models/registro-muestras-mercancias.model';
+import { Observable } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { SharedModule } from '@ng-mf/data-access-user';
+import { choferesEnum } from '../constantes/choferes.enum';
+import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mercancias.model';
+import { datosDelChoferNacional } from '../../../40103/models/registro-muestras-mercancias.model';
+import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
+import { takeUntil } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
-import { choferesEnum } from '../constantes/choferes.enum';
-import { extranjero } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
-import { map, take } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 
 @Component({
@@ -58,34 +58,48 @@ import mockData from '@libs/shared/theme/assets/json/40103/director-general-mock
   ],
 })
 export class ChoferesComponent implements OnInit, OnDestroy {
-  solicitudTituloChoferExtranjero: string = 'Datos del chofer extranjero';
-  labelSolicitudPersonaNombre: string = 'Nombre';
-  labelSolicitudPersonaPrimerApellido: string = 'Primer Apellido ';
-  labelSolicitudPersonaSegundoApellido: string = 'Segundo Apellido';
-  labelNacionalidad: string = 'Nacionalidad';
-  labelSolicitudChoferExtGafete: string = 'Numero de gafete del chofer';
-  labelSolicitudChoferExtVigenciaGafete: string = 'Vigencia del Gafete';
-  labelSolicitudChoferExtNss: string = 'Número de Seguro Social (NSS)';
-  labelSolicitudChoferExtIdeFiscal: string = 'Número de Identificación Fiscal';
+  solicitudTituloChoferExtranjero: string =
+    CHOFERES_PAGE.SOLICITUD_TITULO_CHOFER_EXTRANJERO;
+  labelSolicitudPersonaNombre: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_NOMBRE;
+  labelSolicitudPersonaPrimerApellido: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_PRIMER_APELLIDO;
+  labelSolicitudPersonaSegundoApellido: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_PERSONA_SEGUNDO_APELLIDO;
+  labelNacionalidad: string = CHOFERES_PAGE.LABEL_NACIONALIDAD;
+  labelSolicitudChoferExtGafete: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_GAFETE;
+  labelSolicitudChoferExtVigenciaGafete: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_VIGENCIA_GAFETE;
+  labelSolicitudChoferExtNss: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_NSS;
+  labelSolicitudChoferExtIdeFiscal: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_CHOFER_EXT_IDE_FISCAL;
   tooltipIdentificacionFiscal: string =
-    'Número de identificación fiscal en el país de residencia';
-  solicitudTituloDomicilioFiscal: string = 'Domicilio Fiscal';
-  labelPais: string = 'País';
-  labelSolicitudDomicilioCodigoPostal: string = 'Código Postal';
-  labelEntidadFederativa: string = 'Estado';
-  labelSolicitudDomicilioCalle: string = 'Calle';
-  labelSolicitudDomicilioNumeroExterior: string = 'Número exterior';
-  labelSolicitudDomicilioNumeroInterior: string = 'Número interior';
-  labelPaisOrigen: string = 'País de residencia';
-  labelSolicitudDomicilioCiudad: string = 'Ciudad';
-  labelSolicitudCorreo: string = 'Correo electrónico';
-  labelSolicitudTelefono: string = 'Teléfono';
-  camposObligatorios: string = '* Campos obligatorios';
-  botonBuscar: string = 'Buscar';
-  botonLimpiar: string = 'Limpiar';
-  botonCancelar: string = 'Cancelar';
-  botonGuardar: string = 'Guardar';
-  seleccionaUnValor: string = 'Selecciona un valor';
+    CHOFERES_PAGE.TOOL_TIP_IDENTIFICACION_FISCAL;
+  solicitudTituloDomicilioFiscal: string =
+    CHOFERES_PAGE.SOLICITUD_TITULO_DOMICILIO_FISCAL;
+  labelPais: string = CHOFERES_PAGE.LABEL_PAIS;
+  labelSolicitudDomicilioCodigoPostal: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CODIGO_POSTAL;
+  labelEntidadFederativa: string = CHOFERES_PAGE.LABEL_ENTIDAD_FEDERATIVA;
+  labelSolicitudDomicilioCalle: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CALLE;
+  labelSolicitudDomicilioNumeroExterior: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_EXTERIOR;
+  labelSolicitudDomicilioNumeroInterior: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_NUMERO_INTERIOR;
+  labelPaisOrigen: string = CHOFERES_PAGE.LABEL_PAIS_ORIGEN;
+  labelSolicitudDomicilioCiudad: string =
+    CHOFERES_PAGE.LABEL_SOLICITUD_DOMICILIO_CIUDAD;
+  labelSolicitudCorreo: string = CHOFERES_PAGE.LABEL_SOLICITUD_CORREO;
+  labelSolicitudTelefono: string = CHOFERES_PAGE.LABEL_SOLICITUD_TELEFONO;
+  camposObligatorios: string = CHOFERES_PAGE.CAMPOS_OBLIGATORIOS;
+  botonBuscar: string = CHOFERES_PAGE.BOTON_BUSCAR;
+  botonLimpiar: string = CHOFERES_PAGE.BOTON_LIMPIAR;
+  botonCancelar: string = CHOFERES_PAGE.BOTON_CANCELAR;
+  botonGuardar: string = CHOFERES_PAGE.BOTON_GUARDAR;
+  seleccionaUnValor: string = CHOFERES_PAGE.SELECCIONA_UNVALOR;
   labelPuntos: string = '...';
   seleccionadosTodos: boolean = false;
   modal: string = 'modal';
@@ -93,8 +107,25 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   extranjero: Array<extranjero> = [];
   activeTab: string = 'nacional';
   Choferesextranjeros: string = 'Choferes extranjeros';
+  /**
+   * Observable que contiene la lista de estados disponibles.
+   *
+   * @type {Observable<Catalogo[]>}
+   */
   estado$!: Observable<Catalogo[]>;
+
+  /**
+   * Lista de entidades federativas (estados) para choferes nacionales.
+   *
+   * @type {Catalogo[]}
+   */
   entidadFederativaCHN: Catalogo[] = [];
+
+  /**
+   * Lista de datos de los choferes nacionales.
+   *
+   * @type {datosDelChoferNacional[]}
+   */
   datosDelChoferNacional: datosDelChoferNacional[] =
     [] as datosDelChoferNacional[];
   municipios: any[] = [];
@@ -103,10 +134,40 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   choferesExtranjero: any[] = [];
   choferes: any[] = [];
   formChoferes!: FormGroup;
+  /**
+   * Observable que contiene la lista de choferes nacionales.
+   *
+   * @type {Observable<any[]>}
+   */
   choferesList$: Observable<any[]> = new Observable();
+
+  /**
+   * Observable que proporciona los datos del chofer nacional.
+   *
+   * @type {Observable<any[]>}
+   */
   getdatosDelChoferNacional$: Observable<any[]> = new Observable();
+
+  /**
+   * Observable que proporciona la lista de choferes extranjeros.
+   *
+   * @type {Observable<any[]>}
+   */
   getchoferesExtranjeros$: Observable<any[]> = new Observable();
+
+  /**
+   * Observable que contiene la lista de choferes extranjeros.
+   *
+   * @type {Observable<any[]>}
+   */
   choferesextranjerosList$: Observable<any[]> = new Observable();
+
+  /**
+   * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
+   * Se emite un valor cuando el componente se destruye, completando todas las suscripciones activas.
+   *
+   * @type {ReplaySubject<boolean>}
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   isEditing: boolean = false;
   selectedRow: any;
@@ -272,11 +333,54 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    */
 
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
+  /**
+   * Catálogo de datos que se recibe como entrada desde el componente padre.
+   *
+   * @type {Catalogo[]}
+   */
   @Input() catalogo: Catalogo[] = [];
+
+  /**
+   * Lista de países de origen para choferes nacionales.
+   *
+   * @type {Catalogo[]}
+   */
   public paisOrigenCHN!: Catalogo[];
+
+  /**
+   * Lista de delegaciones para choferes nacionales.
+   *
+   * @type {Catalogo[]}
+   */
   public delegacionCHN!: Catalogo[];
+
+  /**
+   * Lista de estados disponibles.
+   *
+   * @type {Catalogo[]}
+   */
+  public estado!: Catalogo[];
+
+  /**
+   * Lista de colonias para choferes nacionales.
+   *
+   * @type {Catalogo[]}
+   */
   public coloniaCHN!: Catalogo[];
+
+  /**
+   * Lista de nacionalidades para choferes extranjeros.
+   *
+   * @type {Catalogo[]}
+   */
   public nacionalidadCHE!: Catalogo[];
+
+  /**
+   * Lista de países para choferes nacionales.
+   *
+   * @type {Catalogo[]}
+   */
+  public paisChn!: Catalogo[];
 
   /**
    * @property {any[]} facturasDisponible - Array de datos de facturas disponibles.
@@ -287,7 +391,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    * @property {any[]} facturasAsociadas - Array de datos de facturas asociadas.
    */
   facturasAsociadas: choferesExtranjeros[] = [];
-  
+
   /**
    * Establece la pestaña activa.
    * @param tab La pestaña que se establecerá como activa.
@@ -299,7 +403,6 @@ export class ChoferesComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private http: HttpClient,
-    // private storeService: StoreService,
     private chofer40103Store: Chofer40103Store,
     private chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query,
@@ -346,7 +449,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
       localidad: ['', [Validators.required, Validators.maxLength(120)]],
       codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
 
-      paisCHN: ['', [Validators.required]],
+      paisChn: ['', [Validators.required]],
       estado: ['', [Validators.required]],
       numerodelsegurosocial: ['', [Validators.required]],
       entidadFederativaCHN: ['', [Validators.required]],
@@ -405,6 +508,8 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.coloniaChnData();
     this.nacionaliDadChe();
     this.recuperarDatos();
+    this.estadoData();
+    this.paisChnData();
     this.ConfiguracionColumna = this.tableColumns;
   }
   /**
@@ -413,9 +518,20 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   get getFormValues() {
     return this.formChoferes.controls;
   }
+  /**
+   * Abre el modal configurando su visibilidad.
+   *
+   * @returns {void}
+   */
   abrirModal(): void {
     this.modal = 'show';
   }
+
+  /**
+   * Cierra el modal eliminando clases CSS y configurando su visibilidad.
+   *
+   * @returns {void}
+   */
   cerrarModal(): void {
     if (this.modalRef) {
       this.modalRef.nativeElement.classList.remove('show');
@@ -533,26 +649,18 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       return;
     }
 
-    const CHOFER_DATA = {
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaternoCHN: 'González',
-      rfc: 'JUAN890123ABC',
-      gafete: '123456',
-      vigenciagafete: '2025-12-31',
-      calle: 'Av. Reforma',
-      numeroExterior: '123',
-      numeroInterior: 'A1',
-      paisCHN: 'MEX',
-      entidadFederativaCHN: 'CDMX',
-      delegacionCHN: 'Benito Juárez',
-      coloniaCHN: 'Nápoles',
-    };
+    const CHOFER_DATA = {};
 
     // Rellenar el formulario
     this.formChoferes.patchValue(CHOFER_DATA);
   }
-
+  /**
+   * Actualiza los valores de los desplegables (listas desplegables) de municipios y colonias
+   * basados en los datos del chofer proporcionados.
+   *
+   * @param choferData Objeto que contiene los datos del chofer, incluyendo las claves de estado y municipio.
+   * @returns void
+   */
   actualizarDesplegables(choferData: any): void {
     const ESTADO_CLAVE = choferData.datosGenerales.estados;
     const MUNICIPIO_CLAVE = choferData.datosGenerales.municipio;
@@ -566,12 +674,24 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
+  /**
+   * Método estático que simula la carga de los estados.
+   * Retorna una promesa que se resuelve inmediatamente.
+   *
+   * @returns {Promise<void>} Una promesa de tipo void.
+   */
   static loadEstados(): Promise<void> {
     return new Promise((resolve) => {
       resolve();
     });
   }
 
+  /**
+   * Carga la lista de municipios basados en la clave del estado proporcionada.
+   *
+   * @param {string} claveEstado - Clave del estado seleccionado. Si no se proporciona, el método no realiza ninguna acción.
+   * @returns {void}
+   */
   loadMunicipios(claveEstado: string): void {
     if (!claveEstado) {
       return;
@@ -581,6 +701,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     });
   }
 
+  /**
+   * Carga la lista de colonias basadas en la clave del municipio proporcionada.
+   *
+   * @param {string} claveMunicipio - Clave del municipio seleccionado. Si no se proporciona, el método no realiza ninguna acción.
+   * @returns {void}
+   */
   loadColonias(claveMunicipio: string): void {
     if (!claveMunicipio) {
       return;
@@ -590,6 +716,14 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       this.colonias = data;
     });
   }
+
+  /**
+   * Maneja el cambio de país en el formulario.
+   * Si se selecciona un país, llama al método estático `loadEstados` para cargar los estados.
+   *
+   * @param {Event} event - Evento que contiene el valor del país seleccionado.
+   * @returns {void}
+   */
   static onPaisChange(event: Event): void {
     const PAIS = (event.target as HTMLSelectElement).value;
     if (PAIS) {
@@ -603,6 +737,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   limpiarFormulario(): void {
     this.formChoferes.reset();
   }
+  /**
+   * Establece los valores del formulario de choferes utilizando datos simulados (`mockData`).
+   *
+   * @returns {void}
+   */
   setFormValues(): void {
     if (mockData) {
       setTimeout(() => {
@@ -614,11 +753,23 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       });
     }
   }
+
+  /**
+   * Alterna la selección de una fila en la tabla de choferes y actualiza el formulario con los datos de la fila seleccionada.
+   *
+   * @param {any} row - Objeto que representa la fila seleccionada.
+   * @returns {void}
+   */
   toggleRowSelection(row: any): void {
     this.selectedRow = row;
     this.formChoferes.patchValue(row);
   }
 
+  /**
+   * Permite editar los datos de la fila seleccionada. Abre un modal para realizar la edición.
+   *
+   * @returns {void}
+   */
   editarFilaSeleccionada(): void {
     if (this.selectedRow) {
       this.isEditing = true;
@@ -629,6 +780,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       }
     }
   }
+
+  /**
+   * Guarda los cambios realizados en la fila seleccionada y actualiza la lista de choferes.
+   *
+   * @returns {void}
+   */
   guardarFilaEditada(): void {
     if (this.selectedRow) {
       const UPDATE_ROWS = { ...this.selectedRow, ...this.formChoferes.value };
@@ -643,10 +800,8 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         })
       );
 
-      //Actualizar la mesa
       this.choferesList$.subscribe();
 
-      //cerrar el modal
       this.isEditing = false;
       const MODEL = Modal.getInstance(this.modalRef.nativeElement);
       if (MODEL) {
@@ -655,6 +810,11 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     }
   }
 
+  /**
+   * Recupera datos de choferes desde un archivo JSON utilizando el servicio `chofer40103Service`.
+   *
+   * @returns {void}
+   */
   recuperarDatos(): void {
     this.chofer40103Service
       .obtenerTablaDatos<datosDelChoferNacional>('facturasDisponible.json')
@@ -669,32 +829,81 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       });
   }
 
+  /**
+   * Actualiza el estado seleccionado en el store basado en los valores del formulario.
+   *
+   * @returns {void}
+   */
   estadoSeleccion(): void {
     const ESTADO = this.formChoferes.get('estado')?.value;
     this.chofer40103Store.setEstado(ESTADO);
   }
 
+  /**
+   * Obtiene la lista de países emisores desde el servicio `chofer40103Service`.
+   *
+   * @returns {void}
+   */
   paisEmisorData(): void {
     this.chofer40103Service.getPaisOrigenChn().subscribe((data) => {
       this.paisOrigenCHN = data;
     });
   }
+
+  /**
+   * Obtiene la lista de delegaciones desde el servicio `chofer40103Service`.
+   *
+   * @returns {void}
+   */
   delegacionChnData(): void {
     this.chofer40103Service.getDelegacionChn().subscribe((data) => {
       this.delegacionCHN = data;
     });
   }
 
+  /**
+   * Obtiene la lista de estados desde el servicio `chofer40103Service` y la asigna a la propiedad `estado`.
+   *
+   * @returns {void}
+   */
+  estadoData(): void {
+    this.chofer40103Service.getEstado().subscribe((data) => {
+      this.estado = data;
+    });
+  }
+
+  /**
+   * Obtiene la lista de países emisores desde el servicio `chofer40103Service` y la asigna a la propiedad `paisChn`.
+   *
+   * @returns {void}
+   */
+  paisChnData(): void {
+    this.chofer40103Service.getPaisEmisor().subscribe((data) => {
+      this.paisChn = data;
+    });
+  }
+  /**
+   * Obtiene la lista de colonias desde el servicio `chofer40103Service`.
+   *
+   * @returns {void}
+   */
   coloniaChnData(): void {
     this.chofer40103Service.getColoniaChn().subscribe((data) => {
       this.coloniaCHN = data;
     });
   }
+
+  /**
+   * Obtiene la lista de nacionalidades desde el servicio `chofer40103Service`.
+   *
+   * @returns {void}
+   */
   nacionaliDadChe(): void {
     this.chofer40103Service.getNacionaliDadChe().subscribe((data) => {
       this.nacionalidadCHE = data;
     });
   }
+
   /**
    * @method ngOnDestroy
    * @description

@@ -40,13 +40,13 @@
           <div class="col-md-12">
             <h4 class="extranjeros">Choferes nacionales:</h4>
             <form [formGroup]="formChoferes">
-            <app-tabla-dinamica
-              [tipoSeleccionTabla]="tipoSeleccionTabla"
-              [configuracionTabla]="ConfiguracionColumna"
-              [datos]="datosDelChoferNacional"
-            >
-            </app-tabla-dinamica>
-          </form>
+              <app-tabla-dinamica
+                [tipoSeleccionTabla]="tipoSeleccionTabla"
+                [configuracionTabla]="ConfiguracionColumna"
+                [datos]="datosDelChoferNacional"
+              >
+              </app-tabla-dinamica>
+            </form>
           </div>
         </div>
 
@@ -344,7 +344,8 @@
                   >
                   <small
                     *ngIf="getFormValues['vigenciagafete'].errors?.['maxLength']"
-                    >La vigencia del gafete no puede tener más de 10 caracteres.</small
+                    >La vigencia del gafete no puede tener más de 10
+                    caracteres.</small
                   >
                 </div>
               </div>
@@ -436,36 +437,27 @@
               <div class="row">
                 <div class="col-md-4">
                   <div>
-                    <label for="paisCHN">País:</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select
-                      id="paisCHN"
-                      class="form-control"
-                      formControlName="paisCHN"
-                    >
-                      <option value="MEX">
-                        MEXICO (ESTADOS UNIDOS MEXICANOS)
-                      </option>
-                    </select>
+                    <app-catalogo-select
+                      class="paisChn"
+                      [catalogo]="paisChn"
+                      formControlName="paisChn"
+                      [required]="true"
+                      name="paisChn"
+                      label="País"
+                    ></app-catalogo-select>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <div>
-                    <label for="entidadFederativaCHN">Estado:</label>
-                    <span class="require">*</span>
-                  </div>
-                  <div>
-                    <select class="form-control" formControlName="estado">
-                      <option
-                        *ngFor="let item of estado$ | async"
-                        [value]="item.id"
-                      >
-                        {{ item.descripcion }}
-                      </option>
-                    </select>
+                    <app-catalogo-select
+                      class="estado"
+                      [catalogo]="estado"
+                      formControlName="estado"
+                      [required]="true"
+                      name="estado"
+                      label="Estado"
+                    ></app-catalogo-select>
                   </div>
                 </div>
 

@@ -1,4 +1,4 @@
-/* eslint-disable no-empty-function */
+
 import { Component, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';

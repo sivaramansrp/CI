@@ -1,9 +1,9 @@
-/* eslint-disable @nx/enforce-module-boundaries */
+
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
-} from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import {
   FormularioDinamico,
   SolicitanteComponent,
@@ -15,6 +15,12 @@ import {
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements AfterViewInit {
+  /**
+ * Referencia al componente hijo `SolicitanteComponent` dentro de la plantilla.
+ * Permite acceder a las propiedades y métodos públicos del componente hijo.
+ *
+ * @type {SolicitanteComponent}
+ */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
   tipoPersona!: number;
   persona: FormularioDinamico[] = [];

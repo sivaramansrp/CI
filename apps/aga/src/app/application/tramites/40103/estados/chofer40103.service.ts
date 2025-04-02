@@ -206,6 +206,14 @@ export class Chofer40103Service {
   getDelegacionChn(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/municipio.json');
   }
+/**
+ * Obtiene la lista de estados desde un archivo JSON local.
+ *
+ * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
+ */
+getEstado(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('/assets/json/40103/estado.json');
+}
  
   /**
    * Obtiene el catálogo de colonias.
@@ -233,8 +241,15 @@ export class Chofer40103Service {
   getChoferData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/40103/chofer.json');
   }
-  obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
-    const JSONURL = this.url + fileName;
-      return this.http.get<T[]>(JSONURL);
-  }
+ /**
+ * Obtiene los datos de una tabla desde un archivo JSON.
+ *
+ * @template T El tipo genérico de los datos que se espera recibir.
+ * @param {string} fileName - Nombre del archivo JSON que contiene los datos.
+ * @returns {Observable<T[]>} Un observable que emite la lista de datos del archivo JSON.
+ */
+obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
+  const JSONURL = this.url + fileName;
+  return this.http.get<T[]>(JSONURL);
+}
 }

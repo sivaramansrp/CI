@@ -4,7 +4,7 @@ export interface Nacional {
     calle: string;
     numeroExterior: string;
     numeroInterior: string;
-    paisCHN: string;
+    paisChn: string;
     estado: string;
     apellidoPaterno: string;
     apellidoMaternoChn: string;
@@ -25,14 +25,14 @@ export interface Nacional {
     calle: string;
     numeroExterior: string;
     numeroInterior: string;
-    paisCHN: string;
+    paisChn: string;
     estado: string;
     apelliDoPaterno: string;
     apelliDoMaternoChn: string;
     rfc: string;
     gafete: string;
     vigenciaGafete: string;
-    entidadFederativaChn: string;
+    entidadFederativaChn : string;
     numeroDelSeguroSocial: string;
   }
   export interface DatosDelVehículo {

@@ -13,10 +13,18 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class DirectorGeneralComponent implements OnInit, OnDestroy {
   /**
-   * Crea el formulario para el director general.
+   * Formulario reactivo que contiene los datos del director general.
+   *
+   * @type {FormGroup}
    */
-
   directorGeneralForm!: FormGroup;
+
+  /**
+   * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
+   * Se emite un valor cuando el componente se destruye, completando todas las suscripciones activas.
+   *
+   * @type {Subject<void>}
+   */
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -32,8 +40,6 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.crearFormularioDirectorGeneral();
     this.establecerValoresDeFormulario();
-
-    // Escucha los cambios del formulario y actualiza la tienda
     this.directorGeneralForm.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((formData) => {
