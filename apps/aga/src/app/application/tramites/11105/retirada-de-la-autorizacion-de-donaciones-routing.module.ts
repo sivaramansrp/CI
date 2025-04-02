@@ -1,22 +1,22 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AcusesYResolucionesBusqueda11105Component } from './pages/acuses-y-resoluciones-busqueda-11105/acuses-y-resoluciones-busqueda-11105.component';
-import { AcusesYResolucionesDetalles11105Component } from './pages/acuses-y-resoluciones-detalles-11105/acuses-y-resoluciones-detalles-11105.component';
 import { NgModule } from '@angular/core';
+import { PaginaDosAcusesYResolucionesDetallesComponent } from './pages/pagina-dos-acuses-y-resoluciones-detalles/pagina-dos-acuses-y-resoluciones-detalles.component';
+import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pages/pagina-uno-acuses-y-resoluciones-busqueda/pagina-uno-acuses-y-resoluciones-busqueda.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 
-export const ROUTES_TERRESTRE: Routes = [
+export const ROUTES_RETIRADA_DE_LA_AUTORIZACION_DE_DONACIONES: Routes = [
   {
     path: 'solicitud',
     component: SolicitantePageComponent,
   },
   {
-    path: 'acuses-y-resoluciones-busqueda-11105',
-    component: AcusesYResolucionesBusqueda11105Component,
+    path: 'pagina-uno-acuses-y-resoluciones-busqueda',
+    component: PaginaUnoAcusesYResolucionesBusquedaComponent,
   },
 
   {
-    path: 'acuses-y-resoluciones-detalles-11105',
-    component: AcusesYResolucionesDetalles11105Component,
+    path: 'pagina-dos-acuses-y-resoluciones-detalles',
+    component: PaginaDosAcusesYResolucionesDetallesComponent,
   },
 
   {
@@ -27,7 +27,9 @@ export const ROUTES_TERRESTRE: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(ROUTES_TERRESTRE)],
+  imports: [
+    RouterModule.forChild(ROUTES_RETIRADA_DE_LA_AUTORIZACION_DE_DONACIONES),
+  ],
   exports: [RouterModule],
 })
 export class RetiradaDeLaAutorizacionDeDonacioneRoutingModule {}

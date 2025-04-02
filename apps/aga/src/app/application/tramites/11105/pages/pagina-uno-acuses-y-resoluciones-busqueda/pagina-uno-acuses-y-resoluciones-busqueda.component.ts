@@ -7,17 +7,17 @@ import { Component } from '@angular/core';
  * Componente para gestionar la búsqueda de acuses y resoluciones del trámite 11105.
  */
 @Component({
-  selector: 'acuses-y-resoluciones-busqueda-11105',
+  selector: 'pagina-uno-acuses-y-resoluciones-busqueda',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     AcusesYResoluionesFolioDelTramiteBusquedaComponent,
   ],
-  templateUrl: './acuses-y-resoluciones-busqueda-11105.component.html',
-  styleUrl: './acuses-y-resoluciones-busqueda-11105.component.scss',
+  templateUrl: './pagina-uno-acuses-y-resoluciones-busqueda.component.html',
+  styleUrl: './pagina-uno-acuses-y-resoluciones-busqueda.component.scss',
 })
-export class AcusesYResolucionesBusqueda11105Component {
+export class PaginaUnoAcusesYResolucionesBusquedaComponent {
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio para construir formularios reactivos.

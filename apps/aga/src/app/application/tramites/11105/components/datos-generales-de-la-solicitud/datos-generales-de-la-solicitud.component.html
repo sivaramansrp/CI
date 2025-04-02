@@ -5,7 +5,7 @@
     class="row mt-5"
   >
     <div class="col-md-12">
-      <ng-container formGroupName="importadorExportador">
+      <ng-container formGroupName="retiradaDeDonaciones">
         <label>Datos Requeridos*:</label>
         <div class="alert alert-info">
           <label style="font-weight: normal">
@@ -69,7 +69,7 @@
       </div>
 
       <ng-titulo titulo="Datos del donante extrajero" />
-      <ng-container formGroupName="importadorExportador">
+      <ng-container formGroupName="retiradaDeDonaciones">
         <div class="row">
           <div class="col-md-8">
             <label>Nombre*:</label>
@@ -80,7 +80,7 @@
               id="nombre"
               formControlName="nombre"
               [ngClass]="
-                isValid(importadorExportador, 'nombre') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'nombre') ? 'required' : ''
               "
             />
           </div>
@@ -96,7 +96,7 @@
               id="calle"
               formControlName="calle"
               [ngClass]="
-                isValid(importadorExportador, 'calle') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'calle') ? 'required' : ''
               "
             />
           </div>
@@ -109,7 +109,7 @@
               id="numeroExterior"
               formControlName="numeroExterior"
               [ngClass]="
-                isValid(importadorExportador, 'numeroExterior')
+                isValid(retiradaDeDonaciones, 'numeroExterior')
                   ? 'required'
                   : ''
               "
@@ -125,7 +125,7 @@
               id="numeroInterior"
               formControlName="numeroInterior"
               [ngClass]="
-                isValid(importadorExportador, 'numeroInterior')
+                isValid(retiradaDeDonaciones, 'numeroInterior')
                   ? 'required'
                   : ''
               "
@@ -141,7 +141,7 @@
               formControlName="telefono"
               maxlength="30"
               [ngClass]="
-                isValid(importadorExportador, 'telefono') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'telefono') ? 'required' : ''
               "
             />
           </div>
@@ -153,7 +153,7 @@
               id="correoElectronico"
               formControlName="correoElectronico"
               [ngClass]="
-                isValid(importadorExportador, 'correoElectronico')
+                isValid(retiradaDeDonaciones, 'correoElectronico')
                   ? 'required'
                   : ''
               "
@@ -169,7 +169,7 @@
               id="pais"
               formControlName="pais"
               [ngClass]="
-                isValid(importadorExportador, 'pais') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'pais') ? 'required' : ''
               "
             />
           </div>
@@ -182,7 +182,7 @@
               id="codigoPostal"
               formControlName="codigoPostal"
               [ngClass]="
-                isValid(importadorExportador, 'codigoPostal') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'codigoPostal') ? 'required' : ''
               "
             />
           </div>
@@ -195,7 +195,7 @@
               id="estado"
               formControlName="estado"
               [ngClass]="
-                isValid(importadorExportador, 'estado') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'estado') ? 'required' : ''
               "
             />
           </div>
@@ -210,7 +210,7 @@
               id="colonia"
               formControlName="colonia"
               [ngClass]="
-                isValid(importadorExportador, 'colonia') ? 'required' : ''
+                isValid(retiradaDeDonaciones, 'colonia') ? 'required' : ''
               "
             />
           </div>

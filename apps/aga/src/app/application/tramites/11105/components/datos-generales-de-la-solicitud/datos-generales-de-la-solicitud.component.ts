@@ -278,8 +278,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el grupo de formulario de importador/exportador.
    */
-  get importadorExportador(): FormGroup {
-    return this.tramiteForm.get('importadorExportador') as FormGroup;
+  get retiradaDeDonaciones(): FormGroup {
+    return this.tramiteForm.get('retiradaDeDonaciones') as FormGroup;
   }
 
   /**
@@ -287,7 +287,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   donanteDomicilio(): void {
     this.tramiteForm = this.formBuilder.group({
-      importadorExportador: this.formBuilder.group({
+      retiradaDeDonaciones: this.formBuilder.group({
         aduana: [{ value: '', disabled: true }, [Validators.required]],
         nombre: [
           { value: '', disabled: true },

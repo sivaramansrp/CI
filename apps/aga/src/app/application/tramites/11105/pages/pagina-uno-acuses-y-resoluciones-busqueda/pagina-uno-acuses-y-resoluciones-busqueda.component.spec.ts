@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AcusesYResolucionesBusqueda11105Component } from './acuses-y-resoluciones-busqueda-11105.component';
+import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pagina-uno-acuses-y-resoluciones-busqueda.component';
 import { AcusesYResoluionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcusesYResolucionesBusqueda11105Component', () => {
-  let component: AcusesYResolucionesBusqueda11105Component;
+  let component: PaginaUnoAcusesYResolucionesBusquedaComponent;
   let fixture: any;
 
   beforeEach(async () => {
@@ -16,12 +16,12 @@ describe('AcusesYResolucionesBusqueda11105Component', () => {
         ReactiveFormsModule,
         AcusesYResoluionesFolioDelTramiteBusquedaComponent,
         HttpClientTestingModule,
-        AcusesYResolucionesBusqueda11105Component
+        PaginaUnoAcusesYResolucionesBusquedaComponent
       ],
       declarations: [],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AcusesYResolucionesBusqueda11105Component);
+    fixture = TestBed.createComponent(PaginaUnoAcusesYResolucionesBusquedaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
