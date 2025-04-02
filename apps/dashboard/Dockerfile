@@ -10,6 +10,11 @@ RUN apk add --no-cache ca-certificates wget && \
     rm glibc-2.35-r0.apk
 ENV LD_LIBRARY_PATH=/usr/glibc-compat/lib
 
+# Configurar variables de entorno para evitar la instalación de bindings nativos
+ENV NX_SKIP_NX_CACHE=true
+ENV NX_NATIVE_BINDINGS=false
+ENV NX_VERBOSE_LOGGING=true
+ENV NX_SKIP_POSTINSTALL=1
 
 # Install necessary dependencies for compilation
 RUN apk add --no-cache python3 make g++ git
