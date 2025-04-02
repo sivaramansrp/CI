@@ -31,7 +31,7 @@
       </div>
     </div>
   </div>
-}
+  }
 
   <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
   <div class="row">
@@ -86,29 +86,31 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-12">
-        <div class="form-group">
-          <label class="form-label" for="correoElectronico"
-            >Correo electrónico:</label
-          >
-          <span
-            class="bi bi-question-circle-fill"
-            title="Correo electrónico"
-            data-bs-toggle="tooltip"
-          ></span>
-          <input
-            class="form-control"
-            id="correoElectronico"
-            type="text"
-            formControlName="correoElectronico"
-            [ngClass]="
-              isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
-            "
-          />
+    @if(mostrarCorreoElectronico){
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label" for="correoElectronico"
+              >Correo electrónico:</label
+            >
+            <span
+              class="bi bi-question-circle-fill"
+              title="Correo electrónico"
+              data-bs-toggle="tooltip"
+            ></span>
+            <input
+              class="form-control"
+              id="correoElectronico"
+              type="text"
+              formControlName="correoElectronico"
+              [ngClass]="
+                isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
+              "
+            />
+          </div>
         </div>
       </div>
-    </div>
+    }
 
     <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
 
@@ -236,6 +238,11 @@
 
     @if (scianConfig && scianConfig.datos) {
     <div class="row mt-5">
+      <div class="col-md-3 my-3">
+        <div class="form-group">
+          <label class="form-label" for="telefono">S.C.I.A.N:</label>
+        </div>
+      </div>
       <app-tabla-dinamica
         [tipoSeleccionTabla]="scianConfig.tipoSeleccionTabla"
         [configuracionTabla]="scianConfig.configuracionTabla"

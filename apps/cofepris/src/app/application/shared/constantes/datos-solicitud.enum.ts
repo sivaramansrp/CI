@@ -1,4 +1,5 @@
 import {
+  TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
   TablaScianConfig,
@@ -40,6 +41,25 @@ export const SCIAN_TABLA = [
     orden: 1,
   },
 ];
+
+export const DATOS_MERCANCIA_CLAVE_TABLA = [
+  {
+    encabezado: 'Clave de los lotes',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.clave,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de fabricacio',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.fabricacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.caducidad,
+    orden: 1,
+  }
+];
+
 export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
   { clave: '001', descripcion: 'Descripción 1' },
   { clave: '002', descripcion: 'Descripción 2' },
@@ -241,9 +261,11 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   },
 ];
 
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216, 260205]
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [260214, 260216, 260205, 260217, 260218, 260102]
 
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE=[260216]
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102];
 
 export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205
