@@ -21,8 +21,6 @@ import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.mo
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
 
-
-
 /**
  * @component TercerosRelacionadosComponent
  * @description Componente que muestra las tablas dinámicas de terceros relacionados: fabricantes,
@@ -82,18 +80,28 @@ export class TercerosRelacionadosComponent {
   configuracionTablaFacturador: ConfiguracionColumna<Facturador>[] =
     FACTURADOR_ENCABEZADO_DE_TABLA;
 
-
-
   /**
    * @property {TablaSeleccion} tipoSeleccionTabla
    * Tipo de selección que utiliza la tabla dinámica (por ejemplo, checkbox).
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
-   /**
+  /**
    * Indica si el componente debe estar oculto o visible.
    * @input estaOculto - Valor booleano que determina la visibilidad del componente.
    */
-   @Input() estaOculto!:boolean;
+  @Input() estaOculto!: boolean;
+
+  /**
+   * Indica si el formulario del proveedor debe estar habilitado.
+   * @input habilitarProveedor - Valor booleano que habilita o deshabilita la sección del proveedor.
+   */
+  @Input() habilitarProveedor!: boolean;
+
+  /**
+   * Indica si el formulario del facturador debe estar habilitado.
+   * @input habilitarFacturador - Valor booleano que habilita o deshabilita la sección del facturador.
+   */
+  @Input() habilitarFacturador!: boolean;
 
   /**
    * @constructor
@@ -104,34 +112,31 @@ export class TercerosRelacionadosComponent {
    * @param tramiteStore - Store que administra los datos del trámite.
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-  ) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
    */
-   @Input() fabricanteTablaDatos: Fabricante[]=[];
+  @Input() fabricanteTablaDatos: Fabricante[] = [];
 
   /**
    * @property {Destinatario[]} destinatarioFinalTablaDatos
    * Datos de la tabla de destinatarios finales.
    */
-  @Input() destinatarioFinalTablaDatos: Destinatario[]=[];
+  @Input() destinatarioFinalTablaDatos: Destinatario[] = [];
 
   /**
    * @property {Proveedor[]} proveedorTablaDatos
    * Datos de la tabla de proveedores.
    */
-  @Input() proveedorTablaDatos: Proveedor[]=[];
+  @Input() proveedorTablaDatos: Proveedor[] = [];
 
   /**
    * @property {Facturador[]} facturadorTablaDatos
    * Datos de la tabla de facturadores.
    */
-  @Input() facturadorTablaDatos: Facturador[]=[];
+  @Input() facturadorTablaDatos: Facturador[] = [];
 
   /**
    * @method irAAcciones
@@ -144,6 +149,4 @@ export class TercerosRelacionadosComponent {
       relativeTo: this.activatedRoute,
     });
   }
-
-
 }
