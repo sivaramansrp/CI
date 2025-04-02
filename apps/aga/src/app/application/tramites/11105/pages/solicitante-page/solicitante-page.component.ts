@@ -2,11 +2,12 @@ import { BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
 import { PasoTresComponent } from '../../../11105/pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../../../11105/pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 
 /**
  * Interfaz para definir la estructura de una acción de botón.
@@ -44,7 +45,7 @@ export class SolicitantePageComponent {
   /**
    * Lista de pasos del wizard.
    */
-  pasos: ListaPasosWizard[] = PASOS.slice(0, 2);
+  pasos: Array<ListaPasosWizard> = PASOS;
 
   /**
    * Índice del paso actual.
@@ -89,11 +90,19 @@ export class SolicitantePageComponent {
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
+      this.datosPasos.indice = this.indice;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Método para continuar al siguiente paso en el wizard.
+   */
+  continuar(): void {
+    this.getValorIndice({ accion: 'cont', valor: this.indice + 1 });
   }
 }

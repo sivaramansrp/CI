@@ -8,7 +8,13 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -48,6 +54,13 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   ],
 })
 export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
+  
+  /**
+   * Evento de salida que emite un valor de tipo cadena.
+   * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
+
   /**
    * Subject para manejar la destrucción del componente.
    */
@@ -370,5 +383,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
+  }
+
+  /**
+   * Método que emite un evento para continuar con el flujo de la solicitud.
+   * Este evento no envía ningún dato adicional, solo notifica que se debe proceder.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
   }
 }

@@ -3,20 +3,18 @@ import {
   ConfiguracionColumna,
   InputFecha,
   InputFechaComponent,
+  TablaDinamicaComponent
 } from '@libs/shared/data-access-user/src';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
 } from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/shared/acuses-y-resolucions-folio-tramite/acuses-y-resoluciones-folio-tramite.service';
 import { CommonModule } from '@angular/common';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-
 import { ToastrService } from 'ngx-toastr';
 
 /**
@@ -117,8 +115,15 @@ export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
   }
 
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario y obtiene los datos iniciales.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Llama al método `getAucesYResolucionesFolioTramiteDatos` para obtener los datos iniciales.
+   * - Configura el formulario reactivo `formBusqueda` con los campos:
+   *   - `solicitante`: Campo de texto vacío.
+   *   - `rfc`: Campo de texto vacío.
+   *   - `folio`: Campo prellenado con un valor predeterminado y habilitado.
+   *   - `fechaInicial`: Campo vacío y habilitado.
+   *   - `fechaFinal`: Campo vacío y habilitado.
    */
   ngOnInit(): void {
     this.getAucesYResolucionesFolioTramiteDatos();

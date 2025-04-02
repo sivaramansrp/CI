@@ -27,36 +27,29 @@ describe('DesistimientoComponent', () => {
     component.ngOnInit();
     expect(component.desisitimientoForm).toBeDefined();
     expect(component.desisitimientoForm.get('folioOriginal')).toBeDefined();
-    expect(
-      component.desisitimientoForm.get('justificacionDelDesistimiento')
-    ).toBeDefined();
+    expect(component.desisitimientoForm.get('justificacionDelDesistimiento')).toBeDefined();
   });
 
   it('should set initial form values in setFormValues', () => {
     component.ngOnInit();
     component.setFormValues();
-    expect(
-      component.desisitimientoForm.get(DESISTIMIENTO.FOLIO_ORIGINAL)?.value
-    ).toBe('');
-    expect(
-      component.desisitimientoForm.get(
-        DESISTIMIENTO.JUSTIFICACION_DEL_DESISTIMIENTO
-      )?.value
-    ).toBe('');
+    expect(component.desisitimientoForm.get(DESISTIMIENTO.FOLIO_ORIGINAL)?.value).toBe('');
+    expect(component.desisitimientoForm.get(DESISTIMIENTO.JUSTIFICACION_DEL_DESISTIMIENTO)?.value).toBe('');
   });
 
   it('should disable the "folioOriginal" field on form initialization', () => {
     component.ngOnInit();
-    expect(component.desisitimientoForm.get('folioOriginal')?.disabled).toBe(
-      true
-    );
+    expect(component.desisitimientoForm.get('folioOriginal')?.disabled).toBe(true);
   });
 
   it('should allow editing the "justificacionDelDesistimiento" field', () => {
     component.ngOnInit();
-    expect(
-      component.desisitimientoForm.get('justificacionDelDesistimiento')
-        ?.disabled
-    ).toBe(false);
+    expect(component.desisitimientoForm.get('justificacionDelDesistimiento')?.disabled).toBe(false);
+  });
+
+  it('should emit continuarEvento when continuar is called', () => {
+    const spy = jest.spyOn(component.continuarEvento, 'emit');
+    component.continuar();
+    expect(spy).toHaveBeenCalledWith('');
   });
 });

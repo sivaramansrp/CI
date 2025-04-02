@@ -17,6 +17,7 @@ describe('PasoTresComponent', () => {
   let routerMock: any;
   let tramiteFolioServiceMock: any;
   let tramiteStoreMock: any;
+  let toastrServiceMock: any;
 
   beforeEach(async () => {
     routerMock = {
@@ -31,19 +32,24 @@ describe('PasoTresComponent', () => {
       establecerTramite: jest.fn(),
     };
 
+    toastrServiceMock = {
+      success: jest.fn(),
+      error: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [
         CommonModule,
         ReactiveFormsModule,
         FirmaElectronicaComponent,
         PasoTresComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
-      declarations: [],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
         { provide: TramiteFolioStore, useValue: tramiteStoreMock },
+        { provide: '_ToastrService', useValue: toastrServiceMock }, 
       ],
     }).compileComponents();
 
@@ -82,6 +88,7 @@ describe('PasoTresComponent', () => {
     expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
     expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
     expect(routerMock.navigate).not.toHaveBeenCalled();
+    expect(toastrServiceMock.error).toHaveBeenCalledWith('Error', 'Error');
   });
 
   it('should not call tramiteFolioService.obtenerTramite if no signature is provided', () => {

@@ -24,7 +24,6 @@ describe('AcusesYResoluionesFolioDelTramiteBusquedaComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent,AcusesYResoluionesFolioDelTramiteBusquedaComponent],
-      declarations: [],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: AcuseYResolucionesFolioTramiteService, useValue: acuseYResolucionesFolioTramiteServiceMock },
@@ -43,6 +42,8 @@ describe('AcusesYResoluionesFolioDelTramiteBusquedaComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.formBusqueda).toBeDefined();
+    expect(component.formBusqueda.get('solicitante')).toBeDefined();
+    expect(component.formBusqueda.get('rfc')).toBeDefined();
     expect(component.formBusqueda.get('folio')).toBeDefined();
     expect(component.formBusqueda.get('fechaInicial')).toBeDefined();
     expect(component.formBusqueda.get('fechaFinal')).toBeDefined();
@@ -53,14 +54,9 @@ describe('AcusesYResoluionesFolioDelTramiteBusquedaComponent', () => {
     expect(acuseYResolucionesFolioTramiteServiceMock.getAcuseYResolucionesFolioTramite).toHaveBeenCalled();
   });
 
-  it('should set default form values in inicializaFormulario', () => {
-    component.inicializaFormulario();
-    expect(component.formBusqueda.get('folio')?.value).toBe('0100001000320251005000002');
-  });
-
   it('should update fechaInicial when cambioFechaInicio is called', () => {
     component.cambioFechaInicio('2025-04-01');
-    expect(component.formBusqueda.get('fechaInicio')?.value).toBe('2025-04-01');
+    expect(component.formBusqueda.get('fechaInicial')?.value).toBe('2025-04-01');
   });
 
   it('should update fechaFinal when cambioFechaFinal is called', () => {

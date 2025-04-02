@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { DatosGeneralesDeLaSolicitudComponent } from './datos-generales-de-la-solicitud.component';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { of } from 'rxjs';
+import { of, ReplaySubject } from 'rxjs';
 
 describe('DatosGeneralesDeLaSolicitudComponent', () => {
   let component: DatosGeneralesDeLaSolicitudComponent;
@@ -26,14 +26,9 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
       imports: [CommonModule, ReactiveFormsModule,DatosGeneralesDeLaSolicitudComponent],
       declarations: [],
       providers: [
-        {
-          provide: RetiradaDeLaAutorizacionDeDonacionesService,
-          useValue: retiradaServiceMock,
-        },
-        {
-          provide: ValidacionesFormularioService,
-          useValue: validacionesServiceMock,
-        },
+        { provide: RetiradaDeLaAutorizacionDeDonacionesService, useValue: retiradaServiceMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        FormBuilder,
       ],
     }).compileComponents();
 
@@ -49,7 +44,7 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
     expect(component.tramiteForm).toBeDefined();
-    expect(component.tramiteForm.get('importadorExportador')).toBeDefined();
+    expect(component.tramiteForm.get('retiradaDeDonaciones')).toBeDefined();
   });
 
   it('should fetch aduana data on initialization', () => {
@@ -80,29 +75,29 @@ describe('DatosGeneralesDeLaSolicitudComponent', () => {
 
   it('should hide the table when nextTabla is called', () => {
     component.nextTabla();
-    expect(component.showTabla).toBe(false);
+    expect(component.mostrarTabla).toBe(false);
   });
 
   it('should validate a form field using isValid', () => {
-    const result = component.isValid(
-      component.tramiteForm,
-      'importadorExportador'
-    );
-    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(
-      component.tramiteForm,
-      'importadorExportador'
-    );
+    const result = component.isValid(component.tramiteForm, 'retiradaDeDonaciones');
+    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.tramiteForm, 'retiradaDeDonaciones');
     expect(result).toBe(true);
   });
 
   it('should mark all fields as touched if the form is invalid', () => {
     component.tramiteForm = component.formBuilder.group({
-      importadorExportador: component.formBuilder.group({
+      retiradaDeDonaciones: component.formBuilder.group({
         aduana: ['', Validators.required],
       }),
     });
     component.validarDestinatarioFormulario();
     expect(component.tramiteForm.touched).toBe(true);
+  });
+
+  it('should emit continuarEvento when continuar is called', () => {
+    const spy = jest.spyOn(component.continuarEvento, 'emit');
+    component.continuar();
+    expect(spy).toHaveBeenCalledWith('');
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

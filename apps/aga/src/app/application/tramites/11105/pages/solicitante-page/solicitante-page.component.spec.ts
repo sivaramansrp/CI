@@ -21,8 +21,8 @@ describe('SolicitantePageComponent', () => {
         BtnContinuarComponent,
         PasoUnoComponent,
         PasoTresComponent,
-        HttpClientTestingModule,
-        SolicitantePageComponent
+        SolicitantePageComponent,
+        HttpClientTestingModule
       ],
       declarations: [],
     }).compileComponents();
@@ -36,32 +36,35 @@ describe('SolicitantePageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the wizard steps on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.pasos.length).toBe(2);
-    expect(component.pasos[1].titulo).toBe('Firmar solicitud');
+  it('should initialize with default values', () => {
+    expect(component.indice).toBe(1);
+    expect(component.pasos.length).toBeGreaterThan(0);
+    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
+    expect(component.datosPasos.indice).toBe(component.indice);
   });
 
-  it('should update the current step index when seleccionaTab is called', () => {
+  it('should update the selected tab index when seleccionaTab is called', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
 
-  it('should navigate forward in the wizard when getValorIndice is called with "cont"', () => {
+  it('should update the wizard index and call siguiente when getValorIndice is called with "cont"', () => {
     const wizardSpy = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should navigate backward in the wizard when getValorIndice is called with "ant"', () => {
+  it('should update the wizard index and call atras when getValorIndice is called with "ant"', () => {
     const wizardSpy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'ant', valor: 1 });
     expect(component.indice).toBe(1);
+    expect(component.datosPasos.indice).toBe(1);
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should not navigate if the index is out of bounds in getValorIndice', () => {
+  it('should not update the wizard index if the value is out of bounds in getValorIndice', () => {
     const wizardSpyNext = jest.spyOn(component.wizardComponent, 'siguiente');
     const wizardSpyBack = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'cont', valor: 6 });
@@ -70,11 +73,9 @@ describe('SolicitantePageComponent', () => {
     expect(wizardSpyBack).not.toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on component destruction', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalledWith(true);
-    expect(completeSpy).toHaveBeenCalled();
+  it('should call getValorIndice with the correct parameters when continuar is called', () => {
+    const spy = jest.spyOn(component, 'getValorIndice');
+    component.continuar();
+    expect(spy).toHaveBeenCalledWith({ accion: 'cont', valor: component.indice + 1 });
   });
 });

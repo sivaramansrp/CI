@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,6 +20,12 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './desistimiento.component.scss',
 })
 export class DesistimientoComponent implements OnInit {
+  /**
+   * Evento de salida que emite un valor de tipo cadena.
+   * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
+   */
+  @Output() continuarEvento = new EventEmitter<string>();
+
   /**
    * Grupo de formulario para gestionar los datos del desistimiento.
    */
@@ -52,5 +58,15 @@ export class DesistimientoComponent implements OnInit {
     this.desisitimientoForm
       .get(DESISTIMIENTO.JUSTIFICACION_DEL_DESISTIMIENTO)
       ?.setValue('');
+  }
+
+  /**
+   * Emite un evento para continuar con el flujo del componente.
+   *
+   * Este método dispara el evento `continuarEvento` sin ningún valor asociado,
+   * permitiendo que otros componentes o servicios reaccionen a esta acción.
+   */
+  continuar(): void {
+    this.continuarEvento.emit('');
   }
 }
