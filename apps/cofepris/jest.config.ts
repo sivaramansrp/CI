@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: 'cofepris',
   preset: '../../jest.preset.js',
