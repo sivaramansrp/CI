@@ -6,61 +6,64 @@ import { FormularioQuery } from '../../../../core/queries/tramite104.query';
 import { of } from 'rxjs';
 
 describe('DatosDelInmuebleComponent', () => {
-  let component: DatosDelInmuebleComponent;
+  let componente: DatosDelInmuebleComponent;
   let fixture: ComponentFixture<DatosDelInmuebleComponent>;
-  let formularioStore: FormularioStore;
-  let formularioQuery: FormularioQuery;
+  let formularioTienda: FormularioStore;
+  let formularioConsulta: FormularioQuery;
+
+  const FORMULARIO_EXPORTACION = { tipoPrograma: '1', folioAutorizacion: '12345' };
+  const FORMULARIO_DIRECCION = { calle: 'Main St', numeroExterior: '100' };
 
   beforeEach(async () => {
-    formularioStore = {
+    formularioTienda = {
       setFomentoExportacion: jest.fn(),
       setDireccion: jest.fn()
-    } as unknown as FormularioStore;
+    } as Partial<FormularioStore> as FormularioStore;
 
-    formularioQuery = {
-      fomentoExportacion$: of({ tipoPrograma: '1', folioAutorizacion: '12345' }),
-      direccion$: of({ calle: 'Main St', numeroExterior: '100' })
-    } as unknown as FormularioQuery;
+    formularioConsulta = {
+      fomentoExportacion$: of(FORMULARIO_EXPORTACION),
+      direccion$: of(FORMULARIO_DIRECCION)
+    } as Partial<FormularioQuery> as FormularioQuery;
 
     await TestBed.configureTestingModule({
-      imports: [DatosDelInmuebleComponent], // ✅ Import instead of declaring
+      imports: [DatosDelInmuebleComponent],
       providers: [
         FormBuilder,
-        { provide: FormularioStore, useValue: formularioStore },
-        { provide: FormularioQuery, useValue: formularioQuery }
+        { provide: FormularioStore, useValue: formularioTienda },
+        { provide: FormularioQuery, useValue: formularioConsulta }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelInmuebleComponent);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('debería crear el componente', (): void => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize forms correctly', () => {
-    expect(component.fomentoExportacionForm).toBeDefined();
-    expect(component.formularioDireccion).toBeDefined();
+  it('debería inicializar los formularios correctamente', (): void => {
+    expect(componente.fomentoExportacionForm).toBeDefined();
+    expect(componente.formularioDireccion).toBeDefined();
   });
 
-  it('should patch values from Akita store', () => {
-    expect(component.fomentoExportacionForm.value).toEqual({ tipoPrograma: '1', folioAutorizacion: '12345' });
-    expect(component.formularioDireccion.value.calle).toBe('Main St');
+  it('debería establecer los valores de Akita en los formularios', (): void => {
+    expect(componente.fomentoExportacionForm.value).toEqual(FORMULARIO_EXPORTACION);
+    expect(componente.formularioDireccion.value.calle).toBe('Main St');
   });
 
-  it('should emit cerrarClicado event on cerrarModal', () => {
-    jest.spyOn(component.cerrarClicado, 'emit');
-    component.cerrarModal();
-    expect(component.cerrarClicado.emit).toHaveBeenCalled();
+  it('debería emitir el evento cerrarClicado al llamar cerrarModal', (): void => {
+    jest.spyOn(componente.cerrarClicado, 'emit');
+    componente.cerrarModal();
+    expect(componente.cerrarClicado.emit).toHaveBeenCalled();
   });
 
-  it('should update Akita store when form values change', () => {
-    component.fomentoExportacionForm.patchValue({ tipoPrograma: '2' });
-    expect(formularioStore.setFomentoExportacion).toHaveBeenCalledWith({ tipoPrograma: '2', folioAutorizacion: '12345' });
+  it('debería actualizar la tienda Akita cuando los valores del formulario cambien', (): void => {
+    componente.fomentoExportacionForm.patchValue({ tipoPrograma: '2' });
+    expect(formularioTienda.setFomentoExportacion).toHaveBeenCalledWith({ tipoPrograma: '2', folioAutorizacion: '12345' });
 
-    component.formularioDireccion.patchValue({ calle: 'New Street' });
-    expect(formularioStore.setDireccion).toHaveBeenCalledWith(expect.objectContaining({ calle: 'New Street' }));
+    componente.formularioDireccion.patchValue({ calle: 'New Street' });
+    expect(formularioTienda.setDireccion).toHaveBeenCalledWith(expect.objectContaining({ calle: 'New Street' }));
   });
 });
