@@ -42,4 +42,4 @@ jobs:
 
       # 4. Construye el proyecto Angular con Nx (build del dashboard).
       - name: Build Angular project with Nx
-        run: npx nx run dashboard:build
+        run: npx nx build dashboard --configuration=development --verbose
