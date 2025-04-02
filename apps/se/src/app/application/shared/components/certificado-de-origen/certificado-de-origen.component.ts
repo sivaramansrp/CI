@@ -1,4 +1,4 @@
-import { CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS } from '../../constantes/modificacion.enum';
+import { CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS } from '../../constants/modificacion.enum';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
@@ -271,7 +271,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   /**
    * Método que emite un evento para buscar la mercancia.
    */
-  buscarrMercancia(): void {
+  buscarMercancia(): void {
     this.setbuscarMercanciaEvent.emit(true);
   }
 
