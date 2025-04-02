@@ -14,7 +14,7 @@ on:
       deployment_mode:
         description: 'Deployment mode'
         required: true
-        default: 'changed'
+        default: 'selected'
         type: choice
         options:
           - changed
@@ -25,15 +25,6 @@ on:
         required: false
         default: 'dashboard'
         type: string
-  push:
-    branches: [ "develop", "main" ]
-    paths:
-      - 'apps/**'
-      - 'libs/**'
-      - 'docker/**'
-      - 'package.json'
-      - 'nx.json'
-      - '.github/workflows/**'
 
 env:
   # Updated to match Angular 18.x compatibility requirements
@@ -66,13 +57,8 @@ jobs:
       - name: Set environment
         id: set-env
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "environment=prod" >> $GITHUB_OUTPUT
-          else
-            echo "environment=dev" >> $GITHUB_OUTPUT
-          fi
+          # Since workflow is only manual now, always use the specified environment
+          echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -82,23 +68,28 @@ jobs:
       - name: Install NX globally
         run: npm install -g nx@${{ env.NX_VERSION }}
 
+      - name: Create .nxrc file
+        run: |
+          echo '{
+            "cli": {
+              "useNativeBuildTools": false,
+              "defaultCollection": "@nrwl/angular"
+            },
+            "useDaemonProcess": false,
+            "skipNxCache": true
+          }' > .nxrc
+
       - name: Detect changed apps
         id: detect-changes
         run: |
-          # En caso de workflow_dispatch, no necesitamos detectar cambios si no es modo 'changed'
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ github.event.inputs.deployment_mode }}" != "changed" ]; then
+          # No necesitamos detectar cambios si no es modo 'changed'
+          if [ "${{ github.event.inputs.deployment_mode }}" != "changed" ]; then
             echo "changed_apps=" >> $GITHUB_OUTPUT
             exit 0
           fi
           
-          # Para push events, necesitamos encontrar el commit antes
-          BEFORE_COMMIT=""
-          if [ "${{ github.event.before }}" != "" ]; then
-            BEFORE_COMMIT="${{ github.event.before }}"
-          else
-            # Si no hay before commit, usar HEAD~1
-            BEFORE_COMMIT=$(git rev-parse HEAD~1)
-          fi
+          # Si estamos en modo 'changed', usamos el último commit
+          BEFORE_COMMIT=$(git rev-parse HEAD~1)
           
           # Detect changes in apps directory
           CHANGED_FILES=$(git diff --name-only $BEFORE_COMMIT ${{ github.sha }} | grep -E '^apps/' || echo "")
@@ -128,35 +119,31 @@ jobs:
       - name: Determine apps to deploy
         id: determine-apps
         run: |
-          # Default to detected changes
+          # Default to empty (no apps)
           FINAL_APPS=""
           
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            # Handle manual deployment mode selection
-            if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
-              FINAL_APPS="${{ env.ALL_APPS }}"
-              echo "Using all apps mode"
-            elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
-              FINAL_APPS="${{ github.event.inputs.selected_apps }}"
-              echo "Using selected apps mode: $FINAL_APPS"
-            else
-              # Changed mode - use detected changes or fallback to dashboard
-              if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
-                FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
-                echo "Using detected changed apps: $FINAL_APPS"
-              else
-                FINAL_APPS="dashboard"
-                echo "No changes detected, defaulting to dashboard"
-              fi
-            fi
+          # Handle deployment mode selection
+          if [ "${{ github.event.inputs.deployment_mode }}" == "all" ]; then
+            FINAL_APPS="${{ env.ALL_APPS }}"
+            echo "Using all apps mode"
+          elif [ "${{ github.event.inputs.deployment_mode }}" == "selected" ]; then
+            FINAL_APPS="${{ github.event.inputs.selected_apps }}"
+            echo "Using selected apps mode: $FINAL_APPS"
           else
-            # Auto mode for push events
+            # Changed mode - use detected changes or fallback to dashboard
             if [ -n "${{ steps.detect-changes.outputs.changed_apps }}" ]; then
               FINAL_APPS="${{ steps.detect-changes.outputs.changed_apps }}"
+              echo "Using detected changed apps: $FINAL_APPS"
             else
-              # No changes detected, workflow will skip the build job
-              FINAL_APPS=""
+              FINAL_APPS="dashboard"
+              echo "No changes detected, defaulting to dashboard"
             fi
+          fi
+          
+          # Validate that we have at least one app to deploy
+          if [ -z "$FINAL_APPS" ]; then
+            echo "Error: No applications selected for deployment"
+            exit 1
           fi
           
           echo "final_apps=$FINAL_APPS" >> $GITHUB_OUTPUT
@@ -214,20 +201,32 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y git python3 make g++ python3-pip
 
+      # More explicit environment variable handling
       - name: Set npm and NX environment variables
         run: |
           # npm environment variables
           echo "npm_config_python=/usr/bin/python3" >> $GITHUB_ENV
           echo "npm_config_unsafe_perm=true" >> $GITHUB_ENV
-          echo "npm_config_build_from_source=false" >> $GITHUB_ENV
+          echo "npm_config_build_from_source=true" >> $GITHUB_ENV
           echo "PYTHON=/usr/bin/python3" >> $GITHUB_ENV
           
           # Establecer tiempo de espera de npm más largo
           echo "npm_config_timeout=600000" >> $GITHUB_ENV
           
-          # Disable NX native modules to avoid binary compatibility issues
-          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+          # Explicitly disable NX native modules to avoid binary compatibility issues
           echo "NX_NATIVE_BINDINGS=false" >> $GITHUB_ENV
+          echo "NX_SKIP_NX_CACHE=true" >> $GITHUB_ENV
+
+      - name: Create .nxrc file
+        run: |
+          echo '{
+            "cli": {
+              "useNativeBuildTools": false,
+              "defaultCollection": "@nrwl/angular"
+            },
+            "useDaemonProcess": false,
+            "skipNxCache": true
+          }' > .nxrc
 
       - name: Ensure .eslintrc.json exists in root
         run: |
@@ -269,15 +268,45 @@ jobs:
       - name: Reset NX cache
         run: npx nx reset || echo "No se pudo resetear NX cache, continuando de todos modos"
 
-      # Modificación para instalar los paquetes con más opciones de seguridad
+      # Modified dependency installation to handle NX issues
       - name: Install dependencies with specific options
         run: |
-          # Verificar que npm está correctamente configurado
-          npm config list
-          # Instalar dependencias con más opciones de seguridad
-          npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
+          # Force clean install to avoid dependency issues
+          npm ci --prefer-offline --no-fund || npm install --legacy-peer-deps --no-package-lock --prefer-offline --no-fund
           
-          # Verificar versión instalada de webpack y forzar si es necesario
+          # Explicitly install nx and disable native bindings
+          npm install nx@${{ env.NX_VERSION }} --no-save
+          
+          # Create nx.json if it doesn't exist to force specific settings
+          if [ ! -f "nx.json" ] || ! grep -q "useNativeBuildTools" nx.json; then
+            echo "Updating nx.json to disable native build tools"
+            cat > nx.json.new << EOF
+            {
+              "tasksRunnerOptions": {
+                "default": {
+                  "options": {
+                    "cacheableOperations": ["build", "lint", "test", "e2e"],
+                    "useDaemonProcess": false
+                  }
+                }
+              },
+              "cli": {
+                "packageManager": "npm",
+                "useNativeBuildTools": false
+              }
+            }
+            EOF
+            
+            # Merge with existing nx.json if it exists
+            if [ -f "nx.json" ]; then
+              jq -s '.[0] * .[1]' nx.json nx.json.new > nx.json.merged
+              mv nx.json.merged nx.json
+            else
+              mv nx.json.new nx.json
+            fi
+          fi
+          
+          # Verify webpack version and force if necessary
           echo "Verificando versión de webpack..."
           CURRENT_WEBPACK=$(node -e "try { console.log(require('webpack/package.json').version) } catch (e) { console.log('not installed') }")
           if [ "$CURRENT_WEBPACK" != "${{ env.WEBPACK_VERSION }}" ]; then
@@ -285,25 +314,35 @@ jobs:
             npm install webpack@${{ env.WEBPACK_VERSION }} --save-dev --force
           fi
           
-          # Verificar que el módulo de Module Federation esté correctamente instalado
-          echo "Verificando @angular-architects/module-federation..."
-          if [ ! -d "node_modules/@angular-architects/module-federation" ]; then
-            echo "Reinstalando @angular-architects/module-federation..."
-            npm install @angular-architects/module-federation --save --force
-          fi
+          # Install Module Federation package
+          npm install @angular-architects/module-federation --save --force
+          
+          # Clear native modules cache
+          rm -rf node_modules/.cache || true
 
       - name: Use locally installed NX
         run: |
-          # Usar la versión instalada localmente en lugar de instalar globalmente
           echo "Usando NX versión local del proyecto"
           npx nx --version || echo "Advertencia: No se pudo verificar la versión de NX, pero continuaremos"
+          
+          # Create a special nx.json file in the app directory as a fallback
+          mkdir -p apps/${{ matrix.app }}/.nx
+          echo '{
+            "implicitDependencies": {},
+            "affected": {
+              "defaultBase": "main"
+            },
+            "cli": {
+              "packageManager": "npm",
+              "useNativeBuildTools": false
+            }
+          }' > apps/${{ matrix.app }}/.nx/nx.json
 
       - name: Build ${{ matrix.app }}
         run: |
           echo "Construyendo la aplicación ${{ matrix.app }}..."
-          # Usar --skip-nx-cache para evitar problemas de caché
-          # Añadir --verbose para más información de diagnóstico
-          npx nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --verbose
+          # Use explicit flags to avoid native bindings
+          NODE_OPTIONS="--max-old-space-size=4096" npx nx build ${{ matrix.app }} --configuration=production --skip-nx-cache --no-interactive --verbose
 
       - name: Verify build output
         run: |
