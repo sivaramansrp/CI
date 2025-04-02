@@ -165,6 +165,20 @@ export const REGEX_CORREO_ELECTRONICO =
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+/**
+ * Expresión regular para validar números decimales con hasta 2 decimales.
+ * 
+ * Este patrón permite validar números que pueden contener una parte entera y opcionalmente una parte decimal con hasta 2 dígitos.
+ * Ejemplos válidos:
+ * - 123
+ * - 123.45
+ * - 0.5
+ * 
+ * Ejemplos no válidos:
+ * - 123.456 (más de 2 decimales)
+ * - abc (no es un número)
+ */
+export const REGEX_PATRON_DECIMAL_2 = /^\d+(\.\d{1,2})?$/;
 
 /**
  * Expresión regular para validar que una cadena contenga solo números.
