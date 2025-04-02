@@ -1,18 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard, SeccionLibState } from '@ng-mf/data-access-user';
+import {AccionBoton,DatosPasos,ListaPasosWizard,SeccionLibState,} from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user'
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-/**
- * **Representa una acción de un botón en la interfaz**  
- * Contiene la acción que se ejecutará y un valor asociado a ella.
- */
-interface AccionBoton {
-  /** Nombre o tipo de la acción que realizará el botón. */
-  accion: string;
-
-  /** Valor numérico asociado a la acción, puede representar un identificador o prioridad. */
-  valor: number;
-}
 
 @Component({
   selector: 'app-solicitud-page',
