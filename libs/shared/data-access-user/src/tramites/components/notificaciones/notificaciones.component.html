@@ -1,0 +1,43 @@
+@if (notificacionInput.tipoNotificacion === eTipoNoficacionEnum.ALERTA) {
+<div 
+    class="modal"
+    [ngClass]="{ show: mostrarModal }"
+    id="modalNotificacion"
+    #modalNotificacion tabindex="-1"
+    aria-labelledby="modalNotificacionLabel"
+    aria-hidden="true"
+    data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ notificacionInput.titulo }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>{{ notificacionInput.mensaje }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-primary p-2"
+                    (click)="confirmarAccion()"
+                >
+                    Aceptar
+                </button>
+                <button type="button" class="btn btn-default" (click)="cerrarModal()">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+} @else if (notificacionInput.tipoNotificacion === eTipoNoficacionEnum.BANNER) {
+<div class="row">
+    <div class="col-md-12">
+       <div class="alert alert-info" [ngClass]="notificacionInput.categoria" [innerHTML]="notificacionInput.mensaje"></div>
+    </div>
+</div>
+}
