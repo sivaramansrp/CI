@@ -1,6 +1,9 @@
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { RegistroCaatNaviero } from './RegistroCaatNaviero';
 
 // Define interfaces based on the models used in the controller
 export interface SolicitudCaatNaviero {
@@ -33,7 +36,7 @@ export interface CaatSolicitud {
 @Injectable({
   providedIn: 'root'
 })
-export class RegistroCaatNavieroService {
+export class RegistroCaatNavieroService implements RegistroCaatNaviero {
   private baseUrl: string = '/api/registroCaatNaviero'; // Adjust the base URL as needed
 
   constructor(private http: HttpClient) {}

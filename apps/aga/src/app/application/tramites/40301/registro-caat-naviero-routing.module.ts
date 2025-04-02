@@ -4,6 +4,11 @@ import { RegistroCaatNavieroPageComponent } from './pages/registro-caat-naviero-
 
 
 export const ROUTES_SOLICITUDES: Routes = [
+  { 
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'caat-naviero',
+  },
   {
     path: 'caat-naviero',
     component: RegistroCaatNavieroPageComponent,

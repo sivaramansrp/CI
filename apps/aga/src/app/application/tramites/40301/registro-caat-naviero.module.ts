@@ -6,6 +6,7 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { LayaoutCapturaTipoAgenteComponent } from './components/layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
 import { LayoutDirectorGeneralComponent } from './components/layoutDirectorGeneral/layoutDirectorGeneral.component';
+import { MockRegistroCaatNavieroService } from './services/mockRegistroCaatNavieroController.service';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
@@ -50,7 +51,8 @@ import { forwardRef } from '@angular/core';
   providers: [
     ToastrService,
     // CancelarSolicitudService,
-    ServiciosExtraordinariosService 
+    ServiciosExtraordinariosService,
+    { provide: 'RegistroCaatNaviero', useClass: MockRegistroCaatNavieroService }   
   ]
 })
 export class RegistroCaatNavieroModule {}
