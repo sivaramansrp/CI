@@ -88,8 +88,9 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * 
    * - Inicializa el `FormBuilder` para la creación de formularios reactivos.
    */
-  // eslint-disable-next-line no-empty-function
+
   constructor(private fb: FormBuilder, private formularioStore: FormularioStore, private formularioQuery: FormularioQuery) {
+    // Inicializa
   }
 
   /**
