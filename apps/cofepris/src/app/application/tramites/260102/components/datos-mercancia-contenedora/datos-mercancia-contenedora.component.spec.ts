@@ -54,11 +54,11 @@ describe('DatosMercanciaContenedoraComponent', () => {
 
     component.tramiteState = mockState as any;
 
-    jest.spyOn(component['Tramite260206Store'], 'update');
+    jest.spyOn(component['Tramite260102Store'], 'update');
 
     component.mercanciaSeleccionado(mockEvent as any);
 
     expect(component.SeleccionadoDatos).toEqual(mockEvent);
-    expect(component['Tramite260206Store'].update).toHaveBeenCalled();
+    expect(component['Tramite260102Store'].update).toHaveBeenCalled();
   });
 });

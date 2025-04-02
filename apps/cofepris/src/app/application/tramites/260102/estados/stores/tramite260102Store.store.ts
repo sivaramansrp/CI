@@ -68,6 +68,11 @@ export function createInitialState(): Tramite260102State {
       representanteNombre: '',
       apellidoPaterno: '',
       apellidoMaterno: '',
+      marca: '',
+      especifique: '',
+      claveDeLos: '',
+      fechaDeFabricacio: '',
+      fechaDeCaducidad: '',
     },
     mercanciaForm: {
       clasificacionProducto: '',
