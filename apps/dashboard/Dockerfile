@@ -40,7 +40,7 @@ COPY apps/dashboard/project.json apps/dashboard/
 RUN npm install -g nx@16.10.0
 
 # Install dependencies with options to avoid common problems
-RUN npm install --legacy-peer-deps --no-package-lock
+RUN npm install --legacy-peer-deps --no-package-lock --ignore-optional
 
 # Copy the rest of the codebase
 COPY . .
