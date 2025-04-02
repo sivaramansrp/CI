@@ -1,0 +1,109 @@
+<div class="container">
+  <div class="container1">
+    <ng-titulo titulo="Acuses y resoluciones" />
+    <form [formGroup]="acusesYResolucionesFormGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label" for="folio"
+            >Folio:<span
+              class="bi bi-question-circle-fill fs-4 m-1"
+              title="Title"
+              ata-bs-toggle="tooltip"
+            ></span>
+          </label>
+          <input
+            type="text"
+            class="form-control"
+            id="folio"
+            formControlName="folio"
+            readonly
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="fechaInicial"
+            >Fecha inicio tr&aacute;mite:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="fechaInicial"
+            formControlName="fechaInicial"
+            readonly
+          />
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label" for="dependencia"
+            >Dependencia:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="dependecia"
+            formControlName="dependencia"
+            readonly
+          />
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label" for="unidadAdministrativaORepresentaciónFederal"
+            >Unidad administrativa o representación federal:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="unidadAdministrativaORepresentaciónFederal"
+            formControlName="unidadAdministrativaORepresentaciónFederal"
+            readonly
+          />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="tipoDeSolicitud"
+            >Tipo de solicitud:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="tipoDeSolicitud"
+            formControlName="tipoDeSolicitud"
+            readonly
+          />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="estatusDeLaSolicitud"
+            >Estatus de la solicitud:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="estatusDeLaSolicitud"
+            formControlName="estatusDeLaSolicitud"
+            readonly
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="díasHábilesTranscurridos"
+            >Días hábiles transcurridos:</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="díasHábilesTranscurridos"
+            formControlName="díasHábilesTranscurridos"
+            readonly
+          />
+        </div>
+
+        <div class="row mt-5 mb-5">
+          <div class="col-md-12 d-flex justify-content-end">
+            <button type="button" class="btn btn-default me-3"  (click)="regresar()" > Regresar </button>
+            <button type="button" class="btn btn-primary" (click)="desistir()"> Desistir </button>
+          </div>
+        </div>
+        
+      </div>
+    </form>
+  </div>
+</div> 
