@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular app
-FROM node:20-alpine AS node
+FROM node:20-slim AS node
 WORKDIR /app
 
 # Install necessary dependencies for compilation

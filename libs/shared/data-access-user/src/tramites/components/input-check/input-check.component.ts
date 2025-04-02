@@ -1,75 +1,89 @@
+/* eslint-disable class-methods-use-this */
 import {
   Component,
-  EventEmitter,
   Input,
-  Output,
+  OnChanges,
   SimpleChanges,
+  forwardRef,
 } from '@angular/core';
 import {
-  FormBuilder,
+  ControlValueAccessor,
+  FormControl,
   FormGroup,
+  NG_VALUE_ACCESSOR,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
-import {
-  DatosInputCheck,
-  InputCheck,
-} from '../../../core/models/shared/components.model';
+import { CommonModule } from '@angular/common';
+
 
 @Component({
-  selector: 'input-check',
+  selector: 'lib-input-check',
   standalone: true,
-  imports: [ReactiveFormsModule],
   templateUrl: './input-check.component.html',
   styleUrl: './input-check.component.scss',
+  imports: [CommonModule, ReactiveFormsModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputCheckComponent ),
+      multi: true,
+    },
+  ]
 })
-export class InputCheckComponent {
-  @Input({ required: true }) datos!: InputCheck;
 
-  @Output() valores = new EventEmitter<DatosInputCheck>();
+export class InputCheckComponent implements OnChanges, ControlValueAccessor{
+  @Input({required: true}) id!: string;
+  @Input({required: true}) label!: string;
+  @Input({required: true}) required!: boolean;
 
-  labelNombre: string = 'Programa de fomento';
-  FormInput!: FormGroup;
+  forma: FormGroup;
+  private onChange: (value: boolean) => void = () => {
+    //
+  };
+  private onTouched: () => void = () => { 
+    //
+   };
 
-  constructor(private fb: FormBuilder) {}
-  ngOnInit() {
-    this.crearFormInput();
+  constructor() {
+    this.forma = new FormGroup({
+      check: new FormControl(false)
+    });
+  }
 
-    this.FormInput.get('seleccion')?.valueChanges.subscribe((checked) => {
-      if (checked) {
-        this.FormInput.get('valorInput')?.enable();
-      } else {
-        this.FormInput.get('valorInput')?.disable();
+    ngOnChanges(changes: SimpleChanges): void {
+      if (changes['required']) {
+        const CONTROL = this.forma.get('checkbox');
+        if (this.required) {
+          CONTROL?.setValidators([
+              Validators.requiredTrue,
+            ]);
+        } else {
+          CONTROL?.clearValidators();
+        }
+        CONTROL?.updateValueAndValidity();
       }
-    });
-  }
-
-  crearFormInput() {
-    this.FormInput = this.fb.group({
-      seleccion: [false],
-      valorInput: [
-        { value: '', disabled: true },
-        [
-          Validators.maxLength(this.datos.maxlength),
-          Validators.minLength(this.datos.minlenght),
-        ],
-      ],
-    });
-  }
-
-  seleccion(){
-    const checkSeleccionado = this.FormInput.get('seleccion')?.value;
-    if( !checkSeleccionado ) {
-      this.FormInput.get('valorInput')?.setValue('');
     }
-    this.onBlurEvent();
-  }
 
-  onBlurEvent() {
-    const valores: DatosInputCheck = {
-      check: this.FormInput.get('seleccion')?.value,
-      valor: this.FormInput.get('valorInput')?.value,
-    };
-    this.valores.emit(valores);
-  }
+    handleChange(event: Event): void {
+      const VALUE = (event.target as HTMLInputElement).checked;
+      this.onChange(VALUE);
+    }
+
+    writeValue(value: boolean): void {
+      this.forma.controls['check'].setValue(value);
+    }
+  
+    registerOnChange(fn: (value: boolean) => void): void {
+      this.onChange = fn;
+      this.forma.get('check')?.valueChanges.subscribe(fn);
+    }
+  
+    registerOnTouched(fn: () => void): void {
+      this.onTouched = fn;
+    }
+  
+    get isValid(): boolean | null | undefined {
+      return this.forma.get('check')?.errors && this.forma.get('check')?.touched;
+    }
 }

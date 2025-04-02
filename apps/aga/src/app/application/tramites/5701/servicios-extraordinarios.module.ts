@@ -7,6 +7,7 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CheckInputTextComponent } from '../../shared/components/check-input-text/check-input-text.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
@@ -40,6 +41,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     PasoTresComponent,
   ],
   imports: [
+    CheckInputTextComponent,
     forwardRef(() => TercerosComponent),
     forwardRef(() => AgregaPersonasComponent),
     forwardRef(() =>AgregarTransporteComponent),
