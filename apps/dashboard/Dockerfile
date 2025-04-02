@@ -2,6 +2,15 @@
 FROM node:20-alpine AS node
 WORKDIR /app
 
+# Instalar glibc en Alpine
+RUN apk add --no-cache ca-certificates wget && \
+    wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+    wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
+    apk add --allow-untrusted --force-overwrite glibc-2.35-r0.apk && \
+    rm glibc-2.35-r0.apk
+ENV LD_LIBRARY_PATH=/usr/glibc-compat/lib
+
+
 # Install necessary dependencies for compilation
 RUN apk add --no-cache python3 make g++ git
 
@@ -31,7 +40,7 @@ COPY apps/dashboard/project.json apps/dashboard/
 RUN npm install -g nx@16.10.0
 
 # Install dependencies with options to avoid common problems
-RUN npm install --legacy-peer-deps --no-package-lock
+RUN npm install --legacy-peer-deps --no-package-lock --ignore-optional
 
 # Copy the rest of the codebase
 COPY . .
