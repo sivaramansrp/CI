@@ -68,9 +68,7 @@ export class AgregarTransporteComponent implements OnChanges {
 
   constructor(
     private fb: FormBuilder,
-  ) {
-    // El contructor inyecta las depencias que se utilizan en este componente
-  }
+  ) { }
 
   /**
    * Detecta y maneja los cambios en las propiedades de entrada del componente.
