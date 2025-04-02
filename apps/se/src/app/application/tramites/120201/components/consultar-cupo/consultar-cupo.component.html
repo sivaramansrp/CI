@@ -1,0 +1,178 @@
+<div [formGroup]="cupoConsultarForm">
+    <ng-titulo titulo="Consultar instrumento de cupo TPL"></ng-titulo>
+
+    <!--Consultar instrumento de cupo TPL-->
+    <div formGroupName="cuotaInstrumentoForm">
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="tratado" formControlName="cveTratado" [label]="'Tratado o acuredo'"
+                    [required]="true" name="cveTratado" (change)="tratadoSeleccion()"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="regimenClasificacion" formControlName="cveRegimenClasificacion"
+                    [label]="'Clasificación del regimen'" [required]="true" name="cveRegimenClasificacion"
+                    (change)="regimenClasificacionSeleccion()"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="paisDestino" formControlName="cvePaisDestino"
+                    [label]="'País destino/origen'" [required]="true" name="cvePaisDestino"
+                    (change)="paisDestinoSeleccion()"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria *:</label>
+                <input type="text" name="fraccionArancelaria" id="fraccionArancelaria" class="form-control"
+                    formControlName="fraccionArancelaria"
+                    (change)="setValoresStore(cuotaInstrumentoForm,'fraccionArancelaria', 'setFraccionArancelaria')">
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-8 text-end">
+                <button type="button" class="btn btn-primary" (click)="buscar()">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <app-tabla-dinamica [configuracionTabla]="configuracionParaEncabezadoDeTabla" [datos]="cuerpoTabla"
+            (filaClic)="onFilaClicHandler($event)">
+            </app-tabla-dinamica>
+        </div>
+    </div>
+
+    <label class="text-label">* El monto disponible mostrado del cupo puede variar de acuerdo a las transacciones
+        constantes que se realizan en el s istema.</label>
+
+    @if(mostrarDetallesCupo) {
+    <!--Descripción del cupo-->
+    <div formGroupName="cupoDescripcionForm">
+        <ng-titulo titulo="Descripción del cupo"></ng-titulo>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria :</label>
+                <input type="text" name="fraccionArancelaria" id="fraccionArancelaria" class="form-control"
+                    formControlName="fraccionArancelaria"
+                    (change)="setValoresStore(cupoDescripcionForm,'fraccionArancelaria', 'setFraccionArancelaria')"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="productoDescripcion" class="form-label">Descripción del producto :</label>
+                <input type="text" name="productoDescripcion" id="productoDescripcion" class="form-control"
+                    formControlName="productoDescripcion"
+                    (change)="setValoresStore(cupoDescripcionForm,'productoDescripcion', 'setProductoDescripcion')"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="tratadoBloque" class="form-label">Tratado o bloque :</label>
+                <input type="text" name="tratadoBloque" id="tratadoBloque" class="form-control"
+                    formControlName="cveTratado"
+                    (change)="setValoresStore(cupoDescripcionForm,'cveTratado', 'setTratado')" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="subproductoClasificacion" class="form-label">Clasificación del subproducto :</label>
+                <input type="text" name="subproductoClasificacion" id="subproductoClasificacion" class="form-control"
+                    formControlName="subproductoClasificacion"
+                    (change)="setValoresStore(cupoDescripcionForm,'subproductoClasificacion', 'setSubproductoClasificacion')"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="asignacionMecanismo" class="form-label">Mecanismo de asignación :</label>
+                <input type="text" name="asignacionMecanismo" id="asignacionMecanismo" class="form-control"
+                    formControlName="asignacionMecanismo"
+                    (change)="setValoresStore(cupoDescripcionForm,'asignacionMecanismo', 'setAsignacionMecanismo')"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="categoriaTextil" class="form-label">Categoría textil :</label>
+                <input type="text" name="categoriaTextil" id="categoriaTextil" class="form-control"
+                    formControlName="categoriaTextil"
+                    (change)="setValoresStore(cupoDescripcionForm,'categoriaTextil', 'setCategoriaTextil')" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="regimenClasificacion" class="form-label">Clasificación del regimen :</label>
+                <input type="text" name="regimenClasificacion" id="regimenClasificacion" class="form-control"
+                    formControlName="cveRegimenClasificacion"
+                    (change)="setValoresStore(cupoDescripcionForm,'cveRegimenClasificacion', 'setRegimenClasificacion')"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="categoriaTextilDescripcion" class="form-label">Descripción de la categoría textil :</label>
+                <input type="text" name="categoriaTextilDescripcion" id="categoriaTextilDescripcion"
+                    class="form-control" formControlName="categoriaTextilDescripcion"
+                    (change)="setValoresStore(cupoDescripcionForm,'categoriaTextilDescripcion', 'setCategoriaTextilDescripcion')"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="paisDestino" class="form-label">País destino/origen :</label>
+                <input type="text" name="paisDestino" id="paisDestino" class="form-control"
+                    formControlName="paisDestino"
+                    (change)="setValoresStore(cupoDescripcionForm,'paisDestino', 'setPaisDestino')" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="unidad" class="form-label">Unidad de medida categoría textil :</label>
+                <input type="text" name="unidad" id="unidad" class="form-control" formControlName="unidad"
+                    (change)="setValoresStore(cupoDescripcionForm,'unidad', 'setUnidad')" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="conversionFactor" class="form-label">Factor de conversión de la categoría textil :</label>
+                <input type="text" name="conversionFactor" id="conversionFactor" class="form-control"
+                    formControlName="conversionFactor"
+                    (change)="setValoresStore(cupoDescripcionForm,'conversionFactor', 'setConversionFactor')" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="fechaInicio" class="form-label">Fecha de inicio de vigencia:</label>
+                <input type="text" name="fechaInicio" id="fechaInicio" class="form-control"
+                    formControlName="fechaInicio"
+                    (change)="setValoresStore(cupoDescripcionForm,'fechaInicio', 'setFechaInicio')" readonly>
+            </div>
+            <div class="col-md-4">
+                <label for="fechaFinal" class="form-label">Fecha de fin de vigencia :</label>
+                <input type="text" name="fechaFinal" id="fechaFinal" class="form-control" formControlName="fechaFinal"
+                    (change)="setValoresStore(cupoDescripcionForm,'fechaFinal', 'setFechaFinal')" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!--Representación federal-->
+    <div formGroupName="representacionFederalForm" class="mt-2">
+        <ng-titulo titulo="Representación federal"></ng-titulo>
+
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estado" formControlName="cveEstado" [label]="'Estado'"
+                    [required]="true" name="cveEstado" (change)="estadoSeleccion()"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="representacionFederal" formControlName="cveRepresentacionFederal"
+                    [label]="'Representación federal'" [required]="true" name="cveRepresentacionFederal"
+                    (change)="representacionFederalSeleccion()"></app-catalogo-select>
+            </div>
+        </div>
+    </div>
+
+    <!--Bien final-->
+    <div formGroupName="bienFinalForm" class="mt-2">
+        <ng-titulo titulo="Bien final"></ng-titulo>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="bienFinalDescripcion" class="form-label">Descripción del bien final *:</label>
+                <input type="text" name="bienFinalDescripcion" id="bienFinalDescripcion" class="form-control"
+                    formControlName="bienFinalDescripcion"
+                    (change)="setValoresStore(bienFinalForm,'bienFinalDescripcion', 'setBienFinalDescripcion')">
+            </div>
+        </div>
+    </div>
+    }
+</div>

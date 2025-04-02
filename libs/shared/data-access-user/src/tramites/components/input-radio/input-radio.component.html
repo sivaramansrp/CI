@@ -10,7 +10,7 @@
       />
       <span class="radio-label">{{ option.label }}</span>
       <span
-        *ngIf="showTooltip"
+        *ngIf="showTooltip && option.hint"
         class="bi bi-question-circle-fill fs-4 m-1"
         [title]="option.hint"
         ata-bs-toggle="tooltip"
