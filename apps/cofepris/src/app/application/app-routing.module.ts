@@ -90,6 +90,13 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
+  {
+    path: 'registrar-solicitud-mcp',
+    loadChildren: () =>
+      import('./tramites/260702/registrar-solicitud-mcp.module').then(
+        (m) => m.RegistrarSolicitudMCPModule
+      ), // Ensure the file exists at this path or update the path to the correct location
+  },
 ];
 
 @NgModule({

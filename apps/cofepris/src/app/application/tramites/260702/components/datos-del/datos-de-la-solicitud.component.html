@@ -1,0 +1,32 @@
+<div class="container">
+    <form [formGroup]="dataDeLaSolicitudForm">
+     <h5>seleccione el tipo operacion que desea realizer</h5>
+     <div class="row mb-3">
+        <div class="col-md-2">
+                <input class="form-label" type="radio" name="selectedValue" formControlName="prorrogaName"
+                  id="prorroga" value="prorroga"/>
+                <label for="prorroga">Prórroga</label>
+        </div>
+         <div class="col-md-2">
+             <input class="form-label" type="radio" name="selectedValue" formControlName="modificación"
+             id="modificación" value="Modificación"/>
+           <label for="modificación">Modificación</label>
+       </div>
+        <div class="col-md-3">
+            <input class="form-label" type="radio" name="selectedValue" formControlName="modificaciónYProrroga"
+            id="modificaciónYProrroga" value="modificaciónYProrroga"/>
+           <label for="modificaciónYProrroga">Modificación y prórroga</label>
+     </div>
+     <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="justification">justification</label>
+            <textarea class="form-control" id="justification" rows="2" height="50"
+            placeholder="" style="height: 100px" formControlName="justification" ></textarea>
+          </div>
+        </div>
+        </div>
+     </div>
+    </form>
+</div>
+      
