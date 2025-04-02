@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import TipoPersonaBtn from 'libs/shared/theme/assets/json/260402/tipoPersonaBtn.json'
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
+
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-generales',
@@ -21,7 +23,7 @@ import { TercerosProcedenciaService } from '../../services/terceros-procedencia.
   templateUrl: './datos-generales.component.html',
   styleUrl: './datos-generales.component.scss'
 })
-export class DatosGeneralesComponent implements OnInit {
+export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Evento que emite los datos del formulario cuando este es válido.
    */
@@ -39,10 +41,22 @@ export class DatosGeneralesComponent implements OnInit {
    */
   datosGeneralesForm!: FormGroup;
 
-  pais: Catalogo[] = []
+  /**
+   * @descripcion Arreglo que contiene los elementos del catálogo de países.
+   * @tipo Catalogo[]
+   */
+  pais: Catalogo[] = [];
+
+  /**
+   * @private
+   * @description Sujeto utilizado para manejar la desuscripción de observables y evitar fugas de memoria.
+   * Se emite un valor `void` cuando el componente se destruye.
+   */
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private tercerosProcedenciaService: TercerosProcedenciaService,) { }
+
   /**
    * @comdoc
    * Cierra el componente de datos generales.
@@ -52,7 +66,6 @@ export class DatosGeneralesComponent implements OnInit {
     this.cancelDatosGenerales.emit();
   }
 
-
   /**
    * @override
    * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -61,7 +74,9 @@ export class DatosGeneralesComponent implements OnInit {
   ngOnInit(): void {
     this.informacionProcedencia();
 
-    this.tercerosProcedenciaService.getData().subscribe((data) => {
+    this.tercerosProcedenciaService.getData()
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((data) => {
       this.pais = data;
     })
   }
@@ -102,5 +117,15 @@ export class DatosGeneralesComponent implements OnInit {
    */
   enviarFormulario(): void {
     this.formularioGuardar.emit(this.datosGeneralesForm.value);
+  }
+
+  /**
+   * @inheritdoc
+   * @description Este método se ejecuta automáticamente cuando el componente se destruye.
+   * Se utiliza para completar y limpiar cualquier suscripción activa, evitando fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

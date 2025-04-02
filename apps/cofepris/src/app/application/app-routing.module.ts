@@ -37,7 +37,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'entrada-humana',
+    path: 'permiso-importacion-biologica',
     loadChildren: () =>
       import('./tramites/260402/entrada-humana.module').then(
         (m) => m.EntradaHumanaModule
