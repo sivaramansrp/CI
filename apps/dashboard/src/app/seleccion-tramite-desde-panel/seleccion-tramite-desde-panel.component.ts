@@ -6,6 +6,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
 @Component({
   selector: 'seleccion-tramite-desde-panel',
   templateUrl: './seleccion-tramite-desde-panel.component.html',
+  styleUrl: './seleccion-tramite-desde-panel.component.scss',
   imports: [TituloComponent,RouterModule],
   standalone: true
 })
