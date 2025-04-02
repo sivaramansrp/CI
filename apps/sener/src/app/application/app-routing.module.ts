@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'permiso-de-hidrocarburos',
+    loadChildren: () =>
+      import('./tramites/130121/permiso-de-hidrocarburos.module').then(
+        (m) => m.PermisoDeHidrocarburosModule
+      )
+  },
 ];
 
 @NgModule({

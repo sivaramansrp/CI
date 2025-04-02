@@ -1,0 +1,22 @@
+{
+    "tableHeader": [
+      "Cantidad",
+      "Unidad de medida",
+      "Fracción arancelaria",
+      "Descripción",
+      "Precio unitario USD",
+      "Total USD"
+    ],
+    "tableBody": [
+      {
+        "tbodyData": [
+          "100",
+          "Litro",
+          "27101902",
+          "pruebas qa",
+          "1.000",
+          "100"
+        ]
+      }
+    ]
+  }

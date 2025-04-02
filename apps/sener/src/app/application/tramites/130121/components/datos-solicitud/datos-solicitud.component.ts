@@ -1,0 +1,643 @@
+import { Catalogo, REG_X } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { HttpClient } from '@angular/common/http';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130121/partidas-de-la.json';
+
+import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
+import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
+import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { Tramite130121Query } from '../../estados/queries/tramite130121.query';
+import { Tramite130121Store } from '../../estados/tramites/tramites130121.store';
+import mercanciaCatalogoVal from '@libs/shared/theme/assets/json/130121/datos-fraccion_arancelaria.json';
+import nicoCatalogoVal from '@libs/shared/theme/assets/json/130121/nico.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130121/solicitud-select.json';
+import unidadOptions from '@libs/shared/theme/assets/json/130121/unidad-medida.json';
+
+/**
+ * @description Componente para gestionar la solicitud de mercancías.
+ * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
+ */
+@Component({
+  selector: 'app-datos-solicitud',
+  templateUrl: './datos-solicitud.component.html',
+  styleUrl: './datos-solicitud.component.scss',
+})
+export class DatosSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * form
+   * Formulario reactivo principal para capturar los datos de la solicitud.
+   */
+  partidasDelaMercanciaForm!: FormGroup;
+  /**
+   * @description Formulario reactivo para los datos del trámite.
+   */
+  formDelTramite!: FormGroup;
+
+  /**
+   * @description Formulario reactivo para los detalles de la mercancía.
+   */
+  mercanciaForm!: FormGroup;
+  /**
+   * formForTotalCount
+   * Formulario reactivo para capturar los totales de las partidas.
+   */
+  formForTotalCount!: FormGroup;
+  /**
+   * Formulario reactivo para la selección de países.
+   * @type {FormGroup}
+   */
+  paisForm!: FormGroup;
+  /**
+   * Formulario reactivo para la representación.
+   * @type {FormGroup}
+   */
+  frmRepresentacionForm!: FormGroup;
+  /**
+   * tableHeaderData
+   * Configuración de las columnas de la tabla dinámica.
+   */
+  tableHeaderData: ConfiguracionColumna<string>[] = [];
+  /**
+   * tableBodyData
+   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   */
+  tableBodyData: { tbodyData: string[] }[] = [];
+  /**
+   * mostrarTabla
+   * Bandera para mostrar u ocultar la tabla dinámica.
+   */
+  mostrarTabla = false;
+  /**
+   * CHECKBOX
+   * Tipo de selección de la tabla dinámica (checkbox).
+   */
+  checkBox = TablaSeleccion.CHECKBOX;
+  /**
+   * getEstablecimientoTableData
+   * Datos de configuración de la tabla obtenidos de un archivo JSON.
+   */
+  public getEstablecimientoTableData = PartidasdelaTable;
+
+  /**
+   * filaSeleccionada
+   * Fila seleccionada en la tabla dinámica.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filaSeleccionada: any = null;
+
+  /**
+   * @description Opciones para el campo "producto".
+   */
+  productoOpciones: ProductoOpción[] = [];
+  /**
+   * @description Catálogo con valores de fracción arancelaria.
+   */
+
+  //  fraccionCatalogo: Catalogo[] = fractionValues;
+  //  umtCatalogo: Catalogo[] = umtValues;
+  //  nicoCatalogo: Catalogo[] = nicoValues;
+
+
+  /**
+   * @description Catálogo con opciones de unidad de medida.
+   */
+  // unidadCatalogo: Catalogo[] = unidadOptions;
+  /**
+   * @description Campos de entrada configurables para detalles adicionales.
+   */
+
+  datosInputFields = [
+    {
+      label: 'Régimen al que se destinará la mercancía',
+      placeholder: 'Selecciona un valor',
+      required: true,
+      controlName: 'regimen',
+    },
+    {
+      label: 'Clasificación del régimen',
+      placeholder: 'Selecciona un valor',
+      required: true,
+      controlName: 'clasificacion',
+    },
+  ];
+  mercanciaInputValues = [
+    {
+      label: 'Fracción arancelaria',
+      placeholder: 'Selecciona un valor',
+      required: true,
+      controlName: 'fraccion',
+    },
+    {
+      label: 'Unidad de medida de la tarifa (UMT)',
+      placeholder: 'Selecciona un valor',
+      required: true,
+      controlName: 'umt',
+    },
+    {
+      label: 'NICO',
+      placeholder: 'Selecciona un valor',
+      required: true,
+      controlName: 'nico',
+    },
+  ];
+  /**
+   * @description Matriz de catálogos adicionales para el formulario.
+   */
+  catalogosArray: Catalogo[][] = solicitudeSelectVal;
+  // mercanciaCatalogoArray: Catalogo[][] = mercanciaCatalogoVal;
+  /**
+   * @description Opciones de solicitud configurables.
+   */
+  opcionesSolicitud: ProductoOpción[] = [];
+
+  /**
+   * @description Sujeto para gestionar la destrucción de suscripciones.
+   */
+  private destroyed$ = new Subject<void>();
+  /**
+   * @description Arreglo que almacena un catálogo de elementosDeBloque.
+   * @type {Catalogo[]}
+   */
+  elementosDeBloque: Catalogo[] = [];
+  /**
+   * @description Arreglo que contiene un catálogo de países organizados por bloque.
+   * @type {Catalogo[]}
+   */
+  paisesPorBloque: Catalogo[] = [];
+  /**
+   * @description Arreglo que guarda un catálogo de entidades federativas.
+   * @type {Catalogo[]}
+   */
+  entidadFederativa: Catalogo[] = [];
+  /**
+   * @description Arreglo que almacena un catálogo de representaciones federales.
+   * @type {Catalogo[]}
+   */
+  representacionFederal: Catalogo[] = [];
+  /**
+   * @description Arreglo de cadenas que representa las opciones seleccionables de rangos de días.
+   * @type {string[]}
+   */
+  selectRangoDias: string[] = [];
+  /**
+   * @description Objeto o constante que contiene los textos utilizados en la aplicación.
+   * @type {any}
+   */
+  TEXTOS = TEXTOS;
+
+  mercanciaCatalogoArray: Catalogo[][] = mercanciaCatalogoVal as Catalogo[][];
+  nicoCatalogoArray: Catalogo[] = nicoCatalogoVal as Catalogo[];
+  unidadCatalogo: Catalogo[] = unidadOptions;
+
+  /**
+   * Constructor del componente.
+   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {HttpClient} http - Servicio para realizar solicitudes HTTP.
+   * @param {Tramite130121Store} tramite130121Store - Store para gestionar el estado del trámite 130202.
+   * @param {Tramite130121Query} tramite130121Query - Query para consultar el estado del trámite 130202.
+   * @param {permisodehidrocarburosService} permisodehidrocarburosService - Servicio para la exportación de minerales de hierro.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private tramite130121Store: Tramite130121Store,
+    private tramite130121Query: Tramite130121Query,
+    private permisodehidrocarburosService: PermisoDeHidrocarburosService
+  ) {
+    //constructor
+  }
+  /**
+   * @description Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
+   */
+  ngOnInit(): void {
+    this.inicializarFormularios();
+    this.configuracionFormularioSuscripciones();
+    this.opcionesDeBusqueda();
+    this.formularioTotalCount();
+    this.getEstablecimiento();
+    this.calcularTotales();
+    this.fetchEntidadFederativa();
+    this.fetchRepresentacionFederal();
+    this.listaDePaisesDisponibles();
+
+    this.tramite130121Query.mostrarTabla$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((mostrarTabla) => {
+        this.mostrarTabla = mostrarTabla;
+      });
+
+    this.partidasDelaMercanciaForm.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((value) => {
+        this.tramite130121Store.updateState({
+          cantidadPartidasDeLaMercancia: value.cantidadPartidasDeLaMercancia,
+          valorPartidaUSDPartidasDeLaMercancia: value.valorPartidaUSDPartidasDeLaMercancia,
+          descripcionPartidasDeLaMercancia: value.descripcionPartidasDeLaMercancia,
+        });
+      });
+
+    this.tramite130121Query.fraccion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((fraccion) => {
+        this.partidasDelaMercanciaForm.patchValue({ fraccion }, { emitEvent: false });
+      });
+
+    this.tramite130121Query.unidadMedida$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((unidadMedida) => {
+        if (unidadMedida) {
+          this.partidasDelaMercanciaForm.patchValue({ unidadMedida }, { emitEvent: false });
+          this.partidasDelaMercanciaForm.get('unidadMedida')?.updateValueAndValidity(); // Trigger update
+        }
+      });
+  }
+
+  /**
+   * @description Inicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
+   */
+
+  inicializarFormularios(): void {
+    this.formDelTramite = this.fb.group({
+      solicitud: ['', Validators.required],
+      regimen: ['', Validators.required],
+      clasificacion: ['', Validators.required],
+    });
+
+    this.mercanciaForm = this.fb.group({
+      plazo: ['Nuevo'],
+      descripcion: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(10),
+          Validators.maxLength(500),
+        ],
+      ],
+      fraccion: ['', Validators.required],
+      unidadMedida: ['', Validators.required],
+      nico: ['', Validators.required],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.min(1),
+        ],
+      ],
+
+      valorFacturaUSD: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.min(0.01),
+        ],
+      ],
+
+    });
+    this.partidasDelaMercanciaForm = this.fb.group({
+      cantidadPartidasDeLaMercancia: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]+$'),
+          Validators.maxLength(18),
+        ],
+      ],
+      unidadMedida: ['', Validators.required],
+      fraccion: ['', Validators.required],
+      descripcionPartidasDeLaMercancia: [
+        '',
+        [Validators.required, Validators.maxLength(255)],
+      ],
+      valorPartidaUSDPartidasDeLaMercancia: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.maxLength(20),
+        ],
+      ],
+    });
+
+    this.paisForm = this.fb.group({
+      bloque: [''],
+      usoEspecifico: ['', Validators.required],
+      justificacionImportacionExportacion: ['', [Validators.required]],
+      observaciones: [''],
+    });
+    this.frmRepresentacionForm = this.fb.group({
+      entidad: ['', Validators.required],
+      representacion: ['', Validators.required],
+    });
+  }
+  /**
+   * @description Configura las suscripciones para actualizar formularios y almacenar estados.
+   */
+  configuracionFormularioSuscripciones(): void {
+    this.tramite130121Query.solicitud$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((solicitud) => {
+        this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
+      });
+
+    this.tramite130121Query.regimen$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((regimen) => {
+        this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
+      });
+
+    this.tramite130121Query.clasificacion$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((clasificacion) => {
+        this.formDelTramite.patchValue(
+          { clasificacion },
+          { emitEvent: false }
+        );
+      });
+    this.tramite130121Query.mercanciaState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
+        this.mercanciaForm.patchValue(
+          {
+            plazo: state.plazo,
+            descripcion: state.descripcion,
+            fraccion: state.fraccion,
+            cantidad: state.cantidad,
+            valorFacturaUSD: state.valorPartidaUSD
+              ? state.valorPartidaUSD.toString()
+              : '',
+            unidadMedida: state.unidadMedida,
+          },
+          { emitEvent: false }
+        );
+      });
+
+    this.tramite130121Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.paisForm.patchValue({
+            bloque: seccionState.bloque,
+            usoEspecifico: seccionState.usoEspecifico,
+            justificacionImportacionExportacion:
+              seccionState.justificacionImportacionExportacion,
+            observaciones: seccionState.observaciones,
+          });
+        })
+      )
+      .subscribe();
+    this.tramite130121Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.frmRepresentacionForm.patchValue({
+            entidad: seccionState.entidad,
+            representacion: seccionState.representacion,
+          });
+        })
+      )
+      .subscribe();
+
+    this.formDelTramite.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((value) => {
+        this.tramite130121Store.updateState({
+          solicitud: value.solicitud,
+          regimen: value.regimen,
+          clasificacion: value.clasificacion,
+        });
+      });
+
+
+    this.mercanciaForm.valueChanges
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((value) => {
+        this.tramite130121Store.updateState({
+          plazo: value.plazo,
+          descripcion: value.descripcion,
+          fraccion: value.fraccion,
+          cantidad: value.cantidad,
+          valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
+          unidadMedida: value.unidadMedida,
+        });
+      });
+  }
+  /**
+   * formularioTotalCount
+   * Crea el formulario reactivo para capturar los totales de las partidas.
+   */
+  formularioTotalCount(): void {
+    this.formForTotalCount = this.fb.group({
+      cantidadTotal: [{ value: '', disabled: true }],
+      valorTotalUSD: [{ value: '', disabled: true }],
+    });
+  }
+
+  /**
+   * getEstablecimiento
+   * Configura los datos de la tabla dinámica a partir de un archivo JSON.
+   */
+  getEstablecimiento(): void {
+    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
+      (header, index) => ({
+        encabezado: header,
+        /* eslint-disable @typescript-eslint/no-explicit-any */
+        clave: (fila: any): string => fila.tbodyData[index],
+        orden: index,
+      })
+    );
+    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
+  }
+
+  /**
+   * calcularTotales
+   * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
+   */
+  calcularTotales(): void {
+    const CANTITAD_TOTAL = this.tableBodyData.reduce(
+      (sum: number, item: { tbodyData: string[] }) =>
+        sum + parseFloat(item.tbodyData[0]),
+      0
+    );
+    const VALOR_TOTALUSD = this.tableBodyData.reduce(
+      (sum: number, item: { tbodyData: string[] }) =>
+        sum + parseFloat(item.tbodyData[5]),
+      0
+    );
+    // eslint-disable-next-line dot-notation
+    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
+    // eslint-disable-next-line dot-notation
+    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
+  }
+
+  /**
+   * @description Solicita opciones configurables para los formularios desde archivos JSON.
+   */
+  opcionesDeBusqueda(): void {
+    this.permisodehidrocarburosService
+      .getSolicitudeOptions()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: any) => {
+          this.opcionesSolicitud = data.options;
+          this.tramite130121Store.updateState({
+            solicitud: data.options[0]?.value || '',
+            defaultSelect: data.defaultSelect || 'Inicial',
+          });
+        },
+        error: (error: any) =>
+          console.error('Error loading solicitude options:', error),
+      });
+
+    this.permisodehidrocarburosService
+      .getProductoOptions()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (data: any) => {
+          this.productoOpciones = data.options;
+          this.tramite130121Store.updateState({
+            plazo: data.options[0]?.value || 'Largo plazo (5 años)',
+            defaultPlazo: data.options[0]?.value || 'Largo plazo (5 años)',
+          });
+        },
+      });
+  }
+  /**
+   * manejarlaFilaSeleccionada
+   * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
+   * Lista de filas seleccionadas.
+   */
+  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
+    console.log('Rows received in parent:', filasSeleccionadas);
+    this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas[0] : null;
+    if (this.filaSeleccionada) {
+      this.tramite130121Store.storeTableValues(this.filaSeleccionada);
+    }
+  }
+  
+
+  /**
+  * validarYEnviarFormulario
+  * Valida el formulario y muestra la tabla dinámica si es válido.
+  */
+  validarYEnviarFormulario(): void {
+    this.mostrarTabla = true;
+    if (this.partidasDelaMercanciaForm.invalid) {
+      this.partidasDelaMercanciaForm.markAllAsTouched();
+    } else {
+      this.mostrarTabla = true;
+    }
+  }
+
+  /**
+   * navegarParaModificarPartida
+   * Navega para modificar una partida específica y actualiza el estado global.
+   */
+  navegarParaModificarPartida(): void {
+    if (this.filaSeleccionada) {
+      this.tramite130121Store.setMostrarTabla(true);
+      this.tramite130121Store.storeTableValues(this.filaSeleccionada);
+    }
+  }
+  /**
+   * Método para obtener la lista de entidades federativas.
+   */
+  fetchEntidadFederativa(): void {
+    this.permisodehidrocarburosService
+      .getEntidadFederativa()
+      .subscribe((data: Catalogo[]) => {
+        this.entidadFederativa = data;
+      });
+  }
+  /**
+  * Método para obtener la lista de representaciones federales.
+  */
+  fetchRepresentacionFederal(): void {
+    this.permisodehidrocarburosService
+      .getRepresentacionFederal()
+      .subscribe((data: Catalogo[]) => {
+        this.representacionFederal = data;
+      });
+  }
+  /**
+  * Método para obtener la lista de países disponibles.
+  */
+  listaDePaisesDisponibles(): void {
+    this.permisodehidrocarburosService
+      .getListaDePaisesDisponibles()
+      .subscribe((data: Catalogo[]) => {
+        this.elementosDeBloque = data;
+      });
+  }
+  /**
+  * Método para obtener la lista de países por bloque.
+  * @param {number} _bloqueId - Identificador del bloque.
+  */
+  fetchPaisesPorBloque(_bloqueId: number): void {
+    this.permisodehidrocarburosService
+      .getPaisesPorBloque(_bloqueId)
+      .subscribe((data: Catalogo[]) => {
+        this.paisesPorBloque = data;
+        this.selectRangoDias = this.paisesPorBloque.map(
+          (pais: Catalogo) => pais.descripcion
+        );
+      });
+  }
+  /**
+  * Maneja el cambio de bloque seleccionado.
+  * @param {number} bloqueId - Identificador del bloque seleccionado.
+  */
+  enCambioDeBloque(bloqueId: number): void {
+    this.fetchPaisesPorBloque(bloqueId);
+  }
+  /**
+   * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
+   * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
+   */
+  setValoresStore(event: { form: FormGroup; campo: string; metodoNombre: string; }): void {
+    const VALOR = event.form.get(event.campo)?.value;
+
+    const METHOD_MAPPING: Record<string, (valor: any) => void> = {
+      updateSolicitud: this.tramite130121Store.updateSolicitud,
+      setFraccion: this.tramite130121Store.setFraccion,
+      setUmt: this.tramite130121Store.setUmt,
+      setNico: this.tramite130121Store.setNico,
+      setDescripcionPartidasDeLaMercancia: this.tramite130121Store.setDescripcionPartidasDeLaMercancia,
+      setCantidadPartidasDeLaMercancia: this.tramite130121Store.setCantidadPartidasDeLaMercancia,
+      setValorPartidaUSDPartidasDeLaMercancia: this.tramite130121Store.setValorPartidaUSDPartidasDeLaMercancia,
+      setregimen: this.tramite130121Store.setregimen,
+      setclasificacion: this.tramite130121Store.setclasificacion,
+      setProducto: this.tramite130121Store.setProducto,
+      setDescripcion: this.tramite130121Store.setDescripcion,
+      setCantidad: this.tramite130121Store.setCantidad,
+      setUnidadMedida: this.tramite130121Store.setUnidadMedida,
+      setBloque: this.tramite130121Store.setBloque,
+      setUsoEspecifico: this.tramite130121Store.setUsoEspecifico,
+      setJustificacionImportacionExportacion: this.tramite130121Store.setJustificacionImportacionExportacion,
+      setObservaciones: this.tramite130121Store.setObservaciones,
+      setEntidad: this.tramite130121Store.setEntidad,
+      setRepresentacion: this.tramite130121Store.setRepresentacion,
+    };
+
+    if (event.metodoNombre === 'setValorPartidaUSD') {
+      this.tramite130121Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
+    } else if (METHOD_MAPPING[event.metodoNombre]) {
+      METHOD_MAPPING[event.metodoNombre](VALOR);
+    }
+  }
+
+
+  /**
+   * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+}
