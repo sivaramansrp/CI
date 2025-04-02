@@ -26,22 +26,22 @@ const ROUTES: Routes = [
     path: 'mercancia-datos',
     component: DatosMercanciaContenedoraComponent,
   },
-    {
-      path: 'agregar-fabricante',
-      component: AgregarFabricanteContenedoraComponent,
-    },
-    {
-      path: 'agregar-destinatario-final',
-      component: AgregarDestinatarioFinalContenedoraComponent,
-    },
-    {
-      path: 'agregar-proveedor',
-      component: AgregarProveedorContenedoraComponent,
-    },
-    {
-      path: 'agregar-facturador',
-      component: AgregarFacturadorContenedoraComponent,
-    },
+  {
+    path: 'agregar-fabricante',
+    component: AgregarFabricanteContenedoraComponent,
+  },
+  {
+    path: 'agregar-destinatario-final',
+    component: AgregarDestinatarioFinalContenedoraComponent,
+  },
+  {
+    path: 'agregar-proveedor',
+    component: AgregarProveedorContenedoraComponent,
+  },
+  {
+    path: 'agregar-facturador',
+    component: AgregarFacturadorContenedoraComponent,
+  },
 ];
 
 @NgModule({
