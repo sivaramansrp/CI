@@ -4,6 +4,8 @@ import { BtnContinuarComponent, TituloComponent, WizardComponent } from '@ng-mf/
 import { RegistroTransportistaComponent } from './pages/registro-transportista/registro-transportista.component';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 
+import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
+
 import { Datos40302Component } from './pages/datos-40302/datos-40302.component';
 
 import { ToastrService } from 'ngx-toastr';
@@ -29,6 +31,7 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
         TituloComponent,
         WizardComponent,
         SolicitanteComponent,
+        DatosDelTramiteComponent,
         PasoUnoComponent,
         PasoTresComponent,
         RegistroTransportistaRoutingModule
