@@ -62,7 +62,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260205/materias-primas-destinados.module').then(
         (m) => m.MateriasPrimasDestinadosModule)
+  },
+  {
+    path: 'parmiso-importacion',
+    loadChildren: () =>
+      import('./tramites/260514/parmiso-importacion-calidad.module').then(
+        (m) => m.ParmisoImportacionCalidadModule)
   }
+
 ];
 
 @NgModule({
