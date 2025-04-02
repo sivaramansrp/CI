@@ -103,7 +103,7 @@ export const REGEX_SOLO_DIGITOS = /^\d+$/;
  * - (\.\d{1,4})?: Coincide con un punto seguido de entre 1 y 4 dígitos decimales, opcional.
  * - $: Aserción para el final de la cadena.
  */
-export const REGEX_PATRON_DECIMAL_15_4=/^\d{0,15}(\.\d{1,4})?$/;
+export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
 
 /**
  * Expresión regular que valida un patrón alfanumérico.
@@ -120,4 +120,26 @@ export const REGEX_PATRON_DECIMAL_15_4=/^\d{0,15}(\.\d{1,4})?$/;
  * - "Hola 123" (contiene un espacio)
  * - "Hola@123" (contiene un carácter especial)
  */
-export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
+export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
+
+/**
+ * Expresión regular para validar una hora en formato de 24 horas (HH:mm).
+ * 
+ * - `^` y `$`: Aseguran que la cadena completa coincida con el patrón.
+ * - `([01]\d|2[0-3])`: Valida la hora. 
+ *   - `[01]\d`: Permite horas de 00 a 19.
+ *   - `2[0-3]`: Permite horas de 20 a 23.
+ * - `:`: Separa la hora de los minutos.
+ * - `[0-5]\d`: Valida los minutos, permitiendo valores de 00 a 59.
+ * 
+ * Ejemplos válidos:
+ * - "00:00"
+ * - "23:59"
+ * - "14:30"
+ * 
+ * Ejemplos no válidos:
+ * - "24:00" (hora inválida)
+ * - "12:60" (minutos inválidos)
+ * - "123:45" (formato incorrecto)
+ */
+export const REGEX_HORA = /^([01]\d|2[0-3]):[0-5]\d$/;

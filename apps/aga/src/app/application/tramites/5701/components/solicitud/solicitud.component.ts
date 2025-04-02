@@ -8,6 +8,7 @@ import {
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import {
+  REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -370,7 +371,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState?.rfcImportExport,
           [
             Validators.required,
-            Validators.pattern(this.validacionesService.rfcPattern),
+            Validators.pattern(REGEX_RFC),
           ],
         ],
         nombreImportExport: [
@@ -395,11 +396,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       datosServicio: this.fb.group({
         fechaInicio: [
           this.solicitudState?.fechaInicio,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
-          [Validators.required, this.validacionesService.validaFechaNoHoy],
+          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],

@@ -4,12 +4,11 @@ import { AlertComponent } from '../alert/alert.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'lib-component-acuse',
   standalone: true,
-  imports: [CommonModule, AlertComponent, TituloComponent],
+  imports: [CommonModule, AlertComponent],
   templateUrl: './acuse.component.html',
   styleUrl: './acuse.component.scss',
 })
