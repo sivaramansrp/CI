@@ -144,7 +144,7 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Presentación',
-    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.presentacion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 14,
   },
   {
@@ -189,7 +189,7 @@ export const PRODUCTO_TABLA_DATA: TablaMercanciasDatos[] = [
     cantidadUMC: '',
     unidadMedidaTarifa: '',
     cantidadUMT: '',
-    presentacion: '',
+    presentacion:'',
     numeroRegistroSanitario: '',
     paisOrigen: '',
     paisProcedencia: '',
@@ -241,40 +241,13 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   },
 ];
 
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216, 260205]
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE=[260214,260216, 260205,260217,260218]
 
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE=[260216]
 
 export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205
 }
-
-export const REGIMEN_DATOS = [
-  {
-    id: 101,
-    descripcion: "Definitivos",  
-  },
-  {
-    id: 101,
-    descripcion: "Depósito Fiscal",  
-  },
-  {
-    id: 102,
-    descripcion: "Temporales",  
-  },
- 
-]
-
-export const ADUNAS_DE_ENTRADAS_DATOS = [
-  {
-    id: 101,
-    descripcion: "ALTAMIRA",  
-  },
-  {
-    id: 101,
-    descripcion: "CD. JUAREZ",  
-  },
-]
 
 export const DETALLE_MERCANCIA_TABLA = [
   {
@@ -293,21 +266,10 @@ export const DETALLE_MERCANCIA_TABLA = [
     orden: 3,
   },
   {
-    encabezado: 'Presentacion',
+    encabezado: 'Presentación',
     clave: (ele: DetalleMercancia): string => ele.tipoDeEnvase,
     orden: 4,
   },
 ];
 
-
-export const FORMA_FORMACEUTICA_DATOS = [
-  {
-    id: 1,
-    descripcion: "Tabletas",  
-  },
-  {
-    id: 2,
-    descripcion: "Gragea",  
-  },
-]
-
+export const STR_NACIONAL = "Nacional";
