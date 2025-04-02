@@ -236,12 +236,24 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'reporte-anual',
+    path: 'validador-certificado-cam',
+    loadChildren:() =>
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
+      )
+  },
+  {
+    path: 'registro-solicitud-anual',
     loadChildren: () =>
-      import('./tramites/150102/reporte-anual.module').then(
+      import('./tramites/150101/registro-solicitud-anual.module').then(
         (m) => m.ReporteAnualModule
       ),
   },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  }
 ];
 
 @NgModule({
