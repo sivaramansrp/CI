@@ -189,14 +189,11 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
 
-    // Actualizar el estado global cuando cambien los valores del formulario
-    this.domicilioEstablecimiento.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.domicilioEstablecimientoStore.update(value);
-      });
   }
-
+  onControlChange(controlName: string): void {
+    const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  }
   /**
    * Carga los datos del catálogo de régimen.
    */

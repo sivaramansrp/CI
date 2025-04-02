@@ -108,12 +108,7 @@ export class ManifiestosRepresentanteSeccionComponent
         });
       });
 
-    // Actualizar el estado global cuando cambien los valores del formulario
-    this.manifiestosRepresentanteForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.representanteStore.update(value);
-      });
+    
 
       this.establecimientoService
       .getInformacionConfidencialRadioOptions()
@@ -123,7 +118,34 @@ export class ManifiestosRepresentanteSeccionComponent
        
       });
   }
+   /**
+   * Maneja los cambios en los controles del formulario y actualiza el estado global.
+   * @param controlName Nombre del control que cambió.
+   */
+   onControlChange(controlName: string): void {
+    const CONTROL_VALUE = this.manifiestosRepresentanteForm.get(controlName)?.value;
 
+    switch (controlName) {
+      case 'representanteRfc':
+        this.representanteStore.setRepresentanteRfc(CONTROL_VALUE);
+        break;
+      case 'representanteNombre':
+        this.representanteStore.setRepresentanteNombre(CONTROL_VALUE);
+        break;
+      case 'apellidoPaterno':
+      case 'apellidoMaterno':
+        this.representanteStore.setRepresentanteApellidos(
+          this.manifiestosRepresentanteForm.get('apellidoPaterno')?.value,
+          this.manifiestosRepresentanteForm.get('apellidoMaterno')?.value
+        );
+        break;
+      case 'informacionConfidencialRadio':
+        this.representanteStore.setInformacionConfidencial(CONTROL_VALUE);
+        break;
+      default:
+        break;
+    }
+  }
   /**
    * Busca los datos del representante por RFC y los actualiza en el formulario.
    */
@@ -140,12 +162,15 @@ export class ManifiestosRepresentanteSeccionComponent
               apellidoPaterno: representante.apellidoPaterno,
               apellidoMaterno: representante.apellidoMaterno,
             });
-          } else {
-            console.error(`No representante found for RFC: ${RFC}`);
+
+     
+            this.representanteStore.setRepresentanteNombre(representante.representanteNombre);
+            this.representanteStore.setRepresentanteApellidos(
+              representante.apellidoPaterno,
+              representante.apellidoMaterno
+            );
           }
         });
-    } else {
-      console.warn('Please enter a valid RFC.');
     }
   }
 

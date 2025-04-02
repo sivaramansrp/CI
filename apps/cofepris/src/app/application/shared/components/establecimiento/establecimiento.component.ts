@@ -84,19 +84,33 @@ import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionami
  * compo doc
  * @description
  */
-export class EstablecimientoComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * Lista de países disponibles para la selección de procedencia.
+   */
   public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+
+  /**
+   * Etiquetas para la lista cruzada de países de origen.
+   */
   public paisDeOriginLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionado(s)',
   };
+
+  /**
+   * Etiquetas para la lista cruzada de países de procedencia.
+   */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
     derecha: 'País(es) seleccionados',
   };
+
+  /**
+   * Lista de países disponibles para la selección de origen.
+   */
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+
   /**
    * Referencia al modal de datos de mercancía.
    */
@@ -115,9 +129,13 @@ export class EstablecimientoComponent
   datosModalInstance!: Modal;
 
   /**
-   * Formularios para gestionar los datos del producto y de la mercancía.
+   * Formulario para gestionar los datos del producto.
    */
   datosProductoForm!: FormGroup;
+
+  /**
+   * Formulario para gestionar los datos de la mercancía.
+   */
   datosMercanciaForm!: FormGroup;
 
   /**
@@ -128,8 +146,8 @@ export class EstablecimientoComponent
   /**
    * Configuración de las columnas de la tabla dinámica para los datos del producto.
    */
-  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] =DATOS_DE_LA_PRODUCTO_MODEL;
-   
+  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] = DATOS_DE_LA_PRODUCTO_MODEL;
+
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -184,6 +202,8 @@ export class EstablecimientoComponent
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
+   * @param establecimientoStore Store para gestionar el estado del establecimiento.
+   * @param establecimientoQuery Query para obtener el estado inicial del establecimiento.
    */
   constructor(
     private fb: FormBuilder,
@@ -198,9 +218,7 @@ export class EstablecimientoComponent
    */
   ngAfterViewInit(): void {
     if (this.datosMercanciaModal) {
-      this.datosModalInstance = new Modal(
-        this.datosMercanciaModal.nativeElement
-      );
+      this.datosModalInstance = new Modal(this.datosMercanciaModal.nativeElement);
     }
   }
 
@@ -218,10 +236,7 @@ export class EstablecimientoComponent
       nombreEspecifico: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccionArancelaria: [
-        { value: null, disabled: true },
-        Validators.required,
-      ],
+      descripcionFraccionArancelaria: [{ value: null, disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
       umt: [{ value: null, disabled: true }, Validators.required],
       cantidadOVolumen: ['', Validators.required],
@@ -235,11 +250,11 @@ export class EstablecimientoComponent
     });
 
     this.establecimientoQuery
-    .select('establecimientoData')
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-this.establecimientoData = data;
-    });
+      .select('establecimientoData')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.establecimientoData = data;
+      });
   }
 
   /**
@@ -271,26 +286,16 @@ this.establecimientoData = data;
     if (this.datosMercanciaForm) {
       const MERCANCIA_DATA: DatosDeLaProductoModel = {
         tipoDeProducto: this.datosMercanciaForm.get('tipoDeProducto')?.value,
-        nombreEspecifico:
-          this.datosMercanciaForm.get('nombreEspecifico')?.value,
-        cantidadOVolumen:
-          this.datosMercanciaForm.get('cantidadOVolumen')?.value,
+        nombreEspecifico: this.datosMercanciaForm.get('nombreEspecifico')?.value,
+        cantidadOVolumen: this.datosMercanciaForm.get('cantidadOVolumen')?.value,
         unidadDeMedida: this.datosMercanciaForm.get('unidadDeMedida')?.value,
-        Presentacion: this.datosMercanciaForm.get('presentacionaFrmaceutica')
-          ?.value,
-        fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')
-          ?.value,
-        descripcionDeLaFraccion: this.datosMercanciaForm.get(
-          'descripcionFraccionArancelaria'
-        )?.value,
+        Presentacion: this.datosMercanciaForm.get('presentacionaFrmaceutica')?.value,
+        fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')?.value,
+        descripcionDeLaFraccion: this.datosMercanciaForm.get('descripcionFraccionArancelaria')?.value,
         unidadDeMedidaDeTarifa: this.datosMercanciaForm.get('umt')?.value,
         cantidadUMT: this.datosMercanciaForm.get('cantidadUMT')?.value,
-        envasePrimario: this.datosMercanciaForm.get(
-          'almacenamientoEnvasePrimario'
-        )?.value,
-        envaseSecundario: this.datosMercanciaForm.get(
-          'almacenamientoEnvaseSecundario'
-        )?.value,
+        envasePrimario: this.datosMercanciaForm.get('almacenamientoEnvasePrimario')?.value,
+        envaseSecundario: this.datosMercanciaForm.get('almacenamientoEnvaseSecundario')?.value,
         paisDeOrigen: this.seleccionadasPaisDeOriginDatos.join(', '),
         paisDeProcedencia: this.seleccionadasPaisDeProcedenciaDatos.join(', '),
         paisDeDestino: this.datosMercanciaForm.get('paisDeDestino')?.value,
@@ -302,12 +307,10 @@ this.establecimientoData = data;
       if (IS_EMPTY) {
         return;
       }
-  // Crear un nuevo array con el nuevo propietario
-  const UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
 
-  // Actualizar el store con los nuevos datos del propietario
-  this.establecimientoStore.update({ establecimientoData: UPDATED_DATA });
-     
+      const UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
+      this.establecimientoStore.update({ establecimientoData: UPDATED_DATA });
+
       this.datosMercanciaForm.reset();
       this.closeDatosMercanciaModal();
     }
@@ -317,14 +320,11 @@ this.establecimientoData = data;
    * Maneja el evento blur en el campo RFC del representante.
    */
   onRepresentanteRfcBlur(): void {
-    const FRACCION_ARANCELARIA = this.datosMercanciaForm.get(
-      'fraccionArancelaria'
-    )?.value;
+    const FRACCION_ARANCELARIA = this.datosMercanciaForm.get('fraccionArancelaria')?.value;
 
     if (FRACCION_ARANCELARIA) {
       this.datosMercanciaForm.patchValue({
-        descripcionFraccionArancelaria:
-          'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
+        descripcionFraccionArancelaria: 'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
         umt: 'Kilogramo',
       });
     }
