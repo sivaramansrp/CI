@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'cafe-exportadores',
+    loadChildren: () =>
+      import('./tramites/290101/nacional-cafe-exportadores.module').then(
+        (m) => m.NacionalCafeExportadoresModule
+      )
+  },
 ];
 
 @NgModule({
