@@ -253,7 +253,7 @@ const ROUTES: Routes = [
     path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
-  }
+  },
   {
     path: 'aviso-importacion-maquinas',
     loadChildren: () =>
