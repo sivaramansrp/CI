@@ -52,7 +52,7 @@ COPY . .
 
 # Ensure NX cache is clean and reset properly
 RUN rm -rf .nx/cache || true
-RUN npx nx reset
+RUN npx nx reset || true
 
 # Try multiple build approaches
 RUN mkdir -p /app/dist/apps/dashboard || true
