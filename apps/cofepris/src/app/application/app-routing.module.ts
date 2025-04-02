@@ -30,6 +30,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-dispositivos-medicos-uso',
+    loadChildren: () =>
+      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
+        (m) => m.ImportacionDispositivosMedicosUsoModule)
+  },
+  {
     path: 'permiso-sanitario-importacion',
     loadChildren: () =>
       import('./tramites/260215/permiso-sanitario-importacion.module').then(
@@ -61,8 +67,16 @@ const ROUTES: Routes = [
     path: 'materias-primas-destinados',
     loadChildren: () =>
       import('./tramites/260205/materias-primas-destinados.module').then(
-        (m) => m.MateriasPrimasDestinadosModule)
-  }
+        (m) => m.MateriasPrimasDestinadosModule
+      ),
+  },
+  {
+    path: 'importacion-dispositivos-medicos-donacion',
+    loadChildren: () =>
+      import(
+        './tramites/260216/importacion-dispositivos-medicos-donacion.module'
+      ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
+  },
 ];
 
 @NgModule({
