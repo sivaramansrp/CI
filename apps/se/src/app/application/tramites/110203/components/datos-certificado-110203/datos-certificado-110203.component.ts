@@ -11,6 +11,9 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 
 import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 
+import { REGEX_RFC,REG_X} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
+
 /**
  * Componente que gestiona los datos del certificado 110203, incluyendo la visualización de mercancias, 
  * su comercialización y la validación de los datos del formulario.
@@ -174,10 +177,10 @@ export class DatosCertificado110203Component implements OnInit, OnDestroy {
       ingles: ['', Validators.required],
       complemento: [''],
       marca: ['', Validators.required],
-      valor: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      cantidad: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      valor: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
+      cantidad: ['', [Validators.required,Validators.pattern(REGEX_RFC)]],
       comercializacion: ['', Validators.required],
-      bruta: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      bruta: ['', [Validators.required, Validators.pattern(REG_X.DECIMALES_DOS_LUGARES)]],
       medida: ['', Validators.required],
       factura: ['', Validators.required],
       tipo: ['', Validators.required],
