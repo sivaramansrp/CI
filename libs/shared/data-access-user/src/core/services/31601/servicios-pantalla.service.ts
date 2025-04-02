@@ -15,14 +15,16 @@ import { Personas, Tipos } from '../../models/31601/servicios-pantallas.model';
 export class ServiciosPantallaService {
   urlServer = enviroment.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * Obtiene los datos del catálogo para el primer bimestre.
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreUnoCatalogo(catalogo: string) {
+  getBimestreUnoCatalogo(_catalogo: string):unknown {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-one.json'
     );
@@ -33,7 +35,7 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreDosCatalogo(catalogo: string) {
+  getBimestreDosCatalogo(_catalogo: string):unknown {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-two.json'
     );
@@ -44,20 +46,20 @@ export class ServiciosPantallaService {
    * @param catalogo - El nombre del catálogo a obtener.
    * @returns Un observable de `RespuestaCatalogos` que contiene los datos del catálogo.
    */
-  getBimestreTresCatalogo(catalogo: string) {
+  getBimestreTresCatalogo(_catalogo: string):unknown {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/bimestre-catalog-three.json'
     );
   }
-  getTipoCatalog(catalogo: string) {
+  getTipoCatalog(_catalogo: string):unknown {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/31601/tipo-catalog.json'
     );
   }
-  getPersonapara() {
+  getPersonapara():unknown {
     return this.http.get<Personas[]>('assets/json/31601/personapara.json');
   }
-  getTiposCatalog() {
+  getTiposCatalog():unknown {
     return this.http.get<Tipos[]>('assets/json/31601/tipo-di-document.json');
   }
   /**

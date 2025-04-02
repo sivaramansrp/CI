@@ -1,7 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'ng-alert',
@@ -17,7 +16,9 @@ export class AlertComponent implements OnInit {
 
   textoHTML: SafeHtml = '';
 
-  constructor(private sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer) {
+    // Lógica de inicialización si es necesario
+   }
 
   /**
    * Método del ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.

@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS } from '../../../core/enums/constantes-alertas.enum';
 import { AlertComponent } from '../alert/alert.component';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '../titulo/titulo.component';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -32,7 +32,9 @@ export class AcuseComponent implements OnChanges {
   ];  
   readonly datosTablaAcuse: BodyTablaAcuse[] = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    // Lógica de inicialización si es necesario
+  }
   /**
    * Método que se ejecuta cuando uno o más inputs del componente cambian.
    *

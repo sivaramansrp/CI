@@ -1,18 +1,16 @@
 import {
   Component,
   EventEmitter,
-  inject,
   Input,
+  OnInit,
   Output,
-  signal,
-  ViewChild,
+  inject,
 } from '@angular/core';
+import {Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../core/models/shared/components.model';
-import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 import { SeccionLibQuery } from '../../../core/queries/seccion.query';
 import { SeccionLibState } from '../../../core/estados/seccion.store';
-import { map, Subject, takeUntil } from 'rxjs';
-
+import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -26,7 +24,7 @@ interface AccionBoton {
   styleUrl: './btn-continuar.component.scss',
   host: {},
 })
-export class BtnContinuarComponent {
+export class BtnContinuarComponent implements OnInit {
   @Input({ required: true }) datos!: DatosPasos;
   @Input() btnGuardar: boolean = false;
 
@@ -38,9 +36,11 @@ export class BtnContinuarComponent {
   private destroyNotifier$: Subject<void> = new Subject();
   public habilitarBoton: boolean = false;
 
-  constructor(private seccionQuery: SeccionLibQuery) { }
+  constructor(private seccionQuery: SeccionLibQuery) {
+    // Lógica de inicialización si es necesario
+   }
 
-  ngOnInit() {
+  ngOnInit():void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -54,40 +54,40 @@ export class BtnContinuarComponent {
       .subscribe();
   }
 
-  get btnAntVisible() {
+  get btnAntVisible(): string {
     return this.datos.indice === 1 ? 'hidden' : 'visible';
   }
 
-  get btnContVisible() {
+  get btnContVisible(): string | boolean{
     return this.datos.indice === this.datos.nroPasos ? false : true;
   }
 
   continuar(): void {
-    const condicion =
+    const CONDICION=
       this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (condicion) {
+    if (CONDICION) {
       this.wizardService.cambio_indice(this.datos.indice);
-      const datosContinuar: AccionBoton = {
+      const DATAOS_CONTINUAR: AccionBoton = {
         accion: 'cont',
         valor: (this.datos.indice += 1),
       };
-      this.continuarEvento.emit(datosContinuar);
+      this.continuarEvento.emit(DATAOS_CONTINUAR);
     }
   }
 
   anterior(): void {
-    const condicion =
+    const CONSDICION=
       this.datos.indice > 1 && this.datos.indice < this.datos.nroPasos + 1;
-    if (condicion) {
-      const datosAnterior: AccionBoton = {
+    if (CONSDICION) {
+      const DATOS_ANTERIOR: AccionBoton = {
         accion: 'ant',
         valor: (this.datos.indice -= 1),
       };
 
-      this.continuarEvento.emit(datosAnterior);
+      this.continuarEvento.emit(DATOS_ANTERIOR);
     }
   }
-  guardar() {
+  guardar(): void {
     this.btnGuardarClicked.emit();
   }
 }

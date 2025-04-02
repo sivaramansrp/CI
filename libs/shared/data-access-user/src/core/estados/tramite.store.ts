@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
 
 /**
  * Estado para el número de trámite
@@ -34,7 +34,7 @@ export class TramiteStore extends Store<TramiteState> {
    *
    * @param idTramite
    */
-  public establecerTramite(idTramite: string, firma: string) {
+  public establecerTramite(idTramite: string, firma: string):void {
     this.update((state) => ({
       ...state,
       idTramite,
@@ -46,7 +46,7 @@ export class TramiteStore extends Store<TramiteState> {
    * Limpia el estado del trámite
    */
 
-  public limpiarTramite() {
+  public limpiarTramite():void {
     this.reset();
   }
 }

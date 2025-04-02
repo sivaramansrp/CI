@@ -50,7 +50,7 @@ export class CatalogoSelectComponent
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges):void {
     if (changes['required']) {
       if (this.required) {
         this.formSelect
@@ -63,12 +63,12 @@ export class CatalogoSelectComponent
     }
 
     if (changes['isDisabled']) {
-      const control = this.formSelect.get('selectControl');
-      if (control) {
+      const CONTROL = this.formSelect.get('selectControl');
+      if (CONTROL) {
         if (this.isDisabled) {
-          control.disable();
+          CONTROL.disable();
         } else {
-          control.enable();
+          CONTROL.enable();
         }
       }
     }
@@ -76,18 +76,22 @@ export class CatalogoSelectComponent
 
   value: string = '';
   handleChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    const selectedOption = this.catalogo.find(
-      (option) => option.id === Number(value)
+    const VALUE = (event.target as HTMLSelectElement).value;
+    const SELECTED_OPTION = this.catalogo.find(
+      (option) => option.id === Number(VALUE)
     );
-    if (selectedOption) {
-      this.selectionChange.emit(selectedOption);
+    if (SELECTED_OPTION) {
+      this.selectionChange.emit(SELECTED_OPTION);
     }
-    this.onChange(value);
+    this.onChange(VALUE);
   }
 
-  private onChange: (value: string) => void = () => { };
-  private onTouched: () => void = () => { };
+  private onChange: (value: string) => void = () => {
+    // Lógica de inicialización si es necesario
+   };
+  private onTouched: () => void = () => {
+    // Lógica de inicialización si es necesario
+   };
 
   writeValue(value: string): void {
     if (value && this.formSelect.get('selectControl')?.value !== value) {
@@ -96,8 +100,8 @@ export class CatalogoSelectComponent
   }
 
   isInvalid(): boolean | null {
-    const control = this.formSelect.get('selectControl');
-    return control ? control.invalid && control.touched : null;
+    const CONTROL= this.formSelect.get('selectControl');
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
   registerOnChange(fn: (_value: string) => void): void {

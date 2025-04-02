@@ -1,4 +1,4 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -8,7 +8,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   templateUrl: './modal-confirmar.component.html',
   styleUrl: './modal-confirmar.component.scss',
 })
-export class ModalConfirmarComponent {
+export class ModalConfirmarComponent implements OnInit {
   @Input() cancelarBtnTxt: string = '';
   @Input() confirmarBtnTxt: string = '';
   @Input() txtMensaje: string = '';
@@ -17,10 +17,12 @@ export class ModalConfirmarComponent {
 
   txtHtml: SafeHtml | string = '';
 
-  constructor( private sanitizier : DomSanitizer ) {}
+  constructor( private sanitizier : DomSanitizer ) {
+    // 
+  }
 
 
-  get getHtml() {
+  get getHtml(): boolean {
     return this.txtCuerpoHtml !== '' ? true : false;
   }
 
@@ -28,7 +30,7 @@ export class ModalConfirmarComponent {
     this.setHtml(this.txtCuerpoHtml);
   }
 
-  cerrarModal( result: boolean): void {
+  cerrarModal( _result: boolean): void {
   //  Cerrar Modal
   }
 

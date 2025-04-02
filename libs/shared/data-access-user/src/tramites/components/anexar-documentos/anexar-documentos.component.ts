@@ -1,27 +1,20 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { SelectCatalogosComponent } from '../select-catalogos/select-catalogos.component';
-import {
-  CatalogosSelect,
-  DocumentosCargados,
-} from '../../../core/models/shared/components.model';
-import { Catalogo } from '../../../core/models/shared/catalogos.model';
-import { CommonModule } from '@angular/common';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import {
-  CATALOGOS_ID,
-  MB,
-  PDF,
-  DPI,
-} from '../../constantes/constantes';
-import { Login } from '../../../core/models/shared/inicio-sesion.model';
-import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
-import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
-import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
-import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+import { CatalogosSelect, DocumentosCargados } from '../../../core/models/shared/components.model';
+import { Component, ElementRef, Input,OnInit, ViewChild} from '@angular/core';
+import { DPI, MB, PDF } from '../../constantes/constantes';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
+import { InicioSesionService } from '../../../core/services/shared/inicio-sesion/inicio-sesion.service';
+import { Login } from '../../../core/models/shared/inicio-sesion.model';
+import { SubirDocumentoService } from '../../../core/services/shared/subir-documento/subir-documento.service';
 import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
 
-declare const bootstrap: any; // Importación para manejar Bootstrap en TS
+
+
+
+declare const BOOTSTRAP: { Modal: { getInstance: (element: HTMLElement) => { hide: () => void } | null } }; // Importación para manejar Bootstrap en TS
 
 @Component({
   selector: 'anexar-documentos',
@@ -30,7 +23,7 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
   templateUrl: './anexar-documentos.component.html',
   styleUrl: './anexar-documentos.component.scss',
 })
-export class AnexarDocumentosComponent {
+export class AnexarDocumentosComponent implements OnInit {
   @Input() catalogoDocumentos: Catalogo[] = [];
   documentoForma!: FormGroup;
 
@@ -65,9 +58,11 @@ export class AnexarDocumentosComponent {
     private inicioSesionService: InicioSesionService,
     private subirDocumentoService: SubirDocumentoService,
     private fb: FormBuilder,
-  ) { }
+  ) { 
+    // Lógica de inicialización si es necesario
+  }
 
-  ngOnInit() {
+  ngOnInit():void {
     this.obtenerToken(this.datosLogin);
     this.crearFormaDocumento();
   }
@@ -76,7 +71,7 @@ export class AnexarDocumentosComponent {
    * Verifica si hay documentos cargados.
    * @returns {boolean} `true` si hay documentos cargados, de lo contrario `false`.
    */
-  get docCargados() {
+  get docCargados(): boolean {
     return this.documentosCargados.length > 0;
   }
 
@@ -122,12 +117,12 @@ export class AnexarDocumentosComponent {
    * @returns {void} Esta función no retorna ningún valor.
    */
   seleccionarDocumento(): void {
-    const documento = this.documentoForma.get('documento')?.value;
-    const documentoEncontrado = this.catalogoDocumentos.find(
-      (doc) => doc.id === documento
+    const DOCUMENTO = this.documentoForma.get('documento')?.value;
+    const DOCUMENTO_ENCONTRADO= this.catalogoDocumentos.find(
+      (doc) => doc.id === DOCUMENTO
     );
-    if (documentoEncontrado) {
-      this.documentoSeleccionado = documentoEncontrado;
+    if (DOCUMENTO_ENCONTRADO) {
+      this.documentoSeleccionado = DOCUMENTO_ENCONTRADO;
     } else {
       this.toastr.error('Documento no encontrado');
       return;
@@ -144,28 +139,28 @@ export class AnexarDocumentosComponent {
    * @param {Event} event - El evento de carga del archivo.
    */
   cargarDoc(event: Event): void {
-    const archivo = event.target as HTMLInputElement;
-    const informacionArchivo = (archivo.files as FileList)[0];
+    const ARCHIVO = event.target as HTMLInputElement;
+    const INFORMACION_ARCHIVO= (ARCHIVO.files as FileList)[0];
 
-    if (informacionArchivo) {
-      const extArchivo = informacionArchivo.name
+    if (INFORMACION_ARCHIVO) {
+      const EXT_ARCHIVO = INFORMACION_ARCHIVO.name
         .split('.')
         .pop()
         ?.toLowerCase();
 
-      if (extArchivo !== this.PDF.toLowerCase()) {
+      if (EXT_ARCHIVO !== this.PDF.toLowerCase()) {
         this.toastr.error('Solo se aceptan archivos pdf');
         return;
       }
 
-      const tamanioRequerido = this.documentoSeleccionado.tam
+      const TAMANIO_REQUERIDO = this.documentoSeleccionado.tam
         ? this.convertirKilobytesABytes(
           parseInt(this.documentoSeleccionado.tam, 10)
         )
         : 0;
-      const tamanioArchivo = informacionArchivo.size;
+      const TAMANIO_ARCHIVO = INFORMACION_ARCHIVO.size;
 
-      if (tamanioArchivo > tamanioRequerido) {
+      if (TAMANIO_ARCHIVO > TAMANIO_REQUERIDO) {
         this.toastr.error(
           'El tamaño del documento que intenta cargar excede el tamaño permitido'
         );
@@ -174,7 +169,7 @@ export class AnexarDocumentosComponent {
 
       this.subirDocumentoService.subirDocumento(
         this.token,
-        informacionArchivo
+        INFORMACION_ARCHIVO
       ).subscribe({
         next: (): void => {
           this.toastr.success('Documento subido');
@@ -186,7 +181,7 @@ export class AnexarDocumentosComponent {
 
       this.documentosCargados.push({
         tipoDocumento: this.documentoSeleccionado,
-        nombreArchivo: informacionArchivo.name,
+        nombreArchivo: INFORMACION_ARCHIVO.name,
       });
     }
   }
@@ -196,7 +191,7 @@ export class AnexarDocumentosComponent {
    * @param {number} kilobytes - El tamaño en kilobytes.
    * @returns {number} El tamaño en megabytes.
    */
-  convertirKilobytesAMegabytes(kilobytes: number): number {
+   convertirKilobytesAMegabytes(kilobytes: number): number {
     return Math.round(kilobytes / 1024);
   }
 
@@ -223,7 +218,7 @@ export class AnexarDocumentosComponent {
  * Abre el modal para eliminar un documento.
  * @param {number} i - El índice del documento.
  */
-  abrirModal(i: number) {
+  abrirModal(i: number):void {
     this.modal = 'show';
     this.indiceDocumento = i;
   }
@@ -233,7 +228,7 @@ export class AnexarDocumentosComponent {
    * @param {number} i - El índice del documento.
    * @param {string} accion - La acción a realizar.
    */
-  verDocumento(i: number, accion: string) {
+  verDocumento(i: number, accion: string):void {
     this.mostrarModal = accion === 'v';
   }
 
@@ -241,7 +236,7 @@ export class AnexarDocumentosComponent {
    * Elimina un documento de la lista.
    * @param {number} i - El índice del documento.
    */
-  eliminarDocumento(i: number) {
+  eliminarDocumento(i: number): void {
     this.documentosCargados.splice(i, 1);
     this.cerrarModal();
     this.toastr.success('Se ha eliminado el archivo exitosamente');
@@ -251,10 +246,10 @@ export class AnexarDocumentosComponent {
    * Cierra el modal.
    */
   cerrarModal(): void {
-    const modalElement = this.modalConfirmacion.nativeElement;
-    const modalInstance = bootstrap.Modal.getInstance(modalElement);
-    if (modalInstance) {
-      modalInstance.hide();
+    const MODAL_ELEMENT= this.modalConfirmacion.nativeElement;
+    const MODAL_INSTANCE = BOOTSTRAP.Modal.getInstance(MODAL_ELEMENT);
+    if (MODAL_INSTANCE) {
+      MODAL_INSTANCE.hide();
     }
   }
 }

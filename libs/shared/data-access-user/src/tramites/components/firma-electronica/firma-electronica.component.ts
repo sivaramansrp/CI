@@ -1,10 +1,9 @@
+import * as forge from 'node-forge';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LOGIN, PADDING } from '../../constantes/constantes';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-
-import * as forge from 'node-forge';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
@@ -33,7 +32,9 @@ export class FirmaElectronicaComponent {
     private fb: FormBuilder,
     private toastrService: ToastrService,
     private formValidator: ValidacionesFormularioService
-  ) { }
+  ) { 
+    // Lógica de inicialización si es necesario
+  }
 
   /**
    * Getter para saber si el componente esta siendo usado para hacer 'login'
@@ -59,27 +60,28 @@ export class FirmaElectronicaComponent {
    * @returns {void} No devuelve valor alguno.
    */
   handleFile(type: string, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      const archivoOriginal = input.files[0];
-      const reader = new FileReader();
-      reader.onload = async (e: ProgressEvent<FileReader>) => {
-        if (e.target && e.target.result) {
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.files) {
+      const ARCHIVO_ORIGINAL = INPUT.files[0];
+      const READER = new FileReader();
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+      READER.onload = async (E: ProgressEvent<FileReader>) => {
+        if (E.target && E.target.result) {
           if (type === 'cer') {
-            const result = (await e.target.result) as ArrayBuffer;
-            const der = new Uint8Array(result);
-            const buff = forge.util.createBuffer(der);
-            const asn1 = forge.asn1.fromDer(buff);
-            const cert = forge.pki.certificateFromAsn1(asn1);
-            const pem = forge.pki.certificateToPem(cert);
-            this.certFile = pem;
+            const RESULT = (await E.target.result) as ArrayBuffer;
+            const DER = new Uint8Array(RESULT);
+            const BUFF = forge.util.createBuffer(DER);
+            const ASN1 = forge.asn1.fromDer(BUFF);
+            const CERT = forge.pki.certificateFromAsn1(ASN1);
+            const PEM = forge.pki.certificateToPem(CERT);
+            this.certFile = PEM;
           }
           if (type === 'key') {
-            this.datosBinarios = (await e.target.result) as ArrayBuffer;
+            this.datosBinarios = (await E.target.result) as ArrayBuffer;
           }
         }
       };
-      reader.readAsArrayBuffer(archivoOriginal);
+      READER.readAsArrayBuffer(ARCHIVO_ORIGINAL);
     }
   }
 
@@ -93,9 +95,9 @@ export class FirmaElectronicaComponent {
       return;
     }
 
-    const password = this.FormCertificado.get('password')?.value;
+    const PASSWORD= this.FormCertificado.get('password')?.value;
     this.contrasenia =
-      password !== undefined && password !== null ? password : '';
+    PASSWORD !== undefined && PASSWORD !== null ? PASSWORD : '';
 
     this.validateFilesBase(this.certFile, this.datosBinarios, this.contrasenia);
   }
@@ -108,35 +110,35 @@ export class FirmaElectronicaComponent {
    * @returns {void} No regresa valor alguno.
    */
   validateFilesBase(
-    certFile: string,
+    certeile: string,
     binaryData: ArrayBuffer,
     password: string
   ): void {
     try {
-      const cert = forge.pki.certificateFromPem(certFile);
-      const certPublicKey = cert.publicKey as forge.pki.rsa.PublicKey;
+      const CERT = forge.pki.certificateFromPem(certeile);
+      const CERTPUBLICKEY = CERT.publicKey as forge.pki.rsa.PublicKey;
 
-      const paddingStart = PADDING.INICIO;
-      const paddingEnd = PADDING.FIN;
-      const der = new Uint8Array(binaryData);
-      const binaryString = String.fromCharCode(...der);
-      const content = paddingStart + btoa(binaryString) + paddingEnd; // añadir paddings al string del certificado, para poder desencriptarlo.
-      const privateKey = forge.pki.decryptRsaPrivateKey(content, password);
+      const PADDINGSTART = PADDING.INICIO;
+      const PADDINGEND = PADDING.FIN;
+      const DER = new Uint8Array(binaryData);
+      const BINARYSTRING = String.fromCharCode(...DER);
+      const CONTENT = PADDINGSTART + btoa(BINARYSTRING) + PADDINGEND; // añadir paddings al string del certificado, para poder desencriptarlo.
+      const PRIVATEKEY = forge.pki.decryptRsaPrivateKey(CONTENT, password);
 
-      const validaciones =
-        privateKey &&
-        certPublicKey &&
-        certPublicKey.n.t === privateKey.n.t &&
-        certPublicKey.e.t === privateKey.e.t;
+      const VALIDACIONES =
+        PRIVATEKEY &&
+        CERTPUBLICKEY &&
+        CERTPUBLICKEY.n.t === PRIVATEKEY.n.t &&
+        CERTPUBLICKEY.e.t === PRIVATEKEY.e.t;
 
-      if (validaciones) {
+      if (VALIDACIONES) {
         this.toastrService.success(
           '¡Certificado válido y llave privada coinciden!'
         );
         this.valido.emit(true);
         if (!this.login) {
-          const firma = this.firmar('hola', privateKey);
-          this.firma.emit(firma);
+          const FIRMA = this.firmar('hola', PRIVATEKEY);
+          this.firma.emit(FIRMA);
         }
       } else {
         this.valido.emit(false);
@@ -144,7 +146,7 @@ export class FirmaElectronicaComponent {
           'La llave privada no coincide con el certificado o la contraseña es incorrecta.'
         );
       }
-    } catch (error) {
+    } catch (ERROR) {
       this.toastrService.error('Error en la validación');
     }
   }
@@ -156,8 +158,8 @@ export class FirmaElectronicaComponent {
    * @returns {string} Regresa la cadena encriptada.
    */
   firmar(cadena: string, privateKey: forge.pki.rsa.PrivateKey): string {
-    const md = forge.md.sha256.create();
-    md.update(cadena, 'utf8');
-    return forge.util.encode64(privateKey.sign(md));
+    const MD = forge.md.sha256.create();
+    MD.update(cadena, 'utf8');
+    return forge.util.encode64(privateKey.sign(MD));
   }
 }

@@ -44,15 +44,15 @@ export class AgregarTransporteComponent implements OnInit {
     this.getTiposTransporte();
   }
 
-  crearFormTransporte() {
+  crearFormTransporte():void {
     this.FormTransporte = this.fb.group({});
   }
 
-  tipoTransporte(e: Catalogo) {
+  tipoTransporte(e: Catalogo):void {
     this.tipoTransporteSeleccionado = e;
   }
 
-  crearFormulario() {
+  crearFormulario():void {
 
     switch (this.tipoTransporteSeleccionado.id) {
       case 1:
@@ -78,7 +78,7 @@ export class AgregarTransporteComponent implements OnInit {
     this.agregarCamposAlForm(this.camposFormulario);
   }
 
-  agregarCamposAlForm(campos: CampoForm[]) {
+  agregarCamposAlForm(campos: CampoForm[]):void {
     campos.forEach((campo: CampoForm) => {
       this.FormTransporte.addControl(campo.campo, this.fb.control(''));
     });
@@ -92,21 +92,21 @@ export class AgregarTransporteComponent implements OnInit {
     // 6 - Otro
   }
 
-  getTiposTransporte() {
+  getTiposTransporte():void {
     this.catalogosServices
       .getCatalogos('cat-tipo-transporte.json')
       .subscribe((resp) => {
         if (resp.code === 200) {
-          const response = resp.data;
-          const tiposTransporte: Catalogo[] = [];
+          const RESPONSE = resp.data;
+          const TIPOS_TRANSPORTE: Catalogo[] = [];
 
 
-          response.forEach((el) => {
+          RESPONSE.forEach((el) => {
 
-            if (this.tipo == 'despacho') {
+            if (this.tipo === 'despacho') {
 
               if (el.id !== 3 && el.id !== 4) {
-                tiposTransporte.push(el);
+                TIPOS_TRANSPORTE.push(el);
               }
             }
           });
@@ -116,7 +116,7 @@ export class AgregarTransporteComponent implements OnInit {
             labelNombre: 'Tipo de transporte',
             required: false,
             primerOpcion: 'Selecciona un valor',
-            catalogos: response,
+            catalogos: RESPONSE,
           };
 
         }

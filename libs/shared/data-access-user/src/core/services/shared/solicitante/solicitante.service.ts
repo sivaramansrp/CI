@@ -7,7 +7,9 @@ import { JSONResponse } from 'libs/shared/data-access-user/src/core/models/share
   providedIn: 'root',
 })
 export class SolicitanteService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario
+  }
 
   urlServer = 'https://dev.v30.ultrasist.net/api/json-auxiliar';
 
