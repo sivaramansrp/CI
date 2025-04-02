@@ -6,21 +6,23 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'mod-permiso-importacion',
     loadChildren: () =>
       import('./tramites/260912/mod-permiso-importacion.module').then(
-        (m)=> m.ModPermisoImportacionModule
-      )
+        (m) => m.ModPermisoImportacionModule
+      ),
   },
   {
     path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
     loadChildren: () =>
-      import('./tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module').then(
-        (m)=> m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
-      )
+      import(
+        './tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module'
+      ).then(
+        (m) => m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
+      ),
   },
   {
     path: 'permiso-maquila',
@@ -39,9 +41,18 @@ const ROUTES: Routes = [
   {
     path: 'modificación-del-permiso-sanitario-de-importación-de-insumos',
     loadChildren: () =>
-      import('./tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module').then(
-        (m)=> m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
-      )
+      import(
+        './tramites/260904/modificación-del-permiso-sanitario-de-importación-de-insumos.module'
+      ).then(
+        (m) => m.ModificaciónDelPermisoSanitarioDeImportaciónDeInsumosModule
+      ),
+  },
+  {
+    path: 'permiso-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
+        (m) => m.PermisoPlaguicidasImportacionModule
+      ),
   },
   {
     path: 'permiso-sanitario',
@@ -51,10 +62,18 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'importacion-psicotropicos',
+    loadChildren: () =>
+      import(
+        './tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
+  },
+  {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
-      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
-        (m) => m.ImportacionDispositivosMedicosUsoModule)
+      import(
+        './tramites/260214/importacion-dispositivos-medicos-uso.module'
+      ).then((m) => m.ImportacionDispositivosMedicosUsoModule),
   },
   {
     path: 'permiso-sanitario-importacion',
