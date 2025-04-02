@@ -67,7 +67,6 @@ jobs:
         with:
           context: ./
           file: apps/dashboard/Dockerfile
-          #file: docker/modulefederation-dashboard.yml
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}
