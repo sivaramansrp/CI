@@ -8,6 +8,8 @@ RUN apk add --no-cache ca-certificates wget && \
     wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r0/glibc-2.35-r0.apk && \
     apk add --allow-untrusted --force-overwrite glibc-2.35-r0.apk && \
     rm glibc-2.35-r0.apk
+ENV LD_LIBRARY_PATH=/usr/glibc-compat/lib
+
 
 # Install necessary dependencies for compilation
 RUN apk add --no-cache python3 make g++ git
