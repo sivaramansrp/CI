@@ -30,9 +30,13 @@ jobs:
       - name: Instalar NX globalmente
         run: npm install -g nx@19.3.1
         
-        # Instala el módulo nativo requerido para Linux.
+      # Instala el módulo nativo requerido para Linux.
       - name: Install native binding for Nx on Linux
         run: npm install @nx/nx-linux-x64-gnu
+        
+      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+      - name: Install SWC native binding for Linux
+        run: npm install @swc/core-linux-x64-gnu
         
 
       # 3. Instala las dependencias usando --force, tal como lo haces localmente.
@@ -43,3 +47,37 @@ jobs:
       # 4. Construye el proyecto Angular con Nx (build del dashboard).
       - name: Build Angular project with Nx
         run: npx nx build dashboard --configuration=development --verbose
+     
+      - name: Listar archivos
+        run: ls -la
+        
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build image and push to GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: apps/dashboard/Dockerfile
+          tags: |
+            ghcr.io/vucem30/dockerized-front-vucem30:latest
+          push: ${{ github.ref == 'refs/heads/develop' }}
+
+      - name: Execute remote command (last one)
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.REMOTE_SRV_IP }}
+          username: ${{ secrets.REMOTE_SRV_USER }}
+          key: ${{ secrets.REMOTE_SRV_PRIV_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/v30
+            microk8s kubectl rollout restart deployment front-vucem30-deployment-dev
