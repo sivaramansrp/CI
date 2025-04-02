@@ -181,15 +181,15 @@ export class DatosDelInmuebleComponent implements OnInit,OnDestroy {
    */
   private inicializarFormulario(): void {
     this.formularioDireccion = this.fb.group({
-      calle: ['', Validators.required], // Campo de calle, obligatorio.
-      numeroExterior: ['', [Validators.required, Validators.pattern('^[0-9a-zA-Z]+$')]], // Número exterior, obligatorio y debe cumplir con el patrón alfanumérico.
-      numeroInterior: ['', Validators.pattern('^[0-9a-zA-Z]*$')], // Número interior, no obligatorio y acepta alfanuméricos.
-      pais: ['', Validators.required], // País, obligatorio.
-      entidadFederativa: ['', Validators.required], // Entidad federativa, obligatorio.
-      municipioDelegacion: ['', Validators.required], // Municipio o delegación, obligatorio.
-      colonia: ['', Validators.required], // Colonia, obligatorio.
-      localidad: ['', Validators.required], // Localidad, obligatorio.
-      codigoPostal: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Código postal, obligatorio y debe ser de 5 dígitos numéricos.
+      calle: ['', [Validators.required, Validators.maxLength(100)]], 
+      numeroExterior: ['', [Validators.required, Validators.maxLength(10)]], 
+      numeroInterior: ['', [Validators.maxLength(10)]], 
+      pais: ['', Validators.required], 
+      entidadFederativa: ['', Validators.required], 
+      municipioDelegacion: ['', Validators.required],
+      colonia: ['', Validators.required], 
+      localidad: ['', Validators.required], 
+      codigoPostal: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]], 
     });
   }
 
