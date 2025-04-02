@@ -28,6 +28,12 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
    * Contiene los datos de la mercancía actualmente seleccionada en la tabla.
    */
   public SeleccionadoDatos!: TablaMercanciasDatos;
+  
+  /**
+   * @property {number} idProcedimiento
+   * Identificador del procedimiento actual.
+   */
+  public readonly idProcedimiento:number = 260102;
 
   /**
    * @property {Subject<void>} destroyNotifier$
