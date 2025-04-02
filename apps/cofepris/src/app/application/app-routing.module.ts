@@ -23,10 +23,11 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
-    path: 'importacion-psicotropicos',
+    path: 'permiso-plaguicidas',
     loadChildren: () =>
-      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
-        (m) => m.CertificadosLicenciasPermisosModule),
+      import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
+        (m) => m.PermisoPlaguicidasImportacionModule
+      ),
   },
   {
     path: 'permiso-sanitario',
@@ -73,8 +74,16 @@ const ROUTES: Routes = [
     path: 'materias-primas-destinados',
     loadChildren: () =>
       import('./tramites/260205/materias-primas-destinados.module').then(
-        (m) => m.MateriasPrimasDestinadosModule)
-  }
+        (m) => m.MateriasPrimasDestinadosModule
+      ),
+  },
+  {
+    path: 'importacion-dispositivos-medicos-donacion',
+    loadChildren: () =>
+      import(
+        './tramites/260216/importacion-dispositivos-medicos-donacion.module'
+      ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
+  },
 ];
 
 @NgModule({
