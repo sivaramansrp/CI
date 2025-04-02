@@ -114,6 +114,21 @@ const ROUTES: Routes = [
         './tramites/570101/cancelacion-servicios-extraordinarios.module'
       ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
+  
+{
+  path: 'registro-digitalizar-documentos',
+  loadChildren: () =>
+    import('./tramites/701/registro-digitalizar-documentos.module').then(
+      (m) => m.RegistroDigitalizarDocumentosModule
+    ),
+},
+{
+  path: 'transferencia-contenedores',
+  loadChildren: () =>
+    import('./tramites/11204/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
+  },
   {
     path: 'registro-digitalizar-documentos',
     loadChildren: () =>
