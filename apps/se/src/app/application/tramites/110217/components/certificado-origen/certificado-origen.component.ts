@@ -10,7 +10,7 @@ import { DisponiblesTabla } from "../../models/certificado-origen.model.js";
 import { ElementRef } from "@angular/core";
 import { FECHAFACTURA } from '../../constants/certificado-origen.enum';
 import { FECHAFINAL } from '../../constants/certificado-origen.enum';
-import { FECHAINICIAL } from '../../constants/certificado-origen.enum';
+import { FECHA_INICIAL } from '../../constants/certificado-origen.enum';
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
 import { InputFecha } from "@libs/shared/data-access-user/src";
@@ -274,7 +274,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Se utiliza como valor inicial para el campo de fecha inicial.
    */
-  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaInicialInput: InputFecha = FECHA_INICIAL;
 
   /**
    * Fecha final predefinida para el formulario.

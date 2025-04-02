@@ -45,7 +45,7 @@ export const TERCEROS_TEXTO_DE_ALERTA = 'Para continuar con el trámite, debes a
  * 
  * Define las propiedades de la fecha inicial, como el nombre de la etiqueta, si es requerida y si está habilitada.
  */
-export const FECHAINICIAL = {
+export const FECHA_INICIAL = {
   labelNombre: 'Fecha inicio',
   required: false,
   habilitado: true,
