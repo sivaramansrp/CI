@@ -33,7 +33,8 @@ data:
       "funcionario": "https://vucem-${ENV}.example.com/funcionario",
       "cofepris": "https://vucem-${ENV}.example.com/cofepris",
       "amecafe": "https://vucem-${ENV}.example.com/amecafe",
-      "sener": "https://vucem-${ENV}.example.com/sener"
+      "sener": "https://vucem-${ENV}.example.com/sener",
+      "inbal": "https://vucem-${ENV}.example.com/inbal"
     }
 ---
 # Deployment for VUCEM Microfrontends
@@ -365,6 +366,33 @@ spec:
             initialDelaySeconds: 10
             timeoutSeconds: 3
             periodSeconds: 10
+        - name: inbal
+          image: ${REGISTRY}/vucem-front-inbal:${TAG}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: inbal
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health.txt
+              port: 80
+            initialDelaySeconds: 10
+            timeoutSeconds: 3
+            periodSeconds: 10
 ---
 # Services for each microfrontend
 apiVersion: v1
@@ -576,6 +604,25 @@ spec:
       targetPort: sener
   type: ClusterIP
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inbal-svc-${ENV}
+  namespace: vucem-${ENV}
+  labels:
+    app: vucem-microfrontends
+    component: inbal
+    env: ${ENV}
+spec:
+  selector:
+    app: vucem-microfrontends
+    env: ${ENV}
+  ports:
+    - name: http
+      port: 80
+      targetPort: inbal
+  type: ClusterIP
+---
 # Ingress for VUCEM Microfrontends
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -713,6 +760,14 @@ spec:
             name: sener-svc-${ENV}
             port:
               number: 80
+      # Inbal microfrontend
+      - path: /inbal
+        pathType: Prefix
+        backend:
+          service:
+            name: inbal-svc-${ENV}
+            port:
+              number: 80
       # Backend API
       - path: /api
         pathType: Prefix
@@ -797,6 +852,13 @@ spec:
         backend:
           service:
             name: sener-svc-${ENV}
+            port:
+              number: 80
+      - path: /inbal/remoteAppEntry.js
+        pathType: Exact
+        backend:
+          service:
+            name: inbal-svc-${ENV}
             port:
               number: 80
 ---
