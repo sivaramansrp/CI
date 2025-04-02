@@ -21,7 +21,7 @@ describe('AgregarFabricanteComponent', () => {
   });
 
   it('should initialize the form with empty values', () => {
-    expect(component.agregarFabricanteForm.get('nacionalidad')?.value).toBe('');
+    expect(component.agregarFabricanteForm.get('nacionalidad')?.value).toBe('Nacional');
     expect(component.agregarFabricanteForm.get('tipoPersona')?.value).toBe('');
     expect(component.agregarFabricanteForm.get('rfc')?.value).toBe('');
   });
