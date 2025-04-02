@@ -4,7 +4,7 @@
     <!-- Datos Generales -->
     <h4>Datos generales</h4>
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12 offset-md-6">
         <label class="form-label">Tipo persona:</label>
         <div class="d-flex flex-column">
           <div class="form-check">
@@ -31,9 +31,26 @@
       </div>
     </div>
 
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === 'Moral') {
+      <div class="row">
+        <div class="form-group">
+          <label class="form-label row mt-3 mover-izquierda fs-2" for="denominacionRazon"
+            >Denominación/razón social*:</label
+          >
+          <input
+            class="form-control col-md-4"
+            id="denominacionRazon"
+            type="text"
+            formControlName="denominacionRazon"
+          />
+        </div>
+      </div>
+    }
+
     <!-- Datos Personales -->
-    <h4 class="mt-4">Datos personales</h4>
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === 'Fisica') {
     <div class="row mt-5">
+      <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s):</label>
         <input type="text" class="form-control" formControlName="nombres" />
@@ -55,6 +72,7 @@
         />
       </div>
     </div>
+  }
 
     <!-- Domicilio -->
     <h4 class="mt-5">Domicilio</h4>
@@ -134,15 +152,17 @@
             type="button"
             name="modificarMercancias"
             class="btn btn-default"
+            (click)="cancelar()"
           >
-            Modificar
+            Cancelar
           </button>
           <button
             type="button"
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
+            (click)="limpiarFormulario()"
           >
-            Eliminar
+          Limpar
           </button>
           <button
             type="button"
