@@ -15,7 +15,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 import { PermisoCitesService } from '../../services/permiso-cites.service';
-import { InputFecha, REG_X } from '@libs/shared/data-access-user/src';
+import { InputFecha } from '@libs/shared/data-access-user/src';
 import { FECHA } from '../../enum/fetcha.enum';
 
 @Component({
