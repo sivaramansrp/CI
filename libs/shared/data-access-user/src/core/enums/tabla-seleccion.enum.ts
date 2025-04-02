@@ -5,3 +5,9 @@ export enum TablaSeleccion {
     DROPDOWN = 'DROPDOWN',
     BUTTON = 'BUTTON',
   }
+
+  export enum TablaCampoSeleccion {
+    INPUT = 'INPUT',
+    DROPDOWN = 'DROPDOWN',
+    NONE = 'NONE' 
+  }
