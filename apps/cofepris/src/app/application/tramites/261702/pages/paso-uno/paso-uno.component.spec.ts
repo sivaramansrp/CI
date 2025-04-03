@@ -19,6 +19,11 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+    jest.resetModules();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });

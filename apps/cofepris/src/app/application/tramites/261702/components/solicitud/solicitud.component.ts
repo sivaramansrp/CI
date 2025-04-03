@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ManifiestosDeclaracionesComponent } from '../manifiestosDeclaraciones/manifiestosDeclaraciones.component';
 import { PermisoDesistirComponent } from '../permisoDesistir/permisoDesistir.component';
-import { RepresentanteLegalComponent } from '../../../260211/components/representanteLegal/representanteLegal.component';
+import { RepresentanteLegalComponent } from '../representanteLegal/representanteLegal/representanteLegal.component';
 
 /**
  * SolicitudComponent es un componente que integra varios subcomponentes 
@@ -16,9 +16,9 @@ import { RepresentanteLegalComponent } from '../../../260211/components/represen
   standalone: true,
   imports: [
     CommonModule,
-    RepresentanteLegalComponent,
     PermisoDesistirComponent,
-    ManifiestosDeclaracionesComponent
+    ManifiestosDeclaracionesComponent,
+    RepresentanteLegalComponent
   ],
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',

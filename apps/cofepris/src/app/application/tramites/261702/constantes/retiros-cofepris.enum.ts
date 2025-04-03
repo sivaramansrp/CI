@@ -14,37 +14,188 @@
  */
 export const PERMISO_A_DESISTIR = [
   {
-    labelNombre: 'Folio',
+    id: 'acuseResolucion.folio',
+    label_nombre: 'Folio',
     campo: 'folio',
-    class: 'col-md-12',
+    clase: 'col-md-12',
     tipo_input: 'number',
-    disabled: false,
-    readonly: true,
-    validators: [''],
-    placeholder: '',
+    desactivado: true,
+    solo_lectura: false,
+    validadores: [
+      {
+        tipo: '', mensaje: ''
+      }
+    ],
+    marcador_de_posicion: '',
+    valor_predeterminado: '0402600201020254006000001',
+    margin_top: 0
   },
   {
-    labelNombre: 'Tipo de solicitud',
+    id: 'tipoDeSolicitud',
+    label_nombre: 'Tipo de solicitud',
     campo: 'tipoDeSolicitud',
-    class: 'col-md-12',
+    clase: 'col-md-12',
     tipo_input: 'textarea',
-    disabled: false,
-    readonly: true,
-    validators: [''],
-    placeholder: '',
+    desactivado: true,
+    solo_lectura: false,
+    validadores:[
+      {
+        tipo: '', mensaje: ''
+      }
+    ],
+    marcador_de_posicion: '',
+    valor_predeterminado: 'Permiso Sanitario de Importación de Medicamentos y Materias Primas Destinados a Pruebas de Laboratorio',
+    margin_top: 3
   },
   {
-    labelNombre: 'Motivo de desistimiento',
+    id: 'motivo',
+    label_nombre: 'Motivo de desistimiento',
     campo: 'motivoDesistimiento',
-    class: 'col-md-12',
+    clase: 'col-md-12',
     tipo_input: 'textarea',
-    disabled: false,
-    readonly: false,
-    tooltip: '',
-    validators: ['required'],
-    placeholder: '',
-  },
+    desactivado: false,
+    solo_lectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcador_de_posicion: '',
+    margin_top: 3
+  }
 ];
+
+/**
+ * REPRESENTANTE_LEGAL es una constante que define la estructura de los campos
+ * utilizados en el formulario para gestionar el desistimiento de un permiso.
+ * 
+ * Cada objeto dentro del arreglo representa un campo del formulario, con las siguientes propiedades:
+ * - `labelNombre`: Etiqueta que describe el campo.
+ * - `campo`: Nombre del campo utilizado como identificador.
+ * - `class`: Clase CSS aplicada al campo para definir su diseño.
+ * - `tipo_input`: Tipo de entrada del campo (por ejemplo, número, texto, área de texto).
+ * - `disabled`: Indica si el campo está deshabilitado.
+ * - `validators`: Validaciones aplicadas al campo (por ejemplo, requerido).
+ * - `placeholder`: Texto de marcador de posición para el campo.
+ * - `tooltip`: Información adicional que se muestra como un tooltip (opcional).
+ */
+export const REPRESENTANTE_LEGAL = [
+  {
+    id: 'representanteLegalRFC',
+    label_nombre: 'RFC',
+    campo: 'rfc',
+    clase: 'col-md-4',
+    tipo_input: 'text',
+    desactivado: false,
+    solo_lectura: false,
+    validadores: [
+      {
+        tipo: 'required'
+      }
+    ],
+    marcador_de_posicion: '',
+    valor_predeterminado: '',
+    margin_top: 0,
+    nino: [
+      {
+        label_nombre: 'Nombre o Razón Social',
+        campo: 'nombre',
+        clase: 'col-md-4',
+        tipo_input: 'text',
+        desactivado: true,
+        solo_lectura: false,
+        validadores: [
+          { tipo: 'required' }
+        ],
+        marcador_de_posicion: '',
+        margin_top: 5,
+        valor_predeterminado: '47875'
+      },
+      {
+        label_nombre: 'Apellido paterno',
+        campo: 'apellidoPaterno',
+        clase: 'col-md-4',
+        tipo_input: 'text',
+        desactivado: true,
+        solo_lectura: false,
+        validadores: [
+          { tipo: 'required' }
+        ],
+        marcador_de_posicion: '',
+        margin_top: 5,
+        valor_predeterminado: 'Paterno'
+      },
+      {
+        label_nombre: 'Apellido materno',
+        campo: 'apellidoMaterno',
+        clase: 'col-md-4',
+        tipo_input: 'text',
+        desactivado: true,
+        solo_lectura: false,
+        validadores:[
+          { tipo: '' }
+        ],
+        marcador_de_posicion:'',
+        margin_top: 5,
+        valor_predeterminado: 'Materno'
+      }
+    ]
+  },
+  {
+    id: 'consultarIDC',
+    label_nombre: 'Buscar',
+    campo: 'buscar',
+    clase: 'col-md-8',
+    tipo_input: 'button',
+    desactivado: false,
+    margin_top: 5,
+    vinculado_a: 'rfc',
+  },
+  {
+    id: 'representanteLegalNombre',
+    label_nombre: 'Nombre o Razón Social',
+    campo: 'nombre',
+    clase: 'col-md-4',
+    tipo_input: 'number',
+    desactivado: true,
+    solo_lectura: false,
+    validadores:[
+      {
+        tipo: 'required'
+      }
+    ],
+    marcador_de_posicion: '',
+    margin_top: 3
+  },
+  {
+    id: 'representanteLegalApPaterno',
+    label_nombre: 'Apellido paterno',
+    campo: 'apellidoPaterno',
+    clase: 'col-md-4',
+    tipo_input: 'text',
+    desactivado: true,
+    solo_lectura: false,
+    validadores: [
+      { tipo: 'required' }
+    ],
+    marcador_de_posicion: '',
+    margin_top: 3
+  },
+  {
+    id: 'representanteLegalApMaterno',
+    label_nombre: 'Apellido materno',
+    campo: 'apellidoMaterno',
+    clase: 'col-md-4',
+    tipo_input: 'text',
+    desactivado: true,
+    solo_lectura: false,
+    validadores: [
+      { tipo: '' }
+    ],
+    marcador_de_posicion: '',
+    margin_top: 3
+  }
+];
+
+
 
 /**
  * MANIFIESTOS_ALERT:

@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit} from '@angular/core';
+import { BehaviorSubject, Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RetirosCofepris261702State, Tramite261702Store } from '../../../../estados/tramites/tramite261702.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { RetirosCofepris261702State, Tramite261702Store } from '../../../../../estados/tramites/tramite261702.store';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { PERMISO_A_DESISTIR } from '../../constantes/retiros-cofepris.enum';
-import { Tramite261702Query } from '../../../../estados/queries/tramite261702.query';
+import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { REPRESENTANTE_LEGAL } from '../../../constantes/retiros-cofepris.enum';
+import { Tramite261702Query } from '../../../../../estados/queries/tramite261702.query';
 
 /**
  * @Component Decorator
@@ -21,79 +22,80 @@ import { Tramite261702Query } from '../../../../estados/queries/tramite261702.qu
  * - `styleUrl`: The path to the SCSS file containing styles for this component.
  */
 @Component({
-  selector: 'permiso-desistir',
+  selector: 'representante-legal',
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
-    FormasDinamicasComponent
+    FormasDinamicasComponent,
+    ReactiveFormsModule
   ],
-  templateUrl: './permisoDesistir.component.html',
-  styleUrl: './permisoDesistir.component.scss',
+  templateUrl: './representanteLegal.component.html',
+  styleUrl: './representanteLegal.component.scss',
 })
-export class PermisoDesistirComponent implements OnInit, OnDestroy {
-
+export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   /**
    * compo doc
    * @type {FormGroup}
-   * @memberof PermisoDesistirComponent
+   * @memberof RepresentanteLegalComponent
    * @description
    * Este es un formulario reactivo de Angular representado por un FormGroup.
    * Se utiliza para manejar y validar los datos del formulario en el componente.
    */
-  public forma: FormGroup = new FormGroup({
-    ninoFormGroup: new FormGroup({})
-  });
-
+    public forma: FormGroup = new FormGroup({
+      ninoFormGroup: new FormGroup({})
+    });
+      
    /**
-  * Subject para destruir las suscripciones.
-  */
-   private destruirNotificador$: Subject<void> = new Subject();
-
-   /**
-   * Suscripción a los cambios en el formulario reactivo.
+   * compo doc
+   * Constantes importadas desde el archivo de enumeración que contienen textos clave y mensajes de advertencia
+   * utilizados en el contexto de los trámites relacionados con permisos a desistir.
+   * @memberof RepresentanteLegalComponent
    */
-   public subscription: Subscription = new Subscription();
- 
-   /**
-   * Estado de la solicitud de la sección 301.
-   * @type {RetirosCofepris261702State}
-   * @memberof PermisoDesistirComponent
-   */
-   public retirosState!: RetirosCofepris261702State;
+   public representanteLegalFormData = REPRESENTANTE_LEGAL;
 
+   /**
+   * Subject para destruir las suscripciones.
+   */
+    private destruirNotificador$: Subject<void> = new Subject();
+  
     /**
+    * Suscripción a los cambios en el formulario reactivo.
+    */
+    public subscription: Subscription = new Subscription();
+
+    public formGroupSubject: BehaviorSubject<FormGroup> = new BehaviorSubject(this.forma);
+  
+    /**
+    * Estado de la solicitud de la sección 301.
+    * @type {RetirosCofepris261702State}
+    * @memberof RepresentanteLegalComponent
+    */
+    public retirosState!: RetirosCofepris261702State;
+
+   get ninoFormGroup(): FormGroup {
+    return this.forma.get('ninoFormGroup') as FormGroup;
+  }
+
+  /**
    * compo doc
    * @constructor
-   * Inicializa una nueva instancia del componente `PermisoDesistirComponent`.
+   * Inicializa una nueva instancia del componente `RepresentanteLegalComponent`.
    * 
    * @param tramite261702Store Servicio encargado de gestionar el estado dinámico asociado al trámite 261702.
    * @param tramite261702Query Consulta que facilita la obtención de datos específicos del estado del trámite 261702.
    */
   constructor(
-    private tramite261702Store: Tramite261702Store,
-    private tramite261702Query: Tramite261702Query
-  ) {}
-    
-  /**
-   * compo doc
-   * Constantes importadas desde el archivo de enumeración que contienen textos clave y mensajes de advertencia
-   * utilizados en el contexto de los trámites relacionados con permisos a desistir.
-   * @memberof PermisoDesistirComponent
-   */
-  public permisoDesistirFormData = PERMISO_A_DESISTIR;
+      private tramite261702Store: Tramite261702Store,
+      private tramite261702Query: Tramite261702Query
+    ) {}
 
-  get ninoFormGroup(): FormGroup {
-    return this.forma.get('ninoFormGroup') as FormGroup;
-  }
-
-  /**
+    /**
    * @method ngOnInit
    * @description
    * El gancho `ngOnInit` se llama al inicializar el componente. Este método realiza las siguientes acciones:
    * - Se suscribe al observable `selectRetiros$` para obtener el estado de los retiros y lo asigna a la propiedad `retirosState`.
    * - Escucha los cambios en los valores del formulario reactivo `forma` y actualiza el store dinámico con los valores cambiados.
-   * @memberof PermisoDesistirComponent
+   * @memberof RepresentanteLegalComponent
    * @returns {void}
    */
   ngOnInit(): void {
@@ -107,12 +109,12 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-
+  
     this.forma.valueChanges.subscribe((value: {ninoFormGroup: Record<string, unknown>}) => {
       Object.entries(value.ninoFormGroup).forEach(([key, fieldValue]) => {
         this.changeInValoresStore(key, fieldValue);
       });
-    });
+    })
   }
 
   /**
@@ -125,8 +127,30 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
   * @param form - El formulario reactivo que contiene los datos.
   * @param campo - El nombre del campo que ha cambiado.
   */
-  public changeInValoresStore(campo: string, value: unknown): void {
-    this.tramite261702Store.setDynamicFieldValue(campo, value);
+  public changeInValoresStore(campo: string, valor: unknown): void {
+    this.tramite261702Store.setDynamicFieldValue(campo, valor);
+  }
+
+  /**
+  * @method onButtonClick
+  * @description 
+  * Este método se activa al hacer clic en un botón dentro del formulario dinámico.
+  * Si el campo del evento es 'buscar', actualiza el formulario reactivo `ninoFormGroup`
+  * con valores predeterminados para los campos `nombre`, `apellidoPaterno` y `apellidoMaterno`.
+  * @param event - Objeto que contiene información sobre el campo y los datos del formulario dinámico.
+  */
+  public onButtonClick(event: ModeloDeFormaDinamica): void {
+    if (event.campo === 'buscar') {
+      const VALORES_ACTUALIZADOS = {
+        nombre: 47875,
+        apellidoPaterno: 'Paterno',
+        apellidoMaterno: 'Materno',
+      };
+      this.ninoFormGroup.patchValue(VALORES_ACTUALIZADOS);
+      Object.entries(VALORES_ACTUALIZADOS).forEach(([campo, valor]) => {
+        this.changeInValoresStore(campo, valor);
+      });
+    }
   }
 
   /**
@@ -138,5 +162,4 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
     }
-  
 }

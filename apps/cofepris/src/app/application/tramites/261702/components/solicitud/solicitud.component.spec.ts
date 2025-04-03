@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -7,7 +8,7 @@ describe('SolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudComponent],
+      imports: [SolicitudComponent, HttpClientModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudComponent);
