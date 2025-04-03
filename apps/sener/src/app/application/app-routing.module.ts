@@ -11,7 +11,14 @@ const ROUTES: Routes = [
   {
     path:'producto-petrolifero',
     loadChildren: () => import('./tramites/130108/importacion-producto-petrolifero.module').then(m => m.ImportacionProductoPetroliferoModule)
-  }
+  },
+  {
+    path: 'renuncia-de-derechos-de-permisos',
+    loadChildren: () =>
+      import('./tramites/140111/renuncia-de-derechos-de.module').then(
+        (m) => m.RenunciaDeDerechosDeModule
+      ),
+  },
 ];
 
 @NgModule({

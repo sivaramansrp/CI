@@ -9,7 +9,7 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'servicios-extraordinarios',
@@ -40,7 +40,16 @@ const ROUTES: Routes = [
   {
     path: 'importante',
     loadChildren: () =>
-      import('./tramites/301/pantallas.module').then((m) => m.Pantallas301Module),
+      import('./tramites/301/pantallas.module').then(
+        (m) => m.Pantallas301Module
+      ),
+  },
+  {
+    path: 'retorno-contenedores',
+    loadChildren: () =>
+      import('./tramites/11202/retorno-contenedores.module').then(
+        (m) => m.RetornoContenedoresModule
+      ),
   },
   {
     path: 'importador-exportador',
@@ -76,6 +85,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'temporal-contenedores',
+    loadChildren: () => import('./tramites/11201/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
+  },
+  {
     path: 'notificacion',
     component: NotificacionPageComponent
   },
@@ -100,6 +115,32 @@ const ROUTES: Routes = [
       (m) => m.RegistroDigitalizarDocumentosModule
     ),
 },
+{
+  path: 'transferencia-contenedores',
+  loadChildren: () =>
+    import('./tramites/11204/temporal-contenedores.module').then(
+      (m) => m.TemporalContenedoresModule
+    ),
+  },
+  {
+    path: 'registro-digitalizar-documentos',
+    loadChildren: () =>
+      import('./tramites/701/registro-digitalizar-documentos.module').then(
+        (m) => m.RegistroDigitalizarDocumentosModule
+      ),
+  },
+  {
+    path: 'certi-registro',
+      loadChildren: () =>
+        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+  },
+  {
+    path: 'transportista-terrestre',
+    loadChildren: () =>
+      import('./tramites/40101/transportista-terrestre.module').then(
+        (m) => m.TransportistaTerrestreModule
+      ),
+  }
 ];
 
 @NgModule({
