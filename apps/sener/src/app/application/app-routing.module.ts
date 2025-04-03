@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.RetiroImportacionExportacionPermisoModule
       ),
   },
+  {
+    path: 'renuncia-de-derechos-de-permisos',
+    loadChildren: () =>
+      import('./tramites/140111/renuncia-de-derechos-de.module').then(
+        (m) => m.RenunciaDeDerechosDeModule
+      ),
+  },
 ];
 
 @NgModule({
