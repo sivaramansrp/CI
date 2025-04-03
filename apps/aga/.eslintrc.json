@@ -16,6 +16,7 @@
           { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
         ],
         "@typescript-eslint/no-explicit-any": "error",
+        "@angular-eslint/no-empty-lifecycle-method" : ["error"],
         "@angular-eslint/directive-selector": [
           "off",
           {
