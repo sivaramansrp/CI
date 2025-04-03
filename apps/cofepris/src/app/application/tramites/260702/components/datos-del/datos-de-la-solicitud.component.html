@@ -1,22 +1,12 @@
 <div class="container">
     <form [formGroup]="dataDeLaSolicitudForm">
-     <h5>seleccione el tipo operacion que desea realizer</h5>
-     <div class="row mb-3">
-        <div class="col-md-2">
-                <input class="form-label" type="radio" name="selectedValue" formControlName="prorrogaName"
-                  id="prorroga" value="prorroga"/>
-                <label for="prorroga">Prórroga</label>
-        </div>
-         <div class="col-md-2">
-             <input class="form-label" type="radio" name="selectedValue" formControlName="modificación"
-             id="modificación" value="Modificación"/>
-           <label for="modificación">Modificación</label>
-       </div>
-        <div class="col-md-3">
-            <input class="form-label" type="radio" name="selectedValue" formControlName="modificaciónYProrroga"
-            id="modificaciónYProrroga" value="modificaciónYProrroga"/>
-           <label for="modificaciónYProrroga">Modificación y prórroga</label>
-     </div>
+        <ng-container formGroupName="datosDelTramiteRealizar"> 
+        <h5>seleccione el tipo operacion que desea realizer</h5>
+       <app-input-radio
+            [radioOptions]="opcionDeBotonDeRadio"
+            [isRequired]="true"
+            [layout]="'horizontal'"
+          ></app-input-radio> 
      <div class="row">
         <div class="col-md-8">
           <div class="form-group">
@@ -26,7 +16,152 @@
           </div>
         </div>
         </div>
-     </div>
+    </ng-container>
+    <ng-titulo titulo="Datos del establecimiento" />
+        <div class="col-md-12 d-flex justify-content-end">
+            <div class="btn-group">
+               <button class="btn btn-primary me-2"
+                type="button">Seleccionar establecimiento</button>
+            </div>     
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label" for="denominación">Denominación/razón social*:</label>
+                <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+                />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="correoelectronico">Correo electronico*:</label>
+                <input class="form-control" id="correoelectronico" type="text" formControlName="correoelectronico"
+                />
+            </div>
+        </div>
+        <ng-titulo titulo="Domicilio del establecimiento" />
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="codigopostal">Codigo postal:</label>
+                <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"/>
+              </div>
+              <div class="col-md-4 ">
+                <div class="form-group">
+                    <div class="form-group">
+                        <app-catalogo-select
+                        id="estadoData"
+                        formControlName="estado"
+                        [catalogo]="estadoData.catalogos"
+                        [label]="'Estado'"
+                        [required]="true"
+                      ></app-catalogo-select>
+                    </div>
+                </div>
+            </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="municipoyalcaldia">Municipio y alcaldia:</label>
+                <input class="form-control" id="municipoyalcaldia" type="text" formControlName="municipoyalcaldia"/>
+              </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="localidad">Localidad:</label>
+                <input class="form-control" id="localidad" type="text" formControlName="localidad"/>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label" for="colonia">Colonia:</label>
+                <input class="form-control" id="colonia" type="text" formControlName="colonia"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label" for="calle">Calle*:</label>
+                <input class="form-control" id="calle" type="text" formControlName="calle"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1">
+                <label class="form-label" for="lada">Lada:</label>
+                <input class="form-control" id="lada" type="text" formControlName="lada"/>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label" for="telefono">Telefono*:</label>
+                <input class="form-control" id="telefono" type="text" formControlName="telefono"/>
+            </div>
+        </div>
+        <ng-titulo titulo="S.C.I.A.N.*" />
+        <app-tabla-dinamica
+      [configuracionTabla]="configuracionColumnasoli"
+       [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+        [datos]="tableData"
+        (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+        >
+    </app-tabla-dinamica>
+    <div class="col-md-12 d-flex justify-content-end">
+        <div class="btn-group">
+          <button class="btn btn-danger"
+            type="button" (click)="onDelete()">Eliminar</button>
+            <button class="btn btn-primary me-2"
+            type="submit" (click)="onAgregar()">Agregar</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+        <input type="checkbox" id="avisode" value="avisode" formControlName="avisode"/>
+        <label for="avisode">Aviso de funcionamiento*</label><br>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label" for="nodelicencia">No. de licencia sanitaria*:</label>
+        <input class="form-control" id="nodelicencia" type="text" formControlName="nodelicencia"/>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            
+        </div>
+    </div>
+    </form>
+</div>
+
+<div *ngIf="showClavaScianForm">
+    <ng-titulo titulo="Clave S.C.I.A.N" />
+<form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
+    <ng-container formGroupName="claveScianG"> 
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="claveScianData"
+                    formControlName="claveScian"
+                    [catalogo]="claveScianData.catalogos"
+                    [label]="'Clave S.C.I.A.N'"
+                    [required]="true"
+                  ></app-catalogo-select>
+                </div>
+             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="form-group">
+                    <app-catalogo-select
+                    id="descripcionDelScianData"
+                    formControlName="descripcionDelScian"
+                    [catalogo]="descripcionDelScianData.catalogos"
+                    [label]="'Descripcion del S.C.I.A.N'"
+                    [required]="true"
+                  ></app-catalogo-select>
+                </div>
+             </div>
+        </div>
+    </ng-container>
+    <div class="col-md-12 d-flex justify-content-end">
+        <div class="btn-group">
+          <button class="btn btn-danger"
+            type="button" (click)="onCancelar()">Cancelar</button>
+            <button class="btn btn-primary me-2"
+            type="button" (click)="onLimpiar()">Limpiar</button>
+            <button class="btn btn-primary me-2"
+            type="submit">Agregar</button>
+        </div>
+      
+    </div>
     </form>
 </div>
       

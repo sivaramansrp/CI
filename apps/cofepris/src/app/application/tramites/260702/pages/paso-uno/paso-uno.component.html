@@ -21,19 +21,19 @@
     <ng-container>
       @switch (indice) {
       @case (1) {
-      <solicitante></solicitante>
+      <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-      <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+      <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
       }
       @case (3) {
-      <app-terceros-relacionados></app-terceros-relacionados>
+      <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
       }
       @case (4) {
-        <app-pago-de-derecho></app-pago-de-derecho>
+        <app-pago-de-derecho [tabindex]="4"></app-pago-de-derecho>
         }
       @case (5) {
-      <app-tramites-asociados></app-tramites-asociados>
+      <app-tramites-asociados [tabindex]="5"></app-tramites-asociados>
         }
       }
     </ng-container>
