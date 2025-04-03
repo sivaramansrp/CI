@@ -5,19 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { of } from 'rxjs';
-
-const MOCK_DATOS_BUSQUEDA_DROPDOWN = {
-  TRATADO: [
-    { id: 2, descripcion: "Tratado de Libre Comercio México-Unión Europea" },
-    { id: 3, descripcion: "Tratado de Libre Comercio México-Asociación Europea de Libre Comercio" }
-  ],
-  PAIS: [
-    { id: 1, descripcion: "ISLANDIA (REPUBLICA DE)" },
-    { id: 2, descripcion: "LIECHTENSTEIN (PRINCIPADO DE)" },
-    { id: 3, descripcion: "NORUEGA (REINO DE)" },
-    { id: 4, descripcion: "SUIZA (CONFEDERACION)" }
-  ]
-};
+import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 
 describe('DatosBusquedaComponent', () => {
   let componente: DatosBusquedaComponent;
@@ -37,24 +25,24 @@ describe('DatosBusquedaComponent', () => {
         tratado: '',
         bloque: '',
         origen: '',
-        destino:'',
-        expedicion:'',
-        vencimiento:'',
+        destino: '',
+        expedicion: '',
+        vencimiento: '',
         nombre: '',
         primer: '',
-        segundo:'',
-        fiscal:'',
-        razon:'',
+        segundo: '',
+        fiscal: '',
+        razon: '',
         calle: '',
         letra: '',
-        ciudad:'',
-        correo:'',
-        fax:'',
-        telefono:'',  
-        medio:'',
-        observaciones:'',
-        precisa:'',  
-        presenta:'',
+        ciudad: '',
+        correo: '',
+        fax: '',
+        telefono: '',
+        medio: '',
+        observaciones: '',
+        precisa: '',
+        presenta: '',
       }),
     };
 
@@ -91,8 +79,8 @@ describe('DatosBusquedaComponent', () => {
     fixture = TestBed.createComponent(DatosBusquedaComponent);
     componente = fixture.componentInstance;
     componente.configuracionesDropdown = [
-      { catalogos: MOCK_DATOS_BUSQUEDA_DROPDOWN.TRATADO },
-      { catalogos: MOCK_DATOS_BUSQUEDA_DROPDOWN.PAIS }
+      { catalogos: datosBusquedaDropdown?.tratado },
+      { catalogos: datosBusquedaDropdown?.pais }
     ];
     fixture.detectChanges();
   });
@@ -103,8 +91,8 @@ describe('DatosBusquedaComponent', () => {
 
   it('debería inicializar correctamente la configuración del dropdown', (): void => {
     expect(componente.configuracionesDropdown).toEqual([
-      { catalogos: MOCK_DATOS_BUSQUEDA_DROPDOWN.TRATADO },
-      { catalogos: MOCK_DATOS_BUSQUEDA_DROPDOWN.PAIS }
+      { catalogos: datosBusquedaDropdown?.tratado },
+      { catalogos: datosBusquedaDropdown?.pais }
     ]);
   });
 
@@ -134,11 +122,11 @@ describe('DatosBusquedaComponent', () => {
   it('should navigate to seleccion-tramite in navigateToSeleccionTramite()', (): void => {
     componente.navigateToSeleccionTramite();
     expect(routerMock.navigate).toHaveBeenCalledWith(
-      ['../tecnicosdatos'], 
-      expect.objectContaining({ relativeTo: expect.any(Object) }) 
+      ['../tecnicosdatos'],
+      expect.objectContaining({ relativeTo: expect.any(Object) })
     );
   });
-  
+
 
   it('debería llamar a actualizarStore cuando cambian los valores del formulario', (): void => {
     const espiaActualizarStore = jest.spyOn(componente as any, 'actualizarStore');
