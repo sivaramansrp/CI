@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-certificados.model';
+import { CuposDisponibles, CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 
 
@@ -71,8 +71,8 @@ export class ServicioDeMensajesService {
    * 
    * @param valor Array de objetos de tipo Cancelacion con los nuevos datos del formulario.
    */
-  actualizarDatosForma(valor: Cancelacion[]) {
-    this.desistimientoStore.actualizarDatosForma(valor as Cancelacion[]);
+  actualizarDatosForma(valor: CuposDisponibles[]) {
+    this.desistimientoStore.actualizarDatosForma(valor as CuposDisponibles[]);
   }
 
    /**
@@ -81,7 +81,7 @@ export class ServicioDeMensajesService {
    * 
    * @returns Un observable que emite el estado completo de los permisos de desistimiento.
    */
-  public obtenerDatos(): Observable<PermisosDatos> {
+  public obtenerDatos(): Observable<CuposDisponiblesDatos> {
     return this.desistimientoStore._select(state => state); // Devuelve el estado completo
   }
 }

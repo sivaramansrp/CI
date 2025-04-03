@@ -15,7 +15,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * @type {number}
  * @default 1
  */
-  indice: number = 2;
+  indice: number = 1;
 
 
   /**

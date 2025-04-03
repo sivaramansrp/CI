@@ -70,8 +70,8 @@
     <div class="row">
       <div class="col-md-12">
         <h5>Cupos disponibles</h5>
-        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasSolicitud"
-          [datos]="cuerpoTablaCancelacion"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCuposDisponibles"
+          [datos]="cuposDisponiblesTabla"></app-tabla-dinamica>
   
       </div>
     </div>
@@ -227,7 +227,7 @@
       </form>
     </div>
     <div class="row">
-      <ng-titulo [titulo]="'Detalle del cupo'"></ng-titulo>
+      <ng-titulo [titulo]="'Ofico'"></ng-titulo>
     </div>
     <div class="row">
       <form [formGroup]="montoForm">
@@ -271,16 +271,16 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        <h5>Cupos disponibles</h5>
-        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasSolicitud"
-          [datos]="cuerpoTablaCancelacion"></app-tabla-dinamica>
+        <h5>Certificados disponibles</h5>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosDisponibles"
+          [datos]="CertificadosDisponiblesTabla"></app-tabla-dinamica>
   
       </div>
     
     <div class="row mt-2">
       <div class="col-md-12 d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight" [disabled]="cuerpoTablaCancelacion.length === 0" (click)="eliminarRegistro($event)">Eliminar registro</button>
+          aria-controls="offcanvasRight" [disabled]="cuposDisponiblesTabla.length === 0" (click)="eliminarRegistro($event)">Eliminar registro</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
           aria-controls="offcanvasRight" (click)="busqueda($event)">Búsqueda folio</button>
       </div>

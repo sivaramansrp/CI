@@ -1,12 +1,27 @@
-export interface Cancelacion {
+export interface CuposDisponibles{
     cupo: string;
     nombre_de_producto: string;
     nombre_del_subproducto: string;
     mecanismo_de_asignación: string;
     tipo_cupo: string;
 }
-export interface PermisosDatos {
-    datos: Cancelacion[];
+export interface CuposDisponiblesDatos {
+    datos: CuposDisponibles[];
+}
+
+export interface CertificadosDisponibles {
+    folio_del_oficio_de_certificado: string;
+    nombre_denominacion_o_razon_social: string;
+    estado: string;
+    fabricante: string;
+    importador: string;
+    unidad_primaria: string;
+    monto_expedido: string;
+    monto_a_cancelar: string;
+    monto_utilizado: string;
+}
+export interface CertificadosDisponiblesDatos {
+    datos: CertificadosDisponibles[];
 }
 
 /**
@@ -23,8 +38,8 @@ export interface PermisosDatos {
  * actualizado con los valores proporcionados o un array vacío por defecto.
  */
 
-export function createDatosState(params: Partial<PermisosDatos> = {}): PermisosDatos {
+export function createDatosState(params: Partial<CuposDisponiblesDatos> = {}): CuposDisponiblesDatos {
     return {
-        datos: params as Cancelacion[]
+        datos: params as CuposDisponibles[]
     }
 }
