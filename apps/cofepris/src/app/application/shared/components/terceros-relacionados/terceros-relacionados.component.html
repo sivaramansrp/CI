@@ -21,7 +21,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (!estaOculto) {          
+        @if (!estaOculto) {
         <button
           type="button"
           name="modificarMercancias"
@@ -36,7 +36,7 @@
         >
           Eliminar
         </button>
-      }
+        }
         <button
           type="button"
           name="agregarMercancias"
@@ -62,7 +62,7 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        @if (!estaOculto) { 
+        @if (!estaOculto) {
         <button
           type="button"
           name="modificarMercancias"
@@ -77,7 +77,7 @@
         >
           Eliminar
         </button>
-      }
+        }
         <button
           type="button"
           name="agregarMercancias"
@@ -91,6 +91,8 @@
       </div>
     </div>
   </div>
+
+  @if(habilitarProveedor===true ){
   <div class="row mt-5"><h6>Proveedor :</h6></div>
   <div class="row mt-5">
     <app-tabla-dinamica
@@ -118,7 +120,7 @@
         >
           Eliminar
         </button>
-      }
+        }
         <button
           type="button"
           name="agregarMercancias"
@@ -132,6 +134,7 @@
       </div>
     </div>
   </div>
+  } @if(habilitarFacturador === true){
   <div class="row mt-5"><h6>Facturador :</h6></div>
   <div class="row mt-5">
     <app-tabla-dinamica
@@ -159,7 +162,7 @@
         >
           Eliminar
         </button>
-      }
+        }
         <button
           type="button"
           name="agregarMercancias"
@@ -173,5 +176,6 @@
       </div>
     </div>
   </div>
+  }
   <div class="row mt-5"></div>
 </div>
