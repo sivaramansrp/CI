@@ -1,0 +1,199 @@
+<div class="modal-header">
+    <h3 class="modal-title pull-left">{{titulo}}</h3>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="tercerosRelacionadosForm">
+        <h4>Datos generales</h4>
+        <div class="row mb-3">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+                <p class="fw-bold">Tipo persona*:</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" 
+                        value="fisica"
+                        formControlName="tipoPersona"
+                        name="tipoPersona" 
+                        id="flexRadioDefault1"
+                        (change)="onChangeTipoPersona()">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                        Física <i class="bi bi-question-circle-fill"></i>
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" 
+                        value="moral"
+                        formControlName="tipoPersona" 
+                        name="tipoPersona" 
+                        id="flexRadioDefault2"
+                        (change)="onChangeTipoPersona()">
+                    <label class="form-check-label" for="flexRadioDefault2">
+                        Moral <i class="bi bi-question-circle-fill"></i>
+                    </label>
+                  </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rfc" class="form-label">RFC*:</label>
+                    <input type="text" id="rfc" 
+                        formControlName="rfc"
+                        class="form-control">
+                </div>
+            </div>
+        </div>
+        @if(radioObjeto.moral) {
+            <div class="row mb-5">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="denominacion">Denominación/razón social*:</label>
+                        <input type="text" class="form-control" 
+                            formControlName="denominacionSocial" 
+                            id="denominacion">
+                    </div>
+                </div>
+            </div>
+            }
+            @if(radioObjeto.fisica) {
+                <div class="row mb-5 mt-4">
+                    <h4 class="fw-bold">Datos personales</h4>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="nombreDescripcion">Nombre(s)*:</label>
+                            <input type="text" class="form-control" 
+                            formControlName="terceroNombre" 
+                            id="nombreDescripcion">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="primerApellido">Primer apellido*:</label>
+                            <input type="text" class="form-control" 
+                            id="primerApellido">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="segundoApellido">Segundo apellido:</label>
+                            <input type="text" class="form-control" 
+                            id="segundoApellido">
+                        </div>
+                    </div>
+                </div>
+            }
+            <h4>Domicilio</h4>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="pais" class="form-label">País*:</label>
+                        <input type="text" id="pais" 
+                            formControlName="pais"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="estado" class="form-label">Estado/localidad*:</label>
+                        <input type="text" id="estado" 
+                            formControlName="estado"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label for="municipio" class="form-label">Municipio/alcaldia</label>
+                        <input type="text" id="estado" 
+                            formControlName="municipio" 
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                     <div class="form-group">
+                        <label for="localidad" class="form-label">Localidad*:</label>
+                        <input type="text" id="localidad" 
+                            formControlName="localidad" 
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                       <label for="estado" class="form-label">Código postal o equivalente</label>
+                       <input type="text" id="estado" 
+                           formControlName="codigoPostal" 
+                           class="form-control">
+                   </div>
+               </div>
+               <div class="col-md-4">
+                <div class="form-group">
+                   <label for="colonia" class="form-label">Colonia:</label>
+                   <input type="text" id="colonia" 
+                       formControlName="colonia" 
+                       class="form-control">
+               </div>
+           </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="calle" class="form-label">Calle*:</label>
+                        <input type="text" id="calle" 
+                            formControlName="calle" 
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="numeroExterior" class="form-label">Número exterior*:</label>
+                        <input type="text" id="numeroExterior" 
+                            formControlName="numeroExterior"
+                            class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="numeroInterior" class="form-label">Número interior:</label>
+                        <input type="text" id="numeroInterior" 
+                            formControlName="numeroInterior"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <label for="lada" class="form-label">Lada:</label>
+                            <input type="text" id="lada" 
+                                formControlName="lada"
+                                class="form-control lada">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono" class="form-label">Teléfono*:</label>
+                            <input type="text" id="telefono" 
+                                formControlName="telefono"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex">
+                        <div class="form-group">
+                            <label for="correoElectronico" class="form-label">Correo electrónico: </label>
+                            <input type="text" id="correoElectronico" 
+                                formControlName="correoElectronico"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger me-2">Cancelar</button>
+        <button type="button" class="btn btn-default me-2">Limpiar</button>
+        <button type="button" class="btn btn-primary" (click)="bsModalRef.hide()">Guardar</button>
+    </div>
+  </div>

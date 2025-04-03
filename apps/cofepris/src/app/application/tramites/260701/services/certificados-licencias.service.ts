@@ -38,4 +38,8 @@ export class CertificadosLicenciasService {
     return this.http.get<JSONResponse>('./assets/json/260701/destinatario-tabla.json');
   }
 
+  getFabricanteDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('./assets/json/260701/fabricante-tabla.json');
+  }
+
 }

@@ -14,6 +14,10 @@ import { CertificadosLicenciasService } from '../services/certificados-licencias
 import { TramitesAsociadosComponent } from '../components/tramites-asociados/tramites-asociados.component';
 import { PagoDeDerechosComponent } from '../components/pago-de-derechos/pago-de-derechos.component';
 import { TercerosRelacionadosComponent } from '../components/terceros-relacionados/terceros-relacionados.component';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { TercerosRelacionadosModalComponent } from '../components/terceros-relacionados-modal/terceros-relacionados-modal.component';
+import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DomicilloDelComponent } from '../components/domicillo-del/domicillo-del.component';
 
 
 @NgModule({
@@ -31,6 +35,9 @@ import { TercerosRelacionadosComponent } from '../components/terceros-relacionad
     TramitesAsociadosComponent,
     PagoDeDerechosComponent,
     TercerosRelacionadosComponent,
+    TercerosRelacionadosModalComponent,
+    DatosDeLaSolicitudComponent,
+    DomicilloDelComponent,
     ToastrModule.forRoot()
   ],
   providers: [
@@ -40,7 +47,8 @@ import { TercerosRelacionadosComponent } from '../components/terceros-relacionad
     InicioSesionService,
     SubirDocumentoService,
     CertificadosLicenciasService,
-    SanitarioService
+    SanitarioService,
+    BsModalService
   ],
 })
 export class CertificadosModule { }

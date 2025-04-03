@@ -12,7 +12,6 @@ import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { SolicitanteService } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { SolicitanteComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
