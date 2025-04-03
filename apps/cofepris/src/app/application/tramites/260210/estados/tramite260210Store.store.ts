@@ -13,6 +13,27 @@ import { TablaMercanciasDatos } from '../../../shared/models/datos-solicitud.mod
 import { TablaOpcionConfig } from '../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
 
+/**
+ * Representa el estado del trámite 260210 en la aplicación.
+ *
+ * @interface Tramite260210State
+ *
+ * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales.
+ * @property {Facturador[]} facturadorTablaDatos - Lista de facturadores.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores.
+ * @property {Fabricante[]} fabricanteTablaDatos - Lista de fabricantes.
+ * @property {DatosSolicitudFormState} datosSolicitudFormState - Información del formulario de solicitud.
+ * @property {MercanciaForm} mercanciaForm - Datos del formulario de mercancías.
+ * @property {TablaOpcionConfig[]} opcionConfigDatos - Opciones de configuración de tabla.
+ * @property {TablaScianConfig[]} scianConfigDatos - Configuraciones SCIAN disponibles.
+ * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Configuración de tabla de mercancías.
+ * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Opciones seleccionadas.
+ * @property {TablaScianConfig[]} seleccionadoScianDatos - Configuraciones SCIAN seleccionadas.
+ * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Mercancías seleccionadas.
+ * @property {boolean} opcionesColapsableState - Estado del panel colapsable.
+ * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
+ * @property {number} [tabSeleccionado] - Pestaña seleccionada actualmente.
+ */
 export interface Tramite260210State {
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
@@ -31,6 +52,11 @@ export interface Tramite260210State {
   tabSeleccionado?: number;
 }
 
+/**
+ * Crea el estado inicial para el trámite 260210.
+ *
+ * @returns {Tramite260210State} El estado inicial del store.
+ */
 export function createInitialState(): Tramite260210State {
   return {
     destinatarioFinalTablaDatos: [],
@@ -82,7 +108,7 @@ export function createInitialState(): Tramite260210State {
       paisDeProcedenciaDatos: [],
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
-    scianConfigDatos: [], // SCIAN_TABLA_DATA
+    scianConfigDatos: [],
     tablaMercanciasConfigDatos: [],
     seleccionadoopcionDatos: [],
     seleccionadoScianDatos: [],
@@ -100,15 +126,23 @@ export function createInitialState(): Tramite260210State {
   };
 }
 
+/**
+ * Store que maneja el estado del trámite 260210.
+ */
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramite260214', resettable: true })
+@StoreConfig({ name: 'tramite260210', resettable: true })
 export class Tramite260214Store extends Store<Tramite260210State> {
   constructor() {
     super(createInitialState());
   }
 
+  /**
+   * Actualiza el estado del formulario de solicitud.
+   *
+   * @param datosSolicitudFormState - Estado actualizado del formulario.
+   */
   public updateDatosSolicitudFormState(
     datosSolicitudFormState: DatosSolicitudFormState
   ): void {
@@ -117,6 +151,12 @@ export class Tramite260214Store extends Store<Tramite260210State> {
       datosSolicitudFormState,
     }));
   }
+
+  /**
+   * Agrega nuevos fabricantes a la lista existente.
+   *
+   * @param newFabricantes - Arreglo de objetos `Fabricante` a añadir.
+   */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
@@ -124,6 +164,11 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     }));
   }
 
+  /**
+   * Agrega nuevos destinatarios finales a la lista existente.
+   *
+   * @param newDestinatarios - Arreglo de objetos `Destinatario` a añadir.
+   */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: Destinatario[]
   ): void {
@@ -136,6 +181,11 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     }));
   }
 
+  /**
+   * Agrega nuevos proveedores a la lista existente.
+   *
+   * @param newProveedores - Arreglo de objetos `Proveedor` a añadir.
+   */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
@@ -143,6 +193,11 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     }));
   }
 
+  /**
+   * Agrega nuevos facturadores a la lista existente.
+   *
+   * @param newFacturadores - Arreglo de objetos `Facturador` a añadir.
+   */
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
@@ -150,6 +205,11 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     }));
   }
 
+  /**
+   * Actualiza las opciones de configuración disponibles.
+   *
+   * @param opcionConfigDatos - Arreglo actualizado de `TablaOpcionConfig`.
+   */
   public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -157,6 +217,11 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     }));
   }
 
+  /**
+   * Actualiza las configuraciones SCIAN disponibles.
+   *
+   * @param scianConfigDatos - Arreglo actualizado de `TablaScianConfig`.
+   */
   public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -164,6 +229,11 @@ export class Tramite260214Store extends Store<Tramite260210State> {
     }));
   }
 
+  /**
+   * Actualiza la configuración de la tabla de mercancías.
+   *
+   * @param tablaMercanciasConfigDatos - Arreglo actualizado de `TablaMercanciasDatos`.
+   */
   public updateTablaMercanciasConfigDatos(
     tablaMercanciasConfigDatos: TablaMercanciasDatos[]
   ): void {
@@ -172,12 +242,24 @@ export class Tramite260214Store extends Store<Tramite260210State> {
       tablaMercanciasConfigDatos,
     }));
   }
+
+  /**
+   * Actualiza la información del formulario de pago de derechos.
+   *
+   * @param nuevoPagoDerechos - Nuevo objeto de tipo `PagoDerechosFormState`.
+   */
   public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
     this.update((state) => ({
       ...state,
       pagoDerechos: nuevoPagoDerechos,
     }));
   }
+
+  /**
+   * Cambia la pestaña actualmente seleccionada.
+   *
+   * @param tabSeleccionado - Índice de la nueva pestaña seleccionada.
+   */
   public updateTabSeleccionado(tabSeleccionado: number): void {
     this.update((state) => ({
       ...state,
