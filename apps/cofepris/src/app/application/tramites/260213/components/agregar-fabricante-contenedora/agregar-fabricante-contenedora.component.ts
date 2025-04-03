@@ -2,7 +2,7 @@ import { AgregarFabricanteComponent } from '../../../../shared/components/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Fabricante } from '../../../../shared/models/terceros-relacionados.model';
-import { Tramite260213Store } from '../../estados/Tramite260213Store.store';
+import { Tramite260213Store } from '../../estados/tramite260213Store.store';
 /**
  * @component AgregarFabricanteContenedoraComponent
  * @description Componente contenedor que utiliza el componente `AgregarFabricanteComponent`

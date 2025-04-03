@@ -5,8 +5,8 @@ import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
-import { Tramite260213Query } from '../../estados/Tramite260213Query.query';
-import { Tramite260213Store } from '../../estados/Tramite260213Store.store';
+import { Tramite260213Query } from '../../estados/tramite260213Query.query';
+import { Tramite260213Store } from '../../estados/tramite260213Store.store';
 
 @Component({
   selector: 'app-paso-uno',
@@ -40,7 +40,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   seleccionaTab(i: number): void {
-    //this.indice = i;
     this.Tramite260213Store.updateTabSeleccionado(i);
   }
 

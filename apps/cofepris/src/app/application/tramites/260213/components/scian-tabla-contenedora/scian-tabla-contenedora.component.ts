@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ScianTablaComponent } from '../../../../shared/components/scian-tabla/scian-tabla.component';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
-import { Tramite260213Store } from '../../estados/Tramite260213Store.store';
+import { Tramite260213Store } from '../../estados/tramite260213Store.store';
 
 @Component({
   selector: 'app-scian-tabla-contenedora',

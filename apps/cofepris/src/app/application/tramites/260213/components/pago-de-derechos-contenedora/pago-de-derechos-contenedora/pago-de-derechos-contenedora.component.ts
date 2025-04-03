@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
-import { Tramite260213Store } from '../../../estados/Tramite260213Store.store';
+import { Tramite260213Store } from '../../../estados/tramite260213Store.store';
 
 /**
  * @component PagoDeDerechosContenedoraComponent

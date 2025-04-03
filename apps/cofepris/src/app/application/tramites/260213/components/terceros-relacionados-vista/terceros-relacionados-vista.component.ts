@@ -8,8 +8,8 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { Tramite260213Query } from '../../estados/Tramite260213Query.query';
-import { Tramite260213Store } from '../../estados/Tramite260213Store.store';
+import { Tramite260213Query } from '../../estados/tramite260213Query.query';
+import { Tramite260213Store } from '../../estados/tramite260213Store.store';
 
 /**
  * @component TercerosRelacionadosVistaComponent

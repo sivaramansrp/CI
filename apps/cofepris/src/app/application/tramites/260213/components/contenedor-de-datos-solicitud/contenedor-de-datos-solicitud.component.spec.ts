@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContenedorDeDatosSolicitudComponent } from './contenedor-de-datos-solicitud.component';
-import { Tramite260213Query } from '../../estados/Tramite260213Query.query';
-import { Tramite260213Store } from '../../estados/Tramite260213Store.store';
+import { Tramite260213Query } from '../../estados/tramite260213Query.query';
+import { Tramite260213Store } from '../../estados/tramite260213Store.store';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import {

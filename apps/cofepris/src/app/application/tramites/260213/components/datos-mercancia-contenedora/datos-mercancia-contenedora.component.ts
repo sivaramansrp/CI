@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import {
   Tramite260213State,
   Tramite260213Store,
-} from '../../estados/Tramite260213Store.store';
+} from '../../estados/tramite260213Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
-import { Tramite260213Query } from '../../estados/Tramite260213Query.query';
+import { Tramite260213Query } from '../../estados/tramite260213Query.query';
 
 /**
  * @component DatosMercanciaContenedoraComponent
