@@ -240,7 +240,40 @@ const ROUTES: Routes = [
       import('./tramites/110203/tecnicos.module').then(
         (m) => m.TecnicosModule
       ),
-  }
+  },
+  {
+    path: 'inicialmente-certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110216/inicialmente-certificado-origen.module').then(
+        (m) => m.InicialmenteCertificadoOrigenModule
+      ),
+  },
+  {
+    path: 'validador-certificado-cam',
+    loadChildren:() =>
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
+      )
+  },
+  {
+    path: 'registro-solicitud-anual',
+    loadChildren: () =>
+      import('./tramites/150101/registro-solicitud-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'reporte-anual',
+    loadChildren: () =>
+      import('./tramites/150102/reporte-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
 ];
 
 @NgModule({
