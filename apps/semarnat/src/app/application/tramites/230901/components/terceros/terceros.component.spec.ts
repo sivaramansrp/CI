@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosComponent } from './terceros.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Store } from '../../estados/store/tramite230901.store';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 import { CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { DestinatarioConfiguracionItem } from '../../enum/destinatario-tabla.enum';
 
 describe('TercerosComponent', () => {
   let component: TercerosComponent;
@@ -15,7 +16,6 @@ describe('TercerosComponent', () => {
   let autorizacionesDeVidaSilvestreServiceMock: any;
 
   beforeEach(async () => {
-    // Mock dependencies
     tramite230901StoreMock = {
       setEntidadFederativa: jest.fn(),
       setTercerosPopupState: jest.fn(),
@@ -38,6 +38,7 @@ describe('TercerosComponent', () => {
         { provide: Tramite230901Store, useValue: tramite230901StoreMock },
         { provide: Tramite230901Query, useValue: tramite230901QueryMock },
         { provide: AutorizacionesDeVidaSilvestreService, useValue: autorizacionesDeVidaSilvestreServiceMock },
+        FormBuilder,
       ],
     }).compileComponents();
 
@@ -50,10 +51,11 @@ describe('TercerosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
+  it('should initialize the form and tablaDatos on ngOnInit', () => {
     component.ngOnInit();
     expect(component.destinatarioForm).toBeDefined();
     expect(component.destinatarioForm.get('entidadFederativa')?.value).toBe('MORELOS');
+    expect(component.tablaDatos).toEqual([{ pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', ciudad: '---', entidadFederativa: 'MORELOS', domicilio: 'prueba', codigoPostal: 96533 }]);
   });
 
   it('should call inicializaTercerosDatosCatalogos on ngOnInit', () => {
@@ -64,7 +66,7 @@ describe('TercerosComponent', () => {
   it('should handle changes in entidadFederativa and update the store', () => {
     component.ngOnInit();
     component.destinatarioForm.get('entidadFederativa')?.setValue('MORELOS');
-    component.onEntidadFederativaChange();
+    component.manejarCambioEntidadFederativa();
     expect(tramite230901StoreMock.setEntidadFederativa).toHaveBeenCalledWith('MORELOS');
     expect(component.tablaDatos.length).toBe(1);
   });
@@ -72,19 +74,36 @@ describe('TercerosComponent', () => {
   it('should not add duplicate entries to tablaDatos', () => {
     component.ngOnInit();
     component.destinatarioForm.get('entidadFederativa')?.setValue('MORELOS');
-    component.onEntidadFederativaChange();
-    component.onEntidadFederativaChange(); // Call again to simulate duplicate addition
-    expect(component.tablaDatos.length).toBe(1); // Should still be 1
+    component.manejarCambioEntidadFederativa();
+    component.manejarCambioEntidadFederativa();
+    expect(component.tablaDatos.length).toBe(1);
+  });
+
+  it('should handle fila seleccionada and enable modificar button', () => {
+    const mockRow: DestinatarioConfiguracionItem = {
+      pais: 'MEXICO',
+      ciudad: 'Cuernavaca',
+      entidadFederativa: 'MORELOS',
+      domicilio: 'Calle 123',
+      codigoPostal: 62000,
+    };
+    component.manejarFilaSeleccionada([mockRow]);
+    expect(component.isModificarEnabled).toBe(true);
+  });
+
+  it('should disable modificar button when no fila is seleccionada', () => {
+    component.manejarFilaSeleccionada([]);
+    expect(component.isModificarEnabled).toBe(false);
   });
 
   it('should open the popup and update the store', () => {
-    component.openPopup();
+    component.abrirPopup();
     expect(component.isPopupOpen).toBe(true);
     expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(true);
   });
 
   it('should close the popup and update the store', () => {
-    component.closePopup();
+    component.cerrarPopup();
     expect(component.isPopupOpen).toBeFalsy();
     expect(component.isPopupClose).toBeFalsy();
     expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(false);

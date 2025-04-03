@@ -26,7 +26,7 @@ describe('PagoDeDerechosComponent', () => {
       selectSolicitud$: of({
         bancoseleccionado: 'Banco 1',
         llaveDePago: 'Llave123',
-        fechaDePago: '2025-03-27',
+        fecPago: '2025-03-27',
       }),
     };
 
@@ -58,18 +58,18 @@ describe('PagoDeDerechosComponent', () => {
     component.ngOnInit();
     expect(component.formularioPagoDerechos).toBeDefined();
     expect(component.formularioPagoDerechos.get('claveDeReferencia')?.value).toBe('084000966');
-    expect(component.formularioPagoDerechos.get('cadenaDeLaDependencia')?.value).toBe('00130090940161');
+    expect(component.formularioPagoDerechos.get('cadenaPagoDependencia')?.value).toBe('00130090940161');
     expect(component.formularioPagoDerechos.get('banco')?.value).toBe('Banco 1');
     expect(component.formularioPagoDerechos.get('llaveDePago')?.value).toBe('Llave123');
-    expect(component.formularioPagoDerechos.get('fechaDePago')?.value).toBe('2025-03-27');
-    expect(component.formularioPagoDerechos.get('importeDePago')?.value).toBe(672);
+    expect(component.formularioPagoDerechos.get('fecPago')?.value).toBe('2025-03-27');
+    expect(component.formularioPagoDerechos.get('impPago')?.value).toBe(672);
   });
 
   it('should disable specific form controls', () => {
     component.ngOnInit();
     expect(component.formularioPagoDerechos.get('claveDeReferencia')?.disabled).toBeTruthy();
-    expect(component.formularioPagoDerechos.get('cadenaDeLaDependencia')?.disabled).toBeTruthy();
-    expect(component.formularioPagoDerechos.get('importeDePago')?.disabled).toBeTruthy();
+    expect(component.formularioPagoDerechos.get('cadenaPagoDependencia')?.disabled).toBeTruthy();
+    expect(component.formularioPagoDerechos.get('impPago')?.disabled).toBeTruthy();
   });
 
   it('should validate form banco', () => {
@@ -94,8 +94,8 @@ describe('PagoDeDerechosComponent', () => {
     expect(LLAVE?.valid).toBeTruthy();
   });
 
-  it('should validate form fechaDePago', () => {
-    const FECHA = component.formularioPagoDerechos.get('fechaDePago');
+  it('should validate form fecPago', () => {
+    const FECHA = component.formularioPagoDerechos.get('fecPago');
     FECHA?.setValue('');
     FECHA?.updateValueAndValidity();
     expect(FECHA?.valid).toBeFalsy();
@@ -108,20 +108,20 @@ describe('PagoDeDerechosComponent', () => {
   it('should call setbancoseleccionado when seleccionarBanco is triggered', () => {
     component.ngOnInit();
     component.formularioPagoDerechos.get('banco')?.setValue('Banco 2');
-    component.seleccionarBanco();
+    component.manejarSeleccionBanco();
     expect(tramite230901StoreMock.setbancoseleccionado).toHaveBeenCalledWith('Banco 2');
   });
 
   it('should call setLlaveDePago when cambiarLlaveDePago is triggered', () => {
     component.ngOnInit();
     component.formularioPagoDerechos.get('llaveDePago')?.setValue('Llave456');
-    component.cambiarLlaveDePago();
+    component.manejarCambioLlavePago();
     expect(tramite230901StoreMock.setLlaveDePago).toHaveBeenCalledWith('Llave456');
   });
 
   it('should call setFechaDePago when cambiarFechaDePago is triggered', () => {
     component.ngOnInit();
-    component.cambiarFechaDePago('2025-03-28');
+    component.manejarCambioFechaPago('2025-03-28');
     expect(tramite230901StoreMock.setFechaDePago).toHaveBeenCalledWith('2025-03-28');
   });
 

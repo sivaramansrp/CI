@@ -2,6 +2,12 @@
  * Interfaz que define la estructura de un elemento de configuración para la tabla de mercancías.
  */
 export interface MercanciaConfiguracionItem {
+
+  /**
+   * Identificador único de la mercancía.
+   */
+  id: number;
+
   /**
    * Fracción arancelaria de la mercancía.
    */
@@ -45,7 +51,7 @@ export interface MercanciaConfiguracionItem {
   /**
    * Cantidad de la mercancía.
    */
-  cantidad: number;
+  cantidad: string;
 
   /**
    * Unidad de medida de la mercancía.
@@ -97,38 +103,43 @@ export const MERCANCIA_TABLA_CONFIGURACION = [
     orden: 4,
   },
   {
+    encabezado: 'Clasificación taxonómica',
+    clave: (item: MercanciaConfiguracionItem): string => item.clasificacionTaxonomica,
+    orden: 5,
+  },
+  {
     encabezado: 'Nombre científico',
     clave: (item: MercanciaConfiguracionItem): string => item.nombreCientifico,
-    orden: 5,
+    orden: 6,
   },
   {
     encabezado: 'Nombre común',
     clave: (item: MercanciaConfiguracionItem): string => item.nombreComun,
-    orden: 6,
+    orden: 7,
   },
   {
     encabezado: 'Marca (marcaje)',
     clave: (item: MercanciaConfiguracionItem): string => item.marca,
-    orden: 7,
+    orden: 8,
   },
   {
     encabezado: 'Cantidad',
-    clave: (item: MercanciaConfiguracionItem): number => item.cantidad,
-    orden: 8,
+    clave: (item: MercanciaConfiguracionItem): string => item.cantidad,
+    orden: 9,
   },
   {
     encabezado: 'Unidad de medida',
     clave: (item: MercanciaConfiguracionItem): string => item.unidadMedida,
-    orden: 9,
+    orden: 10,
   },
   {
     encabezado: 'País de orígen',
     clave: (item: MercanciaConfiguracionItem): string => item.paisOrigen,
-    orden: 10,
+    orden: 11,
   },
   {
     encabezado: 'País de procedencia',
     clave: (item: MercanciaConfiguracionItem): string => item.paisProcedencia,
-    orden: 11,
+    orden: 12,
   },
 ];

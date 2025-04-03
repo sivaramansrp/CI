@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { DatosSolicitudComponent } from './datos-solicitud.component';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Store } from '../../estados/store/tramite230901.store';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 import { CatalogoSelectComponent, CrosslistComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { MercanciaConfiguracionItem } from '../../enum/mercancia-tabla.enum';
 
 describe('DatosSolicitudComponent', () => {
   let component: DatosSolicitudComponent;
@@ -15,16 +16,17 @@ describe('DatosSolicitudComponent', () => {
   let autorizacionesDeVidaSilvestreServiceMock: any;
 
   beforeEach(async () => {
-    // Mock dependencies
     tramite230901StoreMock = {
       setTipoDeMovimiento: jest.fn(),
       setTipoDeRegimen: jest.fn(),
+      setMercanciaTablaDatos: jest.fn(),
     };
 
     tramite230901QueryMock = {
       selectSolicitud$: of({
         tipoDeMovimiento: '1',
         tipoDeRegimen: 'A',
+        mercanciaTablaDatos: [],
       }),
     };
 
@@ -75,7 +77,7 @@ describe('DatosSolicitudComponent', () => {
   it('should handle changes in tipoDeMovimiento and update the store', () => {
     component.ngOnInit();
     component.formSolicitud.get('tipodemovimiento')?.setValue('2');
-    component.onTipoMovimientoChange();
+    component.manejarCambioTipoMovimiento();
     expect(tramite230901StoreMock.setTipoDeMovimiento).toHaveBeenCalledWith('2');
     expect(component.tipoMovimientoSeleccionada).toBe(2);
   });
@@ -83,34 +85,40 @@ describe('DatosSolicitudComponent', () => {
   it('should handle changes in tipoDeRegimen and update the store', () => {
     component.ngOnInit();
     component.formSolicitud.get('tipoderegimen')?.setValue('B');
-    component.onTipoRegimenChange();
+    component.manejarCambioTipoRegimen();
     expect(tramite230901StoreMock.setTipoDeRegimen).toHaveBeenCalledWith('B');
   });
 
   it('should create formMercancia with default values', () => {
-    component.createFormMercancia();
+    component.crearNuevoFormularioMercancia();
     expect(component.formMercancia).toBeDefined();
     expect(component.formMercancia.get('fraccionArancelaria')?.value).toBe('');
     expect(component.formMercancia.get('descripcion')?.value).toBe('');
   });
 
-  it('should toggle showDatosMercanciaModal when toggleDivMercancia is called', () => {
+  it('should toggle showDatosMercanciaModal when alternarModalMercancia is called', () => {
     component.showDatosMercanciaModal = false;
-    component.toggleDivMercancia();
+    component.alternarModalMercancia();
     expect(component.showDatosMercanciaModal).toBeTruthy();
 
-    component.toggleDivMercancia();
+    component.alternarModalMercancia();
     expect(component.showDatosMercanciaModal).toBeFalsy();
   });
 
-  it('should call inicializaMercanciaDatosCatalogos and toggle modal on showMercanciaFormModal', () => {
-    component.showMercanciaFormModal();
+  it('should call inicializaMercanciaDatosCatalogos and toggle modal on mostrarFormularioMercanciaModal', () => {
+    component.mostrarFormularioMercanciaModal();
     expect(autorizacionesDeVidaSilvestreServiceMock.inicializaMercanciaDatosCatalogos).toHaveBeenCalled();
     expect(component.showDatosMercanciaModal).toBeTruthy();
   });
 
-  it('should add a new row to tablaDatos on submitMercanciaForm', () => {
-    component.createFormMercancia();
+  it('should validate esControlInvalido for invalid form controls', () => {
+    component.crearNuevoFormularioMercancia();
+    component.formMercancia.get('descripcion')?.markAsTouched();
+    expect(component.esControlInvalido('descripcion')).toBeTruthy();
+  });
+
+  it('should add a new row to tablaDatos on enviarFormularioMercancia', () => {
+    component.crearNuevoFormularioMercancia();
     component.formMercancia.get('fraccionArancelaria')?.setValue(0);
     component.formMercancia.get('descripcion')?.setValue('Descripción');
     component.formMercancia.get('clasificacionTaxonomica')?.setValue(1);
@@ -122,12 +130,14 @@ describe('DatosSolicitudComponent', () => {
     component.formMercancia.get('marca')?.setValue('Marca');
     component.formMercancia.get('cantidad')?.setValue(10);
 
-    component.submitMercanciaForm();
-    expect(component.tablaDatos.length).toBe(2); // Default row + new row
+    component.enviarFormularioMercancia();
+    expect(component.tablaDatos.length).toBe(1); // New row added
+    expect(tramite230901StoreMock.setMercanciaTablaDatos).toHaveBeenCalled();
   });
 
-  it('should handle fila seleccionada and show modal', () => {
-    const mockRow = {
+  it('should handle fila seleccionada', () => {
+    const mockRow: MercanciaConfiguracionItem = {
+      id: 123,
       fraccionArancelaria: '12345678',
       otraFraccion: false,
       descripcion: 'Descripción de la mercancía',
@@ -136,14 +146,50 @@ describe('DatosSolicitudComponent', () => {
       nombreCientifico: 'Nombre científico',
       nombreComun: 'Nombre común',
       marca: 'Marca de la mercancía',
-      cantidad: 10,
+      cantidad: '10',
       unidadMedida: 'Unidad de medida',
       paisOrigen: 'País de origen',
       paisProcedencia: 'País de procedencia',
     };
-    component.hadleFilaSeleccionada(mockRow);
+    component.manejarFilaSeleccionada([mockRow]);
     expect(component.filaSeleccionada).toEqual(mockRow);
-    expect(component.showDatosMercanciaModal).toBeTruthy();
+  });
+
+  it('should update filaSeleccionada with the latest data from tablaDatos', () => {
+    component.tablaDatos = [
+      {
+        id: 1, descripcion: 'Item 1',
+        fraccionArancelaria: '',
+        otraFraccion: false,
+        clasificacionTaxonomica: '',
+        rendimientoProducto: '',
+        nombreCientifico: '',
+        nombreComun: '',
+        marca: '',
+        cantidad: '',
+        unidadMedida: '',
+        paisOrigen: '',
+        paisProcedencia: ''
+      },
+    ];
+    component.filaSeleccionada = { 
+      id: 1, 
+      descripcion: 'Updated Item',
+      fraccionArancelaria: '',
+      otraFraccion: false,
+      clasificacionTaxonomica: '',
+      rendimientoProducto: '',
+      nombreCientifico: '',
+      nombreComun: '',
+      marca: '',
+      cantidad: '',
+      unidadMedida: '',
+      paisOrigen: '',
+      paisProcedencia: ''
+    };
+    component.manejarFilaSeleccionada([component.tablaDatos[0]]);
+    component.actualizarFilaSeleccionada();
+    expect(component.filaSeleccionada.descripcion).toBe('Item 1');
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
@@ -153,6 +199,4 @@ describe('DatosSolicitudComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
-
-  
 });

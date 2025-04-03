@@ -7,7 +7,7 @@
         formControlName="entidadFederativa"
         class="col-md-4"
         [label]="'Entidad federativa'"
-        (change)="onEntidadFederativaChange()"
+        (change)="manejarCambioEntidadFederativa()"
       ></app-catalogo-select>
     </div>
     <label class="row mt-5">Destinatarios*:</label>
@@ -16,6 +16,7 @@
         [configuracionTabla]="configuracionTabla"
         [datos]="tablaDatos"
         [tipoSeleccionTabla]="TablaSeleccion"
+        (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
       ></app-tabla-dinamica>
     </div>
 
@@ -34,7 +35,7 @@
         <button
           type="button"
           class="btn btn-primary me-2"
-          (click)="openPopup()"
+          (click)="abrirPopup()"
         >
           Modificar
         </button>
@@ -70,7 +71,7 @@
             <button
               type="button"
               class="btn btn-primary"
-              (click)="closePopup()"
+              (click)="cerrarPopup()"
             >
               Aceptar
             </button>

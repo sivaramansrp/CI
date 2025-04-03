@@ -12,12 +12,12 @@ export const CLAVE_DE_REFERENCIA: number = 84000966;
 /**
  * Cadena de la dependencia asociada al trámite.
  */
-export const CADENA_DE_LA_DEPENDENCIA: number = 130090940161;
+export const CADENA_PAGO_DEPENDENCIA: number = 130090940161;
 
 /**
  * Importe de pago requerido para el trámite.
  */
-export const IMPORT_DE_PAGO: number = 672;
+export const IMP_PAGO: number = 672;
 
 /**
  * Etiquetas para los movimientos disponibles y seleccionados en la interfaz.

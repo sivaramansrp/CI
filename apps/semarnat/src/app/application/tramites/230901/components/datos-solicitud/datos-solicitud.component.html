@@ -9,7 +9,7 @@
           [label]="'Tipo de movimiento'"
           [required]="true"
           name="tipodemovimiento"
-          (change)="onTipoMovimientoChange()"
+          (change)="manejarCambioTipoMovimiento()"
         ></app-catalogo-select>
       </div>
     </div>
@@ -24,7 +24,7 @@
           [label]="'Tipo de régimen'"
           [required]="true"
           name="tipoderegimen"
-          (change)="onTipoRegimenChange()"
+          (change)="manejarCambioTipoRegimen()"
         ></app-catalogo-select>
       </div>
     </div>
@@ -33,13 +33,13 @@
         solicitud230901State.tipoDeMovimiento === '2' ||
         solicitud230901State.tipoDeMovimiento === '3'
           ? 'Aduanas de salida'
-          : 'Adnuana'
+          : 'Aduana'
       "
     ></ng-titulo>
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
         @if(solicitud230901State.tipoDeMovimiento==="1"){
-        <h5>Aduana des entrades (Maximo 3 aduanas)</h5>
+        <h5>Aduana de entradas (Máximo 3 aduanas)</h5>
         }
         <crosslist
           [fechas]="listaOriginalAduanas"
@@ -56,13 +56,13 @@
       </div>
       <div class="table-container">
         <app-tabla-dinamica
-        [configuracionTabla]="configuracionTabla"
-        [datos]="tablaDatos"
-        [tipoSeleccionTabla]="tablaSeleccion"
-        (filaSeleccionada)="hadleFilaSeleccionada($event)"
-      ></app-tabla-dinamica>
+          [configuracionTabla]="configuracionTabla"
+          [datos]="tablaDatos"
+          [tipoSeleccionTabla]="tablaSeleccion"
+          (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+        ></app-tabla-dinamica>
       </div>
-      
+
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
           <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -70,12 +70,19 @@
       </nav>
       <div class="row" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-default me-2">Modficar</button>
+          <button
+            type="button"
+            class="btn btn-default me-2"
+            [disabled]="!isFileSelected"
+            (click)="modificarItemMercancia()"
+          >
+            Modificar
+          </button>
           <button type="button" class="btn btn-danger me-2">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
-            (click)="showMercanciaFormModal()"
+            (click)="mostrarFormularioMercanciaModal()"
           >
             Agregar
           </button>
@@ -100,7 +107,7 @@
   @if(showDatosMercanciaModal){
   <app-modal>
     <div class="datos-mercancia-container">
-      <ng-titulo titulo="Datos mercancia" />
+      <ng-titulo titulo="Datos mercancía" />
       <form [formGroup]="formMercancia">
         <div class="row">
           <div class="col-md-5">
@@ -120,10 +127,10 @@
                 >Descripción de la fracción arancelaria:</label
               >
               <input
-              id="fraccionDescripcion"
-              type="text"
-              formControlName="fraccionDescripcion"
-              class="form-control"
+                id="fraccionDescripcion"
+                type="text"
+                formControlName="fraccionDescripcion"
+                class="form-control"
               />
             </div>
           </div>
@@ -132,10 +139,10 @@
           <div class="col-md-12 justify-content-start">
             <div class="form-check mt-4">
               <input
-              id="otraFraccion"
-              type="checkbox"
-              formControlName="otraFraccion"
-              class="form-check-input"
+                id="otraFraccion"
+                type="checkbox"
+                formControlName="otraFraccion"
+                class="form-check-input"
               />
               <label class="form-check-label" for="otraFraccion"
                 >Otra fracción
@@ -145,14 +152,17 @@
           @if(otraFraccionSeleccionada){
           <div class="row">
             <div class="col-md-5">
-              <label class="form-label" style="text-align: left;" for="fraccionVigenteTIGIE"
+              <label
+                class="form-label"
+                style="text-align: left;"
+                for="fraccionVigenteTIGIE"
                 >La Fracción debe estar vigente conforme a la TIGIE</label
               >
               <input
-              id="fraccionVigenteTIGIE"
-              type="text"
-              formControlName="fraccionVigenteTIGIE"
-              class="form-control"
+                id="fraccionVigenteTIGIE"
+                type="text"
+                formControlName="fraccionVigenteTIGIE"
+                class="form-control"
               />
             </div>
           </div>
@@ -168,8 +178,11 @@
               rows="4"
               [required]="true"
             ></textarea>
-            <div *ngIf="esInvalido('descripcion')" class="text-danger">
-              <small *ngIf="formMercancia.controls['descripcion'].hasError('required')">Este campo es obligatorio.</small>
+            <div *ngIf="esControlInvalido('descripcion')" class="text-danger">
+              <small
+                *ngIf="formMercancia.controls['descripcion'].hasError('required')"
+                >Este campo es obligatorio.</small
+              >
             </div>
           </div>
         </div>
@@ -235,9 +248,12 @@
                 [required]="true"
               />
             </div>
-            <div *ngIf="esInvalido('marca')" class="text-danger">
-              <small *ngIf="formMercancia.controls['marca'].hasError('required')">Este campo es obligatorio.</small>
-          </div>
+            <div *ngIf="esControlInvalido('marca')" class="text-danger">
+              <small
+                *ngIf="formMercancia.controls['marca'].hasError('required')"
+                >Este campo es obligatorio.</small
+              >
+            </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
@@ -249,19 +265,25 @@
                 formControlName="cantidad"
                 [required]="true"
               />
-              <div *ngIf="esInvalido('cantidad')" class="text-danger">
-                <small *ngIf="formMercancia.controls['cantidad'].hasError('required')">Este campo es obligatorio.</small>
+              <div *ngIf="esControlInvalido('cantidad')" class="text-danger">
+                <small
+                  *ngIf="formMercancia.controls['cantidad'].hasError('required')"
+                  >Este campo es obligatorio.</small
+                >
               </div>
-              <div *ngIf="esInvalido('cantidad')" class="text-danger">
-                <small *ngIf="formMercancia.controls['cantidad'].hasError('pattern')">Ingrese solo dígitos.</small>
-            </div>
-              <p>No esta permitido capturar "," (coma)</p>
+              <div *ngIf="esControlInvalido('cantidad')" class="text-danger">
+                <small
+                  *ngIf="formMercancia.controls['cantidad'].hasError('pattern')"
+                  >Ingrese solo dígitos.</small
+                >
+              </div>
+              <p>No está permitido capturar "," (coma)</p>
             </div>
           </div>
           <div class="col-md-4">
             <app-catalogo-select
-            name="unidadMedida"
-            formControlName="unidadMedida"
+              name="unidadMedida"
+              formControlName="unidadMedida"
               [catalogo]="autorizacionesDeVidaSilvestreService.unidadMedida"
               [label]="'Unidad de medida'"
               [required]="true"
@@ -271,8 +293,8 @@
         <div class="row">
           <div class="col-md-4">
             <app-catalogo-select
-            formControlName="paisOrigen"
-            name="paisOrigen"
+              formControlName="paisOrigen"
+              name="paisOrigen"
               [catalogo]="autorizacionesDeVidaSilvestreService.paisOrigen"
               [label]="'País de origen'"
               [required]="true"
@@ -280,8 +302,8 @@
           </div>
           <div class="col-md-4">
             <app-catalogo-select
-            name="paisProcedencia"
-            formControlName="paisProcedencia"
+              name="paisProcedencia"
+              formControlName="paisProcedencia"
               [catalogo]="autorizacionesDeVidaSilvestreService.paisProcedencia"
               [label]="'País de procedencia'"
               [required]="true"
@@ -294,14 +316,14 @@
             <button
               type="button"
               class="btn btn-danger"
-              (click)="toggleDivMercancia()"
+              (click)="alternarModalMercancia()"
             >
               Cancelar
             </button>
             <button
               type="button"
               class="btn btn-primary"
-              (click)="submitMercanciaForm()"
+              (click)="enviarFormularioMercancia()"
             >
               Guardar
             </button>

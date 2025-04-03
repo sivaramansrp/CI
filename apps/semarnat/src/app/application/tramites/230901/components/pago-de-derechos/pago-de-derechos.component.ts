@@ -1,17 +1,11 @@
-import { CADENA_DE_LA_DEPENDENCIA, CLAVE_DE_REFERENCIA, FECHA, IMPORT_DE_PAGO } from '../../enum/autorizaciones.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { Solicitud230901State, Tramite230901Store } from '../../estados/store/tramite230901.store';
-import { Subject, takeUntil } from 'rxjs';
-import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
-import { InputFecha} from '@libs/shared/data-access-user/src';
-import { Tramite230901Query } from '../../estados/query/tramite230901.query';
-
+import { CADENA_PAGO_DEPENDENCIA, CLAVE_DE_REFERENCIA, FECHA, IMP_PAGO } from "../../enum/autorizaciones.enum";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { Solicitud230901State, Tramite230901Store } from "../../estados/store/tramite230901.store";
+import { Subject, takeUntil } from "rxjs";
+import { AutorizacionesDeVidaSilvestreService } from "../../services/autorizaciones-de-vida-silvestre.service";
+import { InputFecha } from "@libs/shared/data-access-user/src";
+import { Tramite230901Query } from "../../estados/query/tramite230901.query";
 
 /**
  * Componente que gestiona los datos relacionados con el pago de derechos en el trámite "230901".
@@ -43,17 +37,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Clave de referencia utilizada en el trámite.
    */
-  claveDeReferencia: string = '0'+CLAVE_DE_REFERENCIA;
+  claveDeReferencia: string = '0' + CLAVE_DE_REFERENCIA;
 
   /**
    * Cadena de la dependencia asociada al trámite.
    */
-  cadenaDeLaDependencia: string = '00'+CADENA_DE_LA_DEPENDENCIA;
+  cadenaPagoDependencia: string = '00' + CADENA_PAGO_DEPENDENCIA;
 
   /**
    * Importe de pago requerido para el trámite.
    */
-  importDePago: number = IMPORT_DE_PAGO;
+  impPago: number = IMP_PAGO;
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
@@ -61,15 +55,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
-   /**
+  /**
    * Constructor del componente PagoDeDerechosComponent.
    * Inicializa los servicios y dependencias necesarias para gestionar el estado
    * y los datos relacionados con el pago de derechos.
-   *
-   * {AutorizacionesDeVidaSilvestreService} servicioVidaSilvestre - Servicio para gestionar autorizaciones de vida silvestre.
-   * {Tramite230901Store} tramite230901Store - Almacén para gestionar el estado del trámite "230901".
-   * {Tramite230901Query} tramite230901Query - Servicio de consulta para acceder al estado del trámite "230901".
-   * {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
    */
   constructor(
     public servicioVidaSilvestre: AutorizacionesDeVidaSilvestreService,
@@ -89,7 +78,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.servicioVidaSilvestre.inicializaPagoDeDerechosDatosCatalogos();
     this.tramite230901Query.selectSolicitud$
       .pipe(takeUntil(this.notificadorDestruccion$))
-      .subscribe((estado) => {
+      .subscribe((estado: Solicitud230901State) => {
         this.estadoSolicitud230901 = estado;
       });
 
@@ -98,29 +87,29 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Crea el formulario reactivo para capturar los datos del pago de derechos.
-   * Algunos campos, como `claveDeReferencia`, `cadenaDeLaDependencia` y `importeDePago`,
+   * Algunos campos, como `claveDeReferencia`, `cadenaPagoDependencia` y `impPago`,
    * están deshabilitados porque no deben ser editados por el usuario.
    */
   crearFormularioPagoDerechos(): void {
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.claveDeReferencia),
-      cadenaDeLaDependencia: new FormControl(this.cadenaDeLaDependencia),
+      cadenaPagoDependencia: new FormControl(this.cadenaPagoDependencia),
       banco: new FormControl(this.estadoSolicitud230901.bancoseleccionado, Validators.required),
       llaveDePago: new FormControl(this.estadoSolicitud230901.llaveDePago, Validators.required),
-      fechaDePago: new FormControl(this.estadoSolicitud230901.fechaDePago, Validators.required),
-      importeDePago: new FormControl(this.importDePago),
+      fecPago: new FormControl(this.estadoSolicitud230901.fecPago, Validators.required),
+      impPago: new FormControl(this.impPago),
     });
 
     this.formularioPagoDerechos.get('claveDeReferencia')?.disable();
-    this.formularioPagoDerechos.get('cadenaDeLaDependencia')?.disable();
-    this.formularioPagoDerechos.get('importeDePago')?.disable();
+    this.formularioPagoDerechos.get('cadenaPagoDependencia')?.disable();
+    this.formularioPagoDerechos.get('impPago')?.disable();
   }
 
   /**
    * Maneja la selección del banco en el formulario.
    * Actualiza el estado del almacén con el banco seleccionado.
    */
-  seleccionarBanco(): void {
+  manejarSeleccionBanco(): void {
     this.tramite230901Store.setbancoseleccionado(
       this.formularioPagoDerechos.get('banco')?.value
     );
@@ -130,7 +119,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Maneja los cambios en el campo "Llave de Pago".
    * Actualiza el estado del almacén con la llave de pago proporcionada.
    */
-  cambiarLlaveDePago(): void {
+  manejarCambioLlavePago(): void {
     this.tramite230901Store.setLlaveDePago(
       this.formularioPagoDerechos.get('llaveDePago')?.value
     );
@@ -140,12 +129,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Maneja los cambios en el campo "Fecha de Pago".
    * Actualiza el estado del almacén con la fecha de pago proporcionada.
    */
-  cambiarFechaDePago(nuevoValor: string): void {
+  manejarCambioFechaPago(nuevoValor: string): void {
     this.formularioPagoDerechos.patchValue({
-      fechaDePago: nuevoValor,
+      fecPago: nuevoValor,
     });
     this.tramite230901Store.setFechaDePago(
-      this.formularioPagoDerechos.get('fechaDePago')?.value
+      this.formularioPagoDerechos.get('fecPago')?.value
     );
   }
 

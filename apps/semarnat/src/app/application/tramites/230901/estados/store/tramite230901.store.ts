@@ -47,7 +47,7 @@ export interface Solicitud230901State {
   /**
    * Fecha de pago registrada en el trámite.
    */
-  fechaDePago: Date | null;
+  fecPago: Date | null;
 }
 
 /**
@@ -66,7 +66,7 @@ export function createInitialState(): Solicitud230901State {
     mercanciaTablaDatos: [],
     bancoseleccionado: '',
     llaveDePago: '',
-    fechaDePago: null,
+    fecPago: null,
   };
 }
 

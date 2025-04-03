@@ -20,14 +20,14 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="cadenaDeLaDependencia"
+            <label class="control-label" for="cadenaPagoDependencia"
               >Cadena de la dependencia*:</label
             >
             <input
-            id="cadenaDeLaDependencia"
+            id="cadenaPagoDependencia"
             type="number"
             class="form-control"
-            formControlName="cadenaDeLaDependencia"
+            formControlName="cadenaPagoDependencia"
               placeholder="00130090940161"
               [required]="true"
             />
@@ -41,7 +41,7 @@
               [catalogo]="this.servicioVidaSilvestre.bancos"
               [label]="'Banco'"
               [required]="true"
-              (change)="seleccionarBanco()"
+              (change)="manejarSeleccionBanco()"
             ></app-catalogo-select>
           </div>
         </div>
@@ -53,7 +53,7 @@
             <label class="control-label" for="llaveDePago">Llave de pago*:</label>
             <input class="form-control" id="llaveDePago" type="text" formControlName="llaveDePago" [required]="true"
               [class.is-invalid]="formularioPagoDerechos.get('llaveDePago')?.touched && formularioPagoDerechos.get('llaveDePago')?.invalid"
-              (change)="cambiarLlaveDePago()">
+              (change)="manejarCambioLlavePago()">
             <div class="invalid-feedback"
               *ngIf="formularioPagoDerechos.get('llaveDePago')?.touched && formularioPagoDerechos.get('llaveDePago')?.invalid">
               <span *ngIf="formularioPagoDerechos.get('llaveDePago')?.hasError('required')">Este campo es
@@ -62,25 +62,25 @@
           </div>
         </div>
         <div class="col-md-4">
-          <input-fecha [setFecha]="formularioPagoDerechos.get('fechaDePago')?.value" [datos]="fechaFinalConfiguracion"
-            (valorCambiado)="cambiarFechaDePago($event)"
-            [class.is-invalid]="formularioPagoDerechos.get('fechaDePago')?.touched && formularioPagoDerechos.get('fechaDePago')?.invalid">
+          <input-fecha [setFecha]="formularioPagoDerechos.get('fecPago')?.value" [datos]="fechaFinalConfiguracion"
+            (valorCambiado)="manejarCambioFechaPago($event)"
+            [class.is-invalid]="formularioPagoDerechos.get('fecPago')?.touched && formularioPagoDerechos.get('fecPago')?.invalid">
           </input-fecha>
           <div class="invalid-feedback"
-            *ngIf="formularioPagoDerechos.get('fechaDePago')?.touched && formularioPagoDerechos.get('fechaDePago')?.invalid">
-            <span *ngIf="formularioPagoDerechos.get('fechaDePago')?.hasError('required')">Este campo es obligatorio.</span>
+            *ngIf="formularioPagoDerechos.get('fecPago')?.touched && formularioPagoDerechos.get('fecPago')?.invalid">
+            <span *ngIf="formularioPagoDerechos.get('fecPago')?.hasError('required')">Este campo es obligatorio.</span>
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="control-label" for="importeDePago"
+            <label class="control-label" for="impPago"
               >Importe de pago*:</label
             >
             <input
               class="form-control"
-              id="importeDePago"
+              id="impPago"
               type="number"
-              formControlName="importeDePago"
+              formControlName="impPago"
               [required]="true"
             />
           </div>

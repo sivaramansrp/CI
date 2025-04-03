@@ -1,9 +1,30 @@
-import { AQUANDAS_CROSSLIST_LABEL, MENSAJE_DE_ALERTA_MERCANCIA, MOVIMIENTO_CROSSLIST_LABEL } from '../../enum/autorizaciones.enum';
+import {
+  AQUANDAS_CROSSLIST_LABEL,
+  MENSAJE_DE_ALERTA_MERCANCIA,
+  MOVIMIENTO_CROSSLIST_LABEL,
+} from '../../enum/autorizaciones.enum';
+import {
+  Catalogo,
+  ConfiguracionColumna,
+  CrossListLable,
+  CrosslistComponent,
+  REGEX_SEPARADO_POR_COMAS,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConfiguracionColumna, CrossListLable, CrosslistComponent, REGEX_SEPARADO_POR_COMAS, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import {
+  CrosslistBoton,
+  OBTENER_BOTONES_CROSSLIST,
+} from '../../enum/crosslist-botons.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MERCANCIA_TABLA_CONFIGURACION, MercanciaConfiguracionItem } from '../../enum/mercancia-tabla.enum';
-import { Solicitud230901State, Tramite230901Store } from '../../estados/store/tramite230901.store';
+import {
+  MERCANCIA_TABLA_CONFIGURACION,
+  MercanciaConfiguracionItem,
+} from '../../enum/mercancia-tabla.enum';
+import {
+  Solicitud230901State,
+  Tramite230901Store,
+} from '../../estados/store/tramite230901.store';
 import { Subject, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
@@ -18,7 +39,6 @@ import { Tramite230901Query } from '../../estados/query/tramite230901.query';
   styleUrls: ['./datos-solicitud.component.css'],
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
-
   /**
    * Referencia al componente Crosslist para gestionar listas dinámicas.
    */
@@ -50,48 +70,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   solicitud230901State!: Solicitud230901State;
 
   /**
-   * Configuración de botones para la lista dinámica de aduanas.
-   */
-  crossListBotons = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-default',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.agregar('t');
-        }
-      },
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-primary',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.agregar('');
-        }
-      },
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-primary',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.quitar('');
-        }
-      },
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      funcion: (): void => {
-        if (this.crosslistComponent) {
-          this.crosslistComponent.quitar('t');
-        }
-      },
-    },
-  ];
-
-  /**
    * Etiquetas para las listas dinámicas de aduanas.
    */
   aquandasLabel: CrossListLable = AQUANDAS_CROSSLIST_LABEL;
@@ -99,7 +77,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Botones configurados para la lista dinámica de aduanas.
    */
-  aduanasBotons = this.crossListBotons;
+  aduanasBotons!: CrosslistBoton[];
 
   /**
    * Lista original de aduanas disponibles.
@@ -119,7 +97,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Botones configurados para la lista dinámica de movimientos.
    */
-  movimientoBotons = this.crossListBotons;
+  movimientoBotons!: CrosslistBoton[];
 
   /**
    * Lista original de movimientos disponibles.
@@ -134,7 +112,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas para la tabla de mercancías.
    */
-  configuracionTabla: ConfiguracionColumna<MercanciaConfiguracionItem>[] = MERCANCIA_TABLA_CONFIGURACION;
+  configuracionTabla: ConfiguracionColumna<MercanciaConfiguracionItem>[] =
+    MERCANCIA_TABLA_CONFIGURACION;
 
   /**
    * Tipo de selección para la tabla dinámica.
@@ -144,27 +123,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Datos de la tabla de mercancías.
    */
-  tablaDatos: MercanciaConfiguracionItem[] = [
-    {
-      fraccionArancelaria: '12345678',
-      otraFraccion: false,
-      descripcion: 'Descripción de la mercancía',
-      rendimientoProducto: 'Rendimiento del producto',
-      clasificacionTaxonomica: 'Clasificación taxonómica',
-      nombreCientifico: 'Nombre científico',
-      nombreComun: 'Nombre común',
-      marca: 'Marca de la mercancía',
-      cantidad: 10,
-      unidadMedida: 'Unidad de medida',
-      paisOrigen: 'País de origen',
-      paisProcedencia: 'País de procedencia',
-    },
-  ];
+  tablaDatos!: MercanciaConfiguracionItem[];
 
   /**
    * Fila seleccionada en la tabla de mercancías.
    */
   filaSeleccionada!: MercanciaConfiguracionItem;
+
+  /**
+   * Indica si un archivo está seleccionado.
+   */
+  isFileSelected: boolean = false;
 
   /**
    * Indica si se debe mostrar el modal de datos de mercancía.
@@ -182,6 +151,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   public alert_message: string = MENSAJE_DE_ALERTA_MERCANCIA;
 
   /**
+   * Indica si se está realizando una operación de actualización.
+   */
+  esOperacionDeActualizacion: boolean = false;
+
+  /**
    * Constructor del componente.
    * autorizacionesDeVidaSilvestreService Servicio para manejar datos relacionados con autorizaciones de vida silvestre.
    * tramite230901Store Almacén de estado para el trámite 230901.
@@ -196,7 +170,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   ) {
     // No se realiza ninguna acción aquí en el constructor.
   }
-  
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -210,69 +183,115 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud230901State = state;
       });
 
-    this.createFormSolitude();
-    this.onTipoMovimientoChange();
-}
+    this.aduanasBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
+    this.movimientoBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
+
+    this.crearFormularioSolicitud();
+    this.manejarCambioTipoMovimiento();
+    this.tablaDatos = this.solicitud230901State.mercanciaTablaDatos;
+  }
 
   /**
    * Crea el formulario reactivo para los datos de la solicitud.
    */
-  createFormSolitude(): void {
+  crearFormularioSolicitud(): void {
     this.formSolicitud = this.formBuilder.group({
-      tipodemovimiento: [this.solicitud230901State.tipoDeMovimiento, Validators.required],
-      tipoderegimen: [this.solicitud230901State.tipoDeRegimen, Validators.required],
+      tipodemovimiento: [
+        this.solicitud230901State.tipoDeMovimiento,
+        Validators.required,
+      ],
+      tipoderegimen: [
+        this.solicitud230901State.tipoDeRegimen,
+        Validators.required,
+      ],
     });
   }
 
   /**
-   * Crea el formulario reactivo para los datos de la mercancía.
-   * data Datos iniciales para el formulario de mercancía.
+   * Crea un nuevo formulario de mercancía con valores predeterminados o datos proporcionados.
+   * Si se proporcionan datos, estos sobrescriben los valores predeterminados.
    */
-  createFormMercancia(data?: MercanciaConfiguracionItem): void {
+  crearNuevoFormularioMercancia(data?: MercanciaConfiguracionItem): void {
+    const DEFAULT_DATA: MercanciaConfiguracionItem = {
+      id: 0,
+      fraccionArancelaria: '',
+      otraFraccion: false,
+      descripcion: '',
+      rendimientoProducto: '',
+      clasificacionTaxonomica: '',
+      nombreCientifico: '',
+      nombreComun: '',
+      marca: '',
+      cantidad: '',
+      unidadMedida: '',
+      paisOrigen: '',
+      paisProcedencia: '',
+      ...data,
+    };
+
     this.formMercancia = this.formBuilder.group({
-      fraccionArancelaria: [data?.fraccionArancelaria || '', Validators.required],
-      fraccionDescripcion: [data?.descripcion || ''],
-      otraFraccion: [data?.otraFraccion || false],
-      descripcion: [data?.descripcion || '', Validators.required],
-      rendimientoProducto: [data?.rendimientoProducto || ''],
-      clasificacionTaxonomica: [data?.clasificacionTaxonomica || '', Validators.required],
-      nombreCientifico: [data?.nombreCientifico || '', Validators.required],
-      nombreComun: [data?.nombreComun || '', Validators.required],
-      marca: [data?.marca || '',Validators.required],
-      cantidad: [data?.cantidad || '',[Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)]],
-      unidadMedida: [data?.unidadMedida || '', Validators.required],
-      paisOrigen: [data?.paisOrigen || '', Validators.required],
-      paisProcedencia: [data?.paisProcedencia || '', Validators.required],
+      id: [DEFAULT_DATA.id],
+      fraccionArancelaria: [
+        DEFAULT_DATA.fraccionArancelaria,
+        Validators.required,
+      ],
+      fraccionDescripcion: [''],
+      otraFraccion: [DEFAULT_DATA.otraFraccion],
+      descripcion: [DEFAULT_DATA.descripcion, Validators.required],
+      rendimientoProducto: [DEFAULT_DATA.rendimientoProducto],
+      clasificacionTaxonomica: [
+        DEFAULT_DATA.clasificacionTaxonomica,
+        Validators.required,
+      ],
+      nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
+      nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
+      marca: [DEFAULT_DATA.marca, Validators.required],
+      cantidad: [
+        DEFAULT_DATA.cantidad,
+        [Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)],
+      ],
+      unidadMedida: [DEFAULT_DATA.unidadMedida, Validators.required],
+      paisOrigen: [DEFAULT_DATA.paisOrigen, Validators.required],
+      paisProcedencia: [DEFAULT_DATA.paisProcedencia, Validators.required],
     });
 
     this.formMercancia.get('fraccionDescripcion')?.disable();
 
-    this.formMercancia.get('otraFraccion')?.valueChanges.subscribe((checked) => {
-      if (checked) {
-        this.formMercancia.addControl(
-          'fraccionVigenteTIGIE',
-          this.formBuilder.control('', Validators.required)
-        );
-        this.formMercancia.get('fraccionArancelaria')?.setValue('0');
-        this.formMercancia.get('fraccionDescripcion')?.reset();
-        this.otraFraccionSeleccionada = true;
-      } else {
-        this.formMercancia.removeControl('fraccionVigenteTIGIE');
-        this.otraFraccionSeleccionada = false;
-      }
-    });
+    this.formMercancia
+      .get('otraFraccion')
+      ?.valueChanges.subscribe((checked) => {
+        if (checked) {
+          this.formMercancia.addControl(
+            'fraccionVigenteTIGIE',
+            this.formBuilder.control('')
+          );
+          this.formMercancia.get('fraccionArancelaria')?.setValue('0');
+          this.formMercancia.get('fraccionArancelaria')?.markAsTouched();
+          this.formMercancia
+            .get('fraccionArancelaria')
+            ?.setErrors({ required: true });
+          this.formMercancia.get('fraccionDescripcion')?.reset();
+          this.otraFraccionSeleccionada = true;
+        } else {
+          this.formMercancia.removeControl('fraccionVigenteTIGIE');
+          this.otraFraccionSeleccionada = false;
+        }
+      });
   }
 
   /**
    * Maneja el cambio en el tipo de movimiento seleccionado.
    */
-  onTipoMovimientoChange(): void {
-    const TIPO_DE_MOVIMIENTO = this.formSolicitud.get('tipodemovimiento')?.value;
+  manejarCambioTipoMovimiento(): void {
+    const TIPO_DE_MOVIMIENTO =
+      this.formSolicitud.get('tipodemovimiento')?.value;
     this.tramite230901Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
     if (TIPO_DE_MOVIMIENTO === '1') {
-      this.aduanasBotons = this.crossListBotons.slice(1);
+      this.aduanasBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent).slice(
+        1
+      );
     } else {
-      this.aduanasBotons = this.crossListBotons;
+      this.aduanasBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
     }
     this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
   }
@@ -280,82 +299,183 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Maneja el cambio en el tipo de régimen seleccionado.
    */
-  onTipoRegimenChange(): void {
-    this.tramite230901Store.setTipoDeRegimen(this.formSolicitud.get('tipoderegimen')?.value);
+  manejarCambioTipoRegimen(): void {
+    this.tramite230901Store.setTipoDeRegimen(
+      this.formSolicitud.get('tipoderegimen')?.value
+    );
   }
 
   /**
    * Maneja la fila seleccionada en la tabla de mercancías.
    * fila Fila seleccionada.
    */
-  hadleFilaSeleccionada(fila: MercanciaConfiguracionItem): void {
-    this.filaSeleccionada = fila;
-    this.createFormMercancia(fila);
-    this.showMercanciaFormModal();
+  manejarFilaSeleccionada(fila: MercanciaConfiguracionItem[]): void {
+    if (fila.length === 0) {
+      this.isFileSelected = false;
+      return;
+    }
+    this.filaSeleccionada = fila[fila.length - 1];
+    this.isFileSelected = true;
+  }
+
+  /**
+   * Actualiza la fila seleccionada con los datos más recientes de la tabla.
+   */
+  actualizarFilaSeleccionada(): void {
+    const UPDATED_DATA = this.tablaDatos.find(
+      (item) => item.id === this.filaSeleccionada.id
+    );
+
+    if (UPDATED_DATA) {
+      this.filaSeleccionada = { ...UPDATED_DATA };
+    }
+  }
+
+  /**
+   * Modifica los datos de una fila seleccionada en la tabla de mercancías.
+   * Actualiza el formulario de mercancía con los datos de la fila seleccionada
+   * y abre el modal para editar los datos.
+   */
+  modificarItemMercancia(): void {
+    this.esOperacionDeActualizacion = true;
+    const GET_INDEX = (array: Catalogo[], value: string): number =>
+      array.findIndex((item) => item.descripcion === value) + 1;
+
+    this.actualizarFilaSeleccionada();
+
+    const MERCANCIA_CONFIGURACION_ITEM: MercanciaConfiguracionItem = {
+      id: this.filaSeleccionada.id,
+      fraccionArancelaria: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
+        this.filaSeleccionada.fraccionArancelaria
+      ).toString(),
+      otraFraccion: this.filaSeleccionada.otraFraccion,
+      descripcion: this.filaSeleccionada.descripcion,
+      rendimientoProducto: this.filaSeleccionada.rendimientoProducto,
+      clasificacionTaxonomica: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
+        this.filaSeleccionada.clasificacionTaxonomica
+      ).toString(),
+      nombreCientifico: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.nombreCientifico,
+        this.filaSeleccionada.nombreCientifico
+      ).toString(),
+      nombreComun: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.nombreComun,
+        this.filaSeleccionada.nombreComun
+      ).toString(),
+      marca: this.filaSeleccionada.marca,
+      cantidad: this.filaSeleccionada.cantidad,
+      unidadMedida: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.unidadMedida,
+        this.filaSeleccionada.unidadMedida
+      ).toString(),
+      paisOrigen: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.paisOrigen,
+        this.filaSeleccionada.paisOrigen
+      ).toString(),
+      paisProcedencia: GET_INDEX(
+        this.autorizacionesDeVidaSilvestreService.paisProcedencia,
+        this.filaSeleccionada.paisProcedencia
+      ).toString(),
+    };
+
+    this.crearNuevoFormularioMercancia(MERCANCIA_CONFIGURACION_ITEM);
+    this.alternarModalMercancia();
   }
 
   /**
    * Alterna la visibilidad del modal de datos de mercancía.
    */
-  toggleDivMercancia(): void {
+  alternarModalMercancia(): void {
     this.showDatosMercanciaModal = !this.showDatosMercanciaModal;
   }
 
   /**
    * Muestra el formulario de mercancía en un modal.
    */
-  showMercanciaFormModal(): void {
+  mostrarFormularioMercanciaModal(): void {
+    this.esOperacionDeActualizacion = false;
     this.autorizacionesDeVidaSilvestreService.inicializaMercanciaDatosCatalogos();
-    this.createFormMercancia();
-    this.toggleDivMercancia();
+    this.crearNuevoFormularioMercancia();
+    this.alternarModalMercancia();
   }
 
-  esInvalido(formControlName: string): boolean {
+  /**
+   * Valida si un control del formulario es inválido.
+   * formControlName Nombre del control del formulario.
+   * `true` si el control es inválido y ha sido tocado o modificado, de lo contrario `false`.
+   */
+  esControlInvalido(formControlName: string): boolean {
     const CONTROL = this.formMercancia.get(formControlName);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
-    
 
   /**
-   * Envía el formulario de mercancía y agrega los datos a la tabla.
+   * Envía los datos del formulario de mercancía.
+   * Valida el formulario, actualiza o agrega una nueva fila en la tabla de mercancías,
+   * y actualiza el estado del almacén correspondiente.
    */
-  submitMercanciaForm(): void {
-    if(this.formMercancia.invalid) {
+  enviarFormularioMercancia(): void {
+    if (this.formMercancia.invalid) {
       return;
     }
+
+    const GET_DESCRIPTION = (array: Catalogo[], index: number): string =>
+      array[index - 1]?.descripcion || '';
+
     const TABLA_ROW: MercanciaConfiguracionItem = {
-      fraccionArancelaria: this.autorizacionesDeVidaSilvestreService.fraccionArancelaria[
+      id: this.esOperacionDeActualizacion
+        ? this.formMercancia.get('id')?.value
+        : this.tablaDatos.length + 1,
+      fraccionArancelaria: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
         this.formMercancia.get('fraccionArancelaria')?.value
-      ].descripcion,
+      ),
       otraFraccion: this.formMercancia.get('otraFraccion')?.value,
       descripcion: this.formMercancia.get('descripcion')?.value,
       rendimientoProducto: this.formMercancia.get('rendimientoProducto')?.value,
-      clasificacionTaxonomica: this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica[
-        this.formMercancia.get('clasificacionTaxonomica')?.value - 1
-      ].descripcion,
-      nombreCientifico: this.autorizacionesDeVidaSilvestreService.nombreCientifico[
-        this.formMercancia.get('nombreCientifico')?.value - 1
-      ].descripcion,
-      nombreComun: this.autorizacionesDeVidaSilvestreService.nombreComun[
-        this.formMercancia.get('nombreComun')?.value - 1
-      ].descripcion,
+      clasificacionTaxonomica: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
+        this.formMercancia.get('clasificacionTaxonomica')?.value
+      ),
+      nombreCientifico: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.nombreCientifico,
+        this.formMercancia.get('nombreCientifico')?.value
+      ),
+      nombreComun: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.nombreComun,
+        this.formMercancia.get('nombreComun')?.value
+      ),
       marca: this.formMercancia.get('marca')?.value,
       cantidad: this.formMercancia.get('cantidad')?.value,
-      unidadMedida: this.autorizacionesDeVidaSilvestreService.unidadMedida[
-        this.formMercancia.get('unidadMedida')?.value - 1
-      ].descripcion,
-      paisOrigen: this.autorizacionesDeVidaSilvestreService.paisOrigen[
-        this.formMercancia.get('paisOrigen')?.value - 1
-      ].descripcion,
-      paisProcedencia: this.autorizacionesDeVidaSilvestreService.paisProcedencia[
-        this.formMercancia.get('paisProcedencia')?.value - 1
-      ].descripcion,
+      unidadMedida: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.unidadMedida,
+        this.formMercancia.get('unidadMedida')?.value
+      ),
+      paisOrigen: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.paisOrigen,
+        this.formMercancia.get('paisOrigen')?.value
+      ),
+      paisProcedencia: GET_DESCRIPTION(
+        this.autorizacionesDeVidaSilvestreService.paisProcedencia,
+        this.formMercancia.get('paisProcedencia')?.value
+      ),
     };
-    this.tablaDatos.push(TABLA_ROW);
+    const EXISTING_INDEX = this.tablaDatos.findIndex(
+      (item) => item.id === TABLA_ROW.id
+    );
+
+    if (EXISTING_INDEX > -1) {
+      this.tablaDatos[EXISTING_INDEX] = TABLA_ROW;
+    } else {
+      this.tablaDatos = [...this.tablaDatos, TABLA_ROW];
+    }
+    this.tramite230901Store.setMercanciaTablaDatos(this.tablaDatos);
     this.formMercancia.reset();
-    this.showDatosMercanciaModal = !this.showDatosMercanciaModal;
+    this.alternarModalMercancia();
   }
 
   /**

@@ -2,6 +2,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 /**
  * Interfaz que define la estructura de un elemento de configuración para la tabla de terceros.
+ * Representa los datos asociados a un destinatario, como país, ciudad, entidad federativa, domicilio y código postal.
  */
 export interface DestinatarioConfiguracionItem {
   /**
@@ -30,8 +31,9 @@ export interface DestinatarioConfiguracionItem {
   codigoPostal: number;
 }
 
-/*
+/**
  * Configuración de las columnas para la tabla de terceros.
+ * Define cómo se mostrarán los datos de los destinatarios en la tabla, incluyendo encabezados, claves y orden.
  */
 export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<DestinatarioConfiguracionItem>[] = [
   {
@@ -106,8 +108,9 @@ export const DESTINATARIO_TABLA_CONFIGURACION: ConfiguracionColumna<Destinatario
   },
 ];
 
-/*
+/**
  * Entrada predeterminada para la tabla de destinatarios.
+ * Proporciona valores iniciales para los datos de un destinatario.
  */
 export const DESTINATARIO_TABLE_ENTRY = {
   /**

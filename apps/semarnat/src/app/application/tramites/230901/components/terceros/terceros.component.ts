@@ -28,7 +28,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
   /**
    * Estado actual de la solicitud "230901".
-   * Este estado se actualiza al suscribirse al observable `selectSolicitud$`.
+   * Este estado se actualiza al suscribirse al observable selectSolicitud$.
    */
   solicitud230901State!: Solicitud230901State;
 
@@ -36,15 +36,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
    */
   destroyNotifier$ = new Subject<void>();
-/**
-  * Indica si el popup está abierto.
-  */
- isPopupOpen = false;
 
- /**
-  * Indica si el popup está cerrado.
-  */
- isPopupClose = true;
+  /**
+   * Indica si el popup está abierto.
+   */
+  isPopupOpen = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  isPopupClose = true;
 
   /**
    * Configuración de las columnas de la tabla de terceros.
@@ -64,16 +65,15 @@ export class TercerosComponent implements OnInit, OnDestroy {
   tablaDatos: DestinatarioConfiguracionItem[] = [];
 
   /**
- * 
- * Constructor del componente TercerosComponent.
- * Inicializa los servicios y dependencias necesarias para gestionar el estado
- * y los datos relacionados con terceros.
- *
- * {AutorizacionesDeVidaSilvestreService} autorizacionesDeVidaSilvestreService - Servicio para gestionar autorizaciones de vida silvestre.
- * {Tramite230901Store} tramite230901Store - Almacén para gestionar el estado del trámite "230901".
- * {Tramite230901Query} tramite230901Query - Servicio de consulta para acceder al estado del trámite "230901".
- * {FormBuilder} formBuilder - Servicio para construir formularios reactivos.
- */
+   * Indica si el botón de modificar está habilitado.
+   */
+  isModificarEnabled: boolean = false;
+
+  /**
+   * Constructor del componente TercerosComponent.
+   * Inicializa los servicios y dependencias necesarias para gestionar el estado
+   * y los datos relacionados con terceros.
+   */
   constructor(
     public autorizacionesDeVidaSilvestreService: AutorizacionesDeVidaSilvestreService,
     private tramite230901Store: Tramite230901Store,
@@ -96,15 +96,15 @@ export class TercerosComponent implements OnInit, OnDestroy {
         this.solicitud230901State = state;
       });
 
-    this.createDestinatarioForm();
-    this.onEntidadFederativaChange();
+    this.crearFormularioDestinatario();
+    this.manejarCambioEntidadFederativa();
   }
 
   /**
    * Crea el formulario reactivo para capturar la entidad federativa del destinatario.
    * Inicializa el valor del formulario con el estado actual de la solicitud.
    */
-  createDestinatarioForm(): void {
+  crearFormularioDestinatario(): void {
     this.destinatarioForm = this.formBuilder.group({
       entidadFederativa: [
         this.solicitud230901State.entidadFederativa,
@@ -118,26 +118,36 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Actualiza el estado del almacén y agrega una entrada a la tabla de datos
    * si la entidad federativa es válida y la tabla está vacía.
    */
-  onEntidadFederativaChange(): void {
-    const ENTIDAD_FEDERATIVE = this.destinatarioForm.get('entidadFederativa')?.value;
-    if (ENTIDAD_FEDERATIVE && this.tablaDatos.length === 0) {
-      this.tramite230901Store.setEntidadFederativa(ENTIDAD_FEDERATIVE);
+  manejarCambioEntidadFederativa(): void {
+    const ENTIDAD_FEDERATIVA = this.destinatarioForm.get('entidadFederativa')?.value;
+    if (ENTIDAD_FEDERATIVA && this.tablaDatos.length === 0) {
+      this.tramite230901Store.setEntidadFederativa(ENTIDAD_FEDERATIVA);
       this.tablaDatos.push(DESTINATARIO_TABLE_ENTRY);
     }
   }
 
   /**
-   * Abre el popup.
+   * Maneja la fila seleccionada en la tabla de terceros.
+   * Habilita o deshabilita el botón de modificar según la selección.
    */
-  openPopup():void {
-    this.isPopupOpen = true;
-    this.tramite230901Store.setTercerosPopupState(this.isPopupOpen);
+  manejarFilaSeleccionada(filaSeleccionada: DestinatarioConfiguracionItem[]): void {
+    this.isModificarEnabled = filaSeleccionada.length > 0;
+  }
+
+  /**
+   * Abre el popup si el botón de modificar está habilitado.
+   */
+  abrirPopup(): void {
+    if (this.isModificarEnabled) {
+      this.isPopupOpen = true;
+      this.tramite230901Store.setTercerosPopupState(this.isPopupOpen);
+    }
   }
 
   /**
    * Cierra el popup.
    */
-  closePopup():void {
+  cerrarPopup(): void {
     this.isPopupOpen = false;
     this.isPopupClose = false;
     this.tramite230901Store.setTercerosPopupState(this.isPopupOpen);
