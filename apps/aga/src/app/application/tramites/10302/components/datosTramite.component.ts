@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AlertComponent,
+  CATALOGOS_ID,
   CatalogoSelectComponent,
   CatalogosSelect,
   TableComponent,
@@ -23,8 +24,9 @@ import {
 } from '../estados/tramite10302.store';
 import { Tramite10302Query } from '../estados/tramite10302.query';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
 import { Modal } from 'bootstrap';
+import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -63,6 +65,21 @@ export class DatosTramiteComponent {
    */
   private subscriptions: Subscription[] = [];
   showTabla = true;
+  
+  /**
+   * Encabezado de la tabla de mercancías.
+   */
+  public mercanciaHeaderData: string[] = [];
+
+  /**
+   * Cuerpo de la tabla de mercancías.
+   */
+  public mercanciaBodyData: unknown = [];
+
+  /**
+   * Datos de la tabla de mercancía.
+   */
+  public getMercanciaTableData = mercanciaTable;
   /**
    * Catálogo de aduanas.
    */
@@ -72,6 +89,10 @@ export class DatosTramiteComponent {
    */
   getAduanaIngresaraSubscription!: Subscription;
   fechasSeleccionadas: Catalogo[] = [];
+  tipoDeMercancia!: Catalogo[];
+  condicionMercancia!: Catalogo[];
+  unidadMedida!: Catalogo[];
+  ano!: Catalogo[];
 
   /**
    * Referencia al elemento del modal.
@@ -87,21 +108,8 @@ export class DatosTramiteComponent {
   //  */
   // TEXTOS = TEXTOS;
 
-  /**
-   * Encabezados de la tabla.
-   */
-  encabezadosTabla: string[] = [
-    'Fines a los que se destinará la mercancía',
-    'Tipo de mercancía',
-    'Año',
-    'Modelo',
-    'Marca',
-    'Número de serie',
-    'Uso específico de la mercancía',
-  ];
-
   constructor(
-    private exencionImpuesto: ExencionImpuestosService,
+    private exencionImpuestoService: ExencionImpuestosService,
     private store: Tramite10302Store,
     private query: Tramite10302Query,
     private fb: FormBuilder,
@@ -112,6 +120,7 @@ export class DatosTramiteComponent {
 
   ngOnInit(): void {
     this.getAduanaIngresara();
+    this.inicializaCatalogos();
 
     this.query.selectSolicitud$
       .pipe(
@@ -138,6 +147,7 @@ export class DatosTramiteComponent {
         };
       })
     );
+    this.obtenerMercancia();
   }
 
   /**
@@ -211,26 +221,73 @@ export class DatosTramiteComponent {
       }),
     });
     
-    // this.agregarMercanciasForm = this.fb.group({
-    //   datosMercancia: this.fb.group({
-    //     tipoDeMercancia: [
-    //       this.solicitudState?.tipoDeMercancia,
-    //       Validators.required
-    //     ],
-    //     unidadMedida: [
-    //       this.solicitudState?.unidadMedida,
-    //       Validators.required
-    //     ],
-    //     condicionMercancia: [
-    //       this.solicitudState?.condicionMercancia,
-    //       Validators.required
-    //     ]
-    //   }),
-    // });
+    this.agregarMercanciasForm = this.fb.group({
+      datosMercancia: this.fb.group({
+        tipoDeMercancia: [
+          this.solicitudState?.tipoDeMercancia,
+          Validators.required
+        ],
+        condicionMercancia: [
+          this.solicitudState?.condicionMercancia,
+          Validators.required
+        ],
+        unidadMedida: [
+          this.solicitudState?.unidadMedida,
+          Validators.required
+        ],
+        ano: [
+          this.solicitudState?.ano,
+          Validators.required
+        ]
+      }),
+    });
+  }
+
+  private inicializaCatalogos(): void {
+    const TIPO_DE_MERCANCIA$ = this.exencionImpuestoService
+      .getTipoDeMercancia()
+      .pipe(
+        map((resp) => {
+          this.tipoDeMercancia = resp.data;
+        })
+      );
+
+      const CONDICION_MERCANCIA$ = this.exencionImpuestoService
+      .getCondicionMercancia()
+      .pipe(
+        map((resp) => {
+          this.condicionMercancia = resp.data;
+        })
+      );
+
+      const UNIDAD_MEDIDA$ = this.exencionImpuestoService
+      .getUnidadMedida()
+      .pipe(
+        map((resp) => {
+          this.unidadMedida = resp.data;
+        })
+      );
+
+      const ANO$ = this.exencionImpuestoService
+      .getAno()
+      .pipe(
+        map((resp) => {
+          this.ano = resp.data;
+        })
+      );
+
+      merge(
+        TIPO_DE_MERCANCIA$,
+        CONDICION_MERCANCIA$,
+        UNIDAD_MEDIDA$,
+        ANO$
+      )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe();
   }
 
   getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.exencionImpuesto
+    this.getAduanaIngresaraSubscription = this.exencionImpuestoService
       .getAduanaIngresara()
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -255,7 +312,27 @@ export class DatosTramiteComponent {
   get datosMercancia(): FormGroup {
     return this.tramiteForm.get('datosMercancia') as FormGroup;
   }
+
+  tipoDeMercanciaSeleccion(): void {
+    const TIPO_DE_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value;
+    this.store.setTipoDeMercancia(TIPO_DE_MERCANCIA);
+  }
   
+  condicionMercanciaSeleccion(): void {
+    const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
+    this.store.setCondicionMercancia(CONDICION_MERCANCIA);
+  }
+
+  unidadMedidaSeleccion(): void {
+    const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
+    this.store.setUnidadMedida(UNIDAD_MEDIDA);
+  }
+
+  anoSeleccion(): void {
+    const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
+    this.store.setAno(ANO);
+  }
+
   /**
    * Este método se utiliza para marcar los controles del formulario como tocados. - 10301
    */
@@ -311,6 +388,29 @@ export class DatosTramiteComponent {
     if (this.closeModal) {
       this.closeModal.nativeElement.click();
     }
+  }
+
+  /**
+   * Agrega mercancías al formulario y cierra el modal.
+   * @returns {void}
+   */
+  agregarMercancias(): void {
+    if (!this.agregarMercanciasForm.valid) {
+      return;
+    }
+    const MERCANCIA = this.agregarMercanciasForm.value;
+    this.getMercanciaTableData.mercanciaTable.tableBody.push(MERCANCIA);
+    this.agregarMercanciasForm.reset();
+    this.cerrarModal();
+  }
+
+  limpiarMercancias(): void {
+    // Implementar la lógica para limpiar las mercancías.
+  }
+
+  public obtenerMercancia(): void {
+    this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTable.tableHeader;
+    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTable.tableBody;
   }
 
   /**

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite10302Store} from '../estados/tramite10302.store'
 import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 /**
  * Servicio para obtener datos relacionados con importadores y exportadores.
@@ -30,6 +31,22 @@ export class ExencionImpuestosService {
     ).pipe(
       tap(response => this.store.setAduana(response.data))
     );
+  }
+
+  getTipoDeMercancia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10302/tipo-de-mercancia.json');
+  }
+
+  getCondicionMercancia(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10302/condicion-mercancia.json');
+  }
+
+  getUnidadMedida(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10302/unidad-medida.json');
+  }
+
+  getAno() {
+    return this.http.get<RespuestaCatalogos>('assets/json/10302/ano.json');
   }
 
   // /**
