@@ -282,7 +282,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.restauraSubscription$ = this.tramite110203Query.selectSolicitud$
       .pipe(
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
-        take(1)
+        takeUntil(this.unsubscribe$)
       )
       .subscribe((datosBusqueda) => {
         if (datosBusqueda) {
