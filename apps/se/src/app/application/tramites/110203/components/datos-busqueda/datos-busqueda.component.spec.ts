@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosBusquedaComponent } from './datos-busqueda.component';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { of } from 'rxjs';
@@ -76,6 +76,13 @@ describe('DatosBusquedaComponent', () => {
         { provide: Tramite110203Query, useValue: tramite110203QueryMock },
         { provide: Tramite110203Store, useValue: tramite110203StoreMock },
         { provide: Router, useValue: routerMock },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: new Map() }, // Mock básico del snapshot
+            params: of({ id: '123' }), // Simula parámetros de la ruta
+          },
+        },
       ],
     }).compileComponents();
   });
@@ -124,10 +131,14 @@ describe('DatosBusquedaComponent', () => {
     expect(componente.verTabla).toBe(true);
   });
 
-  it('debería navegar a seleccion-tramite en navigateToSeleccionTramite()', (): void => {
+  it('should navigate to seleccion-tramite in navigateToSeleccionTramite()', (): void => {
     componente.navigateToSeleccionTramite();
-    expect(routerMock.navigate).toHaveBeenCalledWith(['/pago/seleccion-tramite']);
+    expect(routerMock.navigate).toHaveBeenCalledWith(
+      ['../tecnicosdatos'], 
+      expect.objectContaining({ relativeTo: expect.any(Object) }) 
+    );
   });
+  
 
   it('debería llamar a actualizarStore cuando cambian los valores del formulario', (): void => {
     const espiaActualizarStore = jest.spyOn(componente as any, 'actualizarStore');
