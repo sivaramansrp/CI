@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Destinatarios" />
-  <form [formGroup]="destinatarioForm">
+  <form [formGroup]="formularioDestinatario">
     <div class="row">
       <app-catalogo-select
         [catalogo]="autorizacionesDeVidaSilvestreService.entidadFederativa"
@@ -13,9 +13,9 @@
     <label class="row mt-5">Destinatarios*:</label>
     <div class="row mt-4">
       <app-tabla-dinamica
-        [configuracionTabla]="configuracionTabla"
-        [datos]="tablaDatos"
-        [tipoSeleccionTabla]="TablaSeleccion"
+        [configuracionTabla]="configuracionColumnas"
+        [datos]="datosTabla"
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
         (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
       ></app-tabla-dinamica>
     </div>
@@ -23,7 +23,7 @@
     <div
       class="row"
       style="padding-bottom: 20px; text-align: right"
-      *ngIf="tablaDatos.length > 0"
+      *ngIf="datosTabla.length > 0"
     >
       <div>
         <button type="button" class="btn btn-default me-2">
@@ -45,7 +45,7 @@
     <div
       class="row justify-content-end"
       style="padding-bottom: 20px; text-align: right"
-      *ngIf="tablaDatos.length === 0"
+      *ngIf="datosTabla.length === 0"
     >
       <div class="col-md-6">
         <button type="button" class="btn btn-primary">Agregar</button>
@@ -55,8 +55,8 @@
       class="modal"
       tabindex="-1"
       role="dialog"
-      [ngClass]="{ show: isPopupOpen }"
-      [ngStyle]="{ display: isPopupOpen ? 'block' : 'none' }"
+      [ngClass]="{ show: popupAbierto }"
+      [ngStyle]="{ display: popupAbierto ? 'block' : 'none' }"
     >
       <div class="modal-dialog" role="document">
         <div
@@ -79,6 +79,6 @@
         </div>
       </div>
     </div>
-    <div class="modal-backdrop fade show" *ngIf="isPopupOpen"></div>
+    <div class="modal-backdrop fade show" *ngIf="popupAbierto"></div>
   </form>
 </div>

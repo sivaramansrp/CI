@@ -64,9 +64,9 @@ describe('DatosSolicitudComponent', () => {
 
   it('should initialize the form on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.formSolicitud).toBeDefined();
-    expect(component.formSolicitud.get('tipodemovimiento')?.value).toBe('1');
-    expect(component.formSolicitud.get('tipoderegimen')?.value).toBe('A');
+    expect(component.formularioSolicitud).toBeDefined();
+    expect(component.formularioSolicitud.get('tipodemovimiento')?.value).toBe('1');
+    expect(component.formularioSolicitud.get('tipoderegimen')?.value).toBe('A');
   });
 
   it('should call inicializaDatosSolicitudDatosCatalogos on ngOnInit', () => {
@@ -76,7 +76,7 @@ describe('DatosSolicitudComponent', () => {
 
   it('should handle changes in tipoDeMovimiento and update the store', () => {
     component.ngOnInit();
-    component.formSolicitud.get('tipodemovimiento')?.setValue('2');
+    component.formularioSolicitud.get('tipodemovimiento')?.setValue('2');
     component.manejarCambioTipoMovimiento();
     expect(tramite230901StoreMock.setTipoDeMovimiento).toHaveBeenCalledWith('2');
     expect(component.tipoMovimientoSeleccionada).toBe(2);
@@ -84,54 +84,54 @@ describe('DatosSolicitudComponent', () => {
 
   it('should handle changes in tipoDeRegimen and update the store', () => {
     component.ngOnInit();
-    component.formSolicitud.get('tipoderegimen')?.setValue('B');
+    component.formularioSolicitud.get('tipoderegimen')?.setValue('B');
     component.manejarCambioTipoRegimen();
     expect(tramite230901StoreMock.setTipoDeRegimen).toHaveBeenCalledWith('B');
   });
 
-  it('should create formMercancia with default values', () => {
+  it('should create formularioMercancia with default values', () => {
     component.crearNuevoFormularioMercancia();
-    expect(component.formMercancia).toBeDefined();
-    expect(component.formMercancia.get('fraccionArancelaria')?.value).toBe('');
-    expect(component.formMercancia.get('descripcion')?.value).toBe('');
+    expect(component.formularioMercancia).toBeDefined();
+    expect(component.formularioMercancia.get('fraccionArancelaria')?.value).toBe('');
+    expect(component.formularioMercancia.get('descripcion')?.value).toBe('');
   });
 
   it('should toggle showDatosMercanciaModal when alternarModalMercancia is called', () => {
-    component.showDatosMercanciaModal = false;
+    component.mostrarModalDatosMercancia = false;
     component.alternarModalMercancia();
-    expect(component.showDatosMercanciaModal).toBeTruthy();
+    expect(component.mostrarModalDatosMercancia).toBeTruthy();
 
     component.alternarModalMercancia();
-    expect(component.showDatosMercanciaModal).toBeFalsy();
+    expect(component.mostrarModalDatosMercancia).toBeFalsy();
   });
 
   it('should call inicializaMercanciaDatosCatalogos and toggle modal on mostrarFormularioMercanciaModal', () => {
     component.mostrarFormularioMercanciaModal();
     expect(autorizacionesDeVidaSilvestreServiceMock.inicializaMercanciaDatosCatalogos).toHaveBeenCalled();
-    expect(component.showDatosMercanciaModal).toBeTruthy();
+    expect(component.mostrarModalDatosMercancia).toBeTruthy();
   });
 
   it('should validate esControlInvalido for invalid form controls', () => {
     component.crearNuevoFormularioMercancia();
-    component.formMercancia.get('descripcion')?.markAsTouched();
+    component.formularioMercancia.get('descripcion')?.markAsTouched();
     expect(component.esControlInvalido('descripcion')).toBeTruthy();
   });
 
   it('should add a new row to tablaDatos on enviarFormularioMercancia', () => {
     component.crearNuevoFormularioMercancia();
-    component.formMercancia.get('fraccionArancelaria')?.setValue(0);
-    component.formMercancia.get('descripcion')?.setValue('Descripción');
-    component.formMercancia.get('clasificacionTaxonomica')?.setValue(1);
-    component.formMercancia.get('nombreCientifico')?.setValue(1);
-    component.formMercancia.get('nombreComun')?.setValue(1);
-    component.formMercancia.get('unidadMedida')?.setValue(1);
-    component.formMercancia.get('paisOrigen')?.setValue(1);
-    component.formMercancia.get('paisProcedencia')?.setValue(1);
-    component.formMercancia.get('marca')?.setValue('Marca');
-    component.formMercancia.get('cantidad')?.setValue(10);
+    component.formularioMercancia.get('fraccionArancelaria')?.setValue(0);
+    component.formularioMercancia.get('descripcion')?.setValue('Descripción');
+    component.formularioMercancia.get('clasificacionTaxonomica')?.setValue(1);
+    component.formularioMercancia.get('nombreCientifico')?.setValue(1);
+    component.formularioMercancia.get('nombreComun')?.setValue(1);
+    component.formularioMercancia.get('unidadMedida')?.setValue(1);
+    component.formularioMercancia.get('paisOrigen')?.setValue(1);
+    component.formularioMercancia.get('paisProcedencia')?.setValue(1);
+    component.formularioMercancia.get('marca')?.setValue('Marca');
+    component.formularioMercancia.get('cantidad')?.setValue(10);
 
     component.enviarFormularioMercancia();
-    expect(component.tablaDatos.length).toBe(1); // New row added
+    expect(component.datosTablaMercancia.length).toBe(1); // New row added
     expect(tramite230901StoreMock.setMercanciaTablaDatos).toHaveBeenCalled();
   });
 
@@ -152,11 +152,11 @@ describe('DatosSolicitudComponent', () => {
       paisProcedencia: 'País de procedencia',
     };
     component.manejarFilaSeleccionada([mockRow]);
-    expect(component.filaSeleccionada).toEqual(mockRow);
+    expect(component.filaSeleccionadaMercancia).toEqual(mockRow);
   });
 
   it('should update filaSeleccionada with the latest data from tablaDatos', () => {
-    component.tablaDatos = [
+    component.datosTablaMercancia = [
       {
         id: 1, descripcion: 'Item 1',
         fraccionArancelaria: '',
@@ -172,7 +172,7 @@ describe('DatosSolicitudComponent', () => {
         paisProcedencia: ''
       },
     ];
-    component.filaSeleccionada = { 
+    component.filaSeleccionadaMercancia = { 
       id: 1, 
       descripcion: 'Updated Item',
       fraccionArancelaria: '',
@@ -187,14 +187,14 @@ describe('DatosSolicitudComponent', () => {
       paisOrigen: '',
       paisProcedencia: ''
     };
-    component.manejarFilaSeleccionada([component.tablaDatos[0]]);
+    component.manejarFilaSeleccionada([component.datosTablaMercancia[0]]);
     component.actualizarFilaSeleccionada();
-    expect(component.filaSeleccionada.descripcion).toBe('Item 1');
+    expect(component.filaSeleccionadaMercancia.descripcion).toBe('Item 1');
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();

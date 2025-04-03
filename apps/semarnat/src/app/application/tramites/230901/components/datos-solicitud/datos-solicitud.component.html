@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Datos de la solicitud" />
-  <form [formGroup]="formSolicitud">
+  <form [formGroup]="formularioSolicitud">
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
@@ -30,22 +30,22 @@
     </div>
     <ng-titulo
       [titulo]="
-        solicitud230901State.tipoDeMovimiento === '2' ||
-        solicitud230901State.tipoDeMovimiento === '3'
+        estadoSolicitud230901.tipoDeMovimiento === '2' ||
+        estadoSolicitud230901.tipoDeMovimiento === '3'
           ? 'Aduanas de salida'
           : 'Aduana'
       "
     ></ng-titulo>
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
-        @if(solicitud230901State.tipoDeMovimiento==="1"){
+        @if(estadoSolicitud230901.tipoDeMovimiento==="1"){
         <h5>Aduana de entradas (Máximo 3 aduanas)</h5>
         }
         <crosslist
           [fechas]="listaOriginalAduanas"
           [fechasSeleccionadas]="listaSeleccionadaAduanas"
-          [botones]="aduanasBotons"
-          [label]="aquandasLabel"
+          [botones]="botonesAduanas"
+          [label]="etiquetaAduanas"
         ></crosslist>
       </div>
     </div>
@@ -56,9 +56,9 @@
       </div>
       <div class="table-container">
         <app-tabla-dinamica
-          [configuracionTabla]="configuracionTabla"
-          [datos]="tablaDatos"
-          [tipoSeleccionTabla]="tablaSeleccion"
+          [configuracionTabla]="configuracionTablaMercancia"
+          [datos]="datosTablaMercancia"
+          [tipoSeleccionTabla]="tipoSeleccionTabla"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
         ></app-tabla-dinamica>
       </div>
@@ -73,7 +73,7 @@
           <button
             type="button"
             class="btn btn-default me-2"
-            [disabled]="!isFileSelected"
+            [disabled]="!archivoSeleccionado"
             (click)="modificarItemMercancia()"
           >
             Modificar
@@ -94,21 +94,21 @@
     <div class="row mt-3">
       <div class="col-md-12 mt-3">
         <crosslist
-          [fechas]="listaOriginalMovimiento"
-          [fechasSeleccionadas]="listSeleccionadaMovimiento"
-          [botones]="movimientoBotons"
-          [label]="movimientoLabel"
+          [fechas]="listaOriginalMovimientos"
+          [fechasSeleccionadas]="listSeleccionadaMovimientos"
+          [botones]="botonesMovimientos"
+          [label]="etiquetaMovimientos"
         ></crosslist>
       </div>
     </div>
     }
   </form>
 
-  @if(showDatosMercanciaModal){
+  @if(mostrarModalDatosMercancia){
   <app-modal>
     <div class="datos-mercancia-container">
       <ng-titulo titulo="Datos mercancía" />
-      <form [formGroup]="formMercancia">
+      <form [formGroup]="formularioMercancia">
         <div class="row">
           <div class="col-md-5">
             <app-catalogo-select
@@ -180,7 +180,7 @@
             ></textarea>
             <div *ngIf="esControlInvalido('descripcion')" class="text-danger">
               <small
-                *ngIf="formMercancia.controls['descripcion'].hasError('required')"
+                *ngIf="formularioMercancia.controls['descripcion'].hasError('required')"
                 >Este campo es obligatorio.</small
               >
             </div>
@@ -233,7 +233,7 @@
           </div>
         </div>
         <ng-alert
-          [CONTENIDO]="alert_message"
+          [CONTENIDO]="mensajeAlertaMercancia"
           [CUSTOMECLASS]="'alert-info'"
         ></ng-alert>
         <div class="row">
@@ -250,7 +250,7 @@
             </div>
             <div *ngIf="esControlInvalido('marca')" class="text-danger">
               <small
-                *ngIf="formMercancia.controls['marca'].hasError('required')"
+                *ngIf="formularioMercancia.controls['marca'].hasError('required')"
                 >Este campo es obligatorio.</small
               >
             </div>
@@ -267,13 +267,13 @@
               />
               <div *ngIf="esControlInvalido('cantidad')" class="text-danger">
                 <small
-                  *ngIf="formMercancia.controls['cantidad'].hasError('required')"
+                  *ngIf="formularioMercancia.controls['cantidad'].hasError('required')"
                   >Este campo es obligatorio.</small
                 >
               </div>
               <div *ngIf="esControlInvalido('cantidad')" class="text-danger">
                 <small
-                  *ngIf="formMercancia.controls['cantidad'].hasError('pattern')"
+                  *ngIf="formularioMercancia.controls['cantidad'].hasError('pattern')"
                   >Ingrese solo dígitos.</small
                 >
               </div>

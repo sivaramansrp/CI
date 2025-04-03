@@ -62,7 +62,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <input-fecha [setFecha]="formularioPagoDerechos.get('fecPago')?.value" [datos]="fechaFinalConfiguracion"
+          <input-fecha [setFecha]="formularioPagoDerechos.get('fecPago')?.value" [datos]="configuracionFechaFinal"
             (valorCambiado)="manejarCambioFechaPago($event)"
             [class.is-invalid]="formularioPagoDerechos.get('fecPago')?.touched && formularioPagoDerechos.get('fecPago')?.invalid">
           </input-fecha>

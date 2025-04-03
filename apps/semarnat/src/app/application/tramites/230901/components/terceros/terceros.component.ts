@@ -24,50 +24,50 @@ export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para capturar la entidad federativa del destinatario.
    */
-  destinatarioForm!: FormGroup;
+  formularioDestinatario!: FormGroup;
 
   /**
    * Estado actual de la solicitud "230901".
    * Este estado se actualiza al suscribirse al observable selectSolicitud$.
    */
-  solicitud230901State!: Solicitud230901State;
+  estadoSolicitud!: Solicitud230901State;
 
   /**
    * Observable utilizado para limpiar las suscripciones al destruir el componente.
    */
-  destroyNotifier$ = new Subject<void>();
+  notificadorDestruccion$ = new Subject<void>();
 
   /**
    * Indica si el popup está abierto.
    */
-  isPopupOpen = false;
+  popupAbierto = false;
 
   /**
    * Indica si el popup está cerrado.
    */
-  isPopupClose = true;
+  popupCerrado = true;
 
   /**
    * Configuración de las columnas de la tabla de terceros.
    * Define cómo se mostrarán los datos en la tabla.
    */
-  configuracionTabla: ConfiguracionColumna<DestinatarioConfiguracionItem>[] = DESTINATARIO_TABLA_CONFIGURACION;
+  configuracionColumnas: ConfiguracionColumna<DestinatarioConfiguracionItem>[] = DESTINATARIO_TABLA_CONFIGURACION;
 
   /**
    * Tipo de selección de la tabla (por ejemplo, selección por checkbox).
    */
-  TablaSeleccion: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Datos que se mostrarán en la tabla de terceros.
    * Inicialmente está vacío y se llena al cambiar la entidad federativa.
    */
-  tablaDatos: DestinatarioConfiguracionItem[] = [];
+  datosTabla: DestinatarioConfiguracionItem[] = [];
 
   /**
    * Indica si el botón de modificar está habilitado.
    */
-  isModificarEnabled: boolean = false;
+  botonModificarHabilitado: boolean = false;
 
   /**
    * Constructor del componente TercerosComponent.
@@ -91,9 +91,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.autorizacionesDeVidaSilvestreService.inicializaTercerosDatosCatalogos();
     this.tramite230901Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((state) => {
-        this.solicitud230901State = state;
+        this.estadoSolicitud = state;
       });
 
     this.crearFormularioDestinatario();
@@ -105,9 +105,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Inicializa el valor del formulario con el estado actual de la solicitud.
    */
   crearFormularioDestinatario(): void {
-    this.destinatarioForm = this.formBuilder.group({
+    this.formularioDestinatario = this.formBuilder.group({
       entidadFederativa: [
-        this.solicitud230901State.entidadFederativa,
+        this.estadoSolicitud.entidadFederativa,
         Validators.required,
       ],
     });
@@ -119,10 +119,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * si la entidad federativa es válida y la tabla está vacía.
    */
   manejarCambioEntidadFederativa(): void {
-    const ENTIDAD_FEDERATIVA = this.destinatarioForm.get('entidadFederativa')?.value;
-    if (ENTIDAD_FEDERATIVA && this.tablaDatos.length === 0) {
+    const ENTIDAD_FEDERATIVA = this.formularioDestinatario.get('entidadFederativa')?.value;
+    if (ENTIDAD_FEDERATIVA && this.datosTabla.length === 0) {
       this.tramite230901Store.setEntidadFederativa(ENTIDAD_FEDERATIVA);
-      this.tablaDatos.push(DESTINATARIO_TABLE_ENTRY);
+      this.datosTabla.push(DESTINATARIO_TABLE_ENTRY);
     }
   }
 
@@ -131,16 +131,16 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Habilita o deshabilita el botón de modificar según la selección.
    */
   manejarFilaSeleccionada(filaSeleccionada: DestinatarioConfiguracionItem[]): void {
-    this.isModificarEnabled = filaSeleccionada.length > 0;
+    this.botonModificarHabilitado = filaSeleccionada.length > 0;
   }
 
   /**
    * Abre el popup si el botón de modificar está habilitado.
    */
   abrirPopup(): void {
-    if (this.isModificarEnabled) {
-      this.isPopupOpen = true;
-      this.tramite230901Store.setTercerosPopupState(this.isPopupOpen);
+    if (this.botonModificarHabilitado) {
+      this.popupAbierto = true;
+      this.tramite230901Store.setTercerosPopupState(this.popupAbierto);
     }
   }
 
@@ -148,10 +148,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Cierra el popup.
    */
   cerrarPopup(): void {
-    this.isPopupOpen = false;
-    this.isPopupClose = false;
-    this.tramite230901Store.setTercerosPopupState(this.isPopupOpen);
-    this.tramite230901Store.setTercerosPopupState(this.isPopupClose);
+    this.popupAbierto = false;
+    this.popupCerrado = false;
+    this.tramite230901Store.setTercerosPopupState(this.popupAbierto);
+    this.tramite230901Store.setTercerosPopupState(this.popupCerrado);
   }
 
   /**
@@ -159,7 +159,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Limpia las suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }

@@ -32,17 +32,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Configuración de la fecha final para el campo "Fecha de Pago".
    */
-  fechaFinalConfiguracion: InputFecha = FECHA;
+  configuracionFechaFinal: InputFecha = FECHA;
 
   /**
    * Clave de referencia utilizada en el trámite.
    */
-  claveDeReferencia: string = '0' + CLAVE_DE_REFERENCIA;
+  referenciaClave: string = '0' + CLAVE_DE_REFERENCIA;
 
   /**
    * Cadena de la dependencia asociada al trámite.
    */
-  cadenaPagoDependencia: string = '00' + CADENA_PAGO_DEPENDENCIA;
+  dependenciaCadenaPago: string = '00' + CADENA_PAGO_DEPENDENCIA;
 
   /**
    * Importe de pago requerido para el trámite.
@@ -82,7 +82,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.estadoSolicitud230901 = estado;
       });
 
-    this.crearFormularioPagoDerechos();
+    this.crearformularioPagoDerechos();
   }
 
   /**
@@ -90,10 +90,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Algunos campos, como `claveDeReferencia`, `cadenaPagoDependencia` y `impPago`,
    * están deshabilitados porque no deben ser editados por el usuario.
    */
-  crearFormularioPagoDerechos(): void {
+  crearformularioPagoDerechos(): void {
     this.formularioPagoDerechos = this.formBuilder.group({
-      claveDeReferencia: new FormControl(this.claveDeReferencia),
-      cadenaPagoDependencia: new FormControl(this.cadenaPagoDependencia),
+      claveDeReferencia: new FormControl(this.referenciaClave),
+      cadenaPagoDependencia: new FormControl(this.dependenciaCadenaPago),
       banco: new FormControl(this.estadoSolicitud230901.bancoseleccionado, Validators.required),
       llaveDePago: new FormControl(this.estadoSolicitud230901.llaveDePago, Validators.required),
       fecPago: new FormControl(this.estadoSolicitud230901.fecPago, Validators.required),

@@ -47,12 +47,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para los datos de la solicitud.
    */
-  formSolicitud!: FormGroup;
+  formularioSolicitud!: FormGroup;
 
   /**
    * Formulario reactivo para los datos de la mercancía.
    */
-  formMercancia!: FormGroup;
+  formularioMercancia!: FormGroup;
 
   /**
    * Tipo de movimiento seleccionado en el formulario.
@@ -67,17 +67,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  solicitud230901State!: Solicitud230901State;
+  estadoSolicitud230901!: Solicitud230901State;
 
   /**
    * Etiquetas para las listas dinámicas de aduanas.
    */
-  aquandasLabel: CrossListLable = AQUANDAS_CROSSLIST_LABEL;
+  etiquetaAduanas: CrossListLable = AQUANDAS_CROSSLIST_LABEL;
 
   /**
    * Botones configurados para la lista dinámica de aduanas.
    */
-  aduanasBotons!: CrosslistBoton[];
+  botonesAduanas!: CrosslistBoton[];
 
   /**
    * Lista original de aduanas disponibles.
@@ -92,63 +92,63 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Etiquetas para las listas dinámicas de movimientos.
    */
-  movimientoLabel: CrossListLable = MOVIMIENTO_CROSSLIST_LABEL;
+  etiquetaMovimientos: CrossListLable = MOVIMIENTO_CROSSLIST_LABEL;
 
   /**
    * Botones configurados para la lista dinámica de movimientos.
    */
-  movimientoBotons!: CrosslistBoton[];
+  botonesMovimientos!: CrosslistBoton[];
 
   /**
    * Lista original de movimientos disponibles.
    */
-  listaOriginalMovimiento: string[] = [];
+  listaOriginalMovimientos: string[] = [];
 
   /**
    * Lista de movimientos seleccionados.
    */
-  listSeleccionadaMovimiento: string[] = [];
+  listSeleccionadaMovimientos: string[] = [];
 
   /**
    * Configuración de las columnas para la tabla de mercancías.
    */
-  configuracionTabla: ConfiguracionColumna<MercanciaConfiguracionItem>[] =
+  configuracionTablaMercancia: ConfiguracionColumna<MercanciaConfiguracionItem>[] =
     MERCANCIA_TABLA_CONFIGURACION;
 
   /**
    * Tipo de selección para la tabla dinámica.
    */
-  tablaSeleccion = TablaSeleccion.CHECKBOX;
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
    * Datos de la tabla de mercancías.
    */
-  tablaDatos!: MercanciaConfiguracionItem[];
+  datosTablaMercancia!: MercanciaConfiguracionItem[];
 
   /**
    * Fila seleccionada en la tabla de mercancías.
    */
-  filaSeleccionada!: MercanciaConfiguracionItem;
+  filaSeleccionadaMercancia!: MercanciaConfiguracionItem;
 
   /**
    * Indica si un archivo está seleccionado.
    */
-  isFileSelected: boolean = false;
+  archivoSeleccionado: boolean = false;
 
   /**
    * Indica si se debe mostrar el modal de datos de mercancía.
    */
-  showDatosMercanciaModal: boolean = false;
+  mostrarModalDatosMercancia: boolean = false;
 
   /**
    * Observable para manejar la destrucción del componente y evitar fugas de memoria.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  private notificadorDestruccion$: Subject<void> = new Subject();
 
   /**
    * Mensaje de alerta relacionado con la mercancía.
    */
-  public alert_message: string = MENSAJE_DE_ALERTA_MERCANCIA;
+  public mensajeAlertaMercancia: string = MENSAJE_DE_ALERTA_MERCANCIA;
 
   /**
    * Indica si se está realizando una operación de actualización.
@@ -178,30 +178,32 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.autorizacionesDeVidaSilvestreService.inicializaDatosSolicitudDatosCatalogos();
 
     this.tramite230901Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((state) => {
-        this.solicitud230901State = state;
+        this.estadoSolicitud230901 = state;
       });
 
-    this.aduanasBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
-    this.movimientoBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
+    this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
+    this.botonesMovimientos = OBTENER_BOTONES_CROSSLIST(
+      this.crosslistComponent
+    );
 
     this.crearFormularioSolicitud();
     this.manejarCambioTipoMovimiento();
-    this.tablaDatos = this.solicitud230901State.mercanciaTablaDatos;
+    this.datosTablaMercancia = this.estadoSolicitud230901.mercanciaTablaDatos;
   }
 
   /**
    * Crea el formulario reactivo para los datos de la solicitud.
    */
   crearFormularioSolicitud(): void {
-    this.formSolicitud = this.formBuilder.group({
+    this.formularioSolicitud = this.formBuilder.group({
       tipodemovimiento: [
-        this.solicitud230901State.tipoDeMovimiento,
+        this.estadoSolicitud230901.tipoDeMovimiento,
         Validators.required,
       ],
       tipoderegimen: [
-        this.solicitud230901State.tipoDeRegimen,
+        this.estadoSolicitud230901.tipoDeRegimen,
         Validators.required,
       ],
     });
@@ -229,7 +231,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ...data,
     };
 
-    this.formMercancia = this.formBuilder.group({
+    this.formularioMercancia = this.formBuilder.group({
       id: [DEFAULT_DATA.id],
       fraccionArancelaria: [
         DEFAULT_DATA.fraccionArancelaria,
@@ -255,25 +257,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       paisProcedencia: [DEFAULT_DATA.paisProcedencia, Validators.required],
     });
 
-    this.formMercancia.get('fraccionDescripcion')?.disable();
+    this.formularioMercancia.get('fraccionDescripcion')?.disable();
 
-    this.formMercancia
+    this.formularioMercancia
       .get('otraFraccion')
       ?.valueChanges.subscribe((checked) => {
         if (checked) {
-          this.formMercancia.addControl(
+          this.formularioMercancia.addControl(
             'fraccionVigenteTIGIE',
             this.formBuilder.control('')
           );
-          this.formMercancia.get('fraccionArancelaria')?.setValue('0');
-          this.formMercancia.get('fraccionArancelaria')?.markAsTouched();
-          this.formMercancia
+          this.formularioMercancia.get('fraccionArancelaria')?.setValue('0');
+          this.formularioMercancia.get('fraccionArancelaria')?.markAsTouched();
+          this.formularioMercancia
             .get('fraccionArancelaria')
             ?.setErrors({ required: true });
-          this.formMercancia.get('fraccionDescripcion')?.reset();
+          this.formularioMercancia.get('fraccionDescripcion')?.reset();
           this.otraFraccionSeleccionada = true;
         } else {
-          this.formMercancia.removeControl('fraccionVigenteTIGIE');
+          this.formularioMercancia.removeControl('fraccionVigenteTIGIE');
           this.otraFraccionSeleccionada = false;
         }
       });
@@ -284,14 +286,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   manejarCambioTipoMovimiento(): void {
     const TIPO_DE_MOVIMIENTO =
-      this.formSolicitud.get('tipodemovimiento')?.value;
+      this.formularioSolicitud.get('tipodemovimiento')?.value;
     this.tramite230901Store.setTipoDeMovimiento(TIPO_DE_MOVIMIENTO);
     if (TIPO_DE_MOVIMIENTO === '1') {
-      this.aduanasBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent).slice(
-        1
-      );
+      this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(
+        this.crosslistComponent
+      ).slice(1);
     } else {
-      this.aduanasBotons = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
+      this.botonesAduanas = OBTENER_BOTONES_CROSSLIST(this.crosslistComponent);
     }
     this.tipoMovimientoSeleccionada = parseInt(TIPO_DE_MOVIMIENTO, 10);
   }
@@ -301,7 +303,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   manejarCambioTipoRegimen(): void {
     this.tramite230901Store.setTipoDeRegimen(
-      this.formSolicitud.get('tipoderegimen')?.value
+      this.formularioSolicitud.get('tipoderegimen')?.value
     );
   }
 
@@ -311,23 +313,23 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   manejarFilaSeleccionada(fila: MercanciaConfiguracionItem[]): void {
     if (fila.length === 0) {
-      this.isFileSelected = false;
+      this.archivoSeleccionado = false;
       return;
     }
-    this.filaSeleccionada = fila[fila.length - 1];
-    this.isFileSelected = true;
+    this.filaSeleccionadaMercancia = fila[fila.length - 1];
+    this.archivoSeleccionado = true;
   }
 
   /**
    * Actualiza la fila seleccionada con los datos más recientes de la tabla.
    */
   actualizarFilaSeleccionada(): void {
-    const UPDATED_DATA = this.tablaDatos.find(
-      (item) => item.id === this.filaSeleccionada.id
+    const UPDATED_DATA = this.datosTablaMercancia.find(
+      (item) => item.id === this.filaSeleccionadaMercancia.id
     );
 
     if (UPDATED_DATA) {
-      this.filaSeleccionada = { ...UPDATED_DATA };
+      this.filaSeleccionadaMercancia = { ...UPDATED_DATA };
     }
   }
 
@@ -344,39 +346,39 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.actualizarFilaSeleccionada();
 
     const MERCANCIA_CONFIGURACION_ITEM: MercanciaConfiguracionItem = {
-      id: this.filaSeleccionada.id,
+      id: this.filaSeleccionadaMercancia.id,
       fraccionArancelaria: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
-        this.filaSeleccionada.fraccionArancelaria
+        this.filaSeleccionadaMercancia.fraccionArancelaria
       ).toString(),
-      otraFraccion: this.filaSeleccionada.otraFraccion,
-      descripcion: this.filaSeleccionada.descripcion,
-      rendimientoProducto: this.filaSeleccionada.rendimientoProducto,
+      otraFraccion: this.filaSeleccionadaMercancia.otraFraccion,
+      descripcion: this.filaSeleccionadaMercancia.descripcion,
+      rendimientoProducto: this.filaSeleccionadaMercancia.rendimientoProducto,
       clasificacionTaxonomica: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
-        this.filaSeleccionada.clasificacionTaxonomica
+        this.filaSeleccionadaMercancia.clasificacionTaxonomica
       ).toString(),
       nombreCientifico: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.nombreCientifico,
-        this.filaSeleccionada.nombreCientifico
+        this.filaSeleccionadaMercancia.nombreCientifico
       ).toString(),
       nombreComun: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.nombreComun,
-        this.filaSeleccionada.nombreComun
+        this.filaSeleccionadaMercancia.nombreComun
       ).toString(),
-      marca: this.filaSeleccionada.marca,
-      cantidad: this.filaSeleccionada.cantidad,
+      marca: this.filaSeleccionadaMercancia.marca,
+      cantidad: this.filaSeleccionadaMercancia.cantidad,
       unidadMedida: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.unidadMedida,
-        this.filaSeleccionada.unidadMedida
+        this.filaSeleccionadaMercancia.unidadMedida
       ).toString(),
       paisOrigen: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.paisOrigen,
-        this.filaSeleccionada.paisOrigen
+        this.filaSeleccionadaMercancia.paisOrigen
       ).toString(),
       paisProcedencia: GET_INDEX(
         this.autorizacionesDeVidaSilvestreService.paisProcedencia,
-        this.filaSeleccionada.paisProcedencia
+        this.filaSeleccionadaMercancia.paisProcedencia
       ).toString(),
     };
 
@@ -388,7 +390,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Alterna la visibilidad del modal de datos de mercancía.
    */
   alternarModalMercancia(): void {
-    this.showDatosMercanciaModal = !this.showDatosMercanciaModal;
+    this.mostrarModalDatosMercancia = !this.mostrarModalDatosMercancia;
   }
 
   /**
@@ -407,7 +409,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * `true` si el control es inválido y ha sido tocado o modificado, de lo contrario `false`.
    */
   esControlInvalido(formControlName: string): boolean {
-    const CONTROL = this.formMercancia.get(formControlName);
+    const CONTROL = this.formularioMercancia.get(formControlName);
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
@@ -419,7 +421,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * y actualiza el estado del almacén correspondiente.
    */
   enviarFormularioMercancia(): void {
-    if (this.formMercancia.invalid) {
+    if (this.formularioMercancia.invalid) {
       return;
     }
 
@@ -428,53 +430,54 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     const TABLA_ROW: MercanciaConfiguracionItem = {
       id: this.esOperacionDeActualizacion
-        ? this.formMercancia.get('id')?.value
-        : this.tablaDatos.length + 1,
+        ? this.formularioMercancia.get('id')?.value
+        : this.datosTablaMercancia.length + 1,
       fraccionArancelaria: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
-        this.formMercancia.get('fraccionArancelaria')?.value
+        this.formularioMercancia.get('fraccionArancelaria')?.value
       ),
-      otraFraccion: this.formMercancia.get('otraFraccion')?.value,
-      descripcion: this.formMercancia.get('descripcion')?.value,
-      rendimientoProducto: this.formMercancia.get('rendimientoProducto')?.value,
+      otraFraccion: this.formularioMercancia.get('otraFraccion')?.value,
+      descripcion: this.formularioMercancia.get('descripcion')?.value,
+      rendimientoProducto: this.formularioMercancia.get('rendimientoProducto')
+        ?.value,
       clasificacionTaxonomica: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
-        this.formMercancia.get('clasificacionTaxonomica')?.value
+        this.formularioMercancia.get('clasificacionTaxonomica')?.value
       ),
       nombreCientifico: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.nombreCientifico,
-        this.formMercancia.get('nombreCientifico')?.value
+        this.formularioMercancia.get('nombreCientifico')?.value
       ),
       nombreComun: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.nombreComun,
-        this.formMercancia.get('nombreComun')?.value
+        this.formularioMercancia.get('nombreComun')?.value
       ),
-      marca: this.formMercancia.get('marca')?.value,
-      cantidad: this.formMercancia.get('cantidad')?.value,
+      marca: this.formularioMercancia.get('marca')?.value,
+      cantidad: this.formularioMercancia.get('cantidad')?.value,
       unidadMedida: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.unidadMedida,
-        this.formMercancia.get('unidadMedida')?.value
+        this.formularioMercancia.get('unidadMedida')?.value
       ),
       paisOrigen: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.paisOrigen,
-        this.formMercancia.get('paisOrigen')?.value
+        this.formularioMercancia.get('paisOrigen')?.value
       ),
       paisProcedencia: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.paisProcedencia,
-        this.formMercancia.get('paisProcedencia')?.value
+        this.formularioMercancia.get('paisProcedencia')?.value
       ),
     };
-    const EXISTING_INDEX = this.tablaDatos.findIndex(
+    const EXISTING_INDEX = this.datosTablaMercancia.findIndex(
       (item) => item.id === TABLA_ROW.id
     );
 
     if (EXISTING_INDEX > -1) {
-      this.tablaDatos[EXISTING_INDEX] = TABLA_ROW;
+      this.datosTablaMercancia[EXISTING_INDEX] = TABLA_ROW;
     } else {
-      this.tablaDatos = [...this.tablaDatos, TABLA_ROW];
+      this.datosTablaMercancia = [...this.datosTablaMercancia, TABLA_ROW];
     }
-    this.tramite230901Store.setMercanciaTablaDatos(this.tablaDatos);
-    this.formMercancia.reset();
+    this.tramite230901Store.setMercanciaTablaDatos(this.datosTablaMercancia);
+    this.formularioMercancia.reset();
     this.alternarModalMercancia();
   }
 
@@ -482,7 +485,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Maneja el evento de cierre del modal de datos de mercancía.
    */
   ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }

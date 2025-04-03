@@ -53,9 +53,9 @@ describe('TercerosComponent', () => {
 
   it('should initialize the form and tablaDatos on ngOnInit', () => {
     component.ngOnInit();
-    expect(component.destinatarioForm).toBeDefined();
-    expect(component.destinatarioForm.get('entidadFederativa')?.value).toBe('MORELOS');
-    expect(component.tablaDatos).toEqual([{ pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', ciudad: '---', entidadFederativa: 'MORELOS', domicilio: 'prueba', codigoPostal: 96533 }]);
+    expect(component.formularioDestinatario).toBeDefined();
+    expect(component.formularioDestinatario.get('entidadFederativa')?.value).toBe('MORELOS');
+    expect(component.datosTabla).toEqual([{ pais: 'MEXICO (ESTADOS UNIDOS MEXICANOS)', ciudad: '---', entidadFederativa: 'MORELOS', domicilio: 'prueba', codigoPostal: 96533 }]);
   });
 
   it('should call inicializaTercerosDatosCatalogos on ngOnInit', () => {
@@ -65,18 +65,18 @@ describe('TercerosComponent', () => {
 
   it('should handle changes in entidadFederativa and update the store', () => {
     component.ngOnInit();
-    component.destinatarioForm.get('entidadFederativa')?.setValue('MORELOS');
+    component.formularioDestinatario.get('entidadFederativa')?.setValue('MORELOS');
     component.manejarCambioEntidadFederativa();
     expect(tramite230901StoreMock.setEntidadFederativa).toHaveBeenCalledWith('MORELOS');
-    expect(component.tablaDatos.length).toBe(1);
+    expect(component.datosTabla.length).toBe(1);
   });
 
   it('should not add duplicate entries to tablaDatos', () => {
     component.ngOnInit();
-    component.destinatarioForm.get('entidadFederativa')?.setValue('MORELOS');
+    component.formularioDestinatario.get('entidadFederativa')?.setValue('MORELOS');
     component.manejarCambioEntidadFederativa();
     component.manejarCambioEntidadFederativa();
-    expect(component.tablaDatos.length).toBe(1);
+    expect(component.datosTabla.length).toBe(1);
   });
 
   it('should handle fila seleccionada and enable modificar button', () => {
@@ -88,30 +88,30 @@ describe('TercerosComponent', () => {
       codigoPostal: 62000,
     };
     component.manejarFilaSeleccionada([mockRow]);
-    expect(component.isModificarEnabled).toBe(true);
+    expect(component.botonModificarHabilitado).toBe(true);
   });
 
   it('should disable modificar button when no fila is seleccionada', () => {
     component.manejarFilaSeleccionada([]);
-    expect(component.isModificarEnabled).toBe(false);
+    expect(component.botonModificarHabilitado).toBe(false);
   });
 
   it('should open the popup and update the store', () => {
     component.abrirPopup();
-    expect(component.isPopupOpen).toBe(true);
+    expect(component.popupAbierto).toBe(true);
     expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(true);
   });
 
   it('should close the popup and update the store', () => {
     component.cerrarPopup();
-    expect(component.isPopupOpen).toBeFalsy();
-    expect(component.isPopupClose).toBeFalsy();
+    expect(component.popupAbierto).toBeFalsy();
+    expect(component.popupCerrado).toBeFalsy();
     expect(tramite230901StoreMock.setTercerosPopupState).toHaveBeenCalledWith(false);
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const destroyNotifierSpy = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['notificadorDestruccion$'], 'complete');
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
