@@ -3,7 +3,15 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -35,7 +43,9 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './agregar-destinatario-final.component.html',
   styleUrl: './agregar-destinatario-final.component.css',
 })
-export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnChanges {
+export class AgregarDestinatarioFinalComponent
+  implements OnDestroy, OnInit, OnChanges
+{
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -85,7 +95,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
    * @property {Catalogo[]} codigosPostalesDatos
    */
   public codigosPostalesDatos: Catalogo[] = [];
-  
+
   /**
    * @property tipoPersona
    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
@@ -100,12 +110,12 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
   destinatarios: Destinatario[] = [];
 
   /**
-    * @property idProcedimiento
-    * @description Identificador del procedimiento asociado a este componente.
-    * @type {number}
-    */
+   * @property idProcedimiento
+   * @description Identificador del procedimiento asociado a este componente.
+   * @type {number}
+   */
   @Input() idProcedimiento!: number;
-  
+
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
@@ -119,7 +129,9 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
    * @property {EventEmitter<Destinatario[]>} updateDestinatarioFinalTabla
    **/
 
-  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<Destinatario[]>();
+  @Output() updateDestinatarioFinalTablaDatos = new EventEmitter<
+    Destinatario[]
+  >();
 
   /**
    * Crea el componente e inicializa el grupo de formulario.
@@ -146,7 +158,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
         ],
       ],
       nombres: ['', Validators.required],
-      denominacionRazon:['', Validators.required],
+      denominacionRazon: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
       pais: ['', Validators.required],
@@ -170,7 +182,8 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
    * Llama al método `mostrarCamposNoContribuyente()`.
    */
   ngOnChanges(): void {
-    this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
@@ -202,12 +215,10 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
-   this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
+    this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
   }
-
-
 
   /**
    * Hook del ciclo de vida que se invoca cuando se inicializa el componente.
@@ -267,25 +278,25 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
   }
 
   /**
- * @method limpiarFormulario
- * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
   }
-/**
- * @method cancelar
- * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
-  cancelar():void{
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
     this.ubicaccion.back();
   }
 
-   /**
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
    * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
@@ -293,7 +304,7 @@ export class AgregarDestinatarioFinalComponent implements OnDestroy, OnInit, OnC
    *
    * @returns {void} No retorna ningún valor.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
