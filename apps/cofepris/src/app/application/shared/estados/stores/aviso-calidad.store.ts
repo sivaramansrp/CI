@@ -137,12 +137,7 @@ export class Avisocalidad260514Store extends Store<Solicitud260514State>{
                 fechaPago,
             }));
         }
-        public settipoFetch(tipoFetch: string) {
-            this.update((state) => ({
-                ...state,
-                tipoFetch,
-            }));
-        }
+       
         public setimportePago(importePago: string) {
             this.update((state) => ({
                 ...state,

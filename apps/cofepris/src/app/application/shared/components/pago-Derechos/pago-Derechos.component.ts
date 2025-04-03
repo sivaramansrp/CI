@@ -68,6 +68,7 @@ loadComboUnidadMedida(): void {
 public cambioFechaIngreso(nuevo_valor: string): void {
     this.derechosForm.get('fechaPago')?.setValue(nuevo_valor);
     this.derechosForm.get('fechaPago')?.markAsUntouched();
+    this.avisocalidad260514Store.setfechaPago(nuevo_valor);
   }
 
    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Avisocalidad260514Store): void {
