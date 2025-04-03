@@ -128,7 +128,7 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * @param {Tramite110203Query} tramite110203Query - Consulta para manejar datos del trámite 110203.
    * @param {Tramite110203Store} tramite110203Store - Almacenamiento para manejar el estado del trámite 110203.
    */
-    constructor(
+  constructor(
     private fb: FormBuilder, // Servicio para construir formularios reactivos
     private router: Router, // Servicio para la navegación entre rutas
     private tramite110203Query: Tramite110203Query, // Consulta para manejar datos del trámite 110203
@@ -172,12 +172,32 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.restaurarValoresFormulario();
 
     /** 
-     * Suscribe a los cambios en el formulario de búsqueda.
-     * Actualiza el estado en el store cada vez que hay un cambio.
+ * Escucha los cambios en el campo "numeroDeCertificado" del formulario.  
+ * Cuando el usuario modifica este campo, se actualiza el estado correspondiente  
+ * en la tienda de Akita utilizando el método setNumeroDeCertificado.  
+ */
+    this.datosBusquedaFormulario.get('numeroDeCertificado')?.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(valor => this.tramite110203Store.setNumeroDeCertificado(valor));
+
+    /** 
+     * Escucha los cambios en el campo "tratadoAcuerdo" del formulario.  
+     * Si el usuario cambia el valor, este se almacena en la tienda de Akita  
+     * llamando al método setTratadoAcuerdo.  
      */
-    this.formSubscription = this.datosBusquedaFormulario.valueChanges.subscribe(() => {
-      this.actualizarStore();
-    });
+    this.datosBusquedaFormulario.get('tratadoAcuerdo')?.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(valor => this.tramite110203Store.setTratadoAcuerdo(valor));
+
+    /** 
+     * Escucha los cambios en el campo "paisBloque" del formulario.  
+     * Cualquier modificación en este campo se refleja en el estado global  
+     * de la aplicación a través del método setPaisBloque de la tienda.  
+     */
+    this.datosBusquedaFormulario.get('paisBloque')?.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(valor => this.tramite110203Store.setPaisBloque(valor));
+
 
     this.destinatarioTableData.encabezadoDeTabla = destinatarioTable?.encabezadoDeTabla;
     this.destinatarioTableData.cuerpoTabla = destinatarioTable?.cuerpoTabla;
@@ -270,16 +290,6 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
         }
       });
   }
-  /**
-   * Updates the store with current form values.
-   * Syncs `numeroDeCertificado`, `tratadoAcuerdo`, and `paisBloque` with the global state.
-   */
-  private actualizarStore(): void {
-    const FORMVALUES = this.datosBusquedaFormulario.value;
-    this.tramite110203Store.setNumeroDeCertificado(FORMVALUES.numeroDeCertificado);
-    this.tramite110203Store.setTratadoAcuerdo(FORMVALUES.tratadoAcuerdo);
-    this.tramite110203Store.setPaisBloque(FORMVALUES.paisBloque);
-  }
 
   /**
    * Navigates to the "selección de trámite" page.
@@ -289,18 +299,16 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     this.router.navigate(['../tecnicosdatos'], { relativeTo: this.route });
 
   }
-  /**
-   * Cleans up resources on component destruction.
-   * Unsubscribes from active subscriptions and completes `unsubscribe$` to prevent memory leaks.
+
+  /** 
+   * Método de ciclo de vida de Angular que se ejecuta cuando el componente se destruye.  
+   * Emite un valor en `unsubscribe$` para notificar a los observables que deben finalizar.  
+   * Luego, marca `unsubscribe$` como completado para liberar memoria y evitar fugas de suscripción.  
    */
   ngOnDestroy(): void {
-    if (this.formSubscription) {
-      this.formSubscription.unsubscribe();
-    }
-    if (this.restauraSubscription$) {
-      this.restauraSubscription$.unsubscribe();
-    }
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
+
+
 }
