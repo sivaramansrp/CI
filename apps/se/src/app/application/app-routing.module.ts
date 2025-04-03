@@ -242,6 +242,12 @@ const ROUTES: Routes = [
         (m) => m.AutorizacionProgrmaNuevoModule
       ),
   },
+  { path: 'tecnicos',
+    loadChildren: () =>
+      import('./tramites/110203/tecnicos.module').then(
+        (m) => m.TecnicosModule
+      ),
+  },
   {
     path: 'inicialmente-certificado-origen',
     loadChildren: () =>
