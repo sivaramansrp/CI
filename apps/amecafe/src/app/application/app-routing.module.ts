@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.NacionalCafeExportadoresModule
       )
   },
+  {
+    path: 'registrar-solicitud',
+    loadChildren: () => import('./tramites/290201/registrar-solicitud/registrar-solicitud.module').then(
+      (m) => m.RegistrarSolicitudModule
+    )
+  },
+
 ];
 
 @NgModule({
