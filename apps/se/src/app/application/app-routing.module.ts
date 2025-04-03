@@ -208,6 +208,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'validar-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110208/validar-inicalmente.module').then(
+        (m) => m.ValidarInicalmenteModule
+      ),
+  },
+  {
     path: 'certificado',
     loadChildren:() =>
       import('./tramites/110219/certificado.module').then(
