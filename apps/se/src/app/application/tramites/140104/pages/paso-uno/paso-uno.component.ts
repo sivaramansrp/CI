@@ -28,7 +28,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   seccionesDeLaSolicitud = [
     { index: 1, title: 'Solicitante', component: 'solicitante' },
-    { index: 2, title: 'Cancelación de solicitud de permisos', component: 'cancelacion-de-solicitus' },
+    { index: 2, title: 'Cancelación de Certificados de Cupo', component: 'cancelacion-de-solicitus' },
   ];
   /**
    * @description Flag indicating whether the search section should be displayed.
