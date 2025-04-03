@@ -2,10 +2,10 @@
     <ng-titulo titulo="Representación federal"></ng-titulo>
     <form [formGroup]="frmRepresentacionForm">
       <div class="row">
-        <div class="col-md-4 form-group">
+        <div class="col-md-6 form-group">
           <app-catalogo-select
-            [catalogo]="entidadFederativa"
-            [label]="'Entidad federativa'"
+            [catalogo]="estado"
+            [label]="'Estado'"
             [required]="true"
             [placeholder]="'Seleccione un valor'"
             formControlName="entidad"
@@ -18,7 +18,7 @@
             <small *ngIf="frmRepresentacionForm.controls['entidad'].errors?.['required']">Debe seleccionar un valor.</small>
           </div>
         </div>
-        <div class="col-md-4 form-group">
+        <div class="col-md-5 form-group">
           <app-catalogo-select
             [catalogo]="representacionFederal"
             [label]="'Representación federal'"
@@ -38,6 +38,4 @@
     </form>
   </div>
   
-  <div style="margin-top: 40px;">
-    <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES_REPRESENTACION_FEDERAL"></ng-alert>
-  </div>
+ 

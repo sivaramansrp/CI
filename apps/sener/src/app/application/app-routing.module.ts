@@ -10,7 +10,7 @@ const ROUTES: Routes = [
   },
   {
     path:'producto-petrolifero',
-    loadChildren: () => import('./tramites/130202/exportacion-minerales-de-hierro.module').then(m => m.ExportacionMineralesDeHierroModule)
+    loadChildren: () => import('./tramites/130108/importacion-producto-petrolifero.module').then(m => m.ImportacionProductoPetroliferoModule)
   }
 ];
 

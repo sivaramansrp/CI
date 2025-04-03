@@ -42,7 +42,7 @@ export class RepresentacionComponent {
    * Lista de entidades federativas.
    * @type {Catalogo[]}
    */
-  @Input() entidadFederativa: Catalogo[] = [];
+  @Input() estado: Catalogo[] = [];
 
   /**
    * Lista de representaciones federales.

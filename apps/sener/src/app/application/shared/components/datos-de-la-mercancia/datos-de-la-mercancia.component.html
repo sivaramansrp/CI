@@ -2,28 +2,20 @@
   <form [formGroup]="form">
     <ng-titulo titulo="Datos de la mercancía"></ng-titulo>
     <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label for="producto">Producto*:</label>
-          <app-input-radio
-            [radioOptions]="productoOpciones"
-            formControlName="producto"
-            [isRequired]="true"
-            (valueChange)="setValoresStore(form, 'producto', 'setProducto')"
-            [layout]="'vertical'"
-          ></app-input-radio>
+      <div class="col-md-12">
+        <div class="form-group radioOpciones">
+          <label class="mb-5" for="plazo">Plazo*:</label>
+          <app-input-radio [radioOptions]="productoOpciones" formControlName="plazo" [isRequired]="true"
+            (valueChange)="setValoresStore(form, 'plazo', 'setProducto')" [layout]="'vertical'"></app-input-radio>
         </div>
       </div>
-      <div class="col-md-8">
+    </div>
+    <div class="row">
+      <div class="col-md-12">
         <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
-        <textarea
-          id="descripcion"
-          class="form-control mb-5"
-          placeholder="Descripción de la mercancía"
-          rows="8"
-          formControlName="descripcion"
-          (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"
-        ></textarea>
+        <textarea id="descripcion" class="form-control descripcion-text-box"
+          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion"
+          (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
             La descripción es obligatoria.
@@ -37,33 +29,51 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <app-catalogo-select
-        [catalogo]="fraccionCatalogo"
-        [label]="'Fracción arancelaria'"
-        [required]="true"
-        [placeholder]="'Seleccione un documento'"
-        formControlName="fraccion"
-        (change)="obtenerFraccion()"
-        (valueChange)="setValoresStore(form, 'fraccion', 'setFraccion')"
-      ></app-catalogo-select>
-      <div *ngIf="esInvalido('fraccion')" class="text-danger">
-        <small *ngIf="form.controls['fraccion'].errors?.['required']">
-          Debe seleccionar un valor.
-        </small>
+    <div class="row">
+      <div class="col-md-6">
+        <app-catalogo-select id="fraccion" [label]="'Fracción arancelaria'" [catalogo]="mercanciaCatalogoArray[0]"
+          [required]="true" [placeholder]="'Selecciona un valor'" [isDisabled]="false"
+          (selectionChange)="onFraccionChange($event)" formControlName="fraccion">
+        </app-catalogo-select>
+      </div>
+ 
+      <div class="col-md-6">
+        <app-catalogo-select id="umt" [label]="'Unidad de medida de la tarifa (UMT)'" [catalogo]="unidadCatalogo"
+          [required]="true" [placeholder]="'Selecciona un valor'" [isDisabled]="false" formControlName="unidadMedida"
+          (selectionChange)="onUmtChange($event)"> 
+        </app-catalogo-select>
+      </div>
+ 
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6">
+        <app-catalogo-select id="nico" [label]="'NICO'" [catalogo]="nicoCatalogoArray" [required]="true"
+          formControlName="nico" [placeholder]="'Selecciona un valor'" [isDisabled]="false"
+          (selectionChange)="onNicoChange($event)">
+        </app-catalogo-select>
+      </div>
+    </div>
+ 
+    <div class="row">
+      <div class="col-md-6">
+        <label for="descripcion_nico" class="form-label">Descripción NICO:</label>
+        <textarea id="descripcion_nico" class="form-control descripcion-text-box"
+          placeholder="Los demás"
+          rows="8" [disabled]="true"></textarea>
+ 
+      </div>
+      <div class="col-md-6">
+        <label for="acotacion" class="form-label">Acotación:</label>
+        <textarea id="acotacion" class="form-control descripcion-text-box" placeholder="" rows="8" [disabled]="true">
+    </textarea>
+ 
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 form-group">
+      <div class="col-md-6 form-group">
         <label class="form-label" for="cantidad">Cantidad<span class="require">*</span>:</label>
-        <input
-          class="form-control"
-          id="cantidad"
-          placeholder=""
-          type="text"
-          formControlName="cantidad"
-          (change)="setValoresStore(form, 'cantidad', 'setCantidad')"
-        />
+        <input class="form-control" id="cantidad" placeholder="" type="text" formControlName="cantidad"
+          (change)="setValoresStore(form, 'cantidad', 'setCantidad')" />
         <div *ngIf="esInvalido('cantidad')" class="text-danger">
           <small *ngIf="form.controls['cantidad'].errors?.['required']">
             Este campo es obligatorio.
@@ -76,16 +86,10 @@
           </small>
         </div>
       </div>
-      <div class="col-md-4 form-group">
+      <div class="col-md-6 form-group">
         <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require">*</span>:</label>
-        <input
-          class="form-control"
-          id="valorFacturaUSD"
-          placeholder=""
-          type="text"
-          formControlName="valorFacturaUSD"
-          (change)="setValoresStore(form, 'valorFacturaUSD', 'setValorPartidaUSD')"
-        />
+        <input class="form-control" id="valorFacturaUSD" placeholder="" type="text" formControlName="valorFacturaUSD"
+          (change)="setValoresStore(form, 'valorFacturaUSD', 'setValorPartidaUSD')" />
         <div *ngIf="esInvalido('valorFacturaUSD')" class="text-danger">
           <small *ngIf="form.controls['valorFacturaUSD'].errors?.['required']">
             Este campo es obligatorio.
@@ -98,22 +102,7 @@
           </small>
         </div>
       </div>
-      <div class="col-md-4 form-group">
-        <app-catalogo-select
-          [catalogo]="unidadCatalogo"
-          [label]="'UMT'"
-          [required]="true"
-          [placeholder]="'Seleccione un valor'"
-          formControlName="unidadMedida"
-          (change)="obtenerFraccion()"
-          (valueChange)="setValoresStore(form, 'unidadMedida', 'setUnidadMedida')"
-        ></app-catalogo-select>
-        <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
-          <small *ngIf="form.controls['unidadMedida'].errors?.['required']">
-            Debe seleccionar una unidad de medida.
-          </small>
-        </div>
-      </div>
     </div>
+ 
   </form>
 </div>

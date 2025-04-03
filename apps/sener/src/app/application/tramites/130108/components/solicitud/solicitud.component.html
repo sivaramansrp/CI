@@ -1,0 +1,36 @@
+<app-datos-del-tramite [form]="formDelTramite" [inputFields]="datosInputFields" [catalogosArray]="catalogosArray"
+  [solicitudOpciones]="opcionesSolicitud" (setValoresStoreEvent)="setValoresStore($event)"></app-datos-del-tramite>
+
+  <app-datos-de-la-mercancia [form]="mercanciaForm" [productoOpciones]="productoOpciones"
+  [unidadCatalogo]="unidadCatalogo" [mercanciaCatalogoArray]="mercanciaCatalogoArray"
+  [nicoCatalogoArray]="nicoCatalogoArray" (setValoresStoreEvent)="setValoresStore($event)"></app-datos-de-la-mercancia>
+
+
+<app-partidas-de-la-mercancia [partidasDelaMercanciaForm]="partidasDelaMercanciaForm"
+  [formForTotalCount]="formForTotalCount" [tableHeaderData]="tableHeaderData" [tableBodyData]="tableBodyData"
+  [mostrarTabla]="mostrarTabla" (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
+  (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
+  (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
+  (setValoresStoreEvent)="setValoresStore($event)"></app-partidas-de-la-mercancia>
+
+
+<!-- <app-pais-procendencia
+[paisForm]="paisForm"
+[elementosDeBloque]="elementosDeBloque"
+[paisesPorBloque]="paisesPorBloque"
+[selectRangoDias]="selectRangoDias"
+(bloqueCambiar)="enCambioDeBloque($event)"
+(setValoresStoreEvent)="setValoresStore($event)"
+></app-pais-procendencia> -->
+
+<app-pais-de-origen [paisForm]="paisForm" [elementosDeBloque]="elementosDeBloque" [paisesPorBloque]="paisesPorBloque"
+  [selectRangoDias]="selectRangoDias" (bloqueCambiar)="enCambioDeBloque($event)"
+  (setValoresStoreEvent)="setValoresStore($event)"></app-pais-de-origen>
+
+<app-representacion [frmRepresentacionForm]="frmRepresentacionForm" [estado]="estado"
+  [representacionFederal]="representacionFederal" [TEXTOS]="TEXTOS" (setValoresStoreEvent)="setValoresStore($event)">
+</app-representacion>
+
+<app-manifiesto-de-aceptacion>
+
+</app-manifiesto-de-aceptacion>
