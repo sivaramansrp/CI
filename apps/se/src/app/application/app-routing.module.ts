@@ -236,6 +236,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'inicialmente-certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110216/inicialmente-certificado-origen.module').then(
+        (m) => m.InicialmenteCertificadoOrigenModule
+      ),
+  },
+  {
     path: 'validador-certificado-cam',
     loadChildren:() =>
       import('./tramites/110221/validador-certificado-cam.module').then(
@@ -253,6 +260,13 @@ const ROUTES: Routes = [
     path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'reporte-anual',
+    loadChildren: () =>
+      import('./tramites/150102/reporte-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
   },
   {
     path: 'importacion',
