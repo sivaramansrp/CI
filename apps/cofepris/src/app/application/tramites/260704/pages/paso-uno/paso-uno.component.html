@@ -27,6 +27,17 @@
       @switch (indice) {
       @case (1) {
       <solicitante [tabindex]="1" #Solicitante></solicitante>
+      <ng-titulo titulo="Numero folio de desistimiento" />
+      <div class="col-md-8">
+        <input type="text" >
+
+      </div>
+      <ng-titulo titulo="Folio original" />
+      <div class="col-md-8">
+        <label>Folio : </label>
+        <input type="text" >
+
+      </div>
       }
       @case (2) {
       <app-datos-de-la-solicitud [tabIndex]="2"></app-datos-de-la-solicitud>

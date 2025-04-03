@@ -1,1 +1,367 @@
-<p>datos-de-la-solicitud works!</p>
+<div class="row mt-5">
+  <label>Seleccione el tipo de operación que desea realizar*:</label>
+</div>
+<div class="row mt-5 radios">
+  <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado"  [layout]="'horizontal'"></app-input-radio>
+</div>
+<div class="row mt-5">
+  <div class="col-md-6">
+    <label>Justificación*:</label>
+    <textarea cols="80" rows="5"></textarea>
+  </div>
+</div>
+<!--Datos del establecimiento-->
+<ng-titulo titulo="Datos del establecimiento" />
+<div>
+  <div class="text-end">
+    <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
+  </div>
+  <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header"></div>
+        <div class="modal-body">
+          <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+        </div>
+        <div class="modal-footer custom-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal (click)="aceptar()">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-8">
+      <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
+      <input type="text" class="form-control" size="68">
+    </div>
+    <div class="col-md-4">
+      <label for="correoElectronico" class="form-label">Correo electrónico: <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
+      </label>
+      <input type="text" class="form-control" maxlength="320">
+    </div>
+  </div>
+</div>
+<!--Domicillo del establecimiento-->
+<ng-titulo titulo="Domicillo del establecimiento"></ng-titulo>
+<div>
+  <div class="row">
+    <div class="col-md-4">
+      <label for="codigoPostal" class="form-label">Código postal*:</label>
+      <input type="text" name="codigoPostal" class="form-control" maxlength="12">
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'"></app-catalogo-select>
+      <input type="hidden" name="clave" id="idClaveEntidadFederativa">
+    </div>
+    <div class="col-md-4">
+      <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
+      <input type="text" name="descripcionMunicipio" id="descripcionMunicipio" class="form-control" maxlength="120">
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="alert alert-warning">
+      <strong>¡Precaución!</strong> Debes capturar localidad y colonia
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <label for="informacionExtra" class="form-label">Localidad*:</label>
+      <input type="text" name="informacionExtra" id="informacionExtra" class="form-control" maxlength="120">
+    </div>
+    <div class="col-md-4">
+      <label for="descripcionColonia" class="form-label">Colonia*:</label>
+      <input type="text" name="descripcionColonia" id="descripcionColonia" class="form-control" maxlength="120">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-8">
+      <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill" title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote" data-bs-toggle="tooltip"></span>
+      </label>
+      <input type="text" name="calle" id="calle" class="form-control" maxlength="90">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+      <label for="lada" class="form-label">Lada:</label>
+      <input type="text" name="lada" id="lada" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label for="telefono" class="form-label">Teléfono:</label>
+      <input type="text" name="telefono" id="telefono" class="form-control">
+    </div>
+  </div>
+  <div class="col-md-12 mt-5">
+    <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="headers" [datos]="certificadoDisponsiblesTablaDatos"></app-tabla-dinamica>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-end">
+      <button type="button" class="btn btn-danger"> Eliminar </button>
+      <button type="button" class="btn btn-primary ms-2" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Agregar </button>
+    </div>
+  </div>
+  <!-- Scian popup screen -->
+  <div class="row mt-5">
+    <ng-titulo titulo="Clave S.C.I.A.N." />
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true"></app-catalogo-select>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false"></app-catalogo-select>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <button type="button" name="limpiarSCIAN" class="btn btn-danger"> Limpiar </button>
+        <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
+        <button type="button" name="agregar" class="btn btn-primary ms-2"> Agregar </button>
+      </div>
+    </div>
+  </div>
+  <!-- Scian popup screen end -->
+  <div class="row mt-5">
+    <div class="col-md-4 mt-4">
+      <div class="form-check mt-3">
+        <input class="form-check-input" type="checkbox" id="avisoDeFuncionamiento" formControlName="avisoDeFuncionamiento" (change)="setAvisoDeFuncionamiento($event)" aria-label="Aviso de funcionamiento" />
+        <label class="control-label" for="avisoDeFuncionamiento"> Aviso de funcionamiento </label>
+      </div>
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
+      </label>
+      <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria" (change)="setLicenciaSanitaria($event)" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-8">
+      <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Régimen al que se destinarán la mercancías'" [required]="true"></app-catalogo-select>
+    </div>
+    <div class="col-md-4">
+      <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Aduana'" [required]="false"></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <label>(Solo para uso específico de Maquila)</label>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <label>No. Programa IMMEX:</label>
+      <input type="text" class="form-control" />
+    </div>
+    <div class="col-md-2">
+      <label>Año:</label>
+      <input type="text" class="form-control" />
+    </div>
+  </div>
+  <div class="col-md-12 mt-4">
+    <label class="form-label mb-5" for="">mercancías*:</label>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla"></app-tabla-dinamica>
+  </div>
+  <div class="row mt-5 pull-right">
+    <button type="button" name="agregar" class="btn btn-primary ms-2"> Modificar </button>
+  </div>
+  <!-- Datos mercancia popup screen start -->
+  <div class="col-md-12">
+    <ng-titulo titulo="Datos mercancía" />
+  </div>
+  <div class="row mt-5"></div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true"></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true"></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label">Marca*:</label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true"></app-catalogo-select>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label">Especifique*:</label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span></label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label class="form-label">Descripción de la fracción arancelaria*:</label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-3">
+       <label class="form-label">Cantidad UMT*:</label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">UMT*:<span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span></label>
+      <input class="form-control" placeholder="" type="text" />
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-3">
+      <label class="form-label">Cantidad UMC*:</label>
+     <input class="form-control" placeholder="" type="text" />
+   </div>
+   <div class="col-md-3">
+     <label class="form-label">UMC*:<span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span></label>
+     <input class="form-control" placeholder="" type="text" />
+   </div>
+  </div>
+  <!-- collapsed crosslist -->
+  <div class="col-md-12 mt-4">
+    <div class="panel-group ficha-collapse" id="accordion">
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          (click)="paisOrigenColapsable()"
+          tabindex="0"
+        >
+          <h4 class="panel-title">País de origen</h4>
+          <button type="button" class="collpase-button collapsed"></button>
+        </div>
+        @if(paisOrigen){
+        <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-body">
+            <crosslist
+              [label]="paisOrigenCrossList.label"
+              [fechas]="paisOrigenCrossList.fechas"
+            ></crosslist>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 mt-4">
+    <div class="panel-group ficha-collapse" id="accordion">
+      <div class="panel panel-default">
+        <div
+          class="panel-heading"
+          (click)="paisProcedencis_colapsable()"
+          tabindex="0"
+        >
+          <h4 class="panel-title">País de procedencia</h4>
+          <button type="button" class="collpase-button collapsed"></button>
+        </div>
+        @if(paisProcedencisColapsable){
+        <div class="panel-collapse collapse in" id="panel-01">
+          <div class="panel-body">
+            <crosslist
+              [label]="paisProcedencisCrossList.label"
+              [fechas]="paisProcedencisCrossList.fechas"
+            ></crosslist>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  <!-- Clave de los lotes -->
+  <div class="col-md-8 mt-3">
+    <div class="col-md-4">
+      <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+    </div>
+    <div class="col-md-4">
+      <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-3">
+    <label class="form-label" for="">Lista Claves de los lotes*:</label>
+  </div>
+
+  <div class="col-md-8 mt-3 justify-content-centre align-items-centre" >
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+      [configuracionTabla]="listaClave" 
+      [datos]="listaClaveTabla"
+    >
+    </app-tabla-dinamica>
+  </div>
+  <div class="col-md-2"></div>
+
+  <div class="col-md-12 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn btn-default btn-space">
+        Modificar
+      </button>
+      <button
+        class="btn btn-default ms-3"
+        type="button">
+        Eliminar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary ms-3">
+        Agregar
+      </button>
+    </div>
+  </div>
+<!-- udospecifico crosslist -->
+
+<div class="col-md-12 mt-4">
+  <div class="panel-group ficha-collapse" id="accordion">
+    <div class="panel panel-default">
+      <div
+        class="panel-heading"
+        (click)="usoEspecificoColapsable()"
+        tabindex="0"
+      >
+        <h4 class="panel-title">Uso especifico</h4>
+        <button type="button" class="collpase-button collapsed"></button>
+      </div>
+      @if(usoEspecifico){
+      <div class="panel-collapse collapse in" id="panel-01">
+        <div class="panel-body">
+          <crosslist
+            [fechas]="usoEspecificoCrossList.fechas"
+            [label]="usoEspecificoCrossList.label"
+          >
+          </crosslist>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+<div class="col-md-12 d-flex justify-content-end align-items-end">
+  <div class="btn-group">
+    <button class="btn btn-default ms-3" type="button">Cancelar</button>
+    <button
+      type="button"
+      class="btn btn-primary ms-3">Modificar
+    </button>
+  </div>
+</div>
+</div>
+<!-- Datos mercancia popup screen end -->

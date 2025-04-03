@@ -5,6 +5,7 @@ import { ConsultaRoutingModule } from './consulta-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConsultaService } from './service/consulta.service';
 import { SharedModule } from '@libs/shared/data-access-user/src';
+import { ToastrService } from 'ngx-toastr';
 
 
 @NgModule({
@@ -14,6 +15,8 @@ import { SharedModule } from '@libs/shared/data-access-user/src';
     ConsultaRoutingModule,
     ReactiveFormsModule,
     SharedModule,
-  ]
+    
+  ],
+  providers:[ToastrService]
 })
 export class ConsultaModule { }

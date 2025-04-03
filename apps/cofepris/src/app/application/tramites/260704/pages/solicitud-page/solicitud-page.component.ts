@@ -11,6 +11,8 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
+import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
 
 /**
  * Texto de alerta para terceros.
@@ -47,13 +49,14 @@ interface AccionBoton {
     PasoTresComponent,
     PasoUnoComponent,
     ReactiveFormsModule,
-  ],
+    AlertComponent
+],
 })
 /**
  * Componente que representa la página de solicitud.
  */
 export class SolicitudPageComponent {
-  TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+  // TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
   /**
    * Lista de pasos del asistente.
    */
@@ -63,7 +66,8 @@ export class SolicitudPageComponent {
    * Índice del paso actual.
    */
   indice: number = 1;
-
+  public infoAlert = 'alert-info';
+  TEXTOS = AVISO_PRIVACIDAD;
   /**
    * Referencia al componente del asistente.
    */
