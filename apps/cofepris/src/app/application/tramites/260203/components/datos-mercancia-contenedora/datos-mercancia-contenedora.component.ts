@@ -137,11 +137,19 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     }));
   }
 
-  aggregarMercancia(datos: DetalleMercancia) : void {
-    this.tramite260203Store.aggregarDetalleMercancia(datos)
+  /**
+   * Agrega un nuevo detalle de mercancía al estado del trámite.
+   * @param {DetalleMercancia} datos - Detalle de la mercancía a agregar
+   */
+  aggregarMercancia(datos: DetalleMercancia): void {
+    this.tramite260203Store.aggregarDetalleMercancia(datos);
   }
 
-  eliminarMercancia(datos: DetalleMercancia[]) : void {
-    this.tramite260203Store.eliminarDetalleMercancia(datos)
+  /**
+   * Elimina los detalles de mercancía del estado del trámite.
+   * @param {DetalleMercancia[]} datos - Detalles de mercancía a eliminar
+   */
+  eliminarMercancia(datos: DetalleMercancia[]): void {
+    this.tramite260203Store.eliminarDetalleMercancia(datos);
   }
 }

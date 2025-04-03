@@ -15,6 +15,10 @@ import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.
 import { TablaOpcionConfig } from '../../../../shared/models/datos-solicitud.model';
 import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.model';
 
+/**
+ * Estado inicial del trámite 260203.
+ * @interface Tramite260203State
+ */
 export interface Tramite260203State {
   destinatarioFinalTablaDatos: Destinatario[];
   facturadorTablaDatos: Facturador[];
@@ -32,9 +36,12 @@ export interface Tramite260203State {
   pagoDerechos: PagoDerechosFormState;
   detalleMercanciaTabla: DetalleMercancia[];
   indice: number;
-
 }
 
+/**
+ * Crea el estado inicial del trámite 260203.
+ * @returns {Tramite260203State} El estado inicial
+ */
 export function createInitialState(): Tramite260203State {
   return {
     destinatarioFinalTablaDatos: [],
@@ -101,10 +108,14 @@ export function createInitialState(): Tramite260203State {
       importePago: '',
     },
     detalleMercanciaTabla: [],
-    indice: 1
+    indice: 1,
   };
 }
 
+/**
+ * Almacén del trámite 260203.
+ * @class Tramite260203Store
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -114,6 +125,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     super(createInitialState());
   }
 
+  /**
+   * Actualiza el estado de los datos del formulario de solicitud.
+   * @param {DatosSolicitudFormState} datosSolicitudFormState - Estado del formulario de solicitud
+   */
   public updateDatosSolicitudFormState(
     datosSolicitudFormState: DatosSolicitudFormState
   ): void {
@@ -122,6 +137,11 @@ export class Tramite260203Store extends Store<Tramite260203State> {
       datosSolicitudFormState,
     }));
   }
+
+  /**
+   * Actualiza la tabla de fabricantes.
+   * @param {Fabricante[]} newFabricantes - Nuevos fabricantes a agregar
+   */
   public updateFabricanteTablaDatos(newFabricantes: Fabricante[]): void {
     this.update((state) => ({
       ...state,
@@ -129,6 +149,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Actualiza la tabla de destinatarios finales.
+   * @param {Destinatario[]} newDestinatarios - Nuevos destinatarios a agregar
+   */
   public updateDestinatarioFinalTablaDatos(
     newDestinatarios: Destinatario[]
   ): void {
@@ -141,6 +165,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Actualiza la tabla de proveedores.
+   * @param {Proveedor[]} newProveedores - Nuevos proveedores a agregar
+   */
   public updateProveedorTablaDatos(newProveedores: Proveedor[]): void {
     this.update((state) => ({
       ...state,
@@ -148,6 +176,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Actualiza la tabla de facturadores.
+   * @param {Facturador[]} newFacturadores - Nuevos facturadores a agregar
+   */
   public updateFacturadorTablaDatos(newFacturadores: Facturador[]): void {
     this.update((state) => ({
       ...state,
@@ -155,6 +187,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de configuración de opción.
+   * @param {TablaOpcionConfig[]} opcionConfigDatos - Nuevos datos de configuración de opción
+   */
   public updateOpcionConfigDatos(opcionConfigDatos: TablaOpcionConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -162,6 +198,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de configuración SCIAN.
+   * @param {TablaScianConfig[]} scianConfigDatos - Nuevos datos de configuración SCIAN
+   */
   public updateScianConfigDatos(scianConfigDatos: TablaScianConfig[]): void {
     this.update((state) => ({
       ...state,
@@ -169,6 +209,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Actualiza los datos de configuración de mercancías.
+   * @param {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Nuevos datos de configuración de mercancías
+   */
   public updateTablaMercanciasConfigDatos(
     tablaMercanciasConfigDatos: TablaMercanciasDatos[]
   ): void {
@@ -177,6 +221,11 @@ export class Tramite260203Store extends Store<Tramite260203State> {
       tablaMercanciasConfigDatos,
     }));
   }
+
+  /**
+   * Actualiza los datos del formulario de pago de derechos.
+   * @param {PagoDerechosFormState} nuevoPagoDerechos - Nuevos datos de pago de derechos
+   */
   public updatePagoDerechos(nuevoPagoDerechos: PagoDerechosFormState): void {
     this.update((state) => ({
       ...state,
@@ -184,6 +233,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     }));
   }
 
+  /**
+   * Agrega un nuevo detalle de mercancía a la tabla.
+   * @param {DetalleMercancia} detalleMercancia - Detalles de la mercancía a agregar
+   */
   aggregarDetalleMercancia(detalleMercancia: DetalleMercancia): void {
     this.update((state) => {
       const DATOS = {
@@ -197,6 +250,10 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     });
   }
 
+  /**
+   * Elimina un detalle de mercancía de la tabla.
+   * @param {DetalleMercancia[]} detalleMercancia - Detalles de mercancía a eliminar
+   */
   eliminarDetalleMercancia(detalleMercancia: DetalleMercancia[]): void {
     this.update((state) => {
       const DATOS = [...state.detalleMercanciaTabla].filter((ele) =>
@@ -209,10 +266,14 @@ export class Tramite260203Store extends Store<Tramite260203State> {
     });
   }
 
+  /**
+   * Establece el índice del trámite.
+   * @param {number} indice - Índice a establecer
+   */
   public setIndice(indice: number): void {
     this.update((state) => ({
       ...state,
-      indice
-    }))
+      indice,
+    }));
   }
 }
