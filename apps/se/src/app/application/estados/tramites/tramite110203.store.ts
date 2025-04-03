@@ -514,6 +514,17 @@ export class Tramite110203Store extends Store<Solicitud110203State> {
     }
 
     /**
+     * Actualiza el observaciones seleccionado por el usuario.
+     * @param paisBloque El nuevo observaciones o bloque económico a establecer.
+     */
+    public setObservaciones(observaciones: string): void {
+        this.update((state) => ({
+            ...state,
+            observaciones
+        }));
+    }
+        
+    /**
      * Limpia la selección de la radio
      */
     public limpiarSeleccion(): void {
