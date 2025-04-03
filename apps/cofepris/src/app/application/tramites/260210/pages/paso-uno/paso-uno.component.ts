@@ -8,6 +8,11 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
 import { Tramite260214Store } from '../../estados/tramite260210Store.store';
 
+/**
+ * @component PasoUnoComponent
+ * @description Container component representing the first step of the procedure form.
+ * It handles the selected tab index using state from `Tramite260210Query` and updates it via `Tramite260214Store`.
+ */
 @Component({
   selector: 'app-paso-uno',
   standalone: true,
@@ -21,16 +26,39 @@ import { Tramite260214Store } from '../../estados/tramite260210Store.store';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
-  indice: number | undefined = 1;
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * @property indice
+   * @description Indicates the index of the selected tab within the form step.
+   * @type {number | undefined}
+   */
+  public indice: number | undefined = 1;
 
+  /**
+   * @property destroyNotifier$
+   * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
+   * Helps prevent memory leaks.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Initializes the component with required query and store for state management.
+   *
+   * @param Tramite260210Query Query to access procedure state.
+   * @param tramite260214Store Store to update procedure state.
+   */
   constructor(
     private Tramite260210Query: Tramite260210Query,
     private tramite260214Store: Tramite260214Store
   ) {}
 
+  /**
+   * Angular lifecycle method that runs on component initialization.
+   * Subscribes to the selected tab from state and updates `indice`.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.Tramite260210Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -39,18 +67,21 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       });
   }
 
-  seleccionaTab(i: number): void {
-    //this.indice = i;
+  /**
+   * Updates the selected tab index in the store.
+   *
+   * @param i Index of the selected tab.
+   * @returns {void}
+   */
+  public seleccionaTab(i: number): void {
     this.tramite260214Store.updateTabSeleccionado(i);
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Angular lifecycle method that runs just before the component is destroyed.
+   * Emits and completes the `destroyNotifier$` to unsubscribe observables.
    *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

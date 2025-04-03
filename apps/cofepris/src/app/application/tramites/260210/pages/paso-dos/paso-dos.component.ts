@@ -11,7 +11,11 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
 
-
+/**
+ * @component PasoDosComponent
+ * @description Component responsible for managing step two of the procedure.
+ * It handles document requirements, retrieves catalog data, and manages user selections.
+ */
 @Component({
   selector: 'app-paso-dos',
   standalone: true,
@@ -25,43 +29,74 @@ import { TEXTOS_REQUISITOS } from '../../constants/medicos-uso.enum';
   styleUrl: './paso-dos.component.css',
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
-  TEXTOS = TEXTOS_REQUISITOS;
-  tiposDocumentos: Catalogo[] = [];
-  infoAlert = 'alert-info';
-  catalogoDocumentos: Catalogo[] = [];
-  documentosSeleccionados: Catalogo[] = [];
+  /**
+   * @property TEXTOS
+   * @description Contains static text literals used in this step of the form.
+   * @type {typeof TEXTOS_REQUISITOS}
+   */
+  public TEXTOS = TEXTOS_REQUISITOS;
 
   /**
-   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
-   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
-   *
-   * @property {Subject<void>} destroyNotifier$
+   * @property tiposDocumentos
+   * @description Local placeholder for document types used in this step.
+   * @type {Catalogo[]}
+   */
+  public tiposDocumentos: Catalogo[] = [];
+
+  /**
+   * @property infoAlert
+   * @description Bootstrap alert type used for informational messages.
+   * @type {string}
+   */
+  public infoAlert = 'alert-info';
+
+  /**
+   * @property catalogoDocumentos
+   * @description Holds the document type catalog fetched from the API.
+   * @type {Catalogo[]}
+   */
+  public catalogoDocumentos: Catalogo[] = [];
+
+  /**
+   * @property documentosSeleccionados
+   * @description List of documents selected by the user.
+   * @type {Catalogo[]}
+   */
+  public documentosSeleccionados: Catalogo[] = [];
+
+  /**
+   * @property destroyNotifier$
+   * @description Notifier used to unsubscribe from observables when the component is destroyed.
+   * Prevents memory leaks.
+   * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @constructor
+   * @param catalogosServices Service to fetch catalog data needed in the form.
+   */
   constructor(private catalogosServices: CatalogosService) {
-    // Necesito inyectar los servicios a través del constructor, de modo que el constructor esté vacío.
-  }
-
-  ngOnInit(): void {
-   // this.getTiposDocumentos();
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que ampare el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
+    // Dependencies are injected here. No initialization logic needed.
   }
 
   /**
-   * Obtiene el catalgoso de los tipos de documentos disponibles para el trámite.
+   * @method ngOnInit
+   * @description Angular lifecycle hook triggered on component initialization.
+   * Initiates the fetch of document types.
+   * @returns {void}
    */
-  getTiposDocumentos(): void {
+  ngOnInit(): void {
+    this.getTiposDocumentos();
+  }
+
+  /**
+   * @method getTiposDocumentos
+   * @description Fetches the catalog of document types for the procedure.
+   * Updates the `catalogoDocumentos` list if successful.
+   * @returns {void}
+   */
+  public getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .pipe(takeUntil(this.destroyNotifier$))
@@ -73,10 +108,12 @@ export class PasoDosComponent implements OnInit, OnDestroy {
         },
       });
   }
+
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
    * @method ngOnDestroy
+   * @description Angular lifecycle hook triggered just before the component is destroyed.
+   * Cleans up active subscriptions to prevent memory leaks.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
