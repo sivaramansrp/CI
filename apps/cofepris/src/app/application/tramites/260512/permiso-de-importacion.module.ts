@@ -16,7 +16,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { ExportacionService } from '../../shared/services/exportacion.service';
 import { ToastrService } from 'ngx-toastr';
 
-import { DatosDeLaSolicitudComponent } from '../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosDelEstablecimientoComponent } from '../../shared/components/datos-del-establecimiento/datos-del-establecimiento.component';
+import { DomicilioComponent } from '../../shared/components/domicilio-establecimiento/domicilio-establecimiento.component'
 @NgModule({
   declarations: [
     DatosComponent,
@@ -30,7 +31,8 @@ import { DatosDeLaSolicitudComponent } from '../../shared/components/datos-de-la
     WizardComponent,
     PasoDosComponent,
     PasoTresComponent,
-    DatosDeLaSolicitudComponent
+    DatosDelEstablecimientoComponent,
+    DomicilioComponent
   ],
   providers: [
     provideHttpClient(),
