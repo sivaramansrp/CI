@@ -12,6 +12,7 @@
             id="claveReferencia"
             class="form-control"
             formControlName="claveReferencia"
+            (change)="setValoresStore(derechosForm,'claveReferencia', 'setclaveReferencia')"
           />
         </div>
   
@@ -25,6 +26,7 @@
             id="cadenaDependencia"
             class="form-control"
             formControlName="cadenaDependencia"
+            (change)="setValoresStore(derechosForm,'cadenaDependencia', 'setcadenaDependencia')"
           />
         </div>
   
@@ -35,6 +37,7 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="true"
+            (change)="setValoresStore(derechosForm,'banco', 'setbanco')"
           ></app-catalogo-select>
         </div>
       </div>
@@ -48,6 +51,7 @@
             id="llavePago"
             class="form-control"
             formControlName="llavePago"
+            (change)="setValoresStore(derechosForm,'llavePago', 'setllavePago')"
           />
         </div>
   
@@ -57,6 +61,7 @@
           formControlName="fechaPago"
          (valorCambiado)="cambioFechaIngreso($event)"
           [setFecha]="derechosForm.get('fechaPago')?.value"
+          (change)="setValoresStore(derechosForm,'fechaPago', 'setfechaPago')"
           ></input-fecha>
         </div>
   
@@ -68,6 +73,7 @@
             id="importePago"
             class="form-control"
             formControlName="importePago"
+            (change)="setValoresStore(derechosForm,'importePago', 'setimportePago')"
           />
         </div>
       </div>
