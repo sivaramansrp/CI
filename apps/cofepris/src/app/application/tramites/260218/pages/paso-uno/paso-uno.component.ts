@@ -20,7 +20,7 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 })
 export class PasoUnoComponent {
   // Variable que mantiene el índice de la pestaña seleccionada.
-  indice: number = 2;
+  indice: number = 1;
 
   /**
    * Método para seleccionar la pestaña activa según el índice proporcionado.

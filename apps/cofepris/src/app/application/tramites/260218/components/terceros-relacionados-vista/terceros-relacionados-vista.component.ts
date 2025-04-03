@@ -5,8 +5,8 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query'; 
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
@@ -26,39 +26,41 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit {
-  /**
-   * @property {Observable<Fabricante[]>} fabricantes$
-   * Observable que emite la lista de fabricantes desde el store.
-   * Se utiliza para renderizar la tabla de fabricantes.
+   /**
+   * @property {Fabricante[]} fabricanteTablaDatos
+   * Datos de la tabla de fabricantes.
    */
-  fabricantes$!: Observable<Fabricante[]>;
+   fabricanteTablaDatos: Fabricante[] = [];
 
-  /**
-   * @property {Observable<Destinatario[]>} destinatarios$
-   * Observable que emite la lista de destinatarios finales desde el store.
-   * Se utiliza para renderizar la tabla de destinatarios finales.
-   */
-  destinatarios$!: Observable<Destinatario[]>;
-
-  /**
-   * @property {Observable<Proveedor[]>} proveedores$
-   * Observable que emite la lista de proveedores desde el store.
-   * Se utiliza para renderizar la tabla de proveedores.
-   */
-  proveedores$!: Observable<Proveedor[]>;
-
-  /**
-   * @property {Observable<Facturador[]>} facturadores$
-   * Observable que emite la lista de facturadores desde el store.
-   * Se utiliza para renderizar la tabla de facturadores.
-   */
-  facturadores$!: Observable<Facturador[]>;
-
+   /**
+    * @property {Destinatario[]} destinatarioFinalTablaDatos
+    * Datos de la tabla de destinatarios finales.
+    */
+   destinatarioFinalTablaDatos: Destinatario[] = [];
+ 
+   /**
+    * @property {Proveedor[]} proveedorTablaDatos
+    * Datos de la tabla de proveedores.
+    */
+   proveedorTablaDatos: Proveedor[] = [];
+ 
+   /**
+    * @property {Facturador[]} facturadorTablaDatos
+    * Datos de la tabla de facturadores.
+    */
+   facturadorTablaDatos: Facturador[] = [];
+ 
   /**
    * @property {boolean} estaOculto
    * Variable booleana que controla si el componente debe estar oculto o no.
    */
   estaOculto: boolean = true;
+
+ /**
+   * Subject para gestionar el ciclo de vida del componente.
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @constructor
@@ -72,17 +74,42 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
     private tramiteQuery: Tramite260218Query
   ) {}
 
+
   /**
    * @method ngOnInit
-   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe los observables para mostrar los datos en la vista.
-   * Inicializa los observables de fabricantes, destinatarios, proveedores y facturadores.
+   * @description Este método se ejecuta al inicializar el componente. 
+   * Suscribe a varios observables para obtener datos relacionados con 
+   * fabricantes, destinatarios finales, proveedores y facturadores, 
+   * y los asigna a las propiedades correspondientes del componente.
+   * 
+   * @remarks
+   * Utiliza el operador `takeUntil` para gestionar la suscripción y 
+   * evitar fugas de memoria al destruir el componente.
    */
   ngOnInit(): void {
-    this.fabricantes$ = this.tramiteQuery.getFabricanteTablaDatos$;
-    this.destinatarios$ = this.tramiteQuery.getDestinatarioFinalTablaDatos$;
-    this.proveedores$ = this.tramiteQuery.getProveedorTablaDatos$;
-    this.facturadores$ = this.tramiteQuery.getFacturadorTablaDatos$;
+    this.tramiteQuery.getFabricanteTablaDatos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.fabricanteTablaDatos = data;
+      });
+
+    this.tramiteQuery.getDestinatarioFinalTablaDatos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.destinatarioFinalTablaDatos = data;
+      });
+
+    this.tramiteQuery.getProveedorTablaDatos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.proveedorTablaDatos = data;
+      });
+
+    this.tramiteQuery.getFacturadorTablaDatos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.facturadorTablaDatos = data;
+      });
   }
 
   /**

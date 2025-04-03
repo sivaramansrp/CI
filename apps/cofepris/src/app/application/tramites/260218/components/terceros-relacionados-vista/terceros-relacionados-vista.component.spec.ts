@@ -32,19 +32,19 @@ describe('TercerosRelacionadosVistaComponent', () => {
   });
 
   it('should initialize fabricantes$ observable on ngOnInit', () => {
-    expect(component.fabricantes$).toBeDefined();
+    expect(component.fabricanteTablaDatos).toBeDefined();
   });
 
   it('should initialize destinatarios$ observable on ngOnInit', () => {
-    expect(component.destinatarios$).toBeDefined();
+    expect(component.destinatarioFinalTablaDatos).toBeDefined();
   });
 
   it('should initialize proveedores$ observable on ngOnInit', () => {
-    expect(component.proveedores$).toBeDefined();
+    expect(component.proveedorTablaDatos).toBeDefined();
   });
 
   it('should initialize facturadores$ observable on ngOnInit', () => {
-    expect(component.facturadores$).toBeDefined();
+    expect(component.facturadorTablaDatos).toBeDefined();
   });
 
 });
