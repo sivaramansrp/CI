@@ -5,6 +5,7 @@ import { BooleanoSiNoPipe, Notificacion, SoloNumerosDirective } from '@ng-mf/dat
 import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { NotificacionesComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'c-pedimento',
@@ -12,6 +13,9 @@ import { NotificacionesComponent } from "../../../../../../../../../libs/shared/
   imports: [ReactiveFormsModule, CommonModule, forwardRef(() => BooleanoSiNoPipe), forwardRef(() => SoloNumerosDirective), NotificacionesComponent],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
+  providers: [
+    ToastrService,
+  ]
 })
 export class PedimentoComponent implements OnChanges {
   @Input({ required: true }) validacion!: boolean;
@@ -146,13 +150,13 @@ export class PedimentoComponent implements OnChanges {
     this.mensajeModal = MSG_ELIMINA_ELEMENTO;
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
-      categoria: 'warning',
+      categoria: 'success',
       modo: 'action',
-      titulo: 'Aviso',
+      titulo: 'Avisos',
       mensaje: MSG_ELIMINA_ELEMENTO
     }
 
-    //this.abrirModal();
+    this.abrirModal();
   }
 
   /**

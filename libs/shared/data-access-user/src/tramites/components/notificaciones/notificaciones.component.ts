@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 /**
  * Modelo que contiene los atributos necesarios para mostrar una notificación al usuario.
@@ -49,7 +50,7 @@ export enum TipoNotificacionEnum {
 export enum CategoriaMensaje {
   ALERTA = 'warning',
   EXITO = 'success',
-  ERROR = 'error',
+  ERROR = 'danger',
   INFORMACION = 'info',
 }
 
@@ -60,7 +61,7 @@ export enum CategoriaMensaje {
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
 })
-export class NotificacionesComponent implements OnChanges{
+export class NotificacionesComponent implements OnChanges {
   /**
    * @description Variable de entrada para definir qué tipo de notificación se va a mostrar.
    * @see ENUM
@@ -83,33 +84,48 @@ export class NotificacionesComponent implements OnChanges{
    */
   public mostrarModal: boolean = false;
 
+  textoHTML: SafeHtml = '';
+
   @ViewChild('modalNotificacion') modalElement!: ElementRef;
 
   constructor(
     private toastr: ToastrService,
+    private sanitizer: DomSanitizer,
   ) {
     //
   }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('entro aquí');
-    throw new Error('Method not implemented.');
+    if (changes['notificacionInput']) {
+      this.notificacionInput = changes['notificacionInput'].currentValue;
+      switch (this.notificacionInput?.tipoNotificacion) {
+        case TipoNotificacionEnum.ALERTA:
+          this.mostrarModal = true;
+          break;
+        case TipoNotificacionEnum.TOASTR:
+          this.creaToastr();
+          break;
+        default:
+          break;
+      }
+    }
+    // throw new Error('Method not implemented.');
   }
 
   /**
    * @description Metodo para definir el tipo de toastr a mostrar en pantalla
    */
   public creaToastr(): void {
-    switch(this.notificacionInput?.categoria){
-      case(CategoriaMensaje.ALERTA):
+    switch (this.notificacionInput?.categoria) {
+      case (CategoriaMensaje.ALERTA):
         this.toastr.warning(this.notificacionInput?.mensaje);
         break;
-      case(CategoriaMensaje.ERROR):
+      case (CategoriaMensaje.ERROR):
         this.toastr.error(this.notificacionInput?.mensaje);
-        break;  
-      case(CategoriaMensaje.EXITO):
+        break;
+      case (CategoriaMensaje.EXITO):
         this.toastr.success(this.notificacionInput?.mensaje);
         break;
-      case(CategoriaMensaje.INFORMACION):
+      case (CategoriaMensaje.INFORMACION):
         this.toastr.info(this.notificacionInput?.mensaje);
         break;
       default:
@@ -147,4 +163,20 @@ export class NotificacionesComponent implements OnChanges{
   cerrarModal(): void {
     this.mostrarModal = false;
   }
+
+  crearBanner(): void {
+    this.setHTML(this.notificacionInput?.mensaje);
+  }
+
+  /**
+ * Establece el contenido HTML de manera segura.
+ * 
+ * @param html - El contenido HTML a establecer.
+ * @returns void
+ */
+  setHTML(html: string): void {
+    this.textoHTML = this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+
 }
