@@ -7,14 +7,26 @@ import { RequisitosObligatorios } from '../models/aviso-catalogo.model';
 import { catchError } from 'rxjs';
 import { throwError } from 'rxjs';
 
+/**
+ * Servicio para gestionar la obtención de datos relacionados con
+ * el aviso del catálogo, la operación de importación y los requisitos obligatorios.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class MercDesmSinMonService {
+  /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar peticiones a archivos JSON.
+   */
   constructor(private http: HttpClient) {
     // El constructor está intencionalmente vacío para la inyección de dependencias
   }
 
+  /**
+   * Obtiene los datos del aviso del catálogo desde un archivo JSON.
+   * @returns Observable con los datos del aviso del catálogo.
+   */
   obtenerAvisoDelCatalogo(): Observable<AvisoCatalogo> {
     return this.http
       .get<AvisoCatalogo>('assets/json/32501/aviso-catalogo.json')
@@ -25,6 +37,10 @@ export class MercDesmSinMonService {
       );
   }
 
+  /**
+   * Obtiene los datos de la operación de importación desde un archivo JSON.
+   * @returns Observable con la lista de operaciones de importación.
+   */
   obtenerOperacionDeImportacion(): Observable<OperacionDeImportacion[]> {
     return this.http
       .get<OperacionDeImportacion[]>(
@@ -37,6 +53,10 @@ export class MercDesmSinMonService {
       );
   }
 
+  /**
+   * Obtiene los datos para agregar nuevos requisitos obligatorios desde un archivo JSON.
+   * @returns Observable con la lista de requisitos obligatorios.
+   */
   obtenerDatosAgregarNuevo(): Observable<RequisitosObligatorios[]> {
     return this.http
       .get<RequisitosObligatorios[]>(

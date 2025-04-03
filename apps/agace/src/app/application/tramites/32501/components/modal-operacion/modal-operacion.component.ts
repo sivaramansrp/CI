@@ -15,16 +15,54 @@ import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente que representa un modal para la operación de importación.
+ * Permite gestionar los datos relacionados con la solicitud 32501, incluyendo
+ * la selección de aduana, patente, RFC y pedimento. Implementa la inicialización
+ * de formularios reactivos y la suscripción a cambios en el estado de la solicitud.
+ * También maneja la limpieza de suscripciones al destruirse el componente.
+ */
 @Component({
   selector: 'app-modal-operacion',
   templateUrl: './modal-operacion.component.html',
   styleUrl: './modal-operacion.component.scss',
 })
+/**
+ * Componente que representa un modal para la operación de importación.
+ * Permite gestionar los datos relacionados con la solicitud 32501, incluyendo
+ * la selección de aduana, patente, RFC y pedimento. Implementa la inicialización
+ * de formularios reactivos y la suscripción a cambios en el estado de la solicitud.
+ * También maneja la limpieza de suscripciones al destruirse el componente.
+ */
+
 export class ModalOperacionComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario para los datos de la operación de importación.
+   */
   frmDatosOperacionImp!: FormGroup;
+
+  /**
+   * Opción seleccionada de aduana.
+   */
   opcionAduana: CatalogosSelect = {} as CatalogosSelect;
+
+  /**
+   * Observable para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Estado actual de la solicitud 32501.
+   */
   solicitud32501State: Solicitud32501State = {} as Solicitud32501State;
+
+  /**
+   * Constructor del componente.
+   * @param fb FormBuilder para la creación de formularios reactivos.
+   * @param mercDesmSinMonService Servicio para obtener datos del catálogo de avisos.
+   * @param solicitud32501Query Consulta de datos relacionados con la solicitud 32501.
+   * @param solicitud32501Store Almacén de datos para la solicitud 32501.
+   */
   constructor(
     private fb: FormBuilder,
     public mercDesmSinMonService: MercDesmSinMonService,
@@ -34,6 +72,9 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
     this.obtenerAvisoDelCatalogo();
   }
 
+  /**
+   * Inicializa el formulario y suscriptores.
+   */
   ngOnInit(): void {
     this.frmDatosOperacionImp = this.fb.group({
       patente: [this.solicitud32501State.patente, [Validators.required]],
@@ -58,6 +99,9 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Obtiene la información del aviso desde el catálogo.
+   */
   obtenerAvisoDelCatalogo(): void {
     this.mercDesmSinMonService
       .obtenerAvisoDelCatalogo()
@@ -69,35 +113,65 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Actualiza la aduana seleccionada en el estado de la solicitud.
+   * @param evento Objeto del catálogo con la información de la aduana.
+   */
   actualizarAduana(evento: Catalogo): void {
     this.solicitud32501Store.actualizarAduana(evento.id);
   }
 
+  /**
+   * Actualiza la patente en el estado de la solicitud.
+   * @param evento Evento del input que contiene el nuevo valor.
+   */
   actualizarPatente(evento: Event): void {
     const VALOR = evento.target as HTMLInputElement;
     this.solicitud32501Store.actualizarPatente(VALOR.value);
   }
 
+  /**
+   * Actualiza el RFC en el estado de la solicitud.
+   * @param evento Evento del input que contiene el nuevo valor.
+   */
   actualizaRFC(evento: Event): void {
     const VALOR = evento.target as HTMLInputElement;
     this.solicitud32501Store.actualizaRFC(VALOR.value);
   }
 
+  /**
+   * Actualiza el número de pedimento en el estado de la solicitud.
+   * @param evento Evento del input que contiene el nuevo valor.
+   */
   actualizarPedimento(evento: Event): void {
     const VALOR = evento.target as HTMLInputElement;
     this.solicitud32501Store.actualizarPedimento(VALOR.value);
   }
 
+  /**
+   * Verifica si un campo del formulario no es válido.
+   * @param id Identificador del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario undefined.
+   */
   noEsValido(id: string): boolean | undefined {
     const CONTROL = this.frmDatosOperacionImp.get(id);
     return CONTROL?.invalid && CONTROL?.touched;
   }
 
+  /**
+   * Verifica si un campo del formulario es válido.
+   * @param field Nombre del campo en el formulario.
+   * @returns true si el campo es inválido y ha sido tocado, de lo contrario false.
+   */
   esValido(field: string): boolean {
     const CONTROL = this.frmDatosOperacionImp.get(field);
     return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
   }
 
+  /**
+   * Método de limpieza al destruir el componente.
+   * Cancela suscripciones para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();

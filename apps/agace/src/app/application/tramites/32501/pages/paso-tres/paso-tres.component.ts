@@ -9,11 +9,34 @@ import { catchError } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+/**
+ * Componente PasoTresComponent.
+ * 
+ * Este componente se encarga de manejar la lógica del paso tres en el flujo de trámites.
+ * 
+ * Propiedades:
+ * - `tipoPersona`: Número que representa el tipo de persona.
+ * 
+ * Métodos:
+ * - `obtenerTipoPersona(tipo: number)`: Método para establecer el tipo de persona.
+ * - `obtieneFirma(ev: string)`: Método que maneja el evento de obtención de firma y realiza acciones adicionales como
+ *   la navegación y el establecimiento del trámite en el almacén.
+ * - `ngOnDestroy()`: Método del ciclo de vida de Angular que se ejecuta al destruir el componente, utilizado para
+ *   completar el Subject `destroy$` y evitar fugas de memoria.
+ * 
+ * Constructor:
+ * - Inyecta las dependencias necesarias como el enrutador, el servicio de trámites y el almacén de trámites.
+ */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.css',
 })
+/**
+ * Componente PasoTresComponent.
+ * 
+ * Este componente se encarga de manejar la lógica del paso tres en el flujo de trámites.
+ */
 export class PasoTresComponent implements OnDestroy {
   /**
    * Tipo de persona.
@@ -66,6 +89,11 @@ export class PasoTresComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Aquí se utiliza para emitir un valor a `destroy$` y completar el observable,
+   * asegurando la limpieza de suscripciones y evitando fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
