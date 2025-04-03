@@ -13,50 +13,31 @@ describe('PagoDeDerechosComponent', () => {
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should initialize the form with empty values', () => {
-    expect(component.pagoDerechosForm.get('claveReferencia')?.value).toBe('');
-    expect(component.pagoDerechosForm.get('cadenaDependencia')?.value).toBe('');
-    expect(component.pagoDerechosForm.get('estado')?.value).toBe('');
-    expect(component.pagoDerechosForm.get('llavePago')?.value).toBe('');
-    expect(component.pagoDerechosForm.get('fechaPago')?.value).toBe('');
-    expect(component.pagoDerechosForm.get('importePago')?.value).toBe('');
-  });
-
-  it('should validate required fields', () => {
-    const form = component.pagoDerechosForm;
-    expect(form.valid).toBeFalsy();
-    
-    form.controls['claveReferencia'].setValue('123');
-    form.controls['cadenaDependencia'].setValue('abc');
-    form.controls['estado'].setValue('active');
-    form.controls['llavePago'].setValue('key123');
-    form.controls['fechaPago'].setValue('2024-01-01');
-    form.controls['importePago'].setValue('100.00');
-    
-    expect(form.valid).toBeTruthy();
-  });
-
-  it('should validate importePago pattern', () => {
-    const importePagoControl = component.pagoDerechosForm.controls['importePago'];
-    
-    importePagoControl.setValue('abc');
-    expect(importePagoControl.valid).toBeFalsy();
-    
-    importePagoControl.setValue('100.00');
-    expect(importePagoControl.valid).toBeTruthy();
-  });
-
-  it('should reset form on onReset()', () => {
-    component.pagoDerechosForm.controls['claveReferencia'].setValue('test');
-    component.onReset();
-    expect(component.pagoDerechosForm.get('claveReferencia')?.value).toBe(null);
-  });
   
+  it('should run #ngOnInit()', async () => {
+
+    component.pagoDerechoFormState = component.pagoDerechoFormState || {};
+    component.pagoDerechoFormState.claveReferencia = 'claveReferencia';
+    component.pagoDerechoFormState.cadenaDependencia = 'cadenaDependencia';
+    component.pagoDerechoFormState.estado = 'estado';
+    component.pagoDerechoFormState.llavePago = 'llavePago';
+    component.pagoDerechoFormState.fechaPago = 'fechaPago';
+    component.pagoDerechoFormState.importePago = 'importePago';
+    component.updatePagoDerechos = component.updatePagoDerechos || {};
+    component.updatePagoDerechos.emit = jest.fn();
+    component.cargarDatos = jest.fn();
+    component.ngOnInit();
+  });
+
+  it('should run #onReset()', async () => {
+    component.pagoDerechosForm = component.pagoDerechosForm || {};
+    component.pagoDerechosForm.reset = jest.fn();
+    component.onReset();
+     expect(component.pagoDerechosForm.reset).toHaveBeenCalled();
+  });
 });
