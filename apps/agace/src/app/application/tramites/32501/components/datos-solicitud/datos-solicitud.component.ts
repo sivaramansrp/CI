@@ -1,31 +1,30 @@
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  Catalogo,
-  CatalogosSelect,
-  ConfiguracionColumna,
-  InputFecha,
-  TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
-import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import {
-  AvisoCatalogo,
-  OperacionDeImportacion,
-} from '../../models/aviso-catalogo.model';
+import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ElementRef } from '@angular/core';
 import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
-import {
-  Solicitud32501State,
-  Solicitud32501Store,
-} from '../../estados/Solicitud32501.store';
-import { Solicitud32501Query } from '../../estados/solicitud32501.query';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
 import { Modal } from 'bootstrap';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
+import { REGEX_NICO_NUMEROS } from '../../enums/solicitud32501.enum';
+import { REGEX_NUMEROS_USD } from '../../enums/solicitud32501.enum';
+import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
+import { Solicitud32501Query } from '../../estados/solicitud32501.query';
+import { Solicitud32501State } from '../../estados/solicitud32501.store';
+import { Solicitud32501Store } from '../../estados/solicitud32501.store';
+import { Subject } from 'rxjs';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
+import { ViewChild } from '@angular/core';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -112,15 +111,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       nico: [
         this.solicitud32501State.nico,
-        [Validators.required, Validators.pattern('^[0-9]*$')],
+        [Validators.required, Validators.pattern(REGEX_NICO_NUMEROS)],
       ],
       peso: [
         this.solicitud32501State.peso,
-        [Validators.required, Validators.pattern('^[0-9.]{1,}$')],
+        [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)],
       ],
       valorUSD: [
         this.solicitud32501State.valorUSD,
-        [Validators.required, Validators.pattern('^[0-9.]{1,}$')],
+        [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)],
       ],
       descripcionMercancia: [
         this.solicitud32501State.descripcionMercancia,
@@ -144,7 +143,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       numeroInterior: [this.solicitud32501State.numeroInterior],
       codigoPostal: [
         this.solicitud32501State.codigoPostal,
-        [Validators.required, Validators.pattern('^[0-9]*$')],
+        [Validators.required, Validators.pattern(REGEX_NICO_NUMEROS)],
       ],
     });
 
@@ -225,25 +224,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   actualizarIdTransaccionVU(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(/[^a-zA-Z0-9]/g, '');
+    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
     this.solicitud32501Store.actualizarIdTransaccionVU(VALOR);
   }
 
   actualizarNico(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(/[^a-zA-Z0-9]/g, '');
+    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
     this.solicitud32501Store.actualizarNico(VALOR);
   }
 
   actualizarPeso(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(/[^a-zA-Z0-9]/g, '');
+    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
     this.solicitud32501Store.actualizarPeso(VALOR);
   }
 
   actualizarValorUSD(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(/[^a-zA-Z0-9]/g, '');
+    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
     this.solicitud32501Store.actualizarValorUSD(VALOR);
   }
 
@@ -275,10 +274,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   actualizarNombreComercial(evento: Event): void {
     const VALOR = evento.target as HTMLInputElement;
     this.solicitud32501Store.actualizarNombreComercial(VALOR.value);
-  }
-
-  eliminarOperacionImp(): void {
-    //
   }
 
   modificarOperacionImp(): void {

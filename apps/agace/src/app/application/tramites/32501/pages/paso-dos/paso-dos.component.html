@@ -1,7 +1,80 @@
 <div class="container">
-  <ng-titulo titulo="Requisitos opcionales" />
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Requisitos obligatorios " />
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <app-tabla-dinamica
+        [configuracionTabla]="configuracionAgregarNuevoTabla"
+        [datos]="datosAgregarNuevo"
+      >
+      </app-tabla-dinamica>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Requisitos opcionales" />
+    </div>
+    <div class="col-md-12">
+      <ng-alert
+        [CONTENIDO]="TEXTOS.INSTRUCCIONES_AGREGAR_NUEVO"
+        [CUSTOMECLASS]="infoAlert"
+      ></ng-alert>
+    </div>
+    <div class="col-md-6">
+      <app-catalogo-select
+        [catalogo]="opcionTipoDeDocumento.catalogos"
+        [label]="opcionTipoDeDocumento.labelNombre"
+        [required]="opcionTipoDeDocumento.required"
+        name="tipoDeDocumento"
+        (selectionChange)="actualizarTipoDeDocumento($event)"
+      ></app-catalogo-select>
+    </div>
+    <div class="col-md-6">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="tipoSeleccionTabla"
+        [configuracionTabla]="configuracionTipoTabla"
+        [datos]="datosTipo"
+      >
+      </app-tabla-dinamica>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button
+            type="button"
+            id="eliminar"
+            class="mid btn btn-default me-3"
+            (click)="seleccionarEliminar()"
+          >
+            Eliminar
+          </button>
+          <button
+            type="button"
+            id="agregarNuevo"
+            class="default btn btn-primary"
+            (click)="seleccionarAgregarNuevo()"
+          >
+            Agregar nuevo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <ng-titulo titulo="Requisitos opcionales" />
 
-  <ng-alert [CONTENIDO]="TEXTOS.INSTRUCCIONES" [CUSTOMECLASS]="infoAlert"></ng-alert>
+      <ng-alert
+        [CONTENIDO]="TEXTOS.INSTRUCCIONES"
+        [CUSTOMECLASS]="infoAlert"
+      ></ng-alert>
 
-  <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+      <anexar-documentos
+        [catalogoDocumentos]="catalogoDocumentos"
+      ></anexar-documentos>
+    </div>
+  </div>
 </div>

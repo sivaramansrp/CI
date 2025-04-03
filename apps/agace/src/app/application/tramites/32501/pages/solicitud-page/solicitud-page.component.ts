@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../enums/lista-pasos-wizard.enum';
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/paso-tres-steps.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -13,7 +12,7 @@ interface AccionBoton {
    * La acción que se realizará.
    */
   accion: string;
-  
+
   /**
    * El valor asociado a la acción.
    */
@@ -65,7 +64,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

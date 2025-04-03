@@ -1,5 +1,5 @@
 import {Observable, catchError, throwError } from 'rxjs';
-import { AvisoCatalogo, OperacionDeImportacion } from '../models/aviso-catalogo.model';
+import { AvisoCatalogo, OperacionDeImportacion, RequisitosObligatorios } from '../models/aviso-catalogo.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -30,5 +30,11 @@ export class MercDesmSinMonService {
     );
   }
 
-  
+  obtenerDatosAgregarNuevo(): Observable<RequisitosObligatorios[]> {
+    return this.http.get<RequisitosObligatorios[]>('assets/json/32501/datos-agregar-nuevo.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  } 
 }

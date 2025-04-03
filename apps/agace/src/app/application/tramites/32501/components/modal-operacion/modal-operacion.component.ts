@@ -1,14 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Catalogo, CatalogosSelect } from '@libs/shared/data-access-user/src';
-import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
-import { Solicitud32501Query } from '../../estados/solicitud32501.query';
-import {
-  Solicitud32501State,
-  Solicitud32501Store,
-} from '../../estados/Solicitud32501.store';
-import { map, Subject, takeUntil } from 'rxjs';
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Solicitud32501Query } from '../../estados/solicitud32501.query';
+import { Solicitud32501State } from '../../estados/solicitud32501.store';
+import { Solicitud32501Store } from '../../estados/solicitud32501.store';
+import { Subject } from 'rxjs';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-modal-operacion',
@@ -91,14 +96,6 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
   esValido(field: string): boolean {
     const CONTROL = this.frmDatosOperacionImp.get(field);
     return CONTROL ? CONTROL.invalid && CONTROL.touched : false;
-  }
-  
-  modalCancelarDatosOperacionImp(): void {
-    //
-  }
-
-  modalAgregarDatosOperacionImp(): void {
-    //
   }
 
   ngOnDestroy(): void {

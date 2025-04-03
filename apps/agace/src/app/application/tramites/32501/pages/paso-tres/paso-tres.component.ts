@@ -1,15 +1,20 @@
-import { Component, Inject, OnDestroy } from '@angular/core';
-import { Subject, catchError, map, takeUntil } from 'rxjs';
+import { Component } from '@angular/core';
+import { Inject } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 import { TramiteAgaceStore } from '../../../../estados/tramite.store';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
+import { catchError } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.css',
 })
-export class PasoTresComponent implements OnDestroy{
+export class PasoTresComponent implements OnDestroy {
   /**
    * Tipo de persona.
    */

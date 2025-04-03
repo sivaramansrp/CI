@@ -6,6 +6,7 @@ export interface AvisoCatalogo {
   delegacionMunicipio: CatalogosSelect;
   colonia: CatalogosSelect;
   aduanaDeImportacion: CatalogosSelect;
+  opcionTipoDeDocumento: CatalogosSelect;
 }
 
 export interface OperacionDeImportacion {
@@ -14,3 +15,9 @@ export interface OperacionDeImportacion {
   numeroDePedimento: string;
   aduanaDeImportacion: string;
 }
+
+export interface RequisitosObligatorios {
+  numeroDeSerie: number;
+  valor: string;
+}
+

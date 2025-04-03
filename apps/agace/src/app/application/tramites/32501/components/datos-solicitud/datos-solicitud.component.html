@@ -54,8 +54,7 @@
         <input
           id="idTransaccionVU"
           formControlName="idTransaccionVU"
-          (blur)="actualizarIdTransaccionVU($event)"
-          (keyup)="actualizarIdTransaccionVU($event)"
+          (change)="actualizarIdTransaccionVU($event)"
           class="form-control"
           type="text"
         />
@@ -291,7 +290,6 @@
           <button
             id="idEliminarOperacionImp"
             class="btn btn-secondary me-3"
-            (click)="eliminarOperacionImp()"
           >
             Eliminar
           </button>

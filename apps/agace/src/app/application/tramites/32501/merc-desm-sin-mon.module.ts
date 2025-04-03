@@ -1,27 +1,35 @@
-import { AlertComponent, InputRadioComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import {CrosslistComponent, InputFechaComponent, SharedModule, WizardComponent } from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { MercDesmSinMonRoutingModule } from './merc-desm-sin-mon-routing.module';
+import { MercDesmSinMonService } from './services/merc-desm-sin-mon.service';
+import { ModalOperacionComponent } from './components/modal-operacion/modal-operacion.component';
+import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
+import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { MercDesmSinMonService } from './services/merc-desm-sin-mon.service';
-import { ModalOperacionComponent } from './components/modal-operacion/modal-operacion.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
+import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
@@ -30,8 +38,7 @@ import { ModalOperacionComponent } from './components/modal-operacion/modal-oper
     PasoDosComponent,
     PasoTresComponent,
     DatosSolicitudComponent,
-    ModalOperacionComponent
-    // SolicitudComponent,
+    ModalOperacionComponent,
   ],
   imports: [
     FirmaElectronicaComponent,
@@ -48,8 +55,6 @@ import { ModalOperacionComponent } from './components/modal-operacion/modal-oper
     InputFechaComponent,
     InputHoraComponent,
     CrosslistComponent,
-    // PedimentoComponent,
-    // AgregaPersonasComponent,
     ReactiveFormsModule,
     TituloComponent,
     SelectPaisesComponent,
@@ -58,12 +63,11 @@ import { ModalOperacionComponent } from './components/modal-operacion/modal-oper
     AlertComponent,
     CatalogoSelectComponent,
     InputRadioComponent,
-    TablaDinamicaComponent
-    // AnexarRequisitosComponent
+    TablaDinamicaComponent,
+    ToastrModule.forRoot()
   ],
   exports: [
-    // SolicitudComponent
   ],
-  providers:[ MercDesmSinMonService]
+  providers: [MercDesmSinMonService,ToastrService],
 })
 export class MercDesmSinMonModule {}
