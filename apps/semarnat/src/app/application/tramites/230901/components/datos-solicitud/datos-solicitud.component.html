@@ -177,6 +177,7 @@
               class="form-control"
               rows="4"
               [required]="true"
+              [class.is-invalid]="formularioMercancia.get('descripcion')?.touched && formularioMercancia.get('descripcion')?.invalid"
             ></textarea>
             <div *ngIf="esControlInvalido('descripcion')" class="text-danger">
               <small
@@ -246,6 +247,7 @@
                 class="form-control"
                 formControlName="marca"
                 [required]="true"
+                [class.is-invalid]="formularioMercancia.get('marca')?.touched && formularioMercancia.get('marca')?.invalid"
               />
             </div>
             <div *ngIf="esControlInvalido('marca')" class="text-danger">
@@ -264,6 +266,8 @@
                 class="form-control"
                 formControlName="cantidad"
                 [required]="true"
+                [class.is-invalid]="formularioMercancia.get('cantidad')?.touched && formularioMercancia.get('cantidad')?.invalid"
+
               />
               <div *ngIf="esControlInvalido('cantidad')" class="text-danger">
                 <small
