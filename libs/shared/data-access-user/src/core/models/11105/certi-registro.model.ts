@@ -1,7 +1,7 @@
 /**
  * Interfaz que representa los detalles de un producto.
  */
-export interface DetallesDelMercancía {
+export interface DetallesDelMercancia {
     /**
      * Tipo de mercancía, por ejemplo, "electrónica", "ropa", etc.
      */

@@ -6,5 +6,5 @@ export interface AcuseYResolucionesFolioTramiteDetalles {
   unidadAdministrativaORepresentaciónFederal: string;
   tipoDeSolicitud: string;
   estatusDeLaSolicitud: string;
-  díasHábilesTranscurridos: string;
+  diasHabilesTranscurridos: string;
 }

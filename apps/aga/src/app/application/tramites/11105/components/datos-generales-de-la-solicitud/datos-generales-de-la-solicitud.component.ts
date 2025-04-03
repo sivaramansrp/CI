@@ -26,7 +26,7 @@ import { ReplaySubject, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERERALES_DE_LA_SOLICICTUD } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
-import { DetallesDelMercancía } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
+import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
 
 /**
@@ -125,42 +125,42 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de la tabla.
    */
-  configuracionTabla: ConfiguracionColumna<DetallesDelMercancía>[] = [
+  configuracionTabla: ConfiguracionColumna<DetallesDelMercancia>[] = [
     {
       encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.ADUANA_LABEL_NOMBRE,
-      clave: (item: DetallesDelMercancía) => item.tipoDeMercancia,
+      clave: (item: DetallesDelMercancia) => item.tipoDeMercancia,
       orden: 1,
     },
     {
       encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.CANTIDAD,
-      clave: (item: DetallesDelMercancía) => item.cantidad,
+      clave: (item: DetallesDelMercancia) => item.cantidad,
       orden: 2,
     },
     {
       encabezado:
         DATOS_GENERERALES_DE_LA_SOLICICTUD.UNIDAD_DE_MEDIDA_DE_COMERCIALIZACION,
-      clave: (item: DetallesDelMercancía) => item.unidadDeMedida,
+      clave: (item: DetallesDelMercancia) => item.unidadDeMedida,
       orden: 3,
     },
     {
       encabezado:
         DATOS_GENERERALES_DE_LA_SOLICICTUD.ANO_DE_IMPORTACION_TEMPORAL,
-      clave: (item: DetallesDelMercancía) => item.anoDeImportacionTemporal,
+      clave: (item: DetallesDelMercancia) => item.anoDeImportacionTemporal,
       orden: 4,
     },
     {
       encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.MODEL,
-      clave: (item: DetallesDelMercancía) => item.modelo,
+      clave: (item: DetallesDelMercancia) => item.modelo,
       orden: 5,
     },
     {
       encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.MARCA,
-      clave: (item: DetallesDelMercancía) => item.marca,
+      clave: (item: DetallesDelMercancia) => item.marca,
       orden: 6,
     },
     {
       encabezado: DATOS_GENERERALES_DE_LA_SOLICICTUD.NUMBERO_DE_SERIE,
-      clave: (item: DetallesDelMercancía) => item.numeroDeSerie,
+      clave: (item: DetallesDelMercancia) => item.numeroDeSerie,
       orden: 7,
     },
   ];
@@ -178,7 +178,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Datos configurados para la tabla.
    */
-  configuracionTablaDatos: DetallesDelMercancía[] = [];
+  configuracionTablaDatos: DetallesDelMercancia[] = [];
 
   /**
    * Opciones para el radio button.
@@ -243,7 +243,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.retiradaDeLaAutorizacionDeDonacionesService
       .getDetallesDelMercanciaDatos()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((datos: DetallesDelMercancía) => {
+      .subscribe((datos: DetallesDelMercancia) => {
         this.configuracionTablaDatos = [datos];
       });
   }

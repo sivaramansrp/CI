@@ -39,7 +39,7 @@ describe('AcusesYResoluionesFolioDelTramiteDetallesComponent', () => {
     expect(component.acusesYResolucionesFormGroup.get('unidadAdministrativaORepresentaciónFederal')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('tipoDeSolicitud')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('estatusDeLaSolicitud')).toBeDefined();
-    expect(component.acusesYResolucionesFormGroup.get('díasHábilesTranscurridos')).toBeDefined();
+    expect(component.acusesYResolucionesFormGroup.get('diasHabilesTranscurridos')).toBeDefined();
   });
 
   it('should navigate to procedureUrl when desistir is called', () => {

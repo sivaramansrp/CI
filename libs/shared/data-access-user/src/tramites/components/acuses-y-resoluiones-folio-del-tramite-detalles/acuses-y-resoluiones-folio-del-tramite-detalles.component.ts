@@ -90,7 +90,7 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
       ],
       tipoDeSolicitud: [{ value: '', disabled: true }],
       estatusDeLaSolicitud: [{ value: '', disabled: true }],
-      díasHábilesTranscurridos: [{ value: '', disabled: true }],
+      diasHabilesTranscurridos: [{ value: '', disabled: true }],
     });
   }
 

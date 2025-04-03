@@ -1,5 +1,5 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DetallesDelMercancía } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
+import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -29,10 +29,10 @@ export class RetiradaDeLaAutorizacionDeDonacionesService {
 
   /**
    * Obtiene los detalles de la mercancía relacionados con la solicitud.
-   * @returns Un observable que emite un objeto del tipo `DetallesDelMercancía`.
+   * @returns Un observable que emite un objeto del tipo `DetallesDelMercancia`.
    */
-  getDetallesDelMercanciaDatos(): Observable<DetallesDelMercancía> {
-    return this.http.get<DetallesDelMercancía>(
+  getDetallesDelMercanciaDatos(): Observable<DetallesDelMercancia> {
+    return this.http.get<DetallesDelMercancia>(
       'assets/json/11105/detalles-del-mercancia-datos.json'
     );
   }
