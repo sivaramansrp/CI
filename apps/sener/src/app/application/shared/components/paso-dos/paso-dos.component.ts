@@ -31,7 +31,14 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 })
 export class PasoDosComponent {
   /**
-   * Obtener el valor de la instrucción e inicializar la variable
+   * @property {any} TEXTOS
+   * @description
+   * Contiene los textos utilizados en el componente, importados desde el módulo `@ng-mf/data-access-user`.
+   * 
+   * @example
+   * ```typescript
+   * console.log(this.TEXTOS.instruccion);
+   * ```
    */
   TEXTOS = TEXTOS;
 }

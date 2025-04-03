@@ -1,3 +1,10 @@
+/**
+ * @packageDocumentation
+ * @module DatosSolicitudComponent
+ * @description
+ * Este módulo contiene el componente `DatosSolicitudComponent`, que gestiona la solicitud de mercancías.
+ * Incluye formularios reactivos, configuraciones de tablas dinámicas y lógica para manejar datos relacionados con el trámite 130121.
+ */
 import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -124,6 +131,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       controlName: 'clasificacion',
     },
   ];
+    /**
+   * @description Campos de entrada configurables para los detalles de la mercancía.
+   */
   mercanciaInputValues = [
     {
       label: 'Fracción arancelaria',
@@ -172,7 +182,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @description Arreglo que guarda un catálogo de entidades federativas.
    * @type {Catalogo[]}
    */
-  entidadFederativa: Catalogo[] = [];
+  estado: Catalogo[] = [];
   /**
    * @description Arreglo que almacena un catálogo de representaciones federales.
    * @type {Catalogo[]}
@@ -197,8 +207,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
    * @param {HttpClient} http - Servicio para realizar solicitudes HTTP.
-   * @param {Tramite130121Store} tramite130121Store - Store para gestionar el estado del trámite 130202.
-   * @param {Tramite130121Query} tramite130121Query - Query para consultar el estado del trámite 130202.
+   * @param {Tramite130121Store} tramite130121Store - Store para gestionar el estado del trámite 130121.
+   * @param {Tramite130121Query} tramite130121Query - Query para consultar el estado del trámite 130121.
    * @param {permisodehidrocarburosService} permisodehidrocarburosService - Servicio para la exportación de minerales de hierro.
    */
   constructor(
@@ -274,7 +284,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     });
 
     this.mercanciaForm = this.fb.group({
-      plazo: ['Nuevo'],
+      plazo: ['Largo plazo (5 años)'],
       descripcion: [
         '',
         [
@@ -555,10 +565,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Método para obtener la lista de entidades federativas.
    */
   fetchEntidadFederativa(): void {
-    this.permisodehidrocarburosService
-      .getEntidadFederativa()
-      .subscribe((data: Catalogo[]) => {
-        this.entidadFederativa = data;
+    this.permisodehidrocarburosService.getEstado()
+      .subscribe((data) => {
+        this.estado = data;
       });
   }
   /**
@@ -588,7 +597,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.permisodehidrocarburosService
       .getPaisesPorBloque(_bloqueId)
-      .subscribe((data: Catalogo[]) => {
+      .subscribe((data) => {
         this.paisesPorBloque = data;
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Catalogo) => pais.descripcion
@@ -678,7 +687,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         break;
       default:
         console.error(
-          `Método ${event.metodoNombre} no existe en Tramite130202Store`
+          `Método ${event.metodoNombre} no existe en Tramite130121Store`
         );
     }
   }

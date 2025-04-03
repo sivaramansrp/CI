@@ -4,13 +4,15 @@ import { NgModule } from '@angular/core';
 
 import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
+import { ManifiestoDeAceptacionComponent } from './components/manifiesto-de-aceptacion/manifiesto-de-aceptacion.component';
+
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoDeHidrocarburosComponent } from './pages/permiso-de-hidrocarburos/permiso-de-hidrocarburos.component';
 import { PermisoDeHidrocarburosRoutingModule } from './permiso-de-hidrocarburos-routing.module';
 
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
+import { PaisDeOrigenComponent } from '../../shared/components/pais-de-origen/pais-de-origen.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { PasoDosComponent } from '../../shared/components/paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../../shared/components/paso-tres/paso-tres.component';
@@ -36,9 +38,10 @@ import { RepresentacionComponent } from '../../shared/components/representacion/
     PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
+    ManifiestoDeAceptacionComponent,
     PartidasDeLaMercanciaComponent ,
     TablaDinamicaComponent,
-    PaisProcendenciaComponent,
+    PaisDeOrigenComponent,
     RepresentacionComponent,
     CrosslistComponent,
     FormsModule

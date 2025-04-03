@@ -33,7 +33,7 @@ describe('PermisoDeHidrocarburosService', () => {
       done();
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/pais-procenia.json');
+    const req = httpMock.expectOne('/assets/json/130121/pais-procenia.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockPaises);
   });
@@ -46,7 +46,7 @@ describe('PermisoDeHidrocarburosService', () => {
       done();
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/paises-por-bloque.json');
+    const req = httpMock.expectOne('/assets/json/130121/paises-por-bloque.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockPaises);
   });
@@ -54,12 +54,12 @@ describe('PermisoDeHidrocarburosService', () => {
   it('should retrieve lista de entidades federativas', (done) => {
     const mockEntidades: Pais[] = [{ id: 1, descripcion: 'Jalisco' }];
 
-    service.getEntidadFederativa().subscribe((entidades) => {
-      expect(entidades).toEqual(mockEntidades);
+    service.getEstado().subscribe((estado) => {
+      expect(estado).toEqual(mockEntidades);
       done();
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/entidad-federativa.json');
+    const req = httpMock.expectOne('/assets/json/130121/estado.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockEntidades);
   });
@@ -72,7 +72,7 @@ describe('PermisoDeHidrocarburosService', () => {
       done();
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/representacion-federal.json');
+    const req = httpMock.expectOne('/assets/json/130121/representacion-federal.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockRepresentaciones);
   });

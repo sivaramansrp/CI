@@ -49,6 +49,11 @@ export class PasoTresComponent {
    * @param {string} ev - Evento que contiene la firma electrónica.
    * @returns {void}
    * @access public
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * const firma = 'firma-electronica';
+   * componente.obtieneFirma(firma);
    */
   obtieneFirma(ev: string): void {
     const FIRMA = ev;

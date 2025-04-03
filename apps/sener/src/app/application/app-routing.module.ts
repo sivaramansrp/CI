@@ -9,12 +9,20 @@ const ROUTES: Routes = [
     component: SeleccionTramiteComponent
   },
   {
+    
+    path: 'renuncia-de-derechos-de-permisos',
+    loadChildren: () =>
+      import('./tramites/140111/renuncia-de-derechos-de.module').then(
+        (m) => m.RenunciaDeDerechosDeModule
+      ),
+  },
+  {
     path: 'permiso-de-hidrocarburos',
     loadChildren: () =>
       import('./tramites/130121/permiso-de-hidrocarburos.module').then(
         (m) => m.PermisoDeHidrocarburosModule
       )
-  },
+  }
 ];
 
 @NgModule({

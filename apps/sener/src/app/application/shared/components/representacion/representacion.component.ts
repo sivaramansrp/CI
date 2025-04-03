@@ -35,47 +35,55 @@ export class RepresentacionComponent {
   /**
    * Formulario reactivo para la representación.
    * @type {FormGroup}
+   * @property {FormGroup} frmRepresentacionForm - Formulario reactivo que contiene los datos de la representación.
    */
   @Input() frmRepresentacionForm!: FormGroup;
 
   /**
    * Lista de entidades federativas.
    * @type {Catalogo[]}
+   * @property {Catalogo[]} estado - Catálogo de entidades federativas disponibles.
    */
-  @Input() entidadFederativa: Catalogo[] = [];
+  @Input() estado: Catalogo[] = [];
 
   /**
    * Lista de representaciones federales.
    * @type {Catalogo[]}
+   * @property {Catalogo[]} representacionFederal - Catálogo de representaciones federales disponibles.
    */
   @Input() representacionFederal: Catalogo[] = [];
 
   /**
    * Textos utilizados en el componente.
    * @type {any}
+   * @property {any} TEXTOS - Constantes de texto utilizadas en el componente.
    */
   @Input() TEXTOS = TEXTOS;
 
   /**
    * Evento emitido para establecer valores en el store.
    * @type {EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>}
+   * @event setValoresStoreEvent - Evento que emite los valores del formulario, el campo y el método para actualizar el store.
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
 
   /**
    * Constructor del componente.
+   * @constructor
    */
   constructor() {
-    // 
+    // Constructor vacío
   }
+
   /**
    * Establece valores en el store.
+   * @method setValoresStore
    * @param {FormGroup} form - El formulario reactivo.
    * @param {string} campo - El campo a actualizar.
-   * @param {string} metodoNombre - El nombre del método.
+   * @param {string} metodoNombre - El nombre del método que se ejecutará.
+   * @description Este método emite un evento con los valores necesarios para actualizar el store.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
   }
 }
-

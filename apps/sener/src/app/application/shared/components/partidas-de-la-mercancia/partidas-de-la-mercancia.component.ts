@@ -10,7 +10,9 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
- * PartidasDeLaMercanciaComponent
+ * @component
+ * @name PartidasDeLaMercanciaComponent
+ * @description
  * Este componente es responsable de gestionar las partidas de la mercancía.
  * Proporciona un formulario para capturar datos, una tabla dinámica para mostrar información
  * y eventos para interactuar con otros componentes o servicios.
@@ -29,79 +31,82 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 })
 export class PartidasDeLaMercanciaComponent {
   /**
-   * form
-   * Formulario reactivo principal para capturar los datos de las partidas.
+   * @property {FormGroup} partidasDelaMercanciaForm
+   * @description Formulario reactivo principal para capturar los datos de las partidas.
    */
   @Input() partidasDelaMercanciaForm!: FormGroup;
 
   /**
-   * formForTotalCount
-   * Formulario reactivo para capturar los totales de las partidas.
+   * @property {FormGroup} formForTotalCount
+   * @description Formulario reactivo para capturar los totales de las partidas.
    */
   @Input() formForTotalCount!: FormGroup;
 
   /**
-   * tableHeaderData
-   * Configuración de las columnas de la tabla dinámica.
+   * @property {ConfiguracionColumna<any>[]} tableHeaderData
+   * @description Configuración de las columnas de la tabla dinámica.
    */
   @Input() tableHeaderData: ConfiguracionColumna<any>[] = [];
 
   /**
-   * tableBodyData
-   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   * @property {any[]} tableBodyData
+   * @description Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
   @Input() tableBodyData: any[] = [];
 
   /**
-   * mostrarTabla
-   * Bandera para mostrar u ocultar la tabla dinámica.
+   * @property {boolean} mostrarTabla
+   * @description Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
 
   /**
-   * filaSeleccionadaChange
-   * Evento que emite las filas seleccionadas en la tabla dinámica.
+   * @event filaSeleccionadaChange
+   * @description Evento que emite las filas seleccionadas en la tabla dinámica.
    */
   @Output() filaSeleccionadaChange = new EventEmitter<any[]>();
 
   /**
-   * validarYEnviarFormularioEvent
-   * Evento que se emite cuando se valida y envía el formulario.
+   * @event validarYEnviarFormularioEvent
+   * @description Evento que se emite cuando se valida y envía el formulario.
    */
   @Output() validarYEnviarFormularioEvent = new EventEmitter<void>();
 
   /**
-   * navegarParaModificarPartidaEvent
-   * Evento que se emite para navegar y modificar una partida específica.
+   * @event navegarParaModificarPartidaEvent
+   * @description Evento que se emite para navegar y modificar una partida específica.
    */
   @Output() navegarParaModificarPartidaEvent = new EventEmitter<void>();
 
   /**
-   * setValoresStoreEvent
+   * @event setValoresStoreEvent
+   * @description
    * Evento que emite los valores del formulario para almacenarlos en el store.
-   * Formulario reactivo.
-   * Nombre del campo que se está actualizando.
-   * Nombre del método que realiza la actualización.
+   * Incluye el formulario reactivo, el nombre del campo que se está actualizando
+   * y el nombre del método que realiza la actualización.
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
 
   /**
-   * Tipo de selección de la tabla dinámica (checkbox).
+   * @property {TablaSeleccion} CHECKBOX
+   * @description Tipo de selección de la tabla dinámica (checkbox).
    */
   CHECKBOX = TablaSeleccion.CHECKBOX;
 
   /**
-   * Constructor para inicializar el componente e inyectar dependencias.
-   * FormBuilder para crear formularios reactivos.
+   * @constructor
+   * @description Constructor para inicializar el componente e inyectar dependencias.
+   * @param {FormBuilder} fb FormBuilder para crear formularios reactivos.
    */
   constructor(private fb: FormBuilder) {
-    //  Constructor del componente
+    // Constructor del componente
   }
 
   /**
-   * Verifica si un control del formulario es inválido.
-   * Nombre del control en el formulario.
-   * boolean Verdadero si el control es inválido, falso en caso contrario.
+   * @method esInvalido
+   * @description Verifica si un control del formulario es inválido.
+   * @param {string} nombreControl Nombre del control en el formulario.
+   * @returns {boolean} Verdadero si el control es inválido, falso en caso contrario.
    */
   esInvalido(nombreControl: string): boolean {
     const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
@@ -109,30 +114,37 @@ export class PartidasDeLaMercanciaComponent {
   }
 
   /**
-   * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
-   * Lista de filas seleccionadas.
+   * @method handleListaDeFilaSeleccionada
+   * @description Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
+   * @param {any[]} filasSeleccionadas Lista de filas seleccionadas.
    */
   handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
     console.log('Selected rows from table:', filasSeleccionadas);
     this.filaSeleccionadaChange.emit(filasSeleccionadas);
-  }  
+  }
 
   /**
-   * Valida y envía el formulario, emitiendo un evento.
+   * @method validarYEnviarFormulario
+   * @description Valida y envía el formulario, emitiendo un evento.
    */
   validarYEnviarFormulario(): void {
     this.validarYEnviarFormularioEvent.emit();
   }
 
   /**
-   * Navega para modificar una partida específica, emitiendo un evento.
+   * @method navegarParaModificarPartida
+   * @description Navega para modificar una partida específica, emitiendo un evento.
    */
   navegarParaModificarPartida(): void {
     this.navegarParaModificarPartidaEvent.emit();
   }
 
   /**
-   * Emite un evento para almacenar valores en el store.
+   * @method setValoresStore
+   * @description Emite un evento para almacenar valores en el store.
+   * @param {FormGroup} form Formulario reactivo.
+   * @param {string} campo Nombre del campo que se está actualizando.
+   * @param {string} metodoNombre Nombre del método que realiza la actualización.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     this.setValoresStoreEvent.emit({ form, campo, metodoNombre });

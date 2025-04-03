@@ -8,3 +8,15 @@
 .btn-row{
     margin-top: 300px;
 }
+
+.buttons-container {
+    margin-left: 8rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.btn-gap{
+    display: flex;
+    gap: 1rem;
+}

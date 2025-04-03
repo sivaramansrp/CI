@@ -32,7 +32,7 @@ describe('DetosDeLaMercanciaComponent', () => {
       { value: 'option2', label: 'Option 2' },
     ];
   
-    component.fraccionCatalogo = [{ id: 1, descripcion: 'Fracción 1' }];
+    // component.fraccionCatalogo = [{ id: 1, descripcion: 'Fracción 1' }];
     component.unidadCatalogo = [{ id: 2, descripcion: 'Unidad 1' }];
   
     fixture.detectChanges();

@@ -172,7 +172,7 @@
         <div class="row">
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
-            <div class="btn-group">
+            <div class="btn-group btn-gap">
               <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()"
                 data-bs-toggle="modal" data-bs-target="#modalModificarPartida">
                 Modificar partidas mercancia
@@ -195,7 +195,7 @@
                   <div>
                     <ng-titulo titulo="Modificar partida"></ng-titulo>
                     <div class="row">
-                      <div class="col-md-4">
+                      <div class="col-md-8">
                         <div class="form-group">
                           <label class="form-label" for="cantidad">Cantidad*:</label>
                           <input class="form-control" type="text" id="cantidad"
@@ -232,7 +232,7 @@
                       </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                       <div class="form-group">
                         <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
                         <input class="form-control" type="number" id="valorPartidaUSD"
@@ -255,18 +255,14 @@
                     </div>
                   </div>
                     <div class="row mt-5">
-                      <div class="col-md-4"></div>
-                      <div class="col-md-8">
-                        <hr />
-                      </div>
                     </div>
                   </div>
                 </form>
               </div>
               <div class="row">
-                <div class="col-md-7"></div>
-                <div class="col-md-4 text-start"> 
-                  <div class="btn-group">
+                <div class="col-md-2"></div>
+                <div class="col-md-4 d-flex align-items-end"> 
+                  <div class="btn-group buttons-container">
                     <button type="button" class="btn btn-primary ms-2">Modificar</button>
                     <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
                       data-bs-dismiss="modal">
