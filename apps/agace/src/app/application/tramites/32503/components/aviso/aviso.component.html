@@ -1,0 +1,258 @@
+<div class="container">
+  <form [formGroup]="avisoFormulario">
+    <ng-container formGroupName="adaceFormulario">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label for="adace" class="form-label">ADACE:</label>
+          <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text"
+            formControlName="adace" name="adace" id="adace" />
+        </div>
+      </div>
+    </ng-container>
+    <ng-titulo titulo="Datos de la empresa IMMEX que transfiere y presenta el aviso" />
+    <ng-container formGroupName="datosEmpresa">
+      <div class="row">
+        <div class="col-md-8">
+          <label for="valorProgramaImmex">
+            Número de programa IMMEX
+          </label>
+          <span class="require">*</span>
+          <label for="puntos">:</label>
+          <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
+            [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
+            formControlName="valorProgramaImmex"
+            (keyup)="sanitizeAlphanumeric('datosEmpresa.valorProgramaImmex',$event)" />
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="valorAnioProgramaImmex">Año de programa IMMEX:</label>
+            <span class="require">*</span>
+            <label for="puntos">:</label>
+            <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
+              maxlength="4" formControlName="valorAnioProgramaImmex"
+              [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
+              (keyup)="sanitizeAlphanumeric('datosEmpresa.valorAnioProgramaImmex',$event)" />
+          </div>
+        </div>
+
+      </div>
+    </ng-container>
+    <ng-titulo titulo="Datos de aviso" />
+    <ng-container formGroupName="datosAviso">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-4 p-0">
+            <label for="tipoAviso">Tipo de Aviso</label>
+            <span class="require">*</span>
+            <label for="puntos">:</label>
+          </div>
+          <div class="radio">
+            <div class="col-md-4">
+              <label>
+                <input type="radio" value="TIPAVI.INI" name="tipoAviso" id="inicial" formControlName="tipoAviso"
+                  (click)="verificaRadioTipo()" />
+                Inicial
+              </label>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <label>
+                <input type="radio" value="TIPAVI.PRO" name="tipoAviso" id="prorroga" formControlName="tipoAviso"
+                  (click)="verificaRadioTipo()" />
+                Prórroga
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row my-3">
+        <div class="col-md-8">
+          <div>
+            <label for="idTransaccion">ID de transacción VUCEM del aviso inicial</label>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control"
+              formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''"
+              (keyup)="sanitizeAlphanumeric('datosAviso.idTransaccion',$event)" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group datepicker-group">
+            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div>
+            <label for="motivoProrroga">Motivo de la Prórroga</label>
+            <span class="require">*</span>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control"
+              [ngClass]="isValid(datosAviso, 'motivoProrroga') ? 'required' : ''" formControlName="motivoProrroga"
+              [maxlength]="250"></textarea>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-titulo titulo="Datos del domicilio de la planta o bodega de origen de las mercancías" />
+    <ng-container formGroupName="direccionOrigen">
+      <div class="row">
+        <div class="col-md-8">
+          <div>
+            <label for="nombrePlanta">Nombre comercial</label>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250"
+              formControlName="nombreComercial" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
+            id="claveEntidadFederativa" formControlName="claveEntidadFederativa"
+            [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''"></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+          <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
+            id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio"
+            [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''"></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+          <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
+            formControlName="claveColonia"
+            [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''"></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+          <div>
+            <label for="solicitud.envioAvisos.callePlanta">Calle</label>
+            <span class="require" id="domicilio">*</span>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle"
+              [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div>
+            <label for="solicitud.envioAvisos.exteriorPlanta">No. exterior</label>
+            <span class="require" id="domicilio">*</span>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15"
+              formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''"
+              (keyup)="sanitizeAlphanumericWithSpace('direccionOrigen.numeroExterior',$event)" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div>
+            <label for="solicitud.envioAvisos.interiorPlanta">Interior</label>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15"
+              formControlName="numeroInterior" [ngClass]="isValid(direccionOrigen,'numeroInterior') ? 'required' : ''"
+              (keyup)="sanitizeAlphanumericWithSpace('direccionOrigen.numeroInterior',$event)" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div>
+            <label for="solicitud.envioAvisos.codigoPlanta">Código postal</label>
+            <span class="require">*</span>
+            <label for="puntos">:</label>
+          </div>
+          <div>
+            <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5"
+              formControlName="codigoPostal" (keyup)="sanitizeNumeric('direccionOrigen.codigoPostal',$event)"
+              [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''" />
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-titulo titulo="Tipo de carga" />
+    <div class="row">
+      <div class="col-md-12">
+        <div class="col-md-4 p-0">
+          <label for="tipoAviso">Tipo de Aviso</label>
+          <span class="require">*</span>
+          <label for="puntos">:</label>
+        </div>
+        <div class="radio">
+          <div class="col-md-4">
+            <label>
+              <input type="radio" value="manual" name="tipoCarga" id="manual" formControlName="tipoCarga"
+                (click)="verificaRadioTipo()" />
+              Manual
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <label>
+              <input type="radio" value="prorroga" name="tipoCarga" id="prorroga" formControlName="tipoCarga"
+                (click)="verificaRadioTipo()" />
+              Carga Masiva
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    @if(avisoFormulario.get('tipoCarga')?.value==='prorroga'){
+    <div id="divCargaMasiva">
+      <div class="row">
+        <ng-titulo titulo="Plantilla de Carga Masiva" />
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-info">
+            Datos de la Plantilla de Carga Masiva<span class="">*</span><br />
+            <label>
+              <a href="javascript:;" target="_blank">
+                Descargar plantilla
+              </a>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="errorArchivoAjax"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <input type="file" name="archivoMasivo" id="archivoMasivo" class="form-control" title="Examinar" />
+        </div>
+        <div class="col-md-4">
+          <div class="pull-right">
+            <button id="botonCargar" name="botonCargar" class="btn btn-primary ms-2">
+              Cargar archivo
+            </button>
+            <button id="botonLimpiar" name="botonLimpiar" class="btn btn-default ms-2">
+              Limpiar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    }@else{
+    <ng-titulo titulo="Datos del aviso" />
+    <div class="row">
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
+        [datos]="tablaDeDatos.datos"></app-tabla-dinamica>
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-danger ms-3" [disabled]="false">
+          Eliminar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          Modificar
+        </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          Agregar
+        </button>
+      </div>
+    </div>
+    }
+  </form>
+
+</div>
