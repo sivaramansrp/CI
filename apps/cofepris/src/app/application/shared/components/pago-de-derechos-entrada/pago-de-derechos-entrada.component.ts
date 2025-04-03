@@ -143,7 +143,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * Obtiene los datos para el selector de opciones desde el servicio.
    */
   ngOnInit(): void {
-    this.pagoDeDerechosService.getData().subscribe((data) => {
+    this.pagoDeDerechosService.getData().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.dropdownData = data;
     });
 
