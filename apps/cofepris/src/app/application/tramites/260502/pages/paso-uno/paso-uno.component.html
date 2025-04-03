@@ -50,17 +50,13 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
-      }
-       @case (2) {
-        <app-datos-solicitud></app-datos-solicitud>
-        }
-        @case (3) {
-          <app-terceros-fabricante></app-terceros-fabricante>
-          }
-          @case (4) {
-            <app-pago-derechos></app-pago-derechos>
-            }
-    }
+      } @case (2) {
+      <app-datos-solicitud></app-datos-solicitud>
+      } @case (3) {
+      <app-terceros-relacionados-fabricante></app-terceros-relacionados-fabricante>
+      } @case (4) {
+      <app-pago-derechos></app-pago-derechos>
+      } }
     </ng-container>
   </div>
 </div>

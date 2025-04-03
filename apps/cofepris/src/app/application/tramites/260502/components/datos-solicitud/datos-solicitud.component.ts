@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatosDeLaComponent } from "../../../../shared/components/datos-solicitud/datos-solicitud.component";
+import { Component } from '@angular/core';
+import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitud/datos-solicitud.component';
 
 @Component({
   selector: 'app-datos-solicitud',

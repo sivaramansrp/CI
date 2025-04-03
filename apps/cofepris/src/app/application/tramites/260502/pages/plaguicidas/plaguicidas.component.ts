@@ -14,6 +14,7 @@ interface AccionBoton {
  */
 @Component({
   selector: 'app-plaguicidas',
+  standalone: false,
   templateUrl: './plaguicidas.component.html',
 })
 export class PlaguicidasComponent {

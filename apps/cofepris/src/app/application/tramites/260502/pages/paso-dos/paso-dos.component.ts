@@ -12,6 +12,7 @@ import { Component, Inject, OnInit } from '@angular/core';
  */
 @Component({
   selector: 'app-paso-dos',
+  standalone: false,
   templateUrl: './paso-dos.component.html',
 })
 export class PasoDosComponent implements OnInit {

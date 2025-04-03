@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PagoDeDerechosBancoComponent } from "../../../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component";
+import { Component } from '@angular/core';
+import { PagoDeDerechosBancoComponent } from '../../../../shared/components/pago-de-derechos-banco/pago-de-derechos-banco.component';
 
 @Component({
   selector: 'app-pago-derechos',

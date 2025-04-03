@@ -2,16 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { PagoDerechosComponent } from "../../components/pago-derechos/pago-derechos.component";
-
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
  */
 @Component({
   selector: 'app-paso-uno',
+  standalone: false,
   templateUrl: './paso-uno.component.html',
-  imports: [PagoDerechosComponent],
 })
 export class PasoUnoComponent implements AfterViewInit {
   /**
