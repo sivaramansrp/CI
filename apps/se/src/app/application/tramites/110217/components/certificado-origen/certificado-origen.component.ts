@@ -8,8 +8,8 @@ import { Component } from "@angular/core";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { DisponiblesTabla } from "../../models/certificado-origen.model.js";
 import { ElementRef } from "@angular/core";
-import { FECHAFACTURA } from '../../constants/certificado-origen.enum';
-import { FECHAFINAL } from '../../constants/certificado-origen.enum';
+import { FECHA_FACTURA } from '../../constants/certificado-origen.enum';
+import { FECHA_FINAL } from '../../constants/certificado-origen.enum';
 import { FECHA_INICIAL } from '../../constants/certificado-origen.enum';
 import { FormBuilder } from "@angular/forms";
 import { FormGroup } from "@angular/forms";
@@ -281,7 +281,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Se utiliza como valor inicial para el campo de fecha final.
    */
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
    * Formulario para gestionar los datos de mercancías.
@@ -295,7 +295,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Se utiliza como valor inicial para el campo de fecha de factura.
    */
-  fechaFacturaInput: InputFecha = FECHAFACTURA;
+  fechaFacturaInput: InputFecha = FECHA_FACTURA;
 
   /**
    * Opciones disponibles para el tipo de factura.
