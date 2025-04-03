@@ -1,18 +1,18 @@
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-import { BtnContinuarComponent,SolicitanteComponent, TituloComponent, WizardComponent, } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent,SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { RegistroTransportistaComponent } from './pages/registro-transportista/registro-transportista.component';
 
-import { Datos40302Component } from './pages/datos-40302/datos-40302.component';
 import { DatosDelTramiteComponent } from './components/datos-del-tramite/datos-del-tramite.component';
-
+import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
 import { RegistroTransportistaRoutingModule } from './registro-transportista-routing.module';
 
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { NgModule } from '@angular/core';
 
@@ -22,7 +22,7 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
 
 
 @NgModule({
-    declarations: [RegistroTransportistaComponent,Datos40302Component],
+    declarations: [RegistroTransportistaComponent,PasoUnoComponent,PasoTresComponent,],
     imports: [
         CommonModule,
         BtnContinuarComponent,
@@ -30,9 +30,9 @@ import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/se
         WizardComponent,
         SolicitanteComponent,
         DatosDelTramiteComponent,
-        PasoTresComponent,
         RegistroTransportistaRoutingModule,
-        AlertComponent
+        AlertComponent,
+        FirmaElectronicaComponent,
     ],
     providers: [
         provideHttpClient(),

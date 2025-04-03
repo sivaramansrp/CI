@@ -1,23 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { AcuseComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { DatosDelTramiteService } from '../../services/datos-del-tramite.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-datos-del-tramite',
   standalone: true,
-  imports: [TituloComponent,ReactiveFormsModule],
+  imports: [TituloComponent,ReactiveFormsModule,AcuseComponent],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss'
 })
-export class DatosDelTramiteComponent implements OnInit {
+export class DatosDelTramiteComponent implements OnInit , OnDestroy{
 public solicitudForm! : FormGroup;
+private destroy$ = new Subject<void>();
 
-constructor(private fb: FormBuilder){
+constructor(private fb: FormBuilder, private datosService: DatosDelTramiteService){
   this.establecerSolicitudForm();
 }
 
   ngOnInit(): void {
-    this.establecerValoresDeFormulario();
+    this.datosService.setInitialValues();
+    this.subscribeToState();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(); 
+    this.destroy$.complete();
   }
 
   public establecerSolicitudForm(): void {
@@ -31,12 +41,14 @@ constructor(private fb: FormBuilder){
     })
   }
 
-public establecerValoresDeFormulario(): void{
-  this.solicitudForm.get('cveFolioCaat')?.setValue('3L6V');
-  this.solicitudForm.get('descTipoCaat')?.setValue('Naviero');
-  this.solicitudForm.get('descTipoAgente')?.setValue('Agente Naviero');
-  this.solicitudForm.get('directorGeneralNombre')?.setValue('HAZEL');
-  this.solicitudForm.get('primerApellido')?.setValue('NAVA');
-  this.solicitudForm.get('segundoApellido')?.setValue('AVILA');
-  }
+public subscribeToState(): void {
+  this.datosService
+    .getSolicitudState()
+    .pipe(takeUntil(this.destroy$)) 
+    .subscribe({
+      next: (state) => {
+        this.solicitudForm.patchValue(state); 
+      },
+    });
+}
 }
