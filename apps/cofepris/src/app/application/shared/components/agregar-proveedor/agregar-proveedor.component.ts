@@ -66,7 +66,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public paisesDatos: Catalogo[] = [];
 
-  @Output() updateProveedorTablaDatos= new EventEmitter<Proveedor[]>();
+  /**
+   * @property updateProveedorTablaDatos
+   * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
+   * Se utiliza para sincronizar los datos de la tabla o disparar acciones relacionadas.
+   * @type {EventEmitter<Proveedor[]>}
+   */
+  @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
   /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
@@ -116,7 +122,6 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.cargarDatos();
   }
 
-
   /**
    * @method cargarDatos
    * @description Obtiene la lista de países del servicio de datos y la almacena en `paisesDatos`.
@@ -163,22 +168,22 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.agregarProveedorForm.reset();
     this.ubicaccion.back();
   }
-/**
- * @method limpiarFormulario
- * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
+  /**
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
   }
-/**
- * @method cancelar
- * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
-  cancelar():void{
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
     this.ubicaccion.back();
   }
 
