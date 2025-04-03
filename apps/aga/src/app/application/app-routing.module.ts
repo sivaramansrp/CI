@@ -140,6 +140,13 @@ const ROUTES: Routes = [
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
       ),
+  },
+  {
+  path: 'retorno-importacion-temporal',
+  loadChildren: () => 
+    import('./tramites/630303/retorno-importacion-temporal.module').then(
+      (m) => m.RetornoImportacionTemporalModule 
+    )
   }
 ];
 
