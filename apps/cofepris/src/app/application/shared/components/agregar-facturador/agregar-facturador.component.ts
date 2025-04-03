@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -31,6 +31,12 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-facturador.component.css',
 })
 export class AgregarFacturadorComponent implements OnInit, OnDestroy {
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
   /**
    * Formulario reactivo para capturar los datos del facturador.
    * @property {FormGroup} agregarFacturadorForm
@@ -101,7 +107,6 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     this.cargarDatos();
   }
 
-
   /**
    * Carga los países desde el servicio y los almacena en `paisesDatos`.
    */
@@ -143,34 +148,34 @@ export class AgregarFacturadorComponent implements OnInit, OnDestroy {
     };
 
     this.facturadores.push(NUEVO_FACTURADOR);
-   this.updateFacturadorTablaDatos.emit(this.facturadores);
+    this.updateFacturadorTablaDatos.emit(this.facturadores);
     this.agregarFacturadorForm.reset();
     this.ubicaccion.back();
   }
   /**
- * @method limpiarFormulario
- * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   limpiarFormulario(): void {
     this.agregarFacturadorForm.reset();
   }
-/**
- * @method cancelar
- * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
- * 
- * @returns {void} Este método no retorna ningún valor.
- */
-  cancelar():void{
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
     this.ubicaccion.back();
   }
 
-    /**
+  /**
    * Hook de destrucción del componente. Libera recursos y detiene suscripciones.
    */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

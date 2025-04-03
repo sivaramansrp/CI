@@ -10,7 +10,7 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -40,6 +40,12 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-proveedor.component.css',
 })
 export class AgregarProveedorComponent implements OnDestroy, OnInit {
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
   /**
    * @property {Subject<void>} unsubscribe$
    * Subject para cancelar suscripciones activas y evitar fugas de memoria.
