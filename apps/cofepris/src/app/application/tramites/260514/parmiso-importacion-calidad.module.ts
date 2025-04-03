@@ -15,18 +15,26 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pago-Derechos.component';
+
+import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
+
 @NgModule({
-  declarations: [Datos260514Component, Pantallas260514Component,PasoDosComponent,PasoTresComponent],
+  declarations: [Datos260514Component, Pantallas260514Component,PasoDosComponent,PasoTresComponent
+
+   ],
   imports: [CommonModule, 
     ParmisoImportacionCalidadRoutingModule, 
     SolicitanteComponent,
     BtnContinuarComponent,
     AnexarDocumentosComponent,
-        TituloComponent,
-        AlertComponent,
-        FirmaElectronicaComponent,
-        WizardComponent
-  ],
+    TituloComponent,
+    AlertComponent,
+    FirmaElectronicaComponent,
+    WizardComponent,
+    PagoDerechosComponent,
+    AvisoTercerosRelacionadosComponent
+        ],
    providers: [
       provideHttpClient(),
       
