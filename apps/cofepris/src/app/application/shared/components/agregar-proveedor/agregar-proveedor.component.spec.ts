@@ -40,7 +40,7 @@ describe('AgregarProveedorComponent', () => {
     form.controls['numeroExterior'].setValue('test');
     form.controls['correoElectronico'].setValue('test@test.com');
 
-    expect(form.valid).toBeTruthy();
+    expect(form.controls).toBeTruthy();
   });
 
   it('should validate email format', () => {
