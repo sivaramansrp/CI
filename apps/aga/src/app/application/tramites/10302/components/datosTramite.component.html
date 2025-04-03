@@ -143,6 +143,12 @@
                   id="cantidad"
                   maxlength="12"
                   [required]="true"
+                  (change)="
+                    setValoresStore(
+                      exencionImpuestos,
+                      'datosMercancia.cantidad',
+                      'setCantidad'
+                    )"
                 />
               </div>
               <div class="col-md-4">
@@ -175,6 +181,12 @@
                     formControlName="marca"
                     id="marca"
                     maxlength="100"
+                    (change)="
+                      setValoresStore(
+                        exencionImpuestos,
+                        'datosMercancia.marca',
+                        'setMarca'
+                      )"
                   />
                 </div>
               </div>
@@ -197,6 +209,12 @@
                     formControlName="modelo"
                     id="modelo"
                     maxlength="50"
+                    (change)="
+                      setValoresStore(
+                        exencionImpuestos,
+                        'datosMercancia.modelo',
+                        'setModelo'
+                      )"
                   />
                 </div>
               </div>
@@ -212,6 +230,12 @@
                     id="serie"
                     size="50"
                     maxlength="25"
+                    (change)="
+                      setValoresStore(
+                        exencionImpuestos,
+                        'datosMercancia.serie',
+                        'setSerie'
+                      )"
                   />
                 </div>
               </div>

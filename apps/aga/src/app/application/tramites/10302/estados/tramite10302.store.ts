@@ -17,11 +17,14 @@ export interface Solicitud10302State {
   tipoDeMercancia:string;
   unidadMedida: string;
   condicionMercancia:string;
-  anio:string;
+  ano: Catalogo[] | null;
+  cantidad:string;
+  marca:string;
+  modelo:string;
+  serie:string;
 
   idSolicitud: string;
   tipoSolicitud: string;
-  ano: Catalogo[] | null;
   pais: Catalogo[] | null;
   condicion: Catalogo[] | null;
   tipoDocumento: Catalogo[] | null;
@@ -37,9 +40,6 @@ export interface Solicitud10302State {
   valorSeleccionado: string | null;
   nombre: string;
   tipoMercancia: string;
-  marca: string;
-  modelo: string;
-  serie: string;
   calle: string;
   numeroExterior: number;
   numeroInterior: number;
@@ -65,11 +65,14 @@ export function createInitialState(): Solicitud10302State {
     tipoDeMercancia: '',
     unidadMedida:'',
     condicionMercancia:'',
-    anio:'',
+    ano: null,
+    cantidad:'',
+    marca:'',
+    modelo:'',
+    serie:'',
 
     idSolicitud: '',
     tipoSolicitud: '',
-    ano: null,
     condicion: null,
     pais: null,
     tipoDocumento: null,
@@ -87,9 +90,6 @@ export function createInitialState(): Solicitud10302State {
 
     nombre: '',
     tipoMercancia: '',
-    marca: '',
-    modelo: '',
-    serie: '',
     calle: '',
     numeroExterior: 0,
     numeroInterior: 0,
@@ -113,34 +113,6 @@ export function createInitialState(): Solicitud10302State {
 export class Tramite10302Store extends Store<Solicitud10302State> {
   constructor() {
     super(createInitialState());
-  }
-
-  public setTableCheck(tableCheck: string) {
-    this.update((state) => ({
-      ...state,
-      tableCheck,
-    }));
-  }
-
-  public setDonacion(donacion: string) {
-    this.update((state) => ({
-      ...state,
-      donacion,
-    }));
-  }
-
-  public setPersona(persona: string) {
-    this.update((state) => ({
-      ...state,
-      persona,
-    }));
-  }
-
-  public setOtro(otro: string) {
-    this.update((state) => ({
-      ...state,
-      otro,
-    }));
   }
 
   public setOrganismoPublico(organismoPublico: string) {
@@ -178,10 +150,67 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     }));
   }
 
-  public setAnio(anio: string) {
+  public setAno(ano: Catalogo[]) {
     this.update((state) => ({
       ...state,
-      anio,
+      ano,
+    }));
+  }
+  
+  public setCantidad(cantidad: string) {
+    this.update((state) => ({
+      ...state,
+      cantidad,
+    }));
+  }
+
+  public setMarca(marca: string) {
+    this.update((state) => ({
+      ...state,
+      marca,
+    }));
+  }
+
+  public setModelo(modelo: string) {
+    this.update((state) => ({
+      ...state,
+      modelo,
+    }));
+  }
+
+  public setSerie(serie: string) {
+    this.update((state) => ({
+      ...state,
+      serie,
+    }));
+  }
+
+  
+  public setTableCheck(tableCheck: string) {
+    this.update((state) => ({
+      ...state,
+      tableCheck,
+    }));
+  }
+
+  public setDonacion(donacion: string) {
+    this.update((state) => ({
+      ...state,
+      donacion,
+    }));
+  }
+
+  public setPersona(persona: string) {
+    this.update((state) => ({
+      ...state,
+      persona,
+    }));
+  }
+
+  public setOtro(otro: string) {
+    this.update((state) => ({
+      ...state,
+      otro,
     }));
   }
 
@@ -196,13 +225,6 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     this.update((state) => ({
       ...state,
       nombre,
-    }));
-  }
-
-  public setAno(ano: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      ano,
     }));
   }
 
@@ -315,27 +337,6 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     this.update((state) => ({
       ...state,
       usoEspecifico,
-    }));
-  }
-
-  public setMarca(marca: string) {
-    this.update((state) => ({
-      ...state,
-      marca,
-    }));
-  }
-
-  public setModelo(modelo: string) {
-    this.update((state) => ({
-      ...state,
-      modelo,
-    }));
-  }
-
-  public setSerie(serie: string) {
-    this.update((state) => ({
-      ...state,
-      serie,
     }));
   }
 

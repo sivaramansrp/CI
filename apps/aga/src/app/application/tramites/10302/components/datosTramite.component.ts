@@ -238,6 +238,22 @@ export class DatosTramiteComponent {
         ano: [
           this.solicitudState?.ano,
           Validators.required
+        ],
+        cantidad: [
+          this.solicitudState?.ano,
+          Validators.required
+        ],
+        marca: [
+          this.solicitudState?.ano,
+          Validators.required
+        ],
+        modelo: [
+          this.solicitudState?.ano,
+          Validators.required
+        ],
+        serie: [
+          this.solicitudState?.ano,
+          Validators.required
         ]
       }),
     });
