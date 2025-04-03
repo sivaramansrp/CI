@@ -11,88 +11,88 @@ export interface Catalogo {
  */
 export interface Solicitud10302State {
   organismoPublico: string;
-  idSolicitud: string;
-  tipoSolicitud: string;
+  // idSolicitud: string;
+  // tipoSolicitud: string;
   aduana: Catalogo[] | null;
-  ano: Catalogo[] | null;
-  pais: Catalogo[] | null;
-  condicion: Catalogo[] | null;
-  tipoDocumento: Catalogo[] | null;
+  // ano: Catalogo[] | null;
+  // pais: Catalogo[] | null;
+  // condicion: Catalogo[] | null;
+  // tipoDocumento: Catalogo[] | null;
   fechasSeleccionadas: Catalogo[] | null;
-  finesElegidos: string[];
-  elegidosSeleccionados: string[];
-  selectRangoDias: string[];
+  // finesElegidos: string[];
+  // elegidosSeleccionados: string[];
+  // selectRangoDias: string[];
   fechasDatos: string[];
   fecha: string | null;
   fechaSeleccionada: string | null;
-  showTabla: boolean;
-  isPopupOpen: boolean;
-  isPopupClose: boolean;
-  valorSeleccionado: string | null;
-  nombre: string;
-  tipoMercancia: string;
+  // showTabla: boolean;
+  // isPopupOpen: boolean;
+  // isPopupClose: boolean;
+  // valorSeleccionado: string | null;
+  // nombre: string;
+  // tipoMercancia: string;
   usoEspecifico: string;
-  marca: string;
-  modelo: string;
-  serie: string;
-  calle: string;
-  numeroExterior: number;
-  numeroInterior: number;
-  telefono: number;
-  correoElectronico: string;
-  codigoPostal: number;
-  estado: number;
-  colonia: number;
-  opcion: string;
-  documentos: Catalogo[] | null;
-  tableCheck: string;
-  donacion: string;
-  persona: string;
-  otro: string;
+  // marca: string;
+  // modelo: string;
+  // serie: string;
+  // calle: string;
+  // numeroExterior: number;
+  // numeroInterior: number;
+  // telefono: number;
+  // correoElectronico: string;
+  // codigoPostal: number;
+  // estado: number;
+  // colonia: number;
+  // opcion: string;
+  // documentos: Catalogo[] | null;
+  // tableCheck: string;
+  // donacion: string;
+  // persona: string;
+  // otro: string;
 }
 
 export function createInitialState(): Solicitud10302State {
   return {
     organismoPublico: '',
-    idSolicitud: '',
-    tipoSolicitud: '',
+    // idSolicitud: '',
+    // tipoSolicitud: '',
     aduana: null,
-    ano: null,
-    condicion: null,
-    pais: null,
-    tipoDocumento: null,
+    // ano: null,
+    // condicion: null,
+    // pais: null,
+    // tipoDocumento: null,
     fechasSeleccionadas: null,
-    finesElegidos: [],
-    elegidosSeleccionados: [],
-    selectRangoDias: [],
+    // finesElegidos: [],
+    // elegidosSeleccionados: [],
+    // selectRangoDias: [],
     fechasDatos: [],
     fecha: null,
     fechaSeleccionada: null,
-    showTabla: true,
-    isPopupOpen: false,
-    isPopupClose: true,
-    valorSeleccionado: null,
-    documentos: null,
+    // showTabla: true,
+    // isPopupOpen: false,
+    // isPopupClose: true,
+    // valorSeleccionado: null,
+    // documentos: null,
 
-    nombre: '',
-    tipoMercancia: '',
+    // nombre: '',
+    // tipoMercancia: '',
     usoEspecifico: '',
-    marca: '',
-    modelo: '',
-    serie: '',
-    calle: '',
-    numeroExterior: 0,
-    numeroInterior: 0,
-    telefono: 0,
-    correoElectronico: '',
-    codigoPostal: 0,
-    estado: 0,
-    colonia: 0,
-    opcion: '',
-    tableCheck: '',
-    donacion: '',
-    persona: '',
-    otro: '',
+    // marca: '',
+    // modelo: '',
+    // serie: '',
+    // calle: '',
+    // numeroExterior: 0,
+    // numeroInterior: 0,
+    // telefono: 0,
+    // correoElectronico: '',
+    // codigoPostal: 0,
+    // estado: 0,
+    // colonia: 0,
+    // opcion: '',
+    // tableCheck: '',
+    // donacion: '',
+    // persona: '',
+    // otro: '',
   };
 }
 

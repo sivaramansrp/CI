@@ -53,21 +53,15 @@
           </div>
           <div class="col-md-12">
             <div class="form-group">
-              <!-- <label>Puntos</label> -->
               <textarea
                 class="form-control form-check-input"
                 id="usoEspecifico"
                 required="true"
                 formControlName="usoEspecifico"
-                (change)="
-                  setValoresStore(
+                (change)="setValoresStore(
                     exencionImpuestos,
                     'usoEspecifico',
-                    'setUsoEspecifico'
-                  )"
-                cols="110"
-                rows="4"
-              ></textarea>
+                    'setUsoEspecifico')" cols="110" rows="4"></textarea>
             </div>
           </div>
           <br/><br/>
@@ -80,13 +74,58 @@
             <button
               type="button"
               class="btn btn-primary ms-3"
-              (click)="nextTabla()"
-            >
+              data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" 
+              (click)="abrirDialogoMercancias()">
               Agregar
             </button>
+            <!-- (click)="nextTabla()" -->
           </div>
         </div>
       </ng-container>
     </div>
   </form>
+</div>
+
+<div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form [formGroup]="agregarMercanciasForm">
+                    <!--Datos de la mercancía-->
+                    <ng-titulo titulo="Datos de la mercancía"></ng-titulo>
+                    <ng-container formGroupName="datosMercancia">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <!-- <app-catalogo-select [catalogo]="tipoDeMercancia" [label]="'Tipo de mercancía'"
+                                    formControlName="tipoDeMercancia" [required]="true"
+                                    (change)="tipoDeMercanciaSeleccion()" name="tipoDeMercancia"></app-catalogo-select> -->
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <!-- <app-catalogo-select [catalogo]="unidadMedida" [label]="'UMC'" [required]="true"
+                                    name="unidadMedida" formControlName="unidadMedida"
+                                    (change)="unidadMedidaSeleccion()"
+                                    [tooltipQuestionCircle]="true"></app-catalogo-select> -->
+                            </div>
+                            <div class="col-md-4">
+                                <!-- <app-catalogo-select [catalogo]="condicionMercancia"
+                                    [label]="'Condición de la mercancía '" [required]="true"
+                                    formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()"
+                                    name="condicionMercanciaA"></app-catalogo-select> -->
+                            </div>
+                        </div>
+                    </ng-container>
+
+                </form>
+            </div>
+            <div class="modal-footer custom-footer">
+                <!-- <button type="button" class="btn btn-primary" (click)="limpiarMercancias()">Limpiar</button>
+                <button type="button" class="btn btn-primary" (click)="agregarMercancias()">Agregar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button> -->
+            </div>
+        </div>
+    </div>
 </div>

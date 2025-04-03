@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  AlertComponent,
   CatalogoSelectComponent,
   CatalogosSelect,
   TableComponent,
+  TEXTOS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
@@ -22,6 +24,7 @@ import {
 import { Tramite10302Query } from '../estados/tramite10302.query';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
 import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -33,15 +36,23 @@ import { map, Subject, Subscription, takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule,
+    AlertComponent
   ],
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.scss',
 })
 export class DatosTramiteComponent {
+
   /**
    * Formulario de trámite.
    */
   tramiteForm!: FormGroup;
+
+  /**
+   * Formulario reactivo para agregar mercancías.
+   */
+
+  agregarMercanciasForm!: FormGroup;
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Estado de la solicitud.
@@ -61,6 +72,20 @@ export class DatosTramiteComponent {
    */
   getAduanaIngresaraSubscription!: Subscription;
   fechasSeleccionadas: Catalogo[] = [];
+
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+
+  /**
+   * Referencia al botón de cerrar el modal.
+   */
+  @ViewChild('closeModal') closeModal!: ElementRef;
+  // /**
+  //  * Textos utilizados en el componente.
+  //  */
+  // TEXTOS = TEXTOS;
 
   /**
    * Encabezados de la tabla.
@@ -185,6 +210,23 @@ export class DatosTramiteComponent {
         // opcion: [this.solicitudState?.opcion],
       }),
     });
+    
+    // this.agregarMercanciasForm = this.fb.group({
+    //   datosMercancia: this.fb.group({
+    //     tipoDeMercancia: [
+    //       this.solicitudState?.tipoDeMercancia,
+    //       Validators.required
+    //     ],
+    //     unidadMedida: [
+    //       this.solicitudState?.unidadMedida,
+    //       Validators.required
+    //     ],
+    //     condicionMercancia: [
+    //       this.solicitudState?.condicionMercancia,
+    //       Validators.required
+    //     ]
+    //   }),
+    // });
   }
 
   getAduanaIngresara(): void {
@@ -207,6 +249,13 @@ export class DatosTramiteComponent {
     return this.tramiteForm.get('exencionImpuestos') as FormGroup;
   }
 
+  /**
+   * Obtiene el grupo de formulario 'datosMercancia' del formulario principal 'RegistroDonacionForm'.
+   */
+  get datosMercancia(): FormGroup {
+    return this.tramiteForm.get('datosMercancia') as FormGroup;
+  }
+  
   /**
    * Este método se utiliza para marcar los controles del formulario como tocados. - 10301
    */
@@ -239,6 +288,29 @@ export class DatosTramiteComponent {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Método para abrir dialogo mercancías.
+   * 
+   * @returns {void}
+   */
+  abrirDialogoMercancias(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Cierra el modal.
+   * 
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    if (this.closeModal) {
+      this.closeModal.nativeElement.click();
+    }
   }
 
   /**
