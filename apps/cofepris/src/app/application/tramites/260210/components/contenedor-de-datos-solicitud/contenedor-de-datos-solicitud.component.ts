@@ -23,6 +23,13 @@ import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
 import { Tramite260210Query } from '../../estados/tramite260210Query.query';
 
+/**
+ * @component ContenedorDeDatosSolicitudComponent
+ * @description Container component that orchestrates user interactions
+ * for entering and managing “datos de la solicitud” (request data).
+ * Integrates the `DatosDeLaSolicitudComponent` and synchronizes data
+ * with the global state managed by `Tramite260214Store`.
+ **/
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -31,37 +38,124 @@ import { Tramite260210Query } from '../../estados/tramite260210Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+  /**
+   * @property destroyNotifier$
+   * @description Subject used to gracefully unsubscribe from observables
+   * when the component is destroyed.
+   * @type {Subject<void>}
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property tramiteState
+   * @description Holds the current state of the “Tramite 260210” process,
+   * retrieved from the store via `Tramite260210Query`.
+   * @type {Tramite260210State}
+   */
   public tramiteState!: Tramite260210State;
 
+  /**
+   * @property opcionConfig
+   * @description Configuration object for the "opcion" table,
+   * including the selection type, table settings, and data array.
+   */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
     configuracionTabla: OPCION_TABLA,
     datos: [] as TablaOpcionConfig[],
   };
+
+  /**
+   * @property scianConfig
+   * @description Configuration object for the SCIAN table,
+   * including selection type, table settings, and data array.
+   */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: SCIAN_TABLA,
     datos: [] as TablaScianConfig[],
   };
+
+  /**
+   * @property tablaMercanciasConfig
+   * @description Configuration object for the “mercancías” table,
+   * including selection type, table settings, and data array.
+   */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PRODUCTO_TABLA,
     datos: [] as TablaMercanciasDatos[],
   };
+
+  /**
+   * @property scianConfigDatos
+   * @description Stores the list of SCIAN table configurations
+   * currently in use within the component.
+   * @type {TablaScianConfig[]}
+   */
   public scianConfigDatos: TablaScianConfig[] = [];
+
+  /**
+   * @property tablaMercanciasConfigDatos
+   * @description Stores the list of “mercancías” data objects
+   * currently in use within the component.
+   * @type {TablaMercanciasDatos[]}
+   */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
+
+  /**
+   * @property seleccionadoopcionDatos
+   * @description Stores the selected “opcion” data coming from the table.
+   * @type {TablaOpcionConfig[]}
+   */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
+
+  /**
+   * @property seleccionadoScianDatos
+   * @description Stores the selected SCIAN data coming from the table.
+   * @type {TablaScianConfig[]}
+   */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
+
+  /**
+   * @property seleccionadoTablaMercanciasDatos
+   * @description Stores the selected “mercancías” data
+   * coming from the respective table.
+   * @type {TablaMercanciasDatos[]}
+   */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
+  /**
+   * @property idProcedimiento
+   * @description ID of the current procedure, defined as a read-only property.
+   * @type {string | number}
+   * @readonly
+   */
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
+  /**
+   * @constructor
+   * @description Initializes dependencies and services used within this component.
+   *
+   * @param {Tramite260210Query} Tramite260210Query - Query service to retrieve the current
+   * state of the “Tramite 260210” from the store.
+   * @param {Tramite260214Store} tramite260214Store - Store service to update the
+   * “Tramite 260214” state with the selected data from the component.
+   */
   constructor(
     private Tramite260210Query: Tramite260210Query,
     private tramite260214Store: Tramite260214Store
   ) {}
 
+  /**
+   * @method ngOnInit
+   * @description Angular lifecycle hook that runs once the component is initialized.
+   * Subscribes to the “Tramite260210” state changes and updates the component’s local
+   * configuration objects with data from the store.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.Tramite260210Query.selectTramiteState$
       .pipe(
@@ -76,7 +170,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   /**
    * Maneja el evento cuando se selecciona una opción en la tabla.
    *
