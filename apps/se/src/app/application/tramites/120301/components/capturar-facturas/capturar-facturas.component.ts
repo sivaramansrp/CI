@@ -193,7 +193,7 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
       calle: [this.capturarState.calle, Validators.required],
       ciudad: [this.capturarState.ciudad, Validators.required],
       cp: [this.capturarState.cp, [Validators.required, Validators.pattern(/^\d{5}$/)]], // Assuming CP is a 5-digit postal code
-      pais: [this.capturarState.pais, Validators.required],
+      pais: [{value:this.capturarState.pais,disabled:true},[ Validators.required]],
     });
   }
   /**

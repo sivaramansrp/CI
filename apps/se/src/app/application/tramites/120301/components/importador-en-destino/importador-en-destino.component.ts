@@ -124,7 +124,7 @@ export class ImportadorEnDestinoComponent implements OnInit, OnDestroy{
       domicilio: [this.importadorState.domicilio, Validators.required],
       ciudadImportador: [this.importadorState.ciudadImportador, Validators.required],
       cpImportador: [this.importadorState.cpImportador, [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Assuming CP is a 5-digit code
-      PaisImportador: [this.importadorState.PaisImportador, Validators.required]
+      PaisImportador: [{value:this.importadorState.PaisImportador, disabled:true}, Validators.required]
     });
 
   }

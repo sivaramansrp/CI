@@ -42,6 +42,8 @@ export interface TextilesState {
   cpImportador: string;
   PaisImportador: string;
   formaValida: Catalogo[];
+  metrosCuadradosEquivalentes:number;
+  cantidadFacturasTotal:number;
 }
 
 export function createInitialState(): TextilesState {
@@ -84,6 +86,8 @@ export function createInitialState(): TextilesState {
     cpImportador: '',
     PaisImportador: '',
     formaValida: [],
+    metrosCuadradosEquivalentes:53,
+    cantidadFacturasTotal:5
   }
 }
 
@@ -359,5 +363,19 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
         formaValida,
     }));
   }
+
+  public setMetrosCuadradosEquivalentes(metrosCuadradosEquivalentes: number) {
+    this.update((state) => ({
+        ...state,
+        metrosCuadradosEquivalentes,
+    }));
+  }
+  public setCantidadFacturasTotal(cantidadFacturasTotal: number) {
+    this.update((state) => ({
+        ...state,
+        cantidadFacturasTotal,
+    }));
+  }
+  
 
 }

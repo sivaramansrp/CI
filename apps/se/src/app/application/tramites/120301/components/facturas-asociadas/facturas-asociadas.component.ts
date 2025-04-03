@@ -231,6 +231,8 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.formularioAsociacionFactura = this.fb.group({
       cantidadFacturas: [this.facturasState.cantidadFacturas, [Validators.required]],
+      cantidadFacturasTotal:[{value:this.facturasState.cantidadFacturasTotal,disabled:true}],
+      metrosCuadradosEquivalentes:[{value:this.facturasState.metrosCuadradosEquivalentes,disabled:true}]
     });
   }
 
