@@ -1,0 +1,9 @@
+{
+    "code": 200,
+    "data": [
+      {
+        "certificadosEmitidos": "29"
+      }
+    ],
+    "message": "Consulta exitosa"
+  }

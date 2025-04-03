@@ -23,4 +23,22 @@ export const PASOS = [
       activo: false,
       completado: false,
     }
-  ];
+];
+
+export const OPCIONES_SOLICITUD_DE_RADIO = [
+    {
+        label: 'Prorroga',
+        value: 'prorroga',
+    }
+];
+
+export const OPCIONES_PRODUCTO_RADIO = [
+    {
+        label: 'Nuevo',
+        value: 'nuevo',
+    },
+    {
+        label: 'Usado',
+        value: 'usado',
+    }
+];
