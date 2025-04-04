@@ -1,4 +1,4 @@
-import { CatalogoLista, RespuestaCatalogos } from '../models/aviso-traslado.model';
+import { AvisoTablaDatos, CatalogoLista, MercanciaTablaDatos, RespuestaCatalogos } from '../models/aviso-traslado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -23,6 +23,18 @@ export class AvisoTrasladoService {
     return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
   obtenerColonias(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+  }
+  obtenerAvisoTabla(): Observable<AvisoTablaDatos> {
+    return this.http.get<AvisoTablaDatos>(`assets/json/32503/aviso-tabla.json`);
+  }
+  obtenerMercanciaTabla(): Observable<MercanciaTablaDatos> {
+    return this.http.get<MercanciaTablaDatos>(`assets/json/32503/mercancia-tabla.json`);
+  }
+  obtenerFraccionArancelaria(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
+  }
+  obtenerUnidadMedida(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
 }

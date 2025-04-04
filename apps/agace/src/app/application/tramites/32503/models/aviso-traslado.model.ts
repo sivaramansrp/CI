@@ -33,10 +33,47 @@ export interface DatosSolicitante {
   telefono: string;
   adace: string;
 }
-export interface ColumnasTabla {
+export interface AvisoTabla {
+  id: number;
   rfc: string,
   nombreComercial: string,
   entidadFederativa: string,
   alcaldioOMuncipio: string,
   colonia: string,
+}
+export interface AvisoTablaDatos {
+  datos: AvisoTabla[];
+}
+export interface MercanciaTabla {
+  id: number;
+  rfc: string,
+  nombreComercial: string,
+  entidadFederativa: string,
+  alcaldioOMuncipio: string,
+  colonia: string,
+}
+export interface MercanciaTablaDatos {
+  datos: MercanciaTabla[];
+}
+export interface MercanciaFormulario {
+  claveFraccionArancelaria: string;
+  nico: string,
+  cantidad: string,
+  claveUnidadMedida: string,
+  valorUSD: string,
+  descripcionMercancia: string,
+  descripcionProceso: string,
+  numPedimentoExportacion: string,
+  numPedimentoImportacion: string,
+}
+export interface DomicilioFormulario {
+  nombreComercial: string;
+  claveEntidadFederativa: string;
+  claveDelegacionMunicipio: string;
+  claveColonia: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: string;
+  rfc: string;
 }
