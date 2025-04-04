@@ -17,7 +17,24 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
 
 /**
  * Estado inicial del trámite 260203.
- * @interface Tramite260203State
+ * @interface Tramite260210State
+ *
+ * @property {Destinatario[]} destinatarioFinalTablaDatos - Lista de destinatarios finales.
+ * @property {Facturador[]} facturadorTablaDatos - Lista de facturadores.
+ * @property {Proveedor[]} proveedorTablaDatos - Lista de proveedores.
+ * @property {Fabricante[]} fabricanteTablaDatos - Lista de fabricantes.
+ * @property {DatosSolicitudFormState} datosSolicitudFormState - Información del formulario de solicitud.
+ * @property {MercanciaForm} mercanciaForm - Datos del formulario de mercancías.
+ * @property {TablaOpcionConfig[]} opcionConfigDatos - Opciones de configuración de tabla.
+ * @property {TablaScianConfig[]} scianConfigDatos - Configuraciones SCIAN disponibles.
+ * @property {TablaMercanciasDatos[]} tablaMercanciasConfigDatos - Configuración de tabla de mercancías.
+ * @property {TablaOpcionConfig[]} seleccionadoopcionDatos - Opciones seleccionadas.
+ * @property {TablaScianConfig[]} seleccionadoScianDatos - Configuraciones SCIAN seleccionadas.
+ * @property {TablaMercanciasDatos[]} seleccionadoTablaMercanciasDatos - Mercancías seleccionadas.
+ * @property {boolean} opcionesColapsableState - Estado del panel colapsable.
+ * @property {PagoDerechosFormState} pagoDerechos - Estado del formulario de pago de derechos.
+ * @property {DetalleMercancia[]} [detalleMercanciaTabla] - Lista de detalles de mercancía en formato de tabla.
+ * @property {number} [indice] - Índice del trámite actual.
  */
 export interface Tramite260203State {
   destinatarioFinalTablaDatos: Destinatario[];
