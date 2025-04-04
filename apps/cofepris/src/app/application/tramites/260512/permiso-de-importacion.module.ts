@@ -19,8 +19,8 @@ import { ToastrService } from 'ngx-toastr';
 import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
-//import { RepresentanteLegalComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
-//import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
+import { RepresentanteLegalComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';  
+
 @NgModule({
   declarations: [
     DatosComponent,
@@ -37,7 +37,7 @@ import { ManifiestosComponent } from '../../shared/components/manifiestos-declar
     DatosDelEstablecimientoRFCComponent,
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
-    //RepresentanteLegalComponent
+    RepresentanteLegalComponent
   ],
   providers: [
     provideHttpClient(),
