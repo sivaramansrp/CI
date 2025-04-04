@@ -15,6 +15,7 @@ import { ModificacionPermisoSanitarioRoutingModule } from './modificacion-permis
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { DatosDeLaSolicitudComponent } from '../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { DatosDelSolicitudModificacionComponent } from '../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { DatosDeLaSolicitudComponent } from '../../shared/components/datos-de-la
     FormsModule,
     SolicitanteComponent,
     DatosDeLaSolicitudComponent,
+    DatosDelSolicitudModificacionComponent,
     ModificacionPermisoSanitarioRoutingModule,
   ],
 })
