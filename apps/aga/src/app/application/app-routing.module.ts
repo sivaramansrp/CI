@@ -140,6 +140,13 @@ const ROUTES: Routes = [
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
       ),
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
   }
 ];
 
