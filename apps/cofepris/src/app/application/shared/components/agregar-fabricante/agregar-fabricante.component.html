@@ -59,7 +59,7 @@
         <label class="form-label">C.U.R.P.*:</label>
         <input type="text" class="form-control" formControlName="curp" />
       </div>
-    }
+      }
     </div>
     }
 
@@ -88,16 +88,43 @@
         />
       </div>
     </div>
-    } @if(agregarFabricanteForm.get('tipoPersona')?.value === 'Moral') {
+    } @if(agregarFabricanteForm.get('tipoPersona')?.value === tipoPersona.MORAL
+    ) {
     <div class="row mt-3">
       <div class="col-md-12">
         <label class="form-label">Denominación/razón social*:</label>
         <input type="text" class="form-control" formControlName="razonSocial" />
       </div>
     </div>
+    } @if (idProcedimiento === 260102) {
+    <h4 class="mt-5">Domicilio</h4>
+    <div class="row mt-5">
+      <div class="col-md-4 px-5">
+        <app-catalogo-select
+          [catalogo]="paisesDatos"
+          formControlName="pais"
+          [label]="'País'"
+          [required]="true"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-4 px-5">
+        <label class="form-label">Estado:</label>
+        <input type="text" class="form-control" formControlName="estado" />
+      </div>
+
+      <div class="col-md-4 px-5">
+        <label class="form-label">Código postal o equivalente:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="codigoPostal"
+        />
+      </div>
+    </div>
     }
 
     <!-- Domicilio -->
+    @else{
     <h4 class="mt-5">Domicilio</h4>
     <div class="row mt-5">
       <div class="col-md-4 px-5">
@@ -152,6 +179,7 @@
         ></app-catalogo-select>
       </div>
     </div>
+    }
 
     <div class="row mt-3">
       <div class="col-md-9">
