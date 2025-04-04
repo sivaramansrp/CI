@@ -23,6 +23,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
+    path: 'maquila-materias-primas',
+    loadChildren: () =>
+      import(
+        './tramites/260206/maquila-materias-primas.module'
+      ).then((m) => m.MaquilaMateriasPrimasModule),
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
@@ -54,6 +61,20 @@ const ROUTES: Routes = [
       import('./tramites/260215/permiso-sanitario-importacion.module').then(
         (m) => m.PermisoSanitarioImportacionModule
       ),
+  },
+    {
+    path: 'permiso-sanitario-medicos-uso-personal',
+    loadChildren: () =>
+      import(
+        './tramites/260213/permiso-sanitario-medicos-uso-personal.module'
+      ).then((m) => m.PermisoSanitarioMedicosUsoPersonalModule),
+  },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos-pruebas',
+    loadChildren: () =>
+      import(
+        './tramites/260210/permiso-sanitario-importacion-medicamentos-pruebas.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosPruebasModule),
   },
   {
     path: 'aviso-de-modificacion-module',
@@ -90,6 +111,21 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
+  {
+   
+        path: 'territorio-nacional',
+        loadChildren: () =>
+          import('./tramites/260401/territorio-nacional-solicitude.module').then(
+            (m) => m.TerritorioNacionalSolicitudeModule
+          ),
+        },
+        {
+    path: 'medicamentos-registro-sanitario',
+    loadChildren: () =>
+      import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
+        (m) => m.PermisoSanitarioImportacion260203Module
+      ),
+  }
 ];
 
 @NgModule({
