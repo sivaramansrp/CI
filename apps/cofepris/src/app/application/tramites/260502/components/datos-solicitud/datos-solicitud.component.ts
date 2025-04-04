@@ -9,4 +9,6 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
 })
-export class DatosSolicitudComponent {}
+export class DatosSolicitudComponent {
+  isAvisoLicenciaVisible: boolean = false;
+}
