@@ -83,6 +83,20 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-sanitario-medicos-uso-personal',
+    loadChildren: () =>
+      import(
+        './tramites/260213/permiso-sanitario-medicos-uso-personal.module'
+      ).then((m) => m.PermisoSanitarioMedicosUsoPersonalModule),
+  },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos-pruebas',
+    loadChildren: () =>
+      import(
+        './tramites/260210/permiso-sanitario-importacion-medicamentos-pruebas.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosPruebasModule),
+  },
+  {
     path: 'aviso-de-modificacion-module',
     loadChildren: () =>
       import('./tramites/260605/pantallas.module').then(
