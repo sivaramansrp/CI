@@ -16,6 +16,11 @@ export class AgregarProveedorContenedoraComponent {
         public tramiteStore: Tramite260204Store){
     }
 
+    /**
+     * Actualiza los datos de la tabla de proveedores en el estado del trámite.
+     * 
+     * @param event - Una lista de proveedores que se utilizará para actualizar los datos de la tabla.
+     */
     updateProveedorTablaDatos(event:Proveedor[]): void {  
         this.tramiteStore.updateProveedorTablaDatos(event);
     }

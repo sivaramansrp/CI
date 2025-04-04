@@ -16,6 +16,11 @@ export class AgregarDestinatarioFinalContenedoraComponent {
 
   constructor(public tramiteStore: Tramite260204Store) {}
 
+  /**
+   * Actualiza los datos de la tabla de destinatarios finales en el almacén de trámites.
+   * 
+   * @param event - Una lista de destinatarios de tipo `Destinatario` que se utilizará para actualizar los datos.
+   */
   updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
