@@ -69,7 +69,7 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should subscribe to state and patch form values in subscribeToState', () => {
     const patchValueSpy = jest.spyOn(component.solicitudForm, 'patchValue');
-    component.subscribeToState();
+    component.suscribirseAlEstado();
     expect(patchValueSpy).toHaveBeenCalledWith({
       cveFolioCaat: '12345',
       descTipoCaat: 'Naviero',
@@ -78,14 +78,6 @@ describe('DatosDelTramiteComponent', () => {
       primerApellido: 'Doe',
       segundoApellido: 'Smith',
     });
-  });
-
-  it('should unsubscribe from observables on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
   });
 
   it('should call destroy$.next() and destroy$.complete() on ngOnDestroy', () => {
@@ -98,12 +90,33 @@ describe('DatosDelTramiteComponent', () => {
     expect(destroyCompleteSpy).toHaveBeenCalled();
   });
 
+  it('should handle partial state in subscribeToState', () => {
+    mockDatosDelTramiteService.getSolicitudState = jest
+      .fn()
+      .mockReturnValue(of({ directorGeneralNombre: 'Partial' }));
+    const patchValueSpy = jest.spyOn(component.solicitudForm, 'patchValue');
+    component.suscribirseAlEstado();
+    expect(patchValueSpy).toHaveBeenCalledWith({
+      directorGeneralNombre: 'Partial',
+    });
+  });
+
+  it('should validate form controls correctly', () => {
+    const directorGeneralNombreControl =
+      component.solicitudForm.get('directorGeneralNombre');
+    directorGeneralNombreControl?.setValue('');
+    expect(directorGeneralNombreControl?.valid).toBeFalsy();
+  
+    directorGeneralNombreControl?.setValue('Valid Name');
+    expect(directorGeneralNombreControl?.valid).toBeTruthy();
+  });
+
   it('should handle empty state in subscribeToState', () => {
     mockDatosDelTramiteService.getSolicitudState = jest
       .fn()
       .mockReturnValue(of({}));
     const patchValueSpy = jest.spyOn(component.solicitudForm, 'patchValue');
-    component.subscribeToState();
+    component.suscribirseAlEstado();
     expect(patchValueSpy).toHaveBeenCalledWith({});
   });
 });
