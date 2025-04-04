@@ -215,6 +215,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'validar-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110208/validar-inicalmente.module').then(
+        (m) => m.ValidarInicalmenteModule
+      ),
+  },
+  {
     path: 'certificado',
     loadChildren:() =>
       import('./tramites/110219/certificado.module').then(
@@ -229,6 +236,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'certificado-validacion',
+    loadChildren: () =>
+      import('./tramites/110202/certificado-validacion.module').then(
+        (m) => m.CertificadoValidacionModule),
+      },
+  {
     path: 'exportacion-minerales',
     loadChildren: () =>
       import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
@@ -240,6 +253,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80102/autorizacion-programa-nuevo.module').then(
         (m) => m.AutorizacionProgrmaNuevoModule
+      ),
+  },
+  { path: 'tecnicos',
+    loadChildren: () =>
+      import('./tramites/110203/tecnicos.module').then(
+        (m) => m.TecnicosModule
       ),
   },
   {
