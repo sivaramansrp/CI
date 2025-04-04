@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { EvaluarSolicitudService } from '../../../core/service/evaluar-solicitud.service';
 import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
 import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimiento.json';
 
@@ -32,7 +31,7 @@ export class CapturarRequerimientoComponent implements OnInit {
    * Notificador para destruir las suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  tipoRequerimiento!: string;
+  // tipoRequerimiento!: string;
   /**
     * Estado de la solicitud.
     */
@@ -41,7 +40,7 @@ export class CapturarRequerimientoComponent implements OnInit {
     private fb: FormBuilder,
     private requerimientosStates: RequerimientosStates,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
-    private estadoService: EvaluarSolicitudService,
+    // private estadoService: EvaluarSolicitudService,
   ) {
     // do nothing.
   }
@@ -78,20 +77,6 @@ export class CapturarRequerimientoComponent implements OnInit {
    */
   tipoRequerimientoSeleccionado(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates) {
     this.setValoresStore(form, campo, metodoNombre);
-    this.tipoRequerimiento = this.formRequerimiento.get('tipoRequerimiento')?.value;
-    switch (this.tipoRequerimiento) {
-      case "1":
-        this.estadoService.setButtonStatus(true);
-        break;
-      case "2":
-        this.estadoService.setButtonStatus(true);
-        break;
-      case "3":
-        this.estadoService.setButtonStatus(false);
-        break;
-      default:
-        break;
-    }
   }
   /**
     * Establece los valores en el store de tramite5701.
