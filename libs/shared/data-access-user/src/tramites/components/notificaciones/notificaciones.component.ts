@@ -126,7 +126,7 @@ export class NotificacionesComponent implements OnChanges {
    * Referencia al modal automático mostrado.
    * Utiliza `ModalDirective` para controlar su comportamiento.
    */
-  @ViewChild('autoShownModal', { static: false }) autoShownModal?: ModalDirective;
+  @ViewChild('modal', { static: false }) modal?: ModalDirective;
 
   constructor(
     private toastr: ToastrService,
@@ -193,7 +193,7 @@ export class NotificacionesComponent implements OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   confirmarAccion(): void {
-    this.autoShownModal?.hide();
+    this.modal?.hide();
     this.confirmacionModal.emit(true);
   }
 
@@ -202,7 +202,7 @@ export class NotificacionesComponent implements OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   declinarAccion(): void {
-    this.autoShownModal?.hide();
+    this.modal?.hide();
   }
 
   /**

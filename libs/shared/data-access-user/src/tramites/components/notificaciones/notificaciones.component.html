@@ -1,6 +1,6 @@
 @if (notificacionInput.tipoNotificacion === eTipoNoficacionEnum.ALERTA) {
 <div *ngIf="mostrarModal" [config]="{ show: true, backdrop: 'static'}" (onHidden)="onHidden()" bsModal
-    #autoShownModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
+    #modal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-auto-name">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
