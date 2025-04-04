@@ -157,7 +157,6 @@ const ROUTES: Routes = [
         (m) => m.AttentionOfRenewalModule
       ),
   },
-  },
   {
     path: 'retirada-de-la-autorizacion-de-donaciones',
     loadChildren: () =>
