@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent,TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AutorizacionesDeVidaSilvestreRoutingModule } from './autorizaciones-de-vida-silvestre-routing.module';
 import { DatosComponent } from './pages/datos/datos.component';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
@@ -33,7 +34,9 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     AlertComponent,
     CrosslistComponent,
     TableComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    ToastrModule.forRoot()
 ],
+providers:[ToastrService]
 })
 export class AutorizacionesDeVidaSilvestreModule {}
