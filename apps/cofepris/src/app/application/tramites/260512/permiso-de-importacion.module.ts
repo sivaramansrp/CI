@@ -21,6 +21,10 @@ import { DomicilioEstablecimientoAduanasComponent } from '../../shared/component
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';  
 
+import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pago-Derechos.component';
+
+import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
+
 @NgModule({
   declarations: [
     DatosComponent,
@@ -37,7 +41,9 @@ import { RepresentanteLegalComponent } from '../../shared/components/representan
     DatosDelEstablecimientoRFCComponent,
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
+    PagoDerechosComponent,
+    AvisoTercerosRelacionadosComponent
   ],
   providers: [
     provideHttpClient(),
