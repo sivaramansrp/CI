@@ -34,7 +34,11 @@ const routes: Routes = [
   {
     path: 'autorizar-dictamen',
     component: AutorizarDictamenComponent,
-  },
+    },
+    {
+        path: 'consulta',
+        component: ConsultaComponent,
+    },
 
 ];
 
