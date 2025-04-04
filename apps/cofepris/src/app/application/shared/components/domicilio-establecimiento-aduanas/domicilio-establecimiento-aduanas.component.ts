@@ -218,10 +218,27 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   /**
    * Etiqueta de la lista de fechas.
    * */
-  public paisDeProcedenciaLabel: CrossListLable = {
+  public aduanasDeLabel: CrossListLable = {
     tituluDeLaIzquierda: 'Aduanas de entrada disponibles:',
     derecha: 'Aduanas de entrada seleccionadas*:',
   };
+
+   /**
+   * Etiqueta de la lista de fechas.
+   * */
+ public paisDeOrigenLabel: CrossListLable = {
+  tituluDeLaIzquierda: 'País de origen:',
+  derecha: 'País(es) seleccionado(s)*:',
+};
+
+ /**
+   * Etiqueta de la lista de fechas.
+   * */
+ public paisDeProcedenciaLabel: CrossListLable = {
+  tituluDeLaIzquierda: 'País de procedencia:',
+  derecha: 'País(es) seleccionado(s)*:',
+};
+
 
   /**
    * Etiqueta de la lista de fechas.
@@ -265,12 +282,14 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       nombreComun: ['', Validators.required],
       nombreCientifico: ['', Validators.required],
       usoEspecifico: ['', Validators.required],
+      estadofisico: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
       descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
       UMT: [{ value: '', disabled: true }, Validators.required],
       cantidadUMC: ['', Validators.required],
       UMC: ['', Validators.required],
+      numerocas:['', Validators.required],
       porcentajeConcentracion: ['', Validators.required],
       numeroRegistro: ['', Validators.required],
       clasificacionToxicologica: ['', Validators.required],

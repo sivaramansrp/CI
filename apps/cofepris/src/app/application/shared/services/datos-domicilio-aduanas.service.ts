@@ -5,7 +5,7 @@ import {
 import {
   MercanciasTabla,
   RespuestaTabla,
-} from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
+} from '../components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
