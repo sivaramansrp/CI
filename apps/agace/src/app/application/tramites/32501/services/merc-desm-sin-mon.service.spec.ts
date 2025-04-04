@@ -185,35 +185,6 @@ describe('MercDesmSinMonService', () => {
     req.flush(mockData);
   });
 
-  it('should fetch RequisitosObligatorios data', () => {
-    const mockData: RequisitosObligatorios[] = [
-      {
-        numeroDeSerie: 1,
-        valor:
-          'Comprobante de domicilio del lugar donde se montará la mercancía.',
-      },
-      {
-        numeroDeSerie: 2,
-        valor: 'Factura/Proforma/Documento comercial.',
-      },
-      {
-        numeroDeSerie: 3,
-        valor:
-          'Lista de empaque/Relación de componentes de la mercancía a importarse.',
-      },
-    ];
-
-    service.obtenerDatosAgregarNuevo().subscribe((data) => {
-      expect(data).toEqual(mockData);
-    });
-
-    const req = httpMock.expectOne(
-      'assets/json/32501/datos-agregar-nuevo.json'
-    );
-    expect(req.request.method).toBe('GET');
-    req.flush(mockData);
-  });
-
   it('should handle errors when fetching AvisoCatalogo data', () => {
     const mockError = new ErrorEvent('Network error');
 
@@ -240,22 +211,6 @@ describe('MercDesmSinMonService', () => {
 
     const req = httpMock.expectOne(
       'assets/json/32501/operacion-de-importacion.json'
-    );
-    req.error(mockError);
-  });
-
-  it('should handle errors when fetching RequisitosObligatorios data', () => {
-    const mockError = new ErrorEvent('Network error');
-
-    service.obtenerDatosAgregarNuevo().subscribe({
-      next: () => fail('Expected an error, not data'),
-      error: (error) => {
-        expect(error).toBeTruthy();
-      },
-    });
-
-    const req = httpMock.expectOne(
-      'assets/json/32501/datos-agregar-nuevo.json'
     );
     req.error(mockError);
   });

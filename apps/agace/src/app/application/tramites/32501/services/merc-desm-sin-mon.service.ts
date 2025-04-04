@@ -55,22 +55,6 @@ export class MercDesmSinMonService {
   }
 
   /**
-   * Obtiene los datos para agregar nuevos requisitos obligatorios desde un archivo JSON.
-   * @returns Observable con la lista de requisitos obligatorios.
-   */
-  obtenerDatosAgregarNuevo(): Observable<RequisitosObligatorios[]> {
-    return this.http
-      .get<RequisitosObligatorios[]>(
-        'assets/json/32501/datos-agregar-nuevo.json'
-      )
-      .pipe(
-        catchError((error) => {
-          return throwError(() => error);
-        })
-      );
-  }
-
-  /**
    * Obtiene los datos de las opciones de radio desde un archivo JSON.
    * @return Observable con los datos de las opciones de radio.
    * 
