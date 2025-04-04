@@ -86,7 +86,11 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene la lista de idiomas disponibles.
    */
   idiomOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('idioma.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('idioma.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
       next: (data) => {
         this.idiomaDatos = data as Catalogo[];
       },
@@ -102,7 +106,11 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene la lista de entidades federativas disponibles.
    */
   entidadFederativasOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('entidadFederativas.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
       next: (data) => {
         this.entidadFederativas = data as Catalogo[];
       },
@@ -118,7 +126,11 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    * Obtiene la lista de representaciones federales disponibles.
    */
   representacionFederalOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('representacionFederal.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
       next: (data) => {
         this.representacionFederal = data as Catalogo[];
       },

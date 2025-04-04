@@ -149,7 +149,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
 
     this.estadoOpcion();
     this.paisOpcion();
-    this.query.selectmercanciaTabla$.subscribe((data) => {
+    this.query.selectmercanciaTabla$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((data) => {
       this.datosTabla$ = data as unknown as Observable<Mercancia[]>;
     });
   }
@@ -159,7 +163,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene la lista de estados disponibles.
    */
   estadoOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('estados.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('estados.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
       next: (data) => {
         this.estado = data as Catalogo[];
       },
@@ -175,7 +183,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene la lista de países disponibles.
    */
   paisOpcion(): void {
-    this.camCertificadoService.obtenerMenuDesplegable('pais.json').subscribe({
+    this.camCertificadoService.obtenerMenuDesplegable('pais.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
       next: (data) => {
         this.pais = data as Catalogo[];
       },
@@ -191,7 +203,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Obtiene los datos disponibles relacionados con mercancías.
    */
   conseguirDisponiblesDatos(): void {
-    this.camCertificadoService.obtenerTablaDatos('disponibles-datos.json').subscribe({
+    this.camCertificadoService.obtenerTablaDatos('disponibles-datos.json')
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe({
       next: (response: Mercancia[]) => {
         if (response && Array.isArray(response)) {
           this.disponiblesDatos = response as Mercancia[];
