@@ -2,6 +2,7 @@ import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -209,6 +210,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarElementoColapsable = true;
+  
+  public mostrarCorreoElectronico = true;
 
   /**
    * @constructor
@@ -236,8 +239,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.mostrarCorreoElectronico =
+    PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(this.idProcedimiento)
+        ? false
+        : true;
     this.crearDatosSolicitudForm();
-
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
       .subscribe((value) => {
