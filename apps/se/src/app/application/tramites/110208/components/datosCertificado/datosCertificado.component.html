@@ -1,0 +1,29 @@
+<ng-titulo titulo="Datos del certificado" />
+<form [formGroup]="formDatosCertificado">
+    <div class="row">
+        <div class="col-md-8">
+            <label for="observaciones" class="form-label">Observaciones</label>
+            <textarea id="observaciones" formControlName="observaciones"  class="mb-4 h-20 w-100" placeholder="" rows="6" (change)="setValoresStore(formDatosCertificado,'observaciones', 'setObservaciones')"></textarea>
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select [catalogo]="estado" [label]="'Idioma'"
+            [required]="true" name="idioma" formControlName="idioma" (change)="setValoresStore(formDatosCertificado,'idioma', 'setIdioma')"
+            ></app-catalogo-select>
+          </div>
+    </div>
+    <ng-titulo titulo="Representación federal" />
+    <div class="row">
+        <div class="col-md-4">
+            <app-catalogo-select [catalogo]="estado" [label]="'Entidad federativa'"
+            [required]="true" name="entidadFederativaCertificado" formControlName="entidadFederativaCertificado" (change)="setValoresStore(formDatosCertificado,'entidadFederativaCertificado', 'setEntidadFederativaCertificado')"
+            ></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select [catalogo]="estado" [label]="'Representación federal'"
+            [required]="true" name="representacionFederal" formControlName="representacionFederal" (change)="setValoresStore(formDatosCertificado,'representacionFederal', 'setRepresentacionFederal')"
+            ></app-catalogo-select>
+        </div>
+    </div>
+</form>
