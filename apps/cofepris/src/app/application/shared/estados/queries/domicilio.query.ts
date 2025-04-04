@@ -1,7 +1,5 @@
-import { DomicilioState } from '../stores/domicilio.store';
- 
-import { DomicilioStore } from '../stores/domicilio.store';
- 
+import { DomicilioState, DomicilioStore } from '../stores/domicilio.store';
+
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
  

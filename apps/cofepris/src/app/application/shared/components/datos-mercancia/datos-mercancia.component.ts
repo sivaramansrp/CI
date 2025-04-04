@@ -278,8 +278,31 @@ export class DatosMercanciaComponent implements OnInit {
     this.crearMercanciaForm();
   }
 
-  public elementosNoValidos: string[] = [];
-  public elementosAnadidos: string[] = [];
+  /**
+   * Lista de elementos que no son válidos.
+   * Esta propiedad almacena un arreglo de cadenas que representan 
+   * los elementos que no cumplen con los criterios de validación.
+   */
+  public elementosNoValidos:string[] = [];
+  /**
+   * Arreglo que almacena los elementos añadidos.
+   * 
+   * Este arreglo se utiliza para guardar una lista de cadenas que representan
+   * los elementos que han sido agregados en el componente.
+   */
+  public elementosAnadidos:string[] = [];
+  /**
+   * Configuración para la clave de mercancía.
+   * 
+   * Esta propiedad define la configuración utilizada para la tabla de selección
+   * de claves de mercancía. Incluye el tipo de selección, la configuración de la tabla
+   * y los datos asociados.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
+   * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
+   * - `datos`: Arreglo que contiene los datos de configuración de las claves de mercancía.
+   */
   public claveConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,

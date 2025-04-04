@@ -2,34 +2,34 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { DatosDelEstablecimientoComponent } from './datos-del-establecimiento.component';
-import { Tramite260603Store } from '../../../shared/estados/stores/tramites260603.store';
-import { Tramite260603Query } from '../../../shared/estados/queries/tramites260603.query';
+import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
 describe('DatosDelEstablecimientoComponent', () => {
   let component: DatosDelEstablecimientoComponent;
   let fixture: ComponentFixture<DatosDelEstablecimientoComponent>;
-  let mockTramiteStore: jest.Mocked<Tramite260603Store>;
-  let mockTramiteQuery: jest.Mocked<Tramite260603Query>;
+  let mockTramiteStore: jest.Mocked<DomicilioStore>;
+  let mockTramiteQuery: jest.Mocked<DomicilioQuery>;
 
   beforeEach(async () => {
     mockTramiteStore = {
       setDenominacion: jest.fn(),
       setCorreoElectronico: jest.fn(),
-    } as unknown as jest.Mocked<Tramite260603Store>;
+    } as unknown as jest.Mocked<DomicilioStore>;
 
     mockTramiteQuery = {
       selectSolicitud$: of({
         denominacion: 'Test Denominacion',
         correoElectronico: 'test@example.com',
       }),
-    } as unknown as jest.Mocked<Tramite260603Query>;
+    } as unknown as jest.Mocked<DomicilioQuery>;
 
     await TestBed.configureTestingModule({
       imports: [DatosDelEstablecimientoComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
-        { provide: Tramite260603Store, useValue: mockTramiteStore },
-        { provide: Tramite260603Query, useValue: mockTramiteQuery },
+        { provide: DomicilioStore, useValue: mockTramiteStore },
+        { provide: DomicilioQuery, useValue: mockTramiteQuery },
       ],
     }).compileComponents();
   });
