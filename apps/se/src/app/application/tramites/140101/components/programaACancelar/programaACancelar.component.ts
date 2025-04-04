@@ -34,7 +34,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Grupo de formularios para gestionar los controles del formulario en el componente.
    */
-  formGroup: FormGroup;
+  ProgramaForm!: FormGroup;
 
   /**
    * Subject utilizado para notificar y completar observables cuando el componente se destruye.
@@ -114,17 +114,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     private tramite140101Store: Tramite140101Store,
     private tramite140101Query: Tramite140101Query
   ) {
-    this.formGroup = this.fb.group({
-      folioPrograma: [{ value: '', disabled: true }],
-      idProgramaSeleccionado: [''],
-      modalidad: [{ value: '', disabled: true }],
-      representacionFederal: [{ value: '', disabled: true }],
-      tipoPrograma: [{ value: '', disabled: true }],
-      estatus: [{ value: '', disabled: true }],
-      solicitudObservaciones: ['', Validators.required],
-      confirmar: [false, Validators.requiredTrue],
-      radio: ['']
-    });
+  
   }
 
   /**
@@ -151,7 +141,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
         .subscribe()
     );
 
-    this.formGroup = this.fb.group({
+      this.ProgramaForm = this.fb.group({
       folioPrograma: [{ value: this.ProgramaState?.programaACancelar?.folioPrograma, disabled: true }],
       idProgramaSeleccionado: [this.ProgramaState?.programaACancelar?.idProgramaSeleccionado],
       modalidad: [{ value: this.ProgramaState?.programaACancelar?.modalidad, disabled: true }],
@@ -195,7 +185,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   }
 
   isValid(field: string): boolean | null {
-    return this.formValidator.isValid(this.formGroup, field);
+    return this.formValidator.isValid(this.ProgramaForm, field);
   }
 
   /**
@@ -209,7 +199,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     const INDEX = this.datosTabla.findIndex((x) => x.idProgramaSeleccionado === row.idProgramaSeleccionado);
     this.radioId = INDEX;
     this.tramite140101Store.setRadioSelection(INDEX);
-    this.formGroup.patchValue({
+    this.ProgramaForm.patchValue({
       folioPrograma: row.folioPrograma,
       idProgramaSeleccionado: row.idProgramaSeleccionado,
       modalidad: row.modalidad,

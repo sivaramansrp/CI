@@ -22,5 +22,5 @@ export const AVISO = {
    * de solicitudes pendientes por firmar. Incluye un número de solicitud como referencia.
    */
   export const FIRMAR = {
-    Firmar: `<p>La solicitud ha sido guardado existosamente. Tiene 15 dias naturales para firmarla, despues de ese tiempo desaparecera del listado de solicitudes pendientes por firmar. Numero de soliticid [202767878] </p>`
+    Firmar: `<p>La solicitud ha sido guardado exitosamente. Tiene 15 días naturales para firmarla, después de ese tiempo desaparecerá del listado de solicitudes pendientes por firmar. Número de solicitud [202767878] </p>`
   };
