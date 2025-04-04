@@ -2,13 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { AvisoDeReciclajeRoutingModule } from './aviso-de-reciclaje-routing.module';
-
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule,
-    AvisoDeReciclajeRoutingModule
-  ]
+  declarations: [PasoUnoComponent],
+  imports: [CommonModule, AvisoDeReciclajeRoutingModule],
 })
-export class AvisoDeReciclajeModule { }
+export class AvisoDeReciclajeModule {}
