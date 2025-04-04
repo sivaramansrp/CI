@@ -208,6 +208,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'validar-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110208/validar-inicalmente.module').then(
+        (m) => m.ValidarInicalmenteModule
+      ),
+  },
+  {
     path: 'certificado',
     loadChildren:() =>
       import('./tramites/110219/certificado.module').then(
@@ -239,6 +246,12 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80102/autorizacion-programa-nuevo.module').then(
         (m) => m.AutorizacionProgrmaNuevoModule
+      ),
+  },
+  { path: 'tecnicos',
+    loadChildren: () =>
+      import('./tramites/110203/tecnicos.module').then(
+        (m) => m.TecnicosModule
       ),
   },
   {
