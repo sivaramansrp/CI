@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RequerimientosStates, SolicitudRequerimientosState } from '../../../estados/evaluacion-solicitud/requerimientos.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -14,15 +14,11 @@ import data from '@libs/shared/theme/assets/json/funcionario/cat-tipo-requerimie
   templateUrl: './capturar-requerimiento.component.html',
   styleUrl: './capturar-requerimiento.component.scss',
 })
-export class CapturarRequerimientoComponent implements OnInit {
+export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   /**
    * Declaración de variable para el formulario
    */
   formRequerimiento!: FormGroup;
-  /**
-   * variable del valor del campo
-   */
-  valor!: string;
   /**
     * Catálogo de tipo de requerimiento
     */
@@ -59,6 +55,14 @@ export class CapturarRequerimientoComponent implements OnInit {
       .subscribe();
     this.crearFormRequerimiento();
   }
+
+  /**
+   * Se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(){
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
   /**
      * Método para crear el formulario de la captura de requerimiento
      */
@@ -87,7 +91,7 @@ export class CapturarRequerimientoComponent implements OnInit {
     * @returns {void}
     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof RequerimientosStates): void {
-    this.valor = form.get(campo)?.value;
-    (this.requerimientosStates[metodoNombre] as (value: string) => void)(this.valor);
+    const VALOR = form.get(campo)?.value;
+    (this.requerimientosStates[metodoNombre] as (value: string) => void)(VALOR);
   }
 }

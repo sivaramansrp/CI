@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
-import { EvaluarSolicitudService } from '../../../core/service/evaluar-solicitud.service';
 import { Router } from '@angular/router';
 import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 import { SolicitudRequerimientoQuery } from '../../../estados/queries/requerimientos.query';
@@ -15,7 +14,7 @@ import { SolicitudRequerimientosState } from '../../../estados/evaluacion-solici
   templateUrl: './requerimiento-informacion.component.html',
   styleUrl: './requerimiento-informacion.component.scss',
 })
-export class RequerimientoInformacionComponent implements OnInit {
+export class RequerimientoInformacionComponent implements OnInit, OnDestroy {
   /**
     * Notificador para destruir las suscripciones.
     */
@@ -28,18 +27,11 @@ export class RequerimientoInformacionComponent implements OnInit {
    * Índice de la pestaña seleccionada
   */
   indiceDictamen: number = 1;
-  /**
-   * Variable para activar la pestaña requerimientos de documentación
-   */
-  documentacion: boolean = false;
   constructor(
     private router: Router,
-    private estadoService: EvaluarSolicitudService,
     private solicitudRequerimientoQuery: SolicitudRequerimientoQuery,
   ) {
-    this.estadoService.buttonStatus$.subscribe(valor => {
-      this.documentacion = valor;
-    });
+      // do nothing.
   }
   ngOnInit(): void {
     this.solicitudRequerimientoQuery.selectSolicitud$
@@ -51,6 +43,14 @@ export class RequerimientoInformacionComponent implements OnInit {
       )
       .subscribe();
   }
+   /**
+   * Se ejecuta al destruir el componente.
+   */
+   ngOnDestroy(){
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
   /**
   /**
     * Método para seleccionar la pestaña
@@ -63,10 +63,18 @@ export class RequerimientoInformacionComponent implements OnInit {
    * Método para la función del botón continuar
    */
   continuar(): void {
-      if (this.indiceDictamen === 2 || Number(this.requerimientoState.idTipoRequerimiento) === 3) {
-        this.router.navigate(['funcionario/firma-electronica']);
-      } else {
-        this.indiceDictamen = 2;
-      }
+    /**
+     * @param IDTIPOREQUERIMIENTO
+     * Indica el tpo de requerimiento de la infomación requerida donde se encuentran 3 opciones
+     * 1.- Docuemntos
+     * 2.-Datos y Documentos
+     * 3.- Datos 
+     */
+    const IDTIPOREQUERIMIENTO = Number(this.requerimientoState.idTipoRequerimiento);
+    if (this.indiceDictamen === 2 || IDTIPOREQUERIMIENTO === 3) {
+      this.router.navigate(['funcionario/firma-electronica']);
+    } else {
+      this.indiceDictamen = 2;
+    }
   }
 }
