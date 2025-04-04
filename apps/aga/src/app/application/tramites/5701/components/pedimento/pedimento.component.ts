@@ -162,7 +162,7 @@ export class PedimentoComponent implements OnChanges {
   }
 
   /**
-   * Elimina un elemento de la tablae de pedimento, si se confirma la acción.
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
    * @param borrar Indica si se debe proceder con la eliminación.
    * @returns {void}
    */
