@@ -57,7 +57,7 @@ export interface SolicitudState {
 export function createInitialState(): SolicitudState {
     return {
         /**
-         * @property {string} referencia
+         * @property {string} claveReferencia
          * @description Referencia de la solicitud.
          */
         claveReferencia: '',
@@ -75,13 +75,13 @@ export function createInitialState(): SolicitudState {
         banco: '',
 
         /**
-         * @property {string} Llave
+         * @property {string} llavePago
          * @description Llave única de la solicitud.
          */
         llavePago: '',
 
         /**
-         * @property {string} tipoFetch
+         * @property {string} fechaPago
          * @description Información de fetch.
          */
         fechaPago: '',
@@ -107,38 +107,38 @@ export class AvisocalidadStore extends Store<SolicitudState>{
             super(createInitialState());
         }
 
-        public setclaveReferencia(claveReferencia: string) {
+        public setclaveReferencia(claveReferencia: string): void {
             this.update((state) => ({
                 ...state,
                 claveReferencia,
             }));
         }
-        public setcadenaDependencia(cadenaDependencia: string) {
+        public setcadenaDependencia(cadenaDependencia: string):void {
             this.update((state) => ({
                 ...state,
                 cadenaDependencia,
             }));
         }
-        public setbanco(banco: string) {
+        public setbanco(banco: string): void {
             this.update((state) => ({
                 ...state,
                 banco,
             }));
         }
-        public setllavePago(llavePago: string) {
+        public setllavePago(llavePago: string): void {
             this.update((state) => ({
                 ...state,
                 llavePago,
             }));
         }
-        public setfechaPago(fechaPago: string) {
+        public setfechaPago(fechaPago: string): void {
             this.update((state) => ({
                 ...state,
                 fechaPago,
             }));
         }
        
-        public setimportePago(importePago: string) {
+        public setimportePago(importePago: string): void {
             this.update((state) => ({
                 ...state,
                 importePago,

@@ -6,7 +6,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 
 import { AvisoImportacionService } from '../../services/parmiso-importacion.service'; 
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { map,takeUntil } from 'rxjs';
+
+import { Subject } from 'rxjs';
 
 import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -70,9 +72,9 @@ public cambioFechaIngreso(nuevo_valor: string): void {
     this.avisocalidadStore.setfechaPago(nuevo_valor);
   }
 
-   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
-    const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
-    (this.avisocalidadStore[metodoNombre] as (value: any) => void)(valor); 
+   setValoresStore<T>(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
+    const VALOR = form.get(campo)?.value as T; // Obtener el valor del campo especificado del formulario.
+    (this.avisocalidadStore[metodoNombre] as (value: T) => void)(VALOR); 
   }
     
   ngOnDestroy(): void {
