@@ -53,12 +53,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @private
    */
   private unsubscribe$ = new Subject<void>();
-  /**
-   * @property tipoPersona
-   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
-   * @type {TipoPersona}
-   */
-  public tipoPersona = TipoPersona;
+
   /**
    * @property {Proveedor[]} proveedores
    * Arreglo de proveedores capturados en el formulario.

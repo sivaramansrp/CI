@@ -364,7 +364,7 @@
     
     @if(detalleMercancia) {
         <div class="row mt-3">
-            <app-detalle-mercancia [datosTablaDetalleMercancia]="datosTablaDetalleMercancia" (aggregarMercancia)="agregarMercanciaSellecion($event)" (eliminarMercancia)="eliminarMercancia($event)"></app-detalle-mercancia>
+            <app-detalle-mercancia [datosTablaDetalleMercancia]="datosTablaDetalleMercancia" (agregarMercanciaSellecion)="agregarMercanciaSellecion($event)" (eliminarMercancia)="eliminarMercancia($event)"></app-detalle-mercancia>
         </div>
     }
 
@@ -784,7 +784,6 @@
         [ngClass]="isValid(mercanciaForm, controlName) ? 'required' : ''"
       />
     </ng-template>
-  </form>
 
   @if(detalleMercancia) {
   <div class="row mt-3">
