@@ -174,7 +174,8 @@ export class AgregarDestinatarioFinalComponent
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
-    this.mostrarCamposNoContribuyente=PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
