@@ -11,7 +11,7 @@ import {
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { CrosslistNewComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist-new/crosslist-new.component';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 /**
@@ -22,7 +22,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   standalone: true,
   imports: [
     TituloComponent,
-    CrosslistNewComponent,
+    CrosslistComponent,
     CommonModule,
     ReactiveFormsModule,
     CatalogoSelectComponent,
@@ -35,7 +35,7 @@ export class PaisProcendenciaComponent implements OnChanges {
  * Referencia al componente CrosslistComponent.
  * @type {CrosslistComponent}
  */
-@ViewChild(CrosslistNewComponent) crosslistNewComponent!: CrosslistNewComponent;
+@ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
 
 /**
  * Formulario reactivo para la selección de países.
@@ -93,8 +93,8 @@ campoDeBotones = [
      *
      */
     funcion: (): void => {
-      if (this.crosslistNewComponent) {
-        this.crosslistNewComponent.agregar('t');
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('t');
       }
     },
   },
@@ -114,8 +114,8 @@ campoDeBotones = [
      * 
      */
     funcion: (): void => {
-      if (this.crosslistNewComponent) {
-        this.crosslistNewComponent.agregar('');
+      if (this.crosslistComponent) {
+        this.crosslistComponent.agregar('');
       }
     },
   },
@@ -136,8 +136,8 @@ campoDeBotones = [
      */
 
     funcion: (): void => {
-      if (this.crosslistNewComponent) {
-        this.crosslistNewComponent.quitar('');
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('');
       }
     },
   },
@@ -157,12 +157,17 @@ campoDeBotones = [
      * 
      */
     funcion: (): void => {
-      if (this.crosslistNewComponent) {
-        this.crosslistNewComponent.quitar('t');
+      if (this.crosslistComponent) {
+        this.crosslistComponent.quitar('t');
       }
     },
   },
 ];
+/**
+ * Indica si es necesario seleccionar la lista cruzada.
+ * @type {boolean}
+ */
+esNecesarioSeleccionarLaListaCruzada : boolean = true;
  /**
  * Constructor del componente.
  */

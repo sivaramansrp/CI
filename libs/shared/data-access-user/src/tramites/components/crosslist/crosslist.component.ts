@@ -35,6 +35,7 @@ export class CrosslistComponent implements OnInit, OnChanges {
   fecha: FormControl = new FormControl('');
   fechaSeleccionada: FormControl = new FormControl('', [Validators.required]);
   fechasDatos: string[] = [];
+  @Input() esNecesarioSeleccionarLaListaCruzada: boolean | undefined;
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -59,6 +60,13 @@ export class CrosslistComponent implements OnInit, OnChanges {
    * - Si `fechasSeleccionadas` tiene elementos, se filtran las fechas para excluir las seleccionadas y se asignan a `fechasDatos`.
    */
   ngOnChanges(changes: SimpleChanges): void {
+    if(this.esNecesarioSeleccionarLaListaCruzada){
+      if (changes['fechas'].currentValue) {
+        this.fechas = [...changes['fechas'].currentValue];
+        this.fechasDatos = [...this.fechas];
+      }
+      return;
+    }
     if (changes['fechas'] && changes['fechas'].currentValue) {
       this.fechas = [...changes['fechas'].currentValue];
 

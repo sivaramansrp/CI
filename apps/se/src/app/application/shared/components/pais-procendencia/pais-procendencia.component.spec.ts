@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PaisProcendenciaComponent } from './pais-procendencia.component';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
-import { CrosslistNewComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist-new/crosslist-new.component';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { CommonModule } from '@angular/common';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { By } from '@angular/platform-browser';
  
 describe('PaisProcendenciaComponent', () => {
   let component: PaisProcendenciaComponent;
@@ -17,7 +16,7 @@ describe('PaisProcendenciaComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         TituloComponent,
-        CrosslistNewComponent,
+        CrosslistComponent,
         CatalogoSelectComponent,
         PaisProcendenciaComponent, 
       ],
