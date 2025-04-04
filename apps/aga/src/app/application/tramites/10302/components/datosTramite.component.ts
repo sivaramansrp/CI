@@ -2,11 +2,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AlertComponent,
-  CATALOGOS_ID,
   CatalogoSelectComponent,
-  CatalogosSelect,
   TableComponent,
-  TEXTOS,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
@@ -56,11 +53,6 @@ export class DatosTramiteComponent {
    * Estado de la solicitud.
    */
   public solicitudState!: Solicitud10302State;
-  /**
-   * Suscripciones a observables.
-   */
-  private subscriptions: Subscription[] = [];
-  showTabla = true;
 
   /**
    * Encabezado de la tabla de mercancías.
@@ -83,7 +75,7 @@ export class DatosTramiteComponent {
   unidadMedida!: Catalogo[];
   ano!: Catalogo[];
   pais!: Catalogo[];
-  aduana!:  Catalogo[];
+  aduana!: Catalogo[];
 
   /**
    * Referencia al elemento del modal.
@@ -126,12 +118,6 @@ export class DatosTramiteComponent {
       )
       .subscribe();
     this.donanteDomicilio();
-
-    this.subscriptions.push(
-      this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
-        this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
     this.obtenerMercancia();
   }
 
@@ -151,61 +137,67 @@ export class DatosTramiteComponent {
           [Validators.required, Validators.maxLength(512)],
         ],
         pais: [this.solicitudState?.pais, Validators.required],
-        // nombre: [
-        //   this.solicitudState?.nombre,
-        //   [Validators.required, Validators.maxLength(50)],
-        // ],
-        // tipoMercancia: [
-        //   this.solicitudState?.tipoMercancia,
-        //   [Validators.required, Validators.maxLength(100)],
-        // ],
-        // condicion: [this.solicitudState?.condicion, Validators.required],
-        // marca: [
-        //   this.solicitudState?.marca,
-        //   [Validators.required, Validators.maxLength(50)],
-        // ],
-        // ano: [this.solicitudState?.ano, [Validators.required]],
-        // modelo: [
-        //   this.solicitudState?.modelo,
-        //   [Validators.required, Validators.maxLength(50)],
-        // ],
-        // serie: [
-        //   this.solicitudState?.serie,
-        //   [Validators.required, Validators.maxLength(50)],
-        // ],
-        // calle: [
-        //   this.solicitudState?.calle,
-        //   [Validators.required, Validators.maxLength(100)],
-        // ],
-        // numeroExterior: [
-        //   this.solicitudState?.numeroExterior,
-        //   [Validators.required, Validators.maxLength(10)],
-        // ],
-        // numeroInterior: [
-        //   this.solicitudState?.numeroInterior,
-        //   [Validators.maxLength(10)],
-        // ],
-        // telefono: [
-        //   this.solicitudState?.telefono,
-        //   [Validators.required, Validators.pattern(/^\d{10}$/)],
-        // ],
-        // correoElectronico: [
-        //   this.solicitudState?.correoElectronico,
-        //   [Validators.required, Validators.email],
-        // ],
-        // codigoPostal: [
-        //   this.solicitudState?.codigoPostal,
-        //   [Validators.required, Validators.pattern(/^\d{5}$/)],
-        // ],
-        // estado: [
-        //   this.solicitudState?.estado,
-        //   [Validators.required, Validators.maxLength(50)],
-        // ],
-        // colonia: [
-        //   this.solicitudState?.colonia,
-        //   [Validators.required, Validators.maxLength(50)],
-        // ],
-        // opcion: [this.solicitudState?.opcion],
+        rfc: [this.solicitudState?.rfc, Validators.required],
+        numeroProgramaImmex: [
+          this.solicitudState?.numeroProgramaImmex,
+          Validators.required,
+        ],
+        razonSocial: [
+          { value: '', disabled: true },
+          [this.solicitudState?.razonSocial, Validators.required],
+        ],
+        correoElectronicoOpcional: [
+          this.solicitudState?.correoElectronicoOpcional,
+          [Validators.required, Validators.email, Validators.maxLength(50)],
+        ],
+        telefonoOpcional: [
+          this.solicitudState?.telefonoOpcional,
+          [Validators.required, Validators.maxLength(30)],
+        ],
+        calle: [
+          { value: '', disabled: true },
+          this.solicitudState?.calle,
+          [Validators.required, Validators.maxLength(80)],
+        ],
+        numeroExterior: [
+          { value: '', disabled: true },
+          this.solicitudState?.numeroExterior,
+          [Validators.required, Validators.maxLength(40)],
+        ],
+        numeroInterior: [
+          { value: '', disabled: true },
+          this.solicitudState?.numeroInterior,
+          [Validators.maxLength(30)],
+        ],
+        telefono: [
+          { value: '', disabled: true },
+          this.solicitudState?.telefono,
+          [Validators.required, Validators.pattern(/^\d{10}$/)],
+        ],
+        correoElectronico: [
+          { value: '', disabled: true },
+          this.solicitudState?.correoElectronico,
+          [Validators.required, Validators.email, Validators.maxLength(50)],
+        ],
+        codigoPostal: [
+          { value: '', disabled: true },
+          this.solicitudState?.codigoPostal,
+          [
+            Validators.required,
+            Validators.pattern(/^\d{5}$/),
+            Validators.maxLength(8),
+          ],
+        ],
+        estado: [
+          { value: '', disabled: true },
+          this.solicitudState?.estado,
+          [Validators.required, Validators.maxLength(80)],
+        ],
+        colonia: [
+          { value: '', disabled: true },
+          this.solicitudState?.colonia,
+          [Validators.required, Validators.maxLength(50)],
+        ],
       }),
     });
 
@@ -230,15 +222,12 @@ export class DatosTramiteComponent {
   }
 
   private inicializaCatalogos(): void {
-
-    const ADUANA$ = this.exencionImpuestoService
-    .getAduana()
-    .pipe(
+    const ADUANA$ = this.exencionImpuestoService.getAduana().pipe(
       map((resp) => {
         this.aduana = resp.data;
       })
     );
-  
+
     const TIPO_DE_MERCANCIA$ = this.exencionImpuestoService
       .getTipoDeMercancia()
       .pipe(
@@ -273,7 +262,14 @@ export class DatosTramiteComponent {
       })
     );
 
-    merge(ADUANA$, TIPO_DE_MERCANCIA$, CONDICION_MERCANCIA$, UNIDAD_MEDIDA$, ANO$, PAIS$)
+    merge(
+      ADUANA$,
+      TIPO_DE_MERCANCIA$,
+      CONDICION_MERCANCIA$,
+      UNIDAD_MEDIDA$,
+      ANO$,
+      PAIS$
+    )
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
   }
@@ -340,14 +336,6 @@ export class DatosTramiteComponent {
   }
 
   /**
-   * Muestra la siguiente tabla.
-   */
-  nextTabla() {
-    this.showTabla = false;
-    this.store.setShowTabla(this.showTabla);
-  }
-
-  /**
    * Establece los valores en el store de tramite5701.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
@@ -403,7 +391,7 @@ export class DatosTramiteComponent {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelMercancia.length + 1;
           this.datosDelMercancia.push(respuesta.datos);
-          (this.store.setDelContenedor as (valor: datosDelMercancia[]) => void)(
+          (this.store.setDelMercancia as (valor: datosDelMercancia[]) => void)(
             this.datosDelMercancia
           );
           const DATOS = {
@@ -446,5 +434,4 @@ export class DatosTramiteComponent {
     this.mercanciaBodyData =
       this.getMercanciaTableData.mercanciaTable.tableBody;
   }
-
 }

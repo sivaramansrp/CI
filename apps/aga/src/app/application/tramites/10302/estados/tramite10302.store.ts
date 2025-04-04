@@ -23,39 +23,20 @@ export interface Solicitud10302State {
   modelo:string;
   serie:string;
   pais: Catalogo[] | null;
-
-  datosDelMercancia: [];
-
-  idSolicitud: string;
-  tipoSolicitud: string;
-  condicion: Catalogo[] | null;
-  tipoDocumento: Catalogo[] | null;
-  fechasSeleccionadas: Catalogo[] | null;
-  finesElegidos: string[];
-  elegidosSeleccionados: string[];
-  selectRangoDias: string[];
-  fechasDatos: string[];
-  fecha: string | null;
-  fechaSeleccionada: string | null;
-  isPopupOpen: boolean;
-  isPopupClose: boolean;
-  valorSeleccionado: string | null;
-  nombre: string;
-  tipoMercancia: string;
+  rfc: string;
+  numeroProgramaImmex: string;
+  razonSocial: string;
   calle: string;
-  numeroExterior: number;
-  numeroInterior: number;
-  telefono: number;
+  numeroExterior: string;
+  numeroInterior: string;
   correoElectronico: string;
-  codigoPostal: number;
-  estado: number;
-  colonia: number;
-  opcion: string;
-  documentos: Catalogo[] | null;
-  tableCheck: string;
-  donacion: string;
-  persona: string;
-  otro: string;
+  telefono: string;
+  correoElectronicoOpcional: string;
+  telefonoOpcional: string;
+  codigoPostal: string;
+  estado: string;
+  colonia: string;
+  datosDelMercancia: [];
 }
 
 export function createInitialState(): Solicitud10302State {
@@ -73,40 +54,20 @@ export function createInitialState(): Solicitud10302State {
     modelo:'',
     serie:'',
     pais: null,
-
-    datosDelMercancia: [],
-
-    idSolicitud: '',
-    tipoSolicitud: '',
-    condicion: null,
-    tipoDocumento: null,
-    fechasSeleccionadas: null,
-    finesElegidos: [],
-    elegidosSeleccionados: [],
-    selectRangoDias: [],
-    fechasDatos: [],
-    fecha: null,
-    fechaSeleccionada: null,
-    isPopupOpen: false,
-    isPopupClose: true,
-    valorSeleccionado: null,
-    documentos: null,
-
-    nombre: '',
-    tipoMercancia: '',
     calle: '',
-    numeroExterior: 0,
-    numeroInterior: 0,
-    telefono: 0,
+    numeroExterior: '',
+    numeroInterior: '',
+    telefono: '',
     correoElectronico: '',
-    codigoPostal: 0,
-    estado: 0,
-    colonia: 0,
-    opcion: '',
-    tableCheck: '',
-    donacion: '',
-    persona: '',
-    otro: '',
+    correoElectronicoOpcional: '',
+    telefonoOpcional: '',
+    rfc: '',
+    numeroProgramaImmex: '',
+    razonSocial: '',
+    codigoPostal: '',
+    estado: '',
+    colonia: '',
+    datosDelMercancia: [],
   };
 }
 
@@ -196,157 +157,6 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     }));
   }
 
-  /**
-   * Establece los datos del contenedor.
-   * @param datosDelMercancia Datos del contenedor.
-   */
-  public setDelContenedor(datosDelMercancia: []): void {
-    this.update((state) => ({
-      ...state,
-      datosDelMercancia,
-    }));
-  }
-  
-  public setTableCheck(tableCheck: string) {
-    this.update((state) => ({
-      ...state,
-      tableCheck,
-    }));
-  }
-
-  public setDonacion(donacion: string) {
-    this.update((state) => ({
-      ...state,
-      donacion,
-    }));
-  }
-
-  public setPersona(persona: string) {
-    this.update((state) => ({
-      ...state,
-      persona,
-    }));
-  }
-
-  public setOtro(otro: string) {
-    this.update((state) => ({
-      ...state,
-      otro,
-    }));
-  }
-
-  public setDocumentos(documentos: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      documentos,
-    }));
-  }
-
-  public setNombre(nombre: string) {
-    this.update((state) => ({
-      ...state,
-      nombre,
-    }));
-  }
-
-  public setCondicion(condicion: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      condicion,
-    }));
-  }
-
-  public setTipoDocumento(tipoDocumento: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      tipoDocumento,
-    }));
-  }
-
-  public setFechasSeleccionadas(fechasSeleccionadas: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      fechasSeleccionadas,
-    }));
-  }
-
-  public setFinesElegidos(finesElegidos: string[]) {
-    this.update((state) => ({
-      ...state,
-      finesElegidos,
-    }));
-  }
-
-  public setElegidosSeleccionados(elegidosSeleccionados: string[]) {
-    this.update((state) => ({
-      ...state,
-      elegidosSeleccionados,
-    }));
-  }
-
-  public setSelectRangoDias(selectRangoDias: string[]) {
-    this.update((state) => ({
-      ...state,
-      selectRangoDias,
-    }));
-  }
-
-  public setFechasDatos(fechasDatos: string[]) {
-    this.update((state) => ({
-      ...state,
-      fechasDatos,
-    }));
-  }
-
-  public setFecha(fecha: string) {
-    this.update((state) => ({
-      ...state,
-      fecha,
-    }));
-  }
-
-  public setFechaSeleccionada(fechaSeleccionada: string) {
-    this.update((state) => ({
-      ...state,
-      fechaSeleccionada,
-    }));
-  }
-
-  public setShowTabla(showTabla: boolean) {
-    this.update((state) => ({
-      ...state,
-      showTabla,
-    }));
-  }
-
-  public setIsPopupOpen(isPopupOpen: boolean) {
-    this.update((state) => ({
-      ...state,
-      isPopupOpen,
-    }));
-  }
-
-  public setIsPopupClose(isPopupClose: boolean) {
-    this.update((state) => ({
-      ...state,
-      isPopupClose,
-    }));
-  }
-
-  public setValorSeleccionado(valorSeleccionado: string) {
-    this.update((state) => ({
-      ...state,
-      valorSeleccionado,
-    }));
-  }
-
-  public setTipoMercancia(tipoMercancia: string) {
-    this.update((state) => ({
-      ...state,
-      tipoMercancia,
-    }));
-  }
-
   public setUsoEspecifico(usoEspecifico: string) {
     this.update((state) => ({
       ...state,
@@ -361,21 +171,21 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     }));
   }
 
-  public setNumeroExterior(numeroExterior: number) {
+  public setNumeroExterior(numeroExterior: string) {
     this.update((state) => ({
       ...state,
       numeroExterior,
     }));
   }
 
-  public setNumeroInterior(numeroInterior: number) {
+  public setNumeroInterior(numeroInterior: string) {
     this.update((state) => ({
       ...state,
       numeroInterior,
     }));
   }
 
-  public setTelefono(telefono: number) {
+  public setTelefono(telefono: string) {
     this.update((state) => ({
       ...state,
       telefono,
@@ -389,34 +199,73 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     }));
   }
 
-  public setCodigoPostal(codigoPostal: number) {
+  public setCodigoPostal(codigoPostal: string) {
     this.update((state) => ({
       ...state,
       codigoPostal,
     }));
   }
 
-  public setEstado(estado: number) {
+  public setEstado(estado: string) {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
 
-  public setColonia(colonia: number) {
+  public setColonia(colonia: string) {
     this.update((state) => ({
       ...state,
       colonia,
     }));
   }
 
-  public setOpcion(opcion: string) {
+  public setRfc(rfc: string) {
+    this.update((state) => ({ 
+      ...state,
+      rfc,
+    }));
+  } 
+
+  public setNumeroProgramaImmex(numeroProgramaImmex: string) {
     this.update((state) => ({
       ...state,
-      opcion,
+      numeroProgramaImmex,
     }));
   }
 
+  public setRazonSocial(razonSocial: string) {
+    this.update((state) => ({
+      ...state,
+      razonSocial,
+    }));
+  }
+
+  public setCorreoElectronicoOpcional(correoElectronicoOpcional: string) {
+    this.update((state) => ({
+      ...state,
+      correoElectronicoOpcional,
+    }));
+  }
+
+  public setTelefonoOpcional(telefonoOpcional: string) {
+    this.update((state) => ({
+      ...state,
+      telefonoOpcional,
+    }));
+  }
+
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelMercancia Datos del contenedor.
+   */
+  public setDelMercancia(datosDelMercancia: []): void {
+    this.update((state) => ({
+      ...state,
+      datosDelMercancia,
+    }));
+  }
+ 
   /**
    * Limpia los datos de la solicitud
    */

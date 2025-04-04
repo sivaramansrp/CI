@@ -89,13 +89,16 @@
         </div>
 
         <ng-titulo titulo="Datos del donante" />
-        <!-- <div class="row">
+        <div class="row">
           <div class="col-md-4">
             <div class="form-group">
               <label for="rfc">RFC</label>
               <span class="require">*</span>
-              <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
-                data-bs-toggle="tooltip"></span>
+              <span
+                class="bi bi-question-circle-fill"
+                title="Registro Federal de Contribuyentes"
+                data-bs-toggle="tooltip"
+              ></span>
               <input
                 type="text"
                 id="rfc"
@@ -107,11 +110,13 @@
           </div>
           <div class="col-md-8">
             <div class="form-group">
-              <label for="numeroProgramaImmex"
-                >Número de programa Immex</label>
+              <label for="numeroProgramaImmex">Número de programa Immex</label>
               <span class="require">*</span>
-              <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
-                data-bs-toggle="tooltip"></span>
+              <span
+                class="bi bi-question-circle-fill"
+                title="Registro Federal de Contribuyentes"
+                data-bs-toggle="tooltip"
+              ></span>
               <input
                 type="text"
                 id="numeroProgramaImmex"
@@ -125,9 +130,7 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <label for="razonSocial"
-                >Nombre / Razón Social</label
-              >
+              <label for="razonSocial">Nombre / Razón Social</label>
               <span class="require">*</span>
               <input
                 type="text"
@@ -139,34 +142,21 @@
               />
             </div>
           </div>
-        </div> -->
+        </div>
 
         <ng-titulo titulo="Domicilio fiscal" />
         <div class="row">
-            <div class="col-md-4">
-                <app-catalogo-select
-                  [catalogo]="pais"
-                  [label]="'País'"
-                  [required]="true"
-                  formControlName="pais"
-                  (change)="paisSeleccion()"
-                  name="pais"
-                ></app-catalogo-select>
-              <!-- <div class="form-group">
-                <label for="Pais">País</label>
-                <span class="require">*</span> -->
-                <!-- <select
-                  id="Pais"
-                  formControlName="Pais"
-                  class="form-control"
-                  [disabled]="true"
-                >
-                  <option value="">----- Selecciona -----</option>
-                  <option *ngFor="let pais of paises" [value]="pais.clave">{{ pais.descripcion }}</option>
-                </select> -->
-              <!-- </div> -->
-            </div>
-            <!-- <div class="col-md-4">
+          <div class="col-md-4">
+            <app-catalogo-select
+              [catalogo]="pais"
+              [label]="'País'"
+              [required]="true"
+              formControlName="pais"
+              (change)="paisSeleccion()"
+              name="pais"
+            ></app-catalogo-select>
+          </div>
+          <div class="col-md-4">
               <div class="form-group">
                 <label for="codigoPostal">C.P. o zona postal</label>
                 <span class="require">*</span>
@@ -307,8 +297,8 @@
                   class="form-control"
                 />
               </div>
-            </div>-->
-          </div> 
+            </div>
+        </div>
       </ng-container>
     </div>
   </form>
