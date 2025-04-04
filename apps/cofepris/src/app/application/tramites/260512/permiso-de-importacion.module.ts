@@ -16,8 +16,11 @@ import { provideHttpClient } from '@angular/common/http';
 import { ExportacionService } from '../../shared/services/exportacion.service';
 import { ToastrService } from 'ngx-toastr';
 
-import { DatosDelEstablecimientoComponent } from '../../shared/components/datos-del-establecimiento/datos-del-establecimiento.component';
-import { DomicilioComponent } from '../../shared/components/domicilio-establecimiento/domicilio-establecimiento.component'
+import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
+import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
+import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
+//import { RepresentanteLegalComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
+//import { RepresentanteLegalComponent } from '../../shared/components/representante-legal/representante-legal.component';
 @NgModule({
   declarations: [
     DatosComponent,
@@ -31,8 +34,10 @@ import { DomicilioComponent } from '../../shared/components/domicilio-establecim
     WizardComponent,
     PasoDosComponent,
     PasoTresComponent,
-    DatosDelEstablecimientoComponent,
-    DomicilioComponent
+    DatosDelEstablecimientoRFCComponent,
+    DomicilioEstablecimientoAduanasComponent,
+    ManifiestosComponent,
+    //RepresentanteLegalComponent
   ],
   providers: [
     provideHttpClient(),
