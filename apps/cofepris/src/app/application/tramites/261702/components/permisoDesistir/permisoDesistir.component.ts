@@ -8,17 +8,17 @@ import { PERMISO_A_DESISTIR } from '../../constantes/retiros-cofepris.enum';
 import { Tramite261702Query } from '../../../../estados/queries/tramite261702.query';
 
 /**
- * @Component Decorator
+ * @Component Decorador
  * 
- * This decorator is used to define the metadata for the Angular component.
- * It specifies the selector, template, styles, and other configurations for the component.
+ * Este decorador se utiliza para definir los metadatos del componente Angular.
+ * Especifica el selector, la plantilla, los estilos y otras configuraciones para el componente.
  * 
- * Properties:
- * - `selector`: The custom HTML tag used to include this component in templates.
- * - `standalone`: Indicates that this component is a standalone component and does not belong to any NgModule.
- * - `imports`: Specifies the modules and components that this component depends on.
- * - `templateUrl`: The path to the HTML template file for this component.
- * - `styleUrl`: The path to the SCSS file containing styles for this component.
+ * Propiedades:
+ * - `selector`: La etiqueta HTML personalizada utilizada para incluir este componente en las plantillas.
+ * - `standalone`: Indica que este componente es un componente independiente y no pertenece a ningún NgModule.
+ * - `imports`: Especifica los módulos y componentes de los que depende este componente.
+ * - `templateUrl`: La ruta al archivo de plantilla HTML para este componente.
+ * - `styleUrl`: La ruta al archivo SCSS que contiene los estilos para este componente.
  */
 @Component({
   selector: 'permiso-desistir',
