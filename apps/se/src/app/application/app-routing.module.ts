@@ -296,6 +296,13 @@ const ROUTES: Routes = [
         (m) => m.ReporteAnualModule
       ),
   },
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110211/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
+  }
 ];
 
 @NgModule({
