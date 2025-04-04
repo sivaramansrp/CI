@@ -10,6 +10,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/c
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { SolicitudComponent } from '../../../tramites/130108/components/solicitud/solicitud.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 /**
@@ -45,6 +46,23 @@ export class PaisDeOrigenComponent implements OnChanges {
    */
   @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
 
+
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Output() eventoAlHacerClicEnTodasLasCiudades = new EventEmitter<any>();
+
+
+
+
+  onObtenerCiudades(): void {
+   this.eventoAlHacerClicEnTodasLasCiudades.emit();
+
+  }
+
+
+
+
+
   /**
    * @propiedad
    * @nombre paisForm
@@ -60,6 +78,8 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {Catalogo[]}
    */
   @Input() elementosDeBloque: Catalogo[] = [];
+
+  @Input() todasLasCiudades: Catalogo[] = [];
 
   /**
    * @propiedad
@@ -178,6 +198,10 @@ export class PaisDeOrigenComponent implements OnChanges {
       this.selectRangoDias = this.paisesPorBloque.map(
         (pais: Catalogo) => pais.descripcion
       );
+      //this.crosslistComponent.fechasDatos = this.todasLasCiudades.map(item => item.descripcion);
+
+
+
     }
   }
 
@@ -203,4 +227,5 @@ export class PaisDeOrigenComponent implements OnChanges {
   setValoresStore(form: FormGroup, campo: string, metodoNombre: string): void {
     this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
   }
+
 }

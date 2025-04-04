@@ -43,7 +43,8 @@ describe('SolicitudComponent', () => {
       setCantidadPartidasDeLaMercancia: jest.fn(),
       setValorPartidaUSDPartidasDeLaMercancia: jest.fn(),
       setregimen: jest.fn(),
-      setclasificacion: jest.fn(),
+      setRegimen: jest.fn(),
+      setClasificacion: jest.fn(),
       setProducto: jest.fn(),
       setDescripcion: jest.fn(),
       setCantidad: jest.fn(),
@@ -290,15 +291,15 @@ describe('SolicitudComponent', () => {
     });
   
     it('should call setregimen when metodoNombre is "setregimen"', () => {
-      const event = { form: mockForm, campo: 'campo', metodoNombre: 'setregimen' };
+      const event = { form: mockForm, campo: 'campo', metodoNombre: 'setRegimen' };
       component.setValoresStore(event);
-      expect(tramite130108Store.setregimen).toHaveBeenCalledWith('test value');
+      expect(tramite130108Store.setRegimen).toHaveBeenCalledWith('test value');
     });
   
-    it('should call setclasificacion when metodoNombre is "setclasificacion"', () => {
-      const event = { form: mockForm, campo: 'campo', metodoNombre: 'setclasificacion' };
+    it('should call setClasificacion when metodoNombre is "setClasificacion"', () => {
+      const event = { form: mockForm, campo: 'campo', metodoNombre: 'setClasificacion' };
       component.setValoresStore(event);
-      expect(tramite130108Store.setclasificacion).toHaveBeenCalledWith('test value');
+      expect(tramite130108Store.setClasificacion).toHaveBeenCalledWith('test value');
     });
   
     it('should call setProducto when metodoNombre is "setProducto"', () => {
