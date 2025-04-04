@@ -1,0 +1,43 @@
+<form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">
+  <!-- Campos ocultos -->
+  <input type="hidden" formControlName="solicitud.cveFolioCaat" />
+  <input type="hidden" formControlName="rol" />
+
+  <!-- Encabezado del Wizard de Captura -->
+  <!-- <app-encabezado-wizard-captura></app-encabezado-wizard-captura> -->
+
+  <!-- Pestañas del Wizard -->
+  <div id="tabs">
+    <ul class="nav nav-tabs">
+      <!-- Definición de Pestañas -->
+      <!-- <app-definicion-tabs-wizard></app-definicion-tabs-wizard> -->
+      <li class="nav-item">
+        <a class="nav-link" >
+          <label style="font-weight: normal" for="solicitud.titulo.datosTramite">{{ titulo }}</label>
+        </a>
+      </li>
+    </ul>
+
+    <div >
+      <!-- Contenido de las Pestañas -->
+      <!-- <app-contenido-tabs-wizard></app-contenido-tabs-wizard> -->
+
+      <!-- Pestaña Adicional: Tabs-3 -->
+      <div id="tabs-3" class="tab-pane fade">
+        <app-layaout-captura-tipo-agente></app-layaout-captura-tipo-agente>
+
+        <!-- Autorización para roles "PersonaMoral" -->
+        <!-- <div *ngIf="rolesUsuario.includes('PersonaMoral')"> -->
+          <!-- <app-layout-director-general></app-layout-director-general> -->
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Pie del Wizard de Captura -->
+  <!-- <app-pie-wizard-captura></app-pie-wizard-captura> -->
+
+  <!-- Aviso de Privacidad (Comentado) -->
+  <!-- <app-aviso-privacidad></app-aviso-privacidad> -->
+
+</form>

@@ -1,4 +1,5 @@
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CapturarComponent } from './components/capturar/capturar.component';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
@@ -29,7 +30,8 @@ import { forwardRef } from '@angular/core';
     PasoUnoComponent,
     PasoDosComponent,
     LayaoutCapturaTipoAgenteComponent,
-    LayoutDirectorGeneralComponent
+    LayoutDirectorGeneralComponent,
+    CapturarComponent
   ],
   imports: [
     forwardRef(() => BtnContinuarComponent),

@@ -14,7 +14,7 @@ export class PasoUnoComponent {
   @Output() isValid = new EventEmitter<boolean>();
   @ViewChild(LayaoutCapturaTipoAgenteComponent) tipoAgentsComponent!: LayaoutCapturaTipoAgenteComponent
   @ViewChild(LayoutDirectorGeneralComponent) layoutDirectorGeneral!: LayoutDirectorGeneralComponent
-
+ 
   /**
    * @method seleccionaTab
    * @description
@@ -23,7 +23,7 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    this.pestanaCambiado.emit(this.indice);
+    // this.pestanaCambiado.emit(this.indice);
   }
 
   /**
@@ -33,7 +33,7 @@ export class PasoUnoComponent {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   isFormValid(): boolean {
-    return this.tipoAgentsComponent?.solicitud.valid && this.layoutDirectorGeneral?.solicitud.valid;
+    return true; //this.tipoAgentsComponent?.solicitud.valid && this.layoutDirectorGeneral?.solicitud.valid;
   }
 }
 

@@ -159,8 +159,8 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<DirectorGeneral>
    */
   obtenerDirectorGeneral(idSolicitud: number): Observable<DirectorGeneral> {
-    const params = new HttpParams().set('idSolicitud', idSolicitud.toString());
-    return this.http.get<DirectorGeneral>(`${this.baseUrl}/directorGeneral`, { params });
+    const PARAMS = new HttpParams().set('idSolicitud', idSolicitud.toString());
+    return this.http.get<DirectorGeneral>(`${this.baseUrl}/directorGeneral`, { params: PARAMS });
   }
 
   /**
@@ -170,11 +170,11 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<any>
    */
   guardarDirectorGeneral(solicitud: SolicitudCaatNaviero, directorGeneral: DirectorGeneral): Observable<any> {
-    const payload = {
+    const PAYLOAD = {
       solicitud,
       directorGeneral
     };
-    return this.http.post(`${this.baseUrl}/guardarDirectorGeneral`, payload, {
+    return this.http.post(`${this.baseUrl}/guardarDirectorGeneral`, PAYLOAD, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
@@ -188,11 +188,11 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<any>
    */
   actualizaTipoAgente(solicitante: Solicitante, idSolicitud: number): Observable<any> {
-    const payload = {
+    const PAYLOAD = {
       solicitante,
       idSolicitud
     };
-    return this.http.put(`${this.baseUrl}/actualizaTipoAgente`, payload, {
+    return this.http.put(`${this.baseUrl}/actualizaTipoAgente`, PAYLOAD, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
