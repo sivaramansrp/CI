@@ -23,6 +23,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
+    path: 'maquila-materias-primas',
+    loadChildren: () =>
+      import(
+        './tramites/260206/maquila-materias-primas.module'
+      ).then((m) => m.MaquilaMateriasPrimasModule),
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
@@ -106,6 +113,13 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
+  {
+    path: 'medicamentos-registro-sanitario',
+    loadChildren: () =>
+      import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
+        (m) => m.PermisoSanitarioImportacion260203Module
+      ),
+  }
 ];
 
 @NgModule({
