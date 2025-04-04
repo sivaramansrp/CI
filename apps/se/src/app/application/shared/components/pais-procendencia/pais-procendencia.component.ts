@@ -163,11 +163,6 @@ campoDeBotones = [
     },
   },
 ];
-/**
- * Indica si es necesario seleccionar la lista cruzada.
- * @type {boolean}
- */
-esNecesarioSeleccionarLaListaCruzada : boolean = true;
  /**
  * Constructor del componente.
  */
