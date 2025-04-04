@@ -41,7 +41,17 @@ export class ExportacionService {
   obtenerTabla(): Observable<PermisoModel[]> {
     return this.http.get<PermisoModel[]>('assets/json/260604/terceros.json');
   }
-
+  
+  /**
+   * @description Obtiene una lista de objetos de tipo PreOperativo desde un archivo JSON local.
+   * @returns {Observable<PreOperativo[]>} Un observable que emite un arreglo de objetos PreOperativo.
+   * @method obtenerRadio
+   * @memberof ExportacionService
+   * @example
+   * this.exportacionService.obtenerRadio().subscribe((data: PreOperativo[]) => {
+   *   console.log(data);
+   * });
+   */
   obtenerRadio(): Observable<PreOperativo[]> {
     return this.http.get<PreOperativo[]>('assets/json/260604/tipoPersonaradio.json');
   }

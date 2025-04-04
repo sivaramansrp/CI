@@ -1,4 +1,4 @@
-import { Solicitud260603State } from '../stores/domicilio.store';
+import { DomicilioState } from '../stores/domicilio.store';
 
 import { DomicilioStore } from '../stores/domicilio.store'; 
 
@@ -9,7 +9,7 @@ import { Query } from '@datorama/akita';
  * Servicio que extiende la clase `Query` de Akita para realizar consultas sobre el estado de la solicitud 260603.
  */
 @Injectable({ providedIn: 'root' })
-export class DomicilioQuery extends Query<Solicitud260603State> {
+export class DomicilioQuery extends Query<DomicilioState> {
   /**
    * Observable que selecciona el estado completo de la solicitud.
    * Permite suscribirse a los cambios en el estado de la solicitud.
