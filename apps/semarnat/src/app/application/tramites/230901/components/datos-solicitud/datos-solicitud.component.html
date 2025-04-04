@@ -78,7 +78,7 @@
           >
             Modificar
           </button>
-          <button type="button" class="btn btn-danger me-2" [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()" >Eliminar</button>
+          <button type="button" class="btn me-2" [ngClass]="{'btn-default': !enableEliminarBoton, 'btn-danger': enableEliminarBoton}" [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()" >Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
