@@ -18,7 +18,7 @@ import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 @Component({
   selector: 'app-terceros',
   templateUrl: './terceros.component.html',
-  styleUrl: './terceros.component.css',
+  styleUrl: './terceros.component.scss',
 })
 export class TercerosComponent implements OnInit, OnDestroy {
   /**

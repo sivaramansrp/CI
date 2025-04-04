@@ -28,6 +28,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
+import { isThisSecond } from 'date-fns';
 
 /*
  * Componente que gestiona los datos de la solicitud, incluyendo la configuración de formularios,
@@ -36,7 +37,7 @@ import { Tramite230901Query } from '../../estados/query/tramite230901.query';
 @Component({
   selector: 'app-datos-solicitud',
   templateUrl: './datos-solicitud.component.html',
-  styleUrls: ['./datos-solicitud.component.css'],
+  styleUrls: ['./datos-solicitud.component.scss'],
 })
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -130,15 +131,40 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   filaSeleccionadaMercancia!: MercanciaConfiguracionItem;
 
+  listaFilaSeleccionadaMercancia!: MercanciaConfiguracionItem[];
+
   /**
    * Indica si un archivo está seleccionado.
    */
-  archivoSeleccionado: boolean = false;
+  enableModficarBoton: boolean = false;
 
   /**
    * Indica si se debe mostrar el modal de datos de mercancía.
    */
   mostrarModalDatosMercancia: boolean = false;
+
+  mostrarPopupSeleccionMultiple: boolean = false;
+  /**
+   * Indica si el popup está abierto.
+   */
+  multipleSeleccionPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  multipleSeleccionPopupCerrado: boolean = true;
+
+  /**
+   * Indica si el popup está abierto.
+   */
+  confirmEliminarPopupAbierto: boolean = false;
+
+  /**
+   * Indica si el popup está cerrado.
+   */
+  confirmEliminarPopupCerrado: boolean = true;
+
+  enableEliminarBoton: boolean = false;
 
   /**
    * Observable para manejar la destrucción del componente y evitar fugas de memoria.
@@ -172,7 +198,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Método del ciclo de vida de Angu131lar que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
     this.autorizacionesDeVidaSilvestreService.inicializaDatosSolicitudDatosCatalogos();
@@ -217,6 +243,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     const DEFAULT_DATA: MercanciaConfiguracionItem = {
       id: 0,
       fraccionArancelaria: '',
+      fraccionDescripcion: '',
       otraFraccion: false,
       descripcion: '',
       rendimientoProducto: '',
@@ -237,7 +264,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         DEFAULT_DATA.fraccionArancelaria,
         Validators.required,
       ],
-      fraccionDescripcion: [''],
+      fraccionDescripcion: [DEFAULT_DATA.fraccionDescripcion],
       otraFraccion: [DEFAULT_DATA.otraFraccion],
       descripcion: [DEFAULT_DATA.descripcion, Validators.required],
       rendimientoProducto: [DEFAULT_DATA.rendimientoProducto],
@@ -257,6 +284,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       paisProcedencia: [DEFAULT_DATA.paisProcedencia, Validators.required],
     });
 
+    if (this.formularioMercancia.get('otraFraccion')?.value) {
+      this.otraFraccionSeleccionada = true;
+    }
     this.formularioMercancia.get('fraccionDescripcion')?.disable();
 
     this.formularioMercancia
@@ -268,17 +298,25 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
             this.formBuilder.control('')
           );
           this.formularioMercancia.get('fraccionArancelaria')?.setValue('0');
-          this.formularioMercancia.get('fraccionArancelaria')?.markAsTouched();
           this.formularioMercancia
-            .get('fraccionArancelaria')
-            ?.setErrors({ required: true });
-          this.formularioMercancia.get('fraccionDescripcion')?.reset();
+            .get('fraccionDescripcion')
+            ?.reset();
           this.otraFraccionSeleccionada = true;
         } else {
-          this.formularioMercancia.removeControl('fraccionVigenteTIGIE');
           this.otraFraccionSeleccionada = false;
+          this.formularioMercancia.removeControl('fraccionVigenteTIGIE');
         }
       });
+  }
+
+  manejarCambioFraccionArancelaria($event: Catalogo): void {
+    const FRACCION_DESCRIPCION =
+      this.autorizacionesDeVidaSilvestreService.fraccionArancelariaDescripcion.find(
+        (item) => Number(item.id) === Number($event.descripcion)
+      );
+    this.formularioMercancia
+      .get('fraccionDescripcion')
+      ?.setValue(FRACCION_DESCRIPCION?.descripcion);
   }
 
   /**
@@ -313,11 +351,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   manejarFilaSeleccionada(fila: MercanciaConfiguracionItem[]): void {
     if (fila.length === 0) {
-      this.archivoSeleccionado = false;
+      this.enableModficarBoton = false;
+      this.enableEliminarBoton = false;
       return;
     }
+    this.listaFilaSeleccionadaMercancia = fila;
     this.filaSeleccionadaMercancia = fila[fila.length - 1];
-    this.archivoSeleccionado = true;
+    this.enableModficarBoton = true;
+    this.enableEliminarBoton = true;
   }
 
   /**
@@ -339,53 +380,106 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * y abre el modal para editar los datos.
    */
   modificarItemMercancia(): void {
-    this.esOperacionDeActualizacion = true;
-    const GET_INDEX = (array: Catalogo[], value: string): number =>
-      array.findIndex((item) => item.descripcion === value) + 1;
+    if (this.listaFilaSeleccionadaMercancia.length < 2) {
+      const GET_INDEX = (array: Catalogo[], value: string): number =>
+        array.findIndex((item) => item.descripcion === value) + 1;
+      
+      this.actualizarFilaSeleccionada();
+      this.esOperacionDeActualizacion = true;
+      const FRACCION_DESCRIPCION =
+        this.autorizacionesDeVidaSilvestreService.fraccionArancelariaDescripcion.find((item)=>Number(item.id) === Number(this.filaSeleccionadaMercancia.fraccionArancelaria))?.descripcion || '';
 
-    this.actualizarFilaSeleccionada();
+        const MERCANCIA_CONFIGURACION_ITEM: MercanciaConfiguracionItem = {
+        id: this.filaSeleccionadaMercancia.id,
+        fraccionArancelaria: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
+          this.filaSeleccionadaMercancia.fraccionArancelaria
+        ).toString(),
+        fraccionDescripcion:FRACCION_DESCRIPCION,
+        otraFraccion: this.filaSeleccionadaMercancia.otraFraccion,
+        descripcion: this.filaSeleccionadaMercancia.descripcion,
+        rendimientoProducto: this.filaSeleccionadaMercancia.rendimientoProducto,
+        clasificacionTaxonomica: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
+          this.filaSeleccionadaMercancia.clasificacionTaxonomica
+        ).toString(),
+        nombreCientifico: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.nombreCientifico,
+          this.filaSeleccionadaMercancia.nombreCientifico
+        ).toString(),
+        nombreComun: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.nombreComun,
+          this.filaSeleccionadaMercancia.nombreComun
+        ).toString(),
+        marca: this.filaSeleccionadaMercancia.marca,
+        cantidad: this.filaSeleccionadaMercancia.cantidad,
+        unidadMedida: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.unidadMedida,
+          this.filaSeleccionadaMercancia.unidadMedida
+        ).toString(),
+        paisOrigen: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.paisOrigen,
+          this.filaSeleccionadaMercancia.paisOrigen
+        ).toString(),
+        paisProcedencia: GET_INDEX(
+          this.autorizacionesDeVidaSilvestreService.paisProcedencia,
+          this.filaSeleccionadaMercancia.paisProcedencia
+        ).toString(),
+      };
 
-    const MERCANCIA_CONFIGURACION_ITEM: MercanciaConfiguracionItem = {
-      id: this.filaSeleccionadaMercancia.id,
-      fraccionArancelaria: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
-        this.filaSeleccionadaMercancia.fraccionArancelaria
-      ).toString(),
-      otraFraccion: this.filaSeleccionadaMercancia.otraFraccion,
-      descripcion: this.filaSeleccionadaMercancia.descripcion,
-      rendimientoProducto: this.filaSeleccionadaMercancia.rendimientoProducto,
-      clasificacionTaxonomica: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
-        this.filaSeleccionadaMercancia.clasificacionTaxonomica
-      ).toString(),
-      nombreCientifico: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.nombreCientifico,
-        this.filaSeleccionadaMercancia.nombreCientifico
-      ).toString(),
-      nombreComun: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.nombreComun,
-        this.filaSeleccionadaMercancia.nombreComun
-      ).toString(),
-      marca: this.filaSeleccionadaMercancia.marca,
-      cantidad: this.filaSeleccionadaMercancia.cantidad,
-      unidadMedida: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.unidadMedida,
-        this.filaSeleccionadaMercancia.unidadMedida
-      ).toString(),
-      paisOrigen: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.paisOrigen,
-        this.filaSeleccionadaMercancia.paisOrigen
-      ).toString(),
-      paisProcedencia: GET_INDEX(
-        this.autorizacionesDeVidaSilvestreService.paisProcedencia,
-        this.filaSeleccionadaMercancia.paisProcedencia
-      ).toString(),
-    };
-
-    this.crearNuevoFormularioMercancia(MERCANCIA_CONFIGURACION_ITEM);
-    this.alternarModalMercancia();
+      this.crearNuevoFormularioMercancia(MERCANCIA_CONFIGURACION_ITEM);
+      this.alternarModalMercancia();
+    } else {
+      this.abrirMultipleSeleccionPopup();
+    }
   }
 
+  confirmEliminarMercanciaItem(): void {
+    if (this.listaFilaSeleccionadaMercancia.length === 0) {
+      return;
+    }
+    this.abrirElimninarConfirmationopup();
+  }
+
+  eliminarMercanciaItem(): void {
+    const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(
+      (item) => item.id
+    );
+
+    this.datosTablaMercancia = this.datosTablaMercancia.filter(
+      (item) => !IDS_TO_DELETE.includes(item.id)
+    );
+
+    this.listaFilaSeleccionadaMercancia = [];
+    this.tramite230901Store.setMercanciaTablaDatos(this.datosTablaMercancia);
+    this.cerrarEliminarConfirmationPopup();
+  }
+
+  /**
+   * Abre el popup si el botón de modificar está habilitado.
+   */
+  abrirMultipleSeleccionPopup(): void {
+    if (this.enableModficarBoton) {
+      this.multipleSeleccionPopupAbierto = true;
+    }
+  }
+
+  /**
+   * Cierra el popup.
+   */
+  cerrarMultipleSeleccionPopup(): void {
+    this.multipleSeleccionPopupAbierto = false;
+    this.multipleSeleccionPopupCerrado = false;
+  }
+
+  abrirElimninarConfirmationopup(): void {
+    this.confirmEliminarPopupAbierto = true;
+  }
+
+  cerrarEliminarConfirmationPopup(): void {
+    this.confirmEliminarPopupAbierto = false;
+    this.confirmEliminarPopupCerrado = false;
+  }
   /**
    * Alterna la visibilidad del modal de datos de mercancía.
    */
@@ -421,7 +515,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * y actualiza el estado del almacén correspondiente.
    */
   enviarFormularioMercancia(): void {
-    if (this.formularioMercancia.invalid) {
+    if (this.formularioMercancia.invalid || (!this.otraFraccionSeleccionada && this.formularioMercancia.get('fraccionArancelaria')?.value === '0')) {
       return;
     }
 
@@ -436,6 +530,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
         this.formularioMercancia.get('fraccionArancelaria')?.value
       ),
+      fraccionDescripcion:this.formularioMercancia.get('fraccionDescripcion')?.value,
       otraFraccion: this.formularioMercancia.get('otraFraccion')?.value,
       descripcion: this.formularioMercancia.get('descripcion')?.value,
       rendimientoProducto: this.formularioMercancia.get('rendimientoProducto')

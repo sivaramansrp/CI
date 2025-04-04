@@ -14,6 +14,11 @@ export interface MercanciaConfiguracionItem {
   fraccionArancelaria: string;
 
   /**
+   * Descripción adicional de la fracción arancelaria de la mercancía.
+   */
+  fraccionDescripcion: string;
+
+  /**
    * Indica si la mercancía pertenece a otra fracción.
    */
   otraFraccion: boolean;

@@ -63,7 +63,7 @@
         </div>
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioPagoDerechos.get('fecPago')?.value" [datos]="configuracionFechaFinal"
-            (valorCambiado)="manejarCambioFechaPago($event)"
+            (valorCambiado)="cambioFechaFinal($event)"
             [class.is-invalid]="formularioPagoDerechos.get('fecPago')?.touched && formularioPagoDerechos.get('fecPago')?.invalid">
           </input-fecha>
           <div class="invalid-feedback"

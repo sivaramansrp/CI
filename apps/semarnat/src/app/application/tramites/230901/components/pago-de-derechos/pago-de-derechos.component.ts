@@ -15,7 +15,7 @@ import { Tramite230901Query } from "../../estados/query/tramite230901.query";
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.css',
+  styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -83,6 +83,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
 
     this.crearformularioPagoDerechos();
+
+    this.formularioPagoDerechos.get('llaveDePago')?.valueChanges.subscribe((value: string) => {
+      if (value) {
+        const CAPITALIZED_VALUE = value.toUpperCase();
+        this.formularioPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE, { emitEvent: false });
+      }
+    });
   }
 
   /**
@@ -91,6 +98,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * están deshabilitados porque no deben ser editados por el usuario.
    */
   crearformularioPagoDerechos(): void {
+
     this.formularioPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.referenciaClave),
       cadenaPagoDependencia: new FormControl(this.dependenciaCadenaPago),
@@ -129,13 +137,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Maneja los cambios en el campo "Fecha de Pago".
    * Actualiza el estado del almacén con la fecha de pago proporcionada.
    */
-  manejarCambioFechaPago(nuevoValor: string): void {
+  cambioFechaFinal(nuevo_valor: string): void {
     this.formularioPagoDerechos.patchValue({
-      fecPago: nuevoValor,
+      fecPago: nuevo_valor,
     });
-    this.tramite230901Store.setFechaDePago(
-      this.formularioPagoDerechos.get('fecPago')?.value
-    );
+    this.tramite230901Store.setfecPago(nuevo_valor);
   }
 
   /**

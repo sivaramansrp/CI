@@ -27,6 +27,11 @@ export class AutorizacionesDeVidaSilvestreService {
   fraccionArancelaria: Catalogo[] = [];
 
   /**
+   * Catálogo de descripciones de fracciones arancelarias.
+   */
+  fraccionArancelariaDescripcion: Catalogo[] = [];
+
+  /**
    * Catálogo de clasificaciones taxonómicas.
    */
   clasificacionTaxonomica: Catalogo[] = [];
@@ -101,6 +106,7 @@ export class AutorizacionesDeVidaSilvestreService {
    */
   public inicializaMercanciaDatosCatalogos(): void {
     this.obtenerRespuestaPorUrl(this, 'fraccionArancelaria', '/230901/fraccionArancelaria.json');
+    this.obtenerRespuestaPorUrl(this, 'fraccionArancelariaDescripcion', '/230901/fraccionArancelariaDescripcion.json');
     this.obtenerRespuestaPorUrl(this, 'clasificacionTaxonomica', '/230901/clasificacionTaxonomica.json');
     this.obtenerRespuestaPorUrl(this, 'nombreCientifico', '/230901/nombreCientifico.json');
     this.obtenerRespuestaPorUrl(this, 'nombreComun', '/230901/nombreComun.json');

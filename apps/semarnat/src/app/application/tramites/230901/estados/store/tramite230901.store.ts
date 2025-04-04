@@ -47,7 +47,7 @@ export interface Solicitud230901State {
   /**
    * Fecha de pago registrada en el trámite.
    */
-  fecPago: Date | null;
+  fecPago: string;
 }
 
 /**
@@ -66,7 +66,7 @@ export function createInitialState(): Solicitud230901State {
     mercanciaTablaDatos: [],
     bancoseleccionado: '',
     llaveDePago: '',
-    fecPago: null,
+    fecPago: '',
   };
 }
 
@@ -174,10 +174,10 @@ export class Tramite230901Store extends Store<Solicitud230901State> {
    *
    *  {string} fechaDePago - La fecha de pago.
    */
-  public setFechaDePago(fechaDePago: Date): void {
+  public setfecPago(fecPago: string): void {
     this.update((state) => ({
       ...state,
-      fechaDePago,
+      fecPago,
     }));
   }
 
