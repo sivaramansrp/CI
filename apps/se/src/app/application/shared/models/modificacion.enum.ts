@@ -1,0 +1,35 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
+export interface Mercancia {
+  fraccionArancelaria: string;
+  numeroDeRegistrodeProductos: string;
+  fechaExpedicion: string;
+  fechaVencimiento: string;
+  nombreTecnico: string;
+  nombreComercial: string;
+  normaOrigen?: string;
+  id?: string;
+  cantidad?: string;
+  umc?: string;
+  tipoFactura?: string;
+  valorMercancia?: string;
+  fechaFinalInput?: string;
+  numeroFactura?: string;
+  unidadMedidaMasaBruta?: string;
+  complementoClasificacion?: string;
+}
+
+export interface ConfiguracionColumna<T> {
+  encabezado: string; // Título de la columna
+  clave: (ele: T) => string | number | undefined | boolean; // Función que devuelve el valor de la columna para cada fila
+  orden: number; // Orden de la columna en la tabla
+}
+
+
+
+
+export interface MenusDesplegables {
+  formControllName: string;
+  data: Catalogo[];
+  required: boolean;
+}
