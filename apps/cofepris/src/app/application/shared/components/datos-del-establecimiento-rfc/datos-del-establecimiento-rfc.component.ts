@@ -10,7 +10,7 @@ import { DomicilioStore } from '../../estados/stores/domicilio.store';
 
 import { DomicilioQuery } from '../../estados/queries/domicilio.query';
 
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, max, takeUntil } from 'rxjs';
 
 /**
  * @description
@@ -87,9 +87,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.datosDelForm = this.fb.group({
-      denominacion: [this.solicitudState?.denominacion, [Validators.required]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
-      rfcdel: ['', [Validators.required]],
+      denominacionRazonSocial: [this.solicitudState?.denominacion, [Validators.required, Validators.maxLength(254)]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]],
+      rfcdel: ['', [Validators.required, Validators.maxLength(254)]],
     });
   }
 

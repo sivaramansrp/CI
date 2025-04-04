@@ -256,17 +256,17 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
       muncipio: [this.solicitudState?.muncipio, Validators.required],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
       calle: [this.solicitudState?.calle],
       lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
+      telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
       avisoCheckbox: [this.solicitudState?.avisoCheckbox],
       licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },
+      { value: this.solicitudState?.licenciaSanitaria, disabled: false },
       ],
       regimen: [this.solicitudState?.regimen],
       aduanasEntradas: [this.solicitudState?.aduanasEntradas],

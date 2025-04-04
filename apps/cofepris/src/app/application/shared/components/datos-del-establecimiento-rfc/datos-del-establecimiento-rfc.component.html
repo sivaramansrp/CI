@@ -9,27 +9,29 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="rfcdel">RFC del responsable sanitario:</label>
-          <input class="form-control" id="rfcdel" formControlName="rfcdel" placeholder=""
-            type="text">
+          <input class="form-control" id="rfcdel" formControlName="rfcdel" placeholder="" type="text">
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="denominacion">Denominación o razón social*:</label>
-          <input class="form-control" id="denominacion" placeholder="" type="text" formControlName="denominacion" (change)="setValoresStore(datosDelForm,'denominacion', 'setDenominacion')">
+          <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
+          <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="254" size="75"
+            [readonly]="true" formControlName="denominacionRazonSocial"
+            (change)="setValoresStore(datosDelForm,'denominacion', 'setDenominacion')">
         </div>
       </div>
     </div>
     <div class="row">
-    <div class="col-md-4">
-      <div class="form-group">
-        <label class="form-label" for="correoElectronico">Correo electrónico:<i
-            class="bi bi-question-circle-fill"></i></label>
-        <input class="form-control" id="correoElectronico" formControlName="correoElectronico" placeholder=""
-          type="text" (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="correoElectronico">Correo electrónico:<i
+              class="bi bi-question-circle-fill"></i></label>
+          <input class="form-control" id="correoElectronico"    maxlength="320"
+          size="29" formControlName="correoElectronico" placeholder=""
+            type="text" (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
+        </div>
       </div>
     </div>
-  </div>
   </form>
 </div>
 

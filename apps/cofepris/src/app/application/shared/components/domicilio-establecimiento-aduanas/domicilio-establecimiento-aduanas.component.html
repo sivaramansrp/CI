@@ -9,6 +9,8 @@
           id="codigoPostal"
           placeholder=""
           type="text"
+          maxlength="12"
+          size="29"
           formControlName="codigoPostal"
           (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
@@ -105,6 +107,8 @@
           id="telefono"
           placeholder=""
           type="number"
+          maxlength="30"
+          size="29"
           formControlName="telefono"
           (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')"
         />
