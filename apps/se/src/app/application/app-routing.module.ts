@@ -287,6 +287,13 @@ const ROUTES: Routes = [
         (m) => m.ReporteAnualModule
       ),
   },
+  {
+    path: 'importacion-definitiva',
+    loadChildren: () =>
+      import('./tramites/130103/importacion-definitiva.module').then(
+        (m) => m.ImportacionDefinitivaModule
+      ),
+  },
 ];
 
 @NgModule({
