@@ -88,10 +88,230 @@
             >
               Agregar
             </button>
-            <!-- (click)="nextTabla()" -->
           </div>
         </div>
+
         <ng-titulo titulo="Datos del donante" />
+        <!-- <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="rfc">RFC</label>
+              <span class="require">*</span>
+              <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
+                data-bs-toggle="tooltip"></span>
+              <input
+                type="text"
+                id="rfc"
+                formControlName="rfc"
+                maxlength="13"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="numeroProgramaImmex"
+                >Número de programa Immex</label>
+              <span class="require">*</span>
+              <span class="bi bi-question-circle-fill" title="Registro Federal de Contribuyentes"
+                data-bs-toggle="tooltip"></span>
+              <input
+                type="text"
+                id="numeroProgramaImmex"
+                formControlName="numeroProgramaImmex"
+                maxlength="11"
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="razonSocial"
+                >Nombre / Razón Social</label
+              >
+              <span class="require">*</span>
+              <input
+                type="text"
+                id="razonSocial"
+                formControlName="razonSocial"
+                maxlength="180"
+                readonly
+                class="form-control"
+              />
+            </div>
+          </div>
+        </div> -->
+
+        <ng-titulo titulo="Domicilio fiscal" />
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select
+                  [catalogo]="pais"
+                  [label]="'País'"
+                  [required]="true"
+                  formControlName="pais"
+                  (change)="paisSeleccion()"
+                  name="pais"
+                ></app-catalogo-select>
+              <!-- <div class="form-group">
+                <label for="Pais">País</label>
+                <span class="require">*</span> -->
+                <!-- <select
+                  id="Pais"
+                  formControlName="Pais"
+                  class="form-control"
+                  [disabled]="true"
+                >
+                  <option value="">----- Selecciona -----</option>
+                  <option *ngFor="let pais of paises" [value]="pais.clave">{{ pais.descripcion }}</option>
+                </select> -->
+              <!-- </div> -->
+            </div>
+            <!-- <div class="col-md-4">
+              <div class="form-group">
+                <label for="codigoPostal">C.P. o zona postal</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  id="codigoPostal"
+                  formControlName="codigoPostal"
+                  maxlength="8"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="estado">Estado</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  id="estado"
+                  formControlName="estado"
+                  maxlength="30"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="colonia">Colonia</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  id="colonia"
+                  formControlName="colonia"
+                  maxlength="80"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="calle">Calle</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  id="calle"
+                  formControlName="calle"
+                  maxlength="80"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="numeroExterior">Número y/o letra exterior</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  id="numeroExterior"
+                  formControlName="numeroExterior"
+                  maxlength="40"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="numeroInterior">Número y/o letra interior</label>
+                <span class="require">*</span>
+                <input
+                  type="text"
+                  id="numeroInterior"
+                  formControlName="numeroInterior"
+                  maxlength="30"
+                  pattern="\\d(\\d?){9}"
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="correoElectronico">Correo electrónico</label>
+                <input
+                  type="email"
+                  id="correoElectronico"
+                  formControlName="correoElectronico"
+                  maxlength="50"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input
+                  type="tel"
+                  id="telefono"
+                  formControlName="telefono"
+                  maxlength="30"
+                  readonly
+                  class="form-control"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="correoElectronicoOpcional">Correo electrónico (opcional)</label>
+                <input
+                  type="email"
+                  id="correoElectronicoOpcional"
+                  formControlName="correoElectronicoOpcional"
+                  maxlength="50"
+                  class="form-control"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="telefonoOpcional">Teléfono (opcional)</label>
+                <input
+                  type="tel"
+                  id="telefonoOpcional"
+                  formControlName="telefonoOpcional"
+                  maxlength="30"
+                  class="form-control"
+                />
+              </div>
+            </div>-->
+          </div> 
       </ng-container>
     </div>
   </form>
@@ -267,18 +487,17 @@
         <button
           type="button"
           class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#confirmarModal"
-          (click)="agregarConfirmarModal()"
+          (click)="agregarMercancias()"
         >
           Agregar
         </button>
-        <!-- (click)="agregarMercancias()" -->
+        <!-- data-bs-toggle="modal"
+        data-bs-target="#confirmarModal"
+        (click)="agregarConfirmarModal()" -->
       </div>
     </div>
   </div>
 </div>
-
 
 <div
   id="confirmarModal"
@@ -287,18 +506,23 @@
   tabindex="-1"
   role="dialog"
   aria-hidden="true"
-  >
+>
   <div class="modal-dialog" role="document">
     <div class="modal-content modalsm">
       <div class="modal-body">
-        <label>La mercancía fue <br/>agregada correctamente.</label>
+        <label>La mercancía fue <br />agregada correctamente.</label>
       </div>
-      <div class="modal-footer" style="justify-content: center;">
-        <button type="button" class="btn btn-primary" (click)="agregarMercancias()" data-bs-dismiss="modal" #closeConfirmarModal>
+      <div class="modal-footer" style="justify-content: center">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="agregarMercancias()"
+          data-bs-dismiss="modal"
+          #closeConfirmarModal
+        >
           Acceptar
         </button>
       </div>
     </div>
   </div>
 </div>
-  

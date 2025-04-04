@@ -22,11 +22,12 @@ export interface Solicitud10302State {
   marca:string;
   modelo:string;
   serie:string;
+  pais: Catalogo[] | null;
+
   datosDelMercancia: [];
 
   idSolicitud: string;
   tipoSolicitud: string;
-  pais: Catalogo[] | null;
   condicion: Catalogo[] | null;
   tipoDocumento: Catalogo[] | null;
   fechasSeleccionadas: Catalogo[] | null;
@@ -71,12 +72,13 @@ export function createInitialState(): Solicitud10302State {
     marca:'',
     modelo:'',
     serie:'',
+    pais: null,
+
     datosDelMercancia: [],
 
     idSolicitud: '',
     tipoSolicitud: '',
     condicion: null,
-    pais: null,
     tipoDocumento: null,
     fechasSeleccionadas: null,
     finesElegidos: [],
@@ -187,6 +189,13 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     }));
   }
 
+  public setPais(pais: Catalogo[]) {
+    this.update((state) => ({
+      ...state,
+      pais,
+    }));
+  }
+
   /**
    * Establece los datos del contenedor.
    * @param datosDelMercancia Datos del contenedor.
@@ -244,13 +253,6 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     this.update((state) => ({
       ...state,
       condicion,
-    }));
-  }
-
-  public setPais(pais: Catalogo[]) {
-    this.update((state) => ({
-      ...state,
-      pais,
     }));
   }
 

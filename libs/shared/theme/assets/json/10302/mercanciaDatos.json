@@ -2,15 +2,13 @@
     "success": true,
     "message": "Solicitud enviada exitosamente",
     "datos": {
-        "id": 1,
         "tipoDeMercancia": "MERCANCIA_01",
-        "unidadMedida": "UNIDAD_MEDIDA_01",
-        "condicionMercancia": "Condicion_Mercancia_01",
-        "ano": "2022",
         "cantidad": "Cantidad 02",
-        "marca": "marca 03",
+        "unidadMedida": "UNIDAD_MEDIDA_01",
+        "ano": "2022",
         "modelo": "modelo 04",
-        "serie": "Textos 05",
-        "datosDelMercancia": "datos for mercancia"
+        "marca": "marca 03",
+        "serie": "serie 05",
+        "condicionMercancia": "Condicion_Mercancia_01"
     }
 }

@@ -39,13 +39,12 @@ import { datosDelMercancia } from '../models/exencion-impuestos.model';
     CatalogoSelectComponent,
     FormsModule,
     ReactiveFormsModule,
-    AlertComponent
+    AlertComponent,
   ],
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.scss',
 })
 export class DatosTramiteComponent {
-
   /**
    * Formulario de trámite.
    */
@@ -66,7 +65,7 @@ export class DatosTramiteComponent {
    */
   private subscriptions: Subscription[] = [];
   showTabla = true;
-  
+
   /**
    * Encabezado de la tabla de mercancías.
    */
@@ -94,6 +93,7 @@ export class DatosTramiteComponent {
   condicionMercancia!: Catalogo[];
   unidadMedida!: Catalogo[];
   ano!: Catalogo[];
+  pais!: Catalogo[];
 
   /**
    * Referencia al elemento del modal.
@@ -109,10 +109,10 @@ export class DatosTramiteComponent {
 
   @ViewChild('closeConfirmarModal') closeConfirmarModal!: ElementRef;
 
-   /**
+  /**
    * Datos del contenedor.
    */
-   public datosDelMercancia: datosDelMercancia[] = [];
+  public datosDelMercancia: datosDelMercancia[] = [];
 
   // /**
   //  * Textos utilizados en el componente.
@@ -168,7 +168,15 @@ export class DatosTramiteComponent {
     this.tramiteForm = this.fb.group({
       exencionImpuestos: this.fb.group({
         aduana: [this.solicitudState?.aduana, [Validators.required]],
-        organismoPublico: [this.solicitudState?.organismoPublico, Validators.required],
+        organismoPublico: [
+          this.solicitudState?.organismoPublico,
+          Validators.required,
+        ],
+        usoEspecifico: [
+          this.solicitudState?.usoEspecifico,
+          [Validators.required, Validators.maxLength(512)],
+        ],
+        pais: [this.solicitudState?.pais, Validators.required],
         // nombre: [
         //   this.solicitudState?.nombre,
         //   [Validators.required, Validators.maxLength(50)],
@@ -177,10 +185,6 @@ export class DatosTramiteComponent {
         //   this.solicitudState?.tipoMercancia,
         //   [Validators.required, Validators.maxLength(100)],
         // ],
-        usoEspecifico: [
-          this.solicitudState?.usoEspecifico,
-          [Validators.required, Validators.maxLength(512)],
-        ],
         // condicion: [this.solicitudState?.condicion, Validators.required],
         // marca: [
         //   this.solicitudState?.marca,
@@ -215,7 +219,6 @@ export class DatosTramiteComponent {
         //   this.solicitudState?.correoElectronico,
         //   [Validators.required, Validators.email],
         // ],
-        // pais: [this.solicitudState?.pais, Validators.required],
         // codigoPostal: [
         //   this.solicitudState?.codigoPostal,
         //   [Validators.required, Validators.pattern(/^\d{5}$/)],
@@ -231,41 +234,23 @@ export class DatosTramiteComponent {
         // opcion: [this.solicitudState?.opcion],
       }),
     });
-    
+
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
         tipoDeMercancia: [
           this.solicitudState?.tipoDeMercancia,
-          Validators.required
+          Validators.required,
         ],
         condicionMercancia: [
           this.solicitudState?.condicionMercancia,
-          Validators.required
+          Validators.required,
         ],
-        unidadMedida: [
-          this.solicitudState?.unidadMedida,
-          Validators.required
-        ],
-        ano: [
-          this.solicitudState?.ano,
-          Validators.required
-        ],
-        cantidad: [
-          this.solicitudState?.ano,
-          Validators.required
-        ],
-        marca: [
-          this.solicitudState?.ano,
-          Validators.required
-        ],
-        modelo: [
-          this.solicitudState?.ano,
-          Validators.required
-        ],
-        serie: [
-          this.solicitudState?.ano,
-          Validators.required
-        ]
+        unidadMedida: [this.solicitudState?.unidadMedida, Validators.required],
+        ano: [this.solicitudState?.ano, Validators.required],
+        cantidad: [this.solicitudState?.ano, Validators.required],
+        marca: [this.solicitudState?.ano, Validators.required],
+        modelo: [this.solicitudState?.ano, Validators.required],
+        serie: [this.solicitudState?.ano, Validators.required],
       }),
     });
   }
@@ -279,7 +264,7 @@ export class DatosTramiteComponent {
         })
       );
 
-      const CONDICION_MERCANCIA$ = this.exencionImpuestoService
+    const CONDICION_MERCANCIA$ = this.exencionImpuestoService
       .getCondicionMercancia()
       .pipe(
         map((resp) => {
@@ -287,28 +272,25 @@ export class DatosTramiteComponent {
         })
       );
 
-      const UNIDAD_MEDIDA$ = this.exencionImpuestoService
-      .getUnidadMedida()
-      .pipe(
-        map((resp) => {
-          this.unidadMedida = resp.data;
-        })
-      );
+    const UNIDAD_MEDIDA$ = this.exencionImpuestoService.getUnidadMedida().pipe(
+      map((resp) => {
+        this.unidadMedida = resp.data;
+      })
+    );
 
-      const ANO$ = this.exencionImpuestoService
-      .getAno()
-      .pipe(
-        map((resp) => {
-          this.ano = resp.data;
-        })
-      );
+    const ANO$ = this.exencionImpuestoService.getAno().pipe(
+      map((resp) => {
+        this.ano = resp.data;
+      })
+    );
 
-      merge(
-        TIPO_DE_MERCANCIA$,
-        CONDICION_MERCANCIA$,
-        UNIDAD_MEDIDA$,
-        ANO$
-      )
+    const PAIS$ = this.exencionImpuestoService.getPais().pipe(
+      map((resp) => {
+        this.pais = resp.data;
+      })
+    );
+
+    merge(TIPO_DE_MERCANCIA$, CONDICION_MERCANCIA$, UNIDAD_MEDIDA$, ANO$, PAIS$)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
   }
@@ -341,23 +323,34 @@ export class DatosTramiteComponent {
   }
 
   tipoDeMercanciaSeleccion(): void {
-    const TIPO_DE_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value;
+    const TIPO_DE_MERCANCIA = this.agregarMercanciasForm.get(
+      'datosMercancia.tipoDeMercancia'
+    )?.value;
     this.store.setTipoDeMercancia(TIPO_DE_MERCANCIA);
   }
-  
+
   condicionMercanciaSeleccion(): void {
-    const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
+    const CONDICION_MERCANCIA = this.agregarMercanciasForm.get(
+      'datosMercancia.condicionMercancia'
+    )?.value;
     this.store.setCondicionMercancia(CONDICION_MERCANCIA);
   }
 
   unidadMedidaSeleccion(): void {
-    const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
+    const UNIDAD_MEDIDA = this.agregarMercanciasForm.get(
+      'datosMercancia.unidadMedida'
+    )?.value;
     this.store.setUnidadMedida(UNIDAD_MEDIDA);
   }
 
   anoSeleccion(): void {
     const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
     this.store.setAno(ANO);
+  }
+
+  paisSeleccion(): void {
+    const PAIS = this.agregarMercanciasForm.get('exencionImpuestos.pais')?.value;
+    this.store.setPais(PAIS);
   }
 
   /**
@@ -396,7 +389,7 @@ export class DatosTramiteComponent {
 
   /**
    * Método para abrir dialogo mercancías.
-   * 
+   *
    * @returns {void}
    */
   abrirDialogoMercancias(): void {
@@ -408,7 +401,7 @@ export class DatosTramiteComponent {
 
   /**
    * Cierra el modal.
-   * 
+   *
    * @returns {void}
    */
   cerrarModal(): void {
@@ -422,26 +415,39 @@ export class DatosTramiteComponent {
    * @returns {void}
    */
   agregarMercancias(): void {
-    if  (this.closeConfirmarModal) {
-      this.closeConfirmarModal.nativeElement.click();
-    }
     if (!this.agregarMercanciasForm.valid) {
       return;
     }
     const MERCANCIA = this.agregarMercanciasForm.value;
-    this.getMercanciaTableData.mercanciaTable.tableBody.push(MERCANCIA);
-    this.exencionImpuestoService.agregarMercancias().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (respuesta) => {
+    this.exencionImpuestoService
+      .agregarMercancias()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelMercancia.length + 1;
           this.datosDelMercancia.push(respuesta.datos);
-          (this.store.setDelContenedor as (valor: datosDelMercancia[]) => void)(this.datosDelMercancia);
+          (this.store.setDelContenedor as (valor: datosDelMercancia[]) => void)(
+            this.datosDelMercancia
+          );
+          const DATOS = {
+            tbodyData: [
+              respuesta.datos.tipoDeMercancia,
+              respuesta.datos.cantidad.toString(),
+              respuesta.datos.unidadMedida,
+              respuesta.datos.ano.toString(),
+              respuesta.datos.modelo,
+              respuesta.datos.marca,
+              respuesta.datos.serie,
+              respuesta.datos.condicionMercancia,
+            ],
+          };
+          this.getMercanciaTableData.mercanciaTable.tableBody.push(DATOS);
           this.agregarMercanciasForm.reset();
           this.agregarMercanciasForm.markAsUntouched();
           this.agregarMercanciasForm.markAsPristine();
+          this.cerrarModal();
         }
-      }
-    );
+      });
   }
 
   limpiarMercancias(): void {
@@ -450,14 +456,18 @@ export class DatosTramiteComponent {
 
   agregarConfirmarModal(): void {
     if (this.confirmarModalElement) {
-      const MODAL_INSTANCE = new Modal(this.confirmarModalElement.nativeElement);
+      const MODAL_INSTANCE = new Modal(
+        this.confirmarModalElement.nativeElement
+      );
       MODAL_INSTANCE.show();
     }
   }
 
   public obtenerMercancia(): void {
-    this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTable.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTable.tableBody;
+    this.mercanciaHeaderData =
+      this.getMercanciaTableData.mercanciaTable.tableHeader;
+    this.mercanciaBodyData =
+      this.getMercanciaTableData.mercanciaTable.tableBody;
   }
 
   /**

@@ -49,6 +49,10 @@ export class ExencionImpuestosService {
   getAno() {
     return this.http.get<RespuestaCatalogos>('assets/json/10302/ano.json');
   }
+  
+  getPais(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10302/pais.json');
+  }
 
   agregarMercancias(): Observable<RespuestaMercancia> {
     return this.http.get<RespuestaMercancia>(`assets/json/10302/mercanciaDatos.json`);
