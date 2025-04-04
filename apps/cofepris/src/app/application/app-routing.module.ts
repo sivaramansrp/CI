@@ -25,9 +25,9 @@ const ROUTES: Routes = [
   {
     path: 'maquila-materias-primas',
     loadChildren: () =>
-      import(
-        './tramites/260206/maquila-materias-primas.module'
-      ).then((m) => m.MaquilaMateriasPrimasModule),
+      import('./tramites/260206/maquila-materias-primas.module').then(
+        (m) => m.MaquilaMateriasPrimasModule
+      ),
   },
   {
     path: 'permiso-plaguicidas',
@@ -112,6 +112,20 @@ const ROUTES: Routes = [
       import(
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
+  },
+  {
+    path: 'territorio-nacional',
+    loadChildren: () =>
+      import('./tramites/260401/territorio-nacional-solicitude.module').then(
+        (m) => m.TerritorioNacionalSolicitudeModule
+      ),
+  },
+  {
+    path: 'medicamentos-registro-sanitario',
+    loadChildren: () =>
+      import(
+        './tramites/260203/permiso-sanitario-importacion-medicamentos.module'
+      ).then((m) => m.PermisoSanitarioImportacion260203Module),
   },
   {
     path: 'importacion-materias-primas-estupefacientes',
