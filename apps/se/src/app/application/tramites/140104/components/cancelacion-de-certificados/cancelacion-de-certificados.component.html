@@ -277,6 +277,13 @@
   
       </div>
     
+      <div class="row">
+        <div class="col-md-12">
+          <h5>Certificados a cancelar</h5>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosDisponibles"
+            [datos]="CertificadosDisponiblesTabla"></app-tabla-dinamica>
+    
+        </div>
     <div class="row mt-2">
       <div class="col-md-12 d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
