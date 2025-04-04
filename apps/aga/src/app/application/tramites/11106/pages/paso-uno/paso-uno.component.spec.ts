@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import {
   SolicitanteComponent,

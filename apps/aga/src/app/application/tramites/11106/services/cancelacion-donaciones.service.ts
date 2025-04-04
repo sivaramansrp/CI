@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con la retirada de la autorización de donaciones.
