@@ -70,6 +70,11 @@ export class MercDesmSinMonService {
       );
   }
 
+  /**
+   * Obtiene los datos de las opciones de radio desde un archivo JSON.
+   * @return Observable con los datos de las opciones de radio.
+   * 
+   */
   obtenerAvisoOpcionesDeRadio(): Observable<AvisoOpcionesDeRadio> {
     return this.http
       .get<AvisoOpcionesDeRadio>(

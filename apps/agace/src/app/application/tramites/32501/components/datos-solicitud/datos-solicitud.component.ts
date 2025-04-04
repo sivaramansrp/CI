@@ -52,19 +52,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Opciones de radio para el tipo de aviso.
    */
   avisoOpcionesDeRadio: AvisoOpcionesDeRadio = {} as AvisoOpcionesDeRadio;
-  // {
-  //   radioOptions: [
-  //     {
-  //       label: 'Importación',
-  //       value: 'TAV.IMP',
-  //     },
-  //     {
-  //       label: 'Montaje',
-  //       value: 'TAV.MON',
-  //     },
-  //   ],
-  //   required: false,
-  // };
 
   /**
    * Tipo de aviso seleccionado.
