@@ -29,6 +29,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'merc-desm-sin-mon',
+    loadChildren: () =>
+      import('./tramites/32501/merc-desm-sin-mon.module').then(
+        (m) => m.MercDesmSinMonModule
+      ),
+  },
 ];
 
 @NgModule({
