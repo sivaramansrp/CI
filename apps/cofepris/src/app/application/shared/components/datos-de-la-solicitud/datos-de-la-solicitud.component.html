@@ -73,8 +73,9 @@
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="denominacionRazon"
-            >Denominación o razón social:</label
-          >
+            >Denominación o razón social</label>
+            <span class="form-label" *ngIf="esCampoRequerido('denominacionRazon')">*</span>
+            <span class="form-label">:</span>
           <input
             class="form-control"
             id="denominacionRazon"
@@ -119,10 +120,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal
-            <span *ngIf="idProcedimiento === 260301">*</span>
-            :
-          </label>
+          <label class="form-label" for="codigoPostal">Código postal*:</label>
           <input
             class="form-control"
             id="codigoPostal"
@@ -149,9 +147,7 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="municipioAlcaldia"
-            >Municipio o alcaldía</label>
-            <span *ngIf="idProcedimiento === 260301">*</span>
-            :
+            >Municipio o alcaldía*:</label>
           <input
             class="form-control"
             id="municipioAlcaldia"
@@ -169,8 +165,8 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="localidad">Localidad</label>
-          <span *ngIf="idProcedimiento === 260301">*</span>
-          :
+          <span class="form-label" *ngIf="esCampoRequerido('localidad')">*</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="localidad"
@@ -185,8 +181,8 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="colonia">Colonia</label>
-          <span *ngIf="idProcedimiento === 260301">*</span>
-          :
+          <span class="form-label" *ngIf="esCampoRequerido('colonia')">*</span>
+          <span class="form-label">:</span>
           <input
             class="form-control"
             id="colonia"
@@ -197,9 +193,9 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('calleYNumero')">
         <div class="form-group">
-          <label class="form-label" for="calleNumero">Calle y número*:
+          <label class="form-label" for="calleYNumero">Calle y número*:
             <span
             class="bi bi-question-circle-fill"
             title="Calle y número"
@@ -208,9 +204,10 @@
           </label>
           <input
             class="form-control"
-            id="colonia"
+            id="calleYNumero"
             type="text"
-            formControlName="colonia"
+            formControlName="calleYNumero"
+            [ngClass]="isValid(datosSolicitudForm, 'calleYNumero') ? 'required' : ''"
           />
         </div>
       </div>
@@ -240,12 +237,10 @@
     </div>
 
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('correoElectronico')">
         <div class="form-group">
           <label class="form-label" for="correoElectronico"
-            >Correo electrónico</label>
-            <span *ngIf="idProcedimiento === 260301">*</span>
-            :
+            >Correo electrónico*:</label>
           <span
             class="bi bi-question-circle-fill"
             title="Correo electrónico"
@@ -262,7 +257,7 @@
           />
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="mostrarCamposDelProcedimiento('rfcSanitario')">
         <div class="form-group">
           <label class="form-label" for="rfcSanitario"
             >RFC del responsable sanitario:</label
@@ -311,6 +306,8 @@
       <div class="col-md-3 my-3">
         <div class="form-group">
           <label class="form-label" for="telefono">S.C.I.A.N:</label>
+          <span class="form-label" *ngIf="esCampoRequerido('scian')">*</span>
+          <span class="form-label">:</span>
         </div>
       </div>
       <app-tabla-dinamica
@@ -352,7 +349,7 @@
           <input
             class="form-check-input"
             type="checkbox"
-            value=""
+            (change)="cambioAviso($event)"
             id="aviso"
             formControlName="aviso"
           />
