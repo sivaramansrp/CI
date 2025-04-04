@@ -275,8 +275,31 @@ export class DatosMercanciaComponent implements OnInit {
     this.crearMercanciaForm();
   }
 
+  /**
+   * Lista de elementos que no son válidos.
+   * Esta propiedad almacena un arreglo de cadenas que representan 
+   * los elementos que no cumplen con los criterios de validación.
+   */
   public elementosNoValidos:string[] = [];
+  /**
+   * Arreglo que almacena los elementos añadidos.
+   * 
+   * Este arreglo se utiliza para guardar una lista de cadenas que representan
+   * los elementos que han sido agregados en el componente.
+   */
   public elementosAnadidos:string[] = [];
+  /**
+   * Configuración para la clave de mercancía.
+   * 
+   * Esta propiedad define la configuración utilizada para la tabla de selección
+   * de claves de mercancía. Incluye el tipo de selección, la configuración de la tabla
+   * y los datos asociados.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
+   * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
+   * - `datos`: Arreglo que contiene los datos de configuración de las claves de mercancía.
+   */
   public claveConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
@@ -617,7 +640,7 @@ validarElementos(): void {
     this.ubicaccion.back();
   }
   /**
-   * @method aggregarMercancia
+   * @method agregarMercanciaSellecion
    * @description Emits an event to add a new merchandise item.
    * This method is used to notify the parent component about the addition of a new merchandise item.
    *
@@ -625,7 +648,7 @@ validarElementos(): void {
    * @returns {void} This method does not return any value.
    */
 
-  aggregarMercancia(datos: DetalleMercancia): void {
+  agregarMercanciaSellecion(datos: DetalleMercancia): void {
     this.aggregarMercanciaDatos.emit(datos);
   }
 
