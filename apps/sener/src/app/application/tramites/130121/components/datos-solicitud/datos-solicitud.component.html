@@ -15,7 +15,7 @@
 
 
   <app-pais-de-origen [paisForm]="paisForm" [elementosDeBloque]="elementosDeBloque" [paisesPorBloque]="paisesPorBloque"
-  [selectRangoDias]="selectRangoDias" (bloqueCambiar)="enCambioDeBloque($event)"
+  [selectRangoDias]="selectRangoDias" (bloqueCambiar)="enCambioDeBloque($event)" (eventoAlHacerClicEnTodasLasCiudades)="obtenerListaDeCiudades()"
   (setValoresStoreEvent)="setValoresStore($event)"></app-pais-de-origen>
 
 <app-representacion [frmRepresentacionForm]="frmRepresentacionForm" [estado]="estado"

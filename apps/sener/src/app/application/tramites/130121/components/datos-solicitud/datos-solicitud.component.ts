@@ -6,11 +6,12 @@
  * Incluye formularios reactivos, configuraciones de tablas dinámicas y lógica para manejar datos relacionados con el trámite 130121.
  */
 import { Catalogo, REG_X } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
+import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130121/partidas-de-la.json';
 
 import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
@@ -173,6 +174,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @type {Catalogo[]}
    */
   elementosDeBloque: Catalogo[] = [];
+
+  @ViewChild(PaisDeOrigenComponent) paisDeOrigenComponent!: PaisDeOrigenComponent;
   /**
    * @description Arreglo que contiene un catálogo de países organizados por bloque.
    * @type {Catalogo[]}
@@ -530,7 +533,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Lista de filas seleccionadas.
    */
   manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
-    console.log('Rows received in parent:', filasSeleccionadas);
     this.filaSeleccionada = filasSeleccionadas.length ? filasSeleccionadas[0] : null;
     if (this.filaSeleccionada) {
       this.tramite130121Store.storeTableValues(this.filaSeleccionada);
@@ -590,6 +592,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.elementosDeBloque = data;
       });
   }
+  obtenerListaDeCiudades (): void {
+    this.permisodehidrocarburosService
+      .obtenerListaDeCiudades().pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        if (this.paisDeOrigenComponent && this.paisDeOrigenComponent.crosslistComponent) {
+          this.paisDeOrigenComponent.crosslistComponent.fechasDatos = data.map(item => item.descripcion);
+        }
+      });
+  }
   /**
   * Método para obtener la lista de países por bloque.
   * @param {number} _bloqueId - Identificador del bloque.
@@ -611,7 +622,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   enCambioDeBloque(bloqueId: number): void {
     this.fetchPaisesPorBloque(bloqueId);
   }
-
+  
   /**
  * @description Actualiza el almacén con nuevos valores basados en eventos de formulario.
  * @param event Evento que incluye el formulario, el campo y el método a ejecutar.

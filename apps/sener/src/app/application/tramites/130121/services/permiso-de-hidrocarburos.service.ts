@@ -28,6 +28,9 @@ export class PermisoDeHidrocarburosService {
     return this.http.get<Catalogo[]>('/assets/json/130121/pais-procenia.json');
     
   }
+  obtenerListaDeCiudades (): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/130121/todas-las-ciudades.json');
+  }
 
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
