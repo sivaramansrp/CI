@@ -47,6 +47,13 @@ export class PaisDeOrigenComponent implements OnChanges {
    * @tipo {CrosslistComponent}
    */
   @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
+
+  clicTodosLosPaises(): void {
+    if (this.crosslistComponent) {
+      // Map elementosDeBloque to an array of descriptions (or the desired property)
+      this.crosslistComponent.fechasDatos = this.elementosDeBloque.map(item => item.descripcion);
+    }
+  }
  
   /**
    * @propiedad
