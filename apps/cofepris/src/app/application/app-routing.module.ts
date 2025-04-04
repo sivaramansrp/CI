@@ -90,6 +90,13 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
+  {
+    path: 'actualizacion-importacion',
+    loadChildren: () =>
+      import('./tramites/260903/actualizacion-importacion-sanitaria.module').then(
+        (m) => m.ActualizacionImportacionSanitariaModule
+      ),
+  },
 ];
 
 @NgModule({
