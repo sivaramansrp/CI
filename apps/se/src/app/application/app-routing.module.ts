@@ -286,8 +286,6 @@ const ROUTES: Routes = [
       import('./tramites/130119/aviso-importacion-maquinas.module').then(
         (m) => m.AvisoImportacionMaquinasModule
       ),
-  }
-  
   },
   {
     path: 'reporte-anual',
