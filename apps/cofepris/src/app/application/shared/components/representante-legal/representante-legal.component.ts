@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud260603State } from '../../estados/stores/domicilio.store';
+import { DomicilioState } from '../../estados/stores/domicilio.store';
 
 import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
 
@@ -36,7 +36,7 @@ export class RepresentanteLegalComponent implements OnInit {
    * @description
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud260603State;
+  public solicitudState!: DomicilioState;
 
   /**
    * @description
@@ -48,8 +48,8 @@ export class RepresentanteLegalComponent implements OnInit {
    * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
-   * @param tramite260603Store Store para gestionar el estado del trámite.
-   * @param tramite260603Query Query para obtener datos del estado del trámite.
+   * @param domicilioStore Store para gestionar el estado del trámite.
+   * @param domicilioquery Query para obtener datos del estado del trámite.
    */
   constructor(
     private fb: FormBuilder,
