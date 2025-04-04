@@ -51,10 +51,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
           if (resp.length > 0) {
             this.catalogoDocumentos = resp;
           }
-        },
-        error: (_error): void => {
-          // Manejo de error
-         },
+        }
       });
   }
 }
