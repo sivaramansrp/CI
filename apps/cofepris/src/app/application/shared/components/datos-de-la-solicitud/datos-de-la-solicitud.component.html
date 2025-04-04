@@ -52,6 +52,7 @@
 
   <form [formGroup]="datosSolicitudForm">
     <div class="row mt-5">
+      @if(mostrarRFCSanitario){
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="rfcSanitario"
@@ -68,6 +69,7 @@
           />
         </div>
       </div>
+    }
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="denominacionRazon"
@@ -117,7 +119,10 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="codigoPostal">Código postal:</label>
+          <label class="form-label" for="codigoPostal">Código postal
+            <span *ngIf="idProcedimiento === 260301">*</span>
+            :
+          </label>
           <input
             class="form-control"
             id="codigoPostal"
@@ -137,14 +142,16 @@
             [label]="'Estado'"
             [required]="true"
             name="estado"
+            (selectionChange)="cambioDeEstado($event)"
           ></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="municipioAlcaldia"
-            >Municipio o alcaldía:</label
-          >
+            >Municipio o alcaldía</label>
+            <span *ngIf="idProcedimiento === 260301">*</span>
+            :
           <input
             class="form-control"
             id="municipioAlcaldia"
@@ -161,7 +168,9 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="localidad">Localidad:</label>
+          <label class="form-label" for="localidad">Localidad</label>
+          <span *ngIf="idProcedimiento === 260301">*</span>
+          :
           <input
             class="form-control"
             id="localidad"
@@ -175,7 +184,9 @@
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="colonia">Colonia:</label>
+          <label class="form-label" for="colonia">Colonia</label>
+          <span *ngIf="idProcedimiento === 260301">*</span>
+          :
           <input
             class="form-control"
             id="colonia"
@@ -185,9 +196,29 @@
           />
         </div>
       </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="calleNumero">Calle y número*:
+            <span
+            class="bi bi-question-circle-fill"
+            title="Calle y número"
+            data-bs-toggle="tooltip"
+          ></span>
+          </label>
+          <input
+            class="form-control"
+            id="colonia"
+            type="text"
+            formControlName="colonia"
+          />
+        </div>
+      </div>
+
     </div>
 
     <div class="row">
+      @if(mostrarRFCCalle){
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="calle">Calle*:</label>
@@ -205,9 +236,48 @@
           />
         </div>
       </div>
+    }
     </div>
 
     <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="correoElectronico"
+            >Correo electrónico</label>
+            <span *ngIf="idProcedimiento === 260301">*</span>
+            :
+          <span
+            class="bi bi-question-circle-fill"
+            title="Correo electrónico"
+            data-bs-toggle="tooltip"
+          ></span>
+          <input
+            class="form-control"
+            id="correoElectronico"
+            type="text"
+            formControlName="correoElectronico"
+            [ngClass]="
+              isValid(datosSolicitudForm, 'correoElectronico') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="rfcSanitario"
+            >RFC del responsable sanitario:</label
+          >
+          <input
+            class="form-control"
+            id="rfcSanitario"
+            type="text"
+            formControlName="rfcSanitario"
+            [ngClass]="
+              isValid(datosSolicitudForm, 'rfcSanitario') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
       <div class="col-md-1">
         <div class="form-group">
           <label class="form-label" for="lada">Lada:</label>

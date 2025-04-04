@@ -1,8 +1,11 @@
 import {
   ALERTA_DE_MANIFESTO_Y_DECLARACIONES,
   ALERTA_OPCIONS,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE,
   PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC,
+  PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO,
+  PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA,
 } from '../../constantes/datos-solicitud.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -24,9 +27,7 @@ import {
 } from '@angular/forms';
 import { delay, takeUntil } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
-import {
-  AlertComponent
-} from '@libs/shared/data-access-user/src';
+import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -210,9 +211,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * o no, dependiendo de la lógica implementada en el componente.
    */
   public mostrarElementoColapsable = true;
-  
+
+  /**
+   * @property {boolean} mostrarCorreoElectronico
+   * Controla la visibilidad del campo de correo electrónico en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si el campo de correo electrónico debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
   public mostrarCorreoElectronico = true;
 
+  /**
+   * @property {boolean} mostrarRFCSanitario
+   * Controla la visibilidad del campo de RFC sanitario en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si el campo de RFC sanitario debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarRFCSanitario = true;
+
+  /**
+   * @property {boolean} mostrarRFCCalle
+   * Controla la visibilidad del campo de RFC de calle en el formulario.
+   *
+   * @description
+   * Este valor se utiliza para determinar si el campo de RFC de calle debe ser visible
+   * o no, dependiendo de la lógica implementada en el componente.
+   */
+  public mostrarRFCCalle = true;
   /**
    * @constructor
    * Inyecta los servicios necesarios para el enrutamiento y construcción del formulario.
@@ -225,13 +253,24 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
-     public datosSolicitudService: DatosSolicitudService
-      ) {
-        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'regimenDatos', '/cofepris/regimenDatos.json');
-        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'adunasDeEntradasDatos', '/cofepris/adunasDeEntradasDatos.json');
-        this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'estadoDatos', '/cofepris/estadoDatos.json');
-
-      }
+    public datosSolicitudService: DatosSolicitudService
+  ) {
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'regimenDatos',
+      '/cofepris/regimenDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'adunasDeEntradasDatos',
+      '/cofepris/adunasDeEntradasDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'estadoDatos',
+      '/cofepris/estadoDatos.json'
+    );
+  }
 
   /**
    * @method ngOnInit
@@ -240,7 +279,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.mostrarCorreoElectronico =
-    PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(this.idProcedimiento)
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
+        this.idProcedimiento
+      )
         ? false
         : true;
     this.crearDatosSolicitudForm();
@@ -257,6 +298,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE.includes(this.idProcedimiento)
         ? false
         : true;
+    this.mostrarRFCSanitario =
+      PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO.includes(
+        this.idProcedimiento
+      )
+        ? false
+        : true;
+    this.mostrarRFCCalle = PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE.includes(
+      this.idProcedimiento
+    )
+      ? false
+      : true;
   }
 
   /**
@@ -310,7 +362,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       municipioAlcaldia: [
-        this.datosSolicitudFormState.municipioAlcaldia,
+        { value: this.datosSolicitudFormState.municipioAlcaldia, disabled: 
+          PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA.includes(this.idProcedimiento) },
         [
           Validators.required,
           Validators.minLength(2),
@@ -529,6 +582,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         opcionSeleccionados: this.opcionLista,
         opcionesColapsableState: this.opcionesColapsable,
       });
+    }
+  }
+  /**
+   * Método que se ejecuta cuando se cambia el estado de un elemento.
+   * Actualmente no tiene implementación.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
+  cambioDeEstado(event:Catalogo): void {
+    if(event){
+      this.datosSolicitudForm.patchValue({
+        municipioAlcaldia:'DISTITO FEDERAL'
+      })
     }
   }
 
