@@ -13,9 +13,9 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 
-import { Avisocalidad260514Store, Solicitud260514State } from '../../estados/stores/aviso-calidad.store'; 
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store'; 
 
-import { Avisocalidad260514Query } from '../../estados/queries/aviso-calidad.query'; 
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query'; 
 
 @Component({
   selector: 'app-pago-derechos',
@@ -28,19 +28,18 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
   derechosForm!:FormGroup;
   constructor(private fb: FormBuilder, 
         private service: AvisoImportacionService,
-        private avisocalidad260514Store: Avisocalidad260514Store, 
-        private avisocalidad260514Query: Avisocalidad260514Query){}
-        public solicitudState!: Solicitud260514State;
+        private avisocalidadStore: AvisocalidadStore, 
+        private avisocalidadQuery: AvisocalidadQuery){}
+        public solicitudState!: SolicitudState;
         private destroyed$ = new Subject<void>();
         public derechosList!: Catalogo[]; 
-        private destroyNotifier$: Subject<void> = new Subject();
        fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
   ngOnInit(): void {
 
-    this.avisocalidad260514Query.selectSolicitud$ 
+    this.avisocalidadQuery.selectSolicitud$ 
           .pipe(
-            takeUntil(this.destroyNotifier$), 
+            takeUntil(this.destroyed$), 
             map((seccionState) => {
               this.solicitudState = seccionState; 
             })
@@ -68,19 +67,16 @@ loadComboUnidadMedida(): void {
 public cambioFechaIngreso(nuevo_valor: string): void {
     this.derechosForm.get('fechaPago')?.setValue(nuevo_valor);
     this.derechosForm.get('fechaPago')?.markAsUntouched();
-    this.avisocalidad260514Store.setfechaPago(nuevo_valor);
+    this.avisocalidadStore.setfechaPago(nuevo_valor);
   }
 
-   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Avisocalidad260514Store): void {
+   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
     const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
-    (this.avisocalidad260514Store[metodoNombre] as (value: any) => void)(valor); 
+    (this.avisocalidadStore[metodoNombre] as (value: any) => void)(valor); 
   }
     
   ngOnDestroy(): void {
       this.destroyed$.next(); 
       this.destroyed$.complete();
-      this.destroyNotifier$.next(); 
-      this.destroyNotifier$.complete();  
-       
-    }
+       }
 }

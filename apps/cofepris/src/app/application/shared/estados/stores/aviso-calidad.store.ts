@@ -2,11 +2,11 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 /**
  * @interface
- * @name Solicitud260514State
+ * @name SolicitudState
  * @description
  * Representa el estado de la solicitud en el sistema. Contiene todos los campos necesarios para gestionar los datos relacionados con la solicitud.
  */
-export interface Solicitud260514State {
+export interface SolicitudState {
     /**
      * @property {string} claveReferencia
      * @description Referencia de la solicitud.
@@ -52,9 +52,9 @@ export interface Solicitud260514State {
  * @description
  * Crea el estado inicial de la solicitud. Esta función devuelve un objeto con todos los campos inicializados como cadenas vacías.
  * 
- * @returns {Solicitud260211State} El estado inicial de la solicitud.
+ * @returns {SolicitudState} El estado inicial de la solicitud.
  */
-export function createInitialState(): Solicitud260514State {
+export function createInitialState(): SolicitudState {
     return {
         /**
          * @property {string} referencia
@@ -100,9 +100,9 @@ export function createInitialState(): Solicitud260514State {
     providedIn: 'root',
 })    
 
-@StoreConfig({ name: 'Avisocalidad260514Store', resettable: true })
+@StoreConfig({ name: 'AvisocalidadStore', resettable: true })
 
-export class Avisocalidad260514Store extends Store<Solicitud260514State>{
+export class AvisocalidadStore extends Store<SolicitudState>{
      constructor() {
             super(createInitialState());
         }
