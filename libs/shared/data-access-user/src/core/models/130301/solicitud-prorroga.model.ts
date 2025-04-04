@@ -94,7 +94,17 @@ export interface RequestPartidasForma {
 
 export interface CertificadoKimberleyForma {
     certificadosEmitidos: string;
-    
+    numeroCertificadokimberley:string;
+    nombreIngles:string;
+    nombreExportador:string;
+    direccionExportador:string;
+    nombreImportador:string;
+    direccionImportador:string;
+    numeroEnLetra:string;
+    numeroEnLetraIngles:string;
+    numeroFactura:string;
+    cantidadQuilates:string;
+    valorDiamantes:string;
 }
 
 export interface RequestCertificadoKimberleyForma {
@@ -102,3 +112,41 @@ export interface RequestCertificadoKimberleyForma {
     data: CertificadoKimberleyForma[];
     message: string;
 }
+
+export interface ProrrogasForma {
+    folioResolucion: string;
+    cantidad:string;
+    prorrogaDel:string;
+    prorrogaAl:string;
+}
+
+export interface RequestProrrogasForma {
+    code: number;
+    data: ProrrogasForma[];
+    message: string;
+}
+
+export interface ProrrogasInfo {
+    fechaSolicitud:string;
+    fechaInicial: string;
+    fechaFinal: string;
+}
+
+export const PRORROGAS_TABLA = [
+    {
+        encabezado: 'Fecha solicitud',
+        clave: (ele: ProrrogasInfo) => ele.fechaSolicitud,
+        orden: 1,
+      },
+    {
+      encabezado: 'Fecha inicial',
+      clave: (ele: ProrrogasInfo) => ele.fechaInicial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Fecha final',
+      clave: (ele: ProrrogasInfo) => ele.fechaFinal,
+      orden: 3,
+    }
+    
+];

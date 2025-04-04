@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RequestCertificadoKimberleyForma, RequestDatosDelTramite, RequestPartidasForma, RespuestaDatos, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { RequestCertificadoKimberleyForma, RequestDatosDelTramite, RequestPartidasForma, RequestProrrogasForma, RespuestaDatos, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -30,5 +31,11 @@ export class SolicitudProrrogaService {
   }
   obtenerCertificadoKimberleyFormDatos(): Observable<RequestCertificadoKimberleyForma> {
     return this.http.get<RequestCertificadoKimberleyForma>('assets/json/130301/certificadoKimberley-forma.json');
+  }
+  obtenerEstadoList(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/130301/seleccion.json');
+  }
+  obtenerProrrogasFormDatos(): Observable<RequestProrrogasForma> {
+    return this.http.get<RequestProrrogasForma>('assets/json/130301/prorrogas-forma.json');
   }
 }
