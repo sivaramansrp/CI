@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
@@ -24,54 +24,80 @@ import { Tramite260204Store } from '../../estados/stores/tramite260204Store.stor
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.css',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit {
-  /**
-   * @property {Observable<Fabricante[]>} fabricantes$
-   * Observable que emite la lista de fabricantes desde el store.
-   */
-  fabricantes$!: Observable<Fabricante[]>;
-
-  /**
-   * @property {Observable<Destinatario[]>} destinatarios$
-   * Observable que emite la lista de destinatarios finales desde el store.
-   */
-  destinatarios$!: Observable<Destinatario[]>;
-
-  /**
-   * @property {Observable<Proveedor[]>} proveedores$
-   * Observable que emite la lista de proveedores desde el store.
-   */
-  proveedores$!: Observable<Proveedor[]>;
-
-  /**
-   * @property {Observable<Facturador[]>} facturadores$
-   * Observable que emite la lista de facturadores desde el store.
-   */
-  facturadores$!: Observable<Facturador[]>;
-
-  /**
-   * @constructor
-   * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
-   *
-   * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
-   * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
-   */
-  constructor(
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query
-  ) {}
-
-  /**
-   * @method ngOnInit
-   * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe los observables para mostrar los datos en la vista.
-   */
-  ngOnInit(): void {
-    this.fabricantes$ = this.tramiteQuery.getFabricanteTablaDatos$;
-    this.destinatarios$ = this.tramiteQuery.getDestinatarioFinalTablaDatos$;
-    this.proveedores$ = this.tramiteQuery.getProveedorTablaDatos$;
-    this.facturadores$ = this.tramiteQuery.getFacturadorTablaDatos$;
-  }
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+   /**
+    * @property {Fabricante[]} fabricanteTablaDatos
+    * Datos de la tabla de fabricantes.
+    */
+   fabricanteTablaDatos: Fabricante[] = [];
+ 
+   /**
+    * @property {Destinatario[]} destinatarioFinalTablaDatos
+    * Datos de la tabla de destinatarios finales.
+    */
+   destinatarioFinalTablaDatos: Destinatario[] = [];
+ 
+   /**
+    * @property {Proveedor[]} proveedorTablaDatos
+    * Datos de la tabla de proveedores.
+    */
+   proveedorTablaDatos: Proveedor[] = [];
+ 
+   /**
+    * @property {Facturador[]} facturadorTablaDatos
+    * Datos de la tabla de facturadores.
+    */
+   facturadorTablaDatos: Facturador[] = [];
+ 
+   /**
+    * @property {Subject<void>} destroy$
+    * Subject para cancelar suscripciones y evitar fugas de memoria.
+    * @private
+    */
+   private destroy$ = new Subject<void>();
+ 
+   /**
+    * @constructor
+    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
+    *
+    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
+    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+    */
+   constructor(
+     private tramiteStore: Tramite260204Store,
+     private tramiteQuery: Tramite260204Query
+   ) { }
+ 
+   /**
+    * @method ngOnInit
+    * @description Hook del ciclo de vida que se ejecuta al inicializar el componente.
+    * Suscribe los observables para mostrar los datos en la vista.
+    */
+   ngOnInit(): void {
+     this.tramiteQuery.getFabricanteTablaDatos$
+       .pipe(takeUntil(this.destroy$))
+       .subscribe((data) => {
+         this.fabricanteTablaDatos = data;
+       });
+ 
+     this.tramiteQuery.getDestinatarioFinalTablaDatos$
+       .pipe(takeUntil(this.destroy$))
+       .subscribe((data) => {
+         this.destinatarioFinalTablaDatos = data;
+       });
+ 
+     this.tramiteQuery.getProveedorTablaDatos$
+       .pipe(takeUntil(this.destroy$))
+       .subscribe((data) => {
+         this.proveedorTablaDatos = data;
+       });
+ 
+     this.tramiteQuery.getFacturadorTablaDatos$
+       .pipe(takeUntil(this.destroy$))
+       .subscribe((data) => {
+         this.facturadorTablaDatos = data;
+       });
+   }
 
   /**
    * @method addFabricantes
@@ -111,5 +137,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
    */
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
+  }
+
+  ngOnDestroy(): void{
+    this.destroy$.next();
   }
 }
