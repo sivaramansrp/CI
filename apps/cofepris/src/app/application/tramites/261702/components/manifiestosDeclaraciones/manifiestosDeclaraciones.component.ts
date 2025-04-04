@@ -75,6 +75,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
   constructor(
     private tramite261702Store: Tramite261702Store,
     private tramite261702Query: Tramite261702Query
+  // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
