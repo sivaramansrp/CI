@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PaginaDosAcusesYResolucionesDetallesComponent } from './pagina-dos-acuses-y-resoluciones-detalles.component';
-import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluiones-folio-del-tramite-detalles/acuses-y-resoluiones-folio-del-tramite-detalles.component';
+import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcusesYResolucionesDetalles11105Component', () => {
@@ -15,7 +15,7 @@ describe('AcusesYResolucionesDetalles11105Component', () => {
         CommonModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        AcusesYResoluionesFolioDelTramiteDetallesComponent,
+        AcusesYResolucionesFolioDelTramiteDetallesComponent,
         PaginaDosAcusesYResolucionesDetallesComponent,
       ],
       declarations: [],

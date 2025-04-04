@@ -3,7 +3,7 @@ export interface AcuseYResolucionesFolioTramiteDetalles {
   dependencia: string;
   fechaInicioDeTramite: string;
   fechaFinal: string;
-  unidadAdministrativaORepresentaciónFederal: string;
+  unidadAdministrativaORepresentacionFederal: string;
   tipoDeSolicitud: string;
   estatusDeLaSolicitud: string;
   diasHabilesTranscurridos: string;

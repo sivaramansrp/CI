@@ -39,7 +39,7 @@ export const FECHA_FINAL = {
  * Componente para gestionar la búsqueda de acuses y resoluciones por folio de trámite.
  */
 @Component({
-  selector: 'acuses-y-resoluiones-folio-del-tramite-busqueda',
+  selector: 'acuses-y-resoluciones-folio-del-tramite-busqueda',
   standalone: true,
   imports: [
     CommonModule,
@@ -49,10 +49,10 @@ export const FECHA_FINAL = {
     TablaDinamicaComponent,
   ],
   templateUrl:
-    './acuses-y-resoluiones-folio-del-tramite-busqueda.component.html',
-  styleUrl: './acuses-y-resoluiones-folio-del-tramite-busqueda.component.scss',
+    './acuses-y-resoluciones-folio-del-tramite-busqueda.component.html',
+  styleUrl: './acuses-y-resoluciones-folio-del-tramite-busqueda.component.scss',
 })
-export class AcusesYResoluionesFolioDelTramiteBusquedaComponent
+export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
   implements OnInit, OnDestroy
 {
   /**

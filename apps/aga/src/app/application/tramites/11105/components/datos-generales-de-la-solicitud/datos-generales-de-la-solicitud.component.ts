@@ -26,7 +26,7 @@ import { ReplaySubject, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERERALES_DE_LA_SOLICICTUD } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
-import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
+import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
 
 /**
@@ -207,7 +207,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.donanteDomicilio();
-    this.buscarAuanaDatos();
+    this.buscarAduanaDatos();
     this.buscarpropositoDeLaMercanciaDatos();
     this.buscarDetallesDelMercanciaDatos();
   }
@@ -215,7 +215,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Busca los datos de la aduana.
    */
-  buscarAuanaDatos(): void {
+  buscarAduanaDatos(): void {
     this.retiradaDeLaAutorizacionDeDonacionesService
       .getAduanaIngresara()
       .pipe(takeUntil(this.destroyed$))

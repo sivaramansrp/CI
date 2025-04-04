@@ -45,7 +45,7 @@ describe('AcuseYResolucionesFolioTramiteService', () => {
       { detalleId: '1', descripcion: 'Detalle 1', fecha: '2025-04-01' },
     ];
 
-    service.getAcuseYResolucionesFolioTramiteDeatlles().subscribe((data) => {
+    service.getAcuseYResolucionesFolioTramiteDetalles().subscribe((data) => {
       expect(data).toEqual(mockResponse);
     });
 

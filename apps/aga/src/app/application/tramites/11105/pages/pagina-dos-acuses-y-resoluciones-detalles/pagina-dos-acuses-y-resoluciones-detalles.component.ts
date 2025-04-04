@@ -1,5 +1,5 @@
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluiones-folio-del-tramite-detalles/acuses-y-resoluiones-folio-del-tramite-detalles.component';
+import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from '@libs/shared/data-access-user/src/tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AcusesYResoluionesFolioDelTramiteDetallesComponent,
+    AcusesYResolucionesFolioDelTramiteDetallesComponent,
   ],
   templateUrl: './pagina-dos-acuses-y-resoluciones-detalles.component.html',
   styleUrl: './pagina-dos-acuses-y-resoluciones-detalles.component.scss',

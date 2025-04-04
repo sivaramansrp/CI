@@ -26,16 +26,16 @@ export const FECHA_FINAL: InputFecha = {
  * Componente para gestionar los detalles de acuses y resoluciones por folio de trámite.
  */
 @Component({
-  selector: 'acuses-y-resoluiones-folio-del-tramite-detalles',
+  selector: 'acuses-y-resoluciones-folio-del-tramite-detalles',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, TituloComponent, RouterModule],
   templateUrl:
-    './acuses-y-resoluiones-folio-del-tramite-detalles.component.html',
+    './acuses-y-resoluciones-folio-del-tramite-detalles.component.html',
   styleUrls: [
-    './acuses-y-resoluiones-folio-del-tramite-detalles.component.scss',
+    './acuses-y-resoluciones-folio-del-tramite-detalles.component.scss',
   ],
 })
-export class AcusesYResoluionesFolioDelTramiteDetallesComponent
+export class AcusesYResolucionesFolioDelTramiteDetallesComponent
   implements OnInit
 {
   /**
@@ -85,7 +85,7 @@ export class AcusesYResoluionesFolioDelTramiteDetallesComponent
       dependencia: [{ value: '', disabled: true }],
       fechaInicial: [{ value: '', disabled: true }],
       fechaFinal: [{ value: '', disabled: true }],
-      unidadAdministrativaORepresentaciónFederal: [
+      unidadAdministrativaORepresentacionFederal: [
         { value: '', disabled: true },
       ],
       tipoDeSolicitud: [{ value: '', disabled: true }],

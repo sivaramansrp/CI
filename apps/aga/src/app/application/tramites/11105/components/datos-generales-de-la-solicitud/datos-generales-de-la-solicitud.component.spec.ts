@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { of, ReplaySubject } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('DatosGeneralesDeLaSolicitudComponent', () => {
   let component: DatosGeneralesDeLaSolicitudComponent;

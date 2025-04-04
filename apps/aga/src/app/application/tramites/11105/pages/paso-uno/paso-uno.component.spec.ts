@@ -1,11 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { PasoUnoComponent } from './paso-uno.component';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
-import { PasoUnoComponent } from './paso-uno.component';
+import {
+  SolicitanteComponent,
+  WizardComponent,
+  BtnContinuarComponent,
+} from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
@@ -23,13 +26,20 @@ describe('PasoUnoComponent', () => {
         SolicitanteComponent,
         BtnContinuarComponent,
         PasoUnoComponent,
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       declarations: [],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
+
+    // Mock the wizardComponent methods
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
     fixture.detectChanges();
   });
 
@@ -42,6 +52,9 @@ describe('PasoUnoComponent', () => {
     expect(component.tipoPersona).toBeUndefined();
     expect(component.persona).toEqual([]);
     expect(component.domicilioFiscal).toEqual([]);
+    expect(component.pasos.length).toBeGreaterThan(0);
+    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
+    expect(component.datosPasos.indice).toBe(component.indice);
   });
 
   it('should update the selected tab index when seleccionaTab is called', () => {

@@ -2,13 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-import { AcusesYResoluionesFolioDelTramiteBusquedaComponent } from './acuses-y-resoluiones-folio-del-tramite-busqueda.component';
+import { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/shared/acuses-y-resolucions-folio-tramite/acuses-y-resoluciones-folio-tramite.service';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 
-describe('AcusesYResoluionesFolioDelTramiteBusquedaComponent', () => {
-  let component: AcusesYResoluionesFolioDelTramiteBusquedaComponent;
+describe('AcusesYResolucionesFolioDelTramiteBusquedaComponent', () => {
+  let component: AcusesYResolucionesFolioDelTramiteBusquedaComponent;
   let fixture: any;
   let routerMock: any;
   let acuseYResolucionesFolioTramiteServiceMock: any;
@@ -23,14 +23,14 @@ describe('AcusesYResoluionesFolioDelTramiteBusquedaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent,AcusesYResoluionesFolioDelTramiteBusquedaComponent],
+      imports: [CommonModule, ReactiveFormsModule, InputFechaComponent, TablaDinamicaComponent,AcusesYResolucionesFolioDelTramiteBusquedaComponent],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: AcuseYResolucionesFolioTramiteService, useValue: acuseYResolucionesFolioTramiteServiceMock },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AcusesYResoluionesFolioDelTramiteBusquedaComponent);
+    fixture = TestBed.createComponent(AcusesYResolucionesFolioDelTramiteBusquedaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

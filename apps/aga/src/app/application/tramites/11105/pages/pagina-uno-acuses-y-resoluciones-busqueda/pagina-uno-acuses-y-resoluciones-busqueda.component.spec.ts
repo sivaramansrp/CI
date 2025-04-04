@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pagina-uno-acuses-y-resoluciones-busqueda.component';
-import { AcusesYResoluionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
+import { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcusesYResolucionesBusqueda11105Component', () => {
@@ -14,7 +14,7 @@ describe('AcusesYResolucionesBusqueda11105Component', () => {
       imports: [
         CommonModule,
         ReactiveFormsModule,
-        AcusesYResoluionesFolioDelTramiteBusquedaComponent,
+        AcusesYResolucionesFolioDelTramiteBusquedaComponent,
         HttpClientTestingModule,
         PaginaUnoAcusesYResolucionesBusquedaComponent
       ],

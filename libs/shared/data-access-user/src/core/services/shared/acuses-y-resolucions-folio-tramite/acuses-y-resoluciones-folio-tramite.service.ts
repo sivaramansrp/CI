@@ -15,7 +15,9 @@ export class AcuseYResolucionesFolioTramiteService {
    * Constructor de la clase.
    * @param http Cliente HTTP para realizar peticiones a servicios externos.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Obtiene la lista de acuses y resoluciones por folio de trámite.
@@ -29,7 +31,7 @@ export class AcuseYResolucionesFolioTramiteService {
    * Obtiene los detalles de los acuses y resoluciones por folio de trámite.
    * @returns Un observable que emite un arreglo de objetos del tipo `AcuseYResolucionesFolioTramiteDetalles`.
    */
-  getAcuseYResolucionesFolioTramiteDeatlles(): Observable<AcuseYResolucionesFolioTramiteDetalles[]> {
+  getAcuseYResolucionesFolioTramiteDetalles(): Observable<AcuseYResolucionesFolioTramiteDetalles[]> {
     return this.http.get<AcuseYResolucionesFolioTramiteDetalles[]>('./assets/json/shared/acuses-y-resoluciones-folio-tramite-detalles.json');
   }
 }

@@ -1,5 +1,5 @@
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { AcusesYResoluionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
+import { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -12,7 +12,7 @@ import { Component } from '@angular/core';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    AcusesYResoluionesFolioDelTramiteBusquedaComponent,
+    AcusesYResolucionesFolioDelTramiteBusquedaComponent,
   ],
   templateUrl: './pagina-uno-acuses-y-resoluciones-busqueda.component.html',
   styleUrl: './pagina-uno-acuses-y-resoluciones-busqueda.component.scss',

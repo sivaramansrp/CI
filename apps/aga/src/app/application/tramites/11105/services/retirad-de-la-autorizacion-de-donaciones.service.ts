@@ -1,5 +1,5 @@
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/certi-registro.model';
+import { DetallesDelMercancia } from '@libs/shared/data-access-user/src/core/models/11105/detalles-del-merchancia.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,7 +24,7 @@ export class RetiradaDeLaAutorizacionDeDonacionesService {
    * @returns Un observable que emite un arreglo de objetos del tipo `Catalogo`.
    */
   getAduanaIngresara(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/11105/aduanaIngresara.json');
+    return this.http.get<Catalogo[]>('assets/json/11105/aduana-ingresara.json');
   }
 
   /**

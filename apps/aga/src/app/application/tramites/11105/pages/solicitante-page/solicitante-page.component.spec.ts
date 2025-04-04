@@ -29,6 +29,13 @@ describe('SolicitantePageComponent', () => {
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
     component = fixture.componentInstance;
+
+    // Mock the wizardComponent methods
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
     fixture.detectChanges();
   });
 
@@ -41,6 +48,8 @@ describe('SolicitantePageComponent', () => {
     expect(component.pasos.length).toBeGreaterThan(0);
     expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
     expect(component.datosPasos.indice).toBe(component.indice);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
   it('should update the selected tab index when seleccionaTab is called', () => {

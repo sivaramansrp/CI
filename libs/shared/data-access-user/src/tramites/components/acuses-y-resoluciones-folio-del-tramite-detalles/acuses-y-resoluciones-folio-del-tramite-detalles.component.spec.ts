@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AcusesYResoluionesFolioDelTramiteDetallesComponent } from './acuses-y-resoluiones-folio-del-tramite-detalles.component';
+import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './acuses-y-resoluciones-folio-del-tramite-detalles.component';
 import { CommonModule } from '@angular/common';
 
-describe('AcusesYResoluionesFolioDelTramiteDetallesComponent', () => {
-  let component: AcusesYResoluionesFolioDelTramiteDetallesComponent;
+describe('AcusesYResolucionesFolioDelTramiteDetallesComponent', () => {
+  let component: AcusesYResolucionesFolioDelTramiteDetallesComponent;
   let fixture: any;
   let routerMock: any;
 
@@ -15,12 +15,12 @@ describe('AcusesYResoluionesFolioDelTramiteDetallesComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule,AcusesYResoluionesFolioDelTramiteDetallesComponent],
+      imports: [CommonModule, ReactiveFormsModule,AcusesYResolucionesFolioDelTramiteDetallesComponent],
       declarations: [],
       providers: [{ provide: Router, useValue: routerMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AcusesYResoluionesFolioDelTramiteDetallesComponent);
+    fixture = TestBed.createComponent(AcusesYResolucionesFolioDelTramiteDetallesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -36,7 +36,7 @@ describe('AcusesYResoluionesFolioDelTramiteDetallesComponent', () => {
     expect(component.acusesYResolucionesFormGroup.get('dependencia')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('fechaInicial')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('fechaFinal')).toBeDefined();
-    expect(component.acusesYResolucionesFormGroup.get('unidadAdministrativaORepresentaciónFederal')).toBeDefined();
+    expect(component.acusesYResolucionesFormGroup.get('unidadAdministrativaORepresentacionFederal')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('tipoDeSolicitud')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('estatusDeLaSolicitud')).toBeDefined();
     expect(component.acusesYResolucionesFormGroup.get('diasHabilesTranscurridos')).toBeDefined();
