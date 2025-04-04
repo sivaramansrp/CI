@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
+import { AlertComponent } from 'ngx-bootstrap/alert';
+
+
+
 /**
  * Modelo que contiene los atributos necesarios para mostrar una notificación al usuario.
  */
@@ -31,6 +35,10 @@ export interface Notificacion {
    * @description Variable de entrada para obtener el mensaje a mostrar en la notificación.
    */
   ttl?: string;
+
+  cerrar: boolean;
+
+  palabraClave?: string;
 }
 
 /**
@@ -57,7 +65,7 @@ export enum CategoriaMensaje {
 @Component({
   selector: 'lib-notificaciones',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AlertComponent],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
 })
@@ -84,7 +92,9 @@ export class NotificacionesComponent implements OnChanges {
    */
   public mostrarModal: boolean = false;
 
-  textoHTML: SafeHtml = '';
+
+
+  isOpen: boolean = false;
 
   @ViewChild('modalNotificacion') modalElement!: ElementRef;
 
@@ -94,6 +104,7 @@ export class NotificacionesComponent implements OnChanges {
   ) {
     //
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['notificacionInput']) {
       this.notificacionInput = changes['notificacionInput'].currentValue;
@@ -108,7 +119,6 @@ export class NotificacionesComponent implements OnChanges {
           break;
       }
     }
-    // throw new Error('Method not implemented.');
   }
 
   /**
@@ -164,19 +174,8 @@ export class NotificacionesComponent implements OnChanges {
     this.mostrarModal = false;
   }
 
-  crearBanner(): void {
-    this.setHTML(this.notificacionInput?.mensaje);
-  }
 
-  /**
- * Establece el contenido HTML de manera segura.
- * 
- * @param html - El contenido HTML a establecer.
- * @returns void
- */
-  setHTML(html: string): void {
-    this.textoHTML = this.sanitizer.bypassSecurityTrustHtml(html);
-  }
+
 
 
 }

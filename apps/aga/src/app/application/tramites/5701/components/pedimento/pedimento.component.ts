@@ -149,11 +149,13 @@ export class PedimentoComponent implements OnChanges {
     this.tituloModal = 'Aviso';
     this.mensajeModal = MSG_ELIMINA_ELEMENTO;
     this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'success',
+      tipoNotificacion: 'banner',
+      categoria: 'danger',
       modo: 'action',
       titulo: 'Avisos',
-      mensaje: MSG_ELIMINA_ELEMENTO
+      mensaje: MSG_ELIMINA_ELEMENTO,
+      cerrar: true,
+      palabraClave: 'Borrado',
     }
 
     this.abrirModal();
