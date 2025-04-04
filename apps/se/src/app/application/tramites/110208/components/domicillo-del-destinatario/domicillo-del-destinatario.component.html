@@ -1,0 +1,52 @@
+<ng-titulo titulo="Domicilio del destinatario" />
+<form [formGroup]="domicilioDestinatario">
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <label for="ciudad" class="form-label">Ciudad (población, estado o provincia)*:</label>
+            <input type="text" class="form-control" formControlName="ciudad"
+                id="ciudad" (change)="setValoresStore(domicilioDestinatario,'ciudad', 'setCiudad')">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="calle" class="form-label">Calle*:</label>
+            <input type="text" class="form-control" formControlName="calle"
+                id="calle" (change)="setValoresStore(domicilioDestinatario,'calle', 'setCalle')">
+        </div>
+        <div class="col-md-4">
+            <label for="numeroLetra" class="form-label">Número y/o letra*:</label>
+            <input type="number" class="form-control" formControlName="numeroLetra"
+                id="numeroLetra" (change)="setValoresStore(domicilioDestinatario,'numeroLetra', 'setNumeroLetra')">
+        </div>
+        <div class="col-md-1">
+            <label for="lada" class="form-label">Lada:</label>
+            <input type="number" class="form-control" formControlName="lada"
+                id="lada" (change)="setValoresStore(domicilioDestinatario,'lada', 'setLada')">
+        </div>
+        <div class="col-md-3">
+            <label for="telefono" class="form-label">Teléfono:</label>
+            <input type="number" class="form-control" formControlName="telefono"
+                id="telefono" (change)="setValoresStore(domicilioDestinatario,'telefono', 'setTelefono')">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="fax" class="form-label">Fax:</label>
+            <input type="text" class="form-control" formControlName="fax"
+                id="fax" (change)="setValoresStore(domicilioDestinatario,'fax', 'setFax')">
+        </div>
+        <div class="col-md-4">
+            <label for="correoElectronico" class="form-label">Correo electrónico*:</label>
+            <span class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span>
+            <input type="text" class="form-control" formControlName="correoElectronico"
+                id="correoElectronico" (change)="setValoresStore(domicilioDestinatario,'correoElectronico', 'setCorreoElectronico')">
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <app-catalogo-select [catalogo]="estado" [label]="'País destino'"
+                [required]="true" name="paisDestino" formControlName="paisDestino" (change)="setValoresStore(domicilioDestinatario,'paisDestino', 'setPaisDestino')"
+                ></app-catalogo-select>
+        </div>
+    </div>
+</form>
