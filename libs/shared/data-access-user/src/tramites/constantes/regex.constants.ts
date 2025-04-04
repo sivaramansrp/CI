@@ -152,6 +152,64 @@ export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
 export const REGEX_NUMEROS = /[^0-9]/g;
 
 /**
+ * Expresión regular que valida números enteros o decimales.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc"
+ */
+export const REGEX_ALTO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_ANCHO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar profundidades.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_PROFUNDIDAD = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar diámetros.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_DIAMETRO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida un año de creación en formato de cuatro dígitos.
+ * 
+ * @description Esta expresión regular acepta cualquier año en formato de cuatro dígitos (por ejemplo, 2024).
+ * @example
+ *   - Valido: "2024"
+ *   - No válido: "abc", "202", "20245"
+ */
+export const REGEX_ANO_DE_CREACION = ('^[0-9]{4}$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar avalúos.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_AVALUO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
  * Expresión regular para validar correos electrónicos.
  * Admite múltiples correos separados por comas.
  * Ejemplo válido: ejemplo@correo.com,otro@correo.com

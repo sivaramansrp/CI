@@ -39,14 +39,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion-psicotropicos',
     loadChildren: () =>
-      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
-        (m) => m.CertificadosLicenciasPermisosModule),
+      import(
+        './tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
-      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
-        (m) => m.ImportacionDispositivosMedicosUsoModule)
+      import(
+        './tramites/260214/importacion-dispositivos-medicos-uso.module'
+      ).then((m) => m.ImportacionDispositivosMedicosUsoModule),
   },
   {
     path: 'permiso-sanitario-importacion',
@@ -54,6 +56,20 @@ const ROUTES: Routes = [
       import('./tramites/260215/permiso-sanitario-importacion.module').then(
         (m) => m.PermisoSanitarioImportacionModule
       ),
+  },
+  {
+    path: 'permiso-sanitario-medicos-uso-personal',
+    loadChildren: () =>
+      import(
+        './tramites/260213/permiso-sanitario-medicos-uso-personal.module'
+      ).then((m) => m.PermisoSanitarioMedicosUsoPersonalModule),
+  },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos-pruebas',
+    loadChildren: () =>
+      import(
+        './tramites/260210/permiso-sanitario-importacion-medicamentos-pruebas.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosPruebasModule),
   },
   {
     path: 'aviso-de-modificacion-module',
