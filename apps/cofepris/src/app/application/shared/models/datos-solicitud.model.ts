@@ -41,6 +41,18 @@ export interface TablaScianConfig {
 }
 
 /**
+ * Interfaz que representa una fila en la tabla SCIAN.
+ *
+ * @property {string} clave - Clave SCIAN.
+ * @property {string} descripcion - Descripción del SCIAN.
+ */
+export interface TablaMercanciaClaveConfig {
+  clave: string;
+  fabricacion: string;
+  caducidad: string;
+}
+
+/**
  * Interfaz que representa la configuración de una tabla de opciones.
  *
  * @property {string} fechaCreacion - Fecha en que se creó la opción.
@@ -230,6 +242,7 @@ export interface DatosSolicitudFormState {
   municipioAlcaldia: string;
   localidad: string;
   colonia: string;
+  calleYNumero?: string;
   calle: string;
   lada: string;
   telefono: string;
@@ -288,4 +301,10 @@ export interface MercanciaForm {
   fechaCaducidad: string;
   paisDeOriginDatos: string[];
   paisDeProcedenciaDatos: string[];
+  marca?: string;
+  especifique?: string;
+  claveDeLos?: string;
+  fechaDeFabricacio?: string;
+  fechaDeCaducidad?: string;
 }
+
