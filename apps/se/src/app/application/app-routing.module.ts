@@ -229,6 +229,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'certificado-validacion',
+    loadChildren: () =>
+      import('./tramites/110202/certificado-validacion.module').then(
+        (m) => m.CertificadoValidacionModule),
+      },
+  {
     path: 'exportacion-minerales',
     loadChildren: () =>
       import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
