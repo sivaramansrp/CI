@@ -1,7 +1,7 @@
 <div class="container">
     <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
     <form [formGroup]="domicilio">
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="codigoPostal">Código postal*:</label>
@@ -25,6 +25,7 @@
                 </div>
             </div>
         </div>
+        <ng-alert [CONTENIDO]="TEXTO.mensaje" [CUSTOMECLASS]="infoAlert"></ng-alert>
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -70,11 +71,11 @@
             </div>
         </div>
         <div class="row">
-            <!-- <app-tabla-dinamica 
+            <app-tabla-dinamica 
                 [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
                 [configuracionTabla]="nicoTabla"
                 [datos]="nicoTablaDatos">
-            </app-tabla-dinamica> -->
+            </app-tabla-dinamica>
             <div class="container text-end mt-5">
                 <button class="btn btn-default me-2">Eliminar</button>
                 <button class="btn btn-primary me-2" data-bs-toggle="modal"
@@ -92,42 +93,42 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:</label>
+                    <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria: <i class="bi bi-question-circle-fill"></i></label>
                     <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
                         formControlName="licenciaSanitaria" />
                 </div>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <app-catalogo-select 
-                    [catalogo]="estado" 
-                    formControlName="regimen" 
-                    [label]="'Régimen'" 
-                    [required]="true"
-                    name="regimen">
-                </app-catalogo-select>
-            </div>
-            <div class="col-md-8">
-                <app-catalogo-select 
-                    [catalogo]="estado" 
-                    formControlName="aduanasEntradas"
-                    [label]="'Aduanas de entradas'" 
-                    [required]="true" 
-                    name="aduanasEntradas">
-                </app-catalogo-select>
+        <div class="row mb-2 mt-3">
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="marcarEnCasoDeQueSea" formControlName="marcarEnCasoDeQueSea"/>
+                    <label class="form-check-label" for="marcarEnCasoDeQueSea">
+                        <span>Marcar en caso de que sea VIVO/FRESCO/ENHIELADO</span>
+                    </label>
+                </div>
             </div>
         </div>
 
         <div class="row">
+            <div class="col-md-8">
+                <app-catalogo-select 
+                    [catalogo]="estado" 
+                    formControlName="regimen" 
+                    [label]="'Régimen al que se destinará la mercancía'" 
+                    [required]="true"
+                    name="regimen">
+                </app-catalogo-select>
+            </div>
             <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label text-start" for="numeroPermiso">Número de Permiso de Importación expedido
-                        por la CNSNS:</label>
-                    <input class="form-control" id="numeroPermiso" placeholder="" type="number"
-                        formControlName="numeroPermiso" />
-                </div>
+                <app-catalogo-select 
+                    [catalogo]="estado" 
+                    formControlName="aduanasEntradas"
+                    [label]="'Aduanas'" 
+                    [required]="true" 
+                    name="aduanasEntradas">
+                </app-catalogo-select>
             </div>
         </div>
 
@@ -137,8 +138,11 @@
             </div>
         </div>
         <div class="row mt-5">
-            <!-- <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-                [datos]="mercanciasTablaDatos"></app-tabla-dinamica> -->
+            <app-tabla-dinamica 
+                [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+                [configuracionTabla]="mercanciasTabla"
+                [datos]="mercanciasTablaDatos">
+            </app-tabla-dinamica>
             <div class="container text-end mt-5">
                 <button class="btn btn-default me-2">Modificar</button>
                 <button class="btn btn-default me-2">Eliminar</button>
@@ -149,6 +153,7 @@
 
     </form>
 
+    <!-- S.C.I.A.N Catalogo Modal -->
     <div class="modal fade" id="modalAddAgent" tabindex="-1" aria-labelledby="modalAddAgentLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content overflow-auto">
@@ -185,6 +190,7 @@
         </div>
     </div>
 
+    <!-- Mercancías Tabla Modal -->
     <div class="modal fade" id="modalAddAgentMercancias" tabindex="-1" aria-labelledby="modalAddAgentMercanciasLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw;">
@@ -285,12 +291,6 @@
                             <label for="numeroRegistro">Número de registro sanitario*:</label>
                             <input type="text" id="numeroRegistro" formControlName="numeroRegistro" class="form-control">
                         </div>
-                        <div class="form-group">
-
-                            <!-- <input-fecha [datos]="fechaCaducidadInput"
-                                [setFecha]="formMercancias.get('fechaCaducidad')?.value"
-                                (valorCambiado)="cambioFechaFinal($event)"></input-fecha> -->
-                        </div>
                         <div class="form-group mt-5">
                             <div class="panel-group ficha-collapse" id="accordion">
                                 <div class="panel panel-default">
@@ -301,9 +301,11 @@
                                     @if(colapsable){
                                     <div class="panel-collapse collapse in" id="panel-01">
                                         <div class="panel-body">
-                                            <!-- <crosslist [fechas]="seleccionarOrigenDelPais"
-                                                [label]="paisDeProcedenciaLabel" [botones]="paisDeProcedenciaBotons">
-                                            </crosslist> -->
+                                            <crosslist 
+                                                [fechas]="seleccionarOrigenDelPais"
+                                                [label]="paisDeProcedenciaLabel" 
+                                                [botones]="paisDeProcedenciaBotons">
+                                            </crosslist>
                                         </div>
                                     </div>
                                     }
@@ -321,9 +323,11 @@
                                     @if(colapsableDos){
                                     <div class="panel-collapse collapse in" id="panel-01">
                                         <div class="panel-body">
-                                            <!-- <crosslist [fechas]="seleccionarOrigenDelPaisDos"
-                                                [label]="paisDeProcedenciaLabel" [botones]="paisDeProcedenciaBotonsDos">
-                                            </crosslist> -->
+                                            <crosslist 
+                                                [fechas]="seleccionarOrigenDelPaisDos"
+                                                [label]="paisDeProcedenciaLabel" 
+                                                [botones]="paisDeProcedenciaBotonsDos">
+                                            </crosslist>
                                         </div>
                                     </div>
                                     }
@@ -341,21 +345,66 @@
                                     @if(colapsableTres){
                                     <div class="panel-collapse collapse in" id="panel-01">
                                         <div class="panel-body">
-                                            <!-- <crosslist [fechas]="seleccionarOrigenDelPaisTres"
+                                            <crosslist 
+                                                [fechas]="seleccionarOrigenDelPaisTres"
                                                 [label]="paisDeProcedenciaLabel"
-                                                [botones]="paisDeProcedenciaBotonsTres"></crosslist> -->
+                                                [botones]="paisDeProcedenciaBotonsTres">
+                                            </crosslist>
                                         </div>
                                     </div>
                                     }
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="claveDeLosLotes">Clave de los lotes*:</label>
+                                    <input type="text" id="claveDeLosLotes" formControlName="claveDeLosLotes" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input-fecha 
+                                        [datos]="fechaCaducidadInput"
+                                        [setFecha]="formMercancias.get('fechaCaducidad')?.value"
+                                        (valorCambiado)="cambioFechaFinal($event)">
+                                    </input-fecha>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <input-fecha 
+                                        [datos]="fechaCaducidadInput"
+                                        [setFecha]="formMercancias.get('fechaCaducidad')?.value"
+                                        (valorCambiado)="cambioFechaFinal($event)">
+                                    </input-fecha>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <h6>Lista Claves de los lotes*:</h6>
+                            <div class="d-flex justify-content-center">
+                                <app-tabla-dinamica
+                                    [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+                                    [configuracionTabla]="listaClavesDeLosLotes"
+                                    [datos]="listaClavesDeLosLotesDatos">
+                                </app-tabla-dinamica>
+                            </div>
+                            <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                                <ul class="pagination">
+                                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                </ul>
+                            </nav>
+                        </div>
 
                     </form>
                 </div>
                 <div class="modal-footer custom-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Eliminar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Modificar</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
                 </div>
             </div>

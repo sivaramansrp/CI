@@ -42,4 +42,20 @@ export class CertificadosLicenciasService {
     return this.http.get<JSONResponse>('./assets/json/260701/fabricante-tabla.json');
   }
 
+  getEstadoCatalogo(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('./assets/json/260701/estado-catalog.json');
+  }
+
+  getScianTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('./assets/json/260701/scian-tabla.json');
+  }
+
+  getMercanciasTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('./assets/json/260701/mercancias-tabla.json');
+  }
+
+  getListaClaveTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('./assets/json/260701/lista-claves.json');
+  }
+
 }

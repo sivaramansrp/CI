@@ -1,7 +1,11 @@
-import { Component, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CrosslistComponent, CrossListLable, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, CrossListLable, InputFecha, InputFechaComponent, Listaclaves, LISTACLAVESDELOSLOTES, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
+import { Subject, takeUntil } from 'rxjs';
+import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../services/certificados-licencias.enum';
+import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260701/domicillo-del.enum';
 
 @Component({
   selector: 'app-domicillo-del',
@@ -13,12 +17,13 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angul
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CrosslistComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputFechaComponent
   ],
   templateUrl: './domicillo-del.component.html',
   styleUrl: './domicillo-del.component.scss',
 })
-export class DomicilloDelComponent {
+export class DomicilloDelComponent implements OnInit, OnDestroy {
 
    /**
      * Lista de componentes Crosslist disponibles en la vista.
@@ -27,6 +32,7 @@ export class DomicilloDelComponent {
    
     constructor(
       private readonly fb: FormBuilder,
+      private certificadosLicenciasSvc: CertificadosLicenciasService
     ) {
       // Dependencia inyectada para uso posterior
     }
@@ -34,102 +40,102 @@ export class DomicilloDelComponent {
     /**
      * Grupo de formularios para domicilio.
      */
-    domicilio!: FormGroup;
+    public domicilio!: FormGroup;
    
     /**
      * Grupo de formularios para agente.
      */
-    formAgente!: FormGroup;
+    public formAgente!: FormGroup;
    
     /**
      * Grupo de formularios para mercancías.
      */
-    formMercancias!: FormGroup;
+    public formMercancias!: FormGroup;
    
     /**
      * Control para la fecha de aduanas de entrada.
      */
-    aduanasDeEntradaFecha: FormControl = new FormControl('');
+    public aduanasDeEntradaFecha: FormControl = new FormControl('');
    
     /**
      * Control para la fecha seleccionada de aduanas de entrada.
      */
-    aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
+    public aduanasDeEntradaFechaSeleccionada: FormControl = new FormControl('');
    
     /**
      * Lista de catálogos de estados.
      */
-    estado: Catalogo[] = [];
+    public estado: Catalogo[] = [];
    
     /**
      * Lista de países para la selección de origen.
      */
-    //public crosListaDePaises = CROSLISTA_DE_PAISES;
+    public crosListaDePaises = CROSLISTA_DE_PAISES;
    
     /**
      * Configuración de tabla para selección de tipo checkbox.
      */
-    tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+    public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
    
     /**
      * Configuración de columnas para la tabla NICO.
      */
-    //nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
+    public nicoTabla: ConfiguracionColumna<ScianModel>[] = NICO_TABLA;
    
     /**
      * Datos cargados para la tabla NICO.
      */
-    //nicoTablaDatos: NicoInfo[] = [];
+    public nicoTablaDatos: ScianModel[] = [];
    
     /**
      * Configuración de columnas para la tabla de mercancías.
      */
-    //mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+    public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
    
     /**
      * Datos cargados para la tabla de mercancías.
      */
-    //mercanciasTablaDatos: MercanciasInfo[] = [];
+    public mercanciasTablaDatos: MercanciasInfo[] = [];
    
     /**
      * Lista de aduanas seleccionadas.
      */
-    aduanasDeEntradaSeleccionadas: string[] = [];
+    public aduanasDeEntradaSeleccionadas: string[] = [];
    
     /**
      * Lista de datos de aduanas de entrada.
      */
-    aduanasDeEntradaDatos: string[] = [];
+    public aduanasDeEntradaDatos: string[] = [];
    
     /**
      * Indica si la sección es colapsable.
      */
-    colapsable: boolean = false;
+    public colapsable: boolean = false;
    
     /**
      * Indica si la sección "Duo" es colapsable.
      */
-    colapsableDos: boolean = false;
+    public colapsableDos: boolean = false;
    
     /**
      * Indica si la sección "Tres" es colapsable.
      */
-    colapsableTres: boolean = false;
+    public colapsableTres: boolean = false;
    
     /**
      * Lista de países para seleccionar el origen de la primera sección.
      */
-    //seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+    seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
    
     /**
      * Lista de países para seleccionar el origen de la segunda sección.
      */
-    //seleccionarOrigenDelPaisDos: string[] = this.crosListaDePaises;
+    public seleccionarOrigenDelPaisDos: string[] = this.crosListaDePaises;
    
     /**
      * Lista de países para seleccionar el origen de la tercera sección.
      */
-    //seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
+    public seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
    
     /**
      * Etiqueta para el crosslist de país de procedencia.
@@ -138,22 +144,29 @@ export class DomicilloDelComponent {
       tituluDeLaIzquierda: 'País de procedencia',
       derecha: 'País(es) seleccionados',
     };
-  
-    
+
+    private destroyed$: Subject<void> = new Subject();
+
+    public TEXTO = LOCALIDAD_COLONIA;
+    public infoAlert = 'alert-warning';
     
   /**
    * Configuración de las fechas de inicio y fin.
    * @type {InputFecha}
    */
-  //public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
+  public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
   /**
    * Método que se ejecuta al inicializar el componente.
    */
+
+  public listaClavesDeLosLotes: ConfiguracionColumna<Listaclaves>[] = LISTACLAVESDELOSLOTES;
+  public listaClavesDeLosLotesDatos: Listaclaves[] = [];
+
   ngOnInit(): void {
-   
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
+    this.obtenerListaClavesDeLosLotes();
    
     /**
      * Inicialización del formulario de domicilio.
@@ -169,6 +182,7 @@ export class DomicilloDelComponent {
       telefono: [''],
       avisoCheckbox: [''],
       licenciaSanitaria: [''],
+      marcarEnCasoDeQueSea: [''],
       regimen: [''],
       aduanasEntradas: [''],
       numeroPermiso: [''],
@@ -202,6 +216,7 @@ export class DomicilloDelComponent {
       presentacion: [''],
       numeroRegistro: [''],
       fechaCaducidad: [''],
+      claveDeLosLotes: [''],
     });
   }
    
@@ -238,37 +253,38 @@ export class DomicilloDelComponent {
   /**
    * Obtiene la lista de estados desde un archivo JSON.
    */
-  obtenerEstadoList(): void {
-    // this.service.obtenerEstadoList()
-    //   .pipe(takeUntil(this.destroyed$))
-    //   .subscribe((data) => {
-    //     const DATOS = data?.data;
-    //     this.estado = DATOS;
-    //   });
+  public obtenerEstadoList(): void {
+    this.certificadosLicenciasSvc.getEstadoCatalogo().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+        const DATOS = JSON.parse(JSON.stringify(response));
+        this.estado = DATOS.data;
+      });
   }
    
   /**
    * Obtiene los datos para la tabla de NICO desde un archivo JSON.
    */
-  obtenerTablaDatos(): void {
-    // this.service.obtenerTablaDatos()
-    // .pipe(takeUntil(this.destroyed$))
-    // .subscribe((data) => {
-    //   const DATOS = data?.datos;
-    //   this.nicoTablaDatos = DATOS;
-    // });
+  public obtenerTablaDatos(): void {
+    this.certificadosLicenciasSvc.getScianTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+      const DATOS = JSON.parse(JSON.stringify(response));
+      this.nicoTablaDatos = DATOS;
+    });
   }
    
   /**
    * Obtiene los datos de la tabla de mercancías desde un archivo JSON.
    */
-  obtenerMercanciasDatos(): void {
-    // this.service.obtenerMercanciasDatos()
-    // .pipe(takeUntil(this.destroyed$))
-    // .subscribe((data) => {
-    //   const DATOS = data?.datos;
-    //   this.mercanciasTablaDatos = DATOS;
-    // });
+  public obtenerMercanciasDatos(): void {
+    this.certificadosLicenciasSvc.getMercanciasTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+      const DATOS = JSON.parse(JSON.stringify(response));
+      this.mercanciasTablaDatos = DATOS;
+    });
+  }
+
+  public obtenerListaClavesDeLosLotes(): void {
+    this.certificadosLicenciasSvc.getListaClaveTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
+      const DATOS = JSON.parse(JSON.stringify(response));
+      this.listaClavesDeLosLotesDatos = DATOS;
+    });
   }
    
   /**
@@ -315,14 +331,23 @@ export class DomicilloDelComponent {
   }
   
     
+  /**
+   * Cambia el valor de la fecha final en el formulario.
+   * @param nuevo_valor Nuevo valor de la fecha final.
+   */
+  public cambioFechaFinal(nuevo_valor: string): void {
+
+    this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
+    this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
+  }
+
     /**
-     * Cambia el valor de la fecha final en el formulario.
-     * @param nuevo_valor Nuevo valor de la fecha final.
+     * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+     * Este método completa el observable destroyed$ para cancelar las suscripciones activas.
      */
-    public cambioFechaFinal(nuevo_valor: string): void {
-  
-      this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
-      this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
-    }
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 
 }

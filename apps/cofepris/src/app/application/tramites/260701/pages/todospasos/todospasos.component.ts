@@ -1,6 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
-import { PANTA_PASOS } from '../../services/certificados-licencias.enum';
+import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/certificados-licencias.enum';
 
 @Component({
   selector: 'app-todospasos',
@@ -16,6 +16,7 @@ export class TodospasosComponent {
   * Esta variable se utiliza para almacenar el índice del paso.
   */
  indice: number = 1;
+ public titulo: string = TITULO_PASO_UNO;
 
 
    /**
@@ -54,6 +55,13 @@ export class TodospasosComponent {
    public getValorIndice(e: AccionBoton) {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
+      if(this.indice === 2) {
+        this.titulo = TITULO_PASO_DOS;
+      } else if(this.indice === 3) {
+        this.titulo = TITULO_PASO_TRES;
+      } else {
+        this.titulo = TITULO_PASO_UNO;
+      }
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {

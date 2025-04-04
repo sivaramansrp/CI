@@ -18,6 +18,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { TercerosRelacionadosModalComponent } from '../components/terceros-relacionados-modal/terceros-relacionados-modal.component';
 import { DatosDeLaSolicitudComponent } from '../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DomicilloDelComponent } from '../components/domicillo-del/domicillo-del.component';
+import { ManifiestosComponent } from '../components/manifiestos/manifiestos.component';
+import { RepresentanteLegalComponent } from '../components/representante-legal/representante-legal.component';
 
 
 @NgModule({
@@ -38,6 +40,8 @@ import { DomicilloDelComponent } from '../components/domicillo-del/domicillo-del
     TercerosRelacionadosModalComponent,
     DatosDeLaSolicitudComponent,
     DomicilloDelComponent,
+    ManifiestosComponent,
+    RepresentanteLegalComponent,
     ToastrModule.forRoot()
   ],
   providers: [

@@ -41,3 +41,171 @@ export interface Fabricante260701 {
     estado: string,
     cp: string,
 }
+
+export interface ScianModel {
+    clave: string,
+    descripcion: string,
+}
+
+export interface MercanciasInfo {
+    clasificacion: string;
+    especificar: string;
+    denominacionEspecifica: string;
+    denominacionDistintiva: string;
+    denominacionComun: string;
+    formaFarmaceutica: string;
+    estadoFisico: string;
+    fraccionArancelaria: string;
+    descripcionFraccion: string;
+    unidad: string;
+    cantidadUMC: string;
+    unidadUMT: string;
+    cantidadUMT: string;
+    presentacion: string;
+    numeroRegistro: string;
+    paisDeOrigen: string;
+    paisDeProcedencia: string;
+    tipoProducto: string;
+    usoEspecifico: string;
+    fechaCaducidad: string;
+}
+
+export interface Listaclaves {
+    clave: string;
+    fecha: string;
+    fechaDeCaducidad: string;
+}
+
+export const NICO_TABLA = [
+    {
+      encabezado: 'Clave S.C.I.A.N.',
+      clave: (ele: ScianModel) => ele.clave,
+      orden: 1,
+    },
+    {
+      encabezado: 'Descripción del S.C.I.A.N.',
+      clave: (ele: ScianModel) => ele.descripcion,
+      orden: 2,
+    },
+];
+
+export const MERCANCIAS_DATA = [
+    {
+      encabezado: 'Clasificación del producto',
+      clave: (ele: MercanciasInfo) => ele.clasificacion,
+      orden: 1,
+    },
+    {
+      encabezado: 'Especificar clasificación del producto',
+      clave: (ele: MercanciasInfo) => ele.especificar,
+      orden: 2,
+    },
+    {
+      encabezado: 'Denominación específica del producto',
+      clave: (ele: MercanciasInfo) => ele.denominacionEspecifica,
+      orden: 3,
+    },
+    {
+      encabezado: 'Denominación distintiva',
+      clave: (ele: MercanciasInfo) => ele.denominacionDistintiva,
+      orden: 4,
+    },
+    {
+      encabezado: 'Denominación común, nombre común o nombre científico',
+      clave: (ele: MercanciasInfo) => ele.denominacionComun,
+      orden: 5,
+    },
+    {
+      encabezado: 'Forma farmacéutica',
+      clave: (ele: MercanciasInfo) => ele.formaFarmaceutica,
+      orden: 6,
+    },
+    {
+      encabezado: 'Estado físico',
+      clave: (ele: MercanciasInfo) => ele.estadoFisico,
+      orden: 7,
+    },
+    {
+      encabezado: 'Fracción arancelaria',
+      clave: (ele: MercanciasInfo) => ele.fraccionArancelaria,
+      orden: 8,
+    },
+    {
+      encabezado: 'Descripción de la fracción',
+      clave: (ele: MercanciasInfo) => ele.descripcionFraccion,
+      orden: 9,
+    },
+    {
+      encabezado: 'Unidad de medida de comercialización (UMC)',
+      clave: (ele: MercanciasInfo) => ele.unidad,
+      orden: 10,
+    },
+    {
+      encabezado: 'Cantidad UMC',
+      clave: (ele: MercanciasInfo) => ele.cantidadUMC,
+      orden: 11,
+    },
+    {
+      encabezado: 'Unidad de medida de tarifa (UMT)',
+      clave: (ele: MercanciasInfo) => ele.unidadUMT,
+      orden: 12,
+    },
+    {
+      encabezado: 'Cantidad UMT',
+      clave: (ele: MercanciasInfo) => ele.cantidadUMT,
+      orden: 13,
+    },
+    {
+      encabezado: 'Presentación',
+      clave: (ele: MercanciasInfo) => ele.presentacion,
+      orden: 14,
+    },
+    {
+      encabezado: 'Número de registro sanitario',
+      clave: (ele: MercanciasInfo) => ele.numeroRegistro,
+      orden: 15,
+    },
+    {
+      encabezado: 'País de orígen',
+      clave: (ele: MercanciasInfo) => ele.paisDeOrigen,
+      orden: 16,
+    },
+    {
+      encabezado: 'País de procedencia',
+      clave: (ele: MercanciasInfo) => ele.paisDeProcedencia,
+      orden: 17,
+    },
+    {
+      encabezado: 'Tipo producto',
+      clave: (ele: MercanciasInfo) => ele.tipoProducto,
+      orden: 18,
+    },
+    {
+      encabezado: 'Uso específico',
+      clave: (ele: MercanciasInfo) => ele.usoEspecifico,
+      orden: 19,
+    },
+    {
+      encabezado: 'Fecha de caducidad',
+      clave: (ele: MercanciasInfo) => ele.fechaCaducidad,
+      orden: 20,
+    },
+  ];
+  
+  export const LISTACLAVESDELOSLOTES = [
+    {
+      encabezado: 'Clave de los lotes',
+      clave: (ele: Listaclaves) => ele.clave,
+      orden: 1,
+    },
+    {
+      encabezado: 'Fecha de fabricación',
+      clave: (ele: Listaclaves) => ele.fecha,
+      orden: 2,
+    },
+    {
+      encabezado: 'Fecha de caducidad',
+      clave: (ele: Listaclaves) => ele.fechaDeCaducidad,
+      orden: 3,
+    }
+  ];
