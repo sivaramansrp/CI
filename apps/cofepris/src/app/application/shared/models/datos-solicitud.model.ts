@@ -242,6 +242,7 @@ export interface DatosSolicitudFormState {
   municipioAlcaldia: string;
   localidad: string;
   colonia: string;
+  calleYNumero?: string;
   calle: string;
   lada: string;
   telefono: string;
@@ -311,3 +312,4 @@ export interface MercanciaForm {
   fechaDeFabricacio?: string;
   fechaDeCaducidad?: string;
 }
+
