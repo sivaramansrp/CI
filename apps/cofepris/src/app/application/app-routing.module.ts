@@ -46,16 +46,14 @@ const ROUTES: Routes = [
   {
     path: 'importacion-psicotropicos',
     loadChildren: () =>
-      import(
-        './tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module'
-      ).then((m) => m.CertificadosLicenciasPermisosModule),
+      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
+        (m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
-      import(
-        './tramites/260214/importacion-dispositivos-medicos-uso.module'
-      ).then((m) => m.ImportacionDispositivosMedicosUsoModule),
+      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
+        (m) => m.ImportacionDispositivosMedicosUsoModule)
   },
   {
     path: 'permiso-sanitario-importacion',
@@ -64,7 +62,7 @@ const ROUTES: Routes = [
         (m) => m.PermisoSanitarioImportacionModule
       ),
   },
-  {
+    {
     path: 'permiso-sanitario-medicos-uso-personal',
     loadChildren: () =>
       import(
@@ -114,6 +112,14 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
   {
+   
+        path: 'territorio-nacional',
+        loadChildren: () =>
+          import('./tramites/260401/territorio-nacional-solicitude.module').then(
+            (m) => m.TerritorioNacionalSolicitudeModule
+          ),
+        },
+        {
     path: 'medicamentos-registro-sanitario',
     loadChildren: () =>
       import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
