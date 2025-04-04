@@ -4,9 +4,10 @@ import { SeleccionModuloComponent } from '../seleccion-modulo/seleccion-modulo.c
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
 import { AtenderRequerimientoComponent } from './atender-requerimiento/atender-requerimiento.component';
 import { BandejaPendientesComponent } from './bandeja-pendientes/bandeja-pendientes.component';
-import { AutorizarDictamenComponent } from './autorizar-dictamen/autorizar-dictamen.component';
+import { AutorizarDictamenComponent } from './autorizar/autorizar-dictamen/autorizar-dictamen.component';
 import { SolicitudPageComponent } from './evaluar-solicitud/solicitud-page/solicitud-page.component';
 import { GenerarDictamenComponent } from './evaluar-solicitud/generar-dictamen/generar-dictamen.component';
+import { ObservacionesDictamenComponent } from './autorizar/observaciones/observaciones-dictamen.component';
 import { ConsultaComponent } from './consulta/consulta.component';
 
 const routes: Routes = [
@@ -33,10 +34,6 @@ const routes: Routes = [
   {
     path: 'autorizar-dictamen',
     component: AutorizarDictamenComponent,
-  },
-  {
-    path: 'consulta',
-    component: ConsultaComponent,
   },
 
 ];

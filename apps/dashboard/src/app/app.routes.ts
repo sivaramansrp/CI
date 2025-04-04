@@ -70,6 +70,15 @@ export const appRoutes: Route[] = [
       }).then((m) => m.AppSemarnatModule)
   },
   {
+    path: 'sener',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4217/remoteAppEntry.js',
+            remoteName: 'sener',
+            exposedModule: './Module'
+        }).then((m) => m.AppSenerModule)
+  },
+  {
     path: 'funcionario',
     loadChildren: () =>
         loadRemoteModule({
@@ -104,5 +113,33 @@ export const appRoutes: Route[] = [
             remoteName: 'sener',
             exposedModule: './Module'
         }).then((m) => m.AppSenerModule)
-  }
+  },
+  {
+    path: 'cofepris',
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4211/remoteAppEntry.js',
+        remoteName: 'cofepris',
+        exposedModule: './Module'
+      }).then((m) => m.AppCofeprisModule)
+  },
+  {
+  path: 'amecafe',
+  loadChildren: () =>
+      loadRemoteModule({
+          remoteEntry: 'http://localhost:4212/remoteAppEntry.js',
+          remoteName: 'amecafe',
+          exposedModule: './Module'
+      }).then((m) => m.AppAmecafeModule)
+  } ,
+  {
+    path: 'sedena',
+    loadChildren: () =>
+        loadRemoteModule({
+            remoteEntry: 'http://localhost:4219/remoteAppEntry.js',
+            remoteName: 'sedena',
+            exposedModule: './Module'
+        }).then((m) => m.AppSedenaModule)
+  }         
+
 ];
