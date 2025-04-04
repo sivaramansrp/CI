@@ -1,0 +1,105 @@
+<form [formGroup]="aviosForm">
+    <div class="col-md-8 mb-3">
+        <ng-container formGroupName="adaceForm">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="adace">ADACE:</label>
+                    <input type="text" class="form-control" style="cursor:not-allowed" formControlName="adace"
+                        [readonly]="true" id="adace" />
+                </div>
+            </div>
+            <ng-titulo titulo="Datos del periodo del aviso" />
+            <div class="row align-items-center">
+                <div class="col-md-6 ">
+                    <label for="pais"> Mes al que corrosponde el aviso*:</label>
+                </div>
+                <div class="col-md-6 d-flex justify-content-center ">
+                    <app-catalogo-select class="optionsPais" [catalogo]="optionsPais" [required]="true" id="pais"
+                        formControlName="pais" [ngClass]="isValid(adaceForm,'pais') ? 'required' : ''"
+                        (change)="setValoresStore(adaceForm, 'pais', 'setPais')">
+                    </app-catalogo-select>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-6 ">
+                    <label for="anio"> Año al que corrosponde el aviso*:</label>
+                </div>
+                <div class="col-md-6 d-flex justify-content-center ">
+                    <app-catalogo-select class="optionsAnio" [catalogo]="optionsAnio" [required]="true" id="anio"
+                        formControlName="anio" [ngClass]="isValid(adaceForm,'anio') ? 'required' : ''"
+                        (change)="setValoresStore(adaceForm, 'anio', 'setAnio')">
+                    </app-catalogo-select>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container formGroupName="adaceForm">
+            <ng-titulo titulo="Tipo de aviso" />   
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" id="idRadioAviso" formControlName="tipoBusqueda"
+                                    value="Manual" class="form-check-input"
+                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda')">
+                                Manual
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" id="idRadioAviso" value="Carga masiva" formControlName="tipoBusqueda"
+                                    class="form-check-input"
+                                    (change)="setValoresStore(adaceForm, 'tipoBusqueda', 'setTipoBusqueda')">
+                                Carga masiva
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container formGroupName="adaceForm"  *ngIf="datosDelAvisoVisible">
+      
+            <ng-titulo titulo="Datos del aviso" />
+            <div class="row">
+                <app-tabla-dinamica 
+                  [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" 
+                  [configuracionTabla]="tableData.headers" 
+                  [datos]="tableData.data" 
+                ></app-tabla-dinamica>
+                <div class="d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn btn-primary ms-3"
+                    [disabled]="true"
+                    (click)="accionesBotones(botonAccionesTipos.ELIMINAR)"
+                  >
+                    Eliminar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary ms-3"
+                    [disabled]="false"
+                    (click)="accionesBotones(botonAccionesTipos.MODIFICAR)"
+                  >
+                    Modificar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary ms-3"
+                    [disabled]="false"
+                    (click)="accionesBotones(botonAccionesTipos.AGREGAR)"
+                  >
+                    Agregar
+                  </button>
+                </div>
+              </div>
+           
+            
+        </ng-container>
+
+    </div>
+</form>
