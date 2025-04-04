@@ -9,15 +9,12 @@
         <div class="row mt-5">
           <div class="col-md-8">
             <app-catalogo-select
-              [catalogo]="aduana.catalogos"
-              [label]="aduana.labelNombre"
-              [placeholder]="aduana.primerOpcion"
-              [required]="true"
-              id="aduana"
+              [catalogo]="aduana"
+              [label]="'Aduana por la que ingresará la mercancía'"
               formControlName="aduana"
-              (change)="
-                setValoresStore(exencionImpuestos, 'aduana', 'setAduana')
-              "
+              [required]="true"
+              (change)="aduanaSeleccion()"
+              name="aduana"
             >
             </app-catalogo-select>
           </div>

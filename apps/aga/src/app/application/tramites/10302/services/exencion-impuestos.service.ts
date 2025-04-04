@@ -26,12 +26,8 @@ export class ExencionImpuestosService {
    * Obtiene el catálogo de aduanas por las que ingresará la mercancía.
    * @returns Observable con la respuesta del catálogo de aduanas.
    */
-  getAduanaIngresara() {
-    return this.http.get<RespuestaCatalogos>(
-      'assets/json/10302/aduanaIngresara.json'
-    ).pipe(
-      tap(response => this.store.setAduana(response.data))
-    );
+  getAduana(): Observable<RespuestaCatalogos> {
+    return this.http.get<RespuestaCatalogos>('assets/json/10302/aduanaIngresara.json');
   }
 
   getTipoDeMercancia(): Observable<RespuestaCatalogos> {

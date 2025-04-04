@@ -50,10 +50,6 @@ export class DatosTramiteComponent {
    */
   tramiteForm!: FormGroup;
 
-  /**
-   * Formulario reactivo para agregar mercancías.
-   */
-
   agregarMercanciasForm!: FormGroup;
   private destroyNotifier$: Subject<void> = new Subject();
   /**
@@ -80,20 +76,14 @@ export class DatosTramiteComponent {
    * Datos de la tabla de mercancía.
    */
   public getMercanciaTableData = mercanciaTable;
-  /**
-   * Catálogo de aduanas.
-   */
-  aduana!: CatalogosSelect;
-  /**
-   * Suscripción para obtener el catálogo de aduanas.
-   */
-  getAduanaIngresaraSubscription!: Subscription;
+
   fechasSeleccionadas: Catalogo[] = [];
   tipoDeMercancia!: Catalogo[];
   condicionMercancia!: Catalogo[];
   unidadMedida!: Catalogo[];
   ano!: Catalogo[];
   pais!: Catalogo[];
+  aduana!:  Catalogo[];
 
   /**
    * Referencia al elemento del modal.
@@ -114,11 +104,6 @@ export class DatosTramiteComponent {
    */
   public datosDelMercancia: datosDelMercancia[] = [];
 
-  // /**
-  //  * Textos utilizados en el componente.
-  //  */
-  // TEXTOS = TEXTOS;
-
   constructor(
     private exencionImpuestoService: ExencionImpuestosService,
     private store: Tramite10302Store,
@@ -130,7 +115,6 @@ export class DatosTramiteComponent {
   }
 
   ngOnInit(): void {
-    this.getAduanaIngresara();
     this.inicializaCatalogos();
 
     this.query.selectSolicitud$
@@ -146,16 +130,6 @@ export class DatosTramiteComponent {
     this.subscriptions.push(
       this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
         this.fechasSeleccionadas = fechas ?? [];
-      })
-    );
-    this.subscriptions.push(
-      this.query.selectAduana$.subscribe((aduana) => {
-        this.aduana = {
-          labelNombre: 'Aduana por la que ingresará la mercancía',
-          required: false,
-          primerOpcion: 'Selecciona un valor',
-          catalogos: aduana ?? [],
-        };
       })
     );
     this.obtenerMercancia();
@@ -256,6 +230,15 @@ export class DatosTramiteComponent {
   }
 
   private inicializaCatalogos(): void {
+
+    const ADUANA$ = this.exencionImpuestoService
+    .getAduana()
+    .pipe(
+      map((resp) => {
+        this.aduana = resp.data;
+      })
+    );
+  
     const TIPO_DE_MERCANCIA$ = this.exencionImpuestoService
       .getTipoDeMercancia()
       .pipe(
@@ -290,20 +273,9 @@ export class DatosTramiteComponent {
       })
     );
 
-    merge(TIPO_DE_MERCANCIA$, CONDICION_MERCANCIA$, UNIDAD_MEDIDA$, ANO$, PAIS$)
+    merge(ADUANA$, TIPO_DE_MERCANCIA$, CONDICION_MERCANCIA$, UNIDAD_MEDIDA$, ANO$, PAIS$)
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe();
-  }
-
-  getAduanaIngresara(): void {
-    this.getAduanaIngresaraSubscription = this.exencionImpuestoService
-      .getAduanaIngresara()
-      .subscribe((resp) => {
-        if (resp.code === 200) {
-          const RESPONSE = resp.data;
-          this.store.setAduana(RESPONSE);
-        }
-      });
   }
 
   /**
@@ -320,6 +292,11 @@ export class DatosTramiteComponent {
    */
   get datosMercancia(): FormGroup {
     return this.tramiteForm.get('datosMercancia') as FormGroup;
+  }
+
+  aduanaSeleccion(): void {
+    const ADUANA = this.tramiteForm.get('exencionImpuestos.aduana')?.value;
+    this.store.setAduana(ADUANA);
   }
 
   tipoDeMercanciaSeleccion(): void {
@@ -349,7 +326,7 @@ export class DatosTramiteComponent {
   }
 
   paisSeleccion(): void {
-    const PAIS = this.agregarMercanciasForm.get('exencionImpuestos.pais')?.value;
+    const PAIS = this.tramiteForm.get('exencionImpuestos.pais')?.value;
     this.store.setPais(PAIS);
   }
 
@@ -470,14 +447,4 @@ export class DatosTramiteComponent {
       this.getMercanciaTableData.mercanciaTable.tableBody;
   }
 
-  /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
-  ngOnDestroy(): void {
-    if (this.getAduanaIngresaraSubscription) {
-      this.getAduanaIngresaraSubscription.unsubscribe();
-    }
-
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
 }
