@@ -152,6 +152,64 @@ export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
 export const REGEX_NUMEROS = /[^0-9]/g;
 
 /**
+ * Expresión regular que valida números enteros o decimales.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc"
+ */
+export const REGEX_ALTO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_ANCHO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar profundidades.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_PROFUNDIDAD = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar diámetros.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_DIAMETRO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
+ * Expresión regular que valida un año de creación en formato de cuatro dígitos.
+ * 
+ * @description Esta expresión regular acepta cualquier año en formato de cuatro dígitos (por ejemplo, 2024).
+ * @example
+ *   - Valido: "2024"
+ *   - No válido: "abc", "202", "20245"
+ */
+export const REGEX_ANO_DE_CREACION = ('^[0-9]{4}$');
+
+/**
+ * Expresión regular que valida números enteros o decimales.
+ * 
+ * @description Esta expresión regular acepta cualquier número entero o decimal positivo, utilizado para validar avalúos.
+ * @example
+ *   - Valido: "123", "123.45"
+ *   - No válido: "abc", "123abc", "-123"
+ */
+export const REGEX_AVALUO = ('^[0-9]*\\.?[0-9]+$');
+
+/**
  * Expresión regular para validar correos electrónicos.
  * Admite múltiples correos separados por comas.
  * Ejemplo válido: ejemplo@correo.com,otro@correo.com
@@ -165,6 +223,20 @@ export const REGEX_CORREO_ELECTRONICO =
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+/**
+ * Expresión regular para validar números decimales con hasta 2 decimales.
+ * 
+ * Este patrón permite validar números que pueden contener una parte entera y opcionalmente una parte decimal con hasta 2 dígitos.
+ * Ejemplos válidos:
+ * - 123
+ * - 123.45
+ * - 0.5
+ * 
+ * Ejemplos no válidos:
+ * - 123.456 (más de 2 decimales)
+ * - abc (no es un número)
+ */
+export const REGEX_PATRON_DECIMAL_2 = /^\d+(\.\d{1,2})?$/;
 
 /**
  * Expresión regular para validar que una cadena contenga solo números.
