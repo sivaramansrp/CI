@@ -4,7 +4,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 import { catalogoResponse } from '@libs/shared/data-access-user/src';
 
-export interface TramiteEntradaHumanaState {
+export interface PermisoImportacionBiologicaState {
   selectedEstado: catalogoResponse | null;
   /**
    * Clave seleccionada del catálogo de respuestas.
@@ -28,9 +28,9 @@ export interface TramiteEntradaHumanaState {
 }
 
 /**
- * Crea el estado inicial para el `TramiteEntradaHumanaState`.
+ * Crea el estado inicial para el `PermisoImportacionBiologicaState`.
  *
- * @returns {TramiteEntradaHumanaState} El objeto de estado inicial con valores predeterminados:
+ * @returns {PermisoImportacionBiologicaState} El objeto de estado inicial con valores predeterminados:
  * - `selectedEstado`: Inicialmente establecido en `null`.
  * - `setClave`: Inicialmente establecido en `null`.
  * - `setBanco`: Inicialmente establecido en `null`.
@@ -41,7 +41,7 @@ export interface TramiteEntradaHumanaState {
  * - `setImporteDePago`: Inicialmente establecido en una cadena vacía `''`.
  */
 
-export function createInitialState(): TramiteEntradaHumanaState {
+export function createInitialState(): PermisoImportacionBiologicaState {
   return {
     selectedEstado: null,
     setClave: null,
@@ -57,7 +57,7 @@ export function createInitialState(): TramiteEntradaHumanaState {
   providedIn: 'root',
 })
 @StoreConfig({ name: 'entradaHumanaState', resettable: true })
-export class TramiteEntradaHumanaStore extends Store<TramiteEntradaHumanaState> {
+export class PermisoImportacionBiologicaStore extends Store<PermisoImportacionBiologicaState> {
   constructor() {
     super(createInitialState());
   }

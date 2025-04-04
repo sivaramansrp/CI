@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TercerosRelacionadosProcedenciaComponent } from './terceros-relacionados-procedencia.component';
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 import { of } from 'rxjs';
-import { TableData, TipoMoModel } from '../../models/entrada-humana-260402.models';
+import { TableData, TipoMoModel } from '../../models/permiso-importacion-biologica.models';
 
 describe('TercerosRelacionadosProcedenciaComponent', () => {
   let component: TercerosRelacionadosProcedenciaComponent;

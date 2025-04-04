@@ -2,23 +2,24 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PagoDeDerechosEntradaComponent } from './pago-de-derechos-entrada.component';
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { Tramite260402Store } from '../../estados/tramite260402.store';
-import { Tramite260402Query } from '../../estados/tramite260402.query';
+
 import { of } from 'rxjs';
+import { PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
+import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
 describe('PagoDeDerechosEntradaComponent', () => {
   let component: PagoDeDerechosEntradaComponent;
   let fixture: ComponentFixture<PagoDeDerechosEntradaComponent>;
   let pagoDeDerechosServiceMock: any;
-  let tramite260402StoreMock: any;
-  let tramite260402QueryMock: any;
+  let PermisoImportacionBiologicaStoreMock: any;
+  let PermisoImportacionBiologicaQueryMock: any;
 
   beforeEach(async () => {
     pagoDeDerechosServiceMock = {
       getData: jest.fn(() => of([{ id: '1', name: 'Bank A' }, { id: '2', name: 'Bank B' }])),
     };
 
-    tramite260402StoreMock = {
+    PermisoImportacionBiologicaStoreMock = {
       setClaveDeReferncia: jest.fn(),
       setCadenaDeLaDependencia: jest.fn(),
       setLlaveDePago: jest.fn(),
@@ -27,7 +28,7 @@ describe('PagoDeDerechosEntradaComponent', () => {
       setBanco: jest.fn(),
     };
 
-    tramite260402QueryMock = {
+    PermisoImportacionBiologicaQueryMock = {
       selectedBanco$: of({ id: '1', name: 'Bank A' }),
       selectedClaveDeReferncia$: of('ReferenceKey123'),
       selectedCadenaDeLaDependencia$: of('DependencyString123'),
@@ -41,8 +42,8 @@ describe('PagoDeDerechosEntradaComponent', () => {
       imports: [ReactiveFormsModule,PagoDeDerechosEntradaComponent],
       providers: [
         { provide: PagoDeDerechosEntradaService, useValue: pagoDeDerechosServiceMock },
-        { provide: Tramite260402Store, useValue: tramite260402StoreMock },
-        { provide: Tramite260402Query, useValue: tramite260402QueryMock },
+        { provide: PermisoImportacionBiologicaStore, useValue: PermisoImportacionBiologicaStoreMock },
+        { provide: PermisoImportacionBiologicaQuery, useValue: PermisoImportacionBiologicaQueryMock },
       ],
     }).compileComponents();
 
@@ -74,25 +75,25 @@ describe('PagoDeDerechosEntradaComponent', () => {
   it('should update store values when updateClaveDeReferncia is called', () => {
     component.pagoDerechos.get('claveDeReferncia')?.setValue('NewReferenceKey');
     component.updateClaveDeReferncia();
-    expect(tramite260402StoreMock.setClaveDeReferncia).toHaveBeenCalledWith('NewReferenceKey');
+    expect(PermisoImportacionBiologicaStoreMock.setClaveDeReferncia).toHaveBeenCalledWith('NewReferenceKey');
   });
 
   it('should update store values when updateCadenaDeLaDependencia is called', () => {
     component.pagoDerechos.get('cadenaDeLaDependencia')?.setValue('NewDependencyString');
     component.updateCadenaDeLaDependencia();
-    expect(tramite260402StoreMock.setCadenaDeLaDependencia).toHaveBeenCalledWith('NewDependencyString');
+    expect(PermisoImportacionBiologicaStoreMock.setCadenaDeLaDependencia).toHaveBeenCalledWith('NewDependencyString');
   });
 
   it('should update store values when updateLlaveDePago is called', () => {
     component.pagoDerechos.get('llaveDePago')?.setValue('NewPaymentKey');
     component.updateLlaveDePago();
-    expect(tramite260402StoreMock.setLlaveDePago).toHaveBeenCalledWith('NewPaymentKey');
+    expect(PermisoImportacionBiologicaStoreMock.setLlaveDePago).toHaveBeenCalledWith('NewPaymentKey');
   });
 
   it('should update store values when cambioFechaDePago is called', () => {
     component.cambioFechaDePago('2025-03-29');
     expect(component.pagoDerechos.get('fechaDePago')?.value).toBe('2025-03-29');
-    expect(tramite260402StoreMock.setFechaDePago).toHaveBeenCalledWith('2025-03-29');
+    expect(PermisoImportacionBiologicaStoreMock.setFechaDePago).toHaveBeenCalledWith('2025-03-29');
   });
 
   it('should complete destroy$ when ngOnDestroy is called', () => {

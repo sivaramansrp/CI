@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { TramiteEntradaHumanaState, TramiteEntradaHumanaStore } from './tramite-entrada-humana.store';
+import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore} from './permiso-importacion-biologica.store';
 
 
 @Injectable({ providedIn: 'root' })
-export class TramiteEntradaHumanaQuery extends Query<TramiteEntradaHumanaState> {
+export class PermisoImportacionBiologicaQuery extends Query<PermisoImportacionBiologicaState> {
   selectedEstado$ = this.select((state) => state.selectedEstado);
   selectedClave$ = this.select((state) => state.setClave);
   selectedBanco$ = this.select((state) => state.setBanco);
@@ -14,7 +14,7 @@ export class TramiteEntradaHumanaQuery extends Query<TramiteEntradaHumanaState> 
   selectedLlaveDePago$=this.select((state)=>state.setLlaveDePago)
   selectedFechaDePago$=this.select((state)=>state.setFechaDePago)
   selectedImporteDePago$ = this.select((state)=>state.setImporteDePago)
-  constructor(private tramiteStore: TramiteEntradaHumanaStore) {
+  constructor(private tramiteStore: PermisoImportacionBiologicaStore) {
     super(tramiteStore);
   }
 }
