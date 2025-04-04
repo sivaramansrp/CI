@@ -161,6 +161,11 @@ export class PedimentoComponent implements OnChanges {
     this.elementoParaEliminar = i;
   }
 
+  /**
+   * Elimina un elemento de la tablae de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
