@@ -27,6 +27,7 @@ import { ExencionImpuestosService } from '../services/exencion-impuestos.service
 import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
 import { Modal } from 'bootstrap';
 import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
+import { datosDelMercancia } from '../models/exencion-impuestos.model';
 
 @Component({
   selector: 'app-datos-tramite',
@@ -99,10 +100,20 @@ export class DatosTramiteComponent {
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
+  @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
+
   /**
    * Referencia al botón de cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
+
+  @ViewChild('closeConfirmarModal') closeConfirmarModal!: ElementRef;
+
+   /**
+   * Datos del contenedor.
+   */
+   public datosDelMercancia: datosDelMercancia[] = [];
+
   // /**
   //  * Textos utilizados en el componente.
   //  */
@@ -411,17 +422,37 @@ export class DatosTramiteComponent {
    * @returns {void}
    */
   agregarMercancias(): void {
+    if  (this.closeConfirmarModal) {
+      this.closeConfirmarModal.nativeElement.click();
+    }
     if (!this.agregarMercanciasForm.valid) {
       return;
     }
     const MERCANCIA = this.agregarMercanciasForm.value;
     this.getMercanciaTableData.mercanciaTable.tableBody.push(MERCANCIA);
-    this.agregarMercanciasForm.reset();
-    this.cerrarModal();
+    this.exencionImpuestoService.agregarMercancias().pipe(takeUntil(this.destroyNotifier$)).subscribe(
+      (respuesta) => {
+        if (respuesta?.success) {
+          respuesta.datos.id = this.datosDelMercancia.length + 1;
+          this.datosDelMercancia.push(respuesta.datos);
+          (this.store.setDelContenedor as (valor: datosDelMercancia[]) => void)(this.datosDelMercancia);
+          this.agregarMercanciasForm.reset();
+          this.agregarMercanciasForm.markAsUntouched();
+          this.agregarMercanciasForm.markAsPristine();
+        }
+      }
+    );
   }
 
   limpiarMercancias(): void {
     // Implementar la lógica para limpiar las mercancías.
+  }
+
+  agregarConfirmarModal(): void {
+    if (this.confirmarModalElement) {
+      const MODAL_INSTANCE = new Modal(this.confirmarModalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
 
   public obtenerMercancia(): void {

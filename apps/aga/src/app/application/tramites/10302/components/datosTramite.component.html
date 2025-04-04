@@ -92,7 +92,6 @@
           </div>
         </div>
         <ng-titulo titulo="Datos del donante" />
-        
       </ng-container>
     </div>
   </form>
@@ -150,7 +149,8 @@
                       exencionImpuestos,
                       'datosMercancia.cantidad',
                       'setCantidad'
-                    )"
+                    )
+                  "
                 />
               </div>
               <div class="col-md-4">
@@ -188,7 +188,8 @@
                         exencionImpuestos,
                         'datosMercancia.marca',
                         'setMarca'
-                      )"
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -216,7 +217,8 @@
                         exencionImpuestos,
                         'datosMercancia.modelo',
                         'setModelo'
-                      )"
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -237,7 +239,8 @@
                         exencionImpuestos,
                         'datosMercancia.serie',
                         'setSerie'
-                      )"
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -264,36 +267,38 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="agregarMercancias()"
+          data-bs-toggle="modal"
+          data-bs-target="#confirmarModal"
+          (click)="agregarConfirmarModal()"
         >
           Agregar
         </button>
+        <!-- (click)="agregarMercancias()" -->
       </div>
     </div>
   </div>
 </div>
 
-<!-- data-bs-toggle="modal"
-          data-bs-target="#confirmarModalLabel" -->
+
 <div
-  class="modal fade"
   id="confirmarModal"
-  tabindex="-1"
   aria-labelledby="confirmarModalLabel"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
   aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+  >
+  <div class="modal-dialog" role="document">
+    <div class="modal-content modalsm">
       <div class="modal-body">
-        <label id="leyenda">La mercancia fue agregada correctamente</label>
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-        >
+        <label>La mercancía fue <br/>agregada correctamente.</label>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary" (click)="agregarMercancias()" data-bs-dismiss="modal" #closeConfirmarModal>
           Acceptar
         </button>
       </div>
     </div>
   </div>
 </div>
+  

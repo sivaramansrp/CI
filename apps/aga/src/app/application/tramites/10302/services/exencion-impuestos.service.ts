@@ -4,6 +4,7 @@ import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Tramite10302Store} from '../estados/tramite10302.store'
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { RespuestaMercancia } from '../models/exencion-impuestos.model';
 
 /**
  * Servicio para obtener datos relacionados con importadores y exportadores.
@@ -49,6 +50,9 @@ export class ExencionImpuestosService {
     return this.http.get<RespuestaCatalogos>('assets/json/10302/ano.json');
   }
 
+  agregarMercancias(): Observable<RespuestaMercancia> {
+    return this.http.get<RespuestaMercancia>(`assets/json/10302/mercanciaDatos.json`);
+  }
   // /**
   //  * Obtiene el catálogo de años.
   //  * @returns Observable con la respuesta del catálogo de años.

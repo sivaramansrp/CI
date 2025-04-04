@@ -22,6 +22,7 @@ export interface Solicitud10302State {
   marca:string;
   modelo:string;
   serie:string;
+  datosDelMercancia: [];
 
   idSolicitud: string;
   tipoSolicitud: string;
@@ -70,6 +71,7 @@ export function createInitialState(): Solicitud10302State {
     marca:'',
     modelo:'',
     serie:'',
+    datosDelMercancia: [],
 
     idSolicitud: '',
     tipoSolicitud: '',
@@ -156,7 +158,7 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
       ano,
     }));
   }
-  
+
   public setCantidad(cantidad: string) {
     this.update((state) => ({
       ...state,
@@ -185,6 +187,16 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     }));
   }
 
+  /**
+   * Establece los datos del contenedor.
+   * @param datosDelMercancia Datos del contenedor.
+   */
+  public setDelContenedor(datosDelMercancia: []): void {
+    this.update((state) => ({
+      ...state,
+      datosDelMercancia,
+    }));
+  }
   
   public setTableCheck(tableCheck: string) {
     this.update((state) => ({
