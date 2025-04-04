@@ -45,6 +45,15 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
   guardarFabricanteForm!: (value: Fabricante[]) => void;
 
   /**
+   * Identificador del procedimiento actual.
+   * Utilizado para controlar el flujo de la vista dependiendo del tipo de procedimiento.
+   *
+   * @input idProcedimiento - Cadena que representa el ID del procedimiento (por ejemplo: '260102').
+   */
+  @Input()
+  idProcedimiento!: number;
+
+  /**
    * FormGroup para el formulario de agregar fabricante.
    * @property {FormGroup} agregarFabricanteForm
    */
@@ -118,12 +127,12 @@ export class AgregarFabricanteComponent implements OnDestroy, OnInit {
    * @property {EventEmitter<Fabricante[]>} updateFabricanteTablaDatos
    */
   @Output() updateFabricanteTablaDatos = new EventEmitter<Fabricante[]>();
-    /**
+  /**
    * Indica si el componente debe estar oculto o visible.
    * @type {boolean}
    * @input
    */
-    @Input() estaOculto!:boolean;
+  @Input() estaOculto!: boolean;
 
   /**
    * Constructor que inyecta los servicios y crea el formulario de fabricante.

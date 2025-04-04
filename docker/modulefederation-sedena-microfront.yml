@@ -1,0 +1,18 @@
+services:
+#----------------------------------------------------------------
+  modulefederation-sedena-microfront:
+    image: modulefederation-sedena-microfront:1.0.0
+    build: 
+      context: ./../
+      dockerfile: apps/sedena/Dockerfile
+    container_name: modulefederation-sedena-microfront
+    restart: on-failure
+    expose:
+      - '4219'
+    ports:
+      - "4219:80"
+    networks:
+      - modulefederation-network
+#----------------------------------------------------------------
+networks:
+  modulefederation-network:
