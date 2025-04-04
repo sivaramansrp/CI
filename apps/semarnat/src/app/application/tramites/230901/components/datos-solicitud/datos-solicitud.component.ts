@@ -28,7 +28,6 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { AutorizacionesDeVidaSilvestreService } from '../../services/autorizaciones-de-vida-silvestre.service';
 import { Tramite230901Query } from '../../estados/query/tramite230901.query';
-import { isThisSecond } from 'date-fns';
 
 /*
  * Componente que gestiona los datos de la solicitud, incluyendo la configuración de formularios,
@@ -131,6 +130,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   filaSeleccionadaMercancia!: MercanciaConfiguracionItem;
 
+  /**
+   * Lista de filas seleccionadas en la tabla de mercancías.
+   */
   listaFilaSeleccionadaMercancia!: MercanciaConfiguracionItem[];
 
   /**
@@ -143,6 +145,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   mostrarModalDatosMercancia: boolean = false;
 
+  /**
+   * Indica si se debe mostrar el popup de selección múltiple.
+   */
   mostrarPopupSeleccionMultiple: boolean = false;
   /**
    * Indica si el popup está abierto.
@@ -164,6 +169,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   confirmEliminarPopupCerrado: boolean = true;
 
+  /**
+   * Indica si el botón de eliminar está habilitado.
+   */
   enableEliminarBoton: boolean = false;
 
   /**
@@ -309,6 +317,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja el cambio en la fracción arancelaria seleccionada.
+   * $event Evento que contiene la información de la fracción arancelaria seleccionada.
+   */
   manejarCambioFraccionArancelaria($event: Catalogo): void {
     const FRACCION_DESCRIPCION =
       this.autorizacionesDeVidaSilvestreService.fraccionArancelariaDescripcion.find(
@@ -434,6 +446,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Confirma la eliminación de los elementos seleccionados en la tabla de mercancías.
+   * Si no hay elementos seleccionados, no realiza ninguna acción.
+   * Si hay elementos seleccionados, abre el popup de confirmación de eliminación.
+   */
   confirmEliminarMercanciaItem(): void {
     if (this.listaFilaSeleccionadaMercancia.length === 0) {
       return;
@@ -441,6 +458,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.abrirElimninarConfirmationopup();
   }
 
+  /**
+ * Filtra y elimina los elementos seleccionados de la tabla de mercancías.
+ * Actualiza el estado del almacén y cierra el popup de confirmación de eliminación.
+ */
   eliminarMercanciaItem(): void {
     const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(
       (item) => item.id
@@ -455,9 +476,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.cerrarEliminarConfirmationPopup();
   }
 
-  /**
-   * Abre el popup si el botón de modificar está habilitado.
-   */
+  
+/**
+ * Abre el popup de selección múltiple si el botón de modificar está habilitado.
+ */
   abrirMultipleSeleccionPopup(): void {
     if (this.enableModficarBoton) {
       this.multipleSeleccionPopupAbierto = true;
@@ -465,24 +487,31 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el popup.
-   */
+ * Cierra el popup de selección múltiple.
+ */
   cerrarMultipleSeleccionPopup(): void {
     this.multipleSeleccionPopupAbierto = false;
     this.multipleSeleccionPopupCerrado = false;
   }
 
+  /**
+ * Abre el popup de confirmación de eliminación.
+ */
   abrirElimninarConfirmationopup(): void {
     this.confirmEliminarPopupAbierto = true;
   }
 
+  /**
+ * Cierra el popup de confirmación de eliminación.
+ */
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
     this.confirmEliminarPopupCerrado = false;
   }
+
   /**
-   * Alterna la visibilidad del modal de datos de mercancía.
-   */
+ * Alterna la visibilidad del modal de datos de mercancía.
+ */
   alternarModalMercancia(): void {
     this.mostrarModalDatosMercancia = !this.mostrarModalDatosMercancia;
   }
@@ -518,10 +547,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     if (this.formularioMercancia.invalid || (!this.otraFraccionSeleccionada && this.formularioMercancia.get('fraccionArancelaria')?.value === '0')) {
       return;
     }
-
-    const GET_DESCRIPTION = (array: Catalogo[], index: number): string =>
-      array[index - 1]?.descripcion || '';
-
+      const GET_DESCRIPTION = (array: Catalogo[], index: number): string => array[index - 1]?.descripcion || '';
+  
     const TABLA_ROW: MercanciaConfiguracionItem = {
       id: this.esOperacionDeActualizacion
         ? this.formularioMercancia.get('id')?.value
@@ -530,14 +557,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.autorizacionesDeVidaSilvestreService.fraccionArancelaria,
         this.formularioMercancia.get('fraccionArancelaria')?.value
       ),
-      fraccionDescripcion:this.formularioMercancia.get('fraccionDescripcion')?.value,
+      fraccionDescripcion: this.formularioMercancia.get('fraccionDescripcion')?.value,
       otraFraccion: this.formularioMercancia.get('otraFraccion')?.value,
       descripcion: this.formularioMercancia.get('descripcion')?.value,
-      rendimientoProducto: this.formularioMercancia.get('rendimientoProducto')
-        ?.value,
+      rendimientoProducto: this.formularioMercancia.get('rendimientoProducto')?.value,
       clasificacionTaxonomica: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.clasificacionTaxonomica,
-        this.formularioMercancia.get('clasificacionTaxonomica')?.value
+       this.formularioMercancia.get('clasificacionTaxonomica')?.value
       ),
       nombreCientifico: GET_DESCRIPTION(
         this.autorizacionesDeVidaSilvestreService.nombreCientifico,
@@ -562,15 +588,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.formularioMercancia.get('paisProcedencia')?.value
       ),
     };
-    const EXISTING_INDEX = this.datosTablaMercancia.findIndex(
-      (item) => item.id === TABLA_ROW.id
-    );
-
+  
+    const EXISTING_INDEX = this.datosTablaMercancia.findIndex(item => item.id === TABLA_ROW.id);
+  
     if (EXISTING_INDEX > -1) {
       this.datosTablaMercancia[EXISTING_INDEX] = TABLA_ROW;
     } else {
       this.datosTablaMercancia = [...this.datosTablaMercancia, TABLA_ROW];
     }
+  
     this.tramite230901Store.setMercanciaTablaDatos(this.datosTablaMercancia);
     this.formularioMercancia.reset();
     this.alternarModalMercancia();

@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { MENSAJE_DE_ALERTA_AVISO_PRIVACIDAD } from '../../enum/autorizaciones.enum';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { MENSAJE_DE_ALERTA_AVISO_PRIVACIDAD } from '../../enum/autorizaciones.enum';
 
 /**
  * Interfaz que representa la acción de un botón.

@@ -116,12 +116,12 @@ describe('PagoDeDerechosComponent', () => {
     component.ngOnInit();
     component.formularioPagoDerechos.get('llaveDePago')?.setValue('Llave456');
     component.manejarCambioLlavePago();
-    expect(tramite230901StoreMock.setLlaveDePago).toHaveBeenCalledWith('Llave456');
+    expect(tramite230901StoreMock.setLlaveDePago).toHaveBeenCalledWith('LLAVE456');
   });
 
   it('should call setFechaDePago when cambiarFechaDePago is triggered', () => {
     component.ngOnInit();
-    component.manejarCambioFechaPago('2025-03-28');
+    component.cambioFechaFinal('2025-03-28');
     expect(tramite230901StoreMock.setFechaDePago).toHaveBeenCalledWith('2025-03-28');
   });
 

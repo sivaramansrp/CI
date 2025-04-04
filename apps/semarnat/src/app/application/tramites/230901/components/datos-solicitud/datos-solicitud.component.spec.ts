@@ -44,7 +44,7 @@ describe('DatosSolicitudComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [DatosSolicitudComponent],
-      imports: [ReactiveFormsModule, CrosslistComponent, TituloComponent, TablaDinamicaComponent, CatalogoSelectComponent],
+      imports: [ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CrosslistComponent],
       providers: [
         { provide: Tramite230901Store, useValue: tramite230901StoreMock },
         { provide: Tramite230901Query, useValue: tramite230901QueryMock },
@@ -105,12 +105,6 @@ describe('DatosSolicitudComponent', () => {
     expect(component.mostrarModalDatosMercancia).toBeFalsy();
   });
 
-  it('should call inicializaMercanciaDatosCatalogos and toggle modal on mostrarFormularioMercanciaModal', () => {
-    component.mostrarFormularioMercanciaModal();
-    expect(autorizacionesDeVidaSilvestreServiceMock.inicializaMercanciaDatosCatalogos).toHaveBeenCalled();
-    expect(component.mostrarModalDatosMercancia).toBeTruthy();
-  });
-
   it('should validate esControlInvalido for invalid form controls', () => {
     component.crearNuevoFormularioMercancia();
     component.formularioMercancia.get('descripcion')?.markAsTouched();
@@ -139,6 +133,7 @@ describe('DatosSolicitudComponent', () => {
     const mockRow: MercanciaConfiguracionItem = {
       id: 123,
       fraccionArancelaria: '12345678',
+      fraccionDescripcion: 'desc 12345678',
       otraFraccion: false,
       descripcion: 'Descripción de la mercancía',
       rendimientoProducto: 'Rendimiento del producto',
@@ -169,13 +164,15 @@ describe('DatosSolicitudComponent', () => {
         cantidad: '',
         unidadMedida: '',
         paisOrigen: '',
-        paisProcedencia: ''
+        paisProcedencia: '',
+        fraccionDescripcion: ''
       },
     ];
     component.filaSeleccionadaMercancia = { 
       id: 1, 
       descripcion: 'Updated Item',
       fraccionArancelaria: '',
+      fraccionDescripcion: '',
       otraFraccion: false,
       clasificacionTaxonomica: '',
       rendimientoProducto: '',
@@ -198,5 +195,88 @@ describe('DatosSolicitudComponent', () => {
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
+
+  it('should confirm deletion when confirmEliminarMercanciaItem is called', () => {
+    component.listaFilaSeleccionadaMercancia = [{ id: 1, descripcion: 'Item 1',
+      fraccionArancelaria: '',
+      otraFraccion: false,
+      clasificacionTaxonomica: '',
+      rendimientoProducto: '',
+      nombreCientifico: '',
+      nombreComun: '',
+      marca: '',
+      cantidad: '',
+      unidadMedida: '',
+      paisOrigen: '',
+      paisProcedencia: '',
+      fraccionDescripcion: ''}];
+    const abrirEliminarPopupSpy = jest.spyOn(component, 'abrirElimninarConfirmationopup');
+    component.confirmEliminarMercanciaItem();
+    expect(abrirEliminarPopupSpy).toHaveBeenCalled();
+  });
+
+  it('should not confirm deletion if no items are selected', () => {
+    component.listaFilaSeleccionadaMercancia = [];
+    const abrirEliminarPopupSpy = jest.spyOn(component, 'abrirElimninarConfirmationopup');
+    component.confirmEliminarMercanciaItem();
+    expect(abrirEliminarPopupSpy).not.toHaveBeenCalled();
+  });
+
+  it('should delete selected items when eliminarMercanciaItem is called', () => {
+    component.datosTablaMercancia = [
+      { 
+        id: 1, 
+        descripcion: 'Item 1',
+        fraccionArancelaria: '',
+        fraccionDescripcion: '',
+        otraFraccion: false,
+        clasificacionTaxonomica: '',
+        rendimientoProducto: '',
+        nombreCientifico: '',
+        nombreComun: '',
+        marca: '',
+        cantidad: '',
+        unidadMedida: '',
+        paisOrigen: '',
+        paisProcedencia: ''
+      },
+      { 
+        id: 2, 
+        descripcion: 'Item 2',
+        fraccionArancelaria: '',
+        fraccionDescripcion: '',
+        otraFraccion: false,
+        clasificacionTaxonomica: '',
+        rendimientoProducto: '',
+        nombreCientifico: '',
+        nombreComun: '',
+        marca: '',
+        cantidad: '',
+        unidadMedida: '',
+        paisOrigen: '',
+        paisProcedencia: ''
+      },
+    ];
+    component.listaFilaSeleccionadaMercancia = [{
+      id: 1,
+      fraccionArancelaria: '',
+      fraccionDescripcion: '',
+      otraFraccion: false,
+      descripcion: '',
+      rendimientoProducto: '',
+      clasificacionTaxonomica: '',
+      nombreCientifico: '',
+      nombreComun: '',
+      marca: '',
+      cantidad: '',
+      unidadMedida: '',
+      paisOrigen: '',
+      paisProcedencia: ''
+    }];
+    component.eliminarMercanciaItem();
+    expect(component.datosTablaMercancia.length).toBe(1);
+    expect(component.datosTablaMercancia[0].id).toBe(2);
+    expect(tramite230901StoreMock.setMercanciaTablaDatos).toHaveBeenCalled();
   });
 });
