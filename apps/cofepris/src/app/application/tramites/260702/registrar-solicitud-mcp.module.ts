@@ -17,9 +17,10 @@ import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derecho
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
 import { ToastrService } from 'ngx-toastr';
 import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
-import { PagodederechoComponent } from './components/pagodederechos/pago-de-derecho.component';
 import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
 import { TramitesasociadosComponent } from './components/tramitesasociados/tramites-asociados..component';
+import { RegistrarSolicitudMcpService } from './services/registrar-solicitud-mcp.service';
+import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component'; 
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { TramitesasociadosComponent } from './components/tramitesasociados/trami
   ],
   imports: [
     DatosdelasolicitudComponent,
-    PagodederechoComponent,
+    PagoDeDerechoComponent,
     TercerosrelacionadosComponent,
     TramitesasociadosComponent,
     PagoDeDerechosComponent,
@@ -47,7 +48,7 @@ import { TramitesasociadosComponent } from './components/tramitesasociados/trami
     RegistrarSolicitudMCPRoutingModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers:[ToastrService]
+  providers:[ToastrService,RegistrarSolicitudMcpService]
 
 })
 export class RegistrarSolicitudMCPModule { }

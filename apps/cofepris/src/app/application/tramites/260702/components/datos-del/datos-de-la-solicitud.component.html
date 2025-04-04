@@ -18,12 +18,24 @@
         </div>
     </ng-container>
     <ng-titulo titulo="Datos del establecimiento" />
-        <div class="col-md-12 d-flex justify-content-end">
-            <div class="btn-group">
-               <button class="btn btn-primary me-2"
-                type="button">Seleccionar establecimiento</button>
-            </div>     
+    
+        <div class="text-end">
+          <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
         </div>
+        <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header"></div>
+              <div class="modal-body">
+                <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.</p>
+              </div>
+              <div class="modal-footer custom-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal (click)="aceptar()">Aceptar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      
         <div class="row">
             <div class="col-md-8">
                 <label class="form-label" for="denominación">Denominación/razón social*:</label>
@@ -60,6 +72,11 @@
                 <input class="form-control" id="municipoyalcaldia" type="text" formControlName="municipoyalcaldia"/>
               </div>
         </div>
+        <div class="row mt-5">
+            <div class="alert alert-warning">
+              <strong>¡Precaución!</strong> Debes capturar localidad y colonia
+            </div>
+          </div>
         <div class="row">
             <div class="col-md-4 mb-3">
                 <label class="form-label" for="localidad">Localidad:</label>
@@ -102,22 +119,46 @@
             type="submit" (click)="onAgregar()">Agregar</button>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-        <input type="checkbox" id="avisode" value="avisode" formControlName="avisode"/>
-        <label for="avisode">Aviso de funcionamiento*</label><br>
-    </div>
-    <div class="col-md-4">
-        <label class="form-label" for="nodelicencia">No. de licencia sanitaria*:</label>
-        <input class="form-control" id="nodelicencia" type="text" formControlName="nodelicencia"/>
-    </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            
+    <div class="row mt-5">
+        <div class="col-md-4 mt-4">
+          <div class="form-check mt-3">
+            <input class="form-check-input" type="checkbox" id="avisoDeFuncionamiento" formControlName="avisoDeFuncionamiento"  aria-label="Aviso de funcionamiento" />
+            <label class="control-label" for="avisoDeFuncionamiento"> Aviso de funcionamiento </label>
+          </div>
         </div>
-    </div>
-    </form>
+        <div class="col-md-4 mt-4">
+          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
+          </label>
+          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text" formControlName="licenciaSanitaria"  />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+            <app-catalogo-select 
+            id="regimenalqueData"
+            formControlName="regimenalque"
+            [catalogo]="regimenalqueData.catalogos" 
+            [label]="'Régimen al que se destinarán la mercancías'" 
+            [required]="true"></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+            <app-catalogo-select 
+            id="aduanaData"
+            formControlName="aduana"
+            [catalogo]="aduanaData.catalogos" 
+            [label]="'Aduana'" 
+            [required]="false">
+        </app-catalogo-select>
+        </div>
+      </div>
+      <div class="col-md-12 mt-4">
+        <label class="form-label mb-5" for="">mercancías*:</label>
+        <!-- <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla"></app-tabla-dinamica> -->
+      </div>
+      <div class="row mt-5 pull-right">
+        <button type="button" name="agregar" class="btn btn-primary ms-2"> Modificar </button>
+      </div>
+</form>
 </div>
 
 <div *ngIf="showClavaScianForm">

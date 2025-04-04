@@ -1,1 +1,46 @@
-<p>pagodederecho works!</p>
+<div class="container">
+    <ng-titulo titulo="Pago de derechos" />
+    <form [formGroup]="pagoDeDerechosForm">
+        <ng-container formGroupName="pagoDeDerechos"> 
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label" for="clavedereferencia">Clave de referencia:</label>
+                    <input class="form-control" id="clavedereferencia" type="text" formControlName="clavedereferencia"/>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label class="form-label" for="cadenadeladependencia">Cadena de la dependencia:</label>
+                    <input class="form-control" id="cadenadeladependencia" type="text" formControlName="cadenadeladependencia"/>
+                  </div>
+                <div class="col-md-4 mb-3">
+                  <app-catalogo-select 
+                  id="bancoData"
+                  formControlName="banco"
+                  [catalogo]="bancoData.catalogos" 
+                  [label]="'Banco'" 
+                  [required]="true"
+                  [placeholder]="bancoData.primerOpcion"
+                  >
+                </app-catalogo-select>
+              </div>    
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="llavedepago">Llave de pago:</label>
+                <input class="form-control" id="llavedepago" type="text" formControlName="llavedepago"/>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="fechadepago">Fecha de pago:</label>
+                <input class="form-control" id="fechadepago" type="date" formControlName="fechadepago"/>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label" for="importedepago">Importe de pago:</label>
+                <input class="form-control" id="importedepago" type="text" formControlName="importedepago"/>
+              </div>
+            </div>
+              <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" name="borarrdatosdelpago" class="btn btn-primary ms-2" (click)="clearForm()"> Borrar datos del pago </button>
+              </div>
+        </ng-container>
+    </form>
+</div>
+

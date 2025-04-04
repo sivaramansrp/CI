@@ -22,4 +22,19 @@ export class RegistrarSolicitudMcpService {
     return this.http.get<Catalogo[]>('./assets/json/260702/clavedescripciondel.json');
   }
 
+  getRegimenalqueData(): Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('./assets/json/260702/regimen.json');
+  }
+  getAduanaData(): Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('./assets/json/260702/adauna.json');
+  }
+
+   getBancoData(): Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('./assets/json/260702/banco.json');
+  }
+
+  getPaisData(): Observable<Catalogo[]>{
+    return this.http.get<Catalogo[]>('./assets/json/260702/pais.json');
+  }
+
 }

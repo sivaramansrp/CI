@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -15,8 +15,9 @@ import { RegistrarSolicitudMCPModule } from '../../registrar-solicitud-mcp.modul
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { FilaData } from '../../models/fila-modal';
+import { FilaData, FilaData2 } from '../../models/fila-modal';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -29,6 +30,9 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   clavaScianForm!: FormGroup;
   public showClavaScianForm: boolean = false; 
+  habilitarEstado: boolean = true;
+  @ViewChild('modalAlerta') modalElement!: ElementRef;
+
   opcionDeBotonDeRadio = [
     { label: 'Prórroga', value: 'prorroga' },
     { label: 'Modificación', value: 'modificacion' },
@@ -48,6 +52,18 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   };
   public descripcionDelScianData: CatalogosSelect = {
     labelNombre: 'Descripcion del S.C.I.A.N',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
+  public regimenalqueData: CatalogosSelect = {
+    labelNombre: 'Régimen al que se destinarán la mercancías',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
+  public aduanaData: CatalogosSelect = {
+    labelNombre: 'Aduana',
     required: true,
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
@@ -73,6 +89,78 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     },
 
 ]
+// configuracionColumnasoli2 : ConfiguracionColumna<FilaData2>[] = [
+//   {
+//     encabezado: 'Clasificación del producto',
+//     clave: (fila) => fila.clasificaionProductos,
+//     orden: 1,
+//   },
+//   {
+//     encabezado: 'Especificar Clasificación del producto',
+//     clave: (fila) => fila.especificarProducto,
+//     orden: 2,
+//   },
+//   {
+//     encabezado: 'Denominación específico del producto',
+//     clave: (fila) => fila.denominacionEspecifica,
+//     orden: 3,
+//   },
+//   {
+//     encabezado: 'Marca',
+//     clave: (fila) => fila.marca,
+//     orden: 4,
+//   },
+//   {
+//     encabezado: 'Fracción arancelaria',
+//     clave: (fila) => fila.fraccionArancelaria,
+//     orden: 5,
+//   },
+//   {
+//     encabezado: 'Descripción de la fracción arancelaria',
+//     clave: (fila) => fila.descripcionFraccionArancelaria,
+//     orden: 6,
+//   },
+//   {
+//     encabezado: 'Unidad de medida de comercialización (UMC)',
+//     clave: (fila) => fila.umc,
+//     orden: 7,
+//   },
+//   {
+//     encabezado: 'Cantidad UMC',
+//     clave: (fila) => fila.cantidadUMC,
+//     orden: 8,
+//   },
+//   {
+//     encabezado: 'Unidad de medida de tarifa (UMT)',
+//     clave: (fila) => fila.umt,
+//     orden: 9,
+//   },
+//   {
+//     encabezado: 'Cantidad UMT',
+//     clave: (fila) => fila.cantidadUMT,
+//     orden: 10,
+//   },
+//   {
+//     encabezado: 'País de origen',
+//     clave: (fila) => fila.paisDeOrigen,
+//     orden: 11,
+//   },
+//   {
+//     encabezado: 'País de procedencia',
+//     clave: (fila) => fila.paisDeProcedencia,
+//     orden: 12,
+//   },
+//   {
+//     encabezado: 'Tipo de producto',
+//     clave: (fila) => fila.tipoProducto,
+//     orden: 13,
+//   },
+//   {
+//     encabezado: 'Uso específico',
+//     clave: (fila) => fila.usoEspecifico,
+//     orden: 14,
+//   },
+// ];
 
   ngOnInit(): void {
     this.dataDeLaSolicitudForm = this.fb.group({
@@ -84,6 +172,8 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     this.getClaveScianData();
     this.createclaveScianForm();
     this.getClaveDescripcionDelData();
+    this.getRegimenalqueData();
+    this.getAduanaData();
   }
   createclaveScianForm(){
     this.clavaScianForm = this.fb.group({
@@ -111,10 +201,35 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     this.registrarsolicitudmcp.getClaveDescripcionDelData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        console.log('Descripcion Scian Data from API:', data);
-
         this.descripcionDelScianData.catalogos = data as Catalogo[];
       });
+  }
+  getRegimenalqueData(){
+    this.registrarsolicitudmcp.getRegimenalqueData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.regimenalqueData.catalogos = data as Catalogo[];
+      });
+  }
+  getAduanaData(){
+    this.registrarsolicitudmcp.getAduanaData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.aduanaData.catalogos = data as Catalogo[];
+      });
+  }
+  aceptar(): void {
+    this.dataDeLaSolicitudForm.enable();
+    // Habilitar todos los campos en el formulario Domicilio del Establecimiento
+    this.dataDeLaSolicitudForm.enable();
+    this.habilitarEstado = false;
+  }
+
+  seleccionarEstablecimiento(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
   }
   
   onSubmit() {
