@@ -7,7 +7,6 @@ import { CamDatosCertificadoComponent } from './components/cam-datos-certificado
 import { CamDestinatarioComponent } from './components/cam-destinatario/cam-destinatario.component';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
-import { DaosCertificadoComponent } from '../../shared/components/daos-certificado/daos-certificado.component';
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';

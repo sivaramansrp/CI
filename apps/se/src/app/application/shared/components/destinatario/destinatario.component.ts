@@ -41,7 +41,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Evento que se emite cuando se selecciona un país de destino
    * @type {EventEmitter<Catalogo>}
    */
-  @Output() paisDestinSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
+  @Output() paisDestionSeleccionEvent: EventEmitter<Catalogo> = new EventEmitter<Catalogo>();
 
   /**
    * Evento que se emite cuando cambia el formulario de destinatario
@@ -129,7 +129,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @param {Catalogo} estado - El país de destino seleccionado
    */
   paisDestionSeleccion(estado: Catalogo): void {
-    this.paisDestinSeleccionEvent.emit(estado)
+    this.paisDestionSeleccionEvent.emit(estado)
   }
 
   /**
