@@ -1,6 +1,5 @@
-import { Injectable } from "@angular/core";
-// multiple - Import multiple members.
 import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from "@angular/core";
 
 export interface SolicitudRequerimientosState {
     /**

@@ -1,7 +1,6 @@
+import { RequerimientosStates, SolicitudRequerimientosState } from "../evaluacion-solicitud/requerimientos.store";
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-// multiple - Import multiple members.
-import { RequerimientosStates, SolicitudRequerimientosState } from "../evaluacion-solicitud/requerimientos.store";
 
 @Injectable({ providedIn: 'root' })
 export class SolicitudRequerimientoQuery extends Query<SolicitudRequerimientosState> {
