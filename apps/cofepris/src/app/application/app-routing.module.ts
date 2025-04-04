@@ -23,6 +23,13 @@ const ROUTES: Routes = [
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
   {
+    path: 'maquila-materias-primas',
+    loadChildren: () =>
+      import(
+        './tramites/260206/maquila-materias-primas.module'
+      ).then((m) => m.MaquilaMateriasPrimasModule),
+  },
+  {
     path: 'permiso-plaguicidas',
     loadChildren: () =>
       import('./tramites/260501/permiso-plaguicidas-importacion.module').then(
@@ -39,14 +46,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion-psicotropicos',
     loadChildren: () =>
-      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
-        (m) => m.CertificadosLicenciasPermisosModule),
+      import(
+        './tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
-      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
-        (m) => m.ImportacionDispositivosMedicosUsoModule)
+      import(
+        './tramites/260214/importacion-dispositivos-medicos-uso.module'
+      ).then((m) => m.ImportacionDispositivosMedicosUsoModule),
   },
   {
     path: 'permiso-sanitario-importacion',
@@ -61,6 +70,13 @@ const ROUTES: Routes = [
       import(
         './tramites/260213/permiso-sanitario-medicos-uso-personal.module'
       ).then((m) => m.PermisoSanitarioMedicosUsoPersonalModule),
+  },
+  {
+    path: 'permiso-sanitario-importacion-medicamentos-pruebas',
+    loadChildren: () =>
+      import(
+        './tramites/260210/permiso-sanitario-importacion-medicamentos-pruebas.module'
+      ).then((m) => m.PermisoSanitarioImportacionMedicamentosPruebasModule),
   },
   {
     path: 'aviso-de-modificacion-module',
@@ -97,6 +113,13 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
+  {
+    path: 'medicamentos-registro-sanitario',
+    loadChildren: () =>
+      import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
+        (m) => m.PermisoSanitarioImportacion260203Module
+      ),
+  }
 ];
 
 @NgModule({
