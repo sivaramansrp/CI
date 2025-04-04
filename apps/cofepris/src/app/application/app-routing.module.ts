@@ -112,14 +112,17 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
   {
-   
-        path: 'territorio-nacional',
-        loadChildren: () =>
-          import('./tramites/260401/territorio-nacional-solicitude.module').then(
-            (m) => m.TerritorioNacionalSolicitudeModule
-          ),
-        },
-        {
+  path: 'aviso-de-importacion',
+    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)  
+  },
+  {
+    path: 'territorio-nacional',
+    loadChildren: () =>
+      import('./tramites/260401/territorio-nacional-solicitude.module').then(
+        (m) => m.TerritorioNacionalSolicitudeModule
+      ),
+    },
+    {
     path: 'medicamentos-registro-sanitario',
     loadChildren: () =>
       import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
