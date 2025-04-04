@@ -288,11 +288,18 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'importacion',
+    path: 'validar-certificado',
     loadChildren: () =>
-      import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
-        (m) => m.ImportacionNeumaticosComercializarModule
+      import('./tramites/110211/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
       ),
+  },
+  {
+    path: 'importacion',
+      loadChildren: () =>
+        import('./tramites/130110/importacion-neumaticos-comercializar.module').then(
+          (m) => m.ImportacionNeumaticosComercializarModule
+        ),
   }
 ];
 
