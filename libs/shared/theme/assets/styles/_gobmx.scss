@@ -952,7 +952,6 @@ dd {
 .ficha-collapse .panel-heading:after,
 .form-horizontal,
 .info-well:after,
-// .modal-footer:after,
 .nav:after,
 .navbar-collapse:after,
 .navbar-header:after,
@@ -3239,8 +3238,6 @@ tbody.collapse.in {
 }
 
 .embed-responsive,
-// .modal,
-// .modal-open,
 .progress {
   overflow: hidden;
 }
@@ -4827,8 +4824,6 @@ tbody.collapse.in {
 }
 
 .embed-responsive,
-// .modal,
-// .modal-open,
 .progress {
   overflow: hidden;
 }
@@ -7170,12 +7165,6 @@ button.close {
     padding: 0 5px;
   }
 }
-
-// @media (min-width: 992px) {
-//   .modal-lg {
-//     width: 900px;
-//   }
-// }
 
 .tooltip-inner {
   max-width: 200px;
@@ -9728,14 +9717,6 @@ dt {
 //   border-radius: 0;
 // }
 
-/*! jQuery UI - v1.11.4 - 2015-09-11
-* http://jqueryui.com
-* Includes: core.css, datepicker.css
-* Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
-
-/*! jQuery UI - v1.11.4 - 2015-09-08
-* http://jqueryui.com
-* Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
 
 .ui-helper-hidden {
   display: none;

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, forwardRef, output } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BooleanoSiNoPipe, Notificacion, SoloNumerosDirective } from '@ng-mf/data-access-user';
+import { BooleanoSiNoPipe, Notificacion, PRECAUCION, SoloNumerosDirective } from '@ng-mf/data-access-user';
 import { ERR_VALIDACION_PEDIMENTO, MSG_ADUANA_PEDIMENTO, MSG_ELIMINA_ELEMENTO, MSG_NRO_PEDIMENTO } from '../../../../core/enums/5701/tramite5701.enum';
 import { DatosComponentePedimento, Pedimento } from '../../../../core/models/5701/tramite5701.model';
 import { NotificacionesComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
@@ -40,6 +40,7 @@ export class PedimentoComponent implements OnChanges {
   modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
+  elementoParaEliminar!: number;
   public nuevaNotificacion!: Notificacion;
 
 
@@ -144,38 +145,25 @@ export class PedimentoComponent implements OnChanges {
    * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
    * y se abre el modal para mostrar un aviso al usuario.
    */
-  eliminar(i: number): void {
-    this.pedimentos.splice(i, 1)
-    this.tituloModal = 'Aviso';
-    this.mensajeModal = MSG_ELIMINA_ELEMENTO;
+  abrirModal(i: number = 0): void {
     this.nuevaNotificacion = {
-      tipoNotificacion: 'banner',
+      tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: 'Avisos',
-      mensaje: MSG_ELIMINA_ELEMENTO,
-      cerrar: true,
-      palabraClave: 'Borrado',
+      mensaje: '¿Desea eliminar este item?',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
     }
 
-    this.abrirModal();
+    this.elementoParaEliminar = i;
   }
 
-  /**
-* Abre el modal para eliminar un documento.
-* @param {number} i - El índice del documento.
-*/
-  abrirModal(): void {
-
-    this.modal = 'show';
-  }
-
-  /**
-  * Cierra el modal.
-  */
-  cerrarModal(): void {
-    this.modal = '';
-    this.tituloModal = '';
-    this.mensajeModal = '';
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
   }
 }

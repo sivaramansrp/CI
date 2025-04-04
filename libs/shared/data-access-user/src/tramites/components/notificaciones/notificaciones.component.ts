@@ -1,10 +1,9 @@
-import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ToastrService } from 'ngx-toastr';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
+import { BsModalRef, BsModalService, ModalDirective, ModalModule, } from 'ngx-bootstrap/modal';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, } from '@angular/core';
 import { AlertComponent } from 'ngx-bootstrap/alert';
-
+import { CommonModule } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
 
 
 /**
@@ -36,9 +35,27 @@ export interface Notificacion {
    */
   ttl?: string;
 
+  /**
+   * @description Variable de entrada para mostrar el boton de cerrar el modal.
+   */
   cerrar: boolean;
 
-  palabraClave?: string;
+  /**
+   * @description Variable de entrada para definir el tiempo en que se muestra el banner y despues desaparece, e tiempo esta en ms.
+   */
+  tiempoDeEspera?: number;
+
+  /**
+   * @description Variable de entrada para definir el texto del boton de aceptar.
+   * @remarks Este texto se muestra en el modal de confirmación.
+   */
+  txtBtnAceptar: string;
+
+  /**
+   * @description Variable de entrada para definir el texto del boton de cancelar.
+   * @remarks Este texto se muestra en el modal de confirmación.
+   */
+  txtBtnCancelar: string;
 }
 
 /**
@@ -65,9 +82,10 @@ export enum CategoriaMensaje {
 @Component({
   selector: 'lib-notificaciones',
   standalone: true,
-  imports: [CommonModule, AlertComponent],
+  imports: [CommonModule, AlertComponent, ModalModule],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.scss',
+  providers: [BsModalService]
 })
 export class NotificacionesComponent implements OnChanges {
   /**
@@ -77,9 +95,10 @@ export class NotificacionesComponent implements OnChanges {
   @Input()
   public notificacionInput!: Notificacion;
 
-  // TODO: Descomentar esta línea cuando se requiera 
-  //@Output()
-  //confirmacionModal: EventEmitter<boolean> = new EventEmitter();
+  /**
+   * Evento que emite un valor booleano para confirmar una acción.
+   */
+  @Output() confirmacionModal = new EventEmitter<boolean>();
 
   /**
    * Constantes para utilizar los valores de enumeración en la plantilla,
@@ -92,11 +111,22 @@ export class NotificacionesComponent implements OnChanges {
    */
   public mostrarModal: boolean = false;
 
+  /**
+   * Referencia al modal de tipo `BsModalRef`.
+   * Utilizada para manejar el estado y las acciones del modal.
+   */
+  public modalRef!: BsModalRef;
 
+  /**
+   * Indica si el banner debe mostrarse.
+   */
+  public verBanner: boolean = false;
 
-  isOpen: boolean = false;
-
-  @ViewChild('modalNotificacion') modalElement!: ElementRef;
+  /**
+   * Referencia al modal automático mostrado.
+   * Utiliza `ModalDirective` para controlar su comportamiento.
+   */
+  @ViewChild('autoShownModal', { static: false }) autoShownModal?: ModalDirective;
 
   constructor(
     private toastr: ToastrService,
@@ -110,10 +140,13 @@ export class NotificacionesComponent implements OnChanges {
       this.notificacionInput = changes['notificacionInput'].currentValue;
       switch (this.notificacionInput?.tipoNotificacion) {
         case TipoNotificacionEnum.ALERTA:
-          this.mostrarModal = true;
+          this.abrirModal();
           break;
         case TipoNotificacionEnum.TOASTR:
           this.creaToastr();
+          break;
+        case TipoNotificacionEnum.BANNER:
+          this.muestraBanner();
           break;
         default:
           break;
@@ -121,6 +154,7 @@ export class NotificacionesComponent implements OnChanges {
     }
   }
 
+  // #Inicia lógica para el toastr
   /**
    * @description Metodo para definir el tipo de toastr a mostrar en pantalla
    */
@@ -142,40 +176,52 @@ export class NotificacionesComponent implements OnChanges {
         break;
     }
   }
+  // #Termina lógica para el toastr
+
+  // #Inicia lógica de modal
 
   /**
-   * Abre el modal estableciendo `mostrarModal` en verdadero.
-   *
-   * Este método se utiliza para mostrar el cuadro de diálogo modal en la interfaz de usuario.
-   * Cuando se llama, establece el indicador `mostrarModal` en verdadero, haciendo que el modal sea visible.
+   * Abre el modal estableciendo la propiedad `mostrarModal` a `true`.
+   * @returns {void} No retorna ningún valor.
    */
   abrirModal(): void {
     this.mostrarModal = true;
   }
 
   /**
-   * Abre el modal estableciendo `mostrarModal` en verdadero.
-   *
-   * Este método se utiliza para mostrar el cuadro de diálogo modal en la interfaz de usuario.
-   * Cuando se llama, establece el indicador `mostrarModal` en verdadero, haciendo que el modal sea visible.
+   * Cierra el modal y emite un evento de confirmación.
+   * @returns {void} No retorna ningún valor.
    */
   confirmarAccion(): void {
-    this.mostrarModal = false;
-    // TODO: Descomentar esta línea cuando se requiera 
-    //this.confirmacionModal.emit(true);
+    this.autoShownModal?.hide();
+    this.confirmacionModal.emit(true);
   }
 
   /**
-   * Cierra el modal estableciendo la propiedad `mostrarModal` en `false`.
-   * Este método normalmente se llama cuando el usuario desea cerrar el cuadro de diálogo modal.
+   * Cierra el modal sin emitir ningún evento.
+   * @returns {void} No retorna ningún valor.
    */
-
-  cerrarModal(): void {
-    this.mostrarModal = false;
+  declinarAccion(): void {
+    this.autoShownModal?.hide();
   }
 
+  /**
+   * Evento que se activa cuando el modal se oculta.
+   * Establece la propiedad `mostrarModal` a `false`.
+   * @returns {void} No retorna ningún valor.
+   */
+  onHidden(): void {
+    this.mostrarModal = false;
+  }
+  // #Termina lógica de modal
 
-
-
-
+  // #Seccion de Banner
+  /**
+   * Muestra un banner sanitizando el mensaje de entrada para evitar problemas de seguridad.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  muestraBanner(): void {
+    this.notificacionInput.mensaje = this.sanitizer.bypassSecurityTrustHtml(this.notificacionInput.mensaje) as string;
+  }
 }

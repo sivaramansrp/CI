@@ -37,13 +37,6 @@ export const TEXTOS = {
 };
 
 
-export const IMMEX = {
-  labelNombre: 'IMMEX (Número/aaaa)',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
 
 export const MESES = [
   { id: '1', mes: 'Enero' },
@@ -252,3 +245,5 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
+
+export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
