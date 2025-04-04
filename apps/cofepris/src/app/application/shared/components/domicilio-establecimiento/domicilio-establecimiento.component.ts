@@ -14,6 +14,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import {
   Component,
+  Input,
   OnDestroy,
   OnInit,
   QueryList,
@@ -71,6 +72,7 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.css'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+ @Input() isAvisoLicenciaVisible: boolean = true;
   /**
    * Referencia a los componentes de la lista de fechas.
    */
