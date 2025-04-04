@@ -7,7 +7,14 @@ const ROUTES: Routes = [
   {
     path: 'seleccion-tramite',
     component: SeleccionTramiteComponent
-  }
+  },
+  {
+    path: 'renuncia-de-derechos-de-permisos',
+    loadChildren: () =>
+      import('./tramites/140111/renuncia-de-derechos-de.module').then(
+        (m) => m.RenunciaDeDerechosDeModule
+      ),
+  },
 ];
 
 @NgModule({
