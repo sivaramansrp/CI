@@ -1,0 +1,159 @@
+<div class="row">
+  <!-- Fila principal que contiene todo el contenido -->
+  <div class="col-md-12">
+    <!-- Contenedor para la tabla de cancelaciones disponibles -->
+    <div class="table-responsive" align="left" style="margin-top: 30px;">
+      <!-- Título para indicar al usuario que seleccione un programa -->
+      <ng-titulo titulo="Elija el programa del que desea realizar el tramite" />
+      <!-- Componente de tabla dinámica con opciones de selección y datos -->
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="encabezadoDeTabla" [tableId] = "Id" [inputSelection] = "radioId" [datos]="datosTabla" (filaSeleccionada)="valorDeAlternancia($event)"></app-tabla-dinamica>
+    </div>
+    <div class="col-md-12">
+      <!-- Navegación para la paginación -->
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center">
+            <!-- Elementos de paginación (actualmente comentados) -->
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Encabezado para mostrar el programa seleccionado -->
+<h3>
+  <label for="programaSeleccionado">Programa seleccionado</label>
+</h3>
+<hr class="red">
+
+<!-- Formulario para mostrar y capturar información del programa -->
+<form [formGroup]="formGroup">
+  <div class="row">
+    <div class="col-md-4">
+      <!-- Campo para mostrar el folio del programa -->
+      <div class="form-group">
+        <label for="folioPrograma">Folio de Programa:</label>
+        <input
+          type="text"
+          id="folioPrograma"
+          formControlName="folioPrograma"
+          class="form-control"
+          readonly
+        />
+        <!-- Campo oculto para almacenar el ID del programa seleccionado -->
+        <input type="hidden" id="idProgramaSeleccionado" formControlName="idProgramaSeleccionado" />
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Campo para mostrar la modalidad seleccionada -->
+      <div class="form-group">
+        <label for="modalidad">Selecciona de Modalidad:</label>
+        <input
+          type="text"
+          id="modalidad"
+          formControlName="modalidad"
+          class="form-control"
+          readonly
+        />
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Campo para mostrar la representación federal -->
+      <div class="form-group">
+        <label for="representacionFederal">Representación Federal:</label>
+        <input
+          type="text"
+          id="representacionFederal"
+          formControlName="representacionFederal"
+          class="form-control"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <!-- Campo para mostrar el tipo de programa -->
+      <div class="form-group">
+        <label for="tipoPrograma">Tipo Programa:</label>
+        <input
+          type="text"
+          id="tipoPrograma"
+          formControlName="tipoPrograma"
+          class="form-control"
+          readonly
+        />
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Campo para mostrar el estatus del programa -->
+      <div class="form-group">
+        <label for="estatus">Estatus:</label>
+        <input
+          type="text"
+          id="estatus"
+          formControlName="estatus"
+          class="form-control"
+          readonly
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <!-- Campo para capturar el motivo de cancelación -->
+      <div class="form-group">
+        <label for="motivoCancelacion">Motivo de Cancelación<span class="require">*</span>:</label>
+        <textarea
+          id="motivoCancelacion"
+          formControlName="solicitudObservaciones"
+          [ngClass]="isValid('solicitudObservaciones') ? 'required' : ''"
+          rows="5"
+          class="form-control"
+          (change)="setValoresStore(
+              formGroup,
+              'solicitudObservaciones',
+              'setSolicitudObservaciones'
+            )"
+        ></textarea>
+        <!-- Mensaje de error o advertencia para el motivo de cancelación -->
+        <div id="motivoCancelacionMensaje" class="red" style="margin-top: -12px; font-size: 15px; font-weight: 300;"></div>
+        <br>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <!-- Checkbox para confirmar la cancelación -->
+        <div class="form-check">
+          <input
+            type="checkbox"
+            id="confirmar"
+            formControlName="confirmar"
+            class="form-check-input"
+            [ngClass]="isValid('confirmar') ? 'required' : ''"
+            style="margin-right: 5px"
+            (change)="setValoresStore(
+              formGroup,
+              'confirmar',
+              'setConfirmar'
+            )"
+          />
+          <label id="etiqueta" for="confirmar" class="form-check-label" style="font-weight: 100 !important;">Confirmo estar de acuerdo con la Cancelación del Programa IMMEX/PROSEC</label>
+          <span class="require" style="font-weight: bold;">*</span>
+        </div>
+        <!-- Campo oculto para almacenar el valor del radio seleccionado -->
+        <!-- <input type="hidden" id="radio" formControlName="radio" />-->
+        <!-- Etiqueta para mostrar el número de folio-->
+        <!-- <label id="numFolio"></label>  -->
+      </div>
+    </div>
+  </div>
+</form>

@@ -287,6 +287,12 @@ const ROUTES: Routes = [
         (m) => m.ReporteAnualModule
       ),
   },
+  {
+    path: 'solicitud-de-cancelation',
+    loadChildren: () =>
+      import('./tramites/140101/solicitud-de-cancelation.module').then(
+        (m) => m.SolicitudDeCancelacionModule),
+  },
 ];
 
 @NgModule({
