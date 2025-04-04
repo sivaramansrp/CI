@@ -87,13 +87,6 @@ const ROUTES: Routes = [
         (m) => m.MateriasPrimasDestinadosModule)
   },
   {
-    path: 'parmiso-importacion',
-    loadChildren: () =>
-      import('./tramites/260514/parmiso-importacion-calidad.module').then(
-        (m) => m.ParmisoImportacionCalidadModule)
-  }
-,
-  {
     path: 'importacion-dispositivos-medicos-donacion',
     loadChildren: () =>
       import(
