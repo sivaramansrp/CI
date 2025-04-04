@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { BodyTablaDocumentos, HeaderTablaDocumentos } from '../../../core/models/shared/consulta-generica.model';
+import { CONSULTA_DOCUMENTOS } from '../../../core/enums/consulta-generica.enum';
 import { CommonModule } from '@angular/common';
-import { DocumentosCargados } from '../../../core/models/shared/components.model';
-import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'lib-documentos',
@@ -10,59 +10,14 @@ import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
   templateUrl: './documentos.component.html',
   styleUrl: './documentos.component.css',
 })
-export class DocumentosComponent implements OnInit {
+export class DocumentosComponent {
   /**
-   * Lista de documentos cargados.
-   */
-  documentosCargados: DocumentosCargados[] = [];
-  readonly url: string = URL_PRUEBA;
-
-  ngOnInit(): void {
-    //this.documentosCargados = [];
-    this.documentosCargados = [
-      {
-        tipoDocumento: {
-          id: 1,
-          descripcion: 'Acta de nacimiento'
-        },
-        nombreArchivo: 'acta_nacimiento.pdf',
-        //estatus: 'Cargado'
-      },
-      {
-        tipoDocumento: {
-          id: 2,
-          descripcion: 'Comprobante de domicilio'
-        },
-        nombreArchivo: 'comprobante_domicilio.pdf',
-        //estatus: 'Cargado'
-      },
-      {
-        tipoDocumento: {
-          id: 3,
-          descripcion: 'Identificación oficial'
-        },
-        nombreArchivo: 'identificacion_oficial.pdf',
-        //estatus: 'Cargado'
-      },
-      {
-        tipoDocumento: {
-          id: 4,
-          descripcion: 'CURP'
-        },
-        nombreArchivo: 'curp.pdf',
-        //estatus: 'Cargado'
-      },
-      {
-        tipoDocumento: {
-          id: 5,
-          descripcion: 'RFC'
-        },
-        nombreArchivo: 'rfc.pdf',
-        //estatus: 'Cargado'
-      }
-    ];
-  }
-
+     * Implementación para la tabla de documentos de requerimientos.
+     *
+     */
+    readonly encabezadoTablaDocumentos : HeaderTablaDocumentos[] = CONSULTA_DOCUMENTOS.encabezadoTablaDocumento;  
+    readonly datosTablaDocumentos: BodyTablaDocumentos[] = CONSULTA_DOCUMENTOS.datosTablaDocumento;
+  
   /**
   * Abre un archivo PDF en una nueva pestaña del navegador.
   *
@@ -81,5 +36,4 @@ export class DocumentosComponent implements OnInit {
     // this.modal = 'show';
     //  this.indiceDocumento = i;
   }
-
 }

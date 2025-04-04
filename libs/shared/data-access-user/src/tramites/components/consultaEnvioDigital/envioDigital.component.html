@@ -1,0 +1,166 @@
+<div class="container">
+  <form [formGroup]="envioDigitalForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="tipoDocumento" class="form-label"
+            >Tipo de documento</label
+          >
+          <input
+            class="form-control"
+            id="tipoDocumento"
+            placeholder="Tipo de documento"
+            type="text"
+            formControlName="tipoDocumento"
+            libUppercase
+          />
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="pais" class="form-label">Pais destino</label>
+          <input
+            class="form-control"
+            id="pais"
+            placeholder="País destino"
+            type="text"
+            formControlName="pais"
+            libUppercase
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row my-3 mb-5">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="numero" class="form-label">Número</label>
+          <input
+            class="form-control"
+            id="numero"
+            placeholder="Número"
+            type="text"
+            formControlName="numero"
+            libUppercase
+          />
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseOne"
+          aria-expanded="true"
+          aria-controls="collapseOne"
+        >
+          Estado de envío del certificado al país destino
+        </button>
+      </h2>
+      <div
+        id="collapseOne"
+        class="accordion-collapse collapse show"
+        data-bs-parent="#accordionExample"
+      >
+        <div class="accordion-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    @for (item of encabezadoTablaDigital; track $index) {
+                    <th>{{ item.valor }}</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="datosTablaDigital.length === 0">
+                    <td
+                      colspan="{{"
+                      encabezadoTablaDigital.length
+                      }}
+                      class="text-center"
+                    >
+                      Sin registros que mostrar
+                    </td>
+                  </tr>
+                  @for (row of datosTablaDigital; track $index) {
+                  <tr>
+                    @for (item of encabezadoTablaDigital; let i = $index; track
+                    $index) {
+                    <td>{{ row[item.key] }}</td>
+                    }
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion" id="accordionDos">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button
+          class="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseB"
+          aria-expanded="true"
+          aria-controls="collapseB"
+        >
+          Estado de revisión del certificado en el país destino
+        </button>
+      </h2>
+      <div
+        id="collapseB"
+        class="accordion-collapse collapse show"
+        data-bs-parent="#accordionDos"
+      >
+        <div class="accordion-body">
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    @for (item of encabezadoTablaDigital; track $index) {
+                    <th>{{ item.valor }}</th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="datosTablaDigitalRevision.length === 0">
+                    <td
+                      [attr.colspan]="encabezadoTablaDigital.length + 1"
+                      class="text-center"
+                    >
+                      Sin registros que mostrar
+                    </td>
+                  </tr>
+
+                  @for (row of datosTablaDigitalRevision; track $index) {
+                  <tr>
+                    @for (item of encabezadoTablaDigital; let i = $index; track
+                    $index) {
+                    <td>{{ row[item.key] }}</td>
+                    }
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="container">
+    <div class="row mt-4 mb-4">
+      <div class="col-md 6">
+        <h4 class="titulo titulo-gold">Requerimiento(s)</h4>
+      </div>
+    </div>
+  
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              @for (item of encabezadoTablaRequerimiento; track $index) {
+                <th>{{ item.valor }}</th>
+                }
+              <th class="center">Detalle</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of datosTablaRequerimiento; track $index) {
+            <tr>
+              @for (item of encabezadoTablaRequerimiento;  let i = $index; track $index) {
+              <td>{{ row[item.key] }}</td>
+              }
+              <td class="center">
+                <button type="button" class="btn btn-link me-2" id="verPdf" data-bs-toggle="button"
+                  data-bs-placement="top" title="Detalle requerimiento" (click)="verDetalleRequerimiento(row.urlPdf)">
+                  <i class="bi bi-file-earmark-pdf text-danger"></i>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+  </div>

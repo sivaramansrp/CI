@@ -1,28 +1,30 @@
-<div class="row mt-5">
-    <div class="col-md-12">
-        <table class="table table-responsive">
-        <thead>
-            <tr>
-            <th>Nombre de la tarea</th>
-            <th>Nombre del usuario al que se le asignó la tarea</th>
-            <th>Clave de usuario al que se le asignó la tarea</th>
-            <th>Fecha de asignación</th>
-            <th>Fecha de atención</th>        
-            </tr>
-        </thead>
-        <tbody>
-            @for (item of documentosCargados; track item.nombreTarea; let i = $index) {
-            <tr>
-            <!-- <td> {{i+1}} </td> -->
-            <td>{{ item.nombreTarea}}</td>
-            <td>{{ item.nombreUsuarioAsignado}}</td>
-            <td>{{ item.claveUsuarioAsignado}}</td>
-            <td>{{ item.fechaAsignacion}}</td>
-            <td>{{ item.fechaAtencion}}</td>
-            <!-- <td> <i class="bi bi-check-circle bi-c"></i></td> --> 
-            </tr>
-            }
-        </tbody>
-        </table>    
+<div class="container">
+    <div class="row mt-4 mb-4">
+      <div class="col-md 6">
+        <h4 class="titulo titulo-gold">Tareas(s)</h4>
+      </div>
     </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                @for (item of encabezadoTablaTareasTramite; track $index) {
+                  <th>{{ item.valor }}</th>
+                  }
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of datosTablaTareasTramite; track $index) {
+              <tr>
+                @for (item of encabezadoTablaTareasTramite;  let i = $index; track $index) {
+                <td>{{ row[item.key] }}</td>
+                }
+              </tr>
+              }
+            </tbody>
+          </table>
+    </div>
+</div>
 </div>
