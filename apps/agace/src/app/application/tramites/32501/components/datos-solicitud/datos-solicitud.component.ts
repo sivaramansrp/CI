@@ -1,4 +1,5 @@
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
+import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
@@ -50,19 +51,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Opciones de radio para el tipo de aviso.
    */
-  avisoOpcionesDeRadio = {
-    radioOptions: [
-      {
-        label: 'Importación',
-        value: 'TAV.IMP',
-      },
-      {
-        label: 'Montaje',
-        value: 'TAV.MON',
-      },
-    ],
-    required: false,
-  };
+  avisoOpcionesDeRadio: AvisoOpcionesDeRadio = {} as AvisoOpcionesDeRadio;
+  // {
+  //   radioOptions: [
+  //     {
+  //       label: 'Importación',
+  //       value: 'TAV.IMP',
+  //     },
+  //     {
+  //       label: 'Montaje',
+  //       value: 'TAV.MON',
+  //     },
+  //   ],
+  //   required: false,
+  // };
 
   /**
    * Tipo de aviso seleccionado.
@@ -166,6 +168,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   ) {
     this.obtenerAvisoDelCatalogo();
     this.obtenerOperacionDeImportacion();
+    this.obtenerAvisoOpcionesDeRadio();
   }
 
   /**
@@ -199,21 +202,42 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       ],
       nico: [
         this.solicitud32501State.nico,
-        [Validators.required, Validators.pattern(REGEX_NICO_NUMEROS)],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_NICO_NUMEROS),
+          Validators.maxLength(2),
+          Validators.minLength(2),
+        ],
       ],
       peso: [
         this.solicitud32501State.peso,
-        [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_NUMEROS_USD),
+          Validators.maxLength(16),
+          Validators.max(9999999999999.99),
+          Validators.min(0.01),
+        ],
       ],
       valorUSD: [
         this.solicitud32501State.valorUSD,
-        [Validators.required, Validators.pattern(REGEX_NUMEROS_USD)],
+        [
+          Validators.required,
+          Validators.pattern(REGEX_NUMEROS_USD),
+          Validators.maxLength(15),
+          Validators.max(9999999999999.99),
+          Validators.min(0.01),
+        ],
       ],
       descripcionMercancia: [
         this.solicitud32501State.descripcionMercancia,
         Validators.required,
+        Validators.maxLength(250),
       ],
-      nombreComercial: [this.solicitud32501State.nombreComercial],
+      nombreComercial: [
+        this.solicitud32501State.nombreComercial,
+        [Validators.maxLength(250)],
+      ],
       entidadFederativa: [
         this.solicitud32501State.entidadFederativa,
         Validators.required,
@@ -222,16 +246,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud32501State.delegacionMunicipio,
         Validators.required,
       ],
-      colonia: [this.solicitud32501State.colonia, Validators.required],
-      calle: [this.solicitud32501State.calle, Validators.required],
+      colonia: [this.solicitud32501State.colonia, [Validators.required]],
+      calle: [this.solicitud32501State.calle, [Validators.required,Validators.maxLength(250)]],
       numeroExterior: [
         this.solicitud32501State.numeroExterior,
-        Validators.required,
+       [ Validators.required, Validators.maxLength(15)]
       ],
-      numeroInterior: [this.solicitud32501State.numeroInterior],
+      numeroInterior: [this.solicitud32501State.numeroInterior,[Validators.maxLength(15)]],
       codigoPostal: [
         this.solicitud32501State.codigoPostal,
-        [Validators.required, Validators.pattern(REGEX_NICO_NUMEROS)],
+        [Validators.required, Validators.pattern(REGEX_NICO_NUMEROS),Validators.maxLength(5)],
       ],
     });
 
@@ -282,6 +306,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           this.opcionEntidadFederativa = respuesta.entidadFederativa;
           this.opcionDelegacionMunicipio = respuesta.delegacionMunicipio;
           this.opcionColonia = respuesta.colonia;
+        },
+      });
+  }
+
+  obtenerAvisoOpcionesDeRadio():void{
+    this.mercDesmSinMonService
+      .obtenerAvisoOpcionesDeRadio()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (respuesta: AvisoOpcionesDeRadio) => {
+          this.avisoOpcionesDeRadio = respuesta;
         },
       });
   }

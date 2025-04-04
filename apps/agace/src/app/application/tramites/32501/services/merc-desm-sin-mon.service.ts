@@ -1,4 +1,5 @@
 import { AvisoCatalogo } from '../models/aviso-catalogo.model';
+import { AvisoOpcionesDeRadio } from '../models/aviso-catalogo.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -61,6 +62,18 @@ export class MercDesmSinMonService {
     return this.http
       .get<RequisitosObligatorios[]>(
         'assets/json/32501/datos-agregar-nuevo.json'
+      )
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+
+  obtenerAvisoOpcionesDeRadio(): Observable<AvisoOpcionesDeRadio> {
+    return this.http
+      .get<AvisoOpcionesDeRadio>(
+        'assets/json/32501/aviso-opciones-de-radio.json'
       )
       .pipe(
         catchError((error) => {

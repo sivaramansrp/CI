@@ -50,3 +50,24 @@ export interface RequisitosObligatorios {
   /** Valor asociado al requisito obligatorio. */
   valor: string;
 }
+
+/**  
+ * Representa un aviso con opciones de radio y su estado de selección.  
+ */
+export interface AvisoOpcionesDeRadio {
+  /** Título del aviso. */
+  opcionesDeRadio: OpcionesDeRadio[];
+  /** Opción seleccionada por el usuario. */
+  required: boolean;
+}
+
+/**
+ * Representa una opción de radio con su etiqueta y valor asociado.
+ */
+export interface OpcionesDeRadio {
+  /** Etiqueta de la opción de radio. */
+  label: string;
+  /** Valor asociado a la opción de radio. */
+  value: string | number;
+}
+
