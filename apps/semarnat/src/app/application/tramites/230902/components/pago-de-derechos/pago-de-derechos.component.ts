@@ -1,27 +1,40 @@
 /**
  * Componente para gestionar el pago de derechos.
  * 
- * {OnInit, OnDestroy}
+ * Métodos:
+ * - ngOnInit: Inicializa el componente y configura las suscripciones necesarias.
+ * - crearFormularioPagoDerechos: Crea y configura el formulario para el pago de derechos.
+ * - cambioFechaFinal: Maneja el cambio de la fecha final en el formulario.
+ * - onBancoSeleccion: Maneja la selección de un banco en el formulario.
+ * - onllavaDePagoChange: Maneja el cambio de la llave de pago en el formulario.
+ * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 
-import { Subject, takeUntil } from 'rxjs';
-import { Solicitud230902State, Tramite230902Store } from '../../estados/tramite230902.store';
-import { Tramite230902Query } from '../../estados/tramite230902.query';
-import { PermisoCitesService } from '../../services/permiso-cites.service';
+import { FormBuilder } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { Validators } from '@angular/forms';
+
 import { InputFecha } from '@libs/shared/data-access-user/src';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import { FECHA } from '../../enum/fetcha.enum';
+
+import { PermisoCitesService } from '../../services/permiso-cites.service';
+
+import { Solicitud230902State } from '../../estados/tramite230902.store';
+import { Tramite230902Query } from '../../estados/tramite230902.query';
+import { Tramite230902Store } from '../../estados/tramite230902.store';
 
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrls: ['./pago-de-derechos.component.css'],
+  styleUrls: ['./pago-de-derechos.component.scss'],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
@@ -67,7 +80,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el componente.
-   * 
+   * Configura las suscripciones necesarias y prepara el formulario.
    */
   ngOnInit(): void {
     this.permisoCitesService.inicializaPagoDeDerechosDatosCatalogos();
@@ -75,45 +88,57 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe(state => { this.solicitud230902State = state });
 
-    this.createFormPagoDerechos();
+      /**
+       * Crea el formulario de pago de derechos y configura el comportamiento de capitalización para el campo 'llaveDePago'.
+       */
+      
+      this.crearFormularioPagoDerechos();
+      this.formPagoDerechos.get('llaveDePago')?.valueChanges.subscribe((value: string) => {
+        if (value) {
+          const CAPITALIZED_VALUE = value.toUpperCase(); // Capitaliza la entrada
+          this.formPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE, { emitEvent: false });
+        }
+      });
+ 
   }
 
   /**
    * Crea el formulario para el pago de derechos.
-   * 
+   * Configura los campos del formulario con validaciones y valores iniciales.
    */
-  createFormPagoDerechos(): void {
+  crearFormularioPagoDerechos(): void {
     this.formPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.solicitud230902State.claveDeReferencia),
-      cadenaDeLaDependencia: new FormControl(this.solicitud230902State.cadenaDeLaDependencia),
+      cadenaPagoDependencia: new FormControl(this.solicitud230902State.cadenaPagoDependencia),
       banco: new FormControl(this.solicitud230902State.bancoseleccionado, Validators.required),
       llaveDePago: new FormControl(this.solicitud230902State.llaveDePago, Validators.required),
-      fechaDePago: new FormControl(this.solicitud230902State.fechaDePago, Validators.required),
-      importeDePago: new FormControl({ value: this.solicitud230902State.importeDePago, disabled: true }),
+      fecPago: new FormControl(this.solicitud230902State.fecPago, Validators.required),
+      impPago: new FormControl({ value: this.solicitud230902State.impPago, disabled: true }),
     });
    
     this.formPagoDerechos.get('claveDeReferencia')?.disable();
-    this.formPagoDerechos.get('cadenaDeLaDependencia')?.disable();
-    this.formPagoDerechos.get('importeDePago')?.disable();
+    this.formPagoDerechos.get('cadenaPagoDependencia')?.disable();
+    this.formPagoDerechos.get('impPago')?.disable();
   }
 
   /**
-   * Maneja el cambio de fecha final.
-   * {string} nuevo_valor - El nuevo valor de la fecha.
+   * Maneja el cambio de la fecha final en el formulario.
+   * Actualiza el valor de la fecha en el estado del formulario y en el almacén.
    * 
+   * @param nuevo_valor El nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
     this.formPagoDerechos.patchValue({
-      fechaDePago: nuevo_valor,
+      fecPago: nuevo_valor,
     });
-    this.tramite230902Store.setFechaDePago(
-      this.formPagoDerechos.get('fechaDePago')?.value
+    this.tramite230902Store.setfecPago(
+      this.formPagoDerechos.get('fecPago')?.value
     );
   }
 
   /**
-   * Maneja la selección de banco.
-   * 
+   * Maneja la selección de un banco en el formulario.
+   * Actualiza el banco seleccionado en el almacén.
    */
   onBancoSeleccion(): void {
     this.tramite230902Store.setbancoseleccionado(
@@ -122,18 +147,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el cambio de llave de pago.
-   * 
+   * Maneja el cambio de la llave de pago en el formulario.
+   * Actualiza la llave de pago en el almacén.
    */
   onllavaDePagoChange(): void {
-    this.tramite230902Store.setLlaveDePago(
+    this.tramite230902Store.setllaveDePago(
       this.formPagoDerechos.get('llaveDePago')?.value
     );
   }
 
   /**
-   * Destruye las suscripciones cuando el componente se destruye.
-   * 
+   * Limpia las suscripciones cuando el componente se destruye.
+   * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();

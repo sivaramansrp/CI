@@ -9,20 +9,17 @@ export const ADUANA_BOTONS= [
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => agregar(CONTINUAR),
+      funcion: (): void => agregar(CONTINUAR),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => quitar(''),
+      funcion: (): void => quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default fixed-width-button',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => quitar(CONTINUAR),
+      funcion: (): void => quitar(CONTINUAR),
     },
   ];
  

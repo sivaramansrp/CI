@@ -153,3 +153,8 @@ export const REGEX_CORREO_ELECTRONICO = /^[0-9a-z_\-\.]+@[0-9a-z\-\.]+\.[a-z]{2,
  * Ejemplo válido: (123) 456-7890
  */
 export const REGEX_TELEFONO = /^([0-9A-Za-z\-() ])*$/;
+
+/**
+ * Expresión regular para validar números separados por comas.
+ */
+export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;

@@ -3,19 +3,18 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AlertComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, InputCheckComponent, InputFechaComponent, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-
-import { DatosComponent } from './pages/datos/datos.component';
-
-import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { TercerosComponent } from './components/terceros/terceros.component';
 
+import { DatosComponent } from './pages/datos/datos.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
+import { PermisoCitesRoutingModule } from './permiso-cites-routing.module';
 
 
 @NgModule({
@@ -36,9 +35,11 @@ import { TercerosComponent } from './components/terceros/terceros.component';
     CrosslistComponent,
     TableComponent,
     InputCheckComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    ToastrModule.forRoot(),
     
    
 ],
+providers: [ToastrService]
 })
 export class PermisoCitesModule {}

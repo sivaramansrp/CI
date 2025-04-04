@@ -1,41 +1,44 @@
 import { Store, StoreConfig } from '@datorama/akita';
-
+import { ConfiguracionItem } from '../enum/mercancia.enum';
 import { Injectable } from '@angular/core';
+
 
 /**
  * Creacion del estado inicial para la interfaz de tramite
  * @returns Solicitud230902State
  */
 export interface Solicitud230902State {
-  tipoDeMovimiento: string;
-  tipoDeRegimen: string;
+  tipodeMovimiento: string;
+  tipoRegimen: string;
 
   entidadFederativa: string;
   claveDeReferencia: string;
-  cadenaDeLaDependencia: string;
+  cadenaPagoDependencia: string;
   bancoseleccionado: string;
   llaveDePago: string;
-  fechaDePago: string;
-  importeDePago: Date | null;
+  fecPago: string;
+  impPago: Date | null;
   isPopupOpen: boolean;
   isPopupClose: boolean;
+  mercanciaTablaDatos: ConfiguracionItem[];
 
 }
 
 export function createInitialState(): Solicitud230902State {
   return {
-    tipoDeMovimiento: '',
-    tipoDeRegimen: '',
+    tipodeMovimiento: '',
+    tipoRegimen: '',
 
     entidadFederativa: '',
     claveDeReferencia: '',
-    cadenaDeLaDependencia: '',
+    cadenaPagoDependencia: '',
     bancoseleccionado: '',
     llaveDePago: '',
-    fechaDePago: '',
-    importeDePago: null,
+    fecPago: '',
+    impPago: null,
     isPopupOpen: false,
     isPopupClose: true,
+    mercanciaTablaDatos: [],
   };
 }
 
@@ -49,18 +52,18 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     super(createInitialState());
   }
 
-  public setTipoDeMovimiento(tipoDeMovimiento: string): void {
+  public setTipoDeMovimiento(tipodeMovimiento: string): void {
     this.update((state) => ({
       ...state,
-      tipoDeMovimiento,
+      tipodeMovimiento,
     }));
 
   }
 
-  public setTipoDeRegimen(tipoDeRegimen: string): void {
+  public setTipoDeRegimen(tipoRegimen: string): void {
     this.update((state) => ({
       ...state,
-      tipoDeRegimen,
+      tipoRegimen,
     }));
   }
 
@@ -71,17 +74,17 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     }));
   }
 
-  public setlCaveDeReferencia(caveDeReferencia: string): void {
+  public setlclaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
-      caveDeReferencia,
+      claveDeReferencia,
     }));
   }
 
-  public setCadenaDeLaDependencia(cadenaDeLaDependencia: string): void {
+  public setcadenaPagoDependencia(cadenaPagoDependencia: string): void {
     this.update((state) => ({
       ...state,
-      cadenaDeLaDependencia,
+      cadenaPagoDependencia,
     }));
   }
 
@@ -92,24 +95,24 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     }));
   }
 
-  public setLlaveDePago(llaveDePago: string): void {
+  public setllaveDePago(llaveDePago: string): void {
     this.update((state) => ({
       ...state,
       llaveDePago,
     }));
   }
 
-  public setFechaDePago(fechaDePago: string): void {
+  public setfecPago(fecPago: string): void {
     this.update((state) => ({
       ...state,
-      fechaDePago,
+      fecPago,
     }));
   }
 
-  public setImporteDePago(importeDePago: Date): void {
+  public setimpPago(impPago: Date): void {
     this.update((state) => ({
       ...state,
-      importeDePago,
+      impPago,
     }));
   }
   public setIsPopupOpen(isPopupOpen: boolean): void {
@@ -123,6 +126,13 @@ export class Tramite230902Store extends Store<Solicitud230902State> {
     this.update((state) => ({
       ...state,
       isPopupClose,
+    }));
+  }
+
+  public setMercanciaTablaDatos(mercanciaTablaDatos: ConfiguracionItem[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaTablaDatos,
     }));
   }
 

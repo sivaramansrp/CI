@@ -10,17 +10,17 @@ export const MOVIMIENTO_BOTONS = [
     {
         btnNombre: 'Agregar selección',
         class: 'btn-default fixed-width-button',
-        funcion: () => agregar(CONTINUAR),
+        funcion: ():void => agregar(CONTINUAR),
     },
     {
         btnNombre: 'Restar selección',
         class: 'btn-danger fixed-width-button',
-        funcion: () => quitar(''),
+        funcion: ():void => quitar(''),
     },
     {
         btnNombre: 'Restar todos',
         class: 'btn-default fixed-width-button',
-        funcion: () => quitar(CONTINUAR),
+        funcion: ():void => quitar(CONTINUAR),
     },
 ];
 

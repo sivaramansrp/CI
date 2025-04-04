@@ -7,8 +7,9 @@
      * @description
      * Fracción arancelaria de la mercancía.
      */
+    id: number; // Added the 'id' property
     fraccionArancelaria: string;
-  
+    fraccionDescripcion : string;
     /**
      * @description
      * Indica si la mercancía pertenece a otra fracción.
@@ -19,7 +20,7 @@
      * @description
      * Descripción de la mercancía.
      */
-    descripcions: string;
+    descripcion: string;
   
     /**
      * @description
@@ -53,9 +54,9 @@
   
     /**
      * @description
-     * Cantidad de la mercancía.
+     * cantidad de la mercancía.
      */
-    cantidad: number;
+    cantidad: string;
   
     /**
      * @description
@@ -106,7 +107,7 @@
     },
     {
       encabezado: 'Descripción',
-      clave: (item: ConfiguracionItem): string => item.descripcions,
+      clave: (item: ConfiguracionItem): string => item.descripcion,
       orden: 3,
     },
     {
@@ -130,8 +131,8 @@
       orden: 7,
     },
     {
-      encabezado: 'Cantidad',
-      clave: (item: ConfiguracionItem): number => item.cantidad,
+      encabezado: 'cantidad',
+      clave: (item: ConfiguracionItem): string => item.cantidad,
       orden: 8,
     },
     {

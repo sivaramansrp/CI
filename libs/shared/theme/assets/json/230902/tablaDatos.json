@@ -2,7 +2,7 @@
     {
       "fraccionArancelaria": "12345678",
       "otraFraccion": false,
-      "descripcions": "Descripción de la mercancía",
+      "descripcion": "Descripción de la mercancía",
       "rendimientoProducto": "Rendimiento del producto",
       "clasificacionTaxonomica": "Clasificación taxonómica",
       "nombreCientifico": "Nombre científico",

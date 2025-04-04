@@ -2,7 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS_REGISTRO } from '@ng-mf/data-access-user';
+import { PERMISO_CITE } from '../../enum/paso.enum';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 
 /**
  * Interfaz que representa la acción de un botón.
@@ -45,7 +47,7 @@ export class DatosComponent {
    * Variable utilizada para almacenar el índice del paso actual.
    */
   indice: number = 1;
-
+  public alert_message: string = PERMISO_CITE;
   /**
    * Datos para los pasos en el asistente.
    */

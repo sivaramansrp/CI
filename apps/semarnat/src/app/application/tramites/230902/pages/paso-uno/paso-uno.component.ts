@@ -28,7 +28,7 @@ export class PasoUnoComponent implements OnInit {
     this.tramite230901Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$))
-      .subscribe(state => { this.isTablDisabled = state.tipoDeMovimiento ? false : true });
+      .subscribe(state => { this.isTablDisabled = state.tipodeMovimiento ? false : true });
   }
 
 

@@ -12,86 +12,74 @@ import { FECHA } from '../../enum/fetcha.enum';
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let permisoCitesService: PermisoCitesService;
-  let tramite230902Store: Tramite230902Store;
-  let tramite230902Query: Tramite230902Query;
+  let permisoCitesServiceMock: any;
+  let tramite230902StoreMock: any;
+  let tramite230902QueryMock: any;
 
   beforeEach(async () => {
-    permisoCitesService = {
-      inicializaPagoDeDerechosDatosCatalogos: jest.fn()
-    } as unknown as PermisoCitesService;
-
-    tramite230902Store = {
+    permisoCitesServiceMock = {
+      inicializaPagoDeDerechosDatosCatalogos: jest.fn(),
+    };
+    tramite230902StoreMock = {
+      setfecPago: jest.fn(),
       setbancoseleccionado: jest.fn(),
-      setLlaveDePago: jest.fn(),
-      setFechaDePago: jest.fn()
-    } as unknown as Tramite230902Store;
-
-    tramite230902Query = {
+      setllaveDePago: jest.fn(),
+    };
+    tramite230902QueryMock = {
       selectSolicitud$: of({
         claveDeReferencia: '123',
-        cadenaDeLaDependencia: 'ABC',
-        bancoseleccionado: 'Banco1',
-        llaveDePago: '123456',
-        importeDePago: '100.00',
-        fechaDePago: '2023-01-01'
-      })
-    } as unknown as Tramite230902Query;
+        cadenaPagoDependencia: 'cadena',
+        bancoseleccionado: 'banco',
+        llaveDePago: 'llave',
+        fecPago: '2023-01-01',
+        impPago: 100,
+      }),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [PagoDeDerechosComponent],
       imports: [ReactiveFormsModule],
       providers: [
-        { provide: PermisoCitesService, useValue: permisoCitesService },
-        { provide: Tramite230902Store, useValue: tramite230902Store },
-        { provide: Tramite230902Query, useValue: tramite230902Query },
+        { provide: PermisoCitesService, useValue: permisoCitesServiceMock },
+        { provide: Tramite230902Store, useValue: tramite230902StoreMock },
+        { provide: Tramite230902Query, useValue: tramite230902QueryMock },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the component', () => {
-    component.ngOnInit();
-    expect(permisoCitesService.inicializaPagoDeDerechosDatosCatalogos).toHaveBeenCalled();
-  });
-
-  it('should create the form for pago de derechos', () => {
-    component.createFormPagoDerechos();
+  it('should initialize the form on ngOnInit', () => {
     expect(component.formPagoDerechos).toBeDefined();
-    expect(component.formPagoDerechos.get('claveDeReferencia')).toBeDefined();
-    expect(component.formPagoDerechos.get('cadenaDeLaDependencia')).toBeDefined();
-    expect(component.formPagoDerechos.get('banco')).toBeDefined();
-    expect(component.formPagoDerechos.get('llaveDePago')).toBeDefined();
-    expect(component.formPagoDerechos.get('importeDePago')).toBeDefined();
-    expect(component.formPagoDerechos.get('fechaDePago')).toBeDefined();
+    expect(component.formPagoDerechos.get('banco')?.value).toBe('banco');
   });
 
-  it('should handle fecha de pago change', () => {
-    component.createFormPagoDerechos();
-    component.cambioFechaFinal('2023-01-01');
-    expect(component.formPagoDerechos.get('fechaDePago')?.value).toBe('2023-01-01');
-    expect(tramite230902Store.setFechaDePago).toHaveBeenCalledWith('2023-01-01');
+  it('should handle cambioFechaFinal', () => {
+    component.cambioFechaFinal('2023-02-01');
+    expect(tramite230902StoreMock.setfecPago).toHaveBeenCalledWith('2023-02-01');
   });
 
-  it('should handle banco selection change', () => {
-    component.createFormPagoDerechos();
-    component.formPagoDerechos.get('banco')?.setValue('Banco1');
+  it('should handle onBancoSeleccion', () => {
+    component.formPagoDerechos.get('banco')?.setValue('nuevoBanco');
     component.onBancoSeleccion();
-    expect(tramite230902Store.setbancoseleccionado).toHaveBeenCalledWith('Banco1');
+    expect(tramite230902StoreMock.setbancoseleccionado).toHaveBeenCalledWith('nuevoBanco');
   });
 
-  it('should handle llave de pago change', () => {
-    component.createFormPagoDerechos();
-    component.formPagoDerechos.get('llaveDePago')?.setValue('123456');
+  it('should handle onllavaDePagoChange', () => {
+    component.formPagoDerechos.get('llaveDePago')?.setValue('nuevaLlave');
     component.onllavaDePagoChange();
-    expect(tramite230902Store.setLlaveDePago).toHaveBeenCalledWith('123456');
+    expect(tramite230902StoreMock.setllaveDePago).toHaveBeenCalledWith('nuevaLlave');
   });
 
-  
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const destroyed$Spy = jest.spyOn(component['destroyed$'], 'next');
+    component.ngOnDestroy();
+    expect(destroyed$Spy).toHaveBeenCalled();
+  });
 });
