@@ -40,14 +40,6 @@ export const TEXTOS = {
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
 };
 
-export const IMMEX = {
-  labelNombre: 'IMMEX (Número/aaaa)',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
 export const MESES = [
   { id: '1', mes: 'Enero' },
   { id: '2', mes: 'Febrero' },
@@ -291,3 +283,5 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
+
+export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
