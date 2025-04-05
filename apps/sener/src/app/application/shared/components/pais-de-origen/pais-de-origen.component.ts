@@ -38,6 +38,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
   styleUrl: './pais-de-origen.component.scss',
 })
 export class PaisDeOrigenComponent implements OnChanges {
+
   /**
    * @propiedad
    * @nombre crosslistComponent
@@ -55,7 +56,7 @@ export class PaisDeOrigenComponent implements OnChanges {
 
 
   onObtenerCiudades(): void {
-   this.eventoAlHacerClicEnTodasLasCiudades.emit();
+    this.eventoAlHacerClicEnTodasLasCiudades.emit();
 
   }
 

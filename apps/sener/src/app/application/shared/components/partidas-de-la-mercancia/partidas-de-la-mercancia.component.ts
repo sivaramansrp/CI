@@ -39,49 +39,49 @@ export class PartidasDeLaMercanciaComponent {
    * @description Formulario reactivo principal para capturar los datos de las partidas.
    */
   @Input() partidasDelaMercanciaForm!: FormGroup;
- 
+
   /**
    * @property {FormGroup} formForTotalCount
    * @description Formulario reactivo para capturar los totales de las partidas.
    */
   @Input() formForTotalCount!: FormGroup;
- 
+
   /**
    * @property {ConfiguracionColumna<any>[]} tableHeaderData
    * @description Configuración de las columnas de la tabla dinámica.
    */
   @Input() tableHeaderData: ConfiguracionColumna<any>[] = [];
- 
+
   /**
    * @property {any[]} tableBodyData
    * @description Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
   @Input() tableBodyData: any[] = [];
- 
+
   /**
    * @property {boolean} mostrarTabla
    * @description Bandera para mostrar u ocultar la tabla dinámica.
    */
   @Input() mostrarTabla = false;
- 
+
   /**
    * @event filaSeleccionadaChange
    * @description Evento que emite las filas seleccionadas en la tabla dinámica.
    */
   @Output() filaSeleccionadaChange = new EventEmitter<any[]>();
- 
+
   /**
    * @event validarYEnviarFormularioEvent
    * @description Evento que se emite cuando se valida y envía el formulario.
    */
   @Output() validarYEnviarFormularioEvent = new EventEmitter<void>();
- 
+
   /**
    * @event navegarParaModificarPartidaEvent
    * @description Evento que se emite para navegar y modificar una partida específica.
    */
   @Output() navegarParaModificarPartidaEvent = new EventEmitter<void>();
- 
+
   /**
    * @event setValoresStoreEvent
    * @description
@@ -90,13 +90,13 @@ export class PartidasDeLaMercanciaComponent {
    * y el nombre del método que realiza la actualización.
    */
   @Output() setValoresStoreEvent = new EventEmitter<{ form: FormGroup; campo: string; metodoNombre: string }>();
- 
+
   /**
    * @property {TablaSeleccion} CHECKBOX
    * @description Tipo de selección de la tabla dinámica (checkbox).
    */
   CHECKBOX = TablaSeleccion.CHECKBOX;
- 
+
   /**
    * @constructor
    * @description Constructor para inicializar el componente e inyectar dependencias.
@@ -105,7 +105,7 @@ export class PartidasDeLaMercanciaComponent {
   constructor(private fb: FormBuilder) {
     // Constructor del componente
   }
- 
+
   /**
    * @method esInvalido
    * @description Verifica si un control del formulario es inválido.
@@ -116,7 +116,7 @@ export class PartidasDeLaMercanciaComponent {
     const CONTROL = this.partidasDelaMercanciaForm.get(nombreControl);
     return CONTROL ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty) : false;
   }
- 
+
   /**
    * @method handleListaDeFilaSeleccionada
    * @description Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
@@ -126,7 +126,7 @@ export class PartidasDeLaMercanciaComponent {
     console.log('Selected rows from table:', filasSeleccionadas);
     this.filaSeleccionadaChange.emit(filasSeleccionadas);
   }
- 
+
   /**
    * @method validarYEnviarFormulario
    * @description Valida y envía el formulario, emitiendo un evento.
@@ -134,7 +134,7 @@ export class PartidasDeLaMercanciaComponent {
   validarYEnviarFormulario(): void {
     this.validarYEnviarFormularioEvent.emit();
   }
- 
+
   /**
    * @method navegarParaModificarPartida
    * @description Navega para modificar una partida específica, emitiendo un evento.
@@ -142,7 +142,7 @@ export class PartidasDeLaMercanciaComponent {
   navegarParaModificarPartida(): void {
     this.navegarParaModificarPartidaEvent.emit();
   }
- 
+
   /**
    * @method setValoresStore
    * @description Emite un evento para almacenar valores en el store.
@@ -154,4 +154,3 @@ export class PartidasDeLaMercanciaComponent {
     this.setValoresStoreEvent.emit({ form, campo, metodoNombre });
   }
 }
- 

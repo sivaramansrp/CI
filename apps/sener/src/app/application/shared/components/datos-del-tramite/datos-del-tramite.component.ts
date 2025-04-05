@@ -32,7 +32,7 @@ export class DatosDelTramiteComponent {
    * Este formulario se utiliza para capturar y validar la información del usuario.
    */
   @Input() form!: FormGroup;
- 
+
   /**
    * @description Campos dinámicos configurados para el formulario.
    * Cada campo incluye una etiqueta, un marcador de posición, una propiedad requerida
@@ -44,19 +44,19 @@ export class DatosDelTramiteComponent {
     required: boolean;
     controlName: string;
   }[] = [];
- 
+
   /**
    * @description Matriz de catálogos que contienen opciones adicionales para el formulario.
    * Los catálogos permiten seleccionar valores predefinidos en los campos del formulario.
    */
   @Input() catalogosArray: Catalogo[][] = [];
- 
+
   /**
    * @description Opciones de solicitud configuradas para el formulario.
    * Estas opciones representan las diferentes configuraciones disponibles para el trámite.
    */
   @Input() solicitudOpciones: ProductoOpción[] = [];
- 
+
   /**
    * @description Emisor de eventos para comunicar cambios de valores al componente padre.
    * Este evento se dispara cuando se actualizan los valores del formulario.
@@ -67,7 +67,7 @@ export class DatosDelTramiteComponent {
     campo: string;
     metodoNombre: string;
   }>();
- 
+
   /**
    * @description Verifica si un control del formulario es inválido.
    * @param nombreControl El nombre del control que se desea verificar.
@@ -79,7 +79,7 @@ export class DatosDelTramiteComponent {
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
   }
- 
+
   /**
    * @description Emite un evento para actualizar valores en el almacén.
    * Este método se utiliza para notificar al componente padre sobre los cambios realizados

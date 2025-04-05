@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
- 
+
       <!-- <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-8">
@@ -89,7 +89,7 @@
       </div>
     </div>
   </form>
- 
+
   <!-- modal start-->
   <div #modalRef class="modal fade test-modal" id="modalCargarArchivo" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
@@ -110,9 +110,9 @@
                 </div>
               </div>
             </div>
- 
+
           </div>
- 
+
           <div class="row btn-row">
             <div class="col-md-7"></div>
             <div class="col-md-4 text-end">
@@ -125,16 +125,16 @@
               </div>
             </div>
           </div>
- 
- 
- 
+
+
+
           <!-- </form> -->
         </div>
       </div>
     </div>
   </div>
   <!-- modal end -->
- 
+
   <div class="row">
     <div>
       <h6>Partidas</h6>
@@ -143,7 +143,7 @@
           [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
         </app-tabla-dinamica>
       </div>
- 
+
       <form [formGroup]="formForTotalCount">
         <div class="row">
           <div class="col-md-4">
@@ -161,14 +161,14 @@
             </div>
           </div>
         </div>
- 
+
         <div class="row mt-5">
           <div class="col-md-4"></div>
           <div class="col-md-8">
             <hr />
           </div>
         </div>
- 
+
         <div class="row">
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
@@ -184,7 +184,7 @@
           </div>
         </div>
       </form>
- 
+
       <!-- modal start-->
       <div #modalRef class="modal fade test-modal" id="modalModificarPartida" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-fullscreen">
@@ -232,28 +232,28 @@
                       </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-8">
-                      <div class="form-group">
-                        <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
-                        <input class="form-control" type="number" id="valorPartidaUSD"
-                          formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
-                        <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
-                            campo es obligatorio.</small>
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
-                            un número válido.</small>
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
-                            valor debe ser mayor o igual a 0.</small>
-                          <small
-                            *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
-                            20 caracteres permitidos.</small>
+                      <div class="col-md-8">
+                        <div class="form-group">
+                          <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+                          <input class="form-control" type="number" id="valorPartidaUSD"
+                            formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" />
+                          <div *ngIf="esInvalido('valorPartidaUSDPartidasDeLaMercancia')" class="text-danger">
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('required')">Este
+                              campo es obligatorio.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('pattern')">Ingrese
+                              un número válido.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('min')">El
+                              valor debe ser mayor o igual a 0.</small>
+                            <small
+                              *ngIf="partidasDelaMercanciaForm.controls['valorPartidaUSDPartidasDeLaMercancia'].hasError('maxlength')">Máximo
+                              20 caracteres permitidos.</small>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
                     <div class="row mt-5">
                     </div>
                   </div>
@@ -271,17 +271,16 @@
                   </div>
                 </div>
               </div>
- 
- 
- 
+
+
+
               <!-- </form> -->
             </div>
           </div>
         </div>
       </div>
       <!--  -->
- 
+
     </div>
   </div>
 </div>
- 

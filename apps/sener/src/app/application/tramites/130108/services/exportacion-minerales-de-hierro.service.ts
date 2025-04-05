@@ -4,87 +4,99 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
+/**
+ * Servicio que maneja la exportación de datos relacionados con minerales de hierro.
+ * Proporciona métodos para obtener información sobre países, ciudades, bloques, estados,
+ * representación federal, y opciones de productos.
+ * 
+ * @export
+ * @class ExportacionMineralesDeHierroService
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class ExportacionMineralesDeHierroService {
-  constructor(private http: HttpClient) {
-    // Constructor del servicio. Actualmente no realiza ninguna acción específica.
-  }
+
   /**
-   * @metodo
-   * @nombre getListaDePaisesDisponibles
-   * @descripcion Obtiene la lista de países disponibles desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo` con la información de los países disponibles.
+   * Crea una instancia del servicio `ExportacionMineralesDeHierroService`.
+   * @param {HttpClient} http - El cliente HTTP que se usa para realizar solicitudes.
+   */
+  constructor(private http: HttpClient) {
+    // Constructor del servicio, inyecta HttpClient para realizar peticiones HTTP.
+  }
+
+  /**
+   * Obtiene la lista de países disponibles desde un archivo JSON.
+   * 
+   * @description Método para cargar la lista de países desde un archivo local en formato JSON.
+   * @returns {Observable<Catalogo[]>} Observable que emite una lista de objetos Catalogo.
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/130108/pais-procenia.json');
   }
+
   /**
-   * @metodo
-   * @nombre obtenerListaDeCiudades
-   * @descripcion Obtiene la lista de todas las ciudades desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo` con la información de las ciudades disponibles.
+   * Obtiene la lista de todas las ciudades disponibles desde un archivo JSON.
+   * 
+   * @description Método para cargar la lista de ciudades desde un archivo local en formato JSON.
+   * @returns {Observable<Catalogo[]>} Observable que emite una lista de objetos Catalogo.
    */
   obtenerListaDeCiudades(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/130108/todas-las-ciudades.json');
   }
 
-   /**
-   * @metodo
-   * @nombre getPaisesPorBloque
-   * @descripcion Obtiene la lista de países por bloque desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @param {number} _bloqueId - Identificador del bloque para filtrar los países.
-   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo` con la información de los países por bloque.
+  /**
+   * Obtiene la lista de países por bloque, basada en el ID de bloque proporcionado.
+   * 
+   * @description Método que permite obtener los países que pertenecen a un bloque específico,
+   * usando un archivo JSON local.
+   * 
+   * @param {number} _bloqueId - El ID del bloque cuyo país se desea obtener.
+   * @returns {Observable<Catalogo[]>} Observable que emite una lista de países en el bloque.
    */
-   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
+  getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/130108/paises-por-bloque.json');
   }
 
- /**
-   * @metodo
-   * @nombre getEstado
-   * @descripcion Obtiene la lista de entidades federativas desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo` con la información de las entidades federativas.
+  /**
+   * Obtiene el estado actual desde un archivo JSON.
+   * 
+   * @description Método para cargar el estado desde un archivo local en formato JSON.
+   * @returns {Observable<Catalogo[]>} Observable que emite una lista de objetos Catalogo
+   * que representan los estados.
    */
- getEstado(): Observable<Catalogo[]> {
-  return this.http.get<Catalogo[]>('/assets/json/130108/estado.json');
-}
+  getEstado(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/130108/estado.json');
+  }
 
- /**
-   * @metodo
-   * @nombre getRepresentacionFederal
-   * @descripcion Obtiene la lista de representaciones federales desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @returns {Observable<Catalogo[]>} Observable que emite un arreglo de objetos `Catalogo` con la información de las representaciones federales.
+  /**
+   * Obtiene la representación federal desde un archivo JSON.
+   * 
+   * @description Método para cargar la representación federal desde un archivo local en formato JSON.
+   * @returns {Observable<Catalogo[]>} Observable que emite una lista de objetos Catalogo
+   * que representan las representaciones federales.
    */
- getRepresentacionFederal(): Observable<Catalogo[]> {
-  return this.http.get<Catalogo[]>('/assets/json/130108/representacion-federal.json');
-}
+  getRepresentacionFederal(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/130108/representacion-federal.json');
+  }
 
- /**
-   * @metodo
-   * @nombre getSolicitudeOptions
-   * @descripcion Obtiene las opciones de solicitud desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @returns {Observable<ProductoResponse>} Observable que emite un objeto `ProductoResponse` con la información de las opciones de solicitud.
+  /**
+   * Obtiene las opciones de solicitud disponibles desde un archivo JSON.
+   * 
+   * @description Método para cargar las opciones de solicitud desde un archivo local en formato JSON.
+   * @returns {Observable<ProductoResponse>} Observable que emite las opciones de solicitud disponibles.
    */
- getSolicitudeOptions(): Observable<ProductoResponse> {
-  return this.http.get<ProductoResponse>('assets/json/130108/solicitude-options.json');
-}
+  getSolicitudeOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>('assets/json/130108/solicitude-options.json');
+  }
 
- /**
-   * @metodo
-   * @nombre getProductoOptions
-   * @descripcion Obtiene las opciones de producto desde un archivo JSON.
-   * Este método realiza una solicitud HTTP GET para recuperar los datos de un archivo local.
-   * @returns {Observable<ProductoResponse>} Observable que emite un objeto `ProductoResponse` con la información de las opciones de producto.
+  /**
+   * Obtiene las opciones de producto disponibles desde un archivo JSON.
+   * 
+   * @description Método para cargar las opciones de productos desde un archivo local en formato JSON.
+   * @returns {Observable<ProductoResponse>} Observable que emite las opciones de producto disponibles.
    */
- getProductoOptions(): Observable<ProductoResponse> {
-  return this.http.get<ProductoResponse>('assets/json/130108/producto-otions.json');
-}
+  getProductoOptions(): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>('assets/json/130108/producto-otions.json');
+  }
 }

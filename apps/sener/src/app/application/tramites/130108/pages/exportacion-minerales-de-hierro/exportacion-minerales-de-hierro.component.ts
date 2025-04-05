@@ -31,13 +31,13 @@ export class ExportacionMineralesDeHierroComponent {
    * Se obtiene desde la constante PASOS_EXPORTACION.
    */
   pasosSolicitar: ListaPasosWizard[] = PASOS_EXPORTACION;
-  
+
   /**
    * @description Índice que indica el paso actual del wizard.
    * Por defecto comienza en el paso 1.
    */
   indice: number = 1;
-  
+
   /**
    * @description Índice de la pestaña actualmente activa.
    * Por defecto comienza en la pestaña 1.

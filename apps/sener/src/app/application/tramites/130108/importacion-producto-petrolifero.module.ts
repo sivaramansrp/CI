@@ -24,7 +24,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     ExportacionMineralesDeHierroComponent,
     PasoUnoComponent,
     SolicitudComponent,
-    
+
   ],
   imports: [
     CommonModule,
@@ -41,7 +41,7 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
     PasoDosComponent,
     DatosDelTramiteComponent,
     DatosDeLaMercanciaComponent,
-    PartidasDeLaMercanciaComponent ,
+    PartidasDeLaMercanciaComponent,
     TablaDinamicaComponent,
     PaisDeOrigenComponent,
     RepresentacionComponent,

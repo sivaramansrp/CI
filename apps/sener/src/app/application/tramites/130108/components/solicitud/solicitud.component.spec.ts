@@ -132,24 +132,24 @@ describe('SolicitudComponent', () => {
       component.partidasDelaMercanciaForm = new FormBuilder().group({
         cantidadPartidasDeLaMercancia: [''], // Invalid form (empty value)
       });
-  
+
       jest.spyOn(component.partidasDelaMercanciaForm, 'markAllAsTouched');
-  
+
       component.validarYEnviarFormulario();
-  
+
       expect(component.partidasDelaMercanciaForm.markAllAsTouched).toHaveBeenCalledTimes(0);
       expect(component.mostrarTabla).toBe(true); // mostrarTabla should still be true
     });
-  
+
     it('should set mostrarTabla to true if the form is valid', () => {
       component.partidasDelaMercanciaForm = new FormBuilder().group({
         cantidadPartidasDeLaMercancia: ['valid value'], // Valid form
       });
-  
+
       jest.spyOn(component.partidasDelaMercanciaForm, 'markAllAsTouched');
-  
+
       component.validarYEnviarFormulario();
-  
+
       expect(component.partidasDelaMercanciaForm.markAllAsTouched).not.toHaveBeenCalled();
       expect(component.mostrarTabla).toBe(true)
     });
@@ -158,19 +158,19 @@ describe('SolicitudComponent', () => {
   describe('manejarlaFilaSeleccionada', () => {
     it('should set filaSeleccionada to null if no rows are selected', () => {
       const filasSeleccionadas: any[] = []; // Empty array
-  
+
       component.manejarlaFilaSeleccionada(filasSeleccionadas);
-  
+
       expect(component.filaSeleccionada).toBeNull();
       expect(tramite130108Store.storeTableValues).not.toHaveBeenCalled();
     });
-  
+
     it('should update filaSeleccionada and call storeTableValues if rows are selected', () => {
       const mockFila = { id: 1, descripcion: 'Fila 1' };
       const filasSeleccionadas = [mockFila];
-  
+
       component.manejarlaFilaSeleccionada(filasSeleccionadas);
-  
+
       expect(component.filaSeleccionada).toEqual(mockFila);
       expect(tramite130108Store.storeTableValues).toHaveBeenCalledWith(mockFila);
     });
@@ -220,12 +220,12 @@ describe('SolicitudComponent', () => {
     it('should call getPaisesPorBloque with the correct _bloqueId', () => {
       const bloqueId = 1;
       const getPaisesPorBloqueSpy = jest.spyOn(exportacionMineralesDeHierroService, 'getPaisesPorBloque').mockReturnValue(of([]));
-  
+
       component.fetchPaisesPorBloque(bloqueId);
-  
+
       expect(getPaisesPorBloqueSpy).toHaveBeenCalledWith(bloqueId);
     });
-  
+
     it('should update paisesPorBloque and selectRangoDias with the returned data', () => {
       const bloqueId = 1;
       const mockData = [
@@ -233,19 +233,19 @@ describe('SolicitudComponent', () => {
         { id: 2, descripcion: 'Country 2' },
       ];
       jest.spyOn(exportacionMineralesDeHierroService, 'getPaisesPorBloque').mockReturnValue(of(mockData));
-  
+
       component.fetchPaisesPorBloque(bloqueId);
-  
+
       expect(component.paisesPorBloque).toEqual(mockData);
       expect(component.selectRangoDias).toEqual(['Country 1', 'Country 2']);
     });
-  
+
     it('should handle empty data gracefully', () => {
       const bloqueId = 1;
       jest.spyOn(exportacionMineralesDeHierroService, 'getPaisesPorBloque').mockReturnValue(of([]));
-  
+
       component.fetchPaisesPorBloque(bloqueId);
-  
+
       expect(component.paisesPorBloque).toEqual([]);
       expect(component.selectRangoDias).toEqual([]);
     });
@@ -255,9 +255,9 @@ describe('SolicitudComponent', () => {
     it('should call fetchPaisesPorBloque with the correct bloqueId', () => {
       const bloqueId = 1;
       const fetchPaisesPorBloqueSpy = jest.spyOn(component, 'fetchPaisesPorBloque');
-  
+
       component.enCambioDeBloque(bloqueId);
-  
+
       expect(fetchPaisesPorBloqueSpy).toHaveBeenCalledWith(bloqueId);
     });
   });
@@ -265,109 +265,118 @@ describe('SolicitudComponent', () => {
     const mockForm = new FormBuilder().group({
       campo: ['test value'],
     });
-  
+
     it('should call updateSolicitud when metodoNombre is "updateSolicitud"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'updateSolicitud' };
       component.setValoresStore(event);
       expect(tramite130108Store.updateSolicitud).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setDescripcionPartidasDeLaMercancia when metodoNombre is "setDescripcionPartidasDeLaMercancia"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setDescripcionPartidasDeLaMercancia' };
       component.setValoresStore(event);
       expect(tramite130108Store.setDescripcionPartidasDeLaMercancia).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setCantidadPartidasDeLaMercancia when metodoNombre is "setCantidadPartidasDeLaMercancia"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setCantidadPartidasDeLaMercancia' };
       component.setValoresStore(event);
       expect(tramite130108Store.setCantidadPartidasDeLaMercancia).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setValorPartidaUSDPartidasDeLaMercancia when metodoNombre is "setValorPartidaUSDPartidasDeLaMercancia"', () => {
+      const mockForm = new FormBuilder().group({
+        campo: ['123.45'], // Valid numeric value as string
+      });
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setValorPartidaUSDPartidasDeLaMercancia' };
+
+      // Ensure the spy is set up before calling the method
+      tramite130108Store.setValorPartidaUSDPartidasDeLaMercancia = jest.fn();
+      jest.spyOn(tramite130108Store, 'setValorPartidaUSDPartidasDeLaMercancia');
+
       component.setValoresStore(event);
-      expect(tramite130108Store.setValorPartidaUSDPartidasDeLaMercancia).toHaveBeenCalledWith('test value');
+
+      expect(tramite130108Store.setValorPartidaUSDPartidasDeLaMercancia).toHaveBeenCalledWith(123.45);
     });
-  
+
     it('should call setregimen when metodoNombre is "setregimen"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setRegimen' };
       component.setValoresStore(event);
       expect(tramite130108Store.setRegimen).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setClasificacion when metodoNombre is "setClasificacion"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setClasificacion' };
       component.setValoresStore(event);
       expect(tramite130108Store.setClasificacion).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setProducto when metodoNombre is "setProducto"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setProducto' };
       component.setValoresStore(event);
       expect(tramite130108Store.setProducto).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setDescripcion when metodoNombre is "setDescripcion"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setDescripcion' };
       component.setValoresStore(event);
       expect(tramite130108Store.setDescripcion).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setCantidad when metodoNombre is "setCantidad"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setCantidad' };
       component.setValoresStore(event);
       expect(tramite130108Store.setCantidad).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setValorPartidaUSD with parsed value when metodoNombre is "setValorPartidaUSD"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setValorPartidaUSD' };
       component.setValoresStore(event);
       expect(tramite130108Store.setValorPartidaUSD).toHaveBeenCalledWith(parseFloat('test value') || 0);
     });
-  
+
     it('should call setUnidadMedida when metodoNombre is "setUnidadMedida"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setUnidadMedida' };
       component.setValoresStore(event);
       expect(tramite130108Store.setUnidadMedida).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setBloque when metodoNombre is "setBloque"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setBloque' };
       component.setValoresStore(event);
       expect(tramite130108Store.setBloque).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setUsoEspecifico when metodoNombre is "setUsoEspecifico"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setUsoEspecifico' };
       component.setValoresStore(event);
       expect(tramite130108Store.setUsoEspecifico).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setJustificacionImportacionExportacion when metodoNombre is "setJustificacionImportacionExportacion"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setJustificacionImportacionExportacion' };
       component.setValoresStore(event);
       expect(tramite130108Store.setJustificacionImportacionExportacion).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setObservaciones when metodoNombre is "setObservaciones"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setObservaciones' };
       component.setValoresStore(event);
       expect(tramite130108Store.setObservaciones).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setEntidad when metodoNombre is "setEntidad"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setEntidad' };
       component.setValoresStore(event);
       expect(tramite130108Store.setEntidad).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should call setRepresentacion when metodoNombre is "setRepresentacion"', () => {
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'setRepresentacion' };
       component.setValoresStore(event);
       expect(tramite130108Store.setRepresentacion).toHaveBeenCalledWith('test value');
     });
-  
+
     it('should log an error when metodoNombre does not match any case', () => {
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       const event = { form: mockForm, campo: 'campo', metodoNombre: 'nonExistentMethod' };
@@ -375,5 +384,5 @@ describe('SolicitudComponent', () => {
       expect(consoleErrorSpy).toHaveBeenCalledWith('Método nonExistentMethod no existe en tramite130108Store');
     });
   });
-  
+
 });

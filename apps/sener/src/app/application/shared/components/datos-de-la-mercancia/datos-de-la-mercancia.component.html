@@ -13,8 +13,8 @@
     <div class="row">
       <div class="col-md-12">
         <label for="descripcion" class="form-label">Descripción de la mercancía*:</label>
-        <textarea id="descripcion" class="form-control descripcion-text-box"
-          placeholder="Descripción de la mercancía" rows="8" formControlName="descripcion"
+        <textarea id="descripcion" class="form-control descripcion-text-box" placeholder="Descripción de la mercancía"
+          rows="8" formControlName="descripcion"
           (change)="setValoresStore(form, 'descripcion', 'setDescripcion')"></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
@@ -36,14 +36,14 @@
           (selectionChange)="onFraccionChange($event)" formControlName="fraccion">
         </app-catalogo-select>
       </div>
- 
+
       <div class="col-md-6">
         <app-catalogo-select id="umt" [label]="'Unidad de medida de la tarifa (UMT)'" [catalogo]="unidadCatalogo"
           [required]="true" [placeholder]="'Selecciona un valor'" [isDisabled]="false" formControlName="unidadMedida"
-          (selectionChange)="onUmtChange($event)"> 
+          (selectionChange)="onUmtChange($event)">
         </app-catalogo-select>
       </div>
- 
+
     </div>
     <div class="row mt-3">
       <div class="col-md-6">
@@ -53,20 +53,19 @@
         </app-catalogo-select>
       </div>
     </div>
- 
+
     <div class="row">
       <div class="col-md-6">
         <label for="descripcion_nico" class="form-label">Descripción NICO:</label>
-        <textarea id="descripcion_nico" class="form-control descripcion-text-box"
-          placeholder="Los demás"
-          rows="8" [disabled]="true"></textarea>
- 
+        <textarea id="descripcion_nico" class="form-control descripcion-text-box" placeholder="Los demás" rows="8"
+          [disabled]="true"></textarea>
+
       </div>
       <div class="col-md-6">
         <label for="acotacion" class="form-label">Acotación:</label>
         <textarea id="acotacion" class="form-control descripcion-text-box" placeholder="" rows="8" [disabled]="true">
     </textarea>
- 
+
       </div>
     </div>
     <div class="row">
@@ -103,6 +102,6 @@
         </div>
       </div>
     </div>
- 
+
   </form>
 </div>
