@@ -1,7 +1,6 @@
 <div class="container">
     <ng-titulo titulo="Pago de derechos" />
       <form [formGroup]="formSolicitud">
-        <ng-container formGroupName="datosImportadorExportador">
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -14,6 +13,13 @@
                   formControlName="claveDeReferencia"
                   type="text"/>
               </div>
+              @if(formSolicitud.controls['claveDeReferencia'].invalid && formSolicitud.controls['claveDeReferencia'].touched) {
+                <div class="d-grid">
+                    @if(formSolicitud.controls['claveDeReferencia'].errors?.['maxlength']) {
+                        <span class="mensaje-error">No puede exceder los 50 caracteres.</span>
+                    }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div class="form-group">
@@ -26,6 +32,13 @@
                   formControlName="cadenaDependencia"
                   type="text"/>
               </div>
+              @if(formSolicitud.controls['cadenaDependencia'].invalid && formSolicitud.controls['cadenaDependencia'].touched) {
+                <div class="d-grid">
+                    @if(formSolicitud.controls['cadenaDependencia'].errors?.['maxlength']) {
+                        <span class="mensaje-error">No puede exceder los 50 caracteres.</span>
+                    }
+                </div>
+              }
             </div>
             <div class="col-md-4">
               <div class="form-group">
@@ -53,6 +66,16 @@
                   formControlName="llaveDePago"
                   type="text"/>
               </div>
+              @if(formSolicitud.controls['llaveDePago'].invalid && formSolicitud.controls['llaveDePago'].touched) {
+                <div class="d-grid">
+                    @if(formSolicitud.controls['llaveDePago'].errors?.['required']) {
+                        <span class="mensaje-error">Este campo es obligatorio.</span>
+                    }
+                    @if(formSolicitud.controls['llaveDePago'].errors?.['pattern']) {
+                        <span class="mensaje-error">Por favor, introduzca la clave de pago correcta.</span>
+                    }
+                </div>
+              }
             </div>
   
             <div class="col-md-4">
@@ -76,9 +99,15 @@
                   formControlName="importePago"
                   type="text"/>
               </div>
+              @if(formSolicitud.controls['importePago'].invalid && formSolicitud.controls['importePago'].touched) {
+                <div class="d-grid">
+                    @if(formSolicitud.controls['importePago'].errors?.['pattern']) {
+                        <span class="mensaje-error">ingrese el monto de pago correcto.</span>
+                    }
+                </div>
+              }
             </div>
           </div>
-        </ng-container>
         <div class="d-flex justify-content-end mt-5">
             <button type="button" class="btn btn-danger">Borrar datos del pago</button>
         </div>

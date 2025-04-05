@@ -1,11 +1,16 @@
 import { Catalogo, CatalogoSelectComponent, InputFechaComponent, JSONResponse, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
 import { INPUT_FECHA_CONFIG } from '../../services/certificados-licencias.enum';
 
+/**
+ * Componente `PagoDeDerechosComponent` que representa el formulario para el pago de derechos.
+ * Este componente es standalone y utiliza varios módulos y componentes para su funcionalidad.
+ * @decorator `@Component`
+ */
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
@@ -55,16 +60,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
      * @param e {Catalogo} Banco seleccionado.
      */
     ngOnInit(): void {
-  
       this.formSolicitud = this.fb.group({
-        datosImportadorExportador: this.fb.group({
-          claveDeReferencia: [''],
-          cadenaDependencia: [''],
+          claveDeReferencia: ['',[Validators.maxLength(50)]],
+          cadenaDependencia: ['',Validators.maxLength(50)],
           banco: [''],
-          llaveDePago: [''],
+          llaveDePago: ['',[Validators.required,Validators.pattern(/^[A-Z0-9]{10}$/)]],
           fechaPago: [''],
-          importePago: [''],
-        }),
+          importePago: ['',Validators.pattern(/^[a-zA-Z0-9]*$/)],
       });
     }
   
@@ -87,14 +89,5 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.destroyNotifier$.next();
       this.destroyNotifier$.complete();
     }
-  
-    /**
-     * Método para actualizar el banco seleccionado.
-     * @param e {Catalogo} Banco seleccionado.
-     */
-    get datosImportadorExportador(): FormGroup {
-      return this.formSolicitud.get('datosImportadorExportador') as FormGroup;
-    }
-
 
 }
