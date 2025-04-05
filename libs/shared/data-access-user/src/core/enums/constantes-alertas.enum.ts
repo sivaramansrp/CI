@@ -36,14 +36,6 @@ export const TEXTOS = {
   DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`,
 };
 
-export const IMMEX = {
-  labelNombre: 'IMMEX (Número/aaaa)',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
 export const MESES = [
   { id: '1', mes: 'Enero' },
   { id: '2', mes: 'Febrero' },
@@ -291,3 +283,5 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
+
+export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
