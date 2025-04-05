@@ -54,6 +54,17 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
     { encabezado: 'Monto a cancelar', clave: (fila) => fila.monto_a_cancelar, orden: 8 },
     { encabezado: 'Monto utilizado', clave: (fila) => fila.monto_utilizado, orden: 9 },
   ];
+  configuracionColumnasCertificadosACancelar: ConfiguracionColumna<CertificadosDisponibles>[] = [
+    { encabezado: 'Folio del oficio de certificado', clave: (fila) => fila.folio_del_oficio_de_certificado, orden: 1 },
+    { encabezado: 'Nombre, Denominación o Razón Social', clave: (fila) => fila.nombre_denominacion_o_razon_social, orden: 2 },
+    { encabezado: 'Estado', clave: (fila) => fila.estado, orden: 3 },
+    { encabezado: 'Fabricante', clave: (fila) => fila.fabricante, orden: 4 },
+    { encabezado: 'Importador', clave: (fila) => fila.importador, orden: 5 },
+    { encabezado: 'Unidad primaria', clave: (fila) => fila.unidad_primaria, orden: 6 },
+    { encabezado: 'Monto expedido', clave: (fila) => fila.monto_expedido, orden: 7 },
+    { encabezado: 'Monto a cancelar', clave: (fila) => fila.monto_a_cancelar, orden: 8 },
+    { encabezado: 'Monto utilizado', clave: (fila) => fila.monto_utilizado, orden: 9 },
+  ];
   /**
   * Configuración para la selección de filas en la tabla.
   */
@@ -62,6 +73,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   
   cuposDisponiblesTabla: CuposDisponibles[] = [];
   CertificadosDisponiblesTabla: CertificadosDisponibles[] = [];
+  CertificadosACancelarTabla: CertificadosDisponibles[] = [];
   /**
    * Indica si el usuario tiene permiso para realizar ciertas acciones.
    */
