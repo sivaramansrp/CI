@@ -986,7 +986,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   fetchEntidadFederativa(): void {
     // Llamada al servicio para obtener los datos del estado
-    this.exportacionMineralesDeHierroService.getEstado().subscribe((data) => {
+    this.exportacionMineralesDeHierroService.getEstado().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
       // Asignamos el resultado al estado
       this.estado = data;
     });
@@ -1001,7 +1001,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   fetchRepresentacionFederal(): void {
     // Llamada al servicio para obtener la representación federal
     this.exportacionMineralesDeHierroService
-      .getRepresentacionFederal()
+      .getRepresentacionFederal().pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         // Asignamos el resultado a la propiedad representacionFederal
         this.representacionFederal = data;
