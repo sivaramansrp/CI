@@ -1,12 +1,11 @@
 <div class="container">
 
-    <ng-titulo *ngIf="!detalleDelPermiso" titulo="Buscar permiso a cancelar" />
-    <ng-titulo *ngIf="detalleDelPermiso" titulo="Detalle del permiso" />
+    <ng-titulo *ngIf="!detalleDelPermiso" titulo="Captura monto a favor del certificado" />
     <div *ngIf="!detalleDelPermiso">
         <form [formGroup]="busquedaForm">
             <div class="row">
                 <div class="col-md-8">
-                    <label class="form-label" for="tramite">Folio Trámite*:</label>
+                    <label class="form-label" for="tramite">*Monto a cancelar (en unidades primarias)</label>
                     <input type="text" class="form-control" id="tramite" formControlName="tramite">
                     <div *ngIf="busquedaForm.controls['tramite'].invalid && busquedaForm.controls['tramite'].touched">
                         <small *ngIf="busquedaForm.controls['tramite'].errors?.['required']">*El campo no puede estar vacío.</small>
@@ -20,15 +19,18 @@
         </div>
         <div class="row mt-2">
             <div class="col-md-8 d-flex justify-content-end">
+                
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+                    (click)="agregarSelect($event)">Agregar</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                     (click)="cancelar($event)">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="buscar($event)">Buscar</button>
             </div>
         </div>
     </div>
+    
+    <ng-titulo *ngIf="detalleDelPermiso" titulo="Detalle del permiso" />
     <div *ngIf="detalleDelPermiso">
         <form [formGroup]="detalleDelPermisoForm">
             <div class="row">

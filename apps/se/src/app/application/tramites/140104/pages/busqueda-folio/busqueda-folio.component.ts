@@ -28,7 +28,7 @@ export class BusquedaFolioComponent {
    * @param event Evento que desencadena la búsqueda.
    */
 
-  public buscar(event: Event): void {
+  public agregarSelect(event: Event): void {
     if (this.busquedaForm.invalid) {
       this.busquedaForm.markAllAsTouched();
       // alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');

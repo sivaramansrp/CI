@@ -197,4 +197,8 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
     this.CertificadosACancelarTabla = [certificadosACancelarDatos as CertificadosDisponibles];
   }
+
+  public seleccionar(event: Event): void {
+    this.servicioDeMensajesService.enviarMensaje(true);
+  }
 }
