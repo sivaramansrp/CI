@@ -2,6 +2,12 @@ import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@lib
 import { Component, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../services/certificados-licencias.enum';
 
+/**
+ * Componente que representa la página "Todos Pasos".
+ * 
+ * Este componente gestiona los pasos en un proceso tipo asistente, incluyendo la navegación
+ * entre pasos, la actualización del título según el paso actual y el manejo de acciones de los botones.
+ */
 @Component({
   selector: 'app-todospasos',
   templateUrl: './todospasos.component.html',
@@ -16,6 +22,10 @@ export class TodospasosComponent {
   * Esta variable se utiliza para almacenar el índice del paso.
   */
  indice: number = 1;
+/**
+ * Representa el título del paso actual en el proceso.
+ * Este valor se inicializa con una constante que representa el título del primer paso.
+ */
  public titulo: string = TITULO_PASO_UNO;
 
 

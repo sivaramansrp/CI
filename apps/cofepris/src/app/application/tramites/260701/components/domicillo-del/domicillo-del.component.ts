@@ -7,6 +7,14 @@ import { Subject, takeUntil } from 'rxjs';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../services/certificados-licencias.enum';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260701/domicillo-del.enum';
 
+/**
+ * Componente `DomicilloDelComponent` que representa una sección de la aplicación
+ * para gestionar información relacionada con domicilios, agentes y mercancías.
+ * 
+ * Este componente incluye formularios reactivos, tablas dinámicas y listas cruzadas
+ * para la selección y gestión de datos. Además, implementa los ciclos de vida de Angular
+ * `OnInit` y `OnDestroy` para inicializar y limpiar recursos.
+ */
 @Component({
   selector: 'app-domicillo-del',
   standalone: true,
@@ -145,9 +153,22 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
       derecha: 'País(es) seleccionados',
     };
 
+    /**
+     * Un Subject que emite un valor `void` cuando el componente es destruido.
+     * Se utiliza para gestionar y limpiar suscripciones, evitando fugas de memoria.
+     */
     private destroyed$: Subject<void> = new Subject();
 
+    /**
+     * Una constante que contiene el valor de `LOCALIDAD_COLONIA`.
+     * Probablemente se utiliza para representar o almacenar información textual
+     * relacionada con una localidad o colonia específica en la aplicación.
+     */
     public TEXTO = LOCALIDAD_COLONIA;
+    /**
+     * Representa el tipo de alerta que se mostrará.
+     * El valor es típicamente una cadena que indica el estilo de alerta, como 'alert-warning'.
+     */
     public infoAlert = 'alert-warning';
     
   /**
@@ -155,13 +176,29 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
    * @type {InputFecha}
    */
   public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   */
 
+  /**
+   * Representa una lista de columnas de configuración para objetos "Listaclaves".
+   * Esta propiedad se inicializa con la constante `LISTACLAVESDELOSLOTES`.
+   * 
+   * @type {ConfiguracionColumna<Listaclaves>[]}
+   */
   public listaClavesDeLosLotes: ConfiguracionColumna<Listaclaves>[] = LISTACLAVESDELOSLOTES;
+  /**
+   * Un arreglo que contiene una lista de objetos `Listaclaves`.
+   * Esta propiedad se utiliza para almacenar datos relacionados con las claves de los lotes.
+   */
   public listaClavesDeLosLotesDatos: Listaclaves[] = [];
 
+  /**
+   * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
+   * Este método inicializa varios formularios y obtiene los datos necesarios para el componente.
+   *
+   * - Llama a métodos para recuperar listas de estados, datos de tablas, datos de mercancías y claves de lotes.
+   * - Inicializa el grupo de formularios `domicilio` con controles para campos relacionados con la dirección.
+   * - Inicializa el grupo de formularios `formAgente` con controles para campos relacionados con el agente.
+   * - Inicializa el grupo de formularios `formMercancias` con controles para campos relacionados con las mercancías.
+   */
   ngOnInit(): void {
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
@@ -280,6 +317,14 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Recupera una lista de claves para los lotes desde el servicio y la asigna a la propiedad del componente.
+   * 
+   * Este método llama al método `getListaClaveTablaDatos` del servicio `certificadosLicenciasSvc`,
+   * se suscribe al observable y procesa la respuesta para poblar la propiedad `listaClavesDeLosLotesDatos`.
+   * 
+   * @returns {void} Este método no retorna un valor.
+   */
   public obtenerListaClavesDeLosLotes(): void {
     this.certificadosLicenciasSvc.getListaClaveTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
       const DATOS = JSON.parse(JSON.stringify(response));

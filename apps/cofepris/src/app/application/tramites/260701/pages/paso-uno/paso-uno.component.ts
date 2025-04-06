@@ -1,5 +1,12 @@
 import { Component } from '@angular/core';
 
+/**
+ * Componente PasoUnoComponent.
+ *
+ * Este componente representa el primer paso de un trámite en la aplicación.
+ * Contiene lógica para manejar la selección de subtítulos y mostrar la sección
+ * correspondiente de datos.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
