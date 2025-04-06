@@ -10,6 +10,13 @@ const ROUTES: Routes = [
   },
   {
     
+    path: 'hidrocarburos-de-petroleo',
+    loadChildren: () =>
+      import('./tramites/140112/retiro-importacion-exportacion-permiso.module').then(
+        (m) => m.RetiroImportacionExportacionPermisoModule
+      ),
+  },
+  {
     path: 'renuncia-de-derechos-de-permisos',
     loadChildren: () =>
       import('./tramites/140111/renuncia-de-derechos-de.module').then(

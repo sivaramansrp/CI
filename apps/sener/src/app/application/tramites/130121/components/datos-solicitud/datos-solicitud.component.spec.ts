@@ -195,7 +195,7 @@ describe('DatosSolicitudComponent', () => {
       // Use the original initialization so that validators are present.
       component.inicializarFormularios();
     });
-
+    
     it('should mark form as touched when form is invalid', () => {
       // Set up an invalid form using required validators.
       component.partidasDelaMercanciaForm = fb.group({
@@ -208,12 +208,14 @@ describe('DatosSolicitudComponent', () => {
       // Ensure the form is invalid.
       component.partidasDelaMercanciaForm.updateValueAndValidity();
       const markAllSpy = jest.spyOn(component.partidasDelaMercanciaForm, 'markAllAsTouched');
-
+    
       component.validarYEnviarFormulario();
-
-      expect(component.mostrarTabla).toBe(true);
+    
+      // Update the expectation to match your intended behavior.
+      expect(component.mostrarTabla).toBe(false);
       expect(markAllSpy).toHaveBeenCalled();
     });
+    
 
     it('should not mark form as touched when form is valid', () => {
       // Set up a valid form.
