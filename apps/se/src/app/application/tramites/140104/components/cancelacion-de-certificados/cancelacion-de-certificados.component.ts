@@ -133,7 +133,25 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
     {
       id: 1,
       descripcion: 'Importación',
-    }]
+    }];
+
+    this.mecanismoAsignacionList = [{
+      id: 0,
+      descripcion: 'Asignación directa',
+    },
+    {
+      id: 1,
+      descripcion: 'Licitación Publica',
+    },
+    {
+      id: 2,
+      descripcion: 'Primero en tiempo primero en derecho',
+    },
+    {
+      id: 3,
+      descripcion: 'Prorrateo',
+    }
+  ];
     
   }
 

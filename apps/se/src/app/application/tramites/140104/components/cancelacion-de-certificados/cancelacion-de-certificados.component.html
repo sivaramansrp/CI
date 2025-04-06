@@ -298,17 +298,18 @@
 
         <div class="row" *ngIf="mostrarDetalleDelCupo">
           <form [formGroup]="cancelacionForm">
-            <div class="col-md-4 form-group">
+            <div class="col-md-12 form-group">
               <label class="form-label" for="razon">Motivo de la cancelación *:</label>
-              <input
-                class="form-control"
-                id="razon"
-                formControlName="razon"
-                placeholder=""
-                name="razon"
-                type="text"
-                readonly=true
-                        />
+             
+              <textarea
+              id="razon"
+              name="razon"
+              class="form-control"
+              style="height: 50%; resize: none"
+              formControlName="razon"
+              readonly="true"
+            ></textarea>
+              
             </div>
             </form>
         </div>
