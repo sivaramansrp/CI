@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import * as formData from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
+import * as cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
+import * as certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
+import * as certificadosACancelarDatos from '@libs/shared/theme/assets/json/140104/certificados-a-cancelar.json';
 import { CuposDisponibles, CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -191,6 +193,8 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
 
   public buscar(event: Event): void{
     this.mostrarDetalleDelCupo = true;
-    this.cuposDisponiblesTabla = [formData as CuposDisponibles];
+    this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
+    this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
+    this.CertificadosACancelarTabla = [certificadosACancelarDatos as CertificadosDisponibles];
   }
 }
