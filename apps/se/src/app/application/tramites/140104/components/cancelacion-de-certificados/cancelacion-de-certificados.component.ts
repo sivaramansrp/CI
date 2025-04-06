@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
+import * as formData from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
 import { CuposDisponibles, CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormControl } from '@angular/forms';
@@ -184,12 +184,13 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   * 
   * @param event Evento que desencadena la eliminación.
   */
-  public eliminarRegistro(event: Event): void {
-    this.cuposDisponiblesTabla = [];
-    this.servicioDeMensajesService.actualizarDatosForma(this.cuposDisponiblesTabla as CuposDisponibles[]);
-  }
+  // public eliminarRegistro(event: Event): void {
+  //   this.cuposDisponiblesTabla = [];
+  //   this.servicioDeMensajesService.actualizarDatosForma(this.cuposDisponiblesTabla as CuposDisponibles[]);
+  // }
 
   public buscar(event: Event): void{
     this.mostrarDetalleDelCupo = true;
+    this.cuposDisponiblesTabla = [formData as CuposDisponibles];
   }
 }
