@@ -20,6 +20,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Formulario para capturar los datos de la solicitud.
    */
+  mostrarDetalleDelCupo: boolean = false;
   regimenAduaneroList: Catalogo[] = [];
   mecanismoAsignacionList: Catalogo[] = [];
   tratadoBloqueComercialList: Catalogo[] = [];
@@ -82,6 +83,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   formularioGrupo!: FormGroup;
   myForm: FormGroup;
   montoForm: FormGroup;
+  cancelacionForm: FormGroup;
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) {
     this.formularioGrupo = new FormGroup({
@@ -94,23 +96,26 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
 
     });
     this.myForm = this.fb.group({
-      regimenAduanero: ['', Validators.required],
-      descripcionProducto: ['', Validators.required],
-      clasificacionSubproducto: [''], // Not required based on the image
-      unidadMedida: ['', Validators.required],
-      mecanismoAsignacion: ['', Validators.required],
-      tratadoAcuerdo: ['', Validators.required],
-      fraccionesArancelarias: ['', Validators.required],
-      paises: [''],
-      fechaInicioVigencia: [''],
-      fechaFinVigencia: [''],
-      observaciones: [''],
-      fundamentos: ['']
+      regimenAduanero: [{value: '', disabled: true}],
+      descripcionProducto: [{value: '', disabled: true}],
+      clasificacionSubproducto: [{value: '', disabled: true}], // Not required based on the image
+      unidadMedida: [{value: '', disabled: true}],
+      mecanismoAsignacion: [{value: '', disabled: true}],
+      tratadoAcuerdo: [{value: '', disabled: true}],
+      fraccionesArancelarias: [{value: '', disabled: true}],
+      paises: [{value: '', disabled: true}],
+      fechaInicioVigencia: [{value: '', disabled: true}],
+      fechaFinVigencia: [{value: '', disabled: true}],
+      observaciones: [{value: '', disabled: true}],
+      fundamentos: [{value: '', disabled: true}]
     });
     this.montoForm = this.fb.group({
-      montoAsignado: [''], // Initial value from the image
-      montoDisponible: [''], // Initial value from the image
-      montoExpedido: ['']    // Initial value from the image
+      montoAsignado: [{value: '', disabled: true}], // Initial value from the image
+      montoDisponible: [{value: '', disabled: true}], // Initial value from the image
+      montoExpedido: [{value: '', disabled: true}]    // Initial value from the image
+    });
+    this.cancelacionForm = this.fb.group({
+      razon: [{value: '', disabled: true}], // Initial value from the image
     });
   }
   /**
@@ -121,7 +126,15 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   * de la solicitud de cancelación.
   */
   ngOnInit(): void {
-
+    this.regimenAduaneroList = [{
+      id: 0,
+      descripcion: 'Exportación',
+    },
+    {
+      id: 1,
+      descripcion: 'Importación',
+    }]
+    
   }
 
   /**
@@ -156,5 +169,9 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   public eliminarRegistro(event: Event): void {
     this.cuposDisponiblesTabla = [];
     this.servicioDeMensajesService.actualizarDatosForma(this.cuposDisponiblesTabla as CuposDisponibles[]);
+  }
+
+  public buscar(event: Event): void{
+    this.mostrarDetalleDelCupo = true;
   }
 }

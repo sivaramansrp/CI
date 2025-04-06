@@ -9,7 +9,7 @@
     [catalogo]="regimenAduaneroList"
     formControlName="regimenAduanero"
     [label]="'Régimen aduanero'"
-    [required]="true"
+    [required]="false"
     name="regimenAduanero"
   ></app-catalogo-select>
   </div>
@@ -18,7 +18,7 @@
     [catalogo]="mecanismoAsignacionList"
     formControlName="mecanismoAsignacion"
     [label]="'Mecanismo de asignación'"
-    [required]="true"
+    [required]="false"
     name="mecanismoAsignacion"
   ></app-catalogo-select>
   </div>
@@ -62,9 +62,10 @@
   </form>
 
   </div>
+  
   <div class="row">
     <div class="col-md-12 d-flex justify-content-end mt-10">
-      <button type="button" class="btn btn-primary">Buscar</button>
+      <button type="button" class="btn btn-primary" (click)="buscar($event)">Buscar</button>
   </div>
   </div>
     <div class="row">
@@ -75,10 +76,10 @@
   
       </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
       <ng-titulo [titulo]="'Detalle del cupo'"></ng-titulo>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
       <form [formGroup]="myForm">
       <div class="col-md-4 form-group">
         <label class="form-label" for="regimenAduanero">Régimen aduanero:</label>
@@ -226,10 +227,10 @@
       </div>
       </form>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
       <ng-titulo [titulo]="'Ofico'"></ng-titulo>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
       <form [formGroup]="montoForm">
         <div class="col-md-4 form-group">
           <label class="form-label" for="montoAsignado">Monto asignado:</label>
@@ -269,29 +270,56 @@
         </div>
         </form>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="mostrarDetalleDelCupo">
       <div class="col-md-12">
         <h5>Certificados disponibles</h5>
         <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosDisponibles"
           [datos]="CertificadosDisponiblesTabla"></app-tabla-dinamica>
-  
+          <div class="row mt-2">
+            <div class="col-md-12 d-flex justify-content-end">
+              <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                aria-controls="offcanvasRight">Seleccionar</button>
+            </div>
+          </div> 
       </div>
     
-      <div class="row">
+      <div class="row" *ngIf="mostrarDetalleDelCupo">
         <div class="col-md-12">
           <h5>Certificados a cancelar</h5>
           <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionSolicitud" [configuracionTabla]="configuracionColumnasCertificadosACancelar"
             [datos]="CertificadosACancelarTabla"></app-tabla-dinamica>
-    
+            <div class="row mt-2">
+              <div class="col-md-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                  aria-controls="offcanvasRight">Eliminar seleccionado</button>
+              </div>
+            </div> 
         </div>
-    <div class="row mt-2">
+
+        <div class="row" *ngIf="mostrarDetalleDelCupo">
+          <form [formGroup]="cancelacionForm">
+            <div class="col-md-4 form-group">
+              <label class="form-label" for="razon">Motivo de la cancelación *:</label>
+              <input
+                class="form-control"
+                id="razon"
+                formControlName="razon"
+                placeholder=""
+                name="razon"
+                type="text"
+                readonly=true
+                        />
+            </div>
+            </form>
+        </div>
+    <!-- <div class="row mt-2">
       <div class="col-md-12 d-flex justify-content-end">
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
           aria-controls="offcanvasRight" [disabled]="cuposDisponiblesTabla.length === 0" (click)="eliminarRegistro($event)">Eliminar registro</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
           aria-controls="offcanvasRight" (click)="busqueda($event)">Búsqueda folio</button>
       </div>
-    </div>
+    </div> -->
 </div>
 
 
