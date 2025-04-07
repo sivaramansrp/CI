@@ -3,6 +3,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
+/**
+ * Component Define el componente de Angular.
+ * selector 'app-aviso-terceros-relacionados' Selector del componente.
+ * standalone true Indica que el componente es independiente.
+ * imports Lista de módulos y componentes importados.
+ * templateUrl Ruta de la plantilla HTML del componente.
+ * styleUrl Ruta de los estilos CSS del componente.
+ */
+
 @Component({
   selector: 'app-aviso-terceros-relacionados',
   standalone: true,
