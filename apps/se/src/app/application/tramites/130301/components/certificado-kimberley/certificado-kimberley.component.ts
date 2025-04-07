@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CertificadoKimberleyForma } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
+import { Solicitud130301State, Tramite130301Store } from '../../../../estados/tramites/tramite130301.store';
+import { Tramite130301Query } from '../../../../estados/queries/tramite130301.query';
 
 @Component({
   selector: 'app-certificado-kimberley',
@@ -23,21 +25,34 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
   certificadoKimberleyDatos:CertificadoKimberleyForma[] = []
   estado: Catalogo[] = [];
+  public solicitudState!: Solicitud130301State;
 
   constructor(
     private fb: FormBuilder,
     private service: SolicitudProrrogaService,
+    public tramite130301Store: Tramite130301Store,
+    private tramite130301Query: Tramite130301Query
   ) {}
 
   ngOnInit(): void {
+    this.tramite130301Query
+      .selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.obtenerEstadoList()
     this.certificadoKimberley = this.fb.group({
       certificadosEmitidos:[{value:'',disabled:true}],
       numeroCertificadokimberley:[{value:'',disabled:true}],
-      paisEmisorCertificado:[],
+      paisEmisorCertificado:[this.solicitudState?.paisEmisorCertificado],
       nombreIngles:[{value:'',disabled:true}],
-      mixed:[],
-      paisDeOrigen:[],
+      mixed:[this.solicitudState?.mixed],
+      paisDeOrigen:[this.solicitudState?.paisDeOrigen],
       nombreExportador:[{value:'',disabled:true}],
       direccionExportador:[{value:'',disabled:true}],
       nombreImportador:[{value:'',disabled:true},Validators.required],
@@ -82,6 +97,15 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
         const DATOS = data?.data;
         this.estado = DATOS;
       });
+  }
+
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite130301Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite130301Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   ngOnDestroy(): void {

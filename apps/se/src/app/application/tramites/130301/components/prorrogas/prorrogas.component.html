@@ -35,7 +35,7 @@
         <div class="col-md-8">
             <div class="form-group">
                 <label for="motivoJustificacion">Motivo y/o justificación de las modificaciones*:</label>
-                <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control h-150"></textarea>
+                <textarea id="motivoJustificacion" formControlName="motivoJustificacion" class="form-control h-150" (change)="setValoresStore(prorrogasForm,'motivoJustificacion', 'setMotivoJustificacion')"></textarea>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
         <div class="col-md-8">
             <div class="form-group">
                 <label for="otrasDeclaraciones">Otras declaraciones*:</label>
-                <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control h-150"></textarea>
+                <textarea id="otrasDeclaraciones" formControlName="otrasDeclaraciones" class="form-control h-150" (change)="setValoresStore(prorrogasForm,'otrasDeclaraciones', 'setOtrasDeclaraciones')"></textarea>
             </div>
         </div>
     </div>

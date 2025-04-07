@@ -22,7 +22,7 @@
             <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" [label]="'País emisor del certificado Kimberley'"
                 [required]="false" name="paisEmisorCertificado" formControlName="paisEmisorCertificado"
-                ></app-catalogo-select>
+                (change)="setValoresStore(certificadoKimberley,'paisEmisorCertificado', 'setPaisEmisorCertificado')"></app-catalogo-select>
             </div>
         </div>
     </div>
@@ -37,12 +37,12 @@
     <div class="row mt-5">
         <div class="col-md-6 align-centre">
             <input class="form-check-input" type="checkbox" id="mixed"
-                formControlName="mixed"/> &nbsp;Mixed:
+                formControlName="mixed" (change)="setValoresStore(certificadoKimberley,'mixed', 'setMixed')"/> &nbsp;Mixed:
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" [label]="'País de origen:'"
-                [required]="false" name="paisDeOrigen" formControlName="paisDeOrigen"
+                [required]="false" name="paisDeOrigen" formControlName="paisDeOrigen" (change)="setValoresStore(certificadoKimberley,'paisDeOrigen', 'setPaisDeOrigen')"
                 ></app-catalogo-select>
             </div>
         </div>
