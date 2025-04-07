@@ -4,6 +4,13 @@ import { CertificadosLicenciasService } from '../../services/certificados-licenc
 import { Router } from '@angular/router';
 import { TramiteCofeprisStore } from '../../../../estados/tramite.store';
 
+/**
+ * Componente PasoTresComponent.
+ *
+ * Este componente maneja la lógica para el paso tres de un trámite en la aplicación.
+ * Incluye la obtención de la firma del usuario, la recuperación del trámite correspondiente,
+ * y la redirección a la pantalla de acuse.
+ */
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',

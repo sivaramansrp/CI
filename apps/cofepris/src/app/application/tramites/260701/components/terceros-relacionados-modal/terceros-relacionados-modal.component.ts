@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente modal para gestionar asociaciones de terceros.
@@ -19,7 +22,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './terceros-relacionados-modal.component.html',
   styleUrl: './terceros-relacionados-modal.component.scss',
 })
-export class TercerosRelacionadosModalComponent implements OnInit {
+export class TercerosRelacionadosModalComponent implements OnInit,OnDestroy {
 
   /**
      * Representa el título del componente modal.
@@ -44,6 +47,18 @@ export class TercerosRelacionadosModalComponent implements OnInit {
       moral: false,
     }
     /**
+     * Notificador para destruir los observables al finalizar.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+
+      /**
+       * Representa el estado de la Solicitud 260701.
+       * Esta propiedad contiene los datos y la gestión del estado para la solicitud actual.
+       * Se espera que se inicialice con una instancia de `Solicitud260303State`.
+       */
+      public solicitudState!: Solicitud260701State;
+
+    /**
      * Constructor del componente FabricanteModalComponent.
      * 
      * @param bsModalRef - Referencia a la instancia del modal de Bootstrap.
@@ -52,6 +67,8 @@ export class TercerosRelacionadosModalComponent implements OnInit {
     constructor(
       public bsModalRef: BsModalRef,
       private fb: FormBuilder,
+      private tramite260701Store: Tramite260701Store,
+      private tramite260701Query: Tramite260701Query
     ) {
       this.titulo = '';
     }
@@ -63,6 +80,14 @@ export class TercerosRelacionadosModalComponent implements OnInit {
      * el formulario relacionado con las asociaciones de terceros.
      */
     ngOnInit(): void {
+      this.tramite260701Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
       this.cerrarTercerosRelacionadosForm();
     }
   
@@ -76,27 +101,27 @@ export class TercerosRelacionadosModalComponent implements OnInit {
      */
     public cerrarTercerosRelacionadosForm(): void {
       this.tercerosRelacionadosForm = this.fb.group({
-        denominacionSocial: ['',Validators.required],
-        terceroNombre: ['',Validators.required],
-        primerApellido: ['',Validators.required],
-        nacional: ['',Validators.required],
-        extranjero: ['',Validators.required],
-        tipoPersona: ['',Validators.required],
-        rfc: ['',Validators.required],
-        curp: ['',Validators.required],
-        razonSocial: ['',Validators.required],
-        pais: ['',Validators.required],
-        estado: ['',Validators.required],
-        municipio: ['',Validators.required],
-        localidad: ['',Validators.required],
-        codigoPostal: ['',Validators.required],
-        colonia: ['',Validators.required],
-        calle: ['',Validators.required],
-        numeroExterior: ['',Validators.required],
-        numeroInterior: ['',Validators.required],
-        lada: [''],
-        telefono: ['',Validators.required],
-        correoElectronico: ['',Validators.required],
+        denominacionSocial: [this.solicitudState.denominacionSocial,Validators.required],
+        terceroNombre: [this.solicitudState.terceroNombre,Validators.required],
+        primerApellido: [this.solicitudState.primerApellido,Validators.required],
+        nacional: [this.solicitudState.nacional,Validators.required],
+        extranjero: [this.solicitudState.extranjero,Validators.required],
+        tipoPersona: [this.solicitudState.tipoPersona,Validators.required],
+        rfc: [this.solicitudState.tercerosRelacionadosRfc,Validators.required],
+        curp: [this.solicitudState.curp,Validators.required],
+        razonSocial: [this.solicitudState.razonSocial,Validators.required],
+        pais: [this.solicitudState.pais,Validators.required],
+        estado: [this.solicitudState.tercerosRelacionadosEstado,Validators.required],
+        municipio: [this.solicitudState.tercerosRelacionadosMunicipio,Validators.required],
+        localidad: [this.solicitudState.tercerosRelacionadosLocalidad,Validators.required],
+        codigoPostal: [this.solicitudState.tercerosRelacionadosCodigoPostal,Validators.required],
+        colonia: [this.solicitudState.tercerosRelacionadosColonia,Validators.required],
+        calle: [this.solicitudState.tercerosRelacionadosCalle,Validators.required],
+        numeroExterior: [this.solicitudState.numeroExterior,Validators.required],
+        numeroInterior: [this.solicitudState.numeroInterior,Validators.required],
+        lada: [this.solicitudState.tercerosRelacionadosLada],
+        telefono: [this.solicitudState.tercerosRelacionadosTelefono,Validators.required],
+        correoElectronico: [this.solicitudState.tercerosRelacionadosCorreoElectronico,Validators.required],
       });
     }
 
@@ -110,9 +135,30 @@ export class TercerosRelacionadosModalComponent implements OnInit {
      * @returns {void}
      */
     public onChangeTipoPersona(): void {
+      this.setValoresStore(this.tercerosRelacionadosForm,'tipoPersona', 'setTipoPersona');
       const RADIO = this.tercerosRelacionadosForm.get('tipoPersona')?.value;
       this.radioObjeto.fisica = RADIO === 'fisica' ? true : false;
       this.radioObjeto.moral = RADIO === 'moral' ? true : false;
     }
+
+  /**
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   */
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260701Store): void {
+      const VALOR = form.get(campo)?.value;
+      (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }

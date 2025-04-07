@@ -1,10 +1,12 @@
 import { Catalogo, CatalogoSelectComponent, InputFechaComponent, JSONResponse, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
 import { INPUT_FECHA_CONFIG } from '../../services/certificados-licencias.enum';
+import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
 /**
  * Componente `PagoDeDerechosComponent` que representa el formulario para el pago de derechos.
@@ -40,12 +42,27 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
      * Constante para configurar el input de fecha.
      */
     INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
+
     /**
-     * Constructor del componente.
+     * Representa el estado de la Solicitud 260701.
+     * Esta propiedad contiene los datos y la gestión del estado para la solicitud actual.
+     * Se espera que se inicialice con una instancia de `Solicitud260303State`.
+     */
+    public solicitudState!: Solicitud260701State;
+
+
+    /**
+     * Constructor del componente `PagoDeDerechosComponent`.
+     * @param fb - Instancia de `FormBuilder` para crear formularios reactivos.
+     * @param certificadosLicenciasSvc - Servicio para manejar operaciones relacionadas con certificados y licencias.
+     * @param tramite260701Store - Store para gestionar el estado del trámite 260701.
+     * @param tramite260701Query - Query para consultar el estado del trámite 260701.
      */
     constructor(
       private fb: FormBuilder,
-      private certificadosLicenciasSvc: CertificadosLicenciasService
+      private certificadosLicenciasSvc: CertificadosLicenciasService,
+      private tramite260701Store: Tramite260701Store,
+      private tramite260701Query: Tramite260701Query
     ) {
       this.fetchBancoData();
     }
@@ -60,13 +77,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
      * @param e {Catalogo} Banco seleccionado.
      */
     ngOnInit(): void {
+      this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.solicitudState = seccionState;
+      })).subscribe();
+
+
       this.formSolicitud = this.fb.group({
-          claveDeReferencia: ['',[Validators.maxLength(50)]],
-          cadenaDependencia: ['',Validators.maxLength(50)],
-          banco: [''],
-          llaveDePago: ['',[Validators.required,Validators.pattern(/^[A-Z0-9]{10}$/)]],
-          fechaPago: [''],
-          importePago: ['',Validators.pattern(/^[a-zA-Z0-9]*$/)],
+          claveDeReferencia: [this.solicitudState.claveDeReferencia,[Validators.maxLength(50)]],
+          cadenaDependencia: [this.solicitudState.cadenaDependencia,Validators.maxLength(50)],
+          banco: [this.solicitudState.banco],
+          llaveDePago: [this.solicitudState.llaveDePago,[Validators.required,Validators.pattern(/^[A-Z0-9]{10}$/)]],
+          fechaPago: [this.solicitudState.fechaPago],
+          importePago: [this.solicitudState.importePago,Validators.pattern(/^[a-zA-Z0-9]*$/)],
       });
     }
   
@@ -80,6 +102,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           this.bancoCatalogo = DATOS.data
         });
     }
+
+      /**
+       * Establece el valor de un campo en el store de Tramite31601.
+       * @param form - El grupo de formularios que contiene el campo.
+       * @param campo - El nombre del campo cuyo valor se va a establecer.
+       * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+       */
+      public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260701Store): void {
+        const VALOR = form.get(campo)?.value;
+        (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
+      }
   
     /**
      * Método para actualizar el banco seleccionado.

@@ -87,6 +87,7 @@
                     placeholder=""
                     type="text"
                     formControlName="denominacionORazonSocial"
+                    (change)="setValoresStore(forma, 'denominacionORazonSocial', 'setDenominacionORazonSocial')"
                   />
                 </div>
             </div>
@@ -99,6 +100,7 @@
                     placeholder=""
                     type="text"
                     formControlName="correoElectronico"
+                    (change)="setValoresStore(forma, 'correoElectronico', 'setCorreoElectronico')"
                   />
                 </div>
             </div>

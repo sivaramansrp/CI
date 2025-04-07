@@ -11,8 +11,16 @@
                         placeholder=""
                         type="text"
                         formControlName="rfc"
+                        (change)="setValoresStore(representante,'rfc', 'setRfc')"
                     />
                 </div>
+                @if(representante.controls['rfc'].invalid && representante.controls['rfc'].touched) {
+                    <div class="d-grid">
+                        @if(representante.controls['rfc'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-4">
                 <button class="btn btn-primary me-2" (click)="obtenerValor()">Buscar</button>
@@ -28,8 +36,16 @@
                         placeholder=""
                         type="number"
                         formControlName="nombre"
+                        (change)="setValoresStore(representante,'nombre', 'setNombre')"
                     />
                 </div>
+                @if(representante.controls['nombre'].invalid && representante.controls['nombre'].touched) {
+                    <div class="d-grid">
+                        @if(representante.controls['nombre'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
@@ -40,8 +56,16 @@
                         placeholder=""
                         type="text"
                         formControlName="apellidoPaterno"
+                        (change)="setValoresStore(representante,'apellidoPaterno', 'setApellidoPaterno')"
                     />
                 </div>
+                @if(representante.controls['apellidoPaterno'].invalid && representante.controls['apellidoPaterno'].touched) {
+                    <div class="d-grid">
+                        @if(representante.controls['apellidoPaterno'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-4">
                 <div class="form-group">
@@ -52,8 +76,16 @@
                         placeholder=""
                         type="text"
                         formControlName="apellidoMaterno"
+                        (change)="setValoresStore(representante,'apellidoMaterno', 'setApellidoMaterno')"
                     />
                 </div>
+                @if(representante.controls['apellidoMaterno'].invalid && representante.controls['apellidoMaterno'].touched) {
+                    <div class="d-grid">
+                        @if(representante.controls['apellidoMaterno'].errors?.['required']) {
+                            <span class="mensaje-error">Este campo es obligatorio.</span>
+                        }
+                    </div>
+                }
             </div>
             
         </div>

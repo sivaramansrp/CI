@@ -11,7 +11,8 @@
                     (valueChange)="cambiarRadio($event)"
                     id="cumplimiento"
                     [layout]="'horizontal'"
-                    formControlName="cumplimiento">
+                    formControlName="cumplimiento"
+                    (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')">
                 </app-input-radio>
             </div>
           </div>

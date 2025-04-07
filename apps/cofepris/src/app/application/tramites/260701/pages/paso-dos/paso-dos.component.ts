@@ -2,6 +2,14 @@ import { CATALOGOS_ID,Catalogo, CatalogosService, TEXTOS } from '@libs/shared/da
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
+/**
+ * Componente PasoDosComponent.
+ *
+ * Este componente es responsable de manejar la lógica y la presentación de la
+ * segunda etapa de un trámite en la aplicación. Se encarga de inicializar y
+ * gestionar el catálogo de documentos disponibles para el trámite, así como
+ * de manejar la destrucción de observables para evitar fugas de memoria.
+ */
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
@@ -21,6 +29,11 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   catalogoDocumentos: Catalogo[] = [];
 
 
+  /**
+   * Constructor del componente PasoDosComponent.
+   * 
+   * @param catalogosServices - Servicio inyectado para manejar operaciones relacionadas con catálogos.
+   */
   constructor(public catalogosServices: CatalogosService) {
     // Dependencia inyectada para uso posterior
   }

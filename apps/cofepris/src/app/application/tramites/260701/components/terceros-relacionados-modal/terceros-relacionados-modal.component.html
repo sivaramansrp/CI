@@ -45,7 +45,8 @@
                     <label for="rfc" class="form-label">RFC*:</label>
                     <input type="text" id="rfc" 
                         formControlName="rfc"
-                        class="form-control">
+                        class="form-control"
+                        (change)="setValoresStore(tercerosRelacionadosForm,'rfc', 'setTercerosRelacionadosRfc')">
                 </div>
                 @if(tercerosRelacionadosForm.controls['rfc'].invalid && tercerosRelacionadosForm.controls['rfc'].touched) {
                     <div class="d-grid">
@@ -63,7 +64,8 @@
                         <label for="denominacion">Denominación/razón social*:</label>
                         <input type="text" class="form-control" 
                             formControlName="denominacionSocial" 
-                            id="denominacion">
+                            id="denominacion"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'denominacionSocial', 'setDenominacionSocial')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['denominacionSocial'].invalid && tercerosRelacionadosForm.controls['denominacionSocial'].touched) {
                         <div class="d-grid">
@@ -83,7 +85,8 @@
                             <label for="nombreDescripcion">Nombre(s)*:</label>
                             <input type="text" class="form-control" 
                             formControlName="terceroNombre" 
-                            id="nombreDescripcion">
+                            id="nombreDescripcion"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'terceroNombre', 'setTerceroNombre')">
                         </div>
                         @if(tercerosRelacionadosForm.controls['terceroNombre'].invalid && tercerosRelacionadosForm.controls['terceroNombre'].touched) {
                             <div class="d-grid">
@@ -96,8 +99,10 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="primerApellido">Primer apellido*:</label>
-                            <input type="text" class="form-control" formControlName="primerApellido"
-                            id="primerApellido">
+                            <input type="text" class="form-control" 
+                            formControlName="primerApellido"
+                            id="primerApellido"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'primerApellido', 'setPrimerApellido')">
                         </div>
                         @if(tercerosRelacionadosForm.controls['primerApellido'].invalid && tercerosRelacionadosForm.controls['primerApellido'].touched) {
                             <div class="d-grid">
@@ -110,7 +115,8 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="segundoApellido">Segundo apellido:</label>
-                            <input type="text" class="form-control" formControlName="segundoApellido"
+                            <input type="text" class="form-control" 
+                            formControlName="segundoApellido"
                             id="segundoApellido">
                         </div>
                         @if(tercerosRelacionadosForm.controls['segundoApellido'].invalid && tercerosRelacionadosForm.controls['segundoApellido'].touched) {
@@ -130,7 +136,8 @@
                         <label for="pais" class="form-label">País*:</label>
                         <input type="text" id="pais" 
                             formControlName="pais"
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'pais', 'setPais')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['pais'].invalid && tercerosRelacionadosForm.controls['pais'].touched) {
                         <div class="d-grid">
@@ -145,7 +152,8 @@
                         <label for="estado" class="form-label">Estado/localidad*:</label>
                         <input type="text" id="estado" 
                             formControlName="estado"
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosEstado', 'setTercerosRelacionadosEstado')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['estado'].invalid && tercerosRelacionadosForm.controls['estado'].touched) {
                         <div class="d-grid">
@@ -160,7 +168,8 @@
                         <label for="municipio" class="form-label">Municipio/alcaldia</label>
                         <input type="text" id="estado" 
                             formControlName="municipio" 
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosMunicipio', 'setTercerosRelacionadosMunicipio')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['municipio'].invalid && tercerosRelacionadosForm.controls['municipio'].touched) {
                         <div class="d-grid">
@@ -177,7 +186,8 @@
                         <label for="localidad" class="form-label">Localidad*:</label>
                         <input type="text" id="localidad" 
                             formControlName="localidad" 
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosLocalidad', 'setTercerosRelacionadosLocalidad')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['localidad'].invalid && tercerosRelacionadosForm.controls['localidad'].touched) {
                         <div class="d-grid">
@@ -192,7 +202,8 @@
                        <label for="estado" class="form-label">Código postal o equivalente</label>
                        <input type="text" id="estado" 
                            formControlName="codigoPostal" 
-                           class="form-control">
+                           class="form-control"
+                           (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosCodigoPostal', 'setTercerosRelacionadosCodigoPostal')">
                    </div>
                    @if(tercerosRelacionadosForm.controls['codigoPostal'].invalid && tercerosRelacionadosForm.controls['codigoPostal'].touched) {
                     <div class="d-grid">
@@ -207,7 +218,8 @@
                    <label for="colonia" class="form-label">Colonia:</label>
                    <input type="text" id="colonia" 
                        formControlName="colonia" 
-                       class="form-control">
+                       class="form-control"
+                       (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosColonia', 'setTercerosRelacionadosColonia')">
                </div>
                @if(tercerosRelacionadosForm.controls['colonia'].invalid && tercerosRelacionadosForm.controls['colonia'].touched) {
                 <div class="d-grid">
@@ -224,7 +236,8 @@
                         <label for="calle" class="form-label">Calle*:</label>
                         <input type="text" id="calle" 
                             formControlName="calle" 
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosCalle', 'setTercerosRelacionadosCalle')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['calle'].invalid && tercerosRelacionadosForm.controls['calle'].touched) {
                         <div class="d-grid">
@@ -239,7 +252,8 @@
                         <label for="numeroExterior" class="form-label">Número exterior*:</label>
                         <input type="text" id="numeroExterior" 
                             formControlName="numeroExterior"
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'numeroExterior', 'setNumeroExterior')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['numeroExterior'].invalid && tercerosRelacionadosForm.controls['numeroExterior'].touched) {
                         <div class="d-grid">
@@ -256,7 +270,8 @@
                         <label for="numeroInterior" class="form-label">Número interior:</label>
                         <input type="text" id="numeroInterior" 
                             formControlName="numeroInterior"
-                            class="form-control">
+                            class="form-control"
+                            (change)="setValoresStore(tercerosRelacionadosForm,'numeroInterior', 'setNumeroInterior')">
                     </div>
                     @if(tercerosRelacionadosForm.controls['numeroInterior'].invalid && tercerosRelacionadosForm.controls['numeroInterior'].touched) {
                         <div class="d-grid">
@@ -272,13 +287,15 @@
                             <label for="lada" class="form-label">Lada:</label>
                             <input type="text" id="lada" 
                                 formControlName="lada"
-                                class="form-control lada">
+                                class="form-control lada"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosLada', 'setTercerosRelacionadosLada')">
                         </div>
                         <div class="form-group">
                             <label for="telefono" class="form-label">Teléfono*:</label>
                             <input type="text" id="telefono" 
                                 formControlName="telefono"
-                                class="form-control">
+                                class="form-control"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosTelefono', 'setTercerosRelacionadosTelefono')">
                         </div>
                         @if(tercerosRelacionadosForm.controls['telefono'].invalid && tercerosRelacionadosForm.controls['telefono'].touched) {
                             <div class="d-grid">
@@ -295,7 +312,8 @@
                             <label for="correoElectronico" class="form-label">Correo electrónico: </label>
                             <input type="text" id="correoElectronico" 
                                 formControlName="correoElectronico"
-                                class="form-control">
+                                class="form-control"
+                                (change)="setValoresStore(tercerosRelacionadosForm,'tercerosRelacionadosCorreoElectronico', 'setTercerosRelacionadosCorreoElectronico')">
                         </div>
                         @if(tercerosRelacionadosForm.controls['correoElectronico'].invalid && tercerosRelacionadosForm.controls['correoElectronico'].touched) {
                             <div class="d-grid">

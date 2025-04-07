@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, CrossListLable, InputFecha, InputFechaComponent, Listaclaves, LISTACLAVESDELOSLOTES, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../services/certificados-licencias.enum';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260701/domicillo-del.enum';
+import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
 /**
  * Componente `DomicilloDelComponent` que representa una sección de la aplicación
@@ -38,9 +40,17 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
      */
     @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
    
+    /**
+     * Constructor del componente DomicilloDelComponent.
+     * 
+     * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
+     * @param certificadosLicenciasSvc - Un servicio para manejar operaciones relacionadas con certificados y licencias.
+     */
     constructor(
       private readonly fb: FormBuilder,
-      private certificadosLicenciasSvc: CertificadosLicenciasService
+      private certificadosLicenciasSvc: CertificadosLicenciasService,
+      private tramite260701Store: Tramite260701Store,
+      private tramite260701Query: Tramite260701Query
     ) {
       // Dependencia inyectada para uso posterior
     }
@@ -189,6 +199,12 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
    * Esta propiedad se utiliza para almacenar datos relacionados con las claves de los lotes.
    */
   public listaClavesDeLosLotesDatos: Listaclaves[] = [];
+  /**
+   * Representa el estado de la Solicitud 260701.
+   * Esta propiedad contiene los datos y la gestión del estado para la solicitud actual.
+   * Se espera que se inicialice con una instancia de `Solicitud260701State`.
+   */
+  public solicitudState!: Solicitud260701State;
 
   /**
    * Gancho del ciclo de vida que se llama después de que Angular ha inicializado todas las propiedades enlazadas a datos de una directiva.
@@ -200,6 +216,10 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
    * - Inicializa el grupo de formularios `formMercancias` con controles para campos relacionados con las mercancías.
    */
   ngOnInit(): void {
+    this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
+        this.solicitudState = seccionState;
+    })).subscribe();
+
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
@@ -333,25 +353,14 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
   }
    
   /**
-   * Maneja el cambio del checkbox en el formulario y actualiza el estado correspondiente.
-   * @param event Evento del checkbox.
-   * @param form Formulario en el que se realiza el cambio.
-   * @param campo Nombre del campo afectado.
-   * @param metodoNombre Método correspondiente del store para actualizar el valor.
+   * Establece el valor de un campo en el store de Tramite31601.
+   * @param form - El grupo de formularios que contiene el campo.
+   * @param campo - El nombre del campo cuyo valor se va a establecer.
+   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
    */
-  onAvisoCheckboxChange(
-    event: Event,
-    form: FormGroup,
-    campo: string,
-  ): void {
-    // const CHECKBOX = event.target as HTMLInputElement;
-    // if (CHECKBOX.checked) {
-    //   this.domicilio.get('licenciaSanitaria')?.disable();
-    // } else {
-    //   this.domicilio.get('licenciaSanitaria')?.enable();
-    // }
-    // const VALOR = form.get(campo)?.value;
-    // (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
+  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260701Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
    
   /**
