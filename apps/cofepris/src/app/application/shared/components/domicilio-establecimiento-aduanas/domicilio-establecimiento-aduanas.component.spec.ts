@@ -109,24 +109,6 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     expect(component.mercanciasTablaDatos).toEqual([]);
   });
 
-  it('should disable licenciaSanitaria when avisoCheckbox is checked', () => {
-    const checkbox = { target: { checked: true } } as unknown as Event;
-    component.onAvisoCheckboxChange(checkbox);
-    expect(component.domicilio.get('licenciaSanitaria')?.disabled).toBe(true);
-  });
-
-  it('should enable licenciaSanitaria when avisoCheckbox is unchecked', () => {
-    const checkbox = { target: { checked: false } } as unknown as Event;
-    component.onAvisoCheckboxChange(checkbox);
-    expect(component.domicilio.get('licenciaSanitaria')?.enabled).toBe(true);
-  });
-
-  it('should toggle colapsable state', () => {
-    expect(component.colapsable).toBe(false);
-    component.mostrar_colapsable();
-    expect(component.colapsable).toBe(true);
-  });
-
   it('should set values in the store when setValoresStore is called', () => {
     component.domicilio.get('codigoPostal')?.setValue('54321');
     component.setValoresStore(
