@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ImportacionOtrosVehiculosUsadosService } from './importacion-otros-vehiculos-usadosservice';
+import { ImportacionOtrosVehiculosUsadosService } from './importacion-otros-vehiculos-usados.service';
 
 describe('ImportacionVehiculosNuevosService', () => {
   let service: ImportacionOtrosVehiculosUsadosService;
