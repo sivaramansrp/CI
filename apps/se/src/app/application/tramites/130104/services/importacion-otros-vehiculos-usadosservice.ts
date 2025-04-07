@@ -22,7 +22,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    * @returns {Observable<Catalogo[]>}
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130115/pais-procenia.json');
+    return this.http.get<Catalogo[]>('/assets/json/130104/pais-procenia.json');
   }
   /**
    * Obtiene la lista de países por bloque desde un archivo JSON.
@@ -31,7 +31,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    */
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130115/paises-por-bloque.json'
+      '/assets/json/130104/paises-por-bloque.json'
     );
   }
   /**
@@ -40,7 +40,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    */
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130115/entidad-federativa.json'
+      '/assets/json/130104/entidad-federativa.json'
     );
   }
   /**
@@ -49,7 +49,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130115/representacion-federal.json'
+      '/assets/json/130104/representacion-federal.json'
     );
   }
 
@@ -59,7 +59,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130115/solicitude-options.json'
+      'assets/json/130104/solicitude-options.json'
     );
   }
 
@@ -69,7 +69,7 @@ export class ImportacionOtrosVehiculosUsadosService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130115/producto-otions.json'
+      'assets/json/130104/producto-otions.json'
     );
   }
 }

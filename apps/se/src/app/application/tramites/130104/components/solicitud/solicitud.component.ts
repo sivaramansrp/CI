@@ -17,9 +17,9 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { Tramite130104Query } from '../../estados/queries/tramite130104.query';
 import { Tramite130104Store } from '../../estados/tramites/tramite130104.store';
 
-import fractionValues from '@libs/shared/theme/assets/json/130115/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130115/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130115/unidad_da.json';
+import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_arancelaria.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
+import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
 
 /**
  *  Componente para gestionar la solicitud de mercancías.
