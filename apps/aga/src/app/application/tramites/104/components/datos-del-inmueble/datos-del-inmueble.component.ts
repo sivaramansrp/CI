@@ -3,8 +3,8 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormularioQuery } from '../../../../core/queries/tramite104.query';
-import { FormularioStore } from '../../../../core/estados/tramites/tramite104.store';
+import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
+import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
 import { MENSAJEDEALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
 import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
@@ -89,7 +89,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * - Inicializa el `FormBuilder` para la creación de formularios reactivos.
    */
 
-  constructor(private fb: FormBuilder, private formularioStore: FormularioStore, private formularioQuery: FormularioQuery) {
+  constructor(private fb: FormBuilder, private datosDelInmueble104Store: DatosDelInmueble104Store, private datosDelInmueble104Query: DatosDelInmueble104Query) {
     // Inicializa
   }
 
@@ -222,7 +222,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * - La suscripción se gestiona con `takeUntil(this.destroy$)` para evitar fugas de memoria cuando el componente se destruye.
    */
   cargarDatosGuardados(): void {
-    this.formularioQuery.fomentoExportacion$
+    this.datosDelInmueble104Query.fomentoExportacion$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         if (data) {
@@ -230,7 +230,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.formularioQuery.direccion$
+    this.datosDelInmueble104Query.direccion$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         if (data) {
@@ -254,7 +254,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((formData) => {
-        this.formularioStore.setFomentoExportacion(formData);
+        this.datosDelInmueble104Store.setFomentoExportacion(formData);
       });
 
     this.formularioDireccion.valueChanges
@@ -263,7 +263,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((formData) => {
-        this.formularioStore.setDireccion(formData);
+        this.datosDelInmueble104Store.setDireccion(formData);
       });
   }
 

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 /**
  * Representa el estado del formulario completo que se guarda en el store.
  */
-export interface FormularioState {
+export interface DatosDelInmueble104State {
   /**
    * Información correspondiente a la sección de Fomento a la Exportación.
    */
@@ -76,7 +76,7 @@ export interface FormularioState {
  * 
  * @returns Un objeto con valores por defecto para cada campo del formulario.
  */
-export function createFormularioInitialState(): FormularioState {
+export function createFormularioInitialState(): DatosDelInmueble104State {
   return {
     fomentoExportacion: {
       /**
@@ -141,8 +141,8 @@ export function createFormularioInitialState(): FormularioState {
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'formulario', resettable: true })
-export class FormularioStore extends Store<FormularioState> {
+@StoreConfig({ name: 'DatosDelInmueble104', resettable: true })
+export class DatosDelInmueble104Store extends Store<DatosDelInmueble104State> {
   /**
    * Constructor del store que inicializa el estado con los valores predeterminados
    * definidos en la función `createFormularioInitialState`.
@@ -158,7 +158,7 @@ export class FormularioStore extends Store<FormularioState> {
    * 
    * @param datos - Objeto con los valores de tipoPrograma y folioAutorizacion.
    */
-  public setFomentoExportacion(datos: FormularioState['fomentoExportacion']): void {
+  public setFomentoExportacion(datos: DatosDelInmueble104State['fomentoExportacion']): void {
     this.update((state) => ({
       ...state,
       fomentoExportacion: datos,
@@ -172,7 +172,7 @@ export class FormularioStore extends Store<FormularioState> {
    * @param datos - Objeto con los valores del formulario de dirección
    * como calle, número exterior, país, entidad federativa, etc.
    */
-  public setDireccion(datos: FormularioState['direccion']): void {
+  public setDireccion(datos: DatosDelInmueble104State['direccion']): void {
     this.update((state) => ({
       ...state,
       direccion: datos,

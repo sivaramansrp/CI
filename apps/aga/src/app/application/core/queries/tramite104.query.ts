@@ -1,4 +1,4 @@
-import { FormularioState, FormularioStore } from '../estados/tramites/tramite104.store';
+import { DatosDelInmueble104State, DatosDelInmueble104Store } from '../estados/tramites/tramite104.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
@@ -8,7 +8,7 @@ import { Query } from '@datorama/akita';
 @Injectable({
   providedIn: 'root',
 })
-export class FormularioQuery extends Query<FormularioState> {
+export class DatosDelInmueble104Query extends Query<DatosDelInmueble104State> {
   
   /** Obtiene los datos completos del formulario de fomento a la exportación */
   fomentoExportacion$ = this.select((state) => state.fomentoExportacion);
@@ -20,7 +20,7 @@ export class FormularioQuery extends Query<FormularioState> {
    * **Constructor para inyectar el store y crear la query**
    * @param store - Store para gestionar el estado del formulario.
    */
-  constructor(protected override store: FormularioStore) {
+  constructor(protected override store: DatosDelInmueble104Store) {
     super(store);
   }
 }
