@@ -1,0 +1,192 @@
+/**
+ * @fileoverview Estado `DatosDelSolicituteSeccionStateStore`
+ * Este archivo define el estado global para gestionar los datos relacionados con la solicitud,
+ * incluyendo información del representante, establecimiento, y propietario.
+ */
+
+import { Injectable } from '@angular/core';
+
+import { DatosDeLaProductoModel, PropietarioModel } from '../../models/datos-de-la-solicitud.model';
+import { Store, StoreConfig } from '@datorama/akita';
+
+/**
+ * @interface DatosDelSolicituteSeccionState
+ * Representa la estructura del estado global para los datos de la solicitud.
+ */
+export interface DatosDelSolicituteSeccionState {
+  /**
+   * RFC del representante.
+   */
+  representanteRfc: string;
+
+  /**
+   * Nombre del representante.
+   */
+  representanteNombre: string;
+
+  /**
+   * Apellido paterno del representante.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * Apellido materno del representante.
+   */
+  apellidoMaterno: string;
+
+  /**
+   * Denominación o razón social del establecimiento.
+   */
+  establecimientoDenominacionRazonSocial: string;
+
+  /**
+   * Correo electrónico del establecimiento.
+   */
+  establecimientoCorreoElectronico: string;
+
+  /**
+   * Código postal del domicilio del establecimiento.
+   */
+  establecimientoDomicilioCodigoPostal: string;
+
+  /**
+   * Estado del domicilio del establecimiento.
+   */
+  establecimientoDomicilioEstado: string;
+
+  /**
+   * Municipio o alcaldía del domicilio del establecimiento.
+   */
+  establecimientoMunicipioYAlcaldia: string;
+
+  /**
+   * Localidad del domicilio del establecimiento.
+   */
+  establecimientoDomicilioLocalidad: string;
+
+  /**
+   * Colonia del domicilio del establecimiento.
+   */
+  establecimientoDomicilioColonia: string;
+
+  /**
+   * Calle del domicilio del establecimiento.
+   */
+  establecimientoDomicilioCalle: string;
+
+  /**
+   * Lada del domicilio del establecimiento.
+   */
+  establecimientoDomicilioLada: string;
+
+  /**
+   * Teléfono del domicilio del establecimiento.
+   */
+  establecimientoDomicilioTelefono: string;
+
+  /**
+   * RFC del profesional responsable.
+   */
+  rfcDelProfesionalResponsable: string;
+
+  /**
+   * Nombre del profesional responsable.
+   */
+  nombreDelProfesionalResponsable: string;
+
+  /**
+   * Opción seleccionada para información confidencial.
+   */
+  informacionConfidencialRadio: string;
+
+  /**
+   * Lista de datos del propietario.
+   */
+  propietarioData: PropietarioModel[];
+
+  /**
+   * Lista de datos del establecimiento.
+   */
+  establecimientoData: DatosDeLaProductoModel[];
+}
+
+/**
+ * @function createInitialState
+ * Crea el estado inicial para `DatosDelSolicituteSeccionState`.
+ * @returns {DatosDelSolicituteSeccionState} El estado inicial.
+ */
+export function createInitialState(): DatosDelSolicituteSeccionState {
+  return {
+    representanteRfc: '',
+    representanteNombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    establecimientoDenominacionRazonSocial: '',
+    establecimientoCorreoElectronico: '',
+    establecimientoDomicilioCodigoPostal: '',
+    establecimientoDomicilioEstado: '',
+    establecimientoMunicipioYAlcaldia: '',
+    establecimientoDomicilioLocalidad: '',
+    establecimientoDomicilioColonia: '',
+    establecimientoDomicilioCalle: '',
+    establecimientoDomicilioLada: '',
+    establecimientoDomicilioTelefono: '',
+    rfcDelProfesionalResponsable: '',
+    nombreDelProfesionalResponsable: '',
+    informacionConfidencialRadio: '',
+    propietarioData: [],
+    establecimientoData: [],
+  };
+}
+
+/**
+ * @class DatosDelSolicituteSeccionStateStore
+ * @description
+ * Clase que representa el estado global para los datos de la solicitud.
+ * Utiliza Akita para gestionar el estado de manera reactiva.
+ */
+@Injectable({ providedIn: 'root' })
+@StoreConfig({ name: 'datosDelSolicitute' })
+export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicituteSeccionState> {
+  /**
+   * Constructor de la clase.
+   * Inicializa el estado con los valores predeterminados.
+   */
+  constructor() {
+    super(createInitialState());
+  }
+
+ 
+  /**
+   * Actualiza el RFC del representante.
+   * @param rfc Nuevo RFC del representante.
+   */
+  setRepresentanteRfc(rfc: string): void {
+    this.update({ representanteRfc: rfc });
+  }
+
+  /**
+   * Actualiza el nombre del representante.
+   * @param nombre Nuevo nombre del representante.
+   */
+  setRepresentanteNombre(nombre: string): void {
+    this.update({ representanteNombre: nombre });
+  }
+
+  /**
+   * Actualiza los apellidos del representante.
+   * @param apellidoPaterno Nuevo apellido paterno.
+   * @param apellidoMaterno Nuevo apellido materno.
+   */
+  setRepresentanteApellidos(apellidoPaterno: string, apellidoMaterno: string): void {
+    this.update({ apellidoPaterno, apellidoMaterno });
+  }
+
+  /**
+   * Actualiza la opción seleccionada de información confidencial.
+   * @param informacionConfidencial Nueva opción seleccionada.
+   */
+  setInformacionConfidencial(informacionConfidencial: string): void {
+    this.update({ informacionConfidencialRadio: informacionConfidencial });
+  }
+}

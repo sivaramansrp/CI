@@ -1,0 +1,40 @@
+<div class="container">
+    <ng-titulo titulo="Representante legal" />
+    <form [formGroup]="representanteLegalForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="form-label" for="rfc">RFC*:</label>
+                    <input class="form-control" id="rfc" formControlName="rfc" type="text" (change)="setValoresStore(representanteLegalForm,'rfc', 'setRfc')"/>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-primary btn-space">
+                    Buscar
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="nombreRazonSocial">Nombre o Razón Social*:</label>
+                <input class="form-control" id="nombreRazonSocial" formControlName="nombreRazonSocial"
+                type="text"/>
+            </div>
+            </div>
+            <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+                <input class="form-control" id="apellidoPaterno" formControlName="apellidoPaterno" type="text"/>
+            </div>
+
+            </div>
+            <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+                <input class="form-control" id="apellidoMaterno" formControlName="apellidoMaterno" type="text"/>
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
