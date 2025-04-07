@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { AVISO_DE_PRIVACIDAD_SIMPLIFICADO } from '../../constantes/retiros-cofepris.enum';
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 /**
@@ -38,7 +38,7 @@ export class PantallasComponent {
   * @type {string}
   * @memberof PantallasComponent
   */
-  public avisoPrivacidadAlert: string = AVISO_DE_PRIVACIDAD_SIMPLIFICADO.message;
+  public avisoPrivacidadAlert: string = AVISO.Aviso;
 
   /**
   * compo doc

@@ -5,7 +5,7 @@
     @for (item of formularioDatos; track item.campo; let i = $index) {
             @switch(item.tipo_input) {
                 @case ('text') {
-                    <div [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{
                             item.label_nombre
@@ -19,7 +19,7 @@
                             [formControlName]="item.campo"
                             [required]="seRequiere(item.campo)"
                             [readonly]="item.solo_lectura"
-                            [ngClass]="isValid(item.campo) ? 'required' : ''"
+                            [ngClass]="esValido(item.campo) ? 'required' : ''"
                           />
                           
                           <validadores-de-formularios 
@@ -30,7 +30,7 @@
                         </div>
                       </div>
                 }  @case ('number') {
-                    <div [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
                         <div class="form-group">
                           <label class="form-label" [for]="item.id">{{
                             item.label_nombre
@@ -44,7 +44,7 @@
                             [formControlName]="item.campo"
                             [required]="seRequiere(item.campo)"
                             [readonly]="item.solo_lectura"
-                            [ngClass]="isValid(item.campo) ? 'required' : ''"
+                            [ngClass]="esValido(item.campo) ? 'required' : ''"
                           />
                           <validadores-de-formularios 
                             [forma]="forma" 
@@ -54,7 +54,7 @@
                         </div>
                       </div>
                 } @case ('textarea') {
-                    <div [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
                         <label for="{{ item.id }}">{{ item.label_nombre }} {{seRequiere(item.campo) ? '*:' : ':'}}</label>
 
                         <textarea
@@ -66,7 +66,7 @@
                           [formControlName]="item.campo"
                           [required]="seRequiere(item.campo)"
                           [readonly]="item.solo_lectura"
-                          [ngClass]="isValid(item.campo) ? 'required' : ''"
+                          [ngClass]="esValido(item.campo) ? 'required' : ''"
                         ></textarea>
                           <validadores-de-formularios 
                             [forma]="forma" 
@@ -75,7 +75,7 @@
                           ></validadores-de-formularios>
                       </div>
                   } @case ('select-catalogos') {
-                    <div [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
                       <app-catalogo-select 
                         [catalogo]="item?.opciones || []" 
                         [formControlName]="item.campo" 
@@ -92,7 +92,7 @@
                     </div>
                   } @case ('checkbox') {
                     <div
-                    [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]"
+                    [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]"
                       class="formas-checkbox min-height">
                     <div class="form-group w-100">
                       <input
@@ -107,19 +107,19 @@
                     </div>
                     </div>
                   } @case ('button') {
-                    <div [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
                       <div class="form-group">
                         <input 
                           [id]="item.id"
                           type="button" 
                           class="btn btn-primary" 
                           [value]="item.label_nombre" 
-                          (click)="onButtonClick(item)" 
+                          (click)="alHacerClicEnElBoton(item)" 
                         />
                       </div>
                     </div>
                   } @case ('radio') {
-                    <div [ngClass]="[getResponsiveClass(item.clase), 'mt-' + item.margin_top]" class="min-height">
+                    <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
                       <div class="form-group">
                         <label class="form-label" [for]="item.id">{{
                           item.label_nombre

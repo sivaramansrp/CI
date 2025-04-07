@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RetirosCofepris261702State, Tramite261702Store } from '../../../../estados/tramites/tramite261702.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { PERMISO_A_DESISTIR } from '../../constantes/retiros-cofepris.enum';
@@ -49,11 +49,6 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
   * Subject para destruir las suscripciones.
   */
    private destruirNotificador$: Subject<void> = new Subject();
-
-   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   */
-   public subscription: Subscription = new Subscription();
  
    /**
    * Estado de la solicitud de la sección 301.
@@ -98,27 +93,31 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite261702Query.selectRetiros$
-        .pipe(
-          takeUntil(this.destruirNotificador$),
-          map((seccionState) => {
-            this.retirosState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite261702Query.selectRetiros$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.retirosState = seccionState;
+        })
+      )
+      .subscribe();
 
-    this.forma.valueChanges.subscribe((value: {ninoFormGroup: Record<string, unknown>}) => {
-      Object.entries(value.ninoFormGroup).forEach(([key, fieldValue]) => {
-        this.changeInValoresStore(key, fieldValue);
-      });
-    });
+    this.forma.valueChanges
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((value: { ninoFormGroup: Record<string, unknown> }) => {
+          Object.entries(value.ninoFormGroup).forEach(([key, fieldValue]) => {
+            this.cambioEnValoresStore(key, fieldValue);
+          });
+        })
+      )
+      .subscribe();
+
   }
 
   /**
   * compo doc
-  * @method changeInValoresStore
+  * @method cambioEnValoresStore
   * @description 
   * Este método se utiliza para emitir un evento cuando hay un cambio en los valores del formulario.
   * Recibe como parámetros el formulario preactivo (FormGroup) y el campo que ha cambiado.
@@ -126,7 +125,7 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
   * @param form - El formulario reactivo que contiene los datos.
   * @param campo - El nombre del campo que ha cambiado.
   */
-  public changeInValoresStore(campo: string, value: unknown): void {
+  public cambioEnValoresStore(campo: string, value: unknown): void {
     this.tramite261702Store.setDynamicFieldValue(campo, value);
   }
 
@@ -135,7 +134,6 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
   */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
     }

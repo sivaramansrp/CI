@@ -41,7 +41,7 @@ export function createInitialState(): RetirosCofepris261702State {
  * @property {string} name - Nombre del store, utilizado para identificarlo.
  * @property {boolean} resettable - Indica si el estado del store puede ser reiniciado.
  */
-@StoreConfig({ name: 'tramite302', resettable: true })
+@StoreConfig({ name: 'tramite261702', resettable: true })
 
 export class Tramite261702Store extends Store<RetirosCofepris261702State> {
 

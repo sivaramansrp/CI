@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RetirosCofepris261702State, Tramite261702Store } from '../../../../estados/tramites/tramite261702.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MANIFIESTOS_ALERT } from '../../constantes/retiros-cofepris.enum';
 import { Tramite261702Query } from '../../../../estados/queries/tramite261702.query';
@@ -31,12 +31,6 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  * @memberof ManifiestosDeclaracionesComponent
  */
   public manifiestosAlert: string = MANIFIESTOS_ALERT.message;
-
-  /**
-  * compo doc
-  * Suscripción a los cambios en el formulario reactivo.
-  */
-  public subscription: Subscription = new Subscription();
   
   /**
    * compo doc
@@ -89,16 +83,14 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
   */
   
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite261702Query.selectRetiros$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.retirosCofeprisState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite261702Query.selectRetiros$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.retirosCofeprisState = seccionState;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -151,7 +143,6 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
    * @returns {void}
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

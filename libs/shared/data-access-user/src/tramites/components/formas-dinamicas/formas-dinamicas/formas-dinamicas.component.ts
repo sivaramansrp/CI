@@ -87,7 +87,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
 
   /**
   * compo doc
-  * @input state
+  * @input estado
   * @type {{[key: string]: unknown}}
   * @memberof FormasDinamicasComponent
   * @description
@@ -95,8 +95,19 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * Se utiliza para almacenar valores dinámicos que pueden ser utilizados
   * para inicializar o actualizar los controles del formulario.
   */
-  @Input() state!: {[key: string]: unknown};
+  @Input() estado!: {[key: string]: unknown};
 
+  /**
+  * compo doc
+  * @output emitirEventoDeClic
+  * @type {EventEmitter<ModeloDeFormaDinamica>}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un EventEmitter que emite un evento cuando se hace clic en un botón
+  * asociado a un campo dinámico del formulario. El evento emite un objeto de tipo
+  * `ModeloDeFormaDinamica`, que contiene información sobre el campo dinámico
+  * relacionado con el botón clicado.
+  */
   @Output() emitirEventoDeClic: EventEmitter<ModeloDeFormaDinamica> = new EventEmitter<ModeloDeFormaDinamica>();
 
   /**
@@ -113,7 +124,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * @type {number}
   * @memberof FormasDinamicasComponent
   */
-  public screenWidth!: number;
+  public anchoDePantalla!: number;
 
   public static onChange: (value: Record<string, unknown>) => void = () => {
   // eslint-disable-next-line no-empty-function
@@ -134,26 +145,26 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {
-      this.screenWidth = window.innerWidth;
+      this.anchoDePantalla = window.innerWidth;
     }
 
   /**
    * compo doc
-  * @method onResize
+  * @method enCambiarTamano
   * @description
   * Este método es un manejador de eventos que se ejecuta cuando la ventana del navegador cambia de tamaño.
   * Utiliza el decorador `@HostListener` para escuchar el evento `resize` del objeto `window`.
-  * Actualiza el valor de la propiedad `screenWidth` con el ancho actual de la ventana. 
+  * Actualiza el valor de la propiedad `anchoDePantalla` con el ancho actual de la ventana. 
   * @param event - El evento de cambio de tamaño (`resize`) que contiene información sobre el nuevo tamaño de la ventana.
   */
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event): void {
-    this.screenWidth = (event.target as Window).innerWidth;
+  enCambiarTamano(event: Event): void {
+    this.anchoDePantalla = (event.target as Window).innerWidth;
   }
 
   /**
    * compo doc
-  * @method getResponsiveClass
+  * @method obtenerClaseResponsiva
   * @description
   * Este método devuelve una clase CSS basada en el ancho de la pantalla.
   * Si el ancho de la pantalla está entre 768 y 991 píxeles, devuelve 'col-12'.
@@ -162,10 +173,10 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * @param {string} clase - La clase CSS que se debe devolver si el ancho de la pantalla es mayor a 991 píxeles.
   * @returns {string} - La clase CSS correspondiente según el ancho de la pantalla.
   */
-  getResponsiveClass(clase: string): string {
-    if (this.screenWidth >= 768 && this.screenWidth <= 991) {
+  obtenerClaseResponsiva(clase: string): string {
+    if (this.anchoDePantalla >= 768 && this.anchoDePantalla <= 991) {
       return 'col-12';
-    } else if (this.screenWidth > 991) {
+    } else if (this.anchoDePantalla > 991) {
       return clase;
     }
     return 'col-12';
@@ -201,7 +212,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: campo.valor_predeterminado || this.state[campo.campo], disabled: campo.desactivado },
+          { value: campo.valor_predeterminado || this.estado[campo.campo], disabled: campo.desactivado },
           { validators: VALIDADORES }
         );
       }
@@ -262,7 +273,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * @param field El nombre del campo que se desea validar.
   * @returns {boolean | null} Un valor booleano que indica si el campo es válido.
   */
-  public isValid(campo: string): boolean | null {
+  public esValido(campo: string): boolean | null {
     return this.validacionesService.isValid(this.forma, campo);
   }
 
@@ -296,7 +307,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * @param item - Un objeto de tipo `ModeloDeFormaDinamica` que representa el campo dinámico
   * asociado al botón que se ha clicado.
   */
-  public onButtonClick(item: ModeloDeFormaDinamica): void {
+  public alHacerClicEnElBoton(item: ModeloDeFormaDinamica): void {
     if (item) {
       this.emitirEventoDeClic.emit(item);
     }
