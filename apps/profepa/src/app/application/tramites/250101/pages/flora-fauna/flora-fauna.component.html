@@ -1,0 +1,22 @@
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Flora y fauna silvestre, recursos marinos, productos y subproductos forestales cuya finalidad sea el comercio o industrialización</h1>
+            </div>
+            <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+        </div>
+        <div class="row">
+            @switch (indice) {
+            @case (1) {
+            <app-datos-250101></app-datos-250101>
+            }
+            @case (2) {
+            }
+            @case (3) {
+            }
+            }
+            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+        </div>
+    </div>
+</div>
