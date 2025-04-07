@@ -14,9 +14,9 @@ import { TRANSPORTACION_MARITIMA_PASO } from '../../constantes/transportacion-ma
 })
 export class PantallasComponent {
   /**
-     * Lista de pasos del wizard.
-     * @type {ListaPasosWizard[]}
-     */
+   * Lista de pasos del wizard.
+   * @type {ListaPasosWizard[]}
+   */
   public pantallasPasos: ListaPasosWizard[] = TRANSPORTACION_MARITIMA_PASO;
 
   /**
