@@ -300,6 +300,13 @@ const ROUTES: Routes = [
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
       ),
+  },
+  {
+    path: 'importacion-otros-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130104/importacion-otros-vehiculos-usados.module').then(
+        (m) => m.ImportacionOtrosVehiculosUsadosModule
+      ),
   }
 ];
 
