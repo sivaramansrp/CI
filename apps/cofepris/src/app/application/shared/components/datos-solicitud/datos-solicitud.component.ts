@@ -35,8 +35,16 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
   @Input() isAvisoLicenciaVisible: boolean = true;
+
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
   @Input() isAduanasEntradaVisible: boolean = false;
+
   /**
    * Estado de la solicitud.
    */

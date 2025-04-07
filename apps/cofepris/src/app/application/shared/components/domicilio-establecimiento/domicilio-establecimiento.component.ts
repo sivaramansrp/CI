@@ -73,8 +73,16 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.css'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
   @Input() isAvisoLicenciaVisible: boolean = true;
+
+  /**
+   * Indica si el campo RFC del solicitante es visible.
+   */
   @Input() isAduanasEntradaVisible: boolean = false;
+
   /**
    * Referencia a los componentes de la lista de fechas.
    */
