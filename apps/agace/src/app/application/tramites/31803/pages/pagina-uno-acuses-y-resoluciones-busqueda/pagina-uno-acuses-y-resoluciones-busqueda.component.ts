@@ -2,7 +2,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule } from '@angular/common/http';
 
 /**
  * Componente para gestionar la búsqueda de acuses y resoluciones del trámite 11105.

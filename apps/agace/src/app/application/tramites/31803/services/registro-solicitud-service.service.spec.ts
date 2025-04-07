@@ -53,7 +53,7 @@ describe('RegistroSolicitudService', () => {
 
       const req = httpMock.expectOne('assets/json/31803/banco.json');
       expect(req.request.method).toBe('GET');
-      req.flush(errorMessage, { status: 500, statusText: 'Internal Server Error' });
+      req.flush(errorMessage, { status: 500, statusText: 'Error Interno del Servidor' });
     });
   });
 });

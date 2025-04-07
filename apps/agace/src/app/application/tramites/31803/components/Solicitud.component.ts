@@ -8,7 +8,7 @@ import {
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHAFINAL, FECHAINICIAL, FECHAPAGO } from '../models/registro.model';
+import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../models/registro.model';
 import {
   FormBuilder,
   FormGroup,
@@ -24,7 +24,6 @@ import { CommonModule } from '@angular/common';
 import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
 import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
 import { Tramite31803Query } from '../state/Tramite31803.query';
-import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from '../../../../../../../../libs/shared/data-access-user/src/tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 
 /**
  * Componente que gestiona la solicitud del trámite 31803.
@@ -64,17 +63,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración para el campo de fecha inicial.
    */
-  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaInicialInput: InputFecha = FECHA_INICIAL;
 
   /**
    * Configuración para el campo de fecha final.
    */
-  fechaFinalInput: InputFecha = FECHAFINAL;
+  fechaFinalInput: InputFecha = FECHA_FINAL;
 
   /**
    * Configuración para el campo de fecha de pago.
    */
-  fechaPagoInput: InputFecha = FECHAPAGO;
+  fechaPagoInput: InputFecha = FECHA_PAGO;
 
   /**
    * Enumeración que contiene los textos utilizados en el componente.

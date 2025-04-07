@@ -23,26 +23,6 @@ class MockTramite31803Store {}
 @Injectable()
 class MockTramite31803Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('SolicitudComponent', () => {
   let fixture;
   let component;
@@ -86,8 +66,8 @@ describe('SolicitudComponent', () => {
     component.query.selectSolicitud$ = observableOf({});
     component.donanteDomicilio = jest.fn();
     component.ngOnInit();
-    // expect(component.getBancoData).toHaveBeenCalled();
-    // expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.getBancoData).toHaveBeenCalled();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
   });
 
   it('should run #cambioFechaFactura()', async () => {
@@ -95,8 +75,8 @@ describe('SolicitudComponent', () => {
     component.registroForm.patchValue = jest.fn();
     component.setValoresStore = jest.fn();
     component.cambioFechaFactura({});
-    // expect(component.registroForm.patchValue).toHaveBeenCalled();
-    // expect(component.setValoresStore).toHaveBeenCalled();
+    expect(component.registroForm.patchValue).toHaveBeenCalled();
+    expect(component.setValoresStore).toHaveBeenCalled();
   });
 
   it('should run #getBancoData()', async () => {
@@ -105,7 +85,7 @@ describe('SolicitudComponent', () => {
     component.bancoCatalogo = component.bancoCatalogo || {};
     component.bancoCatalogo.catalogos = 'catalogos';
     component.getBancoData();
-    // expect(component.registroSolicitud.getBancoData).toHaveBeenCalled();
+    expect(component.registroSolicitud.getBancoData).toHaveBeenCalled();
   });
 
   it('should run #onSubmit()', async () => {
@@ -119,7 +99,7 @@ describe('SolicitudComponent', () => {
     component.validacionesService = component.validacionesService || {};
     component.validacionesService.isValid = jest.fn();
     component.isValid({}, {});
-    // expect(component.validacionesService.isValid).toHaveBeenCalled();
+    expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
 
   it('should run #validarDestinatarioFormulario()', async () => {
@@ -127,7 +107,7 @@ describe('SolicitudComponent', () => {
     component.registroForm.invalid = 'invalid';
     component.registroForm.markAllAsTouched = jest.fn();
     component.validarDestinatarioFormulario();
-    // expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
+    expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
   });
 
   it('should run #setValoresStore()', async () => {
@@ -140,7 +120,7 @@ describe('SolicitudComponent', () => {
         };
       }
     }, {}, {});
-    // expect(component.store.metodoNombre).toHaveBeenCalled();
+    expect(component.store.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #donanteDomicilio()', async () => {
@@ -153,7 +133,7 @@ describe('SolicitudComponent', () => {
     component.solicitudState.manifiesto2 = 'manifiesto2';
     component.solicitudState.numeroOperacion = 'numeroOperacion';
     component.donanteDomicilio();
-    // expect(component.fb.group).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -161,8 +141,8 @@ describe('SolicitudComponent', () => {
     component.destroyed$.next = jest.fn();
     component.destroyed$.complete = jest.fn();
     component.ngOnDestroy();
-    // expect(component.destroyed$.next).toHaveBeenCalled();
-    // expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(component.destroyed$.next).toHaveBeenCalled();
+    expect(component.destroyed$.complete).toHaveBeenCalled();
   });
 
 });
