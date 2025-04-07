@@ -1,4 +1,5 @@
 import {
+  
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
@@ -24,6 +25,7 @@ import { CommonModule } from '@angular/common';
 import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
 import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
 import { Tramite31803Query } from '../state/Tramite31803.query';
+import { AcusesYResolucionesFolioDelTramiteDetallesComponent } from "../../../../../../../../libs/shared/data-access-user/src/tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component";
 
 /**
  * Componente que gestiona la solicitud del trámite 31803.
@@ -38,7 +40,8 @@ import { Tramite31803Query } from '../state/Tramite31803.query';
     InputFechaComponent,
     CatalogoSelectComponent,
     ReactiveFormsModule,
-  ],
+    AcusesYResolucionesFolioDelTramiteDetallesComponent
+],
   providers: [RegistroSolicitudService],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
@@ -84,7 +87,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Formulario reactivo para gestionar los datos de la solicitud.
    */
   registroForm!: FormGroup;
-
+ 
   /**
    * Configuración para el catálogo de bancos.
    */
@@ -120,8 +123,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
-    this.obtenerDatosBanco();
 
+    this.obtenerDatosBanco();
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -132,7 +135,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
   }
-
+  
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
