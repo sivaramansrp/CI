@@ -10,7 +10,7 @@ import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ImportacionVehiculosNuevosService } from '../../services/importacion-vehiculos-nuevos.service';
 
 import { HttpClient } from '@angular/common/http';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130202/partidas-de-la.json';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130115/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
