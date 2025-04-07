@@ -350,16 +350,12 @@ export interface MercanciaFormEstupefacientes {
   numeroCAS:string;
   cantidadDeLotes:string
   kgPorLote:string,
-  
+  paisDeDestino:string,
+  paisDeProcedencia:string,
+  detallarUsoEspecifico:string,
+  numeroDePiezasAFabricar:string,
+  descripcionNumeroDePiezas:string,
   presentacion: string;
   numeroRegistroSanitario: string;
-  fechaCaducidad: string;
-  paisDeOriginDatos: string[];
-  paisDeProcedenciaDatos: string[];
-  marca?: string;
-  especifique?: string;
-  claveDeLos?: string;
-  fechaDeFabricacio?: string;
-  fechaDeCaducidad?: string;
 }
 

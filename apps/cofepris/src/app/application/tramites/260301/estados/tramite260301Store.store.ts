@@ -94,12 +94,14 @@ export function createInitialState(): Tramite260301State {
       numeroCAS: '',
       cantidadDeLotes: '',
       kgPorLote: '',
-
+      paisDeDestino:'',
+      paisDeProcedencia: '',
+      detallarUsoEspecifico:'',
+      numeroDePiezasAFabricar:'',
+      descripcionNumeroDePiezas:'',
       presentacion: '',
       numeroRegistroSanitario: '',
-      fechaCaducidad: '',
-      paisDeOriginDatos: [],
-      paisDeProcedenciaDatos: [],
+   
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA

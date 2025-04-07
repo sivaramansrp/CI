@@ -217,7 +217,7 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * @property {Catalogo[]} paisDeProcedenciaDatos
    * Datos de países para la lista cruzada de procedencia.
    */
-  public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+  public paisDeProcedenciaDatos: Catalogo[] = [];
 
   /**
    * @property {Catalogo[]} usoEspesificoDatos
@@ -237,6 +237,11 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   public seleccionarOrigenFormaFormaceutica = CROSLISTA_DE_FORMAS_FARMACEUTICAS;
 
+  /**
+   * @property {Catalogo[]} paisDeDestinoDatos
+   * Datos de países para lista cruzada de país de destino.
+   */
+  public paisDeDestinoDatos:Catalogo[]=[]
   /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
@@ -274,6 +279,16 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
       this,
       'cantidadUmcDatos',
       '/cofepris/cantidadUmcDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'paisDeDestinoDatos',
+      '/cofepris/paisDeDestinoDatos.json'
+    );
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'paisDeProcedenciaDatos',
+      '/cofepris/paisDeProcedenciaDatos.json'
     );
   }
 
@@ -531,20 +546,26 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
       cantidadDeLotes:[this.mercanciaFormState.cantidadDeLotes,Validators.required],
       kgPorLote:[this.mercanciaFormState.kgPorLote,Validators.required],
 
-      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
+      paisDeDestino:["101",Validators.required],
+
+      paisDeProcedencia: [
+        this.mercanciaFormState.paisDeProcedencia,
+        Validators.required,
+      ],
+
+      detallarUsoEspecifico:[ this.mercanciaFormState.detallarUsoEspecifico],
+
+      nummeroDePiezasAFabricar:[this.mercanciaFormState.numeroDePiezasAFabricar,Validators.required],
+
+      descripcionNumeroDePiezas:[this.mercanciaFormState.descripcionNumeroDePiezas,Validators.required], 
+      
       numeroRegistroSanitario: [
         this.mercanciaFormState.numeroRegistroSanitario,
         Validators.required,
-      ],
-      fechaCaducidad: [this.mercanciaFormState.fechaCaducidad],
-      paisDeOriginDatos: [
-        this.mercanciaFormState.paisDeOriginDatos || [],
-        Validators.required,
-      ],
-      paisDeProcedenciaDatos: [
-        this.mercanciaFormState.paisDeProcedenciaDatos || [],
-        Validators.required,
-      ],
+      ], 
+      presentacion: [this.mercanciaFormState.presentacion, Validators.required],
+
+
     });
 
     const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
@@ -639,7 +660,7 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
     if (orden === 1) {
       this.formFormaceuticaColapsable = !this.formFormaceuticaColapsable;
     } else if (orden === 2) {
-      this.paisDeProcedenciaColapsable = !this.paisDeProcedenciaColapsable;
+      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
     } else if (orden === 3) {
       this.usoEspesificoColapsable = !this.usoEspesificoColapsable;
     }
