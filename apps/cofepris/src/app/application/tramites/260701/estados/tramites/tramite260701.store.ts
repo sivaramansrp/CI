@@ -275,6 +275,18 @@ export interface Solicitud260701State {
      * El valor de tercerosRelacionadosCorreoElectronico.
      */
     tercerosRelacionadosCorreoElectronico: string;
+    /**
+     * El valor de muncipio.
+     */
+    muncipio: string;
+    /**
+     * El valor de tipoOperacion.
+     */
+    tipoOperacion: string;
+    /**
+     * El valor de justificacion.
+     */
+    justificacion: string;
 
 }
 
@@ -347,7 +359,10 @@ return {
     numeroInterior: '',
     tercerosRelacionadosLada: '',
     tercerosRelacionadosTelefono: '',
-    tercerosRelacionadosCorreoElectronico: ''
+    tercerosRelacionadosCorreoElectronico: '',
+    muncipio: '',
+    tipoOperacion: '',
+    justificacion: ''
     };
     
 }
@@ -1033,6 +1048,37 @@ export class Tramite260701Store extends Store<Solicitud260701State> {
         this.update((state) => ({
             ...state,
             tercerosRelacionadosCorreoElectronico,
+        }));
+    }
+
+    /**
+     * Establece el estado de muncipio.
+     * @param muncipio - El valor de muncipio.
+     */
+    public setMuncipio(muncipio: string) {
+        this.update((state) => ({
+            ...state,
+            muncipio,
+        }));
+    }
+    /**
+     * Establece el estado de tipoOperacion.
+     * @param tipoOperacion - El valor de tipoOperacion.
+     */
+    public setTipoOperacion(tipoOperacion: string) {
+        this.update((state) => ({
+            ...state,
+            tipoOperacion,
+        }));
+    }
+    /**
+     * Establece el estado de justificacion.
+     * @param justificacion - El valor de justificacion.
+     */
+    public setJustificacion(justificacion: string) {
+        this.update((state) => ({
+            ...state,
+            justificacion,
         }));
     }
 

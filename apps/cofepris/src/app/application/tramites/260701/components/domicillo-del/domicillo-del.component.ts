@@ -229,51 +229,51 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
      * Inicialización del formulario de domicilio.
      */
     this.domicilio = this.fb.group({
-      codigoPostal: [''],
-      estado: [''],
-      muncipio: [''],
-      localidad: [''],
-      colonia: [''],
-      calle: [''],
-      lada: [''],
-      telefono: [''],
-      avisoCheckbox: [''],
-      licenciaSanitaria: [''],
-      marcarEnCasoDeQueSea: [''],
-      regimen: [''],
-      aduanasEntradas: [''],
-      numeroPermiso: [''],
+      codigoPostal: [this.solicitudState.codigoPostal],
+      estado: [this.solicitudState.estado],
+      muncipio: [this.solicitudState.muncipio],
+      localidad: [this.solicitudState.localidad],
+      colonia: [this.solicitudState.colonia],
+      calle: [this.solicitudState.calle],
+      lada: [this.solicitudState.lada],
+      telefono: [this.solicitudState.telefono],
+      avisoCheckbox: [this.solicitudState.avisoCheckbox],
+      licenciaSanitaria: [this.solicitudState.licenciaSanitaria],
+      marcarEnCasoDeQueSea: [this.solicitudState.marcarEnCasoDeQueSea],
+      regimen: [this.solicitudState.regimen],
+      aduanasEntradas: [this.solicitudState.aduanasEntradas],
+      numeroPermiso: [this.solicitudState.numeroPermiso],
     });
    
     /**
      * Inicialización del formulario de agente.
      */
     this.formAgente = this.fb.group({
-      claveScianModal: [''],
-      claveDescripcionModal: [''],
+      claveScianModal: [this.solicitudState.claveScianModal],
+      claveDescripcionModal: [this.solicitudState.claveDescripcionModal],
     });
    
     /**
      * Inicialización del formulario de mercancías.
      */
     this.formMercancias = this.fb.group({
-      clasificacion: [''],
-      especificarClasificacionProducto: [''],
-      denominacionEspecifica: [''],
-      denominacionDistintiva: [''],
-      denominacionComun: [''],
-      tipoDeProducto: [''],
-      estadoFisico: [''],
-      fraccionArancelaria: [''],
-      descripcionFraccion: [''],
-      cantidadUMT: [''],
-      UMT: [''],
-      cantidadUMC: [''],
-      UMC: [''],
-      presentacion: [''],
-      numeroRegistro: [''],
-      fechaCaducidad: [''],
-      claveDeLosLotes: [''],
+      clasificacion: [this.solicitudState.clasificacion],
+      especificarClasificacionProducto: [this.solicitudState.especificarClasificacionProducto],
+      denominacionEspecifica: [this.solicitudState.denominacionEspecifica],
+      denominacionDistintiva: [this.solicitudState.denominacionDistintiva],
+      denominacionComun: [this.solicitudState.denominacionComun],
+      tipoDeProducto: [this.solicitudState.tipoDeProducto],
+      estadoFisico: [this.solicitudState.estadoFisico],
+      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
+      descripcionFraccion: [this.solicitudState.descripcionFraccion],
+      cantidadUMT: [this.solicitudState.cantidadUMT],
+      UMT: [this.solicitudState.UMT],
+      cantidadUMC: [this.solicitudState.cantidadUMC],
+      UMC: [this.solicitudState.UMC],
+      presentacion: [this.solicitudState.presentacion],
+      numeroRegistro: [this.solicitudState.numeroRegistro],
+      fechaCaducidad: [this.solicitudState.fechaCaducidad],
+      claveDeLosLotes: [this.solicitudState.claveDeLosLotes],
     });
   }
    

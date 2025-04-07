@@ -63,6 +63,13 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
      */
     public solicitudState!: Solicitud260701State;
  
+  /**
+   * Constructor del componente DatosDeLaSolicitudComponent.
+   * 
+   * @param fb - Instancia de FormBuilder utilizada para crear y gestionar formularios reactivos.
+   * @param tramite260701Store - Servicio de store para gestionar el estado del Trámite 260701.
+   * @param tramite260701Query - Servicio de consulta para obtener datos relacionados con el Trámite 260701.
+   */
   constructor(
     public readonly fb: FormBuilder,
     private tramite260701Store: Tramite260701Store,
@@ -81,6 +88,8 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
       })).subscribe();
    
       this.forma = this.fb.group({
+        tipoOperacion: [{ value: this.solicitudState.tipoOperacion, disabled: true }],
+        justificacion: [{ value: this.solicitudState.justificacion, disabled: true }],
         denominacionORazonSocial: [{ value: this.solicitudState.denominacionORazonSocial, disabled: true }],
         correoElectronico: [{ value: this.solicitudState.correoElectronico, disabled: true }]
       });

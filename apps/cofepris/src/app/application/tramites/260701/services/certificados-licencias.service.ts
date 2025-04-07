@@ -4,6 +4,12 @@ import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { enviroment } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 
+/**
+ * Servicio para gestionar operaciones relacionadas con certificados y licencias.
+ * Proporciona métodos para obtener datos desde el servidor o archivos JSON locales,
+ * incluyendo trámites, catálogos y tablas asociadas.
+ * 
+ */
 @Injectable({
   providedIn: 'root'
 })
