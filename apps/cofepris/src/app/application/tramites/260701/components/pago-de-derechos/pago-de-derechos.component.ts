@@ -1,11 +1,11 @@
 import { Catalogo, CatalogoSelectComponent, InputFechaComponent, JSONResponse, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
 import { INPUT_FECHA_CONFIG } from '../../services/certificados-licencias.enum';
-import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
 /**

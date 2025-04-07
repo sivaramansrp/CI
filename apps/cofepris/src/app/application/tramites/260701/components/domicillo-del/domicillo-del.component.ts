@@ -1,12 +1,12 @@
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable,CrosslistComponent, InputFecha, InputFechaComponent, LISTACLAVESDELOSLOTES,Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent, CrossListLable, InputFecha, InputFechaComponent, Listaclaves, LISTACLAVESDELOSLOTES, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
-import { map, Subject, takeUntil } from 'rxjs';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../services/certificados-licencias.enum';
-import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260701/domicillo-del.enum';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260701/domicillo-del.enum';
+import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
+import { CommonModule } from '@angular/common';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
 /**

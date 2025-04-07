@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MENSAJE_DE_ALERTA } from '../../services/certificados-licencias.enum';
 import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Subject,map , takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MENSAJE_DE_ALERTA } from '../../services/certificados-licencias.enum';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente `ManifiestosComponent` que gestiona la visualización y funcionalidad

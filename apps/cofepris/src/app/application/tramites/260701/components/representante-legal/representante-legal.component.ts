@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * RepresentanteLegalComponent

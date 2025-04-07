@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DomicilloDelComponent } from '../domicillo-del/domicillo-del.component';
 import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
 /**
@@ -77,6 +77,9 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
   ) {
     // Dependencia inyectada para uso posterior
   }
+
+
+  
     /**
      * Método del ciclo de vida de Angular que se llama al inicializar el componente.
      * Obtiene datos del estado de la solicitud y configura el formulario.

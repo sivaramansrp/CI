@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
-import { ConfiguracionColumna, Destinatario, Fabricante260701, TablaDinamicaComponent, TablaSeleccion, TERCEROS } from '@libs/shared/data-access-user/src';
-import { AlertComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component";
-import { Subject, takeUntil } from 'rxjs';
-import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConfiguracionColumna, Destinatario, Fabricante260701,TERCEROS, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Subject, takeUntil } from 'rxjs';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
+import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosModalComponent } from '../terceros-relacionados-modal/terceros-relacionados-modal.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
 /**
  * Componente `TercerosRelacionadosComponent` que gestiona la visualización y manipulación
