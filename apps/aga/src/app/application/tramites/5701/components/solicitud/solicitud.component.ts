@@ -376,7 +376,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         idAduana: [this.solicitudState?.idAduana, [Validators.required]],
         descripcionAduana: [
           this.solicitudState?.descripcionAduana,
-          [Validators.required],
         ],
         idSeccionAduanera: [this.solicitudState?.idSeccionAduanera],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
@@ -669,4 +668,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  test(): void {
+    console.log(this.FormSolicitud);
+    
+  }
+
 }

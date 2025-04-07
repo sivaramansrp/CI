@@ -4,8 +4,10 @@ import {
   ElementRef,
   Input, OnChanges, OnDestroy,
   OnInit,
+  QueryList,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import {
   Catalogo,
@@ -38,7 +40,9 @@ import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums
 export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() catalogoDocumentos: Catalogo[] = [];
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
+
+
   subscription: Subscription[] = [];
   documentoForma!: FormGroup;
 
@@ -275,10 +279,19 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  limpiarFile(fileInput: HTMLInputElement, item: any): void {
-    fileInput.value = '';
-    const index: number = this.listadoArchivos.findIndex(f => f.id === item.id);
-    this.listadoArchivos.splice(index, 1);
+  limpiarFile(item: any, index: number): void {
+
+    // Obtén el input file correspondiente a la fila
+    const fileInput = this.fileInputs.toArray()[index].nativeElement as HTMLInputElement;
+
+    if (fileInput) {
+      fileInput.value = ''; // Limpia el archivo seleccionado
+    }
+    
+    const indexArchivo: number = this.listadoArchivos.findIndex(f => f.id === item.id);
+    if (indexArchivo !== -1) {
+      this.listadoArchivos.splice(indexArchivo, 1);
+    }        
   }
 
   agregarParte(fileInput: HTMLInputElement, item: any, origen: string) {

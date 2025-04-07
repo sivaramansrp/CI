@@ -1,38 +1,4 @@
 <div class="container">
-  <!--<div class="row d-flex align-items-end">
-    <div class="col-md-4">
-      <form [formGroup]="documentoForma">
-        <app-catalogo-select [catalogo]="catalogoDocumentos" [label]="'Tipo de documento'" [required]="true"
-                             formControlName="documento" (change)="seleccionarDocumento()"></app-catalogo-select>
-      </form>
-    </div>
-
-    <div class="col-md-4">
-      <div class="btn-upload">
-        <input type="file" class="form-control" id="file-input" (change)="cargarDoc($event)"
-               [disabled]="btnDesactivado">
-        <label for="file-input" class="btn" [ngClass]="!btnDesactivado ? 'btn-primary' : 'btn-disabled'">
-          <i class="bi bi-cloud-arrow-up"></i>
-          Subir documento
-        </label>
-      </div>
-    </div>
-  </div>-->
-
-  <!--<div class="row mt-3">
-    <div class="col-md-4">
-      @if (documentoSeleccionado) {
-      <div class="especificaciones">
-        <span>Tipo documento: {{PDF}}</span>
-        <span>Tamaño(MB): {{tamMaximo}} {{MB}} </span>
-        <span>Resolución(dpi): {{documentoSeleccionado.dpi}}
-          {{DPI}}</span>
-      </div>
-
-      }
-    </div>
-  </div>-->
-
   <div class="row mt-5">
     <span class="h3">Documentos obligatorios</span>
     <div class="col-md-12 border rounded bg-file-container px-4">
@@ -48,7 +14,7 @@
               <div class="col-md-9">
                 <div class="d-flex">
                   <label for="formFile{{item.id}}" class="form-label"></label>
-                  <input class="form-control custom-file-label" type="file" id="formFile{{item.id}}" #fileInput
+                  <input class="form-control custom-file-label" type="file" [id]="'formFile' + item.id" #fileInput
                          (change)="cargarDoc($event, fileInput,item.id,'obligatorio')">
                 </div>
               </div>
@@ -63,7 +29,7 @@
                   </button>
                 }
                 <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modalConfirmacion"
-                        (click)="limpiarFile(fileInput,item)">
+                        (click)="limpiarFile(item, i)">
                   <i class="bi bi-trash3 bi-c"></i>
                 </button>
               </div>
