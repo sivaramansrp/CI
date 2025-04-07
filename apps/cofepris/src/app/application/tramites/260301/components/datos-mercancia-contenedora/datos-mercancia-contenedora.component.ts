@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Tramite260301State, Tramite260301Store } from '../../estados/tramite260301Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { DatosMercanciaEstupefacientesComponent } from '../../../../shared/components/datos-mercancia-estupefacientes/datos-mercancia-estupefacientes.component';
 import { Subject } from 'rxjs';
 import { TablaMercanciasDatos } from '../../../../shared/models/datos-solicitud.model';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
@@ -17,7 +17,7 @@ import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 @Component({
   selector: 'app-datos-mercancia-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosMercanciaComponent],
+  imports: [CommonModule, DatosMercanciaEstupefacientesComponent],
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
@@ -51,7 +51,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   constructor(
     private tramite260301Query: Tramite260301Query,
     private tramite260301Store: Tramite260301Store
-  ) {}
+  ) {
+        //Constructor necesario para inyectar las dependencias
+  }
 
   /**
    * @method ngOnInit

@@ -244,6 +244,16 @@ export const CROSLISTA_DE_PAISES: string[] = [
   'BHUTAN (KINGDOM OF)',
 ];
 
+export const CROSLISTA_DE_FORMAS_FARMACEUTICAS: string[] = [
+  
+    "AEROSOL",
+    "CAPSULAS",
+    "COMPRIMIDOS",
+    "CREMA",
+    "EMULSIÓN"
+  
+]
+
 export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
   {
     fechaCreacion: '2025-02-19 11:26:55.0',
@@ -278,6 +288,12 @@ export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301]
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301]
 
 export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_MATERNO=[260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_APELLIDO_PATERNO=[260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_NOMBRE_RAZON_SOCIAL=[260301]
 
 export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205,
@@ -319,4 +335,6 @@ export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = n
   ['calleYNumero', [260301]],
   ['correoElectronico', [260301]],
   ['rfcSanitario', [260301]],
+  ['regimenLaMercancia',[260301]],
+  ['aduana',[260301]]
 ]);

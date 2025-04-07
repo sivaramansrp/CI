@@ -144,7 +144,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260301Query: Tramite260301Query,
     private tramite260301Store: Tramite260301Store
-  ) {}
+  ) {
+    //Constructor necesario para inyectar las dependencias
+  }
 
   /**
    * @method ngOnInit

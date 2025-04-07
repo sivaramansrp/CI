@@ -1,9 +1,11 @@
-import { DatosSolicitudFormState } from '../../../shared/models/datos-solicitud.model';
+import {
+  DatosSolicitudFormState,
+  MercanciaFormEstupefacientes,
+} from '../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
 import { Fabricante } from '../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
-import { MercanciaForm } from '../../../shared/models/datos-solicitud.model';
 import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
 import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
@@ -25,7 +27,7 @@ export interface Tramite260301State {
   proveedorTablaDatos: Proveedor[];
   fabricanteTablaDatos: Fabricante[];
   datosSolicitudFormState: DatosSolicitudFormState;
-  mercanciaForm: MercanciaForm;
+  mercanciaForm: MercanciaFormEstupefacientes;
   opcionConfigDatos: TablaOpcionConfig[];
   scianConfigDatos: TablaScianConfig[];
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
@@ -72,17 +74,16 @@ export function createInitialState(): Tramite260301State {
       representanteNombre: '',
       apellidoPaterno: '',
       apellidoMaterno: '',
-      regimenLaMercancia:'',
-      aduana:''
+      regimenLaMercancia: '',
+      aduana: '',
     },
     mercanciaForm: {
       clasificacionProducto: '',
       especificarClasificacionProducto: '',
-      denominacionEspecificaProducto: '',
-      denominacionDistintiva: '',
-      denominacionComun: '',
+      marcaComercialDenominación: '',
+      denominacionCumonInternacional: '',
       tipoProducto: '',
-      formaFarmaceutica: '',
+      formaFarmaceutica: [],
       estadoFisico: '',
       fraccionArancelaria: '',
       descripcionFraccion: '',
@@ -90,6 +91,10 @@ export function createInitialState(): Tramite260301State {
       cantidadUmt: '',
       cantidadUmcValor: '',
       cantidadUmc: '',
+      numeroCAS: '',
+      cantidadDeLotes: '',
+      kgPorLote: '',
+
       presentacion: '',
       numeroRegistroSanitario: '',
       fechaCaducidad: '',
@@ -224,7 +229,7 @@ export class Tramite260301Store extends Store<Tramite260301State> {
       scianConfigDatos,
     }));
   }
-  
+
   /**
    * @method updateSeleccionadoOpcionDatos
    * @description Actualiza la opción seleccionada en el estado.
