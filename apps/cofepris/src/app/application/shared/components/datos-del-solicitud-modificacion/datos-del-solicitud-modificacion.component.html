@@ -1,7 +1,73 @@
-<p>datos-del-solicitud-modificacion works!</p>
+
 <div class="container">
     <form >
       <div>
+        <label>
+          Seleccione el tipo de operación que desea realizar*:
+        </label>
+        <!-- <app-input-radio
+          [radioOptions]="opcionDeBotonDeRadio"
+          [layout]="'horizontal'"
+          formControlName="tipoOperacion"
+          (change)="getTipoOperacion()"
+        ></app-input-radio> -->
+        <app-input-radio
+        [radioOptions]="radioOptions"
+        [isRequired]="true"
+        [layout]="'horizontal'"
+        formControlName="ideGenerica1"
+      ></app-input-radio>
+  <div class="radio">
+    <label>
+      <input 
+        type="radio" 
+        value="TIMOD.PRO" 
+        formControlName="ideGenerica1" 
+        id="pro" 
+      
+      /> Prórroga
+    </label>  
+    &nbsp;&nbsp;&nbsp;
+    <label>
+      <input 
+        type="radio" 
+        value="TIMOD.MOD" 
+        formControlName="ideGenerica1" 
+        id="mod" 
+       
+      /> Modificación
+    </label>
+    &nbsp;&nbsp;&nbsp;
+    <label>
+      <input 
+        type="radio" 
+        value="TIMOD.MYP" 
+        formControlName="ideGenerica1" 
+        id="modPro" 
+       
+      /> Modificación y prórroga
+    </label>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12" style="margin-bottom:25px">
+      <div>
+        <label for="justificacionId"> labelOpinionJustificacion</label>
+        <span class="require">*</span>
+        <label for="puntos"> labelPuntos </label>
+      </div>
+      <div>
+        <textarea 
+          formControlName="observaciones" 
+          cols="70"
+          rows="5" 
+          id="justificacionId" 
+          class="form-control" 
+         
+        ></textarea>
+      </div>
+    </div>
+  </div>
         <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
         <div class="row">
           <div class="col-md-4">
@@ -11,10 +77,8 @@
                 class="form-control"
                 type="text"
                 id="codigoPostal"
-                formControlName="codigoPostal"
                 appUppercase
                 aria-labelledby="codigoPostal"
-                (change)="getCodigoPostal()"
               />
             </div>
           </div>
@@ -25,8 +89,6 @@
                 [catalogo]="estado"
                 [label]="'Estado*'"
                 name="estado"
-                formControlName="estado"
-                (change)="getEstado()"
               >
               </app-catalogo-select>
             </div>
@@ -41,20 +103,19 @@
                 class="form-control"
                 type="text"
                 id="municipioOAlcaldía"
-                formControlName="municipioOAlcaldía"
                 appUppercase
                 aria-labelledby="municipioOAlcaldía"
-                (change)="getMunicipioOAlcaldia()"
+                
               />
             </div>
           </div>
         </div>
   
         <div class="row mt-5">
-          <ng-alert
+          <!-- <ng-alert
             [CONTENIDO]="TEXTOS.ADVERTENCIA"
             [CUSTOMECLASS]="class"
-          ></ng-alert>
+          ></ng-alert> -->
         </div>
   
         <div class="row">
@@ -65,10 +126,10 @@
                 class="form-control"
                 type="text"
                 id="localidad"
-                formControlName="localidad"
+               
                 appUppercase
                 aria-labelledby="localidad"
-                (change)="getLocalidad()"
+               
               />
             </div>
           </div>
@@ -80,10 +141,10 @@
                 class="form-control"
                 type="text"
                 id="colonias"
-                formControlName="colonias"
+               
                 appUppercase
                 aria-labelledby="colonias"
-                (change)="getColonias()"
+              
               />
             </div>
           </div>
@@ -104,10 +165,10 @@
                 class="form-control"
                 type="text"
                 id="calle"
-                formControlName="calle"
+              
                 appUppercase
                 aria-labelledby="calle"
-                (change)="getCalle()"
+               
               />
             </div>
           </div>
@@ -121,10 +182,10 @@
                 class="form-control"
                 type="text"
                 id="lada"
-                formControlName="lada"
+              
                 appUppercase
                 aria-labelledby="lada"
-                (change)="getLada()"
+               
               />
             </div>
           </div>
@@ -135,10 +196,10 @@
                 class="form-control"
                 type="text"
                 id="telefono"
-                formControlName="telefono"
+               
                 appUppercase
                 aria-labelledby="telefono"
-                (change)="getTelefono()"
+               
               />
             </div>
           </div>
@@ -150,11 +211,11 @@
       <label class="form-label mt-4 text-start">S.C.I.A.N.*:</label>
     </div>
     <div class="row">
-      <app-tabla-dinamica
+      <!-- <app-tabla-dinamica
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
         [configuracionTabla]="nicoTabla"
         [datos]="nicoTablaDatos"
-      ></app-tabla-dinamica>
+      ></app-tabla-dinamica> -->
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2">Eliminar</button>
         <button
@@ -174,8 +235,7 @@
               class="form-check-input"
               type="checkbox"
               id="avisoCheckbox"
-              formControlName="avisoCheckbox"
-              (change)="getAvisoCheckbox()"
+            
             />
             <label class="form-check-label" for="avisoCheckbox">
               <span>Aviso de funcionamiento</span>
@@ -207,22 +267,22 @@
         <div class="col-md-4">
           <app-catalogo-select
             [catalogo]="estado"
-            formControlName="regimen"
+         
             [label]="'Régimen'"
             [required]="true"
             name="regimen"
             [tooltipQuestionCircle]="true"
-            (change)="getRegimen()"
+          
           ></app-catalogo-select>
         </div>
         <div class="col-md-8">
           <app-catalogo-select
             [catalogo]="estado"
-            formControlName="aduanasEntradas"
+        
             [label]="'Aduanas de entradas'"
             [required]="true"
             name="aduanasEntradas"
-            (change)="getAduanasEntradas()"
+          
           ></app-catalogo-select>
         </div>
       </div>
@@ -235,8 +295,8 @@
               class="form-check-input"
               type="checkbox"
               id="aifaCheckbox"
-              formControlName="aifaCheckbox"
-              (change)="getAifaCheckbox()"
+            
+              
             />
             <label class="form-check-label" for="aifaCheckbox">
               <span
@@ -287,10 +347,10 @@
                 formControlName="manifests"
                 type="checkbox"
                 id="manifiesto"
-                (change)="getManifests()"
+             
               />
               <span class="fw-bold align-middle"> *</span>
-              <div>{{ manifests }}</div>
+              <div>manifests </div>
             </div>
           </div>
         </div>
@@ -303,12 +363,12 @@
           acuerdo en hacerlos públicos?*:
         </h6>
         <div class="row px-3">
-          <app-input-radio
+          <!-- <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
             [layout]="'horizontal'"
             formControlName="acuerdoPublico"
             (change)="getAcuerdoPublico()"
-          ></app-input-radio>
+          ></app-input-radio> -->
         </div>
         <ng-titulo titulo="Representante legal"></ng-titulo>
         <div class="row">
@@ -322,7 +382,7 @@
                 formControlName="rfc"
                 appUppercase
                 aria-labelledby="rfc"
-                (change)="getRfc()"
+               
               />
             </div>
           </div>
