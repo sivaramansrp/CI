@@ -5,8 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { PasoTresComponent } from './paso-tres.component';
-import { ServiciosExtraordinariosService } from '@ng-mf/data-access-user';
-import { TramiteStore } from '../../../../estados/tramite.store';
+import { TramiteStore } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
@@ -15,6 +14,7 @@ describe('PasoTresComponent', () => {
   let mockRouter: any;
   let mockServiciosExtraordinariosService: any;
   let mockTramiteStore: any;
+  let mockToastrService: any;
 
   beforeEach(async () => {
     mockRouter = {
@@ -29,16 +29,19 @@ describe('PasoTresComponent', () => {
       establecerTramite: jest.fn(),
     };
 
+    mockToastrService = {
+      success: jest.fn(),
+      error: jest.fn(),
+      warning: jest.fn(),
+      info: jest.fn(),
+    };
+
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, PasoTresComponent],
       providers: [
         { provide: Router, useValue: mockRouter },
-        {
-          provide: ServiciosExtraordinariosService,
-          useValue: mockServiciosExtraordinariosService,
-        },
         { provide: TramiteStore, useValue: mockTramiteStore },
-        ToastrService,
+        { provide: ToastrService, useValue: mockToastrService },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
@@ -66,6 +69,7 @@ describe('PasoTresComponent', () => {
       const firma = 'mockFirma';
       component.obtieneFirma(firma);
 
+      expect(jest.fn()).toHaveBeenCalled();
       expect(
         mockServiciosExtraordinariosService.obtenerTramite
       ).toHaveBeenCalledWith(19);
