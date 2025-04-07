@@ -1,61 +1,106 @@
 <div class="container">
-    <ng-titulo titulo="Datos mercancía"></ng-titulo>
+  <ng-titulo titulo="Datos mercancía"></ng-titulo>
 
-    <form [formGroup]="mercanciaForm">
-        <div class="row">
-            <div class="col-md-10">
-                <div class="ml-2">
-                    <app-catalogo-select [catalogo]="clasificacionProductoDatos" formControlName="clasificacionProducto"
-                        [label]="'Clasificación del producto'" [required]="true"
-                        name="clasificacionProducto"></app-catalogo-select>
-                </div>
-
-            </div>
+  <form [formGroup]="mercanciaForm">
+    <div class="row">
+      <div class="col-md-10">
+        <div class="ml-2">
+          <app-catalogo-select
+            [catalogo]="clasificacionProductoDatos"
+            formControlName="clasificacionProducto"
+            [label]="'Clasificación del producto'"
+            [required]="true"
+            name="clasificacionProducto"
+          ></app-catalogo-select>
         </div>
-        <div class="row">
-            <div class="col-md-10 ml-2">
-                <div class="form-group">
-                    <app-catalogo-select [catalogo]="especificarClasificacionProductoDatos"
-                        formControlName="especificarClasificacionProducto"
-                        [label]="'Especificar clasificación del producto'" [required]="true"
-                        name="especificarClasificacionProducto"></app-catalogo-select>
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10 ml-2">
+        <div class="form-group">
+          <app-catalogo-select
+            [catalogo]="especificarClasificacionProductoDatos"
+            formControlName="especificarClasificacionProducto"
+            [label]="'Especificar clasificación del producto'"
+            [required]="true"
+            name="especificarClasificacionProducto"
+          ></app-catalogo-select>
         </div>
-        <div class="row">
-            <div class="col-md-10">
-                <div class="form-group">
-                    <label class="form-label" for="denominacionEspecificaProducto">Denominación específica del
-                        producto*:</label>
-                    <input class="form-control" id="denominacionEspecificaProducto" type="text"
-                        formControlName="denominacionEspecificaProducto"
-                        [ngClass]="isValid(mercanciaForm, 'denominacionEspecificaProducto') ? 'required' : ''">
-                </div>
-            </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="denominacionEspecificaProducto"
+            >Denominación específica del producto*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionEspecificaProducto"
+            type="text"
+            formControlName="denominacionEspecificaProducto"
+            [ngClass]="
+              isValid(mercanciaForm, 'denominacionEspecificaProducto')
+                ? 'required'
+                : ''
+            "
+          />
         </div>
-        @if(elementosAnadidos.includes('marca')){
-            <div class="row">
-                <div class="col-md-10">
-                    <div class="form-group">
-                        <label class="form-label" for="marca">Marca*:</label>
-                        <input class="form-control" id="marca" type="text"
-                            formControlName="marca"
-                            [ngClass]="isValid(mercanciaForm, 'marca') ? 'required' : ''">
-                    </div>
-                </div>
-            </div>
-        }
-        @if(!elementosNoValidos.includes('denominacionDistintiva')) {   
-        <div class="row">
-            <div class="col-md-10">
-                <div class="form-group">
-                    <label class="form-label" for="denominacionDistintiva">Denominación distintiva*:</label>
-                    <input class="form-control" id="denominacionDistintiva" type="text"
-                        formControlName="denominacionDistintiva"
-                        [ngClass]="isValid(mercanciaForm, 'denominacionDistintiva') ? 'required' : ''">
-                </div>
-            </div>
+      </div>
+    </div>
+    @if(elementosAnadidos.includes('marca')){
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="marca">Marca*:</label>
+          <input
+            class="form-control"
+            id="marca"
+            type="text"
+            formControlName="marca"
+            [ngClass]="isValid(mercanciaForm, 'marca') ? 'required' : ''"
+          />
         </div>
+      </div>
+    </div>
+    } @if(!elementosNoValidos.includes('denominacionDistintiva')) {
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="denominacionDistintiva"
+            >Denominación distintiva*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionDistintiva"
+            type="text"
+            formControlName="denominacionDistintiva"
+            [ngClass]="
+              isValid(mercanciaForm, 'denominacionDistintiva') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
+    </div>
+    } @if(!elementosNoValidos.includes('denominacionComun')){
+    <div class="row">
+      <div class="col-md-10">
+        <div class="form-group">
+          <label class="form-label" for="denominacionComun"
+            >Denominación o nombre científico*:</label
+          >
+          <input
+            class="form-control"
+            id="denominacionComun"
+            type="text"
+            formControlName="denominacionComun"
+            [ngClass]="
+              isValid(mercanciaForm, 'denominacionComun') ? 'required' : ''
+            "
+          />
+        </div>
+      </div>
+    </div>
     }
     @if(!elementosNoValidos.includes('denominacionComun')){
         <div class="row">
@@ -70,9 +115,8 @@
     }
         <div class="row">
             <div class="col-md-10 ml-2">
-                <app-catalogo-select [catalogo]="tipoProductoDatos" formControlName="tipoProducto"
-                    [label]="'Tipo de producto'" [required]="true"
-                    name="tipoProducto"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="tipoProductoDatos" formControlName="tipoProducto" [label]="'Tipo de producto'"
+                    [required]="true" name="tipoProducto"></app-catalogo-select>
             </div>
         </div>
 
@@ -320,7 +364,7 @@
     
     @if(detalleMercancia) {
         <div class="row mt-3">
-            <app-detalle-mercancia [datosTablaDetalleMercancia]="datosTablaDetalleMercancia" (aggregarMercancia)="aggregarMercancia($event)" (eliminarMercancia)="eliminarMercancia($event)"></app-detalle-mercancia>
+            <app-detalle-mercancia [datosTablaDetalleMercancia]="datosTablaDetalleMercancia" (agregarMercanciaSellecion)="agregarMercanciaSellecion($event)" (eliminarMercancia)="eliminarMercancia($event)"></app-detalle-mercancia>
         </div>
     }
 
@@ -343,6 +387,4 @@
         </div>
     </div>
 
-   
 </div>
-

@@ -6,7 +6,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CROSLISTA_DE_PAISES, DATOS_MERCANCIA_CLAVE_TABLA } from '../../constantes/datos-solicitud.enum';
+import {
+  CROSLISTA_DE_PAISES,
+  DATOS_MERCANCIA_CLAVE_TABLA,
+} from '../../constantes/datos-solicitud.enum';
 import {
   Catalogo,
   CrossListLable,
@@ -42,7 +45,7 @@ import { Observable } from 'rxjs';
     CatalogoSelectComponent,
     CrosslistComponent,
     DetalleMercanciaComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
   ],
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
@@ -50,12 +53,12 @@ import { Observable } from 'rxjs';
 })
 export class DatosMercanciaComponent implements OnInit {
   /**
- * @property {number} idProcedimiento
- * Identificador único del procedimiento asociado a la solicitud.
- * Este valor es recibido como un input desde el componente padre.
- *
- * @decorador @Input
- */
+   * @property {number} idProcedimiento
+   * Identificador único del procedimiento asociado a la solicitud.
+   * Este valor es recibido como un input desde el componente padre.
+   *
+   * @decorador @Input
+   */
   @Input() public idProcedimiento!: number;
   /**
    * @property {boolean} detalleMercancia
@@ -89,11 +92,11 @@ export class DatosMercanciaComponent implements OnInit {
     new EventEmitter<TablaMercanciasDatos>();
 
   /**
-   * @event aggregarMercanciaDatos
+   * @event agregarMercanciaDatos
    * @description EventEmitter that emits a single merchandise item to be added.
    * This is used to notify the parent component about the addition of a new merchandise item.
    */
-  @Output() aggregarMercanciaDatos: EventEmitter<DetalleMercancia> =
+  @Output() agregarMercanciaDatos: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
 
   /**
@@ -275,66 +278,100 @@ export class DatosMercanciaComponent implements OnInit {
     this.crearMercanciaForm();
   }
 
+  /**
+   * Lista de elementos que no son válidos.
+   * Esta propiedad almacena un arreglo de cadenas que representan 
+   * los elementos que no cumplen con los criterios de validación.
+   */
   public elementosNoValidos:string[] = [];
+  /**
+   * Arreglo que almacena los elementos añadidos.
+   * 
+   * Este arreglo se utiliza para guardar una lista de cadenas que representan
+   * los elementos que han sido agregados en el componente.
+   */
   public elementosAnadidos:string[] = [];
+  /**
+   * Configuración para la clave de mercancía.
+   * 
+   * Esta propiedad define la configuración utilizada para la tabla de selección
+   * de claves de mercancía. Incluye el tipo de selección, la configuración de la tabla
+   * y los datos asociados.
+   * 
+   * Propiedades:
+   * - `tipoSeleccionTabla`: Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
+   * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
+   * - `datos`: Arreglo que contiene los datos de configuración de las claves de mercancía.
+   */
   public claveConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: DATOS_MERCANCIA_CLAVE_TABLA,
     datos: [] as TablaMercanciaClaveConfig[],
-  }
+  };
   /**
    * @property {TablaMercanciaClaveConfig[]} scianLista
    * Lista de registros Clave seleccionados.
    */
   public claveLista: TablaMercanciaClaveConfig[] = [];
- /**
- * Valida elementos según el `idProcedimiento` y establece 
- * las listas de elementos no válidos y añadidos.
- * @returns {void} Lista de elementos no válidos.
- */
-validarElementos(): void {
-  this.elementosNoValidos = [];
-  this.elementosAnadidos = [];
-  switch (this.idProcedimiento) {
-    case 260102:
-      this.elementosNoValidos = [
-        "denominacionDistintiva",
-        "denominacionComun",
-        "formaFarmaceutica",
-        "estadoFisico",
-        "presentacion",
-        "numeroRegistroSanitario",
-        "fechaCaducidad"
-      ];
-      this.elementosAnadidos = [
-        "marca",
-        "especifique",
-        "claveDeLos",
-        "fechaDeFabricacio",
-        "fechaDeCaducidad"
-      ];
-      break;
-    default:
-      if (this.detalleMercancia) {
-        this.elementosNoValidos = ["denominacionDistintiva", "formaFarmaceutica"];
-      }
-      break;
+  /**
+   * Valida elementos según el `idProcedimiento` y establece
+   * las listas de elementos no válidos y añadidos.
+   * @returns {void} Lista de elementos no válidos.
+   */
+  validarElementos(): void {
+    this.elementosNoValidos = [];
+    this.elementosAnadidos = [];
+    switch (this.idProcedimiento) {
+      case 260102:
+        this.elementosNoValidos = [
+          'denominacionDistintiva',
+          'denominacionComun',
+          'formaFarmaceutica',
+          'estadoFisico',
+          'presentacion',
+          'numeroRegistroSanitario',
+          'fechaCaducidad',
+        ];
+        this.elementosAnadidos = [
+          'marca',
+          'especifique',
+          'claveDeLos',
+          'fechaDeFabricacio',
+          'fechaDeCaducidad',
+        ];
+        break;
+      default:
+        if (this.detalleMercancia) {
+          this.elementosNoValidos = [
+            'denominacionDistintiva',
+            'formaFarmaceutica',
+          ];
+        }
+        break;
+    }
   }
-}
 
-/**
- * Restablece los valores de los campos clave en el formulario.
- */
+  /**
+   * Restablece los valores de los campos clave en el formulario.
+   */
   modificarClave(): void {
-    if (!this.claveLista.length) { return }
-    const CLAVES_A_ELIMINAR = new Set(this.claveLista.map(item => item.clave));
+    if (!this.claveLista.length) {
+      return;
+    }
+    const CLAVES_A_ELIMINAR = new Set(
+      this.claveLista.map((item) => item.clave)
+    );
     const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
     const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
     const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
     for (let i = 0; i < this.claveConfig.datos.length; i++) {
       const ITEM = this.claveConfig.datos[i];
       if (CLAVES_A_ELIMINAR.has(ITEM.clave)) {
-        this.claveConfig.datos[i] = { clave: CLAVE, fabricacion: FABRICACION, caducidad: CADUCIDAD };
+        this.claveConfig.datos[i] = {
+          clave: CLAVE,
+          fabricacion: FABRICACION,
+          caducidad: CADUCIDAD,
+        };
         break;
       }
     }
@@ -355,46 +392,58 @@ validarElementos(): void {
    */
   claveListaFn(event: TablaMercanciaClaveConfig[]): void {
     this.claveLista = event;
-    if (!this.claveLista.length) {return}
-    const CLAVES_A_ELIMINAR = new Set(this.claveLista.map(item => item.clave));
-    const FILA_SELECCIONADA = this.claveConfig.datos.find(item => CLAVES_A_ELIMINAR.has(item.clave));
+    if (!this.claveLista.length) {
+      return;
+    }
+    const CLAVES_A_ELIMINAR = new Set(
+      this.claveLista.map((item) => item.clave)
+    );
+    const FILA_SELECCIONADA = this.claveConfig.datos.find((item) =>
+      CLAVES_A_ELIMINAR.has(item.clave)
+    );
     if (FILA_SELECCIONADA) {
       this.mercanciaForm.patchValue({
         claveDeLos: FILA_SELECCIONADA.clave,
         fechaDeFabricacio: FILA_SELECCIONADA.fabricacion,
-        fechaDeCaducidad: FILA_SELECCIONADA.caducidad
+        fechaDeCaducidad: FILA_SELECCIONADA.caducidad,
       });
     }
   }
-/**
- * Agrega una nueva clave a la lista `claveConfig.datos`
- * solo si los valores de los campos no están vacíos.
- */
-  agregarClave():void{
+  /**
+   * Agrega una nueva clave a la lista `claveConfig.datos`
+   * solo si los valores de los campos no están vacíos.
+   */
+  agregarClave(): void {
     const CLAVE = this.mercanciaForm.get('claveDeLos')?.value;
     const FABRICACION = this.mercanciaForm.get('fechaDeFabricacio')?.value;
     const CADUCIDAD = this.mercanciaForm.get('fechaDeCaducidad')?.value;
     if (CLAVE && FABRICACION && CADUCIDAD) {
-      this.claveConfig.datos.push({ clave: CLAVE, fabricacion:FABRICACION, caducidad:CADUCIDAD });
+      this.claveConfig.datos.push({
+        clave: CLAVE,
+        fabricacion: FABRICACION,
+        caducidad: CADUCIDAD,
+      });
       this.mercanciaForm.patchValue({
-        claveDeLos: '', 
+        claveDeLos: '',
         fechaDeFabricacio: '',
-        fechaDeCaducidad: ''
+        fechaDeCaducidad: '',
       });
     }
   }
 
-/**
- * Elimina las claves seleccionadas en `claveLista` de `claveConfig.datos`.
- * Si la lista de claves a eliminar está vacía, no hace nada.
- */
-  eliminarClave():void{
+  /**
+   * Elimina las claves seleccionadas en `claveLista` de `claveConfig.datos`.
+   * Si la lista de claves a eliminar está vacía, no hace nada.
+   */
+  eliminarClave(): void {
     if (!this.claveLista.length) {
       return;
     }
-    const CLAVES_A_ELIMINAR = new Set(this.claveLista.map(item => item.clave));
+    const CLAVES_A_ELIMINAR = new Set(
+      this.claveLista.map((item) => item.clave)
+    );
     this.claveConfig.datos = this.claveConfig.datos.filter(
-      item => !CLAVES_A_ELIMINAR.has(item.clave)
+      (item) => !CLAVES_A_ELIMINAR.has(item.clave)
     );
   }
 
@@ -505,8 +554,15 @@ validarElementos(): void {
     if (this.elementosAnadidos.length) {
       for (const NOMBRE_DEL_CONTROL of this.elementosAnadidos) {
         if (!this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-          this.mercanciaForm.addControl(NOMBRE_DEL_CONTROL,
-            new FormControl(this.mercanciaFormState[NOMBRE_DEL_CONTROL as keyof MercanciaForm], { validators: [Validators.required] }));
+          this.mercanciaForm.addControl(
+            NOMBRE_DEL_CONTROL,
+            new FormControl(
+              this.mercanciaFormState[
+                NOMBRE_DEL_CONTROL as keyof MercanciaForm
+              ],
+              { validators: [Validators.required] }
+            )
+          );
         }
       }
     }
@@ -617,7 +673,7 @@ validarElementos(): void {
     this.ubicaccion.back();
   }
   /**
-   * @method aggregarMercancia
+   * @method agregarMercancia
    * @description Emits an event to add a new merchandise item.
    * This method is used to notify the parent component about the addition of a new merchandise item.
    *
@@ -625,8 +681,8 @@ validarElementos(): void {
    * @returns {void} This method does not return any value.
    */
 
-  aggregarMercancia(datos: DetalleMercancia): void {
-    this.aggregarMercanciaDatos.emit(datos);
+  agregarMercanciaSellecion(datos: DetalleMercancia): void {
+    this.agregarMercanciaDatos.emit(datos);
   }
 
   /**
