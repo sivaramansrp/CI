@@ -36,14 +36,6 @@ export const TEXTOS = {
   DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`,
 };
 
-export const IMMEX = {
-  labelNombre: 'IMMEX (Número/aaaa)',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
-};
-
 export const MESES = [
   { id: '1', mes: 'Enero' },
   { id: '2', mes: 'Febrero' },
@@ -215,6 +207,38 @@ export const Todospasos = {
   efectos de identificar tu Solicitud. Un folio oficial le será asignado a la Solicitud al momento en que ésta sea firmada.</p>`,
 };
 
+export const MANIFIESTOS = {
+  Importante: `<div class="form-check d-flex">
+   <input class="form-check-input" type="checkbox" id="manifiestos">* 
+  <label class="form-check-label" for="manifiestos">
+    Cumplo con los requisitos y normatividad aplicable, sin que me eximan de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en que puedo incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo acepto que la notificación de este trámite, sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.
+  </label>
+  </div>`
+};
+
+export const REQUISITOS = {
+  Importante: `<p>La solicitud ha quedado registrada con el número temporal 202767918. Éste no tiene validez legal y sirve solamente para
+efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.</p>`
+};
+
+export const REQUISITOS_OPCIONALES = {
+  INSTRUCCIONES: `<h6>Instrucciones</h6>
+  <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+  <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
+  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+};
+
+export const ANEXAR = {
+  Importante: `<p>
+Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar documentos".</p>`
+};
+
+
+export const LASTABLA = {
+  Importante: `<p>Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.</p>`
+};
+
+
 export const URL_PRUEBA = 'assets/pdf/Test03.pdf';
 
 export const PASOS_REQUERIMIENTOS = [
@@ -255,3 +279,5 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
+
+export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
