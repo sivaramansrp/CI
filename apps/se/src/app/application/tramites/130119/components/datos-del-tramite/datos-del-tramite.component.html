@@ -1,0 +1,17 @@
+<div class="container">
+    <ng-titulo [titulo]="'Datos del trámite a realizar'"></ng-titulo>
+    <form [formGroup]="datosDelTramiteForm">
+        <div class="row">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="opcionesDeRegimen" [label]="'Régimen'" [required]="true"
+                    formControlName="regimen"
+                    (change)="setValoresStore(datosDelTramiteForm,'regimen','setRegimen')" [tooltipQuestionCircle]="true"></app-catalogo-select>
+            </div>
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="opcionesDeClasificacionDeRegimen" [label]="'Clasificación de régimen'"
+                    [required]="true" formControlName="clasificacionDeRegimen"
+                    (change)="setValoresStore(datosDelTramiteForm,'clasificacionDeRegimen','setClasificacionDeRegimen')"></app-catalogo-select>
+            </div>
+        </div>
+    </form>
+</div>
