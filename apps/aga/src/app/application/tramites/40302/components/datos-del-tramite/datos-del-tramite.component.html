@@ -35,21 +35,21 @@
                 <div class="form-group">
                     <label class="form-label" for="nombreDirectorGeneral">Nombre(s)*:</label>
                     <input class="form-control" type="text" id="nombreDirectorGeneral"
-                        formControlName="directorGeneralNombre" />
+                        formControlName="directorGeneralNombre" (input)="actualizarDirectorGeneralNombre()" />
                 </div>
             </div>
             <div class="col-md-4 mt-3">
                 <div class="form-group">
                     <label class="form-label" for="apellidoPaternoDirectorGeneral">Primer apellido*:</label>
                     <input class="form-control" type="text" id="apellidoPaternoDirectorGeneral"
-                        formControlName="primerApellido" />
+                        formControlName="primerApellido" (input)="actualizarPrimerApellido()" />
                 </div>
             </div>
             <div class="col-md-4 mt-3">
                 <div class="form-group">
                     <label class="form-label" for="apellidoMaternoDirectorGeneral">Segundo apellido:</label>
                     <input class="form-control" type="text" id="apellidoMaternoDirectorGeneral"
-                        formControlName="segundoApellido" />
+                        formControlName="segundoApellido" (input)="actualizarSegundoApellido()" />
                 </div>
             </div>
         </div>

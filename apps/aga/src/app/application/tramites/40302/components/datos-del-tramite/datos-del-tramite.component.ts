@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { DatosDelTramiteService } from '../../services/datos-del-tramite.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { Solicitud40302Store } from './../../estados/tramite40302.store';
 /**
  * ## DatosDelTramiteComponent
  * 
@@ -59,9 +61,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * - **datosService**: `DatosDelTramiteService`  
    *   Servicio que gestiona los datos del trámite.
    */
-  constructor(private fb: FormBuilder, private datosService: DatosDelTramiteService) {
-    this.establecerSolicitudForm();
-  }
+    
+    constructor(private fb: FormBuilder, private datosService: DatosDelTramiteService, 
+      private solicitud40302Store: Solicitud40302Store, ) {
+      this.establecerSolicitudForm();
+    }
 
   /**
    * ## ngOnInit
@@ -74,19 +78,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.datosService.setInitialValues();
     this.suscribirseAlEstado();
-  }
-
-  /**
-   * ## ngOnDestroy
-   * 
-   * Método que se ejecuta al destruir el componente.
-   * 
-   * ### Funcionalidad
-   * Cancela las suscripciones para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   /**
@@ -126,4 +117,50 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  /**
+ * Actualiza el nombre del Director General en el store.
+ *
+ * Este método obtiene el valor actual del campo `directorGeneralNombre` del formulario `solicitudForm`
+ * y lo envía al store `solicitud40302Store` mediante el método `setDirectorGeneralNombre`.
+ */
+  public actualizarDirectorGeneralNombre(): void {
+    const DIRECTOR_GENERAL_NOMBRE = this.solicitudForm.get('directorGeneralNombre')?.value;
+    this.solicitud40302Store.setDirectorGeneralNombre(DIRECTOR_GENERAL_NOMBRE);
+  }
+
+  /**
+ * Actualiza el primer apellido en el store.
+ *
+ * Este método obtiene el valor actual del campo `primerApellido` del formulario `solicitudForm`
+ * y lo envía al store `solicitud40302Store` mediante el método `setDirectorGeneralNombre`.
+ */
+  public actualizarPrimerApellido(): void {
+    const PRIMER_APELLIDO = this.solicitudForm.get('primerApellido')?.value;
+    this.solicitud40302Store.setPrimerApellido(PRIMER_APELLIDO);
+  }
+
+  /**
+ * Actualiza el segundo apellido en el store.
+ *
+ * Este método obtiene el valor actual del campo `segundoApellido` del formulario `solicitudForm`
+ * y lo envía al store `solicitud40302Store` mediante el método `setDirectorGeneralNombre`.
+ */
+  public actualizarSegundoApellido(): void {
+    const SEGUNDO_APELLIDO = this.solicitudForm.get('segundoApellido')?.value;
+    this.solicitud40302Store.setSegundoApellido(SEGUNDO_APELLIDO);
+  }
+
+    /**
+   * ## ngOnDestroy
+   * 
+   * Método que se ejecuta al destruir el componente.
+   * 
+   * ### Funcionalidad
+   * Cancela las suscripciones para evitar fugas de memoria.
+   */
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
 }
