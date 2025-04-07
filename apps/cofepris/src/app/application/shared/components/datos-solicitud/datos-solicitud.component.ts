@@ -30,7 +30,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     DomicilioComponent,
     ManifiestosComponent,
     RepresentanteLegalRfcComponent,
-],
+  ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
@@ -70,7 +70,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Método que se llama cuando se inicializa el componente
    * */
-  ngOnInit() {
+  ngOnInit(): void {
     this.DatosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -95,7 +95,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Método que se llama cuando se envía el formulario.
    */
-  alternarControlesDeFormulario() {
+  alternarControlesDeFormulario(): void {
     Object.keys(this.forma.controls).forEach((controlName) => {
       const CONTROL = this.forma.get(controlName);
       if (CONTROL?.disabled) {

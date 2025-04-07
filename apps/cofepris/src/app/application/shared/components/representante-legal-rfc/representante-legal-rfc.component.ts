@@ -78,7 +78,7 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
-  obtenerValor() {
+  obtenerValor(): void {
     this.representante.patchValue({
       nombre: 47875,
       apellidoPaterno: 'Paterno',

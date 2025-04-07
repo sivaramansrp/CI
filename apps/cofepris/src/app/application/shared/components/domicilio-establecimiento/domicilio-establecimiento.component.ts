@@ -73,8 +73,8 @@ export interface MercanciasTabla {
   styleUrls: ['./domicilio-establecimiento.component.css'],
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
- @Input() isAvisoLicenciaVisible: boolean = true;
- @Input() isAduanasEntradaVisible: boolean = false;
+  @Input() isAvisoLicenciaVisible: boolean = true;
+  @Input() isAduanasEntradaVisible: boolean = false;
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -116,15 +116,15 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   domicilio!: FormGroup;
 
-   /**
-     * Lista de países disponibles para la selección de origen.
-     */
-    public seleccionarAduanasEntrada = CROSLISTA_DE_ADUANAS_ENTRADA;
+  /**
+   * Lista de países disponibles para la selección de origen.
+   */
+  public seleccionarAduanasEntrada = CROSLISTA_DE_ADUANAS_ENTRADA;
 
-   /**
+  /**
    * Botones para gestionar la lista cruzada de países de origen.
    */
-   aduanasEntradaBotons = [
+  aduanasEntradaBotons = [
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
@@ -147,7 +147,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     },
   ];
 
-     /**
+  /**
    * Etiquetas para la lista cruzada de países de origen.
    */
   public aduanasEntradaLabel: CrossListLable = {
@@ -160,11 +160,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public seleccionadasAduanasEntradaDatos: string[] = [];
 
-   /**
+  /**
    * Maneja el cambio de selección de países de origen.
    * @param events Lista de países seleccionados.
    */
-   aduanasEntradaSeleccionadasChange(events: string[]): void {
+  aduanasEntradaSeleccionadasChange(events: string[]): void {
     this.seleccionadasAduanasEntradaDatos = events;
     this.domicilio.patchValue({
       paisDeOriginDatos: events,
@@ -285,7 +285,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Etiqueta de la lista de fechas.
    * */
-  ngOnInit() {
+  ngOnInit(): void {
     this.DatosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -510,7 +510,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable() {
+  mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
@@ -518,7 +518,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableDuos
    */
-  mostrar_colapsableDuos() {
+  mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
   }
 
@@ -526,7 +526,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableTres
    */
-  mostrar_colapsableTres() {
+  mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
   /**

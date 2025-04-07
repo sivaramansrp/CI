@@ -18,7 +18,14 @@ import { PermisoModel } from '../models/datos-domicilio-legal.model';
   providedIn: 'root',
 })
 export class TercerosFabricanteService {
-  constructor(public http: HttpClient) {}
+  /**
+   * Constructor del servicio TercerosFabricanteService.
+   *
+   * @param http - Instancia de HttpClient para realizar solicitudes HTTP.
+   */
+  constructor(public http: HttpClient) {
+    // Constructor del servicio
+  }
 
   /**
    * Obtiene los datos de un archivo JSON local.
