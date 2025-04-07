@@ -13,9 +13,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  DETALLE_MERCANCIA_TABLA,
-} from '../../constantes/datos-solicitud.enum';
+import { DETALLE_MERCANCIA_TABLA } from '../../constantes/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { Observable } from 'rxjs';
@@ -61,7 +59,7 @@ export class DetalleMercanciaComponent implements OnInit {
   /**
    * Datos para la forma farmacéutica.
    */
-  datosFormFormaceutica : Catalogo[] = [];
+  datosFormFormaceutica: Catalogo[] = [];
 
   /**
    * Lista de mercancías seleccionadas o detalladas.
@@ -71,7 +69,7 @@ export class DetalleMercanciaComponent implements OnInit {
   /**
    * Emite el evento cuando se agrega una mercancía.
    */
-  @Output() aggregarMercancia: EventEmitter<DetalleMercancia> =
+  @Output() agregarMercanciaSellecion: EventEmitter<DetalleMercancia> =
     new EventEmitter<DetalleMercancia>(true);
 
   /**
@@ -80,7 +78,10 @@ export class DetalleMercanciaComponent implements OnInit {
   @Output() eliminarMercancia: EventEmitter<DetalleMercancia[]> =
     new EventEmitter<DetalleMercancia[]>(true);
 
-  constructor(private fb: FormBuilder, public datosSolicitudService: DatosSolicitudService) {
+  constructor(
+    private fb: FormBuilder,
+    public datosSolicitudService: DatosSolicitudService
+  ) {
     this.formaDetalleMercancia = this.fb.group({
       formaFormaceutica: ['', Validators.required],
       numeroDeRegistro: [''],
@@ -92,7 +93,11 @@ export class DetalleMercanciaComponent implements OnInit {
     if (this.datosDetalleMercancia) {
       this.formaDetalleMercancia.patchValue(this.datosDetalleMercancia);
     }
-    this.datosSolicitudService.obtenerRespuestaPorUrl(this, 'datosFormFormaceutica', '/cofepris/formaFarmaceutica.json');
+    this.datosSolicitudService.obtenerRespuestaPorUrl(
+      this,
+      'datosFormFormaceutica',
+      '/cofepris/formaFarmaceutica.json'
+    );
   }
 
   /**
@@ -133,10 +138,10 @@ export class DetalleMercanciaComponent implements OnInit {
         )?.descripcion,
       };
 
-      this.aggregarMercancia.emit(DATOS);
+      this.agregarMercanciaSellecion.emit(DATOS);
       this.formaDetalleMercancia.reset();
       //Es necesario restablecer el cuadro de selección a -1 para restablecer el formulario
-      this.formaDetalleMercancia.patchValue({formaFormaceutica: -1})
+      this.formaDetalleMercancia.patchValue({ formaFormaceutica: -1 });
     }
   }
 }
