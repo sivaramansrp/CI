@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaRoutingModule } from './consulta-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConsultaService } from './service/consulta.service';
-import { SharedModule } from '@libs/shared/data-access-user/src';
+import { CatalogosService, SharedModule, TramiteFolioService } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -17,6 +17,7 @@ import { ToastrService } from 'ngx-toastr';
     SharedModule,
     
   ],
-  providers:[ToastrService]
+  providers:[ToastrService,CatalogosService,
+    TramiteFolioService,ConsultaService],
 })
 export class ConsultaModule { }
