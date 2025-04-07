@@ -11,12 +11,15 @@ import {
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
+import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoExperimentalesPlaguicidasRoutingModule } from './permiso-experimentales-plaguicidas-routing.module';
 import { PlaguicidasComponent } from './pages/plaguicidas/plaguicidas.component';
+import { TercerosRelacionadosFabricanteComponent } from './components/terceros-relacionados-fabricante/terceros-relacionados-fabricante.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -38,6 +41,9 @@ import { provideHttpClient } from '@angular/common/http';
     TituloComponent,
     AlertComponent,
     AnexarDocumentosComponent,
+    DatosSolicitudComponent,
+    TercerosRelacionadosFabricanteComponent,
+    PagoDerechosComponent,
   ],
   providers: [
     ToastrService,
