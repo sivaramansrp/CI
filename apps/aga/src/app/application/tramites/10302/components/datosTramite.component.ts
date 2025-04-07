@@ -214,9 +214,9 @@ export class DatosTramiteComponent {
         unidadMedida: [this.solicitudState?.unidadMedida, Validators.required],
         ano: [this.solicitudState?.ano, Validators.required],
         cantidad: [this.solicitudState?.ano, Validators.required],
-        marca: [this.solicitudState?.ano, Validators.required],
-        modelo: [this.solicitudState?.ano, Validators.required],
-        serie: [this.solicitudState?.ano, Validators.required],
+        marca: [this.solicitudState?.ano],
+        modelo: [this.solicitudState?.ano],
+        serie: [this.solicitudState?.ano],
       }),
     });
   }
@@ -381,8 +381,9 @@ export class DatosTramiteComponent {
    */
   agregarMercancias(): void {
     if (!this.agregarMercanciasForm.valid) {
+      this.agregarMercanciasForm.markAllAsTouched();
       return;
-    }
+    } else {
     const MERCANCIA = this.agregarMercanciasForm.value;
     this.exencionImpuestoService
       .agregarMercancias()
@@ -407,12 +408,13 @@ export class DatosTramiteComponent {
             ],
           };
           this.getMercanciaTableData.mercanciaTable.tableBody.push(DATOS);
-          this.agregarMercanciasForm.reset();
-          this.agregarMercanciasForm.markAsUntouched();
-          this.agregarMercanciasForm.markAsPristine();
-          this.cerrarModal();
         }
+        this.agregarMercanciasForm.reset();
+        this.agregarMercanciasForm.markAsUntouched();
+        this.agregarMercanciasForm.markAsPristine();
+        this.cerrarModal();
       });
+    }
   }
 
   limpiarMercancias(): void {
@@ -420,11 +422,18 @@ export class DatosTramiteComponent {
   }
 
   agregarConfirmarModal(): void {
-    if (this.confirmarModalElement) {
-      const MODAL_INSTANCE = new Modal(
-        this.confirmarModalElement.nativeElement
-      );
-      MODAL_INSTANCE.show();
+    if (this.agregarMercanciasForm.valid == true) {
+      console.log(this.confirmarModalElement);
+      if (this.confirmarModalElement) {
+        const MODAL_INSTANCE = new Modal(
+          this.confirmarModalElement.nativeElement
+        );
+        this.cerrarModal();
+        MODAL_INSTANCE.show();
+      }
+    } else {
+      this.agregarMercanciasForm.markAllAsTouched();
+      return;
     }
   }
 
@@ -433,5 +442,9 @@ export class DatosTramiteComponent {
       this.getMercanciaTableData.mercanciaTable.tableHeader;
     this.mercanciaBodyData =
       this.getMercanciaTableData.mercanciaTable.tableBody;
+  }
+
+  isValid(form: FormGroup, field: string): boolean {
+    return this.validacionesService.isValid(form, field) || false;
   }
 }
