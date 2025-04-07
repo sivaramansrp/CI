@@ -1,0 +1,123 @@
+import { CatalogoSelectComponent, SeccionLibQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  delay,
+  map,
+  takeUntil,
+  tap,
+} from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { PagoDerechosState } from '../../models/materiales-peligrosos.model';
+import { SeccionLibState } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { Subject } from 'rxjs';
+import { Tramite230501Query } from "../../estados/queries/tramite230501Query.query";
+import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
+
+@Component({
+  selector: 'app-pago-de-derechos',
+    standalone: true,
+    imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+  templateUrl: './pago-de-derechos.component.html',
+  styleUrl: './pago-de-derechos.component.scss',
+  providers: [MaterialesPeligrososService],
+})
+export class PagoDeDerechosComponent implements OnInit {
+  public pagoDerechos!: FormGroup;
+  public clasificacion: string = '';
+  private destroyNotifier$: Subject<void> = new Subject();
+  public pagoDerechosState!: PagoDerechosState;
+  private seccion!: SeccionLibState;
+
+  constructor(public materialesPeligrososService: MaterialesPeligrososService, private fb: FormBuilder,
+    public tramite230501Store:Tramite230501Store, public tramite230501Query: Tramite230501Query,
+    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore
+  ) {
+    this.materialesPeligrososService.inicializaPagoDerechosCatalogo();
+  }
+
+  /**
+   * Crea y configura el formulario de pago de derechos.
+   * Los campos 'clave', 'dependencia', 'llavePago' e 'importePago' están deshabilitados por defecto.
+   * Los campos 'banco' y 'fecha' son obligatorios.
+   */
+  ngOnInit(): void {
+     this.tramite230501Query.seletPagoDerechosState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.pagoDerechosState = seccionState;
+          })
+        ).subscribe();
+    this.createPagoDerechos();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+    this.pagoDerechos.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          const SECCION: number = 2;
+          const FORMAS_VALIDADAS = this.seccion.formaValida;
+          const ES_VALIDO_EL_BANCO = this.pagoDerechos.get('banco')?.status;
+          const ES_VALIDO_EL_FECHO = this.pagoDerechos.get('fecha')?.status;
+          if (this.pagoDerechos.valid ||
+            (ES_VALIDO_EL_BANCO === 'VALID' && ES_VALIDO_EL_FECHO === 'VALID')) {
+            FORMAS_VALIDADAS[SECCION] = true;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          } else {
+            FORMAS_VALIDADAS[SECCION] = false;
+            this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  
+  /**
+   * Este método inicializa el formulario `pagoDerechos` con varios campos predefinidos
+   * y sus respectivas validaciones. Algunos campos están deshabilitados y tienen valores
+   * predeterminados.
+   * Campos del formulario:
+   * - clave: Clave del trámite, deshabilitado y con valor predeterminado.
+   * - dependencia: Dependencia correspondiente, deshabilitado y con valor predeterminado.
+   * - banco: Banco donde se realizará el pago, requerido.
+   * - llavePago: Llave de pago, deshabilitado y con valor predeterminado.
+   * - importePago: Importe del pago, deshabilitado y con valor predeterminado.
+    */
+  createPagoDerechos(): void {
+    this.pagoDerechos = this.fb.group({
+      clave: [{ value: this.pagoDerechosState.clave, disabled: true }],
+      dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],
+      banco: [this.pagoDerechosState.banco, [Validators.required]],
+      llavePago: [{ value: this.pagoDerechosState.llavePago, disabled: true }],
+      fecha: [this.pagoDerechosState.fecha, [Validators.required]],
+      importePago: [{ value: this.pagoDerechosState.importePago, disabled: true }],
+    });
+    const FETCHA_CONTROL = this.pagoDerechos.get('fecha');
+    if (FETCHA_CONTROL) {
+      FETCHA_CONTROL.valueChanges.subscribe((value) => {
+        this.tramite230501Store.setPagoDerechosStateProperty('fecha', value);
+      });
+    }
+  }
+
+  
+  /**
+   * Método para manejar la selección de clasificación.
+   */
+  clasificacionSeleccione(): void {
+    this.clasificacion = this.pagoDerechos.get('banco')?.value;
+    this.tramite230501Store.setPagoDerechosStateProperty('banco', this.clasificacion);
+  }
+
+}
