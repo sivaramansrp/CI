@@ -1,3 +1,5 @@
+import { TablaNumeroCasType } from "../models/materiales-peligrosos.model";
+
 /**
  * Define una constante que representa la lista de pasos para un asistente (wizard).
  * Cada paso incluye su índice, título, estado de actividad y estado de completitud.
@@ -45,3 +47,17 @@ export const SECCIONES_TRAMITE_260206 = {
       requiereValidacion: true,
     },
   };
+
+  export const SCIAN_TABLA = [
+    {
+      encabezado: 'Clave S.C.I.A.N.',
+      clave: (ele: TablaNumeroCasType): string => ele.clave,
+      orden: 1,
+    },
+    {
+      encabezado: 'Descripcion del S.C.I.A.N.',
+      clave: (ele: TablaNumeroCasType): string => ele.descripcion,
+      orden: 1,
+    },
+  ];
+

@@ -26,3 +26,14 @@ export interface PagoDerechosState {
   fecha: string;
   importePago: string;
 }
+
+/**
+ * Interfaz que representa una fila en la tabla SCIAN.
+ *
+ * @property {string} clave - Clave SCIAN.
+ * @property {string} descripcion - Descripción del SCIAN.
+ */
+export interface TablaNumeroCasType {
+  clave: string;
+  descripcion: string;
+}
