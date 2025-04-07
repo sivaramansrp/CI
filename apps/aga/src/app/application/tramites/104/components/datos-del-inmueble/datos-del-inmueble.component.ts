@@ -5,7 +5,7 @@ import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
-import { MENSAJEDEALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
+import { MENSAJEDE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
 import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
 import dropDown from '@libs/shared/theme/assets/json/104/selector-104.json'
@@ -113,7 +113,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.fomentoExportacionForm.get('tipoPrograma')?.valueChanges.subscribe(value => { // Se suscribe a los cambios en 'tipoPrograma' del formulario.
       if (value === '1') {
         this.mostrarAlerta = true; // Muestra la alerta si el valor es '1'.
-        this.mensajeDeAlerta = MENSAJEDEALERTA.ADJUNTAR; // Asigna el mensaje de alerta correspondiente.
+        this.mensajeDeAlerta = MENSAJEDE_ALERTA.ADJUNTAR; // Asigna el mensaje de alerta correspondiente.
       }
     });
     this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
