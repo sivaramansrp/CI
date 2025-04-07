@@ -1,0 +1,71 @@
+<div>
+    <form [formGroup]="formCertificado">
+        <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
+        <ng-titulo titulo="Tratado y país o bloque" />
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estado" [label]="'Tratado / Acuerdo'"
+                    [required]="true" name="estado" formControlName="entidadFederativa" (change)="setValoresStore(formCertificado,'entidadFederativa', 'setEntidadFederativa')"
+                    ></app-catalogo-select>
+            </div>
+
+            <div class="col-md-4">
+                <app-catalogo-select [catalogo]="estado" [label]="'País / Bloque'" [required]="true"
+                    name="estado" formControlName="bloque" (change)="tercerOperador(formCertificado,'bloque', 'setBloque')"
+                    ></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="fraccionArancelaria" class="form-label">Fracción arancelaria:</label>
+                <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
+                    id="fraccionArancelaria" (change)="setValoresStore(formCertificado,'fraccionArancelariaForm', 'setFraccionArancelariaForm')">
+            </div>
+
+            <div class="col-md-4">
+                <label for="registroProducto" class="form-label"># Registro producto:</label>
+                <input type="text" class="form-control" formControlName="registroProductoForm" id="registroProducto" (change)="setValoresStore(formCertificado,'registroProductoForm', 'setRegistroProductoForm')">
+            </div>
+            <div class="col-md-4">
+                <label for="nombreComercial" class="form-label">Nombre comercial:</label>
+                <input type="text" class="form-control" formControlName="nombreComercialForm" id="nombreComercial" (change)="setValoresStore(formCertificado,'nombreComercialForm', 'setNombreComercialForm')">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12 text-center">
+                <label for="fracciónArancelaria" class="form-label">Periodo</label>
+            </div>
+        </div>
+
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
+            (valorCambiado)="cambioFechaInicio($event,formCertificado,'fechaInicio', 'setFechaInicio')" ></input-fecha>
+        </div>
+
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event,formCertificado,'fechaFinal', 'setFechaFinal')"></input-fecha>
+        </div>
+
+        <div class="row w-100">
+            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+                <button class="btn btn-primary">Buscar mercancías</button>
+            </div>
+        </div>
+        @if(mostrarTercerOperador){
+            <ng-titulo titulo="¿Necesita el anexo de japón?" />
+            <div class="col-md-12">
+                <input class="form-check-input" type="checkbox" id="tercerOperador"
+                    formControlName="tercerOperador" (change)="setValoresStore(formCertificado,'tercerOperador', 'setTercerOperador')"/> &nbsp;si
+            </div>
+        }
+        <h6 class="mt-5">Mercancías disponibles</h6>
+        <app-tabla-dinamica [configuracionTabla]="nicoTabla"
+        [datos]="nicoTablaDatos"></app-tabla-dinamica>
+        <ul class="pagination d-flex justify-content-center">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+        </ul>
+
+    </form>
+    <app-carga-de-mercancias></app-carga-de-mercancias>
+</div>
