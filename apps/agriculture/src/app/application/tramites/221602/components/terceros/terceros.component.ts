@@ -2,7 +2,11 @@
 import { AlertComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Exportador, MENSAJE_TABLA_OBLIGATORIA } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { Component } from '@angular/core';
+
+import { CONFIGURATION_TABLA_DESTINATARIO } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { Destinatario } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
+
+import { CONFIGURATION_TABLA_DATOS } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import realizar from '@libs/shared/theme/assets/json/221602/realizar.json';
 
 /**
@@ -71,12 +75,7 @@ export class TercerosComponent {
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
    */
   public checkbox = TablaSeleccion.CHECKBOX;
-  configuracionTabla: ConfiguracionColumna<Exportador>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (item: Exportador) => item.nombre_denominacion_o_razon_social, orden: 1 },
-    { encabezado: 'Teléfono', clave: (item: Exportador) => item.telefono, orden: 2 },
-    { encabezado: 'Correo electrónico', clave: (item: Exportador) => item.correo_electronico, orden: 3 },
-    { encabezado: 'Domicilio', clave: (item: Exportador) => item.domicilio, orden: 4 }
-  ];
+  configuracionTabla: ConfiguracionColumna<Exportador>[] =CONFIGURATION_TABLA_DATOS;
 
   /**
    * Lista de destinatarios obtenida desde un archivo JSON.
@@ -88,17 +87,5 @@ export class TercerosComponent {
    * Configuración de las columnas de la tabla de destinatarios.
    * Define el encabezado, clave y el orden de las columnas para la tabla de destinatarios.
    */
-  configuracionTablaDatos: ConfiguracionColumna<Destinatario>[] = [
-    { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario) => item.nombre_denominacion_o_razon_social, orden: 1 },
-    { encabezado: 'Teléfono', clave: (item: Destinatario) => item.telefono, orden: 2 },
-    { encabezado: 'Correo electrónico', clave: (item: Destinatario) => item.correo_electronico, orden: 3 },
-    { encabezado: 'Calle', clave: (item: Destinatario) => item.calle, orden: 4 },
-    { encabezado: 'Número exterior', clave: (item: Destinatario) => item.numero_exterior, orden: 5 },
-    { encabezado: 'Número interior', clave: (item: Destinatario) => item.numero_interior, orden: 6 },
-    { encabezado: 'País', clave: (item: Destinatario) => item.pais, orden: 7 },
-    { encabezado: 'Colonia', clave: (item: Destinatario) => item.colonia, orden: 8 },
-    { encabezado: 'Municipio o Alcaldía', clave: (item: Destinatario) => item.municipio_o_alcaldia, orden: 9 },
-    { encabezado: 'Entidad Federativa', clave: (item: Destinatario) => item.entidad_federativa, orden: 10 },
-    { encabezado: 'Código Postal', clave: (item: Destinatario) => item.codigo_postal, orden: 11 }
-  ];
+  configuracionTablaDatos: ConfiguracionColumna<Destinatario>[] = CONFIGURATION_TABLA_DESTINATARIO ;
 }

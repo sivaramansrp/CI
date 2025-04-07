@@ -125,7 +125,17 @@
               "id": 13,
               "descripcion": "CT Banco"
             }
-          ]
+          ],
+          "formData":{
+            "clave": "454000554",
+            "dependencia": "0001840646CAIM",
+            "importe": "1281",
+            "empresa": "GRUPO OPERADOR MULTIMODAL, SA DE CV",
+            "aduana": "QUERETARO, QRO.",
+            "oficina": "Querétaro",
+            "punto": "Querétaro Oficina de Inspección"
+          }
+          
           
           
           

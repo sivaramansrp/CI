@@ -136,9 +136,9 @@ export class PagoDeDerechos221602Component implements OnInit, OnDestroy {
     this.pagoDerechosForm.get('clave')?.disable();
     this.pagoDerechosForm.get('dependencia')?.disable();
     this.pagoDerechosForm.get('importe')?.disable();
-    this.pagoDerechosForm.get('clave')?.setValue('454000554');
-    this.pagoDerechosForm.get('dependencia')?.setValue('0001840646CAIM');
-    this.pagoDerechosForm.get('importe')?.setValue('1281');
+    this.pagoDerechosForm.get('clave')?.setValue(realizar.formData.clave);
+    this.pagoDerechosForm.get('dependencia')?.setValue(realizar.formData.dependencia);
+    this.pagoDerechosForm.get('importe')?.setValue(realizar.formData.importe);
   }
 
   /**

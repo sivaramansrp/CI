@@ -8,6 +8,7 @@ import { Subject,map,takeUntil } from 'rxjs';
 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DATOS_SOLICITUD ,Mercancia } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
+import { CONFIGURATION_TABLA_MERCANCIAS} from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 
 import { Solicitud221602State, Tramite221602Store } from '../../../../estados/tramites/tramite221602.store';
 import { Tramite221602Query } from '../../../../estados/queries/tramite221602.query';
@@ -125,26 +126,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] = [
-    { encabezado: 'Número de partida', clave: (item: Mercancia) => item.no_partida, orden: 1 },
-    { encabezado: 'Tipo de requisito', clave: (item: Mercancia) => item.tipo_requisito, orden: 2 },
-    { encabezado: 'Requisito', clave: (item: Mercancia) => item.requisito, orden: 3 },
-    { encabezado: 'Número de Certificado Internacional', clave: (item: Mercancia) => item.numero_certificado_internacional, orden: 4 },
-    { encabezado: 'Fracción arancelaria', clave: (item: Mercancia) => item.fraccion_arancelaria, orden: 5 },
-    { encabezado: 'NICO', clave: (item: Mercancia) => item.nico, orden: 6 },
-    { encabezado: 'Descripción NICO', clave: (item: Mercancia) => item.descripcion_nico, orden: 7 },
-    { encabezado: 'Descripción', clave: (item: Mercancia) => item.descripcion, orden: 8 },
-    { encabezado: 'Unidad de medida de tarifa', clave: (item: Mercancia) => item.unidad_medida_tarifa, orden: 9 },
-    { encabezado: 'Cantidad UMT', clave: (item: Mercancia) => item.cantidad_umt, orden: 10 },
-    { encabezado: 'Unidad de medida de comercialización', clave: (item: Mercancia) => item.unidad_medida_comercializacion, orden: 11 },
-    { encabezado: 'Cantidad UMC', clave: (item: Mercancia) => item.cantidad_umc, orden: 12 },
-    { encabezado: 'Uso', clave: (item: Mercancia) => item.uso, orden: 13 },
-    { encabezado: 'Tipo de Producto', clave: (item: Mercancia) => item.tipo_producto, orden: 14 },
-    { encabezado: 'Número de lote', clave: (item: Mercancia) => item.numero_lote, orden: 15 },
-    { encabezado: 'País de origen', clave: (item: Mercancia) => item.pais_origen, orden: 16 },
-    { encabezado: 'País de procedencia', clave: (item: Mercancia) => item.pais_procedencia, orden: 17 },
-    { encabezado: 'Certificado Internacional Electrónico', clave: (item: Mercancia) => item.certificado_internacional_electronico, orden: 18 }
-  ];
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURATION_TABLA_MERCANCIAS;
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias necesarias.
@@ -205,9 +187,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.TramitesForm.get('punto')?.disable();
     this.TramitesForm.get('aduana')?.disable();
     this.TramitesForm.get('oficina')?.disable();
-    this.TramitesForm.get('aduana')?.setValue('QUERETARO, QRO.');
-    this.TramitesForm.get('oficina')?.setValue('Querétaro');
-    this.TramitesForm.get('punto')?.setValue('Querétaro Oficina de Inspección');
+    this.TramitesForm.get('aduana')?.setValue(realizar.formData.aduana);
+    this.TramitesForm.get('oficina')?.setValue(realizar.formData.oficina);
+    this.TramitesForm.get('punto')?.setValue(realizar.formData.punto);
   }
 
   /**

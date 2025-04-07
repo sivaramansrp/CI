@@ -12,15 +12,15 @@
   }
   
   .header {
-    display: flex;               /* Use flexbox to layout the child elements */
-    justify-content: flex-end;   /* Align content to the right */
-    align-items: center;         /* Vertically center the items */
+    display: flex;               
+    justify-content: flex-end;   
+    align-items: center;         
   }
   
   .plus-icon {
     font-size: 20px;
     cursor: pointer;
-    user-select: none;           /* Prevent text selection on the icon */
+    user-select: none;           
   }
   
   .container {
@@ -29,7 +29,7 @@
   }
   
   .content {
-    margin-top: 10px;            /* Adds spacing to the top of the content */
-    padding: 15px;               /* Optional: Added padding for content section */
+    margin-top: 10px;
+    padding: 15px;
   }
   

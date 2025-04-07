@@ -136,7 +136,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
       empresa: [this.solicitudState.empresa, Validators.required]
     });
 
-    this.MedioForm.get('empresa')?.setValue('GRUPO OPERADOR MULTIMODAL, SA DE CV');
+    this.MedioForm.get('empresa')?.setValue(realizar.formData.empresa);
   }
 
   /**

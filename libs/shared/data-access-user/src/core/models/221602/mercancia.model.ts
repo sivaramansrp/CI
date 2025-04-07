@@ -77,3 +77,45 @@ notificaciones que se deriven de dichos trámites, serán protegidos, incorporad
 establecidas en el Decreto por el que se establece la Ventanilla Digital Mexicana de Comercio Exterior, publicado en el Diario Oficial de la Federación el 14 de diciembre de 2011, así como por el titular 
 de la información. El titular, en su caso, podrá manifestar su negativa para el tratamiento de sus datos personales para finalidades y transferencias de los mismos que requieran el consentimiento del titular. 
 Si desea conocer nuestro aviso de privacidad integral, lo podrá consultar en el portal.<p style='text-align: center; font-weight: bold;'>Aviso de privacidad integral.</p>`;
+
+export const CONFIGURATION_TABLA_DATOS=[
+  { encabezado: 'Nombre/denominación o razón social', clave: (item: Exportador) => item.nombre_denominacion_o_razon_social, orden: 1 },
+  { encabezado: 'Teléfono', clave: (item: Exportador) => item.telefono, orden: 2 },
+  { encabezado: 'Correo electrónico', clave: (item: Exportador) => item.correo_electronico, orden: 3 },
+  { encabezado: 'Domicilio', clave: (item: Exportador) => item.domicilio, orden: 4 },
+  { encabezado: 'País', clave: (item: Exportador) => item.pais, orden: 5 }
+]
+export const CONFIGURATION_TABLA_MERCANCIAS =[
+  { encabezado: 'Número de partida', clave: (item: Mercancia) => item.no_partida, orden: 1 },
+  { encabezado: 'Tipo de requisito', clave: (item: Mercancia) => item.tipo_requisito, orden: 2 },
+  { encabezado: 'Requisito', clave: (item: Mercancia) => item.requisito, orden: 3 },
+  { encabezado: 'Número de Certificado Internacional', clave: (item: Mercancia) => item.numero_certificado_internacional, orden: 4 },
+  { encabezado: 'Fracción arancelaria', clave: (item: Mercancia) => item.fraccion_arancelaria, orden: 5 },
+  { encabezado: 'NICO', clave: (item: Mercancia) => item.nico, orden: 6 },
+  { encabezado: 'Descripción NICO', clave: (item: Mercancia) => item.descripcion_nico, orden: 7 },
+  { encabezado: 'Descripción', clave: (item: Mercancia) => item.descripcion, orden: 8 },
+  { encabezado: 'Unidad de medida de tarifa', clave: (item: Mercancia) => item.unidad_medida_tarifa, orden: 9 },
+  { encabezado: 'Cantidad UMT', clave: (item: Mercancia) => item.cantidad_umt, orden: 10 },
+  { encabezado: 'Unidad de medida de comercialización', clave: (item: Mercancia) => item.unidad_medida_comercializacion, orden: 11 },
+  { encabezado: 'Cantidad UMC', clave: (item: Mercancia) => item.cantidad_umc, orden: 12 },
+  { encabezado: 'Uso', clave: (item: Mercancia) => item.uso, orden: 13 },
+  { encabezado: 'Tipo de Producto', clave: (item: Mercancia) => item.tipo_producto, orden: 14 },
+  { encabezado: 'Número de lote', clave: (item: Mercancia) => item.numero_lote, orden: 15 },
+  { encabezado: 'País de origen', clave: (item: Mercancia) => item.pais_origen, orden: 16 },
+  { encabezado: 'País de procedencia', clave: (item: Mercancia) => item.pais_procedencia, orden: 17 },
+  { encabezado: 'Certificado Internacional Electrónico', clave: (item: Mercancia) => item.certificado_internacional_electronico, orden: 18 }
+]
+
+export const CONFIGURATION_TABLA_DESTINATARIO =[
+  { encabezado: 'Nombre/denominación o razón social', clave: (item: Destinatario) => item.nombre_denominacion_o_razon_social, orden: 1 },
+  { encabezado: 'Teléfono', clave: (item: Destinatario) => item.telefono, orden: 2 },
+  { encabezado: 'Correo electrónico', clave: (item: Destinatario) => item.correo_electronico, orden: 3 },
+  { encabezado: 'Calle', clave: (item: Destinatario) => item.calle, orden: 4 },
+  { encabezado: 'Número exterior', clave: (item: Destinatario) => item.numero_exterior, orden: 5 },
+  { encabezado: 'Número interior', clave: (item: Destinatario) => item.numero_interior, orden: 6 },
+  { encabezado: 'País', clave: (item: Destinatario) => item.pais, orden: 7 },
+  { encabezado: 'Colonia', clave: (item: Destinatario) => item.colonia, orden: 8 },
+  { encabezado: 'Municipio o Alcaldía', clave: (item: Destinatario) => item.municipio_o_alcaldia, orden: 9 },
+  { encabezado: 'Entidad Federativa', clave: (item: Destinatario) => item.entidad_federativa, orden: 10 },
+  { encabezado: 'Código Postal', clave: (item: Destinatario) => item.codigo_postal, orden: 11 }
+]
