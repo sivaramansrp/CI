@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -10,16 +10,13 @@ import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Proveedor } from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-
-import { Tramite260204Query } from '../../../tramites/260204/estados/queries/tramite260204Query.query';
-import { Tramite260204Store } from '../../../tramites/260204/estados/stores/tramite260204Store.store';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -43,6 +40,12 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-proveedor.component.css',
 })
 export class AgregarProveedorComponent implements OnDestroy, OnInit {
+  /**
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
+  public tipoPersona = TipoPersona;
   /**
    * @property {Subject<void>} unsubscribe$
    * Subject para cancelar suscripciones activas y evitar fugas de memoria.
@@ -70,6 +73,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   public paisesDatos: Catalogo[] = [];
 
   /**
+   * @property updateProveedorTablaDatos
+   * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
+   * Se utiliza para sincronizar los datos de la tabla o disparar acciones relacionadas.
+   * @type {EventEmitter<Proveedor[]>}
+   */
+  @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
+  /**
    * @constructor
    * Inicializa el formulario y los servicios necesarios para el componente.
    *
@@ -82,12 +92,18 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore: Tramite260204Store,
-    private tramiteQuery: Tramite260204Query,
     private ubicaccion: Location
   ) {
     this.agregarProveedorForm = this.fb.group({
       tipoPersona: ['', Validators.required],
+      denominacionRazon: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
       nombres: ['', Validators.required],
       primerApellido: ['', Validators.required],
       segundoApellido: [''],
@@ -110,15 +126,6 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     this.cargarDatos();
-  }
-
-  /**
-   * @method ngOnDestroy
-   * @description Hook de destrucción del componente. Libera las suscripciones activas.
-   */
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 
   /**
@@ -163,8 +170,35 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    this.tramiteStore.updateProveedorTablaDatos(this.proveedores);
+    this.updateProveedorTablaDatos.emit(this.proveedores);
     this.agregarProveedorForm.reset();
     this.ubicaccion.back();
+  }
+  /**
+   * @method limpiarFormulario
+   * @description Resetea el formulario reactivo `agregarProveedorForm` para limpiar todos los campos.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    this.agregarProveedorForm.reset();
+  }
+  /**
+   * @method cancelar
+   * @description Navega hacia la vista anterior utilizando el servicio de ubicación (`Location`).
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  cancelar(): void {
+    this.ubicaccion.back();
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Hook de destrucción del componente. Libera las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

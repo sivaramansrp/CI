@@ -1,8 +1,10 @@
 import {
+  TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../models/datos-solicitud.model';
+import { DetalleMercancia } from '../models/detalle-mercancia.model';
 
 export const OPCION_TABLA = [
   {
@@ -39,6 +41,25 @@ export const SCIAN_TABLA = [
     orden: 1,
   },
 ];
+
+export const DATOS_MERCANCIA_CLAVE_TABLA = [
+  {
+    encabezado: 'Clave de los lotes',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.clave,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de fabricacio',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.fabricacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: (ele: TablaMercanciaClaveConfig): string => ele.caducidad,
+    orden: 1,
+  },
+];
+
 export const SCIAN_TABLA_DATA: TablaScianConfig[] = [
   { clave: '001', descripcion: 'Descripción 1' },
   { clave: '002', descripcion: 'Descripción 2' },
@@ -143,7 +164,7 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Presentación',
-    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.presentacion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 14,
   },
   {
@@ -239,3 +260,44 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
     proveedor: 'TramitesVUCEM SA de CV',
   },
 ];
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
+  260214, 260216, 260205, 260217, 260218, 260102,
+];
+
+export const OCULTAR_PROVEEDOR = [260102];
+
+export const OCULTAR_FACTURADOR = [260102];
+
+export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102];
+
+export enum NUMERO_TRAMITE {
+  TRAMITE_260205 = 260205,
+}
+
+export const DETALLE_MERCANCIA_TABLA = [
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: DetalleMercancia): string => ele.formaFormaceutica,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: DetalleMercancia): string => ele.numeroDeRegistro,
+    orden: 2,
+  },
+  {
+    encabezado: 'Marcas Distintivas',
+    clave: (ele: DetalleMercancia): string => ele.marcasDistintivas,
+    orden: 3,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: DetalleMercancia): string => ele.tipoDeEnvase,
+    orden: 4,
+  },
+];
+
+export const STR_NACIONAL = 'Nacional';
