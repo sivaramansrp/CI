@@ -1,10 +1,10 @@
+import { DetalleMercancia, DetalleMercanciaEstupefacientes } from '../models/detalle-mercancia.model';
 import {
   TablaMercanciaClaveConfig,
   TablaMercanciasDatos,
   TablaOpcionConfig,
   TablaScianConfig,
 } from '../models/datos-solicitud.model';
-import { DetalleMercancia } from '../models/detalle-mercancia.model';
 
 export const OPCION_TABLA = [
   {
@@ -320,6 +320,30 @@ export const DETALLE_MERCANCIA_TABLA = [
     clave: (ele: DetalleMercancia): string => ele.tipoDeEnvase,
     orden: 4,
   },
+];
+
+export const DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES = [
+  {
+    encabezado: 'Presentación',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.presentacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Número de piezas',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.numeroDePiezasAFabricar,
+    orden: 2,
+  },
+  {
+    encabezado: 'Descripción del número de piezas a fabricar',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.descripcionNumeroDePiezas,
+    orden: 3,
+  },
+  {
+    encabezado: 'Registro Sanitario',
+    clave: (ele: DetalleMercanciaEstupefacientes): string => ele.numeroRegistroSanitario,
+    orden: 4,
+  },
+ 
 ];
 
 export const STR_NACIONAL = 'Nacional';
