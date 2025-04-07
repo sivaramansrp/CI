@@ -32,7 +32,7 @@ export class TercerosFabricanteService {
    *
    * @returns Observable que emite un objeto RespuestaCatalogos.
    */
-  getObtenerEstadoList() {
+  getObtenerEstadoList(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/260501/seleccion.json'
     );
@@ -43,7 +43,7 @@ export class TercerosFabricanteService {
    *
    * @returns Observable que emite un objeto RespuestaCatalogos.
    */
-  getObtenerTablaDatos() {
+  getObtenerTablaDatos(): Observable<RespuestaTabla> {
     return this.http.get<RespuestaTabla>('assets/json/260501/tablaDatos.json');
   }
 
@@ -52,7 +52,7 @@ export class TercerosFabricanteService {
    *
    * @returns Observable que emite un objeto RespuestaCatalogos.
    */
-  getObtenerMercanciasDatos() {
+  getObtenerMercanciasDatos(): Observable<MercanciasTabla> {
     return this.http.get<MercanciasTabla>(
       'assets/json/260501/mercanciasDatos.json'
     );

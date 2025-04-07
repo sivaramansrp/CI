@@ -24,12 +24,12 @@ import {
   REGEX_CURP,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
-} from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
-import SELECT_OPTIONS_DATA from 'libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
+import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../constantes/terceros-fabricante.enum';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
