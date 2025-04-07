@@ -138,8 +138,11 @@ const ROUTES: Routes = [
   },
   {
     path: 'solicitud-modificacion-permiso-salida-territorio',
-    loadChildren: () => import('./tramites/261401/solicitud-modificacion-permiso-salida-territorio.module').then((m) => m.SolicitudModificacionPermisoSalidaTerritorioModule)
-  }
+    loadChildren: () =>
+      import(
+        './tramites/261401/solicitud-modificacion-permiso-salida-territorio.module'
+      ).then((m) => m.SolicitudModificacionPermisoSalidaTerritorioModule),
+  },
 ];
 
 @NgModule({
