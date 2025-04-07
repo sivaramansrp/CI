@@ -1,4 +1,5 @@
 import {
+  AlertComponent,
   BtnContinuarComponent,
   SolicitanteComponent,
   WizardComponent,
@@ -15,6 +16,7 @@ import { SolicitudDatosSolicitanteComponent } from './solicitud-datos-solicitant
   imports: [
     CommonModule,
     WizardComponent,
+    AlertComponent,
     SolicitanteComponent,
     BtnContinuarComponent,
     AvisoDeReciclajeRoutingModule,

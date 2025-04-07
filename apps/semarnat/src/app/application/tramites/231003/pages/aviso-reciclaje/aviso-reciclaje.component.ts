@@ -1,5 +1,6 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, DatosPasos, ListaPasosWizard,PAGO_DE_DERECHOS,WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
+import {PASOS} from '../../constantes/aviso-de-reciclaje.enum';
 
 @Component({
   selector: 'app-aviso-reciclaje',
@@ -20,6 +21,10 @@ export class AvisoReciclajeComponent {
      *  Referencia al componente del wizard.
      */
     @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+    public infoAlert = 'alert-info';
+
+      TEXTOS = PAGO_DE_DERECHOS;
     
     /**
      * @property indice
