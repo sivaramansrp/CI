@@ -6,10 +6,14 @@ import { Subject, takeUntil } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 
+/**
+ * Componente para gestionar las partidas de la mercancía.
+ */
 @Component({
   selector: 'app-partidas-de-la-mercancia',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TituloComponent,
     TablaDinamicaComponent,
     ReactiveFormsModule
@@ -17,28 +21,59 @@ import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solic
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.css',
 })
-export class PartidasDeLaMercanciaComponent implements OnInit,OnDestroy {
+export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
+  /**
+   * Configuración de las columnas de la tabla de partidas.
+   */
   partidasTabla: ConfiguracionColumna<PartidasInfo>[] = PARTIDAS_TABLA;
+
+  /**
+   * Datos de la tabla de partidas obtenidos del servicio.
+   */
   partidasTablaDatos: PartidasInfo[] = [];
+
+  /**
+   * Notificador para destruir observables activos y evitar pérdidas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  partidasFormDatos:PartidasForma[] = []
-  partidas!:FormGroup
+
+  /**
+   * Datos del formulario de partidas obtenidos del servicio.
+   */
+  partidasFormDatos: PartidasForma[] = [];
+
+  /**
+   * Formulario reactivo para las partidas de la mercancía.
+   */
+  partidas!: FormGroup;
+
+  /**
+   * Constructor del componente.
+   * @param fb Constructor de formularios reactivos.
+   * @param service Servicio para obtener los datos de las partidas.
+   */
   constructor(
     private fb: FormBuilder,
     private service: SolicitudProrrogaService,
   ) {}
 
+  /**
+   * Método de inicialización del componente.
+   */
   ngOnInit(): void {
-    this.obtenerTablaDatos()
-    this.obtenerFormDatos()
+    this.obtenerTablaDatos();
+    this.obtenerFormDatos();
     this.partidas = this.fb.group({
-      usoEspecificoMercancia:[{value:'',disabled:true}],
-      justificacionBeneficio:[{value:'',disabled:true}],
-      observaciones:[{value:'',disabled:true}],
-      representacionFederal:[{value:'',disabled:true}]
-    })
+      usoEspecificoMercancia: [{ value: '', disabled: true }],
+      justificacionBeneficio: [{ value: '', disabled: true }],
+      observaciones: [{ value: '', disabled: true }],
+      representacionFederal: [{ value: '', disabled: true }]
+    });
   }
 
+  /**
+   * Obtiene los datos de la tabla de partidas desde el servicio.
+   */
   obtenerTablaDatos(): void {
     this.service.obtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -48,6 +83,9 @@ export class PartidasDeLaMercanciaComponent implements OnInit,OnDestroy {
       });
   }
 
+  /**
+   * Obtiene los datos del formulario de partidas desde el servicio.
+   */
   obtenerFormDatos(): void {
     this.service
       .obtenerPartidasFormDatos()
@@ -56,13 +94,17 @@ export class PartidasDeLaMercanciaComponent implements OnInit,OnDestroy {
         this.partidasFormDatos = data?.data;
         this.partidas.patchValue({
           usoEspecificoMercancia: this.partidasFormDatos[0].usoEspecificoMercancia,
-          justificacionBeneficio:this.partidasFormDatos[0].justificacionBeneficio,
-          observaciones:this.partidasFormDatos[0].observaciones,
-          representacionFederal:this.partidasFormDatos[0].representacionFederal
+          justificacionBeneficio: this.partidasFormDatos[0].justificacionBeneficio,
+          observaciones: this.partidasFormDatos[0].observaciones,
+          representacionFederal: this.partidasFormDatos[0].representacionFederal
         });
       });
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Libera los recursos y destruye los observables activos.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -8,6 +8,9 @@ import { CertificadoKimberleyForma } from '@libs/shared/data-access-user/src/cor
 import { Solicitud130301State, Tramite130301Store } from '../../../../estados/tramites/tramite130301.store';
 import { Tramite130301Query } from '../../../../estados/queries/tramite130301.query';
 
+/**
+ * Componente para gestionar el formulario del Certificado Kimberley.
+ */
 @Component({
   selector: 'app-certificado-kimberley',
   standalone: true,
@@ -20,13 +23,39 @@ import { Tramite130301Query } from '../../../../estados/queries/tramite130301.qu
   templateUrl: './certificado-kimberley.component.html',
   styleUrl: './certificado-kimberley.component.css',
 })
-export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
-  certificadoKimberley!:FormGroup
+export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo para el Certificado Kimberley.
+   */
+  certificadoKimberley!: FormGroup;
+
+  /**
+   * Notificador para manejar la destrucción de suscripciones.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  certificadoKimberleyDatos:CertificadoKimberleyForma[] = []
+
+  /**
+   * Datos del formulario del Certificado Kimberley.
+   */
+  certificadoKimberleyDatos: CertificadoKimberleyForma[] = [];
+
+  /**
+   * Lista de estados obtenidos del servicio.
+   */
   estado: Catalogo[] = [];
+
+  /**
+   * Estado actual de la solicitud.
+   */
   public solicitudState!: Solicitud130301State;
 
+  /**
+   * Constructor del componente.
+   * @param fb Constructor de formularios reactivos.
+   * @param service Servicio para obtener datos del Certificado Kimberley.
+   * @param tramite130301Store Almacén de estado para el trámite 130301.
+   * @param tramite130301Query Consulta de estado para el trámite 130301.
+   */
   constructor(
     private fb: FormBuilder,
     private service: SolicitudProrrogaService,
@@ -34,6 +63,9 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
     private tramite130301Query: Tramite130301Query
   ) {}
 
+  /**
+   * Método de inicialización del componente.
+   */
   ngOnInit(): void {
     this.tramite130301Query
       .selectSolicitud$
@@ -45,27 +77,30 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
       )
       .subscribe();
 
-    this.obtenerEstadoList()
+    this.obtenerEstadoList();
     this.certificadoKimberley = this.fb.group({
-      certificadosEmitidos:[{value:'',disabled:true}],
-      numeroCertificadokimberley:[{value:'',disabled:true}],
-      paisEmisorCertificado:[this.solicitudState?.paisEmisorCertificado],
-      nombreIngles:[{value:'',disabled:true}],
-      mixed:[this.solicitudState?.mixed],
-      paisDeOrigen:[this.solicitudState?.paisDeOrigen],
-      nombreExportador:[{value:'',disabled:true}],
-      direccionExportador:[{value:'',disabled:true}],
-      nombreImportador:[{value:'',disabled:true},Validators.required],
-      direccionImportador:[{value:'',disabled:true},Validators.required],
-      numeroEnLetra:[{value:'',disabled:true},Validators.required],
-      numeroEnLetraIngles:[{value:'',disabled:true},Validators.required],
-      numeroFactura:[{value:'',disabled:true},Validators.required],
-      cantidadQuilates:[{value:'',disabled:true},Validators.required],
-      valorDiamantes:[{value:'',disabled:true},Validators.required],
-    })
-    this.obtenerFormDatos()
+      certificadosEmitidos: [{ value: '', disabled: true }],
+      numeroCertificadokimberley: [{ value: '', disabled: true }],
+      paisEmisorCertificado: [this.solicitudState?.paisEmisorCertificado],
+      nombreIngles: [{ value: '', disabled: true }],
+      mixed: [this.solicitudState?.mixed],
+      paisDeOrigen: [this.solicitudState?.paisDeOrigen],
+      nombreExportador: [{ value: '', disabled: true }],
+      direccionExportador: [{ value: '', disabled: true }],
+      nombreImportador: [{ value: '', disabled: true }, Validators.required],
+      direccionImportador: [{ value: '', disabled: true }, Validators.required],
+      numeroEnLetra: [{ value: '', disabled: true }, Validators.required],
+      numeroEnLetraIngles: [{ value: '', disabled: true }, Validators.required],
+      numeroFactura: [{ value: '', disabled: true }, Validators.required],
+      cantidadQuilates: [{ value: '', disabled: true }, Validators.required],
+      valorDiamantes: [{ value: '', disabled: true }, Validators.required],
+    });
+    this.obtenerFormDatos();
   }
 
+  /**
+   * Obtiene los datos del formulario desde el servicio.
+   */
   obtenerFormDatos(): void {
     this.service
       .obtenerCertificadoKimberleyFormDatos()
@@ -76,19 +111,22 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
           certificadosEmitidos: this.certificadoKimberleyDatos[0].certificadosEmitidos,
           numeroCertificadokimberley: this.certificadoKimberleyDatos[0].numeroCertificadokimberley,
           nombreIngles: this.certificadoKimberleyDatos[0].nombreIngles,
-          nombreExportador:this.certificadoKimberleyDatos[0].nombreExportador,
+          nombreExportador: this.certificadoKimberleyDatos[0].nombreExportador,
           direccionExportador: this.certificadoKimberleyDatos[0].direccionExportador,
           nombreImportador: this.certificadoKimberleyDatos[0].nombreImportador,
           direccionImportador: this.certificadoKimberleyDatos[0].direccionImportador,
           numeroEnLetra: this.certificadoKimberleyDatos[0].numeroEnLetra,
           numeroEnLetraIngles: this.certificadoKimberleyDatos[0].numeroEnLetraIngles,
-          numeroFactura:this.certificadoKimberleyDatos[0].numeroFactura,
-          cantidadQuilates:this.certificadoKimberleyDatos[0].cantidadQuilates,
-          valorDiamantes:this.certificadoKimberleyDatos[0].valorDiamantes,
+          numeroFactura: this.certificadoKimberleyDatos[0].numeroFactura,
+          cantidadQuilates: this.certificadoKimberleyDatos[0].cantidadQuilates,
+          valorDiamantes: this.certificadoKimberleyDatos[0].valorDiamantes,
         });
       });
   }
 
+  /**
+   * Obtiene la lista de estados desde el servicio.
+   */
   obtenerEstadoList(): void {
     this.service
       .obtenerEstadoList()
@@ -99,6 +137,12 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
       });
   }
 
+  /**
+   * Establece valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo en el formulario.
+   * @param metodoNombre Nombre del método en el store.
+   */
   setValoresStore(
     form: FormGroup,
     campo: string,
@@ -108,6 +152,9 @@ export class CertificadoKimberleyComponent implements OnInit,OnDestroy {
     (this.tramite130301Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+   * Método de limpieza al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

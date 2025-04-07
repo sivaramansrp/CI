@@ -2,6 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/130301/modificacion.enum";
 
+/**
+ * Componente para gestionar la página de la solicitud del trámite.
+ * Este componente utiliza un asistente (wizard) para guiar al usuario a través de los pasos del trámite.
+ */
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
@@ -9,26 +13,32 @@ import { PASOS } from "@libs/shared/data-access-user/src/core/enums/130301/modif
 export class SolicitudPageComponent {
   /**
    * Índice actual del paso en el asistente.
+   * Este valor determina el paso activo en el wizard.
+   * 
    * @type {number}
    */
   indice: number = 1;
-    /**
+
+  /**
    * Referencia al componente del asistente (wizard).
    * Se utiliza para interactuar con el wizard y controlar su flujo (pasar al siguiente paso, ir al anterior, etc.).
+   * 
    * @type {WizardComponent}
    */
-    @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-    /**
-     * Lista de pasos del asistente.
-     * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
-     * @type {ListaPasosWizard[]}
-     */
-    pasos: ListaPasosWizard[] = PASOS;
-    
+  /**
+   * Lista de pasos del asistente.
+   * Contiene un arreglo con los pasos definidos en `PASOS` que será utilizado en el wizard.
+   * 
+   * @type {ListaPasosWizard[]}
+   */
+  pasos: ListaPasosWizard[] = PASOS;
+
   /**
    * Datos de los pasos del asistente.
    * Incluye el número total de pasos, el índice del paso actual y los textos de los botones de navegación (Anterior, Continuar).
+   * 
    * @type {DatosPasos}
    */
   datosPasos: DatosPasos = {
@@ -49,6 +59,7 @@ export class SolicitudPageComponent {
      */
     txtBtnSig: 'Continuar',
   };
+
   /**
    * Obtiene el valor del índice de la acción del botón.
    * Este método controla el cambio de paso en el wizard dependiendo de la acción del botón presionado.

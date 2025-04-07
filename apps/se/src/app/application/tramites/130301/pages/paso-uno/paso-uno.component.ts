@@ -1,6 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 
+/**
+ * Componente para gestionar el paso uno del trámite.
+ * Este componente permite al usuario seleccionar una pestaña y gestionar información del solicitante.
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
