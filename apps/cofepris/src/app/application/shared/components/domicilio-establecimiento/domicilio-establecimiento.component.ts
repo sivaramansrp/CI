@@ -1,4 +1,5 @@
 import {
+  CROSLISTA_DE_ADUANAS_ENTRADA,
   CROSLISTA_DE_PAISES,
   INPUT_FECHA_CADUCIDAD_CONFIG,
 } from '../../constantes/datos-domicilio-legal.enum';
@@ -73,6 +74,7 @@ export interface MercanciasTabla {
 })
 export class DomicilioComponent implements OnInit, OnDestroy {
  @Input() isAvisoLicenciaVisible: boolean = true;
+ @Input() isAduanasEntradaVisible: boolean = false;
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -113,6 +115,61 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * @property {FormGroup} domicilio
    */
   domicilio!: FormGroup;
+
+   /**
+     * Lista de países disponibles para la selección de origen.
+     */
+    public seleccionarAduanasEntrada = CROSLISTA_DE_ADUANAS_ENTRADA;
+
+   /**
+   * Botones para gestionar la lista cruzada de países de origen.
+   */
+   aduanasEntradaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+     /**
+   * Etiquetas para la lista cruzada de países de origen.
+   */
+  public aduanasEntradaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Aduanas de entrada disponibles',
+    derecha: 'Aduanas de entrada seleccionadas',
+  };
+
+  /**
+   * Lista de países seleccionados como origen.
+   */
+  public seleccionadasAduanasEntradaDatos: string[] = [];
+
+   /**
+   * Maneja el cambio de selección de países de origen.
+   * @param events Lista de países seleccionados.
+   */
+   aduanasEntradaSeleccionadasChange(events: string[]): void {
+    this.seleccionadasAduanasEntradaDatos = events;
+    this.domicilio.patchValue({
+      paisDeOriginDatos: events,
+    });
+  }
 
   /**
    * Grupo de formularios para el agente aduanal.

@@ -32,12 +32,13 @@
   }
 }
 
-.alert-dismissable .close,
+
 .alert-dismissible .close {
-  position: relative;
-  top: -2px;
-  right: -21px;
-  color: inherit;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  padding: 1.25rem 1rem;
 }
 
 .alert-success {
