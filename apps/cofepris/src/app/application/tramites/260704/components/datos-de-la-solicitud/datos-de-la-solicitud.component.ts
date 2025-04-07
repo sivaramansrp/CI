@@ -46,7 +46,7 @@ import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
   styleUrl: './datos-de-la-solicitud.component.css',
 })
 export class DatosDeLaSolicitudComponent implements OnInit {
-  valorSeleccionado!: string;
+  valorSeleccionado: string = '';
   hercelosSeleccionados!: string;
   datosDelEstablecimientoForm!: FormGroup;
   domicilloDelEstablecimientoForm!: FormGroup;
@@ -249,7 +249,15 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   agregarDatosSCIAN(): void {
     // Implementar la lógica para agregar datos SCIAN.
   }
+  onRadioChange(event: Event): void {
+    const target = event.target as HTMLInputElement; // Cast the event target to HTMLInputElement
+    this.valorSeleccionado = target.value; // Extract the selected value
+  }
 
+  // Method to check if fields should be disabled
+  areFieldsDisabled(): boolean {
+    return this.valorSeleccionado !== 'modificacion'; // Enable fields only if "modificacion" is selected
+  }
   claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
     this.consulta.getDescripcionScian()
