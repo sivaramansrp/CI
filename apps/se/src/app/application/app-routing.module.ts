@@ -281,6 +281,13 @@ const ROUTES: Routes = [
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   },
   {
+    path: 'aviso-importacion-maquinas',
+    loadChildren: () =>
+      import('./tramites/130119/aviso-importacion-maquinas.module').then(
+        (m) => m.AvisoImportacionMaquinasModule
+      ),
+  },
+  {
     path: 'reporte-anual',
     loadChildren: () =>
       import('./tramites/150102/reporte-anual.module').then(
