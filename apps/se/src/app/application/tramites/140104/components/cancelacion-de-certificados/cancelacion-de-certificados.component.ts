@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
 import * as cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
 import * as certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
 import * as certificadosACancelarDatos from '@libs/shared/theme/assets/json/140104/certificados-a-cancelar.json';
-import { CuposDisponibles, CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
-import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { CuposDisponibles } from '../../models/cancelacion-de-certificados.model';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { OnDestroy, OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cancelacion-de-certificados',
@@ -19,25 +19,49 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrl: './cancelacion-de-certificados.component.scss',
 })
 export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
+
   /**
-   * Formulario para capturar los datos de la solicitud.
+   * Bandera para mostrar el detalle del cupo seleccionado.
    */
   mostrarDetalleDelCupo: boolean = false;
-  regimenAduaneroList: Catalogo[] = [];
-  mecanismoAsignacionList: Catalogo[] = [];
-  tratadoBloqueComercialList: Catalogo[] = [];
-  nombreProductoList: Catalogo[] = [];
-  nombreSubproductoList: Catalogo[] = [];
-  representacionFederalList: Catalogo[] = [];
+
   /**
-   * Sujeto para gestionar la destrucción del componente y evitar fugas de memoria.
+   * Listado de opciones para el campo Régimen Aduanero.
+   */
+  regimenAduaneroList: Catalogo[] = [];
+
+  /**
+   * Listado de opciones para el campo Mecanismo de Asignación.
+   */
+  mecanismoAsignacionList: Catalogo[] = [];
+
+  /**
+   * Listado de opciones para el campo Tratado o Bloque Comercial.
+   */
+  tratadoBloqueComercialList: Catalogo[] = [];
+
+  /**
+   * Listado de opciones para el campo Nombre del Producto.
+   */
+  nombreProductoList: Catalogo[] = [];
+
+  /**
+   * Listado de opciones para el campo Nombre del Subproducto.
+   */
+  nombreSubproductoList: Catalogo[] = [];
+
+  /**
+   * Listado de opciones para el campo Representación Federal.
+   */
+  representacionFederalList: Catalogo[] = [];
+
+  /**
+   * Sujeto para controlar el ciclo de vida del componente y evitar fugas de memoria en suscripciones.
    */
   private destroyNotificationSubject$ = new Subject<void>();
+
   /**
-   * Formulario para capturar el motivo de cancelación.
-   */
-  /**
-   * Configuración de las columnas de la tabla de solicitudes de cancelación.
+   * Configuración de columnas para la tabla de Cupos Disponibles.
    */
   configuracionColumnasCuposDisponibles: ConfiguracionColumna<CuposDisponibles>[] = [
     { encabezado: 'Cupo', clave: (fila) => fila.cupo, orden: 1 },
@@ -46,6 +70,10 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
     { encabezado: 'Mecanismo de asignación', clave: (fila) => fila.mecanismo_de_asignación, orden: 4 },
     { encabezado: 'Tipo cupo', clave: (fila) => fila.tipo_cupo, orden: 5 },
   ];
+
+  /**
+   * Configuración de columnas para la tabla de Certificados Disponibles.
+   */
   configuracionColumnasCertificadosDisponibles: ConfiguracionColumna<CertificadosDisponibles>[] = [
     { encabezado: 'Folio del oficio de certificado', clave: (fila) => fila.folio_del_oficio_de_certificado, orden: 1 },
     { encabezado: 'Nombre, Denominación o Razón Social', clave: (fila) => fila.nombre_denominacion_o_razon_social, orden: 2 },
@@ -57,38 +85,59 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
     { encabezado: 'Monto a cancelar', clave: (fila) => fila.monto_a_cancelar, orden: 8 },
     { encabezado: 'Monto utilizado', clave: (fila) => fila.monto_utilizado, orden: 9 },
   ];
-  configuracionColumnasCertificadosACancelar: ConfiguracionColumna<CertificadosDisponibles>[] = [
-    { encabezado: 'Folio del oficio de certificado', clave: (fila) => fila.folio_del_oficio_de_certificado, orden: 1 },
-    { encabezado: 'Nombre, Denominación o Razón Social', clave: (fila) => fila.nombre_denominacion_o_razon_social, orden: 2 },
-    { encabezado: 'Estado', clave: (fila) => fila.estado, orden: 3 },
-    { encabezado: 'Fabricante', clave: (fila) => fila.fabricante, orden: 4 },
-    { encabezado: 'Importador', clave: (fila) => fila.importador, orden: 5 },
-    { encabezado: 'Unidad primaria', clave: (fila) => fila.unidad_primaria, orden: 6 },
-    { encabezado: 'Monto expedido', clave: (fila) => fila.monto_expedido, orden: 7 },
-    { encabezado: 'Monto a cancelar', clave: (fila) => fila.monto_a_cancelar, orden: 8 },
-    { encabezado: 'Monto utilizado', clave: (fila) => fila.monto_utilizado, orden: 9 },
-  ];
+
   /**
-  * Configuración para la selección de filas en la tabla.
-  */
+   * Configuración de columnas para la tabla de Certificados a Cancelar.
+   */
+  configuracionColumnasCertificadosACancelar: ConfiguracionColumna<CertificadosDisponibles>[] = [...this.configuracionColumnasCertificadosDisponibles];
+
+  /**
+   * Tipo de selección habilitada en la tabla.
+   */
   tipoSeleccionSolicitud: TablaSeleccion = TablaSeleccion.CHECKBOX;
- 
-  
-  cuposDisponiblesTabla: CuposDisponibles[] = [];
-  CertificadosDisponiblesTabla: CertificadosDisponibles[] = [];
-  CertificadosACancelarTabla: CertificadosDisponibles[] = [];
+
   /**
-   * Indica si el usuario tiene permiso para realizar ciertas acciones.
+   * Datos cargados en la tabla de cupos disponibles.
+   */
+  cuposDisponiblesTabla: CuposDisponibles[] = [];
+
+  /**
+   * Datos cargados en la tabla de certificados disponibles.
+   */
+  CertificadosDisponiblesTabla: CertificadosDisponibles[] = [];
+
+  /**
+   * Datos cargados en la tabla de certificados a cancelar.
+   */
+  CertificadosACancelarTabla: CertificadosDisponibles[] = [];
+
+  /**
+   * Indica si el usuario tiene permisos habilitados.
    */
   datosDePermiso: boolean = false;
 
+  /**
+   * Formulario principal del componente.
+   */
   formularioGrupo!: FormGroup;
+
+  /**
+   * Formulario para datos generales del cupo.
+   */
   myForm: FormGroup;
+
+  /**
+   * Formulario para mostrar montos asociados.
+   */
   montoForm: FormGroup;
+
+  /**
+   * Formulario para la cancelación (motivo de cancelación).
+   */
   cancelacionForm: FormGroup;
- 
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) {
+    // Formulario de búsqueda
     this.formularioGrupo = new FormGroup({
       regimenAduanero: new FormControl('', Validators.required),
       mecanismoAsignacion: new FormControl('', Validators.required),
@@ -96,117 +145,87 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
       nombreProducto: new FormControl(''),
       nombreSubproducto: new FormControl(''),
       representacionFederal: new FormControl(''),
-
     });
+
+    // Formulario para datos del producto
     this.myForm = this.fb.group({
-      regimenAduanero: [{value: '', disabled: true}],
-      descripcionProducto: [{value: '', disabled: true}],
-      clasificacionSubproducto: [{value: '', disabled: true}], // Not required based on the image
-      unidadMedida: [{value: '', disabled: true}],
-      mecanismoAsignacion: [{value: '', disabled: true}],
-      tratadoAcuerdo: [{value: '', disabled: true}],
-      fraccionesArancelarias: [{value: '', disabled: true}],
-      paises: [{value: '', disabled: true}],
-      fechaInicioVigencia: [{value: '', disabled: true}],
-      fechaFinVigencia: [{value: '', disabled: true}],
-      observaciones: [{value: '', disabled: true}],
-      fundamentos: [{value: '', disabled: true}]
+      regimenAduanero: [{ value: '', disabled: true }],
+      descripcionProducto: [{ value: '', disabled: true }],
+      clasificacionSubproducto: [{ value: '', disabled: true }],
+      unidadMedida: [{ value: '', disabled: true }],
+      mecanismoAsignacion: [{ value: '', disabled: true }],
+      tratadoAcuerdo: [{ value: '', disabled: true }],
+      fraccionesArancelarias: [{ value: '', disabled: true }],
+      paises: [{ value: '', disabled: true }],
+      fechaInicioVigencia: [{ value: '', disabled: true }],
+      fechaFinVigencia: [{ value: '', disabled: true }],
+      observaciones: [{ value: '', disabled: true }],
+      fundamentos: [{ value: '', disabled: true }]
     });
+
+    // Formulario para los montos asociados al certificado
     this.montoForm = this.fb.group({
-      montoAsignado: [{value: '', disabled: true}], // Initial value from the image
-      montoDisponible: [{value: '', disabled: true}], // Initial value from the image
-      montoExpedido: [{value: '', disabled: true}]    // Initial value from the image
+      montoAsignado: [{ value: '', disabled: true }],
+      montoDisponible: [{ value: '', disabled: true }],
+      montoExpedido: [{ value: '', disabled: true }]
     });
+
+    // Formulario para motivo de cancelación
     this.cancelacionForm = this.fb.group({
-      razon: [{value: '', disabled: true}], // Initial value from the image
+      razon: [{ value: '', disabled: true }]
     });
   }
-  /**
-  * Método que se ejecuta al iniciar el componente.
-  * Inicializa los formularios de solicitud y cancelación, 
-  * así como sus validaciones. También suscribe a los datos 
-  * del servicio de mensajes para actualizar la tabla y los datos
-  * de la solicitud de cancelación.
-  */
-  ngOnInit(): void {
-    this.regimenAduaneroList = [{
-      id: 0,
-      descripcion: 'Exportación',
-    },
-    {
-      id: 1,
-      descripcion: 'Importación',
-    }];
 
-    this.mecanismoAsignacionList = [{
-      id: 0,
-      descripcion: 'Asignación directa',
-    },
-    {
-      id: 1,
-      descripcion: 'Licitación Publica',
-    },
-    {
-      id: 2,
-      descripcion: 'Primero en tiempo primero en derecho',
-    },
-    {
-      id: 3,
-      descripcion: 'Prorrateo',
-    }
-  ];
-    
+  ngOnInit(): void {
+    this.regimenAduaneroList = [
+      { id: 0, descripcion: 'Exportación' },
+      { id: 1, descripcion: 'Importación' }
+    ];
+
+    this.mecanismoAsignacionList = [
+      { id: 0, descripcion: 'Asignación directa' },
+      { id: 1, descripcion: 'Licitación Pública' },
+      { id: 2, descripcion: 'Primero en tiempo primero en derecho' },
+      { id: 3, descripcion: 'Prorrateo' }
+    ];
   }
 
-  /**
-   * Método que se ejecuta al destruir el componente.
-   * Limpia los datos de permiso en el servicio de mensajes
-   * para evitar posibles fugas de memoria o actualizaciones 
-   * innecesarias cuando el componente ya no está activo.
-   */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.servicioDeMensajesService.establecerDatosDePermiso(false);
     this.destroyNotificationSubject$.next();
     this.destroyNotificationSubject$.complete();
   }
 
   /**
-   * Método que se ejecuta al realizar una búsqueda.
-   * Envía un mensaje al servicio para indicar que se ha iniciado una búsqueda.
-   * 
-   * @param event Evento que desencadena la búsqueda.
+   * Ejecuta la acción de búsqueda y notifica a otros componentes a través del servicio de mensajes.
    */
-
   public busqueda(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
   }
-  /**
-  * Método que se ejecuta al eliminar un registro de la tabla.
-  * Limpia el contenido de la tabla de cancelación y actualiza los datos 
-  * en el servicio de mensajes.
-  * 
-  * @param event Evento que desencadena la eliminación.
-  */
-  // public eliminarRegistro(event: Event): void {
-  //   this.cuposDisponiblesTabla = [];
-  //   this.servicioDeMensajesService.actualizarDatosForma(this.cuposDisponiblesTabla as CuposDisponibles[]);
-  // }
 
-  public buscar(event: Event): void{
+  /**
+   * Ejecuta la acción de buscar registros y muestra los datos precargados en las tablas.
+   */
+  public buscar(event: Event): void {
     this.mostrarDetalleDelCupo = true;
     this.cuposDisponiblesTabla = [cuposDisponiblesDatos as CuposDisponibles];
     this.CertificadosDisponiblesTabla = [certificadosDisponiblesDatos as CertificadosDisponibles];
     this.CertificadosACancelarTabla = [certificadosACancelarDatos as CertificadosDisponibles];
   }
 
+  /**
+   * Maneja la selección de registros. Envía un mensaje de selección activa y limpia la intención de devolver facturas.
+   */
   public seleccionar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
-
   }
+
+  /**
+   * Marca los certificados seleccionados como listos para devolución.
+   */
   public devlover(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(true);
-    
   }
 }
