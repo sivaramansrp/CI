@@ -98,279 +98,279 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
     super(createInitialState());
   }
 
-  public setNumeroFactura(numeroFactura: string) {
+  public setNumeroFactura(numeroFactura: string): void {
       this.update((state) => ({
           ...state,
           numeroFactura,
       }));
   }
 
-  public setCantidadTotal(cantidadTotal: string) {
+  public setCantidadTotal(cantidadTotal: string): void {
     this.update((state) => ({
         ...state,
         cantidadTotal,
     }));
   }
 
-  public setUnidadDeMedida(unidadDeMedida: string) {
+  public setUnidadDeMedida(unidadDeMedida: string): void {
     this.update((state) => ({
         ...state,
         unidadDeMedida,
     }));
   }
 
-  public setFechaInicioInput(fechaInicioInput: string) {
+  public setFechaInicioInput(fechaInicioInput: string): void {
     this.update((state) => ({
         ...state,
         fechaInicioInput,
     }));
   }
 
-  public setValorDolares(valorDolares: string) {
+  public setValorDolares(valorDolares: string): void {
     this.update((state) => ({
         ...state,
         valorDolares,
     }));
   }
 
-  public setTaxId(taxId: string) {
+  public setTaxId(taxId: string): void {
     this.update((state) => ({
         ...state,
         taxId,
     }));
   }
 
-  public setRazonSocial(razonSocial: string) {
+  public setRazonSocial(razonSocial: string): void {
     this.update((state) => ({
         ...state,
         razonSocial,
     }));
   }
 
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
         ...state,
         calle,
     }));
   }
 
-  public setCiudad(ciudad: string) {
+  public setCiudad(ciudad: string): void {
     this.update((state) => ({
         ...state,
         ciudad,
     }));
   }
 
-  public setCp(cp: string) {
+  public setCp(cp: string): void {
     this.update((state) => ({
         ...state,
         cp,
     }));
   }
 
-  public setPais(pais: string) {
+  public setPais(pais: string): void {
     this.update((state) => ({
         ...state,
         pais,
     }));
   }
 
-  public setFlexRadioRegistro(flexRadioRegistro: string) {
+  public setFlexRadioRegistro(flexRadioRegistro: string): void {
     this.update((state) => ({
         ...state,
         flexRadioRegistro,
     }));
   }
 
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
         ...state,
         estado,
     }));
   }
 
-  public setRepresentacionFederal(representacionFederal: string) {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
         ...state,
         representacionFederal,
     }));
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
         ...state,
         fraccionArancelaria,
     }));
   }
 
-  public setDescripcionProducto(descripcionProducto: string) {
+  public setDescripcionProducto(descripcionProducto: string): void {
     this.update((state) => ({
         ...state,
         descripcionProducto,
     }));
   }
 
-  public setTratado(tratado: string) {
+  public setTratado(tratado: string): void {
     this.update((state) => ({
         ...state,
         tratado,
     }));
   }
 
-  public setSubproducto(subproducto: string) {
+  public setSubproducto(subproducto: string): void {
     this.update((state) => ({
         ...state,
         subproducto,
     }));
   }
 
-  public setMecanismo(mecanismo: string) {
+  public setMecanismo(mecanismo: string): void {
     this.update((state) => ({
         ...state,
         mecanismo,
     }));
   }
 
-  public setTypoCategoria(typoCategoria: string) {
+  public setTypoCategoria(typoCategoria: string): void {
     this.update((state) => ({
         ...state,
         typoCategoria,
     }));
   }
 
-  public setTypoRegimen(typoRegimen: string) {
+  public setTypoRegimen(typoRegimen: string): void {
     this.update((state) => ({
         ...state,
         typoRegimen,
     }));
   }
 
-  public setDescripcionCategoriaTextil(descripcionCategoriaTextil: string) {
+  public setDescripcionCategoriaTextil(descripcionCategoriaTextil: string): void {
     this.update((state) => ({
         ...state,
         descripcionCategoriaTextil,
     }));
   }
 
-  public setPaisDestino(PaisDestino: string) {
+  public setPaisDestino(PaisDestino: string): void {
     this.update((state) => ({
         ...state,
         PaisDestino,
     }));
   }
 
-  public setUnidadMedidaCategoriaTextil(unidadMedidaCategoriaTextil: string) {
+  public setUnidadMedidaCategoriaTextil(unidadMedidaCategoriaTextil: string): void {
     this.update((state) => ({
         ...state,
         unidadMedidaCategoriaTextil,
     }));
   }
 
-  public setFactorConversionCategoriaTextil(factorConversionCategoriaTextil: string) {
+  public setFactorConversionCategoriaTextil(factorConversionCategoriaTextil: string): void {
     this.update((state) => ({
         ...state,
         factorConversionCategoriaTextil,
     }));
   }
 
-  public setFechaInicioVigencia(fechaInicioVigencia: string) {
+  public setFechaInicioVigencia(fechaInicioVigencia: string): void {
     this.update((state) => ({
         ...state,
         fechaInicioVigencia,
     }));
   }
 
-  public setFechaFinVigencia(fechaFinVigencia: string) {
+  public setFechaFinVigencia(fechaFinVigencia: string): void {
     this.update((state) => ({
         ...state,
         fechaFinVigencia,
     }));
   }
 
-  public setCantidadFacturas(cantidadFacturas: string) {
+  public setCantidadFacturas(cantidadFacturas: string): void {
     this.update((state) => ({
         ...state,
         cantidadFacturas,
     }));
   }
 
-  public setExportadorFabricanteMismo(exportadorFabricanteMismo: string) {
+  public setExportadorFabricanteMismo(exportadorFabricanteMismo: string): void {
     this.update((state) => ({
         ...state,
         exportadorFabricanteMismo,
     }));
   }
 
-  public setNumeroRegistroFiscal(numeroRegistroFiscal: string) {
+  public setNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
     this.update((state) => ({
         ...state,
         numeroRegistroFiscal,
     }));
   }
 
-  public setTipo(tipo: string) {
+  public setTipo(tipo: string): void {
     this.update((state) => ({
         ...state,
         tipo,
     }));
   }
 
-  public setCantidadTotalImportador(cantidadTotalImportador: string) {
+  public setCantidadTotalImportador(cantidadTotalImportador: string): void {
     this.update((state) => ({
         ...state,
         cantidadTotalImportador,
     }));
   }
 
-  public setRazonSocialImportador(razonSocialImportador: string) {
+  public setRazonSocialImportador(razonSocialImportador: string): void {
     this.update((state) => ({
         ...state,
         razonSocialImportador,
     }));
   }
 
-  public setDomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string): void {
     this.update((state) => ({
         ...state,
         domicilio,
     }));
   }
 
-  public setCiudadImportador(ciudadImportador: string) {
+  public setCiudadImportador(ciudadImportador: string): void {
     this.update((state) => ({
         ...state,
         ciudadImportador,
     }));
   }
 
-  public setCpImportador(cpImportador: string) {
+  public setCpImportador(cpImportador: string): void {
     this.update((state) => ({
         ...state,
         cpImportador,
     }));
   }
 
-  public setPaisImportador(PaisImportador: string) {
+  public setPaisImportador(PaisImportador: string): void {
     this.update((state) => ({
         ...state,
         PaisImportador,
     }));
   }
 
-  public setFormaValida(formaValida: Catalogo[]) {
+  public setFormaValida(formaValida: Catalogo[]): void {
     this.update((state) => ({
         ...state,
         formaValida,
     }));
   }
 
-  public setMetrosCuadradosEquivalentes(metrosCuadradosEquivalentes: number) {
+  public setMetrosCuadradosEquivalentes(metrosCuadradosEquivalentes: number): void {
     this.update((state) => ({
         ...state,
         metrosCuadradosEquivalentes,
     }));
   }
-  public setCantidadFacturasTotal(cantidadFacturasTotal: number) {
+  public setCantidadFacturasTotal(cantidadFacturasTotal: number): void {
     this.update((state) => ({
         ...state,
         cantidadFacturasTotal,
