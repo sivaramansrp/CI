@@ -288,9 +288,9 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'solicitud-de-cancelation',
+    path: 'solicitud-de-cancelacion',
     loadChildren: () =>
-      import('./tramites/140101/solicitud-de-cancelation.module').then(
+      import('./tramites/140101/solicitud-de-cancelacion.module').then(
         (m) => m.SolicitudDeCancelacionModule),
   },
 ];

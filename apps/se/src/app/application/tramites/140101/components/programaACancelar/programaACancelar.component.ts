@@ -35,16 +35,29 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * Grupo de formularios para gestionar los controles del formulario en el componente.
    */
   ProgramaForm!: FormGroup;
-
+  
   /**
-   * Subject utilizado para notificar y completar observables cuando el componente se destruye.
+   * Notificador utilizado para destruir suscripciones activas en el componente.
+   * Se utiliza comúnmente en el patrón de diseño para evitar fugas de memoria
+   * al desuscribirse de observables cuando el componente se destruye.
+   *
+   * @example
+   * ```typescript
+   * this.someObservable.pipe(
+   *   takeUntil(this.destroyNotifier$)
+   * ).subscribe(data => {
+   *   // Manejo de datos
+   * });
+   * ```
+   *
+   * @see {@link Subject}
    */
   public destroyNotifier$: Subject<void> = new Subject();
-
+   
   /**
-   * Objeto de suscripción para gestionar y cancelar la suscripción de observables.
+   * Suscripción utilizada para gestionar la obtención de datos del programa.
    */
-  private subscription: Subscription = new Subscription();
+  private getProgramaSubscription!: Subscription;
 
   /**
    * Estado de la sección Programa A Cancelar.
@@ -62,7 +75,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
 
   public encabezadoDeTabla: ConfiguracionColumna<programaACancelar>[] = [
     { encabezado: 'Folio Programa', clave: (item:programaACancelar) => item.folioPrograma, orden: 1 },
-    { encabezado: 'Selecciona de Modalidad',clave: (item:programaACancelar) => item.modalidad, orden: 2 },
+    { encabezado: 'Selección de Modalidad',clave: (item:programaACancelar) => item.modalidad, orden: 2 },
     { encabezado: 'Representación Federal', clave: (item:programaACancelar) => item.representacionFederal, orden: 3 },
     { encabezado: 'Tipo Programa', clave: (item:programaACancelar) => item.tipoPrograma, orden: 4 },
     { encabezado: 'Estatus', clave: (item:programaACancelar) => item.estatus, orden: 5 },
@@ -114,7 +127,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     private tramite140101Store: Tramite140101Store,
     private tramite140101Query: Tramite140101Query
   ) {
-  
+   // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
@@ -130,7 +143,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con datos del estado.
    */
   inicializarFormulario(): void {
-    this.subscription.add(
+    this.getProgramaSubscription.add(
       this.tramite140101Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),

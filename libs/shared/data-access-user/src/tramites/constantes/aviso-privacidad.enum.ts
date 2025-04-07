@@ -1,6 +1,7 @@
 /**
  * Constante que contiene el aviso de privacidad simplificado utilizado en la Ventanilla Digital Mexicana de Comercio Exterior (VUCE).
  * 
+ * @constant
  * @property {string} Aviso - Texto en formato HTML que describe el aviso de privacidad simplificado. 
  * Este aviso informa sobre el tratamiento de los datos personales recabados por el Servicio de Administración Tributaria (SAT),
  * su uso, transferencia a autoridades competentes y su protección conforme a la legislación aplicable.
@@ -22,5 +23,5 @@ export const AVISO = {
    * de solicitudes pendientes por firmar. Incluye un número de solicitud como referencia.
    */
   export const FIRMAR = {
-    Firmar: `<p>La solicitud ha sido guardado exitosamente. Tiene 15 días naturales para firmarla, después de ese tiempo desaparecerá del listado de solicitudes pendientes por firmar. Número de solicitud [202767878] </p>`
+    Firmar: `<p>La solicitud ha sido guardada exitosamente. Tiene 15 días naturales para firmarla, después de ese tiempo desaparecerá del listado de solicitudes pendientes por firmar. Número de solicitud [202767878] </p>`
   };

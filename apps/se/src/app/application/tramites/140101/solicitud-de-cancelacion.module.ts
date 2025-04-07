@@ -8,7 +8,7 @@ import { DatosComponent } from './pages/datos/datos.component';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
 import { ProgramaACancelarComponent } from './components/programaACancelar/programaACancelar.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { SolicitudDeCancelacionRoutingModule } from './solicitud-de-cancelation-routing.module';
+import { SolicitudDeCancelacionRoutingModule } from './solicitud-de-cancelacion-routing.module';
 
 @NgModule({
   // Declaraciones de los componentes que pertenecen a este módulo

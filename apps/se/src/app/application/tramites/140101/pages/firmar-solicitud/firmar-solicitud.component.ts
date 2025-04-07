@@ -25,7 +25,9 @@ export class FirmarSolicitudComponent {
    * 
    * @param router Servicio de enrutamiento utilizado para navegar entre rutas.
    */
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+     // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Método encargado de procesar la firma obtenida del usuario.

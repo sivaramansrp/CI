@@ -20,7 +20,9 @@ export class ProgramaACancelarService {
    * 
    * @param http - Cliente HTTP utilizado para realizar solicitudes a recursos externos.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+     // El constructor se utiliza para la inyección de dependencias.
+  }
 
   /**
    * Obtiene los datos del programa a cancelar desde un archivo JSON local.
