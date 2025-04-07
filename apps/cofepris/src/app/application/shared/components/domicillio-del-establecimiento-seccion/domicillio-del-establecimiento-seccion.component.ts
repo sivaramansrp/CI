@@ -1,4 +1,5 @@
 /**
+ * compodoc
  * @fileoverview Componente `DomicillioDelEstablecimientoSeccionComponent`
  * Este componente gestiona el formulario relacionado con el domicilio del establecimiento,
  * incluyendo datos como el estado, código postal, municipio, localidad, colonia, calle, teléfono,
@@ -39,7 +40,13 @@ import { Subject, takeUntil } from 'rxjs';
 import { ScianModel } from '../../models/datos-de-la-solicitud.model';
 
 import { Modal } from 'bootstrap';
+import { SCIAN_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
 
+
+/* 
+* @description
+* Componente que gestiona el domicilio del establecimiento.
+*/
 @Component({
   selector: 'app-domicillio-del-establecimiento-seccion',
   standalone: true,
@@ -130,18 +137,7 @@ export class DomicillioDelEstablecimientoSeccionComponent
   /**
    * Configuración de las columnas de la tabla dinámica para los datos SCIAN.
    */
-  configuracionTabla: ConfiguracionColumna<ScianModel>[] = [
-    {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (item: ScianModel) => item.claveScian,
-      orden: 1,
-    },
-    {
-      encabezado: 'Descripción del S.C.I.A.N.',
-      clave: (item: ScianModel) => item.descripcionScian,
-      orden: 2,
-    },
-  ];
+  configuracionTabla: ConfiguracionColumna<ScianModel>[] = SCIAN_TABLE_CONFIG;
 
   /**
    * Ciclo de vida `AfterViewInit`.
@@ -193,14 +189,11 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
 
-    // Actualizar el estado global cuando cambien los valores del formulario
-    this.domicilioEstablecimiento.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.domicilioEstablecimientoStore.update(value);
-      });
   }
-
+  onControlChange(controlName: string): void {
+    const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  }
   /**
    * Carga los datos del catálogo de régimen.
    */

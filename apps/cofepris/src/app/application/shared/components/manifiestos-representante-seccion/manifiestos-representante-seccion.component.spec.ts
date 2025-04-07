@@ -65,6 +65,7 @@ describe('ManifiestosRepresentanteSeccionComponent', () => {
       rfcDelProfesionalResponsable: '',
       nombreDelProfesionalResponsable: '',
       propietarioData: [],
+      establecimientoData: null, // Added missing property
     };
   
     mockQuery.select.mockReturnValue(of(mockState));

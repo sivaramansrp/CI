@@ -47,6 +47,12 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
   templateUrl: './Datos-del-establecimiento-seccion.component.html',
   styleUrl: './Datos-del-establecimiento-seccion.component.scss',
 })
+/*
+  * @description
+  * Clase que representa el componente de datos del establecimiento.
+  * Este componente gestiona la visualización y edición de los datos del establecimiento,
+  * incluyendo su denominación, razón social y correo electrónico.
+  */
 export class DatosDelEstablecimientoSeccionComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
@@ -101,14 +107,12 @@ export class DatosDelEstablecimientoSeccionComponent
         this.detosEstablecimiento.patchValue(state, { emitEvent: false });
       });
 
-    // Actualizar el estado global cuando cambien los valores del formulario
-    this.detosEstablecimiento.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.establecimientoStore.update(value);
-      });
+  
   }
-
+  onControlChange(controlName: string): void {
+    const UPDATED_VALUE = { [controlName]: this.detosEstablecimiento.get(controlName)?.value };
+    this.establecimientoStore.update(UPDATED_VALUE);
+  }
   /**
    * Ciclo de vida `AfterViewInit`.
    * Inicializa la instancia del modal de Bootstrap.

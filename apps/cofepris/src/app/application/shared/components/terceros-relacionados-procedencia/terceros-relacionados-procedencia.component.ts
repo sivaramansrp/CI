@@ -12,12 +12,14 @@ import {
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { TableData, TipoMoModel } from '../../models/entrada-humana.models';
+import { TableData, TipoMoModel } from '../../models/permiso-importacion-biologica.models';
 
 
-import { MANIFIESTOS_ALERT } from '../../constantes/entrada-humana.enum';
+import { MANIFIESTOS_ALERT } from '../../constantes/permiso-importacion-biologica.enum';
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
+
+import { Subject, takeUntil } from 'rxjs';
 /**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
@@ -40,6 +42,8 @@ import { TercerosProcedenciaService } from '../../services/terceros-procedencia.
 })
 
 export class TercerosRelacionadosProcedenciaComponent implements OnInit {
+    /** Subject para destruir el componente */
+    private destroy$ = new Subject<void>();
 
   /**
    * Variable que controla la visibilidad del componente de datos generales.
@@ -85,7 +89,7 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    * propiedad `fabricanteHeaderData`.
    */
   ngOnInit(): void {
-    this.tercerosProcedenciaService.getInformacioDeTabla().subscribe((data) => {
+    this.tercerosProcedenciaService.getInformacioDeTabla().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.fabricanteHeaderData = data.columns
     });
   }

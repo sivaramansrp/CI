@@ -134,8 +134,8 @@ describe('EstablecimientoComponent', () => {
 
     component.guardarDatosMercancia();
 
-    expect(component.propietarioData.length).toBe(1);
-    expect(component.propietarioData[0].tipoDeProducto).toBe('Producto 1');
+    expect(component.establecimientoData.length).toBe(1);
+    expect(component.establecimientoData[0].tipoDeProducto).toBe('Producto 1');
     expect(component.datosMercanciaForm.value).toEqual({
       nombreEspecifico: null,
       tipoDeProducto: null,
@@ -159,7 +159,7 @@ describe('EstablecimientoComponent', () => {
 
     component.guardarDatosMercancia();
 
-    expect(component.propietarioData.length).toBe(0);
+    expect(component.establecimientoData.length).toBe(0);
   });
 
   it('should clean up subscriptions on ngOnDestroy', () => {

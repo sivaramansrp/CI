@@ -12,12 +12,12 @@ import { CatalogoSelectComponent, InputFecha, InputFechaComponent, catalogoRespo
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { TramiteEntradaHumanaStore } from '../../estados/tramite-entrada-humana.store';
+import { PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
 
-import { TramiteEntradaHumanaQuery } from '../../estados/tramite-entrada-humana.query';
+import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { FECHA_PAGO } from '../../constantes/entrada-humana.enum';
+import { FECHA_PAGO } from '../../constantes/permiso-importacion-biologica.enum';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
@@ -45,26 +45,26 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * @observable selectedBanco$
    * @description Observable que representa el banco seleccionado en el contexto del componente.
    * @type {Observable<catalogoResponse | null>}
-   * @remarks Este observable se suscribe al estado del query `tramiteEntradaHumanaQuery` 
+   * @remarks Este observable se suscribe al estado del query `permisoImportacionBiologicaQuery` 
    * para obtener el banco seleccionado. Puede emitir un valor de tipo `catalogoResponse` 
    * o `null` si no hay un banco seleccionado.
    */
   selectedBanco$: Observable<catalogoResponse | null> =
-    this.tramiteEntradaHumanaQuery.selectedBanco$;
+    this.permisoImportacionBiologicaQuery.selectedBanco$;
   
   /**
    * @observable claveDeReferncia$
    * @description Representa un observable que emite la clave de referencia seleccionada
    * en el contexto del trámite 260402.
    */
-  claveDeReferncia$ = this.tramiteEntradaHumanaQuery.selectedClaveDeReferncia$
+  claveDeReferncia$ = this.permisoImportacionBiologicaQuery.selectedClaveDeReferncia$
 
   /**
    * @observable cadenaDeLaDependencia$
    * @description Representa un observable que emite la cadena de la dependencia seleccionada
    * en el contexto del trámite 260402.
    */
-  cadenaDeLaDependencia$ = this.tramiteEntradaHumanaQuery.selectedCadenaDeLaDependencia$
+  cadenaDeLaDependencia$ = this.permisoImportacionBiologicaQuery.selectedCadenaDeLaDependencia$
 
   /**
    * @observable llaveDePago$
@@ -72,13 +72,13 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * en el contexto del trámite 260402. Este flujo de datos se utiliza 
    * para rastrear y reaccionar a los cambios en la llave de pago seleccionada.
    */
-  llaveDePago$ = this.tramiteEntradaHumanaQuery.selectedLlaveDePago$
+  llaveDePago$ = this.permisoImportacionBiologicaQuery.selectedLlaveDePago$
 
   /**
    * @descripcion Un observable que emite la fecha de pago seleccionada
-   * desde el estado del query `tramiteEntradaHumanaQuery`.
+   * desde el estado del query `permisoImportacionBiologicaQuery`.
    */
-  fechaDePago$ = this.tramiteEntradaHumanaQuery.selectedFechaDePago$
+  fechaDePago$ = this.permisoImportacionBiologicaQuery.selectedFechaDePago$
 
   /**
    * @observable importeDePago$
@@ -86,7 +86,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * en el contexto del trámite 260402. Este observable se utiliza para
    * rastrear y reaccionar a los cambios en el importe de pago asociado.
    */
-  importeDePago$ = this.tramiteEntradaHumanaQuery.selectedImporteDePago$
+  importeDePago$ = this.permisoImportacionBiologicaQuery.selectedImporteDePago$
 
 
   /**
@@ -112,8 +112,8 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private pagoDeDerechosService: PagoDeDerechosEntradaService,
-    private tramiteEntradaHumanaStore: TramiteEntradaHumanaStore,
-    private tramiteEntradaHumanaQuery: TramiteEntradaHumanaQuery
+    private permisoImportacionBiologicaStore: PermisoImportacionBiologicaStore,
+    private permisoImportacionBiologicaQuery: PermisoImportacionBiologicaQuery
 
   ) { 
      //La lógica del constructor se puede agregar aquí si es necesario
@@ -193,7 +193,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    */
   updateClaveDeReferncia(): void {
     const CORREO = this.pagoDerechos.get('claveDeReferncia')?.value;
-    this.tramiteEntradaHumanaStore.setClaveDeReferncia(CORREO);
+    this.permisoImportacionBiologicaStore.setClaveDeReferncia(CORREO);
   }
 
   /**
@@ -206,7 +206,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    */
   updateCadenaDeLaDependencia(): void {
     const CORREO = this.pagoDerechos.get('cadenaDeLaDependencia')?.value;
-    this.tramiteEntradaHumanaStore.setCadenaDeLaDependencia(CORREO);
+    this.permisoImportacionBiologicaStore.setCadenaDeLaDependencia(CORREO);
   }
 
   /**
@@ -219,7 +219,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    */
   updateLlaveDePago(): void {
     const CORREO = this.pagoDerechos.get('llaveDePago')?.value;
-    this.tramiteEntradaHumanaStore.setLlaveDePago(CORREO);
+    this.permisoImportacionBiologicaStore.setLlaveDePago(CORREO);
   }
 
   /**
@@ -232,7 +232,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    */
   updateFechaDePago(): void {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
-    this.tramiteEntradaHumanaStore.setFechaDePago(CORREO);
+    this.permisoImportacionBiologicaStore.setFechaDePago(CORREO);
   }
   
   /**
@@ -245,7 +245,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    */
   updateImporteDePago(): void {
     const CORREO = this.pagoDerechos.get('importeDePago')?.value;
-    this.tramiteEntradaHumanaStore.setImporteDePago(CORREO);
+    this.permisoImportacionBiologicaStore.setImporteDePago(CORREO);
   }
 
   /**
@@ -253,7 +253,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
  */
   getMunicipios(): void {
     const SELECTED_BANCO = this.pagoDerechos.get('banco')?.value;
-    this.tramiteEntradaHumanaStore.setBanco(SELECTED_BANCO);
+    this.permisoImportacionBiologicaStore.setBanco(SELECTED_BANCO);
   }
 
     /**
@@ -267,7 +267,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       this.pagoDerechos.patchValue({
         fechaDePago: nuevo_valor,
       });
-      this.tramiteEntradaHumanaStore.setFechaDePago(nuevo_valor);
+      this.permisoImportacionBiologicaStore.setFechaDePago(nuevo_valor);
     }
 
   /*

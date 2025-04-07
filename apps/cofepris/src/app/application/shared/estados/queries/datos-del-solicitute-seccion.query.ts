@@ -25,7 +25,10 @@ export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSecc
   rfcDelProfesionalResponsable$ =this.select('rfcDelProfesionalResponsable');
   nombreDelProfesionalResponsable$ =this.select('nombreDelProfesionalResponsable');
   informacionConfidencialRadio$ = this.select('informacionConfidencialRadio');
-  propietarioData$ = this.select('propietarioData');
+   propietarioData$ = this.select('propietarioData');
+  establecimientoData$ = this.select('establecimientoData');
+  
+
   constructor(protected override store: DatosDelSolicituteSeccionStateStore) {
     super(store);
   }

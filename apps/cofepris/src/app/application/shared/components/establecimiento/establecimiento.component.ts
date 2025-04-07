@@ -1,4 +1,5 @@
 /**
+ * compodoc
  * @fileoverview Componente `EstablecimientoComponent`
  * Este componente gestiona el formulario relacionado con los datos del establecimiento,
  * incluyendo información sobre productos, países de origen, países de procedencia,
@@ -36,7 +37,6 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -44,9 +44,7 @@ import {
 
 import { CROSLISTA_DE_PAISES } from '../../constantes/datos-solicitud.enum';
 
-import {
-  DatosDeLaProductoModel,
-} from '../../models/datos-de-la-solicitud.model';
+import { DatosDeLaProductoModel } from '../../models/datos-de-la-solicitud.model';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
@@ -55,7 +53,15 @@ import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-represe
 import { DomicillioDelEstablecimientoSeccionComponent } from '../domicillio-del-establecimiento-seccion/domicillio-del-establecimiento-seccion.component';
 
 import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecimiento-seccion/datos-del-establecimiento-seccion.component';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
 
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
+
+import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
+/**
+ * Componente `EstablecimientoComponent`
+ * Componente que gestiona los datos del establecimiento.
+ */
 @Component({
   selector: 'app-establecimiento',
   standalone: true,
@@ -68,27 +74,43 @@ import { DatosDelEstablecimientoSeccionComponent } from '../datos-del-establecim
     TablaDinamicaComponent,
     CrosslistComponent,
     DomicillioDelEstablecimientoSeccionComponent,
-    InputRadioComponent,
     ManifiestosRepresentanteSeccionComponent,
-    DatosDelEstablecimientoSeccionComponent
+    DatosDelEstablecimientoSeccionComponent,
   ],
   templateUrl: './establecimiento.component.html',
   styleUrl: './establecimiento.component.scss',
 })
-export class EstablecimientoComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
- 
+/**
+ * compo doc
+ * @description
+ */
+export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * Lista de países disponibles para la selección de procedencia.
+   */
   public paisDeProcedenciaDatos = CROSLISTA_DE_PAISES;
+
+  /**
+   * Etiquetas para la lista cruzada de países de origen.
+   */
   public paisDeOriginLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionado(s)',
   };
+
+  /**
+   * Etiquetas para la lista cruzada de países de procedencia.
+   */
   public paisDeProcedenciaLabel: CrossListLable = {
     tituluDeLaIzquierda: 'País de procedencia',
     derecha: 'País(es) seleccionados',
   };
+
+  /**
+   * Lista de países disponibles para la selección de origen.
+   */
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
+
   /**
    * Referencia al modal de datos de mercancía.
    */
@@ -107,97 +129,24 @@ export class EstablecimientoComponent
   datosModalInstance!: Modal;
 
   /**
-   * Formularios para gestionar los datos del producto y de la mercancía.
+   * Formulario para gestionar los datos del producto.
    */
   datosProductoForm!: FormGroup;
+
+  /**
+   * Formulario para gestionar los datos de la mercancía.
+   */
   datosMercanciaForm!: FormGroup;
 
   /**
    * Datos de los productos agregados.
    */
-  propietarioData: DatosDeLaProductoModel[] = [];
+  establecimientoData: DatosDeLaProductoModel[] = [];
 
   /**
    * Configuración de las columnas de la tabla dinámica para los datos del producto.
    */
-  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] =
-    [
-      {
-        encabezado: 'Tipo de producto',
-        clave: (item: DatosDeLaProductoModel) => item.tipoDeProducto,
-        orden: 1,
-      },
-      {
-        encabezado: 'Nombre Específico',
-        clave: (item: DatosDeLaProductoModel) => item.nombreEspecifico,
-        orden: 2,
-      },
-      {
-        encabezado: 'Cantidad o Volúmen',
-        clave: (item: DatosDeLaProductoModel) => item.cantidadOVolumen,
-        orden: 3,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (item: DatosDeLaProductoModel) => item.unidadDeMedida,
-        orden: 4,
-      },
-      {
-        encabezado: 'Presentación',
-        clave: (item: DatosDeLaProductoModel) => item.Presentacion,
-        orden: 5,
-      },
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (item: DatosDeLaProductoModel) => item.fraccionArancelaria,
-        orden: 6,
-      },
-      {
-        encabezado: 'Descripción de la fracción',
-        clave: (item: DatosDeLaProductoModel) => item.descripcionDeLaFraccion,
-        orden: 7,
-      },
-      {
-        encabezado: 'Unidad de medida de tarifa (UMT)',
-        clave: (item: DatosDeLaProductoModel) => item.unidadDeMedidaDeTarifa,
-        orden: 8,
-      },
-      {
-        encabezado: 'Cantidad UMT',
-        clave: (item: DatosDeLaProductoModel) => item.cantidadUMT,
-        orden: 9,
-      },
-      {
-        encabezado: 'Envase primario',
-        clave: (item: DatosDeLaProductoModel) => item.envasePrimario,
-        orden: 10,
-      },
-      {
-        encabezado: 'Envase secundario',
-        clave: (item: DatosDeLaProductoModel) => item.envaseSecundario,
-        orden: 11,
-      },
-      {
-        encabezado: 'País de origen',
-        clave: (item: DatosDeLaProductoModel) => item.paisDeOrigen,
-        orden: 12,
-      },
-      {
-        encabezado: 'País de procedencia',
-        clave: (item: DatosDeLaProductoModel) => item.paisDeProcedencia,
-        orden: 13,
-      },
-      {
-        encabezado: 'País de destino',
-        clave: (item: DatosDeLaProductoModel) => item.paisDeDestino,
-        orden: 14,
-      },
-      {
-        encabezado: 'Uso específico',
-        clave: (item: DatosDeLaProductoModel) => item.usoEpecifico,
-        orden: 15,
-      },
-    ];
+  configuracionTablaDatosProducto: ConfiguracionColumna<DatosDeLaProductoModel>[] = DATOS_DE_LA_PRODUCTO_MODEL;
 
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
@@ -253,10 +202,14 @@ export class EstablecimientoComponent
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
+   * @param establecimientoStore Store para gestionar el estado del establecimiento.
+   * @param establecimientoQuery Query para obtener el estado inicial del establecimiento.
    */
   constructor(
     private fb: FormBuilder,
-    private establecimientoService: EstablecimientoService
+    private establecimientoService: EstablecimientoService,
+    private establecimientoStore: DatosDelSolicituteSeccionStateStore,
+    private establecimientoQuery: DatosDelSolicituteSeccionQuery
   ) {}
 
   /**
@@ -265,9 +218,7 @@ export class EstablecimientoComponent
    */
   ngAfterViewInit(): void {
     if (this.datosMercanciaModal) {
-      this.datosModalInstance = new Modal(
-        this.datosMercanciaModal.nativeElement
-      );
+      this.datosModalInstance = new Modal(this.datosMercanciaModal.nativeElement);
     }
   }
 
@@ -285,10 +236,7 @@ export class EstablecimientoComponent
       nombreEspecifico: ['', Validators.required],
       tipoDeProducto: ['', Validators.required],
       fraccionArancelaria: ['', Validators.required],
-      descripcionFraccionArancelaria: [
-        { value: null, disabled: true },
-        Validators.required,
-      ],
+      descripcionFraccionArancelaria: [{ value: null, disabled: true }, Validators.required],
       cantidadUMT: ['', Validators.required],
       umt: [{ value: null, disabled: true }, Validators.required],
       cantidadOVolumen: ['', Validators.required],
@@ -300,6 +248,13 @@ export class EstablecimientoComponent
       almacenamientoEnvasePrimario: [''],
       presentacionaFrmaceutica: ['', Validators.required],
     });
+
+    this.establecimientoQuery
+      .select('establecimientoData')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.establecimientoData = data;
+      });
   }
 
   /**
@@ -331,26 +286,16 @@ export class EstablecimientoComponent
     if (this.datosMercanciaForm) {
       const MERCANCIA_DATA: DatosDeLaProductoModel = {
         tipoDeProducto: this.datosMercanciaForm.get('tipoDeProducto')?.value,
-        nombreEspecifico:
-          this.datosMercanciaForm.get('nombreEspecifico')?.value,
-        cantidadOVolumen:
-          this.datosMercanciaForm.get('cantidadOVolumen')?.value,
+        nombreEspecifico: this.datosMercanciaForm.get('nombreEspecifico')?.value,
+        cantidadOVolumen: this.datosMercanciaForm.get('cantidadOVolumen')?.value,
         unidadDeMedida: this.datosMercanciaForm.get('unidadDeMedida')?.value,
-        Presentacion: this.datosMercanciaForm.get('presentacionaFrmaceutica')
-          ?.value,
-        fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')
-          ?.value,
-        descripcionDeLaFraccion: this.datosMercanciaForm.get(
-          'descripcionFraccionArancelaria'
-        )?.value,
+        Presentacion: this.datosMercanciaForm.get('presentacionaFrmaceutica')?.value,
+        fraccionArancelaria: this.datosMercanciaForm.get('fraccionArancelaria')?.value,
+        descripcionDeLaFraccion: this.datosMercanciaForm.get('descripcionFraccionArancelaria')?.value,
         unidadDeMedidaDeTarifa: this.datosMercanciaForm.get('umt')?.value,
         cantidadUMT: this.datosMercanciaForm.get('cantidadUMT')?.value,
-        envasePrimario: this.datosMercanciaForm.get(
-          'almacenamientoEnvasePrimario'
-        )?.value,
-        envaseSecundario: this.datosMercanciaForm.get(
-          'almacenamientoEnvaseSecundario'
-        )?.value,
+        envasePrimario: this.datosMercanciaForm.get('almacenamientoEnvasePrimario')?.value,
+        envaseSecundario: this.datosMercanciaForm.get('almacenamientoEnvaseSecundario')?.value,
         paisDeOrigen: this.seleccionadasPaisDeOriginDatos.join(', '),
         paisDeProcedencia: this.seleccionadasPaisDeProcedenciaDatos.join(', '),
         paisDeDestino: this.datosMercanciaForm.get('paisDeDestino')?.value,
@@ -363,7 +308,9 @@ export class EstablecimientoComponent
         return;
       }
 
-      this.propietarioData.push(MERCANCIA_DATA);
+      const UPDATED_DATA = [...this.establecimientoData, MERCANCIA_DATA];
+      this.establecimientoStore.update({ establecimientoData: UPDATED_DATA });
+
       this.datosMercanciaForm.reset();
       this.closeDatosMercanciaModal();
     }
@@ -373,14 +320,11 @@ export class EstablecimientoComponent
    * Maneja el evento blur en el campo RFC del representante.
    */
   onRepresentanteRfcBlur(): void {
-    const FRACCION_ARANCELARIA = this.datosMercanciaForm.get(
-      'fraccionArancelaria'
-    )?.value;
+    const FRACCION_ARANCELARIA = this.datosMercanciaForm.get('fraccionArancelaria')?.value;
 
     if (FRACCION_ARANCELARIA) {
       this.datosMercanciaForm.patchValue({
-        descripcionFraccionArancelaria:
-          'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
+        descripcionFraccionArancelaria: 'Los demás. Unicamente: Organos y células de origen humano para fines de docencia',
         umt: 'Kilogramo',
       });
     }

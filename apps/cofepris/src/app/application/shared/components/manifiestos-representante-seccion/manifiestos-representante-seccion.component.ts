@@ -8,6 +8,9 @@
 import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { EstablecimientoService } from '../../services/establecimiento.service';
+
 import {
   FormBuilder,
   FormGroup,
@@ -22,13 +25,13 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import radioJson from 'libs/shared/theme/assets/json/260401/radioSiNo.json';
 
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+
+import { Manifiestistos, PropietarioTipoPersona } from '../../models/datos-de-la-solicitud.model';
 
 @Component({
   selector: 'app-manifiestos-representante-seccion',
@@ -43,7 +46,9 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
   templateUrl: './manifiestos-representante-seccion.component.html',
   styleUrl: './manifiestos-representante-seccion.component.scss',
 })
-export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestroy {
+export class ManifiestosRepresentanteSeccionComponent
+  implements OnInit, OnDestroy
+{
   /**
    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -52,7 +57,7 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
   /**
    * Opciones para el radio de información confidencial.
    */
-  informacionConfidencialRadioOption = radioJson;
+  informacionConfidencialRadioOption: PropietarioTipoPersona[]=[];
 
   /**
    * Texto de los manifiestos.
@@ -73,7 +78,8 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
   constructor(
     private fb: FormBuilder,
     private representanteStore: DatosDelSolicituteSeccionStateStore,
-    private representanteQuery: DatosDelSolicituteSeccionQuery
+    private representanteQuery: DatosDelSolicituteSeccionQuery,
+    private establecimientoService :EstablecimientoService
   ) {}
 
   /**
@@ -97,28 +103,74 @@ export class ManifiestosRepresentanteSeccionComponent implements OnInit, OnDestr
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
-        this.manifiestosRepresentanteForm.patchValue(state);
+        this.manifiestosRepresentanteForm.patchValue(state, {
+          emitEvent: false,
+        });
       });
 
-    // Actualizar el estado global cuando cambien los valores del formulario
-    this.manifiestosRepresentanteForm.valueChanges
+    
+
+      this.establecimientoService
+      .getInformacionConfidencialRadioOptions()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        this.representanteStore.update(value);
+      .subscribe((data: PropietarioTipoPersona[]) => {
+        this.informacionConfidencialRadioOption = data; // Bind the fetched data
+       
       });
   }
+   /**
+   * Maneja los cambios en los controles del formulario y actualiza el estado global.
+   * @param controlName Nombre del control que cambió.
+   */
+   onControlChange(controlName: string): void {
+    const CONTROL_VALUE = this.manifiestosRepresentanteForm.get(controlName)?.value;
 
+    switch (controlName) {
+      case 'representanteRfc':
+        this.representanteStore.setRepresentanteRfc(CONTROL_VALUE);
+        break;
+      case 'representanteNombre':
+        this.representanteStore.setRepresentanteNombre(CONTROL_VALUE);
+        break;
+      case 'apellidoPaterno':
+      case 'apellidoMaterno':
+        this.representanteStore.setRepresentanteApellidos(
+          this.manifiestosRepresentanteForm.get('apellidoPaterno')?.value,
+          this.manifiestosRepresentanteForm.get('apellidoMaterno')?.value
+        );
+        break;
+      case 'informacionConfidencialRadio':
+        this.representanteStore.setInformacionConfidencial(CONTROL_VALUE);
+        break;
+      default:
+        break;
+    }
+  }
   /**
    * Busca los datos del representante por RFC y los actualiza en el formulario.
    */
   buscarRepresentanteRfc(): void {
     const RFC = this.manifiestosRepresentanteForm.get('representanteRfc')?.value;
     if (RFC) {
-      this.manifiestosRepresentanteForm.patchValue({
-        representanteNombre: 'EUROFOODS DE MEXICO',
-        apellidoPaterno: 'GONZALEZ',
-        apellidoMaterno: 'PINAL',
-      });
+      this.establecimientoService
+        .getManifiestosByRfc(RFC)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((representante: Manifiestistos | null) => {
+          if (representante) {
+            this.manifiestosRepresentanteForm.patchValue({
+              representanteNombre: representante.representanteNombre,
+              apellidoPaterno: representante.apellidoPaterno,
+              apellidoMaterno: representante.apellidoMaterno,
+            });
+
+     
+            this.representanteStore.setRepresentanteNombre(representante.representanteNombre);
+            this.representanteStore.setRepresentanteApellidos(
+              representante.apellidoPaterno,
+              representante.apellidoMaterno
+            );
+          }
+        });
     }
   }
 

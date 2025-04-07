@@ -46,10 +46,10 @@ describe('DestinatarioComponent', () => {
   });
 
   it('should run #paisDestionSeleccion()', async () => {
-    component.paisDestinSeleccionEvent = component.paisDestinSeleccionEvent || {};
-    component.paisDestinSeleccionEvent.emit = jest.fn();
+    component.paisDestionSeleccionEvent = component.paisDestionSeleccionEvent || {};
+    component.paisDestionSeleccionEvent.emit = jest.fn();
     component.paisDestionSeleccion({});
-    expect(component.paisDestinSeleccionEvent.emit).toHaveBeenCalled();
+    expect(component.paisDestionSeleccionEvent.emit).toHaveBeenCalled();
   });
 
 });

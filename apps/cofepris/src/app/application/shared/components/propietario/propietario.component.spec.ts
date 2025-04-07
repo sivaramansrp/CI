@@ -18,7 +18,7 @@ describe('PropietarioComponent', () => {
 
   beforeEach(async () => {
     mockQuery = {
-      select: jest.fn(),
+      select: jest.fn().mockReturnValue(of({})), // Ensure select returns an observable
     } as unknown as jest.Mocked<DatosDelSolicituteSeccionQuery>;
 
     mockStore = {
@@ -30,9 +30,10 @@ describe('PropietarioComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         FormsModule,
-        HttpClientTestingModule, // Added to mock HttpClient
+        PropietarioComponent
+     
       ],
-      declarations: [PropietarioComponent],
+    
       providers: [
         { provide: DatosDelSolicituteSeccionQuery, useValue: mockQuery },
         { provide: DatosDelSolicituteSeccionStateStore, useValue: mockStore },
@@ -45,7 +46,8 @@ describe('PropietarioComponent', () => {
     component = fixture.componentInstance;
 
     // Mock destroy$
-    component['destroy$'] = new Subject<void>();
+    component['destroy$'] = new Subject<void>(); // Ensure destroy$ is properly initialized
+    component.ngOnInit(); // Call ngOnInit to initialize component state
 
     fixture.detectChanges();
   });
@@ -105,6 +107,7 @@ describe('PropietarioComponent', () => {
           codigoPostal: '12345',
         },
       ],
+      establecimientoData: []
     };
   
     mockQuery.select.mockReturnValue(of(mockState));
