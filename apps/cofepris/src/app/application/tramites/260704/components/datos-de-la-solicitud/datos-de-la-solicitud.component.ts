@@ -256,7 +256,18 @@ export class DatosDeLaSolicitudComponent implements OnInit {
 
   // Method to check if fields should be disabled
   areFieldsDisabled(): boolean {
-    return this.valorSeleccionado !== 'modificacion'; // Enable fields only if "modificacion" is selected
+    
+    if(this.radioOpcions[1].label == 'Modificación'){
+      return false;
+
+    } else {
+      return true;
+
+    }
+    // if(this.valorSeleccionado){}
+
+    
+    // return this.valorSeleccionado !== 'modificacion'; // Enable fields only if "modificacion" is selected
   }
   claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;

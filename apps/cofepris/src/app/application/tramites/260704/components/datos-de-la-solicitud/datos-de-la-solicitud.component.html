@@ -173,75 +173,75 @@
   </div>
   <!-- Datos mercancia popup screen start -->
   <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-xl modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">Datos mercancía</h4>
         </div>
         <div class="modal-body">
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true"></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true"></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
               <input class="form-control" placeholder="" type="text" />
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <label class="form-label">Marca*:</label>
               <input class="form-control" placeholder="" type="text" />
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true"></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <label class="form-label">Especifique*:</label>
               <input class="form-control" placeholder="" type="text" />
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
               </label>
               <input class="form-control" placeholder="" type="text" />
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-6">
+            <div class="col-md-8">
               <label class="form-label">Descripción de la fracción arancelaria*:</label>
               <input class="form-control" placeholder="" type="text" />
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <label class="form-label">Cantidad UMT*:</label>
               <input class="form-control" placeholder="" type="text" />
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
               </label>
               <input class="form-control" placeholder="" type="text" />
             </div>
           </div>
           <div class="row mt-5">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <label class="form-label">Cantidad UMC*:</label>
               <input class="form-control" placeholder="" type="text" />
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
               </label>
               <input class="form-control" placeholder="" type="text" />
@@ -282,13 +282,13 @@
               <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
             </div>
             <div class="col-md-4">
-              <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+              <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha" sty></input-fecha>
             </div>
           </div>
           <div class="col-md-12 mt-3">
             <label class="form-label" for="">Lista Claves de los lotes*:</label>
           </div>
-          <div class="col-md-8 mt-3 justify-content-centre align-items-centre">
+          <div class="col-md-8 mt-3 align-items-centre">
             <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla"></app-tabla-dinamica>
           </div>
           <div class="col-md-12 d-flex justify-content-end align-items-end">
