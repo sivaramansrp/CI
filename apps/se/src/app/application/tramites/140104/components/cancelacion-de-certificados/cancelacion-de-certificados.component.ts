@@ -202,6 +202,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   public seleccionar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
     this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
+
   }
   public devlover(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);

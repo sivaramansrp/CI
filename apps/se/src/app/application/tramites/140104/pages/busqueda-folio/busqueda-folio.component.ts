@@ -8,6 +8,9 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Validators } from '@angular/forms';
+import { FacturasDisponiblesParaDevolver, FacturasSeleccionadasParaDevolver } from '../../models/cancelacion-de-certificados.model';
+import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
@@ -16,18 +19,37 @@ import { Validators } from '@angular/forms';
 export class BusquedaFolioComponent implements OnInit, OnDestroy {
   public montoACancelarForm!: FormGroup;
   public devloverForm!: FormGroup;
+  public cantidadADevolver!: FormGroup;
+  public devolver!: FormGroup;
   // public detalleDelPermiso: boolean = false;
   public mostrarDevolverFacturas!: boolean;
   public mostrarBusqueda!: boolean;
-  
+  tipoSeleccionSolicitud: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  FacturasDisponiblesParaDevolverTabla: FacturasDisponiblesParaDevolver[] = [];
+  FacturasSeleccionadasParaDevolverTabla: FacturasSeleccionadasParaDevolver[] = [];
+
+
+  configuracionColumnasFacturasDisponiblesParaDevolver: ConfiguracionColumna<FacturasDisponiblesParaDevolver>[] = [
+      { encabezado: 'Numero de factura', clave: (fila) => fila.numero_de_factura, orden: 1 },
+      { encabezado: 'Importe inicial', clave: (fila) => fila.importe_inicial, orden: 2 },
+      ];
+      configuracionColumnasFacturasSeleccionadasParaDevolver: ConfiguracionColumna<FacturasSeleccionadasParaDevolver>[] = [
+        { encabezado: 'Numero de factura', clave: (fila) => fila.numero_de_factura, orden: 1 },
+        { encabezado: 'Importe inicial', clave: (fila) => fila.importe_inicial, orden: 2 },
+        { encabezado: 'Saldo a devolver', clave: (fila) => fila.saldo_a_devolver, orden: 3 },
+        ];
+
   constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder) {
     this.establecerMontoACancelarForm();
-    this.estableDevloverForm();
+   
   }
 
   ngOnInit(): void {
     this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
       this.mostrarDevolverFacturas = mensaje;
+      if(this.mostrarDevolverFacturas){
+        this.estableDevloverForm();
+      }
     });
   
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
@@ -86,7 +108,10 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
   public cancelar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
-
+  public devloverMonto(event: Event): void {
+   
+  }
+  
   /**
    * Método para establecer el formulario de búsqueda con su validación.
    * Inicializa el formulario de búsqueda con un campo 'tramite' que es obligatorio 
@@ -104,21 +129,18 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    */
   public estableDevloverForm(): void {
     this.devloverForm = this.fb.group({
-      folioTramite: [{ value: '', disabled: true }],
-      tipoDeSolicitud: [{ value: '', disabled: true }],
-      regimen: [{ value: '', disabled: true }],
-      condicionDeLaMercancia: [{ value: '', disabled: true }],
-      umt: [{ value: '', disabled: true }],
-      cantidad: [{ value: '', disabled: true }],
-      cdr: [{ value: '', disabled: true }],
-      usd: [{ value: '', disabled: true }],
-      fraccionArancelaria: [{ value: '', disabled: true }],
-      descripcionDeLaMercancia: [{ value: '', disabled: true }],
-      procedencia: [{ value: '', disabled: true }],
-      mercancia: [{ value: '', disabled: true }],
-      beneficioQueSeObtiene: [{ value: '', disabled: true }],
-      observaciones: [{ value: '', disabled: true }],
-    });
+      folioDelOficioDeCertificado: [{ value: '', disabled: true }],
+      montoDisponible: [{ value: '', disabled: true }],
+          });
+          this.cantidadADevolver = this.fb.group({
+            cantidad: [{ value: '', disabled: false }],
+            });
+
+            this.devolver = this.fb.group({
+              totalDevolver: [{ value: '', disabled: true }],
+              totalDevolverMetrosCuadrados: [{ value: '', disabled: true }],
+              });
+          
   }
 
    /**

@@ -24,6 +24,15 @@ export interface CertificadosDisponiblesDatos {
     datos: CertificadosDisponibles[];
 }
 
+export interface FacturasDisponiblesParaDevolver{
+    numero_de_factura: string;
+    importe_inicial: string;
+}
+export interface FacturasSeleccionadasParaDevolver{
+    numero_de_factura: string;
+    importe_inicial: string;
+    saldo_a_devolver: string;
+}
 /**
  * Función para crear el estado inicial de los datos de permiso.
  * Esta función crea y devuelve un objeto de tipo PermisosDatos, 
