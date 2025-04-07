@@ -100,6 +100,12 @@ const ROUTES: Routes = [
         (m) => m.AcuicolaFisicaModule
       ),
   },
+    { path: 'phytosanitary',
+    loadChildren: () =>
+      import('./tramites/221602/phytosanitary.module').then(
+        (m) => m.PhytosanitaryModule
+      ),
+  }
 ];
 
 @NgModule({
