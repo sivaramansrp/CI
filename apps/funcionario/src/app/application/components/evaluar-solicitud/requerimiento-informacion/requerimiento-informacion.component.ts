@@ -64,14 +64,13 @@ export class RequerimientoInformacionComponent implements OnInit, OnDestroy {
    */
   continuar(): void {
     /**
-     * @param IDTIPOREQUERIMIENTO
      * Indica el tpo de requerimiento de la infomación requerida donde se encuentran 3 opciones
      * 1.- Docuemntos
-     * 2.-Datos y Documentos
+     * 2.- Datos y Documentos
      * 3.- Datos 
      */
-    const IDTIPOREQUERIMIENTO = Number(this.requerimientoState.idTipoRequerimiento);
-    if (this.indiceDictamen === 2 || IDTIPOREQUERIMIENTO === 3) {
+    const DATOS = 3;
+    if (this.indiceDictamen === 2 || Number(this.requerimientoState.idTipoRequerimiento) === DATOS) {
       this.router.navigate(['funcionario/firma-electronica']);
     } else {
       this.indiceDictamen = 2;
