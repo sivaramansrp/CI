@@ -1,0 +1,9 @@
+.btn-group {
+    display: flex;        /* Enables horizontal alignment */
+    gap: 10px;            /* Adds spacing between buttons */
+    align-items: center;  /* Vertically aligns buttons */
+  }
+  
+  .btn {
+    white-space: nowrap;  /* Prevents buttons from wrapping to the next line */
+  }

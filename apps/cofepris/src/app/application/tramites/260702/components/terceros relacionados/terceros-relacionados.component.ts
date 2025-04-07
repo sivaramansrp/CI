@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable sort-imports */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
-import { TEXTOS } from '../../constants/constantes';
+import { TEXTOS } from '../../constants/constantes.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -31,13 +32,15 @@ export class TercerosrelacionadosComponent implements OnInit,OnDestroy {
    TEXTOS = TEXTOS;
    destinatarioForm!: FormGroup;
      private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-   
+     selectedRows: Set<number> = new Set();
+     selectedRow: any = null;
+
      destinatarioSeleccionTabla = TablaSeleccion.CHECKBOX;
       selectedDestinatario: Destinatario[] = [];
-      esFormularioVisible = true;
+      esFormularioVisible = false;
 
       constructor(private fb: FormBuilder,private registrarsolicitudmcp: RegistrarSolicitudMcpService ) {
-        
+        this.crearFormTransporte();
       }
        public paisData: CatalogosSelect = {
           labelNombre: 'Pais',
@@ -46,117 +49,113 @@ export class TercerosrelacionadosComponent implements OnInit,OnDestroy {
           catalogos: [],
         };
         tableData: Destinatario[] = [];
-   selectedRows: Set<number> = new Set();
+  //  selectedRows: Set<number> = new Set();
 
    destinatarioConfiguracionTabla: ConfiguracionColumna<Destinatario>[] = [
        {
          encabezado: 'Nombre/denominación o razón social',
-         clave: (fila) => fila.agregarDestinatario.nombre,
+         clave: (fila) => fila?.nombre || 'N/A', // Access `nombre` directly
          orden: 1,
        },
        {
          encabezado: 'R.F.C.',
-         clave:  (fila) => fila.agregarDestinatario.rfc,
+         clave:  (fila) => fila?.rfc || '---', // Access `rfc` directly
          orden: 2,
        },
        {
          encabezado: 'CURP',
-         clave:  (fila) => fila.agregarDestinatario.curp,
+         clave:  (fila) => fila?.curp || '---', // Access `curp` directly
          orden: 3,
        },
        {
          encabezado: 'Teléfono',
-         clave:  (fila) => fila.agregarDestinatario.telefono,
+         clave:  (fila) => fila?.telefono || 'N/A', // Access `telefono` directly
          orden: 4,
        },
        {
          encabezado: 'Correo electrónico',
-         clave:  (fila) => fila.agregarDestinatario.correoElectronico,
+         clave:  (fila) => fila?.correoElectronico || 'N/A', // Access `correoElectronico` directly
          orden: 5,
        },
        {
          encabezado: 'Calle',
-         clave:  (fila) => fila.agregarDestinatario.calle,
+         clave:  (fila) => fila?.calle || 'N/A', // Access `calle` directly
          orden: 6,
        },
        {
          encabezado: 'Número exterior',
-         clave:  (fila) => fila.agregarDestinatario.numeroExterior,
+         clave:  (fila) => fila?.numeroExterior || 'N/A', // Access `numeroExterior` directly
          orden: 7,
        },
        {
          encabezado: 'Número interior',
-         clave:  (fila) => fila.agregarDestinatario.numeroInterior,
+         clave:  (fila) => fila?.numeroInterior || 'N/A', // Access `numeroInterior` directly
          orden: 8,
        },
        {
          encabezado: 'País',
-         clave:  (fila) => fila.agregarDestinatario.pais,
+         clave:  (fila) => fila?.pais || 'N/A', // Access `pais` directly
          orden: 9,
        },
        {
          encabezado: 'Colonia',
-         clave:  (fila) => fila.agregarDestinatario.colonia,
+         clave:  (fila) => fila?.colonia || '---', // Access `colonia` directly
          orden: 10,
        },
        {
          encabezado: 'Municipio o alcaldía',
-         clave:  (fila) => fila.agregarDestinatario.municipio,
+         clave:  (fila) => fila?.municipio || '---', // Access `municipio` directly
          orden: 11,
        },
        {
          encabezado: 'Localidad',
-         clave:  (fila) => fila.agregarDestinatario.localidad,
+         clave:  (fila) => fila?.localidad || '---', // Access `localidad` directly
          orden: 12,
        },
        {
          encabezado: 'Estado',
-         clave:  (fila) => fila.agregarDestinatario.estado,
+         clave:  (fila) => fila?.estado || '---', // Access `estado` directly
          orden: 13,
        },
        {
          encabezado: 'Estado',
-         clave:  (fila) => fila.agregarDestinatario.estado2,
+         clave:  (fila) => fila?.estado2 || '---', // Access `estado2` directly
          orden: 14,
        },
        {
          encabezado: 'Código postal',
-         clave:  (fila) => fila.agregarDestinatario.codigo,
+         clave:  (fila) => fila?.codigopostal || 'N/A', // Access `codigo` directly
          orden: 15,
        },
      ];
-      ngOnInit(): void {
-      this.crearFormTransporte();
-      this.getPaisData();
-    }
-     crearFormTransporte(): void {
+     crearFormTransporte():void {
       this.destinatarioForm = this.fb.group({
         agregarDestinatario: this.fb.group({
+          tipoPersona: ['', Validators.required]
+        }),
+        datosPersonales: this.fb.group({
           nombre: ['', Validators.required],
-          rfc: [''],
-          curp: [''],
-          telefono: [''],
-          correoElectronico: [''],
-          calle: [''],
-          numeroExterior: [''],
-          numeroInterior: [''],
-          pais: [''],
-          colonia: [''],
-          municipio: [''],
-          localidad: [''],
-          estado: [''],
-          estado2: [''],
-          codigo: [''],
-          domicilio: [''],
+          primerApellido: ['', Validators.required],
+          segundoApellido: ['', Validators.required],
+          denominacion: ['', Validators.required],
+          pais: ['', Validators.required],
+          domicilio: ['', Validators.required],
+          estado:['', Validators.required],
+          codigopostal:['', Validators.required],
+          calle:['', Validators.required],
+          numeroExterior:['', Validators.required],
+          numeroInterior:['', Validators.required],
           lada: [''],
-          primerApellido: [''],
-          segundoApellido: [''],
-          denominacion: ['']
+          telefono: [''],
+          correoElectronico: ['']
         })
       });
     }
 
-   
+    ngOnInit(): void {
+      this.crearFormTransporte();
+      this.getPaisData();
+    }
 
     getPaisData(){
       this.registrarsolicitudmcp.getPaisData()
@@ -174,30 +173,97 @@ export class TercerosrelacionadosComponent implements OnInit,OnDestroy {
     }
   
     onGuardar() {
-      console.log("hi sravani")
-      this.esFormularioVisible = false;
-      const formData = { ...this.destinatarioForm.value };
-      console.log(formData);
-      formData.agregarDestinatario.pais = this.paisData.catalogos.find(
-        (item: Catalogo) => String(item.id) === String(formData.agregarDestinatario.pais),
-      )?.descripcion;
-  
-      console.log('Form Data:', formData); // Log the form data before adding to tableData
-      console.log('Form Data Before Push:', JSON.stringify(formData, null, 2)); // Log the form data before adding to tableData
-      this.tableData.push(formData);
-      console.log('Table Data After Push:', JSON.stringify(this.tableData, null, 2)); // Log the table data after adding the form data
-      console.log('Table Data:', this.tableData); // Log the table data after adding the form data
-      console.log('Table Data Structure:', JSON.stringify(this.tableData, null, 2)); // Log the full structure of tableData
-  }
-  
-    
-    onSelectedRowsChange(event: Event): void {
-      const selectedRows = (event as CustomEvent).detail as Destinatario[]; // Extract Destinatario[] from the event
+      const formData = this.destinatarioForm.value;
+      console.log('Form Data:', formData);
+
+      if (formData.agregarDestinatario) {
+        const destinatario = {
+          ...formData.agregarDestinatario,
+          ...formData.datosPersonales,// Merge nested objects into a flat structure
+          pais: this.getPaisName(formData.datosPersonales.pais) // Map the `pais` id to its description
+
+        };
+
+        console.log('Mapped Destinatario:', destinatario);
+
+        // Push the mapped data to the table
+        this.tableData.push(destinatario);
+      } else {
+        console.error('agregarDestinatario is undefined in formData:', formData);
+      }
+
+      console.log('Table Data:', JSON.stringify(this.tableData, null, 2)); // Log the table data
+      this.destinatarioForm.reset();
+      
+    }
+    private getPaisName(paisId: string): string {
+      const pais = this.paisData.catalogos.find((catalogo) => catalogo.id === Number(paisId));
+      return pais ? pais.descripcion : 'N/A'; // Return the description or 'N/A' if not found
+    }
+    onSelectedRowsChange(selectedRows: Destinatario[]): void {
       this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
       this.esFormularioVisible = false;
     }
+    eliminarMercancias(): void {
+      if (this.selectedRows.size > 0) {
+        // Filter out the rows that are not selected
+        this.tableData = this.tableData.filter((row) => !this.selectedRows.has(row.id));
+        // Clear the selected rows after deletion
+        this.selectedRows.clear();
+        console.log('Selected rows removed. Updated table data:', this.tableData);
+      } else {
+        console.warn('No rows selected for deletion.');
+      }
+    }
   
+   openModificarMercancias(): void {
+  if (this.selectedRows.size === 1) {
+    // Get the selected row ID
+    const selectedId = Array.from(this.selectedRows)[0];
 
+    // Find the corresponding row data in tableData
+    const selectedRowData = this.tableData.find((row) => row.id === selectedId);
+
+    if (selectedRowData) {
+      // Populate the form with the selected row's data
+      this.destinatarioForm.patchValue({
+        agregarDestinatario: {
+          tipoPersona: selectedRowData.tipoPersona,
+        },
+        datosPersonales: {
+          nombre: selectedRowData.nombre,
+          primerApellido: selectedRowData.primerApellido,
+          segundoApellido: selectedRowData.segundoApellido,
+          denominacion: selectedRowData.denominacion,
+          pais: selectedRowData.pais,
+          domicilio: selectedRowData.domicilio,
+          estado: selectedRowData.estado,
+          codigopostal: selectedRowData.codigopostal,
+          calle: selectedRowData.calle,
+          numeroExterior: selectedRowData.numeroExterior,
+          numeroInterior: selectedRowData.numeroInterior,
+          lada: selectedRowData.lada,
+          telefono: selectedRowData.telefono,
+          correoElectronico: selectedRowData.correoElectronico,
+        },
+      });
+
+      // Show the form for modification
+      this.esFormularioVisible = true;
+    } else {
+      console.error('Selected row data not found.');
+    }
+  } else {
+    console.warn('Please select exactly one row to modify.');
+  }
+}
+agregarMercancias(): void {
+  this.esFormularioVisible = true; // Show the form
+  this.destinatarioForm.reset(); // Reset the form for new data
+}
+cancelarFormulario(): void {
+  this.esFormularioVisible = false; // Hide the form
+}
     ngOnDestroy(): void {
       this.destroyed$.next(true);
       this.destroyed$.complete();

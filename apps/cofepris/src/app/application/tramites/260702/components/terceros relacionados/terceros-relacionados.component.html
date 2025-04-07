@@ -8,37 +8,46 @@
         <app-tabla-dinamica
           [tipoSeleccionTabla]="destinatarioSeleccionTabla"
           [configuracionTabla]="destinatarioConfiguracionTabla"
-           [datos]="tableData">
+           [datos]="tableData"
+           (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+           >
         </app-tabla-dinamica>
       </div>
-      <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+      <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
-          @if (selectedDestinatario.length > 0) {
+         <div>
           <button
+          *ngIf="selectedRows.size > 0"
             class="btn btn-default 3"
             type="button"
+            (click)="eliminarMercancias()"
           >
             Eliminar
           </button>
           <button
+          *ngIf="selectedRows.size === 1"
             type="button"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
             class="btn btn-default btn-space ms-3"
+            (click)="openModificarMercancias()"
+           
           >
             Modificar
           </button>
-          }
+          </div>
           <button
             type="button"
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+            (click)="agregarMercancias()"
           >
             Agregar
           </button>
         </div>
-      </div>
+      
+    </div>
       <div class="col-md-12 mt-5">
         <label class="form-label" for="">Destinatario(destino final)*:</label>
         <app-tabla-dinamica
@@ -47,12 +56,11 @@
         >
         </app-tabla-dinamica>
       </div>
-     
     </div>
 </div>
 </div>
 
-<div class="container">
+<div class="container" *ngIf="esFormularioVisible">
     <form [formGroup]="destinatarioForm" (ngSubmit)="onGuardar()">
       <ng-titulo titulo="Agregar destinatario (destino final)" />
       <ng-container formGroupName="agregarDestinatario">
@@ -73,6 +81,7 @@
         </div>
       </ng-container>
       <ng-titulo titulo="Datos personales" />
+      <ng-container formGroupName="datosPersonales">
         @if (selectedTipoPersona === 'fisica') {
         <div class="row">
           <div class="col-md-4 mb-3">
@@ -97,8 +106,8 @@
         } @if (selectedTipoPersona === 'moral') {
         <div class="row">
           <div class="col-md-8 mb-3">
-            <label class="form-label" for="denominación">Denominación/razón social*:</label>
-            <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+            <label class="form-label" for="nombre">Denominación/razón social*:</label>
+            <input class="form-control" id="nombre" type="text" formControlName="nombre"
              
                />
           </div>
@@ -114,7 +123,7 @@
             [catalogo]="paisData.catalogos" 
              [label]="'Pais'"
               [required]="true"
-              (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+             
               ></app-catalogo-select>
           </div>
           <div class="col-md-4 mb-3">
@@ -139,7 +148,7 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="numeroexterior">Numero exterior*:</label>
-                <input class="form-control" id="numeroexterior" type="text" formControlName="numeroexterior"
+                <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
                  
                    />
             </div>
@@ -173,11 +182,12 @@
             </div>
           </div>
         </div>
+      </ng-container>
       <div class="col-md-12 d-flex justify-content-end">
       <div class="btn-group">
-        <button class="btn btn-danger" type="button" >Modificar</button>
-        <button class="btn btn-danger" type="button" >Eliminar</button>
-        <button class="btn btn-primary me-2" type="submit" (click)="onGuardar()">Guardar</button>
+        <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" >Cancelar</button>
+        <button class="btn btn-danger" type="button" >Limpiar</button>
+        <button class="btn btn-primary me-2" type="button" (click)="onGuardar()">Guardar</button>
       </div>
     </div>
       </form>

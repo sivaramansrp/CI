@@ -13,12 +13,11 @@ import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { PagoDeDerechosComponent } from '../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { RegistroPageComponent } from './pages/registro-page/registro-page.component';
 import { ToastrService } from 'ngx-toastr';
 import { DatosdelasolicitudComponent } from './components/datos-del/datos-de-la-solicitud.component';
 import { TercerosrelacionadosComponent } from './components/terceros relacionados/terceros-relacionados.component';
-import { TramitesasociadosComponent } from './components/tramitesasociados/tramites-asociados..component';
+import { TramitesAsociadosComponent } from './components/tramitesasociados/tramites-asociados.component';
 import { RegistrarSolicitudMcpService } from './services/registrar-solicitud-mcp.service';
 import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-derecho.component'; 
 
@@ -29,14 +28,14 @@ import { PagoDeDerechoComponent } from './components/pagodederechos/pago-de-dere
     PasoTresComponent,
     PasoCuatroComponent,
     RegistroPageComponent,
+    
    
   ],
   imports: [
     DatosdelasolicitudComponent,
     PagoDeDerechoComponent,
     TercerosrelacionadosComponent,
-    TramitesasociadosComponent,
-    PagoDeDerechosComponent,
+    TramitesAsociadosComponent,
     AnexarDocumentosComponent,
     SolicitanteComponent,
     WizardComponent,

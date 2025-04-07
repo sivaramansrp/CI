@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RadioOpcion } from '../../models/radio.model';
-import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogosSelect, ConfiguracionColumna, InputFecha, InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudMCPModule } from '../../registrar-solicitud-mcp.module';
 import { ReplaySubject, takeUntil } from 'rxjs';
@@ -18,20 +18,40 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { FilaData, FilaData2 } from '../../models/fila-modal';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
+import { TEXTOS } from '../../constants/constantes.enum';
+import { CrossList,FECHAINICIAL,FECHAFINAL } from '../../models/destinatario.model';
+import { CrossListLable } from '../../models/destinatario.model';
+import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
+import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputFechaComponent,CrosslistComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   dataDeLaSolicitudForm!: FormGroup;
+  TEXTOS = TEXTOS;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   clavaScianForm!: FormGroup;
   public showClavaScianForm: boolean = false; 
   habilitarEstado: boolean = true;
+  hercelosSeleccionados!: string;
+  selectedMercanciasDatos: FilaData2[] = [];
+  public mercanciasConfiguracionTabla: FilaData2[] = [];
+  paisOrigen = false;
+  paisOrigenCrossList: CrossList = {} as CrossList;
+  paisProcedencisCrossList: CrossList = {} as CrossList;
+  paisProcedencisColapsable = false;
   @ViewChild('modalAlerta') modalElement!: ElementRef;
+  fechaInicialInput: InputFecha = FECHAINICIAL;
+  fechaFinalInput: InputFecha = FECHAFINAL;
+  
+usoEspecifico = false;
+usoEspecificoCrossList: CrossList = {} as CrossList;
+  
 
   opcionDeBotonDeRadio = [
     { label: 'Prórroga', value: 'prorroga' },
@@ -68,11 +88,34 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     primerOpcion: 'Selecciona un medio de transporte',
     catalogos: [],
   };
+  public delProducto: CatalogosSelect = {
+    labelNombre: 'Clasificacion del producto*:',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
+  public especificarData: CatalogosSelect = {
+    labelNombre: 'Especificar clasificación del producto:',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
+  public tipoProductoData: CatalogosSelect = {
+    labelNombre: 'Tipo de producto*:',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
    tableData: FilaData[] = []; 
    selectedRows: Set<number> = new Set();
+   
 
 // tableData: any = [];
+hacerlosRadioOptions = [
+  { label: 'No', value: 'no' },
+  { label: 'Sí', value: 'si' },
+];
 
   constructor(private fb: FormBuilder, private registrarsolicitudmcp: RegistrarSolicitudMcpService, private cdr: ChangeDetectorRef) {}
 
@@ -89,78 +132,80 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     },
 
 ]
-// configuracionColumnasoli2 : ConfiguracionColumna<FilaData2>[] = [
-//   {
-//     encabezado: 'Clasificación del producto',
-//     clave: (fila) => fila.clasificaionProductos,
-//     orden: 1,
-//   },
-//   {
-//     encabezado: 'Especificar Clasificación del producto',
-//     clave: (fila) => fila.especificarProducto,
-//     orden: 2,
-//   },
-//   {
-//     encabezado: 'Denominación específico del producto',
-//     clave: (fila) => fila.denominacionEspecifica,
-//     orden: 3,
-//   },
-//   {
-//     encabezado: 'Marca',
-//     clave: (fila) => fila.marca,
-//     orden: 4,
-//   },
-//   {
-//     encabezado: 'Fracción arancelaria',
-//     clave: (fila) => fila.fraccionArancelaria,
-//     orden: 5,
-//   },
-//   {
-//     encabezado: 'Descripción de la fracción arancelaria',
-//     clave: (fila) => fila.descripcionFraccionArancelaria,
-//     orden: 6,
-//   },
-//   {
-//     encabezado: 'Unidad de medida de comercialización (UMC)',
-//     clave: (fila) => fila.umc,
-//     orden: 7,
-//   },
-//   {
-//     encabezado: 'Cantidad UMC',
-//     clave: (fila) => fila.cantidadUMC,
-//     orden: 8,
-//   },
-//   {
-//     encabezado: 'Unidad de medida de tarifa (UMT)',
-//     clave: (fila) => fila.umt,
-//     orden: 9,
-//   },
-//   {
-//     encabezado: 'Cantidad UMT',
-//     clave: (fila) => fila.cantidadUMT,
-//     orden: 10,
-//   },
-//   {
-//     encabezado: 'País de origen',
-//     clave: (fila) => fila.paisDeOrigen,
-//     orden: 11,
-//   },
-//   {
-//     encabezado: 'País de procedencia',
-//     clave: (fila) => fila.paisDeProcedencia,
-//     orden: 12,
-//   },
-//   {
-//     encabezado: 'Tipo de producto',
-//     clave: (fila) => fila.tipoProducto,
-//     orden: 13,
-//   },
-//   {
-//     encabezado: 'Uso específico',
-//     clave: (fila) => fila.usoEspecifico,
-//     orden: 14,
-//   },
-// ];
+
+mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (fila) => fila.clasificaionProductos,
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar Clasificación del producto',
+    clave: (fila) => fila.especificarProducto,
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específico del producto',
+    clave: (fila) => fila.denominacionEspecifica,
+    orden: 3,
+  },
+  {
+    encabezado: 'Marca',
+    clave: (fila) => fila.marca,
+    orden: 4,
+  },
+  {
+    encabezado: 'Tipo de producto',
+    clave: (fila) => fila.tipoProducto,
+    orden: 5,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (fila) => fila.fraccionArancelaria,
+    orden: 6,
+  },
+  {
+    encabezado: 'Descripción de la fracción arancelaria',
+    clave: (fila) => fila.descripcionFraccionArancelaria,
+    orden: 7,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (fila) => fila.UMC,
+    orden: 8,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (fila) => fila.cantidadUMC,
+    orden: 9,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (fila) => fila.UMT,
+    orden: 10,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (fila) => fila.cantidadUMT,
+    orden: 11,
+  },
+  {
+    encabezado: 'País de origen',
+    clave: (fila) => fila.paisDeOrigen,
+    orden: 12,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (fila) => fila.paisDeProcedencia,
+    orden: 13,
+  },
+  
+  {
+    encabezado: 'Uso específico',
+    clave: (fila) => fila.usoEspecifico,
+    orden: 14,
+  },
+];
 
   ngOnInit(): void {
     this.dataDeLaSolicitudForm = this.fb.group({
@@ -174,6 +219,10 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     this.getClaveDescripcionDelData();
     this.getRegimenalqueData();
     this.getAduanaData();
+    this. getMercanciasData();
+    this.getEspificarData();
+    this.getClasificacionDelProductoData();
+    this.getTipoProductoData();
   }
   createclaveScianForm(){
     this.clavaScianForm = this.fb.group({
@@ -183,6 +232,16 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
       }),
   });
   }
+  paisOrigenColapsable(): void {
+    this.paisOrigen = !this.paisOrigen;
+  }
+  paisProcedencis_colapsable(): void {
+    this.paisProcedencisColapsable = !this.paisProcedencisColapsable;
+  }
+  usoEspecificoColapsable(): void {
+    this.usoEspecifico = !this.usoEspecifico;
+  }
+  
   getEstadosData() {
     this.registrarsolicitudmcp.getEstadosData()
       .pipe(takeUntil(this.destroyed$))
@@ -223,6 +282,35 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     // Habilitar todos los campos en el formulario Domicilio del Establecimiento
     this.dataDeLaSolicitudForm.enable();
     this.habilitarEstado = false;
+  }
+
+  getMercanciasData(){
+    this.registrarsolicitudmcp.getMercanciasData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.mercanciasConfiguracionTabla = data as unknown as FilaData2[];
+      });
+  }
+  getClasificacionDelProductoData(){
+    this.registrarsolicitudmcp.getClasificacionDelProductoData()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.delProducto.catalogos = data as Catalogo[];
+    });
+  }
+  getEspificarData(){
+    this.registrarsolicitudmcp.getEspificarData()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.especificarData.catalogos = data as Catalogo[];
+    });
+  }
+  getTipoProductoData(){
+    this.registrarsolicitudmcp.getTipoProductoData()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.tipoProductoData.catalogos = data as Catalogo[];
+    });
   }
 
   seleccionarEstablecimiento(): void {
@@ -272,6 +360,12 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
     this.showClavaScianForm = false; // Hide the form without submitting
     this.clavaScianForm.reset(); // Reset the form
   }
+  agregarMercanciaGrid(): void {
+    if (this.modalElement) {
+     const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+     MODAL_INSTANCE.show();
+   }
+ }
  
   ngOnDestroy(): void {
     this.destroyed$.next(true);

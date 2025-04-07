@@ -97,6 +97,7 @@ const ROUTES: Routes = [
         (m) => m.RegistrarSolicitudMCPModule
       ), // Ensure the file exists at this path or update the path to the correct location
   },
+
 ];
 
 @NgModule({
