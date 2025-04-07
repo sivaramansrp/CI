@@ -10,7 +10,7 @@ import { NgModule } from '@angular/core';
 import { AvisoDeReciclajeRoutingModule } from './aviso-de-reciclaje-routing.module';
 import { AvisoReciclajeComponent } from './pages/aviso-reciclaje/aviso-reciclaje.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
-import { SolicitudDatosSolicitanteComponent } from './solicitud-datos-solicitante/solicitud-datos-solicitante.component';
+import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-solicitante/solicitud-datos-solicitante.component';
 
 @NgModule({
   declarations: [
