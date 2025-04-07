@@ -1,118 +1,172 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FacturasDisponiblesParaDevolver } from '../../models/cancelacion-de-certificados.model';
+import { FacturasSeleccionadasParaDevolver } from '../../models/cancelacion-de-certificados.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+
+/**
+ * Componente para realizar la búsqueda de folios, visualización de datos de facturas
+ * y gestionar formularios relacionados con devoluciones y cancelaciones.
+ */
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
   styleUrl: './busqueda-folio.component.scss',
 })
-export class BusquedaFolioComponent {
-  public busquedaForm!: FormGroup;
-  public detalleDelPermisoForm!: FormGroup;
-  public detalleDelPermiso: boolean = false;
+export class BusquedaFolioComponent implements OnInit, OnDestroy {
 
+  /** Formulario para ingresar el monto a cancelar */
+  public montoACancelarForm!: FormGroup;
+
+  /** Formulario para mostrar los datos del certificado seleccionado para devolución */
+  public devloverForm!: FormGroup;
+
+  /** Formulario que captura la cantidad que se desea devolver */
+  public cantidadADevolver!: FormGroup;
+
+  /** Formulario que muestra los totales a devolver */
+  public devolver!: FormGroup;
+
+  /** Variable que indica si debe mostrarse el bloque de devolver facturas */
+  public mostrarDevolverFacturas!: boolean;
+
+  /** Variable que controla la visualización del formulario de búsqueda */
+  public mostrarBusqueda!: boolean;
+
+  /** Tipo de selección de filas para la tabla (checkbox) */
+  tipoSeleccionSolicitud: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /** Lista de facturas disponibles para devolución */
+  FacturasDisponiblesParaDevolverTabla: FacturasDisponiblesParaDevolver[] = [];
+
+  /** Lista de facturas seleccionadas para devolver */
+  FacturasSeleccionadasParaDevolverTabla: FacturasSeleccionadasParaDevolver[] = [];
+
+  /** Configuración de columnas para la tabla de facturas disponibles */
+  configuracionColumnasFacturasDisponiblesParaDevolver: ConfiguracionColumna<FacturasDisponiblesParaDevolver>[] = [
+    { encabezado: 'Numero de factura', clave: (fila) => fila.numero_de_factura, orden: 1 },
+    { encabezado: 'Importe inicial', clave: (fila) => fila.importe_inicial, orden: 2 },
+  ];
+
+  /** Configuración de columnas para la tabla de facturas seleccionadas */
+  configuracionColumnasFacturasSeleccionadasParaDevolver: ConfiguracionColumna<FacturasSeleccionadasParaDevolver>[] = [
+    { encabezado: 'Numero de factura', clave: (fila) => fila.numero_de_factura, orden: 1 },
+    { encabezado: 'Importe inicial', clave: (fila) => fila.importe_inicial, orden: 2 },
+    { encabezado: 'Saldo a devolver', clave: (fila) => fila.saldo_a_devolver, orden: 3 },
+  ];
+
+  /**
+   * Constructor del componente. Inyecta servicios necesarios y establece el formulario principal.
+   * @param servicioDeMensajesService Servicio de mensajería compartido entre componentes
+   * @param fb FormBuilder para crear los formularios reactivos
+   */
   constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder) {
-    this.establecerBusquedaForm();
-    this.estableDetalleDelPermisoForm();
+    this.establecerMontoACancelarForm();
+  }
+
+  /**
+   * Hook de inicialización. Se suscribe a los mensajes emitidos desde el servicio compartido
+   * para mostrar u ocultar formularios.
+   */
+  ngOnInit(): void {
+    this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
+      this.mostrarDevolverFacturas = mensaje;
+      if (this.mostrarDevolverFacturas) {
+        this.estableDevloverForm();
+      }
+    });
+
+    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
+      this.mostrarBusqueda = mensaje;
+    });
   }
 
   /**
    * Método que se ejecuta al realizar una búsqueda.
-   * Valida si el formulario de búsqueda es válido. Si es inválido, marca todos los campos como tocados.
-   * Si el formulario es válido, muestra el detalle del permiso y establece los datos correspondientes.
+   * Valida si el formulario de búsqueda es válido. Si no lo es, marca todos los campos como tocados.
+   * Si es válido, emite mensajes para mostrar detalles del permiso.
    * 
-   * @param event Evento que desencadena la búsqueda.
+   * @param event Evento que desencadena la acción
    */
-
-  public buscar(event: Event): void {
-    if (this.busquedaForm.invalid) {
-      this.busquedaForm.markAllAsTouched();
-      // alert('El formulario contiene errores. Por favor, corrígelos antes de continuar.');
+  public agregarSelect(event: Event): void {
+    if (this.montoACancelarForm.invalid) {
+      this.montoACancelarForm.markAllAsTouched();
       return;
     }
-
-    this.detalleDelPermiso = true;
-    this.establecerFormularioDeDetallesDe();
-  }
-
-   /**
-   * Método que se ejecuta al agregar datos.
-   * Envía un mensaje indicando que los datos del permiso han sido establecidos.
-   * 
-   * @param event Evento que desencadena la acción de agregar.
-   */
-
-  public agregar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
 
   /**
-   * Método que se ejecuta al cancelar la visualización del detalle del permiso.
-   * Establece la variable detalleDelPermiso a false, ocultando el detalle.
+   * Método que emite los mensajes necesarios para mostrar los detalles del permiso.
    * 
-   * @param event Evento que desencadena la acción de cancelar.
+   * @param event Evento que desencadena la acción
    */
-
-  public detalleCancelar(event: Event): void {
-    this.detalleDelPermiso = false;
+  public agregar(event: Event): void {
+    this.servicioDeMensajesService.enviarMensaje(false);
+    this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
+
 
   /**
    * Método que se ejecuta al cancelar la acción de búsqueda.
-   * Envía un mensaje para indicar que se ha cancelado la búsqueda.
+   * Emite un mensaje para ocultar el formulario de búsqueda.
    * 
-   * @param event Evento que desencadena la cancelación de la acción.
+   * @param event Evento que desencadena la cancelación
    */
-
   public cancelar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
   }
 
   /**
-   * Método para establecer el formulario de búsqueda con su validación.
-   * Inicializa el formulario de búsqueda con un campo 'tramite' que es obligatorio 
-   * y solo acepta números.
+   * Inicializa el formulario para ingresar el monto a cancelar.
+   * Aplica validaciones: requerido y solo números.
    */
-  public establecerBusquedaForm(): void {
-    this.busquedaForm = this.fb.group({
-      tramite: ['', [Validators.compose([Validators.required, Validators.pattern('^[0-9]+$')])]]
+  public establecerMontoACancelarForm(): void {
+    this.montoACancelarForm = this.fb.group({
+      monto: ['', [Validators.compose([Validators.required, Validators.pattern('^[0-9]+$')])]]
     });
   }
 
-   /**
-   * Método para establecer el formulario del detalle del permiso.
-   * Inicializa los campos del formulario como deshabilitados y vacíos.
+  /**
+   * Inicializa los formularios necesarios para mostrar los detalles de devolución:
+   * datos del certificado, cantidad a devolver y totales.
    */
-  public estableDetalleDelPermisoForm(): void {
-    this.detalleDelPermisoForm = this.fb.group({
-      folioTramite: [{ value: '', disabled: true }],
-      tipoDeSolicitud: [{ value: '', disabled: true }],
-      regimen: [{ value: '', disabled: true }],
-      condicionDeLaMercancia: [{ value: '', disabled: true }],
-      umt: [{ value: '', disabled: true }],
-      cantidad: [{ value: '', disabled: true }],
-      cdr: [{ value: '', disabled: true }],
-      usd: [{ value: '', disabled: true }],
-      fraccionArancelaria: [{ value: '', disabled: true }],
-      descripcionDeLaMercancia: [{ value: '', disabled: true }],
-      procedencia: [{ value: '', disabled: true }],
-      mercancia: [{ value: '', disabled: true }],
-      beneficioQueSeObtiene: [{ value: '', disabled: true }],
-      observaciones: [{ value: '', disabled: true }],
+  public estableDevloverForm(): void {
+    this.devloverForm = this.fb.group({
+      folioDelOficioDeCertificado: [{ value: '', disabled: true }],
+      montoDisponible: [{ value: '', disabled: true }],
+    });
+
+    this.cantidadADevolver = this.fb.group({
+      cantidad: [{ value: '', disabled: false }],
+    });
+
+    this.devolver = this.fb.group({
+      totalDevolver: [{ value: '', disabled: true }],
+      totalDevolverMetrosCuadrados: [{ value: '', disabled: true }],
     });
   }
 
-   /**
-   * Método para establecer los valores en el formulario de detalles de permiso.
-   * Se utiliza para actualizar el formulario con los datos correspondientes al detalle de la solicitud.
+  /**
+   * Establece los valores en el formulario de detalles del permiso a partir de un JSON de datos.
    */
   public establecerFormularioDeDetallesDe(): void {
-    this.detalleDelPermisoForm.patchValue(formData);
+    this.devloverForm.patchValue(formData);
   }
 
+  /**
+   * Hook de destrucción del componente.
+   * Limpia el estado relacionado con los datos del permiso en el servicio de mensajes.
+   */
+  ngOnDestroy(): void {
+    this.servicioDeMensajesService.establecerDatosDePermiso(false);
+  }
 }

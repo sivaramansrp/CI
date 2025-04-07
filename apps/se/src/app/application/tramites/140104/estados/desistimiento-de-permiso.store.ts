@@ -1,17 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Store, StoreConfig } from '@datorama/akita';
 import {
-    Cancelacion,
-    PermisosDatos,
+    CuposDisponibles,
+    CuposDisponiblesDatos,
     createDatosState,
 } from '../models/cancelacion-de-certificados.model';
+import { Injectable } from '@angular/core';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
+
 @Injectable({
     providedIn: 'root',
 })
 
 @StoreConfig({ name: 'desistimiento-de-permiso', resettable: true })
 
-export class DesistimientoStore extends Store<PermisosDatos> {
+export class DesistimientoStore extends Store<CuposDisponiblesDatos> {
     constructor() {
         super(createDatosState());
     }
@@ -24,7 +26,7 @@ export class DesistimientoStore extends Store<PermisosDatos> {
      * @param datos Array de objetos de tipo Cancelacion que se va a actualizar en el estado.
      */
     
-    public actualizarDatosForma(datos: Cancelacion[]): void {
+    public actualizarDatosForma(datos: CuposDisponibles[]): void {
         this.update(state => ({
             datos
         }));

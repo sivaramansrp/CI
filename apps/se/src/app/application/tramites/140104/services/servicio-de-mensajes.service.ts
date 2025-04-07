@@ -1,87 +1,103 @@
-import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-
-import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-certificados.model';
+import { BehaviorSubject } from 'rxjs';
+import { CuposDisponibles } from '../models/cancelacion-de-certificados.model';
+import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
-
+/**
+ * Servicio que centraliza la comunicación entre componentes a través de mensajes observables.
+ * También interactúa con el store para gestionar y actualizar los datos del formulario de desistimiento.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class ServicioDeMensajesService {
   /**
-   * @description Subject that acts as the source of boolean messages.
-   * It is used to communicate state changes or signals across the application.
-   * @type {Subject<boolean>}
+   * Fuente de emisión de mensajes booleanos generales.
+   * Utilizado para comunicar cambios de estado entre componentes.
    */
-  private fuenteDelMensaje = new Subject<boolean>();
+  private fuenteDelMensaje = new BehaviorSubject<boolean>(false);
+
   /**
-   * @description Observable that emits messages to subscribers.
-   * Components can subscribe to this observable to react to state changes.
-   * @type {Observable<boolean>}
+   * Fuente de emisión de mensajes específicos para mostrar/ocultar la sección de devolución de facturas.
+   */
+  private devolverFacturasMensaje = new BehaviorSubject<boolean>(false);
+
+  /**
+   * Observable expuesto para suscripción a mensajes generales.
+   * Los componentes pueden usarlo para reaccionar ante cambios en el estado.
    */
   mensaje$ = this.fuenteDelMensaje.asObservable();
-/**
-   * @description Subject that manages permission data updates.
-   * Used to notify subscribers about changes in permission data state.
-   * @type {Subject<boolean>}
+
+  /**
+   * Observable expuesto para la visualización de la sección de devolución de facturas.
+   */
+  devolverFacturasMensaje$ = this.devolverFacturasMensaje.asObservable();
+
+  /**
+   * Subject que maneja la emisión del estado de los datos de permiso.
    */
   private datosDePermiso = new Subject<boolean>();
 
   /**
-   * @description Observable that emits permission data status to subscribers.
-   * @type {Observable<boolean>}
+   * Observable que expone el estado actual de los datos de permiso.
+   * Indica si los datos del formulario han sido establecidos o no.
    */
   datos$ = this.datosDePermiso.asObservable();
-/**
-   * @description Service constructor.
-   * Initializes the service and provides access to the DesistimientoStore.
-   * 
-   * @param {DesistimientoStore} desistimientoStore - Store responsible for managing form data.
-   */
-  constructor(private readonly desistimientoStore: DesistimientoStore) {
-
-  }
 
   /**
-   * Método para enviar un mensaje de tipo booleano a los suscriptores.
-   * Este mensaje puede ser utilizado para comunicar estados o señales dentro de la aplicación.
+   * Constructor del servicio.
+   * Inyecta el store de desistimiento, encargado de mantener el estado del formulario.
    * 
-   * @param mensaje El valor booleano que se enviará a los suscriptores.
+   * @param desistimientoStore Store para gestionar los datos del formulario de desistimiento.
    */
-  enviarMensaje(mensaje: boolean) {
+  constructor(private readonly desistimientoStore: DesistimientoStore) {}
+
+  /**
+   * Envía un mensaje general a través del observable `mensaje$`.
+   * 
+   * @param mensaje Valor booleano que será emitido.
+   */
+  enviarMensaje(mensaje: boolean): void {
     this.fuenteDelMensaje.next(mensaje);
   }
 
   /**
-   * Método para establecer el estado de los datos de permiso.
-   * Envía un valor booleano a los suscriptores indicando si los datos de permiso 
-   * están disponibles o no.
+   * Envía un mensaje para mostrar u ocultar la sección de devolución de facturas.
    * 
-   * @param valor El valor booleano que se enviará para indicar el estado de los datos de permiso.
+   * @param mensaje Valor booleano que será emitido.
    */
-  establecerDatosDePermiso(valor: boolean) {
+  enviarDevolverFacturasMensaje(mensaje: boolean): void {
+    this.devolverFacturasMensaje.next(mensaje);
+  }
+
+  /**
+   * Establece el estado de los datos de permiso.
+   * Permite notificar a otros componentes si se ha establecido o limpiado el formulario.
+   * 
+   * @param valor Valor booleano que indica el estado del formulario de permiso.
+   */
+  establecerDatosDePermiso(valor: boolean): void {
     this.datosDePermiso.next(valor);
   }
 
-   /**
-   * Método para actualizar los datos del formulario de desistimiento en el store.
-   * Envía un array de objetos de tipo Cancelacion al store para actualizar el estado 
-   * de los datos relacionados.
+  /**
+   * Actualiza los datos del formulario de desistimiento en el store.
    * 
-   * @param valor Array de objetos de tipo Cancelacion con los nuevos datos del formulario.
+   * @param valor Array de objetos de tipo `CuposDisponibles` que contiene los nuevos datos.
    */
-  actualizarDatosForma(valor: Cancelacion[]) {
-    this.desistimientoStore.actualizarDatosForma(valor as Cancelacion[]);
+  actualizarDatosForma(valor: CuposDisponibles[]): void {
+    this.desistimientoStore.actualizarDatosForma(valor as CuposDisponibles[]);
   }
 
-   /**
-   * Método para obtener los datos del store.
-   * Devuelve el estado completo de los permisos de desistimiento desde el store.
+  /**
+   * Obtiene el estado actual del formulario desde el store.
    * 
-   * @returns Un observable que emite el estado completo de los permisos de desistimiento.
+   * @returns Observable que emite el estado completo del formulario de desistimiento.
    */
-  public obtenerDatos(): Observable<PermisosDatos> {
-    return this.desistimientoStore._select(state => state); // Devuelve el estado completo
+  public obtenerDatos(): Observable<CuposDisponiblesDatos> {
+    return this.desistimientoStore._select(state => state);
   }
 }

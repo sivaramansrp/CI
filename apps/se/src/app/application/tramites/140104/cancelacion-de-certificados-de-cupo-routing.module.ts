@@ -1,8 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { IntroPermisoComponent } from './pages/intro-permiso/intro-permiso.component';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { Routes } from '@angular/router';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
       path: 'solicitante',
       component: IntroPermisoComponent,
@@ -15,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class CancelacionDeCertificadosDeCupoRoutingModule { }

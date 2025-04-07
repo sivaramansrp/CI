@@ -67,6 +67,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  mostrarDevolverFacturas: boolean = false;
 
   /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
@@ -95,6 +96,9 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
   ngOnInit() {
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
+    });
+    this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
+      this.mostrarDevolverFacturas = mensaje;
     });
   }
   /**
