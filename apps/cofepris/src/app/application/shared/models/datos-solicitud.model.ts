@@ -163,14 +163,14 @@ export enum TablaSeleccion {
 export interface TablaMercanciasDatos {
   clasificacionProducto: string;
   especificarClasificacionProducto: string;
-  denominacionEspecificaProducto: string;
-  denominacionDistintiva: string;
-  denominacionComun: string;
+  denominacionEspecificaProducto?: string;
+  denominacionDistintiva?: string;
+  denominacionComun?: string;
   formaFarmaceutica: string;
   estadoFisico: string;
   fraccionArancelaria: string;
-  descripcionFraccion: string;
-  unidadMedidaComercializacion: string;
+  descripcionFraccion?: string;
+  unidadMedidaComercializacion?: string;
   cantidadUMC: string;
   unidadMedidaTarifa: string;
   cantidadUMT: string;
@@ -180,6 +180,16 @@ export interface TablaMercanciasDatos {
   paisProcedencia: string;
   tipoProducto: string;
   usoEspecifico: string;
+  detallarUsoEspecifico?:string,
+  numeroDePiezasAFabricar?:string,
+  descripcionNumeroDePiezas?:string,
+  numeroCAS?:string;
+  cantidadDeLotes?:string
+  kgPorLote?:string,
+  paisDeDestino?:string,
+  denominacionCumonInternacional?:string;
+  marcaComercialDenominación?:string;
+
 }
 
 /**

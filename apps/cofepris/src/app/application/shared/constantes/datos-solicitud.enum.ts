@@ -107,18 +107,18 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Denominación específica del producto',
-    clave: (ele: TablaMercanciasDatos): string =>
+    clave: (ele: TablaMercanciasDatos): string |undefined =>
       ele.denominacionEspecificaProducto, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
     orden: 3,
   },
   {
     encabezado: 'Denominación distintiva',
-    clave: (ele: TablaMercanciasDatos): string => ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.denominacionDistintiva, // Reemplaza 'ele.denominacionDistintiva' con la clave correcta
     orden: 4,
   },
   {
     encabezado: 'Denominación común, nombre común o nombre científico',
-    clave: (ele: TablaMercanciasDatos): string => ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.denominacionComun, // Reemplaza 'ele.denominacionComun' con la clave correcta
     orden: 5,
   },
   {
@@ -138,12 +138,12 @@ export const PRODUCTO_TABLA = [
   },
   {
     encabezado: 'Descripción de la fracción',
-    clave: (ele: TablaMercanciasDatos): string => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 9,
   },
   {
     encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (ele: TablaMercanciasDatos): string =>
+    clave: (ele: TablaMercanciasDatos): string |undefined=>
       ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
     orden: 10,
   },

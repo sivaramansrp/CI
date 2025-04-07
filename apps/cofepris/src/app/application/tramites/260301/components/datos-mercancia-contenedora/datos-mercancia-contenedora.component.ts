@@ -90,9 +90,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
     const SELECCIONADO_MERCANCIA = {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
-      denominacionEspecificaProducto: event.denominacionEspecificaProducto,
-      denominacionDistintiva: event.denominacionComun,
-      denominacionComun: event.denominacionComun,
+      denominacionCumonInternacional: event.denominacionCumonInternacional,
+      marcaComercialDenominación: event.marcaComercialDenominación,
+      cantidadDeLotes: event.cantidadDeLotes,
       formaFarmaceutica: event.formaFarmaceutica,
       estadoFisico: event.estadoFisico,
       fraccionArancelaria: event.fraccionArancelaria,
