@@ -80,12 +80,13 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Indica si el usuario tiene permiso para realizar ciertas acciones.
    */
-  public datosDePermiso: boolean = false;
+  datosDePermiso: boolean = false;
 
   formularioGrupo!: FormGroup;
   myForm: FormGroup;
   montoForm: FormGroup;
   cancelacionForm: FormGroup;
+ 
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) {
     this.formularioGrupo = new FormGroup({
@@ -200,5 +201,11 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
 
   public seleccionar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(true);
+    this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
+  }
+  public devlover(event: Event): void {
+    this.servicioDeMensajesService.enviarMensaje(true);
+    this.servicioDeMensajesService.enviarDevolverFacturasMensaje(true);
+    
   }
 }

@@ -1,15 +1,15 @@
 <div class="container">
 
-    <ng-titulo *ngIf="!detalleDelPermiso" titulo="Captura monto a favor del certificado" />
-    <div *ngIf="!detalleDelPermiso">
-        <form [formGroup]="busquedaForm">
+    <ng-titulo *ngIf="mostrarBusqueda && !mostrarDevolverFacturas" titulo="Captura monto a favor del certificado" />
+    <div *ngIf="mostrarBusqueda && !mostrarDevolverFacturas">
+        <form [formGroup]="montoACancelarForm">
             <div class="row">
                 <div class="col-md-8">
-                    <label class="form-label" for="tramite">*Monto a cancelar (en unidades primarias)</label>
-                    <input type="text" class="form-control" id="tramite" formControlName="tramite">
-                    <div *ngIf="busquedaForm.controls['tramite'].invalid && busquedaForm.controls['tramite'].touched">
-                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['required']">*El campo no puede estar vacío.</small>
-                        <small *ngIf="busquedaForm.controls['tramite'].errors?.['pattern']">*Solo se permiten números.</small>
+                    <label class="form-label" for="monto">*Monto a cancelar (en unidades primarias)</label>
+                    <input type="text" class="form-control" id="monto" formControlName="monto">
+                    <div *ngIf="montoACancelarForm.controls['monto'].invalid && montoACancelarForm.controls['monto'].touched">
+                        <small *ngIf="montoACancelarForm.controls['monto'].errors?.['required']">*El campo no puede estar vacío.</small>
+                        <small *ngIf="montoACancelarForm.controls['monto'].errors?.['pattern']">*Solo se permiten números.</small>
                       </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                 
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-                    (click)="agregarSelect($event)">Agregar</button>
+                    (click)="agregar($event)">Agregar</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
                     (click)="cancelar($event)">Cancelar</button>
@@ -30,9 +30,9 @@
         </div>
     </div>
     
-    <ng-titulo *ngIf="detalleDelPermiso" titulo="Detalle del permiso" />
-    <div *ngIf="detalleDelPermiso">
-        <form [formGroup]="detalleDelPermisoForm">
+    <ng-titulo *ngIf="mostrarBusqueda && mostrarDevolverFacturas" titulo="Detalle del permiso" />
+    <div *ngIf="mostrarBusqueda && mostrarDevolverFacturas">
+        <form [formGroup]="devloverForm">
             <div class="row">
                 <div class="col-md-4">
                     <label class="form-label" for="folioTramite">Folio Trámite:

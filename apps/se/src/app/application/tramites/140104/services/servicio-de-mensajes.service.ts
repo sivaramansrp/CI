@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { CuposDisponibles, CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
@@ -14,13 +14,15 @@ export class ServicioDeMensajesService {
    * It is used to communicate state changes or signals across the application.
    * @type {Subject<boolean>}
    */
-  private fuenteDelMensaje = new Subject<boolean>();
+  private fuenteDelMensaje = new BehaviorSubject<boolean>(false);
+  private devolverFacturasMensaje = new BehaviorSubject<boolean>(false);
   /**
    * @description Observable that emits messages to subscribers.
    * Components can subscribe to this observable to react to state changes.
    * @type {Observable<boolean>}
    */
   mensaje$ = this.fuenteDelMensaje.asObservable();
+  devolverFacturasMensaje$ = this.devolverFacturasMensaje.asObservable();
 /**
    * @description Subject that manages permission data updates.
    * Used to notify subscribers about changes in permission data state.
@@ -53,6 +55,9 @@ export class ServicioDeMensajesService {
     this.fuenteDelMensaje.next(mensaje);
   }
 
+  enviarDevolverFacturasMensaje(mensaje: boolean) {
+    this.devolverFacturasMensaje.next(mensaje);
+  }
   /**
    * Método para establecer el estado de los datos de permiso.
    * Envía un valor booleano a los suscriptores indicando si los datos de permiso 

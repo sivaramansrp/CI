@@ -37,6 +37,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @default false
    */
   public mostrarBusqueda: boolean = false;
+  public mostrarDevolverFacturas: boolean= false;
 
 
   /**
@@ -76,6 +77,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
     });
+    this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
+      this.mostrarDevolverFacturas  = mensaje;
+    });
   }
 
   /**
@@ -85,6 +89,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  */
   ngOnDestroy() {
     this.servicioDeMensajesService.enviarMensaje(false);
+    this.servicioDeMensajesService.enviarDevolverFacturasMensaje(false);
   }
 
 }
