@@ -9,15 +9,16 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="rfcdel">RFC del responsable sanitario:</label>
-          <input class="form-control" id="rfcdel" formControlName="rfcdel" placeholder="" type="text">
+          <input class="form-control" id="rfcDel" formControlName="rfcDel" placeholder="" type="text"
+            (change)="setValoresStore(datosDelForm,'rfcDel', 'setRfcDel')">
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="denominacionRazonSocial">Denominación o razón social*:</label>
           <input class="form-control" id="denominacionRazonSocial" placeholder="" type="text" maxlength="254" size="75"
-            [readonly]="true" formControlName="denominacionRazonSocial"
-            (change)="setValoresStore(datosDelForm,'denominacion', 'setDenominacion')">
+            formControlName="denominacionRazonSocial"
+            (change)="setValoresStore(datosDelForm,'denominacionRazonSocial', 'setDenominacionRazonSocial')">
         </div>
       </div>
     </div>
@@ -26,9 +27,9 @@
         <div class="form-group">
           <label class="form-label" for="correoElectronico">Correo electrónico:<i
               class="bi bi-question-circle-fill"></i></label>
-          <input class="form-control" id="correoElectronico"    maxlength="320"
-          size="29" formControlName="correoElectronico" placeholder=""
-            type="text" (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
+          <input class="form-control" id="correoElectronico" maxlength="320" size="29"
+            formControlName="correoElectronico" placeholder="" type="text"
+            (change)="setValoresStore(datosDelForm,'correoElectronico', 'setCorreoElectronico')">
         </div>
       </div>
     </div>

@@ -19,10 +19,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import {
-  DatosDomicilioLegalState,
-  DatosDomicilioLegalStore,
-} from '../../estados/stores/datos-domicilio-legal.store';
+
 import {
   FormBuilder,
   FormControl,
@@ -40,18 +37,55 @@ import {
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';  
+
+import { AvisocalidadStore, SolicitudState} from '../../estados/stores/aviso-calidad.store';
+
+/**
+ * Representa la estructura de la respuesta de una tabla.
+ */
 export interface RespuestaTabla {
+  /**
+   * Código de estado de la respuesta.
+   * @type {number}
+   */
   code: number;
+
+  /**
+   * Datos de tipo NicoInfo que contiene la respuesta.
+   * @type {NicoInfo[]}
+   */
   data: NicoInfo[];
+
+  /**
+   * Mensaje descriptivo de la respuesta.
+   * @type {string}
+   */
   message: string;
 }
 
+/**
+ * Interfaz que representa la estructura de datos para la tabla de mercancías.
+ */
 export interface MercanciasTabla {
+  /**
+   * Código de estado que indica el resultado de la operación.
+   * @type {number}
+   */
   code: number;
+
+  /**
+   * Lista de información detallada sobre las mercancías.
+   * @type {MercanciasInfo[]}
+   */
   data: MercanciasInfo[];
+
+  /**
+   * Mensaje descriptivo relacionado con el resultado de la operación.
+   * @type {string}
+   */
   message: string;
 }
 
@@ -81,7 +115,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   /**
    * Estado de la solicitud.
    */
-  public solicitudState!: DatosDomicilioLegalState;
+  public solicitudState!: SolicitudState;
 
   /**
    * Notificador para destruir observables.
@@ -101,8 +135,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    */
   constructor(
     public readonly fb: FormBuilder,
-    private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
-    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private avisocalidadStore: AvisocalidadStore,
+    private avisocalidadQuery: AvisocalidadQuery,
     private service: DatosDomicilioLegalService
   ) {
     // constructor
@@ -246,7 +280,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
-    this.DatosDomicilioLegalQuery.selectSolicitud$
+    this.avisocalidadQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -270,9 +304,6 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       licenciaSanitaria: [
       { value: this.solicitudState?.licenciaSanitaria, disabled: false },
       ],
-      regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
-      numeroPermiso: [this.solicitudState?.numeroPermiso],
     });
 
     this.formAgente = this.fb.group({
@@ -325,94 +356,6 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     },
   ];
 
-  /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
-   */
-  readonly paisDeProcedenciaBotonesDuos = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[1].quitar('t'),
-    },
-  ];
-
-  /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
-   */
-  readonly paisDeProcedenciaBotonesTres = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[2].quitar('t'),
-    },
-  ];
-  /**
-   * Botones de acción disponibles para gestionar las listas de fechas.
-   */
-  readonly paisDeProcedenciaBotonesCuatro = [
-    {
-      btnNombre: 'Agregar todos',
-      class: 'btn-primary',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar('t'),
-    },
-    {
-      btnNombre: 'Agregar selección',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].agregar(''),
-    },
-    {
-      btnNombre: 'Restar selección',
-      class: 'btn-danger',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar(''),
-    },
-    {
-      btnNombre: 'Restar todos',
-      class: 'btn-default',
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      funcion: () => this.crossList.toArray()[3].quitar('t'),
-    },
-  ];
 
   /**
    * Método para obtener el valor de la fecha seleccionada.
@@ -452,23 +395,10 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   }
 
   /**
-   * Método para obtener el valor de la fecha seleccionada.
-   * @param event
-   */
-  onAvisoCheckboxChange(event: Event): void {
-    const CHECKBOX = event.target as HTMLInputElement;
-    if (CHECKBOX.checked) {
-      this.domicilio.get('licenciaSanitaria')?.disable();
-    } else {
-      this.domicilio.get('licenciaSanitaria')?.enable();
-    }
-  }
-
-  /**
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableDuos
    */
-  mostrar_colapsableDuos() {
+  mostrar_colapsableDuos(): void {
     this.colapsableDuos = !this.colapsableDuos;
   }
 
@@ -476,27 +406,21 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsableTres
    */
-  mostrar_colapsableTres() {
+  mostrar_colapsableTres(): void {
     this.colapsableTres = !this.colapsableTres;
   }
-  /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+
+    /**
+   * @description
+   * Método que actualiza el estado del store con los valores del formulario.
+   * @param form Formulario reactivo.
+   * @param campo Campo del formulario que se desea actualizar.
+   * @param metodoNombre Nombre del método del store que se invocará.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof DatosDomicilioLegalStore
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (
-      this.DatosDomicilioLegalStore[metodoNombre] as (
-        value: string | number | boolean
-      ) => void
-    )(VALOR);
-  }
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
+      const VALOR = form.get(campo)?.value;
+      (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    }
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
