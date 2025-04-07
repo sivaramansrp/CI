@@ -22,6 +22,11 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
+  
+  {
+    path: 'aviso-exportacion',
+    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)  
+  },
   {
     path: 'maquila-materias-primas',
     loadChildren: () =>
@@ -111,10 +116,7 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
-  {
-  path: 'aviso-de-importacion',
-    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)  
-  },
+ 
   {
     path: 'territorio-nacional',
     loadChildren: () =>
