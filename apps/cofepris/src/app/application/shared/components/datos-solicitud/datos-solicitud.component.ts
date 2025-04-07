@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDomicilioLegalState,
   DatosDomicilioLegalStore,
@@ -35,6 +35,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './datos-solicitud.component.css',
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
+  @Input() isAvisoLicenciaVisible: boolean = true;
+  @Input() isAduanasEntradaVisible: boolean = false;
   /**
    * Estado de la solicitud.
    */
