@@ -30,12 +30,14 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
 import {
-  MERCANCIAS_DATA,
+  DATOS_MERCANCIAS,
   MercanciasInfo,
   NICO_TABLA,
   NicoInfo,
 } from '../../models/datos-domicilio-legal.model';
+
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
@@ -160,7 +162,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
   /**
    * Tabla de selección de checkbox.
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = DATOS_MERCANCIAS;
 
   /**
    * Datos de la tabla de selección de checkbox.
@@ -460,14 +462,6 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     } else {
       this.domicilio.get('licenciaSanitaria')?.enable();
     }
-  }
-
-  /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @method mostrar_colapsable
-   */
-  mostrar_colapsable() {
-    this.colapsable = !this.colapsable;
   }
 
   /**

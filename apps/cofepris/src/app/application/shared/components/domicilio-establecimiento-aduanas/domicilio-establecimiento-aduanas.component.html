@@ -146,8 +146,7 @@
           id="avisoCheckbox"
           formControlName="avisoCheckbox"
           (change)="
-            onAvisoCheckboxChange($event);
-            setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
+           setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
           "
         />
         <label class="form-check-label" for="avisoCheckbox">
@@ -312,7 +311,7 @@
           </div>
           <div class="form-group">
             <label for="nombreComun"
-              >nombre común:</label
+              >Nombre común:</label
             >
             <input
               type="text"
@@ -330,7 +329,7 @@
           </div>
           <div class="form-group">
             <label for="nombreCientifico"
-              >nombre científico:</label
+              >Nombre científico:</label
             >
             <input
               type="text"
@@ -348,7 +347,7 @@
           </div>
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start"
-              >uso específico:</label
+              >Uso específico:</label
             >
             <textarea
               id="usoEspecifico"
@@ -394,7 +393,7 @@
             </div>
             <div class="form-group">
               <label for="descripcionFraccion"
-                >descripción de la fracción:</label
+                >Descripción de la fracción:</label
               >
               <input
                 type="text"
@@ -480,7 +479,7 @@
             </div>
             <div class="form-group">
               <label for="porcentajeConcentracion"
-                >porcentaje de concentración:</label
+                >Porcentaje de concentración:</label
               >
               <input
                 type="text"
@@ -511,6 +510,7 @@
                     class="collpase-button collapsed"
                   ></button>
                 </div>
+                @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist
@@ -520,6 +520,7 @@
                     ></crosslist>
                   </div>
                 </div>
+              }
               </div>
             </div>
           </div>
@@ -528,15 +529,16 @@
                 <div class="panel panel-default">
                   <div
                     class="panel-heading"
-                    (click)="mostrar_colapsableTres()"
+                    (click)="mostrar_colapsableDuos()"
                     tabindex="0"
                   >
-                    <p class="panel-title">país de procedencia/país de último puerto de embarque</p>
+                    <p class="panel-title">País de procedencia/país de último puerto de embarque</p>
                     <button
                       type="button"
                       class="collpase-button collapsed"
                     ></button>
                   </div>
+                  @if(colapsableDuos){
                   <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
                       <crosslist
@@ -546,6 +548,7 @@
                       ></crosslist>
                     </div>
                   </div>
+                }
                 </div>
               </div>
             </div>
@@ -553,7 +556,7 @@
               <app-catalogo-select
                 [catalogo]="estado"
                 formControlName="clasificacionToxicologica"
-                [label]="'clasificación toxicológica'"
+                [label]="'Clasificación toxicológica'"
                 [required]="true"
                 name="clasificacionToxicologica"
                 (change)="
@@ -565,7 +568,7 @@
               <app-catalogo-select
                 [catalogo]="estado"
                 formControlName="objetoImportacion"
-                [label]="'objeto de importación'"
+                [label]="'Objeto de importación'"
                 [required]="true"
                 name="objetoImportacion"
                 (change)="
