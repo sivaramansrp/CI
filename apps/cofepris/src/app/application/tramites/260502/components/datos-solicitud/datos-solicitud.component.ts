@@ -11,4 +11,6 @@ import { DatosDeLaComponent } from '../../../../shared/components/datos-solicitu
 })
 export class DatosSolicitudComponent {
   isAvisoLicenciaVisible: boolean = false;
+  isAduanasEntradaVisible: boolean = true;
+
 }

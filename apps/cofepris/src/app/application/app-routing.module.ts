@@ -130,7 +130,7 @@ const ROUTES: Routes = [
       import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
         (m) => m.PermisoSanitarioImportacion260203Module
       ),
-  }
+  },
   {
     path: 'muestras-plaguicidas',
     loadChildren: () =>
