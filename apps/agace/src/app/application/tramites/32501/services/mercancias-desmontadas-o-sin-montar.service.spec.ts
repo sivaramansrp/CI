@@ -3,21 +3,20 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import { MercDesmSinMonService } from './merc-desm-sin-mon.service';
+import { MercanciasDesmontadasOSinMontarService } from './mercancias-desmontadas-o-sin-montar.service';
 import { AvisoCatalogo } from '../models/aviso-catalogo.model';
 import { OperacionDeImportacion } from '../models/aviso-catalogo.model';
-import { RequisitosObligatorios } from '../models/aviso-catalogo.model';
 
-describe('MercDesmSinMonService', () => {
-  let service: MercDesmSinMonService;
+describe('MercanciasDesmontadasOSinMontarService', () => {
+  let service: MercanciasDesmontadasOSinMontarService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [MercDesmSinMonService],
+      providers: [MercanciasDesmontadasOSinMontarService],
     });
-    service = TestBed.inject(MercDesmSinMonService);
+    service = TestBed.inject(MercanciasDesmontadasOSinMontarService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 

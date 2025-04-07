@@ -113,7 +113,7 @@
         <input
           id="nico"
           formControlName="nico"
-          (keyup)="actualizarNico($event)"
+          (change)="actualizarNico($event)"
           class="form-control"
           type="number"
           [ngClass]="esValido('nico') ? 'required' : ''"
@@ -135,7 +135,7 @@
         <input
           id="peso"
           formControlName="peso"
-          (keyup)="actualizarPeso($event)"
+          (change)="actualizarPeso($event)"
           class="form-control"
           type="text"
           [ngClass]="esValido('peso') ? 'required' : ''"
@@ -160,7 +160,7 @@
         <input
           id="valorUSD"
           formControlName="valorUSD"
-          (keyup)="actualizarValorUSD($event)"
+          (change)="actualizarValorUSD($event)"
           class="form-control"
           type="text"
           [ngClass]="esValido('valorUSD') ? 'required' : ''"

@@ -19,4 +19,4 @@ export const ROUTES_SOLICITUDES: Routes = [
   imports: [RouterModule.forChild(ROUTES_SOLICITUDES)],
   exports: [RouterModule]
 })
-export class MercDesmSinMonRoutingModule { }
+export class MercanciasDesmontadasOSinMontarRoutingModule { }

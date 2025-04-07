@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OperacionDeImportacion } from '../models/aviso-catalogo.model';
-import { RequisitosObligatorios } from '../models/aviso-catalogo.model';
 import { catchError } from 'rxjs';
 import { throwError } from 'rxjs';
 
@@ -15,7 +14,7 @@ import { throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class MercDesmSinMonService {
+export class MercanciasDesmontadasOSinMontarService {
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar peticiones a archivos JSON.

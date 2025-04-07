@@ -12,8 +12,8 @@ import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { MercDesmSinMonRoutingModule } from './merc-desm-sin-mon-routing.module';
-import { MercDesmSinMonService } from './services/merc-desm-sin-mon.service';
+import { MercanciasDesmontadasOSinMontarRoutingModule } from './mercancias-desmontadas-o-sin-montar-routing.module';
+import { MercanciasDesmontadasOSinMontarService } from './services/mercancias-desmontadas-o-sin-montar.service';
 import { ModalOperacionComponent } from './components/modal-operacion/modal-operacion.component';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
@@ -47,7 +47,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     FormsModule,
     HttpClientModule,
     WizardComponent,
-    MercDesmSinMonRoutingModule,
+    MercanciasDesmontadasOSinMontarRoutingModule,
     SharedModule,
     SolicitanteComponent,
     BtnContinuarComponent,
@@ -68,6 +68,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   ],
   exports: [
   ],
-  providers: [MercDesmSinMonService,ToastrService],
+  providers: [MercanciasDesmontadasOSinMontarService,ToastrService],
 })
-export class MercDesmSinMonModule {}
+export class MercanciasDesmontadasOSinMontarModule {}

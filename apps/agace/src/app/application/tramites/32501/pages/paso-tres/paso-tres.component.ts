@@ -11,19 +11,19 @@ import { takeUntil } from 'rxjs';
 
 /**
  * Componente PasoTresComponent.
- * 
+ *
  * Este componente se encarga de manejar la lógica del paso tres en el flujo de trámites.
- * 
+ *
  * Propiedades:
  * - `tipoPersona`: Número que representa el tipo de persona.
- * 
+ *
  * Métodos:
  * - `obtenerTipoPersona(tipo: number)`: Método para establecer el tipo de persona.
  * - `obtieneFirma(ev: string)`: Método que maneja el evento de obtención de firma y realiza acciones adicionales como
  *   la navegación y el establecimiento del trámite en el almacén.
  * - `ngOnDestroy()`: Método del ciclo de vida de Angular que se ejecuta al destruir el componente, utilizado para
  *   completar el Subject `destroy$` y evitar fugas de memoria.
- * 
+ *
  * Constructor:
  * - Inyecta las dependencias necesarias como el enrutador, el servicio de trámites y el almacén de trámites.
  */
@@ -34,7 +34,7 @@ import { takeUntil } from 'rxjs';
 })
 /**
  * Componente PasoTresComponent.
- * 
+ *
  * Este componente se encarga de manejar la lógica del paso tres en el flujo de trámites.
  */
 export class PasoTresComponent implements OnDestroy {
@@ -42,6 +42,10 @@ export class PasoTresComponent implements OnDestroy {
    * Tipo de persona.
    */
   tipoPersona!: number;
+  
+  /**
+   * Observable para manejar la destrucción de suscripciones y evitar fugas de memoria.
+   */
   private destroy$: Subject<void> = new Subject<void>();
 
   /**

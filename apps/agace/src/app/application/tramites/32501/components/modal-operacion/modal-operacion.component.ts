@@ -4,7 +4,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
@@ -59,13 +59,13 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param fb FormBuilder para la creación de formularios reactivos.
-   * @param mercDesmSinMonService Servicio para obtener datos del catálogo de avisos.
+   * @param MercanciasDesmontadasOSinMontarService Servicio para obtener datos del catálogo de avisos.
    * @param solicitud32501Query Consulta de datos relacionados con la solicitud 32501.
    * @param solicitud32501Store Almacén de datos para la solicitud 32501.
    */
   constructor(
     private fb: FormBuilder,
-    public mercDesmSinMonService: MercDesmSinMonService,
+    public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService,
     public solicitud32501Query: Solicitud32501Query,
     public solicitud32501Store: Solicitud32501Store
   ) {
@@ -103,7 +103,7 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
    * Obtiene la información del aviso desde el catálogo.
    */
   obtenerAvisoDelCatalogo(): void {
-    this.mercDesmSinMonService
+    this.mercanciasDesmontadasOSinMontarService
       .obtenerAvisoDelCatalogo()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({

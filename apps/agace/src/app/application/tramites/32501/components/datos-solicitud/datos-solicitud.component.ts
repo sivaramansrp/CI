@@ -9,13 +9,13 @@ import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputFecha } from '@libs/shared/data-access-user/src';
-import { MercDesmSinMonService } from '../../services/merc-desm-sin-mon.service';
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
-import { REGEX_NICO_NUMEROS } from '../../enums/solicitud32501.enum';
-import { REGEX_NUMEROS_USD } from '../../enums/solicitud32501.enum';
+import { REGEX_NICO_NUMEROS } from '@libs/shared/data-access-user/src';
+import { REGEX_NUMEROS_USD } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501State } from '../../estados/solicitud32501.store';
@@ -139,7 +139,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Constructor de la clase `DatosSolicitudComponent`.
    *
    * @param fb - Servicio de `FormBuilder` para la creación y gestión de formularios reactivos.
-   * @param mercDesmSinMonService - Servicio para manejar operaciones relacionadas con mercancías desmanteladas sin monitoreo.
+   * @param MercanciasDesmontadasOSinMontarService - Servicio para manejar operaciones relacionadas con mercancías desmanteladas sin monitoreo.
    * @param solicitud32501Query - Servicio para realizar consultas relacionadas con la solicitud 32501.
    * @param solicitud32501Store - Almacén para gestionar el estado de la solicitud 32501.
    *
@@ -149,7 +149,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    public mercDesmSinMonService: MercDesmSinMonService,
+    public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService,
     public solicitud32501Query: Solicitud32501Query,
     public solicitud32501Store: Solicitud32501Store
   ) {
@@ -277,14 +277,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene un aviso del catálogo utilizando el servicio `mercDesmSinMonService`.
+   * Obtiene un aviso del catálogo utilizando el servicio `mercanciasDesmontadasOSinMontarService`.
    * Se suscribe al observable y actualiza las opciones relacionadas con la fracción arancelaria,
    * entidad federativa, delegación/municipio y colonia con los valores obtenidos de la respuesta.
    *
    * @returns {void} Este método no retorna ningún valor.
    */
   obtenerAvisoDelCatalogo(): void {
-    this.mercDesmSinMonService
+    this.mercanciasDesmontadasOSinMontarService
       .obtenerAvisoDelCatalogo()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
@@ -298,7 +298,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   obtenerAvisoOpcionesDeRadio():void{
-    this.mercDesmSinMonService
+    this.mercanciasDesmontadasOSinMontarService
       .obtenerAvisoOpcionesDeRadio()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({
@@ -311,14 +311,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Obtiene la lista de operaciones de importación desde el servicio correspondiente.
    *
-   * Este método realiza una solicitud al servicio `mercDesmSinMonService` para obtener
+   * Este método realiza una solicitud al servicio `MercanciasDesmontadasOSinMontarService` para obtener
    * las operaciones de importación y las asigna a la propiedad `operacionDeImportacionLista`.
    *
    * La suscripción al observable se gestiona utilizando el operador `takeUntil` para
    * evitar fugas de memoria, asegurándose de que se complete cuando el componente sea destruido.
    */
   obtenerOperacionDeImportacion(): void {
-    this.mercDesmSinMonService
+    this.mercanciasDesmontadasOSinMontarService
       .obtenerOperacionDeImportacion()
       .pipe(takeUntil(this.destroyed$))
       .subscribe({

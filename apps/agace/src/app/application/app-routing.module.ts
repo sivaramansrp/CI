@@ -30,10 +30,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'merc-desm-sin-mon',
+    path: 'mercancias-desmontadas-o-sin-montar',
     loadChildren: () =>
-      import('./tramites/32501/merc-desm-sin-mon.module').then(
-        (m) => m.MercDesmSinMonModule
+      import('./tramites/32501/mercancias-desmontadas-o-sin-montar.module').then(
+        (m) => m.MercanciasDesmontadasOSinMontarModule
       ),
   },
 ];
