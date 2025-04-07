@@ -173,13 +173,17 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div *ngIf="isAduanasEntradaVisible" class="row">
     <div class="panel-body">
       <crosslist
-        [fechas]="seleccionarOrigenDelPais"
-        [label]="paisDeProcedenciaLabel"
-        [botones]="paisDeProcedenciaBotones"
-      ></crosslist>
+      [fechas]="seleccionarAduanasEntrada"
+      [label]="aduanasEntradaLabel"
+      [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos"
+      [botones]="aduanasEntradaBotons"
+      (fechasSeleccionadasChange)="
+        aduanasEntradaSeleccionadasChange($event)
+      "
+    ></crosslist>
     </div>
   </div>
   <div class="row">

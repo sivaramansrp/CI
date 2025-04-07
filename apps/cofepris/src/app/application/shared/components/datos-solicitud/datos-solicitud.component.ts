@@ -36,6 +36,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 })
 export class DatosDeLaComponent implements OnInit, OnDestroy {
   @Input() isAvisoLicenciaVisible: boolean = true;
+  @Input() isAduanasEntradaVisible: boolean = false;
   /**
    * Estado de la solicitud.
    */
