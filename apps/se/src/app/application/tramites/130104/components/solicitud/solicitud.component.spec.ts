@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Tramite130104Store } from '../../estados/tramites/tramite130104.store';
 import { Tramite130104Query } from '../../estados/queries/tramite130104.query';
-import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usadosservice';
+import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
