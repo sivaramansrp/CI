@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { Tramite130115Store } from '../../estados/tramites/tramite130104.store';
-import { Tramite130115Query } from '../../estados/queries/tramite130104.query';
-import { ImportacionVehiculosNuevosService } from '../../services/importacion-otros-vehiculos-usadosservice';
+import { Tramite130104Store } from '../../estados/tramites/tramite130104.store';
+import { Tramite130104Query } from '../../estados/queries/tramite130104.query';
+import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usadosservice';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
@@ -39,9 +39,9 @@ const mockPartidasdelaTable = {
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let mockStore: jest.Mocked<Tramite130115Store>;
-  let mockQuery: jest.Mocked<Tramite130115Query>;
-  let mockService: jest.Mocked<ImportacionVehiculosNuevosService>;
+  let mockStore: jest.Mocked<Tramite130104Store>;
+  let mockQuery: jest.Mocked<Tramite130104Query>;
+  let mockService: jest.Mocked<ImportacionOtrosVehiculosUsadosService>;
 
   const mockProductoOptions: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
@@ -132,9 +132,9 @@ describe('SolicitudComponent', () => {
       imports: [ReactiveFormsModule, HttpClientModule],
       providers: [
         FormBuilder,
-        { provide: Tramite130115Store, useValue: mockStore },
-        { provide: Tramite130115Query, useValue: mockQuery },
-        { provide: ImportacionVehiculosNuevosService, useValue: mockService },
+        { provide: Tramite130104Store, useValue: mockStore },
+        { provide: Tramite130104Query, useValue: mockQuery },
+        { provide: ImportacionOtrosVehiculosUsadosService, useValue: mockService },
       ],
     }).compileComponents();
   });
