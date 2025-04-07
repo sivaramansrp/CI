@@ -22,6 +22,11 @@ const ROUTES: Routes = [
     path: 'tramites-disponibles',
     loadChildren: () =>
       import('./tramites/230101/tramites-disponsibles.module').then((m) => m.TramitesDisponiblesModule),
+  },
+  {
+    path: 'aviso-de-reciclaje',
+    loadChildren: () =>
+      import('./tramites/231003/aviso-de-reciclaje.module').then((m) => m.AvisoDeReciclajeModule),
   }
 ];
 
