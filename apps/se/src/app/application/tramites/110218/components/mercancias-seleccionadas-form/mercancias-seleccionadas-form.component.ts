@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
-import { REG_X } from '@libs/shared/data-access-user/src';
 import { REGEX_NUMEROS_DECIMALES } from '@libs/shared/data-access-user/src';
+import { REG_X } from '@libs/shared/data-access-user/src';
+
 
 import { Tramite110218Query } from '../../estados/queries/tramite110218.query';
 import { Tramite110218Store } from '../../estados/tramites/tramite110218.store';
@@ -68,7 +69,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    * Datos recibidos para la tabla.
    * MercanciasSeleccionadasFormComponent
    */
-  receivedData: any;
+  receivedData: { nombreComercial: string; nombreIngles: string; }[] | null = null;
 
   /**
    * Observable para la unidad de medida de comercialización.
@@ -201,7 +202,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
    * MercanciasSeleccionadasFormComponent
    */
   unidadMedidaData(): void {
-    this.service.getUnidadMedida().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
+    this.service.getUnidadMedida().pipe(takeUntil(this.destroyed$)).subscribe((data: Catalogo[]) => {
       this.unidaddeMedidadeComercializacionOptions = data;
     });
   }
@@ -213,7 +214,7 @@ export class MercanciasSeleccionadasFormComponent implements OnInit, OnDestroy {
   tipoDeFactura(): void {
     this.service.getTipodeFctura()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: any) => {
+      .subscribe((data: Catalogo[]) => {
         this.tipodeFacturaOptions = data;
       });
   }

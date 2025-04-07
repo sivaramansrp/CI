@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 
 import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
-import { OnDestroy } from '@angular/core';
+
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -69,19 +70,19 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * DatosCertificadoComponent
    * 
    */
-  datos: any;
+  datos: CompliMentaria[] = [];
   /**
    * Fila seleccionada en la tabla.
    * DatosCertificadoComponent
    *
    */
-  filaSeleccionada: any;
+  filaSeleccionada: CompliMentaria | null = null;
   /**
    * Lista de filas seleccionadas en la tabla.
    * DatosCertificadoComponent
    *
    */
-  filasSeleccionadas: any[] = [];
+  filasSeleccionadas: CompliMentaria[] = [];
   /**
    * Observable para el lugar del certificado.
    * DatosCertificadoComponent
@@ -116,25 +117,25 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * Datos seleccionados previamente en la tabla, obtenidos desde el store.
-  */
-  tablaSeleccionadaDeLaTienda: any;
+   */
+  tablaSeleccionadaDeLaTienda: CompliMentaria | null = null;
 
   /**
- * Índice utilizado para propósitos internos del componente.
- */
+   * Índice utilizado para propósitos internos del componente.
+   */
   indice: number = 5;
 
   /**
  * Evento de salida que emite un valor booleano cuando se modifica el certificado.
  */
   @Output() modificarEventCertificado: EventEmitter<boolean> = new EventEmitter<boolean>(false);
-  /**
- * Constructor for the component.
+ /**
+ * Constructor del componente.
  * 
- * FormBuilder instance for creating form groups.
- * Service for handling certificate-related operations.
- * Store for managing state related to Tramite 110218.
- * Query for retrieving data related to Tramite 110218.
+ * Instancia de FormBuilder para crear grupos de formularios.
+ * Servicio para manejar operaciones relacionadas con certificados.
+ * Almacén para gestionar el estado relacionado con el Trámite 110218.
+ * Consulta para recuperar datos relacionados con el Trámite 110218.
  */
   constructor(
     private fb: FormBuilder,
@@ -146,35 +147,36 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
   
   /**
-   * Creates and returns a FormGroup for certificate data.
-   * 
-   * The form group containing 'lugar' and 'observaciones' controls.
+   * Crea y devuelve un FormGroup para los datos del certificado.
+   * Contiene los controles 'lugar' y 'observaciones' con sus respectivas validaciones.
+   * Retorna el formulario creado.
    */
   private crearFormularioDatosDelCertificado(): FormGroup {
     return this.fb.group({
       /**
-       * The place where the certificate is issued.
-       * This field is required.
+       * El lugar donde se emite el certificado.
+       * Este campo es obligatorio.
        */
       lugar: ['', Validators.required],
   
       /**
-       * Observations or remarks related to the certificate.
-       * This field is required.
+       * Observaciones o comentarios relacionados con el certificado.
+       * Este campo es obligatorio.
        */
       observaciones: ['', Validators.required]
     });
   }
   /**
    * Método de inicialización del componente.
-   * DatosCertificadoComponent
+   * Obtiene los datos de la tabla y se suscribe a los cambios en el store.
+   * También inicializa los datos seleccionados previamente desde el store.
    */
   ngOnInit(): void {
     this.obtenerDatosDeTabla();
     this.suscribirseACambiosEnLaTienda();
 
     this.tramite110218Query.tableDataDatos$.pipe(takeUntil(this.destroyed$)).subscribe((data) => {
-      this.tablaSeleccionadaDeLaTienda = data;
+      this.tablaSeleccionadaDeLaTienda = data.length > 0 ? data[0] : null;
     }
     )
 
@@ -182,33 +184,35 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
   /**
    * Obtiene los datos de la tabla desde el servicio.
-   * DatosCertificadoComponent
+   * Actualiza la propiedad `datos` con los datos obtenidos.
    */
   obtenerDatosDeTabla(): void {
-    this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
-      this.datos = data;
+    this.service.getDatosCertificado().pipe(takeUntil(this.destroyed$)).subscribe((data: { [key: string]: string | number | boolean }) => {
+      this.datos = Array.isArray(data) ? data as CompliMentaria[] : [];
     });
   }
   /**
    * Maneja la selección de una fila en la tabla.
-   * DatosCertificadoComponent
-   * Fila seleccionada.
+   * Actualiza la propiedad `filaSeleccionada` con la fila seleccionada.
+   * filaSeleccionada es la fila seleccionada en la tabla.
    */
   manejarFilaSeleccionada(fila: CompliMentaria): void {
     this.filaSeleccionada = fila;
   }
   /**
    * Navega a la sección de mercancías seleccionadas del formulario.
-   * DatosCertificadoComponent
+   * Almacena los valores de la fila seleccionada en el store y emite un evento para modificar el certificado.
    */
   enModificarFormulario(): void {
-    this.tramite110218Store.almacenarValoresDeTabla(this.filaSeleccionada);
+    if (this.filaSeleccionada) {
+      this.tramite110218Store.almacenarValoresDeTabla(this.filaSeleccionada);
+    }
     this.modificarEventCertificado.emit(false);
 
   }
   /**
-   * Suscribe a los cambios en el store y actualiza el formulario.
-   * DatosCertificadoComponent
+   * Suscribe a los cambios en el store y actualiza los valores del formulario.
+   * Se suscribe a los observables `lugar$` y `observaciones$` para actualizar los controles correspondientes.
    */
   suscribirseACambiosEnLaTienda(): void {
     const OBSERVABLES = {
@@ -225,7 +229,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   }
   /**
    * Método de destrucción del componente.
-   * DatosCertificadoComponent
+   * Limpia las suscripciones activas para evitar fugas de memoria.
    */
 
   ngOnDestroy(): void {
@@ -235,8 +239,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
   /**
       * Maneja los cambios en los controles del formulario y actualiza el store.
-      * DatosCertificadoComponent
-      * Nombre del control del formulario.
+      * Actualiza el valor correspondiente en el store según el control modificado.
+      * controlName es el nombre del control del formulario que cambió.
       */
   enCambioDeDatosDelCertificado(controlName: string): void {
     const VALUE = this.datosDelCertificado.get(controlName)?.value;

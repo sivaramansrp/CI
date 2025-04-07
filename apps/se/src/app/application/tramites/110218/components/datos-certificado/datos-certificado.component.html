@@ -28,7 +28,7 @@
 
     </div>
     <h6>Mercancías seleccionadas</h6>
-    <app-tabla-dinamica [configuracionTabla]="arregloConfiguracionTabla" [datos]="datos" [tipoSeleccionTabla]="radioDeMesa"
+    <app-tabla-dinamica [configuracionTabla]="arregloConfiguracionTabla" [datos]="datos || []" [tipoSeleccionTabla]="radioDeMesa"
         (filaSeleccionada)="manejarFilaSeleccionada($event)">
     </app-tabla-dinamica>
     <div class="col-md-12">

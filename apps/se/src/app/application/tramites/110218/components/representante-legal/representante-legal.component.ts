@@ -6,11 +6,12 @@ import { OnInit } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { REGEX_DESCRIPCION_ESPECIALES } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
 import { REG_X } from '@ng-mf/data-access-user';
-import { REGEX_DESCRIPCION_ESPECIALES } from '@ng-mf/data-access-user';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
@@ -117,7 +118,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * RepresentanteLegalComponent
    */
   obtenerDatosDeTabla(): void {
-    this.service.getrepresentante().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
+    this.service.getrepresentante().pipe(takeUntil(this.destroyed$)).subscribe((data: { empresa: string }) => {
       this.datosdelexportador.patchValue({
         empresa: data.empresa,
       });

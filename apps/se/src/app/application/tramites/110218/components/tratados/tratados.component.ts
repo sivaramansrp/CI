@@ -85,7 +85,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   obtenerDatosDeTabla(): void {
     this.service.gettratados().pipe(takeUntil(this.destroyed$)).subscribe(
-      (data: any) => {
+      (data: { tratadoAcuerdo: string; paisBloque: string; paisdeOrigen: string; paisDestino: string; fechadeExpedicion: string; fechadeVencimiento: string }) => {
         this.detallesdeltransporte.patchValue({
           tratadoAcuerdo: data.tratadoAcuerdo,
           paisBloque: data.paisBloque,

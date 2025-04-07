@@ -6,11 +6,12 @@ import { OnInit } from '@angular/core';
 
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { REGEX_DESCRIPCION_ESPECIALES } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
 import { REG_X } from '@libs/shared/data-access-user/src';
-import { REGEX_DESCRIPCION_ESPECIALES } from '@libs/shared/data-access-user/src';
+
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { CertificadoTecnicoJaponService } from '@libs/shared/data-access-user/src/core/services/110218/certificadoTecnicoJapon.service';
@@ -170,7 +171,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * DestinatarioComponent
    */
   obtenerDatosDeTabla(): void {
-    this.service.getdestinatario().pipe(takeUntil(this.destroyed$)).subscribe((data: any) => {
+    this.service.getdestinatario().pipe(takeUntil(this.destroyed$)).subscribe((data: { segundoApellido: string }) => {
       this.datosDelDestinatario.patchValue({
         segundoApellido: data.segundoApellido,
       });
