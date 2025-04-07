@@ -18,13 +18,13 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
  * Componente principal para gestionar el formulario de representante.
  */
 @Component({
-  selector: 'app-representante-legal',
+  selector: 'app-representante-legal-rfc',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule],
   templateUrl: './representante-legal-rfc.component.html',
   styleUrl: './representante-legal-rfc.component.css',
 })
-export class RepresentanteLegalComponent implements OnInit, OnDestroy {
+export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   /**
    * Estado de la solicitud.
    */

@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
-import { RepresentanteLegalComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
+import { RepresentanteLegalRfcComponent } from '../representante-legal-rfc/representante-legal-rfc.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
@@ -29,8 +29,8 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
     TituloComponent,
     DomicilioComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent,
-  ],
+    RepresentanteLegalRfcComponent,
+],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
