@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 
 /**
@@ -9,7 +9,7 @@ import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-use
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements AfterViewInit {
   
   /**
    * Índice para manejar la pestaña seleccionada.

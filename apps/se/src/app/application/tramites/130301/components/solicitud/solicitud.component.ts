@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { SolicitudForma } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
+import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar la solicitud del trámite.

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
-import { Subject, takeUntil } from 'rxjs';
-import { DatosDelTramite } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
+import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_PRODUCTO_RADIO, OPCIONES_SOLICITUD_DE_RADIO } from '@libs/shared/data-access-user/src/core/enums/130301/modificacion.enum';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosDelTramite } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
+import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 
 /**
  * Componente para gestionar los datos del trámite.

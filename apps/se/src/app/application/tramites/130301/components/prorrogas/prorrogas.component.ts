@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 import { PRORROGAS_TABLA, ProrrogasForma, ProrrogasInfo } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
 import { Solicitud130301State, Tramite130301Store } from '../../../../estados/tramites/tramite130301.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 import { Tramite130301Query } from '../../../../estados/queries/tramite130301.query';
 
 /**

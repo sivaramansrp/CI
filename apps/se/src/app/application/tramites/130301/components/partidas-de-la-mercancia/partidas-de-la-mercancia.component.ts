@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PARTIDAS_TABLA, PartidasForma, PartidasInfo } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
 import { Subject, takeUntil } from 'rxjs';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 
 /**

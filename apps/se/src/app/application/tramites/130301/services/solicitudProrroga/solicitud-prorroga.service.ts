@@ -1,8 +1,8 @@
+import { RequestCertificadoKimberleyForma, RequestDatosDelTramite, RequestPartidasForma, RequestProrrogasForma, RespuestaDatos, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RequestCertificadoKimberleyForma, RequestDatosDelTramite, RequestPartidasForma, RequestProrrogasForma, RespuestaDatos, RespuestaTabla } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
 import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con el trámite de prórrogas.

@@ -1,5 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, ViewChild } from '@angular/core';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/130301/modificacion.enum";
 
 /**
