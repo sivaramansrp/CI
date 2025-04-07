@@ -163,6 +163,13 @@ const ROUTES: Routes = [
       import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
         (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
       )
+  },
+  {
+    path: 'junta-tecnica',
+    loadChildren: () =>
+      import('./tramites/6101/junta-tecnica.module').then(
+        (m) => m.JuntaTecnicaModule
+      )
   }
 ];
 
