@@ -25,78 +25,273 @@ import { takeUntil } from 'rxjs';
   styleUrl: './vehiculos.component.scss',
 })
 export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
+  /**
+   * Referencia al elemento modal en la plantilla.
+   */
   @ViewChild('exampleModal', { static: false }) modalElement!: ElementRef;
+
+  /**
+   * Referencia a la tabla de datos en la plantilla.
+   */
   @ViewChild('dataTable', { static: false }) dataTable!: ElementRef;
+
+  /**
+   * Catálogo de datos del vehículo y país emisor.
+   */
   @Input() catalogo: DatosDelVehículoPaisEmisor[] = [];
+
+  /**
+   * Tipo de selección de la tabla (CHECKBOX).
+   */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Sujeto utilizado para limpiar las suscripciones al destruir el componente.
+   */
   private destroy$ = new Subject<void>();
 
   /**
-   * @property {Subject<void>} destroyNotifier$
-   * Emite una señal para limpiar las suscripciones cuando se destruye el componente.
+   * Sujeto utilizado para notificar cuando se destruye el componente.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  /**
+   * Lista de pagos de derechos.
+   */
   pagoDerechosLista: PagoDerechosLista[] = [] as PagoDerechosLista[];
+
+  /**
+   * Catálogo de tipos de vehículos de arrastre.
+   */
   public tipoVehiculoArrastreAGA!: Catalogo[];
+
+  /**
+   * Catálogo de países emisores.
+   */
   public paisEmisor!: Catalogo[];
+
+  /**
+   * Catálogo de colores de vehículos.
+   */
   public colorAGA!: Catalogo[];
+
+  /**
+   * Catálogo de países emisores para la segunda placa.
+   */
   public paisEmisor2daPlaca!: Catalogo[];
+
+  /**
+   * Catálogo de colores de vehículos para la solicitud.
+   */
   public solicitudVehiculoColor!: Catalogo[];
+
+  /**
+   * Instancia del modal de Bootstrap.
+   */
   private modalInstance!: Modal;
+
+  /**
+   * Formulario reactivo para los datos del vehículo.
+   */
   formVehiculo!: FormGroup;
+
+  /**
+   * Lista de vehículos.
+   */
   vehiculos: any[] = [];
+
+  /**
+   * Observable que contiene la lista de vehículos.
+   */
   vehiculosList$: Observable<any[]> = new Observable();
   private subscriptions: Subscription = new Subscription();
+   /**
+   * Lista de unidades de arrastre.
+   */
   unidadesdearrastre: any[] = [];
+
+  /**
+   * Observable que contiene la lista de unidades de arrastre.
+   */
   unidadesdearrastreList$: Observable<any[]> = new Observable();
+
+  /**
+   * Pestaña seleccionada actualmente.
+   */
   selectedTab: string = 'Parque vehicular';
+
+  /**
+   * Nombre de la pestaña activa.
+   */
   activeTab: string = 'parquevehicular';
+
+  /**
+   * Lista de vehículos con arrastre.
+   */
   vehiculoArrastr: any[] = [];
+
+  /**
+   * Catálogo de vehículos.
+   */
   vehiculosA: Catalogo[] = [];
+
+  /**
+   * Catálogo de vehículos para la vista.
+   */
   VehiculoVEH: Catalogo[] = [];
+
+  /**
+   * Catálogo de colores de vehículos.
+   */
   VehiculoColors: Catalogo[] = [];
+
+  /**
+   * Lista de países emisores para la segunda placa.
+   */
   PaisEmisor2daPlaca: DatosDelVehículoPaisEmisor[] = [];
+
+  /**
+   * Etiqueta para el tipo de vehículo en la solicitud.
+   */
   labelSolicitudVehiculoTipoVehiculo =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TIPO_VEHICULO;
+
+  /**
+   * Título de los datos del vehículo en la solicitud.
+   */
   solicitudTituloDatosVehiculo: string =
     VEHICULO_PAGE.SOLICITUD_TITULO_DATOS_VEHICULO;
+
+  /**
+   * Etiqueta para el VIN del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoVin: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_VIN;
+
+  /**
+   * Etiqueta para los puntos en la solicitud.
+   */
   labelPuntos: string = VEHICULO_PAGE.LABEL_PUNTOS;
+
+  /**
+   * Texto de selección no disponible para el tipo de vehículo.
+   */
   nonSelectionTextTipoVehiculo: string =
     VEHICULO_PAGE.NON_SELECTION_TEXT_TIPO_VEHICULO;
+
+  /**
+   * Texto de selección no disponible para el país emisor.
+   */
   nonSelectionTextPaisEmisor: string =
     VEHICULO_PAGE.NON_SELECTION_TEXT_PAIS_EMISOR;
-  nonSelectionTextColorAGA: string = VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
+
+  /**
+   * Texto de selección no disponible para el color del vehículo.
+   */
+  nonSelectionTextColorAGA: string =
+    VEHICULO_PAGE.NON_SELECTION_TEXT_COLOR_AGA;
+
+  /**
+   * Texto de selección no disponible para los años.
+   */
   nonSelectionTextAnios: string = VEHICULO_PAGE.NON_SELECTION_TEXT_ANIOS;
+
+  /**
+   * Etiqueta para el ID del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoIdDeVehiculo: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_ID_DEVEHICULO;
+
+  /**
+   * Etiqueta para el número de placas en la solicitud.
+   */
   labelSolicitudVehiculoNumeroPlacas: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMEROPLACAS;
+
+  /**
+   * Etiqueta para el país emisor en la solicitud.
+   */
   labelSolicitudVehiculoPaisEmisor: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR;
+
+  /**
+   * Etiqueta para el estado o provincia en la solicitud.
+   */
   labelSolicitudDomicilioEstado: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_DOMICILIO_ESTADO;
+
+  /**
+   * Etiqueta para la marca del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoMarca: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MARCA;
+
+  /**
+   * Etiqueta para el modelo del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoModelo: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_MODELO;
+
+  /**
+   * Etiqueta para el año del vehículo en la solicitud.
+   */
   labelAnioVEH: string = VEHICULO_PAGE.LABEL_ANIO_VEH;
+
+  /**
+   * Etiqueta para el transponder del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoTransponder: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_TRANSPONDER;
+
+  /**
+   * Etiqueta para el color del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoColor: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_COLOR;
+
+  /**
+   * Etiqueta para el número económico del vehículo en la solicitud.
+   */
   labelSolicitudVehiculoNumeroEconomico: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_ECONOMICO;
+
+  /**
+   * Etiqueta para el número de la segunda placa en la solicitud.
+   */
   labelSolicitudVehiculoNumero2daPlaca: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_NUMERO_2DAPLACA;
+
+  /**
+   * Etiqueta para el emisor de la segunda placa en la solicitud.
+   */
   labelSolicitudVehiculoEmisor2daPlaca: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_EMISOR_2DAPLACA;
+
+  /**
+   * Etiqueta para el país emisor de la segunda placa en la solicitud.
+   */
   labelSolicitudVehiculoPaisEmisor2daPlaca: string =
     VEHICULO_PAGE.LABEL_SOLICITUD_VEHICULO_PAIS_EMISOR_2DAPLACA;
-  labelDescripcionVehiculo: string = VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
+
+  /**
+   * Etiqueta para la descripción del vehículo en la solicitud.
+   */
+  labelDescripcionVehiculo: string =
+    VEHICULO_PAGE.LABEL_DESCRIPCION_VEHICULO;
+
+  /**
+   * Texto del botón para limpiar el formulario.
+   */
   botonLimpiar: string = VEHICULO_PAGE.BOTON_LIMPIAR;
+
+  /**
+   * Texto del botón para cancelar la operación.
+   */
   botonCancelar: string = VEHICULO_PAGE.BOTON_CANCELAR;
+
+  /**
+   * Texto del botón para guardar los datos.
+   */
   botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
   /**
    * Selecciona una pestaña.
@@ -107,6 +302,17 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
       tabName === 'parquevehicular' ? 'Parque vehicular' : 'Unidad de arrastre';
     this.activeTab = tabName;
   }
+  /**
+   * Representa una lista de configuraciones para el parque vehicular, donde cada elemento
+   * define las propiedades de un vehículo y su mapeo correspondiente a los datos de origen.
+   * 
+   * Cada objeto en la lista contiene:
+   * - `encabezado`: El nombre de la columna que se mostrará en la interfaz de usuario.
+   * - `clave`: Una función que toma un objeto de tipo `PagoDerechosLista` y devuelve el valor correspondiente.
+   * - `orden`: El orden en el que se deben mostrar las columnas.
+   * 
+   * @type {Array<{ encabezado: string; clave: (item: PagoDerechosLista) => any; orden: number }>}
+   */
   ParqueVehicular = [
     {
       encabezado: 'Número de identificación vehicular',
@@ -189,6 +395,25 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
       orden: 16,
     },
   ];
+
+  /**
+   * Lista de objetos que representan las unidades de arrastre con sus respectivas propiedades.
+   * Cada objeto contiene información sobre el encabezado, la clave para acceder a los datos
+   * y el orden en el que deben aparecer.
+   *
+   * Propiedades:
+   * - `encabezado`: Título que describe la columna correspondiente.
+   * - `clave`: Función que toma un objeto de tipo `PagoDerechosLista` y devuelve el valor asociado a la clave.
+   * - `orden`: Número que indica el orden en el que se deben mostrar las columnas.
+   *
+   * Ejemplo de columnas:
+   * 1. VIN del vehículo
+   * 2. Tipo de unidad de arrastre
+   * 3. Número económico
+   * 4. Número de Placas
+   * 5. País Emisor
+   * 6. Estado o provincia
+   */
   unidadesDeArrastre = [
     {
       encabezado: 'VIN del vehículo',
