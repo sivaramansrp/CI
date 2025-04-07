@@ -7,7 +7,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usadosservice';
+import { ImportacionOtrosVehiculosUsadosService } from '../../services/importacion-otros-vehiculos-usados.service';
 
 import { HttpClient } from '@angular/common/http';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130104/partidas-de-la.json';
