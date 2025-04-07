@@ -11,6 +11,14 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
     super(store);
   }
 
+    /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
+
   /**
    * Observable que selecciona la lista de choferes nacionales.
    */

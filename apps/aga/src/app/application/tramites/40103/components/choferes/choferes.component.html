@@ -701,7 +701,7 @@
                       formControlName="nombres"
                       class="form-control"
                       id="nombreCHE"
-                      maxlength="200"
+                      maxlength="200" (change)="setValoresStore(formChoferes,'nombres', 'setNombres')"
                     />
                   </div>
                 </div>
@@ -718,6 +718,7 @@
                       type="text"
                       formControlName="apellidoPaternos"
                       class="form-control"
+                      (change)="setValoresStore(formChoferes,'apellidoPaternos', 'setApellidoPaternos')"
                     />
                   </div>
                 </div>
@@ -735,6 +736,7 @@
                       class="form-control"
                       id="apellidoMaternoCHE"
                       maxlength="200"
+                      (change)="setValoresStore(formChoferes,'apellidoMaternoCHE', 'setApellidoMaternoCHE')"
                     />
                   </div>
                 </div>
@@ -752,6 +754,7 @@
                       [required]="true"
                       name="nacionalidadCHE"
                       label="Nacionalidad"
+                      (change)="setValoresStore(formChoferes,'nacionalidadCHE', 'setNacionalidadCHE')"
                     ></app-catalogo-select>
                   </div>
                 </div>
@@ -771,6 +774,7 @@
                       id="gafeteCHE"
                       maxlength="24"
                       readonly
+                      (change)="setValoresStore(formChoferes,'gafete', 'setGafete')"
                     />
                   </div>
                 </div>
@@ -789,6 +793,7 @@
                       class="form-control inputtexto1"
                       id="vigenciagafeteCHE"
                       maxlength="15"
+                      (change)="setValoresStore(formChoferes,'vigenciagafete', 'setVigenciaGafete')"
                     />
                   </div>
                 </div>
@@ -809,6 +814,7 @@
                       class="form-control"
                       id="nssCHE"
                       maxlength="18"
+                      (change)="setValoresStore(formChoferes,'nss', 'setNss')"
                     />
                   </div>
                 </div>
@@ -834,6 +840,7 @@
                       class="form-control"
                       id="idefiscalCHE"
                       maxlength="18"
+                      (change)="setValoresStore(formChoferes,'ideFiscal', 'setIdeFiscal')"
                     />
                   </div>
                 </div>
@@ -868,6 +875,7 @@
                       [required]="true"
                       name="paisOrigenCHN"
                       label="País de residencia"
+                      (change)="setValoresStore(formChoferes,'paisOrigenCHN', 'setPaisOrigenCHN')"
                     ></app-catalogo-select>
                   </div>
                 </div>
@@ -887,6 +895,7 @@
                       class="form-control"
                       id="codigoPostalCHE"
                       maxlength="12"
+                      (change)="setValoresStore(formChoferes,'codigoPostal', 'setCodigoPostal')"
                     />
                   </div>
                 </div>
@@ -906,6 +915,7 @@
                       class="form-control"
                       id="entidadFederativaCHE"
                       maxlength="55"
+                      (change)="setValoresStore(formChoferes,'entidadFederativaCHE', 'setEntidadFederativaCHE')"
                     />
                   </div>
                 </div>
@@ -927,6 +937,7 @@
                       class="form-control"
                       id="calleCHE"
                       maxlength="100"
+                      (change)="setValoresStore(formChoferes,'calle', 'setCalle')"
                     />
                   </div>
                 </div>
@@ -946,6 +957,7 @@
                       class="form-control"
                       id="numeroExteriorCHE"
                       maxlength="55"
+                      (change)="setValoresStore(formChoferes,'numeroExterior', 'setNumeroExterior')"
                     />
                   </div>
                 </div>
@@ -964,6 +976,7 @@
                       class="form-control"
                       id="numeroInteriorCHE"
                       maxlength="55"
+                      (change)="setValoresStore(formChoferes,'numeroInterior', 'setNumeroInterior')"
                     />
                   </div>
                 </div>
@@ -981,6 +994,7 @@
                       [required]="true"
                       name="paisOrigenCHN"
                       label="País de residencia"
+                      (change)="setValoresStore(formChoferes,'paisOrigenCHN', 'setPaisOrigenCHN')"
                     ></app-catalogo-select>
                   </div>
                 </div>
@@ -1000,6 +1014,7 @@
                       class="form-control"
                       id="ciudadCHE"
                       maxlength="120"
+                      (change)="setValoresStore(formChoferes,'ciudad', 'setCiudad')"
                     />
                   </div>
                 </div>
@@ -1019,6 +1034,7 @@
                       class="form-control"
                       id="correoCHE"
                       maxlength="120"
+                      (change)="setValoresStore(formChoferes,'correo', 'setCorreo')"
                     />
                   </div>
                 </div>
@@ -1037,6 +1053,7 @@
                       class="form-control"
                       id="telefonoCHE"
                       maxlength="12"
+                      (change)="setValoresStore(formChoferes,'telefono', 'setTelefono')"
                     />
                   </div>
                 </div>

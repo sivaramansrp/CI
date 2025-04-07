@@ -1,5 +1,5 @@
 /* eslint-disable sort-imports */
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Chofer40103Service } from './estados/chofer40103.service';
@@ -32,8 +32,7 @@ import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { TablaDinamicaComponent } from '../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { ToastrService } from 'ngx-toastr';
 @NgModule({
   declarations: [
     SolicitantePageComponent,

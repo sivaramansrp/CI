@@ -1,11 +1,12 @@
 /* eslint-disable no-empty-function */
+import { Chofer40103Store, Choferesnacionales40103State } from '../../estados/chofer40103.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs/operators';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
-import { Chofer40103Store } from '../../estados/chofer40103.store';
+import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Subject } from 'rxjs';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
-import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -27,10 +28,28 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Observable para notificar la destrucción del componente.
+   * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual del trámite.
+   * Contiene los datos relacionados con la modificación del trámite.
+   */
+  public derechoState: Choferesnacionales40103State = {} as Choferesnacionales40103State;
+
+    /**
+   * Estado de la solicitud.
+   */
+  public solicitud40103State!: Choferesnacionales40103State;
+
   constructor(
     private fb: FormBuilder,
-    private chofer40103Query: Chofer40103Query,
-    private chofer40103Store: Chofer40103Store
+    private chofer40103Store: Chofer40103Store,
+    private chofer40103Service: Chofer40103Service,
+    private chofer40103Query: Chofer40103Query
   ) {}
 
   /**
@@ -38,13 +57,18 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    * Inicializa el formulario del director general y establece los valores del formulario.
    */
   ngOnInit(): void {
+    this.chofer40103Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.derechoState = {
+            ...this.derechoState,
+            ...seccionState,
+          };
+        })
+      ).subscribe();
     this.crearFormularioDirectorGeneral();
     this.establecerValoresDeFormulario();
-    this.directorGeneralForm.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((formData) => {
-        this.actualizarTienda(formData);
-      });
     this.actualizarTienda(this.directorGeneralForm.value);
   }
 
@@ -53,9 +77,9 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
    */
   crearFormularioDirectorGeneral(): void {
     this.directorGeneralForm = this.fb.group({
-      nombre: ['', [Validators.required]],
-      primerApellido: ['', [Validators.required]],
-      segundoApellido: ['', [Validators.required]],
+      nombre: [this.solicitud40103State?.curp, [Validators.required]],
+      primerApellido: [this.solicitud40103State?.primerApellido, [Validators.required]],
+      segundoApellido: [this.solicitud40103State?.segundoApellido, [Validators.required]],
     });
   }
 
@@ -89,5 +113,20 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+    /**
+   * Establecer valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.
+   */
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Chofer40103Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.chofer40103Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 }

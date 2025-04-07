@@ -15,6 +15,37 @@ export interface Choferesnacionales40103State {
   segundoApellido: string;
   datosDelChoferNacional: any[];
   PagoDerechosLista:any[];
+  curp: string;
+  rfc: string;
+  // Form Controls
+  apellidoPaterno: string;
+  apellidoMaternoCHN: string;
+  gafete: string;
+  vigenciagafete: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  ciudad: string;
+  localidad: string;
+  codigoPostal: string;
+  paisChn: string;
+  estadoControl: string;
+  numerodelsegurosocial: string;
+  entidadFederativaCHN: string;
+  delegacionCHN: string;
+  coloniaCHN: string;
+  paisOrigenCHN: string;
+  correo: string;
+  telefono: string;
+  apellidoMaternoCHE: string;
+  nacionalidadCHE: string;
+  nss: string;
+  ideFiscal: string;
+  paisCHE: string;
+  entidadFederativaCHE: string;
+  paisOrigenCHE: string;
+  apellidoPaternos: string;
+  nombres: string;
 }
 
 export function createChoferState(): Choferesnacionales40103State {
@@ -31,7 +62,37 @@ export function createChoferState(): Choferesnacionales40103State {
     primerApellido: '',
     segundoApellido: '',
     datosDelChoferNacional: [],
-    PagoDerechosLista:[]
+    PagoDerechosLista:[],
+    curp: '',
+    rfc: '',
+    apellidoPaterno: '',
+    apellidoMaternoCHN: '',
+    gafete: '',
+    vigenciagafete: '',
+    calle: '',
+    numeroExterior: '',
+    numeroInterior: '',
+    ciudad: '',
+    localidad: '',
+    codigoPostal: '',
+    paisChn: '',
+    estadoControl: '',
+    numerodelsegurosocial: '',
+    entidadFederativaCHN: '',
+    delegacionCHN: '',
+    coloniaCHN: '',
+    paisOrigenCHN: '',
+    correo: '',
+    telefono: '',
+    apellidoMaternoCHE: '',
+    nacionalidadCHE: '',
+    nss: '',
+    ideFiscal: '',
+    paisCHE: '',
+    entidadFederativaCHE: '',
+    paisOrigenCHE: '',
+    apellidoPaternos: '',
+    nombres: '',
   };
 }
 
@@ -51,6 +112,150 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
       ...state,
       choferes: nacionalArray,
     }));
+  }
+
+  public setCurp(curp: string): void {
+    this.update((state) => ({
+      ...state,
+      curp,
+    }));
+  }
+
+  public setPrimerApellido(primerApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      primerApellido,
+    }));
+  }
+
+  public setRfc(rfc: string): void {
+    this.update((state) => ({
+      ...state,
+      rfc,
+    }));
+  }
+
+  public setSegundoApellido(segundoApellido: string): void {
+    this.update((state) => ({
+      ...state,
+      segundoApellido,
+    }));
+  }
+
+  public setApellidoPaterno(apellidoPaterno: string): void {
+    this.update((state) => ({ ...state, apellidoPaterno }));
+  }
+
+  public setApellidoMaternoCHN(apellidoMaternoCHN: string): void {
+    this.update((state) => ({ ...state, apellidoMaternoCHN }));
+  }
+
+  public setGafete(gafete: string): void {
+    this.update((state) => ({ ...state, gafete }));
+  }
+
+  public setVigenciaGafete(vigenciagafete: string): void {
+    this.update((state) => ({ ...state, vigenciagafete }));
+  }
+
+  public setCalle(calle: string): void {
+    this.update((state) => ({ ...state, calle }));
+  }
+
+  public setNumeroExterior(numeroExterior: string): void {
+    this.update((state) => ({ ...state, numeroExterior }));
+  }
+
+  public setNumeroInterior(numeroInterior: string): void {
+    this.update((state) => ({ ...state, numeroInterior }));
+  }
+
+  public setCiudad(ciudad: string): void {
+    this.update((state) => ({ ...state, ciudad }));
+  }
+
+  public setLocalidad(localidad: string): void {
+    this.update((state) => ({ ...state, localidad }));
+  }
+
+  public setCodigoPostal(codigoPostal: string): void {
+    this.update((state) => ({ ...state, codigoPostal }));
+  }
+
+  public setPaisChn(paisChn: string): void {
+    this.update((state) => ({ ...state, paisChn }));
+  }
+
+  public setEstadoControl(estadoControl: string): void {
+    this.update((state) => ({ ...state, estadoControl }));
+  }
+
+  public setNumeroDelSeguroSocial(numerodelsegurosocial: string): void {
+    this.update((state) => ({ ...state, numerodelsegurosocial }));
+  }
+
+  public setEntidadFederativaCHN(entidadFederativaCHN: string): void {
+    this.update((state) => ({ ...state, entidadFederativaCHN }));
+  }
+
+  public setDelegacionCHN(delegacionCHN: string): void {
+    this.update((state) => ({ ...state, delegacionCHN }));
+  }
+
+  public setColoniaCHN(coloniaCHN: string): void {
+    this.update((state) => ({ ...state, coloniaCHN }));
+  }
+
+  public setPaisOrigenCHN(paisOrigenCHN: string): void {
+    this.update((state) => ({ ...state, paisOrigenCHN }));
+  }
+
+  public setCorreo(correo: string): void {
+    this.update((state) => ({ ...state, correo }));
+  }
+
+  public setTelefono(telefono: string): void {
+    this.update((state) => ({ ...state, telefono }));
+  }
+
+  public setApellidoMaternoCHE(apellidoMaternoCHE: string): void {
+    this.update((state) => ({ ...state, apellidoMaternoCHE }));
+  }
+
+  public setNacionalidadCHE(nacionalidadCHE: string): void {
+    this.update((state) => ({ ...state, nacionalidadCHE }));
+  }
+
+  public setNss(nss: string): void {
+    this.update((state) => ({ ...state, nss }));
+  }
+
+  public setIdeFiscal(ideFiscal: string): void {
+    this.update((state) => ({ ...state, ideFiscal }));
+  }
+
+  public setPaisCHE(paisCHE: string): void {
+    this.update((state) => ({ ...state, paisCHE }));
+  }
+
+  public setEntidadFederativaCHE(entidadFederativaCHE: string): void {
+    this.update((state) => ({ ...state, entidadFederativaCHE }));
+  }
+
+  public setPaisOrigenCHE(paisOrigenCHE: string): void {
+    this.update((state) => ({ ...state, paisOrigenCHE }));
+  }
+
+  public setApellidoPaternos(apellidoPaternos: string): void {
+    this.update((state) => ({ ...state, apellidoPaternos }));
+  }
+
+  public setNombres(nombres: string): void {
+    this.update((state) => ({ ...state, nombres }));
+  }
+
+  public setNombre(nombre: string): void {
+    this.update((state) => ({ ...state, nombre }));
   }
 
   /**
@@ -74,7 +279,6 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
       unidadesdearrastre: unidadesdearrastreArray,
     }));
   }
-  
 
   /**
    * Establece el tipo de vehículo de la solicitud.
@@ -167,7 +371,7 @@ export class Chofer40103Store extends Store<Choferesnacionales40103State> {
   /**
    * Limpia la lista de choferes.
    */
-  public clearChoferes():void {
+  public clearChoferes(): void {
     this.reset();
   }
 }

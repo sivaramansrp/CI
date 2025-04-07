@@ -170,6 +170,13 @@ const ROUTES: Routes = [
       import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
         (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
       )
+  },
+  {
+    path: 'modificarCaatTerrestre',
+    loadChildren: () =>
+      import('./tramites/40103/modificarCaatTerrestre.module').then(
+        (m) => m.ModificarCaatTerrestreModule
+      )
   }
   
 ];

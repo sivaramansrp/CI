@@ -1,18 +1,9 @@
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import {AfterViewInit,Component,ElementRef,Input,OnDestroy,OnInit,ViewChild} from '@angular/core';
 import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -22,11 +13,10 @@ import { PagoDerechosLista } from '../../../40103/models/registro-muestras-merca
 import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
-import { of } from 'rxjs';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ToastrService } from 'ngx-toastr';
 import { VEHICULO_PAGE } from '../../enum/transportista-terrestre.enum';
 import { Validators } from '@angular/forms';
+import { of } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 @Component({
@@ -238,7 +228,9 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     private chofer40103Store: Chofer40103Store,
     private chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query
-  ) {}
+  ) {
+    //
+  }
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
