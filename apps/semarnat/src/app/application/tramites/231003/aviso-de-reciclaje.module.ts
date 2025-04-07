@@ -5,6 +5,7 @@ import {
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { DatosSolicitudComponent } from './components/datos-solicitud/datos-solicitud.component';
 import { NgModule } from '@angular/core';
 
 import { AvisoDeReciclajeRoutingModule } from './aviso-de-reciclaje-routing.module';
@@ -23,6 +24,7 @@ import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-soli
     WizardComponent,
     AlertComponent,
     SolicitanteComponent,
+    DatosSolicitudComponent,
     BtnContinuarComponent,
     AvisoDeReciclajeRoutingModule,
   ],
