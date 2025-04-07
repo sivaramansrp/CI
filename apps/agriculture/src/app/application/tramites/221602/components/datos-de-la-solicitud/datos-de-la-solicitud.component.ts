@@ -197,9 +197,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduana: [this.solicitudState.aduana, Validators.required],
       oficina: [this.solicitudState.oficina, Validators.required],
       punto: [this.solicitudState.punto, Validators.required],
-      guia: [this.solicitudState.guia, Validators.required],
+      guia: [this.solicitudState.guia],
       regimen: [this.solicitudState.regimen, Validators.required],
-      carro: [this.solicitudState.carro, Validators.required]
+      carro: [this.solicitudState.carro]
     });
 
     this.TramitesForm.get('punto')?.disable();

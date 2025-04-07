@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import{AccionBoton} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+
+import { AVISO_DATOS } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS} from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
-
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 
@@ -19,6 +20,8 @@ export class PhytosanitaryComponent {
    * @property {ListaPasosWizard[]} pantallasPasos - Array para almacenar los pasos del wizard.
    */
   pantallasPasos: ListaPasosWizard[] = PASOS;
+
+    TEXTOS: string = AVISO_DATOS;
 
   /**
    * @property {number} indice - El índice actual del paso.

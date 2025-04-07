@@ -25,7 +25,7 @@
     <div class="row">
     <div class="col-md-12">
         <div class="form-group">
-          <label class="form-label" for="justificacion"> justificación:</label>
+          <label class="form-label" for="justificacion"> justificación*:</label>
           <textarea class="form-control custom-textarea" id="justificacion" formControlName="justificacion" style="height: 90px;"  (change)="setValoresStore(TramitesForm,'justificacion', 'setJustificacion')"></textarea>
         </div>
       </div>
@@ -35,7 +35,7 @@
    <div class="row"  style="padding-bottom: 20px;" >
     <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="aduana">  Aduana de ingreso:</label>
+          <label class="form-label" for="aduana">  Aduana de ingreso*:</label>
           <input class="form-control" id="aduana" formControlName="aduana"  type="text" (change)="setValoresStore(TramitesForm,'aduana', 'setAduana')">
         </div>
       </div>
@@ -43,7 +43,7 @@
    <div class="row" >
          <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria:</label>
+          <label class="form-label" for="oficina">Oficina de inspección de Sanidad Agropecuaria*:</label>
           <input class="form-control" id="oficina" formControlName="oficina"  type="text" (change)="setValoresStore(TramitesForm,'oficina', 'setOficina')">
         </div>
       </div>
@@ -51,7 +51,7 @@
 <div class="row" >
     <div class="col-md-8">
    <div class="form-group">
-     <label class="form-label" for="punto">Punto de inspección:</label>
+     <label class="form-label" for="punto">Punto de inspección*:</label>
      <input class="form-control" id="punto" formControlName="punto"  type="text" (change)="setValoresStore(TramitesForm,'punto', 'setPunto')">
    </div>
  </div>
@@ -60,7 +60,7 @@
     <div class="col-md-4">
    <div class="form-group">
      <label class="form-label" for="guia">Número de guía:</label>
-     <input class="form-control" id="guia" formControlName="guia"  type="text" (change)="setValoresStore(TramitesForm,'guia', 'setGuia')">
+     <input class="form-control" id="guia" formControlName="guia"  type="number" (change)="setValoresStore(TramitesForm,'guia', 'setGuia')">
    </div>
  </div>
  <div class="col-md-4">
