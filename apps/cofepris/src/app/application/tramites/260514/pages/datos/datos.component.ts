@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-datos-260514',
-  templateUrl: './datos-260514.component.html',
+  selector: 'app-datos',
+  templateUrl: './datos.component.html',
   
 })
-export class Datos260514Component {
+export class DatosComponent {
 
   /**
    * Índice del subtítulo seleccionado.

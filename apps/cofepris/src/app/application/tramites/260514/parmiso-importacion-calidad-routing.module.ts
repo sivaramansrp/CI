@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 
-import { Pantallas260514Component } from './pages/pantallas-260514/pantallas-260514.component';
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
       path: 'pantallas',
-      component: Pantallas260514Component,
+      component: PantallasComponent,
     },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class ParmisoImportacionCalidadRoutingModule { }
