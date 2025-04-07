@@ -5,7 +5,8 @@
         <div class="col-md-4">
           <label for="adace" class="form-label">ADACE:</label>
           <input class="form-control" [ngClass]="isValid(adaceFormulario, 'adace') ? 'required' : ''" type="text"
-            formControlName="adace" name="adace" id="adace" />
+            formControlName="adace" name="adace" id="adace"
+            (change)="setValoresStore(avisoFormulario, 'adace', 'setAvisoFormularioAdace')" />
         </div>
       </div>
     </ng-container>
@@ -21,7 +22,8 @@
           <input id="valorProgramaImmex" name="valorProgramaImmex" class="form-control"
             [ngClass]="isValid(datosEmpresa, 'valorProgramaImmex') ? 'required' : ''" type="text" maxlength="9"
             formControlName="valorProgramaImmex"
-            (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)" />
+            (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorProgramaImmex',$event)"
+            (change)="setValoresStore(datosEmpresa, 'valorProgramaImmex', 'setAvisoFormularioValorProgramaImmex')" />
         </div>
         <div class="col-md-4">
           <div class="form-group">
@@ -31,10 +33,10 @@
             <input id="valorAnioProgramaImmex" name="valorAnioProgramaImmex" class="form-control" type="text"
               maxlength="4" formControlName="valorAnioProgramaImmex"
               [ngClass]="isValid(datosEmpresa, 'valorAnioProgramaImmex') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)" />
+              (keyup)="sanitizeAlphanumeric(datosEmpresa,'valorAnioProgramaImmex',$event)"
+              (change)="setValoresStore(datosEmpresa, 'valorAnioProgramaImmex', 'setAvisoFormularioValorAnioProgramaImmex')" />
           </div>
         </div>
-
       </div>
     </ng-container>
     <ng-titulo titulo="Datos de aviso" />
@@ -48,17 +50,13 @@
           </div>
           <div class="radio">
             <div class="col-md-4">
-              <label>
-                <input type="radio" value="TIPAVI.INI" name="tipoAviso" id="inicial" formControlName="tipoAviso"
-                  (click)="verificaRadioTipo()" />
-                Inicial
+              @for (el of TIPAVI; track el.valor) {
+              <label class="ms-5">
+                <input type="radio" value="{{el.valor}}" name="tipoAviso" id="{{el.valor}}" formControlName="tipoAviso"
+                  (change)="verificaTipoAviso()" />
+                {{el.etiqueta}}
               </label>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <label>
-                <input type="radio" value="TIPAVI.PRO" name="tipoAviso" id="prorroga" formControlName="tipoAviso"
-                  (click)="verificaRadioTipo()" />
-                Prórroga
-              </label>
+              }
             </div>
           </div>
         </div>
@@ -72,7 +70,8 @@
           <div>
             <input id="idTransacccion" name="idTransaccion" type="text" maxlength="25" class="form-control"
               formControlName="idTransaccion" [ngClass]="isValid(datosAviso, 'idTransaccion') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumeric(datosAviso,'idTransaccion',$event)" />
+              (keyup)="sanitizeAlphanumeric(datosAviso,'idTransaccion',$event)"
+              (change)="setValoresStore(datosAviso, 'idTransaccion', 'setAvisoFormularioTransaccion')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -89,9 +88,10 @@
             <label for="puntos">:</label>
           </div>
           <div>
-            <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control"
+            <textarea id="motivoProrroga" name="motivoProrroga" rows="5" class="form-control textarea"
               [ngClass]="isValid(datosAviso, 'motivoProrroga') ? 'required' : ''" formControlName="motivoProrroga"
-              [maxlength]="250"></textarea>
+              [maxlength]="250"
+              (change)="setValoresStore(datosAviso, 'motivoProrroga', 'setAvisoFormularioMotivoProrroga')"></textarea>
           </div>
         </div>
       </div>
@@ -106,23 +106,26 @@
           </div>
           <div>
             <input id="nombrePlanta" name="nombreComercial" type="text" class="form-control" maxlength="250"
-              formControlName="nombreComercial" />
+              formControlName="nombreComercial"
+              (change)="setValoresStore(direccionOrigen, 'nombreComercial', 'setAvisoFormularioNombreComercial')" />
           </div>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="entidadFederativa" [label]="'Entidad federativa'" [required]="true"
             id="claveEntidadFederativa" formControlName="claveEntidadFederativa"
-            [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''"></app-catalogo-select>
+            [ngClass]="isValid(direccionOrigen,'claveEntidadFederativa') ? 'required' : ''"
+            (change)="setValoresStore(direccionOrigen, 'claveEntidadFederativa', 'setAvisoFormularioEntidadFederativa')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="delegacionMunicipio" [label]="'Alcaldía o Municipio'" [required]="true"
             id="claveDelegacionMunicipio" formControlName="claveDelegacionMunicipio"
-            [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''"></app-catalogo-select>
+            [ngClass]="isValid(direccionOrigen,'claveDelegacionMunicipio') ? 'required' : ''"
+            (change)="setValoresStore(direccionOrigen, 'claveDelegacionMunicipio', 'setAvisoFormularioDelegacionMunicipio')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="colonia" [label]="'Colonia'" [required]="true" id="claveColonia"
-            formControlName="claveColonia"
-            [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''"></app-catalogo-select>
+            formControlName="claveColonia" [ngClass]="isValid(direccionOrigen,'claveColonia') ? 'required' : ''"
+            (change)="setValoresStore(direccionOrigen, 'claveColonia', 'setAvisoFormularioColonia')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <div>
@@ -132,7 +135,8 @@
           </div>
           <div>
             <input id="calle" name="calle" type="text" class="form-control" maxlength="250" formControlName="calle"
-              [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''" />
+              [ngClass]="isValid(direccionOrigen,'calle') ? 'required' : ''"
+              (change)="setValoresStore(direccionOrigen, 'calle', 'setAvisoFormularioCalle')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -144,7 +148,8 @@
           <div>
             <input id="numeroExterior" name="numeroExterior" type="text" class="form-control" maxlength="15"
               formControlName="numeroExterior" [ngClass]="isValid(direccionOrigen,'numeroExterior') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroExterior',$event)" />
+              (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroExterior',$event)"
+              (change)="setValoresStore(direccionOrigen, 'numeroExterior', 'setAvisoFormularioNumeroExterior')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -155,7 +160,8 @@
           <div>
             <input id="numeroInterior" name="numeroInterior" type="text" class="form-control" maxlength="15"
               formControlName="numeroInterior" [ngClass]="isValid(direccionOrigen,'numeroInterior') ? 'required' : ''"
-              (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroInterior',$event)" />
+              (keyup)="sanitizeAlphanumericWithSpace(direccionOrigen,'numeroInterior',$event)"
+              (change)="setValoresStore(direccionOrigen, 'numeroInterior', 'setAvisoFormularioNumeroInterior')" />
           </div>
         </div>
         <div class="col-md-4">
@@ -167,7 +173,8 @@
           <div>
             <input id="codigoPostal" name="codigoPostal" type="text" class="form-control validanumericos" maxlength="5"
               formControlName="codigoPostal" (keyup)="sanitizeNumeric(direccionOrigen,'codigoPostal',$event)"
-              [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''" />
+              [ngClass]="isValid(direccionOrigen,'codigoPostal') ? 'required' : ''"
+              (change)="setValoresStore(direccionOrigen, 'codigoPostal', 'setAvisoFormularioCodigoPostal')" />
           </div>
         </div>
       </div>
@@ -182,38 +189,23 @@
         </div>
         <div class="radio">
           <div class="col-md-4">
-            <label>
-              <input type="radio" value="manual" name="tipoCarga" id="manual" formControlName="tipoCarga"
-                (click)="verificaRadioTipo()" />
-              Manual
+            @for (el of TIPACA; track el.valor) {
+            <label class="ms-5">
+              <input type="radio" value="{{el.valor}}" name="tipoCarga" id="{{el.valor}}" formControlName="tipoCarga"
+                (change)="setValoresStore(avisoFormulario, 'tipoCarga', 'setAvisoFormularioTipoCarga')" />
+              {{el.etiqueta}}
             </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-              <input type="radio" value="prorroga" name="tipoCarga" id="prorroga" formControlName="tipoCarga"
-                (click)="verificaRadioTipo()" />
-              Carga Masiva
-            </label>
+            }
           </div>
         </div>
       </div>
     </div>
-    @if(avisoFormulario.get('tipoCarga')?.value==='prorroga'){
+    @if(avisoFormulario.get('tipoCarga')?.value===TIPACA[1].valor){
     <div id="divCargaMasiva">
       <div class="row">
         <ng-titulo titulo="Plantilla de Carga Masiva" />
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div class="alert alert-info">
-            Datos de la Plantilla de Carga Masiva<span class="">*</span><br />
-            <label>
-              <a href="javascript:;" target="_blank">
-                Descargar plantilla
-              </a>
-            </label>
-          </div>
-        </div>
-      </div>
+      <ng-alert [CONTENIDO]="TEXTOS.TIPOCARGO"></ng-alert>
       <div class="row">
         <div class="col-md-12">
           <div id="errorArchivoAjax"></div>
@@ -221,14 +213,15 @@
       </div>
       <div class="row">
         <div class="col-md-8">
-          <input type="file" name="archivoMasivo" id="archivoMasivo" class="form-control" title="Examinar" />
+          <input type="file" name="archivoMasivo" id="archivoMasivo" class="form-control" title="Examinar" form
+            #fileInput (change)="onArchivoMasivoSeleccionado($event)" />
         </div>
         <div class="col-md-4">
           <div class="pull-right">
             <button id="botonCargar" name="botonCargar" class="btn btn-primary ms-2">
               Cargar archivo
             </button>
-            <button id="botonLimpiar" name="botonLimpiar" class="btn btn-default ms-2">
+            <button id="botonLimpiar" name="botonLimpiar" class="btn btn-default ms-2" (click)="limpiar(fileInput)">
               Limpiar
             </button>
           </div>
@@ -518,7 +511,7 @@
       </div>
       <div class="modal-footer custom-footer mt-4">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeMercancia> Cancelar </button>
-        <button type="submit" class="btn btn-primary" aria-hidden="true" (click)="agregarMercancia()"> Agregar </button>
+        <button type="submit" class="btn btn-primary" (click)="agregarMercancia()"> Agregar </button>
       </div>
     </div>
   </div>

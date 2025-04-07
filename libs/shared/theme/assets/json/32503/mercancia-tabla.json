@@ -2,19 +2,27 @@
     "datos": [
         {
             "id": 1,
-            "rfc": "XAXX010101000",
-            "nombreComercial": "NOMBRE COMERCIAL",
-            "entidadFederativa": "ENTIDAD FEDERATIVA",
-            "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-            "colonia": "COLONIA"
+            "claveFraccionArancelaria": "certificado",
+            "nico": "01",
+            "cantidad": "50",
+            "claveUnidadMedida": "Botella",
+            "valorUSD": "2555",
+            "descripcionMercancia": "certificado",
+            "descripcionProceso": "certificado",
+            "numPedimentoExportacion": "certificado",
+            "numPedimentoImportacion": "certificado"
         },
         {
             "id": 1,
-            "rfc": "XAXX010101000",
-            "nombreComercial": "NOMBRE COMERCIAL",
-            "entidadFederativa": "ENTIDAD FEDERATIVA",
-            "alcaldioOMuncipio": "ALCALDIA O MUNICIPIO",
-            "colonia": "COLONIA"
+            "claveFraccionArancelaria": "certificado",
+            "nico": "01",
+            "cantidad": "50",
+            "claveUnidadMedida": "Botella",
+            "valorUSD": "2555",
+            "descripcionMercancia": "certificado",
+            "descripcionProceso": "certificado",
+            "numPedimentoExportacion": "certificado",
+            "numPedimentoImportacion": "certificado"
         }
     ]
 }

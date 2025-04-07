@@ -1,4 +1,4 @@
-import { DatosSolicitante, DomicilioFormulario, MercanciaFormulario } from '../../tramites/32503/models/aviso-traslado.model';
+import { AvisoFormulario, DatosSolicitante, DomicilioFormulario, MercanciaFormulario } from '../../tramites/32503/models/aviso-traslado.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -7,9 +7,10 @@ export interface Tramite32503State {
 
   pasoActivo: number;
   pestanaActiva: number;
-  datosSolicitante: DatosSolicitante
-  mercanciaFormulario: MercanciaFormulario
-  domicilioFormulario: DomicilioFormulario
+  datosSolicitante: DatosSolicitante;
+  mercanciaFormulario: MercanciaFormulario;
+  domicilioFormulario: DomicilioFormulario;
+  avisoFormulario: AvisoFormulario;
 
 }
 
@@ -56,6 +57,24 @@ export function createInitialState(): Tramite32503State {
       numeroInterior: '',
       codigoPostal: '',
       rfc: '',
+    },
+    avisoFormulario: {
+      adace: '',
+      valorProgramaImmex: '',
+      valorAnioProgramaImmex: '',
+      tipoAviso: '',
+      idTransaccion: '',
+      motivoProrroga: '',
+      fechaTranslado: '',
+      nombreComercial: '',
+      claveEntidadFederativa: '',
+      claveDelegacionMunicipio: '',
+      claveColonia: '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      codigoPostal: '',
+      tipoCarga: '',
     }
   };
 }
@@ -196,6 +215,105 @@ export class Tramite32503Store extends Store<Tramite32503State> {
     this.update((state) => ({
       ...state,
       domicilioFormulario: { ...state.domicilioFormulario, rfc },
+    }));
+  }
+
+
+
+  public setAvisoFormularioAdace(adace: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, adace },
+    }));
+  }
+  public setAvisoFormularioValorProgramaImmex(valorProgramaImmex: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, valorProgramaImmex },
+    }));
+  }
+  public setAvisoFormularioValorAnioProgramaImmex(valorAnioProgramaImmex: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, valorAnioProgramaImmex },
+    }));
+  }
+  public setAvisoFormularioTipoAviso(tipoAviso: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, tipoAviso },
+    }));
+  }
+  public setAvisoFormularioTransaccion(idTransaccion: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, idTransaccion },
+    }));
+  }
+  public setAvisoFormularioMotivoProrroga(motivoProrroga: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, motivoProrroga },
+    }));
+  }
+  public setAvisoFormularioFechaTranslado(fechaTranslado: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, fechaTranslado },
+    }));
+  }
+  public setAvisoFormularioNombreComercial(nombreComercial: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, nombreComercial },
+    }));
+  }
+  public setAvisoFormularioEntidadFederativa(claveEntidadFederativa: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, claveEntidadFederativa },
+    }));
+  }
+  public setAvisoFormularioDelegacionMunicipio(claveDelegacionMunicipio: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, claveDelegacionMunicipio },
+    }));
+  }
+  public setAvisoFormularioColonia(claveColonia: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, claveColonia },
+    }));
+  }
+  public setAvisoFormularioCalle(calle: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, calle },
+    }));
+  }
+  public setAvisoFormularioNumeroExterior(numeroExterior: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, numeroExterior },
+    }));
+  }
+  public setAvisoFormularioNumeroInterior(numeroInterior: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, numeroInterior },
+    }));
+  }
+  public setAvisoFormularioCodigoPostal(codigoPostal: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, codigoPostal },
+    }));
+  }
+  public setAvisoFormularioTipoCarga(tipoCarga: string): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario: { ...state.avisoFormulario, tipoCarga },
     }));
   }
 

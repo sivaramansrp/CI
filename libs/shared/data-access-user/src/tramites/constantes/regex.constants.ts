@@ -197,3 +197,8 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+
+export const SOLO_ALFANUMERICO = /^[a-zA-Z0-9]*$/;
+export const REGEX_ALFANUMERICO_CON_ESPACIOS = /^[a-zA-Z0-9 ]*$/;
+export const REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = /[^a-zA-Z0-9 ]/g;
+export const REGEX_NUMERICO_CON_PUNTO = /^[0-9.]*$'/;

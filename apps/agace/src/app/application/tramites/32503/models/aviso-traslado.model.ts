@@ -45,12 +45,15 @@ export interface AvisoTablaDatos {
   datos: AvisoTabla[];
 }
 export interface MercanciaTabla {
-  id: number;
-  rfc: string,
-  nombreComercial: string,
-  entidadFederativa: string,
-  alcaldioOMuncipio: string,
-  colonia: string,
+  claveFraccionArancelaria: string;
+  nico: string,
+  cantidad: string,
+  claveUnidadMedida: string,
+  valorUSD: string,
+  descripcionMercancia: string,
+  descripcionProceso: string,
+  numPedimentoExportacion: string,
+  numPedimentoImportacion: string,
 }
 export interface MercanciaTablaDatos {
   datos: MercanciaTabla[];
@@ -76,4 +79,22 @@ export interface DomicilioFormulario {
   numeroInterior: string;
   codigoPostal: string;
   rfc: string;
+}
+export interface AvisoFormulario {
+  adace: string;
+  valorProgramaImmex: string;
+  valorAnioProgramaImmex: string;
+  tipoAviso: string;
+  idTransaccion: string;
+  motivoProrroga: string;
+  fechaTranslado: string;
+  nombreComercial: string;
+  claveEntidadFederativa: string;
+  claveDelegacionMunicipio: string;
+  claveColonia: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  codigoPostal: string;
+  tipoCarga: string;
 }
