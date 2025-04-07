@@ -5,7 +5,7 @@ import {
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
 import { catchError, Observable, throwError } from 'rxjs';
-import { ColumnasTabla, ListaClave, Mercancia } from '../models/consulta.model';
+import { Asociados, ColumnasTabla, ListaClave, Mercancia } from '../models/consulta.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +15,9 @@ export class ConsultaService {
 
   obtenerDatosEstado(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260704/estado.json');
+  }
+  obtenerDatosClave(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260704/clave.json');
   }
   getScianTabla(): Observable<ColumnasTabla[]> {
     return this.http
@@ -45,5 +48,22 @@ getListaClaveTabla(): Observable<ListaClave[]> {
         return throwError(() => error);
       })
     );
+}
+public getTramitesTabla(): Observable<Asociados[]> {
+  return this.http
+    .get<Asociados[]>('assets/json/260704/asociados-tabla.json')
+    .pipe(
+      catchError((error) => {
+        // Maneja errores en la solicitud HTTP.
+        return throwError(() => error);
+      })
+    );
+}
+obtenerDatosBanco(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/260704/banco.json');
+}
+
+getDescripcionScian(): Observable<RespuestaCatalogos> {
+  return this.http.get<RespuestaCatalogos>('assets/json/260601/descripcion-scian.json');
 }
 }

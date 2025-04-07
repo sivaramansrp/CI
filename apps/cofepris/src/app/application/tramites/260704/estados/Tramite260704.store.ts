@@ -433,4 +433,18 @@ export class Tramite260704Store extends Store<Solicitud260704State> {
         ),
       }));
     }
+
+    public setDescripcionScian(cveSCIANDescripcion: string): void {
+      this.update((state) => ({
+          ...state,
+          cveSCIANDescripcion,
+      }));
+  }
+
+  public setClaveScian(cveSCIAN: string): void {
+    this.update((state) => ({
+        ...state,
+        cveSCIAN,
+    }));
+}
 }

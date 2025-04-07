@@ -26,6 +26,7 @@ import {
 import { Tramite260704Store } from '../../estados/Tramite260704.store';
 import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+import { AVISO_PRIVACIDAD } from '../../constantes/consulta.enum';
 
 @Component({
   selector: 'app-datos-de-la-solicitud',
@@ -39,12 +40,14 @@ import { InputFechaComponent } from '../../../../../../../../../libs/shared/data
     TablaDinamicaComponent,
     CrosslistComponent,
     InputFechaComponent,
+    
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.css',
 })
 export class DatosDeLaSolicitudComponent implements OnInit {
   valorSeleccionado!: string;
+  hercelosSeleccionados!: string;
   datosDelEstablecimientoForm!: FormGroup;
   domicilloDelEstablecimientoForm!: FormGroup;
   scianForm!: FormGroup;
@@ -66,11 +69,18 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   usoEspecificoCrossList: CrossList = {} as CrossList;
   fechaInicialInput: InputFecha = FECHAINICIAL;
   fechaFinalInput: InputFecha = FECHAFINAL;
+  AVISO_PRIVACIDAD = AVISO_PRIVACIDAD;
+  descripcionScian!: Catalogo[];
 
   radioOpcions = [
     { label: 'Prórroga', value: 'prorroga' },
     { label: 'Modificación', value: 'modificacion' },
     { label: 'Modificación y prórroga', value: 'modificacionYProrroga' },
+  ];
+
+  hacerlosRadioOptions = [
+    { label: 'No', value: 'no' },
+    { label: 'Sí', value: 'si' },
   ];
   public estadoCatalogo: CatalogosSelect = {
     labelNombre: 'Estado',
@@ -189,14 +199,13 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   constructor(
     private consulta: ConsultaService,
     public store: Tramite260704Store
-  ) {
-    // this.datosDelEstablecimientoForm = new FormGroup({});
-  }
+  ) {  }
 
   ngOnInit(): void {
     this.getScianTabla();
     this.obtenerDatosEstado();
     this.getMercanciasTabla();
+    this.obtenerDatosClave();
   }
   public getScianTabla(): void {
     this.consulta
@@ -233,6 +242,27 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.habilitarEstado = false;
   }
 
+  limpiarDatosSCIAN(): void {
+    // Implementar la lógica para limpiar datos SCIAN.
+  }
+
+  agregarDatosSCIAN(): void {
+    // Implementar la lógica para agregar datos SCIAN.
+  }
+
+  claveScianSeleccion(): void {
+    const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
+    this.consulta.getDescripcionScian()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (result) => {
+          const SCIAN_DESCRIPCION = result.data[0].descripcion;
+          this.scianForm.get('cveSCIANDescripcion')?.setValue(SCIAN_DESCRIPCION);
+          this.store.setDescripcionScian(SCIAN_DESCRIPCION);
+        }
+      })
+    this.store.setClaveScian(CLAVE_SCIAN);
+  }
   seleccionarEstablecimiento(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
@@ -248,12 +278,24 @@ export class DatosDeLaSolicitudComponent implements OnInit {
         this.estadoCatalogo.catalogos = resp as Catalogo[];
       });
   }
+  obtenerDatosClave(): void {
+    this.consulta
+      .obtenerDatosClave()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((resp): void => {
+        this.claveCatalogo.catalogos = resp as Catalogo[];
+      });
+  }
 
   agregarMercanciaGrid(): void {
-    if (this.modalElement) {
+     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
     }
+  }
+ 
+  abrirDialogoAgregarDatosSCIAN(): void {
+    // Implementar la lógica para abrir dialogo agregar datos SCIAN.
   }
   setAvisoDeFuncionamiento(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;

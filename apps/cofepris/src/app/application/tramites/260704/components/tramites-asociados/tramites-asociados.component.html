@@ -1,1 +1,9 @@
-<p>tramites-asociados works!</p>
+
+    <label class="form-label" for="">Tramites asociados*:</label>
+
+<div class="row mt-5">
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+      [configuracionTabla]="destinatarioConfiguracionTabla"
+      [datos]="destinatarioDatos">
+    </app-tabla-dinamica></div>

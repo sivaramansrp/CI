@@ -2,7 +2,7 @@
   <label>Seleccione el tipo de operación que desea realizar*:</label>
 </div>
 <div class="row mt-5 radios">
-  <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado"  [layout]="'horizontal'"></app-input-radio>
+  <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [layout]="'horizontal'"></app-input-radio>
 </div>
 <div class="row mt-5">
   <div class="col-md-6">
@@ -97,29 +97,35 @@
   <div class="row">
     <div class="col-md-12 text-end">
       <button type="button" class="btn btn-danger"> Eliminar </button>
-      <button type="button" class="btn btn-primary ms-2" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Agregar </button>
+      <button type="button" class="btn btn-primary ms-2" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalClaveScian" (click)="agregarMercanciaGrid()"> Agregar </button>
     </div>
   </div>
-  <!-- Scian popup screen -->
-  <div class="row mt-5">
-    <ng-titulo titulo="Clave S.C.I.A.N." />
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true"></app-catalogo-select>
-    </div>
-    <div class="row">
-      <div class="col-md-6">
-        <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false"></app-catalogo-select>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="pull-right">
-        <button type="button" name="limpiarSCIAN" class="btn btn-danger"> Limpiar </button>
-        <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-        <button type="button" name="agregar" class="btn btn-primary ms-2"> Agregar </button>
+  <!-- Scian popup -->
+  <div class="modal fade" id="modalClaveScian" tabindex="-1" aria-labelledby="modalClaveScianLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Clave S.C.I.A.N.</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true"></app-catalogo-select>
+            <div class="row">
+              <app-catalogo-select [catalogo]="claveCatalogo.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false"></app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer custom-footer">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="pull-right">
+                <button type="button" name="limpiarSCIAN" class="btn btn-danger"> Limpiar </button>
+                <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
+                <button type="button" name="agregar" class="btn btn-primary ms-2"> Agregar </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -163,205 +169,198 @@
     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla"></app-tabla-dinamica>
   </div>
   <div class="row mt-5 pull-right">
-    <button type="button" name="agregar" class="btn btn-primary ms-2"> Modificar </button>
+    <button type="button" class="btn btn-primary ms-2" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
   </div>
   <!-- Datos mercancia popup screen start -->
-  <div class="col-md-12">
-    <ng-titulo titulo="Datos mercancía" />
-  </div>
-  <div class="row mt-5"></div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true"></app-catalogo-select>
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true"></app-catalogo-select>
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <label class="form-label">Marca*:</label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true"></app-catalogo-select>
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <label class="form-label">Especifique*:</label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span></label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-6">
-      <label class="form-label">Descripción de la fracción arancelaria*:</label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-3">
-       <label class="form-label">Cantidad UMT*:</label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-    <div class="col-md-3">
-      <label class="form-label">UMT*:<span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span></label>
-      <input class="form-control" placeholder="" type="text" />
-    </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-3">
-      <label class="form-label">Cantidad UMC*:</label>
-     <input class="form-control" placeholder="" type="text" />
-   </div>
-   <div class="col-md-3">
-     <label class="form-label">UMC*:<span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span></label>
-     <input class="form-control" placeholder="" type="text" />
-   </div>
-  </div>
-  <!-- collapsed crosslist -->
-  <div class="col-md-12 mt-4">
-    <div class="panel-group ficha-collapse" id="accordion">
-      <div class="panel panel-default">
-        <div
-          class="panel-heading"
-          (click)="paisOrigenColapsable()"
-          tabindex="0"
-        >
-          <h4 class="panel-title">País de origen</h4>
-          <button type="button" class="collpase-button collapsed"></button>
+  <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Datos mercancía</h4>
         </div>
-        @if(paisOrigen){
-        <div class="panel-collapse collapse in" id="panel-01">
-          <div class="panel-body">
-            <crosslist
-              [label]="paisOrigenCrossList.label"
-              [fechas]="paisOrigenCrossList.fechas"
-            ></crosslist>
+        <div class="modal-body">
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <label class="form-label">Marca*:</label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true"></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <label class="form-label">Especifique*:</label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+              </label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <label class="form-label">Descripción de la fracción arancelaria*:</label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-3">
+              <label class="form-label">Cantidad UMT*:</label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
+              </label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-3">
+              <label class="form-label">Cantidad UMC*:</label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
+              </label>
+              <input class="form-control" placeholder="" type="text" />
+            </div>
+          </div>
+          <!-- collapsed crosslist -->
+          <div class="col-md-12 mt-4">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                  <h4 class="panel-title">País de origen</h4>
+                  <button type="button" class="collpase-button collapsed"></button>
+                </div> @if(paisOrigen){ <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                  </div>
+                </div> }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-4">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading" (click)="paisProcedencis_colapsable()" tabindex="0">
+                  <h4 class="panel-title">País de procedencia</h4>
+                  <button type="button" class="collpase-button collapsed"></button>
+                </div> @if(paisProcedencisColapsable){ <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas"></crosslist>
+                  </div>
+                </div> }
+              </div>
+            </div>
+          </div>
+          <!-- Clave de los lotes -->
+          <div class="col-md-8 mt-3">
+            <div class="col-md-4">
+              <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+            </div>
+            <div class="col-md-4">
+              <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+            </div>
+          </div>
+          <div class="col-md-12 mt-3">
+            <label class="form-label" for="">Lista Claves de los lotes*:</label>
+          </div>
+          <div class="col-md-8 mt-3 justify-content-centre align-items-centre">
+            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla"></app-tabla-dinamica>
+          </div>
+          <div class="col-md-12 d-flex justify-content-end align-items-end">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-space"> Modificar </button>
+              <button class="btn btn-default ms-3" type="button"> Eliminar </button>
+              <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+            </div>
+          </div>
+          <!-- udospecifico crosslist -->
+          <div class="col-md-12 mt-4">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
+                  <h4 class="panel-title">Uso especifico</h4>
+                  <button type="button" class="collpase-button collapsed"></button>
+                </div> @if(usoEspecifico){ <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
+                  </div>
+                </div> }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 d-flex justify-content-end align-items-end">
+            <div class="btn-group">
+              <button class="btn btn-default ms-3" type="button">Cancelar</button>
+              <button type="button" class="btn btn-primary ms-3">Modificar </button>
+            </div>
           </div>
         </div>
-        }
       </div>
     </div>
   </div>
-  <div class="col-md-12 mt-4">
-    <div class="panel-group ficha-collapse" id="accordion">
-      <div class="panel panel-default">
-        <div
-          class="panel-heading"
-          (click)="paisProcedencis_colapsable()"
-          tabindex="0"
-        >
-          <h4 class="panel-title">País de procedencia</h4>
-          <button type="button" class="collpase-button collapsed"></button>
-        </div>
-        @if(paisProcedencisColapsable){
-        <div class="panel-collapse collapse in" id="panel-01">
-          <div class="panel-body">
-            <crosslist
-              [label]="paisProcedencisCrossList.label"
-              [fechas]="paisProcedencisCrossList.fechas"
-            ></crosslist>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-  </div>
-  <!-- Clave de los lotes -->
-  <div class="col-md-8 mt-3">
-    <div class="col-md-4">
-      <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
-    </div>
-    <div class="col-md-4">
-      <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
-    </div>
-  </div>
-
-  <div class="col-md-12 mt-3">
-    <label class="form-label" for="">Lista Claves de los lotes*:</label>
-  </div>
-
-  <div class="col-md-8 mt-3 justify-content-centre align-items-centre" >
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-      [configuracionTabla]="listaClave" 
-      [datos]="listaClaveTabla"
-    >
-    </app-tabla-dinamica>
-  </div>
-  <div class="col-md-2"></div>
-
-  <div class="col-md-12 d-flex justify-content-end align-items-end">
-    <div class="btn-group">
-      <button
-        type="button"
-        class="btn btn-default btn-space">
-        Modificar
-      </button>
-      <button
-        class="btn btn-default ms-3"
-        type="button">
-        Eliminar
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary ms-3">
-        Agregar
-      </button>
-    </div>
-  </div>
-<!-- udospecifico crosslist -->
-
-<div class="col-md-12 mt-4">
-  <div class="panel-group ficha-collapse" id="accordion">
-    <div class="panel panel-default">
-      <div
-        class="panel-heading"
-        (click)="usoEspecificoColapsable()"
-        tabindex="0"
-      >
-        <h4 class="panel-title">Uso especifico</h4>
-        <button type="button" class="collpase-button collapsed"></button>
-      </div>
-      @if(usoEspecifico){
-      <div class="panel-collapse collapse in" id="panel-01">
-        <div class="panel-body">
-          <crosslist
-            [fechas]="usoEspecificoCrossList.fechas"
-            [label]="usoEspecificoCrossList.label"
-          >
-          </crosslist>
-        </div>
-      </div>
-      }
-    </div>
-  </div>
-</div>
-<div class="col-md-12 d-flex justify-content-end align-items-end">
-  <div class="btn-group">
-    <button class="btn btn-default ms-3" type="button">Cancelar</button>
-    <button
-      type="button"
-      class="btn btn-primary ms-3">Modificar
-    </button>
-  </div>
-</div>
 </div>
 <!-- Datos mercancia popup screen end -->
+ <div class="row mt-5" style="margin-top: 100px;">
+<ng-titulo titulo="Manifiestos y declaraciones" /></div>
+<div class="alert alert-info">
+  <label style="font-weight: normal">
+    <div class="col-md-1 mt-5">
+      <input type="checkbox" class="mt-5" />
+      <b> *</b>
+    </div>
+    <div class="col-md-11 mt-4">{{ AVISO_PRIVACIDAD.TEXTO_DE_ALERTA}} </div>
+  </label>
+</div>
+<div class="col-md-12 mt-4">
+  <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+  <app-input-radio [radioOptions]="hacerlosRadioOptions" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'"></app-input-radio>
+</div>
+<ng-titulo titulo="Representante legal" />
+<div class="row mt-5">
+  <div class="col-md-4 mt-2">
+    <label class="form-label" for="rfc">RFC*:</label>
+    <input class="form-control" type="text" />
+  </div>
+  <div class="col-md-2 mt-4">
+    <button type="button" class="btn btn-primary">Buscar</button>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
+    <input class="form-control" type="text" />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+    <input class="form-control" type="text" />
+  </div>
+  <div class="col-md-4 mt-4">
+    <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+    <input class="form-control" type="text" />
+  </div>
+</div>
