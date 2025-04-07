@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
-import { EntradaHumanaComponent } from './pages/entrada-humana/entrada-humana.component';
+import { PermisoImportacionBiologicaComponent } from './pages/permiso-importacion-biologica/permiso-importacion-biologica.component';
 
 const ROUTES:Routes = [
   {
     path:'solictud',
-    component:EntradaHumanaComponent
+    component:PermisoImportacionBiologicaComponent
   }
 ];
 

@@ -13,10 +13,10 @@ import { NgModule } from '@angular/core';
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 
-import { EntradaHumanaRoutingModule } from './entrada-humana-routing.module';
+import { EntradaHumanaRoutingModule } from './permiso-importacion-biologica-routing.module';
 
 import { Datos260402Component } from './pages/datos-260402/datos-260402.component';
-import { EntradaHumanaComponent } from './pages/entrada-humana/entrada-humana.component';
+import { PermisoImportacionBiologicaComponent } from './pages/permiso-importacion-biologica/permiso-importacion-biologica.component';
 import { TercerosRelacionadosProcedenciaComponent } from '../../shared/components/terceros-relacionados-procedencia/terceros-relacionados-procedencia.component';
 
 
@@ -33,7 +33,7 @@ import { PropietarioComponent } from '../../shared/components/propietario/propie
 
 
 @NgModule({
-  declarations: [Datos260402Component,EntradaHumanaComponent
+  declarations: [Datos260402Component,PermisoImportacionBiologicaComponent
   ],
   imports: [
     CommonModule,

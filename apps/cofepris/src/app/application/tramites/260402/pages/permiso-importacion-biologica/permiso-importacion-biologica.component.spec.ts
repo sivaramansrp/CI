@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PermisoMaquilaComponent } from './permiso-maquila.component';
-import { PERMISO_MAQUILA } from '../../constantes/entrada-humana.enum';
+import { PermisoImportacionBiologicaComponent } from './permiso-importacion-biologica.component';
+import { PERMISO_MAQUILA } from '../../constantes/permiso-importacion-biologica.enum';
 
-describe('PermisoMaquilaComponent', () => {
-  let component: PermisoMaquilaComponent;
-  let fixture: ComponentFixture<PermisoMaquilaComponent>;
+describe('PermisoImportacionBiologicaComponent', () => {
+  let component: PermisoImportacionBiologicaComponent;
+  let fixture: ComponentFixture<PermisoImportacionBiologicaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PermisoMaquilaComponent],
+      declarations: [PermisoImportacionBiologicaComponent],
       imports:[PERMISO_MAQUILA]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PermisoMaquilaComponent);
+    fixture = TestBed.createComponent(PermisoImportacionBiologicaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

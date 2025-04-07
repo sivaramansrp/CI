@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
-import { PERMISO_MAQUILA } from '../../constantes/entrada-humana.enum';
+import { PERMISO_MAQUILA } from '../../constantes/permiso-importacion-biologica.enum';
 
 /**
  * Representa una acción asociada a un botón con un valor numérico.
@@ -21,11 +21,11 @@ interface AccionBoton {
  */
 
 @Component({
-  selector: 'app-entrada-humana',
+  selector: 'app-permiso-importacion-biologica',
   standalone: false,
-  templateUrl: './entrada-humana.component.html',
+  templateUrl: './permiso-importacion-biologica.component.html',
 })
-export class EntradaHumanaComponent {
+export class PermisoImportacionBiologicaComponent {
   /**
    * @comdoc
    * Referencia al componente WizardComponent utilizado en este componente.
