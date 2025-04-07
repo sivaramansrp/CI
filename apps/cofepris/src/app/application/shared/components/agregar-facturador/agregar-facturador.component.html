@@ -31,24 +31,27 @@
       </div>
     </div>
 
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === 'Moral') {
-      <div class="row">
-        <div class="form-group">
-          <label class="form-label row mt-3 mover-izquierda fs-2" for="denominacionRazon"
-            >Denominación/razón social*:</label
-          >
-          <input
-            class="form-control col-md-4"
-            id="denominacionRazon"
-            type="text"
-            formControlName="denominacionRazon"
-          />
-        </div>
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.MORAL) {
+    <div class="row">
+      <div class="form-group">
+        <label
+          class="form-label row mt-3 mover-izquierda fs-2"
+          for="denominacionRazon"
+          >Denominación/razón social*:</label
+        >
+        <input
+          class="form-control col-md-4"
+          id="denominacionRazon"
+          type="text"
+          formControlName="denominacionRazon"
+        />
       </div>
+    </div>
     }
 
     <!-- Datos Personales -->
-    @if(agregarFacturadorForm.get('tipoPersona')?.value === 'Fisica') {
+    @if(agregarFacturadorForm.get('tipoPersona')?.value === tipoPersona.FISICA)
+    {
     <div class="row mt-5">
       <h4 class="mt-4">Datos personales</h4>
       <div class="col-md-4">
@@ -72,7 +75,7 @@
         />
       </div>
     </div>
-  }
+    }
 
     <!-- Domicilio -->
     <h4 class="mt-5">Domicilio</h4>
@@ -162,7 +165,7 @@
             class="btn btn-danger ms-2"
             (click)="limpiarFormulario()"
           >
-          Limpar
+            Limpar
           </button>
           <button
             type="button"

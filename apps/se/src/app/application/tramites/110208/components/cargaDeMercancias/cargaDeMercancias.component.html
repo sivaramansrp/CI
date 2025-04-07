@@ -1,0 +1,138 @@
+<ng-titulo titulo="Carga de mercancías por archivo" />
+<div class="row w-100">
+    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-primary">Carga por archivo</button>
+    </div>
+</div>
+<div class="row mt-5">
+    <ng-alert [CONTENIDO]="alerta.inst"></ng-alert>
+</div>
+<h6 class="mt-5">Mercancías seleccionadas</h6>
+<app-tabla-dinamica [configuracionTabla]="mercanciasTabla"
+[datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+<ul class="pagination d-flex justify-content-center">
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+</ul>
+<div class="row w-100">
+    <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+        <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()">Modificar</button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Datos de la mercancía</h4>
+            </div>
+            <div class="modal-body modal-body-height">
+                <form [formGroup]="formMercancia">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="fraccionArancelaria">Fracción arancelaria:</label>
+                                <input type="text" id="fraccionArancelaria" formControlName="fraccionArancelaria" class="form-control">
+                              </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombreComercial">Nombre comercial de la mercancía (igual que en la factura):</label>
+                                <input type="text" id="nombreComercial" formControlName="nombreComercial" class="form-control">
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombreTecnio">Nombre técnico:</label>
+                                <input type="text" id="nombreTecnio" formControlName="nombreTecnio" class="form-control">
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombreEnIngles">Nombre en inglés:</label>
+                                <input type="text" id="nombreEnIngles" formControlName="nombreEnIngles" class="form-control">
+                              </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="criterioPara">Criterio para conferir origen:</label>
+                                <input type="text" id="criterioPara" formControlName="criterioPara" class="form-control">
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="marca">Marca:</label>
+                                <input type="text" id="marca" formControlName="marca" class="form-control" (change)="setValoresStore(formMercancia,'marca', 'setMarca')">
+                              </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="cantidad">Cantidad*:</label>
+                                <input type="text" id="cantidad" formControlName="cantidad" class="form-control" (change)="setValoresStore(formMercancia,'cantidad', 'setCantidad')">
+                              </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <app-catalogo-select [catalogo]="estado" [label]="'UMC'"
+                                [required]="true" name="umc" formControlName="umc" (change)="setValoresStore(formMercancia,'umc', 'setUmc')"
+                                ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="valorDeLa">Valor de la mercancía (dólares)*:</label>
+                                <input type="text" id="valorDeLa" formControlName="valorDeLa" class="form-control" (change)="setValoresStore(formMercancia,'valorDeLa', 'setValorDeLa')">
+                              </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="complementoDescripcion">Complemento de la descripción*:</label>
+                                <input type="text" id="complementoDescripcion" formControlName="complementoDescripcion" class="form-control h-70" (change)="setValoresStore(formMercancia,'complementoDescripcion', 'setComplementoDescripcion')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="nFactura">N° factura*:</label>
+                                <input type="text" id="nFactura" formControlName="nFactura" class="form-control" (change)="setValoresStore(formMercancia,'nFactura', 'setNFactura')">
+                              </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <app-catalogo-select [catalogo]="estado" [label]="'Tipo de factura'"
+                                [required]="true" name="tipoDeFactura" formControlName="tipoDeFactura" (change)="setValoresStore(formMercancia,'tipoDeFactura', 'setTipoDeFactura')"
+                                ></app-catalogo-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <input-fecha [datos]="fechaFacturaInput" [setFecha]="formMercancia.get('fechaFactura')?.value"
+                                (valorCambiado)="cambioFechaFactura($event,formMercancia,'fechaFactura', 'setFechaFactura')"></input-fecha>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+            <div class="modal-footer custom-footer">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
