@@ -72,7 +72,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
   /**
    * Lista de opciones de verificación obtenidas de un catálogo.
    */
-  public verificacion: Catalogo[] = realizar.verficacion;
+  public verificacion: Catalogo[] = realizar.verificacion;
 
   /**
    * Estado de la solicitud 221602, que contiene los valores actuales de la solicitud.

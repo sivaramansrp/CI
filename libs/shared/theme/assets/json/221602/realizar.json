@@ -45,7 +45,7 @@
             "certificado_internacional_electronico": ""
           }],
           "medio":[{ "id": 1, "descripcion": "Terrestre" }], 
-          "verficacion":[{ "id": 1, "descripcion": "NO CRUZA NINGUN PUNTO." }] ,
+          "verificacion":[{ "id": 1, "descripcion": "NO CRUZA NINGUN PUNTO." }] ,
           "exportador":[
             {
                 "nombre_denominacion_o_razon_social": "IDAKA & CO. LTD.",
