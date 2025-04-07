@@ -79,9 +79,23 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
    */
   public permisoDesistirFormData = PERMISO_A_DESISTIR;
 
-  get ninoFormGroup(): FormGroup {
-    return this.forma.get('ninoFormGroup') as FormGroup;
-  }
+  /**
+  * compo doc
+  * @getter ninoFormGroup
+  * @description
+  * Este getter devuelve el grupo de formularios anidado llamado `ninoFormGroup` 
+  * dentro del formulario reactivo principal `forma`. 
+  * Se utiliza para acceder y manipular los controles y valores específicos de este grupo de formularios.
+  * 
+  * @returns {FormGroup} El grupo de formularios `ninoFormGroup` como un objeto de tipo `FormGroup`.
+  * 
+  * @example
+  * const grupo = this.ninoFormGroup;
+  * grupo.get('campo').setValue('nuevo valor');
+  */
+get ninoFormGroup(): FormGroup {
+  return this.forma.get('ninoFormGroup') as FormGroup;
+}
 
   /**
    * @method ngOnInit
@@ -101,18 +115,28 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
 
-    this.forma.valueChanges
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((value: { ninoFormGroup: Record<string, unknown> }) => {
-          Object.entries(value.ninoFormGroup).forEach(([key, fieldValue]) => {
-            this.cambioEnValoresStore(key, fieldValue);
-          });
-        })
-      )
-      .subscribe();
-
+  /**
+  * compo doc
+  * @method establecerCambioDeValor
+  * @description
+  * Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
+  * Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
+  * dinámico del formulario en el store correspondiente.
+  * 
+  * @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
+  * El objeto tiene la estructura: `{ campo: string; valor: any }`.
+  * 
+  * @example
+  * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
+  * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    if (event) {
+      this.cambioEnValoresStore(event.campo, event.valor);
+    }
   }
 
   /**
@@ -136,6 +160,6 @@ export class PermisoDesistirComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
-    }
+  }
   
 }

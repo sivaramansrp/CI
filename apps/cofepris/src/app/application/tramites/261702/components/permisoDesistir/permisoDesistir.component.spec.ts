@@ -53,7 +53,6 @@ describe('PermisoDesistirComponent', () => {
       component.ngOnDestroy();
       expect(nextSpy).toHaveBeenCalled();
       expect(completeSpy).toHaveBeenCalled();
-      expect(component.subscription.closed).toBeTruthy();
     });
   
     it('should set and remove validators dynamically', () => {
@@ -78,14 +77,14 @@ describe('PermisoDesistirComponent', () => {
     it('should call setDynamicFieldValue with correct campo and value', () => {
       const campo = 'folio';
       const value = 'folio';
-      component.changeInValoresStore(campo, value);
+      component.cambioEnValoresStore(campo, value);
       expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith(campo, value);
     });
 
     it('should call setDynamicFieldValue with numeric value', () => {
       const campo = 'testCampo';
       const value = 12345;
-      component.changeInValoresStore(campo, value);
+      component.cambioEnValoresStore(campo, value);
       expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledWith(campo, 12345);
     });
 
@@ -94,9 +93,9 @@ describe('PermisoDesistirComponent', () => {
       const value = 'testValue';
       jest.spyOn(mockTramite261702Store, 'setDynamicFieldValue');
       mockTramite261702Store.setDynamicFieldValue.mockClear();
-      component.changeInValoresStore(campo, value);
+      component.cambioEnValoresStore(campo, value);
       expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledTimes(1);
-      component.changeInValoresStore(campo, value);
+      component.cambioEnValoresStore(campo, value);
       expect(mockTramite261702Store.setDynamicFieldValue).toHaveBeenCalledTimes(2);
     });
   

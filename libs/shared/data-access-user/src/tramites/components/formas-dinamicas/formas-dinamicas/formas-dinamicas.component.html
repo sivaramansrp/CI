@@ -20,6 +20,7 @@
                             [required]="seRequiere(item.campo)"
                             [readonly]="item.solo_lectura"
                             [ngClass]="esValido(item.campo) ? 'required' : ''"
+                            (change)="eventoDeCambioDeValor($event, item.campo)"
                           />
                           
                           <validadores-de-formularios 
@@ -45,6 +46,7 @@
                             [required]="seRequiere(item.campo)"
                             [readonly]="item.solo_lectura"
                             [ngClass]="esValido(item.campo) ? 'required' : ''"
+                            (change)="eventoDeCambioDeValor($event, item.campo)"
                           />
                           <validadores-de-formularios 
                             [forma]="forma" 
@@ -67,7 +69,9 @@
                           [required]="seRequiere(item.campo)"
                           [readonly]="item.solo_lectura"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
+                          (change)="eventoDeCambioDeValor($event, item.campo)"
                         ></textarea>
+                
                           <validadores-de-formularios 
                             [forma]="forma" 
                             [controlDeFormulario]="item.campo" 
@@ -76,13 +80,15 @@
                       </div>
                   } @case ('select-catalogos') {
                     <div [ngClass]="[obtenerClaseResponsiva(item.clase), 'mt-' + item.margin_top]" class="min-height">
-                      <app-catalogo-select 
+                      <app-catalogo-select
                         [catalogo]="item?.opciones || []" 
                         [formControlName]="item.campo" 
                         [label]="item.label_nombre" 
                         [required]="seRequiere(item.campo)" 
                         name=""
+                        (selectionChange)="eventoDeCambioDeValor($event, item.campo)"
                       ></app-catalogo-select>
+                      
                       <validadores-de-formularios 
                             [forma]="forma" 
                             [controlDeFormulario]="item.campo" 
@@ -99,7 +105,9 @@
                         type="checkbox"
                         [id]="item.id"
                         [formControlName]="item.campo"
+                        (change)="eventoDeCambioDeValor($event, item.campo)"
                       />
+                      
                       
                       <label class="form-label" [for]="item.id" style="margin-left: 10px;">{{
                         item.label_nombre
@@ -130,7 +138,9 @@
                           (valueChange)="cambiarRadio($event)"
                           id="{{item.id}}"
                           formControlName="{{item.campo}}"
+                          (valueChange)="eventoDeCambioDeValor($event, item.campo)"
                         ></app-input-radio>
+                        
                       </div>
                     </div>
                   }

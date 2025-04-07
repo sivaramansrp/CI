@@ -16,6 +16,10 @@
             <div class="mensaje-error">
                 {{ validador.mensaje }}
             </div>
+        } @else if (validador.tipo === 'backend' && forma.get(controlDeFormulario)?.errors?.['backend']) {
+            <div class="mensaje-error">
+                {{ forma.get(controlDeFormulario)?.errors?.['backend'].mensaje }}
+            </div>
         }
 
     }

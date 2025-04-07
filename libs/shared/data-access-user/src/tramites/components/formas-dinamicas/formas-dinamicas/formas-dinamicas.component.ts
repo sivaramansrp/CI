@@ -112,6 +112,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
 
   /**
   * compo doc
+  * @output emitirCambioDeValor
+  * @type {EventEmitter<ModeloDeFormaDinamica>}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Este es un EventEmitter que emite un evento cuando se hace clic en un botón
+  * asociado a un campo dinámico del formulario. El evento emite un objeto de tipo
+  * `ModeloDeFormaDinamica`, que contiene información sobre el campo dinámico
+  * relacionado con el botón clicado.
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Output() emitirCambioDeValor: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+
+  /**
+  * compo doc
   * Valor seleccionado del radio.
   * @type {string}
   * @memberof FormasDinamicasComponent
@@ -133,7 +147,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   // eslint-disable-next-line no-empty-function
   };
   
-
   /**
   * compo doc
   * @constructor
@@ -260,7 +273,6 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       if (validadore.tipo.includes('pattern') && typeof validadore.valor === 'string') {
         VALIDATORS.push(Validators.pattern(validadore.valor));
       }
-  
     });
     return VALIDATORS;
   }
@@ -310,6 +322,35 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   public alHacerClicEnElBoton(item: ModeloDeFormaDinamica): void {
     if (item) {
       this.emitirEventoDeClic.emit(item);
+    }
+  }
+
+  /**
+  * compo doc
+  * @method eventoDeCambioDeValor
+  * @description
+  * Este método se ejecuta cuando ocurre un cambio en el valor de un campo del formulario.
+  * Detecta el valor del evento, ya sea desde un elemento HTML o directamente desde el evento,
+  * y emite un objeto que contiene el nombre del campo y su nuevo valor.
+  * 
+  * @param event - El evento que contiene el nuevo valor del campo. Puede ser un evento de entrada
+  * (como un cambio en un campo de texto) o un valor directo.
+  * @param campo - El nombre del campo del formulario que ha cambiado.
+  * 
+  * @example
+  * eventoDeCambioDeValor({ target: { value: 'nuevo valor' } }, 'nombreCampo');
+  * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
+  */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public eventoDeCambioDeValor(event: any, campo: string): void {
+    let VALOR;
+    if (event.target) {
+      VALOR = (event.target as HTMLInputElement).value;
+    } else {
+      VALOR = event;
+    }
+    if (campo && event) {
+      this.emitirCambioDeValor.emit({ campo: campo, valor: VALOR });
     }
   }
 

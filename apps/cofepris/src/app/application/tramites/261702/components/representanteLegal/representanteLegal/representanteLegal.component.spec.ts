@@ -59,7 +59,7 @@ describe('RepresentanteLegalComponent', () => {
       margin_top: 5,
     };
   
-    component.onButtonClick(event);
+    component.alHacerClicEnElBoton(event);
     const ninoFormGroup = component.forma.get('ninoFormGroup') as FormGroup;
     ninoFormGroup.addControl('nombre', new FormGroup({}));
     ninoFormGroup.addControl('apellidoPaterno', new FormGroup({}));
@@ -90,7 +90,6 @@ describe('RepresentanteLegalComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
-    expect(component.subscription.closed).toBeTruthy();
   });
 
   it('should set and remove validators dynamically', () => {

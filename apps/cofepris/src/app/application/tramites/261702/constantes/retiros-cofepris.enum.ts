@@ -93,51 +93,7 @@ export const REPRESENTANTE_LEGAL = [
     ],
     marcador_de_posicion: '',
     valor_predeterminado: '',
-    margin_top: 0,
-    nino: [
-      {
-        label_nombre: 'Nombre o Razón Social',
-        campo: 'nombre',
-        clase: 'col-md-4',
-        tipo_input: 'text',
-        desactivado: true,
-        solo_lectura: false,
-        validadores: [
-          { tipo: 'required' }
-        ],
-        marcador_de_posicion: '',
-        margin_top: 5,
-        valor_predeterminado: '47875'
-      },
-      {
-        label_nombre: 'Apellido paterno',
-        campo: 'apellidoPaterno',
-        clase: 'col-md-4',
-        tipo_input: 'text',
-        desactivado: true,
-        solo_lectura: false,
-        validadores: [
-          { tipo: 'required' }
-        ],
-        marcador_de_posicion: '',
-        margin_top: 5,
-        valor_predeterminado: 'Paterno'
-      },
-      {
-        label_nombre: 'Apellido materno',
-        campo: 'apellidoMaterno',
-        clase: 'col-md-4',
-        tipo_input: 'text',
-        desactivado: true,
-        solo_lectura: false,
-        validadores:[
-          { tipo: '' }
-        ],
-        marcador_de_posicion:'',
-        margin_top: 5,
-        valor_predeterminado: 'Materno'
-      }
-    ]
+    margin_top: 0
   },
   {
     id: 'consultarIDC',
@@ -147,7 +103,6 @@ export const REPRESENTANTE_LEGAL = [
     tipo_input: 'button',
     desactivado: false,
     margin_top: 5,
-    vinculado_a: 'rfc',
   },
   {
     id: 'representanteLegalNombre',
