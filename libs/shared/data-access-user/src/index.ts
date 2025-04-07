@@ -123,3 +123,5 @@ export * from './core/models/260303/certificados-licencias-permisos.model';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
+
+export * from './tramites/components/select-catalogos/select-catalogos.component';
