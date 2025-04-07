@@ -7,11 +7,11 @@ import { PANTA_PASOS } from '../../../../../../../../../libs/shared/data-access-
 import { AccionBoton } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/260514/aviso-pantallas.model'
 
 @Component({
-  selector: 'app-pantallas-260514',
-  templateUrl: './pantallas-260514.component.html',
-  styleUrl: './pantallas-260514.component.scss',
+  selector: 'app-pantallas',
+  templateUrl: './pantallas.component.html',
+  styleUrl: './pantallas.component.scss',
 })
-export class Pantallas260514Component {
+export class PantallasComponent {
 
   /**
      * Lista de pasos del wizard.

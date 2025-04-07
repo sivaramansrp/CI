@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pantallas260514Component } from './pantallas-260514.component';
+import { Pantallas260514Component } from './pantallas.component';
 
 describe('Pantallas260514Component', () => {
   let component: Pantallas260514Component;

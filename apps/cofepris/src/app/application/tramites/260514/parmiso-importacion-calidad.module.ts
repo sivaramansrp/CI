@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 
 import { ParmisoImportacionCalidadRoutingModule } from './parmiso-importacion-calidad-routing.module';
 
-import { Datos260514Component } from './pages/datos-260514/datos-260514.component';
-import { Pantallas260514Component } from './pages/pantallas-260514/pantallas-260514.component';
+import { DatosComponent } from './pages/datos/datos.component';
+import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 
@@ -20,7 +20,7 @@ import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pag
 import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
 
 @NgModule({
-  declarations: [Datos260514Component, Pantallas260514Component,PasoDosComponent,PasoTresComponent
+  declarations: [DatosComponent, PantallasComponent,PasoDosComponent,PasoTresComponent
 
    ],
   imports: [CommonModule, 
