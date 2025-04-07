@@ -72,7 +72,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   constructor(
     private tramiteStore: Tramite260218Store,
     private tramiteQuery: Tramite260218Query
-  ) {}
+  ) {
+    // no realizar ninguna acción
+  }
 
 
   /**

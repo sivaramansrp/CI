@@ -16,7 +16,9 @@ import { Tramite260218Store } from "../../estados/tramite260218Store.store";
 })
 export class AgregarsFabricanteComponent {
 
-  constructor(public tramiteStore: Tramite260218Store){}
+  constructor(public tramiteStore: Tramite260218Store){
+        // no realizar ninguna acción
+  }
   /**
    * @property {boolean} estaOculto
    * Variable booleana que indica si el componente o sección relacionada con el 

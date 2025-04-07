@@ -60,7 +60,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private tramite260218Query: Tramite260218Query,
     private tramite260218Store: Tramite260218Store
-  ) { }
+  ) { 
+        // no realizar ninguna acción
+  }
 
   /**
    * Método del ciclo de vida de Angular, se ejecuta al iniciar el componente.

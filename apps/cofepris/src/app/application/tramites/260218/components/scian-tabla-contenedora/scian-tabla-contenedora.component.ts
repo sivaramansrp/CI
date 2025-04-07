@@ -26,7 +26,9 @@ export class ScianTablaContenedoraComponent {
    *
    * @param tramite260218Store - Store que maneja el estado de la información del trámite.
    */
-  constructor(private tramite260218Store: Tramite260218Store) {}
+  constructor(private tramite260218Store: Tramite260218Store) {
+        // no realizar ninguna acción
+  }
 
   /**
    * @method obtenerSeleccionado

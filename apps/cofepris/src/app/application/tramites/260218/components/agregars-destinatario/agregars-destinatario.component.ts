@@ -13,7 +13,9 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 })
 export class AgregarsDestinatarioComponent {
   
-  constructor(public tramiteStore: Tramite260218Store) {}
+  constructor(public tramiteStore: Tramite260218Store) {
+    // no realizar ninguna acción
+  }
 
   /**
    * Actualiza la tabla de datos de destinatarios finales con los datos proporcionados.

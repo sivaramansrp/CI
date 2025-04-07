@@ -53,7 +53,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
   constructor(
     private tramite260218Query: Tramite260218Query,
     private tramite260218Store: Tramite260218Store
-  ) {}
+  ) {
+        // no realizar ninguna acción
+  }
 
   /**
    * @method ngOnInit

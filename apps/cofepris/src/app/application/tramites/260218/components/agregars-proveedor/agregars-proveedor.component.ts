@@ -14,6 +14,7 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 export class AgregarsProveedorComponent {
     constructor(
         public tramiteStore: Tramite260218Store){
+                // no realizar ninguna acción
     }
 
     /**
