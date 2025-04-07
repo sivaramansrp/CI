@@ -1,17 +1,20 @@
-import * as cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
-import * as certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
 import * as certificadosACancelarDatos from '@libs/shared/theme/assets/json/140104/certificados-a-cancelar.json';
+import * as certificadosDisponiblesDatos from '@libs/shared/theme/assets/json/140104/certificados-disponibles.json';
+import * as cuposDisponiblesDatos from '@libs/shared/theme/assets/json/140104/cupos-disponibles.json';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { CuposDisponibles } from '../../models/cancelacion-de-certificados.model';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder} from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnDestroy} from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { takeUntil } from 'rxjs/operators';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-cancelacion-de-certificados',

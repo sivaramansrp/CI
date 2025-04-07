@@ -1,11 +1,15 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
-import { combineLatest } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { FacturasDisponiblesParaDevolver } from '../../models/cancelacion-de-certificados.model';
+import { FacturasSeleccionadasParaDevolver } from '../../models/cancelacion-de-certificados.model';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { FacturasDisponiblesParaDevolver, FacturasSeleccionadasParaDevolver } from '../../models/cancelacion-de-certificados.model';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Validators } from '@angular/forms';
 
 /**
  * Componente para realizar la búsqueda de folios, visualización de datos de facturas
@@ -110,14 +114,6 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
     this.servicioDeMensajesService.establecerDatosDePermiso(true);
   }
 
-  /**
-   * Método para cancelar la visualización del detalle del permiso.
-   * 
-   * @param event Evento que desencadena la acción
-   */
-  public detalleCancelar(event: Event): void {
-    // this.detalleDelPermiso = false;
-  }
 
   /**
    * Método que se ejecuta al cancelar la acción de búsqueda.
@@ -127,15 +123,6 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    */
   public cancelar(event: Event): void {
     this.servicioDeMensajesService.enviarMensaje(false);
-  }
-
-  /**
-   * Método reservado para implementar lógica de devolución de monto.
-   * 
-   * @param event Evento que desencadena la acción
-   */
-  public devloverMonto(event: Event): void {
-    // lógica pendiente
   }
 
   /**

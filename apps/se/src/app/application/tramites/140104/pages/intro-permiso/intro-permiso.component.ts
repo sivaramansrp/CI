@@ -98,7 +98,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
       this.mostrarBusqueda = mensaje;
     });
     this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
-      this.mostrarDevolverFacturas  = mensaje;
+      this.mostrarDevolverFacturas = mensaje;
     });
   }
   /**

@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Store, StoreConfig } from '@datorama/akita';
 import {
     CuposDisponibles,
     CuposDisponiblesDatos,
     createDatosState,
 } from '../models/cancelacion-de-certificados.model';
+import { Injectable } from '@angular/core';
+import { Store } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
+
 @Injectable({
     providedIn: 'root',
 })

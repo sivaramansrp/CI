@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-
-import { CuposDisponibles, CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
+import { BehaviorSubject } from 'rxjs';
+import { CuposDisponibles } from '../models/cancelacion-de-certificados.model';
+import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 /**
  * Servicio que centraliza la comunicación entre componentes a través de mensajes observables.
