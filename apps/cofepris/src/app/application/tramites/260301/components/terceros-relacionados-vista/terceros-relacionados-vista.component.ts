@@ -122,6 +122,10 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Asigna el valor de `TIPO_TABLA_DATOS` a la variable `tipoTablaDatos`.
+   * `TIPO_TABLA_DATOS` es un objeto o constante que define los tipos de datos para las tablas.
+   */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
   /**
@@ -157,12 +161,21 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     this.otrasTablaDatos$ = this.tramiteQuery.getOtrasTablaDatos$;
   }
 
+  /**
+   * Navega a la ruta 'aggregar-datos-generales' con el parámetro `tipo` pasado en la URL.
+   * La navegación se realiza de manera relativa a la ruta activada actual.
+   *
+   * @param tipo - El tipo de datos que se pasará en la URL.
+   */
   navigate(tipo: string): void {
     this.router.navigate(['..', 'aggregar-datos-generales', tipo], {
       relativeTo: this.activatedROute,
     });
   }
 
+  /**
+   * Navega a la ruta 'agregar-otros' de manera relativa a la ruta activada actual.
+   */
   navigateOtros(): void {
     this.router.navigate(['..', 'agregar-otros'], {
       relativeTo: this.activatedROute,
