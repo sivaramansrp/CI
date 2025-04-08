@@ -35,7 +35,9 @@ const ROUTES: Routes = [
   {
     path: 'registro-cuentas-bancarias',
     loadChildren: () =>
-      import('./tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module').then((m) => m.RegistroCuentasBancariasModule),
+      import(
+        './tramites/6001/registro-cuentas-bancarias/registro-cuentas-bancarias.module'
+      ).then((m) => m.RegistroCuentasBancariasModule),
   },
   {
     path: 'importante',
@@ -57,12 +59,13 @@ const ROUTES: Routes = [
       import('./tramites/10301/importador-exportador.module').then(
         (m) => m.ImportadorExportadorModule
       ),
-    },
-    {
+  },
+  {
     path: 'donaciones-extranjeras',
     loadChildren: () =>
       import('./tramites/10303/donaciones-extranjeras.module').then(
-        (m) => m.DonacionesExtranjerasModule)
+        (m) => m.DonacionesExtranjerasModule
+      ),
   },
   {
     path: 'muestras-mercancias',
@@ -73,9 +76,10 @@ const ROUTES: Routes = [
   },
   {
     path: 'atender-requerimientos',
-    loadChildren: () => import('./atencion-requerimientos/atencion-requerimientos.module').then(
-      (m) => m.AtencionRequerimientosModule
-    ),
+    loadChildren: () =>
+      import('./atencion-requerimientos/atencion-requerimientos.module').then(
+        (m) => m.AtencionRequerimientosModule
+      ),
   },
   {
     path: 'transportista-terrestre',
@@ -86,26 +90,29 @@ const ROUTES: Routes = [
   },
   {
     path: 'temporal-contenedores',
-    loadChildren: () => import('./tramites/11201/temporal-contenedores.module').then(
-      (m) => m.TemporalContenedoresModule
-    ),
+    loadChildren: () =>
+      import('./tramites/11201/temporal-contenedores.module').then(
+        (m) => m.TemporalContenedoresModule
+      ),
   },
   {
     path: 'notificacion',
-    component: NotificacionPageComponent
+    component: NotificacionPageComponent,
   },
   {
     path: 'firmar',
-    component: FirmaPageComponent
+    component: FirmaPageComponent,
   },
   {
     path: 'acuse',
-    component: AcusePageComponent
+    component: AcusePageComponent,
   },
   {
     path: 'cancelacion-servicios-extraordinarios',
     loadChildren: () =>
-      import('./tramites/570101/cancelacion-servicios-extraordinarios.module').then((m) => m.CancelacionServiciosExtraordinariosModule),
+      import(
+        './tramites/570101/cancelacion-servicios-extraordinarios.module'
+      ).then((m) => m.CancelacionServiciosExtraordinariosModule),
   },
   
 {
@@ -131,14 +138,30 @@ const ROUTES: Routes = [
   },
   {
     path: 'certi-registro',
-      loadChildren: () =>
-        import('./tramites/302/certi-registro.module').then((m) => m.CertiRegistroModule),
+    loadChildren: () =>
+      import('./tramites/302/certi-registro.module').then(
+        (m) => m.CertiRegistroModule
+      ),
   },
   {
     path: 'transportista-terrestre',
     loadChildren: () =>
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
+      ),
+  },
+  {
+    path: 'attention-Of-Renewal',
+    loadChildren: () =>
+      import('./tramites/40403/attentionOfRenewal.module').then(
+        (m) => m.AttentionOfRenewalModule
+      ),
+  },
+  {
+    path: 'retirada-de-la-autorizacion-de-donaciones',
+    loadChildren: () =>
+      import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
+        (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
       ),
   },
   {
@@ -154,4 +177,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
