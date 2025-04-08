@@ -21,7 +21,11 @@ export class ImportacionEquipoAnticontaminanteService {
    * Constructor del servicio. Inyecta el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  /**
+   * Constructor vacío.
+   */
+  }
 
   /**
    * @descripcion

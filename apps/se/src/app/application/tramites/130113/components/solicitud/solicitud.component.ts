@@ -633,11 +633,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Establece valores en el store.
    */
   setValoresStore(event: { form: FormGroup; campo: string; metodoNombre: string }): void {
-    const valorCampo = event.form.get(event.campo)?.value;
-    const funcionMetodoStore = this.mapaDeMetodosDelStore[event.metodoNombre];
+    const VALOR_CAMPO = event.form.get(event.campo)?.value;
+    const FUNCION_METODO_STORE = this.mapaDeMetodosDelStore[event.metodoNombre];
 
-    if (funcionMetodoStore) {
-      funcionMetodoStore(valorCampo);
+    if (FUNCION_METODO_STORE) {
+      FUNCION_METODO_STORE(VALOR_CAMPO);
     } else {
       console.error(`Método ${event.metodoNombre} no existe en Tramite130113Store`);
     }
