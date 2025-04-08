@@ -68,7 +68,9 @@ export class Solicitud6101Store extends Store<Solicitud6101State> {
     }));
   }
 
-  public actualizarJuntaTecnicaDerivada(juntaTecnicaDerivada: string | number): void {
+  public actualizarJuntaTecnicaDerivada(
+    juntaTecnicaDerivada: string | number
+  ): void {
     this.update((state) => ({
       ...state,
       juntaTecnicaDerivada,
@@ -212,5 +214,9 @@ export class Solicitud6101Store extends Store<Solicitud6101State> {
       ...state,
       manifiestosSeleccionados,
     }));
+  }
+
+  public limpiarSolicitud(): void {
+    this.reset();
   }
 }

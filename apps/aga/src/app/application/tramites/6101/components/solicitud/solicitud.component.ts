@@ -1,10 +1,12 @@
-import { Catalogo, REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
+import { DivideFraccion } from '../../models/solicitud.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { Solicitud6101Query } from '../../estados/solicitud6101.query';
 import { Solicitud6101State } from '../../estados/solicitud6101.store';
 import { Solicitud6101Store } from '../../estados/solicitud6101.store';
@@ -14,7 +16,6 @@ import { Subject } from 'rxjs';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -111,21 +112,59 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   onFraccionI(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionI(ELEMENTO_DE_ENTRADA.value);
+    const FRACCION = this.divideFraccion(ELEMENTO_DE_ENTRADA.value);
+    this.solicitud6101Store.actualizarCapitulo(FRACCION.capitulo);
+    this.solicitud6101Store.actualizarPartida(FRACCION.partida);
+    this.solicitud6101Store.actualizarSubpartida(FRACCION.subpartida);
+    this.solicitud6101Store.actualizarSubdivision(FRACCION.subdivision);
   }
 
   onFraccionII(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionII(ELEMENTO_DE_ENTRADA.value);
+    const FRACCION = this.divideFraccion(ELEMENTO_DE_ENTRADA.value);
+    this.solicitud6101Store.actualizarCapituloII(FRACCION.capitulo);
+    this.solicitud6101Store.actualizarPartidaII(FRACCION.partida);
+    this.solicitud6101Store.actualizarSubpartidaII(FRACCION.subpartida);
+    this.solicitud6101Store.actualizarSubdivisionII(FRACCION.subdivision);
   }
 
   onFraccionIII(evento : Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionIII(ELEMENTO_DE_ENTRADA.value);
+    const FRACCION = this.divideFraccion(ELEMENTO_DE_ENTRADA.value);
+    this.solicitud6101Store.actualizarCapituloIII(FRACCION.capitulo);
+    this.solicitud6101Store.actualizarPartidaIII(FRACCION.partida);
+    this.solicitud6101Store.actualizarSubpartidaIII(FRACCION.subpartida);
+    this.solicitud6101Store.actualizarSubdivisionIII(FRACCION.subdivision);
   }    
 
   onManifiesto(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarManifiestosSeleccionados(ELEMENTO_DE_ENTRADA.checked);
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  divideFraccion(str: string): DivideFraccion {
+    const LONGITUDVALUE = str.length;
+    let capitulo = '';
+    let partida = '';
+    let subpartida = '';
+    let subdivision = '';
+
+    if (LONGITUDVALUE === 10 || LONGITUDVALUE === 8) {
+      capitulo = str.substr(0, 2);
+      partida = str.substr(0, 4);
+      subpartida = str.substr(0, 6);
+      subdivision = LONGITUDVALUE === 10 ? str.substr(8, 2) : '00';
+    }
+
+    return {
+      capitulo,
+      partida,
+      subpartida,
+      subdivision
+    };
   }
 
   ngOnDestroy(): void {
