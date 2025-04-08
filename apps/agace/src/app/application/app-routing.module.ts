@@ -29,6 +29,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'mercancias-desmontadas-o-sin-montar',
+    loadChildren: () =>
+      import('./tramites/32501/mercancias-desmontadas-o-sin-montar.module').then(
+        (m) => m.MercanciasDesmontadasOSinMontarModule
+      ),
+  },
 ];
 
 @NgModule({
