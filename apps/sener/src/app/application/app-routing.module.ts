@@ -15,6 +15,13 @@ const ROUTES: Routes = [
         (m) => m.RenunciaDeDerechosDeModule
       ),
   },
+  {
+    path: 'autorizacion-de-rayos-x',
+    loadChildren: () =>
+      import('./tramites/300105/autorizacion-de-rayos-x.module').then(
+        (m) => m.AutorizacionDeRayosXModule
+      ),
+  }
 ];
 
 @NgModule({
