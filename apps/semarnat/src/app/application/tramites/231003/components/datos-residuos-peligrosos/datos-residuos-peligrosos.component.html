@@ -10,12 +10,17 @@
         </div>
         <ng-titulo titulo="Materias primas relacionadas" />
         <div class="row mb-3">
-            <div class="col-md-6 d-flex align-items-center">
+            <div class="col-md-6 d-flex">
                 <div class="form-group me-3 flex-grow-1">
                     <label for="Numero" class="form-label">Número de bitácora*:</label>
                     <input type="text" class="form-control" id="Numero">
                 </div>
                 <button type="button" class="btn btn-primary align-self-end">Buscar</button>
+            </div>
+        </div>
+        <div class="row mb-3">
+             <div class="col-md-4">
+                <app-catalogo-select [catalogo]='nombre'  [label]="'Nombre de la materia prima'" [required]="true"></app-catalogo-select>
             </div>
         </div>
     </div>

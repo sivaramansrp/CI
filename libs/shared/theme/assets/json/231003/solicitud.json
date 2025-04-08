@@ -138,5 +138,11 @@
             "label": "Residuo generado del proceso",
             "value": "Residuo generado del proceso"
         }
+    ],
+    "nombre": [
+        {
+            "id": 1,
+            "descripcion": "Plastico"
+        }
     ]
 }

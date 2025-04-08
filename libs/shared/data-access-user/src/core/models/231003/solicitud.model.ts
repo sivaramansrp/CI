@@ -19,6 +19,11 @@ interface ImmexItem {
     descripcion: string;
 }
 
+interface Nombre{
+    id: number;
+    descripcion: string;
+}
+
 interface Tabla {
     encabezadoDeTabla: string[];
     cuerpoTabla: { tbodyData: string[] }[];
@@ -28,4 +33,7 @@ export interface SolicitudJson {
     Immex: ImmexItem[];
     table: Tabla[];
     radioOptions: RadioOpcion[];
+    nombre: Nombre[];
 }
+
+
