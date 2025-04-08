@@ -115,6 +115,7 @@ export * from './core/services/120501/licitacionesDisponibles.service';
 export * from './core/models/shared/configuracion-columna.model';
 
 export * from './tramites/constantes/120602/datos-empresa.enum';
+export * from './core/services/110218/validar-certificado-tecnico.enum';
 
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
 
