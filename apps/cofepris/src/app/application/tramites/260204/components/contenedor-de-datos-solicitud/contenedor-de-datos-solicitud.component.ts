@@ -16,28 +16,96 @@ import { Tramite260204Query } from '../../estados/queries/tramite260204Query.que
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
+  /**
+   * Sujeto utilizado como notificador para destruir suscripciones y evitar fugas de memoria.
+   * Este observable se completa cuando el componente se destruye.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Representa el estado actual del trámite 260204.
+   * 
+   * @type {Tramite260204State}
+   * @public
+   */
   public tramiteState!: Tramite260204State;
 
+  /**
+   * Configuración de opciones para la tabla.
+   * 
+   * @property {undefined} tipoSeleccionTabla - Define el tipo de selección en la tabla. Actualmente no está definido.
+   * @property {typeof OPCION_TABLA} configuracionTabla - Configuración predeterminada de la tabla basada en la constante `OPCION_TABLA`.
+   * @property {TablaOpcionConfig[]} datos - Arreglo que contiene los datos de configuración de la tabla.
+   */
   public opcionConfig = {
     tipoSeleccionTabla: undefined,
     configuracionTabla: OPCION_TABLA,
     datos: [] as TablaOpcionConfig[],
   }
+  /**
+   * Configuración para la tabla SCIAN en el componente.
+   * 
+   * - `tipoSeleccionTabla`: Define el tipo de selección que se puede realizar en la tabla. 
+   *   En este caso, se utiliza una selección de tipo CHECKBOX.
+   * - `configuracionTabla`: Especifica la configuración de la tabla SCIAN, 
+   *   que se define en la constante `SCIAN_TABLA`.
+   * - `datos`: Contiene un arreglo de configuraciones de tipo `TablaScianConfig`. 
+   *   Inicialmente, este arreglo está vacío.
+   */
   public scianConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: SCIAN_TABLA,
     datos: [] as TablaScianConfig[],
   }
+  /**
+   * Configuración para la tabla de mercancías.
+   * 
+   * @property {TablaSeleccion} tipoSeleccionTabla - Define el tipo de selección que se puede realizar en la tabla (en este caso, CHECKBOX).
+   * @property {any} configuracionTabla - Configuración específica de la tabla, basada en la constante PRODUCTO_TABLA.
+   * @property {TablaMercanciasDatos[]} datos - Arreglo que contiene los datos de la tabla, inicialmente vacío.
+   */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
     configuracionTabla: PRODUCTO_TABLA,
     datos: [] as TablaMercanciasDatos[],
   }
+  /**
+   * Configuración de la tabla SCIAN.
+   * 
+   * Esta propiedad almacena un arreglo de configuraciones para la tabla SCIAN,
+   * que se utiliza para gestionar y mostrar datos relacionados con el catálogo
+   * del Sistema de Clasificación Industrial de América del Norte (SCIAN).
+   */
   public scianConfigDatos: TablaScianConfig[] = [];
+  /**
+   * Configuración de datos para la tabla de mercancías.
+   * 
+   * Esta propiedad almacena un arreglo de objetos del tipo `TablaMercanciasDatos`,
+   * que representan los datos necesarios para configurar y mostrar la tabla
+   * de mercancías en el componente.
+   */
   public tablaMercanciasConfigDatos: TablaMercanciasDatos[] = [];
+  /**
+   * Arreglo que almacena la configuración de opciones de la tabla.
+   * 
+   * Este arreglo se utiliza para gestionar las opciones seleccionadas
+   * en la tabla dentro del componente. Cada elemento del arreglo es 
+   * de tipo `TablaOpcionConfig`, que define la estructura de las opciones.
+   */
   public seleccionadoopcionDatos: TablaOpcionConfig[] = [];
+  /**
+   * Arreglo que almacena la configuración de datos seleccionados de la tabla SCIAN.
+   * 
+   * Este arreglo se utiliza para gestionar y almacenar los datos seleccionados
+   * relacionados con la tabla SCIAN en el componente.
+   */
   public seleccionadoScianDatos: TablaScianConfig[] = [];
+  /**
+   * Arreglo que almacena los datos seleccionados de la tabla de mercancías.
+   * 
+   * Este arreglo contiene objetos de tipo `TablaMercanciasDatos` que representan
+   * los elementos seleccionados en la tabla correspondiente. Se utiliza para 
+   * gestionar y manipular los datos seleccionados en el contexto de la solicitud.
+   */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
   constructor(private tramite260204Query: Tramite260204Query,
     private tramite260204Store: Tramite260204Store
