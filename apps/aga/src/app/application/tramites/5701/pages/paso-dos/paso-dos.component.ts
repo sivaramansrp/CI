@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Notificacion } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { TEXTOS } from '@ng-mf/data-access-user';
@@ -16,6 +16,17 @@ export class PasoDosComponent implements OnInit {
   infoAlert = 'alert-info';
   catalogoDocumentos: Catalogo[] = [];
   documentosSeleccionados: Catalogo[] = [];
+
+  public alertaNotificacion: Notificacion = {
+    tipoNotificacion: 'banner',
+    categoria: 'warning',
+    modo: 'action',
+    titulo: '',
+    mensaje: TEXTOS.INSTRUCCIONES,
+    cerrar: true,
+    txtBtnAceptar: '',
+    txtBtnCancelar: '',
+  }
 
   constructor(
     private catalogosServices: CatalogosService,)

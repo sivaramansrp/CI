@@ -24,10 +24,12 @@ export const CONSTANTES = {
 };
 
 export const TEXTOS = {
-  INSTRUCCIONES: `<h6>Instrucciones</h6>
-  <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
-  <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
-  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista.</p>`,
+  INSTRUCCIONES: `<h5>Instrucciones</h5>
+  <ul>
+    <li>De acuerdo al caso particular, algunos documentos podrían ser obligatorios</li>
+    <li>En caso de que no requieras algún documento, selecciónalo y elimínalo</li>
+    <li>Si necesitas anexar más de un documento del mismo tipo, da clic en el botón <i class="bi bi-plus-circle-fill"></i> para agregar cuantos necesites.</li>
+  </ul>`,
   ADJUNTAR: `<p>Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento-- y presiona el botón "Adjuntar dcumentos"</p>`,
   ADJUNTAR_DOCUMENTOS: `<p>Para poder adjuntar tu documento, deberá cumplir las signuientes características:</p>
   <p><b>•</b> Debe ser formato PDF que no contenga formularios, objetos OLE incrustrados, código java script, etc.</p>
