@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, TituloComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS, TituloComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el paso dos del trámite.
@@ -49,7 +46,9 @@ export class PasoDosComponent implements OnInit {
    * Constructor del componente.
    * @param catalogosServices Servicio para obtener los catálogos necesarios para el trámite.
    */
-  constructor(private catalogosServices: CatalogosService) {}
+  constructor(private catalogosServices: CatalogosService) {
+    // Constructor utilizado para la inyección de dependencias.
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.

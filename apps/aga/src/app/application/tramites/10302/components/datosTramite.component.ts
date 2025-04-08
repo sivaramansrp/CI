@@ -1,5 +1,8 @@
-import { Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Modal } from 'bootstrap';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 import {
   AlertComponent,
   CatalogoSelectComponent,
@@ -7,24 +10,11 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  Catalogo,
-  Solicitud10302State,
-  Tramite10302Store,
-} from '../estados/tramite10302.store';
-import { Tramite10302Query } from '../estados/tramite10302.query';
-import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import { Modal } from 'bootstrap';
 import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
 import { datosDelMercancia } from '../models/exencion-impuestos.model';
+import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
+import { Catalogo, Solicitud10302State, Tramite10302Store } from '../estados/tramite10302.store';
+import { Tramite10302Query } from '../estados/tramite10302.query';
 
 /**
  * Componente que representa la funcionalidad de datos del trámite.
@@ -44,7 +34,7 @@ import { datosDelMercancia } from '../models/exencion-impuestos.model';
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.scss',
 })
-export class DatosTramiteComponent implements OnDestroy {
+export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal del trámite.
    */
@@ -423,9 +413,8 @@ export class DatosTramiteComponent implements OnDestroy {
   agregarMercancias(): void {
     if (!this.agregarMercanciasForm.valid) {
       this.agregarMercanciasForm.markAllAsTouched();
-      return;
+      // return;
     } else {
-      const MERCANCIA = this.agregarMercanciasForm.value;
       this.exencionImpuestoService
         .agregarMercancias()
         .pipe(takeUntil(this.destroyNotifier$))
@@ -469,7 +458,7 @@ export class DatosTramiteComponent implements OnDestroy {
    * Abre el modal de confirmación si el formulario es válido.
    */
   agregarConfirmarModal(): void {
-    if (this.agregarMercanciasForm.valid == true) {
+    if (this.agregarMercanciasForm.valid === true) {
       console.log(this.confirmarModalElement);
       if (this.confirmarModalElement) {
         const MODAL_INSTANCE = new Modal(
@@ -480,7 +469,7 @@ export class DatosTramiteComponent implements OnDestroy {
       }
     } else {
       this.agregarMercanciasForm.markAllAsTouched();
-      return;
+      // return;
     }
   }
 

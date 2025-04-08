@@ -5,6 +5,7 @@ export interface Catalogo {
   id: number;
   descripcion: string;
 }
+
 /**
  * Creacion del estado inicial para la interfaz de tramite 10302
  * @returns Solicitud10302
@@ -14,14 +15,14 @@ export interface Solicitud10302State {
   aduana: Catalogo[] | null;
   usoEspecifico: string;
   showTabla: boolean;
-  tipoDeMercancia:string;
+  tipoDeMercancia: string;
   unidadMedida: string;
-  condicionMercancia:string;
+  condicionMercancia: string;
   ano: Catalogo[] | null;
-  cantidad:string;
-  marca:string;
-  modelo:string;
-  serie:string;
+  cantidad: string;
+  marca: string;
+  modelo: string;
+  serie: string;
   pais: Catalogo[] | null;
   rfc: string;
   numeroProgramaImmex: string;
@@ -46,13 +47,13 @@ export function createInitialState(): Solicitud10302State {
     usoEspecifico: '',
     showTabla: true,
     tipoDeMercancia: '',
-    unidadMedida:'',
-    condicionMercancia:'',
+    unidadMedida: '',
+    condicionMercancia: '',
     ano: null,
-    cantidad:'',
-    marca:'',
-    modelo:'',
-    serie:'',
+    cantidad: '',
+    marca: '',
+    modelo: '',
+    serie: '',
     pais: null,
     calle: '',
     numeroExterior: '',
@@ -80,175 +81,175 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
     super(createInitialState());
   }
 
-  public setOrganismoPublico(organismoPublico: string) {
+  public setOrganismoPublico(organismoPublico: string): void {
     this.update((state) => ({
       ...state,
       organismoPublico,
     }));
   }
 
-  public setAduana(aduana: Catalogo[]) {
+  public setAduana(aduana: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       aduana,
     }));
   }
 
-  public setTipoDeMercancia(tipoDeMercancia: string) {
+  public setTipoDeMercancia(tipoDeMercancia: string): void {
     this.update((state) => ({
       ...state,
       tipoDeMercancia,
     }));
   }
 
-  public setUnidadMedida(unidadMedida: string) {
+  public setUnidadMedida(unidadMedida: string): void {
     this.update((state) => ({
       ...state,
       unidadMedida,
     }));
   }
 
-  public setCondicionMercancia(condicionMercancia: string) {
+  public setCondicionMercancia(condicionMercancia: string): void {
     this.update((state) => ({
       ...state,
       condicionMercancia,
     }));
   }
 
-  public setAno(ano: Catalogo[]) {
+  public setAno(ano: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       ano,
     }));
   }
 
-  public setCantidad(cantidad: string) {
+  public setCantidad(cantidad: string): void {
     this.update((state) => ({
       ...state,
       cantidad,
     }));
   }
 
-  public setMarca(marca: string) {
+  public setMarca(marca: string): void {
     this.update((state) => ({
       ...state,
       marca,
     }));
   }
 
-  public setModelo(modelo: string) {
+  public setModelo(modelo: string): void {
     this.update((state) => ({
       ...state,
       modelo,
     }));
   }
 
-  public setSerie(serie: string) {
+  public setSerie(serie: string): void {
     this.update((state) => ({
       ...state,
       serie,
     }));
   }
 
-  public setPais(pais: Catalogo[]) {
+  public setPais(pais: Catalogo[]): void {
     this.update((state) => ({
       ...state,
       pais,
     }));
   }
 
-  public setUsoEspecifico(usoEspecifico: string) {
+  public setUsoEspecifico(usoEspecifico: string): void {
     this.update((state) => ({
       ...state,
       usoEspecifico,
     }));
   }
 
-  public setCalle(calle: string) {
+  public setCalle(calle: string): void {
     this.update((state) => ({
       ...state,
       calle,
     }));
   }
 
-  public setNumeroExterior(numeroExterior: string) {
+  public setNumeroExterior(numeroExterior: string): void {
     this.update((state) => ({
       ...state,
       numeroExterior,
     }));
   }
 
-  public setNumeroInterior(numeroInterior: string) {
+  public setNumeroInterior(numeroInterior: string): void {
     this.update((state) => ({
       ...state,
       numeroInterior,
     }));
   }
 
-  public setTelefono(telefono: string) {
+  public setTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
       telefono,
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico,
     }));
   }
 
-  public setCodigoPostal(codigoPostal: string) {
+  public setCodigoPostal(codigoPostal: string): void {
     this.update((state) => ({
       ...state,
       codigoPostal,
     }));
   }
 
-  public setEstado(estado: string) {
+  public setEstado(estado: string): void {
     this.update((state) => ({
       ...state,
       estado,
     }));
   }
 
-  public setColonia(colonia: string) {
+  public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
       colonia,
     }));
   }
 
-  public setRfc(rfc: string) {
-    this.update((state) => ({ 
+  public setRfc(rfc: string): void {
+    this.update((state) => ({
       ...state,
       rfc,
     }));
-  } 
+  }
 
-  public setNumeroProgramaImmex(numeroProgramaImmex: string) {
+  public setNumeroProgramaImmex(numeroProgramaImmex: string): void {
     this.update((state) => ({
       ...state,
       numeroProgramaImmex,
     }));
   }
 
-  public setRazonSocial(razonSocial: string) {
+  public setRazonSocial(razonSocial: string): void {
     this.update((state) => ({
       ...state,
       razonSocial,
     }));
   }
 
-  public setCorreoElectronicoOpcional(correoElectronicoOpcional: string) {
+  public setCorreoElectronicoOpcional(correoElectronicoOpcional: string): void {
     this.update((state) => ({
       ...state,
       correoElectronicoOpcional,
     }));
   }
 
-  public setTelefonoOpcional(telefonoOpcional: string) {
+  public setTelefonoOpcional(telefonoOpcional: string): void {
     this.update((state) => ({
       ...state,
       telefonoOpcional,
@@ -265,11 +266,11 @@ export class Tramite10302Store extends Store<Solicitud10302State> {
       datosDelMercancia,
     }));
   }
- 
+
   /**
-   * Limpia los datos de la solicitud
+   * Limpia los datos de la solicitud.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

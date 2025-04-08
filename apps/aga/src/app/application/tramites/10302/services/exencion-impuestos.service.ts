@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Tramite10302Store } from '../estados/tramite10302.store';
-import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaMercancia } from '../models/exencion-impuestos.model';
+import { Tramite10302Store } from '../estados/tramite10302.store';
 
 /**
  * Servicio para gestionar datos relacionados con el trámite de exención de impuestos.

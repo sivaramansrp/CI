@@ -1,11 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { FormularioDinamico } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { DatosTramiteComponent } from '../../components/datosTramite.component';
+import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -13,9 +11,8 @@ import { DatosTramiteComponent } from '../../components/datosTramite.component';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
-  standalone:true,
-  imports:[SolicitanteComponent, DatosTramiteComponent, CommonModule, FormsModule, ReactiveFormsModule]
-  
+  standalone: true,
+  imports: [SolicitanteComponent, DatosTramiteComponent, CommonModule, FormsModule, ReactiveFormsModule],
 })
 export class PasoUnoComponent implements AfterViewInit {
   /**
@@ -44,6 +41,7 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
   constructor(private cdr: ChangeDetectorRef) {}
+
   /**
    * Método que se ejecuta después de que la vista ha sido inicializada.
    */

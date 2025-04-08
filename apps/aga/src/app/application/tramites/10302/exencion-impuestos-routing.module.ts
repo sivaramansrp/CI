@@ -2,20 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'solicitud',
-    component: SolicitudPageComponent
+    component: SolicitudPageComponent,
   },
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'solicitud'
-  }
+    redirectTo: 'solicitud',
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forChild(ROUTES)],
+  exports: [RouterModule],
 })
-export class ExencionImpuestosRoutingModule { }
+export class ExencionImpuestosRoutingModule {}

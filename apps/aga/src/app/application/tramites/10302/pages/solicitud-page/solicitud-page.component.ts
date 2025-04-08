@@ -1,18 +1,16 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, DatosPasos, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 
 /**
  * Texto de alerta para terceros.
  */
-const TERCEROS_TEXTO_DE_ALERTA ='La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+const TERCEROS_TEXTO_DE_ALERTA = 'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -27,6 +25,7 @@ interface AccionBoton {
    */
   valor: number;
 }
+
 /**
  * Componente que representa la página de solicitud.
  */
@@ -34,14 +33,23 @@ interface AccionBoton {
   templateUrl: './solicitud-page.component.html',
   styles: ``,
   standalone: true,
-  imports:[AlertComponent,WizardComponent,CommonModule,PasoUnoComponent,PasoTresComponent,PasoDosComponent,BtnContinuarComponent,FormsModule,ReactiveFormsModule, TituloComponent, AnexarDocumentosComponent]
+  imports: [
+    AlertComponent,
+    AnexarDocumentosComponent,
+    BtnContinuarComponent,
+    CommonModule,
+    FormsModule,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    ReactiveFormsModule,
+    TituloComponent,
+    WizardComponent,
+  ],
 })
-/**
- * Componente que representa la página de solicitud.
- */
 export class SolicitudPageComponent {
-
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+
   /**
    * Lista de pasos del asistente.
    */
