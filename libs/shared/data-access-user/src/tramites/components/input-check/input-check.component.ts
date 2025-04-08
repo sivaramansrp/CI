@@ -1,6 +1,3 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable class-methods-use-this */
 import {
   Component,
   Input,
@@ -58,7 +55,7 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
 
   forma: FormGroup;
 
-  
+
   constructor() {
     this.forma = new FormGroup({
       check: new FormControl(false)
@@ -69,13 +66,15 @@ export class InputCheckComponent implements OnChanges, ControlValueAccessor {
    * Función de callback que se ejecuta cuando el valor cambia.
    * @param value Indica el nuevo valor booleano.
    */
-  private onChange: (value: boolean) => void = () => {};
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onChange: (value: boolean) => void = () => { };
 
   /**
    * Función que se llama cuando el control es marcado como "tocado".
    * @returns void
    */
-  private onTouched: () => void = () => {};
+  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
+  private onTouched: () => void = () => { };
 
 
   /**

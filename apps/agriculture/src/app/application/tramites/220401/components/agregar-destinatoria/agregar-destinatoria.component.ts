@@ -29,8 +29,7 @@ export class AgregarDestinatoriaComponent implements OnInit {
    * @description getPais se utiliza para obtener los datos de los paises
    */
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  public getPais() {
+  public getPais(): void {
     this.pais = [
       {
         id: 1,
@@ -51,8 +50,7 @@ export class AgregarDestinatoriaComponent implements OnInit {
    * @param  checkBoxName, que acepta datos de tipo cadena
    * @description inputChecked se utiliza para verificar si el checkbox está seleccionado
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  public inputChecked(checkBoxName: string) {
+  public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;

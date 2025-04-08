@@ -12,8 +12,7 @@ export class DocumentoService {
   constructor(private http: HttpClient) { }
 
   subirDocumento(token: string, file: File): Observable<{ message: string }> {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const headers = new HttpHeaders({
+    const HEADERS = new HttpHeaders({
       jwt: `${token}`,
       idUser: 1,
     });
@@ -23,7 +22,7 @@ export class DocumentoService {
 
 
     return this.http.put<{ message: string }>(`${this.urlServer}/upload`, FORM_DATA, {
-      headers,
+      headers: HEADERS,
     });
   }
 
