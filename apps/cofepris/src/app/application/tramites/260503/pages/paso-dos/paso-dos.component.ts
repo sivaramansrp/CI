@@ -4,7 +4,9 @@ import {
   CatalogosService,
   TEXTOS,
 } from '@libs/shared/data-access-user/src';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Componente que representa el segundo paso del proceso de solicitud.
@@ -14,7 +16,7 @@ import { Component, Inject, OnInit } from '@angular/core';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /** Textos usados en el componente, provenientes de una fuente centralizada. */
   TEXTOS = TEXTOS;
 
@@ -27,8 +29,8 @@ export class PasoDosComponent implements OnInit {
   /** Catálogo completo de documentos disponibles. */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Lista de documentos seleccionados por el usuario. */
-  documentosSeleccionados: Catalogo[] = [];
+  /** Subject para manejar la destrucción de observables. */
+  private destroy$ = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -49,19 +51,16 @@ export class PasoDosComponent implements OnInit {
    */
   ngOnInit(): void {
     this.getTiposDocumentos();
+  }
 
-    // Documentos seleccionados por defecto al iniciar el componente
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que amparen el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   *
+   * Completa todos los observables para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -73,6 +72,7 @@ export class PasoDosComponent implements OnInit {
   getTiposDocumentos(): void {
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp): void => {
           // Si la respuesta tiene documentos, los almacena en catalogoDocumentos
