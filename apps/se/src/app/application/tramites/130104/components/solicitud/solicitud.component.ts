@@ -21,6 +21,9 @@ import fractionValues from '@libs/shared/theme/assets/json/130104/fraccion_aranc
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130104/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130104/unidad_da.json';
 
+import { FilaTabla } from '../../modelos/importacion-otros-vehiculos-usados.model';
+
+
 /**
  *  Componente para gestionar la solicitud de mercancías.
  * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
@@ -64,7 +67,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
+  tableHeaderData: ConfiguracionColumna<FilaTabla>[] = [];
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
@@ -410,8 +413,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
       (header, index) => ({
         encabezado: header,
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        clave: (fila: any): string => fila.tbodyData[index],
+        clave: (fila: FilaTabla): string => fila.tbodyData[index] as string,
         orden: index,
       })
     );
@@ -515,6 +517,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 fetchEntidadFederativa(): void {
   this.importacionOtrosVehiculosUsadosService
     .getEntidadFederativa()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.entidadFederativa = data;
     });
@@ -525,6 +528,7 @@ fetchEntidadFederativa(): void {
 fetchRepresentacionFederal(): void {
   this.importacionOtrosVehiculosUsadosService
     .getRepresentacionFederal()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -535,6 +539,7 @@ fetchRepresentacionFederal(): void {
 listaDePaisesDisponibles(): void {
   this.importacionOtrosVehiculosUsadosService
     .getListaDePaisesDisponibles()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.elementosDeBloque = data;
     });
@@ -546,6 +551,7 @@ listaDePaisesDisponibles(): void {
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.importacionOtrosVehiculosUsadosService
     .getPaisesPorBloque(_bloqueId)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.paisesPorBloque = data;
       this.selectRangoDias = this.paisesPorBloque.map(

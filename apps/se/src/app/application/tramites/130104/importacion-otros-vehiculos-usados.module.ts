@@ -9,7 +9,7 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 
 import { ToastrService } from 'ngx-toastr';
 
-import { ImportacionOtrosVehiculosUsadosRoutingModule } from './iimportacion-otros-vehiculos-usados-routing.module';
+import { ImportacionOtrosVehiculosUsadosRoutingModule } from './importacion-otros-vehiculos-usados-routing.module';
 
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
