@@ -1,1 +1,38 @@
-<p>datos-solicitud works!</p>
+<div class="container mb-5">
+  <form [formGroup]="solicitudForm">
+    <div class="form" formGroupName="datosdelForm">
+      <ng-titulo titulo="Datos del generador de residuos" />
+
+      <div class="row mb-3">
+        <div class="col-md-4 mb-3 form-group">
+          <label for="numeroRegistroAmbiental">Número de Registro Ambiental*:</label>
+          <input type="text" class="form-control" placeholder="123123" formControlName="numeroRegistroAmbiental"
+            id="numeroRegistroAmbiental" maxlength="13" size="30"
+            [ngClass]="isInvalid('numeroRegistroAmbiental') ? 'required' : ''" />
+          <div *ngIf="isInvalid('numeroRegistroAmbiental')" class="text-danger">
+            Este campo es obligatorio
+          </div>
+        </div>
+        <div class="col-md-9 mb-3 form-group">
+          <label for="descripcionGenerica1">Giro industrial del importador*: </label>
+          <input type="text" class="form-control" placeholder="Giro industrial del importador"
+            formControlName="descripcionGenerica1" id="descripcionGenerica1" maxlength="150" size="105"
+            [ngClass]="isInvalid('descripcionGenerica1') ? 'required' : ''" />
+          <div *ngIf="isInvalid('descripcionGenerica1')" class="text-danger">
+            Este campo es obligatorio
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4 form-group">
+          <app-catalogo-select [catalogo]='aduanas' formControlName="numeroProgramaImmex"
+            [label]="'Número de autorización Immex'" [required]="true"></app-catalogo-select>
+
+          <div *ngIf="isInvalid('numeroProgramaImmex')" class="text-danger">
+            Este campo es obligatorio
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
