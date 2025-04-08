@@ -1,4 +1,4 @@
 
 export const SOLICITUD = {
-  ES_AUTORIZACION: false,
+  lA_AUTORIZACION_ES_NULA:false
 };

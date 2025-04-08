@@ -44,7 +44,7 @@ export class SolicitudComponent implements OnInit {
   ngOnInit(): void {
     this.solicitudForm = this.formBuilder.group({
       cancelacionDonaciones: this.formBuilder.group({
-        esAutorizacion: [{ value: false, disabled: false }],
+        laAutorizacionEsNula: [{ value: false, disabled: false }],
       }),
     });
     this.setFormValues();
@@ -54,16 +54,16 @@ export class SolicitudComponent implements OnInit {
    * @method setFormValues
    * @description Establece los valores iniciales del formulario `solicitudForm` 
    * utilizando datos predefinidos. En este caso, configura el valor del campo 
-   * `esAutorizacion` dentro de `cancelacionDonaciones` con el valor de 
-   * `SOLICITUD.ES_AUTORIZACION`.
+   * `laAutorizacionEsNula` dentro de `cancelacionDonaciones` con el valor de 
+   * `SOLICITUD.lA_AUTORIZACION_ES_NULA`.
    * 
    * @returns {void} No retorna ningún valor.
    */
   setFormValues(): void {
     this.solicitudForm
       .get('cancelacionDonaciones')
-      ?.get('esAutorizacion')
-      ?.setValue(SOLICITUD.ES_AUTORIZACION);
+      ?.get('laAutorizacionEsNula')
+      ?.setValue(SOLICITUD.lA_AUTORIZACION_ES_NULA);
   }
 
   /**

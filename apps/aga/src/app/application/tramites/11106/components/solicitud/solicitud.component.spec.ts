@@ -26,7 +26,7 @@ describe('SolicitudComponent', () => {
     expect(component.solicitudForm).toBeDefined();
     expect(component.solicitudForm.get('cancelacionDonaciones')).toBeDefined();
     expect(
-      component.solicitudForm.get('cancelacionDonaciones.esAutorizacion')
+      component.solicitudForm.get('cancelacionDonaciones.laAutorizacionEsNula')
     ).toBeDefined();
   });
 
@@ -35,8 +35,8 @@ describe('SolicitudComponent', () => {
     component.setFormValues();
     const valorEsAutorizacion = component.solicitudForm
       .get('cancelacionDonaciones')
-      ?.get('esAutorizacion')?.value;
-    expect(valorEsAutorizacion).toBe('ES_AUTORIZACION'); // Reemplazar con el valor real de `SOLICITUD.ES_AUTORIZACION`
+      ?.get('laAutorizacionEsNula')?.value;
+    expect(valorEsAutorizacion).toBe('lA_AUTORIZACION_ES_NULA'); // Reemplazar con el valor real de `SOLICITUD.lA_AUTORIZACION_ES_NULA`
   });
 
   it('debería devolver el grupo de formulario cancelacionDonaciones', () => {
@@ -51,10 +51,10 @@ describe('SolicitudComponent', () => {
     component.ngOnInit();
     // Establecer el formulario en un estado inválido
     component.solicitudForm
-      .get('cancelacionDonaciones.esAutorizacion')
+      .get('cancelacionDonaciones.laAutorizacionEsNula')
       ?.setValue('');
     component.solicitudForm
-      .get('cancelacionDonaciones.esAutorizacion')
+      .get('cancelacionDonaciones.laAutorizacionEsNula')
       ?.setValidators(() => ({ required: true }));
     component.solicitudForm.updateValueAndValidity();
 
@@ -64,7 +64,7 @@ describe('SolicitudComponent', () => {
       true
     );
     expect(
-      component.solicitudForm.get('cancelacionDonaciones.esAutorizacion')
+      component.solicitudForm.get('cancelacionDonaciones.laAutorizacionEsNula')
         ?.touched
     ).toBe(true);
   });
