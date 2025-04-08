@@ -160,13 +160,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS;
 
   /**
- * Sujeto para gestionar la destrucción de suscripciones.
- * Este campo se utiliza para emitir un evento que indica la destrucción del componente,
- * permitiendo limpiar las suscripciones activas y evitar fugas de memoria.
- */
-  destroyNotifier$ = new Subject<void>();
-
-  /**
    * Constructor del componente.
    */
   constructor(
