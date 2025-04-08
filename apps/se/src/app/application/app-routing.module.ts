@@ -121,6 +121,10 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule
       ),
   },
+  {  
+    path:'certificado-tecnico-japon',
+    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+  },
   {
     path: 'desmantelar',
     loadChildren: () =>
@@ -199,6 +203,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'diamante-bruto',
+    loadChildren: () =>
+      import('./tramites/130114/diamante-bruto.module').then(
+        (m) => m.DiamanteBrutoModule
+      )
+  },
+  {
     path: 'solicitud-modificacion',
     loadChildren: () =>
       import('./tramites/80302/modificacion.module').then(
@@ -210,6 +221,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/140201/cancelaciones.module').then(
         (m) => m.CancelacionesModule
+      ),
+  },
+  {
+    path: 'validar-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110208/validar-inicalmente.module').then(
+        (m) => m.ValidarInicalmenteModule
       ),
   },
   {
@@ -227,6 +245,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'certificado-validacion',
+    loadChildren: () =>
+      import('./tramites/110202/certificado-validacion.module').then(
+        (m) => m.CertificadoValidacionModule),
+      },
+  {
     path: 'exportacion-minerales',
     loadChildren: () =>
       import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
@@ -238,6 +262,19 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80102/autorizacion-programa-nuevo.module').then(
         (m) => m.AutorizacionProgrmaNuevoModule
+      ),
+  },
+  { path: 'tecnicos',
+    loadChildren: () =>
+      import('./tramites/110203/tecnicos.module').then(
+        (m) => m.TecnicosModule
+      ),
+  },
+  {
+    path: 'inicialmente-certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110216/inicialmente-certificado-origen.module').then(
+        (m) => m.InicialmenteCertificadoOrigenModule
       ),
   },
   {
@@ -258,6 +295,27 @@ const ROUTES: Routes = [
     path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'aviso-importacion-maquinas',
+    loadChildren: () =>
+      import('./tramites/130119/aviso-importacion-maquinas.module').then(
+        (m) => m.AvisoImportacionMaquinasModule
+      ),
+  },
+  {
+    path: 'reporte-anual',
+    loadChildren: () =>
+      import('./tramites/150102/reporte-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110211/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
   }
 ];
 
