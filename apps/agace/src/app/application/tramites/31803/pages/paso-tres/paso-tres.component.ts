@@ -1,6 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { FirmaElectronicaComponent, TramiteFolioService} from '@ng-mf/data-access-user';
-import { Subscription,catchError, map } from 'rxjs';
+import { ReplaySubject, Subscription,catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { TramiteStore } from '@ng-mf/data-access-user'; 
 /**
@@ -13,16 +13,18 @@ import { TramiteStore } from '@ng-mf/data-access-user';
   standalone: true,
   imports: [FirmaElectronicaComponent],
 })
-export class PasoTresComponent implements OnDestroy {
-   /**
-   * Suscripción para obtener el trámite.
-   */
-   obtienerTramiteSubscriber!: Subscription;
+export class PasoTresComponent  {
+  
    /**
     * Tipo de persona.
     */
    tipoPersona!: number;
- 
+  /**
+      * Observable para manejar la destrucción del componente.
+      * Se utiliza para cancelar suscripciones activas.
+      */
+     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   constructor(
     private router: Router,
     private serviciosExtraordinariosServices: TramiteFolioService,
@@ -47,7 +49,7 @@ export class PasoTresComponent implements OnDestroy {
       // Obtiene el número de trámite
       this.serviciosExtraordinariosServices
         .obtenerTramite(19)
-        .pipe(
+        .pipe(takeUntil(this.destroyed$),
           map((tramite) => {
             this.tramiteStore.establecerTramite(tramite.data, FIRMA);
             this.router.navigate(['pago/registro-solicitud/acuse']);
@@ -59,13 +61,13 @@ export class PasoTresComponent implements OnDestroy {
         .subscribe();
     }
   }
-   /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
+ /**
+   * Método que se ejecuta al destruir el componente.
+   * Libera los recursos utilizados por las suscripciones.
    */
-   ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
-    }
-  }
+ ngOnDestroy(): void {
+  this.destroyed$.next(true);
+  this.destroyed$.complete();
+}
 
 }

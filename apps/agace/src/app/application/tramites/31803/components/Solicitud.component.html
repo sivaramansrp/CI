@@ -1,13 +1,11 @@
 <form [formGroup]="registroForm" (ngSubmit)="validarDestinatarioFormulario()">
   <ng-container>
     <ng-titulo titulo="Aviso Único de Renovación en el Registro en el Esquema de Certificación de Empresas" />
-    <label>{{ solicitudEnum.MODALIDAD_SOCIO_COMERCIAL }}</label>
-    <br />
-    <br />
-    <label>{{ solicitudEnum.RUBRO_MENSAJERIA }}</label>
-    <br />
-    <br />
-    <label>{{ solicitudEnum.DATOS_REGISTRO }}</label>
+    <label class="label-spacing">{{ solicitudEnum.MODALIDAD_SOCIO_COMERCIAL }}</label>
+   
+    <label class="label-spacing">{{ solicitudEnum.RUBRO_MENSAJERIA }}</label>
+    
+    <label class="label-spacing">{{ solicitudEnum.DATOS_REGISTRO }}</label>
     <div class="row mt-5">
       <div class="col-md-8">
         <label>Número de oficio*:</label>

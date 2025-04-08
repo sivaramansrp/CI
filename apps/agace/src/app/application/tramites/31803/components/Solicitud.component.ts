@@ -51,11 +51,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Notificador para manejar eventos de destrucción.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud31803State;
@@ -123,7 +118,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.obtenerDatosBanco();
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
