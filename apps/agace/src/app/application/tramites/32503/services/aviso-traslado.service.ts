@@ -37,4 +37,7 @@ export class AvisoTrasladoService {
   obtenerUnidadMedida(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
+  obtenerTipoDocumento(): Observable<CatalogoLista> {
+    return this.http.get<CatalogoLista>(`assets/json/32503/tipo-documento.json`);
+  }
 }

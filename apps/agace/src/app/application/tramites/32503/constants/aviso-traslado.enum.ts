@@ -45,6 +45,12 @@ export const TEXTOS = {
   TIPOCARGO: ` Datos de la Plantilla de Carga Masiva<span class="">*</span><br />
    <label><a href="javascript:;" target="_blank"> Descargar plantilla</a></label>
       `,
+  REQUISITOS_OPCIONALES_INSTRUCCIONES: `<h6>Instrucciones</h6>
+      <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+      <p>- En caso de que no requieras algún documento, seleccionalo y elíminalo</p>
+      <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
+  TERCEROS_TEXTO_DE_ALERTA: 'La solicitud ha quedado registrada con el número temporal 202767903 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.',
+
 };
 
 export const FECHA_INGRESO = {
@@ -72,3 +78,9 @@ export const TIPACA = [
     etiqueta: 'Carga Masiva',
   }
 ];
+export const TIPO_DOCUMENTO = {
+  labelNombre: 'Tipo de documento',
+  required: false,
+  primerOpcion: 'Seleccion una valor',
+  catalogos: [],
+}

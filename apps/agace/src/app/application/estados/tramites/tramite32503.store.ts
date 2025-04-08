@@ -1,4 +1,4 @@
-import { AvisoFormulario, DatosSolicitante, DomicilioFormulario, MercanciaFormulario } from '../../tramites/32503/models/aviso-traslado.model';
+import { AvisoFormulario, DatosSolicitante, DomicilioFormulario, MercanciaFormulario, TipoDocumento } from '../../tramites/32503/models/aviso-traslado.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -11,13 +11,15 @@ export interface Tramite32503State {
   mercanciaFormulario: MercanciaFormulario;
   domicilioFormulario: DomicilioFormulario;
   avisoFormulario: AvisoFormulario;
+  tipoTablaDatos: TipoDocumento[];
+  tipoDocumento: string
 
 }
 
 export function createInitialState(): Tramite32503State {
   return {
     pasoActivo: 1,
-    pestanaActiva: 2,
+    pestanaActiva: 1,
     datosSolicitante: {
       rfc: "",
       denominacion: "",
@@ -75,7 +77,9 @@ export function createInitialState(): Tramite32503State {
       numeroInterior: '',
       codigoPostal: '',
       tipoCarga: '',
-    }
+    },
+    tipoTablaDatos: [],
+    tipoDocumento: ''
   };
 }
 @Injectable({
@@ -92,6 +96,12 @@ export class Tramite32503Store extends Store<Tramite32503State> {
     this.update((state) => ({
       ...state,
       pasoActivo,
+    }));
+  }
+  public setTipoDocumento(tipoDocumento: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoDocumento,
     }));
   }
 
@@ -217,9 +227,6 @@ export class Tramite32503Store extends Store<Tramite32503State> {
       domicilioFormulario: { ...state.domicilioFormulario, rfc },
     }));
   }
-
-
-
   public setAvisoFormularioAdace(adace: string): void {
     this.update((state) => ({
       ...state,
@@ -314,6 +321,12 @@ export class Tramite32503Store extends Store<Tramite32503State> {
     this.update((state) => ({
       ...state,
       avisoFormulario: { ...state.avisoFormulario, tipoCarga },
+    }));
+  }
+  public setTipoTablaDatos(tipoTablaDatos: TipoDocumento[]): void {
+    this.update((state) => ({
+      ...state,
+      tipoTablaDatos,
     }));
   }
 

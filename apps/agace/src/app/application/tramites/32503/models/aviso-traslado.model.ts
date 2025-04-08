@@ -98,3 +98,9 @@ export interface AvisoFormulario {
   codigoPostal: string;
   tipoCarga: string;
 }
+
+export interface TipoDocumento {
+  id: number;
+  descripcion: string;
+  controlarCaja: boolean;
+}
