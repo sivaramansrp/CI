@@ -40,6 +40,18 @@
 
     <div>
       <h6>Datos de los residuos peligrosos a reciclar*:</h6>
+      <div class="row mb-3">
+        <div class="col-md-12">
+            <ng-table [commonTableHeader]="establecimientoHeaderData"
+                [commonTableBody]="establecimientoBodyData"></ng-table>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination d-flex justify-content-center">
+                    <li class="page-item"><a class="page-link">1</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    
 
       <div class="row mb-5">
         <div class="col-md-6 col-sm-6"></div>

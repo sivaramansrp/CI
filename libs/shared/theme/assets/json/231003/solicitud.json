@@ -76,5 +76,57 @@
             "id": 19,
             "descripcion": "0200800100220222643000002"
         }
+    ],
+    "table": [
+        {
+            "encabezadoDeTabla": [
+                "Origen del residuo",
+                "Fracción Arancelaria",
+                "Nombre Residuo",
+                "NICO",
+                "Acotación",
+                "Nombre Residuo Peligroso",
+                "Cantidad",
+                "Cantidad letra",
+                "Unidad de medida",
+                "Clave Clasificación",
+                "Nombre Clasificación",
+                "Descripción clasificación",
+                "Descripción otro",
+                "Clasificación",
+                "CRETI",
+                "Estado físico",
+                "Descripción otro estado físico",
+                "Tipo de contenedor",
+                "Descripción otro contenedor",
+                "Capacidad"
+            ],
+            "cuerpoTabla": [
+                {
+                    "tbodyData": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ]
+                }
+            ]
+        }
     ]
 }
