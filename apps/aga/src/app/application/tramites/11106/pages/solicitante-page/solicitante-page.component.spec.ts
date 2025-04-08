@@ -8,7 +8,8 @@ describe('SolicitantePageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SolicitantePageComponent],
+      imports: [SolicitantePageComponent],
+      declarations: [],
       providers: [],
     }).compileComponents();
 
@@ -16,11 +17,11 @@ describe('SolicitantePageComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
+  it('debe inicializarse con los valores predeterminados', () => {
     expect(component.indice).toBe(1);
     expect(component.pasos).toBe(PASOS);
     expect(component.datosPasos.nroPasos).toBe(PASOS.length);
@@ -29,12 +30,12 @@ describe('SolicitantePageComponent', () => {
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debería actualizar el índice cuando se llama a seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with "cont"', () => {
+  it('debe actualizar el índice y llamar a WizardComponent.siguiente cuando se llama a getValorIndice con "cont"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -48,7 +49,7 @@ describe('SolicitantePageComponent', () => {
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with "ant"', () => {
+  it('debería actualizar el índice y llamar a WizardComponent.atras cuando se llame a getValorIndice con "ant"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -62,7 +63,7 @@ describe('SolicitantePageComponent', () => {
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+  it('no debe actualizar el índice ni llamar a los métodos WizardComponent si el valor está fuera de rango', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -82,7 +83,7 @@ describe('SolicitantePageComponent', () => {
     expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should call getValorIndice with correct parameters when continuar is called', () => {
+  it('debería llamar a getValorIndice con los parámetros correctos cuando se llama a continuar', () => {
     const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
     component.indice = 2;
 

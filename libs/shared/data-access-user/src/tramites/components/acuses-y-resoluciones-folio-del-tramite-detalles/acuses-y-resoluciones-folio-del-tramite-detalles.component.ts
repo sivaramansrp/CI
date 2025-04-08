@@ -58,8 +58,6 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
    */
   @Input() public procedureUrl = '';
 
-  @Input() public procUrl = '';
-
   /**
    * URL para regresar al procedimiento anterior.
    */
@@ -97,7 +95,17 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
   }
 
   /**
-   * Navega a la página de acuses y resoluciones.
+   * Navega a la URL del procedimiento asociado.
+   *
+   * Este método redirige al usuario a la página correspondiente al procedimiento
+   * utilizando la URL almacenada en `this.procedureUrl`.
+   *
+   * @method desistir
+   *
+   * Comentarios:
+   * Acusa y resoluciones son los componentes comunes a todos los procedimientos.
+   * Los botones de este componente se habilitarán o deshabilitarán según la lógica y las reglas comerciales y la
+   * integración con los servicios restantes.
    */
   public desistir(): void {
     this.router.navigate([this.procedureUrl]);
@@ -110,11 +118,38 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
     this.router.navigate([this.procedureRegresorUrl]);
   }
 
+  /**
+   * @method solicitarCancelacion
+   * @description Navega a la URL del procedimiento especificado para solicitar la cancelación.
+   * @memberof AcusesYResolucionesFolioDelTramiteDetallesComponent
+   * @returns {void} No retorna ningún valor.
+   *
+   * Comentarios:
+   * Acusa y resoluciones son los componentes comunes a todos los procedimientos.
+   * Los botones de este componente se habilitarán o deshabilitarán según la lógica y las reglas comerciales y la
+   * integración con los servicios restantes.
+   */
   public solicitarCancelacion(): void {
     this.router.navigate([this.procedureUrl]);
   }
 
-  public solicitarModificcion(): void {
+  /**
+   * Navega a la URL especificada en `procedureRegresorUrl` para solicitar la modificación
+   * del trámite actual.
+   *
+   * @remarks
+   * Este método utiliza el servicio de enrutamiento para redirigir al usuario
+   * a la página correspondiente donde puede realizar la solicitud de modificación.
+   *
+   * @method solicitarModificacion
+   *
+   * Comentarios:
+   * Acusa y resoluciones son los componentes comunes a todos los procedimientos.
+   * Los botones de este componente se habilitarán o deshabilitarán según la lógica y las reglas comerciales y la
+   * integración con los servicios restantes.
+   *
+   */
+  public solicitarModificacion(): void {
     this.router.navigate([this.procedureRegresorUrl]);
   }
 }

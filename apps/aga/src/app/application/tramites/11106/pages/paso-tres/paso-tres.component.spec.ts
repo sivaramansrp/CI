@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
@@ -12,7 +13,7 @@ describe('PasoTresComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [CommonModule, FirmaElectronicaComponent, RouterTestingModule],
-      providers: [],
+      providers: [ToastrService],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(PasoTresComponent);

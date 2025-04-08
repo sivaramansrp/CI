@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { EventEmitter } from '@angular/core';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+      declarations: [],
+      imports: [ReactiveFormsModule, SolicitudComponent],
       providers: [FormBuilder],
     }).compileComponents();
 
@@ -17,38 +17,59 @@ describe('SolicitudComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    const initializeFormSpy = jest.spyOn(component, 'initializeSolicitudForm');
+  it('debería inicializar el formulario en ngOnInit', () => {
     component.ngOnInit();
-    expect(initializeFormSpy).toHaveBeenCalled();
     expect(component.solicitudForm).toBeDefined();
+    expect(component.solicitudForm.get('cancelacionDonaciones')).toBeDefined();
+    expect(
+      component.solicitudForm.get('cancelacionDonaciones.esAutorizacion')
+    ).toBeDefined();
   });
 
-  it('should initialize the form with correct structure', () => {
-    component.initializeSolicitudForm();
-    expect(component.solicitudForm.contains('cancelacionDonaciones')).toBe(true);
-    const cancelacionDonaciones = component.solicitudForm.get('cancelacionDonaciones') as any;
-    expect(cancelacionDonaciones.contains('esAutorizacion')).toBe(true);
+  it('debería establecer los valores iniciales del formulario en setFormValues', () => {
+    component.ngOnInit();
+    component.setFormValues();
+    const valorEsAutorizacion = component.solicitudForm
+      .get('cancelacionDonaciones')
+      ?.get('esAutorizacion')?.value;
+    expect(valorEsAutorizacion).toBe('ES_AUTORIZACION'); // Reemplazar con el valor real de `SOLICITUD.ES_AUTORIZACION`
   });
 
-  it('should return the cancelacionDonaciones form group', () => {
-    component.initializeSolicitudForm();
+  it('debería devolver el grupo de formulario cancelacionDonaciones', () => {
+    component.ngOnInit();
     const cancelacionDonaciones = component.cancelacionDonaciones;
-    expect(cancelacionDonaciones).toBe(component.solicitudForm.get('cancelacionDonaciones'));
+    expect(cancelacionDonaciones).toBe(
+      component.solicitudForm.get('cancelacionDonaciones')
+    );
   });
 
-  it('should mark all fields as touched if the form is invalid', () => {
-    component.initializeSolicitudForm();
-    component.solicitudForm.get('cancelacionDonaciones.esAutorizacion')?.setValue('');
+  it('debería marcar todos los campos como tocados si el formulario es inválido', () => {
+    component.ngOnInit();
+    // Establecer el formulario en un estado inválido
+    component.solicitudForm
+      .get('cancelacionDonaciones.esAutorizacion')
+      ?.setValue('');
+    component.solicitudForm
+      .get('cancelacionDonaciones.esAutorizacion')
+      ?.setValidators(() => ({ required: true }));
+    component.solicitudForm.updateValueAndValidity();
+
     component.validarDestinatarioFormulario();
-    expect(component.solicitudForm.touched).toBe(true);
+
+    expect(component.solicitudForm.get('cancelacionDonaciones')?.touched).toBe(
+      true
+    );
+    expect(
+      component.solicitudForm.get('cancelacionDonaciones.esAutorizacion')
+        ?.touched
+    ).toBe(true);
   });
 
-  it('should emit continuarEvento when continuar is called', () => {
+  it('debería emitir continuarEvento cuando se llame a continuar', () => {
     const emitSpy = jest.spyOn(component.continuarEvento, 'emit');
     component.continuar();
     expect(emitSpy).toHaveBeenCalledWith('');

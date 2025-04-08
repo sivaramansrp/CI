@@ -9,7 +9,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
+      imports: [PasoUnoComponent],
+      declarations: [],
       providers: [],
     }).compileComponents();
 
@@ -17,11 +18,11 @@ describe('PasoUnoComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
+  it('debería inicializarse con valores predeterminados', () => {
     expect(component.indice).toBe(1);
     expect(component.pasos).toBe(PASOS);
     expect(component.datosPasos.nroPasos).toBe(PASOS.length);
@@ -30,18 +31,18 @@ describe('PasoUnoComponent', () => {
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should emit continuarEvento when continuar is called', () => {
+  it('debería emitir continuarEvento cuando se llame a continuar', () => {
     const emitSpy = jest.spyOn(component.continuarEvento, 'emit');
     component.continuar();
     expect(emitSpy).toHaveBeenCalledWith('');
   });
 
-  it('should update indice when seleccionaTab is called', () => {
+  it('debería actualizar el índice cuando se llame a seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with "cont"', () => {
+  it('debería actualizar el índice y llamar a wizardComponent.siguiente cuando se llame a getValorIndice con "cont"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -54,7 +55,7 @@ describe('PasoUnoComponent', () => {
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras when getValorIndice is called with "ant"', () => {
+  it('debería actualizar el índice y llamar a wizardComponent.atras cuando se llame a getValorIndice con "ant"', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -67,7 +68,7 @@ describe('PasoUnoComponent', () => {
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+  it('no debería actualizar el índice ni llamar a los métodos de wizardComponent si el valor está fuera de rango', () => {
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

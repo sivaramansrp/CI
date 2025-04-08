@@ -32,31 +32,38 @@ export class SolicitudComponent implements OnInit {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  
   /**
    * @override
    * @method ngOnInit
-   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Se utiliza para realizar configuraciones iniciales, como la inicialización del formulario de solicitud.
+   * @description Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo `solicitudForm` con los controles necesarios y establece
+   * los valores iniciales del formulario llamando al método `setFormValues`.
+   * 
    */
   ngOnInit(): void {
-    this.initializeSolicitudForm();
+    this.solicitudForm = this.formBuilder.group({
+      cancelacionDonaciones: this.formBuilder.group({
+        esAutorizacion: [{ value: false, disabled: false }],
+      }),
+    });
+    this.setFormValues();
   }
 
   /**
-   * @description
-   * Inicializa el formulario reactivo de la solicitud. Este método configura
-   * los controles y grupos necesarios para gestionar los datos de la solicitud.
-   *
-   * @method initializeSolicitudForm
-   * @memberof SolicitudComponent
-   * @returns {void}
+   * @method setFormValues
+   * @description Establece los valores iniciales del formulario `solicitudForm` 
+   * utilizando datos predefinidos. En este caso, configura el valor del campo 
+   * `esAutorizacion` dentro de `cancelacionDonaciones` con el valor de 
+   * `SOLICITUD.ES_AUTORIZACION`.
+   * 
+   * @returns {void} No retorna ningún valor.
    */
-  initializeSolicitudForm(): void {
-    this.solicitudForm = this.formBuilder.group({
-      cancelacionDonaciones: this.formBuilder.group({
-        esAutorizacion: [{ value: SOLICITUD.ES_AUTORIZACION, disabled: false }],
-      }),
-    });
+  setFormValues(): void {
+    this.solicitudForm
+      .get('cancelacionDonaciones')
+      ?.get('esAutorizacion')
+      ?.setValue(SOLICITUD.ES_AUTORIZACION);
   }
 
   /**
