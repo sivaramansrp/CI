@@ -29,6 +29,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'aviso-unico-renovacion',
+    loadChildren: () =>
+      import('./tramites/317/aviso-unico-renovacion.module').then(
+        (m) => m.AvisoUnicoRenovacionModule
+      ),
+  },
 ];
 
 @NgModule({
