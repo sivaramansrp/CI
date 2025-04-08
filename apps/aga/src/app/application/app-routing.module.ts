@@ -170,6 +170,13 @@ const ROUTES: Routes = [
       import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
         (m) => m.DepositoFiscalManufacturaVehiculosModule
       )
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
   }
 ];
 
