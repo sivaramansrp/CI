@@ -189,22 +189,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
       });
- 
-    this.tramite130111Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia:
-              seccionState.cantidadPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia:
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia:
-              seccionState.descripcionPartidasDeLaMercancia,
-          });
-        })
-      )
-      .subscribe();
   }
  
   /**
@@ -288,94 +272,87 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
-    this.tramite130111Query.solicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((solicitud) => {
-        this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
-      });
- 
-    this.tramite130111Query.regimen$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((regimen) => {
-        this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
-      });
- 
-    this.tramite130111Query.clasificacion$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((clasificacion) => {
-        this.formDelTramite.patchValue(
-          { clasificacion },
-          { emitEvent: false }
-        );
-      });
-    this.tramite130111Query.mercanciaState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        this.mercanciaForm.patchValue(
-          {
-            producto: state.producto,
-            descripcion: state.descripcion,
-            fraccion: state.fraccion,
-            cantidad: state.cantidad,
-            valorFacturaUSD: state.valorPartidaUSD
-              ? state.valorPartidaUSD.toString()
-              : '',
-            unidadMedida: state.unidadMedida,
-          },
-          { emitEvent: false }
-        );
-      });
- 
-    this.tramite130111Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.paisForm.patchValue({
-            bloque: seccionState.bloque,
-            usoEspecifico: seccionState.usoEspecifico,
-            justificacionImportacionExportacion:
-            seccionState.justificacionImportacionExportacion,
-            observaciones: seccionState.observaciones,
-          });
-        })
-      )
-      .subscribe();
-    this.tramite130111Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.frmRepresentacionForm.patchValue({
-            entidad: seccionState.entidad,
-            representacion: seccionState.representacion,
-          });
-        })
-      )
-      .subscribe();
- 
-    this.formDelTramite.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130111Store.updateState({
-          solicitud: value.solicitud,
-          regimen: value.regimen,
-          clasificacion: value.clasificacion,
-        });
-      });
- 
 
-    this.mercanciaForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130111Store.updateState({
-          producto: value.producto,
-          descripcion: value.descripcion,
-          fraccion: value.fraccion,
-          cantidad: value.cantidad,
-          valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
-          unidadMedida: value.unidadMedida,
-        });
-      });
+    this.tramite130111Query.selectSolicitud$
+
+      .pipe(
+
+        takeUntil(this.destroyed$),
+
+        map((seccionState) => {
+
+          this.partidasDelaMercanciaForm.patchValue({
+
+            cantidadPartidasDeLaMercancia:
+
+              seccionState.cantidadPartidasDeLaMercancia,
+
+            valorPartidaUSDPartidasDeLaMercancia:
+
+              seccionState.valorPartidaUSDPartidasDeLaMercancia,
+
+            descripcionPartidasDeLaMercancia:
+
+              seccionState.descripcionPartidasDeLaMercancia,
+
+          });
+ 
+          this.formDelTramite.patchValue({
+
+            solicitud: seccionState.solicitud,
+
+            regimen: seccionState.regimen,
+
+            clasificacion: seccionState.clasificacion,
+
+          });
+ 
+          this.mercanciaForm.patchValue({
+
+            producto: seccionState.producto,
+
+            descripcion: seccionState.descripcion,
+
+            fraccion: seccionState.fraccion,
+
+            cantidad: seccionState.cantidad,
+
+            valorFacturaUSD: seccionState.valorFacturaUSD,
+
+            unidadMedida: seccionState.unidadMedida,
+
+          });
+ 
+          this.paisForm.patchValue({
+
+            bloque: seccionState.bloque,
+
+            usoEspecifico: seccionState.usoEspecifico,
+
+            justificacionImportacionExportacion:
+
+            seccionState.justificacionImportacionExportacion,
+
+            observaciones: seccionState.observaciones,
+
+          });
+ 
+          this.frmRepresentacionForm.patchValue({
+
+            entidad: seccionState.entidad,
+
+            representacion: seccionState.representacion,
+
+          });
+
+        })
+
+      )
+
+      .subscribe();
+
   }
+ 
   /**
    * formularioTotalCount
    * Crea el formulario reactivo para capturar los totales de las partidas.
@@ -535,11 +512,8 @@ enCambioDeBloque(bloqueId: number): void {
    * jest.spyOnActualiza el almacén con nuevos valores basados en eventos de formulario.
    * jest.spyOnEvento que incluye el formulario, el campo y el método a ejecutar.
    */
-  setValoresStore(event: {
-    form: FormGroup;
-    campo: string;
-    metodoNombre: string;
-  }): void {
+  // eslint-disable-next-line complexity
+  setValoresStore(event: { form: FormGroup;campo: string;metodoNombre: string;}): void {
     const VALOR = event.form.get(event.campo)?.value;
     switch (event.metodoNombre) {
       case 'updateSolicitud':
@@ -560,7 +534,6 @@ enCambioDeBloque(bloqueId: number): void {
       case 'setclasificacion':
         this.tramite130111Store.setclasificacion(VALOR);
         break;
-
       case 'setProducto':
         this.tramite130111Store.setProducto(VALOR);
         break;
@@ -593,6 +566,13 @@ enCambioDeBloque(bloqueId: number): void {
         break;
       case 'setRepresentacion':
         this.tramite130111Store.setRepresentacion(VALOR);
+        break;
+      case 'setFraccion':
+        this.tramite130111Store.setFraccion(VALOR);
+        this.tramite130111Store.setUnidadMedida("1");
+        break;
+      case 'setValorFacturaUSD':
+        this.tramite130111Store.setValorFacturaUSD(VALOR);
         break;
       default:
         console.error(
