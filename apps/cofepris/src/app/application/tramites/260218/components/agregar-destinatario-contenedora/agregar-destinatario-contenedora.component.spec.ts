@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AgregarsDestinatarioComponent } from './agregars-destinatario.component';
+import { AgregarsDestinatarioContenedoraComponent } from './agregar-destinatario-contenedora.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarsDestinatarioComponent', () => {
-  let component: AgregarsDestinatarioComponent;
-  let fixture: ComponentFixture<AgregarsDestinatarioComponent>;
+  let component: AgregarsDestinatarioContenedoraComponent;
+  let fixture: ComponentFixture<AgregarsDestinatarioContenedoraComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AgregarsDestinatarioComponent, HttpClientTestingModule],
+      imports: [AgregarsDestinatarioContenedoraComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(
-      AgregarsDestinatarioComponent
+      AgregarsDestinatarioContenedoraComponent
     );
     component = fixture.componentInstance;
     fixture.detectChanges();

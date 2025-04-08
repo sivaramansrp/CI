@@ -1,8 +1,8 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AgregarsDestinatarioComponent } from './components/agregars-destinatario/agregars-destinatario.component';
-import { AgregarsFabricanteComponent } from './components/agregars-fabricante/agregars-fabricante.component';
-import { AgregarsFacturadorComponent } from './components/agregars-facturador/agregars-facturador.component';
-import { AgregarsProveedorComponent } from './components/agregars-proveedor/agregars-proveedor.component';
+import { AgregarsDestinatarioContenedoraComponent } from './components/agregar-destinatario-contenedora/agregar-destinatario-contenedora.component';
+import { AgregarsFabricanteContenedoraComponent } from './components/agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
+import { AgregarsFacturadorContenedoraComponent } from './components/agregar-facturador-contenedora/agregar-facturador-contenedora.component';
+import { AgregarsProveedorContenedoraComponent } from './components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 import { ContenedorDePasosComponent } from './pages/contenedor-de-paso/contenedor-de-pasos.component';
 import { DatosMercanciaContenedoraComponent } from './components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 import { NgModule } from '@angular/core';
@@ -29,19 +29,19 @@ const ROUTES: Routes = [
   },
   {
     path: 'agregar-fabricante',
-    component: AgregarsFabricanteComponent,
+    component: AgregarsFabricanteContenedoraComponent,
   },
   {
     path: 'agregar-destinatario-final',
-    component: AgregarsDestinatarioComponent,
+    component: AgregarsDestinatarioContenedoraComponent,
   },
   {
     path: 'agregar-proveedor',
-    component: AgregarsProveedorComponent,
+    component: AgregarsProveedorContenedoraComponent,
   },
   {
     path: 'agregar-facturador',
-    component: AgregarsFacturadorComponent,
+    component: AgregarsFacturadorContenedoraComponent,
   },
 ];
 @NgModule({

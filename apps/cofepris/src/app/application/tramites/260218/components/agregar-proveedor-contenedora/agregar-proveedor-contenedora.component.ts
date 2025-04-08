@@ -5,13 +5,13 @@ import { Proveedor } from '../../../../shared/models/terceros-relacionados.model
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
 @Component({
-  selector: 'app-agregars-proveedor',
+  selector: 'app-agregar-proveedor-contenedora',
   standalone: true,
   imports: [CommonModule, AgregarProveedorComponent],
-  templateUrl: './agregars-proveedor.component.html',
-  styleUrl: './agregars-proveedor.component.scss',
+  templateUrl: './agregar-proveedor-contenedora.component.html',
+  styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarsProveedorComponent {
+export class AgregarsProveedorContenedoraComponent {
     constructor(
         public tramiteStore: Tramite260218Store){
                 // no realizar ninguna acción

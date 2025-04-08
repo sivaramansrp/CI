@@ -5,13 +5,13 @@ import { Facturador } from '../../../../shared/models/terceros-relacionados.mode
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
 @Component({
-  selector: 'app-agregars-facturador',
+  selector: 'app-agregar-facturador-contenedora',
   standalone: true,
   imports: [CommonModule,AgregarFacturadorComponent],
-  templateUrl: './agregars-facturador.component.html',
-  styleUrl: './agregars-facturador.component.scss',
+  templateUrl: './agregar-facturador-contenedora.component.html',
+  styleUrl: './agregar-facturador-contenedora.component.scss',
 })
-export class AgregarsFacturadorComponent {
+export class AgregarsFacturadorContenedoraComponent {
     constructor(
         public tramiteStore: Tramite260218Store){
                 // no realizar ninguna acción

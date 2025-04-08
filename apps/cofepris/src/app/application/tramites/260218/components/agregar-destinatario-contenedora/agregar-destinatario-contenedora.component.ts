@@ -5,13 +5,13 @@ import { Destinatario } from '../../../../shared/models/terceros-relacionados.mo
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
 
 @Component({
-  selector: 'app-agregars-destinatario',
+  selector: 'app-agregar-destinatario-contenedora',
   standalone: true,
   imports: [CommonModule, AgregarDestinatarioFinalComponent],
-  templateUrl: './agregars-destinatario.component.html',
-  styleUrl: './agregars-destinatario.component.scss',
+  templateUrl: './agregar-destinatario-contenedora.component.html',
+  styleUrl: './agregar-destinatario-contenedora.component.scss',
 })
-export class AgregarsDestinatarioComponent {
+export class AgregarsDestinatarioContenedoraComponent {
   
   constructor(public tramiteStore: Tramite260218Store) {
     // no realizar ninguna acción
