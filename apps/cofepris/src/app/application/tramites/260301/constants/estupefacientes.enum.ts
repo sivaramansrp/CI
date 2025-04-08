@@ -193,7 +193,7 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
   },
   {
     encabezado: 'Kg o g por lote ',
-    clave: (ele: TablaMercanciasDatos): string |undefined => ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
+    clave: (ele: TablaMercanciasDatos): string |undefined => ele.kgPorLote, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
     orden: 9,
   },
   {

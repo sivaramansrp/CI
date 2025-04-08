@@ -93,6 +93,9 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       denominacionCumonInternacional: event.denominacionCumonInternacional,
       marcaComercialDenominacion: event.marcaComercialDenominacion,
       cantidadDeLotes: event.cantidadDeLotes,
+      kgPorLote: event.kgPorLote,
+      numeroDePiezasAFabricar: event.numeroDePiezasAFabricar,
+      descripcionNumeroDePiezas: event.descripcionNumeroDePiezas,
       formaFarmaceutica: event.formaFarmaceutica,
       estadoFisico: event.estadoFisico,
       fraccionArancelaria: event.fraccionArancelaria,
@@ -107,6 +110,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       paisProcedencia: event.paisProcedencia,
       tipoProducto: event.tipoProducto,
       usoEspecifico: event.usoEspecifico,
+      numeroCAS: event.numeroCAS,
     };
 
     const INDICES = this.tramiteState.tablaMercanciasConfigDatos.findIndex(
