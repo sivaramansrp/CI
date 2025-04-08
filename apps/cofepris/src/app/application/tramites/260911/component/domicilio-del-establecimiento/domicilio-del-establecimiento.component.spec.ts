@@ -51,7 +51,8 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, DomicilioDelEstablecimientoComponent],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      declarations: [DomicilioDelEstablecimientoComponent],
       providers: [
         FormBuilder,
         { provide: Tramite260911Query, useValue: queryMock },
