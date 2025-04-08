@@ -32,7 +32,7 @@ export class SolicitudComponent implements OnInit {
   initializeSolicitudForm(): void {
     this.solicitudForm = this.formBuilder.group({
       cancelacionDonaciones: this.formBuilder.group({
-        manifesto: [{ value: '', disabled: true }],
+        manifesto: [{ value: '', disabled: false }],
       }),
     });
   }

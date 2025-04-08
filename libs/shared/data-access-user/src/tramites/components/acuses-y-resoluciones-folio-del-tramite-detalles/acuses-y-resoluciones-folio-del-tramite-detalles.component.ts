@@ -58,6 +58,8 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
    */
   @Input() public procedureUrl = '';
 
+  @Input() public procUrl = '';
+
   /**
    * URL para regresar al procedimiento anterior.
    */
@@ -105,6 +107,14 @@ export class AcusesYResolucionesFolioDelTramiteDetallesComponent
    * Navega a la página anterior del procedimiento.
    */
   public regresar(): void {
+    this.router.navigate([this.procedureRegresorUrl]);
+  }
+
+  public solicitarCancelacion(): void {
+    this.router.navigate([this.procedureUrl]);
+  }
+
+  public solicitarModificcion(): void {
     this.router.navigate([this.procedureRegresorUrl]);
   }
 }

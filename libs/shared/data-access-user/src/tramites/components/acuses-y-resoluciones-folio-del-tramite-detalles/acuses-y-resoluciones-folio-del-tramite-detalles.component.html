@@ -34,9 +34,7 @@
         </div>
 
         <div class="col-md-12">
-          <label class="form-label" for="dependencia"
-            >Dependencia:</label
-          >
+          <label class="form-label" for="dependencia">Dependencia:</label>
           <input
             type="text"
             class="form-control"
@@ -47,7 +45,9 @@
         </div>
 
         <div class="col-md-12">
-          <label class="form-label" for="unidadAdministrativaORepresentacionFederal"
+          <label
+            class="form-label"
+            for="unidadAdministrativaORepresentacionFederal"
             >Unidad administrativa o representación federal:</label
           >
           <input
@@ -96,14 +96,35 @@
           />
         </div>
 
-        <div class="row mt-5 mb-5">
-          <div class="col-md-12 d-flex justify-content-end">
-            <button type="button" class="btn btn-default me-3"  (click)="regresar()" > Regresar </button>
-            <button type="button" class="btn btn-primary" (click)="desistir()"> Desistir </button>
+        <div class="row mt-5">
+          <div class="col-md-12 mt-5 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="regresar()">
+              Regresar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger ms-2"
+              (click)="solicitarCancelacion()"
+            >
+              Solicitar cancelación
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger ms-2"
+              (click)="solicitarModificcion()"
+            >
+              Solicitar modificación
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary ms-2"
+              (click)="desistir()"
+            >
+              Desistir
+            </button>
           </div>
         </div>
-        
       </div>
     </form>
   </div>
-</div> 
+</div>
