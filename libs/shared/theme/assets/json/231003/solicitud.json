@@ -145,6 +145,75 @@
             "descripcion": "Plastico"
         }
     ],
+    "arancelaria":[
+        {
+            "id": 1,
+            "descripcion": "25241003"
+        },
+        {
+            "id": 2,
+            "descripcion": "25249099"
+        },
+        {
+            "id": 3,
+            "descripcion": "26190002"
+        },
+        {
+            "id": 4,
+            "descripcion": "26201999"
+        },
+        {
+            "id": 5,
+            "descripcion": "26203001"
+        },
+        {
+            "id": 6,
+            "descripcion": "26204002"
+        },
+        {
+            "id": 7,
+            "descripcion": "26209102"
+        },
+        {
+            "id": 8,
+            "descripcion": "26209999"
+        },
+        {
+            "id": 9,
+            "descripcion": "27109101"
+        },
+        {
+            "id": 10,
+            "descripcion": "27109999"
+        },
+        {
+            "id": 11,
+            "descripcion": "38040002"
+        },
+        {
+            "id": 12,
+            "descripcion": "38251001"
+        },
+        {
+            "id": 13,
+            "descripcion": "38253001"
+        },
+        {
+            "id": 14,
+            "descripcion": "38254101"
+        },
+        {
+            "id": 15,
+            "descripcion": "38254999"
+        }
+    ],
+
+    "nico": [
+        {
+            "id": 1,
+            "descripcion": "00-Crocidolita."
+        }
+    ],
 
     "PrimasRelacionadas": [
         {

@@ -24,11 +24,16 @@ export class DatosResiduosPeligrososComponent implements OnInit {
 
   public establecimientoBodyData: unknown = [];
 
+  fraccion!: Catalogo[];
+  nico!: Catalogo[];
+
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
 
   ngOnInit(): void {
     this.nombre = RADIO_OPCIONES.nombre;
     this.establecimientoHeaderData= RADIO_OPCIONES.PrimasRelacionadas[0]?.encabezadoDeTabla || [];
     this.establecimientoBodyData= RADIO_OPCIONES.PrimasRelacionadas[0]?.cuerpoTabla || [];
+    this.fraccion = RADIO_OPCIONES.arancelaria;
+    this.nico = RADIO_OPCIONES.nico;
   }
 }

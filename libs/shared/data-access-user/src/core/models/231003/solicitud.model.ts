@@ -35,6 +35,8 @@ export interface SolicitudJson {
     radioOptions: RadioOpcion[];
     nombre: Nombre[];
     PrimasRelacionadas: Tabla[];
+    arancelaria: ImmexItem[];
+    nico: ImmexItem[];
 }
 
 

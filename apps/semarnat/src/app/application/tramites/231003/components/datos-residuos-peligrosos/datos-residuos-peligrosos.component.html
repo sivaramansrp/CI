@@ -82,4 +82,15 @@
                 <button class="btn btn-danger" type="button">Borrar</button>
             </div>
         </div>
+        <ng-titulo titulo="Datos de los residuos peligrosos a reciclar" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]='fraccion' [label]="'Fracción arancelaria'"
+                    [required]="true"></app-catalogo-select>
+            </div>
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]='nico' [label]="'NICO'"
+                    [required]="true"></app-catalogo-select>
+            </div>
+        </div>
     </div>
