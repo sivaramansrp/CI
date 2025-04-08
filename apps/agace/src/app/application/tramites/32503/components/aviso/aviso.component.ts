@@ -18,7 +18,7 @@ import { Tramite32503Store } from "../../../../estados/tramites/tramite32503.sto
 import { Validators } from "@angular/forms";
 import { ViewChild } from "@angular/core";
 import { map } from "rxjs";
-import { takeUntil } from "rxjs"; \
+import { takeUntil } from "rxjs";
 @Component({
   selector: 'app-aviso',
   templateUrl: './aviso.component.html',
@@ -151,7 +151,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
-          console.log(this.tramiteState);
         })
       )
       .subscribe();
