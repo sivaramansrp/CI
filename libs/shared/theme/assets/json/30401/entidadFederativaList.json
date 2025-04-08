@@ -1,0 +1,21 @@
+[
+  {"id": 1, "name": "AGUASCALIENTES"},
+  {"id": 2, "name": "BAJA CALIFORNIA"},
+  {"id": 3, "name": "BAJA CALIFORNIA SUR"},
+  {"id": 4, "name": "CAMPECHE"},
+  {"id": 5, "name": "CHIHUAHUA"},
+  {"id": 6, "name": "CHIAPAS"},
+  {"id": 7, "name": "COAHUILA DE ZARAGOZA"},
+  {"id": 8, "name": "COLIMA"},
+  {"id": 9, "name": "CIUDAD DE MÉXICO"},
+  {"id": 10, "name": "DURANGO"},
+  {"id": 11, "name": "GUERRERO"},
+  {"id": 12, "name": "GUANAJUATO"},
+  {"id": 13, "name": "HIDALGO"},
+  {"id": 14, "name": "JALISCO"},
+  {"id": 15, "name": "MÉXICO"},
+  {"id": 16, "name": "MICHOACÁN DE OCAMPO"},
+  {"id": 17, "name": "MORELOS"},
+  {"id": 18, "name": "NAYARIT"},
+  {"id": 19, "name": "NUEVO LEÓN"}
+]

@@ -1,0 +1,268 @@
+<div class="col-md-12">
+    <form [formGroup]="empresasForm">
+      <ng-titulo titulo="Datos generales del trámite" />
+      <div class="row mt-2">
+        <div class="col-lg-4 col-md-6">
+          <div class="form-group">
+            <label class="form-label text-left">Número CAAT:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="numeroCaat"
+              formControlName="numeroCaat"
+              (change)="setValoresStore(empresasForm,'numeroCaat','SetnumeroCaat')"
+            />
+            <div *ngIf="esInvalido('numeroCaat')" class="text-danger">
+                <small *ngIf="empresasForm.controls['numeroCaat'].hasError('required')">Required</small>
+          </div>
+          </div>
+        </div>
+       </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="form-group">
+              <label class="form-label text-left">Seleccione el tipo de tránsito que desea realizar*:</label>
+               <select name="clave" class="form-control form-select" formControlName="tipodeTransito" (change)="setValoresStore(empresasForm,'tipodeTransito','setTipodeTransito')">
+                <option value="" selected>Seleccione un valor</option>
+                @for (articulo of tipodeTransitoList | async; track articulo.name) {
+                  <option value={{articulo.name}}>{{articulo.name}}</option>
+                }
+
+               </select>
+              <div *ngIf="esInvalido('tipodeTransito')" class="text-danger">
+                <small *ngIf="empresasForm.controls['tipodeTransito'].hasError('required')">Este campo es obligatorio.</small>
+            </div>
+            </div>
+          </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-md-12">
+            <ng-titulo titulo="Datos generales de la empresa" />
+                <h5>Aduanas autorizadas*:</h5>
+                  <crosslist
+                  [fechas]="seleccionarAduanasEntrada"
+                  [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos"
+                  [botones]="aduanasEntradaBotons"
+                  (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)"
+                ></crosslist>
+        </div>
+    </div>
+
+      <div class="row mt-2">
+        <div class="col-md-12">
+            <ng-titulo titulo=" Domicilio de la empresa para oír y recibir notificaciones" />
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Calle*:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="calle"
+              formControlName="calle"
+              (change)="setValoresStore(empresasForm,'calle','setCalle')"
+            />
+            <div *ngIf="esInvalido('calle')" class="text-danger">
+              <small *ngIf="empresasForm.controls['calle'].hasError('required')">Este campo es obligatorio.</small>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label">Número exterior*:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="numeroExterior"
+              formControlName="numeroExterior"
+              (change)="setValoresStore(empresasForm,'numeroExterior','setNumeroExterior')"
+            />
+            <div *ngIf="esInvalido('numeroExterior')" class="text-danger">
+              <small *ngIf="empresasForm.controls['numeroExterior'].hasError('required')">Este campo es obligatorio.</small>
+              <small *ngIf="empresasForm.controls['numeroExterior'].hasError('pattern')">El valor debe estar en número.</small>
+          </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Numero interior:</label>
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                name="numeroInterior"
+                formControlName="numeroInterior"
+                (change)="setValoresStore(empresasForm,'numeroInterior','setNumeroInterior')"
+              />
+            </div>
+          </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label">Entidad federativa*:</label>
+               <select name="clave" class="form-control form-select" formControlName="entidadFederativa" (change)="setValoresStore(empresasForm,'entidadFederativa','setEntidadFederativa')">
+                <option value="" selected>Seleccione un valor</option>
+                @for (articulo of entidadFederativaList | async; track articulo.name) {
+                  <option value={{articulo.name}}>{{articulo.name}}</option>
+                }
+
+               </select>
+              <div *ngIf="esInvalido('entidadFederativa')" class="text-danger">
+                <small *ngIf="empresasForm.controls['entidadFederativa'].hasError('required')">Este campo es obligatorio.</small>
+            </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label">Municipio o delegación*:</label>
+               <select name="clave" class="form-control form-select" formControlName="municipioDelegacion" (change)="setValoresStore(empresasForm,'municipioDelegacion','setMunicipioDelegacion')">
+                <option value="" selected>Seleccione un valor</option>
+                @for (articulo of municipioDelegacionList | async; track articulo.name) {
+                  <option value={{articulo.name}}>{{articulo.name}}</option>
+                }
+
+               </select>
+              <div *ngIf="esInvalido('municipioDelegacion')" class="text-danger">
+                <small *ngIf="empresasForm.controls['municipioDelegacion'].hasError('required')">Este campo es obligatorio.</small>
+            </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-group">
+                <label class="form-label">Colonia*:</label>
+               <select name="clave" class="form-control form-select" formControlName="colonia" (change)="setValoresStore(empresasForm,'colonia','setColonia')">
+                <option value="" selected>Seleccione un valor</option>
+                @for (articulo of coloniaList | async; track articulo.name) {
+                  <option value={{articulo.name}}>{{articulo.name}}</option>
+                }
+
+               </select>
+              <div *ngIf="esInvalido('colonia')" class="text-danger">
+                <small *ngIf="empresasForm.controls['colonia'].hasError('required')">Este campo es obligatorio.</small>
+            </div>
+            </div>
+          </div>
+
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Localidad*:</label>
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                name="localidad"
+                formControlName="localidad"
+                (change)="setValoresStore(empresasForm,'localidad','setLocalidad')"
+              />
+              <div *ngIf="esInvalido('localidad')" class="text-danger">
+                <small *ngIf="empresasForm.controls['localidad'].hasError('required')">Este campo es obligatorio.</small>
+            </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label">Codigo postal*:</label>
+                <input
+                  class="form-control"
+                  placeholder=""
+                  type="text"
+                  name="codigoPostal"
+                  formControlName="codigoPostal"
+                  (change)="setValoresStore(empresasForm,'codigoPostal','setCodigoPostal')"
+                />
+                <div *ngIf="esInvalido('codigoPostal')" class="text-danger">
+                    <small *ngIf="empresasForm.controls['codigoPostal'].hasError('required')">Este campo es obligatorio.</small>
+              </div>
+              </div>
+            </div>
+      </div>
+
+
+      <!-- <div class="row mt-2">
+        <div class="col-md-12">
+            <ng-titulo titulo="Capital social" />
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label text-left">El capital social de la persona moral por lo menos es de $3,113,240.00*:</label>
+            <input
+              class="form-control"
+              placeholder=""
+              type="text"
+              name="capitalSocial"
+              formControlName="capitalSocial"
+              (change)="setValoresStore(empresasForm,'capitalSocial','setCapitalSocial')"
+            />
+            <div *ngIf="esInvalido('capitalSocial')" class="text-danger">
+                <small *ngIf="empresasForm.controls['capitalSocial'].hasError('required')">Required</small>
+            </div>
+          </div>
+        </div>
+       </div> -->
+
+       <!-- <div class="row mt-2 mb-4">
+        <div class="col-md-12">
+            <ng-titulo titulo="Permiso expedido por la Dirección General de Autotransporte Federal de la Secretaria de Comunicaciones y Transportes, para prestar el servicio de autotransporte federal de carga" />
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label text-left">Número:</label>
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                name="numero"
+                formControlName="numero"
+                (change)="setValoresStore(empresasForm,'numero','setNumero')"
+              />
+              <div *ngIf="esInvalido('numero')" class="text-danger">
+                  <small *ngIf="empresasForm.controls['numero'].hasError('required')">Required</small>
+              </div>
+            </div>
+          </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Fecha*:</label>
+                <input
+                  class="form-control"
+                  placeholder=""
+                  type="date"
+                  name="fecha"
+                  formControlName="fecha"
+                  (change)="setValoresStore(empresasForm,'fecha','setFecha')"
+                />
+                <div *ngIf="esInvalido('fecha')" class="text-danger">
+                  <small *ngIf="empresasForm.controls['fecha'].hasError('required')">Este campo es obligatorio.</small>
+              </div>
+              </div>
+        </div>
+
+       </div> -->
+
+       
+      <!-- <div class="alert alert-info content-with-checkbox">
+        <input class="form-check-input" formControlName="capitalSocialCheck" [ngClass]="{'is-invalid': esInvalido('capitalSocialCheck')}" (change)="setValoresStore(empresasForm,'capitalSocialCheck','setCapitalSocialCheck')" type="checkbox" id="efectuar-el-pago">
+        {{CAPITAL_SOCIAL_NOTA}}
+      </div>
+
+      <div class="alert alert-info content-with-checkbox mb-0">
+        <input class="form-check-input" formControlName="miRepresentadaCheck" [ngClass]="{'is-invalid': esInvalido('miRepresentadaCheck')}" (change)="setValoresStore(empresasForm,'miRepresentadaCheck','setMiRepresentadaCheck')" type="checkbox" id="efectuar-el-pago">
+        {{MI_REPRESENTADA_NOTA}}
+      </div> -->
+
+    </form>
+  </div>

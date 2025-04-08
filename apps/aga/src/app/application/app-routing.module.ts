@@ -140,7 +140,14 @@ const ROUTES: Routes = [
       import('./tramites/40101/transportista-terrestre.module').then(
         (m) => m.TransportistaTerrestreModule
       ),
-  }
+  },
+  {
+    path: 'registro-empresas',
+    loadChildren: () =>
+      import('./tramites/30401/registro-empresas-transporte.module').then(
+        (m) => m.RegistroEmpresasTransporteModule
+      ),
+  },
 ];
 
 @NgModule({
