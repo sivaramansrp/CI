@@ -20,7 +20,7 @@ interface AccionBoton {
 })
 export class SolicitudPageComponent implements OnInit {
   pasos: ListaPasosWizard[] = PASOS;
-  indice: number = 1;
+  indice: number = 2;
   public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
 
