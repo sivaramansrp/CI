@@ -514,6 +514,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 fetchEntidadFederativa(): void {
   this.importacionVehiculosNuevosService
     .getEntidadFederativa()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.entidadFederativa = data;
     });
@@ -524,6 +525,7 @@ fetchEntidadFederativa(): void {
 fetchRepresentacionFederal(): void {
   this.importacionVehiculosNuevosService
     .getRepresentacionFederal()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.representacionFederal = data;
     });
@@ -534,6 +536,7 @@ fetchRepresentacionFederal(): void {
 listaDePaisesDisponibles(): void {
   this.importacionVehiculosNuevosService
     .getListaDePaisesDisponibles()
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.elementosDeBloque = data;
     });
@@ -545,6 +548,7 @@ listaDePaisesDisponibles(): void {
 fetchPaisesPorBloque(_bloqueId: number): void {
   this.importacionVehiculosNuevosService
     .getPaisesPorBloque(_bloqueId)
+    .pipe(takeUntil(this.destroyed$))
     .subscribe((data) => {
       this.paisesPorBloque = data;
       this.selectRangoDias = this.paisesPorBloque.map(
