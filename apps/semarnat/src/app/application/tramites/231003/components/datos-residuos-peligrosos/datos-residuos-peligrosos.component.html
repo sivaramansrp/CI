@@ -152,23 +152,25 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
-            <app-catalogo-select [catalogo]='descripcion' [label]="'Descripción*:'"
-                [required]="true"></app-catalogo-select>
+                <app-catalogo-select [catalogo]='descripcion' [label]="'Descripción*:'"
+                    [required]="true"></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
-            <app-catalogo-select [catalogo]='creti' [label]="'CRETI*:'" [required]="true"></app-catalogo-select>
+                <app-catalogo-select [catalogo]='creti' [label]="'CRETI*:'" [required]="true"></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
-            <app-catalogo-select [catalogo]='estadoFisico' [label]="'Estado físico*:'" [required]="true"></app-catalogo-select>
+                <app-catalogo-select [catalogo]='estadoFisico' [label]="'Estado físico*:'"
+                    [required]="true"></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
-            <app-catalogo-select [catalogo]='tipoContenedor' [label]="'Tipo de Contenedor*:'" [required]="true"></app-catalogo-select>
+                <app-catalogo-select [catalogo]='tipoContenedor' [label]="'Tipo de Contenedor*:'"
+                    [required]="true"></app-catalogo-select>
             </div>
         </div>
         <div class="row mb-3">
@@ -176,6 +178,20 @@
                 <div class="form-group mb-3">
                     <label for="capacidad" class="form-label">Capacidad*:</label>
                     <input type="text" class="form-control" id="capacidad">
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <button type="button" id="cancelarDatosOperacionImp" class="mid btn btn-default me-3"
+                        data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="button" id="agregarDatosOperacionImp" class="default btn btn-primary"
+                        data-bs-dismiss="modal">
+                        Agregar
+                    </button>
                 </div>
             </div>
         </div>
