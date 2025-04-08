@@ -117,6 +117,15 @@ const ROUTES: Routes = [
         (m) => m.AvisoSanitarioModule
       ),
   },
+
+  {
+    path: 'dispositivos-medicos-sin-registrar',
+    loadChildren: () =>
+      import('./tramites/260217/importacion-dispositivos-medicos-sin-registrar.module').then(
+        (m) => m.ImportacionDispositivosMedicosSinRegistrarModule
+      ),
+  },
+
   {
     path: 'materias-primas-destinados',
     loadChildren: () =>
