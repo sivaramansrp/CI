@@ -198,6 +198,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'diamante-bruto',
+    loadChildren: () =>
+      import('./tramites/130114/diamante-bruto.module').then(
+        (m) => m.DiamanteBrutoModule
+      )
+  },
+  {
     path: 'solicitud-modificacion',
     loadChildren: () =>
       import('./tramites/80302/modificacion.module').then(
