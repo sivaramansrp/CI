@@ -1,0 +1,79 @@
+<div class="container">
+    <div *ngIf="showTableDiv">
+        <div class="row">
+            <ng-titulo titulo="Datos del destinatario*" />
+            <div class="datos-table">
+                <div class="table-responsive mt-5">
+                    <ng-table [commonTableHeader]="tablaDestinatarioData" [commonTableBody]=""></ng-table>
+                </div>
+            </div>
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-default ms-3">Seleccionar</button>
+                <button type="button" class="btn btn-primary ms-3" (click)="cambiarDestinatario()">Agregar</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <ng-titulo titulo="Datos del agente aduanal*" />
+            <div class="datos-table">
+                <div class="table-responsive mt-5">
+                    <ng-table [commonTableHeader]="tablaAgenteAduanalData" [commonTableBody]=""></ng-table>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-primary ms-3">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-modal [active]="showDestinatarioModal">
+    <div>
+        <ng-titulo titulo="Destinatario" />
+        <form>
+            <app-input-radio [radioOptions]="destinatarioOpcionDeBotonDeRadio"
+                [layout]="'horizontal'"></app-input-radio>
+
+            <div class="col-md-8 mt-5">
+                <label class="form-label" for="denominacion">Denominación o razón social*:</label>
+                <input type="text" class="form-control" id="denominacion" name="denominacion" [required]=true>
+            </div>
+
+            <div class="clearfix"></div>
+            
+
+            <div class="col-md-4 mt-5 destinatario-field">
+                <div class="form-group">
+                    <app-catalogo-select [label]="'País'" [required]="true" name="" id="pais"
+                        formControlName=""></app-catalogo-select>
+                </div>
+            </div>
+    
+            <div class="col-md-4 mt-5 destinatario-field" >
+                <div class="form-group">
+                    <app-catalogo-select [label]="'Estado'" [required]="true" name="" id="estado"
+                        formControlName=""></app-catalogo-select>
+                </div>
+            </div>
+
+            <div class="col-md-4 mt-5 destinatario-field">
+                <label class="form-label" for="codigoPostalEquivalente">Código postal o equivalente*:</label>
+                <input type="text" class="form-control" id="codigoPostalEquivalente" name="codigoPostalEquivalente" [required]=true>
+            </div>
+
+            <div class="col-md-8 mt-4">
+                <label class="form-label" for="domicilio">Domicilio*:</label>
+                <input type="text" class="form-control" id="domicilio" name="domicilio" [required]=true>
+            </div>
+
+            <div class="col-md-12 mt-5 d-flex justify-content-end">
+                <button type="button" class="btn btn-danger" (click)="cambiarDestinatario()">Cancelar</button>
+                <button type="button" class="btn btn-default ms-3">Limpiar</button>
+                <button type="button" class="btn btn-primary ms-3">Agregar</button>
+            </div>
+        </form>
+    </div>
+</app-modal>

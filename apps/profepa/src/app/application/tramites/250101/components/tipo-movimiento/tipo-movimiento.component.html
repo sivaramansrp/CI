@@ -1,0 +1,32 @@
+<div class="container">
+    <ng-titulo titulo="Tipo de movimiento" />
+    <form>
+        <div class="radio-botons">
+            <app-input-radio [radioOptions]="movimientoOpcionDeBotonDeRadio" [layout]="'horizontal'"></app-input-radio>
+        </div>
+
+        <ng-titulo titulo="Lugar de inspección" />
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <app-catalogo-select [label]="'Aduana'" [required]="true" name="" id="aduana"
+                    formControlName=""></app-catalogo-select>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="form-group">
+                <app-catalogo-select [label]="'Inspectoría de PROFEPA'" [required]="true" name="" id="aduana"
+                    formControlName=""></app-catalogo-select>
+            </div>
+        </div>
+
+        <div class="col-md-8 mt-3">
+            <div class="form-group">
+                <app-catalogo-select [label]="'Municipio o alcaldía de la PROFEPA en el estado de'" [required]="true"
+                    name="" id="aduana" formControlName=""></app-catalogo-select>
+            </div>
+        </div>
+
+    </form>
+</div>
