@@ -6,6 +6,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import {DomicilioDelEstablecimientoService} from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -218,7 +219,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
     private fb: FormBuilder,
     private httpServicios: HttpClient,
     private tramite260911Query: Tramite260911Query,
-    private tramite260911Store: Tramite260911Store
+    private tramite260911Store: Tramite260911Store,
+    private domicilioDelEstablecimientoService:DomicilioDelEstablecimientoService
   ) {
     // Constructor
   }
@@ -231,90 +233,33 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
-
-    this.codigoPostal$.pipe(takeUntil(this.destroy$)).subscribe((codigoPostal) => {
-      if (codigoPostal) {
-        this.form.get('codigoPostal')?.setValue(codigoPostal);
-      }
-    });
-
-    this.estado$.pipe(takeUntil(this.destroy$)).subscribe((estado) => {
-      if (estado) {
-        this.form.get('estado')?.setValue(estado);
-      }
-    });
-
-    this.municipioOAlcaldia$.pipe(takeUntil(this.destroy$)).subscribe((municipioOAlcaldia) => {
-      if (municipioOAlcaldia) {
-        this.form.get('municipioOAlcaldia')?.setValue(municipioOAlcaldia);
-      }
-    });
-    this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
-      if (localidad) {
-        this.form.get('localidad')?.setValue(localidad);
-      }
-    });
-    this.colonias$.pipe(takeUntil(this.destroy$)).subscribe((colonias) => {
-      if (colonias) {
-        this.form.get('colonias')?.setValue(colonias);
-      }
-    });
-    this.calle$.pipe(takeUntil(this.destroy$)).subscribe((calle) => {
-      if (calle) {
-        this.form.get('calle')?.setValue(calle);
-      }
-    });
-    this.lada$.pipe(takeUntil(this.destroy$)).subscribe((lada) => {
-      if (lada) {
-        this.form.get('lada')?.setValue(lada);
-      }
-    });
-    this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
-      if (telefono) {
-        this.form.get('telefono')?.setValue(telefono);
-      }
-    });
-
-    this.avisoCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((avisoCheckbox) => {
-      if (avisoCheckbox) {
-        this.domicilio.get('avisoCheckbox')?.setValue(avisoCheckbox);
-      }
-    });
-
-    this.regimen$.pipe(takeUntil(this.destroy$)).subscribe((regimen) => {
-      if (regimen) {
-        this.domicilio.get('regimen')?.setValue(regimen);
-      }
-    });
-
-    this.aduanasEntradas$.pipe(takeUntil(this.destroy$)).subscribe((aduanasEntradas) => {
-      if (aduanasEntradas) {
-        this.domicilio.get('aduanasEntradas')?.setValue(aduanasEntradas);
-      }
-    });
-
-    this.aifaCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((aifaCheckbox) => {
-      if (aifaCheckbox) {
-        this.domicilio.get('aifaCheckbox')?.setValue(aifaCheckbox);
-      }
-    });
-
-    this.manifests$.pipe(takeUntil(this.destroy$)).subscribe((manifests) => {
-      if (manifests) {
-        this.domicilio.get('manifests')?.setValue(manifests);
-      }
-    });
-
-    this.acuerdoPublico$.pipe(takeUntil(this.destroy$)).subscribe((acuerdoPublico) => {
-      if (acuerdoPublico) {
-        this.representanteLegal.get('acuerdoPublico')?.setValue(acuerdoPublico);
-      }
-    });
-
-    this.rfc$.pipe(takeUntil(this.destroy$)).subscribe((rfc) => {
-      if (rfc) {
-        this.representanteLegal.get('rfc')?.setValue(rfc);
-      }
+ 
+    this.tramite260911Query.selectTramite260911$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      this.form.patchValue({
+        codigoPostal: data.codigoPostal,
+        estado: data.estado,
+        municipioOAlcaldia: data.municipioOAlcaldia,
+        localidad: data.localidad,
+        colonias: data.colonias,
+        calle: data.calle,
+        lada: data.lada,
+        telefono: data.telefono,
+      });
+ 
+      this.domicilio.patchValue({
+        avisoCheckbox: data.avisoCheckbox,
+        regimen: data.regimen,
+        aduanasEntradas: data.aduanasEntradas,
+        aifaCheckbox: data.aifaCheckbox,
+        manifests: data.manifests,
+      });
+ 
+      this.representanteLegal.patchValue({
+        acuerdoPublico: data.acuerdoPublico,
+        rfc: data.rfc,
+      });
     });
   }
 
@@ -360,37 +305,36 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
    * Método para obtener los datos de la tabla.
    */
   obtenerTablaDatos(): void {
-    this.httpServicios
-      .get<RespuestaTabla>('../../../../../assets/json/260911/tablaDatos.json')
-      .pipe(takeUntil(this.destroy$)).subscribe((data): void => {
+    this.domicilioDelEstablecimientoService
+      .obtenerTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
         this.nicoTablaDatos = data?.data;
       });
   }
 
-  /**
+   /**
    * Método para obtener la lista de estados.
    */
-  obtenerEstadoList(): void {
-    this.httpServicios
-      .get<RespuestaCatalogos>(
-        '../../../../../assets/json/260911/seleccion.json'
-      ).pipe(takeUntil(this.destroy$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.estado = DATOS;
+   obtenerEstadoList(): void {
+    this.domicilioDelEstablecimientoService
+      .obtenerEstadoList()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.estado = data?.data || [];
       });
   }
+ 
 
   /**
    * Método para obtener los datos de mercancías.
    */
   obtenerMercanciasDatos(): void {
-    this.httpServicios
-      .get<MercanciasTabla>(
-        '../../../../../assets/json/260911/mercanciasDatos.json'
-      )
-      .subscribe((data): void => {
-        this.mercanciasTablaDatos = data?.data;
+    this.domicilioDelEstablecimientoService
+      .obtenerMercanciasDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.mercanciasTablaDatos = data?.data || [];
       });
   }
 

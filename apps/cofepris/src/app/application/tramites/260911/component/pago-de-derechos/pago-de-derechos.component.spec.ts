@@ -59,12 +59,15 @@ describe('PagoDeDerechosComponent', () => {
         fecPago: '',
         impPago: '',
         btonDeRadio: '',
+        justificacion: '',
         justificación: '',
         rfcDel: '',
         denominacion: '',
         correo: '',
+        codigoPostal: '',
         códigoPostal: '',
         estado: null,
+        municipioOAlcaldia: '',
         municipioOAlcaldía: '',
         localidad: '',
         colonias: '',
@@ -138,11 +141,11 @@ describe('PagoDeDerechosComponent', () => {
     // Recreate the component to trigger ngOnInit
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
     component = fixture.componentInstance;
-    component.bancoList = mockBancoList;
+    component.bancoList = mockBancoList.map(banco => ({ id: banco.id, descripcion: banco.name }));
     component.ngOnInit();
     // expect(mockPagoDeDerechosService.onBancoList).toHaveBeenCalled();
     fixture.detectChanges(); // Trigger change detection
-    expect(component.bancoList).toEqual(mockBancoList); // Verify the component's state
+    expect(component.bancoList).toEqual(mockBancoList.map(banco => ({ id: banco.id, descripcion: banco.name }))); // Verify the component's state
   });
 
   it('should patch form data on enPatchStoredFormData call', () => {

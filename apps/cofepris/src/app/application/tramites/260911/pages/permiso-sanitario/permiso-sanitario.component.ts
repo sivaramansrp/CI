@@ -23,18 +23,37 @@ interface AccionBoton {
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
  */
 @Component({
-  selector: 'app-sanitary-permit',
-  templateUrl: './sanitary-permit.component.html',
+  /**
+   * Selector del componente utilizado en el HTML.
+   */
+  selector: 'app-permiso-sanitary',
+  /**
+   * Ruta del archivo de plantilla HTML asociado al componente.
+   */
+  templateUrl: './permiso-sanitario.component.html',
 })
-export class SanitaryPermitComponent {
-  message:string | undefined;
-  errorMessage(errorMessage: string): void {
-    this.message = errorMessage;
-    throw new Error('Method not implemented.');
-  }
-  static onSubmit(): void {
-    throw new Error('Method not implemented.');
-  }
+export class PermisoSanitarioComponent {
+  /**
+   * Variable para almacenar mensajes de información o error.
+   */
+  message: string | undefined;
+ /**
+   * Método para manejar mensajes de error.
+   * Asigna el mensaje de error a la variable `message` y lanza una excepción.
+   * @param errorMessage El mensaje de error que se desea mostrar.
+   */
+ errorMessage(errorMessage: string): void {
+  this.message = errorMessage;
+  throw new Error('Method not implemented.');
+}
+
+/**
+ * Método estático para manejar el evento de envío.
+ * Actualmente no implementado.
+ */
+static onSubmit(): void {
+  throw new Error('Method not implemented.');
+}
   /**
    * Lista de pasos en el asistente.
    */

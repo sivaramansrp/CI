@@ -1,6 +1,7 @@
-import { BancoList } from '../../models/pago-de-derechos.model';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -16,7 +17,7 @@ export class PagoDeDerechosService {
  * Recupera la lista de bancos desde un archivo JSON almacenado.
  * El método devuelve un observable que contiene un arreglo de objetos BancoList.
  */
-   onBancoList(): Observable<BancoList[]> {
-        return this.http.get<BancoList[]>('assets/json/260911/bancoList.json');
+   onBancoList(): Observable<Catalogo[]> {
+        return this.http.get<Catalogo[]>('assets/json/260911/bancoList.json');
       }
 }

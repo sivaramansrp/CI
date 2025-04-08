@@ -77,8 +77,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Observable para la justificación.
    */
-  justificación$: Observable<string | null> =
-    this.tramite260911Query.justificación$;
+  justificacion$: Observable<string | null> =
+    this.tramite260911Query.justificacion$;
 
   /**
    * Observable para el RFC del establecimiento.
@@ -118,39 +118,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
+    this.tramite260911Query.selectTramite260911$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((formData) => {
+      this.form.patchValue({
+        btonDeRadio: formData.btonDeRadio,
+        justificacion: formData.justificacion,
+      });
 
-    this.btonDeRadio$.pipe(takeUntil(this.destroy$)).subscribe((btonDeRadio) => {
-      if (btonDeRadio) {
-        this.form.get('btonDeRadio')?.setValue(btonDeRadio);
-      }
+      this.datosDelEstablecimiento.patchValue({
+        rfcDel: formData.rfcDel,
+        denominacion: formData.denominacion,
+        correo: formData.correo,
+      });
     });
-
-    this.justificación$.pipe(takeUntil(this.destroy$)).subscribe((justificación) => {
-      if (justificación) {
-        this.form.get('justificación')?.setValue(justificación);
+    
       }
-    });
-
-    this.rfcDel$.pipe(takeUntil(this.destroy$)).subscribe((rfcDel) => {
-      if (rfcDel) {
-        this.datosDelEstablecimiento.get('rfcDel')?.setValue(rfcDel);
-      }
-    });
-
-    this.denominacion$.pipe(takeUntil(this.destroy$)).subscribe((denominacion) => {
-      if (denominacion) {
-        this.datosDelEstablecimiento
-          .get('denominacion')
-          ?.setValue(denominacion);
-      }
-    });
-
-    this.correo$.pipe(takeUntil(this.destroy$)).subscribe((correo) => {
-      if (correo) {
-        this.datosDelEstablecimiento.get('correo')?.setValue(correo);
-      }
-    });
-  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -170,7 +153,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.form = this.fb.group({
       btonDeRadio: ['', [Validators.required]],
-      justificación: ['', [Validators.required]],
+      justificacion: ['', [Validators.required]],
     });
 
     this.datosDelEstablecimiento = this.fb.group({
@@ -206,8 +189,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Método para obtener el valor de la justificación.
    */
   getJustificacion(): void {
-    const JUSTIFICACION = this.form.get('justificación')?.value;
-    this.tramite260911Store.setJustificación(JUSTIFICACION);
+    const JUSTIFICACION = this.form.get('justificacion')?.value;
+    this.tramite260911Store.setJustificacion(JUSTIFICACION);
   }
 
   /**

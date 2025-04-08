@@ -14,7 +14,7 @@ describe('DatosDeLaSolicitud260904Component', () => {
   beforeEach(async () => {
     const queryMock = {
       btonDeRadio$: of('option1'),
-      justificación$: of('justification'),
+      justificacion$: of('justification'),
       rfcDel$: of('RFC123'),
       denominacion$: of('Denomination'),
       correo$: of('test@example.com'),
@@ -22,14 +22,15 @@ describe('DatosDeLaSolicitud260904Component', () => {
 
     const storeMock = {
       setBtonDeRadio: jest.fn(),
-      setJustificación: jest.fn(),
+      setJustificacion: jest.fn(),
       setRfcDel: jest.fn(),
       setDenominacion: jest.fn(),
       setCorreo: jest.fn(),
     } as jest.Mocked<Partial<Tramite260911Store>>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosDeLaSolicitudComponent],
+      declarations: [DatosDeLaSolicitudComponent],
+      imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
         { provide: Tramite260911Query, useValue: queryMock },
@@ -70,7 +71,7 @@ describe('DatosDeLaSolicitud260904Component', () => {
   it('should set form values from observables', () => {
     component.ngOnInit();
     expect(component.form.get('btonDeRadio')?.value).toBe('option1');
-    expect(component.form.get('justificación')?.value).toBe('justification');
+    expect(component.form.get('justificacion')?.value).toBe('justification');
     expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFC123');
     expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Denomination');
     expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('test@example.com');
@@ -81,7 +82,7 @@ describe('DatosDeLaSolicitud260904Component', () => {
     expect(tramite260904Store.setBtonDeRadio).toHaveBeenCalledWith('option1');
 
     component.getJustificacion();
-    expect(tramite260904Store.setJustificación).toHaveBeenCalledWith('justification');
+    expect(tramite260904Store.setJustificacion).toHaveBeenCalledWith('justification');
 
     component.getRfcDel();
     expect(tramite260904Store.setRfcDel).toHaveBeenCalledWith('RFC123');
