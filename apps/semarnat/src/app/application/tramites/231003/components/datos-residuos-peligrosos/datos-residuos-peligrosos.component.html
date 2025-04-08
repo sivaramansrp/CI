@@ -89,8 +89,16 @@
                     [required]="true"></app-catalogo-select>
             </div>
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]='nico' [label]="'NICO'"
-                    [required]="true"></app-catalogo-select>
+                <app-catalogo-select [catalogo]='nico' [label]="'NICO'" [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label class="form-label">Acotación:</label>
+                    <textarea class="form-control disabled-color textarea-auto-height" rows="2"
+                        name="solicitudAcotacion" readonly formControlName="solicitudAcotacion"></textarea>
+                </div>
             </div>
         </div>
     </div>
