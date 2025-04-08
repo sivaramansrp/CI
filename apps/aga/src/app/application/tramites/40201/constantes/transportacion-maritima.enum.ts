@@ -118,7 +118,7 @@ export const CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Pe
     { encabezado: 'País', clave: (fila) => fila.paisPME, orden: 3 },
     { encabezado: 'Estado', clave: (fila) => fila.estadoPME, orden: 4 },
     { encabezado: 'C.P.', clave: (fila) => fila.codigoPostalPME, orden: 5 },
-    { encabezado: 'Nombre del director general', clave: (fila) => fila.nombreDirectorGeneral, orden: 6 },
+    { encabezado: 'Nombre del director general', clave: (fila) => fila.nombreDG, orden: 6 },
     { encabezado: 'Correo electrónico', clave: (fila) => fila.correoPME, orden: 7 }
 ];
 

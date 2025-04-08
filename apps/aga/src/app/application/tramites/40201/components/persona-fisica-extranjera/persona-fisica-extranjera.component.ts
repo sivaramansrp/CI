@@ -231,7 +231,7 @@ export class PersonaFisicaExtranjeraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
-    const PAIS = this.pais.find((pais) => pais.id === personaFisicaExtranjeraFormDatos.paisPFE)?.descripcion;
+    const PAIS = this.pais.find((pais) => pais.id === Number(personaFisicaExtranjeraFormDatos.paisPFE))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaFisicaExtranjeraTabla];
 

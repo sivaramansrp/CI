@@ -361,7 +361,7 @@ export interface PersonaMoralExtranjeraForm {
      * Nombre del director general de la persona moral extranjera
      * @type {string}
      */
-    nombreDirectorGeneral: string;
+    nombreDG: string;
 
     /**
      * Correo electrónico de la persona moral extranjera

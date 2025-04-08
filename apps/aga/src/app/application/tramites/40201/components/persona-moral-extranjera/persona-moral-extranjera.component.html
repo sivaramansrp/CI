@@ -60,8 +60,8 @@
 
                         <div class="row">
                             <div class="col-md-4">
-                                <app-catalogo-select [catalogo]="pais" [id]="'paisPME'" formControlName="cvePais"
-                                    [label]="'País'" name="cvePais" (change)="paisSeleccion()"
+                                <app-catalogo-select [catalogo]="pais" [id]="'paisPME'" formControlName="paisPME"
+                                    [label]="'País'" name="paisPME" (change)="paisSeleccion()"
                                     [required]="true"></app-catalogo-select>
                             </div>
                             <div class="col-md-4 pt-7">
@@ -133,11 +133,19 @@
                 </div>
             </div>
             <div class="modal-footer custom-footer mt-4">
-                <button type="button" class="btn btn-primary" id="limpiarPME" name="limpiar" (click)="limpiarDatosPME()">Limpiar</button>
-                <button type="button" class="btn btn-default" id="cancelarPME" name="cancelar" data-bs-dismiss="modal"
-                    #closeModal>Cancelar</button>
-                <button type="button" class="btn btn-primary" id="guardarPME" name="guardar" (click)="agregarPME(personaMoralExtranjeraForm.getRawValue())">Guardar</button>
+                <div class="row">
+                    <div class="col-md-8 text-muted">
+                        <p>* Campos obligatorios</p>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" id="limpiarPME" name="limpiar"
+                            (click)="limpiarDatosPME()">Limpiar</button>
+                        <button type="button" class="btn btn-default mx-2" id="cancelarPME" name="cancelar"
+                            data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="guardarPME" name="guardar"
+                            (click)="agregarPME(personaMoralExtranjeraForm.getRawValue())">Guardar</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>

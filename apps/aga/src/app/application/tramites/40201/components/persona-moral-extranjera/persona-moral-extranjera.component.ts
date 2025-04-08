@@ -126,7 +126,7 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
           Validators.maxLength(320)
         ]
       ],
-      cvePais: [
+      paisPME: [
         this.transportacionMaritimaState.paisPME,
       ],
       codigoPostalPME: [
@@ -218,7 +218,7 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   paisSeleccion(): void {
-    const PAIS = this.personaMoralExtranjeraForm.get('cvePais')?.value;
+    const PAIS = this.personaMoralExtranjeraForm.get('paisPME')?.value;
     this.tramite40201Store.setPaisPME(PAIS);
   }
 
@@ -228,17 +228,17 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   agregarPME(personaMoralExtranjeraFormDatos: PersonaMoralExtranjeraForm): void {
-    const PAIS = this.pais.find((pais) => pais.id === personaMoralExtranjeraFormDatos.paisPME)?.descripcion;
+    const PAIS = this.pais.find((pais) => pais.id === Number(personaMoralExtranjeraFormDatos.paisPME))?.descripcion;
 
     const NUEVO_CUERPO_TABLA = [...this.personaMoralExtranjeraTabla];
 
     NUEVO_CUERPO_TABLA.push({
       denominacionPME: personaMoralExtranjeraFormDatos.denominacionPME,
-      paisPME: personaMoralExtranjeraFormDatos.paisPME,
+      paisPME: PAIS ?? '',
       estadoPME: personaMoralExtranjeraFormDatos.estadoPME,
       codigoPostalPME: personaMoralExtranjeraFormDatos.codigoPostalPME,
       correoPME: personaMoralExtranjeraFormDatos.correoPME,
-      nombreDirectorGeneral: `${personaMoralExtranjeraFormDatos.nombreDirectorGeneral} ${personaMoralExtranjeraFormDatos.apellidoPaternoDG} ${personaMoralExtranjeraFormDatos.apellidoMaternoDG}`.trim(),
+      nombreDG: `${personaMoralExtranjeraFormDatos.nombreDG} ${personaMoralExtranjeraFormDatos.apellidoPaternoDG} ${personaMoralExtranjeraFormDatos.apellidoMaternoDG}`.trim(),
       domicilioPME: `${personaMoralExtranjeraFormDatos.callePME} ${personaMoralExtranjeraFormDatos.numeroExteriorPME} ${personaMoralExtranjeraFormDatos.estadoPME} ${PAIS} ${personaMoralExtranjeraFormDatos.codigoPostalPME}`.trim(),
     });
     this.personaMoralExtranjeraTabla = NUEVO_CUERPO_TABLA;

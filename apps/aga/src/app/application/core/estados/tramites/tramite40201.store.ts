@@ -269,9 +269,9 @@ export interface TransportacionMaritima40201State {
 
     /**
      * País de la persona moral extranjera.
-     * @type {string}
+     * @type {number | string}
      */
-    paisPME?: string;
+    paisPME?: number | string;
 
     /**
      * Código postal de la persona moral extranjera.
@@ -1028,7 +1028,7 @@ export class Tramite40201Store extends Store<TransportacionMaritima40201State> {
      * @param paisPME - País de la persona moral extranjera.
      * @description Establece el país de la persona moral extranjera en el estado.
      */
-    public setPaisPME(paisPME: string): void {
+    public setPaisPME(paisPME: number | string): void {
         this.update((state) => ({
             ...state,
             paisPME,

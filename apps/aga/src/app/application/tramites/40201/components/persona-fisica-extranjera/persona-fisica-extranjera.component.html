@@ -129,11 +129,19 @@
                 </div>
             </div>
             <div class="modal-footer custom-footer mt-4">
-                <button type="button" class="btn btn-primary" id="limpiarPFE" name="limpiar" (click)="limpiarDatosPFE()">Limpiar</button>
-                <button type="button" class="btn btn-default" id="cancelarPFE" name="cancelar" data-bs-dismiss="modal"
-                    #closeModal>Cancelar</button>
-                <button type="button" class="btn btn-primary" id="guardarPFE" name="guardar" (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())">Guardar</button>
+                <div class="row">
+                    <div class="col-md-8 text-muted">
+                        <p>* Campos obligatorios</p>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" id="limpiarPFE" name="limpiar"
+                            (click)="limpiarDatosPFE()">Limpiar</button>
+                        <button type="button" class="btn btn-default mx-2" id="cancelarPFE" name="cancelar"
+                            data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="guardarPFE" name="guardar"
+                            (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())">Guardar</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>

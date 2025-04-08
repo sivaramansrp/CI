@@ -90,7 +90,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="pais" formControlName="paisPFN" [label]="'País'"
-                                name="cvePais" (change)="paisSeleccion()" [isDisabled]="true"></app-catalogo-select>
+                                    name="cvePais" (change)="paisSeleccion()" [isDisabled]="true"></app-catalogo-select>
                             </div>
                             <div class="col-md-4 pt-7">
                                 <label for="codigoPostal">Código postal:</label>
@@ -100,13 +100,14 @@
                             </div>
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="estado" formControlName="estadoPFN" [label]="'Estado'"
-                                name="cveEstado" (change)="estadoSeleccion()"></app-catalogo-select>
+                                    name="cveEstado" (change)="estadoSeleccion()"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
-                                <app-catalogo-select [catalogo]="municipio" formControlName="municipioPFN" [label]="'Municipio o alcaldía'"
-                                name="cveMunicipio" (change)="municipioSeleccion()"></app-catalogo-select>
+                                <app-catalogo-select [catalogo]="municipio" formControlName="municipioPFN"
+                                    [label]="'Municipio o alcaldía'" name="cveMunicipio"
+                                    (change)="municipioSeleccion()"></app-catalogo-select>
                             </div>
                             <div class="col-md-4 pt-7">
                                 <label for="localidad">Localidad:</label>
@@ -115,8 +116,9 @@
                                     (change)="setValoresStore(personaFisicaForm,'localidadPFN', 'setLocalidadPFN')">
                             </div>
                             <div class="col-md-4">
-                                <app-catalogo-select [catalogo]="colonia" formControlName="coloniaPFN" [label]="'Colonia'"
-                                name="cveColonia" (change)="coloniaSeleccion()"></app-catalogo-select>
+                                <app-catalogo-select [catalogo]="colonia" formControlName="coloniaPFN"
+                                    [label]="'Colonia'" name="cveColonia"
+                                    (change)="coloniaSeleccion()"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -128,27 +130,36 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="numeroExterior">Número exterior:</label>
-                                <input type="text" class="form-control" name="numeroExteriorPFN"
-                                    id="numeroExteriorPFN" formControlName="numeroExteriorPFN" maxlength="55"
+                                <input type="text" class="form-control" name="numeroExteriorPFN" id="numeroExteriorPFN"
+                                    formControlName="numeroExteriorPFN" maxlength="55"
                                     (change)="setValoresStore(personaFisicaForm,'numeroExteriorPFN', 'setNumeroExteriorPFN')">
                             </div>
                         </div>
                         <div class="row pt-7">
                             <div class="col-md-4">
                                 <label for="numeroInterior">Número interior:</label>
-                                <input type="text" class="form-control" name="numeroInteriorPFN"
-                                    id="numeroInteriorPFN" formControlName="numeroInteriorPFN" maxlength="55"
+                                <input type="text" class="form-control" name="numeroInteriorPFN" id="numeroInteriorPFN"
+                                    formControlName="numeroInteriorPFN" maxlength="55"
                                     (change)="setValoresStore(personaFisicaForm,'numeroInteriorPFN', 'setNumeroInteriorPFN')">
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-            <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-primary" id="limpiarPFN" name="limpiar" (click)="limpiarDatosPFN()">Limpiar</button>
-                <button type="button" class="btn btn-default" id="cancelarPFN" name="cancelar" data-bs-dismiss="modal" #closeModal>Cancelar</button>
-                <button type="button" class="btn btn-primary" id="guardarPFN" name="guardar" (click)="agregarPFN(personaFisicaForm.getRawValue())">Guardar</button>
+            <div class="modal-footer custom-footer mt-4">
+                <div class="row">
+                    <div class="col-md-8 text-muted">
+                        <p>* Campos obligatorios</p>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" id="limpiarPFN" name="limpiar"
+                            (click)="limpiarDatosPFN()">Limpiar</button>
+                        <button type="button" class="btn btn-default mx-2" id="cancelarPFN" name="cancelar"
+                            data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="guardarPFN" name="guardar"
+                            (click)="agregarPFN(personaFisicaForm.getRawValue())">Guardar</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
