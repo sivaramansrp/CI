@@ -1,0 +1,27 @@
+<div class="page">
+    <div class="container">
+      @if(showMercanciaForm){
+      <div class="row">
+        <div class="col-md-12">
+          <h1>Validar por motivos técnicos el certificado 
+            Japón </h1>
+        </div>
+        <app-wizard [listaPasos]="pasosSolicitar"></app-wizard>
+      </div>
+  
+      <div class="row">
+        @switch(indice){
+            @case(1){
+                <app-solicitante-tabs [indice]="capturarTapIndice" (SolicitanteEventCertificado)="isModificar($event,1)"></app-solicitante-tabs>
+            }@case(2){
+              <app-paso-tres></app-paso-tres>
+            }
+        }
+        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    </div>
+  }
+  @else{
+    <app-mercancias-seleccionadas-form (modificarÉxitoBtn)="isModificar($event,6)"></app-mercancias-seleccionadas-form>
+  }
+  </div>
+  
