@@ -1,3 +1,4 @@
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -7,25 +8,17 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Location } from '@angular/common';
-
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
+import { ImportacionMateriasPrimasService } from '../../service/importacion-materias-primas.service';
+import { Location } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260301Store } from '../../estados/tramite260301Store.store';
-import { ImportacionMateriasPrimasService } from '../../service/importacion-materias-primas.service';
 
 @Component({
   selector: 'app-agregar-otros',
   standalone: true,
-  imports: [
-    CommonModule,
-    CatalogoSelectComponent,
-    ReactiveFormsModule,
-    TituloComponent,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
   templateUrl: './agregar-otros.component.html',
   styleUrl: './agregar-otros.component.scss',
 })
@@ -77,7 +70,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     private datosSolicitudService: DatosSolicitudService,
     private ubicaccion: Location,
     private tramiteStore: Tramite260301Store,
-    private importacionMateriasPrimasService:ImportacionMateriasPrimasService
+    private importacionMateriasPrimasService: ImportacionMateriasPrimasService
   ) {
     this.agregarDatosForm = this.fb.group({
       curp: [''],
@@ -100,8 +93,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       correoElectronico: ['', [Validators.required, Validators.email]],
       localidad: [''],
       municipio: [''],
-      denominacionRazon: ['']
- 
+      denominacionRazon: [''],
     });
 
     this.changeNacionalidad();
@@ -147,11 +139,20 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     this.ubicaccion.back();
   }
 
+  /**
+   * Guarda los datos del formulario y navega hacia atrás.
+   * Actualiza el estado de los datos en el store y realiza una acción de retroceso en la ubicación.
+   */
   guardar(): void {
     this.tramiteStore.updateOtrosTablaDatos([this.agregarDatosForm.value]);
     this.ubicaccion.back();
   }
 
+  /**
+   * Cambia el estado de habilitación de los campos del formulario dependiendo de la nacionalidad.
+   * Si la nacionalidad no es 'true', habilita todos los campos del formulario.
+   * Si la nacionalidad es 'true', deshabilita algunos campos y habilita otros dependiendo de la tipoPersona.
+   */
   changeNacionalidad(): void {
     if (this.agregarDatosForm?.value?.nacionalidad !== 'true') {
       this.agregarDatosForm.enable();
@@ -163,7 +164,10 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
       this.agregarDatosForm.get('rfc')?.enable();
       this.agregarDatosForm.get('curp')?.enable();
 
-      if (this.agregarDatosForm.value.tipoPersona !== this.tipoPersona.NO_CONTRIBUYENTE) {
+      if (
+        this.agregarDatosForm.value.tipoPersona !==
+        this.tipoPersona.NO_CONTRIBUYENTE
+      ) {
         this.agregarDatosForm.get('curp')?.disable();
       } else {
         this.agregarDatosForm.get('curp')?.enable();
@@ -172,13 +176,17 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Realiza una búsqueda para obtener datos de importación y los asigna al formulario.
+   * Hace una petición al servicio 'importacionMateriasPrimasService' y actualiza los valores del formulario con los datos obtenidos.
+   */
   buscar(): void {
-    this.importacionMateriasPrimasService.obtenerOstro()
-    .pipe(takeUntil(this.unsubscribe$))
+    this.importacionMateriasPrimasService
+      .obtenerOstro()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.agregarDatosForm.patchValue(data);
       });
-
   }
 
   /**

@@ -16,7 +16,6 @@ import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
 import { TIPO_TABLA_DATOS } from '../../constants/estupefacientes.enum';
-import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 import { Tramite260301Store } from '../../estados/tramite260301Store.store';
 
 @Component({
@@ -32,8 +31,16 @@ import { Tramite260301Store } from '../../estados/tramite260301Store.store';
   styleUrl: './datos-generales.component.scss',
 })
 export class DatosGeneralesComponent {
+  /**
+   * Variable que almacena el tipo de dato, que se inicializa más tarde.
+   * Se usa el operador `!` para indicar que la variable no es nula ni indefinida en el momento de su uso.
+   */
   tipoDatos!: string;
 
+  /**
+   * Lista de objetos `Catalogo` que contiene los datos de los países.
+   * Esta variable se utiliza para almacenar los países en un catálogo.
+   */
   paisesDatos: Catalogo[] = [];
 
   /**
@@ -50,6 +57,10 @@ export class DatosGeneralesComponent {
    */
   agregarDatosForm: FormGroup;
 
+  /**
+   * Asigna el valor de `TIPO_TABLA_DATOS` a la variable `tipoTablaDatos`.
+   * `TIPO_TABLA_DATOS` es un objeto o constante que define los tipos de datos para las tablas.
+   */
   tipoTablaDatos = TIPO_TABLA_DATOS;
 
   constructor(
@@ -57,9 +68,7 @@ export class DatosGeneralesComponent {
     private datosSolicitudService: DatosSolicitudService,
     private fb: FormBuilder,
     private tramiteStore: Tramite260301Store,
-    private tramiteQuery: Tramite260301Query,
-    private router: Router,
-    private activatedROute: ActivatedRoute
+    private router: Router
   ) {
     this.tipoDatos = this.route.snapshot.paramMap.get('tipo') || '';
     this.agregarDatosForm = this.fb.group({
@@ -98,6 +107,9 @@ export class DatosGeneralesComponent {
       });
   }
 
+  /**
+   * Navega a la ruta 'pago/importacion-materias-primas-estupefacientes'.
+   */
   cancelar(): void {
     this.router.navigate([
       'pago',
@@ -105,10 +117,19 @@ export class DatosGeneralesComponent {
     ]);
   }
 
+  /**
+   * Resetea los valores del formulario 'agregarDatosForm'.
+   * Restaura el formulario a su estado inicial.
+   */
   limpiarFormulario(): void {
     this.agregarDatosForm.reset();
   }
 
+  /**
+   * Guarda los datos del formulario dependiendo del tipo de datos (`tipoDatos`).
+   * Dependiendo del valor de `tipoDatos`, se llama a un método específico para guardar los datos.
+   * Luego navega a la ruta 'pago/importacion-materias-primas-estupefacientes'.
+   */
   guardarDatos(): void {
     switch (this.tipoDatos) {
       case this.tipoTablaDatos.FABRICANTE:
@@ -156,6 +177,12 @@ export class DatosGeneralesComponent {
     this.tramiteStore.updateCertificadoTablaDatos(newDestinatarios);
   }
 
+  /**
+   * Actualiza los datos de tipo 'Otros' en el store 'tramiteStore'.
+   * Recibe un array de objetos de tipo 'Facturador' y actualiza la información correspondiente.
+   *
+   * @param datos - Array de objetos `Facturador` con los datos a actualizar.
+   */
   addOtros(datos: Facturador[]): void {
     this.tramiteStore.updateOtrosTablaDatos(datos);
   }
