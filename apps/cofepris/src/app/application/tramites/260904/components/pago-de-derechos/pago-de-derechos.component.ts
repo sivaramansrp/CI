@@ -4,7 +4,14 @@
  * @module PagoDeDerechosComponent
  */
 
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { BancoList } from '../../modelos/pago-de-derechos.model';
@@ -31,7 +38,6 @@ import { Tramite260904Store } from '../../estados/tramites/tramite260904.store';
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -60,7 +66,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite260904Store: Tramite260904Store,
     private Servicio: PagoDeDerechosService
   ) {
-     // No se necesita lógica de inicialización adicional.
+    // No se necesita lógica de inicialización adicional.
   }
 
   /**
@@ -80,24 +86,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       claveDeReferencia: ['', [Validators.maxLength(50)]],
       cadenaPagoDependencia: ['', [Validators.maxLength(50)]],
       clave: ['', Validators.required],
-      llaveDePago: ['', [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
-      fecPago: ['', [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
-      impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
+      llaveDePago: [
+        '',
+        [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')],
+      ],
+      fecPago: [
+        '',
+        [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
+      ],
+      impPago: [
+        '',
+        [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()],
+      ],
     });
 
     // Actualiza y valida el campo 'fecPago' cuando cambia su valor
-    this.pagoDeDerechosForm.get('fecPago')?.valueChanges
-      .pipe(distinctUntilChanged(), takeUntil(this.destroyed$))
-      .subscribe(() => {
-        this.pagoDeDerechosForm.get('fecPago')?.updateValueAndValidity({ emitEvent: false });
-      });
+    this.pagoDeDerechosForm.get('fecPago')?.statusChanges.subscribe(() => {
+      this.pagoDeDerechosForm
+        .get('fecPago')
+        ?.updateValueAndValidity({ emitEvent: false });
+    });
 
     // Actualiza y valida el campo 'impPago' cuando cambia su valor
-    this.pagoDeDerechosForm.get('impPago')?.valueChanges
-      .pipe(distinctUntilChanged(), takeUntil(this.destroyed$))
-      .subscribe(() => {
-        this.pagoDeDerechosForm.get('impPago')?.updateValueAndValidity({ emitEvent: false });
-      });
+    this.pagoDeDerechosForm.get('impPago')?.statusChanges.subscribe(() => {
+      this.pagoDeDerechosForm
+        .get('impPago')
+        ?.updateValueAndValidity({ emitEvent: false });
+    });
   }
 
   /**
@@ -138,7 +153,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: BancoList[]) => {
-        this.bancoList = data;        
+        this.bancoList = data;
       });
   }
 
@@ -148,7 +163,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param campo - El nombre del campo en el formulario.
    * @param metodoNombre - El método en la tienda para actualizar el estado.
    */
-  public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260904Store): void {
+  public setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Tramite260904Store
+  ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260904Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
@@ -186,10 +205,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       : false;
   }
 
-   /**
+  /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
