@@ -91,7 +91,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit {
       clasificacionProducto: event.clasificacionProducto,
       especificarClasificacionProducto: event.especificarClasificacionProducto,
       denominacionCumonInternacional: event.denominacionCumonInternacional,
-      marcaComercialDenominación: event.marcaComercialDenominación,
+      marcaComercialDenominacion: event.marcaComercialDenominacion,
       cantidadDeLotes: event.cantidadDeLotes,
       formaFarmaceutica: event.formaFarmaceutica,
       estadoFisico: event.estadoFisico,
