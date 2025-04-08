@@ -1,17 +1,24 @@
-import { CommonModule } from "@angular/common";
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { AlertComponent, CatalogoSelectComponent, InputFecha, InputFechaComponent, REGEX_ALFANUMERICO_CON_ESPACIOS, REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, REGEX_NUMERICO_CON_PUNTO, REGEX_NUMEROS, REGEX_REEMPLAZAR, REGEX_SOLO_NUMEROS, SOLO_ALFANUMERICO, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from "@libs/shared/data-access-user/src";
-import { Tramite32503State, Tramite32503Store } from "../../../../estados/tramites/tramite32503.store";
-import { Tramite32503Query } from "../../../../estados/queries/tramite32503.query";
-import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
-import { map, Subject, takeUntil } from "rxjs";
-import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
+import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
+import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
+import { CommonModule } from "@angular/common";
+import { Component } from "@angular/core";
+import { ElementRef } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
+import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
-
-
-
+import { OnDestroy } from "@angular/core";
+import { OnInit } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { Subject } from "rxjs";
+import { Tramite32503Query } from "../../../../estados/queries/tramite32503.query";
+import { Tramite32503State } from "../../../../estados/tramites/tramite32503.store";
+import { Tramite32503Store } from "../../../../estados/tramites/tramite32503.store";
+import { Validators } from "@angular/forms";
+import { ViewChild } from "@angular/core";
+import { map } from "rxjs";
+import { takeUntil } from "rxjs"; \
 @Component({
   selector: 'app-aviso',
   templateUrl: './aviso.component.html',
@@ -102,6 +109,20 @@ export class AvisoComponent implements OnInit, OnDestroy {
         {
           encabezado: 'Descripción de la Mercancía',
           clave: (ele: MercanciaTabla) => ele.descripcionMercancia,
+          orden: 6,
+        },
+        {
+          encabezado: 'Proceso llevará',
+          clave: (ele: MercanciaTabla) => ele.descripcionProceso,
+          orden: 6,
+        }, {
+          encabezado: 'Número de exportación',
+          clave: (ele: MercanciaTabla) => ele.numPedimentoExportacion,
+          orden: 6,
+        },
+        {
+          encabezado: 'Número de importación',
+          clave: (ele: MercanciaTabla) => ele.numPedimentoImportacion,
           orden: 6,
         }
       ],
