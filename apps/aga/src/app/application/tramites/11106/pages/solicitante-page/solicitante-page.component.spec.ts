@@ -1,42 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { PasoUnoComponent } from '../../../11106/pages/paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../../../11106/pages/paso-tres/paso-tres.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11106/pasos.enum';
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
-  let fixture: any;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        WizardComponent,
-        BtnContinuarComponent,
-        PasoUnoComponent,
-        PasoTresComponent,
-        SolicitantePageComponent,
-        HttpClientTestingModule
-      ],
-      declarations: [],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [SolicitantePageComponent],
+      providers: [],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolicitantePageComponent);
+    const fixture = TestBed.createComponent(SolicitantePageComponent);
     component = fixture.componentInstance;
-
-    // Mock the wizardComponent methods
-    component.wizardComponent = {
-      siguiente: jest.fn(),
-      atras: jest.fn(),
-    } as unknown as WizardComponent;
-
-    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -45,46 +22,75 @@ describe('SolicitantePageComponent', () => {
 
   it('should initialize with default values', () => {
     expect(component.indice).toBe(1);
-    expect(component.pasos.length).toBeGreaterThan(0);
-    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
+    expect(component.pasos).toBe(PASOS);
+    expect(component.datosPasos.nroPasos).toBe(PASOS.length);
+    expect(component.datosPasos.indice).toBe(1);
     expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
     expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update the selected tab index when seleccionaTab is called', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
   });
 
-  it('should update the wizard index and call siguiente when getValorIndice is called with "cont"', () => {
+  it('should update indice and call wizardComponent.siguiente when getValorIndice is called with "cont"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
     const wizardSpy = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice({ accion: 'cont', valor: 2 });
+
     expect(component.indice).toBe(2);
     expect(component.datosPasos.indice).toBe(2);
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should update the wizard index and call atras when getValorIndice is called with "ant"', () => {
+  it('should update indice and call wizardComponent.atras when getValorIndice is called with "ant"', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
     const wizardSpy = jest.spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({ accion: 'ant', valor: 1 });
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
+    component.getValorIndice({ accion: 'ant', valor: 2 });
+
+    expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
     expect(wizardSpy).toHaveBeenCalled();
   });
 
-  it('should not update the wizard index if the value is out of bounds in getValorIndice', () => {
-    const wizardSpyNext = jest.spyOn(component.wizardComponent, 'siguiente');
-    const wizardSpyBack = jest.spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({ accion: 'cont', valor: 6 });
-    expect(component.indice).toBe(1); // Index should remain unchanged
-    expect(wizardSpyNext).not.toHaveBeenCalled();
-    expect(wizardSpyBack).not.toHaveBeenCalled();
+  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+
+    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+    const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
+
+    component.getValorIndice({ accion: 'cont', valor: 0 });
+    expect(component.indice).toBe(1);
+    expect(siguienteSpy).not.toHaveBeenCalled();
+    expect(atrasSpy).not.toHaveBeenCalled();
+
+    component.getValorIndice({ accion: 'ant', valor: 6 });
+    expect(component.indice).toBe(1);
+    expect(siguienteSpy).not.toHaveBeenCalled();
+    expect(atrasSpy).not.toHaveBeenCalled();
   });
 
-  it('should call getValorIndice with the correct parameters when continuar is called', () => {
-    const spy = jest.spyOn(component, 'getValorIndice');
+  it('should call getValorIndice with correct parameters when continuar is called', () => {
+    const getValorIndiceSpy = jest.spyOn(component, 'getValorIndice');
+    component.indice = 2;
+
     component.continuar();
-    expect(spy).toHaveBeenCalledWith({ accion: 'cont', valor: component.indice + 1 });
+
+    expect(getValorIndiceSpy).toHaveBeenCalledWith({
+      accion: 'cont',
+      valor: 3,
+    });
   });
 });

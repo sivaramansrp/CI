@@ -1,4 +1,4 @@
 
 export const SOLICITUD = {
-  MANIFESTO: true,
+  ES_AUTORIZACION: false,
 };

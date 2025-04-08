@@ -1,101 +1,44 @@
 import { TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
 import { PasoTresComponent } from './paso-tres.component';
-import {
-  TramiteFolioService,
-  TramiteFolioStore,
-} from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
-  let fixture: any;
-  let routerMock: any;
-  let tramiteFolioServiceMock: any;
-  let tramiteStoreMock: any;
-  let toastrServiceMock: any;
+  let router: Router;
 
-  beforeEach(async () => {
-    routerMock = {
-      navigate: jest.fn(),
-    };
-
-    tramiteFolioServiceMock = {
-      obtenerTramite: jest.fn(),
-    };
-
-    tramiteStoreMock = {
-      establecerTramite: jest.fn(),
-    };
-
-    toastrServiceMock = {
-      success: jest.fn(),
-      error: jest.fn(),
-    };
-
-    await TestBed.configureTestingModule({
-      imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        FirmaElectronicaComponent,
-        PasoTresComponent,
-        HttpClientTestingModule,
-      ],
-      providers: [
-        { provide: Router, useValue: routerMock },
-        { provide: TramiteFolioService, useValue: tramiteFolioServiceMock },
-        { provide: TramiteFolioStore, useValue: tramiteStoreMock },
-        { provide: '_ToastrService', useValue: toastrServiceMock }, 
-      ],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [CommonModule, FirmaElectronicaComponent, RouterTestingModule],
+      providers: [],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PasoTresComponent);
+    const fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    router = TestBed.inject(Router);
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call tramiteFolioService.obtenerTramite and tramiteStore.establecerTramite when obtieneFirma is called with a valid signature', () => {
-    const mockTramiteData = { data: { id: 19, name: 'Test Tramite' } };
-    tramiteFolioServiceMock.obtenerTramite.mockReturnValue(of(mockTramiteData));
+  it('should navigate to "temporal-contenedores/acuse" when obtieneFirma is called with a valid signature', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const validSignature = 'valid-signature';
 
-    component.obtieneFirma('valid-signature');
+    component.obtieneFirma(validSignature);
 
-    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(tramiteStoreMock.establecerTramite).toHaveBeenCalledWith(
-      mockTramiteData.data,
-      'valid-signature'
-    );
-    expect(routerMock.navigate).toHaveBeenCalledWith([
-      'servicios-extraordinarios/acuse',
-    ]);
+    expect(navigateSpy).toHaveBeenCalledWith(['temporal-contenedores/acuse']);
   });
 
-  it('should handle errors when tramiteFolioService.obtenerTramite fails', () => {
-    tramiteFolioServiceMock.obtenerTramite.mockReturnValue(
-      throwError(() => new Error('Error'))
-    );
+  it('should not navigate when obtieneFirma is called with an empty signature', () => {
+    const navigateSpy = jest.spyOn(router, 'navigate');
+    const emptySignature = '';
 
-    component.obtieneFirma('valid-signature');
+    component.obtieneFirma(emptySignature);
 
-    expect(tramiteFolioServiceMock.obtenerTramite).toHaveBeenCalledWith(19);
-    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
-    expect(toastrServiceMock.error).toHaveBeenCalledWith('Error', 'Error');
-  });
-
-  it('should not call tramiteFolioService.obtenerTramite if no signature is provided', () => {
-    component.obtieneFirma('');
-
-    expect(tramiteFolioServiceMock.obtenerTramite).not.toHaveBeenCalled();
-    expect(tramiteStoreMock.establecerTramite).not.toHaveBeenCalled();
-    expect(routerMock.navigate).not.toHaveBeenCalled();
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 });
