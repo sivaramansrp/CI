@@ -5,13 +5,13 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { MercanciasTabla } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NICO_TABLA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NicoInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento-260904.enum';
@@ -19,8 +19,6 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RespuestaTabla } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -33,7 +31,7 @@ import { Validators } from '@angular/forms';
 
 /**
  * Componente para gestionar el domicilio del establecimiento 260904.
- * 
+ *
  * @selector app-domicilio-del-establecimiento-260904
  * @standalone true
  * @imports [
@@ -63,7 +61,9 @@ import { Validators } from '@angular/forms';
   templateUrl: './domicilio-del-establecimiento-260904.component.html',
   styleUrl: './domicilio-del-establecimiento-260904.component.scss',
 })
-export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDestroy {
+export class DomicilioDelEstablecimiento260904Component
+  implements OnInit, OnDestroy
+{
   /**
    * Formulario principal.
    */
@@ -174,7 +174,8 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
   /**
    * Observable para el checkbox de aviso.
    */
-  avisoCheckbox$: Observable<string | null> = this.tramite260904Query.avisoCheckbox$;
+  avisoCheckbox$: Observable<string | null> =
+    this.tramite260904Query.avisoCheckbox$;
 
   /**
    * Observable para el régimen.
@@ -184,12 +185,14 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
   /**
    * Observable para las aduanas de entrada.
    */
-  aduanasEntradas$: Observable<Catalogo | null> = this.tramite260904Query.aduanasEntradas$;
+  aduanasEntradas$: Observable<Catalogo | null> =
+    this.tramite260904Query.aduanasEntradas$;
 
   /**
    * Observable para el checkbox de AIFA.
    */
-  aifaCheckbox$: Observable<string | null> = this.tramite260904Query.aifaCheckbox$;
+  aifaCheckbox$: Observable<string | null> =
+    this.tramite260904Query.aifaCheckbox$;
 
   /**
    * Observable para los manifiestos.
@@ -199,7 +202,8 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
   /**
    * Observable para el acuerdo público.
    */
-  acuerdoPublico$: Observable<string | null> = this.tramite260904Query.acuerdoPublico$;
+  acuerdoPublico$: Observable<string | null> =
+    this.tramite260904Query.acuerdoPublico$;
 
   /**
    * Observable para el RFC.
@@ -213,7 +217,7 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param fb FormBuilder para crear formularios.
    * @param httpServicios Servicio HTTP para realizar peticiones.
    * @param tramite260904Query Consulta de datos del trámite.
@@ -223,7 +227,8 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
     private fb: FormBuilder,
     private httpServicios: HttpClient,
     private tramite260904Query: Tramite260904Query,
-    private tramite260904Store: Tramite260904Store
+    private tramite260904Store: Tramite260904Store,
+    private domicilioService: DomicilioDelEstablecimientoService
   ) {
     // Constructor
   }
@@ -238,32 +243,32 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
     this.obtenerMercanciasDatos();
 
     this.tramite260904Query.selectTramite260904$
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((data) => {
-      this.form.patchValue({
-        codigoPostal: data.codigoPostal,
-        estado: data.estado,
-        municipioOAlcaldia: data.municipioOAlcaldia,
-        localidad: data.localidad,
-        colonias: data.colonias,
-        calle: data.calle,
-        lada: data.lada,
-        telefono: data.telefono,
-      });
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.form.patchValue({
+          codigoPostal: data.codigoPostal,
+          estado: data.estado,
+          municipioOAlcaldia: data.municipioOAlcaldia,
+          localidad: data.localidad,
+          colonias: data.colonias,
+          calle: data.calle,
+          lada: data.lada,
+          telefono: data.telefono,
+        });
 
-      this.domicilio.patchValue({
-        avisoCheckbox: data.avisoCheckbox,
-        regimen: data.regimen,
-        aduanasEntradas: data.aduanasEntradas,
-        aifaCheckbox: data.aifaCheckbox,
-        manifests: data.manifests,
-      });
+        this.domicilio.patchValue({
+          avisoCheckbox: data.avisoCheckbox,
+          regimen: data.regimen,
+          aduanasEntradas: data.aduanasEntradas,
+          aifaCheckbox: data.aifaCheckbox,
+          manifests: data.manifests,
+        });
 
-      this.representanteLegal.patchValue({
-        acuerdoPublico: data.acuerdoPublico,
-        rfc: data.rfc,
+        this.representanteLegal.patchValue({
+          acuerdoPublico: data.acuerdoPublico,
+          rfc: data.rfc,
+        });
       });
-    });
   }
 
   /**
@@ -301,9 +306,18 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
     this.representanteLegal = this.fb.group({
       acuerdoPublico: [],
       rfc: ['', [Validators.required]],
-      nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
-      apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
-      apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
+      nombre: [
+        { value: 'LUIS AMBROSIO', disabled: true },
+        [Validators.required],
+      ],
+      apellidoPaterno: [
+        { value: 'MARTINEZ', disabled: true },
+        [Validators.required],
+      ],
+      apellidoMaterno: [
+        { value: 'VALENZUELA', disabled: true },
+        [Validators.required],
+      ],
     });
   }
 
@@ -311,9 +325,10 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
    * Método para obtener los datos de la tabla.
    */
   obtenerTablaDatos(): void {
-    this.httpServicios
-      .get<RespuestaTabla>('../../../../../assets/json/260904/tablaDatos.json')
-      .pipe(takeUntil(this.destroy$)).subscribe((data): void => {
+    this.domicilioService
+      .obtenerTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
         this.nicoTablaDatos = data?.data;
       });
   }
@@ -322,13 +337,11 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
    * Método para obtener la lista de estados.
    */
   obtenerEstadoList(): void {
-    this.httpServicios
-      .get<RespuestaCatalogos>(
-        '../../../../../assets/json/260904/seleccion.json'
-      ).pipe(takeUntil(this.destroy$))
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.estado = DATOS;
+    this.domicilioService
+      .obtenerEstadoList()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.estado = data?.data || [];
       });
   }
 
@@ -336,12 +349,11 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
    * Método para obtener los datos de mercancías.
    */
   obtenerMercanciasDatos(): void {
-    this.httpServicios
-      .get<MercanciasTabla>(
-        '../../../../../assets/json/260904/mercanciasDatos.json'
-      )
-      .subscribe((data): void => {
-        this.mercanciasTablaDatos = data?.data;
+    this.domicilioService
+      .obtenerMercanciasDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.mercanciasTablaDatos = data?.data || [];
       });
   }
 
@@ -453,7 +465,8 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
    * Método para obtener el valor del acuerdo público.
    */
   getAcuerdoPublico(): void {
-    const ACUERDO_PUBLICO = this.representanteLegal.get('acuerdoPublico')?.value;
+    const ACUERDO_PUBLICO =
+      this.representanteLegal.get('acuerdoPublico')?.value;
     this.tramite260904Store.setAcuerdoPublico(ACUERDO_PUBLICO);
   }
 
