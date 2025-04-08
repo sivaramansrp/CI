@@ -81,7 +81,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Datos del cuerpo de la tabla.
    * @type {{ tbodyData: string[] }[]} Arreglo que contiene los datos que se mostrarán en el cuerpo de la tabla.
    */
- tableBodyData: { tbodyData: string[] }[] = [];
+ tableBodyData: string[] = [];
 
  /**
   * Bandera que controla la visibilidad de la tabla.
@@ -105,8 +105,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   * Fila seleccionada en la tabla.
   * @type {any} Contiene la fila seleccionada de la tabla.
   */
- // eslint-disable-next-line @typescript-eslint/no-explicit-any
- filaSeleccionada: any;
+ filaSeleccionada: { [key: string]: unknown } | null = null;
 
  /**
   * Opciones de productos disponibles.
@@ -717,20 +716,17 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         encabezado: header,
 
         /**
-         * @description
-         * Función que obtiene el valor correspondiente de la columna de la fila, basado en el índice del encabezado.
-         * 
-         * @type {(fila: any) => string}
-         */
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        clave: (fila:any): string => fila.tbodyData[index],
-
-        /**
-         * @description
-         * El índice del encabezado dentro de la tabla, usado para determinar la posición de la columna.
-         * 
-         * @type {number}
-         */
+ * @description Función que obtiene el valor correspondiente de la columna de la fila,
+ * basándose en el índice del encabezado. La función convierte la cadena JSON en un objeto
+ * que contiene la propiedad `tbodyData` y retorna el elemento en la posición indicada.
+ *
+ * @param {string} fila - Cadena JSON que representa la fila con la propiedad `tbodyData`.
+ * @returns {string} Valor correspondiente a la columna en la fila.
+ */
+        clave: (fila: string): string => {
+          const PARSED_FILA = JSON.parse(fila) as { tbodyData: string[] };
+          return PARSED_FILA.tbodyData[index];
+        },
         orden: index,
       })
     );
@@ -743,7 +739,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * @type {any[]}
      * @default []
      */
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
+    this.tableBodyData = this.getEstablecimientoTableData.tableBody.map(row =>
+      JSON.stringify(row)
+    );
   }
 
  
@@ -769,8 +767,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * @default 0
      */
     const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
+      (sum: number, item: string) => {
+        const PARSED_ITEM = JSON.parse(item) as { tbodyData: string[] };
+        return sum + parseFloat(PARSED_ITEM.tbodyData[0]);
+      },
       0
     );
 
@@ -783,8 +783,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
      * @default 0
      */
     const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
+      (sum: number, item: string) => {
+        const PARSED_ITEM = JSON.parse(item) as { tbodyData: string[] };
+        return sum + parseFloat(PARSED_ITEM.tbodyData[5]);
+      },
       0
     );
 
@@ -897,8 +899,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   * @param {any[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
   * @returns {void}
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
+  manejarlaFilaSeleccionada(filasSeleccionadas: { [key: string]: unknown }[]): void {
     /**
      * @description
      * Asigna la primera fila seleccionada a la propiedad `filaSeleccionada`, o `null` si no hay filas seleccionadas.
@@ -999,9 +1000,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   fetchRepresentacionFederal(): void {
     // Llamada al servicio para obtener la representación federal
     this.permisodehidrocarburosService
-      .getRepresentacionFederal()
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data:any) => {
+      .getRepresentacionFederal().pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Catalogo[]) => {
         // Asignamos el resultado a la propiedad representacionFederal
         this.representacionFederal = data;
       });
@@ -1018,8 +1018,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.permisodehidrocarburosService
       .getListaDePaisesDisponibles()
       .pipe(takeUntil(this.destroyed$))
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data:any) => {
+      .subscribe((data: Catalogo[]) => {
         // Asignamos el resultado a la propiedad elementosDeBloque
         this.elementosDeBloque = data;
       });
@@ -1061,8 +1060,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.permisodehidrocarburosService
       .getPaisesPorBloque(_bloqueId)
       .pipe(takeUntil(this.destroyed$)) // Se asegura de que la suscripción se cancele correctamente
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((data:any) => {
+      .subscribe((data: Catalogo[]) => {
         // Asigna los países obtenidos a la propiedad paisesPorBloque
         this.paisesPorBloque = data;
         // Mapea las descripciones de los países y las asigna a selectRangoDias

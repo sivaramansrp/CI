@@ -62,7 +62,7 @@ export interface Tramite130121State {
   /**
    * Fila seleccionada en la tabla (puede ser nula).
    */
-  filaSeleccionada: null;
+  filaSeleccionada: { [key: string]: unknown } | null;
   /**
    * Cantidad de partidas de la mercancía.
    */
@@ -469,7 +469,8 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @param {null} fila - La fila seleccionada (valor nulo en este caso).
    * @memberof Tramite130121Store
    */
-  public storeTableValues(fila: null): void {
+ 
+  public storeTableValues(fila: { [key: string]: unknown } | null): void {
     this.update({
       filaSeleccionada: fila,
     });

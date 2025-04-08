@@ -119,7 +119,6 @@ export class PartidasDeLaMercanciaComponent {
    * @param {any[]} filasSeleccionadas Lista de filas seleccionadas.
    */
   handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
-    console.log('Selected rows from table:', filasSeleccionadas);
     this.filaSeleccionadaChange.emit(filasSeleccionadas);
   }
 
