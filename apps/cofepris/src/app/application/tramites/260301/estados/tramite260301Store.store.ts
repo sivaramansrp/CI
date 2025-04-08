@@ -84,7 +84,7 @@ export function createInitialState(): Tramite260301State {
       marcaComercialDenominacion: '',
       denominacionCumonInternacional: '',
       tipoProducto: '',
-      formaFarmaceutica: [],
+      formaFarmaceutica: '',
       estadoFisico: '',
       fraccionArancelaria: '',
       descripcionFraccion: '',
@@ -102,7 +102,8 @@ export function createInitialState(): Tramite260301State {
       descripcionNumeroDePiezas:'',
       presentacion: '',
       numeroRegistroSanitario: '',
-   
+      usoEspecifico: '',
+      paisOrigen:''
     },
     opcionConfigDatos: TABLA_OPCION_DATA,
     scianConfigDatos: [], // SCIAN_TABLA_DATA

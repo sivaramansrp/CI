@@ -505,7 +505,7 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
       ],
       tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
       formaFarmaceutica: [
-        this.mercanciaFormState.formaFarmaceutica || [],
+        this.mercanciaFormState.formaFarmaceutica,
         Validators.required,
       ],
       estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
@@ -559,6 +559,8 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
         Validators.required,
       ],
       presentacion: [this.mercanciaFormState.presentacion, Validators.required],
+      usoEspecifico: [this.mercanciaFormState.usoEspecifico],
+      paisOrigen:[this.mercanciaFormState.paisOrigen]
     });
   }
 
@@ -587,31 +589,16 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   paisDeOriginSeleccionadasChange(events: string[]): void {
     this.seleccionadasPaisDeOriginDatos = events;
-    this.mercanciaForm.patchValue({
-      paisDeOriginDatos: events,
-    });
+    if (events.length > 0) {
+      this.mercanciaForm.get('paisOrigen')?.setValue(events[0]);
+      }
   }
 
   formaFarmaceuticaSeleccionadasChange(events: string[]): void {
-    this.seleccionadasPaisDeOriginDatos = events;
-    this.mercanciaForm.patchValue({
-      paisDeOriginDatos: events,
-    });
-  }
-
-  /**
-   * Maneja el evento de cambio para las selecciones de país de procedencia.
-   *
-   * @param events - Un arreglo de cadenas que representa los países seleccionados.
-   *
-   * Actualiza la propiedad `seleccionadasPaisDeProcedenciaDatos` con los valores seleccionados
-   * y sincroniza el formulario `mercanciaForm` con los datos actualizados.
-   */
-  paisDeProcedenciaSeleccionadasChange(events: string[]): void {
-    this.seleccionadasPaisDeProcedenciaDatos = events;
-    this.mercanciaForm.patchValue({
-      paisDeProcedenciaDatos: events,
-    });
+    this.seleccionadasFormaFormaceuticaDatos = events;
+    if (events.length > 0) {
+      this.mercanciaForm.get('formaFarmaceutica')?.setValue(events[0]);
+      }
   }
 
   /**
@@ -623,10 +610,10 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * y actualiza el formulario `mercanciaForm` para reflejar los valores seleccionados en el campo `usoEspecifico`.
    */
   usoEspesificoSeleccionadasChange(events: string[]): void {
-    this.seleccionadasUsoEspesificoDatos = events;
-    this.mercanciaForm.patchValue({
-      usoEspecifico: events,
-    });
+    if (events.length > 0) {
+      this.seleccionadasUsoEspesificoDatos = events;
+      this.mercanciaForm.get('usoEspecifico')?.setValue(events[0]);
+    }
   }
 
   /**
@@ -736,10 +723,16 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   agregarDetalleMercancia(): void {
     const PRESENTACION = this.mercanciaForm.get('presentacion')?.value;
-    const NUMERO_DE_PIEZAS_A_FABRICAR = this.mercanciaForm.get('nummeroDePiezasAFabricar')?.value;
-    const DESCRIPCION_NUMERO_DE_PIEZAS = this.mercanciaForm.get('descripcionNumeroDePiezas')?.value;
-    const NUMERO_REGISTRO_SANITARIO = this.mercanciaForm.get('numeroRegistroSanitario')?.value;
-    
+    const NUMERO_DE_PIEZAS_A_FABRICAR = this.mercanciaForm.get(
+      'nummeroDePiezasAFabricar'
+    )?.value;
+    const DESCRIPCION_NUMERO_DE_PIEZAS = this.mercanciaForm.get(
+      'descripcionNumeroDePiezas'
+    )?.value;
+    const NUMERO_REGISTRO_SANITARIO = this.mercanciaForm.get(
+      'numeroRegistroSanitario'
+    )?.value;
+
     if (
       PRESENTACION ||
       NUMERO_DE_PIEZAS_A_FABRICAR ||
@@ -754,6 +747,4 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
       });
     }
   }
-
-
 }

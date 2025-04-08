@@ -349,7 +349,7 @@ export interface MercanciaFormEstupefacientes {
   denominacionCumonInternacional:string;
   marcaComercialDenominacion:string;
   tipoProducto: string;
-  formaFarmaceutica: string[];
+  formaFarmaceutica: string;
   estadoFisico: string;
   fraccionArancelaria: string;
   descripcionFraccion: string;
@@ -367,5 +367,7 @@ export interface MercanciaFormEstupefacientes {
   descripcionNumeroDePiezas:string,
   presentacion: string;
   numeroRegistroSanitario: string;
+  usoEspecifico:string
+  paisOrigen:string
 }
 

@@ -20,7 +20,7 @@ describe('DatosMercanciaEstupefacientesComponent', () => {
       marcaComercialDenominacion: '',
       denominacionCumonInternacional: '',
       tipoProducto: '',
-      formaFarmaceutica: [],
+      formaFarmaceutica:'',
       estadoFisico: '',
       fraccionArancelaria: '',
       descripcionFraccion: '',
@@ -38,6 +38,9 @@ describe('DatosMercanciaEstupefacientesComponent', () => {
       descripcionNumeroDePiezas:'',
       presentacion: '',
       numeroRegistroSanitario: '',
+      usoEspecifico:'',
+      paisOrigen:'',
+
     };
     component.crearMercanciaForm();
   });
@@ -53,7 +56,7 @@ describe('DatosMercanciaEstupefacientesComponent', () => {
       marcaComercialDenominación: '', // Corrected property name
       denominacionCumonInternacional: '',
       tipoProducto: '',
-      formaFarmaceutica: [],
+      formaFarmaceutica: '',
       estadoFisico: '',
       fraccionArancelaria: '',
       descripcionFraccion: '',
@@ -67,10 +70,12 @@ describe('DatosMercanciaEstupefacientesComponent', () => {
       paisDeDestino: '101',
       paisDeProcedencia: '',
       detallarUsoEspecifico: '',
-      nummeroDePiezasAFabricar: '', // Corrected property name
+      nummeroDePiezasAFabricar: '', 
       descripcionNumeroDePiezas: '',
       presentacion: '',
       numeroRegistroSanitario: '',
+      usoEspecifico:'',
+      paisOrigen:'',
     });
   });
 
