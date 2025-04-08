@@ -1,7 +1,7 @@
-import { Observable, map } from 'rxjs';
 import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,9 @@ export class ImportacionMateriasPrimasService {
    */
   private jsonUrl = 'assets/json/260301/';
 
-  constructor(public httpServicios: HttpClient) {}
+  constructor(public httpServicios: HttpClient) {
+    // Constructor necesario para inyectar el servicio HttpClient
+  }
 
   obtenerOstro(): Observable<Facturador> {
     return this.httpServicios.get<Facturador>(

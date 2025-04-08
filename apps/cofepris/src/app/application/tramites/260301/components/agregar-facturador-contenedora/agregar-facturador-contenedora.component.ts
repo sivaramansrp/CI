@@ -28,6 +28,7 @@ export class AgregarFacturadorContenedoraComponent {
    */
     constructor(
         public tramite260301Store: Tramite260301Store){
+        // Constructor necesario para inyectar el store del trámite
     }
 
     /**

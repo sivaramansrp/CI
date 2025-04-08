@@ -3,11 +3,9 @@ import {
   MercanciaFormEstupefacientes,
 } from '../../../shared/models/datos-solicitud.model';
 import { Destinatario } from '../../../shared/models/terceros-relacionados.model';
-import { Fabricante } from '../../../shared/models/terceros-relacionados.model';
 import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { Injectable } from '@angular/core';
 import { PagoDerechosFormState } from '../../../shared/models/terceros-relacionados.model';
-import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
 import { TABLA_OPCION_DATA } from '../../../shared/constantes/datos-solicitud.enum';

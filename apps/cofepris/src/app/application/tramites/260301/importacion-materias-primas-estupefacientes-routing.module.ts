@@ -1,5 +1,4 @@
 import { RouterModule, Routes } from '@angular/router';
-import { AgregarDestinatarioFinalContenedoraComponent } from './components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
 import { AgregarFabricanteContenedoraComponent } from './components/agregar-fabricante-contenedora/agregar-fabricante-contenedora.component';
 import { AgregarFacturadorContenedoraComponent } from './components/agregar-facturador-contenedora/agregar-facturador-contenedora.component';
 import { AgregarOtrosComponent } from './components/agregar-otros/agregar-otros.component';
@@ -27,10 +26,6 @@ const ROUTES: Routes = [
   {
     path: 'agregar-fabricante',
     component: AgregarFabricanteContenedoraComponent,
-  },
-  {
-    path: 'agregar-destinatario-final',
-    component: AgregarDestinatarioFinalContenedoraComponent,
   },
   {
     path: 'agregar-proveedor',

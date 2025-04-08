@@ -13,7 +13,9 @@ import { Tramite260301Store } from '../../estados/tramite260301Store.store';
   styleUrl: './scian-tabla-contenedora.component.scss',
 })
 export class ScianTablaContenedoraComponent {
-  constructor(private tramite260301Store: Tramite260301Store){}
+  constructor(private tramite260301Store: Tramite260301Store){
+    // Constructor necesario para inyectar el store del trámite
+  }
 
   public scianSeleccionado!: TablaScianConfig;
 

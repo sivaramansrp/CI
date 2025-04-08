@@ -29,7 +29,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private tramite260301Query: Tramite260301Query,
     private tramite260301Store: Tramite260301Store
-  ) {}
+  ) {
+    // Constructor necesario para inyectar el store del trámite
+  }
 
   ngOnInit(): void {
     this.tramite260301Query.getTabSeleccionado$
