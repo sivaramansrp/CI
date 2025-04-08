@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +40,7 @@ export class CapturarService {
    */
   obtenerRolesUsuario(): Observable<string[]> {
     //return this.http.get<string[]>(`${this.baseUrl}/obtenerRolesUsuario`);
-
+    return of(["persomanMoral"]);
   }
 
   /**

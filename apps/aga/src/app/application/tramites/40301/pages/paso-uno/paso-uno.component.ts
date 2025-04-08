@@ -33,7 +33,7 @@ export class PasoUnoComponent {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   isFormValid(): boolean {
-    return true; //this.tipoAgentsComponent?.solicitud.valid && this.layoutDirectorGeneral?.solicitud.valid;
+    return this.tipoAgentsComponent?.solicitud.valid && this.layoutDirectorGeneral?.solicitud.valid;
   }
 }
 
