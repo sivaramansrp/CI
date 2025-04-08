@@ -15,7 +15,7 @@ import { ExportacionService } from '../../services/exportacion.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
-import { solicitud260604State } from '../../estados/stores/exportacion.store';
+import { ExportacionState } from '../../estados/stores/exportacion.store';
 
 import { ExportacionStore } from '../../estados/stores/exportacion.store'; 
 
@@ -40,17 +40,12 @@ import { NICO_TABLA } from '../../models/aviso-exportacion.model';
   styleUrl: './tercerosRelacionado.component.css',
 })
 export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
-  /**
-   * property destroyNotifier$
-   * description Sujeto para manejar la destrucción de suscripciones.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * property solicitudState
    * description Estado actual de la solicitud.
    */
-  public solicitudState!: solicitud260604State;
+  public solicitudState!: ExportacionState;
 
   /**
    * property facturatorForm
@@ -142,9 +137,9 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.exportacionQuery.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.solicitudState = seccionState as solicitud260604State;
+          this.solicitudState = seccionState as ExportacionState;
         })
       )
       .subscribe();
@@ -273,7 +268,5 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }

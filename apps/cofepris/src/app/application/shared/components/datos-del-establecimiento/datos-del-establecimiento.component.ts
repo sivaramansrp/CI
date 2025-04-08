@@ -4,7 +4,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud260603State } from '../../estados/stores/domicilio.store';
+import { DomicilioState } from '../../estados/stores/domicilio.store';
 
 import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
 
@@ -48,7 +48,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * @description
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud260603State;
+  public solicitudState!: DomicilioState;
 
   /**
    * @description

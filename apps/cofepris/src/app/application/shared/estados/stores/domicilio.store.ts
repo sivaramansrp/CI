@@ -2,9 +2,9 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Representa el estado de una solicitud 260603 en la aplicación.
+ * Representa el estado de una solicitud en la aplicación.
  */
-export interface Solicitud260603State {
+export interface DomicilioState {
   /** Denominación de la solicitud. */
   denominacion: string;
   /** Correo electrónico asociado a la solicitud. */
@@ -84,7 +84,7 @@ export interface Solicitud260603State {
  * Esta función crea y devuelve el estado inicial para la entidad `Solicitud260603State`.
  * Proporciona valores predeterminados vacíos para todas las propiedades del estado.
  */
-export function createInitialState(): Solicitud260603State {
+export function createInitialState(): DomicilioState {
   return {
     /** Denominación de la solicitud. */
     denominacion: '',
@@ -163,7 +163,7 @@ export function createInitialState(): Solicitud260603State {
 
 /**
  * @description
- * Esta clase representa el store para manejar el estado de la solicitud 260603.
+ * Esta clase representa el store para manejar el estado de la solicitud.
  * Proporciona métodos para actualizar diferentes propiedades del estado de la solicitud.
  * 
  * @example
@@ -176,19 +176,19 @@ export function createInitialState(): Solicitud260603State {
  * @providedIn root
  * 
  * @storeConfig
- * Nombre del store: 'solicitud260603'
+ * Nombre del store: 'DomicilioState'
  */
 @Injectable({
   providedIn: 'root'
 })
 
-@StoreConfig({ name: 'solicitud260603' })
+@StoreConfig({ name: 'DomicilioState' })
 
 /**
- * Clase que representa el store para gestionar el estado de la solicitud 260603.
+ * Clase que representa el store para gestionar el estado de la solicitud.
  * Extiende la clase base `Store` para manejar el estado de tipo `Solicitud260603State`.
  */
-export class DomicilioStore extends Store<Solicitud260603State> {
+export class DomicilioStore extends Store<DomicilioState> {
   /**
    * Constructor de la clase que inicializa el estado con valores predeterminados.
    */

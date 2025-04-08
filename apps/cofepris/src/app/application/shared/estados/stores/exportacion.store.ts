@@ -3,10 +3,10 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * interface solicitud260604State
- * description Interfaz que define el estado de la solicitud para el trámite 260604.
+ * interface ExportacionState
+ * description Interfaz que define el estado de la solicitud para el trámite.
  */
-export interface solicitud260604State {
+export interface ExportacionState {
   /**
    * property nombre
    * description Nombre del solicitante.
@@ -100,10 +100,10 @@ export interface solicitud260604State {
 
 /**
  * function createInitialState
- * description Función para crear el estado inicial del trámite 260604.
- * returns Estado inicial de tipo solicitud260604State.
+ * description Función para crear el estado inicial del trámite.
+ * returns Estado inicial de tipo ExportacionState.
  */
-export function createInitialState(): solicitud260604State {
+export function createInitialState(): ExportacionState {
   return {
     nombre: '',
     apellidoPrimer: '',
@@ -124,14 +124,14 @@ export function createInitialState(): solicitud260604State {
 }
 
 /**
- * class Tramites260604Store
- * description Clase que gestiona el estado del trámite 260604 utilizando Akita Store.
+ * class ExportacionStore
+ * description Clase que gestiona el estado del trámite utilizando Akita Store.
  */
 @Injectable({
   providedIn: 'root',
 })
-@StoreConfig({ name: 'tramites260604store', resettable: true })
-export class ExportacionStore extends Store<solicitud260604State> {
+@StoreConfig({ name: 'ExportacionState', resettable: true })
+export class ExportacionStore extends Store<ExportacionState> {
   /**
    * @constructor
    * @description Constructor que inicializa el estado con valores predeterminados.

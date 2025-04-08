@@ -22,7 +22,7 @@ import { PreOperativo } from '../../../shared/models/datos-modificacion.model';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 
-import { Solicitud260603State } from '../../estados/stores/domicilio.store';
+import { DomicilioState } from '../../estados/stores/domicilio.store';
 
 import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
 
@@ -57,13 +57,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   /**
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud260603State;
-
-  /**
-   * Notificador para destruir observables relacionados con el estado.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
+  public solicitudState!: DomicilioState;
   /**
    * Formulario reactivo para capturar los datos del domicilio.
    */
@@ -204,7 +198,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.domicilioquery.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroy$),
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
@@ -398,7 +392,5 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }
