@@ -131,4 +131,29 @@
                     [required]="true"></app-catalogo-select>
             </div>
         </div>
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <label required="true">Clasificación / Tipo*:</label>
+                <app-input-radio [radioOptions]="clasificacionRadioOptions" [isRequired]="true"
+                    [layout]="'horizontal'"></app-input-radio>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]='residuo' [label]="'Clave de residuo*:'"
+                    [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]='tipoNombre' [label]="'Nombre*'"
+                    [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]='descripcion' [label]="'Descripción*:'"
+                    [required]="true"></app-catalogo-select>
+            </div>
+        </div>
     </div>

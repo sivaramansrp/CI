@@ -38,6 +38,10 @@ export interface SolicitudJson {
     arancelaria: ImmexItem[];
     nico: ImmexItem[];
     unidad: ImmexItem[];
+    residuo: ImmexItem[];
+    tipoNombre: ImmexItem[];
+    descripcion: ImmexItem[];
+    clasificacionRadioOptions: RadioOpcion[];
 }
 
 

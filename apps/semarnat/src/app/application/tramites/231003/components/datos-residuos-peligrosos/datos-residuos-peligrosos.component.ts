@@ -28,8 +28,12 @@ export class DatosResiduosPeligrososComponent implements OnInit {
 
   fraccion!: Catalogo[];
   nico!: Catalogo[];
+  residuo!: Catalogo[];
+  tipoNombre!: Catalogo[];
+  descripcion!: Catalogo[];
 
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
+  clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES.clasificacionRadioOptions;
 
   ngOnInit(): void {
     this.nombre = RADIO_OPCIONES.nombre;
@@ -38,5 +42,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.fraccion = RADIO_OPCIONES.arancelaria;
     this.nico = RADIO_OPCIONES.nico;
     this.unidad = RADIO_OPCIONES.unidad;
+    this.residuo = RADIO_OPCIONES.residuo;
+    this.tipoNombre = RADIO_OPCIONES.tipoNombre;
+    this.descripcion = RADIO_OPCIONES.descripcion;
   }
 }
