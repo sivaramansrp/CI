@@ -2,7 +2,7 @@
 // Este conjunto de importaciones cubre funcionalidades relacionadas con la gestión de formularios, validaciones,
 // permisos, configuraciones, así como la obtención y manipulación de datos externos para la aplicación.
 
-import { Catalogo, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, REG_X, REGEX_VALORES_NUMERICOS } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -206,21 +206,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.mostrarTabla = mostrarTabla;
       });
 
-    this.tramite130217Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia:
-              seccionState.cantidadPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia:
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia:
-              seccionState.descripcionPartidasDeLaMercancia,
-          });
-        })
-      )
-      .subscribe();
+    
+      
   }
 
   /**
@@ -268,7 +255,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern('^[0-9]+$'),
+          Validators.pattern(REG_X.SOLO_NUMEROS),
           Validators.maxLength(18),
         ],
       ],
@@ -281,7 +268,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REGEX_VALORES_NUMERICOS),
           Validators.maxLength(20),
         ],
       ],
@@ -304,49 +291,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
-    this.tramite130217Query.solicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((solicitud) => {
-        this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
-      });
-
-    this.tramite130217Query.regimen$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((regimen) => {
-        this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
-      });
-
-    this.tramite130217Query.clasificacion$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((clasificacion) => {
-        this.formDelTramite.patchValue(
-          { clasificacion },
-          { emitEvent: false }
-        );
-      });
-
-    this.tramite130217Query.mercanciaState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        this.mercanciaForm.patchValue(
-          {
-            producto: state.producto,
-            descripcion: state.descripcion,
-            fraccion: state.fraccion,
-            cantidad: state.cantidad,
-            valorFacturaUSD: state.valorPartidaUSD
-              ? state.valorPartidaUSD.toString()
-              : '',
-            unidadMedida: state.unidadMedida,
-          },
-          { emitEvent: false }
-        );
-      });
-
     this.tramite130217Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
+          this.partidasDelaMercanciaForm.patchValue({
+            cantidadPartidasDeLaMercancia:
+              seccionState.cantidadPartidasDeLaMercancia,
+            valorPartidaUSDPartidasDeLaMercancia:
+              seccionState.valorPartidaUSDPartidasDeLaMercancia,
+            descripcionPartidasDeLaMercancia:
+              seccionState.descripcionPartidasDeLaMercancia,
+          });
+
+          this.formDelTramite.patchValue({
+            solicitud: seccionState.solicitud,
+            regimen: seccionState.regimen,
+            clasificacion: seccionState.clasificacion,
+          });
+
+          this.mercanciaForm.patchValue({
+            producto: seccionState.producto,
+            descripcion: seccionState.descripcion,
+            fraccion: seccionState.fraccion,
+            cantidad: seccionState.cantidad,
+            valorFacturaUSD: seccionState.valorFacturaUSD,
+            unidadMedida: seccionState.unidadMedida,
+          });
+
           this.paisForm.patchValue({
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
@@ -354,14 +326,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
               seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
-        })
-      )
-      .subscribe();
 
-    this.tramite130217Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
           this.frmRepresentacionForm.patchValue({
             entidad: seccionState.entidad,
             representacion: seccionState.representacion,
@@ -369,29 +334,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.formDelTramite.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130217Store.updateState({
-          solicitud: value.solicitud,
-          regimen: value.regimen,
-          clasificacion: value.clasificacion,
-        });
-      });
-
-    this.mercanciaForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130217Store.updateState({
-          producto: value.producto,
-          descripcion: value.descripcion,
-          fraccion: value.fraccion,
-          cantidad: value.cantidad,
-          valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
-          unidadMedida: value.unidadMedida,
-        });
-      });
   }
 
   /**
@@ -627,6 +569,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         break;
       case 'setRepresentacion':
         this.tramite130217Store.setRepresentacion(VALOR);
+        break;
+      case 'setFraccion':
+        this.tramite130217Store.setFraccion(VALOR);
+        break;
+      case 'setValorFacturaUSD':
+        this.tramite130217Store.setValorFacturaUSD(VALOR);
         break;
       default:
         console.error(
