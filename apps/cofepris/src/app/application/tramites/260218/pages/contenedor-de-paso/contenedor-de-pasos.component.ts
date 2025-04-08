@@ -1,5 +1,6 @@
 import {
   AccionBoton,
+  Aviso,
   DatosPasos,
   ListaPasosWizard,
 } from '@ng-mf/data-access-user';
@@ -7,7 +8,6 @@ import { Component, ViewChild } from '@angular/core';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { PAGO_DE_DERECHOS } from '../../constants/pasos.enum';
 import { PASOS } from '../../constants/pasos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
@@ -36,7 +36,7 @@ export class ContenedorDePasosComponent {
      */
     tituloMensaje: string | null =
       'Permiso sanitario de importación de dispositivos médicos destinados a pruebas de laboratorio.';
-      TEXTOS: string = PAGO_DE_DERECHOS.ADJUNTAR;
+      TEXTOS: string = Aviso.Aviso;
       /**
        *
        * Una cadena que representa la clase CSS para una alerta de información.
