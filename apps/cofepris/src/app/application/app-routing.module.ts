@@ -138,6 +138,13 @@ const ROUTES: Routes = [
       import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
         (m) => m.PermisoSanitarioImportacion260203Module
       ),
+  },
+  {
+    path: 'retiros-cofepris',
+    loadChildren: () =>
+      import('./tramites/261702/retiros-cofepris.module').then(
+        (m) => m.RetirosCofeprisModule
+      ),
   }
 ];
 
