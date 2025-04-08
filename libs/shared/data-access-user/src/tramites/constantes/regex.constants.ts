@@ -261,3 +261,9 @@ export const REGEX_CURP =
  * Allows whole numbers and numbers with up to two decimal places.
  */
 export const REGEX_VALORES_NUMERICOS = /^[0-9]+(\\.[0-9]{1,2})?$/;
+
+/** 
+ * Expresión regular para validar números en formato USD. 
+ * Permite dígitos y el punto decimal. 
+ */
+export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
