@@ -6,7 +6,7 @@ import { Tramite260904Store } from '../tramites/tramite260904.store';
 @Injectable({ providedIn: 'root' })
 export class Tramite260904Query extends Query<Tramite260904State> {
   btonDeRadio$ = this.select((state) => state.btonDeRadio);
-  justificación$ = this.select((state) => state.justificación);
+  justificacion$ = this.select((state) => state.justificacion);
   rfcDel$ = this.select((state) => state.rfcDel);
   denominacion$ = this.select((state) => state.denominacion);
   correo$ = this.select((state) => state.correo);

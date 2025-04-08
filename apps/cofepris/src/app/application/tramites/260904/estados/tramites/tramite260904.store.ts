@@ -6,7 +6,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 
 export interface Tramite260904State {
   btonDeRadio: string;
-  justificación: string;
+  justificacion: string;
   rfcDel: string;
   denominacion: string;
   correo: string;
@@ -39,7 +39,7 @@ export interface Tramite260904State {
 export function createInitialState(): Tramite260904State {
   return {
     btonDeRadio: '',
-    justificación: '',
+    justificacion: '',
     rfcDel: '',
     denominacion: '',
     correo: '',
@@ -84,10 +84,10 @@ export class Tramite260904Store extends Store<Tramite260904State> {
     }));
   }
 
-  public setJustificación(justificación: string): void {
+  public setJustificacion(justificacion: string): void {
     this.update((state) => ({
       ...state,
-      justificación,
+      justificacion,
     }));
   }
 
