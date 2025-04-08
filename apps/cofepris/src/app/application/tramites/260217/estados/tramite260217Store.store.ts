@@ -20,20 +20,95 @@ import { TablaScianConfig } from '../../../shared/models/datos-solicitud.model';
  * con destinatarios, facturadores, proveedores, fabricantes, formularios y configuraciones.
  */
 export interface Tramite260217State {
+  
+  /**
+   * Array of final recipient data for the recipients table
+   * @type {Destinatario[]}
+   */
   destinatarioFinalTablaDatos: Destinatario[];
+
+  /**
+   * Array of biller/invoicer data for the billers table
+   * @type {Facturador[]}
+   */
   facturadorTablaDatos: Facturador[];
+
+  /**
+   * Array of supplier data for the suppliers table
+   * @type {Proveedor[]}
+   */
   proveedorTablaDatos: Proveedor[];
+
+  /**
+   * Array of manufacturer data for the manufacturers table
+   * @type {Fabricante[]}
+   */
   fabricanteTablaDatos: Fabricante[];
+
+  /**
+   * State object containing request form data
+   * @type {DatosSolicitudFormState}
+   */
   datosSolicitudFormState: DatosSolicitudFormState;
+
+  /**
+   * Form data structure for merchandise information
+   * @type {MercanciaForm}
+   */
   mercanciaForm: MercanciaForm;
+
+  /**
+   * Array of configuration options for data tables
+   * @type {TablaOpcionConfig[]}
+   */
   opcionConfigDatos: TablaOpcionConfig[];
+
+  /**
+   * Array of SCIAN (Mexican industry classification) configuration data
+   * @type {TablaScianConfig[]}
+   */
   scianConfigDatos: TablaScianConfig[];
+
+  /**
+   * Array of merchandise table configuration data
+   * @type {TablaMercanciasDatos[]}
+   */
   tablaMercanciasConfigDatos: TablaMercanciasDatos[];
+
+  /**
+   * Array of selected configuration options
+   * @type {TablaOpcionConfig[]}
+   */
   seleccionadoopcionDatos: TablaOpcionConfig[];
+
+  /**
+   * Array of selected SCIAN configuration data
+   * @type {TablaScianConfig[]}
+   */
   seleccionadoScianDatos: TablaScianConfig[];
+
+  /**
+   * Array of selected merchandise table data
+   * @type {TablaMercanciasDatos[]}
+   */
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[];
+
+  /**
+   * Boolean flag indicating the collapsible options state (expanded/collapsed)
+   * @type {boolean}
+   */
   opcionesColapsableState: boolean;
+
+  /**
+   * State object containing payment rights form data
+   * @type {PagoDerechosFormState}
+   */
   pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * Optional index of the currently selected tab
+   * @type {number | undefined}
+   */
   tabSeleccionado?: number;
 }
 
