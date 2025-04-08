@@ -1,36 +1,65 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { AlertComponent, BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { SolicitudPageComponent } from './solicitud-page.component';
+import { BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { provideToastr, ToastrService } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http'; 
 
 describe('SolicitudPageComponent', () => {
-  let fixture: ComponentFixture<SolicitudPageComponent>;
   let component: SolicitudPageComponent;
+  let fixture: ComponentFixture<SolicitudPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        FormsModule, 
-        ReactiveFormsModule,
-        WizardComponent,
-        AlertComponent,
-        BtnContinuarComponent
+        CommonModule,
+        PasoDosComponent,
+        SolicitudPageComponent,
+        WizardComponent, // Import standalone component
+        PasoUnoComponent, // Import standalone component
+        PasoTresComponent, // Import standalone component
+        BtnContinuarComponent, // Import standalone component
       ],
-      declarations: [
-        SolicitudPageComponent        
+      declarations: [], // Declare the main component
+      providers: [
+        provideHttpClient(), // Provide HttpClient
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should set indice to the provided value on seleccionaTab', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
+  it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
+    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
+    expect(siguienteSpy).toHaveBeenCalled();
+  });
+
+  it('should update indice and call wizardComponent.atras on getValorIndice with accion "back"', () => {
+    const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
+    component.getValorIndice({ accion: 'back', valor: 1 });
+    expect(component.indice).toBe(1);
+    expect(component.datosPasos.indice).toBe(1);
+    expect(atrasSpy).toHaveBeenCalled();
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 

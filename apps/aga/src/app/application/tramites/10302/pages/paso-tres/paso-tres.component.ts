@@ -1,88 +1,40 @@
-import { Component, OnDestroy } from '@angular/core';
-import {
-  FirmaElectronicaComponent,
-  TramiteFolioService,
-  TramiteFolioStore,
-} from '@ng-mf/data-access-user';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subscription, catchError, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
 /**
- * Componente que representa el paso tres del trámite.
+ * Componente para el paso tres del trámite 301.
+ * Este componente se utiliza para mostrar los pasos del asistente - 301
+ * Lista de pasos
+ * Índice del paso
  */
 @Component({
   selector: 'paso-tres',
-  templateUrl: './paso-tres.component.html',
-  styleUrls: ['./paso-tres.component.scss'],
   standalone: true,
-  imports: [
-    FirmaElectronicaComponent,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
+  templateUrl: './paso-tres.component.html',
+  imports: [FirmaElectronicaComponent, CommonModule],
 })
-export class PasoTresComponent implements OnDestroy {
+export class PasoTresComponent {
   /**
-   * Suscripción para obtener el trámite.
+   * componente doc
+   * @constructor
+   * @param {Router} router - Servicio de Angular para la navegación entre rutas.
    */
-  obtienerTramiteSubscriber!: Subscription;
-  /**
-   * Tipo de persona.
-   */
-  tipoPersona!: number;
-
-  /**
-   * Constructor que se utiliza para la inyección de dependencias.
-   * @param router Servicio de enrutamiento.
-   * @param tramiteFolioService Servicio de servicios extraordinarios.
-   * @param tramiteStore Almacén de trámites.
-   */
-  constructor(
-    private router: Router,
-    private tramiteFolioService: TramiteFolioService,
-    private tramiteStore: TramiteFolioStore
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
+  constructor(private router: Router) {
+    // Constructor del componente
   }
 
   /**
-   * Obtiene el tipo de persona.
-   * @param tipo Tipo de persona.
-   */
-  obtenerTipoPersona(tipo: number): void {
-    this.tipoPersona = tipo;
-  }
-
-  /**
-   * Maneja el evento para obtener la firma y realiza acciones adicionales.
-   * @param ev La cadena de texto que representa la firma obtenida.
+   * componente doc
+   * @método obtieneFirma
+   * @descripcion Recibe la firma electrónica y redirige a la página de acuse si la firma es válida.
+   * @param {string} ev - Cadena que representa la firma electrónica obtenida.
    */
   obtieneFirma(ev: string): void {
     const FIRMA: string = ev;
     if (FIRMA) {
-      this.obtienerTramiteSubscriber = this.tramiteFolioService
-        .obtenerTramite(19)
-        .pipe(
-          map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-            this.router.navigate(['servicios-extraordinarios/acuse']);
-          }),
-          catchError((_error) => {
-            return _error;
-          })
-        )
-        .subscribe();
-    }
-  }
-  /**
-   * Método de limpieza que se ejecuta cuando el componente se destruye.
-   */
-  ngOnDestroy(): void {
-    if (this.obtienerTramiteSubscriber) {
-      this.obtienerTramiteSubscriber.unsubscribe();
+      this.router.navigate(['temporal-contenedores/acuse']); // Navegación a la página de acuse
     }
   }
 }

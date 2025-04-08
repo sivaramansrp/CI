@@ -128,7 +128,7 @@ export class DatosTramiteComponent implements OnDestroy {
     private exencionImpuestoService: ExencionImpuestosService,
     private store: Tramite10302Store,
     private query: Tramite10302Query,
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService
   ) {}
 

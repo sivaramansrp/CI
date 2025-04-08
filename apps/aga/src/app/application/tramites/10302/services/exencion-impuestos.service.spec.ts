@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { Tramite10301Store } from '../../10301/estados/tramite10301.store';
 import { ExencionImpuestosService } from './exencion-impuestos.service';
 
