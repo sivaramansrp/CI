@@ -1,5 +1,6 @@
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CapturarComponent } from './components/capturar/capturar.component';
+import { CapturarService } from './services/capturar.service';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
@@ -7,13 +8,13 @@ import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { FormsModule } from '@angular/forms';
 import { LayaoutCapturaTipoAgenteComponent } from './components/layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
 import { LayoutDirectorGeneralComponent } from './components/layoutDirectorGeneral/layoutDirectorGeneral.component';
-import { MockRegistroCaatNavieroService } from './services/mockRegistroCaatNavieroController.service';
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroCaatNavieroPageComponent } from './pages/registro-caat-naviero-page/registro-caat-naviero-page.component';
 import { RegistroCaatNavieroRoutingModule } from './registro-caat-naviero-routing.module';
+import { RegistroCaatNavieroService } from './services/RegistroCaatNavieroController.service';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { ServiciosExtraordinariosService } from './service_/servicios-extraordinarios.service';
@@ -52,9 +53,9 @@ import { forwardRef } from '@angular/core';
   exports: [],
   providers: [
     ToastrService,
-    // CancelarSolicitudService,
     ServiciosExtraordinariosService,
-    { provide: 'RegistroCaatNaviero', useClass: MockRegistroCaatNavieroService }   
+    RegistroCaatNavieroService,
+    CapturarService
   ]
 })
 export class RegistroCaatNavieroModule {}

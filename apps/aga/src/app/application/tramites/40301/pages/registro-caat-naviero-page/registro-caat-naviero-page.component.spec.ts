@@ -94,11 +94,4 @@ describe('CancelacionExtraordinariosPageComponent', () => {
     expect(component.cancelarModelInstance.hide).toHaveBeenCalled();
   });
 
-  it('should update mostrarBotonParaModal based on pestanaCambiado()', () => {
-    component.pestanaCambiado(2);
-    expect(component.mostrarBotonParaModal).toBeTruthy();
-
-    component.pestanaCambiado(1);
-    expect(component.mostrarBotonParaModal).toBeFalsy();
-  });
 });

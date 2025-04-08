@@ -17,11 +17,9 @@ export class LayoutDirectorGeneralComponent implements OnInit {
 
   ngOnInit(): void {
     this.solicitud = this.fb.group({
-      directorGeneral: this.fb.group({
         nombre: this.fb.control<string>('', [Validators.required, Validators.maxLength(200)]),
         apellidoPaterno: this.fb.control<string>('', [Validators.required, Validators.maxLength(200)]),
         apellidoMaterno: this.fb.control<string | null>(null, [Validators.maxLength(200)])
-      })
     });
   }
 

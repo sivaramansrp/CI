@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class CapturarService {
-  private baseUrl: string = '/api/capturar'; // Adjust the base URL as needed
+  private baseUrl: string = 'assets/json/40301/'; // Adjust the base URL as needed
 
   constructor(private http: HttpClient) {}
 
@@ -14,10 +14,18 @@ export class CapturarService {
    * Retrieves the title for the "capturar" process.
    * @returns Observable<string>
    */
-  obtenerTitulo(): Observable<string> {
-    return this.http.get<string>(`${this.baseUrl}/obtenerTitulo`);
+  obtenerTitulo(catalogo: string): Observable<string> {
+    return this.http.get<string>(`${this.baseUrl}/solicitud.json`);
   }
 
+  /**
+   * Retrieves the roles of the current user.
+   * @returns Observable<string[]>
+   */
+  obtenerRolesUsuario(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/userRoles.json`);
+    // return of(["persomanMoral"]);
+  }
   /**
    * Retrieves the tramite ID.
    * @returns Observable<string>
@@ -34,14 +42,6 @@ export class CapturarService {
     return this.http.get<any>(`${this.baseUrl}/obtenerCamposMetadata`);
   }
 
-  /**
-   * Retrieves the roles of the current user.
-   * @returns Observable<string[]>
-   */
-  obtenerRolesUsuario(): Observable<string[]> {
-    //return this.http.get<string[]>(`${this.baseUrl}/obtenerRolesUsuario`);
-    return of(["persomanMoral"]);
-  }
 
   /**
    * Validates form fields using metadata.

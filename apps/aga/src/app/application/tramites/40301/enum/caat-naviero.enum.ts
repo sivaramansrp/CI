@@ -1,3 +1,4 @@
+
 /**
  * Secciones a mostrar dentro de cada Paso de acuerdo al trámite
  */
@@ -10,3 +11,25 @@ export const SECCIONES_TRAMITE_40301 = {
       requiereValidacion: true,
     },
   };
+
+  export const CAAT_NAVIERO_PASOS = [
+    {
+      indice: 1,
+      titulo: 'Capturar solicitud',
+      activo: true,
+      completado: true,
+    },
+    {
+      indice: 2,
+      titulo: 'Firmar solicitud',
+      activo: false,
+      completado: false,
+    },
+  ];
+  
+
+export const CATALOGOS_40301_ID = {
+  TRAMITE: '40301',
+  OBTENER_TITULO: "obtenerTitulo"
+
+}

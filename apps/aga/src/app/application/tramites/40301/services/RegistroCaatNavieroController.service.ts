@@ -3,7 +3,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RegistroCaatNaviero } from './RegistroCaatNaviero';
 
 // Define interfaces based on the models used in the controller
 export interface SolicitudCaatNaviero {
@@ -36,8 +35,8 @@ export interface CaatSolicitud {
 @Injectable({
   providedIn: 'root'
 })
-export class RegistroCaatNavieroService implements RegistroCaatNaviero {
-  private baseUrl: string = '/api/registroCaatNaviero'; // Adjust the base URL as needed
+export class RegistroCaatNavieroService {
+  private baseUrl: string = '/assets/json/40301/'; 
 
   constructor(private http: HttpClient) {}
 
@@ -97,9 +96,9 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<Blob>
    */
   generaAcuseRecibo(folioTramite: string): Observable<Blob> {
-    const params = new HttpParams().set('folioTramite', folioTramite);
+    const PARAMS = new HttpParams().set('folioTramite', folioTramite);
     return this.http.get(`${this.baseUrl}/generaAcuseRecibo`, {
-      params,
+      params: PARAMS,
       responseType: 'blob'
     });
   }
@@ -109,7 +108,7 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<SolicitudCaatNaviero>
    */
   getSolicitud(): Observable<SolicitudCaatNaviero> {
-    return this.http.get<SolicitudCaatNaviero>(`${this.baseUrl}/solicitud`);
+    return this.http.get<SolicitudCaatNaviero>(`${this.baseUrl}/caatSolicitudes.json`);
   }
 
   /**
@@ -117,7 +116,7 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @param solicitud SolicitudCaatNaviero
    * @returns Observable<any>
    */
-  setSolicitud(solicitud: SolicitudCaatNaviero): Observable<any> {
+  setSolicitud(solicitud: SolicitudCaatNaviero): Observable<unknown> {
     return this.http.put(`${this.baseUrl}/solicitud`, solicitud, {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
@@ -131,8 +130,8 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<CaatSolicitud>
    */
   getCaatByFolio(cveFolioCaat: string): Observable<CaatSolicitud> {
-    const params = new HttpParams().set('cveFolioCaat', cveFolioCaat);
-    return this.http.get<CaatSolicitud>(`${this.baseUrl}/caatPorFolio`, { params });
+    const PARAMS = new HttpParams().set('cveFolioCaat', cveFolioCaat);
+    return this.http.get<CaatSolicitud>(`${this.baseUrl}/caatPorFolio`, { params: PARAMS });
   }
 
   /**
@@ -141,16 +140,16 @@ export class RegistroCaatNavieroService implements RegistroCaatNaviero {
    * @returns Observable<boolean>
    */
   tieneSolicitudesPendientes(rfc: string): Observable<boolean> {
-    const params = new HttpParams().set('rfc', rfc);
-    return this.http.get<boolean>(`${this.baseUrl}/solicitudesPendientes`, { params });
+    const PARAMS = new HttpParams().set('rfc', rfc);
+    return this.http.get<boolean>(`${this.baseUrl}/solicitudesPendientes`, { params: PARAMS });
   }
 
   /**
    * Retrieves the role of the current user.
-   * @returns Observable<string>
+   * @returns Observable<string[]>
    */
-  getUserRole(): Observable<string> {
-    return this.http.get<string>(`${this.baseUrl}/userRole`);
+  getUserRole(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/userRoles.json`);
   }
 
   /**

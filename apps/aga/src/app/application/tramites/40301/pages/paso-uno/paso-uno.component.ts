@@ -23,7 +23,7 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-    // this.pestanaCambiado.emit(this.indice);
+    this.pestanaCambiado.emit(this.indice);
   }
 
   /**
@@ -33,7 +33,8 @@ export class PasoUnoComponent {
    * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
    */
   isFormValid(): boolean {
-    return this.tipoAgentsComponent?.solicitud.valid && this.layoutDirectorGeneral?.solicitud.valid;
+    console.log(this.tipoAgentsComponent?.formularioAgente.valid, this.layoutDirectorGeneral?.solicitud.valid);
+    return this.tipoAgentsComponent?.formularioAgente.valid && this.layoutDirectorGeneral?.solicitud.valid;
   }
 }
 

@@ -1,14 +1,15 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CAAT_NAVIERO_PASOS } from '../../enum/caat-naviero.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { SECCIONES_TRAMITE_40301 } from '../../enum/caat-naviero.enum';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos, 
   ListaPasosWizard, 
   SeccionLibQuery, 
   SeccionLibState, 
   SeccionLibStore, 
   WizardComponent } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
-import { CANCELACION_PASOS } from '../../enum/cancelacion-servicios-extraordinarios.enum';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { SECCIONES_TRAMITE_40301 } from '../../enum/caat-naviero.enum';
+  import { Subject, map, takeUntil } from 'rxjs';
 
 interface AccionBoton {
   accion: string;
@@ -21,7 +22,7 @@ interface AccionBoton {
 })
 
 export class RegistroCaatNavieroPageComponent implements OnInit {
-  pasos: ListaPasosWizard[] = CANCELACION_PASOS;
+  pasos: ListaPasosWizard[] = CAAT_NAVIERO_PASOS;
   indice: number = 1;
   mostrarBotonParaModal:boolean = false;
   modal: string = 'modal';
@@ -68,11 +69,13 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
    private asignarSecciones(): void {
     const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_40301.PASO_1);
     const FORM_VALIDA: boolean[] = [];
+    
     for (const LLAVE_SECCIONE in SECCIONES_TRAMITE_40301.PASO_1) {
       if(LLAVE_SECCIONE) {
         FORM_VALIDA.push(false);
       }
     }
+    console.log('SECCIONES:', SECCIONES);
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORM_VALIDA);
   }
@@ -96,6 +99,7 @@ export class RegistroCaatNavieroPageComponent implements OnInit {
 
   // Cambia la visibilidad del botón del modal dependiendo del paso actual
   pestanaCambiado(event: number):void{
+    console.log('Evento:', event);
     this.mostrarBotonParaModal = event === 2 ? true : false;
   }
 }
