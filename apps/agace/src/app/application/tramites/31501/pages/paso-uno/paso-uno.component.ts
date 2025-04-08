@@ -162,15 +162,8 @@ export class PasoUnoComponent implements OnInit {
       )
       .subscribe();
     this.inicializarFormulario();
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
-      this.setValoresStore(
-        this.solicitudForm,
-        'tipoBusqueda',
-        'setTipoBusqueda'
-      );
-      this.mostrarCampos();
-      this.fetchAduanaList();
-    });
+    this.mostrarCampos();
+    this.fetchAduanaList();
   }
 
   /**

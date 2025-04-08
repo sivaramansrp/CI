@@ -32,11 +32,6 @@ class TranslatePipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 @Pipe({name: 'safeHtml'})
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
@@ -82,8 +77,6 @@ describe('CapturarRequerimientoComponent', () => {
     component.inicializarFormulario = jest.fn();
     component.fetchAduanaList = jest.fn();
     component.ngOnInit();
-    // expect(component.inicializarFormulario).toHaveBeenCalled();
-    // expect(component.fetchAduanaList).toHaveBeenCalled();
   });
 
   it('should run #inicializarFormulario()', async () => {
@@ -93,7 +86,6 @@ describe('CapturarRequerimientoComponent', () => {
     component.solicitud31501State.motivoCancelacion = 'motivoCancelacion';
     component.solicitud31501State.tipoDeRequerimiento = 'tipoDeRequerimiento';
     component.inicializarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
   });
 
   it('should run #fetchAduanaList()', async () => {
@@ -117,7 +109,6 @@ describe('CapturarRequerimientoComponent', () => {
         };
       }
     }, {}, {});
-    // expect(component.tramite31501Store.metodoNombre).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {
