@@ -34,7 +34,6 @@ export class PasoDosComponent implements OnInit {
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta una vez que el componente ha sido inicializado.
-   * Aquí se llama al método `obtenerDatosIniciales` para cargar los datos necesarios al iniciar el componente.
    *
    * @returns {void}
    */
