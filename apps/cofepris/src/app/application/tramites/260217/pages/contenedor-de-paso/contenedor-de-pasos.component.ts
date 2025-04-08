@@ -6,24 +6,10 @@ import {
 import { Component, ViewChild } from '@angular/core';
 
 import { PASOS, TITULOMENSAJE } from '../../constants/medicos-sin-registrar.enum';
-import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-contenedor-de-pasos',
-  standalone: true,
-  imports: [
-    CommonModule,
-    WizardComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    BtnContinuarComponent
-  ],
   templateUrl: './contenedor-de-pasos.component.html',
   styleUrl: './contenedor-de-paso.component.scss',
 })
