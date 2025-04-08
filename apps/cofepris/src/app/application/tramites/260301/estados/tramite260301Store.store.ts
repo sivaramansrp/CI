@@ -83,7 +83,7 @@ export function createInitialState(): Tramite260301State {
     mercanciaForm: {
       clasificacionProducto: '',
       especificarClasificacionProducto: '',
-      marcaComercialDenominación: '',
+      marcaComercialDenominacion: '',
       denominacionCumonInternacional: '',
       tipoProducto: '',
       formaFarmaceutica: [],

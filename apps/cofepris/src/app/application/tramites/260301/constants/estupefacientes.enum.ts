@@ -167,74 +167,76 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
   {
     encabezado: 'Marca comercial o denominación distintiva',
     clave: (ele: TablaMercanciasDatos): string |undefined =>
-      ele.marcaComercialDenominación, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
-    orden: 3,
-  },
-  {
-    encabezado: 'Forma farmacéutica',
-    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
-    orden: 6,
-  },
-  {
-    encabezado: 'Estado físico',
-    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
-    orden: 7,
+      ele.marcaComercialDenominacion, // Reemplaza 'ele.denominacionEspecificaProducto' con la clave correcta
+    orden: 4,
   },
   {
     encabezado: 'Número CAS',
     clave: (ele: TablaMercanciasDatos): string | undefined=> ele.numeroCAS, // Reemplaza 'ele.estadoFisico' con la clave correcta
-    orden: 7,
+    orden: 5,
   },
   {
     encabezado: 'Fracción arancelaria',
     clave: (ele: TablaMercanciasDatos): string => ele.fraccionArancelaria, // Reemplaza 'ele.fraccionArancelaria' con la clave correcta
-    orden: 8,
+    orden: 6,
   },
   {
     encabezado: 'Descripción de la fracción',
     clave: (ele: TablaMercanciasDatos): string |undefined => ele.descripcionFraccion, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
-    orden: 9,
+    orden: 7,
   },
 
   {
     encabezado: 'Cantidad de lotes ',
     clave: (ele: TablaMercanciasDatos): string |undefined => ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
-    orden: 10,
+    orden: 8,
   },
   {
     encabezado: 'Kg o g por lote ',
     clave: (ele: TablaMercanciasDatos): string |undefined => ele.cantidadDeLotes, // Reemplaza 'ele.descripcionFraccion' con la clave correcta
-    orden: 11,
-  },
-  {
-    encabezado: 'Unidad de medida de comercialización (UMC)',
-    clave: (ele: TablaMercanciasDatos): string |undefined=>
-      ele.unidadMedidaComercializacion, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
-    orden: 12,
-  },
-  {
-    encabezado: 'Cantidad UMC',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMC, // Reemplaza 'ele.cantidadUMC' con la clave correcta
-    orden: 13,
-  },
-  {
-    encabezado: 'Unidad de medida de tarifa (UMT)',
-    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
-    orden: 14,
-  },
-  {
-    encabezado: 'Cantidad UMT',
-    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
-    orden: 15,
-  },
-  {
-    encabezado: 'Presentación',
-    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
-    orden: 16,
+    orden: 9,
   },
   {
     encabezado: 'Número de registro sanitario',
     clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
+    orden: 10,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: TablaMercanciasDatos): string => ele.numeroRegistroSanitario, // Reemplaza 'ele.numeroRegistroSanitario' con la clave correcta
+    orden: 11,
+  },
+  {
+    encabezado: 'Número de piezas a fabricar',
+    clave: (ele: TablaMercanciasDatos): string |undefined=>
+      ele.numeroDePiezasAFabricar, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+    orden: 12,
+  },
+  {
+    encabezado: 'Descripción del número de piezas a fabricar',
+    clave: (ele: TablaMercanciasDatos): string |undefined=>
+      ele.descripcionNumeroDePiezas, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+    orden: 13,
+  },
+  {
+    encabezado: 'Número de piezas a fabricar',
+    clave: (ele: TablaMercanciasDatos): string |undefined=>
+      ele.numeroDePiezasAFabricar, // Reemplaza 'ele.unidadMedidaComercializacion' con la clave correcta
+    orden: 14,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: TablaMercanciasDatos): string => ele.presentacion, // Reemplaza 'ele.Presentación' con la clave correcta
+    orden: 15,
+  },
+  {
+    encabezado: 'Uso especifico',
+    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
+    orden: 16,
+  },
+  {
+    encabezado: 'Detallar uso específico',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.detallarUsoEspecifico, // Reemplaza 'ele.Presentación' con la clave correcta
     orden: 17,
   },
   {
@@ -248,13 +250,34 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
     orden: 19,
   },
   {
-    encabezado: 'Tipo producto',
-    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    encabezado: 'País de destino',
+    clave: (ele: TablaMercanciasDatos): string | undefined => ele.paisDeDestino, // Reemplaza 'ele.paisProcedencia' con la clave correcta
     orden: 20,
   },
   {
-    encabezado: 'Uso especifico',
-    clave: (ele: TablaMercanciasDatos): string => ele.usoEspecifico, // Reemplaza 'ele.usoEspecifico' con la clave correcta
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: TablaMercanciasDatos): string => ele.formaFarmaceutica, // Reemplaza 'ele.formaFarmaceutica' con la clave correcta
     orden: 21,
   },
+  {
+    encabezado: 'Estado físico',
+    clave: (ele: TablaMercanciasDatos): string => ele.estadoFisico, // Reemplaza 'ele.estadoFisico' con la clave correcta
+    orden: 22,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: TablaMercanciasDatos): string => ele.unidadMedidaTarifa, // Reemplaza 'ele.unidadMedidaTarifa' con la clave correcta
+    orden: 23,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (ele: TablaMercanciasDatos): string => ele.cantidadUMT, // Reemplaza 'ele.cantidadUMT' con la clave correcta
+    orden: 24,
+  },
+  {
+    encabezado: 'Tipo producto',
+    clave: (ele: TablaMercanciasDatos): string => ele.tipoProducto, // Reemplaza 'ele.tipoProducto' con la clave correcta
+    orden: 25,
+  },
+ 
 ];

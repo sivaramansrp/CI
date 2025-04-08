@@ -188,7 +188,7 @@ export interface TablaMercanciasDatos {
   kgPorLote?:string,
   paisDeDestino?:string,
   denominacionCumonInternacional?:string;
-  marcaComercialDenominación?:string;
+  marcaComercialDenominacion?:string;
 
 }
 
@@ -347,7 +347,7 @@ export interface MercanciaFormEstupefacientes {
   clasificacionProducto: string;
   especificarClasificacionProducto: string;
   denominacionCumonInternacional:string;
-  marcaComercialDenominación:string;
+  marcaComercialDenominacion:string;
   tipoProducto: string;
   formaFarmaceutica: string[];
   estadoFisico: string;

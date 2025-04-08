@@ -500,7 +500,7 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
         Validators.required,
       ],
       marcaComercialDenominación: [
-        this.mercanciaFormState.marcaComercialDenominación,
+        this.mercanciaFormState.marcaComercialDenominacion,
         Validators.required,
       ],
       tipoProducto: [this.mercanciaFormState.tipoProducto, Validators.required],
@@ -735,16 +735,25 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * @returns {void} Este método no retorna ningún valor.
    */
   agregarDetalleMercancia(): void {
-    this.detalleMercanciaDatos.push({
-      presentacion: this.mercanciaForm.get('presentacion')?.value,
-      numeroDePiezasAFabricar: this.mercanciaForm.get(
-        'nummeroDePiezasAFabricar'
-      )?.value,
-      descripcionNumeroDePiezas: this.mercanciaForm.get(
-        'descripcionNumeroDePiezas'
-      )?.value,
-      numeroRegistroSanitario: this.mercanciaForm.get('numeroRegistroSanitario')
-        ?.value,
-    });
+    const PRESENTACION = this.mercanciaForm.get('presentacion')?.value;
+    const NUMERO_DE_PIEZAS_A_FABRICAR = this.mercanciaForm.get('nummeroDePiezasAFabricar')?.value;
+    const DESCRIPCION_NUMERO_DE_PIEZAS = this.mercanciaForm.get('descripcionNumeroDePiezas')?.value;
+    const NUMERO_REGISTRO_SANITARIO = this.mercanciaForm.get('numeroRegistroSanitario')?.value;
+    
+    if (
+      PRESENTACION ||
+      NUMERO_DE_PIEZAS_A_FABRICAR ||
+      DESCRIPCION_NUMERO_DE_PIEZAS ||
+      NUMERO_REGISTRO_SANITARIO
+    ) {
+      this.detalleMercanciaDatos.push({
+        presentacion: PRESENTACION,
+        numeroDePiezasAFabricar: NUMERO_DE_PIEZAS_A_FABRICAR,
+        descripcionNumeroDePiezas: DESCRIPCION_NUMERO_DE_PIEZAS,
+        numeroRegistroSanitario: NUMERO_REGISTRO_SANITARIO,
+      });
+    }
   }
+
+
 }
