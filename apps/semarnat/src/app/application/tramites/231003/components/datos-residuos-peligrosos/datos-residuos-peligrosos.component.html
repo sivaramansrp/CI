@@ -3,8 +3,9 @@
         <ng-titulo titulo="Agregar residuo o materia prima a importar" />
         <div class="row mb-3">
             <div class="col-md-8">
-                <app-input-radio [radioOptions]="radioOptions"  [isRequired]="true"
-                    [layout]="'horizontal'" ></app-input-radio>
+                <label required="true">Orígen de generación de residuos:</label>
+                <app-input-radio [radioOptions]="radioOptions" [isRequired]="true"
+                    [layout]="'horizontal'"></app-input-radio>
             </div>
         </div>
     </div>
