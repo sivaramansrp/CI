@@ -43,6 +43,6 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    */
 
   updateDestinatarioFinalTablaDatos(event: Destinatario[]): void {
-    this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
+    // this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
 }

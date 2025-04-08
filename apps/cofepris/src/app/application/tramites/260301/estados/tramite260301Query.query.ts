@@ -44,12 +44,12 @@ export class Tramite260301Query extends Query<Tramite260301State> {
     (state) => state.fabricanteTablaDatos
   );
   /**
-   * @property {Observable<Destinatario[]>} getDestinatarioFinalTablaDatos$
+   * @property {Observable<Destinatario[]>} getCertificadoTablaDatos$
    * @description
    * Selecciona la lista de destinatarios finales del estado.
    */
-  public getDestinatarioFinalTablaDatos$ = this.select(
-    (state) => state.destinatarioFinalTablaDatos
+  public getCertificadoTablaDatos$ = this.select(
+    (state) => state.certificadoTablaDatos
   );
   /**
    * @property {Observable<Proveedor[]>} getProveedorTablaDatos$
@@ -73,4 +73,8 @@ export class Tramite260301Query extends Query<Tramite260301State> {
    * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
    */
   public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
+
+  getOtrasTablaDatos$ = this.select(
+    (state) => state.otrosTablaDatos
+  );
 }
