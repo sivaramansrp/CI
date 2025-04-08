@@ -99,7 +99,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * Propiedad de salida que emite el valor del formulario cuando se actualiza.
    * @type {EventEmitter<undefined>}
    */
-  @Output() formCertificadoEvent: EventEmitter<undefined> = new EventEmitter<undefined>();
+  @Output() formCertificadoEvent: EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }> = new EventEmitter<{ formGroupName: string; campo: string; valor: undefined; storeStateName: string }>();
 
   /**
    * Propiedad de salida que emite el estado seleccionado.
@@ -210,13 +210,15 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
       fraccionArancelariaForm: [''],
       registroProductoForm: [''],
       nombreComercialForm: [''],
-      fechaFinal: ['', [Validators.required]],
-      fechaInicio: ['', [Validators.required]],
+      fechaInicioInput: ['', [Validators.required]],
+      fechaFinalInput: ['', [Validators.required]],
     });
 
     // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
+    
     setTimeout(() => {
       if (this.datosForm) {
+        console.log('datosForm', this.datosForm);
         this.formCertificado.patchValue(this.datosForm);
       }
     }, 100);
@@ -227,13 +229,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    */
   ngOnInit(): void {
     // Se suscribe a los cambios en el formulario y emite los valores cada vez que cambia el formulario.
-    this.formCertificado.valueChanges
-      .pipe(delay(100))
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((_) => {
-        this.formCertificadoEvent.emit(this.formCertificado.value);
-        this.formaValida.emit(this.formCertificado.valid);
-      });
+    // this.formCertificado.valueChanges
+    //   .pipe(delay(100))
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe((_) => {
+    //     this.formCertificadoEvent.emit(this.formCertificado.value);
+        // this.formaValida.emit(this.formCertificado.valid);
+    //   });
   }
 
   /**
@@ -260,6 +262,14 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.complete();
   }
 
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
+    const VALOR = this.formCertificado.get(campo)?.value;
+    console.log(VALOR,'VALOR');
+    
+    this.formaValida.emit(this.formCertificado.valid);
+    this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
+  }
+
   /**
    * Getter para obtener el control del formulario de la entidad federativa.
    * @returns {FormControl} El control para la entidad federativa.
@@ -280,8 +290,10 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @param nuevo_valor El nuevo valor de la fecha de inicio.
    */
   public cambioFechaInicio(nuevo_valor: string): void {
-    this.formCertificado.get('fechaInicio')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaInicio')?.markAsUntouched();
+    console.log(nuevo_valor, 'nuevo_valor');
+    
+    this.formCertificado.get('fechaInicioInput')?.setValue(nuevo_valor);
+    this.formCertificado.get('fechaInicioInput')?.markAsUntouched();
   }
 
   /**
@@ -289,8 +301,8 @@ export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
    * @param nuevo_valor El nuevo valor de la fecha final.
    */
   public cambioFechaFinal(nuevo_valor: string): void {
-    this.formCertificado.get('fechaFinal')?.setValue(nuevo_valor);
-    this.formCertificado.get('fechaFinal')?.markAsUntouched();
+    this.formCertificado.get('fechaFinalInput')?.setValue(nuevo_valor);
+    this.formCertificado.get('fechaFinalInput')?.markAsUntouched();
   }
 
   /**

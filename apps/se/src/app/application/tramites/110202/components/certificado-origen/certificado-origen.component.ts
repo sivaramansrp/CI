@@ -157,6 +157,8 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       delay(100)
     ).subscribe(estado => {
       this.formCertificadoValues = estado;
+      console.log(this.formCertificadoValues,'formCertificadoValues');
+      
     });
 
     // Suscripción al estado de la sección para obtener y actualizar el estado
@@ -246,6 +248,10 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
     this.store.setBloqueSeleccion(estado);
   }
 
+  setValoresStore(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }) :void{
+    const { campo, valor } = event;
+    this.store.setFormCertificadoGenric({ [campo]: valor });
+  }
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
    */

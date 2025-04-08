@@ -431,6 +431,14 @@ export class Tramite110202Store extends Store<TramiteState> {
     }));
   }
 
+  setFormCertificadoGenric(values: { [key: string]: undefined | boolean | string | number | object }): void {    
+    this.update((state) => ({
+      formCertificado: {
+        ...state.formCertificado,
+        ...values,
+      },
+    }));
+  }
   /**
    * Establece los valores del formulario del certificado en el almacén.
    * 
