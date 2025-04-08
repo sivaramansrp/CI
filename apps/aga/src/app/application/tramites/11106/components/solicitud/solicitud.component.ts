@@ -31,14 +31,14 @@ export class SolicitudComponent implements OnInit {
 
   initializeSolicitudForm(): void {
     this.solicitudForm = this.formBuilder.group({
-      retiradaDeDonaciones: this.formBuilder.group({
+      retiradaDonaciones: this.formBuilder.group({
         manifesto: [{ value: '', disabled: true }],
       }),
     });
   }
 
   get cancelacionDonaciones(): FormGroup {
-    return this.solicitudForm.get('retiradaDeDonaciones') as FormGroup;
+    return this.solicitudForm.get('retiradaDonaciones') as FormGroup;
   }
 
   validarDestinatarioFormulario(): void {
