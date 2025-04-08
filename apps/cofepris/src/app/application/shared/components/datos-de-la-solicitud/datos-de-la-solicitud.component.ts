@@ -314,14 +314,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Crea el formulario, activa la escucha de cambios y sincroniza el estado con el input.
    */
   ngOnInit(): void {
+    this.crearDatosSolicitudForm();
+    this.actualizarDatosFormularioSolicitud();
     this.mostrarCorreoElectronico =
       PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC.includes(
         this.idProcedimiento
       )
         ? false
         : true;
-    this.crearDatosSolicitudForm();
-    this.actualizarDatosFormularioSolicitud();
+  
     this.datosSolicitudForm.valueChanges
       .pipe(takeUntil(this.destroyNotifier$), delay(10))
       .subscribe((value) => {
@@ -454,7 +455,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.idProcedimiento
           ),
         },
-        this.datosSolicitudFormState.apellidoPaterno,
         [Validators.required],
       ],
       apellidoMaterno: [
@@ -498,9 +498,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo].errors && control.controls[campo].touched;
+      return control.controls[campo]?.errors && control.controls[campo]?.touched;
     }
-    return control.errors && control.touched;
+    return control?.errors && control?.touched;
   }
 
   /**

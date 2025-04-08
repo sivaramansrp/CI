@@ -50,9 +50,9 @@
     </div>
   </div>
 
-  <form [formGroup]="datosSolicitudForm">
+  <form *ngIf="datosSolicitudForm"  [formGroup]="datosSolicitudForm">
     <div class="row mt-5">
-      @if(mostrarRFCSanitario){
+       @if(mostrarRFCSanitario){ 
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="rfcSanitario"
@@ -69,7 +69,7 @@
           />
         </div>
       </div>
-    }
+    } 
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="denominacionRazon"

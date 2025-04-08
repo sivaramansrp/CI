@@ -7,9 +7,9 @@ import {
   TablaScianConfig,
   TablaSeleccion,
 } from '../../../../shared/models/datos-solicitud.model';
+import { ID_PROCEDIMIENTO, PRODUCTO_TABLA_ESTUPEFACIENTES } from '../../constants/estupefacientes.enum';
 import {
   OPCION_TABLA,
-  PRODUCTO_TABLA,
   SCIAN_TABLA,
 } from '../../../../shared/constantes/datos-solicitud.enum';
 import {
@@ -19,7 +19,6 @@ import {
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { ID_PROCEDIMIENTO } from '../../constants/estupefacientes.enum';
 import { Subject } from 'rxjs';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 
@@ -87,7 +86,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public tablaMercanciasConfig = {
     tipoSeleccionTabla: TablaSeleccion.CHECKBOX,
-    configuracionTabla: PRODUCTO_TABLA,
+    configuracionTabla: PRODUCTO_TABLA_ESTUPEFACIENTES,
     datos: [] as TablaMercanciasDatos[],
   };
 

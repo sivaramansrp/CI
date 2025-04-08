@@ -9,6 +9,7 @@ import {
   CROSLISTA_DE_FORMAS_FARMACEUTICAS,
   CROSLISTA_DE_PAISES,
   DATOS_MERCANCIA_CLAVE_TABLA,
+  DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES,
 } from '../../constantes/datos-solicitud.enum';
 import {
   Catalogo,
@@ -20,13 +21,17 @@ import {
 import {
   CatalogoSelectComponent,
   CrosslistComponent,
+  TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  DetalleMercancia,
+  DetalleMercanciaEstupefacientes,
+} from '../../models/detalle-mercancia.model';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
-import { DetalleMercancia } from '../../models/detalle-mercancia.model';
 import { Observable } from 'rxjs';
 /**
  * @component DatosMercanciaComponent
@@ -41,7 +46,8 @@ import { Observable } from 'rxjs';
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    CrosslistComponent
+    CrosslistComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './datos-mercancia-estupefacientes.component.html',
   styleUrl: './datos-mercancia-estupefacientes.component.scss',
@@ -183,11 +189,10 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
     derecha: 'Uso específico',
   };
 
-
-    public formaFaramaceuticaLabel: CrossListLable = {
-      tituluDeLaIzquierda: 'Forma farmacéutica',
-      derecha: 'Forma farmacéutica',
-    };
+  public formaFaramaceuticaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Forma farmacéutica',
+    derecha: 'Forma farmacéutica',
+  };
 
   /**
    * @property {string[]} seleccionadasPaisDeOriginDatos
@@ -195,11 +200,11 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   public seleccionadasPaisDeOriginDatos: string[] = [];
 
-    /**
+  /**
    * @property {string[]} seleccionadasFormaFormaceuticaDatos
    * Lista de países seleccionados como origen.
    */
-    public seleccionadasFormaFormaceuticaDatos: string[] = [];
+  public seleccionadasFormaFormaceuticaDatos: string[] = [];
 
   /**
    * @property {string[]} seleccionadasPaisDeProcedenciaDatos
@@ -231,17 +236,35 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   public seleccionarOrigenDelPais = CROSLISTA_DE_PAISES;
 
- /**
+  /**
    * @property {Catalogo[]} seleccionarOrigenFormaFormaceutica
    * @description Lista cruzada de formas farmacéuticas.
    */
   public seleccionarOrigenFormaFormaceutica = CROSLISTA_DE_FORMAS_FARMACEUTICAS;
 
   /**
+   * Tipo de selección de la tabla (en este caso, selección por checkbox).
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración de la tabla para mostrar los detalles de las mercancías.
+   */
+  tablaDetalleMercancia = DETALLE_MERCANCIA_TABLA_ESTUPEFACIENTES;
+
+  /**
    * @property {Catalogo[]} paisDeDestinoDatos
    * Datos de países para lista cruzada de país de destino.
    */
-  public paisDeDestinoDatos:Catalogo[]=[]
+  public paisDeDestinoDatos: Catalogo[] = [];
+
+  /**
+   * Lista de mercancías seleccionadas o detalladas.
+   */
+  public tablaMercanciasLista: DetalleMercanciaEstupefacientes[] = [];
+
+  public detalleMercanciaDatos: DetalleMercanciaEstupefacientes[] = [];
+
   /**
    * @constructor
    * Inicializa el formulario de mercancía y carga catálogos desde archivos JSON.
@@ -303,24 +326,24 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
 
   /**
    * Lista de elementos que no son válidos.
-   * Esta propiedad almacena un arreglo de cadenas que representan 
+   * Esta propiedad almacena un arreglo de cadenas que representan
    * los elementos que no cumplen con los criterios de validación.
    */
-  public elementosNoValidos:string[] = [];
+  public elementosNoValidos: string[] = [];
   /**
    * Arreglo que almacena los elementos añadidos.
-   * 
+   *
    * Este arreglo se utiliza para guardar una lista de cadenas que representan
    * los elementos que han sido agregados en el componente.
    */
-  public elementosAnadidos:string[] = [];
+  public elementosAnadidos: string[] = [];
   /**
    * Configuración para la clave de mercancía.
-   * 
+   *
    * Esta propiedad define la configuración utilizada para la tabla de selección
    * de claves de mercancía. Incluye el tipo de selección, la configuración de la tabla
    * y los datos asociados.
-   * 
+   *
    * Propiedades:
    * - `tipoSeleccionTabla`: Define el tipo de selección en la tabla (por ejemplo, CHECKBOX).
    * - `configuracionTabla`: Configuración específica de la tabla para mostrar las claves de mercancía.
@@ -336,43 +359,6 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    * Lista de registros Clave seleccionados.
    */
   public claveLista: TablaMercanciaClaveConfig[] = [];
-  /**
-   * Valida elementos según el `idProcedimiento` y establece
-   * las listas de elementos no válidos y añadidos.
-   * @returns {void} Lista de elementos no válidos.
-   */
-  validarElementos(): void {
-    this.elementosNoValidos = [];
-    this.elementosAnadidos = [];
-    switch (this.idProcedimiento) {
-      case 260102:
-        this.elementosNoValidos = [
-          'denominacionDistintiva',
-          'denominacionComun',
-          'formaFarmaceutica',
-          'estadoFisico',
-          'presentacion',
-          'numeroRegistroSanitario',
-          'fechaCaducidad',
-        ];
-        this.elementosAnadidos = [
-          'marca',
-          'especifique',
-          'claveDeLos',
-          'fechaDeFabricacio',
-          'fechaDeCaducidad',
-        ];
-        break;
-      default:
-        if (this.detalleMercancia) {
-          this.elementosNoValidos = [
-            'denominacionDistintiva',
-            'formaFarmaceutica',
-          ];
-        }
-        break;
-    }
-  }
 
   /**
    * Restablece los valores de los campos clave en el formulario.
@@ -524,7 +510,7 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
       ],
       estadoFisico: [this.mercanciaFormState.estadoFisico, Validators.required],
       fraccionArancelaria: [
-        this.mercanciaFormState.fraccionArancelaria ,
+        this.mercanciaFormState.fraccionArancelaria,
         Validators.required,
       ],
       descripcionFraccion: [
@@ -542,45 +528,38 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
       ],
       cantidadUmc: [this.mercanciaFormState.cantidadUmc, Validators.required],
 
-      numeroCAS:[this.mercanciaFormState.numeroCAS],
-      cantidadDeLotes:[this.mercanciaFormState.cantidadDeLotes,Validators.required],
-      kgPorLote:[this.mercanciaFormState.kgPorLote,Validators.required],
+      numeroCAS: [this.mercanciaFormState.numeroCAS],
+      cantidadDeLotes: [
+        this.mercanciaFormState.cantidadDeLotes,
+        Validators.required,
+      ],
+      kgPorLote: [this.mercanciaFormState.kgPorLote, Validators.required],
 
-      paisDeDestino:["101",Validators.required],
+      paisDeDestino: ['101', Validators.required],
 
       paisDeProcedencia: [
         this.mercanciaFormState.paisDeProcedencia,
         Validators.required,
       ],
 
-      detallarUsoEspecifico:[ this.mercanciaFormState.detallarUsoEspecifico],
+      detallarUsoEspecifico: [this.mercanciaFormState.detallarUsoEspecifico],
 
-      nummeroDePiezasAFabricar:[this.mercanciaFormState.numeroDePiezasAFabricar,Validators.required],
+      nummeroDePiezasAFabricar: [
+        this.mercanciaFormState.numeroDePiezasAFabricar,
+        Validators.required,
+      ],
 
-      descripcionNumeroDePiezas:[this.mercanciaFormState.descripcionNumeroDePiezas,Validators.required], 
-      
+      descripcionNumeroDePiezas: [
+        this.mercanciaFormState.descripcionNumeroDePiezas,
+        Validators.required,
+      ],
+
       numeroRegistroSanitario: [
         this.mercanciaFormState.numeroRegistroSanitario,
         Validators.required,
-      ], 
+      ],
       presentacion: [this.mercanciaFormState.presentacion, Validators.required],
-
-
     });
-
-    const CONTROLS_A_ELIMINAR = [...this.elementosNoValidos];
-    if (this.detalleMercancia) {
-      CONTROLS_A_ELIMINAR.push('formaFarmaceutica', 'denominacionDistintiva');
-    }
-    if (this.elementosNoValidos.length) {
-      for (const NOMBRE_DEL_CONTROL of CONTROLS_A_ELIMINAR) {
-        if (this.mercanciaForm.contains(NOMBRE_DEL_CONTROL)) {
-          this.mercanciaForm.removeControl(NOMBRE_DEL_CONTROL, {
-            emitEvent: false,
-          });
-        }
-      }
-    }
   }
 
   /**
@@ -592,7 +571,9 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
   // eslint-disable-next-line class-methods-use-this
   public isValid(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
-      return control.controls[campo]?.errors && control.controls[campo]?.touched;
+      return (
+        control.controls[campo]?.errors && control.controls[campo]?.touched
+      );
     }
     return control.errors && control.touched;
   }
@@ -717,5 +698,53 @@ export class DatosMercanciaEstupefacientesComponent implements OnInit {
    */
   eliminarMercancia(datos: DetalleMercancia[]): void {
     this.eliminarMercanciaDatos.emit(datos);
+  }
+
+  /**
+   * @method eliminarDetalleMercancia
+   * @description Elimina los detalles de mercancía que no están presentes en la lista de mercancías seleccionadas.
+   * Este método filtra la lista `detalleMercanciaDatos` para mantener solo aquellos elementos que tienen un
+   * número de registro sanitario presente en `tablaMercanciasLista`.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  eliminarDetalleMercancia(): void {
+    const [DETALLE] = this.detalleMercanciaDatos;
+    const [TABLA] = this.tablaMercanciasLista;
+
+    const VALOR =
+      this.detalleMercanciaDatos.length === 1 &&
+      this.tablaMercanciasLista.length === 1 &&
+      DETALLE?.numeroRegistroSanitario === TABLA?.numeroRegistroSanitario;
+
+    this.detalleMercanciaDatos = VALOR
+      ? []
+      : this.detalleMercanciaDatos.filter((item) =>
+          this.tablaMercanciasLista.some(
+            (tablaItem) =>
+              tablaItem.numeroRegistroSanitario === item.numeroRegistroSanitario
+          )
+        );
+  }
+
+  /**
+   * @method agregarDetalleMercancia
+   * @description Agrega un nuevo detalle de mercancía a la lista `detalleMercanciaDatos`.
+   * Los datos se obtienen del formulario reactivo `mercanciaForm`.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  agregarDetalleMercancia(): void {
+    this.detalleMercanciaDatos.push({
+      presentacion: this.mercanciaForm.get('presentacion')?.value,
+      numeroDePiezasAFabricar: this.mercanciaForm.get(
+        'nummeroDePiezasAFabricar'
+      )?.value,
+      descripcionNumeroDePiezas: this.mercanciaForm.get(
+        'descripcionNumeroDePiezas'
+      )?.value,
+      numeroRegistroSanitario: this.mercanciaForm.get('numeroRegistroSanitario')
+        ?.value,
+    });
   }
 }
