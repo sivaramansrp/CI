@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AlertComponent,
@@ -21,7 +21,7 @@ import {
 } from '../estados/tramite10302.store';
 import { Tramite10302Query } from '../estados/tramite10302.query';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
+import { map, merge, Subject, takeUntil } from 'rxjs';
 import { Modal } from 'bootstrap';
 import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
 import { datosDelMercancia } from '../models/exencion-impuestos.model';
@@ -44,7 +44,7 @@ import { datosDelMercancia } from '../models/exencion-impuestos.model';
   templateUrl: './datosTramite.component.html',
   styleUrl: './datosTramite.component.scss',
 })
-export class DatosTramiteComponent {
+export class DatosTramiteComponent implements OnDestroy {
   /**
    * Formulario principal del trámite.
    */
@@ -492,5 +492,14 @@ export class DatosTramiteComponent {
       this.getMercanciaTableData.mercanciaTable.tableHeader;
     this.mercanciaBodyData =
       this.getMercanciaTableData.mercanciaTable.tableBody;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

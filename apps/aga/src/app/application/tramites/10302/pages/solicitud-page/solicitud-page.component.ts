@@ -7,6 +7,7 @@ import { PASOS } from '@ng-mf/data-access-user';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 
 /**
  * Texto de alerta para terceros.
@@ -33,7 +34,7 @@ interface AccionBoton {
   templateUrl: './solicitud-page.component.html',
   styles: ``,
   standalone: true,
-  imports:[AlertComponent,WizardComponent,CommonModule,PasoUnoComponent,PasoTresComponent,BtnContinuarComponent,FormsModule,ReactiveFormsModule, TituloComponent, AnexarDocumentosComponent]
+  imports:[AlertComponent,WizardComponent,CommonModule,PasoUnoComponent,PasoTresComponent,PasoDosComponent,BtnContinuarComponent,FormsModule,ReactiveFormsModule, TituloComponent, AnexarDocumentosComponent]
 })
 /**
  * Componente que representa la página de solicitud.
