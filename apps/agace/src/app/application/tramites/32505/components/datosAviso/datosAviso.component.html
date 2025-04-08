@@ -1,0 +1,44 @@
+
+<form formGroupName="datosAviso">
+<div class="modal fade" id="datosAviso" tabindex="-1" #datosAviso aria-labelledby="datosAviso"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <ng-titulo titulo="Datos del aviso" />
+                            <div class="row align-items-center">
+                                <ng-titulo titulo="Tipo de operecion" />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            Datos del tipo de registro*:
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" id="idRadioAviso" formControlName="tipoBusqueda"
+                                                        value="Manual" class="form-check-input"
+                                                        >
+                                                    Manual
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" id="idRadioAviso" value="Carga masiva"
+                                                        formControlName="tipoBusqueda" class="form-check-input"
+                                                       >
+                                                    Carga masiva
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>

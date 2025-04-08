@@ -8,6 +8,19 @@ import { CatalogoLista } from '../models/avios-model';
   providedIn: 'any'
 })
 export class AvisoService {
+  obtenerCombustible() {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/combustible.json');
+  }
+  obtenerCilindros():Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/cilindros.json');
+  }
+
+  obtenerPaisIssued(): Observable<CatalogoLista> {
+    return this.http
+      .get<CatalogoLista>('assets/json/32505/pais-issued.json');
+  }
   
 
     /**
@@ -25,7 +38,7 @@ export class AvisoService {
 
     obtenerAnio(): Observable<CatalogoLista> {
       return this.http
-        .get<CatalogoLista>('assets/json/32505/pais.json');
+        .get<CatalogoLista>('assets/json/32505/years.json');
     }
   constructor(
     private http: HttpClient
