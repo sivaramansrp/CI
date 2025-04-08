@@ -4,7 +4,7 @@ import {
   CatalogosService,
   TEXTOS,
 } from '@libs/shared/data-access-user/src';
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 /**
