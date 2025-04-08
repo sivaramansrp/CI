@@ -78,6 +78,7 @@ export class DatosDeLaMercanciaComponent {
    */
   obtenerFraccion(): void {
     this.form.get('unidadMedida')?.setValue(this.unidadCatalogo[0].id);
+    console.log('Fracción arancelaria:', this.form.get('fraccion')?.value);
   }
 
   /**
