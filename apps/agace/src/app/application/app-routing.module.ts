@@ -36,6 +36,13 @@ const ROUTES: Routes = [
         (m) => m.MercanciasDesmontadasOSinMontarModule
       ),
   },
+  {
+    path: 'solicitud-de-registro-invocar',
+    loadChildren: () =>
+      import('./tramites/31616/solicitud-de-registro-invocar.module').then(
+        (m) => m.SolicitudDeRegistroInvocarModule
+      ),
+  },
 ];
 
 @NgModule({
