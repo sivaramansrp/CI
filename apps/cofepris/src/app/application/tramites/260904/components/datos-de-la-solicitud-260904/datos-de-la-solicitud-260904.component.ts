@@ -125,38 +125,21 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
+    
+    this.tramite260904Query.selectTramite260904$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.form.patchValue({
+          btonDeRadio: data.btonDeRadio,
+          justificacion: data.justificacion,
+        });
 
-    this.btonDeRadio$.pipe(takeUntil(this.destroy$)).subscribe((btonDeRadio) => {
-      if (btonDeRadio) {
-        this.form.get('btonDeRadio')?.setValue(btonDeRadio);
-      }
-    });
-
-    this.justificacion$.pipe(takeUntil(this.destroy$)).subscribe((justificacion) => {
-      if (justificacion) {
-        this.form.get('justificacion')?.setValue(justificacion);
-      }
-    });
-
-    this.rfcDel$.pipe(takeUntil(this.destroy$)).subscribe((rfcDel) => {
-      if (rfcDel) {
-        this.datosDelEstablecimiento.get('rfcDel')?.setValue(rfcDel);
-      }
-    });
-
-    this.denominacion$.pipe(takeUntil(this.destroy$)).subscribe((denominacion) => {
-      if (denominacion) {
-        this.datosDelEstablecimiento
-          .get('denominacion')
-          ?.setValue(denominacion);
-      }
-    });
-
-    this.correo$.pipe(takeUntil(this.destroy$)).subscribe((correo) => {
-      if (correo) {
-        this.datosDelEstablecimiento.get('correo')?.setValue(correo);
-      }
-    });
+        this.datosDelEstablecimiento.patchValue({
+          rfcDel: data.rfcDel,
+          denominacion: data.denominacion,
+          correo: data.correo,
+        });
+      });
   }
 
   /**

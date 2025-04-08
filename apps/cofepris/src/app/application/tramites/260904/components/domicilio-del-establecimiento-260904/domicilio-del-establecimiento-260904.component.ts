@@ -237,89 +237,32 @@ export class DomicilioDelEstablecimiento260904Component implements OnInit, OnDes
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
 
-    this.codigoPostal$.pipe(takeUntil(this.destroy$)).subscribe((codigoPostal) => {
-      if (codigoPostal) {
-        this.form.get('codigoPostal')?.setValue(codigoPostal);
-      }
-    });
+    this.tramite260904Query.selectTramite260904$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((data) => {
+      this.form.patchValue({
+        codigoPostal: data.codigoPostal,
+        estado: data.estado,
+        municipioOAlcaldia: data.municipioOAlcaldia,
+        localidad: data.localidad,
+        colonias: data.colonias,
+        calle: data.calle,
+        lada: data.lada,
+        telefono: data.telefono,
+      });
 
-    this.estado$.pipe(takeUntil(this.destroy$)).subscribe((estado) => {
-      if (estado) {
-        this.form.get('estado')?.setValue(estado);
-      }
-    });
+      this.domicilio.patchValue({
+        avisoCheckbox: data.avisoCheckbox,
+        regimen: data.regimen,
+        aduanasEntradas: data.aduanasEntradas,
+        aifaCheckbox: data.aifaCheckbox,
+        manifests: data.manifests,
+      });
 
-    this.municipioOAlcaldia$.pipe(takeUntil(this.destroy$)).subscribe((municipioOAlcaldia) => {
-      if (municipioOAlcaldia) {
-        this.form.get('municipioOAlcaldia')?.setValue(municipioOAlcaldia);
-      }
-    });
-    this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
-      if (localidad) {
-        this.form.get('localidad')?.setValue(localidad);
-      }
-    });
-    this.colonias$.pipe(takeUntil(this.destroy$)).subscribe((colonias) => {
-      if (colonias) {
-        this.form.get('colonias')?.setValue(colonias);
-      }
-    });
-    this.calle$.pipe(takeUntil(this.destroy$)).subscribe((calle) => {
-      if (calle) {
-        this.form.get('calle')?.setValue(calle);
-      }
-    });
-    this.lada$.pipe(takeUntil(this.destroy$)).subscribe((lada) => {
-      if (lada) {
-        this.form.get('lada')?.setValue(lada);
-      }
-    });
-    this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
-      if (telefono) {
-        this.form.get('telefono')?.setValue(telefono);
-      }
-    });
-
-    this.avisoCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((avisoCheckbox) => {
-      if (avisoCheckbox) {
-        this.domicilio.get('avisoCheckbox')?.setValue(avisoCheckbox);
-      }
-    });
-
-    this.regimen$.pipe(takeUntil(this.destroy$)).subscribe((regimen) => {
-      if (regimen) {
-        this.domicilio.get('regimen')?.setValue(regimen);
-      }
-    });
-
-    this.aduanasEntradas$.pipe(takeUntil(this.destroy$)).subscribe((aduanasEntradas) => {
-      if (aduanasEntradas) {
-        this.domicilio.get('aduanasEntradas')?.setValue(aduanasEntradas);
-      }
-    });
-
-    this.aifaCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((aifaCheckbox) => {
-      if (aifaCheckbox) {
-        this.domicilio.get('aifaCheckbox')?.setValue(aifaCheckbox);
-      }
-    });
-
-    this.manifests$.pipe(takeUntil(this.destroy$)).subscribe((manifests) => {
-      if (manifests) {
-        this.domicilio.get('manifests')?.setValue(manifests);
-      }
-    });
-
-    this.acuerdoPublico$.pipe(takeUntil(this.destroy$)).subscribe((acuerdoPublico) => {
-      if (acuerdoPublico) {
-        this.representanteLegal.get('acuerdoPublico')?.setValue(acuerdoPublico);
-      }
-    });
-
-    this.rfc$.pipe(takeUntil(this.destroy$)).subscribe((rfc) => {
-      if (rfc) {
-        this.representanteLegal.get('rfc')?.setValue(rfc);
-      }
+      this.representanteLegal.patchValue({
+        acuerdoPublico: data.acuerdoPublico,
+        rfc: data.rfc,
+      });
     });
   }
 
