@@ -10,7 +10,7 @@ import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json
   imports: [CommonModule,
         CatalogoSelectComponent,
         TituloComponent,
-        ReactiveFormsModule,],
+        ReactiveFormsModule],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
@@ -18,7 +18,7 @@ export class DatosSolicitudComponent implements OnInit{
 
   solicitudForm!: FormGroup;
 
-    aduanas!: Catalogo[];
+   aduanas!: Catalogo[];
   
 
 
