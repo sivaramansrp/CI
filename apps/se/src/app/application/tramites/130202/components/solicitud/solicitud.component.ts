@@ -469,11 +469,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Valida el formulario y muestra la tabla dinámica si es válido.
    */
   validarYEnviarFormulario(): void {
-    this.mostrarTabla = true;
     if (this.partidasDelaMercanciaForm.invalid) {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
+      this.tramite130202Store.setMostrarTabla(true);
+
     }
   }
  
