@@ -1082,87 +1082,57 @@ enCambioDeBloque(bloqueId: number): void {
 }
   
   /**
-   * @description Actualiza el almacén global con nuevos valores basados en eventos del formulario.
-   * @param {Object} event - Objeto que contiene el formulario, el nombre del campo y el método a ejecutar.
-   * @param {FormGroup} event.form - Formulario desde el cual se extrae el valor.
-   * @param {string} event.campo - Nombre del campo del formulario.
-   * @param {string} event.metodoNombre - Nombre del método a ejecutar en el store.
+   * @description Actualiza el estado global en la instancia `tramite130121Store` a partir de los datos obtenidos del formulario.
+   * El método extrae el valor del campo especificado en el formulario y, mediante un objeto de mapeo, invoca
+   * el método correspondiente en el store. Se maneja de forma especial el método `setValorPartidaUSD` para
+   * convertir el valor a número antes de actualizar el estado.
+   *
+   * @param {Object} event Objeto que contiene la información necesaria para actualizar el store.
+   * @param {FormGroup} event.form Formulario Angular del cual se extrae el valor del campo.
+   * @param {string} event.campo Nombre del campo del formulario cuyo valor se utilizará.
+   * @param {string} event.metodoNombre Nombre del método a invocar en el store.
    * @returns {void}
    */
-  // eslint-disable-next-line complexity
   setValoresStore(event: {
     form: FormGroup;
     campo: string;
     metodoNombre: string;
   }): void {
     const VALOR = event.form.get(event.campo)?.value;
-    switch (event.metodoNombre) {
-      case 'updateSolicitud':
-        this.tramite130121Store.updateSolicitud(VALOR);
-        break;
-      case 'setDescripcionPartidasDeLaMercancia':
-        this.tramite130121Store.setDescripcionPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setCantidadPartidasDeLaMercancia':
-        this.tramite130121Store.setCantidadPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setValorPartidaUSDPartidasDeLaMercancia':
-        this.tramite130121Store.setValorPartidaUSDPartidasDeLaMercancia(VALOR);
-        break;
-      case 'setregimen':
-        this.tramite130121Store.setregimen(VALOR);
-        break;
-      case 'setclasificacion':
-        this.tramite130121Store.setclasificacion(VALOR);
-        break;
-      case 'setProducto':
-        this.tramite130121Store.setProducto(VALOR);
-        break;
-      case 'setDescripcion':
-        this.tramite130121Store.setDescripcion(VALOR);
-        break;
-      case 'setCantidad':
-        this.tramite130121Store.setCantidad(VALOR);
-        break;
-      case 'setValorPartidaUSD':
-        this.tramite130121Store.setValorPartidaUSD(parseFloat(VALOR) || 0);
-        break;
-      case 'setUnidadMedida':
-        this.tramite130121Store.setUnidadMedida(VALOR);
-        break;
-      case 'setBloque':
-        this.tramite130121Store.setBloque(VALOR);
-        break;
-      case 'setUsoEspecifico':
-        this.tramite130121Store.setUsoEspecifico(VALOR);
-        break;
-      case 'setJustificacionImportacionExportacion':
-        this.tramite130121Store.setJustificacionImportacionExportacion(VALOR);
-        break;
-      case 'setObservaciones':
-        this.tramite130121Store.setObservaciones(VALOR);
-        break;
-      case 'setEntidad':
-        this.tramite130121Store.setEntidad(VALOR);
-        break;
-      case 'setRepresentacion':
-        this.tramite130121Store.setRepresentacion(VALOR);
-        break;
-      case 'setUmt':
-        this.tramite130121Store.setUmt(VALOR);
-        break;
-      case 'setNico':
-        this.tramite130121Store.setNico(VALOR);
-        break;
-      case 'setFraccion':
-        this.tramite130121Store.setFraccion(VALOR);
-        break;
-      default:
-        console.error(
-          `Método ${event.metodoNombre} no existe en Tramite130121Store`
-        );
+  
+    const METHOD_MAPPING: { [key: string]: (val: string | number) => void } = {
+      updateSolicitud: (val) => this.tramite130121Store.updateSolicitud(String(val)),
+      setDescripcionPartidasDeLaMercancia: (val) => this.tramite130121Store.setDescripcionPartidasDeLaMercancia(String(val)),
+      setCantidadPartidasDeLaMercancia: (val) => this.tramite130121Store.setCantidadPartidasDeLaMercancia(String(val)),
+      setValorPartidaUSDPartidasDeLaMercancia: (val) => this.tramite130121Store.setValorPartidaUSDPartidasDeLaMercancia(typeof val === 'string' ? parseFloat(val) || 0 : val),
+      setregimen: (val) => this.tramite130121Store.setregimen(String(val)),
+      setclasificacion: (val) => this.tramite130121Store.setclasificacion(String(val)),
+      setProducto: (val) => this.tramite130121Store.setProducto(String(val)),
+      setDescripcion: (val) => this.tramite130121Store.setDescripcion(String(val)),
+      setCantidad: (val) => this.tramite130121Store.setCantidad(String(val)),
+      // Caso especial: convierte el valor a número antes de llamar a la función
+      setValorPartidaUSD: (val) => this.tramite130121Store.setValorPartidaUSD(parseFloat(String(val)) || 0),
+      setUnidadMedida: (val) => this.tramite130121Store.setUnidadMedida(String(val)),
+      setBloque: (val) => this.tramite130121Store.setBloque(String(val)),
+      setUsoEspecifico: (val) => this.tramite130121Store.setUsoEspecifico(String(val)),
+      setJustificacionImportacionExportacion: (val) => this.tramite130121Store.setJustificacionImportacionExportacion(String(val)),
+      setObservaciones: (val) => this.tramite130121Store.setObservaciones(String(val)),
+      setEntidad: (val) => this.tramite130121Store.setEntidad(String(val)),
+      setRepresentacion: (val) => this.tramite130121Store.setRepresentacion(String(val)),
+      setUmt: (val) => this.tramite130121Store.setUmt(String(val)),
+      setNico: (val) => this.tramite130121Store.setNico(String(val)),
+      setFraccion: (val) => this.tramite130121Store.setFraccion(String(val)),
+    };
+  
+    const METODO = METHOD_MAPPING[event.metodoNombre];
+  
+    if (METODO) {
+      METODO(VALOR);
+    } else {
+      console.error(`Método ${event.metodoNombre} no existe en Tramite130121Store`);
     }
   }
+  
 
  /**
   * Se ejecuta cuando el componente o servicio es destruido.
