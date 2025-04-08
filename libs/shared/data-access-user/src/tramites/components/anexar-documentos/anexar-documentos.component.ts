@@ -43,6 +43,7 @@ declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() catalogoDocumentos: Catalogo[] = [];
+  @Input() catalogoDocumentosOpcionales: Catalogo[] = [];
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef>;
 
 
@@ -282,11 +283,30 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  limpiarFile(item: any, index: number): void {
+  limpiarFile(item: any, index: number, tipo: string): void {
+    let fileInput: HTMLInputElement | null = null;
+    switch (tipo) {
+      case 'obligatorios':
+        fileInput = this.fileInputs.toArray()[index].nativeElement as HTMLInputElement;
+        break;
+      case 'adicional': {
+        console.log(this.catalogoDocumentos);
+        const INDICE_ITEM_PADRE = this.catalogoDocumentos.findIndex(doc => doc.id === item.id);
+        console.log(INDICE_ITEM_PADRE);
+        
+        
+        console.log(item);
+        console.log(index);
+        
+        // fileInput = document.getElementById(`formFile${this.catalogoDocumentos.adicionales[index]?.id}`) as HTMLInputElement;
+        
 
-    // Obtén el input file correspondiente a la fila
-    const fileInput = this.fileInputs.toArray()[index].nativeElement as HTMLInputElement;
-
+      break;
+      }
+      default:
+        break;
+    }
+    
     if (fileInput) {
       fileInput.value = ''; // Limpia el archivo seleccionado
     }

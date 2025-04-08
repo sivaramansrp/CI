@@ -23,8 +23,8 @@ export interface Catalogo {
   tam?: string;
   dpi?: string;
   nuevo?: boolean;
-  uniqueId?: any;
-  adicionales?: any[];
+  uniqueId?: string;
+  adicionales?: Catalogo[];
 }
 
 export interface CatalogoPaises {

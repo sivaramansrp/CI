@@ -24,7 +24,7 @@ export const CONSTANTES = {
 };
 
 export const TEXTOS = {
-  INSTRUCCIONES: `<h5>Instrucciones</h5>
+  INSTRUCCIONES: `<h5>Nota: </h5>
   <ul>
     <li>De acuerdo al caso particular, algunos documentos podrían ser obligatorios</li>
     <li>En caso de que no requieras algún documento, selecciónalo y elimínalo</li>
