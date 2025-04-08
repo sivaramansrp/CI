@@ -1,47 +1,47 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.component';
+import { EncabezadoRequerimientoComponent, FirmaPageComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
-import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { GenerarDictamenComponent } from '../generar-dictamen/generar-dictamen.component';
 import { RequerimientoInformacionComponent } from '../requerimiento-informacion/requerimiento-informacion.component';
-import { EncabezadoRequerimientoComponent, FirmaPageComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
+import { SolicitarDocumentosEvaluacionComponent } from '../solicitar-documentos-evaluacion/solicitar-documentos-evaluacion.component';
 
 @Component({
   selector: 'app-solicitud-page',
   standalone: true,
-  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent], // <-- Importa los componentes aquí
+  imports: [CommonModule, EncabezadoRequerimientoComponent, GenerarDictamenComponent, CapturarRequerimientoComponent, SolicitarDocumentosEvaluacionComponent, RequerimientoInformacionComponent, FirmaPageComponent, TituloComponent], // <-- Importa los componentes aquí
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
-  constructor(
-    private router: Router
-  ){
-    
-  }
   /**
-   * Índice de la pestaña seleccionada
-   */
-  indice: number = 2;
-
+     * Índice de la pestaña seleccionada
+     */
+  indice: number = 1;
   /**
    * Variable para firmar
    */
-  firmar: boolean = false;
-
+  public firmarFuncionario: boolean = true;
+  constructor(
+    private router: Router
+  ) {
+      // do nothing.
+  }
   /**
    * Método para seleccionar la pestaña
    * @param i indica el número de la pestaña seleccionada
    */
   seleccionaTab(i: number): void {
+    if (i === 2) {
+      this.firmarFuncionario = false;
+    }
     this.indice = i;
   }
-
   /*
    * Método que se ejecuta para guardar y firmar
   */
-  guardarFirmar(): void { 
+  guardarFirmar(): void {
     this.router.navigate(['funcionario/firma-electronica']);
   }
 }
