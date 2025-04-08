@@ -2,6 +2,7 @@ import { Catalogo, CatalogoSelectComponent, TableComponent, TituloComponent } fr
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
 @Component({
@@ -24,7 +25,7 @@ export class DatosSolicitudComponent implements OnInit {
 
   public establecimientoBodyData: unknown = [];
 
-  constructor(public fb: FormBuilder) {
+  constructor(public fb: FormBuilder,private router: Router) {
     // Constructor logic if needed
   }
 
@@ -49,4 +50,7 @@ export class DatosSolicitudComponent implements OnInit {
     return CONTROL?.invalid && CONTROL?.touched;
   }
 
+  navigateToPath(): void {
+    this.router.navigate(['pago/aviso-de-reciclaje/datos-residuos']);
+  }
 }
