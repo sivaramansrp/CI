@@ -2,7 +2,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged, take } from 'rxjs/operators';
+import { distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110210Query } from '../../estados/queries/tramite110210.query';
 import { Tramite110210Store } from '../../estados/store/tramite110210.store';
@@ -37,11 +37,6 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
 
   /**
- * Suscripción para rastrear los cambios en el formulario y manejar la limpieza de memoria.
- */
-  formSubscription!: Subscription;
-
-  /**
  * Sujeto para manejar la destrucción de suscripciones y evitar fugas de memoria.
  */
   private destroy$ = new Subject<void>();
@@ -69,9 +64,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
       razonSocial: [''],
     });
     this.restoreFormValues(); 
-    this.formSubscription = this.solicitudForm.valueChanges.subscribe(() => {
-      this.updateStore();
-    });
+    this.updateStore();
     this.setFormValues()
   }
 
@@ -107,7 +100,7 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
     this.restoreSubscription$ = this.tramite110210Query.selectTramite110210$
       .pipe(
         distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
-        take(1)
+        takeUntil(this.destroy$)
       )
       .subscribe((solicitante) => {
         if (solicitante) {
@@ -122,12 +115,6 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    * Se encarga de limpiar las suscripciones para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    if (this.formSubscription) {
-      this.formSubscription.unsubscribe();
-    }
-    if (this.restoreSubscription$) {
-      this.restoreSubscription$.unsubscribe();
-    }
     this.destroy$.next();
     this.destroy$.complete();
   }
