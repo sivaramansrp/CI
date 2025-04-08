@@ -141,7 +141,7 @@ export const MERCANCIAS_DATA = [
     orden: 20,
   },
 ];
-export interface permisoModel {
+export interface PermisoModel {
   Nombre: string;
   RFC: string;
   CURP: string;
