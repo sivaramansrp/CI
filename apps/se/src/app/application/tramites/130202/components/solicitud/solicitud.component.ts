@@ -15,6 +15,9 @@ import fractionValues from '@libs/shared/theme/assets/json/130202/fraccion_aranc
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130202/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130202/unidad_da.json';
 
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
+
 /**
  * @description Componente para gestionar la solicitud de mercancías.
  * Contiene formularios reactivos y opciones configurables relacionadas con el trámite.
@@ -58,12 +61,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
+ tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
-  tableBodyData: { tbodyData: string[] }[] = []; 
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
   /**
    * mostrarTabla
    * Bandera para mostrar u ocultar la tabla dinámica.
@@ -84,7 +87,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * filaSeleccionada
    * Fila seleccionada en la tabla dinámica.
    */
-  filaSeleccionada: any = null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
  
   /**
    * @description Opciones para el campo "producto".
@@ -186,8 +189,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.getEstablecimiento();
-    this.calcularTotales();
+    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -396,43 +398,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
  
   /**
-   * getEstablecimiento
-   * Configura los datos de la tabla dinámica a partir de un archivo JSON.
-   */
-  getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
-      (header, index) => ({
-        encabezado: header,
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        clave: (fila: any): string => fila.tbodyData[index],
-        orden: index,
-      })
-    );
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
- 
-  /**
-   * calcularTotales
-   * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
-   */
-  calcularTotales(): void {
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
-      0
-    );
-    const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
-  }
- 
-  /**
    * @description Solicita opciones configurables para los formularios desde archivos JSON.
    */
   opcionesDeBusqueda(): void {
@@ -470,14 +435,34 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Lista de filas seleccionadas.
    */
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
+  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
+      ? filasSeleccionadas
+      : [];
     if (this.filaSeleccionada) {
       this.tramite130202Store.storeTableValues(this.filaSeleccionada);
     }
   }
+
+  /**
+ * Método para obtener los datos de la tabla dinámica.
+ * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
+ * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+ * 
+ * - Actualiza `tableBodyData` con los datos obtenidos.
+ * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+ * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+ * 
+ */
+  obtenerTablaDatos(): void {
+    this.exportacionMineralesDeHierroService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+      this.tableBodyData = data;
+      this.formForTotalCount.patchValue({
+        cantidadTotal:data[0].cantidad,
+        valorTotalUSD:data[0].totalUSD
+      });
+    });
+}
  
   /**
    * validarYEnviarFormulario
@@ -622,7 +607,18 @@ enCambioDeBloque(bloqueId: number): void {
         );
     }
   }
- 
+ /**
+ * Determina si el botón "Modificar" debe estar deshabilitado.
+ * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
+ * 
+ */
+ disabledModificar() : boolean {
+  let disabled = false;
+  if(this.filaSeleccionada.length === 0){
+    disabled = true
+  }
+  return disabled;
+}
   /**
    * @description Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
    */
