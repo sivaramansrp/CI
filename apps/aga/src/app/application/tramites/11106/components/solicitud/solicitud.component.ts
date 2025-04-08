@@ -26,15 +26,25 @@ export class SolicitudComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.solicitudForm = this.formBuilder.group({
-      folioOriginal: [{ value: '', disabled: true }],
-      justificacionDelDesistimiento: [{ value: '' }, Validators.maxLength(200)],
-    });
-    this.setFormValues();
+    this.initializeSolicitudForm();
   }
 
-  setFormValues(): void {
-    this.solicitudForm.get(SOLICITUD.FOLIO_ORIGINAL)?.setValue('');
+  initializeSolicitudForm(): void {
+    this.solicitudForm = this.formBuilder.group({
+      retiradaDeDonaciones: this.formBuilder.group({
+        manifesto: [{ value: '', disabled: true }],
+      }),
+    });
+  }
+
+  get cancelacionDonaciones(): FormGroup {
+    return this.solicitudForm.get('retiradaDeDonaciones') as FormGroup;
+  }
+
+  validarDestinatarioFormulario(): void {
+    if (this.solicitudForm.invalid) {
+      this.solicitudForm.markAllAsTouched();
+    }
   }
 
   continuar(): void {
