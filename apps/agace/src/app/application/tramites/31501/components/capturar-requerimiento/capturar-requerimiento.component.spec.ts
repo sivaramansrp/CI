@@ -22,21 +22,6 @@ class MockTramite31501Store {}
 @Injectable()
 class MockTramite31501Query {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('CapturarRequerimientoComponent', () => {
   let fixture;
   let component;
