@@ -1,9 +1,10 @@
-import { forwardRef, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { FuncionarioRoutingModule } from './funcionario-routing.module';
+// multiple - Import multiple members.
+import { NgModule, forwardRef } from '@angular/core';
+// multiple - Import multiple members.
 import { CatalogoSelectComponent, CatalogosService, FirmaPageComponent, SelectCatalogosComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { FuncionarioRoutingModule } from './funcionario-routing.module';
 
 
 @NgModule({

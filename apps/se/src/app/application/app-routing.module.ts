@@ -116,6 +116,10 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule
       ),
   },
+  {  
+    path:'certificado-tecnico-japon',
+    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+  },
   {
     path: 'desmantelar',
     loadChildren: () =>
