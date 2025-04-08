@@ -67,7 +67,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteStore: Tramite260217Store,
     private tramiteQuery: Tramite260217Query
-  ) {}
+  ) {
+        // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * @method ngOnInit

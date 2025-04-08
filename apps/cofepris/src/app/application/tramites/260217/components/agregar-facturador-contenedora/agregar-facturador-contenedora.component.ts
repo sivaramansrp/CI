@@ -28,6 +28,7 @@ export class AgregarFacturadorContenedoraComponent {
    */
     constructor(
         public tramite260217Store: Tramite260217Store){
+        // No se necesita lógica de inicialización adicional.
     }
 
     /**

@@ -36,7 +36,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private tramite260217Query: Tramite260217Query,
     private tramite260217Store: Tramite260217Store
-  ) { }
+  ) { 
+        // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Método del ciclo de vida OnInit de Angular.

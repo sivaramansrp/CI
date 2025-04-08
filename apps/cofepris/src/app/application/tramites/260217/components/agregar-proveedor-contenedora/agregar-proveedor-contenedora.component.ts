@@ -25,7 +25,9 @@ export class AgregarProveedorContenedoraComponent {
    *
    * @param tramite260217Store - Store que administra el estado del trámite 260217.
    */
-  constructor(public tramite260217Store: Tramite260217Store) {}
+  constructor(public tramite260217Store: Tramite260217Store) {
+        // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * @method updateProveedorTablaDatos

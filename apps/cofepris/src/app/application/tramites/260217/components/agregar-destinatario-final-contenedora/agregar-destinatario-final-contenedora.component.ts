@@ -32,7 +32,9 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * 
    * @param tramiteStore - Store que administra el estado del trámite 260217.
    */
-  constructor(public tramiteStore: Tramite260217Store) {}
+  constructor(public tramiteStore: Tramite260217Store) {
+      // No se necesita lógica de inicialización adicional.
+  }
 
     /**
    * @method updateDestinatarioFinalTablaDatos

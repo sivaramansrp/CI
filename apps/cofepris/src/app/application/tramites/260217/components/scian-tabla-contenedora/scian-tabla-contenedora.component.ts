@@ -19,7 +19,9 @@ export class ScianTablaContenedoraComponent {
    * @constructor
    * @param {Tramite260217Store} tramite260217Store - Store que maneja el estado del trámite 260217.
    */
-  constructor(private tramite260217Store: Tramite260217Store) {}
+  constructor(private tramite260217Store: Tramite260217Store) {
+        // No se necesita lógica de inicialización adicional.
+  }
 
   /**
    * Configuración del SCIAN (Sistema de Clasificación Industrial de América del Norte) seleccionado.
