@@ -24,3 +24,10 @@ paisDeProcedencia: string,
 usoEspecifico: string,
 
 }
+export interface ListaClave{
+    id: number;
+    claveDeLosLotes: string,
+    fechaDeFabricacion: string,
+    fechaDeCaducidad: string
+
+}

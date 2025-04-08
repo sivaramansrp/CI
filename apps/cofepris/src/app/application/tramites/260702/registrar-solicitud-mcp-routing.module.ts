@@ -8,7 +8,7 @@ const routes: Routes = [
     path: 'registro',
     component: RegistroPageComponent,
     children: [
-      // { path: 'pagodederechos', component: PagoDeDerechoComponent }, // Correct child route
+      { path: 'pagodederechos', component: PagoDeDerechoComponent }, // Correct child route
 
       { path: 'registro',
         component: RegistroPageComponent

@@ -15,10 +15,13 @@ import { Destinatario } from '../../models/destinatario.model';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user'; // Adjusted the path to the correct location
 import { ReplaySubject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
+import { Solicitud260702Query } from '../../estados/tramites260702.query';
+import { Solicitud260702State, Solicitud260702Store } from '../../estados/tramites260702.store';
 
 
 @Component({
@@ -34,12 +37,16 @@ export class TercerosrelacionadosComponent implements OnInit,OnDestroy {
      private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
      selectedRows: Set<number> = new Set();
      selectedRow: any = null;
-
+     agregarDestinatarioState!: Solicitud260702State;
      destinatarioSeleccionTabla = TablaSeleccion.CHECKBOX;
       selectedDestinatario: Destinatario[] = [];
       esFormularioVisible = false;
 
-      constructor(private fb: FormBuilder,private registrarsolicitudmcp: RegistrarSolicitudMcpService ) {
+      constructor(private fb: FormBuilder,
+        private registrarsolicitudmcp: RegistrarSolicitudMcpService,
+        private solicitud260702Store: Solicitud260702Store,
+        private solicitud260702Query: Solicitud260702Query) 
+         {
         this.crearFormTransporte();
       }
        public paisData: CatalogosSelect = {
@@ -131,28 +138,37 @@ export class TercerosrelacionadosComponent implements OnInit,OnDestroy {
      crearFormTransporte():void {
       this.destinatarioForm = this.fb.group({
         agregarDestinatario: this.fb.group({
-          tipoPersona: ['', Validators.required]
+          tipoPersona: [this.agregarDestinatarioState?.tipoPersona, Validators.required]
         }),
         datosPersonales: this.fb.group({
-          nombre: ['', Validators.required],
-          primerApellido: ['', Validators.required],
-          segundoApellido: ['', Validators.required],
-          denominacion: ['', Validators.required],
-          pais: ['', Validators.required],
-          domicilio: ['', Validators.required],
-          estado:['', Validators.required],
-          codigopostal:['', Validators.required],
-          calle:['', Validators.required],
-          numeroExterior:['', Validators.required],
-          numeroInterior:['', Validators.required],
-          lada: [''],
-          telefono: [''],
-          correoElectronico: ['']
+          nombre: [this.agregarDestinatarioState?.nombre, Validators.required],
+          primerApellido: [this.agregarDestinatarioState?.primerApellido, Validators.required],
+          segundoApellido: [this.agregarDestinatarioState?.segundoApellido, Validators.required],
+          denominacion: [this.agregarDestinatarioState?.denominacion, Validators.required],
+          pais: [this.agregarDestinatarioState?.pais, Validators.required],
+          domicilio: [this.agregarDestinatarioState?.domicilio, Validators.required],
+          estado:[this.agregarDestinatarioState?.estado, Validators.required],
+          codigopostal:[this.agregarDestinatarioState?.codigopostal, Validators.required],
+          calle:[this.agregarDestinatarioState?.calle, Validators.required],
+          numeroExterior:[this.agregarDestinatarioState?.numeroExterior, Validators.required],
+          numeroInterior:[this.agregarDestinatarioState?.numeroInterior, Validators.required],
+          lada: [this.agregarDestinatarioState?.lada],
+          telefono: [this.agregarDestinatarioState?.telefono],
+          correoElectronico: [this.agregarDestinatarioState?.correoElectronico]
         })
       });
     }
 
     ngOnInit(): void {
+      this.solicitud260702Query.selectSolicitud$
+            .pipe(
+              takeUntil(this.destroyed$),
+              map((seccionState: any) => {
+                this.agregarDestinatarioState = seccionState;
+              })
+            )
+            .subscribe();
+      
       this.crearFormTransporte();
       this.getPaisData();
     }
@@ -264,6 +280,36 @@ agregarMercancias(): void {
 cancelarFormulario(): void {
   this.esFormularioVisible = false; // Hide the form
 }
+onConfirmarEliminacion(): void {
+  this.eliminarMercancias(); // Perform deletion logic
+
+  // Get the modal element
+  const modalElement = document.getElementById('datoseliminadosModal');
+
+  // Check if the modal element exists
+  if (modalElement) {
+    const datosEliminadosModal = new Modal(modalElement);
+    datosEliminadosModal.show();
+  } else {
+    console.error('Modal element with ID "datoseliminadosModal" not found.');
+  }
+}
+limpiarFormulario(){
+  this.destinatarioForm.reset();
+}
+
+
+
+setValoresStore(
+  form: FormGroup,
+  campo: string,
+  metodoNombre: keyof Solicitud260702Store
+): void {
+  const VALOR = form.get(campo)?.value;
+  (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+}
+
+
     ngOnDestroy(): void {
       this.destroyed$.next(true);
       this.destroyed$.complete();

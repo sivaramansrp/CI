@@ -49,20 +49,20 @@ export interface TramitesAsociados{
     fechaaltaderegistro: number;
 }
 
-export interface CrossListLable {
-    /** Texto que aparece en la parte izquierda de la etiqueta. */
-    tituluDeLaIzquierda: string;
+// export interface CrossListLable {
+//     /** Texto que aparece en la parte izquierda de la etiqueta. */
+//     tituluDeLaIzquierda: string;
   
-    /** Texto que aparece en la parte derecha de la etiqueta. */
-    derecha: string;
-  }
-  export interface CrossList {
-    /** Etiquetas asociadas a la lista cruzada. */
-    label: CrossListLable;
+//     /** Texto que aparece en la parte derecha de la etiqueta. */
+//     derecha: string;
+//   }
+//   export interface CrossList {
+//     /** Etiquetas asociadas a la lista cruzada. */
+//     label: CrossListLable;
   
-    /** Fechas asociadas con los datos de la lista cruzada. */
-    fechas: string[];
-  }
+//     /** Fechas asociadas con los datos de la lista cruzada. */
+//     fechas: string[];
+//   }
   export const FECHAINICIAL = {
     labelNombre: 'Fecha de fabricación',
     required: true,

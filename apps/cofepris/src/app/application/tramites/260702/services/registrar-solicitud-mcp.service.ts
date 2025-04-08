@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Catalogo, } from '@libs/shared/data-access-user/src';
 import { Observable } from 'rxjs';
 import { TramitesAsociados } from '../models/destinatario.model';
-import { FilaData2 } from '../models/fila-modal';
+import { FilaData2, ListaClave } from '../models/fila-modal';
+import { MercanciaCrossList } from '../models/mercancia.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -54,5 +55,11 @@ export class RegistrarSolicitudMcpService {
   }
  getTipoProductoData(): Observable<Catalogo[]>{
   return this.http.get<Catalogo[]>('./assets/json/260702/tipoproducto.json');
+}
+getListaClaveData(): Observable<ListaClave[]>{
+  return this.http.get<ListaClave[]>('./assets/json/260702/lista-clave.json');
+}
+getMercanciaCrosslistData(): Observable<MercanciaCrossList[]>{
+  return this.http.get<MercanciaCrossList[]>('./assets/json/260702/mercancia-crosslist.json');
 }
 }

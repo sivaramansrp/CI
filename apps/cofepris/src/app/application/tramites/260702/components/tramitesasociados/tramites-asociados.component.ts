@@ -73,10 +73,10 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
   //   this.router.navigate(['/registro/pagodederechos']); // Absolute navigation to the route
   // }
   
-  // navigateToPagoDeDerechos() {
-  //   this.isModalVisible = false; // Hide the modal
-  //   this.router.navigate(['/registro/pagodederechos']); // Use the correct path
-  // }
+  navigateToPagoDeDerechos() {
+    this.isModalVisible = false; // Hide the modal
+    this.router.navigate(['/registro/pagodederechos']); // Use the correct path
+  }
 
  
   showModal(): void {

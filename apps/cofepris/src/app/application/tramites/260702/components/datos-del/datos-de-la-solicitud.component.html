@@ -108,8 +108,7 @@
       [configuracionTabla]="configuracionColumnasoli"
        [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
         [datos]="tableData"
-        (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
-        >
+        (listaDeFilaSeleccionada)="onSelectedRows($event)">
     </app-tabla-dinamica>
     <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
@@ -164,7 +163,7 @@
         <button type="button" class="btn btn-primary ms-2" name="agregarAduana" id="btnagregarAduana" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
       </div>
       <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Datos mercancía</h4>
@@ -272,37 +271,79 @@
               <div class="col-md-12 mt-4">
                 <div class="panel-group ficha-collapse" id="accordion">
                   <div class="panel panel-default">
-                    <div class="panel-heading" (click)="paisProcedencis_colapsable()" tabindex="0">
-                      <h4 class="panel-title">País de procedencia</h4>
+                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                      <h4 class="panel-title">País de origen</h4>
                       <button type="button" class="collpase-button collapsed"></button>
-                    </div> @if(paisProcedencisColapsable){ <div class="panel-collapse collapse in" id="panel-01">
+                    </div>
+                    @if(paisOrigen){
+                    <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
                       <div class="panel-body">
-                        <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas"></crosslist>
+                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
                       </div>
-                    </div> }
+                    </div>
+                    }
                   </div>
                 </div>
               </div>
               <!-- Clave de los lotes -->
-              <div class="col-md-8 mt-3">
-                <div class="col-md-4">
-                  <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+               <div class="row">
+                <div class="col-md-8">
+                  <label class="form-label" for="claveDeLosLotes">Clave de los lotes*:</label>
+                  <input class="form-control"  type="text" formControlName="claveDeLosLotes">
                 </div>
+               </div>
+              <div class="row">
                 <div class="col-md-4">
-                  <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+                  <input-fecha class="form-control"  type="date" [datos]="fechaInicialInput"  class="disabled-input-fecha"></input-fecha>
+                  </div>
+                <div class="col-md-4">
+                  <input-fecha class="form-control" type="date" [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>                
                 </div>
               </div>
               <div class="col-md-12 mt-3">
                 <label class="form-label" for="">Lista Claves de los lotes*:</label>
               </div>
               <div class="col-md-8 mt-3 justify-content-centre align-items-centre">
-                <!-- <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla"></app-tabla-dinamica> -->
+                <app-tabla-dinamica 
+                [tipoSeleccionTabla]="tipoSeleccionsoliMercancias" 
+                [configuracionTabla]="listaClave"
+                 [datos]="listaClaveTabla"
+                 (listaDeFilaSeleccionada)="onSelectedRows($event)"></app-tabla-dinamica>
               </div>
               <div class="col-md-12 d-flex justify-content-end align-items-end">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-default btn-space"> Modificar </button>
-                  <button class="btn btn-default ms-3" type="button"> Eliminar </button>
-                  <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+                    <button type="button" class="btn btn-default btn-space">Modificar</button>          
+                  <button class="btn btn-default ms-3" type="button"  (click)="onEliminar()"> Eliminar </button>
+                  <button type="button" class="btn btn-primary ms-3" (click)="onAgregarListaClave()"> Agregar </button>
+                </div>
+              </div>
+              <div class="modal fade" id="seleccionaRegistroModal" tabindex="-1" aria-labelledby="seleccionaRegistroModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">    
+                    <div class="modal-body">
+                      <p>Selecciona un registro</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal fade" id="confirmarEliminarModal" tabindex="-1" aria-labelledby="confirmarEliminarModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="confirmarEliminarModalLabel">Confirmación</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="button" class="btn btn-danger" (click)="confirmarEliminar()">Aceptar</button>
+                    </div>
+                  </div>
                 </div>
               </div>
               <!-- udospecifico crosslist -->
@@ -323,14 +364,12 @@
               <div class="col-md-12 d-flex justify-content-end align-items-end">
                 <div class="btn-group">
                   <button class="btn btn-default ms-3" type="button">Cancelar</button>
-                  <button type="button" class="btn btn-primary ms-3">Modificar </button>
+                  <button type="button" class="btn btn-primary ms-3" >Modificar </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-</form>
 </div>
 
 <div *ngIf="showClavaScianForm">

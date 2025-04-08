@@ -15,15 +15,14 @@ import { RegistrarSolicitudMCPModule } from '../../registrar-solicitud-mcp.modul
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { RegistrarSolicitudMcpService } from '../../services/registrar-solicitud-mcp.service';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { FilaData, FilaData2 } from '../../models/fila-modal';
+import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
-import { Modal } from 'bootstrap';
 import { TEXTOS } from '../../constants/constantes.enum';
-import { CrossList,FECHAINICIAL,FECHAFINAL } from '../../models/destinatario.model';
-import { CrossListLable } from '../../models/destinatario.model';
+import { FECHAINICIAL,FECHAFINAL } from '../../models/destinatario.model';
 import { CrosslistComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { InputFechaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
-
+import { Modal } from 'bootstrap';
+import { MercanciaCrossList,CrossList,CrossListLable } from '../../models/mercancia.model';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -34,6 +33,7 @@ import { InputFechaComponent } from '../../../../../../../../../libs/shared/data
 export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   dataDeLaSolicitudForm!: FormGroup;
   TEXTOS = TEXTOS;
+  
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   clavaScianForm!: FormGroup;
   public showClavaScianForm: boolean = false; 
@@ -41,6 +41,7 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   hercelosSeleccionados!: string;
   selectedMercanciasDatos: FilaData2[] = [];
   public mercanciasConfiguracionTabla: FilaData2[] = [];
+  public listaClaveTabla: ListaClave[] = [];
   paisOrigen = false;
   paisOrigenCrossList: CrossList = {} as CrossList;
   paisProcedencisCrossList: CrossList = {} as CrossList;
@@ -48,11 +49,15 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
   @ViewChild('modalAlerta') modalElement!: ElementRef;
   fechaInicialInput: InputFecha = FECHAINICIAL;
   fechaFinalInput: InputFecha = FECHAFINAL;
+  editingRowIndex: number | null = null;
+//   fechaInicialInput = { habilitado: true }; // Example InputFecha object
+// fechaFinalInput = { habilitado: true }; 
   
 usoEspecifico = false;
 usoEspecificoCrossList: CrossList = {} as CrossList;
   
-
+fechaInicialSeleccionada: string = '';
+fechaFinalSeleccionada: string = '';
   opcionDeBotonDeRadio = [
     { label: 'Prórroga', value: 'prorroga' },
     { label: 'Modificación', value: 'modificacion' },
@@ -116,6 +121,7 @@ hacerlosRadioOptions = [
   { label: 'No', value: 'no' },
   { label: 'Sí', value: 'si' },
 ];
+  selectedRow: any;
 
   constructor(private fb: FormBuilder, private registrarsolicitudmcp: RegistrarSolicitudMcpService, private cdr: ChangeDetectorRef) {}
 
@@ -206,13 +212,41 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
     orden: 14,
   },
 ];
+public listaClave: ConfiguracionColumna<ListaClave>[] = [
+  {
+    encabezado: 'Clave de los lotes',
+    clave: (fila) => fila.claveDeLosLotes,
+    orden: 1,
+  },
+  {
+    encabezado: 'Fecha de fabricación',
+    clave: (fila) => fila.fechaDeFabricacion,
+    orden: 2,
+  },
+  {
+    encabezado: 'Fecha de caducidad',
+    clave: (fila) => fila.fechaDeCaducidad,
+    orden: 3,
+  },
+];
 
   ngOnInit(): void {
     this.dataDeLaSolicitudForm = this.fb.group({
-      datosDelTramiteRealizar: this.fb.group({
-        justification: [''],
-      }),
+      claveDeLosLotes: ['', Validators.required],
+      fechaDeFabricacion: ['', Validators.required],
+      fechaDeCaducidad: ['', Validators.required],
     });
+   
+    // this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.valueChanges.subscribe((value) => {
+    //   console.log('Fecha de Fabricación changed:', value);
+    //   this.fechaInicialSeleccionada = value; // Store the selected date
+    // });
+  
+    // // Subscribe to value changes for fechaDeCaducidad
+    // this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.valueChanges.subscribe((value) => {
+    //   console.log('Fecha de Caducidad changed:', value);
+    //   this.fechaFinalSeleccionada = value; // Store the selected date
+    // });
     this.getEstadosData();
     this.getClaveScianData();
     this.createclaveScianForm();
@@ -223,6 +257,8 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
     this.getEspificarData();
     this.getClasificacionDelProductoData();
     this.getTipoProductoData();
+    this.getListaClaveData();
+    this.getMercanciaCrosslistData();
   }
   createclaveScianForm(){
     this.clavaScianForm = this.fb.group({
@@ -232,6 +268,36 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
       }),
   });
   }
+  getMercanciaCrosslistData(): void {
+    this.registrarsolicitudmcp
+      .getMercanciaCrosslistData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe({
+        next: (respuesta: MercanciaCrossList[]) => {
+          console.log('API Response:', respuesta); // Log the response
+          if (respuesta.length > 0) {
+            const firstItem = respuesta[0];
+            this.paisOrigenCrossList = firstItem.paisOrigenCrossList;
+            this.paisProcedencisCrossList = firstItem.paisProcedencisCrossList;
+            this.usoEspecificoCrossList = firstItem.usoEspecificoCrossList;
+          } else {
+            console.warn('Empty response received for MercanciaCrosslistData');
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching MercanciaCrosslistData:', err);
+        },
+      });
+  }
+  // onFechaDeFabricacionChange(event: string): void {
+  //   this.fechaInicialSeleccionada = event; // Update the selected date
+  //   this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.setValue(event);
+  // }
+  
+  // onFechaDeCaducidadChange(event: string): void {
+  //   this.fechaFinalSeleccionada = event; // Update the selected date
+  //   this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.setValue(event);
+  // }
   paisOrigenColapsable(): void {
     this.paisOrigen = !this.paisOrigen;
   }
@@ -312,6 +378,13 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
       this.tipoProductoData.catalogos = data as Catalogo[];
     });
   }
+  getListaClaveData(){
+    this.registrarsolicitudmcp.getListaClaveData()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.listaClaveTabla = data as unknown as ListaClave[];
+    });
+  }
 
   seleccionarEstablecimiento(): void {
     if (this.modalElement) {
@@ -319,6 +392,7 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
       MODAL_INSTANCE.show();
     }
   }
+  
   
   onSubmit() {
     const formData = { ...this.clavaScianForm.value };
@@ -339,11 +413,67 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
       this.clavaScianForm.reset(); 
     
   }
-  onSelectedRowsChange(selectedRows: FilaData[]): void {
-    this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
-    // this.esFormularioVisible = false;
+  
+  // onSelectedRowsChange(selectedRows: FilaData[]): void {
+  //   this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
+  //   // this.esFormularioVisible = false;
+  // }
+  // onSelectedRowsChanges(selectedRows: ListaClave[]): void {
+  //   this.selectedRows = new Set(selectedRows.map((row) => row.id)); // Update selected rows
+  //   // this.esFormularioVisible = false;
+  // }
+  onSelectedRows(selectedRows: FilaData[] | ListaClave[]): void {
+    console.log('Selected rows:', selectedRows);
+  
+    if (selectedRows.length > 0 && 'claveDeLosLotes' in selectedRows[0]) {
+      // Handle ListaClave[]
+      this.selectedRows = new Set((selectedRows as ListaClave[]).map((row) => Number(row.claveDeLosLotes)));
+    } else if (selectedRows.length > 0 && 'id' in selectedRows[0]) {
+      // Handle FilaData[]
+      this.selectedRows = new Set((selectedRows as FilaData[]).map((row) => row.id));
+    } else {
+      console.error('Selected rows do not contain expected properties.');
+    }
+  
+    console.log('Updated selectedRows:', Array.from(this.selectedRows));
+  }
+  onEliminar(){
+    if (!this.selectedRows || this.selectedRows.size === 0) {
+      // Trigger the modal if no row is selected
+      const modalElement = document.getElementById('seleccionaRegistroModal');
+      if (modalElement) {
+        const modal = new Modal(modalElement);
+        modal.show();
+      }
+    } else {
+      // Show the confirmation modal if rows are selected
+    const modalElement = document.getElementById('confirmarEliminarModal');
+    if (modalElement) {
+      const modal = new Modal(modalElement);
+      modal.show();
+    }
+    }
   }
   
+ 
+  confirmarEliminar() {
+    // Delete the selected rows
+    this.listaClaveTabla = this.listaClaveTabla.filter(
+      (row) => !this.selectedRows.has(Number(row.claveDeLosLotes))
+    );
+      this.selectedRows.clear(); // Clear the selection after deletion
+  
+    // Close the confirmation modal
+    const modalElement = document.getElementById('confirmarEliminarModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement);
+      modal?.hide();
+    }
+    console.log('Deleting selected rows:', Array.from(this.selectedRows));
+    console.log('Before deletion, listaClaveTabla:', this.listaClaveTabla);
+    console.log('After deletion, listaClaveTabla:', this.listaClaveTabla);
+    console.log("Updated Table Data:", this.tableData);
+  }
   onLimpiar() {
     this.clavaScianForm.reset();
   }
@@ -366,7 +496,72 @@ mercanciasDatos : ConfiguracionColumna<FilaData2>[] = [
      MODAL_INSTANCE.show();
    }
  }
+ onAgregarListaClave() {
+  console.log('onAgregarListaClave triggered');
+  
+  console.log('onAgregarListaClave triggered');
+  console.log('Form Value:', this.dataDeLaSolicitudForm.value);
+
+  const claveDeLosLotes = this.dataDeLaSolicitudForm.get('claveDeLosLotes')?.value || '';
+  const fechaDeFabricacion = this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value || '';
+  const fechaDeCaducidad = this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value || '';
+
+  console.log('Form Value:', this.dataDeLaSolicitudForm.value);
+  console.log('claveDeLosLotes:', claveDeLosLotes);
+  console.log('fechaDeFabricacion:', fechaDeFabricacion);
+  console.log('fechaDeCaducidad:', fechaDeCaducidad);
+
+  // Validate form values
+  if (!claveDeLosLotes || !fechaDeFabricacion || !fechaDeCaducidad) {
+    console.error('One or more fields are empty. Please fill out all fields.');
+    return;
+  }
+
+  if (this.editingRowIndex !== null) {
+    this.listaClaveTabla[this.editingRowIndex] = {
+      ...this.listaClaveTabla[this.editingRowIndex],
+      claveDeLosLotes,
+      fechaDeFabricacion,
+      fechaDeCaducidad,
+    };
+    this.editingRowIndex = null;
+  } else {
+    const newId = this.listaClaveTabla.length > 0 
+      ? Math.max(...this.listaClaveTabla.map(row => row.id)) + 1 
+      : 1;
+
+    const newRow: ListaClave = {
+      id: newId,
+      claveDeLosLotes,
+      fechaDeFabricacion,
+      fechaDeCaducidad,
+    };
+
+    this.listaClaveTabla.push(newRow);
+  }
+
+  this.dataDeLaSolicitudForm.reset();
+
+  console.log('Updated listaClaveTabla:', this.listaClaveTabla);
+
+}
+
  
+// onModificar(rowIndex: number): void {
+//   // const row = this.listaClaveTabla[rowIndex];
+//   // this.editingRowIndex = rowIndex; // Track the row being edited
+
+//   // // Populate the form with the row's data
+//   // this.dataDeLaSolicitudForm.patchValue({
+//   //   claveDeLosLotes: row.claveDeLosLotes || '',
+//   //   fechaDeFabricacion: row.fechaDeFabricacion || '',
+//   //   fechaDeCaducidad: row.fechaDeCaducidad || '',
+//   // });
+//   // console.log('Form Value:', this.dataDeLaSolicitudForm.value);
+//   // console.log('listaClaveTabla Before:', this.listaClaveTabla);
+//   // console.log('Editing row:', row);
+// }
+
   ngOnDestroy(): void {
     this.destroyed$.next(true);
     this.destroyed$.complete();
