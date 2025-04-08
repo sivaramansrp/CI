@@ -256,13 +256,6 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
 
-  
-/** 
- * Expresión regular para validar que solo se ingresen números en el campo NICO. 
- * Permite solo dígitos del 0 al 9. 
- */
-export const REGEX_NICO_NUMEROS = '^[0-9]*$';
-
 /** 
  * Expresión regular para validar números en formato USD. 
  * Permite dígitos y el punto decimal. 

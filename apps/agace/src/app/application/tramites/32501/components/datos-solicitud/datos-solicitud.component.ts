@@ -14,9 +14,9 @@ import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
-import { REGEX_NICO_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_NUMEROS_USD } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
+import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501State } from '../../estados/solicitud32501.store';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
@@ -191,7 +191,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         this.solicitud32501State.nico,
         [
           Validators.required,
-          Validators.pattern(REGEX_NICO_NUMEROS),
+          Validators.pattern(REGEX_SOLO_NUMEROS),
           Validators.maxLength(2),
           Validators.minLength(2),
         ],
@@ -242,7 +242,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       numeroInterior: [this.solicitud32501State.numeroInterior,[Validators.maxLength(15)]],
       codigoPostal: [
         this.solicitud32501State.codigoPostal,
-        [Validators.required, Validators.pattern(REGEX_NICO_NUMEROS),Validators.maxLength(5)],
+        [Validators.required, Validators.pattern(REGEX_SOLO_NUMEROS),Validators.maxLength(5)],
       ],
     });
 
