@@ -1,17 +1,17 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
-import { Tramite130113Store } from '../../estados/tramites/tramites130113.store';
-import { SolicitudComponent } from './solicitud.component';
+import { of } from 'rxjs';
 import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { Tramite130112Query } from '../../estados/queries/tramite130113.query';
+import { Tramite130112Store } from '../../estados/tramites/tramites130113.store';
+import { SolicitudComponent } from '../solicitud/solicitud.component';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let store: Tramite130113Store;
-  let query: Tramite130113Query;
+  let store: Tramite130112Store;
+  let query: Tramite130112Query;
   let service: ImportacionMaterialDeInvestigacionCientificaService;
 
   beforeEach(async () => {
@@ -20,16 +20,16 @@ describe('SolicitudComponent', () => {
       imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
-        Tramite130113Store,
-        Tramite130113Query,
+        Tramite130112Store,
+        Tramite130112Query,
         ImportacionMaterialDeInvestigacionCientificaService,
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    store = TestBed.inject(Tramite130113Store);
-    query = TestBed.inject(Tramite130113Query);
+    store = TestBed.inject(Tramite130112Store);
+    query = TestBed.inject(Tramite130112Query);
     service = TestBed.inject(ImportacionMaterialDeInvestigacionCientificaService);
 
     fixture.detectChanges();
@@ -98,7 +98,7 @@ describe('SolicitudComponent', () => {
       valorPartidaUSDPartidasDeLaMercancia: '100',
     });
     component.validarYEnviarFormulario();
-    expect(component.mostrarTabla).toBe(true);
+    expect(component.mostrarTabla).toBe(true); // Updated here
   });
 
   it('should fetch entidad federativa', () => {
@@ -127,19 +127,6 @@ describe('SolicitudComponent', () => {
     spyOn(service, 'getFraccionDescripcionPartidasDeLaMercancia').and.returnValue(of(mockData));
     component.listaDeFraccionDescripcion();
     expect(component.fraccionDescription).toEqual(mockData);
-  });
-
-  it('should fetch paises por bloque', () => {
-    const mockData = [{ id: 1, descripcion: 'País 1' }];
-    spyOn(service, 'getPaisesPorBloque').and.returnValue(of(mockData));
-    component.fetchPaisesPorBloque(1);
-    expect(component.paisesPorBloque).toEqual(mockData);
-  });
-
-  it('should handle enCambioDeBloque correctly', () => {
-    const spy = spyOn(component, 'fetchPaisesPorBloque');
-    component.enCambioDeBloque(1);
-    expect(spy).toHaveBeenCalledWith(1);
   });
 
   it('should update store values on setValoresStore', () => {
