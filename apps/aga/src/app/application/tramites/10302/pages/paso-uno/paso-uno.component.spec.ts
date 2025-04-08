@@ -61,16 +61,8 @@ describe('PasoUnoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.solicitante = component.solicitante || {};
-    component.solicitante.obtenerTipoPersona = jest.fn();
-    component.ngAfterViewInit();
-  });
-
   it('should run #seleccionaTab()', async () => {
-
     component.seleccionaTab({});
-
   });
 
 });

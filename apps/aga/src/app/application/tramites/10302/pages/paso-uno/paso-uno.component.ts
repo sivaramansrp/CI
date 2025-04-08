@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
@@ -43,6 +43,7 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
+  constructor(private cdr: ChangeDetectorRef) {}
   /**
    * Método que se ejecuta después de que la vista ha sido inicializada.
    */
@@ -50,6 +51,7 @@ export class PasoUnoComponent implements AfterViewInit {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    this.cdr.detectChanges();
   }
 
   /**

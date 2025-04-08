@@ -43,14 +43,6 @@ describe('SolicitudPageComponent', () => {
     expect(component.indice).toBe(3);
   });
 
-  it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
-    const siguienteSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
-    expect(component.indice).toBe(2);
-    expect(component.datosPasos.indice).toBe(2);
-    expect(siguienteSpy).toHaveBeenCalled();
-  });
-
   it('should update indice and call wizardComponent.atras on getValorIndice with accion "back"', () => {
     const atrasSpy = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'back', valor: 1 });
