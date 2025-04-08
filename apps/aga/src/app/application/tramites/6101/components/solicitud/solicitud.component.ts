@@ -16,20 +16,50 @@ import { Subject } from 'rxjs';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+/**
+ * Componente de Angular para el formulario de solicitud.
+ * Se encarga de inicializar el formulario, sus valores y
+ * de gestionar las interacciones del usuario con los campos del formulario.
+ */
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
+/**
+ * Componente de Angular para el formulario de solicitud.
+ * Se encarga de inicializar el formulario, sus valores y
+ * de gestionar las interacciones del usuario con los campos del formulario.
+ */
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+  /** Formulario reactivo principal */
   solicitudForm!: FormGroup;
+
+  /** Opciones para el catálogo de aduanas auxiliares */
   opcionAduanaAux: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Opciones para el catálogo de juntas técnicas derivadas */
   opcionJuntaTecnicaDerivada: CatalogosSelect = {} as CatalogosSelect;
+
+  /** Sujeto para manejar la destrucción del componente y cancelar suscripciones */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Acción booleana usada posiblemente para el control de un sello u otra lógica */
   actionBean = {
     sello: false,
   };
-  solicitud6101State : Solicitud6101State = {} as Solicitud6101State;
+
+  /** Estado actual de la solicitud */
+  solicitud6101State: Solicitud6101State = {} as Solicitud6101State;
+
+  /**
+   * Constructor con inyecciones de dependencias
+   * @param fb - FormBuilder para crear el formulario
+   * @param solicitudService - Servicio para obtener catálogos
+   * @param solicitud6101Store - Store para manejar estado
+   * @param solicitud6101Query - Query para seleccionar datos del estado
+   */
   constructor(
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
@@ -39,6 +69,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.conseguirSolicitudCatologo();
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario y se suscribe a cambios en el estado.
+   */
   ngOnInit(): void {
     this.solicitudForm = this.fb.group({
       aduanaAux: [this.solicitud6101State.aduanaAux, [Validators.required]],
@@ -69,10 +103,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       map((respuesta: Solicitud6101State) => {
         this.solicitud6101State = respuesta;
         this.solicitudForm.patchValue(respuesta);
-    })
+      })
     ).subscribe();
   }
 
+  /**
+   * Método que obtiene los catálogos desde el servicio
+   */
   conseguirSolicitudCatologo(): void {
     this.solicitudService
       .conseguirSolicitudCatologo()
@@ -85,30 +122,45 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Maneja la selección de aduana
+   * @param evento - Catálogo seleccionado
+   */
   seleccionarAduana(evento: Catalogo): void {
     this.solicitud6101Store.actualizarAduanaAux(evento.id);
   }
 
+  /**
+   * Maneja la selección de junta técnica derivada
+   * @param evento - Catálogo seleccionado
+   */
   seleccionarJuntaTecnicaDerivada(evento: Catalogo): void {
     this.solicitud6101Store.actualizarJuntaTecnicaDerivada(evento.id);
   }
 
+  /**
+   * Maneja la entrada del número de pedimento y filtra caracteres no numéricos
+   * @param evento - Evento del input
+   */
   onNumeroPedimento(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     const VALOR_DESINFECTADO = ELEMENTO_DE_ENTRADA.value.replace(REGEX_NUMEROS, '');
     this.solicitud6101Store.actualizarNumeroPedimento(VALOR_DESINFECTADO);
   }
 
+  /** Actualiza el nombre comercial de la mercancía */
   onNombreComercialMercancia(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarNombreComercialMercancia(ELEMENTO_DE_ENTRADA.value);
   }
 
+  /** Actualiza la descripción detallada de la mercancía */
   onDescDetalladaMercancia(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarDescDetalladaMercancia(ELEMENTO_DE_ENTRADA.value);
   }
 
+  /** Procesa la fracción I y actualiza sus partes */
   onFraccionI(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionI(ELEMENTO_DE_ENTRADA.value);
@@ -119,6 +171,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.solicitud6101Store.actualizarSubdivision(FRACCION.subdivision);
   }
 
+  /** Procesa la fracción II y actualiza sus partes */
   onFraccionII(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionII(ELEMENTO_DE_ENTRADA.value);
@@ -129,6 +182,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.solicitud6101Store.actualizarSubdivisionII(FRACCION.subdivision);
   }
 
+  /** Procesa la fracción III y actualiza sus partes */
   onFraccionIII(evento : Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarFraccionIII(ELEMENTO_DE_ENTRADA.value);
@@ -139,11 +193,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.solicitud6101Store.actualizarSubdivisionIII(FRACCION.subdivision);
   }    
 
+  /** Actualiza el valor del checkbox de manifiestos seleccionados */
   onManifiesto(evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     this.solicitud6101Store.actualizarManifiestosSeleccionados(ELEMENTO_DE_ENTRADA.checked);
   }
 
+  /**
+   * Método para dividir una fracción arancelaria en sus componentes
+   * @param str - Cadena de fracción
+   * @returns Objeto con capitulo, partida, subpartida y subdivisión
+   */
   // eslint-disable-next-line class-methods-use-this
   divideFraccion(str: string): DivideFraccion {
     const LONGITUDVALUE = str.length;
@@ -167,6 +227,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     };
   }
 
+  /**
+   * Método de ciclo de vida que se ejecuta al destruir el componente
+   * Se encarga de completar el subject y cancelar las suscripciones activas
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
