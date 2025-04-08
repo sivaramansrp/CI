@@ -10,7 +10,6 @@ import { takeUntil } from 'rxjs/operators';
 
 /**
  * Componente que representa el segundo paso del proceso de solicitud.
-
  */
 @Component({
   selector: 'app-paso-dos',
