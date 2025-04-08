@@ -144,5 +144,30 @@
             "id": 1,
             "descripcion": "Plastico"
         }
+    ],
+
+    "PrimasRelacionadas": [
+        {
+            "encabezadoDeTabla": [
+                "Id materia prima",
+                "Nombre materia prima",
+                "Cantidad",
+                "Cantidad letra",
+                "Unidad de medida",
+                "Fracción"
+            ],
+            "cuerpoTabla": [
+                {
+                    "tbodyData": [
+                    "18119670",
+                    "Plastico",
+                    "1000",
+                    "MIL",
+                    "Tonelada",
+                    "39251001"
+                    ]
+                }
+            ]
+        }
     ]
 }

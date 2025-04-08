@@ -34,6 +34,7 @@ export interface SolicitudJson {
     table: Tabla[];
     radioOptions: RadioOpcion[];
     nombre: Nombre[];
+    PrimasRelacionadas: Tabla[];
 }
 
 
