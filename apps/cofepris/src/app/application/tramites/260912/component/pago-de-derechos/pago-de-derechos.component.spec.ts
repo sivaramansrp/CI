@@ -28,7 +28,7 @@ describe('PagoDeDerechosComponent', () => {
         fecPago: '',
         impPago: '',
         btonDeRadio: '',
-        justificación: '',
+        justificacion: '',
         rfcDel: '',
         denominacion: '',
         correo: '',

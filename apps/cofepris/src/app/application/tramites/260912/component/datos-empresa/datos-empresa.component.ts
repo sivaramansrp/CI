@@ -79,10 +79,10 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
     this.Tramite260912Query.btonDeRadio$;
 
   /**
-   * Observable para la justificación.
+   * Observable para la justificacion.
    */
-  justificación$: Observable<string | null> =
-    this.Tramite260912Query.justificación$;
+  justificacion$: Observable<string | null> =
+    this.Tramite260912Query.justificacion$;
 
   /**
    * Observable para el RFC del establecimiento.
@@ -132,9 +132,9 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.justificación$.pipe(takeUntil(this.destroyed$)).subscribe((justificación) => {
-      if (justificación) {
-        this.form.get('justificación')?.setValue(justificación);
+    this.justificacion$.pipe(takeUntil(this.destroyed$)).subscribe((justificacion) => {
+      if (justificacion) {
+        this.form.get('justificacion')?.setValue(justificacion);
       }
     });
 
@@ -172,7 +172,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   crearFormulario(): void {
     this.form = this.fb.group({
       btonDeRadio: ['', [Validators.required]],
-      justificación: ['', [Validators.required]],
+      justificacion: ['', [Validators.required]],
     });
 
     this.datosDelEstablecimiento = this.fb.group({
@@ -208,8 +208,8 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    * Método para obtener el valor de la justificación.
    */
   getJustificacion(): void {
-    const JUSTIFICACION = this.form.get('justificación')?.value;
-    this.Tramite260912Store.setJustificación(JUSTIFICACION);
+    const JUSTIFICACION = this.form.get('justificacion')?.value;
+    this.Tramite260912Store.setJustificacion(JUSTIFICACION);
   }
 
   /**

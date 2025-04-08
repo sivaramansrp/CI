@@ -78,7 +78,7 @@
               type="date"
               name="fecPago"
               formControlName="fecPago"
-              (change)="setValoresStore(pagoDeDerechosForm,'fecPago','setFecPago')"
+              (change)="setValoresStore(pagoDeDerechosForm,'fecPago','setFecPago'); validarFechaFutura('fecPago')"
             />
             <div *ngIf="esInvalido('fecPago')" class="text-danger">
               <small *ngIf="pagoDeDerechosForm.controls['fecPago'].hasError('required')">Fecha de pago es obligatoria.</small>
@@ -95,7 +95,7 @@
                 type="text"
                 name="impPago"
                 formControlName="impPago"
-                (change)="setValoresStore(pagoDeDerechosForm,'impPago','setImpPago')"
+                (change)="setValoresStore(pagoDeDerechosForm,'impPago','setImpPago'); validarSinComas('impPago')"
               />
               <div *ngIf="esInvalido('impPago')" class="text-danger">
                 <small *ngIf="pagoDeDerechosForm.controls['impPago'].hasError('maxlength')">Máximo 16 caracteres.</small>

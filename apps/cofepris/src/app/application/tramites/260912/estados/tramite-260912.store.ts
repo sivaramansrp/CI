@@ -15,7 +15,7 @@ export interface Tramites260912State {
   fecPago: string;
   impPago: string;
   btonDeRadio: string;
-  justificación: string;
+  justificacion: string;
   rfcDel: string;
   denominacion: string;
   correo: string;
@@ -47,7 +47,7 @@ export function createInitialState(): Tramites260912State {
     fecPago: '',
     impPago: '',
     btonDeRadio: '',
-    justificación: '',
+    justificacion: '',
     rfcDel: '',
     denominacion: '',
     correo: '',
@@ -127,10 +127,10 @@ export class Tramite260912Store extends Store<Tramites260912State> {
     }));
   }
 
-  public setJustificación(justificación: string): void {
+  public setJustificacion(justificacion: string): void {
     this.update((state) => ({
       ...state,
-      justificación,
+      justificacion,
     }));
   }
 

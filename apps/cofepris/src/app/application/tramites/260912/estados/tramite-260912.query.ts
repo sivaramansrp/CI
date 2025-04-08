@@ -6,7 +6,7 @@ import { Query } from '@datorama/akita';
 export class Tramite260912Query extends Query<Tramites260912State> {
 
   btonDeRadio$ = this.select((state) => state.btonDeRadio);
-  justificación$ = this.select((state) => state.justificación);
+  justificacion$ = this.select((state) => state.justificacion);
   rfcDel$ = this.select((state) => state.rfcDel);
   denominacion$ = this.select((state) => state.denominacion);
   correo$ = this.select((state) => state.correo);
