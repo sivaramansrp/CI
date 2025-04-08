@@ -4,7 +4,8 @@ import {
   CatalogosService,
   TEXTOS,
 } from '@libs/shared/data-access-user/src';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 /**
  * Componente que representa el segundo paso del proceso de solicitud.
@@ -15,7 +16,7 @@ import { Component, Inject, OnInit } from '@angular/core';
   standalone: false,
   templateUrl: './paso-dos.component.html',
 })
-export class PasoDosComponent implements OnInit {
+export class PasoDosComponent implements OnInit, OnDestroy {
   /** Textos usados en el componente, provenientes de una fuente centralizada. */
   TEXTOS = TEXTOS;
 
@@ -28,8 +29,8 @@ export class PasoDosComponent implements OnInit {
   /** Catálogo completo de documentos disponibles. */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Lista de documentos seleccionados por el usuario. */
-  documentosSeleccionados: Catalogo[] = [];
+  /** Suscripción para manejar la respuesta del servicio. */
+  private subscription: Subscription | null = null;
 
   /**
    * Constructor del componente.
@@ -45,34 +46,10 @@ export class PasoDosComponent implements OnInit {
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    *
-   * Inicializa la lista de tipos de documentos disponibles y define algunos
-   * documentos seleccionados por defecto.
+   * Inicializa la lista de tipos de documentos disponibles.
    */
   ngOnInit(): void {
-    this.getTiposDocumentos();
-
-    // Documentos seleccionados por defecto al iniciar el componente
-    this.documentosSeleccionados = [
-      {
-        id: 1,
-        descripcion: 'Documentos que amparen el valor de la mercancía',
-      },
-      {
-        id: 2,
-        descripcion:
-          'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
-      },
-    ];
-  }
-
-  /**
-   * Obtiene el catálogo de tipos de documentos disponibles para el trámite.
-   *
-   * Este método realiza una solicitud al servicio de catálogos para cargar la lista
-   * de documentos disponibles que el usuario podrá seleccionar.
-   */
-  getTiposDocumentos(): void {
-    this.catalogosServices
+    this.subscription = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
         next: (resp): void => {
@@ -85,5 +62,16 @@ export class PasoDosComponent implements OnInit {
           // Manejo de errores, actualmente vacío pero puede ser implementado
         },
       });
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   *
+   * Libera la suscripción activa para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
