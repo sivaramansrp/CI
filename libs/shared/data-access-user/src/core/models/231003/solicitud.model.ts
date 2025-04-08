@@ -41,6 +41,9 @@ export interface SolicitudJson {
     residuo: ImmexItem[];
     tipoNombre: ImmexItem[];
     descripcion: ImmexItem[];
+    creti: ImmexItem[];
+    estadoFisico: ImmexItem[];
+    tipoContenedor: ImmexItem[];
     clasificacionRadioOptions: RadioOpcion[];
 }
 

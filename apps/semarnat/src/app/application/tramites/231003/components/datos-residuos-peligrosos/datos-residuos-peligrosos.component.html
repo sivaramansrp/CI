@@ -152,8 +152,31 @@
         </div>
         <div class="row mb-3">
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]='descripcion' [label]="'Descripción*:'"
-                    [required]="true"></app-catalogo-select>
+            <app-catalogo-select [catalogo]='descripcion' [label]="'Descripción*:'"
+                [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <app-catalogo-select [catalogo]='creti' [label]="'CRETI*:'" [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <app-catalogo-select [catalogo]='estadoFisico' [label]="'Estado físico*:'" [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+            <app-catalogo-select [catalogo]='tipoContenedor' [label]="'Tipo de Contenedor*:'" [required]="true"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group mb-3">
+                    <label for="capacidad" class="form-label">Capacidad*:</label>
+                    <input type="text" class="form-control" id="capacidad">
+                </div>
             </div>
         </div>
     </div>

@@ -31,6 +31,10 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   residuo!: Catalogo[];
   tipoNombre!: Catalogo[];
   descripcion!: Catalogo[];
+  creti!: Catalogo[];
+  estadoFisico!: Catalogo[];
+  tipoContenedor!: Catalogo[];
+
 
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
   clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES.clasificacionRadioOptions;
@@ -45,5 +49,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.residuo = RADIO_OPCIONES.residuo;
     this.tipoNombre = RADIO_OPCIONES.tipoNombre;
     this.descripcion = RADIO_OPCIONES.descripcion;
+    this.creti = RADIO_OPCIONES.creti;
+    this.estadoFisico = RADIO_OPCIONES.estadoFisico;
+    this.tipoContenedor = RADIO_OPCIONES.tipoContenedor;
   }
 }

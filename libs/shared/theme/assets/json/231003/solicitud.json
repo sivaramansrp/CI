@@ -451,5 +451,127 @@
             "id": 18,
             "descripcion": "2,4-toluendiamina"
         }
+    ],
+    "creti": [
+        {
+            "id": 1,
+            "descripcion": "Corrosivo Reactivo"
+        },
+        {
+            "id": 2,
+            "descripcion": "Explosivo"
+        },
+        {
+            "id": 3,
+            "descripcion": "Inflamable"
+        },
+        {
+            "id": 4,
+            "descripcion": "Biológico-Infeccioso"
+        },
+        {
+            "id": 5,
+            "descripcion": "Toxico"
+        },
+        {
+            "id": 6,
+            "descripcion": "Toxico - Ambiental"
+        },
+        {
+            "id": 7,
+            "descripcion": "Toxico - Agudo"
+        },
+        {
+            "id": 8,
+            "descripcion": "Toxico - Crónico"
+        }
+    ],
+    "estadoFisico": [
+        {
+            "id": 1,
+            "descripcion": "Gas"
+        },
+        {
+            "id": 2,
+            "descripcion": "Granulado o polvo"
+        },
+        {
+            "id": 3,
+            "descripcion": "Líquido"
+        },
+        {
+            "id": 4,
+            "descripcion": "Lodoso"
+        },
+        {
+            "id": 5,
+            "descripcion": "Otro (especifique)"
+        },
+        {
+            "id": 6,
+            "descripcion": "Semisólido"
+        },
+        {
+            "id": 7,
+            "descripcion": "Sólido"
+        },
+        {
+            "id": 8,
+            "descripcion": "Viscoso o pastoso"
+        }
+    ],
+    "tipoContenedor": [
+        {
+            "id": 1,
+            "descripcion": "Tambor metálico"
+        },
+        {
+            "id": 2,
+            "descripcion": "Barril de madera"
+        },
+        {
+            "id": 3,
+            "descripcion": "Bidón (capacidad aproximada de 20 1)"
+        },
+        {
+            "id": 4,
+            "descripcion": "Caja Bolsa"
+        },
+        {
+            "id": 5,
+            "descripcion": "Empaque compuesto"
+        },
+        {
+            "id": 6,
+            "descripcion": "Recipiente a presión"
+        },
+        {
+            "id": 7,
+            "descripcion": "A granel"
+        },
+        {
+            "id": 8,
+            "descripcion": "Otro (especifique)"
+        },
+        {
+            "id": 9,
+            "descripcion": "Barril de plástico"
+        },
+        {
+            "id": 10,
+            "descripcion": "Bidón"
+        },
+        {
+            "id": 11,
+            "descripcion": "Bolsa (Especificar)"
+        },
+        {
+            "id": 12,
+            "descripcion": "Contenedor cisterna"
+        },
+        {
+            "id": 13,
+            "descripcion": "Tambo de plástico"
+        }
     ]
 }
