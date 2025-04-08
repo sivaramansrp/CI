@@ -291,7 +291,7 @@ export class PersonaFisicaExtranjeraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite120201.
+   * Establece los valores en el store de tramite40201.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.

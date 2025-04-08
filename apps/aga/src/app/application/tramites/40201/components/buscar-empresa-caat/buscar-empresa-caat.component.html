@@ -18,7 +18,7 @@
         <div class="col col-md-8">
             <div class="form-group">
                 <label class="form-label" for="rfc">RFC: <span class="bi bi-question-circle-fill"
-                        title="Registro Federal de Contribuyente" data-bs-toggle="tooltip"></span></label>
+                        title="{{ TEXTOS.RFC_TITULO_TOOLTIP }}" data-bs-toggle="tooltip"></span></label>
                 <input type="text" class="form-control" id="buscarPorRFCNa" maxlength="20"
                     formControlName="buscarPorRFCNa"
                     (change)="setValoresStore(tipoDeEmpresaNacional,'buscarPorRFCNa', 'setBuscarPorRFCNa')">
@@ -32,7 +32,7 @@
             </div>
             <div class="form-group mt-4">
                 <label class="form-label" for="folioCaatBusquedaNa">CAAT: <span class="bi bi-question-circle-fill"
-                        title="Código alfanumérico armonizado del transportista"
+                        title="{{ TEXTOS.CAAT_TITULO_TOOLTIP }}"
                         data-bs-toggle="tooltip"></span></label>
                 <input type="text" class="form-control" name="folioCaatBusquedaNa" formControlName="folioCaatBusquedaNa"
                     maxlength="50" id="folioCaatBusquedaNa"
@@ -59,7 +59,7 @@
                 </div>
                 <div class="form-group mt-4">
                     <label class="form-label" for="folioCaatBusquedaEx">CAAT: <span class="bi bi-question-circle-fill"
-                            title="Código alfanumérico armonizado del transportista"
+                            title="{{ TEXTOS.CAAT_TITULO_TOOLTIP }}"
                             data-bs-toggle="tooltip"></span></label>
                     <input type="text" class="form-control" name="folioCaatBusquedaEx"
                         formControlName="folioCaatBusquedaEx" maxlength="50" id="folioCaatBusquedaEx"

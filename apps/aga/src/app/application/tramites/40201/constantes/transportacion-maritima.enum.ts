@@ -141,7 +141,10 @@ export const CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<C
  * @enum {string}
  */
 export const TEXTOS = {
-    PN: 'Para iniciar la búsqueda de una persona física, ingresa un RFC y da clic en el botón buscar'
+    PN: 'Para iniciar la búsqueda de una persona física, ingresa un RFC y da clic en el botón buscar',
+    CORREO_TITULO_TOOLTIP: 'ejemplo@dominio.com',
+    RFC_TITULO_TOOLTIP: 'Registro Federal de Contribuyente',
+    CAAT_TITULO_TOOLTIP: 'Código alfanumérico armonizado del transportista'
 };
 
 /**

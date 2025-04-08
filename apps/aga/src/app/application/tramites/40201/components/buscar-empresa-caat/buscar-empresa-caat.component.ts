@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/transportacion-maritima.enum';
+import { CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/transportacion-maritima.enum';
 import { InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite40201Store, TransportacionMaritima40201State } from '../../../../core/estados/tramites/tramite40201.store';
 import { CAATRegistradoEmpresaForm } from '../../models/transportacion-maritima.model';
@@ -42,6 +42,11 @@ export class BuscarEmpresaCaatComponent implements OnInit, OnDestroy {
    * Vista seleccionada por el usuario.
    */
   vista: string | number = '';
+
+  /**
+   * Texto de la sección.
+   */
+  TEXTOS = TEXTOS;
 
   /**
    * Configuración para el encabezado de la tabla de CAAT registrado empresa.
@@ -241,7 +246,7 @@ export class BuscarEmpresaCaatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite120201.
+   * Establece los valores en el store de tramite40201.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.

@@ -1,12 +1,13 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Tramite40201Store, TransportacionMaritima40201State } from '../../../../core/estados/tramites/tramite40201.store';
 import { CONFIGURACION_PARA_PME_ENCABEZADO_DE_TABLA } from '../../constantes/transportacion-maritima.enum';
 import { PersonaMoralExtranjeraForm } from '../../models/transportacion-maritima.model';
+import { TEXTOS } from '../../constantes/transportacion-maritima.enum';
 import { Tramite40201Query } from '../../../../core/queries/tramite40201.query';
 import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
 
@@ -51,6 +52,11 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
    * @description Esta tabla se utiliza para mostrar los datos de las personas morales extranjeras capturadas.
    */
   personaMoralExtranjeraTabla: PersonaMoralExtranjeraForm[] = [];
+
+  /**
+   * Texto de la sección.
+   */
+  TEXTOS = TEXTOS;
 
   /**
    * Referencia al botón de cerrar el modal.
@@ -287,7 +293,7 @@ export class PersonaMoralExtranjeraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite120201.
+   * Establece los valores en el store de tramite40201.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
