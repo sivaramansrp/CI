@@ -22,10 +22,10 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
-  {
-    path: 'aviso-de-importacion',
-    loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)  
-  },
+  // {
+  //   path: 'aviso-de-importacion',
+  //   loadChildren: () => import('./tramites/260603/aviso-de-importacion.module').then(m => m.AvisoDeImportacionModule)  
+  // },
   {
 path: 'permiso-plaguicidas',
     loadChildren: () =>
@@ -114,6 +114,12 @@ path: 'permiso-plaguicidas',
       import(
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
+  },
+  {
+    path: 'Permiso-de-importacion',
+    loadChildren: () =>
+      import('./tramites/260512/permiso-de-importacion.module').then(
+        (m) => m.PermisoDeImportacionModule),
   },
 ];
 
