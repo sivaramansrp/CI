@@ -6,7 +6,14 @@ const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent,
+    component: SeleccionTramiteComponent
+  },
+  {
+    path: 'dispositivos-medicos-laboratorio',
+    loadChildren: () =>
+      import('./tramites/260218/importacion-dispositivos-mediocos-laboratorio.module').then(
+        (m) => m.ImportacionDispositivosMedicosLaboratorioModule
+      )
   },
   {
     path: 'permiso-maquila',
