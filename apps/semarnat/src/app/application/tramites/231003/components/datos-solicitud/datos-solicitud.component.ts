@@ -2,6 +2,7 @@ import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json';
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -35,6 +36,7 @@ export class DatosSolicitudComponent implements OnInit{
         numeroProgramaImmex: ['', Validators.required],
       }),
     });
+    this.aduanas = SolicitudeJson.Immex;
   }
 
   isInvalid(id: string): boolean | undefined {
