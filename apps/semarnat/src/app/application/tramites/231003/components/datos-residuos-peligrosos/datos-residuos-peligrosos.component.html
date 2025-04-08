@@ -1,6 +1,11 @@
 <div class="container mb-5">
     <div class="form">
         <ng-titulo titulo="Agregar residuo o materia prima a importar" />
-        <p>content</p>
+        <div class="row mb-3">
+            <div class="col-md-8">
+                <app-input-radio [radioOptions]="radioOptions"  [isRequired]="true"
+                    [layout]="'horizontal'" ></app-input-radio>
+            </div>
+        </div>
     </div>
 </div>

@@ -128,5 +128,15 @@
                 }
             ]
         }
+    ],
+    "radioOptions": [
+        {
+            "label": "Residuo (materia prima residual)",
+            "value": "Residuo (materia prima residual)"
+        },
+        {
+            "label": "Residuo generado del proceso",
+            "value": "Residuo generado del proceso"
+        }
     ]
 }
