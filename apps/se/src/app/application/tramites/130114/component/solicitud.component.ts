@@ -224,7 +224,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private Tramite130114Store: Tramite130114Store,
     private Tramite130114Query: Tramite130114Query,
     private DiamanteBrutoService: DiamanteBrutoService
-  ) {}
+  ) {
+    //constructor
+  }
 
   /**
    * Inicializa el componente:
