@@ -162,7 +162,14 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/11105/retirada-de-la-autorizacion-de-donaciones.module').then(
         (m) => m.RetiradaDeLaAutorizacionDeDonacioneModule
-      )
+      ),
+  },
+  {
+    path: 'cancelacion-donaciones',
+    loadChildren: () =>
+      import('./tramites/11106/cancelacion-donaciones.module').then(
+        (m) => m.CancelacionDonacionesModule
+      ),
   }
 ];
 
