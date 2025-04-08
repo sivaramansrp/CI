@@ -326,12 +326,16 @@ describe('SolicitudComponent', () => {
 
   describe('setValoresStore', () => {
     it('Debería actualizar el store según el método especificado', () => {
+      component.mercanciaForm = TestBed.inject(FormBuilder).group({
+        producto: ['Nuevo'], 
+      });
+  
       component.setValoresStore({
         form: component.mercanciaForm,
         campo: 'producto',
         metodoNombre: 'setProducto',
       });
-
+  
       expect(mockStore.setProducto).toHaveBeenCalledWith('Nuevo');
     });
   });

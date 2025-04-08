@@ -272,81 +272,47 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * jest.spyOnConfigura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
-
     this.tramite130111Query.selectSolicitud$
-
-      .pipe(
-
-        takeUntil(this.destroyed$),
-
+      .pipe(takeUntil(this.destroyed$),
         map((seccionState) => {
-
           this.partidasDelaMercanciaForm.patchValue({
-
             cantidadPartidasDeLaMercancia:
-
-              seccionState.cantidadPartidasDeLaMercancia,
-
+            seccionState.cantidadPartidasDeLaMercancia,
             valorPartidaUSDPartidasDeLaMercancia:
-
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-
+            seccionState.valorPartidaUSDPartidasDeLaMercancia,
             descripcionPartidasDeLaMercancia:
-
-              seccionState.descripcionPartidasDeLaMercancia,
+            seccionState.descripcionPartidasDeLaMercancia,
 
           });
  
           this.formDelTramite.patchValue({
-
             solicitud: seccionState.solicitud,
-
             regimen: seccionState.regimen,
-
             clasificacion: seccionState.clasificacion,
-
           });
  
           this.mercanciaForm.patchValue({
-
             producto: seccionState.producto,
-
             descripcion: seccionState.descripcion,
-
             fraccion: seccionState.fraccion,
-
             cantidad: seccionState.cantidad,
-
             valorFacturaUSD: seccionState.valorFacturaUSD,
-
             unidadMedida: seccionState.unidadMedida,
-
           });
  
           this.paisForm.patchValue({
-
             bloque: seccionState.bloque,
-
             usoEspecifico: seccionState.usoEspecifico,
-
             justificacionImportacionExportacion:
-
             seccionState.justificacionImportacionExportacion,
-
             observaciones: seccionState.observaciones,
-
           });
  
           this.frmRepresentacionForm.patchValue({
-
             entidad: seccionState.entidad,
-
             representacion: seccionState.representacion,
-
           });
-
         })
-
       )
 
       .subscribe();
