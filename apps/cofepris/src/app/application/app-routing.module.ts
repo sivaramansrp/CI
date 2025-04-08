@@ -22,7 +22,6 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
-
   {
     path: 'aviso-exportacion',
     loadChildren: () =>
