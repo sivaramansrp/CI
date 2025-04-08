@@ -1,5 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { CompliMentaria } from '../../enums/partidasdela-table.enum';
 import { Injectable } from '@angular/core';
+
 
 /**
  * @descripcion
@@ -18,7 +20,7 @@ export interface Tramite130113State {
   defaultProducto: string;
   regimen: string;
   clasificacion: string;
-  filaSeleccionada: null;
+  filaSeleccionada: CompliMentaria | null;
   cantidadPartidasDeLaMercancia: string;
   fraccionTigiePartidasDeLaMercancia: string;
   fraccionDescripcionPartidasDeLaMercancia: string;
@@ -370,7 +372,7 @@ export class Tramite130113Store extends Store<Tramite130113State> {
    * Almacena los valores de la fila seleccionada en el estado.
    * @param {null} fila - Fila seleccionada.
    */
-  public storeTableValues(fila: null): void {
+  public storeTableValues(fila: CompliMentaria | null): void {
     this.update({
       filaSeleccionada: fila,
     });

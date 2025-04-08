@@ -1,38 +1,33 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
 import { Tramite130113Store } from '../../estados/tramites/tramites130113.store';
 import { SolicitudComponent } from './solicitud.component';
-import { ImportacionMaterialDeInvestigacionCientificaService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
+
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
-  let fixture: ComponentFixture<SolicitudComponent>;
   let store: Tramite130113Store;
   let query: Tramite130113Query;
-  let service: ImportacionMaterialDeInvestigacionCientificaService;
+  let service: ImportacionEquipoAnticontaminanteService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent],
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [SolicitudComponent, ReactiveFormsModule],
       providers: [
         FormBuilder,
         Tramite130113Store,
         Tramite130113Query,
-        ImportacionMaterialDeInvestigacionCientificaService,
+        ImportacionEquipoAnticontaminanteService,
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SolicitudComponent);
-    component = fixture.componentInstance;
+    component = TestBed.createComponent(SolicitudComponent).componentInstance;
     store = TestBed.inject(Tramite130113Store);
     query = TestBed.inject(Tramite130113Query);
-    service = TestBed.inject(ImportacionMaterialDeInvestigacionCientificaService);
-
-    fixture.detectChanges();
+    service = TestBed.inject(ImportacionEquipoAnticontaminanteService);
   });
 
   it('should create the component', () => {

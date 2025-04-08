@@ -3,47 +3,43 @@ import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { PASOS } from '../../constants/pasos.enum';
 
+/**
+ * Componente para gestionar el asistente de importación de equipo anticontaminante.
+ * Contiene la lógica para manejar los pasos del asistente y la navegación entre ellos.
+ * Autor: Equipo de Desarrollo
+ * Versión: 1.0.0
+ * Fecha: 2023-10-01
+ */
 @Component({
   selector: 'app-importacion-equipo-anticontaminante',
-  templateUrl: './importacion-equipo-anticontaminante.html',
-  styleUrl: './importacion-equipo-anticontaminante.component.css',
+  templateUrl: './importacion-equipo-anticontaminante.component.html',
+  styleUrl: './importacion-equipo-anticontaminante.component.scss',
 })
 export class ImportacionEquipoAnticontaminanteComponent {
-  // Definición de la lista de pasos
+  // Lista de pasos del asistente.
   pasos: ListaPasosWizard[] = PASOS;
-   /**
-   * Índice del paso actual en el asistente.
-   */
-   indice: number = 1;
-   /**
- * @module
- * @description
- * Módulo que contiene la definición de la variable tabIndex.
- */
-   tabIndex: number = 1;
-   /**
- * @module
- * @description
- * Módulo que contiene la definición del componente MiComponente y su uso de @ViewChild.
- */
-   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
-/**
- * @module
- * @description
- * Módulo que contiene la definición de la variable datosPasos.
- */
+  // Índice del paso actual en el asistente.
+  indice: number = 1;
+
+  // Índice de la pestaña activa.
+  tabIndex: number = 1;
+
+  // Referencia al componente del asistente (wizard).
+  @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
+
+  // Datos relacionados con los pasos del asistente.
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
   /**
- * @module
- * @description
- * Módulo que contiene la definición del método getValorIndice.
- */
+   * Método para manejar el cambio de paso en el asistente.
+   * Recibe un evento con el valor del paso y la acción a realizar (continuar o retroceder).
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 4) {
       this.indice = e.valor;

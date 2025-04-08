@@ -2,7 +2,9 @@ import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CompliMentaria } from '../../enums/partidasdela-table.enum';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+
 import { HttpClient } from '@angular/common/http';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
@@ -15,8 +17,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import fractionValues from '@libs/shared/theme/assets/json/130113/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130113/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130113/unidad_da.json';
-
-
 
 
 
@@ -96,7 +96,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * filaSeleccionada
    * Fila seleccionada en la tabla dinámica.
    */
-  filaSeleccionada: any = null;
+  filaSeleccionada: CompliMentaria | null = null;
 
   /**
    *  Opciones para el campo "producto".
@@ -152,40 +152,40 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
   /**
    *  Arreglo que almacena un catálogo de elementosDeBloque.
-   * @type {Catalogo[]}
+   * {Catalogo[]}
    */
   elementosDeBloque: Catalogo[] = [];
   /**
    *  Arreglo que contiene un catálogo de países organizados por bloque.
-   * @type {Catalogo[]}
+   * {Catalogo[]}
    */
   paisesPorBloque: Catalogo[] = [];
   /**
    *  Arreglo que guarda un catálogo de entidades federativas.
-   * @type {Catalogo[]}
+   * {Catalogo[]}
    */
   entidadFederativa: Catalogo[] = [];
   /**
    *  Arreglo que almacena un catálogo de representaciones federales.
-   * @type {Catalogo[]}
+   * {Catalogo[]}
    */
   representacionFederal: Catalogo[] = [];
   /**
    *  Arreglo de cadenas que representa las opciones seleccionables de rangos de días.
-   * @type {string[]}
+   * {string[]}
    */
   selectRangoDias: string[] = [];
   /**
    *  Objeto o constante que contiene los textos utilizados en la aplicación.
-   * @type {any}
+   * {any}
    */
   TEXTOS = TEXTOS;
   /**
    * Constructor del componente.
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {HttpClient} http - Servicio para realizar solicitudes HTTP.
-   * @param {Tramite130113Store} tramite130113Store - Store para gestionar el estado del trámite 130113.
-   * @param {Tramite130113Query} tramite130113Query - Query para consultar el estado del trámite 130113.
+   *{FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   *{HttpClient} http - Servicio para realizar solicitudes HTTP.
+   *{Tramite130113Store} tramite130113Store - Store para gestionar el estado del trámite 130113.
+   *{Tramite130113Query} tramite130113Query - Query para consultar el estado del trámite 130113.
    */
   constructor(
     private fb: FormBuilder,
@@ -573,7 +573,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
   * Método para obtener la lista de países por bloque.
-  * @param {number} _bloqueId - Identificador del bloque.
+  *{number} _bloqueId - Identificador del bloque.
   */
   fetchPaisesPorBloque(_bloqueId: number): void {
     this.importacionEquipoAnticontaminanteService
@@ -587,7 +587,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
   /**
   * Maneja el cambio de bloque seleccionado.
-  * @param {number} bloqueId - Identificador del bloque seleccionado.
+  *{number} bloqueId - Identificador del bloque seleccionado.
   */
   enCambioDeBloque(bloqueId: number): void {
     this.fetchPaisesPorBloque(bloqueId);
