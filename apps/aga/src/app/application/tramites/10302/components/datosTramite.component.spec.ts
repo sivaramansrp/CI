@@ -19,182 +19,162 @@ describe('DatosTramiteComponent', () => {
     fixture.detectChanges();
   });
 
-  // it('should initialize tramiteForm and agregarMercanciasForm on donanteDomicilio()', () => {
-  //   component.solicitudState = {
-  //     aduana: 'aduanaValue',
-  //     organismoPublico: 'organismoValue',
-  //     usoEspecifico: 'usoValue',
-  //     pais: 'paisValue',
-  //     rfc: 'rfcValue',
-  //     numeroProgramaImmex: 'programaValue',
-  //     razonSocial: 'razonValue',
-  //     correoElectronicoOpcional: 'emailValue',
-  //     telefonoOpcional: 'phoneValue',
-  //     calle: 'calleValue',
-  //     numeroExterior: 'exteriorValue',
-  //     numeroInterior: 'interiorValue',
-  //     telefono: 'telefonoValue',
-  //     correoElectronico: 'correoValue',
-  //     codigoPostal: 'postalValue',
-  //     estado: 'estadoValue',
-  //     colonia: 'coloniaValue',
-  //     tipoDeMercancia: 'tipoValue',
-  //     condicionMercancia: 'condicionValue',
-  //     unidadMedida: 'unidadValue',
-  //     ano: 'anoValue',
-  //   } as any;
+  it('should initialize tramiteForm and agregarMercanciasForm on donanteDomicilio()', () => {
+    component.solicitudState = {
+      aduana: 'aduanaValue',
+      organismoPublico: 'organismoValue',
+      usoEspecifico: 'usoValue',
+      pais: 'paisValue',
+      rfc: 'rfcValue',
+      numeroProgramaImmex: 'programaValue',
+      razonSocial: 'razonValue',
+      correoElectronicoOpcional: 'emailValue',
+      telefonoOpcional: 'phoneValue',
+      calle: 'calleValue',
+      numeroExterior: 'exteriorValue',
+      numeroInterior: 'interiorValue',
+      telefono: 'telefonoValue',
+      correoElectronico: 'correoValue',
+      codigoPostal: 'postalValue',
+      estado: 'estadoValue',
+      colonia: 'coloniaValue',
+      tipoDeMercancia: 'tipoValue',
+      condicionMercancia: 'condicionValue',
+      unidadMedida: 'unidadValue',
+      ano: 'anoValue',
+    } as any;
 
-  //   component.donanteDomicilio();
+    component.donanteDomicilio();
 
-  //   expect(component.tramiteForm).toBeDefined();
-  //   expect(component.agregarMercanciasForm).toBeDefined();
-  //   expect(component.tramiteForm.get('exencionImpuestos.aduana')?.value).toBe('aduanaValue');
-  //   expect(component.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value).toBe('tipoValue');
-  // });
+    expect(component.tramiteForm).toBeDefined();
+    expect(component.agregarMercanciasForm).toBeDefined();
+    expect(component.tramiteForm.get('exencionImpuestos.aduana')?.value).toBe('aduanaValue');
+    expect(component.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value).toBe('tipoValue');
+  });
 
-  // it('should call setAduana on aduanaSeleccion()', () => {
-  //   const setAduanaSpy = jest.spyOn(component['store'], 'setAduana');
-  //   component.tramiteForm = component.fb.group({
-  //     exencionImpuestos: component.fb.group({
-  //       aduana: ['aduanaValue'],
-  //     }),
-  //   });
+  it('should call setAduana on aduanaSeleccion()', () => {
+    const setAduanaSpy = jest.spyOn(component['store'], 'setAduana');
+    component.tramiteForm = component.fb.group({
+      exencionImpuestos: component.fb.group({
+        aduana: ['aduanaValue'],
+      }),
+    });
 
-  //   component.aduanaSeleccion();
+    component.aduanaSeleccion();
 
-  //   expect(setAduanaSpy).toHaveBeenCalledWith('aduanaValue');
-  // });
+    expect(setAduanaSpy).toHaveBeenCalledWith('aduanaValue');
+  });
 
-  // it('should call setTipoDeMercancia on tipoDeMercanciaSeleccion()', () => {
-  //   const setTipoDeMercanciaSpy = jest.spyOn(component['store'], 'setTipoDeMercancia');
-  //   component.agregarMercanciasForm = component.fb.group({
-  //     datosMercancia: component.fb.group({
-  //       tipoDeMercancia: ['tipoValue'],
-  //     }),
-  //   });
+  it('should call setTipoDeMercancia on tipoDeMercanciaSeleccion()', () => {
+    const setTipoDeMercanciaSpy = jest.spyOn(component['store'], 'setTipoDeMercancia');
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        tipoDeMercancia: ['tipoValue'],
+      }),
+    });
 
-  //   component.tipoDeMercanciaSeleccion();
+    component.tipoDeMercanciaSeleccion();
 
-  //   expect(setTipoDeMercanciaSpy).toHaveBeenCalledWith('tipoValue');
-  // });
+    expect(setTipoDeMercanciaSpy).toHaveBeenCalledWith('tipoValue');
+  });
 
-  // it('should call setCondicionMercancia on condicionMercanciaSeleccion()', () => {
-  //   const setCondicionMercanciaSpy = jest.spyOn(component['store'], 'setCondicionMercancia');
-  //   component.agregarMercanciasForm = component.fb.group({
-  //     datosMercancia: component.fb.group({
-  //       condicionMercancia: ['condicionValue'],
-  //     }),
-  //   });
+  it('should call setCondicionMercancia on condicionMercanciaSeleccion()', () => {
+    const setCondicionMercanciaSpy = jest.spyOn(component['store'], 'setCondicionMercancia');
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        condicionMercancia: ['condicionValue'],
+      }),
+    });
 
-  //   component.condicionMercanciaSeleccion();
+    component.condicionMercanciaSeleccion();
 
-  //   expect(setCondicionMercanciaSpy).toHaveBeenCalledWith('condicionValue');
-  // });
+    expect(setCondicionMercanciaSpy).toHaveBeenCalledWith('condicionValue');
+  });
 
-  // it('should call setUnidadMedida on unidadMedidaSeleccion()', () => {
-  //   const setUnidadMedidaSpy = jest.spyOn(component['store'], 'setUnidadMedida');
-  //   component.agregarMercanciasForm = component.fb.group({
-  //     datosMercancia: component.fb.group({
-  //       unidadMedida: ['unidadValue'],
-  //     }),
-  //   });
+  it('should call setUnidadMedida on unidadMedidaSeleccion()', () => {
+    const setUnidadMedidaSpy = jest.spyOn(component['store'], 'setUnidadMedida');
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        unidadMedida: ['unidadValue'],
+      }),
+    });
 
-  //   component.unidadMedidaSeleccion();
+    component.unidadMedidaSeleccion();
 
-  //   expect(setUnidadMedidaSpy).toHaveBeenCalledWith('unidadValue');
-  // });
+    expect(setUnidadMedidaSpy).toHaveBeenCalledWith('unidadValue');
+  });
 
-  // it('should call setAno on anoSeleccion()', () => {
-  //   const setAnoSpy = jest.spyOn(component['store'], 'setAno');
-  //   component.agregarMercanciasForm = component.fb.group({
-  //     datosMercancia: component.fb.group({
-  //       ano: ['anoValue'],
-  //     }),
-  //   });
+  it('should call setAno on anoSeleccion()', () => {
+    const setAnoSpy = jest.spyOn(component['store'], 'setAno');
+    component.agregarMercanciasForm = component.fb.group({
+      datosMercancia: component.fb.group({
+        ano: ['anoValue'],
+      }),
+    });
 
-  //   component.anoSeleccion();
+    component.anoSeleccion();
 
-  //   expect(setAnoSpy).toHaveBeenCalledWith('anoValue');
-  // });
+    expect(setAnoSpy).toHaveBeenCalledWith('anoValue');
+  });
 
-  // it('should call setPais on paisSeleccion()', () => {
-  //   const setPaisSpy = jest.spyOn(component['store'], 'setPais');
-  //   component.tramiteForm = component.fb.group({
-  //     exencionImpuestos: component.fb.group({
-  //       pais: ['paisValue'],
-  //     }),
-  //   });
+  it('should call setPais on paisSeleccion()', () => {
+    const setPaisSpy = jest.spyOn(component['store'], 'setPais');
+    component.tramiteForm = component.fb.group({
+      exencionImpuestos: component.fb.group({
+        pais: ['paisValue'],
+      }),
+    });
 
-  //   component.paisSeleccion();
+    component.paisSeleccion();
 
-  //   expect(setPaisSpy).toHaveBeenCalledWith('paisValue');
-  // });
+    expect(setPaisSpy).toHaveBeenCalledWith('paisValue');
+  });
 
-  // it('should mark tramiteForm as touched if invalid on validarDestinatarioFormulario()', () => {
-  //   component.tramiteForm = component.fb.group({
-  //     exencionImpuestos: component.fb.group({
-  //       aduana: ['', Validators.required],
-  //     }),
-  //   });
+  it('should mark tramiteForm as touched if invalid on validarDestinatarioFormulario()', () => {
+    component.tramiteForm = component.fb.group({
+      exencionImpuestos: component.fb.group({
+        aduana: ['', Validators.required],
+      }),
+    });
 
-  //   component.validarDestinatarioFormulario();
+    component.validarDestinatarioFormulario();
 
-  //   expect(component.tramiteForm.touched).toBeTruthy();
-  // });
+    expect(component.tramiteForm.touched).toBeTruthy();
+  });
 
-  // it('should set values in store on setValoresStore()', () => {
-  //   const setAduanaSpy = jest.spyOn(component['store'], 'setAduana');
-  //   component.tramiteForm = component.fb.group({
-  //     exencionImpuestos: component.fb.group({
-  //       aduana: ['aduanaValue'],
-  //     }),
-  //   });
+  it('should set values in store on setValoresStore()', () => {
+    const setAduanaSpy = jest.spyOn(component['store'], 'setAduana');
+    component.tramiteForm = component.fb.group({
+      exencionImpuestos: component.fb.group({
+        aduana: ['aduanaValue'],
+      }),
+    });
 
-  //   component.setValoresStore(component.tramiteForm, 'exencionImpuestos.aduana', 'setAduana');
+    component.setValoresStore(component.tramiteForm, 'exencionImpuestos.aduana', 'setAduana');
 
-  //   expect(setAduanaSpy).toHaveBeenCalledWith('aduanaValue');
-  // });
+    expect(setAduanaSpy).toHaveBeenCalledWith('aduanaValue');
+  });
 
-  // it('should open modal on abrirDialogoMercancias()', () => {
-  //   const modalElementMock = {
-  //     nativeElement: {
-  //       show: jest.fn(),
-  //     },
-  //   };
-  //   component.modalElement = modalElementMock as any;
+  it('should close modal on cerrarModal()', () => {
+    const closeModalMock = {
+      nativeElement: {
+        click: jest.fn(),
+      },
+    };
+    component.closeModal = closeModalMock as any;
 
-  //   component.abrirDialogoMercancias();
+    component.cerrarModal();
 
-  //   expect(modalElementMock.nativeElement.show).toHaveBeenCalled();
-  // });
+    expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
+  });
 
-  // it('should close modal on cerrarModal()', () => {
-  //   const closeModalMock = {
-  //     nativeElement: {
-  //       click: jest.fn(),
-  //     },
-  //   };
-  //   component.closeModal = closeModalMock as any;
+  it('should complete destroyNotifier$ on ngOnDestroy()', () => {
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
 
-  //   component.cerrarModal();
+    component.ngOnDestroy();
 
-  //   expect(closeModalMock.nativeElement.click).toHaveBeenCalled();
-  // });
-
-  // it('should initialize mercanciaHeaderData and mercanciaBodyData on obtenerMercancia()', () => {
-  //   component.obtenerMercancia();
-
-  //   expect(component.mercanciaHeaderData).toEqual(component.getMercanciaTableData.mercanciaTable.tableHeader);
-  //   expect(component.mercanciaBodyData).toEqual(component.getMercanciaTableData.mercanciaTable.tableBody);
-  // });
-
-  // it('should complete destroyNotifier$ on ngOnDestroy()', () => {
-  //   const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
-  //   component.ngOnDestroy();
-
-  //   expect(destroyNotifierSpy).toHaveBeenCalled();
-  // });
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

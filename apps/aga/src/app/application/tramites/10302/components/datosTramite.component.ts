@@ -489,9 +489,9 @@ export class DatosTramiteComponent implements OnDestroy {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData =
-      this.getMercanciaTableData.mercanciaTable.tableHeader;
+      this.getMercanciaTableData?.mercanciaTable?.tableHeader;
     this.mercanciaBodyData =
-      this.getMercanciaTableData.mercanciaTable.tableBody;
+      this.getMercanciaTableData?.mercanciaTable?.tableBody;
   }
 
   /**
