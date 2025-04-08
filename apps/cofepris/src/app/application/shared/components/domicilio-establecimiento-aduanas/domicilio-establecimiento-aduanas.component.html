@@ -9,6 +9,8 @@
           id="codigoPostal"
           placeholder=""
           type="text"
+          maxlength="12"
+          size="29"
           formControlName="codigoPostal"
           (change)="
             setValoresStore(domicilio, 'codigoPostal', 'setCodigoPostal')
@@ -105,6 +107,8 @@
           id="telefono"
           placeholder=""
           type="number"
+          maxlength="30"
+          size="29"
           formControlName="telefono"
           (change)="setValoresStore(domicilio, 'telefono', 'setTelefono')"
         />
@@ -142,8 +146,7 @@
           id="avisoCheckbox"
           formControlName="avisoCheckbox"
           (change)="
-            onAvisoCheckboxChange($event);
-            setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
+           setValoresStore(domicilio, 'avisoCheckbox', 'setAvisoCheckbox')
           "
         />
         <label class="form-check-label" for="avisoCheckbox">
@@ -231,15 +234,7 @@
               formControlName="claveScianModal"
               [label]="'Clave S.C.I.A.N.'"
               [required]="true"
-              name="claveScianModal"
-              (change)="
-                setValoresStore(
-                  formAgente,
-                  'claveScianModal',
-                  'setClaveScianModal'
-                )
-              "
-            ></app-catalogo-select>
+              name="claveScianModal"></app-catalogo-select>
           </div>
           <div class="form-group">
             <app-catalogo-select
@@ -247,15 +242,7 @@
               formControlName="claveDescripcionModal"
               [label]="'Descripción del S.C.I.A.N.'"
               [required]="false"
-              name="claveDescripcionModal"
-              (change)="
-                setValoresStore(
-                  formAgente,
-                  'claveDescripcionModal',
-                  'setClaveDescripcionModal'
-                )
-              "
-            ></app-catalogo-select>
+              name="claveDescripcionModal" ></app-catalogo-select>
           </div>
         </form>
       </div>
@@ -296,69 +283,37 @@
               type="text"
               id="nombreComercial"
               formControlName="nombreComercial"
-              class="form-control"
-              (change)="
-                setValoresStore(
-                  formMercancias,
-                  'denominacionEspecifica',
-                  'setDenominacionEspecifica'
-                )
-              "
-            />
+              class="form-control"/>
           </div>
           <div class="form-group">
             <label for="nombreComun"
-              >nombre común:</label
+              >Nombre común:</label
             >
             <input
               type="text"
               id="nombreComun"
               formControlName="nombreComun"
-              class="form-control"
-              (change)="
-                setValoresStore(
-                  formMercancias,
-                  'denominacionEspecifica',
-                  'setDenominacionEspecifica'
-                )
-              "
-            />
+              class="form-control"/>
           </div>
           <div class="form-group">
             <label for="nombreCientifico"
-              >nombre científico:</label
+              >Nombre científico:</label
             >
             <input
               type="text"
               id="nombreCientifico"
               formControlName="nombreCientifico"
-              class="form-control"
-              (change)="
-                setValoresStore(
-                  formMercancias,
-                  'denominacionEspecifica',
-                  'setDenominacionEspecifica'
-                )
-              "
-            />
+              class="form-control" />
           </div>
           <div class="form-group">
             <label for="usoEspecifico" class="form-label text-start"
-              >uso específico:</label
+              >Uso específico:</label
             >
             <textarea
               id="usoEspecifico"
               class="form-control"
               style="height: 50%; resize: none"
-              formControlName="usoEspecifico"
-              (change)="
-                setValoresStore(
-                  formMercancias,
-                  'acondicionamiento',
-                  'setDenominacionEspecifica'
-                )
-              "
-            ></textarea>
+              formControlName="usoEspecifico" ></textarea>
           </div>
 
           <div class="form-group">
@@ -367,9 +322,7 @@
               formControlName="estadofisico"
               [label]="'Estado físico'"
               [required]="true"
-              name="estadofisico"
-              (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
-            ></app-catalogo-select>
+              name="estadofisico" ></app-catalogo-select>
           </div>
 
           <div class="form-group">
@@ -378,32 +331,16 @@
                 type="text"
                 id="fraccionArancelaria"
                 formControlName="fraccionArancelaria"
-                class="form-control"
-                (change)="
-                  setValoresStore(
-                    formMercancias,
-                    'fraccionArancelaria',
-                    'setFraccionArancelaria'
-                  )
-                "
-              />
+                class="form-control"/>
             </div>
             <div class="form-group">
               <label for="descripcionFraccion"
-                >descripción de la fracción:</label
-              >
+                >Descripción de la fracción:</label>
               <input
                 type="text"
                 id="descripcionFraccion"
                 formControlName="descripcionFraccion"
                 class="form-control"
-                (change)="
-                  setValoresStore(
-                    formMercancias,
-                    'denominacionEspecifica',
-                    'setDenominacionEspecifica'
-                  )
-                "
               />
             </div>
             <div class="form-group row">
@@ -413,9 +350,7 @@
                   type="text"
                   id="cantidadUMT"
                   formControlName="cantidadUMT"
-                  class="form-control"
-                  (change)="setValoresStore(formMercancias, 'cantidadUMT', 'setCantidadUMT')"
-                />
+                  class="form-control"/>
               </div>
               <div class="col-md-6">
                 <label for="UMT">UMT*:</label>
@@ -424,7 +359,6 @@
                   id="UMT"
                   formControlName="UMT"
                   class="form-control"
-                  (change)="setValoresStore(formMercancias, 'UMT', 'setUMT')"
                 />
               </div>
             </div>
@@ -437,9 +371,6 @@
                     id="cantidadUMC"
                     formControlName="cantidadUMC"
                     class="form-control"
-                    (change)="
-                      setValoresStore(formMercancias, 'cantidadUMC', 'setCantidadUMC')
-                    "
                   />
                 </div>
               </div>
@@ -451,7 +382,6 @@
                     [label]="'UMC'"
                     [required]="true"
                     name="UMC"
-                    (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
                   ></app-catalogo-select>
                 </div>
               </div>
@@ -465,31 +395,17 @@
                 id="numerocas"
                 formControlName="numerocas"
                 class="form-control"
-                (change)="
-                  setValoresStore(
-                    formMercancias,
-                    'denominacionEspecifica',
-                    'setDenominacionEspecifica'
-                  )
-                "
               />
             </div>
             <div class="form-group">
               <label for="porcentajeConcentracion"
-                >porcentaje de concentración:</label
+                >Porcentaje de concentración:</label
               >
               <input
                 type="text"
                 id="porcentajeConcentracion"
                 formControlName="porcentajeConcentracion"
                 class="form-control"
-                (change)="
-                  setValoresStore(
-                    formMercancias,
-                    'denominacionEspecifica',
-                    'setDenominacionEspecifica'
-                  )
-                "
               />
             </div>
           
@@ -507,15 +423,17 @@
                     class="collpase-button collapsed"
                   ></button>
                 </div>
+                @if(colapsableTres){
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist
                       [fechas]="seleccionarOrigenDelPaisTres"
                       [label]="paisDeOrigenLabel"
-                      [botones]="paisDeProcedenciaBotonesTres"
+                      [botones]="paisDeProcedenciaBotones"
                     ></crosslist>
                   </div>
                 </div>
+              }
               </div>
             </div>
           </div>
@@ -524,24 +442,26 @@
                 <div class="panel panel-default">
                   <div
                     class="panel-heading"
-                    (click)="mostrar_colapsableTres()"
+                    (click)="mostrar_colapsableDuos()"
                     tabindex="0"
                   >
-                    <p class="panel-title">país de procedencia/país de último puerto de embarque</p>
+                    <p class="panel-title">País de procedencia/país de último puerto de embarque</p>
                     <button
                       type="button"
                       class="collpase-button collapsed"
                     ></button>
                   </div>
+                  @if(colapsableDuos){
                   <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
                       <crosslist
                         [fechas]="seleccionarOrigenDelPaisCuatro"
                         [label]="paisDeProcedenciaLabel"
-                        [botones]="paisDeProcedenciaBotonesCuatro"
+                        [botones]="paisDeProcedenciaBotones"
                       ></crosslist>
                     </div>
                   </div>
+                }
                 </div>
               </div>
             </div>
@@ -549,24 +469,18 @@
               <app-catalogo-select
                 [catalogo]="estado"
                 formControlName="clasificacionToxicologica"
-                [label]="'clasificación toxicológica'"
+                [label]="'Clasificación toxicológica'"
                 [required]="true"
                 name="clasificacionToxicologica"
-                (change)="
-                  setValoresStore(formMercancias, 'especificar', 'setEspecificar')
-                "
               ></app-catalogo-select>
             </div>
             <div class="form-group">
               <app-catalogo-select
                 [catalogo]="estado"
                 formControlName="objetoImportacion"
-                [label]="'objeto de importación'"
+                [label]="'Objeto de importación'"
                 [required]="true"
                 name="objetoImportacion"
-                (change)="
-                  setValoresStore(formMercancias, 'especificar', 'setEspecificar')
-                "
               ></app-catalogo-select>
             </div>
         </form>

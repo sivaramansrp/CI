@@ -46,6 +46,20 @@ export interface SolicitudState {
      * Importe relacionado con la solicitud.
      */
     importePago: string;
+
+    rfcDel: string; // RFC del establecimiento.
+    denominacionRazonSocial: string; // Denominación del establecimiento.
+    correoElectronico: string; // Correo electrónico del establecimiento.
+    codigoPostal: string; // Código postal del establecimiento.
+    estado: string; // Estado del establecimiento.
+    muncipio: string; // Municipio del establecimiento.
+    localidad: string; // Localidad del establecimiento.
+    colonia: string; // Colonia del establecimiento.
+    calle: string; // Calle del establecimiento.
+    lada: string; // Lada del establecimiento.
+    telefono: string; // Teléfono del establecimiento.
+    avisoCheckbox: boolean; // Checkbox de aviso.
+    licenciaSanitaria: string; // Licencia sanitaria del establecimiento.
 }
 
 /**
@@ -61,6 +75,19 @@ export function createInitialState(): SolicitudState {
         llavePago: '', // Inicializa llavePago como una cadena vacía.
         fechaPago: '', // Inicializa fechaPago como una cadena vacía.
         importePago: '', // Inicializa importePago como una cadena vacía.
+        rfcDel: '', // Inicializa rfcdel como una cadena vacía.
+        denominacionRazonSocial: '', // Inicializa denominacion como una cadena vacía.
+        correoElectronico: '', // Inicializa correoElectronico como una cadena vacía.
+        codigoPostal: '', // Inicializa codigoPostal como una cadena vacía.
+        estado: '', // Inicializa estado como una cadena vacía.
+        muncipio: '', // Inicializa muncipio como una cadena vacía.
+        localidad: '', // Inicializa localidad como una cadena vacía.
+        colonia: '', // Inicializa colonia como una cadena vacía.
+        calle: '', // Inicializa calle como una cadena vacía.
+        lada: '', // Inicializa lada como una cadena vacía.
+        telefono: '', // Inicializa telefono como una cadena vacía.
+        avisoCheckbox: false, // Inicializa avisoCheckbox como falso.
+        licenciaSanitaria: '', // Inicializa licenciaSanitaria como una cadena vacía.
     };
 }
 
@@ -70,7 +97,7 @@ export function createInitialState(): SolicitudState {
  */
 @Injectable({
     providedIn: 'root',
-})    
+})
 
 /**
  * @StoreConfig Configuración del store.
@@ -162,5 +189,163 @@ export class AvisocalidadStore extends Store<SolicitudState> {
             ...state,
             importePago,
         }));
+    }
+
+    /**
+     * @method setRfcDel
+     * @description Actualiza el estado con el RFC del delegado proporcionado.
+     * @param {string} rfcDel - El RFC del delegado que se establecerá en el estado.
+     */
+    public setRfcDel(rfcDel: string): void {
+        this.update((state) => ({
+            ...state,
+            rfcDel,
+        }));
+    }
+
+    /**
+     * @method setDenominacion
+     * @description Actualiza el estado con la nueva denominación proporcionada.
+     * @param denominacion - La nueva denominación que se establecerá en el estado.
+     */
+    public setDenominacionRazonSocial(denominacionRazonSocial: string): void {
+        this.update((state) => ({
+            ...state,
+            denominacionRazonSocial,
+        }));
+    }
+
+    /**
+     * @method setCorreoElectronico
+     * @description Actualiza el estado con el correo electrónico proporcionado.
+     * @param {string} correoElectronico - El correo electrónico que se establecerá en el estado.
+     */
+    public setCorreoElectronico(correoElectronico: string): void {
+        this.update((state) => ({
+            ...state,
+            correoElectronico,
+        }));
+    }
+
+    /**
+     * @method setCodigoPostal
+     * @description Actualiza el estado con el código postal proporcionado.
+     * @param {string} codigoPostal - El código postal que se establecerá en el estado.
+     */
+    public setCodigoPostal(codigoPostal: string): void {
+        this.update((state) => ({
+            ...state,
+            codigoPostal,
+        }));
+    }
+    /**
+     * @method setEstado
+     * @description Actualiza el estado del store con el valor proporcionado.
+     * @param estado - El nuevo estado que se establecerá en el store.
+     */
+    public setEstado(estado: string): void {
+        this.update((state) => ({
+            ...state,
+            estado,
+        }));
+    }
+    /**
+     * @method setMuncipio
+     * @description Actualiza el estado con el municipio proporcionado.
+     * @param {string} muncipio - El nombre del municipio que se establecerá en el estado.
+     */
+    public setMuncipio(muncipio: string): void {
+        this.update((state) => ({
+            ...state,
+            muncipio,
+        }));
+    }
+    /**
+     * @method setLocalidad
+     * @description Actualiza el estado con la localidad proporcionada.
+     * @param {string} localidad - La nueva localidad que se establecerá en el estado.
+     */
+    public setLocalidad(localidad: string): void {
+        this.update((state) => ({
+            ...state,
+            localidad,
+        }));
+    }
+    /**
+     * @description Actualiza el estado con la colonia proporcionada.
+     * @param colonia - El nombre de la colonia que se establecerá en el estado.
+     */
+    public setColonia(colonia: string): void {
+        this.update((state) => ({
+            ...state,
+            colonia,
+        }));
+    }
+
+    /**
+     * @method setCalle
+     * @description Actualiza el estado con el valor de la calle proporcionado.
+     * @param {string} calle - El nuevo valor de la calle que se establecerá en el estado.
+     */
+    public setCalle(calle: string): void {
+        this.update((state) => ({
+            ...state,
+            calle,
+        }));
+    }
+    /**
+     * @method setLada
+     * @description Actualiza el estado con el valor proporcionado de la lada.
+     * @param {string} lada - El valor de la lada que se establecerá en el estado.
+     * @example
+     * this.setLada('123');
+     * @memberof AvisoCalidadStore
+     */
+    public setLada(lada: string): void {
+        this.update((state) => ({
+            ...state,
+            lada,
+        }));
+    }
+    /**
+     * @method setTelefono
+     * @description Actualiza el estado con un nuevo valor de teléfono.
+     * @param telefono - El nuevo número de teléfono que se establecerá en el estado.
+     */
+    public setTelefono(telefono: string): void {
+        this.update((state) => ({
+            ...state,
+            telefono,
+        }));
+    }
+    /**
+     * @method setAvisoCheckbox
+     * @description Actualiza el estado del checkbox de aviso en la tienda.
+     * @param {boolean} avisoCheckbox - Valor booleano que indica el estado del checkbox de aviso.
+     * @returns {void}
+     */
+    public setAvisoCheckbox(avisoCheckbox: boolean): void {
+        this.update((state) => ({
+            ...state,
+            avisoCheckbox,
+        }));
+    }
+    /**
+     * @method setLicenciaSanitaria
+     * @description Actualiza el estado con el valor proporcionado de la licencia sanitaria.
+     * @param licenciaSanitaria - El nuevo valor de la licencia sanitaria que se establecerá en el estado.
+     */
+    public setLicenciaSanitaria(licenciaSanitaria: string): void {
+        this.update((state) => ({
+            ...state,
+            licenciaSanitaria,
+        }));
+    }
+
+    /**
+     * Limpia los datos de la solicitud y restablece el estado inicial.
+     */
+    public limpiarSolicitud(): void {
+        this.reset();
     }
 }

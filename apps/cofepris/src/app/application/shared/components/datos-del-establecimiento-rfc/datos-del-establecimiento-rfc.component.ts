@@ -4,11 +4,9 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
-import { Solicitud260603State } from '../../estados/stores/domicilio.store';
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 
-import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
-
-import { DomicilioQuery } from '../../estados/queries/domicilio.query';
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 
 import { Subject, map, takeUntil } from 'rxjs';
 
@@ -48,7 +46,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
    * @description
    * Estado actual de la solicitud.
    */
-  public solicitudState!: Solicitud260603State;
+  public solicitudState!: SolicitudState;
 
   /**
    * @description
@@ -60,13 +58,13 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
    * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
-   * @param tramite260603Store Store para gestionar el estado del trámite.
-   * @param tramite260603Query Query para obtener datos del estado del trámite.
+   * @param avisocalidadStore Store para gestionar el estado del trámite.
+   * @param avisocalidadQuery Query para obtener datos del estado del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private domicilioStore: DomicilioStore,
-    private domicilioquery: DomicilioQuery
+    private avisocalidadStore: AvisocalidadStore,
+    private avisocalidadQuery: AvisocalidadQuery
   ) {
     // Llama al constructor de la clase base Query con el almacén inyectado.
   }
@@ -77,7 +75,7 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
-    this.domicilioquery.selectSolicitud$
+    this.avisocalidadQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -87,9 +85,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.datosDelForm = this.fb.group({
-      denominacion: [this.solicitudState?.denominacion, [Validators.required]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
-      rfcdel: ['', [Validators.required]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]],
+      rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.maxLength(254)]],
     });
   }
 
@@ -100,9 +98,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
    * @param campo Campo del formulario que se desea actualizar.
    * @param metodoNombre Nombre del método del store que se invocará.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof AvisocalidadStore): void {
     const VALOR = form.get(campo)?.value;
-    (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);
+    (this.avisocalidadStore[metodoNombre] as (value: string | number) => void)(VALOR);
   }
 
   /**

@@ -21,7 +21,10 @@ import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-
 import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
 
 /**
- * Componente principal para gestionar el formulario de manifiestos.
+ * @description
+ * Componente principal para gestionar el formulario de manifiestos y declaraciones.
+ * Este componente permite capturar y validar datos relacionados con el cumplimiento
+ * de manifiestos y declaraciones en el sistema.
  */
 @Component({
   selector: 'app-manifiestos',
@@ -38,44 +41,54 @@ import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
 })
 export class ManifiestosComponent implements OnInit, OnDestroy {
   /**
-   * Mensaje de alerta.
+   * @description
+   * Mensaje de alerta que se muestra en el componente.
    */
   public mensaje: string = MENSAJE_DE_ALERTA;
 
   /**
-   * Estado de la solicitud.
+   * @description
+   * Estado actual de la solicitud.
    */
   public solicitudState!: DatosDomicilioLegalState;
 
   /**
-   * Notificador para destruir observables.
+   * @description
+   * Notificador para destruir observables y evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @description
+   * Opciones de cumplimiento cargadas desde un archivo JSON.
+   */
   cumplimientoOptions = CumplimientoOptions;
 
   /**
+   * @description
    * Constructor del componente.
-   * @param fb
-   * @param DatosDomicilioLegalStore
-   * @param DatosDomicilioLegalQuery
+   * @param fb Constructor de formularios reactivos.
+   * @param DatosDomicilioLegalStore Store para gestionar el estado del domicilio legal.
+   * @param DatosDomicilioLegalQuery Query para obtener datos del estado del domicilio legal.
    */
   constructor(
     public fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
   ) {
-    // Se inicial
+    // Constructor
   }
 
   /**
-   * Grupo de formularios principal.
-   * @property {FormGroup} manifiestos
+   * @description
+   * Grupo de formularios principal para capturar los datos de manifiestos.
    */
   manifiestos!: FormGroup;
 
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se inicializa.
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
     this.DatosDomicilioLegalQuery.selectSolicitud$
@@ -86,16 +99,23 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     this.manifiestos = this.fb.group({
+      /**
+       * @description
+       * Campo para capturar el cumplimiento de manifiestos.
+       * Es un campo obligatorio.
+       */
       cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
     });
   }
 
   /**
-   * Establece el valor de un campo en el store de Tramite31601.
-   * @param form - El grupo de formularios que contiene el campo.
-   * @param campo - El nombre del campo cuyo valor se va a establecer.
-   * @param metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
+   * @description
+   * Método que actualiza el estado del store con los valores del formulario.
+   * @param form Formulario reactivo que contiene los datos.
+   * @param campo Nombre del campo del formulario que se desea actualizar.
+   * @param metodoNombre Nombre del método del store que se invocará.
    */
   setValoresStore(
     form: FormGroup,
@@ -111,8 +131,9 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia los observables para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

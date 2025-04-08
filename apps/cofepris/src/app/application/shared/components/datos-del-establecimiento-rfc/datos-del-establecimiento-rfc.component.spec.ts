@@ -63,7 +63,7 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
   it('should set values in the store using setValoresStore', () => {
     const form = component.datosDelForm;
     form.get('denominacion')?.setValue('New Denominacion');
-    component.setValoresStore(form, 'denominacion', 'setDenominacion');
+    component.setValoresStore(form, 'denominacion', 'setDenominacionRazonSocial');
     expect(mockTramiteStore.setDenominacion).toHaveBeenCalledWith('New Denominacion');
 
     form.get('correoElectronico')?.setValue('new@example.com');
