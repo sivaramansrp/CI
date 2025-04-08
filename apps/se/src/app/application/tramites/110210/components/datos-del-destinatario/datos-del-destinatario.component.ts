@@ -56,17 +56,24 @@ export class DatosDelDestinatarioComponent implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
-    this.solicitudForm = this.fb.group({
-      nombres: [''],
-      primerApellido: [''],
-      segundoApellido: [''],
-      numeroRegistroFiscal: [''],
-      razonSocial: [''],
-    });
+    this.inicializarFormulario();
     this.restoreFormValues(); 
     this.updateStore();
     this.setFormValues()
   }
+
+   /**
+ * Método para inicializar el formulario `solicitudForm`.
+ */
+private inicializarFormulario(): void {
+  this.solicitudForm = this.fb.group({
+    nombres: [''],
+    primerApellido: [''],
+    segundoApellido: [''],
+    numeroRegistroFiscal: [''],
+    razonSocial: [''],
+  });
+}
 
   /**
  * Establece los valores del formulario `solicitudForm` utilizando datos simulados.

@@ -53,17 +53,24 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
-    this.solicitudForm = this.fb.group({
-      cveRegistroProductor: [''],
-      fichaExpedicion: [''],
-      fechaVecimiento: [''],
-      tratadoAcuerdoClave: [''],
-      paisBloqueClave: [''],
-    });
+    this.inicializarFormulario();
     this.restoreFormValues(); 
     this.updateStore();
     this.setFormValues()
   }
+
+    /**
+ * Método para inicializar el formulario `solicitudForm`.
+ */
+private inicializarFormulario(): void {
+  this.solicitudForm = this.fb.group({
+    cveRegistroProductor: [''],
+    fichaExpedicion: [''],
+    fechaVecimiento: [''],
+    tratadoAcuerdoClave: [''],
+    paisBloqueClave: [''],
+  });
+}
 
   /**
  * Establece los valores del formulario `solicitudForm` utilizando datos simulados.

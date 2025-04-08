@@ -53,19 +53,26 @@ export class DomicilioDelDestinatarioComponent implements OnInit, OnDestroy {
    */
 
   ngOnInit(): void {
-    this.solicitudForm = this.fb.group({
-      ciudad: [''],
-      calle: [''],
-      numeroLetra: [''],
-      telefono: [''],
-      fax: [''],
-      correoElectronico: [''],
-      observaciones: [''],
-    });
+    this.inicializarFormulario();
     this.restoreFormValues(); 
     this.updateStore();
     this.setFormValues()
   }
+
+  /**
+ * Método para inicializar el formulario `solicitudForm`.
+ */
+private inicializarFormulario(): void {
+  this.solicitudForm = this.fb.group({
+    ciudad: [''],
+    calle: [''],
+    numeroLetra: [''],
+    telefono: [''],
+    fax: [''],
+    correoElectronico: [''],
+    observaciones: [''],
+  });
+}
 
   /**
  * Establece los valores del formulario `solicitudForm` utilizando datos simulados.
