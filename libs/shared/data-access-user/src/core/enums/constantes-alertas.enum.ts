@@ -34,14 +34,10 @@ export const TEXTOS = {
   <p><b>•</b> No debe contener páginas en blanco.</p>`,
   ADJUNTAR_WARNING: `<p>La carga del documento puede tardar varios segundos, este tiempo dependerá del tamaño de tu archivo y de la velocidad de tu conexión.</p>`,
   DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`,
-};
-
-export const IMMEX = {
-  labelNombre: 'IMMEX (Número/aaaa)',
-  maxlength: 25,
-  minlenght: 0,
-  required: false,
-  alfanumerico: true,
+  INSTRUCCIONES_AGREGAR_NUEVO: `<h6>Instrucciones</h6>
+  <p>- De acuerdo al caso particular, algunos documentos podrían ser obligatorios</p>
+  <p>- En caso de que no requieras algún documento, selecciónalo y elimínalo</p>
+  <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo"</p>`,
 };
 
 export const MESES = [
@@ -287,3 +283,5 @@ export const FECHA_FINAL = {
   required: true,
   habilitado: true,
 };
+
+export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.';

@@ -1,0 +1,319 @@
+<app-datos-del-establecimiento-seccion></app-datos-del-establecimiento-seccion>
+
+<app-domicillio-del-establecimiento-seccion></app-domicillio-del-establecimiento-seccion>
+
+  <label class="mt-5"> Datos del producto*: </label>
+  <app-tabla-dinamica
+    [configuracionTabla]="configuracionTablaDatosProducto"
+    [datos]="establecimientoData"
+    [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+  ></app-tabla-dinamica>
+
+  <div class="row">
+    <div class="col-md-12 d-flex justify-content-end mt-5">
+      <div class="btn-group">
+        <button class="btn btn-default" type="button">Modificar</button>
+        <button class="btn btn-default" type="button">Eliminar</button>
+        <button
+          type="button"
+          class="btn btn-primary ms-2"
+         
+          (click)="openDatosMercanciaModal()"
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+<app-manifiestos-representante-seccion></app-manifiestos-representante-seccion>
+
+<div
+  class="modal fade"
+  #datosMercanciaModal
+  tabindex="-1"
+  
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form [formGroup]="datosMercanciaForm">
+        <div class="modal-body">
+          <ng-titulo titulo="Datos mercancía"></ng-titulo>
+          <div class="row">
+            <div class="col-md-10">
+              <label> Nombre Específico*: </label>
+              <textarea
+                id="message"
+                class="form-control mb-5"
+                placeholder=""
+                rows="15"
+                formControlName="nombreEspecifico"
+              ></textarea>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <app-catalogo-select
+                [catalogo]="catalogoTipoProducto"
+                formControlName="tipoDeProducto"
+                [label]="'Tipo de producto'"
+                [required]="true"
+                [placeholder]="'Seleccione una valor'"
+                name="tipoDeProducto"
+              >
+              </app-catalogo-select>
+            </div>
+          </div>
+          <div class="row">
+            <div id="fraccionArancelaria" class="col-md-10 mb-3">
+              <label for="fraccionArancelaria"
+                >Fracción arancelaria <span class="require">*</span>:</label
+              >
+              <div>
+                <input
+                  type="text"
+                  id="fraccionArancelariaId"
+                  formControlName="fraccionArancelaria"
+                  class="form-control"
+                  (blur)="onRepresentanteRfcBlur()"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <label for="descripcionFraccionArancelaria"
+                >Descripción de la fracción arancelaria*:</label
+              >
+              <input
+                type="text"
+                id="descripcionFraccionArancelariaId"
+                class="form-control"
+                formControlName="descripcionFraccionArancelaria"
+                [readOnly]="true"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <label for="cantidadUMT"
+                >Cantidad UMT<span class="require">*</span> :</label
+              >
+              <input
+                type="text"
+                id="cantidadUMT"
+                class="form-control"
+                formControlName="cantidadUMT"
+              />
+            </div>
+            <div class="col-md-5">
+              <label for="descripcionFraccionArancelaria">UMT:</label>
+              <input
+                type="text"
+                id="umt"
+                class="form-control"
+                formControlName="umt"
+                [readOnly]="true"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-5">
+              <label for="cantidadOVolumen"
+                >Cantidad o Volúmen<span class="require">*</span> :</label
+              >
+              <input
+                type="text"
+                id="cantidadOVolumenId"
+                class="form-control"
+                formControlName="cantidadOVolumen"
+              />
+            </div>
+            <div class="col-md-5">
+              <app-catalogo-select
+                [catalogo]="unidadDeMedida"
+                [label]="'Unidad de medida*'"
+                [placeholder]="'Seleccione una valor'"
+                formControlName="unidadDeMedida"
+              ></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <label>Presentación farmacéutica o tipo de envase*:</label>
+              <textarea
+                id="presentacionaFrmaceuticaId"
+                class="form-control mb-5"
+                placeholder=""
+                rows="15"
+                formControlName="presentacionaFrmaceutica"
+              ></textarea>
+            </div>
+            <div class="col-md-2"></div>
+          </div>
+
+          <ng-titulo titulo="Condiciones de almacenamiento"></ng-titulo>
+          <div class="row">
+            <div class="col-md-10">
+              <label for="almacenamientoEnvasePrimario">Envase primario:</label>
+              <input
+                type="text"
+                id="almacenamientoEnvasePrimarioId"
+                class="form-control"
+                formControlName="almacenamientoEnvasePrimario"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <label for="almacenamientoEnvaseSecundario"
+                >Envase secundario</label
+              >
+              <input
+                type="text"
+                id="almacenamientoEnvaseSecundarioId"
+                class="form-control"
+                formControlName="almacenamientoEnvaseSecundario"
+              />
+            </div>
+          </div>
+
+          <ng-titulo titulo="Condiciones de transporte"></ng-titulo>
+          <div class="row">
+            <div class="col-md-10">
+              <label for="transporteEnvasePrimario">Envase primario:</label>
+              <input
+                type="text"
+                id="transporteEnvasePrimarioId"
+                class="form-control"
+                formControlName="transporteEnvasePrimario"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <label for="transporteEnvaseSecundario">Envase secundario</label>
+              <input
+                type="text"
+                id="transporteEnvaseSecundarioId"
+                class="form-control"
+                formControlName="transporteEnvaseSecundario"
+              />
+            </div>
+          </div>
+
+          <div class="row mt-5">
+            <div class="col-md-10">
+              <div
+                class="panel-group ficha-collapse"
+                id="accordionPaisDeOrigen"
+              >
+                <div class="panel panel-default">
+                  <div
+                    class="panel-heading"
+                    (click)="mostrar_colapsable_pais()"
+                  >
+                    <h4 class="panel-title">
+                      <a> País de origen </a>
+                    </h4>
+                    <button
+                      type="button"
+                      title="Mostrar"
+                      class="collpase-button collapsed"
+                    ></button>
+                  </div>
+                  @if(colapsable){
+                  <div class="panel-collapse collapse in" id="panel-01">
+                    <div class="panel-body">
+                      <crosslist
+                        [fechas]="seleccionarOrigenDelPais"
+                        [label]="paisDeOriginLabel"
+                        [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
+                        [botones]="paisDeOriginBotons"
+                        (fechasSeleccionadasChange)="
+                          paisDeOriginSeleccionadasChange($event)
+                        "
+                      ></crosslist>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-md-10">
+              <div
+                class="panel-group ficha-collapse"
+                id="accordionPaisProcedencia"
+              >
+                <div class="panel panel-default">
+                  <div
+                    class="panel-heading"
+                    (click)="mostrar_colapsable_pais_procedencia()"
+                  >
+                    <h4 class="panel-title">
+                      <a> País de procedencia </a>
+                    </h4>
+                    <button
+                      type="button"
+                      title="Mostrar"
+                      class="collpase-button collapsed"
+                    ></button>
+                  </div>
+                  @if(colapsable_procedencia){
+                  <div class="panel-collapse collapse in" id="panel-02">
+                    <div class="panel-body">
+                      <crosslist
+                        [fechas]="paisDeProcedenciaDatos"
+                        [label]="paisDeProcedenciaLabel"
+                        [fechasSeleccionadas]="
+                          seleccionadasPaisDeProcedenciaDatos
+                        "
+                        [botones]="paisDeProcedenciaBotons"
+                        (fechasSeleccionadasChange)="
+                          paisDeProcedenciaSeleccionadasChange($event)
+                        "
+                      ></crosslist>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <app-catalogo-select
+                [catalogo]="usoEspecifico"
+                [label]="'Uso específico*'"
+                [placeholder]="'Seleccione una valor'"
+                formControlName="usoEspecifico"
+              ></app-catalogo-select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer mt-5">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="limpiarFormulario()"
+          >
+            Limpiar
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="guardarDatosMercancia()"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
