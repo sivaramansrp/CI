@@ -27,6 +27,20 @@ export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSecc
   informacionConfidencialRadio$ = this.select('informacionConfidencialRadio');
    propietarioData$ = this.select('propietarioData');
   establecimientoData$ = this.select('establecimientoData');
+  ideGenerica1$ = this.select('ideGenerica1');
+  observaciones$ = this.select('observaciones');
+  establecimientoRFCResponsableSanitario$ = this.select('establecimientoRFCResponsableSanitario');
+  establecimientoRazonSocial$ = this.select('establecimientoRazonSocial');
+  establecimientoEstados$ = this.select('establecimientoEstados');
+  descripcionMunicipio$ = this.select('descripcionMunicipio');
+  localidad$ = this.select('localidad');
+  colonias$ = this.select('colonias');
+  calle$ = this.select('calle');
+  lada$ = this.select('lada');
+  telefono$ = this.select('telefono');
+  scian$ = this.select('scian');
+  establishomentoColonias$ = this.select('establishomentoColonias');
+
   
 
   constructor(protected override store: DatosDelSolicituteSeccionStateStore) {

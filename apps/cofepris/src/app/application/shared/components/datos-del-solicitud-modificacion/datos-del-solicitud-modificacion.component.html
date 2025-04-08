@@ -1,445 +1,736 @@
-
 <div class="container">
-    <form >
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <div class="panel-group ficha-collapse" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading" (click)="mostrarColapsable()" (keyup.enter)="mostrarColapsable()" tabindex="0">
+            <h4 class="panel-title">
+              <a aria-label="Repeat"><i class="bi bi-copy" aria-hidden="true"></i>Opciones de pre-llenado de Solicitud</a>
+            </h4>
+            <button type="button" class="collpase-button collapsed" (keydown)="mostrarColapsable()"> </button>
+          </div>
+          @if(colapsable1){
+          <div class="panel-collapse collapse in" id="panel-01">
+            <div class="panel-body">
+              <ng-alert [CONTENIDO]="TEXTOS1.TEXTOS_SOLICITUD"></ng-alert>
+              <div class="row">
+                
+                <div class=" d-flex justify-content-end">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    
+                  >
+                  Copiar datos en una Nueva Solicitud
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="domicilioEstablecimiento">
+    <div>
       <div>
-        <label>
+        <label class="mt-5 mb-3">
           Seleccione el tipo de operación que desea realizar*:
         </label>
-        <!-- <app-input-radio
-          [radioOptions]="opcionDeBotonDeRadio"
-          [layout]="'horizontal'"
-          formControlName="tipoOperacion"
-          (change)="getTipoOperacion()"
-        ></app-input-radio> -->
-        <app-input-radio
-        [radioOptions]="radioOptions"
-        [isRequired]="true"
-        [layout]="'horizontal'"
-        formControlName="ideGenerica1"
-      ></app-input-radio>
-  <div class="radio">
-    <label>
-      <input 
-        type="radio" 
-        value="TIMOD.PRO" 
-        formControlName="ideGenerica1" 
-        id="pro" 
-      
-      /> Prórroga
-    </label>  
-    &nbsp;&nbsp;&nbsp;
-    <label>
-      <input 
-        type="radio" 
-        value="TIMOD.MOD" 
-        formControlName="ideGenerica1" 
-        id="mod" 
-       
-      /> Modificación
-    </label>
-    &nbsp;&nbsp;&nbsp;
-    <label>
-      <input 
-        type="radio" 
-        value="TIMOD.MYP" 
-        formControlName="ideGenerica1" 
-        id="modPro" 
-       
-      /> Modificación y prórroga
-    </label>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12" style="margin-bottom:25px">
-      <div>
-        <label for="justificacionId"> labelOpinionJustificacion</label>
-        <span class="require">*</span>
-        <label for="puntos"> labelPuntos </label>
+        <app-input-radio
+          [radioOptions]="genericOptions"
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          formControlName="ideGenerica1"
+        ></app-input-radio>
       </div>
-      <div>
-        <textarea 
-          formControlName="observaciones" 
-          cols="70"
-          rows="5" 
-          id="justificacionId" 
-          class="form-control" 
-         
-        ></textarea>
+
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <div>
+            <label for="observaciones"> Justificacion</label>
+            <span class="require">*</span>
+          </div>
+          <div>
+            <textarea
+              cols="70"
+              rows="5"
+              id="observacionesId"
+              class="form-control"
+              formControlName="observaciones" 
+              placeholder="Justificación"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+      <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="openEstablecimientoModal()"
+          >
+            Seleccionar establecimiento
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoRFCResponsableSanitario"
+              >RFC del responsable sanitario:</label
+            >
+            <input
+              class="form-control"
+              id="establecimientoRFCResponsableSanitarioId"
+              placeholder=""
+              type="text"
+              formControlName="establecimientoRFCResponsableSanitario"
+            />
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoRazonSocial"
+              >Denominación o razón social*:</label
+            >
+            <input
+              class="form-control"
+              id="establecimientoRazonSocialId"
+              placeholder=""
+              type="text"
+              formControlName="establecimientoRazonSocial"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
+            <input
+              class="form-control"
+              id="establecimientoCorreoElectronicoId"
+              placeholder=""
+              type="text"
+              formControlName="establecimientoCorreoElectronico"
+            />
+          </div>
+        </div>
+      </div>
+      <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establecimientoDomicilioCodigoPostal">Código postal*:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="establecimientoDomicilioCodigoPostalId"
+              appUppercase
+           formControlName="establecimientoDomicilioCodigoPostal"
+           (change)="onControlChange('establecimientoDomicilioCodigoPostal')"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              [label]="'Estado*'"
+              name="estado"
+              [required]="true"
+              formControlName="establecimientoEstados"
+              (change)="onControlChange('establecimientoEstados')"
+            >
+            </app-catalogo-select>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="descripcionMunicipio"
+              >Municipio o alcaldía*:</label
+            >
+            <input
+              class="form-control"
+              type="text"
+              id="descripcionMunicipioId"
+              appUppercase
+              formControlName="descripcionMunicipio"
+              (change)="onControlChange('descripcionMunicipio')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <ng-alert [CONTENIDO]="TEXTOS.ALERTA" [CUSTOMECLASS]="class"></ng-alert>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="localidad">Localidad:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="localidad"
+              formControlName="localidad"
+              (change)="onControlChange('localidad')"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="establishomentoColonias">Colonias:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="establishomentoColoniasId"
+              formControlName="establishomentoColonias"
+              (change)="onControlChange('establishomentoColonias')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-8">
+          <div class="form-group">
+            <label class="form-label" for="calle"
+              >Calle*:
+              <span
+                class="bi bi-question-circle-fill"
+                title="Calle"
+                data-bs-toggle="tooltip"
+              
+              ></span
+            ></label>
+            <input
+              class="form-control"
+              type="text"
+              id="calle"
+              appUppercase
+              formControlName="calle"
+               (change)="onControlChange('calle')"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1">
+          <div class="form-group">
+            <label class="form-label" for="lada">Lada:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="lada"
+              appUppercase
+              formControlName ="lada"
+              (change)="onControlChange('lada')"
+            />
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="form-label" for="telefono">Teléfono*:</label>
+            <input
+              class="form-control"
+              type="text"
+              id="telefono"
+              appUppercase
+              formControlName = "telefono"
+              (change)="onControlChange('telefono')"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-        <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="codigoPostal">Código postal*:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="codigoPostal"
-                appUppercase
-                aria-labelledby="codigoPostal"
-              />
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="form-group">
-              <app-catalogo-select
-                [catalogo]="estado"
-                [label]="'Estado*'"
-                name="estado"
-              >
-              </app-catalogo-select>
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="municipioOAlcaldía"
-                >Municipio o alcaldía*:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="municipioOAlcaldía"
-                appUppercase
-                aria-labelledby="municipioOAlcaldía"
-                
-              />
-            </div>
-          </div>
-        </div>
-  
-        <div class="row mt-5">
-          <!-- <ng-alert
-            [CONTENIDO]="TEXTOS.ADVERTENCIA"
-            [CUSTOMECLASS]="class"
-          ></ng-alert> -->
-        </div>
-  
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="localidad">Localidad:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="localidad"
-               
-                appUppercase
-                aria-labelledby="localidad"
-               
-              />
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="colonias">Colonias:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="colonias"
-               
-                appUppercase
-                aria-labelledby="colonias"
-              
-              />
-            </div>
-          </div>
-        </div>
-  
-        <div class="row">
-          <div class="col-md-8">
-            <div class="form-group">
-              <label class="form-label" for="calle"
-                >Calle*:
-                <span
-                  class="bi bi-question-circle-fill"
-                  title="Calle"
-                  data-bs-toggle="tooltip"
-                ></span
-              ></label>
-              <input
-                class="form-control"
-                type="text"
-                id="calle"
-              
-                appUppercase
-                aria-labelledby="calle"
-               
-              />
-            </div>
-          </div>
-        </div>
-  
-        <div class="row">
-          <div class="col-md-1">
-            <div class="form-group">
-              <label class="form-label" for="lada">Lada:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="lada"
-              
-                appUppercase
-                aria-labelledby="lada"
-               
-              />
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label class="form-label" for="telefono">Teléfono*:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="telefono"
-               
-                appUppercase
-                aria-labelledby="telefono"
-               
-              />
-            </div>
-          </div>
+ 
+    <div class="row" class="mt-5">
+      <div class="form-group">
+        <label class="form-label" for="scian">S.C.I.A.N.*:</label>
+        <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla"
+          [datos]="datosData"
+          [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
+          formcontrolname="scian"
+        >
+        </app-tabla-dinamica>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-default btn-space">Eliminar</button>
+      <button
+        type="button"
+        class="btn btn-primary btn-space"
+        data-bs-toggle="modal"
+        data-bs-target="#modalClave"
+        (click)="mostrarModeloClave()"
+      >
+        Agregar
+      </button>
+    </div>
+  </form>
+
+  <form [formGroup]="solicitudEstablecimientoForm">
+    <div class="row align-item-center">
+      <div class="col-md-4 mt-5">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="avisoCheckbox"
+            formControlName="avisoCheckbox"
+            (change)="toggleNoLicenciaSanitaria($event)"
+          />
+          <label class="form-check-label" for="avisoCheckbox">
+            <span>Aviso de funcionamiento</span>
+          </label>
         </div>
       </div>
-    </form>
-  
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label" for="licenciaSanitaria"
+            >No. de licencia sanitaria:
+            <span
+              class="bi bi-question-circle-fill"
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+            ></span
+          ></label>
+          <input
+            class="form-control"
+            id="licenciaSanitaria"
+            placeholder=""
+            type="text"
+            formControlName="noLicenciaSanitaria"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-catalogo-select
+          [catalogo]="estado"
+          [label]="'Régimen'"
+          [required]="true"
+          name="regimen"
+          [tooltipQuestionCircle]="true"
+          formControlName="regimen"
+        ></app-catalogo-select>
+      </div>
+      <div class="col-md-8">
+        <app-catalogo-select
+          [catalogo]="estado"
+          [label]="'Aduanas de entradas'"
+          [required]="true"
+          name="aduanasEntradas"
+          formControlName="aduanasEntradas"
+        ></app-catalogo-select>
+      </div>
+    </div>
     <div class="row mt-5">
-      <label class="form-label mt-4 text-start">S.C.I.A.N.*:</label>
+      <div class="col-md-4"></div>
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="aifaCheckbox"
+            formControlName="aifaCheckbox"
+            
+          />
+          <label class="form-check-label" for="aifaCheckbox">
+            <span
+              >Aeropuerto Internacional Felipe Ángeles (AIFA).
+              <span
+                class="bi bi-question-circle-fill"
+                title="Aeropuerto Internacional Felipe Ángeles (AIFA)."
+                data-bs-toggle="tooltip"
+              ></span>
+            </span>
+          </label>
+        </div>
+      </div>
     </div>
     <div class="row">
-      <!-- <app-tabla-dinamica
+      <div class="col-md-12 mt-5">
+        <h4>Mercancías*:</h4>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <app-tabla-dinamica
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-        [configuracionTabla]="nicoTabla"
-        [datos]="nicoTablaDatos"
-      ></app-tabla-dinamica> -->
+        [configuracionTabla]="mercanciasTabla"
+        [datos]="mercanciasTablaDatos"
+      ></app-tabla-dinamica>
       <div class="container text-end mt-5">
+        <button class="btn btn-default me-2">Modificar</button>
         <button class="btn btn-default me-2">Eliminar</button>
         <button
           class="btn btn-primary me-2"
           data-bs-toggle="modal"
-          data-bs-target="#modalAddAgent"
+          data-bs-target="#modalAddAgentMercancias"
         >
           Agregar
         </button>
       </div>
     </div>
-    <form >
-      <div class="row align-item-center">
-        <div class="col-md-4 mt-5">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="avisoCheckbox"
-            
-            />
-            <label class="form-check-label" for="avisoCheckbox">
-              <span>Aviso de funcionamiento</span>
-            </label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="licenciaSanitaria"
-              >No. de licencia sanitaria:
-              <span
-                class="bi bi-question-circle-fill"
-                title="No. de licencia sanitaria"
-                data-bs-toggle="tooltip"
-              ></span
-            ></label>
-            <input
-              class="form-control"
-              id="licenciaSanitaria"
-              placeholder=""
-              type="text"
-              formControlName="licenciaSanitaria"
-            />
-          </div>
-        </div>
-      </div>
+
+    <app-manifiestos-representante-seccion></app-manifiestos-representante-seccion>
   
-      <div class="row">
-        <div class="col-md-4">
-          <app-catalogo-select
-            [catalogo]="estado"
-         
-            [label]="'Régimen'"
-            [required]="true"
-            name="regimen"
-            [tooltipQuestionCircle]="true"
-          
-          ></app-catalogo-select>
-        </div>
-        <div class="col-md-8">
-          <app-catalogo-select
-            [catalogo]="estado"
-        
-            [label]="'Aduanas de entradas'"
-            [required]="true"
-            name="aduanasEntradas"
-          
-          ></app-catalogo-select>
-        </div>
-      </div>
-      <div class="row mt-5">
-        <div class="col-md-4"></div>
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="aifaCheckbox"
-            
-              
-            />
-            <label class="form-check-label" for="aifaCheckbox">
-              <span
-                >Aeropuerto Internacional Felipe Ángeles (AIFA).
-                <span
-                  class="bi bi-question-circle-fill"
-                  title="Aeropuerto Internacional Felipe Ángeles (AIFA)."
-                  data-bs-toggle="tooltip"
-                ></span>
-              </span>
-            </label>
-          </div>
-        </div>
-      </div>
-  
-      <div>
-        <div class="row">
-          <div class="col-md-12 mt-5">
-            <h4>Mercancías*:</h4>
-          </div>
-        </div>
-        <div class="row mt-5">
-          <!-- <app-tabla-dinamica
-            [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-            [configuracionTabla]="mercanciasTabla"
-            [datos]="mercanciasTablaDatos"
-          ></app-tabla-dinamica> -->
-          <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Modificar</button>
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button
-              class="btn btn-primary me-2"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAddAgentMercancias"
-            >
-              Agregar
-            </button>
-          </div>
-        </div>
-      </div>
-  
-      <div class="row mt-2">
-        <div class="col-md-12">
-          <ng-titulo titulo="Manifiesto bajo protesta" />
-          <div class="form-check bg-light p-0">
-            <div class="alert alert-info content-with-checkbox py-6">
-              <input
-                formControlName="manifests"
-                type="checkbox"
-                id="manifiesto"
-             
-              />
-              <span class="fw-bold align-middle"> *</span>
-              <div>manifests </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-    <div>
+  </form>
+</div>
+
+<div class="modal fade" #establecimientoModalButton>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
       <form>
-        <h6>
-          Los datos o anexos pueden contener información confidencial ¿Está de
-          acuerdo en hacerlos públicos?*:
-        </h6>
-        <div class="row px-3">
-          <!-- <app-input-radio
-            [radioOptions]="opcionDeBotonDeRadio"
-            [layout]="'horizontal'"
-            formControlName="acuerdoPublico"
-            (change)="getAcuerdoPublico()"
-          ></app-input-radio> -->
+        <div class="modal-body">
+          Por el momento no hay comunicación con el Sistema de COFEPRIS, favor
+          de capturar su establecimiento. Acerar
         </div>
-        <ng-titulo titulo="Representante legal"></ng-titulo>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="rfc">RFC*:</label>
-              <input
-                class="form-control"
-                type="text"
-                id="rfc"
-                formControlName="rfc"
-                appUppercase
-                aria-labelledby="rfc"
-               
-              />
-            </div>
-          </div>
-          <div class="col-md-3 mt-5">
-            <button class="btn btn-default me-2">Modificar</button>
-          </div>
-        </div>
-  
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="nombre"
-                >Nombre o Razón Social*:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="nombre"
-                formControlName="nombre"
-                appUppercase
-                aria-labelledby="nombre"
-              />
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="apellidoPaterno"
-                >Apellido paterno*:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="apellidoPaterno"
-                formControlName="apellidoPaterno"
-                appUppercase
-                aria-labelledby="apellidoPaterno"
-              />
-            </div>
-          </div>
-  
-          <div class="col-md-4">
-            <div class="form-group">
-              <label class="form-label" for="apellidoMaterno"
-                >Apellido materno:</label
-              >
-              <input
-                class="form-control"
-                type="text"
-                id="apellidoMaterno"
-                formControlName="apellidoMaterno"
-                appUppercase
-                aria-labelledby="apellidoMaterno"
-              />
-            </div>
-          </div>
+        <div class="modal-footer mt-5 d-flex justify-content-center">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
   </div>
+</div>
+
+<div class="modal fade" #establecimientoModal>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form [formGroup]="scianForm">
+        <div class="modal-body">
+          <ng-titulo titulo="Clave S.C.I.A.N."></ng-titulo>
+          <div class="row">
+            <div class="col-md-8">
+              <app-catalogo-select
+                [catalogo]="scianJson"
+                [label]="'Clave S.C.I.A.N.*'"
+                [placeholder]="'Seleccione una valor'"
+                formControlName="scian"
+                (change)="onControlChange('scian')"
+              ></app-catalogo-select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <label for="descripcionScian">Descripción del S.C.I.A.N.</label>
+              <input
+                type="text"
+                id="descripcionScianId"
+                formControlName="descripcionScian"
+                class="form-control"
+                (change)="onControlChange('descripcionScian')"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer mt-5">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="limpiarScianForm()"
+          >
+            Limpiar
+          </button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="guardarScian()"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modalAddAgentMercancias"
+  tabindex="-1"
+  aria-labelledby="modalAddAgentMercanciasLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 80vw">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Datos mercancías</h4>
+      </div>
+      <div class="modal-body modal-height">
+        <form [formGroup]="formMercancias">
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="clasificacion"
+              [label]="'Clasificación del producto'"
+              [required]="true"
+              name="clasificacion"
+            ></app-catalogo-select>
+          </div>
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="especificarClasificacionProducto"
+              [label]="'Especificar clasificación del producto'"
+              [required]="true"
+              name="especificarClasificacionProducto"
+            ></app-catalogo-select>
+          </div>
+          <div class="form-group">
+            <label for="denominacionEspecifica"
+              >Denominación específica del producto*:</label
+            >
+            <input
+              type="text"
+              id="denominacionEspecifica"
+              formControlName="denominacionEspecifica"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="denominacionDistintiva"
+              >Denominación distintiva*:</label
+            >
+            <input
+              type="text"
+              id="denominacionDistintiva"
+              formControlName="denominacionDistintiva"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="denominacionComun"
+              >Denominación común, nombre común o nombre científico*:</label
+            >
+            <input
+              type="text"
+              id="denominacionComun"
+              formControlName="denominacionComun"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="tipoDeProducto"
+              [label]="'Tipo de producto'"
+              [required]="true"
+              name="tipoDeProducto"
+            ></app-catalogo-select>
+          </div>
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="estadoFisico"
+              [label]="'Estado físico'"
+              [required]="true"
+              name="estadoFisico"
+            ></app-catalogo-select>
+          </div>
+          <div class="form-group">
+            <label for="fraccionArancelaria">Fracción arancelaria*:</label>
+            <input
+              type="text"
+              id="fraccionArancelaria"
+              formControlName="fraccionArancelaria"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="descripcionFraccion"
+              >Descripción de la fracción*:</label
+            >
+            <input
+              type="text"
+              id="descripcionFraccion"
+              formControlName="descripcionFraccion"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cantidadUMT">Cantidad UMT*:</label>
+            <input
+              type="text"
+              id="cantidadUMT"
+              formControlName="cantidadUMT"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="UMT">UMT*:</label>
+            <input
+              type="text"
+              id="UMT"
+              formControlName="UMT"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cantidadUMC">Cantidad UMC*:</label>
+            <input
+              type="text"
+              id="cantidadUMC"
+              formControlName="cantidadUMC"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <app-catalogo-select
+              [catalogo]="estado"
+              formControlName="UMC"
+              [label]="'UMC'"
+              [required]="true"
+              name="UMC"
+            ></app-catalogo-select>
+          </div>
+          <div class="form-group">
+            <label for="presentacion"
+              >Presentación farmacéutica o tipo de envase*:</label
+            >
+            <input
+              type="text"
+              id="presentacion"
+              formControlName="presentacion"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <label for="numeroRegistro">Número de registro sanitario*:</label>
+            <input
+              type="text"
+              id="numeroRegistro"
+              formControlName="numeroRegistro"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group">
+            <input-fecha
+              [datos]="fechaCaducidadInput"
+              [setFecha]="formMercancias.get('fechaCaducidad')?.value"
+              (valorCambiado)="cambioFechaFinal($event)"
+            ></input-fecha>
+          </div>
+          <div class="form-group mt-5">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsable()"
+                  tabindex="0"
+                >
+                  <p class="panel-title">País de orígen</p>
+                  <button
+                    type="button"
+                    class="collpase-button collapsed"
+                  ></button>
+                </div>
+                @if(colapsable){
+                <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist
+                      [fechas]="seleccionarOrigenDelPais"
+                      [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotons"
+                    ></crosslist>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mt-5">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsableDos()"
+                  tabindex="0"
+                >
+                  <p class="panel-title">País de procedencia</p>
+                  <button
+                    type="button"
+                    class="collpase-button collapsed"
+                  ></button>
+                </div>
+                @if(colapsableDos){
+                <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist
+                      [fechas]="seleccionarOrigenDelPaisDos"
+                      [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonsDos"
+                    ></crosslist>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mt-5">
+            <div class="panel-group ficha-collapse" id="accordion">
+              <div class="panel panel-default">
+                <div
+                  class="panel-heading"
+                  (click)="mostrar_colapsableTres()"
+                  tabindex="0"
+                >
+                  <p class="panel-title">Uso específico</p>
+                  <button
+                    type="button"
+                    class="collpase-button collapsed"
+                  ></button>
+                </div>
+                @if(colapsableTres){
+                <div class="panel-collapse collapse in" id="panel-01">
+                  <div class="panel-body">
+                    <crosslist
+                      [fechas]="seleccionarOrigenDelPaisTres"
+                      [label]="paisDeProcedenciaLabel"
+                      [botones]="paisDeProcedenciaBotonsTres"
+                    ></crosslist>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer custom-footer">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+          Limpiar
+        </button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

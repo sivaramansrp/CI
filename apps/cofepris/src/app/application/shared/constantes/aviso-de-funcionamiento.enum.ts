@@ -2,6 +2,7 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 
 import {
   DatosDeLaProductoModel,
+  MercanciasInfo,
   PropietarioModel,
   ScianModel,
 } from '../models/datos-de-la-solicitud.model';
@@ -186,3 +187,145 @@ export const ESTABLECIMIENTO_TABLE_CONFIG: ConfiguracionColumna<PropietarioModel
     orden: 15,
   },
 ];
+
+export const MERCANCIAS_DATA = [
+  {
+    encabezado: 'Clasificación del producto',
+    clave: (ele: MercanciasInfo): string => ele.clasificacion,
+    orden: 1,
+  },
+  {
+    encabezado: 'Especificar clasificación del producto',
+    clave: (ele: MercanciasInfo): string => ele.especificar,
+    orden: 2,
+  },
+  {
+    encabezado: 'Denominación específica del producto',
+    clave: (ele: MercanciasInfo): string => ele.denominacionEspecifica,
+    orden: 3,
+  },
+  {
+    encabezado: 'Denominación distintiva',
+    clave: (ele: MercanciasInfo):string => ele.denominacionDistintiva,
+    orden: 4,
+  },
+  {
+    encabezado: 'Denominación común, nombre común o nombre científico',
+    clave: (ele: MercanciasInfo): string => ele.denominacionComun,
+    orden: 5,
+  },
+  {
+    encabezado: 'Forma farmacéutica',
+    clave: (ele: MercanciasInfo): string => ele.formaFarmaceutica,
+    orden: 6,
+  },
+  {
+    encabezado: 'Estado físico',
+    clave: (ele: MercanciasInfo): string => ele.estadoFisico,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: MercanciasInfo): string => ele.fraccionArancelaria,
+    orden: 8,
+  },
+  {
+    encabezado: 'Descripción de la fracción',
+    clave: (ele: MercanciasInfo): string => ele.descripcionFraccion,
+    orden: 9,
+  },
+  {
+    encabezado: 'Unidad de medida de comercialización (UMC)',
+    clave: (ele: MercanciasInfo): string => ele.unidad,
+    orden: 10,
+  },
+  {
+    encabezado: 'Cantidad UMC',
+    clave: (ele: MercanciasInfo): string => ele.cantidadUMC,
+    orden: 11,
+  },
+  {
+    encabezado: 'Unidad de medida de tarifa (UMT)',
+    clave: (ele: MercanciasInfo): string => ele.unidadUMT,
+    orden: 12,
+  },
+  {
+    encabezado: 'Cantidad UMT',
+    clave: (ele: MercanciasInfo): string => ele.cantidadUMT,
+    orden: 13,
+  },
+  {
+    encabezado: 'Presentación',
+    clave: (ele: MercanciasInfo): string => ele.presentacion,
+    orden: 14,
+  },
+  {
+    encabezado: 'Número de registro sanitario',
+    clave: (ele: MercanciasInfo): string => ele.numeroRegistro,
+    orden: 15,
+  },
+  {
+    encabezado: 'País de orígen',
+    clave: (ele: MercanciasInfo): string => ele.paisDeOrigen,
+    orden: 16,
+  },
+  {
+    encabezado: 'País de procedencia',
+    clave: (ele: MercanciasInfo): string => ele.paisDeProcedencia,
+    orden: 17,
+  },
+  {
+    encabezado: 'Tipo producto',
+    clave: (ele: MercanciasInfo): string => ele.tipoProducto,
+    orden: 18,
+  },
+  {
+    encabezado: 'Uso específico',
+    clave: (ele: MercanciasInfo): string => ele.usoEspecifico,
+    orden: 19,
+  },
+];
+export const FECHA_DE_PAGO = {
+  labelNombre: 'Fecha de caducidad',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * Lista de países disponibles para la selección en el formulario.
+ * Cada elemento de la lista representa el nombre oficial de un país o territorio.
+ */
+export const CROSLISTA_DE_PAISES: string[] = [
+  "AFGANISTÁN (EMIRATO ISLÁMICO)",
+  "ALBANIA (REPÚBLICA DE)",
+  "ALEMANIA (REPÚBLICA FEDERAL DE)",
+  "ANDORRA (PRINCIPADO DE)",
+  "ANGOLA (REPÚBLICA DE)",
+  "ANGUILLA",
+  "ANTIGUA Y BARBUDA",
+  "ARABIA SAUDITA (COMUNIDAD ECONÓMICA EUROPEA)",
+  "ARGELIA (REPÚBLICA DEMOCRÁTICA Y POPULAR DE)",
+  "ARGENTINA (REPÚBLICA)",
+  "AUSTRALIA (COMMONWEALTH OF)",
+  "AUSTRIA (REPUBLIC OF)",
+  "BAHAMAS (COMMONWEALTH OF THE)",
+  "BAHRAIN (KINGDOM OF)",
+  "BANGLADESH (PEOPLE'S REPUBLIC OF)",
+  "BARBADOS",
+  "BELGIUM (KINGDOM OF)",
+  "BELIZE",
+  "BENIN (REPUBLIC OF)",
+  "BHUTAN (KINGDOM OF)"
+];
+
+export const TEXTOS = {
+  /**
+   * Texto para la solicitud.
+   */
+  TEXTOS_SOLICITUD: 'Al dar doble-clic en una Solicitud, se copiarán sus datos en esta Solicitud.',
+
+  /**
+   * Texto para la leyenda de confirmación de la sección.
+   */
+  SECCION_LEYENDA_CONFIRMAR_TEXTOS: 'Debes declarar la cantidad que ingresa en parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.'
+}

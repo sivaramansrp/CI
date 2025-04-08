@@ -1,480 +1,548 @@
-
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ALERT, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Observable, Subject, takeUntil } from 'rxjs';
-
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  ALERT,
+  AlertComponent,
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  CrosslistComponent,
+  CrossListLable,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
+import {Subject, takeUntil } from 'rxjs';
+import {
+  
+  MercanciasInfo,
+  PropietarioTipoPersona,
+  ScianModel,
+} from '../../models/datos-de-la-solicitud.model';
+import { EstablecimientoService } from '../../services/establecimiento.service';
+import { DatosDelEstablecimientoComponent } from '../datos-del-establecimiento/datos-del-establecimiento.component';
+import { Modal } from 'bootstrap';
+import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+import { ScianData } from '../../../shared/models/datos-modificacion.model';
+import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
+import {
+  CROSLISTA_DE_PAISES,
+  FECHA_DE_PAGO,
+  MERCANCIAS_DATA,
+  TEXTOS,
+} from '../../constantes/aviso-de-funcionamiento.enum';
+import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
+import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 @Component({
   selector: 'app-datos-del-solicitud-modificacion',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,FormsModule, TituloComponent,InputRadioComponent,CatalogoSelectComponent,TablaDinamicaComponent],
-  // imports: [CommonModule, ReactiveFormsModule, FormsModule, TituloComponent],  
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    CrosslistComponent,
+    ManifiestosRepresentanteSeccionComponent,
+    InputFechaComponent,
+    TituloComponent,
+    InputRadioComponent,
+    CatalogoSelectComponent,
+    TablaDinamicaComponent,
+    AlertComponent,
+  ],
+
   templateUrl: './datos-del-solicitud-modificacion.component.html',
   styleUrl: './datos-del-solicitud-modificacion.component.scss',
 })
-export class DatosDelSolicitudModificacionComponent {
-  radioOptions: RadioOpcion[] = [
-    { id: 'opcion1', value: 'Opción 1' },
-    { id: 'opcion2', value: 'Opción 2' },
-    { id: 'opcion3', value: 'Opción 3' },
-  ];
-   /**
-   * Formulario principal.
-   */
-   form!: FormGroup;
+export class DatosDelSolicitudModificacionComponent
+  implements OnInit, OnDestroy ,AfterViewInit
+{
+  @ViewChild('establecimientoModal', { static: false })
+  establecimientoModal!: ElementRef;
 
-   /**
-    * Lista de estados.
-    */
-   estado: Catalogo[] = [];
- 
-   /**
-    * Textos de alerta.
-    */
-   TEXTOS = ALERT;
- 
-   /**
-    * Clase de alerta.
-    */
-   class = 'alert-warning';
- 
-   /**
-    * Configuración de selección de tabla.
-    */
-   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
- 
-   /**
-    * Configuración de columnas de la tabla NICO.
-    */
-  //  nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
- 
-   /**
-    * Datos de la tabla NICO.
-    */
-  //  nicoTablaDatos: NicoInfo[] = [];
- 
-   /**
-    * Formulario de domicilio.
-    */
-   domicilio!: FormGroup;
- 
-   /**
-    * Configuración de columnas de la tabla de mercancías.
-    */
-  //  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
- 
-   /**
-    * Datos de la tabla de mercancías.
-    */
-  //  mercanciasTablaDatos: MercanciasInfo[] = [];
- 
-   /**
-    * Manifiestos de alerta.
-    */
-  //  manifests = ALERT.MANIFESTS;
- 
-   /**
-    * Opciones de botón de radio.
-    */
-  //  opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
- 
-   /**
-    * Formulario de representante legal.
-    */
-   representanteLegal!: FormGroup;
- 
-   /**
-    * Observable para el código postal.
-    */
-  //  codigoPostal$: Observable<string | null> =
-  //    this.tramite260904Query.codigoPostal$;
- 
-   /**
-    * Observable para el estado.
-    */
-  //  estado$: Observable<Catalogo | null> = this.tramite260904Query.estado$;
- 
-   /**
-    * Observable para el municipio o alcaldía.
-    */
-  //  municipioOAlcaldia$: Observable<string | null> =
-  //    this.tramite260904Query.municipioOAlcaldia$;
- 
-   /**
-    * Observable para la localidad.
-    */
-  //  localidad$: Observable<string | null> = this.tramite260904Query.localidad$;
- 
-   /**
-    * Observable para las colonias.
-    */
-  //  colonias$: Observable<string | null> = this.tramite260904Query.colonias$;
- 
-   /**
-    * Observable para la calle.
-    */
-  //  calle$: Observable<string | null> = this.tramite260904Query.calle$;
- 
-   /**
-    * Observable para la lada.
-    */
-  //  lada$: Observable<string | null> = this.tramite260904Query.lada$;
- 
-   /**
-    * Observable para el teléfono.
-    */
-  //  telefono$: Observable<string | null> = this.tramite260904Query.telefono$;
- 
-   /**
-    * Observable para el checkbox de aviso.
-    */
-  //  avisoCheckbox$: Observable<string | null> = this.tramite260904Query.avisoCheckbox$;
- 
-   /**
-    * Observable para el régimen.
-    */
-  //  regimen$: Observable<Catalogo | null> = this.tramite260904Query.regimen$;
- 
-   /**
-    * Observable para las aduanas de entrada.
-    */
-  //  aduanasEntradas$: Observable<Catalogo | null> = this.tramite260904Query.aduanasEntradas$;
- 
-   /**
-    * Observable para el checkbox de AIFA.
-    */
-  //  aifaCheckbox$: Observable<string | null> = this.tramite260904Query.aifaCheckbox$;
- 
-   /**
-    * Observable para los manifiestos.
-    */
-  //  manifests$: Observable<string | null> = this.tramite260904Query.manifests$;
- 
-   /**
-    * Observable para el acuerdo público.
-    */
-  //  acuerdoPublico$: Observable<string | null> = this.tramite260904Query.acuerdoPublico$;
- 
-   /**
-    * Observable para el RFC.
-    */
-  //  rfc$: Observable<string | null> = this.tramite260904Query.rfc$;
- 
-   /**
-    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
-    */
-   private destroy$ = new Subject<void>();
- 
-   /**
-    * Constructor del componente.
-    * 
-    * @param fb FormBuilder para crear formularios.
-    * @param httpServicios Servicio HTTP para realizar peticiones.
-    * @param tramite260904Query Consulta de datos del trámite.
-    * @param tramite260904Store Almacenamiento de datos del trámite.
-    */
-   constructor(
-     private fb: FormBuilder,
-     private httpServicios: HttpClient,
-    //  private tramite260904Query: Tramite260904Query,
-    //  private tramite260904Store: Tramite260904Store
-   ) {
-     // Constructor
-   }
- 
-   /**
-    * Método de inicialización del componente.
-    */
-   ngOnInit(): void {
-     this.crearFormulario();
-    //  this.obtenerTablaDatos();
-    //  this.obtenerEstadoList();
-    //  this.obtenerMercanciasDatos();
- 
-    //  this.codigoPostal$.pipe(takeUntil(this.destroy$)).subscribe((codigoPostal) => {
-    //    if (codigoPostal) {
-    //      this.form.get('codigoPostal')?.setValue(codigoPostal);
-    //    }
-    //  });
- 
-    //  this.estado$.pipe(takeUntil(this.destroy$)).subscribe((estado) => {
-    //    if (estado) {
-    //      this.form.get('estado')?.setValue(estado);
-    //    }
-    //  });
- 
-    //  this.municipioOAlcaldia$.pipe(takeUntil(this.destroy$)).subscribe((municipioOAlcaldia) => {
-    //    if (municipioOAlcaldia) {
-    //      this.form.get('municipioOAlcaldia')?.setValue(municipioOAlcaldia);
-    //    }
-    //  });
-    //  this.localidad$.pipe(takeUntil(this.destroy$)).subscribe((localidad) => {
-    //    if (localidad) {
-    //      this.form.get('localidad')?.setValue(localidad);
-    //    }
-    //  });
-    //  this.colonias$.pipe(takeUntil(this.destroy$)).subscribe((colonias) => {
-    //    if (colonias) {
-    //      this.form.get('colonias')?.setValue(colonias);
-    //    }
-    //  });
-    //  this.calle$.pipe(takeUntil(this.destroy$)).subscribe((calle) => {
-    //    if (calle) {
-    //      this.form.get('calle')?.setValue(calle);
-    //    }
-    //  });
-    //  this.lada$.pipe(takeUntil(this.destroy$)).subscribe((lada) => {
-    //    if (lada) {
-    //      this.form.get('lada')?.setValue(lada);
-    //    }
-    //  });
-    //  this.telefono$.pipe(takeUntil(this.destroy$)).subscribe((telefono) => {
-    //    if (telefono) {
-    //      this.form.get('telefono')?.setValue(telefono);
-    //    }
-    //  });
- 
-    //  this.avisoCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((avisoCheckbox) => {
-    //    if (avisoCheckbox) {
-    //      this.domicilio.get('avisoCheckbox')?.setValue(avisoCheckbox);
-    //    }
-    //  });
- 
-    //  this.regimen$.pipe(takeUntil(this.destroy$)).subscribe((regimen) => {
-    //    if (regimen) {
-    //      this.domicilio.get('regimen')?.setValue(regimen);
-    //    }
-    //  });
- 
-    //  this.aduanasEntradas$.pipe(takeUntil(this.destroy$)).subscribe((aduanasEntradas) => {
-    //    if (aduanasEntradas) {
-    //      this.domicilio.get('aduanasEntradas')?.setValue(aduanasEntradas);
-    //    }
-    //  });
- 
-    //  this.aifaCheckbox$.pipe(takeUntil(this.destroy$)).subscribe((aifaCheckbox) => {
-    //    if (aifaCheckbox) {
-    //      this.domicilio.get('aifaCheckbox')?.setValue(aifaCheckbox);
-    //    }
-    //  });
- 
-    //  this.manifests$.pipe(takeUntil(this.destroy$)).subscribe((manifests) => {
-    //    if (manifests) {
-    //      this.domicilio.get('manifests')?.setValue(manifests);
-    //    }
-    //  });
- 
-    //  this.acuerdoPublico$.pipe(takeUntil(this.destroy$)).subscribe((acuerdoPublico) => {
-    //    if (acuerdoPublico) {
-    //      this.representanteLegal.get('acuerdoPublico')?.setValue(acuerdoPublico);
-    //    }
-    //  });
- 
-    //  this.rfc$.pipe(takeUntil(this.destroy$)).subscribe((rfc) => {
-    //    if (rfc) {
-    //      this.representanteLegal.get('rfc')?.setValue(rfc);
-    //    }
-    //  });
-   }
- 
-   /**
-    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
-    */
-   ngOnDestroy(): void {
-     this.destroy$.next();
-     this.destroy$.complete();
-   }
- 
-   /**
-    * Método para crear el formulario.
-    */
-   crearFormulario(): void {
-     this.form = this.fb.group({
-       codigoPostal: ['', [Validators.required]],
-       estado: ['', [Validators.required]],
-       municipioOAlcaldia: ['', [Validators.required]],
-       localidad: [''],
-       colonias: [''],
-       calle: ['', [Validators.required]],
-       lada: [''],
-       telefono: ['', [Validators.required]],
-     });
- 
-     this.domicilio = this.fb.group({
-       avisoCheckbox: [true],
+  @ViewChild('establecimientoModalButton', { static: false })
+  establecimientoModalButton!: ElementRef;
+
+  public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
+  modalInstance!: Modal;
+  formMercancias!: FormGroup;
+
+  establecimientoModalInstance!: Modal;
+
+  scianJson: Catalogo[] = [];
+
+  scianForm!: FormGroup;
+  solicitudEstablecimientoForm!: FormGroup;
+
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  genericOptions: PropietarioTipoPersona[] = [];
+
+  public modal: string = 'modal';
+
+  form!: FormGroup;
+  solicitudForm!: FormGroup;
+
+  /**
+   * Botones de acción para gestionar listas de países en la primera sección.
+   */
+  paisDeProcedenciaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en la segunda sección.
+   */
+  paisDeProcedenciaBotonsDos = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[1].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[1].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[1].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[1].quitar('t'),
+    },
+  ];
+
+  /**
+   * Botones de acción para gestionar listas de países en la tercera sección.
+   */
+  paisDeProcedenciaBotonsTres = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[2].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[2].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[2].quitar('t'),
+    },
+  ];
+
+  /**
+   * Etiqueta para el crosslist de país de procedencia.
+   */
+  public paisDeProcedenciaLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionados',
+  };
+  /**
+   * Lista de países para la selección de origen.
+   */
+  public crosListaDePaises = CROSLISTA_DE_PAISES;
+  /**
+   * Indica si la sección es colapsable.
+   */
+  colapsable: boolean = false;
+
+  /**
+   * Indica si la sección "Duo" es colapsable.
+   */
+  colapsableDos: boolean = false;
+
+  /**
+   * Indica si la sección "Tres" es colapsable.
+   */
+  colapsableTres: boolean = false;
+  public cambioFechaFinal(nuevo_valor: string): void {
+    this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
+    this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
+  }
+  /**
+   * Alterna el estado colapsable de la primera sección.
+   */
+  mostrar_colapsable(): void {
+    this.colapsable = !this.colapsable;
+  }
+
+  /**
+   * Alterna el estado colapsable de la segunda sección.
+   */
+  mostrar_colapsableDos(): void {
+    this.colapsableDos = !this.colapsableDos;
+  }
+
+  /**
+   * Alterna el estado colapsable de la tercera sección.
+   */
+  mostrar_colapsableTres(): void {
+    this.colapsableTres = !this.colapsableTres;
+  }
+  /**
+   * Lista de países para seleccionar el origen de la primera sección.
+   */
+  seleccionarOrigenDelPais: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de países para seleccionar el origen de la segunda sección.
+   */
+  seleccionarOrigenDelPaisDos: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de países para seleccionar el origen de la tercera sección.
+   */
+  seleccionarOrigenDelPaisTres: string[] = this.crosListaDePaises;
+
+  /**
+   * Lista de estados.
+   */
+  estado: Catalogo[] = [];
+
+  /**
+   * Textos de alerta.
+   */
+  TEXTOS = ALERT;
+
+  /**
+   * Clase de alerta.
+   */
+  class = 'alert-warning';
+
+  /**
+   * Configuración de selección de tabla.
+   */
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Datos cargados dinámicamente para la tabla SCIAN.
+   */
+  datosData: ScianData[] = [];
+  /**
+   * Enum para la selección de tablas.
+   */
+  tipoSeleccionTabla = TablaSeleccion;
+  /**
+   * Formulario de domicilio.
+   */
+  domicilio!: FormGroup;
+  domicilioEstablecimiento!: FormGroup;
+  /**
+   * Muestra el modal para la clave SCIAN.
+   */
+  public mostrarModeloClave(): void {
+    this.modalInstance.show();
+  }
+
+  openEstablecimientoModal(): void {
+    this.establecimientoModalInstance.show();
+  }
+  /**
+   * Ciclo de vida `AfterViewInit`.
+   * Inicializa la instancia del modal de Bootstrap.
+   */
+  ngAfterViewInit(): void {
+    if (this.establecimientoModalButton) {
+      this.establecimientoModalInstance = new Modal(
+        this.establecimientoModalButton.nativeElement
+      );
+    }
+    if (this.establecimientoModal) {
+      this.modalInstance = new Modal(this.establecimientoModal.nativeElement);
+    }
+  }
+
+  representanteLegal!: FormGroup;
+  TEXTOS1 = TEXTOS;
+  colapsable1: boolean = true;
+  private destroy$ = new Subject<void>();
+
+  /**
+   * Configuración de columnas de la tabla de mercancías.
+   */
+  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+
+  /**
+   * Datos de la tabla de mercancías.
+   */
+  mercanciasTablaDatos: MercanciasInfo[] = [];
+
+  /**
+   * Constructor del componente.
+   *
+   * @param fb FormBuilder para crear formularios.
+   * @param httpServicios Servicio HTTP para realizar peticiones.
+   * @param tramite260904Query Consulta de datos del trámite.
+   * @param tramite260904Store Almacenamiento de datos del trámite.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private httpServicios: HttpClient,
+    private establecimientoService: EstablecimientoService,
+    private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
+    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
+  )  
+  {
+    // Constructor
+  }
+
+  /**
+   * Método de inicialización del componente.
+   */
+  ngOnInit(): void {
+    this.loadScian();
+    this.loadEstadoData();
+    this.crearFormulario();
+   
+    this.domicilioEstablecimiento = this.fb.group({
+      ideGenerica1: ['', Validators.required],
+      observaciones: ['', [Validators.required, Validators.maxLength(2000)]],
+      establecimientoRFCResponsableSanitario: ['', Validators.pattern(/^[A-Z]{4}\d{6}[A-Z\d]{3}$/)],
+      establecimientoRazonSocial:['', Validators.required],
+      establecimientoCorreoElectronico :['', [Validators.required, Validators.email]],
+      establecimientoEstados :['', Validators.required],
+      descripcionMunicipio: ['', Validators.required],
+      localidad :[''],
+      establishomentoColonias:[''],
+      calle: ['', Validators.required],
+      lada: ['', [Validators.maxLength(5), Validators.pattern(/^\d+$/)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      establecimientoDomicilioCodigoPostal :['', Validators.required],
+      scian :['', Validators.required]
+    });
+    this.scianForm = this.fb.group({
+      scian: ['', Validators.required],
+      descripcionScian: ['', Validators.required],
+    });
+
+    this.solicitudEstablecimientoForm = this.fb.group({
+      noLicenciaSanitaria: ['', Validators.required],
+      avisoCheckbox: [true],
        licenciaSanitaria: [{ value: '', disabled: true }],
        regimen: [],
        aduanasEntradas: [],
        aifaCheckbox: [true],
-       manifests: [true],
-     });
+    });
+    this.formMercancias = this.fb.group({
+      clasificacion: ['', Validators.required],
+      especificarClasificacionProducto: ['', Validators.required],
+      denominacionEspecifica: ['', Validators.required],
+      denominacionDistintiva:['', Validators.required],
+      denominacionComun: ['', Validators.required],
+      tipoDeProducto: ['', Validators.required],
+      estadoFisico: ['', Validators.required],
+      fraccionArancelaria: ['', Validators.required],
+      descripcionFraccion: [ { value: '', disabled: true }, Validators.required],
+      cantidadUMT: ['', Validators.required],
+      UMT: [{ value: '', disabled: true }, Validators.required],
+      cantidadUMC: ['', Validators.required],
+      UMC: ['', Validators.required],
+      presentacion:  ['', Validators.required],
+      numeroRegistro: ['', Validators.required],
+      fechaCaducidad: [''],
+      
+    });
+    this.establecimientoService
+      .getJustificationData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: PropietarioTipoPersona[]) => {
+        this.genericOptions = data; // Bind the fetched data
+      });
+      this.domicilioEstablecimientoQuery
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
+      });
+  }
+
+  // onControlChange(controlName: string): void {
+  //   const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
+  //   this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  // }
+  mostrarColapsable(): void {
+    this.colapsable1 = !this.colapsable1;
+  }
+  /**
+   * Carga los datos del catálogo SCIAN.
+   */
+  loadScian(): void {
+    this.establecimientoService
+      .getSciandata()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: Catalogo[]) => {
+        this.scianJson = resp;
+      });
+  }
+  loadEstadoData(): void {
+    this.establecimientoService
+      .getEstadodata()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: Catalogo[]) => {
+        this.estado = resp;
+      });
+  }
+
+  onControlChange(controlName: string): void {
+    console.log(controlName);
+    const UPDATED_VALUE = {
+      [controlName]: this.domicilioEstablecimiento.get(controlName)?.value,
+    };
+    console.log(UPDATED_VALUE);
+    this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
+  }
+
+  /**
+   * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
+   * @param event Evento del checkbox.
+   */
+  toggleNoLicenciaSanitaria(event: Event): void {
+    const NO_LICENCIA_SANITARIA = this.solicitudEstablecimientoForm.get(
+      'noLicenciaSanitaria'
+    );
+
+    if ((event.target as HTMLInputElement).checked) {
+      NO_LICENCIA_SANITARIA?.disable();
+    } else {
+      NO_LICENCIA_SANITARIA?.enable();
+    }
+  }
+
+  /**
+   * Limpia el formulario SCIAN.
+   */
+  limpiarScianForm(): void {
+    this.scianForm.reset();
+  }
+  /**
+   * Datos SCIAN agregados por el usuario.
+   */
+  personaparas: ScianModel[] = [];
+  /**
+   * Guarda un nuevo dato SCIAN y lo agrega a la tabla.
+   */
+  guardarScian(): void {
+    if (this.scianForm.valid) {
+      const SCIAN_DATA: ScianModel = {
+        claveScian: this.scianForm.get('scian')?.value,
+        descripcionScian: this.scianForm.get('descripcionScian')?.value,
+      };
+
+      // Agregar el nuevo dato a la tabla
+      this.personaparas.push(SCIAN_DATA);
+
+      // Limpiar el formulario
+      this.scianForm.reset();
+
+      // Cerrar el modal
+      this.closeScianModal();
+    }
+  }
+
+  /**
+   * Abre el modal SCIAN.
+   */
+  openScianModal(): void {
+    this.modalInstance.show();
+  }
+
+  /**
+   * Cierra el modal SCIAN.
+   */
+  closeScianModal(): void {
+    this.modalInstance.hide();
+  }
+
+  /**
+   * Configuración de columnas para la tabla de datos SCIAN.
+   */
+  configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  /**
+   * Habilita todos los controles del formulario si están deshabilitados.
+   * @returns {void}
+   */
+  public toggleFormControls(): void {
+    Object.keys(this.solicitudForm.controls).forEach((controlName) => {
+      const CONTROL = this.solicitudForm.get(controlName);
+      if (CONTROL?.disabled) {
+        CONTROL.enable();
+      }
+    });
+  }
+  /**
+   * Método para crear el formulario.
+   */
+  crearFormulario(): void {
+    this.solicitudForm = this.fb.group({
+      ideGenerica1: ['', [Validators.required]],
+      justificacionId: ['', [Validators.required]],
+      codigoPostal: ['', [Validators.required]],
+      estado: ['', [Validators.required]],
+      municipioOAlcaldia: ['', [Validators.required]],
+      localidad: [''],
+      colonias: [''],
+      calle: ['', [Validators.required]],
+      lada: [''],
+      telefono: ['', [Validators.required]],
+    });
+
  
-     this.representanteLegal = this.fb.group({
-       acuerdoPublico: [],
-       rfc: ['', [Validators.required]],
-       nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
-       apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
-       apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
-     });
-   }
- 
-   /**
-    * Método para obtener los datos de la tabla.
-    */
-  //  obtenerTablaDatos(): void {
-  //    this.httpServicios
-  //      .get<RespuestaTabla>('../../../../../assets/json/260904/tablaDatos.json')
-  //      .pipe(takeUntil(this.destroy$)).subscribe((data): void => {
-  //        this.nicoTablaDatos = data?.data;
-  //      });
-  //  }
- 
-   /**
-    * Método para obtener la lista de estados.
-    */
-  //  obtenerEstadoList(): void {
-  //    this.httpServicios
-  //      .get<RespuestaCatalogos>(
-  //        '../../../../../assets/json/260904/seleccion.json'
-  //      ).pipe(takeUntil(this.destroy$))
-  //      .subscribe((data): void => {
-  //        const DATOS = data?.data;
-  //        this.estado = DATOS;
-  //      });
-  //  }
- 
-   /**
-    * Método para obtener los datos de mercancías.
-    */
-  //  obtenerMercanciasDatos(): void {
-  //    this.httpServicios
-  //      .get<MercanciasTabla>(
-  //        '../../../../../assets/json/260904/mercanciasDatos.json'
-  //      )
-  //      .subscribe((data): void => {
-  //        this.mercanciasTablaDatos = data?.data;
-  //      });
-  //  }
- 
-   /**
-    * Método para obtener el valor del código postal.
-    */
-  //  getCodigoPostal(): void {
-  //    const CODING_POSTAL = this.form.get('codigoPostal')?.value;
-  //    this.tramite260904Store.setCodigoPostal(CODING_POSTAL);
-  //  }
- 
-   /**
-    * Método para obtener el valor del estado.
-    */
-  //  getEstado(): void {
-  //    const ESTADO = this.form.get('estado')?.value;
-  //    this.tramite260904Store.setEstado(ESTADO);
-  //  }
- 
-   /**
-    * Método para obtener el valor del municipio o alcaldía.
-    */
-  //  getMunicipioOAlcaldia(): void {
-  //    const MUNICIPIO_OALCALDIA = this.form.get('municipioOAlcaldia')?.value;
-  //    this.tramite260904Store.setMunicipioOAlcaldia(MUNICIPIO_OALCALDIA);
-  //  }
- 
-   /**
-    * Método para obtener el valor de la localidad.
-    */
-  //  getLocalidad(): void {
-  //    const LOCALIDAD = this.form.get('localidad')?.value;
-  //    this.tramite260904Store.setLocalidad(LOCALIDAD);
-  //  }
- 
-   /**
-    * Método para obtener el valor de las colonias.
-    */
-  //  getColonias(): void {
-  //    const COLONIAS = this.form.get('colonias')?.value;
-  //    this.tramite260904Store.setColonias(COLONIAS);
-  //  }
- 
-   /**
-    * Método para obtener el valor de la calle.
-    */
-  //  getCalle(): void {
-  //    const CALLE = this.form.get('calle')?.value;
-  //    this.tramite260904Store.setCalle(CALLE);
-  //  }
- 
-   /**
-    * Método para obtener el valor de la lada.
-    */
-  //  getLada(): void {
-  //    const LADA = this.form.get('lada')?.value;
-  //    this.tramite260904Store.setLada(LADA);
-  //  }
- 
-   /**
-    * Método para obtener el valor del teléfono.
-    */
-  //  getTelefono(): void {
-  //    const TELEFONO = this.form.get('telefono')?.value;
-  //    this.tramite260904Store.setTelefono(TELEFONO);
-  //  }
- 
-   /**
-    * Método para obtener el valor del checkbox de aviso.
-    */
-  //  getAvisoCheckbox(): void {
-  //    const AVISO_CHECKBOX = this.domicilio.get('avisoCheckbox')?.value;
-  //    this.tramite260904Store.setAvisoCheckbox(AVISO_CHECKBOX);
-  //  }
- 
-   /**
-    * Método para obtener el valor del régimen.
-    */
-  //  getRegimen(): void {
-  //    const REGIMEN = this.domicilio.get('regimen')?.value;
-  //    this.tramite260904Store.setRegimen(REGIMEN);
-  //  }
- 
-   /**
-    * Método para obtener el valor de las aduanas de entrada.
-    */
-  //  getAduanasEntradas(): void {
-  //    const ADUANAS_ENTRADAS = this.domicilio.get('aduanasEntradas')?.value;
-  //    this.tramite260904Store.setAduanasEntradas(ADUANAS_ENTRADAS);
-  //  }
- 
-   /**
-    * Método para obtener el valor del checkbox de AIFA.
-    */
-  //  getAifaCheckbox(): void {
-  //    const AIFA_CHECKBOX = this.domicilio.get('aifaCheckbox')?.value;
-  //    this.tramite260904Store.setAifaCheckbox(AIFA_CHECKBOX);
-  //  }
- 
-   /**
-    * Método para obtener el valor de los manifiestos.
-    */
-  //  getManifests(): void {
-  //    const MANIFESTS = this.domicilio.get('manifests')?.value;
-  //    this.tramite260904Store.setManifests(MANIFESTS);
-  //  }
- 
-   /**
-    * Método para obtener el valor del acuerdo público.
-    */
-  //  getAcuerdoPublico(): void {
-  //    const ACUERDO_PUBLICO = this.representanteLegal.get('acuerdoPublico')?.value;
-  //    this.tramite260904Store.setAcuerdoPublico(ACUERDO_PUBLICO);
-  //  }
- 
-   /**
-    * Método para obtener el valor del RFC.
-    */
-  //  getRfc(): void {
-  //    const RFC = this.representanteLegal.get('rfc')?.value;
-  //    this.tramite260904Store.setRFC(RFC);
-  //  }
+  }
 }

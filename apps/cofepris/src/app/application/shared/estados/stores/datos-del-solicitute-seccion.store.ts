@@ -108,6 +108,20 @@ export interface DatosDelSolicituteSeccionState {
    * Lista de datos del establecimiento.
    */
   establecimientoData: DatosDeLaProductoModel[];
+  ideGenerica1: string,
+  observaciones: '',
+  establecimientoRFCResponsableSanitario: string,
+  establecimientoRazonSocial:string,
+
+  establecimientoEstados :string,
+  descripcionMunicipio:string
+  localidad :string,
+  colonias:string,
+  calle: string
+  lada: string,
+  telefono:string,
+  scian :string
+  establishomentoColonias:string
 }
 
 /**
@@ -136,6 +150,19 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     informacionConfidencialRadio: '',
     propietarioData: [],
     establecimientoData: [],
+     ideGenerica1: '',
+          observaciones: '',
+          establecimientoRFCResponsableSanitario: '',
+          establecimientoRazonSocial:'',
+          establishomentoColonias:'',
+          establecimientoEstados :'',
+          descripcionMunicipio: '',
+          localidad :'',
+          colonias:'',
+          calle: '',
+          lada: '',
+          telefono:'',
+          scian :'' 
   };
 }
 

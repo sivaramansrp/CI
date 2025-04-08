@@ -10,7 +10,7 @@ import { Observable ,map} from 'rxjs';
 
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
-import { Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante } from '../models/datos-de-la-solicitud.model';
+import { Asociados, Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante } from '../models/datos-de-la-solicitud.model';
 /**
  * @class EstablecimientoService
  * @description
@@ -129,5 +129,14 @@ export class EstablecimientoService {
    */
   getInformacionConfidencialRadioOptions(): Observable<PropietarioTipoPersona[]> {
     return this.http.get<PropietarioTipoPersona[]>('assets/json/260401/radioSiNo.json');
+  }
+  getJustificationData(): Observable<PropietarioTipoPersona[]> {
+    return this.http.get<PropietarioTipoPersona[]>('assets/json/cofepris/justificacion.json');
+  }
+  getEstadodata(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/260401/scianda.json');
+  }
+  enListaDeAsociados(): Observable<Asociados[]> {
+    return this.http.get<Asociados[]>('assets/json/cofepris/asociadosList.json');
   }
 }
