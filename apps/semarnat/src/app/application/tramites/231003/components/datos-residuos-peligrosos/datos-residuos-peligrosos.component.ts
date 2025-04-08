@@ -20,6 +20,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
 
   nombre!: Catalogo[];
 
+  unidad!: Catalogo[];
+
   public establecimientoHeaderData: string[] = [];
 
   public establecimientoBodyData: unknown = [];
@@ -35,5 +37,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.establecimientoBodyData= RADIO_OPCIONES.PrimasRelacionadas[0]?.cuerpoTabla || [];
     this.fraccion = RADIO_OPCIONES.arancelaria;
     this.nico = RADIO_OPCIONES.nico;
+    this.unidad = RADIO_OPCIONES.unidad;
   }
 }

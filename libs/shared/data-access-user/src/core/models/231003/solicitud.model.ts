@@ -37,6 +37,7 @@ export interface SolicitudJson {
     PrimasRelacionadas: Tabla[];
     arancelaria: ImmexItem[];
     nico: ImmexItem[];
+    unidad: ImmexItem[];
 }
 
 

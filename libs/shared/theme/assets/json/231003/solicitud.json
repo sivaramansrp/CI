@@ -215,6 +215,13 @@
         }
     ],
 
+    "unidad": [
+        {
+            "id": 1,
+            "descripcion": "tonelada"
+        }
+    ],
+
     "PrimasRelacionadas": [
         {
             "encabezadoDeTabla": [
