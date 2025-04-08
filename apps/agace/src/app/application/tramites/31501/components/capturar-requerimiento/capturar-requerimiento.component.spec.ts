@@ -29,10 +29,7 @@ describe('CapturarRequerimientoComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule, CapturarRequerimientoComponent ],
-      declarations: [
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: AutoridadService, useClass: MockAutoridadService },
