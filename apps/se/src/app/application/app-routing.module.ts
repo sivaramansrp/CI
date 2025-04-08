@@ -116,6 +116,10 @@ const ROUTES: Routes = [
         (m) => m.CancelacionDeModule
       ),
   },
+  {  
+    path:'certificado-tecnico-japon',
+    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+  },
   {
     path: 'desmantelar',
     loadChildren: () =>
@@ -192,6 +196,13 @@ const ROUTES: Routes = [
       import('./tramites/80208/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
       ),
+  },
+  {
+    path: 'diamante-bruto',
+    loadChildren: () =>
+      import('./tramites/130114/diamante-bruto.module').then(
+        (m) => m.DiamanteBrutoModule
+      )
   },
   {
     path: 'solicitud-modificacion',
