@@ -29,6 +29,13 @@ const ROUTES: Routes = [
         (m) => m.AvisoProcesosModule
       ),
   },
+  {
+    path: 'autoridad',
+    loadChildren: () =>
+      import('./tramites/31501/autoridad.module').then(
+        (m) => m.AutoridadModule
+      ),
+  },
 ];
 
 @NgModule({

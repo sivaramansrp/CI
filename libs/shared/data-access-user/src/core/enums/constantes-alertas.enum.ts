@@ -34,6 +34,8 @@ export const TEXTOS = {
   <p><b>•</b> No debe contener páginas en blanco.</p>`,
   ADJUNTAR_WARNING: `<p>La carga del documento puede tardar varios segundos, este tiempo dependerá del tamaño de tu archivo y de la velocidad de tu conexión.</p>`,
   DECLARACION_DE_RESPONSABILIDAD_SOLIDARIA: `*? En mi calidad de Residente en Territorio Nacional, manifiesto mi voluntad y disposición de asumir la responsabilidad solidaria a que se refiere la fracción VIII del artículo 26 del Código Fiscal de la Federación, por los créditos fiscales que lleguen a derivarse por no retornar las Mercancías a que el presente aviso se refiere, al extranjero dentro del plazo establecido en la Ley"`,
+  SELECCION_UN_CRITERIO_DE_BUSQUEDA: `Selecciona un criterio de búsqueda`,
+  REQUISITOS_GUARDADOS_CORRECTAMENTE: `Requisitos guardados correctamente`,
 };
 
 export const IMMEX = {

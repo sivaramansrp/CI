@@ -72,7 +72,7 @@
          }
         
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
-        <td *ngFor="let col of obtenerConfiguracionOrdenada()">
+        <td *ngFor="let col of obtenerConfiguracionOrdenada()" (click)="col.hiperenlace?cambiarValor(fila):null">
           {{ col.clave(fila) || ' ' }}
         </td>
       </tr>
