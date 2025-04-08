@@ -29,6 +29,9 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { Subscription } from 'rxjs';
 import { MensajesDocumentos } from '@libs/shared/data-access-user/src/core/enums/mensajes-documentos.enum';
+import { URL_PRUEBA } from '../../../core/enums/constantes-alertas.enum';
+
+declare const bootstrap: any; // Importación para manejar Bootstrap en TS
 
 @Component({
   selector: 'anexar-documentos',
@@ -120,8 +123,8 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         this.token = resp.jwt;
       },
       error: (error): void => {
-        console.error(error);
-      }
+        return error;
+      },
     });
   }
 

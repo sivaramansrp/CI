@@ -1,11 +1,13 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+
+import { ComplementarPlantaComponent } from './shared/components/complementar-planta/complementar-planta.component';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
-const routes: Routes = [
+const ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'seleccion-tramite' },
   {
     path: 'seleccion-tramite',
-    component: SeleccionTramiteComponent
+    component: SeleccionTramiteComponent,
   },
   {
     path: 'octava-temporal',
@@ -14,13 +16,48 @@ const routes: Routes = [
         (m) => m.OctavaTemporalModule
       ),
   },
+  {
+    path: 'entidad-legal',
+    loadChildren: () =>
+      import('./tramites/120404/entidad-legal.module').then(
+        (m) => m.EntidadLegalModule
+      ),
+  },
 
   {
-    path:'exportador-autorizado',
-    loadChildren:()=>
+    path: 'exportador-autorizado',
+    loadChildren: () =>
       import('./tramites/110102/exportador-autorizado.module').then(
-        (m)=>m.ExportadorautorizadoModule
-      )
+        (m) => m.ExportadorautorizadoModule
+      ),
+  },
+  {
+    path: 'solicitartransferencia',
+    loadChildren: () =>
+      import('./tramites/120501/solicitar-transferencia-cupos.module').then(
+        (m) => m.SolicitarTransferenciaCuposModule
+      ),
+  },
+  {
+    path: 'registro-como-empresa',
+    loadChildren: () =>
+      import('./tramites/120601/registro-como-empresa.module').then(
+        (m) => m.RegistroComoEmpresaModule
+      ),
+  },
+  {
+    path: 'empresa-frontera',
+    loadChildren: () =>
+      import('./tramites/120602/empresa-frontera-solicitud.module').then(
+        (m) => m.EmpresaFronteraSolicitudModule
+      ),
+  },
+  {
+    path: 'prosec-modificacion',
+    loadChildren: () =>
+      import('./tramites/90305/prosec-modificacion.module').then(
+        (m) => m.ProsecModificacionModule
+      ),
   },
   {
     path: 'pantallas',
@@ -30,9 +67,28 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'asignacion-directa-de-cupo',
+    loadChildren: () =>
+      import('./tramites/120402/asignacion-directa-de-cupo.module').then(
+        (m) => m.AsignacionDirectaDeCupoModule
+      ),
+  },
+  {
     path: 'pexim',
     loadChildren: () =>
       import('./tramites/130118/pexim.module').then((m) => m.PeximModule),
+  },
+  {
+    path: 'expansion-de-productores',
+    loadChildren: () =>
+      import(
+        './tramites/90201/expansion-de-productores/expansion-de-productores.module'
+      ).then((m) => m.ExpansionDeProductoresModule),
+  },
+  {
+    path: 'pexim',
+    loadChildren: () =>
+      import('./tramites/110204/pexim.module').then((m) => m.PeximModule),
   },
   {
     path: 'elegibilidad-de-textiles',
@@ -47,11 +103,226 @@ const routes: Routes = [
       import('./tramites/130120/permiso-importacion.module').then(
         (m) => m.PermisoImportacionModule
       ),
+  },
+  {
+    path: 'registro',
+    loadChildren: () =>
+      import('./tramites/110201/registro.module').then((m) => m.RegistroModule),
+  },
+  {
+    path: 'cancelacion-de',
+    loadChildren: () =>
+      import('./tramites/140103/cancelacion-de.module').then(
+        (m) => m.CancelacionDeModule
+      ),
+  },
+  {  
+    path:'certificado-tecnico-japon',
+    loadChildren: () =>import('./tramites/110218/certificado-tecnico-japon.module').then((m)=>m.CertificadoTecnicoJaponModule)
+  },
+  {
+    path: 'desmantelar',
+    loadChildren: () =>
+      import('./tramites/130106/desmantelar.module').then(
+        (m) => m.DesmantelarModule
+      ),
+  },
+  {
+    path: 'desistimiento-de-permiso',
+    loadChildren: () =>
+      import('./tramites/140105/desistimiento-de-permiso.module').then(
+        (m) => m.DesistimientoDePermisoModule
+      ),
+  },
+  {
+    path: 'certificado-sgp',
+    loadChildren: () =>
+      import('./tramites/110209/certificado-sgp.module').then(
+        (m) => m.CertificadoSGPModule
+      ),
+  },
+  {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule
+      ),
+  },
+  {
+    path: 'certificado-registro',
+    loadChildren: () =>
+      import('./tramites/80205/certificado-registro.module').then(
+        (m) => m.CertificadoRegistroModule
+      ),
+  },
+  {
+    path: 'subfabricante-immex',
+    loadChildren: () =>
+      import('./tramites/80207/subfabricante-extension.module').then(
+        (m) => m.SubfabricanteExtentionModule
+      ),
+  },
+  {
+    path: 'immex-ampliacion-sensibles',
+    loadChildren: () =>
+      import('./tramites/80202/immex-ampliacion-sensibles.module').then(
+        (m) => m.ImmexAmpliacionSensiblesModule
+      ),
+  },
+  {
+    path: 'immex-registro-solicitud-modality',
+    loadChildren: () =>
+      import(
+        './tramites/80203/immex-registro-de-solicitud-modalidad.modulo'
+      ).then((m) => m.ImmexRegistroDeSolicitudModalityModule),
+  },
+  {
+    path: 'modificacion',
+    loadChildren: () =>
+      import('./tramites/80308/modificacion-solicitud.module').then(
+        (m) => m.ModificacionSolicitudModule
+      ),
+  },
+  {
+    path: 'autorizacion-prosec',
+    loadChildren: () =>
+      import('./tramites/90101/autorizacion-prosec.module').then(
+        (m) => m.AutorizacionProsecModule
+      ),
+  },
+  {
+    path: 'solicitud-modalidad',
+    loadChildren: () =>
+      import('./tramites/80208/registro-solicitud.module').then(
+        (m) => m.RegistroSolicitudModule
+      ),
+  },
+  {
+    path: 'importacion-de-vehiculos-usados',
+    loadChildren: () =>
+      import('./tramites/130111/importacion-de-vehiculos-usados.module').then(
+        (m) => m.ImportacionDeVehiculosUsadosModule
+      ),
+  },   
+  {      
+    path: 'diamante-bruto',
+    loadChildren: () =>
+      import('./tramites/130114/diamante-bruto.module').then(
+        (m) => m.DiamanteBrutoModule
+      )
+  },
+  {
+    path: 'solicitud-modificacion',
+    loadChildren: () =>
+      import('./tramites/80302/modificacion.module').then(
+        (m) => m.ModificacionModule
+      ),
+  },
+  {
+    path: 'cancelaciones-ministerio',
+    loadChildren: () =>
+      import('./tramites/140201/cancelaciones.module').then(
+        (m) => m.CancelacionesModule
+      ),
+  },
+  {
+    path: 'validar-inicialmente',
+    loadChildren: () =>
+      import('./tramites/110208/validar-inicalmente.module').then(
+        (m) => m.ValidarInicalmenteModule
+      ),
+  },
+  {
+    path: 'certificado',
+    loadChildren:() =>
+      import('./tramites/110219/certificado.module').then(
+        (m) => m.CertificadoModule
+      )
+  }, 
+  {
+    path: 'nuevo-programa-industrial',
+    loadChildren: () =>
+      import('./tramites/80101/nuevo-programa-industrial.module').then(
+        (m) => m.NuevoProgramaIndustrialModule
+      ),
+  },
+  {
+    path: 'certificado-validacion',
+    loadChildren: () =>
+      import('./tramites/110202/certificado-validacion.module').then(
+        (m) => m.CertificadoValidacionModule),
+      },
+  {
+    path: 'exportacion-minerales',
+    loadChildren: () =>
+      import('./tramites/130202/exportacion-minerales-de-hierro.module').then(
+        (m) => m.ExportacionMineralesDeHierroModule
+      ),
+  },
+  {
+    path: 'autorizacion-programa-nuevo',
+    loadChildren: () =>
+      import('./tramites/80102/autorizacion-programa-nuevo.module').then(
+        (m) => m.AutorizacionProgrmaNuevoModule
+      ),
+  },
+  { path: 'tecnicos',
+    loadChildren: () =>
+      import('./tramites/110203/tecnicos.module').then(
+        (m) => m.TecnicosModule
+      ),
+  },
+  {
+    path: 'inicialmente-certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110216/inicialmente-certificado-origen.module').then(
+        (m) => m.InicialmenteCertificadoOrigenModule
+      ),
+  },
+  {
+    path: 'validador-certificado-cam',
+    loadChildren:() =>
+      import('./tramites/110221/validador-certificado-cam.module').then(
+        (m) => m.ValidadorCertificadoCamModule
+      )
+  },
+  {
+    path: 'registro-solicitud-anual',
+    loadChildren: () =>
+      import('./tramites/150101/registro-solicitud-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'cupos',
+    loadChildren: () =>
+      import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
+  },
+  {
+    path: 'aviso-importacion-maquinas',
+    loadChildren: () =>
+      import('./tramites/130119/aviso-importacion-maquinas.module').then(
+        (m) => m.AvisoImportacionMaquinasModule
+      ),
+  },
+  {
+    path: 'reporte-anual',
+    loadChildren: () =>
+      import('./tramites/150102/reporte-anual.module').then(
+        (m) => m.ReporteAnualModule
+      ),
+  },
+  {
+    path: 'validar-certificado',
+    loadChildren: () =>
+      import('./tramites/110211/validar-certificado.module').then(
+        (m) => m.ValidarCertificadoModule
+      ),
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

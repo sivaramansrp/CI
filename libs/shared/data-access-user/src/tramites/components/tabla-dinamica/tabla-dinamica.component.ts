@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { FormsModule } from '@angular/forms';
-import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-tabla-dinamica',
@@ -10,7 +10,7 @@ import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
   styleUrl: './tabla-dinamica.component.scss',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  host: { 'hostID': crypto.randomUUID().toString()}
+  host: {},
 })
 export class TablaDinamicaComponent<T> {
   /**
@@ -19,19 +19,16 @@ export class TablaDinamicaComponent<T> {
    *
    * @type { TablaSeleccion}
    */
+  @Output() filaClic = new EventEmitter<T>();
+
   @Input() tipoSeleccionTabla!: TablaSeleccion;
-
-
-  /**
-   * Expone el `enum` `TablaSeleccion` al componente de plantilla HTML.
-   * Permite que los valores del `enum` sean accesibles dentro de la plantilla para usarlos en las directivas de Angular como `*ngIf` o `*ngFor`.
-   *
+/*
    * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
    *
    * @type {typeof TablaSeleccion}
    */
   TablaSeleccion = TablaSeleccion;
-
+  
   /**
    * Configuración de las columnas de la tabla.
    * Contiene la información sobre cómo se deben mostrar las columnas, incluyendo el nombre, el orden,
@@ -67,6 +64,20 @@ export class TablaDinamicaComponent<T> {
     true
   );
 
+  
+  /**
+   * Evento de salida que emite un objeto con información sobre una fila y una columna.
+   * 
+   * Este evento se utiliza para alternar o cambiar un valor asociado a una fila y columna específica
+   * en una tabla dinámica. El objeto emitido contiene:
+   * - `row`: La fila afectada.
+   * - `column`: El nombre de la columna afectada.
+   * 
+   * @event
+   */
+  @Output() alternarValor: EventEmitter<{ row: any; column: string }> = new EventEmitter();
+
+
   /**
    * Almacena el ID de la fila seleccionada.
    * Este valor se establece cuando el usuario selecciona una fila en la tabla.
@@ -87,11 +98,11 @@ export class TablaDinamicaComponent<T> {
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
    * @returns {ConfiguracionColumna<T>[]} La configuración de las columnas ordenada.
+   * 
    */
   obtenerConfiguracionOrdenada(): ConfiguracionColumna<T>[] {
     return this.configuracionTabla.sort((a, b) => a.orden - b.orden);
   }
-
   /**
    * Maneja la selección de una fila.
    * Actualiza el valor de `idFilaSeleccionada` con el ID de la fila seleccionada y emite el evento con la fila completa seleccionada.
@@ -158,5 +169,23 @@ export class TablaDinamicaComponent<T> {
       this.filasSeleccionadas = [];
       this.listaDeFilaSeleccionada.emit([]);
     }
+  }
+
+  /**
+   * Maneja el evento de clic en una fila de la tabla.
+   * 
+   * @param data - Los datos de la fila que fue clickeada.
+   */
+  onFilaClic(data: T): void {    
+    this.filaClic.emit(data);
+  }
+
+  /**
+   * Cambia el valor de una fila específica y emite un evento con la fila modificada.
+   *
+   * @param row - La fila cuyos valores se desean cambiar.
+   */
+  cambiarValor(row: any): void {
+    this.alternarValor.emit(row);
   }
 }

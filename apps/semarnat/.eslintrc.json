@@ -14,6 +14,7 @@
           { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
         ],
         "@typescript-eslint/no-explicit-any": "error",
+        "@angular-eslint/no-empty-lifecycle-method" : ["error"],
         "@angular-eslint/directive-selector": [
           "off",
           {
@@ -56,6 +57,7 @@
         "grouped-accessor-pairs": "error",
         "guard-for-in": "error",
         "max-classes-per-file": "error",
+        "no-console": ["error", { "allow": ["warn", "error"] }],
         "no-alert": "error",
         "no-caller": "error",
         "no-constructor-return": "error",

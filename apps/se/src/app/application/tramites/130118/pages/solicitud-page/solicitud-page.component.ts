@@ -1,9 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
-// import { DatosPasos } from '../../../../core/models/shared/components.model';
-// import { ListaPasosWizard } from '../../../../core/models/5701/servicios-extraordinarios.model';
-// import { PASOS } from '../../../../shared/constantes/servicios-extraordinarios.enum';
-// import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -20,13 +16,13 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * Componente que representa la página de solicitud.
+ */
 @Component({
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })
-/**
- * Componente que representa la página de solicitud.
- */
 export class SolicitudPageComponent {
   /**
    * Lista de pasos del asistente.
@@ -65,7 +61,7 @@ export class SolicitudPageComponent {
    * Obtiene el valor del índice de la acción del botón.
    * @param e Acción del botón.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

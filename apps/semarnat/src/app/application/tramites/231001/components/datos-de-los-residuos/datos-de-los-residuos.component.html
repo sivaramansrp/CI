@@ -12,6 +12,7 @@
                 class="form-control"
                 id="nombreDeLaMateriaPrima"
                 [placeholder]="'Nombre de la materia prima'"
+                (change)="setValoresStore(materiaPrimaForm,'nombreDeLaMateriaPrima', 'setNombreDeLaMateriaPrima')"
               />
               <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.invalid && (materiaPrimaForm.get('nombreDeLaMateriaPrima')?.dirty || materiaPrimaForm.get('nombreDeLaMateriaPrima')?.touched)">
                   <div *ngIf="materiaPrimaForm.get('nombreDeLaMateriaPrima')?.errors?.['required']">
@@ -31,6 +32,7 @@
                 id="cantidad"
                 [placeholder]="'1'"
                 (blur)="obtenerLetraCantidad(materiaPrimaForm.get('cantidad')?.value)"
+                (change)="setValoresStore(materiaPrimaForm,'cantidad', 'setcantidad')"
               />
               <div *ngIf="materiaPrimaForm.get('cantidad')?.invalid && (materiaPrimaForm.get('cantidad')?.dirty || materiaPrimaForm.get('cantidad')?.touched)">
                   <div *ngIf="materiaPrimaForm.get('cantidad')?.errors?.['required']">
@@ -54,9 +56,9 @@
               />
             </div>
           </div>
-          <div class="col-md-4" formGroupName="unidadMedidaComercial">
+          <div class="col-md-4">
             <app-catalogo-select  (change)="cambiaUnidadMedida()" 
-             formControlName="clave" 
+             formControlName="unidadMedidaComercial" 
              [catalogo]="comboUnidadMedida" 
              [label]="'Unidad de medida'"
              [required]="true"></app-catalogo-select>
@@ -108,16 +110,14 @@
                [label]="'Fracción arancelaria'"
                [required]="true">
           </app-catalogo-select>
-            </div>
-          </div>
         </div>
-    
-        <div class="row mt-3">
-          <div class="col-md-12">
-              <btn-continuar [datos]="datosPasosGuardar"></btn-continuar>
-          </div>
-        </div>
-      </form>
+      </div>
     </div>
-  
-  
+
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <btn-continuar [datos]="datosPasosGuardar"></btn-continuar>
+      </div>
+    </div>
+  </form>
+</div>

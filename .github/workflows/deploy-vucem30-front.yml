@@ -1,62 +1,55 @@
-name: CI/CD deploy-vucem30-front
+name: CI/CD - Microfront Dashboard
 
 on:
   workflow_dispatch:
-
   push:
-    branches: [ "develop" ]
+    branches: [ develop ]
     paths:
-      - 'frontend/**'
+      - 'apps/**'
+      - 'libs/**'
+      - 'package*.json'
+      - 'Dockerfile'
+      - 'docker/**'
 
 jobs:
-  deploy:
-    name: Deploy deploy-vucem30-front and build Docker image
+  build-deploy:
     runs-on: ubuntu-latest
-
+    env:
+      NX_SKIP_POSTINSTALL: 1   # Evita la ejecución del postinstall de Nx
     steps:
-      - uses: actions/checkout@v3
+      # 1. Obtiene el código de tu repositorio.
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
+      # 2. Configura la versión de Node.js requerida (22.14.0).
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.14.0
-
+          node-version: '22.14.0'
+          
       - name: Instalar NX globalmente
         run: npm install -g nx@19.3.1
-      
-      - name: Set Sonar Version Number
-        run: echo "VERSION=6.2.1.4610-linux-x64" >> $GITHUB_ENV
         
-      - name: Define SonarScanner full name
-        run: echo "SONAR=sonar-scanner-${{ env.VERSION }}" >> $GITHUB_ENV
+      # Instala el módulo nativo requerido para Linux.
+      - name: Install native binding for Nx on Linux
+        run: npm install @nx/nx-linux-x64-gnu
         
-      - name: Listar archivos
-        run: ls -la
-  
-      - name: Download SonarScanner
-        run: |
-          curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.VERSION }}.zip
-          unzip sonar-scanner.zip
-          
-      - name: Verify SonarScanner Installation
-        run: |
-          ./${{ env.SONAR }}/bin/sonar-scanner --version
+      # Instala el binding nativo de SWC para Linux (necesario para la compilación)
+      - name: Install SWC native binding for Linux
+        run: npm install @swc/core-linux-x64-gnu
         
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
+      # 3. Instala las dependencias usando --force, tal como lo haces localmente.
       - name: Install dependencies
         run: |
           npm install --force
-          npm ci
-          
+
+      # 4. Construye el proyecto Angular con Nx (build del dashboard).
       - name: Build Docker images from docker-compose
         run: docker compose -f ./docker/modulefederation-microfrontends.yml build
+     
+      - name: Listar archivos
+        run: ls -la
         
       - name: Set up Docker Buildx
         id: buildx
@@ -72,7 +65,8 @@ jobs:
       - name: Build image and push to GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
-          context: ./frontend/
+          context: ./
+          file: apps/dashboard/Dockerfile
           tags: |
             ghcr.io/vucem30/dockerized-front-vucem30:latest
           push: ${{ github.ref == 'refs/heads/develop' }}

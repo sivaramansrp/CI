@@ -2,17 +2,17 @@
     <ng-titulo titulo="Pago de derechos" />
     <div>
       <form [formGroup]="FormSolicitud" (ngSubmit)="validarFormulario()">
-        
-        <ng-container formGroupName="datosImportadorExportador">
-          <div>
+         <div>
             <label for="exentoDePago">Exento de pago*:</label>
             <div class="radio-container">
               <div class="radio-option">
-                <input type="radio" id="no" formControlName="exentoDePago" value="No">
+                <input type="radio" id="no" formControlName="exentoDePago" value="No"
+                (change)="setValoresStore(FormSolicitud,'exentoDePago', 'setexentoDePago')">
                 <label for="no">No</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="yes" formControlName="exentoDePago" value="Yes">
+                <input type="radio" id="yes" formControlName="exentoDePago" value="Yes"
+                (change)="setValoresStore(FormSolicitud,'exentoDePago', 'setexentoDePago')" >
                 <label for="yes">Si</label>
               </div>
              
@@ -26,8 +26,8 @@
               <div class="form-group">
                
 
-                <app-catalogo-select [catalogo]="Justificacion" formControlName="Justificacion" [label]="'Justificación*:'"
-                [required]="true" name="Justificacion"  (change)="JustificacionSeleccion()" ></app-catalogo-select>
+                <app-catalogo-select [catalogo]="Justificacion" formControlName="Justificacion" [label]="'Justificación'"
+                [required]="true" name="Justificacion"  (change)="setValoresStore(FormSolicitud,'Justificacion', 'setJustificacion')"></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -44,36 +44,35 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="cadenaDependencia">Cadena de la dependencia*:</label>
-                <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia"  type="text" appUppercase>
+                <input class="form-control" id="cadenaDependencia" formControlName="cadenaDependencia"  type="text" libUppercase>
               </div>
             </div>
   
             <div class="col-md-4">
               <div class="form-group">
                 
-                <app-catalogo-select [catalogo]="Banco" formControlName="Banco" [label]="'Banco*:'"
-                [required]="true" name="Banco"  (change)="BancoSeleccion()" ></app-catalogo-select>
-               
-             
-             
-              </div>
+                <app-catalogo-select [catalogo]="Banco" formControlName="Banco" [label]="'Banco'"
+                [required]="true" name="Banco"  
+                (change)="setValoresStore(FormSolicitud,'Banco', 'setBanco')" ></app-catalogo-select>
+               </div>
             </div>
-           
-          </div>
+           </div>
   
           <!-- Llave de pago, Fecha de pago, Importe de pago -->
           <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="llaveDePago">Llave de pago*:</label>
-                <input class="form-control" id="llaveDePago" formControlName="llaveDePago"  type="text">
+                <input class="form-control" id="llaveDePago" formControlName="llaveDePago"  type="text"
+                (change)="setValoresStore(FormSolicitud,'llaveDePago', 'setllaveDePago')">
               </div>
             </div>
   
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="fechaPago">Fecha de pago*:</label>
-                <input class="form-control" id="fechaPago" formControlName="fechaPago"  type="date">
+                <input class="form-control" id="fechaPago" formControlName="fechaPago"  type="date" 
+                (change)="setValoresStore(FormSolicitud,'fechaPago', 'setfechaPago')">
                 
               </div>
             </div>
@@ -81,7 +80,7 @@
             <div class="col-md-4">
               <div class="form-group">
                 <label class="form-label" for="importePago">Importe de pago*:</label>
-                <input class="form-control" id="importePago" formControlName="importePago"  type="text" appUppercase>
+                <input class="form-control" id="importePago" formControlName="importePago"  type="text" libUppercase>
               </div>
             </div>
           </div>
@@ -92,13 +91,7 @@
               </div>
             </div>
           </div>
-  
-        </ng-container>
-  
-       
-  
-       
-      </form>
+        </form>
     </div>
   </div>
   

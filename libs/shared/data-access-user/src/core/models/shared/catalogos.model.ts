@@ -45,4 +45,12 @@ export interface BodyTablaAcuse {
   urlPdf: string;
 }
 
+export interface RespuestaDocuemntosRequeridos {
+  id: number;
+  requerido: boolean;
+  tipoDocumento: string;
+  nombreArchivo: string;
+  estatus: string;
+}
+
 

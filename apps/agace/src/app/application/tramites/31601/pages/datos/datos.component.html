@@ -3,25 +3,25 @@
     <div class="row">
         <ul class="nav nav-tabs">
             <li [ngClass]="indice === 1 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Datos Comunes</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Datos Comunes</a>
             </li>
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros Relacionados</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros Relacionados</a>
             </li>
             <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos por Régimen</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(4)">Datos por Régimen</a>
             </li>
             <li [ngClass]="indice === 5 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(5)">IVA e IEPS A</a>
+                <a data-toggle="tab" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(5)">IVA e IEPS A</a>
             </li>
         </ul>
         <ng-container>
             @switch (indice) {
                 @case(1) {
-                    <p>componente de solicitud aquí</p>
+                    <solicitante></solicitante>
                 }              
                 @case (2) {
                    

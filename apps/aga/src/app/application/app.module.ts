@@ -1,4 +1,4 @@
-import { ToastrModule, provideToastr } from 'ngx-toastr';
+import { ToastrModule, ToastrService, provideToastr } from 'ngx-toastr';
 
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AppComponent } from './app.component';
@@ -10,10 +10,10 @@ import { HeaderComponent } from '@ng-mf/data-access-user';
 import { InformacionUsuarioComponent } from "@ng-mf/data-access-user";
 import { NavComponent } from '@ng-mf/data-access-user';
 import { NgModule } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
 import { SeleccionTramiteComponent } from './seleccion-tramite/seleccion-tramite.component';
 import { SolicitanteService } from '@ng-mf/data-access-user';
 import { TituloComponent } from "@ng-mf/data-access-user";
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -34,6 +34,7 @@ import { TituloComponent } from "@ng-mf/data-access-user";
     ToastrModule.forRoot(),
 ],
   providers: [
+    ToastrService,
     provideToastr({
       positionClass: 'toast-top-right',
     }),

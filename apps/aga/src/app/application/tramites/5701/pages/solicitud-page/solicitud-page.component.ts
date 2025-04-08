@@ -1,12 +1,13 @@
-import { Component, ViewChild } from '@angular/core';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  DatosPasos, SeccionLibQuery, SeccionLibState,
+  SeccionLibStore,
+} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
-import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_5701 } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { SeccionQuery } from '../../../../estados/queries/seccion.query';
 
 interface AccionBoton {
   accion: string;
@@ -17,10 +18,10 @@ interface AccionBoton {
   templateUrl: './solicitud-page.component.html',
   styles: ``,
 })
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
   pasos: ListaPasosWizard[] = PASOS;
-  indice: number = 2;
-  public seccion!: SeccionState;
+  indice: number = 1;
+  public seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
@@ -33,11 +34,23 @@ export class SolicitudPageComponent {
   };
 
   constructor(
-    private seccionQuery: SeccionQuery,
-    private seccionStore: SeccionStore
-  ) {}
+              private seccionQuery: SeccionLibQuery,
+              private seccionStore: SeccionLibStore,) 
+  // eslint-disable-next-line no-empty-function
+  {
 
-  ngOnInit() {
+  }
+
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * En este método, se suscribe al estado de la sección utilizando `selectSeccionState$` 
+   * y actualiza la propiedad `seccion` con el estado recibido. La suscripción se 
+   * completa cuando se emite `destroyNotifier$` para evitar fugas de memoria.
+   * 
+   * Además, llama al método `asignarSecciones` para realizar asignaciones adicionales.
+   */
+  ngOnInit(): void{
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -50,11 +63,25 @@ export class SolicitudPageComponent {
     this.asignarSecciones();
   }
 
+  /**
+   * Selecciona una pestaña específica y actualiza el índice actual.
+   *
+   * @param i - El índice de la pestaña a seleccionar.
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
-  getValorIndice(e: AccionBoton) {
+  /**
+   * Actualiza el valor del índice basado en la acción del botón y navega en el componente wizard.
+   *
+   * @param e - Objeto de tipo `AccionBoton` que contiene el valor y la acción del botón.
+   * 
+   * Si el valor del botón está entre 1 y 4, actualiza el índice con el valor del botón.
+   * Si la acción es 'cont', avanza al siguiente paso del wizard.
+   * Si la acción no es 'cont', retrocede al paso anterior del wizard.
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -68,15 +95,17 @@ export class SolicitudPageComponent {
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones() {
-    const secciones: boolean[] = [];
-    const formaValida: boolean[] = [];
-    for (const llaveSeccion in SECCIONES_TRAMITE_5701.PASO_1) {
-      // @ts-ignore - fix this
-      secciones.push(SECCIONES_TRAMITE_5701.PASO_1[llaveSeccion]);
-      formaValida.push(false);
+  private asignarSecciones(): void {
+    const SECCIONES: boolean[] = [];
+    const FORMA_VALIDA: boolean[] = [];
+    for (const LLAVE_SECCION in SECCIONES_TRAMITE_5701.PASO_1) {
+      if (Object.prototype.hasOwnProperty.call(SECCIONES_TRAMITE_5701.PASO_1, LLAVE_SECCION)) {
+        // @ts-expect-error - fix this
+        SECCIONES.push(SECCIONES_TRAMITE_5701.PASO_1[LLAVE_SECCION]);
+        FORMA_VALIDA.push(false);
+      }
     }
-    this.seccionStore.establecerSeccion(secciones);
-    this.seccionStore.establecerFormaValida(formaValida);
+    this.seccionStore.establecerSeccion(SECCIONES);
+    this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
 }
