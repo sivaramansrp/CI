@@ -1,22 +1,22 @@
-import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-generar-dictamen',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './generar-dictamen.component.html',
   styleUrl: './generar-dictamen.component.scss',
 })
 export class GenerarDictamenComponent {
+  
+constructor(private fb: FormBuilder
+) {
+    // do nothing.
+}
   formDictamen: FormGroup = this.fb.group({
-    sentidoDictamen: ['', [Validators.required]],
-    justificacionDictamen:['', [Validators.required]]
-
-});
-
-constructor(private fb: FormBuilder,
-) {}
-
+  sentidoDictamen: ['', [Validators.required]],
+  justificacionDictamen:['', [Validators.required]]
+  });
 }

@@ -1,0 +1,100 @@
+<div>
+    <form [formGroup]="formCertificado">
+        <div>
+            <ng-titulo titulo="Validación inicial del certificado de circulación de mercancías" />
+            @if(operador){
+                <div class="row">
+                    <div class="col-md-12">
+                      <label for="Tipo_de_Certificado"
+                        >&iquest; La operación se realizó con un tercer operador?</label
+                      >
+                    </div>
+                    <div class="col">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="" id="si"
+                            formControlName="si" >
+                          <label class="form-check-label" for="si">SI</label>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <ng-titulo titulo="Tratado y país o bloque" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="tratadoAcuerdo || []" [label]="'Tratado / Acuerdo'"
+                    [required]="true" name="estado" formControlName="entidadFederativa"
+                    (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
+            </div>
+
+            <div class="col-md-6">
+                <app-catalogo-select [catalogo]="paisBloqu || []" [label]="'País / Bloque'" [required]="true"
+                    name="estado" formControlName="bloque"
+                    (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="fracciónArancelaria" class="form-label">Fracción arancelaria:</label>
+                <input type="text" class="form-control" formControlName="fraccionArancelariaForm"
+                    id="fracciónArancelaria">
+            </div>
+
+            <div class="col-md-4">
+                <label for="registroProducto" class="form-label"># Registro producto:</label>
+                <input type="text" class="form-control" formControlName="registroProductoForm" id="registroProducto">
+            </div>
+            <div class="col-md-4">
+                <label for="nombreComercial" class="form-label">Nombre comercial:</label>
+                <input type="text" class="form-control" formControlName="nombreComercialForm" id="nombreComercial">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-12  text-center">
+                <label for="fracciónArancelaria" class="form-label">Periodo</label>
+            </div>
+        </div>
+
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaInicioInput" [setFecha]="formCertificado.get('fechaInicio')?.value"
+            (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+        </div>
+        <div class="col-md-4 form-field">
+            <input-fecha [datos]="fechaFinalInput" [setFecha]="formCertificado.get('fechaFinal')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+        </div>
+
+        <div class="row w-100">
+            <div class="col-12 d-flex justify-content-end mt-3 mb-4">
+                <button class="btn btn-primary" [disabled]="formCertificado.invalid" (click)="buscarMercancia()">Mercancías Disponibles</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ng-titulo titulo="Mercancías disponibles" />
+
+            </div>
+        </div>
+        <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tableData || []"
+            [tipoSeleccionTabla]="seleccionTabla" (filaClic)="abrirModificarModal($event)"></app-tabla-dinamica>
+
+            
+            @if(tablaSeleccionEvent){
+            <div class="row">
+                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion"  [configuracionTabla]="configuracionTablaMercancia"
+                [datos]="guardarClicado || []"  ></app-tabla-dinamica>
+              </div>
+
+              <div class="row d-flex  mt-3 mb-4 justify-content-end">
+                  <div class="col-12 container text-end mt-5">
+                    <button class="btn btn-default me-2">Eliminar</button>
+                    <button class="btn btn-primary"  (click)="abrirModal(tableData[0])">Modificar</button>
+                  </div>
+              </div>
+
+            }
+
+    </form>
+
+</div>
