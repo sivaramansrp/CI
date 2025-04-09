@@ -82,7 +82,12 @@ export interface MercanciasTabla {
 }
  
 /**
+ * @component
+ * @name DomicilloComponent
+ * @description
  * Componente principal para gestionar el formulario de domicilio.
+ * Este componente incluye funcionalidades para manejar datos de domicilio,
+ * mercancías, agentes y tablas dinámicas.
  */
 @Component({
   selector: 'app-domicillo',
@@ -100,6 +105,11 @@ export interface MercanciasTabla {
   styleUrl: './domicillo.component.css',
 })
 export class DomicilloComponent implements OnInit,OnDestroy {
+  /**
+   * Indica si un campo es requerido o no.
+   * @type {boolean}
+   * @default false
+   */
   noRequerido: boolean = false;
   /**
    * Lista de componentes Crosslist disponibles en la vista.

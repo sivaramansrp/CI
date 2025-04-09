@@ -1,147 +1,145 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+
 /**
- * @interface
- * @name Solicitud260906State
- * @description
- * Representa el estado de la solicitud en el sistema. Contiene todos los campos necesarios para gestionar los datos relacionados con la solicitud.
+ * @interface Solicitud260906State
+ * @description Representa el estado de la solicitud 260906.
  */
 export interface Solicitud260906State {
-    /**
-     * @property {string} referencia
-     * @description Referencia de la solicitud.
-     */
-    referencia: string;
-  
-    /**
-     * @property {string} cadenaDependencia
-     * @description Cadena de dependencia asociada a la solicitud.
-     */
-    cadenaDependencia: string;
-  
-    /**
-     * @property {string} banco
-     * @description Información del banco relacionado.
-     */
-    banco: string;
-  
-    /**
-     * @property {string} Llave
-     * @description Llave única de la solicitud.
-     */
-    Llave: string;
-  
-    /**
-     * @property {string} tipoFetch
-     * @description Información de fetch.
-     */
-    tipoFetch: string;
-  
-    /**
-     * @property {string} importe
-     * @description Importe relacionado con la solicitud.
-     */
-    importe: string;
-  
-    
-  }
+  /**
+   * @property {string} referencia - Referencia de la solicitud.
+   */
+  referencia: string;
 
-/**
- * @function
- * @name createInitialState
- * @description
- * Crea el estado inicial de la solicitud. Esta función devuelve un objeto con todos los campos inicializados como cadenas vacías.
- * 
- * @returns {Solicitud260906State} El estado inicial de la solicitud.
- */
-export function createInitialState(): Solicitud260906State {
-    return {
-        /**
-         * @property {string} referencia
-         * @description Referencia de la solicitud.
-         */
-        referencia: '',
+  /**
+   * @property {string} cadenaDependencia - Cadena de dependencia asociada.
+   */
+  cadenaDependencia: string;
 
-        /**
-         * @property {string} cadenaDependencia
-         * @description Cadena de dependencia asociada a la solicitud.
-         */
-        cadenaDependencia: '',
+  /**
+   * @property {string} banco - Banco asociado a la solicitud.
+   */
+  banco: string;
 
-        /**
-         * @property {string} banco
-         * @description Información del banco relacionado.
-         */
-        banco: '',
+  /**
+   * @property {string} Llave - Llave única de la solicitud.
+   */
+  Llave: string;
 
-        /**
-         * @property {string} Llave
-         * @description Llave única de la solicitud.
-         */
-        Llave: '',
+  /**
+   * @property {string} tipoFetch - Tipo de operación de obtención de datos.
+   */
+  tipoFetch: string;
 
-        /**
-         * @property {string} tipoFetch
-         * @description Información de fetch.
-         */
-        tipoFetch: '',
-
-        /**
-         * @property {string} importe
-         * @description Importe relacionado con la solicitud.
-         */
-        importe: '',
-
-       
-    };
+  /**
+   * @property {string} importe - Importe asociado a la solicitud.
+   */
+  importe: string;
 }
 
+/**
+ * @function createInitialState
+ * @description Crea el estado inicial de la solicitud 260906.
+ * @returns {Solicitud260906State} Estado inicial.
+ */
+export function createInitialState(): Solicitud260906State {
+  return {
+    referencia: '',
+    cadenaDependencia: '',
+    banco: '',
+    Llave: '',
+    tipoFetch: '',
+    importe: '',
+  };
+}
+
+/**
+ * @class Sanitario260906Store
+ * @extends {Store<Solicitud260906State>}
+ * @description Almacén para gestionar el estado de la solicitud 260906.
+ */
 @Injectable({
-    providedIn: 'root',
-})    
-
+  providedIn: 'root',
+})
 @StoreConfig({ name: 'sanitario260906Store', resettable: true })
+export class Sanitario260906Store extends Store<Solicitud260906State> {
+  /**
+   * @constructor
+   * @description Inicializa el almacén con el estado inicial.
+   */
+  constructor() {
+    super(createInitialState());
+  }
 
-export class Sanitario260906Store extends Store<Solicitud260906State>{
-     constructor() {
-            super(createInitialState());
-        }
+  /**
+   * @method setreferencia
+   * @description Actualiza el valor de la referencia en el estado.
+   * @param {string} referencia - Nueva referencia.
+   */
+  public setreferencia(referencia: string): void {
+    this.update((state) => ({
+      ...state,
+      referencia,
+    }));
+  }
 
-        public setreferencia(referencia: string) {
-            this.update((state) => ({
-                ...state,
-                referencia,
-            }));
-        }
-        public setcadenaDependencia(cadenaDependencia: string) {
-            this.update((state) => ({
-                ...state,
-                cadenaDependencia,
-            }));
-        }
-        public setbanco(banco: string) {
-            this.update((state) => ({
-                ...state,
-                banco,
-            }));
-        }
-        public setLlave(Llave: string) {
-            this.update((state) => ({
-                ...state,
-                Llave,
-            }));
-        }
-        public settipoFetch(tipoFetch: string) {
-            this.update((state) => ({
-                ...state,
-                tipoFetch,
-            }));
-        }
-        public setimporte(importe: string) {
-            this.update((state) => ({
-                ...state,
-                importe,
-            }));
-        }
+  /**
+   * @method setcadenaDependencia
+   * @description Actualiza el valor de la cadena de dependencia en el estado.
+   * @param {string} cadenaDependencia - Nueva cadena de dependencia.
+   */
+  public setcadenaDependencia(cadenaDependencia: string): void {
+    this.update((state) => ({
+      ...state,
+      cadenaDependencia,
+    }));
+  }
 
+  /**
+   * @method setbanco
+   * @description Actualiza el valor del banco en el estado.
+   * @param {string} banco - Nuevo banco.
+   */
+  public setbanco(banco: string): void {
+    this.update((state) => ({
+      ...state,
+      banco,
+    }));
+  }
+
+  /**
+   * @method setLlave
+   * @description Actualiza el valor de la llave en el estado.
+   * @param {string} Llave - Nueva llave.
+   */
+  public setLlave(Llave: string): void {
+    this.update((state) => ({
+      ...state,
+      Llave,
+    }));
+  }
+
+  /**
+   * @method settipoFetch
+   * @description Actualiza el valor del tipo de operación de obtención de datos en el estado.
+   * @param {string} tipoFetch - Nuevo tipo de operación.
+   */
+  public settipoFetch(tipoFetch: string): void {
+    this.update((state) => ({
+      ...state,
+      tipoFetch,
+    }));
+  }
+
+  /**
+   * @method setimporte
+   * @description Actualiza el valor del importe en el estado.
+   * @param {string} importe - Nuevo importe.
+   */
+  public setimporte(importe: string): void {
+    this.update((state) => ({
+      ...state,
+      importe,
+    }));
+  }
 }

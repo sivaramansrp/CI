@@ -26,11 +26,18 @@ import { ModalComponent } from '../model/modal.component';
 import nacionalidadRedio from 'libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
 import tipoPersonaoptions from 'libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
 
-
- 
+ /**
+ * Constante que define el texto de alerta para las tablas de terceros relacionados.
+ * Este texto indica que las tablas con asterisco son obligatorias.
+ */
 const TERCEROS_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 
+  
+/**
+ * Componente que gestiona la funcionalidad de terceros relacionados.
+ * Permite agregar, editar y visualizar información de fabricantes, destinatarios, proveedores y facturadores.
+ */
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,

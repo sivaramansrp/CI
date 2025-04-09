@@ -55,14 +55,6 @@ export class DerechosComponent implements OnInit, OnDestroy {
 
   /**
    * compodoc
-   * property {Subject<void>} destroyed$
-   * description Sujeto utilizado para manejar la destrucción de observables.
-   * private
-   */
-  private destroyed$ = new Subject<void>(); // Subject para manejar la limpieza de observables.
-
-  /**
-   * compodoc
    * property {Catalogo[]} derechosList
    * description Lista de datos relacionados con los derechos.
    */
@@ -147,7 +139,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
    */
   loadComboUnidadMedida(): void {
     this.service.getDatos() // Llamar al método del servicio para obtener datos.
-      .pipe(takeUntil(this.destroyed$)) // Darse de baja automáticamente cuando el componente sea destruido. .
+      .pipe(takeUntil(this.destroyNotifier$)) // Darse de baja automáticamente cuando el componente sea destruido. .
       .subscribe((data): void => {
         this.derechosList = data as Catalogo[]; // Asignar los datos obtenidos a derechosList.
       });
@@ -161,8 +153,6 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * returns {void}
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(); 
-    this.destroyed$.complete(); 
     this.destroyNotifier$.next(); 
     this.destroyNotifier$.complete(); 
   }
