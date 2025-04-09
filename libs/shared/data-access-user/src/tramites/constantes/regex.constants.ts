@@ -282,10 +282,3 @@ export const REGEX_CURP =
  * Permite dígitos y el punto decimal. 
  */
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
-
-/**
- * Expresión regular para validar una cadena que contenga solo números enteros
- * separados por comas y espacios opcionales.
- * Ejemplo válido: 123, 456, 789
- */
-export const REGEX_SEPARADO_POR_COMAS = /^\d+(,\s*\d+)*$/;
