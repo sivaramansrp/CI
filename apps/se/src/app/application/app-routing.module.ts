@@ -324,6 +324,13 @@ const ROUTES: Routes = [
       import('./tramites/110211/validar-certificado.module').then(
         (m) => m.ValidarCertificadoModule
       ),
+  },
+  {
+    path:'importacion-vehiculos-usados-donacion',
+    loadChildren: () =>
+      import('./tramites/130105/importacion-vehiculos-usados-donacion.module').then(
+        (m) => m.ImportacionVehiculosUsadosDonacionModule
+      )
   }
 ];
 
