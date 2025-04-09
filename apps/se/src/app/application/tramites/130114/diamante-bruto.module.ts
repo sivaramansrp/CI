@@ -1,33 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms'
 
-import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent} from '@ng-mf/data-access-user';
-import { ImportacionVehiculosNuevosPageComponent } from './pages/importacion-vehiculos-nuevos-page/importacion-vehiculos-nuevos-page.component';
-
-import { PasoDosComponent } from '../120402/components/paso-dos/paso-dos.component';
-import { PasoTresComponent } from '../120402/components/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-
-import { ToastrService } from 'ngx-toastr';
-
-import { ImportacionVehiculosNuevosRoutingModule } from './importacion-vehiculos-nuevos-routing.module';
-
+import { BtnContinuarComponent, CrosslistComponent, InputRadioComponent, SolicitanteComponent, TablaDinamicaComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { DatosDeLaMercanciaComponent } from '../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
 import { DatosDelTramiteComponent } from '../../shared/components/datos-del-tramite/datos-del-tramite.component';
+import { DiamanteBrutoComponent } from './pages/diamante-bruto/diamante-bruto.component';
+import { DiamanteBrutoRoutingModule } from './diamante-bruto-routing.module';
 import { PaisProcendenciaComponent } from '../../shared/components/pais-procendencia/pais-procendencia.component';
 import { PartidasDeLaMercanciaComponent } from '../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
+import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RepresentacionComponent } from '../../shared/components/representacion/representacion.component';
-import { SolicitudComponent } from './components/solicitud/solicitud.component';
-
-
+import { SolicitudComponent } from '../130114/component/solicitud.component';
 
 
 @NgModule({
-  declarations: [SolicitudComponent,ImportacionVehiculosNuevosPageComponent,PasoUnoComponent],
+    declarations: [
+      DiamanteBrutoComponent,
+      PasoUnoComponent,
+      SolicitudComponent
+    ],
   imports: [
-    CommonModule,
-    ImportacionVehiculosNuevosRoutingModule,
+        CommonModule,
+        DiamanteBrutoRoutingModule,
         WizardComponent,
         BtnContinuarComponent,
         TituloComponent,
@@ -42,10 +40,11 @@ import { SolicitudComponent } from './components/solicitud/solicitud.component';
         TablaDinamicaComponent,
         PaisProcendenciaComponent,
         RepresentacionComponent,
-        CrosslistComponent
+        CrosslistComponent,
+        ToastrModule.forRoot()
   ],
   providers: [
     ToastrService
   ]
 })
-export class ImportacionVehiculosNuevosModule {}
+export class DiamanteBrutoModule {}
