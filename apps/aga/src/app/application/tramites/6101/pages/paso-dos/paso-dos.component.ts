@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
 /**
- * Componente PasoDosComponent que representa el segundo paso del trámite 30901.
+ * Componente PasoDosComponent que representa el segundo paso del trámite 6101.
  */
 @Component({
   selector: 'app-paso-dos',
@@ -13,7 +13,7 @@ import { TEXTOS } from '@ng-mf/data-access-user';
   styleUrl: './paso-dos.component.scss',
 })
 /**
- * Clase PasoDosComponent encargada de manejar la lógica y vista del segundo paso del trámite 30901.
+ * Clase PasoDosComponent encargada de manejar la lógica y vista del segundo paso del trámite 6101.
  */
 export class PasoDosComponent implements OnInit {
   /**

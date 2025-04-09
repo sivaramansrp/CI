@@ -252,17 +252,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   // eslint-disable-next-line class-methods-use-this
   divideFraccion(valor: string): DivideFraccion {
-    const LONGITUD_VALUE = valor.length;
+    const LONGITUD_VALOR = valor.length;
     let capitulo = '';
     let partida = '';
     let subpartida = '';
     let subdivision = '';
 
-    if (LONGITUD_VALUE === 10 || LONGITUD_VALUE === 8) {
+    if (LONGITUD_VALOR === 10 || LONGITUD_VALOR === 8) {
       capitulo = valor.substr(0, 2);
       partida = valor.substr(0, 4);
       subpartida = valor.substr(0, 6);
-      subdivision = LONGITUD_VALUE === 10 ? valor.substr(8, 2) : '00';
+      subdivision = LONGITUD_VALOR === 10 ? valor.substr(8, 2) : '00';
     }
 
     return {
