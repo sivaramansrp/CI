@@ -14,7 +14,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   imports: [CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ReactiveFormsModule, TableComponent,InputRadioComponent],
+    ReactiveFormsModule, TableComponent, InputRadioComponent],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
@@ -23,6 +23,8 @@ export class DatosSolicitudComponent implements OnInit {
   solicitudForm!: FormGroup;
 
   formularioEmpresaReciclaje!: FormGroup;
+
+  formularioLugarReciclaje!: FormGroup;
 
   aduanas!: Catalogo[];
 
@@ -35,7 +37,7 @@ export class DatosSolicitudComponent implements OnInit {
 
   public establecimientoBodyData: unknown = [];
 
-  constructor(public fb: FormBuilder,private router: Router) {
+  constructor(public fb: FormBuilder, private router: Router) {
     // Constructor logic if needed
   }
 
@@ -56,7 +58,8 @@ export class DatosSolicitudComponent implements OnInit {
     this.reciclajeEnInstalaciones = RADIO_OPCIONES.reciclajeEnInstalaciones;
     this.inicializarFormularioEmpresaReciclaje();
     this.suscribirCambioRequiereEmpresa();
-
+    this.inicializarFormularioLugarReciclaje();
+    this.suscribirCambioReciclajeInstalaciones();
   }
 
   isInvalid(id: string): boolean | undefined {
@@ -77,7 +80,7 @@ export class DatosSolicitudComponent implements OnInit {
       correoElectronico: new FormControl('', [Validators.required, Validators.email])
     });
   }
-  
+
   private suscribirCambioRequiereEmpresa(): void {
     const CAMPO_REQUIERE_EMPRESA: string = 'requiereEmpresa';
     const CAMPOS_A_CONTROLAR: string[] = [
@@ -86,12 +89,12 @@ export class DatosSolicitudComponent implements OnInit {
       'telefono',
       'correoElectronico'
     ];
-  
+
     const CONTROL_REQUIERE_EMPRESA: FormControl<string> = this.formularioEmpresaReciclaje.get(CAMPO_REQUIERE_EMPRESA) as FormControl<string>;
-  
+
     CONTROL_REQUIERE_EMPRESA.valueChanges.subscribe((valor: string): void => {
       const DEBE_HABILITAR: boolean = valor === 'Si';
-  
+
       CAMPOS_A_CONTROLAR.forEach((CAMPO: string): void => {
         const CONTROL_CAMPO: FormControl<string> = this.formularioEmpresaReciclaje.get(CAMPO) as FormControl<string>;
         if (CONTROL_CAMPO) {
@@ -104,7 +107,35 @@ export class DatosSolicitudComponent implements OnInit {
       });
     });
   }
+
+  private inicializarFormularioLugarReciclaje(): void {
+    this.formularioLugarReciclaje = new FormGroup({
+      reciclajeInstalaciones: new FormControl<string>('Si', Validators.required),
+      lugarReciclaje: new FormControl<string>('', Validators.required),
+      numeroAutorizacionEmpresaReciclaje: new FormControl<string>('',Validators.required)
+    });
+  }
+
+  private suscribirCambioReciclajeInstalaciones(): void {
+    const CAMPO_RADIO: string = 'reciclajeInstalaciones';
+    const CAMPOS_A_CONTROLAR: string[] = [
+      'lugarReciclaje',
+      'numeroAutorizacionEmpresaReciclaje'
+    ];
   
+    this.formularioLugarReciclaje.get(CAMPO_RADIO)?.valueChanges.subscribe((valor: string): void => {
+      const DEBE_HABILITAR: boolean = valor === 'Si';
   
+      CAMPOS_A_CONTROLAR.forEach((campo: string): void => {
+        const CONTROL_CAMPO: FormControl<string> = this.formularioLugarReciclaje.get(campo) as FormControl<string>;
+        if (DEBE_HABILITAR) {
+          CONTROL_CAMPO.enable();
+        } else {
+          CONTROL_CAMPO.disable();
+        }
+      });
+    });
+  }
   
+
 }

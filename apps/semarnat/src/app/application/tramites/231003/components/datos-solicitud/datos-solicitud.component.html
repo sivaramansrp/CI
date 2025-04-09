@@ -80,24 +80,22 @@
     <div class="row mb-3">
       <div class="col-md-8">
         <label required="true">¿Requiere de una empresa de servicio para realizar el reciclaje?*:</label>
-        <app-input-radio 
-          [radioOptions]="requiereEmpresaServicioReciclaje" 
-          [isRequired]="true"
-          [layout]="'horizontal'"
+        <app-input-radio [radioOptions]="requiereEmpresaServicioReciclaje" [isRequired]="true" [layout]="'horizontal'"
           formControlName="requiereEmpresa">
         </app-input-radio>
       </div>
     </div>
-  
+
     <div class="row mb-3">
       <div class="col-md-8">
         <div class="form-group mb-3">
-          <label for="nombreEmpresaServicioReciclaje" class="form-label">Nombre de la empresa de servicios que realizará el reciclaje*:</label>
+          <label for="nombreEmpresaServicioReciclaje" class="form-label">Nombre de la empresa de servicios que realizará
+            el reciclaje*:</label>
           <input type="text" class="form-control" id="nombreEmpresaServicioReciclaje" formControlName="nombreEmpresa">
         </div>
       </div>
     </div>
-  
+
     <div class="row mb-3">
       <div class="col-md-8">
         <div class="form-group mb-3">
@@ -106,7 +104,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="row mb-3">
       <div class="col-md-6">
         <div class="form-group mb-3">
@@ -114,7 +112,7 @@
           <input type="text" class="form-control" id="telefono" formControlName="telefono">
         </div>
       </div>
-  
+
       <div class="col-md-6">
         <div class="form-group mb-3">
           <label for="correoElectronico" class="form-label">Correo electrónico*:</label>
@@ -123,26 +121,28 @@
       </div>
     </div>
   </form>
-  </div>
-  <ng-titulo titulo="Información sobre precauciones"></ng-titulo>
-  <div class="row mb-3">
-    <div class="col-md-10">
-      <div class="form-group">
-        <label class="form-label">Información sobre las precauciones de manejo que se debe dar al residuo
-          peligroso*:</label>
-        <textarea class="form-control disabled-color textarea-auto-height" rows="4"
-          name="solicitudAcotacion"></textarea>
-      </div>
+</div>
+<ng-titulo titulo="Información sobre precauciones"></ng-titulo>
+<div class="row mb-3">
+  <div class="col-md-10">
+    <div class="form-group">
+      <label class="form-label">Información sobre las precauciones de manejo que se debe dar al residuo
+        peligroso*:</label>
+      <textarea class="form-control disabled-color textarea-auto-height" rows="4" name="solicitudAcotacion"></textarea>
     </div>
   </div>
+</div>
 
-  <ng-titulo titulo="Lugar donde se realizará el reciclaje"></ng-titulo>
+<ng-titulo titulo="Lugar donde se realizará el reciclaje"></ng-titulo>
+<form [formGroup]="formularioLugarReciclaje">
   <div class="row mb-3">
     <div class="col-md-8">
-      <label required="true">¿El reciclaje se realizará dentro de las instalaciones donde se generaron los
-        residuos?*:</label>
-      <app-input-radio [radioOptions]="reciclajeEnInstalaciones" [isRequired]="true"
-        [layout]="'horizontal'"></app-input-radio>
+      <label required="true">
+        ¿El reciclaje se realizará dentro de las instalaciones donde se generaron los residuos?*:
+      </label>
+      <app-input-radio [radioOptions]="reciclajeEnInstalaciones" [isRequired]="true" [layout]="'horizontal'"
+        formControlName="reciclajeInstalaciones">
+      </app-input-radio>
     </div>
   </div>
 
@@ -150,7 +150,7 @@
     <div class="col-md-8">
       <div class="form-group mb-3">
         <label for="lugarReciclaje" class="form-label">Lugar donde se realizará el reciclaje*:</label>
-        <input type="text" class="form-control" id="lugarReciclaje">
+        <input type="text" class="form-control" id="lugarReciclaje" formControlName="lugarReciclaje">
       </div>
     </div>
   </div>
@@ -158,9 +158,12 @@
   <div class="row mb-3">
     <div class="col-md-8">
       <div class="form-group mb-3">
-        <label for="numeroAutorizacionEmpresaReciclaje" class="form-label">Número de autorización de la empresa del
-          reciclaje*:</label>
-        <input type="text" class="form-control" id="numeroAutorizacionEmpresaReciclaje">
+        <label for="numeroAutorizacionEmpresaReciclaje" class="form-label">
+          Número de autorización de la empresa del reciclaje*:
+        </label>
+        <input type="text" class="form-control" id="numeroAutorizacionEmpresaReciclaje"
+          formControlName="numeroAutorizacionEmpresaReciclaje">
       </div>
     </div>
   </div>
+</form>
