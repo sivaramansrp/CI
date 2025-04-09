@@ -162,10 +162,12 @@ export * from './core/services/231001/materia-prima-formservice.service';
 export * from './core/services/231001/administrar-residuos.service';
 
 export * from './core/services/shared/tramite-folio/tramite-folio.service';
-export * from './tramites/components/notificaciones/notificaciones.component';
+export {TramiteStore} from './core/estados/tramite.store';
 export * from './core/models/260303/certificados-licencias-permisos.model';
 export * from './core/models/260701/certificados-licencias.model';
 
+
+export * from './tramites/components/notificaciones/notificaciones.component';
 
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
