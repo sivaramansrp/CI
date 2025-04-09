@@ -91,9 +91,8 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260402/permiso-importacion-biologica.module').then(
         (m) => m.EntradaHumanaModule
-
       ),
-    },
+  },
   {
     path: 'permiso-sanitario-medicos-uso-personal',
     loadChildren: () =>

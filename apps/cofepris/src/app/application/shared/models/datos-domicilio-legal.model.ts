@@ -145,7 +145,7 @@ export interface PermisoModel {
   Nombre: string;
   RFC: string;
   CURP: string;
-  Teléfono: number;
-  CorreoElectrónico: string;
+  Telefono: number;
+  CorreoElectronico: string;
   calle: string;
 }
