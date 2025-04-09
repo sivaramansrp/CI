@@ -5,6 +5,8 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PASOS } from '../../constants/intropermiso.enum';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
@@ -68,6 +70,7 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
     txtBtnSig: 'Continuar',
   };
   mostrarDevolverFacturas: boolean = false;
+  private destroy$ = new Subject<void>(); // Subject to manage unsubscription
 
   /**
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
@@ -94,18 +97,26 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * Subscribes to the message service to update the search display state.
    */
   ngOnInit() {
-    this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
-      this.mostrarBusqueda = mensaje;
-    });
-    this.servicioDeMensajesService.devolverFacturasMensaje$.subscribe((mensaje) => {
-      this.mostrarDevolverFacturas = mensaje;
-    });
+    this.servicioDeMensajesService.mensaje$
+      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
+      .subscribe((mensaje) => {
+        this.mostrarBusqueda = mensaje;
+      });
+
+    this.servicioDeMensajesService.devolverFacturasMensaje$
+      .pipe(takeUntil(this.destroy$)) // Automatically unsubscribe on destroy
+      .subscribe((mensaje) => {
+        this.mostrarDevolverFacturas = mensaje;
+      });
   }
   /**
    * @description Lifecycle method executed when the component is destroyed.
    * Resets the search display state to false.
    */
   ngOnDestroy() {
+    this.destroy$.next(); // Emit a value to signal completion
+    this.destroy$.complete(); // Complete the Subject to clean up resources
+   
       this.mostrarBusqueda = false;
   }
   /**
