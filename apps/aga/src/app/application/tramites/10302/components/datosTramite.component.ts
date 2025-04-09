@@ -413,7 +413,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   agregarMercancias(): void {
     if (!this.agregarMercanciasForm.valid) {
       this.agregarMercanciasForm.markAllAsTouched();
-      // return;
     } else {
       this.exencionImpuestoService
         .agregarMercancias()
@@ -459,7 +458,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    */
   agregarConfirmarModal(): void {
     if (this.agregarMercanciasForm.valid === true) {
-      console.log(this.confirmarModalElement);
       if (this.confirmarModalElement) {
         const MODAL_INSTANCE = new Modal(
           this.confirmarModalElement.nativeElement
@@ -469,7 +467,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
       }
     } else {
       this.agregarMercanciasForm.markAllAsTouched();
-      // return;
     }
   }
 
