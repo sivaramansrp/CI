@@ -6,7 +6,7 @@
         <div class="form-group radioOpciones">
           <label class="mb-5" for="plazo">Plazo*:</label>
           <app-input-radio [radioOptions]="productoOpciones" formControlName="plazo" [isRequired]="true"
-            (valueChange)="setValoresStore(form, 'plazo', 'setProducto')" [layout]="'vertical'"></app-input-radio>
+            (change)="setValoresStore(form, 'plazo', 'setProducto')" [layout]="'vertical'"></app-input-radio>
         </div>
       </div>
     </div>
