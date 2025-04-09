@@ -180,6 +180,13 @@ const ROUTES: Routes = [
         (m) => m.RetirosCofeprisModule
       ),
   },
+  {
+    path: 'muestras-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260502/muestras-plaguicidas.module').then(
+        (m) => m.MuestrasPlaguicidasModule
+      ),
+  },
 ];
 
 @NgModule({
