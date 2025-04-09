@@ -2,13 +2,15 @@
 // Este conjunto de importaciones cubre funcionalidades relacionadas con la gestión de formularios, validaciones,
 // permisos, configuraciones, así como la obtención y manipulación de datos externos para la aplicación.
 
-import { Catalogo, REG_X, REGEX_VALORES_NUMERICOS } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_VALORES_NUMERICOS, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 import { HttpClient } from '@angular/common/http';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130217/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
@@ -62,12 +64,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
 
   /**
-   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
+   * Datos para el cuerpo de la tabla de partidas.
+   * @type {{ tbodyData: string[] }[]}
    */
-  tableBodyData: { tbodyData: string[] }[] = [];
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * Bandera para mostrar u ocultar la tabla dinámica.
@@ -87,8 +90,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Fila seleccionada en la tabla dinámica.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filaSeleccionada: any = null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * Opciones para el campo "producto".
@@ -194,11 +196,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.getEstablecimiento();
-    this.calcularTotales();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
+    this.obtenerTablaDatos();
 
     this.tramite130217Query.mostrarTabla$
       .pipe(takeUntil(this.destroyed$))
@@ -346,38 +347,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Configura los datos de la tabla dinámica a partir de un archivo JSON.
-   */
-  getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
-      (header, index) => ({
-        encabezado: header,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        clave: (fila: any): string => fila.tbodyData[index],
-        orden: index,
-      })
-    );
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
-
-  /**
-   * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
-   */
-  calcularTotales(): void {
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
-      0
-    );
-    const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
-  }
 
   /**
    * Solicita opciones configurables para los formularios desde archivos JSON.
@@ -413,30 +382,50 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de filas en la tabla dinámica y actualiza el estado global.
-   * @param filasSeleccionadas Lista de filas seleccionadas.
+   * Maneja la selección de filas en la tabla de partidas.
+   * @param {any[]} filasSeleccionadas - Array de filas seleccionadas
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
+  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
+      ? filasSeleccionadas
+      : [];
     if (this.filaSeleccionada) {
       this.tramite130217Store.storeTableValues(this.filaSeleccionada);
     }
   }
 
-  /**
-   * Valida el formulario y muestra la tabla dinámica si es válido.
+   /**
+ * Método para obtener los datos de la tabla dinámica.
+ * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
+ * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+ * 
+ * - Actualiza `tableBodyData` con los datos obtenidos.
+ * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+ * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+ * 
+ */
+   obtenerTablaDatos(): void {
+    this.ControlPermisosPreviosExportacionService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+      this.tableBodyData = data;
+      this.formForTotalCount.patchValue({
+        cantidadTotal:data[0].cantidad,
+        valorTotalUSD:data[0].totalUSD
+      });
+    });
+}
+
+/**
+   * Valida el formulario de partidas y muestra la tabla si es válido.
    */
-  validarYEnviarFormulario(): void {
+validarYEnviarFormulario(): void {
+  if (this.partidasDelaMercanciaForm.invalid) {
+    this.partidasDelaMercanciaForm.markAllAsTouched();
+  } else {
     this.mostrarTabla = true;
-    if (this.partidasDelaMercanciaForm.invalid) {
-      this.partidasDelaMercanciaForm.markAllAsTouched();
-    } else {
-      this.mostrarTabla = true;
-    }
+    this.tramite130217Store.setMostrarTabla(true);
+
   }
+}
 
   /**
    * Navega para modificar una partida específica y actualiza el estado global.
@@ -512,6 +501,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Actualiza el almacén con nuevos valores basados en eventos de formulario.
    * @param event Evento que incluye el formulario, el campo y el método a ejecutar.
    */
+  // eslint-disable-next-line complexity
   setValoresStore(event: {
     form: FormGroup;
     campo: string;
@@ -582,6 +572,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         );
     }
   }
+
+  /**
+ * Determina si el botón "Modificar" debe estar deshabilitado.
+ * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
+ * 
+ */
+disabledModificar() : boolean {
+  let disabled = false;
+  if(this.filaSeleccionada.length === 0){
+    disabled = true
+  }
+  return disabled;
+}
 
   /**
    * Ciclo de vida de Angular: limpia las suscripciones al destruir el componente.
