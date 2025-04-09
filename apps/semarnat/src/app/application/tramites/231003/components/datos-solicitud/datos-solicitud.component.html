@@ -35,32 +35,41 @@
       </div>
     </div>
   </form>
-  <div>
-    <ng-titulo titulo="Administrar residuos"></ng-titulo>
-
-    <div>
-      <h6>Datos de los residuos peligrosos a reciclar*:</h6>
-      <div class="row mb-3">
-        <div class="col-md-12">
-            <ng-table [commonTableHeader]="establecimientoHeaderData"
-                [commonTableBody]="establecimientoBodyData"></ng-table>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination d-flex justify-content-center">
-                    <li class="page-item"><a class="page-link">1</a></li>
-                </ul>
-            </nav>
-        </div>
+  <ng-titulo titulo="Administrar residuos"></ng-titulo>
+  <h6>Datos de los residuos peligrosos a reciclar*:</h6>
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData"></ng-table>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
     </div>
-    
-
-      <div class="row mb-5">
-        <div class="col-md-6 col-sm-6"></div>
-        <div class="col-md-6 col-sm-6 text-end">
-          <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button">Borrar</button>
-            <button class="btn btn-danger" type="button" (click)="navigateToPath()">Agregar</button>
-          </div>
-        </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col text-end">
+      <div class="btn-group">
+        <button class="btn btn-primary me-2" type="button">Borrar</button>
+        <button class="btn btn-danger" type="button" (click)="navigateToPath()">Agregar</button>
+      </div>
+    </div>
+  </div>
+  <ng-titulo titulo="Datos de la empresa transportista"></ng-titulo>
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <div class="form-group mb-3">
+        <label for="nombreEmpresaTransportistaResiduos" class="form-label">Nombre de la empresa transportista de
+          residuos peligrosos*:</label>
+        <input type="text" class="form-control" id="nombreEmpresaTransportistaResiduos">
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-8">
+      <div class="form-group mb-3">
+        <label for="numeroAutorizacionSemarnat" class="form-label">Número de autorización SEMARNAT*:</label>
+        <input type="text" class="form-control" id="numeroAutorizacionSemarnat">
       </div>
     </div>
   </div>
