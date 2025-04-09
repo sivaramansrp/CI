@@ -2,10 +2,10 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Estado de los formularios: solicitud, empresa reciclaje y lugar reciclaje.
+ * Estado de los formularios para el trámite de reciclaje.
  */
-export interface EstadoFormularioSolicitud {
-  solicitud: {
+export interface EstadoFormularioReciclaje {
+  solicitudForm: {
     numeroRegistroAmbiental: string;
     descripcionGenerica1: string;
     numeroProgramaImmex: string;
@@ -25,11 +25,11 @@ export interface EstadoFormularioSolicitud {
 }
 
 /**
- * Estado inicial del formulario.
+ * Función para crear el estado inicial de los formularios.
  */
-export function crearEstadoInicialFormulario(): EstadoFormularioSolicitud {
+export function crearEstadoInicialFormularioReciclaje(): EstadoFormularioReciclaje {
   return {
-    solicitud: {
+    solicitudForm: {
       numeroRegistroAmbiental: '',
       descripcionGenerica1: '',
       numeroProgramaImmex: '',
@@ -50,25 +50,34 @@ export function crearEstadoInicialFormulario(): EstadoFormularioSolicitud {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'formulario-solicitud', resettable: true })
-export class FormularioSolicitudStore extends Store<EstadoFormularioSolicitud> {
+@StoreConfig({ name: 'formulario-reciclaje', resettable: true })
+export class FormularioReciclajeStore extends Store<EstadoFormularioReciclaje> {
   constructor() {
-    super(crearEstadoInicialFormulario());
+    super(crearEstadoInicialFormularioReciclaje());
   }
 
-  public establecerSolicitud(solicitud: EstadoFormularioSolicitud['solicitud']): void {
-    this.update({ solicitud });
+  actualizarSolicitudForm(valores: EstadoFormularioReciclaje['solicitudForm']): void {
+    this.update(state => ({
+      ...state,
+      solicitudForm: { ...valores }
+    }));
   }
 
-  public establecerEmpresaReciclaje(empresaReciclaje: EstadoFormularioSolicitud['empresaReciclaje']): void {
-    this.update({ empresaReciclaje });
+  actualizarEmpresaReciclaje(valores: EstadoFormularioReciclaje['empresaReciclaje']): void {
+    this.update(state => ({
+      ...state,
+      empresaReciclaje: { ...valores }
+    }));
   }
 
-  public establecerLugarReciclaje(lugarReciclaje: EstadoFormularioSolicitud['lugarReciclaje']): void {
-    this.update({ lugarReciclaje });
+  actualizarLugarReciclaje(valores: EstadoFormularioReciclaje['lugarReciclaje']): void {
+    this.update(state => ({
+      ...state,
+      lugarReciclaje: { ...valores }
+    }));
   }
 
-  public limpiarFormulario(): void {
+  limpiarFormulario(): void {
     this.reset();
   }
 }

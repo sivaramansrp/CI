@@ -1,15 +1,17 @@
-import { EstadoFormularioSolicitud } from '../tramites/dato-solicitud.store';
-import { FormularioSolicitudStore } from '../tramites/dato-solicitud.store';
+import { EstadoFormularioReciclaje,FormularioReciclajeStore} from '../tramites/dato-solicitud.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 @Injectable({ providedIn: 'root' })
-export class FormularioSolicitudQuery extends Query<EstadoFormularioSolicitud> {
-  solicitud$ = this.select(estado => estado.solicitud);
-  empresaReciclaje$ = this.select(estado => estado.empresaReciclaje);
-  lugarReciclaje$ = this.select(estado => estado.lugarReciclaje);
+export class FormularioReciclajeQuery extends Query<EstadoFormularioReciclaje> {
 
-  constructor(protected override store: FormularioSolicitudStore) {
+  estadoFormulario$ = this.select();
+
+  constructor(protected override store: FormularioReciclajeStore) {
     super(store);
   }
+
+  obtenerSolicitudForm$ = this.select(state => state.solicitudForm);
+  obtenerEmpresaReciclaje$ = this.select(state => state.empresaReciclaje);
+  obtenerLugarReciclaje$ = this.select(state => state.lugarReciclaje);
 }

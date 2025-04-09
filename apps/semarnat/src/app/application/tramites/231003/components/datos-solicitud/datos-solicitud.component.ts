@@ -4,8 +4,8 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormularioSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
-import { FormularioSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
+import { FormularioReciclajeQuery } from '../../estados/queries/dato-solicitud.query';
+import { FormularioReciclajeStore } from '../../estados/tramites/dato-solicitud.store';
 import { Router } from '@angular/router';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
 const RADIO_OPCIONES = rawData as SolicitudJson;
@@ -42,8 +42,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   public establecimientoBodyData: unknown = [];
 
-  constructor(public fb: FormBuilder, private router: Router,private formularioSolicitudStore: FormularioSolicitudStore,
-    private formularioSolicitudQuery: FormularioSolicitudQuery) {
+  constructor(public fb: FormBuilder, private router: Router, private formularioSolicitudStore: FormularioReciclajeStore,
+    private formularioSolicitudQuery: FormularioReciclajeQuery) {
     // Constructor logic if needed
   }
 
@@ -60,13 +60,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.suscribirCambioRequiereEmpresa();
     this.inicializarFormularioLugarReciclaje();
     this.suscribirCambioReciclajeInstalaciones();
-    this.restaurarDatosDesdeStore();
-    this.suscribirseACambiosFormulario();
-  }
-
-  isInvalid(id: string): boolean | undefined {
-    const CONTROL = this.solicitudForm.get('datosdelForm')?.get(id);
-    return CONTROL?.invalid && CONTROL?.touched;
+    this.recuperarValoresDesdeStore();
+    this.suscribirseACambiosDeFormulario();
   }
 
   navigateToPath(): void {
@@ -75,13 +70,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   private inicializarSolicitudForm(): void {
     this.solicitudForm = this.fb.group({
-      datosdelForm: this.fb.group({
-        numeroRegistroAmbiental: ['', Validators.required],
-        descripcionGenerica1: ['', Validators.required],
-        numeroProgramaImmex: ['', Validators.required],
-      }),
+      numeroRegistroAmbiental: ['', Validators.required],
+      descripcionGenerica1: ['', Validators.required],
+      numeroProgramaImmex: ['', Validators.required],
     });
   }
+
 
   private inicializarFormularioEmpresaReciclaje(): void {
     this.formularioEmpresaReciclaje = this.fb.group({
@@ -134,10 +128,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       'lugarReciclaje',
       'numeroAutorizacionEmpresaReciclaje'
     ];
-  
+
     this.formularioLugarReciclaje.get(CAMPO_RADIO)?.valueChanges.subscribe((valor: string): void => {
       const DEBE_HABILITAR: boolean = valor === 'Si';
-  
+
       CAMPOS_A_CONTROLAR.forEach((campo: string): void => {
         const CONTROL_CAMPO: FormControl<string> = this.formularioLugarReciclaje.get(campo) as FormControl<string>;
         if (DEBE_HABILITAR) {
@@ -148,62 +142,29 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       });
     });
   }
-  
-  private restaurarDatosDesdeStore(): void {
-    this.formularioSolicitudQuery.solicitud$
-      .pipe(takeUntil(this.destruir$))
-      .subscribe((datos) => {
-        this.solicitudForm.get('datosdelForm')?.patchValue(datos, { emitEvent: false });
-      });
 
-    this.formularioSolicitudQuery.empresaReciclaje$
-      .pipe(takeUntil(this.destruir$))
-      .subscribe((datos) => {
-        this.formularioEmpresaReciclaje.patchValue(datos, { emitEvent: false });
-      });
+  private recuperarValoresDesdeStore(): void {
+    const ESTADO = this.formularioSolicitudQuery.getValue();
 
-    this.formularioSolicitudQuery.lugarReciclaje$
-      .pipe(takeUntil(this.destruir$))
-      .subscribe((datos) => {
-        this.formularioLugarReciclaje.patchValue(datos, { emitEvent: false });
-      });
+    this.solicitudForm.patchValue(ESTADO.solicitudForm, { emitEvent: false });
+    this.formularioEmpresaReciclaje.patchValue(ESTADO.empresaReciclaje, { emitEvent: false });
+    this.formularioLugarReciclaje.patchValue(ESTADO.lugarReciclaje, { emitEvent: false });
   }
 
-  private suscribirseACambiosFormulario(): void {
-    const SOLICITUD_CONTROLES = this.solicitudForm.get('datosdelForm') as FormGroup;
-    SOLICITUD_CONTROLES.get('numeroRegistroAmbiental')?.valueChanges
+  private suscribirseACambiosDeFormulario(): void {
+    this.solicitudForm.valueChanges
       .pipe(takeUntil(this.destruir$))
-      .subscribe(() => this.actualizarEstadoSolicitud());
+      .subscribe(valor => this.formularioSolicitudStore.actualizarSolicitudForm(valor));
 
-      SOLICITUD_CONTROLES.get('descripcionGenerica1')?.valueChanges
+    this.formularioEmpresaReciclaje.valueChanges
       .pipe(takeUntil(this.destruir$))
-      .subscribe(() => this.actualizarEstadoSolicitud());
+      .subscribe(valor => this.formularioSolicitudStore.actualizarEmpresaReciclaje(valor));
 
-      SOLICITUD_CONTROLES.get('numeroProgramaImmex')?.valueChanges
+    this.formularioLugarReciclaje.valueChanges
       .pipe(takeUntil(this.destruir$))
-      .subscribe(() => this.actualizarEstadoSolicitud());
-
-    this.vincularControlAStore(this.formularioEmpresaReciclaje, () =>
-      this.formularioSolicitudStore.establecerEmpresaReciclaje(this.formularioEmpresaReciclaje.value)
-    );
-
-    this.vincularControlAStore(this.formularioLugarReciclaje, () =>
-      this.formularioSolicitudStore.establecerLugarReciclaje(this.formularioLugarReciclaje.value)
-    );
+      .subscribe(valor => this.formularioSolicitudStore.actualizarLugarReciclaje(valor));
   }
 
-  private vincularControlAStore(grupo: FormGroup, accion: () => void): void {
-    Object.values(grupo.controls).forEach((control) => {
-      control.valueChanges.pipe(takeUntil(this.destruir$)).subscribe(accion);
-    });
-  }
-
-  private actualizarEstadoSolicitud(): void {
-    const VALORES = this.solicitudForm.get('datosdelForm')?.value;
-    if (VALORES) {
-      this.formularioSolicitudStore.establecerSolicitud(VALORES);
-    }
-  }
 
   ngOnDestroy(): void {
     this.destruir$.next();
