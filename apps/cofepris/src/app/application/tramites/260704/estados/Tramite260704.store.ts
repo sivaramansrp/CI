@@ -424,6 +424,7 @@ export class Tramite260704Store extends Store<Solicitud260704State> {
         tipoPersona,
       }));
     }
+  
 
     public setModificarRFC(modificarRFC: string): void {
       this.update((state) => ({

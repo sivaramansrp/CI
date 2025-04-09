@@ -97,6 +97,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
+
   public headers: ConfiguracionColumna<ColumnasTabla>[] = [
     {
       encabezado: 'Clave S.C.I.A.N.',
@@ -209,6 +210,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     this.obtenerDatosEstado();
     this.getMercanciasTabla();
     this.obtenerDatosClave();
+    this.getListaClaveTabla();
   }
   public getScianTabla(): void {
     this.consulta
@@ -249,27 +251,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   agregarDatosSCIAN(): void {
     // Implementar la lógica para agregar datos SCIAN.
   }
-  onRadioChange(event: Event): void {
-    const target = event.target as HTMLInputElement; // Cast the event target to HTMLInputElement
-    this.valorSeleccionado = target.value; // Extract the selected value
-  }
-
-  // Method to check if fields should be disabled
-  areFieldsDisabled(): boolean {
-    
-    if(this.radioOpcions[1].label == 'Modificación'){
-      return false;
-
-    } else {
-      return true;
-
-    }
-    // if(this.valorSeleccionado){}
-
-    
-    // return this.valorSeleccionado !== 'modificacion'; // Enable fields only if "modificacion" is selected
-  }
-
+  
   claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
     this.consulta.getDescripcionScian()
@@ -314,8 +296,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     }
   }
 checkCheckboxSelection(event: Event): void {
-  console.log('Selection Change Event:', event);
-  const selectedItems = (event.target as any).selectedItems || []; 
+   const selectedItems = (event.target as any).selectedItems || []; 
   this.isCheckboxSelected = selectedItems.length > 0;
   }
   eliminarMercanciaGrid(): void {

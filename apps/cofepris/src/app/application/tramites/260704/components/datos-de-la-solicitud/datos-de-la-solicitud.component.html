@@ -5,14 +5,14 @@
   <app-input-radio
     [radioOptions]="radioOpcions"
     [selectedValue]="valorSeleccionado"
+    [isRequired]="true"
     [layout]="'horizontal'"
-    (change)="onRadioChange($event)"
   ></app-input-radio>
 </div>
 <div class="row mt-5">
   <div class="col-md-6">
     <label>Justificación*:</label>
-    <textarea cols="80" rows="5" [disabled]="areFieldsDisabled()"></textarea>
+    <textarea cols="80" rows="5"></textarea>
   </div>
 </div>
 <!--Datos del establecimiento-->
@@ -39,10 +39,10 @@
     aria-labelledby="modalAlertaLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered" style="width: 300px;">
-      <div class="modal-content" >
+    <div class="modal-dialog modal-dialog-centered" style="width: 300px">
+      <div class="modal-content">
         <div class="modal-header"></div>
-        <div class="modal-body" >
+        <div class="modal-body">
           <p>
             Por el momento no hay comunicación con el Sistema de COFEPRIS, favor
             de capturar su establecimiento.
@@ -67,12 +67,7 @@
       <label for="razonSocial" class="form-label"
         >Denominación o razón social*:</label
       >
-      <input
-        type="text"
-        class="form-control"
-        size="68"
-        [disabled]="areFieldsDisabled()"
-      />
+      <input type="text" class="form-control" size="68" />
     </div>
     <div class="col-md-4">
       <label for="correoElectronico" class="form-label"
@@ -83,12 +78,7 @@
           data-bs-toggle="tooltip"
         ></span>
       </label>
-      <input
-        type="text"
-        class="form-control"
-        maxlength="320"
-        [disabled]="areFieldsDisabled()"
-      />
+      <input type="text" class="form-control" maxlength="320" />
     </div>
   </div>
 </div>
@@ -199,8 +189,15 @@
   </div>
   <div class="row">
     <div class="col-md-12 text-end">
-      <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-      data-bs-target="#modalEliminarScian" (click)="eliminarMercanciaGrid()">Eliminar</button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#modalEliminarScian"
+        (click)="eliminarMercanciaGrid()"
+      >
+        Eliminar
+      </button>
       <button
         type="button"
         class="btn btn-primary ms-2"
@@ -278,54 +275,55 @@
     </div>
   </div>
   <!-- Scian popup screen end -->
-   <!-- eliminar alert screen start -->
-   <div
-   class="modal fade"
-   id="modalEliminarScian"
-   tabindex="-1"
-   aria-labelledby="modalEliminarScianLabel"
-   aria-hidden="true"
- >
-   <div class="modal-dialog modal-dialog-centered">
-     <div class="modal-content">
-      <div class="modal-header"></div>
-              <div class="modal-body">
-                <div *ngIf="isCheckboxSelected; else noSelectionMessage">
-                ¿Estás seguro que deseas eliminar los registros marcados?</div>
-                <ng-template #noSelectionMessage>
-                  Selecciona un registro.
-                </ng-template>
-       </div>
-       <div class="modal-footer custom-footer">
-         <div class="row">
-           <div class="col-md-12">
-             <div class="pull-right">
-               <button
-                 type="button"
-                 name="cancelar"
-                 class="btn btn-default ms-2"
-                 data-bs-dismiss="modal"
-                 #closeModal
-               >
-                 Cancelar
-               </button>
-               <button
-                 type="button"
-                 name="agregar"
-                 class="btn btn-primary ms-2"
-                 data-bs-dismiss="modal"
-               >
-                 Acceptar
-               </button>
-             </div>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
- </div>
+  <!-- eliminar alert screen start -->
+  <div
+    class="modal fade"
+    id="modalEliminarScian"
+    tabindex="-1"
+    aria-labelledby="modalEliminarScianLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header"></div>
+        <div class="modal-body">
+          <div *ngIf="isCheckboxSelected; else noSelectionMessage">
+            ¿Estás seguro que deseas eliminar los registros marcados?
+          </div>
+          <ng-template #noSelectionMessage>
+            Selecciona un registro.
+          </ng-template>
+        </div>
+        <div class="modal-footer custom-footer">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="pull-right">
+                <button
+                  type="button"
+                  name="cancelar"
+                  class="btn btn-default ms-2"
+                  data-bs-dismiss="modal"
+                  #closeModal
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  name="agregar"
+                  class="btn btn-primary ms-2"
+                  data-bs-dismiss="modal"
+                >
+                  Acceptar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- eliminar alert screen end -->
+  <!-- eliminar alert screen end -->
   <div class="row mt-5">
     <div class="col-md-4 mt-4">
       <div class="form-check mt-3">
@@ -372,8 +370,7 @@
         [label]="'Régimen al que se destinarán la mercancías'"
         [required]="true"
         [tooltipQuestionCircle]="true"
-      ></app-catalogo-select
-      >
+      ></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <app-catalogo-select
@@ -406,17 +403,18 @@
   </div>
   <div class="row mt-5">
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-    <button
-      type="button"
-      class="btn btn-primary ms-2 mb-5"
-      name="agregarAduana"
-      id="btnagregarAduana"
-      data-bs-toggle="modal"
-      data-bs-target="#modalAgregarMercancia"
-      (click)="agregarMercanciaGrid()"
-    >
-      Modificar
-    </button></div>
+      <button
+        type="button"
+        class="btn btn-primary ms-2 mb-5"
+        name="agregarAduana"
+        id="btnagregarAduana"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAgregarMercancia"
+        (click)="agregarMercanciaGrid()"
+      >
+        Modificar
+      </button>
+    </div>
   </div>
   <!-- Datos mercancia popup screen start -->
   <div
@@ -497,7 +495,12 @@
               <label class="form-label"
                 >Descripción de la fracción arancelaria*:</label
               >
-              <input class="form-control gris-color" placeholder="" type="text" readonly/>
+              <input
+                class="form-control gris-color"
+                placeholder=""
+                type="text"
+                readonly
+              />
             </div>
           </div>
           <div class="row mt-5">
@@ -514,7 +517,12 @@
                   data-bs-toggle="tooltip"
                 ></span>
               </label>
-              <input class="form-control gris-color" placeholder="" type="text" readonly />
+              <input
+                class="form-control gris-color"
+                placeholder=""
+                type="text"
+                readonly
+              />
             </div>
           </div>
           <div class="row mt-5">
@@ -523,15 +531,11 @@
               <input class="form-control" placeholder="" type="text" />
             </div>
             <div class="col-md-4">
-              <label class="form-label"
-                >UMC*:
-                <span
-                  class="bi bi-question-circle-fill"
-                  title="UMC"
-                  data-bs-toggle="tooltip"
-                ></span>
-              </label>
-              <input class="form-control" placeholder="" type="text" />
+              <app-catalogo-select
+                [catalogo]="estadoCatalogo.catalogos"
+                [label]="'UMC'"
+                [required]="true"
+              ></app-catalogo-select>
             </div>
           </div>
           <!-- collapsed crosslist -->
@@ -590,25 +594,33 @@
             </div>
           </div>
           <!-- Clave de los lotes -->
-          <div class="col-md-8 mt-3">
-            <div class="col-md-4">
-              <input-fecha
-                [datos]="fechaInicialInput"
-                class="disabled-input-fecha"
-              ></input-fecha>
+          <div class="row mt-5">
+            <div class="col-md-8 mt-3">
+              <label class="form-label">Clave de los lotes*:</label>
+              <input class="form-control" type="text" />
             </div>
-            <div class="col-md-4">
-              <input-fecha
-                [datos]="fechaFinalInput"
-                class="disabled-input-fecha"
-                sty
-              ></input-fecha>
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-8 mt-3">
+              <div class="col-md-4">
+                <input-fecha
+                  [datos]="fechaInicialInput"
+                  class="disabled-input-fecha"
+                ></input-fecha>
+              </div>
+              <div class="col-md-4">
+                <input-fecha
+                  [datos]="fechaFinalInput"
+                  class="disabled-input-fecha"
+                  sty
+                ></input-fecha>
+              </div>
             </div>
           </div>
           <div class="col-md-12 mt-3">
             <label class="form-label" for="">Lista Claves de los lotes*:</label>
           </div>
-          <div class="col-md-8 mt-3" style="margin-left: 155px;">
+          <div class="col-md-8 mt-3" style="margin-left: 155px">
             <app-tabla-dinamica
               [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
               [configuracionTabla]="listaClave"
@@ -620,7 +632,7 @@
               <button type="button" class="btn btn-default btn-space">
                 Modificar
               </button>
-              <button class="btn btn-default ms-3" type="button">
+              <button class="btn btn-danger ms-3" type="button">
                 Eliminar
               </button>
               <button type="button" class="btn btn-primary ms-3">
@@ -661,7 +673,8 @@
               <button class="btn btn-default ms-3" type="button">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary ms-3">
+              <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal"
+              (click)="agregarMercanias()">
                 Modificar
               </button>
             </div>
@@ -687,7 +700,8 @@
 <div class="col-md-12 mt-4">
   <label class="form-label" for=""
     >Los datos o anexos pueden contener información confidencial ¿Está de
-    acuerdo en hacerlos públicos?*:</label>
+    acuerdo en hacerlos públicos?*:</label
+  >
   <app-input-radio
     [radioOptions]="hacerlosRadioOptions"
     [selectedValue]="hercelosSeleccionados"
@@ -700,7 +714,7 @@
     <label class="form-label" for="rfc">RFC*:</label>
     <input class="form-control" type="text" />
   </div>
-  <div class="col-md-2 mt-4">
+  <div class="col-md-2 mt-5">
     <button type="button" class="btn btn-primary">Buscar</button>
   </div>
 </div>
@@ -709,14 +723,14 @@
     <label class="form-label" for="legalRazonSocial"
       >Nombre o Razón Social*:</label
     >
-    <input class="form-control" type="text" />
+    <input class="form-control gris-color" type="text" readonly/>
   </div>
   <div class="col-md-4 mt-4">
     <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-    <input class="form-control" type="text" />
+    <input class="form-control gris-color" type="text" readonly/>
   </div>
   <div class="col-md-4 mt-4">
     <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-    <input class="form-control" type="text" />
+    <input class="form-control gris-color" type="text"readonly />
   </div>
 </div>
