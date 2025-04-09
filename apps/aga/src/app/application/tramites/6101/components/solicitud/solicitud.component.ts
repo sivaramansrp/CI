@@ -205,18 +205,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @returns Objeto con capitulo, partida, subpartida y subdivisión
    */
   // eslint-disable-next-line class-methods-use-this
-  divideFraccion(str: string): DivideFraccion {
-    const LONGITUDVALUE = str.length;
+  divideFraccion(valor: string): DivideFraccion {
+    const LONGITUDVALUE = valor.length;
     let capitulo = '';
     let partida = '';
     let subpartida = '';
     let subdivision = '';
 
     if (LONGITUDVALUE === 10 || LONGITUDVALUE === 8) {
-      capitulo = str.substr(0, 2);
-      partida = str.substr(0, 4);
-      subpartida = str.substr(0, 6);
-      subdivision = LONGITUDVALUE === 10 ? str.substr(8, 2) : '00';
+      capitulo = valor.substr(0, 2);
+      partida = valor.substr(0, 4);
+      subpartida = valor.substr(0, 6);
+      subdivision = LONGITUDVALUE === 10 ? valor.substr(8, 2) : '00';
     }
 
     return {
