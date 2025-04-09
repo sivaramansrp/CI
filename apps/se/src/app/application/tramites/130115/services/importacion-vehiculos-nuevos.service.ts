@@ -74,6 +74,9 @@ export class ImportacionVehiculosNuevosService {
       'assets/json/130115/producto-otions.json'
     );
   }
+  /**
+   * Obtiene la lista de productos desde un archivo JSON.
+   * */
     getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
       return this.http.get<PartidasDeLaMercanciaModelo[]>(
             'assets/json/130115/partidas-de-la.json'

@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130111/partidas-de-la.json';
+import PartidasdelaTable from '@libs/shared/theme/assets/json/130115/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import fractionValues from '@libs/shared/theme/assets/json/130111/fraccion_arancelaria.json';
-import solicitudeSelectVal from '@libs/shared/theme/assets/json/130111/solicitud-select.json';
-import unidadOptions from '@libs/shared/theme/assets/json/130111/unidad_da.json';
+import fractionValues from '@libs/shared/theme/assets/json/130115/fraccion_arancelaria.json';
+import solicitudeSelectVal from '@libs/shared/theme/assets/json/130115/solicitud-select.json';
+import unidadOptions from '@libs/shared/theme/assets/json/130115/unidad_da.json';
 
 import { ImportacionVehiculosNuevosService } from '../../services/importacion-vehiculos-nuevos.service';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';

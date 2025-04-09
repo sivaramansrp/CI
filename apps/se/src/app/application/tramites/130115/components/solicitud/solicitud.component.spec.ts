@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite130111Store } from '../../../../estados/tramites/tramites130111.store';
-import { Tramite130111Query } from '../../../../estados/queries/tramite130111.query';
+import { Tramite130115Store } from '../../../../estados/tramites/tramite130115.store';
+import { Tramite130115Query } from '../../../../estados/queries/tramite130115.query';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
@@ -41,8 +41,8 @@ const mockPartidasdelaTable = {
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let mockStore: jest.Mocked<Tramite130111Store>;
-  let mockQuery: jest.Mocked<Tramite130111Query>;
+  let mockStore: jest.Mocked<Tramite130115Store>;
+  let mockQuery: jest.Mocked<Tramite130115Query>;
   let mockService: jest.Mocked<any>;
   let mockImportacionDeVehiculosService: Partial<ImportacionVehiculosNuevosService>;
 
@@ -126,8 +126,8 @@ describe('SolicitudComponent', () => {
       imports: [ReactiveFormsModule,HttpClientModule],
       providers: [
         FormBuilder,
-        { provide: Tramite130111Store, useValue: mockStore },
-        { provide: Tramite130111Query, useValue: mockQuery },
+        { provide: Tramite130115Store, useValue: mockStore },
+        { provide: Tramite130115Query, useValue: mockQuery },
         { provide: ImportacionVehiculosNuevosService, useValue: mockImportacionDeVehiculosService },
       ],
     }).compileComponents();
