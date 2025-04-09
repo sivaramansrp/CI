@@ -1,0 +1,33 @@
+.form-control {
+    height: 35px;
+    background-color: #80808024;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+:host ::ng-deep .form-label {
+    font-size: 15px;
+}
+
+:host ::ng-deep .input-group-text {
+    background-color: rgba(128, 128, 128, 0.1411764706);
+    height: 35px !important;
+    border: 1px solid #ccc;
+}
+
+@media (min-width: 320px) and (max-width: 370px) {
+    .form-label {
+        text-align: unset !important;
+
+    }
+}
+
+.label-width {
+    width: 38px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.bg-white {
+    background-color: white;
+}
