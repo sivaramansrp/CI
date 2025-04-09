@@ -1,9 +1,13 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model'
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormularioResiduoQuery } from '../../estados/queries/datos-residuos.query';
+import { FormularioResiduoStore } from '../../estados/tramites/datos-residuos.store';
 import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
+
 const RADIO_OPCIONES = rawData as SolicitudJson;
 
 @Component({
@@ -15,10 +19,12 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
   templateUrl: './datos-residuos-peligrosos.component.html',
   styleUrl: './datos-residuos-peligrosos.component.css',
 })
-export class DatosResiduosPeligrososComponent implements OnInit {
+export class DatosResiduosPeligrososComponent implements OnInit, OnDestroy {
   formularioDatos!: FormGroup
 
   formularioResiduo!: FormGroup;
+
+  private destruir$ = new Subject<void>();
 
   nombre!: Catalogo[];
 
@@ -41,7 +47,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
   radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
   clasificacionRadioOptions: RadioOpcion[] = RADIO_OPCIONES.clasificacionRadioOptions;
 
-  constructor(public fb: FormBuilder) {
+  constructor(public fb: FormBuilder, private formularioStore: FormularioResiduoStore,
+    private formularioQuery: FormularioResiduoQuery) {
     // Constructor logic if needed  
   }
 
@@ -60,6 +67,8 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.tipoContenedor = RADIO_OPCIONES.tipoContenedor;
     this.inicializarFormulario();
     this.crearFormularioResiduo();
+    this.recuperarValoresDesdeStore();
+    this.suscribirseACambiosDeFormulario();
   }
 
   private inicializarFormulario(): void {
@@ -84,14 +93,35 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       cantidadLetra: [{ value: '', disabled: true }],
       unidadMedida: ['', Validators.required],
       clasificacion: ['', Validators.required],
-      claveResiduo: [{ value: '', disabled: true }, Validators.required],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      descripcion: [{ value: '', disabled: true }, Validators.required],
+      claveResiduo: ['', Validators.required],
+      nombre: ['', Validators.required],
+      descripcion: ['', Validators.required],
       creti: ['', Validators.required],
       estadoFisico: ['', Validators.required],
       tipoContenedor: ['', Validators.required],
       capacidad: ['', Validators.required]
     });
+  }
+
+  private recuperarValoresDesdeStore(): void {
+    const ESTADO = this.formularioQuery.getValue();
+    this.formularioDatos.patchValue(ESTADO.formularioDatos, { emitEvent: false });
+    this.formularioResiduo.patchValue(ESTADO.formularioResiduo, { emitEvent: false });
+  }
+
+  private suscribirseACambiosDeFormulario(): void {
+    this.formularioDatos.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valores => this.formularioStore.actualizarFormularioDatos(valores));
+
+    this.formularioResiduo.valueChanges
+      .pipe(takeUntil(this.destruir$))
+      .subscribe(valores => this.formularioStore.actualizarFormularioResiduo(valores));
+  }
+
+  ngOnDestroy(): void {
+    this.destruir$.next();
+    this.destruir$.complete();
   }
 
 }
