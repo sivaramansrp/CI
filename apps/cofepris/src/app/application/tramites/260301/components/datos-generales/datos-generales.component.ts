@@ -55,7 +55,7 @@ export class DatosGeneralesComponent {
    * @property {FormGroup} agregarProveedorForm
    * Formulario reactivo utilizado para capturar los datos del proveedor.
    */
-  agregarDatosForm: FormGroup;
+  agregarDatosForm!: FormGroup;
 
   /**
    * Asigna el valor de `TIPO_TABLA_DATOS` a la variable `tipoTablaDatos`.
@@ -71,6 +71,17 @@ export class DatosGeneralesComponent {
     private router: Router
   ) {
     this.tipoDatos = this.route.snapshot.paramMap.get('tipo') || '';
+    this.crearFormulario();
+    this.cargarDatos();
+  }
+
+  /**
+   * Crea y inicializa el formulario con los campos y validaciones necesarios.
+   * Este formulario incluye información personal y de contacto.
+   * 
+   * @returns {void}
+   */
+  crearFormulario(): void {
     this.agregarDatosForm = this.fb.group({
       nombreRazonSocial: [
         '',
@@ -91,7 +102,6 @@ export class DatosGeneralesComponent {
       telefono: [''],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
-    this.cargarDatos();
   }
 
   /**
