@@ -1,4 +1,4 @@
-import { Catalogo, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -298,7 +298,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         [
           Validators.required,
           Validators.min(0),
-          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+          Validators.pattern(REGEX_NUMERO_DECIMAL_ENTERO),
           Validators.maxLength(20),
         ],
       ],
