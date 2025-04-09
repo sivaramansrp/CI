@@ -56,7 +56,7 @@ export class DatosSolicitudComponent implements OnInit {
     this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
     this.reciclajeEnInstalaciones = RADIO_OPCIONES.reciclajeEnInstalaciones;
     this.inicializarFormularioEmpresaReciclaje();
-    // this.suscribirCambioRequiereEmpresa();
+    this.suscribirCambioRequiereEmpresa();
 
   }
 
@@ -79,21 +79,33 @@ export class DatosSolicitudComponent implements OnInit {
     });
   }
   
-
-  // private suscribirCambioRequiereEmpresa(): void {
-  //   const CAMPO_REQUIERE_EMPRESA = 'requiereEmpresa';
-  //   const CAMPOS_A_CONTROLAR = ['nombreEmpresa', 'representanteLegal', 'telefono', 'correoElectronico'];
+  private suscribirCambioRequiereEmpresa(): void {
+    const CAMPO_REQUIERE_EMPRESA: string = 'requiereEmpresa';
+    const CAMPOS_A_CONTROLAR: string[] = [
+      'nombreEmpresa',
+      'representanteLegal',
+      'telefono',
+      'correoElectronico'
+    ];
   
-  //   this.formularioEmpresaReciclaje.get(CAMPO_REQUIERE_EMPRESA)?.valueChanges.subscribe((valor: string) => {
-  //     const HABILITAR = valor === 'Sí';
+    const CONTROL_REQUIERE_EMPRESA: FormControl<string> = this.formularioEmpresaReciclaje.get(CAMPO_REQUIERE_EMPRESA) as FormControl<string>;
   
-  //     CAMPOS_A_CONTROLAR.forEach((campo: string) => {
-  //       const CONTROL = this.formularioEmpresaReciclaje.get(campo);
-  //       if (CONTROL) {
-  //         HABILITAR ? CONTROL.enable() : CONTROL.disable();
-  //       }
-  //     });
-  //   });
-  // }
+    CONTROL_REQUIERE_EMPRESA.valueChanges.subscribe((valor: string): void => {
+      const DEBE_HABILITAR: boolean = valor === 'Sí';
+  
+      CAMPOS_A_CONTROLAR.forEach((CAMPO: string): void => {
+        const CONTROL_CAMPO: FormControl<string> = this.formularioEmpresaReciclaje.get(CAMPO) as FormControl<string>;
+        if (CONTROL_CAMPO) {
+          if (DEBE_HABILITAR) {
+            CONTROL_CAMPO.enable();
+          } else {
+            CONTROL_CAMPO.disable();
+          }
+        }
+      });
+    });
+  }
+  
+  
   
 }
