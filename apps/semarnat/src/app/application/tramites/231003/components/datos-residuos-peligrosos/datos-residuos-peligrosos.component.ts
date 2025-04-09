@@ -56,7 +56,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.tipoContenedor = RADIO_OPCIONES.tipoContenedor;
     this.inicializarFormulario();
     this.crearFormularioResiduo();
-    this.controlarHabilitacionDeCatalogos();
   }
 
   private inicializarFormulario(): void {
@@ -87,33 +86,6 @@ export class DatosResiduosPeligrososComponent implements OnInit {
       estadoFisico: new FormControl('', Validators.required),
       tipoContenedor: new FormControl('', Validators.required),
       capacidad: new FormControl('', Validators.required)
-    });
-  }
-
-  private controlarHabilitacionDeCatalogos(): void {
-    const OPCION_CLAVE = 'Clave de residuo';
-    const OPCION_NOMBRE = 'Nombre';
-    const OPCION_DESCRIPCION = 'Descripción';
-
-    const MAPA_CONTROLES: { [key: string]: string } = {
-      [OPCION_CLAVE]: 'claveResiduo',
-      [OPCION_NOMBRE]: 'nombre',
-      [OPCION_DESCRIPCION]: 'descripcion'
-    };
-
-    const TODOS_LOS_CONTROLES = Object.values(MAPA_CONTROLES);
-
-    this.formularioResiduo.get('clasificacion')?.valueChanges.subscribe((VALOR_CLASIFICACION: string) => {
-      TODOS_LOS_CONTROLES.forEach((CAMPO: string) => {
-        const CONTROL = this.formularioResiduo.get(CAMPO);
-        CONTROL?.disable();
-        CONTROL?.reset();
-      });
-
-      const CAMPO_ACTIVO = MAPA_CONTROLES[VALOR_CLASIFICACION];
-      const CONTROL_ACTIVO = this.formularioResiduo.get(CAMPO_ACTIVO);
-
-      CONTROL_ACTIVO?.enable();
     });
   }
 
