@@ -157,7 +157,7 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
   {
-    path: 'Permiso-de-importacion',
+    path: 'territorio-nacional',
     loadChildren: () =>
       import('./tramites/260401/territorio-nacional-solicitude.module').then(
         (m) => m.TerritorioNacionalSolicitudeModule
