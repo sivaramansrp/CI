@@ -99,7 +99,7 @@ export class ImportacionEquipoAnticontaminanteService {
    */
   getFraccionDescripcionPartidasDeLaMercancia(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/fraccion-descripcion-partidas-de-la-mercancia.json'
+      '/assets/json/130113/fraccion-descripcion-partidas-de-la-mercancia.json'
     );
   }
 }
