@@ -44,7 +44,7 @@ describe('CancelacionDeCertificadosComponent', () => {
 
   it('should initialize form groups in the constructor', () => {
     expect(component.formularioGrupo).toBeDefined();
-    expect(component.myForm).toBeDefined();
+    expect(component.detalleDelCupoForm).toBeDefined();
     expect(component.montoForm).toBeDefined();
     expect(component.cancelacionForm).toBeDefined();
   });

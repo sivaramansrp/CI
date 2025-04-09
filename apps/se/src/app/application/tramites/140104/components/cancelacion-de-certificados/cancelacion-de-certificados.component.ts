@@ -127,7 +127,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   /**
    * Formulario para datos generales del cupo.
    */
-  myForm: FormGroup;
+  detalleDelCupoForm: FormGroup;
 
   /**
    * Formulario para mostrar montos asociados.
@@ -151,7 +151,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
     });
 
     // Formulario para datos del producto
-    this.myForm = this.fb.group({
+    this.detalleDelCupoForm = this.fb.group({
       regimenAduanero: [{ value: '', disabled: true }],
       descripcionProducto: [{ value: '', disabled: true }],
       clasificacionSubproducto: [{ value: '', disabled: true }],
