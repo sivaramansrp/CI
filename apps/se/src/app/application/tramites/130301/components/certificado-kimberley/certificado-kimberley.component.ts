@@ -76,8 +76,14 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+    this.crearFormulario();
     this.obtenerEstadoList();
+    this.obtenerFormDatos();
+  }
+ /**
+   * Crea y configura un formulario reactivo para gestionar los datos del Certificado Kimberley con campos deshabilitados y validaciones requeridas.
+  */
+  crearFormulario():void{
     this.certificadoKimberley = this.fb.group({
       certificadosEmitidos: [{ value: '', disabled: true }],
       numeroCertificadokimberley: [{ value: '', disabled: true }],
@@ -95,7 +101,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       cantidadQuilates: [{ value: '', disabled: true }, Validators.required],
       valorDiamantes: [{ value: '', disabled: true }, Validators.required],
     });
-    this.obtenerFormDatos();
   }
 
   /**

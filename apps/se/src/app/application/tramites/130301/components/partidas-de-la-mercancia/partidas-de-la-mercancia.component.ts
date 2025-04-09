@@ -63,6 +63,12 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.obtenerTablaDatos();
     this.obtenerFormDatos();
+    this.crearFormulario();
+  }
+  /**
+   * Crea y configura un formulario reactivo para gestionar las partidas de la mercancía con campos deshabilitados.
+   */
+  crearFormulario():void{
     this.partidas = this.fb.group({
       usoEspecificoMercancia: [{ value: '', disabled: true }],
       justificacionBeneficio: [{ value: '', disabled: true }],

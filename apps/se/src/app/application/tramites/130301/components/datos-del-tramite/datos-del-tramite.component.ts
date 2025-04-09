@@ -63,6 +63,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.obtenerFormDatos();
+    this.crearFormulario();
+  }
+  /**
+   * Crea y configura un formulario reactivo para gestionar los datos del trámite con campos deshabilitados.
+   */
+  crearFormulario():void{
     this.datosDelTramite = this.fb.group({
       numeroFolioTramiteOriginal: [{ value: '', disabled: true }],
       solicitudOpcion: [{ value: '', disabled: true }],

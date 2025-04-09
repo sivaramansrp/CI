@@ -81,7 +81,13 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+    this.crearFormulario();
+    this.obtenerFormDatos();
+  }
+  /**
+   * Crea y configura un formulario reactivo para gestionar las prorrogas del trámite con campos deshabilitados y validaciones requeridas.
+   */
+  crearFormulario():void{
     this.prorrogasForm = this.fb.group({
       folioResolucion: [{ value: '', disabled: true }],
       cantidad: [{ value: '', disabled: true }],
@@ -90,8 +96,6 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
       motivoJustificacion: [this.solicitudState?.motivoJustificacion, Validators.required],
       otrasDeclaraciones: [this.solicitudState?.otrasDeclaraciones, Validators.required],
     });
-
-    this.obtenerFormDatos();
   }
 
   /**

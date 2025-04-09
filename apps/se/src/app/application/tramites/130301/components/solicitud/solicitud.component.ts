@@ -51,6 +51,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.obtenerFormDatos();
+    this.crearFormulario();
+  }
+  /**
+   * Crea y configura un formulario reactivo para gestionar la solicitud del trámite con campos deshabilitados.
+   */
+  crearFormulario():void{
     this.solicitudForm = this.fb.group({
       folio: [{ value: '', disabled: true }],
       fechaInicio: [{ value: '', disabled: true }],
