@@ -284,6 +284,19 @@ export const REGEX_CURP =
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
 
 /**
+ * Constante de expresión regular utilizada para validar cadenas alfanuméricas.
+ * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
+ * @constant
+ */
+export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+
+/**
+ * Expresión regular para validar una llave de pago.
+ * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
+ */
+export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
+
+/**
  * Expresión regular para validar números en formato de pesos mexicanos (MXN).
  * Permite dígitos y el punto decimal.
  */
