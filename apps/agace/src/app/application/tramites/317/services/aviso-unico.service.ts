@@ -33,6 +33,10 @@ export class AvisoUnicoService {
       })
     );
   }
+
+  getSolicitante(): Observable<unknown> {
+    return this.http.get('assets/json/317/renovacion.json');
+  }
  
   /**
    * Obtiene los datos de la tabla de permisos desde un archivo JSON.

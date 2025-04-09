@@ -28,22 +28,47 @@ constructor(private fb: FormBuilder,private service:AvisoUnicoService ) {}
   ngOnInit(): void {
     this.initializeForm();
     this.loadLocalidad();
+    this.loadAsignacionData();
   }
 
   private initializeForm(): void {
     this.avisoForm = this.fb.group({
-      modalidad: ['', Validators.required],
-      protestaVerdad: [false, Validators.requiredTrue],
-      envioAviso: [false, Validators.requiredTrue],
-      claveReferencia: ['', Validators.required],
-      numeroOperacion: ['', Validators.required],
-      cadenaDependencia: ['', Validators.required],
-      banco: ['', Validators.required],
-      llavePago: ['', Validators.required],
-      fechaPago: ['', Validators.required],
-      importePago: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      modalidad: [''],
+      protestaVerdad: [''],
+      envioAviso: [''],
+      numeroAviso:[''],
+      claveReferencia: [{ value: '', disabled: true }],
+      numeroOperacion: [''],
+      cadenaDependencia: [{ value: '', disabled: true }],
+      banco: [''],
+      llavePago: [''],
+      fechaPago: [''],
+      importePago: [{ value: '', disabled: true }],
     });
   }
+
+  loadAsignacionData(): void {
+    this.service.getSolicitante().pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe(
+      (data:any) => {
+        this.avisoForm.patchValue({
+          modalidad: data.modalidad,
+          protestaVerdad: data.protestaVerdad,
+          envioAviso: data.envioAviso,
+          numeroAviso: data.numeroAviso,
+          claveReferencia: data.claveReferencia,
+          numeroOperacion: data.numeroOperacion,
+          cadenaDependencia: data.cadenaDependencia,
+          banco: data.banco,
+          llavePago: data.llavePago,
+          fechaPago: data.fechaPago,
+          importePago: data.importePago,
+        });
+      }
+    );
+  }
+
 
   /**
    * method loadLocalidad

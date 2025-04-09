@@ -36,7 +36,7 @@
     </div>
     <div class="mt-3">
       <label>
-        <input type="checkbox" formControlName="envioAviso" />
+        <input type="checkbox" formControlName="numeroAviso" />
         * Que las circunstancias por la cual se me otorgó el registro en el Esquema Integral de Certificación, en el rubro que ostento, no han variado y se continúan cumpliendo con los requisitos inherentes de la misma.
       </label>
     </div>
@@ -69,18 +69,18 @@
       </div>
     </div>
     <div class="row mt-5">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label for="llavePago">Llave de pago:</label>
         <input id="llavePago" type="text" class="form-control" formControlName="llavePago" />
       </div>
-      <div class="col-md-3 custom-fetchapago">
+      <div class="col-md-4 custom-fetchapago">
        <input-fecha [datos]="fechaInicioInput"
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="avisoForm.get('fechaPago')?.value"
         ></input-fecha>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label for="importePago">Importe de pago:</label>
         <input id="importePago" type="text" class="form-control" formControlName="importePago" />
       </div>
