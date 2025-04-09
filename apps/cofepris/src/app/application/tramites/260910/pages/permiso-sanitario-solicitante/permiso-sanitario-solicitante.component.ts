@@ -12,7 +12,13 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
  * @property valor - El índice o paso relacionado con la acción.
  */
 interface AccionBoton {
+  /**
+   * Define la acción a realizar, como avanzar ('cont') o retroceder.
+   */
   accion: string;
+  /**
+   * El índice o paso relacionado con la acción.
+   */
   valor: number;
 }
 

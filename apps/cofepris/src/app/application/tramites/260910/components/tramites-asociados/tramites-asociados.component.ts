@@ -18,8 +18,15 @@ import { takeUntil } from 'rxjs';
 })
 export class TramitesAsociadosComponent implements OnDestroy {
 
+  /**
+   * Configuración de la tabla de selección para Tramites Asociados.
+   */
   tramitesAsociadosTabla = TablaSeleccion.UNDEFINED;
   
+  /**
+   * Configuración de las columnas de la tabla para Tramites Asociados.
+   * Define los encabezados, claves y el orden de las columnas.
+   */
   tramitesAsociadosConfiguracionTabla: ConfiguracionColumna<Asociados>[] = [
     {
       encabezado: 'Folio Trámite',

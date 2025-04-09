@@ -233,88 +233,122 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   fabricanteDatos: Fabricante[] = [];
 
+  /**
+   * Configuración de las columnas de la tabla de proveedores.
+   * Define las propiedades que se mostrarán en la tabla de proveedores.
+   */
   proveedorConfiguracionTabla: ConfiguracionColumna<Proveedor>[] = [
     {
       encabezado: 'Nombre/denominación o razón social',
-      clave: (item: Fabricante) => item.nombre,
+      clave: (item: Proveedor) => item.nombre,
       orden: 1,
     },
     {
       encabezado: 'R.F.C.',
-      clave: (item: Fabricante) => item.rfc,
+      clave: (item: Proveedor) => item.rfc,
       orden: 2,
     },
     {
       encabezado: 'CURP',
-      clave: (item: Fabricante) => item.curp,
+      clave: (item: Proveedor) => item.curp,
       orden: 3,
     },
     {
       encabezado: 'Teléfono',
-      clave: (item: Fabricante) => item.telefono,
+      clave: (item: Proveedor) => item.telefono,
       orden: 4,
     },
     {
       encabezado: 'Correo electrónico',
-      clave: (item: Fabricante) => item.correoElectronico,
+      clave: (item: Proveedor) => item.correoElectronico,
       orden: 5,
     },
     {
       encabezado: 'Calle',
-      clave: (item: Fabricante) => item.calle,
+      clave: (item: Proveedor) => item.calle,
       orden: 6,
     },
     {
       encabezado: 'Número exterior',
-      clave: (item: Fabricante) => item.numeroExterior,
+      clave: (item: Proveedor) => item.numeroExterior,
       orden: 7,
     },
     {
       encabezado: 'Número interior',
-      clave: (item: Fabricante) => item.numeroInterior,
+      clave: (item: Proveedor) => item.numeroInterior,
       orden: 8,
     },
     {
       encabezado: 'País',
-      clave: (item: Fabricante) => item.pais,
+      clave: (item: Proveedor) => item.pais,
       orden: 9,
     },
     {
       encabezado: 'Colonia',
-      clave: (item: Fabricante) => item.colonia,
+      clave: (item: Proveedor) => item.colonia,
       orden: 10,
     },
     {
       encabezado: 'Municipio o alcaldía',
-      clave: (item: Fabricante) => item.municipio,
+      clave: (item: Proveedor) => item.municipio,
       orden: 11,
     },
     {
       encabezado: 'Localidad',
-      clave: (item: Fabricante) => item.localidad,
+      clave: (item: Proveedor) => item.localidad,
       orden: 12,
     },
     {
       encabezado: 'Estado',
-      clave: (item: Fabricante) => item.estado,
+      clave: (item: Proveedor) => item.estado,
       orden: 13,
     },
     {
       encabezado: 'Estado',
-      clave: (item: Fabricante) => item.estado2,
+      clave: (item: Proveedor) => item.estado2,
       orden: 14,
     },
     {
       encabezado: 'Código postal',
-      clave: (item: Fabricante) => item.codigo,
+      clave: (item: Proveedor) => item.codigo,
       orden: 15,
     },
   ];
 
+  /**
+   * Datos de los proveedores.
+   * 
+   * @description
+   * Esta propiedad almacena la lista de proveedores que se mostrarán en la tabla.
+   * Los datos son obtenidos desde el servicio correspondiente y actualizados en el estado.
+   * 
+   * @type {Proveedor[]}
+   */
   proveedorDatos: Proveedor[] = [];
 
+  /**
+   * Configuración para la selección de filas en la tabla de proveedores.
+   * Utiliza selección con checkbox.
+   */
   proveedorSeleccionTabla = TablaSeleccion.CHECKBOX;
 
+  /**
+   * @description
+   * Configuración de columnas para la tabla de facturadores relacionados.
+   * Define los encabezados, claves y el orden de las columnas que se mostrarán en la tabla.
+   *
+   * @type {ConfiguracionColumna<Facturador>[]}
+   *
+   * @property {string} encabezado - El título que se mostrará en la cabecera de la columna.
+   * @property {Function} clave - Una función que recibe un objeto de tipo `Fabricante` y devuelve el valor correspondiente a la columna.
+   * @property {number} orden - El orden en el que se mostrará la columna en la tabla.
+   *
+   * @example
+   * // Ejemplo de uso:
+   * facturadorConfiguracionTabla.forEach(columna => {
+   *   console.log(columna.encabezado, columna.clave(fabricante), columna.orden);
+   * });
+   */
   facturadorConfiguracionTabla: ConfiguracionColumna<Facturador>[] = [
     {
       encabezado: 'Nombre/denominación o razón social',
@@ -393,8 +427,21 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Datos de los facturadores.
+   * 
+   * @description
+   * Esta propiedad almacena la lista de facturadores que se mostrarán en la tabla.
+   * Los datos son obtenidos desde el servicio correspondiente y actualizados en el estado.
+   * 
+   * @type {Facturador[]}
+   */
   facturadorDatos: Facturador[] = [];
 
+  /**
+   * Configuración para la selección de filas en la tabla de facturadores.
+   * Utiliza selección con checkbox.
+   */
   facturadorSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
@@ -402,10 +449,37 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   selectedDestinatario: Destinatario[] = [];
 
+  /**
+   * Lista de fabricantes seleccionados.
+   * 
+   * @description
+   * Esta propiedad almacena los fabricantes seleccionados en la tabla.
+   * Los datos seleccionados se actualizan a través de eventos emitidos por la tabla.
+   * 
+   * @type {Fabricante[]}
+   */
   selectedFabricante: Fabricante[] = [];
 
+  /**
+   * Lista de proveedores seleccionados.
+   * 
+   * @description
+   * Esta propiedad almacena los proveedores seleccionados en la tabla.
+   * Los datos seleccionados se actualizan a través de eventos emitidos por la tabla.
+   * 
+   * @type {Proveedor[]}
+   */
   selectedProveedor: Proveedor[] = [];
 
+  /**
+   * Lista de facturadores seleccionados.
+   * 
+   * @description
+   * Esta propiedad almacena los facturadores seleccionados en la tabla.
+   * Los datos seleccionados se actualizan a través de eventos emitidos por la tabla.
+   * 
+   * @type {Facturador[]}
+   */
   selectedFacturador: Facturador[] = [];
 
   /**
@@ -493,6 +567,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * Obtiene la lista de Proveedor disponibles desde el servicio
+   * y almacena los datos en el componente.
+   */
   obtenerProveedorListo(): void {
     this.solicitudDatosService
       .obtenerProveedorListo()
@@ -504,6 +582,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         },
       });
   }
+
+  /**
+   * Obtiene la lista de Facturador disponibles desde el servicio
+   * y almacena los datos en el componente.
+   */
 
   obtenerFacturadorListo(): void {
     this.solicitudDatosService
@@ -518,80 +601,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal para modificar mercancías.
-   */
-  openModificarDestinatario(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  /**
-   * Abre el modal para modificar fabricantes.
-   * 
-   * @remarks
-   * Este método utiliza la referencia al elemento del modal (`modalElement`) 
-   * para crear una instancia del modal de Bootstrap y mostrarlo en pantalla.
-   * 
-   * @method
-   * @returns {void} Este método no retorna ningún valor.
-   */
-  openModificarFabricante(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  openModificarProveedor(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  openModificarFacturador(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  /**
-   * Abre el modal para agregar nuevas mercancías.
-   */
-  agregarDestinatario(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  agregarFabricante(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  agregarProveedor(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  agregarFacturador(): void {
-    if (this.modalElement) {
-      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-
-  /**
    * Obtiene los datos seleccionados de destinatarios desde el evento emitido.
-   * @param evento - Lista de fabricantes seleccionados.
+   * @param evento - Lista de destinatarios seleccionados.
    */
   getDestinatarioDatos(evento: Destinatario[]): void {
     this.selectedDestinatario = evento;
@@ -606,10 +617,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.selectedFabricante = evento;
   }
 
+  /**
+   * Obtiene los datos seleccionados de Proveedor desde el evento emitido.
+   * @param evento - Lista de Proveedor seleccionados.
+   */
   getProveedorDatos(evento: Fabricante[]): void {
     this.selectedProveedor = evento;
   }
 
+  /**
+   * Obtiene los datos seleccionados de Facturador desde el evento emitido.
+   * @param evento - Lista de Facturador seleccionados.
+   */
   getFacturadorDatos(evento: Fabricante[]): void {
     this.selectedFacturador = evento;
   }
@@ -645,6 +664,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Elimina una mercancía seleccionada de la lista almacenada.
+   * Si hay Proveedor seleccionados, elimina el primero de la lista.
+   */
   eliminarProveedor(): void {
     if (this.selectedProveedor.length > 0) {
       this.solicitud260910Store.removeProveedorDato(
@@ -653,6 +676,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Elimina una mercancía seleccionada de la lista almacenada.
+   * Si hay Facturador seleccionados, elimina el primero de la lista.
+   */
   eliminarFacturador(): void {
     if (this.selectedFacturador.length > 0) {
       this.solicitud260910Store.removeFacturadorDato(
@@ -661,6 +688,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @description Muestra un modal de confirmación para eliminar un elemento relacionado con el tipo especificado.
+   * @param {string} tipo - El tipo de elemento que se desea eliminar.
+   * @returns {void}
+   * @example
+   * // Llamar al método para confirmar la eliminación de un tipo específico
+   * this.confirmarEliminar('tipoEjemplo');
+   * 
+   * @remarks
+   * Este método utiliza la instancia de `Modal` para mostrar un modal de confirmación.
+   * Asegúrese de que `modalConfirmarElement` esté correctamente inicializado antes de llamar a este método.
+   */
   confirmarEliminar(tipo: string): void {
     this.seleccionadoTipo = tipo;
     if (this.modalConfirmarElement) {
@@ -669,6 +708,16 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Selecciona el tipo de acción a realizar según el tipo proporcionado.
+   * 
+   * @param tipo - Una cadena que indica el tipo de acción a ejecutar. 
+   *               Puede ser uno de los siguientes valores:
+   *               - 'fabricante': Ejecuta la función `eliminarFabricante`.
+   *               - 'destinatario': Ejecuta la función `eliminarDestinatario`.
+   *               - 'proveedor': Ejecuta la función `eliminarProveedor`.
+   *               - 'facturador': Ejecuta la función `eliminarFacturador`.
+   */
   seleccionaTipo(tipo: string): void {
     if (tipo === 'fabricante') {
       this.eliminarFabricante();
