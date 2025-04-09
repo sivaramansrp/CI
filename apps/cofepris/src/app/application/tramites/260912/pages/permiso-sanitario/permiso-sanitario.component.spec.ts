@@ -1,11 +1,11 @@
-import { SanitaryPermitComponent } from './sanitary-permit.component';
+import { PermisoSanitarioComponent } from './permiso-sanitario.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
-describe('SanitaryPermitComponent', () => {
-  let component: SanitaryPermitComponent;
+describe('PermisoSanitarioComponent', () => {
+  let component: PermisoSanitarioComponent;
 
   beforeEach(() => {
-    component = new SanitaryPermitComponent();
+    component = new PermisoSanitarioComponent();
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),

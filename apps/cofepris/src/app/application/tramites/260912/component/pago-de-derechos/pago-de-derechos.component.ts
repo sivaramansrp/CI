@@ -5,12 +5,11 @@
  */
 
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
-import { BancoList } from '../../modelos/pago-de-derechos.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
 import { Tramite260912Store } from '../../estados/tramite-260912.store';
 
@@ -25,7 +24,7 @@ import { Tramite260912Store } from '../../estados/tramite-260912.store';
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, CatalogoSelectComponent],
   providers: [PagoDeDerechosService],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
@@ -45,7 +44,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
-  public bancoList!: BancoList[];
+  public bancoList!: Catalogo[];
 
   /**
    * Constructor para inyectar los servicios y las tiendas necesarias.
@@ -144,7 +143,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   obtenerBancoList(): void {
     this.Servicio.onBancoList()
       .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: BancoList[]) => {
+      .subscribe((data: Catalogo[]) => {
         this.bancoList = data;
       });
   }

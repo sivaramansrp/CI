@@ -1,30 +1,28 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
-import { MercanciasTabla } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NICO_TABLA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { NicoInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecimiento.enum';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RespuestaTabla } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
-import { Tramite260912Store } from '../../estados/tramite-260912.store';
 import { Validators } from '@angular/forms';
 
 /**
@@ -56,6 +54,7 @@ import { Validators } from '@angular/forms';
     TablaDinamicaComponent,
     InputRadioComponent,
   ],
+  providers: [DomicilioDelEstablecimientoService],
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
@@ -211,15 +210,15 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * 
    * @param fb FormBuilder para crear formularios.
-   * @param httpServicios Servicio HTTP para realizar peticiones.
+   * @param domicilioService Servicio HTTP para realizar peticiones.
    * @param Tramite260912Query Consulta de datos del trámite.
    * @param Tramite260912Store Almacenamiento de datos del trámite.
    */
   constructor(
     private fb: FormBuilder,
-    private httpServicios: HttpClient,
     private Tramite260912Query: Tramite260912Query,
-    private Tramite260912Store: Tramite260912Store
+    private Tramite260912Store: Tramite260912Store,
+    private domicilioService:DomicilioDelEstablecimientoService
   ) {
     // Constructor
   }
@@ -232,90 +231,33 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
-
-    this.codigoPostal$.pipe(takeUntil(this.destroyed$)).subscribe((codigoPostal) => {
-      if (codigoPostal) {
-        this.form.get('codigoPostal')?.setValue(codigoPostal);
-      }
-    });
-
-    this.estado$.pipe(takeUntil(this.destroyed$)).subscribe((estado) => {
-      if (estado) {
-        this.form.get('estado')?.setValue(estado);
-      }
-    });
-
-    this.municipioOAlcaldia$.pipe(takeUntil(this.destroyed$)).subscribe((municipioOAlcaldia) => {
-      if (municipioOAlcaldia) {
-        this.form.get('municipioOAlcaldia')?.setValue(municipioOAlcaldia);
-      }
-    });
-    this.localidad$.pipe(takeUntil(this.destroyed$)).subscribe((localidad) => {
-      if (localidad) {
-        this.form.get('localidad')?.setValue(localidad);
-      }
-    });
-    this.colonias$.pipe(takeUntil(this.destroyed$)).subscribe((colonias) => {
-      if (colonias) {
-        this.form.get('colonias')?.setValue(colonias);
-      }
-    });
-    this.calle$.pipe(takeUntil(this.destroyed$)).subscribe((calle) => {
-      if (calle) {
-        this.form.get('calle')?.setValue(calle);
-      }
-    });
-    this.lada$.pipe(takeUntil(this.destroyed$)).subscribe((lada) => {
-      if (lada) {
-        this.form.get('lada')?.setValue(lada);
-      }
-    });
-    this.telefono$.pipe(takeUntil(this.destroyed$)).subscribe((telefono) => {
-      if (telefono) {
-        this.form.get('telefono')?.setValue(telefono);
-      }
-    });
-
-    this.avisoCheckbox$.pipe(takeUntil(this.destroyed$)).subscribe((avisoCheckbox) => {
-      if (avisoCheckbox) {
-        this.domicilio.get('avisoCheckbox')?.setValue(avisoCheckbox);
-      }
-    });
-
-    this.regimen$.pipe(takeUntil(this.destroyed$)).subscribe((regimen) => {
-      if (regimen) {
-        this.domicilio.get('regimen')?.setValue(regimen);
-      }
-    });
-
-    this.aduanasEntradas$.pipe(takeUntil(this.destroyed$)).subscribe((aduanasEntradas) => {
-      if (aduanasEntradas) {
-        this.domicilio.get('aduanasEntradas')?.setValue(aduanasEntradas);
-      }
-    });
-
-    this.aifaCheckbox$.pipe(takeUntil(this.destroyed$)).subscribe((aifaCheckbox) => {
-      if (aifaCheckbox) {
-        this.domicilio.get('aifaCheckbox')?.setValue(aifaCheckbox);
-      }
-    });
-
-    this.manifests$.pipe(takeUntil(this.destroyed$)).subscribe((manifests) => {
-      if (manifests) {
-        this.domicilio.get('manifests')?.setValue(manifests);
-      }
-    });
-
-    this.acuerdoPublico$.pipe(takeUntil(this.destroyed$)).subscribe((acuerdoPublico) => {
-      if (acuerdoPublico) {
-        this.representanteLegal.get('acuerdoPublico')?.setValue(acuerdoPublico);
-      }
-    });
-
-    this.rfc$.pipe(takeUntil(this.destroyed$)).subscribe((rfc) => {
-      if (rfc) {
-        this.representanteLegal.get('rfc')?.setValue(rfc);
-      }
+ 
+    this.Tramite260912Query.selectTramite260912$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data:Tramites260912State) => {
+      this.form.patchValue({
+        codigoPostal: data.codigoPostal,
+        estado: data.estado,
+        municipioOAlcaldia: data.municipioOAlcaldia,
+        localidad: data.localidad,
+        colonias: data.colonias,
+        calle: data.calle,
+        lada: data.lada,
+        telefono: data.telefono,
+      });
+ 
+      this.domicilio.patchValue({
+        avisoCheckbox: data.avisoCheckbox,
+        regimen: data.regimen,
+        aduanasEntradas: data.aduanasEntradas,
+        aifaCheckbox: data.aifaCheckbox,
+        manifests: data.manifests,
+      });
+ 
+      this.representanteLegal.patchValue({
+        acuerdoPublico: data.acuerdoPublico,
+        rfc: data.rfc,
+      });
     });
   }
 
@@ -352,41 +294,36 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Método para obtener los datos de la tabla.
-   */
   obtenerTablaDatos(): void {
-    this.httpServicios
-      .get<RespuestaTabla>('../../../../../assets/json/260912/tablaDatos.json')
-      .subscribe((data): void => {
+    this.domicilioService
+      .obtenerTablaDatos()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
         this.nicoTablaDatos = data?.data;
       });
   }
-
+ 
   /**
    * Método para obtener la lista de estados.
    */
   obtenerEstadoList(): void {
-    this.httpServicios
-      .get<RespuestaCatalogos>(
-        '../../../../../assets/json/260912/seleccion.json'
-      )
-      .subscribe((data): void => {
-        const DATOS = data?.data;
-        this.estado = DATOS;
+    this.domicilioService
+      .obtenerEstadoList()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estado = data?.data || [];
       });
   }
-
+ 
   /**
    * Método para obtener los datos de mercancías.
    */
   obtenerMercanciasDatos(): void {
-    this.httpServicios
-      .get<MercanciasTabla>(
-        '../../../../../assets/json/260912/mercanciasDatos.json'
-      )
-      .subscribe((data): void => {
-        this.mercanciasTablaDatos = data?.data;
+    this.domicilioService
+      .obtenerMercanciasDatos()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.mercanciasTablaDatos = data?.data || [];
       });
   }
 

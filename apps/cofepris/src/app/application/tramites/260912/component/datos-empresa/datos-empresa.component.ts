@@ -125,39 +125,22 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormulario();
-
-    this.btonDeRadio$.pipe(takeUntil(this.destroyed$)).subscribe((btonDeRadio) => {
-      if (btonDeRadio) {
-        this.form.get('btonDeRadio')?.setValue(btonDeRadio);
-      }
+    this.Tramite260912Query.selectTramite260912$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((formData) => {
+      this.form.patchValue({
+        btonDeRadio: formData.btonDeRadio,
+        justificacion: formData.justificacion,
+      });
+ 
+      this.datosDelEstablecimiento.patchValue({
+        rfcDel: formData.rfcDel,
+        denominacion: formData.denominacion,
+        correo: formData.correo,
+      });
     });
-
-    this.justificacion$.pipe(takeUntil(this.destroyed$)).subscribe((justificacion) => {
-      if (justificacion) {
-        this.form.get('justificacion')?.setValue(justificacion);
-      }
-    });
-
-    this.rfcDel$.pipe(takeUntil(this.destroyed$)).subscribe((rfcDel) => {
-      if (rfcDel) {
-        this.datosDelEstablecimiento.get('rfcDel')?.setValue(rfcDel);
-      }
-    });
-
-    this.denominacion$.pipe(takeUntil(this.destroyed$)).subscribe((denominacion) => {
-      if (denominacion) {
-        this.datosDelEstablecimiento
-          .get('denominacion')
-          ?.setValue(denominacion);
-      }
-    });
-
-    this.correo$.pipe(takeUntil(this.destroyed$)).subscribe((correo) => {
-      if (correo) {
-        this.datosDelEstablecimiento.get('correo')?.setValue(correo);
-      }
-    });
-  }
+   
+    }
 
   /**
    * Método para mostrar u ocultar el formulario colapsable.

@@ -7,9 +7,9 @@ import { PagoDeDerechosComponent } from './component/pago-de-derechos/pago-de-de
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { PermisoSanitarioComponent } from './pages/permiso-sanitario/permiso-sanitario.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroComoEmpresaRoutingModule } from './mod-permiso-importacion-routing.module';
-import { SanitaryPermitComponent } from './pages/sanitary-permit/sanitary-permit.component';
 import { TercerosRelacionadosComponent } from './component/terceros-relacionados/terceros-relacionados.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramitesAsociadoComponent } from './component/tramites-asociado/tramites-asociado.component';
@@ -17,7 +17,7 @@ import { TramitesAsociadoComponent } from './component/tramites-asociado/tramite
 
 
 @NgModule({
-  declarations: [SanitaryPermitComponent, PasoUnoComponent],
+  declarations: [PermisoSanitarioComponent, PasoUnoComponent],
   imports: [
     CommonModule, 
     RegistroComoEmpresaRoutingModule,

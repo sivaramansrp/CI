@@ -1,13 +1,11 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-// eslint-disable-next-line sort-imports
-
-import { SanitaryPermitComponent } from './pages/sanitary-permit/sanitary-permit.component';
+import { PermisoSanitarioComponent } from './pages/permiso-sanitario/permiso-sanitario.component';
 
 const ROUTES: Routes = [
   {
-    path: 'sanitary-permit',
-    component: SanitaryPermitComponent,
+    path: 'permiso-sanitario',
+    component: PermisoSanitarioComponent,
 
   },
   {
