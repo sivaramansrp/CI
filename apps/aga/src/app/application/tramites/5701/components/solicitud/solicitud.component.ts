@@ -12,6 +12,7 @@ import {
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
+  ALFANUMERICO_ESPACIO,
   CATALOGOS_ID,
   Catalogo,
   CatalogoPaises,
@@ -19,6 +20,7 @@ import {
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
+  REGEX_RFC,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
@@ -622,7 +624,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           this.solicitudState?.RFCImpExp,
           [
             Validators.required,
-            Validators.pattern(this.validacionesService.rfcPattern),
+            Validators.pattern(REGEX_RFC),
           ],
         ],
         nombre: [
@@ -967,7 +969,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     if (SOCIO_COMERCIAL) {
       this.datosImportadorExportador.get('idSocioComercial')?.enable();
-      this.datosImportadorExportador.get('idSocioComercial')?.setValidators([Validators.required, Validators.maxLength(30), Validators.pattern(this.validacionesService.alfaNumericosEspacioPattern)]);
+      this.datosImportadorExportador.get('idSocioComercial')?.setValidators([Validators.required, Validators.maxLength(30), Validators.pattern(ALFANUMERICO_ESPACIO)]);
       this.datosImportadorExportador.get('idSocioComercial')?.updateValueAndValidity();
 
     } else {

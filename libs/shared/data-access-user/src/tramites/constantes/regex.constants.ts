@@ -137,7 +137,7 @@ export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
  * - "Hola 123" (contiene un espacio)
  * - "Hola@123" (contiene un carácter especial)
  */
-export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
+export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
 
 /**
  * Expresión regular para validar números enteros o decimales con hasta dos decimales.
@@ -295,3 +295,15 @@ export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
  * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
  */
 export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
+
+/**
+ * Expresión regular para validar una hora en formato 24 horas (HH:mm).
+ * - HH: Horas (00-23).
+ * - mm: Minutos (00-59).
+ */
+export const HORA_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/**
+ * Expresión regular que valida cadenas alfanuméricas con espacios y guiones.
+ */
+export const ALFANUMERICO_ESPACIO = /^([0-9a-zA-Z -]+)$/;

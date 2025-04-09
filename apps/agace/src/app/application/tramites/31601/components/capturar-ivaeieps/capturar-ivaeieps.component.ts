@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { REGEX_LLAVE_DE_PAGO, TituloComponent } from '@ng-mf/data-access-user';
 
 import { SelectCatalogosComponent } from '@ng-mf/data-access-user';
 
@@ -203,7 +203,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern(this.validacionesService.rfcPattern),
+          Validators.pattern(REGEX_RFC),
         ],
       ],
       denominacion: [{ value: '', disabled: true }],
@@ -225,7 +225,7 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
         this.solicitudState?.llavePago,
         [
           Validators.required,
-          Validators.pattern(this.validacionesService.llavePagoPattern),
+          Validators.pattern(REGEX_LLAVE_DE_PAGO),
           Validators.maxLength(20),
         ],
       ],

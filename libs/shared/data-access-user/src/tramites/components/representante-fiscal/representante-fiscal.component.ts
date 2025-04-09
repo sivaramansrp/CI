@@ -21,6 +21,7 @@ import {
   REQUERIDO,
   RFC_INVALIDO,
 } from '../../constantes/mensajes-error-formularios';
+import { REGEX_RFC } from '../../constantes/regex.constants';
 
 @Component({
   selector: 'representante-fiscal',
@@ -43,7 +44,7 @@ export class RepresentanteFiscalComponent {
 
   rfcBusqueda: FormControl = new FormControl('', [
     Validators.required,
-    Validators.pattern(this.validacionesService.rfcPattern),
+    Validators.pattern(REGEX_RFC),
   ]);
 
   representanteLegalForm!: FormGroup;
@@ -104,7 +105,7 @@ export class RepresentanteFiscalComponent {
         [
           Validators.required,
           Validators.maxLength(13),
-          Validators.pattern(this.validacionesService.rfcPattern),
+          Validators.pattern(REGEX_RFC),
         ],
       ],
       nombre: [

@@ -21,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { HoraFormatoDirective } from '../../directives/hora-formato/hora-formato.directive';
 import { InputHora } from '../../../core/models/shared/components.model';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { HORA_PATTERN } from '../../constantes/regex.constants';
 
 @Component({
   selector: 'input-hora',
@@ -50,7 +51,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   constructor(private validacionesService: ValidacionesFormularioService) {
     this.forma = new FormGroup({
       hora: new FormControl('', [
-        Validators.pattern(this.validacionesService.horaPattern),
+        Validators.pattern(HORA_PATTERN),
       ]),
     });
   }
@@ -62,7 +63,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
           .get('hora')
           ?.setValidators([
             Validators.required,
-            Validators.pattern(this.validacionesService.horaPattern),
+            Validators.pattern(HORA_PATTERN),
           ]);
       } else {
         this.forma.get('hora')?.clearValidators();
