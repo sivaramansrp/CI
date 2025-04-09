@@ -59,7 +59,7 @@ import { PagoDeDerechosEntradaService } from './shared/services/pago-de-derechos
       positionClass: 'toast-top-right',
     }),
     provideHttpClient(),
-    SolicitanteService
+    SolicitanteService,
   ],
   bootstrap: [AppComponent],
 })

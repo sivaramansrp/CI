@@ -63,7 +63,10 @@
       </div>
     </div>
   </form>
-  <app-domicillo></app-domicillo>
+  <app-domicillo 
+    [isAvisoLicenciaVisible]="isAvisoLicenciaVisible" 
+    [isAduanasEntradaVisible]="isAduanasEntradaVisible">
+  </app-domicillo>
   <app-manifiestos></app-manifiestos>
-  <app-representante-legal></app-representante-legal>
+  <app-representante-legal-rfc></app-representante-legal-rfc>
 </div>
