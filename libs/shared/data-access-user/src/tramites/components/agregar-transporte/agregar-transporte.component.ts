@@ -1,5 +1,4 @@
-import * as CONSTANTES from '../../constantes/formularios-transportes.enums';
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -12,26 +11,28 @@ import { ItemTransporte, TransporteAereo, TransporteCarretero, TransporteFerrovi
 
 import { CampoForm } from '../../../core/models/shared/forms-model';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '../../../core/models/shared/components.model';
 import { CatalogosService } from '../../../core/services/shared/catalogos/catalogos.service';
 import { CommonModule } from '@angular/common';
+import { InputCheckComponent } from '../input-check/input-check.component';
+import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
-import { InputHoraComponent } from '../input-hora/input-hora.component';
-import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
   imports: [
     CatalogoSelectComponent,
     CommonModule,
+    InputCheckComponent,
     ReactiveFormsModule,
     InputHoraComponent,
   ],
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
 })
-export class AgregarTransporteComponent implements OnInit, OnChanges {
+export class AgregarTransporteComponent implements OnChanges {
   @Input() tipo!: string;
   @Input() tablaTransporte!: any[];
   @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<(TransporteAereo | TransporteCarretero | TransporteFerroviario | TransporteMaritimo | TransporteOtro | TransportePeatonal)[]>();
@@ -80,10 +81,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
   ) { }
 
-  ngOnInit(): void {
-  }
-
-
+  /**
+   * Detecta cambios en las propiedades de entrada y actualiza los datos de la tabla según el tipo y la información de transporte.
+   * @param changes - Cambios detectados en las propiedades de entrada del componente.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tipo'] && changes['tipo'].currentValue) {
       this.headerTabla = this.tipoTabla();
@@ -96,6 +97,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   }
 
   // #Seccion de creacion de formularios
+  /**
+   * Crea el formulario de transporte carretero.
+   * @returns {void} No retorna ningún valor.
+   */
   crearCarreteroForm(): void {
     this.carreteroForma = this.fb.group({
       empTransportista: ['', [Validators.maxLength(80)]],
@@ -108,6 +113,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * Crea el formulario de transporte ferroviario.
+   * @returns {void} No retorna ningún valor.
+   */
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
       numeroBL: ['', [Validators.maxLength(25)]],
@@ -118,6 +127,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
   }
 
+  /**
+   * Crea el formulario de transporte peatonal.
+   * @returns {void} No retorna ningún valor.
+   */
   crearPeatonalForm(): void {
     this.peatonalForma = this.fb.group({
       rfcEmpresa: ['', [Validators.maxLength(13)]],
@@ -127,6 +140,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * Crea el formulario de transporte otro.
+   * @returns {void} No retorna ningún valor.
+   */
   crearOtroForm(): void {
     this.otroForma = this.fb.group({
       tipoTransporteDes: ['', [Validators.maxLength(100)]],
@@ -135,6 +152,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * Crea el formulario de transporte aereo.
+   * @returns {void} No retorna ningún valor.
+   */
   crearAereoForm(): void {
     this.aereoForma = this.fb.group({
       arriboPendienteAereo: [''],
@@ -146,6 +167,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * Crea el formulario de transporte maritimo.
+   * @returns {void} No retorna ningún valor.
+   */
   crearMaritimoForm(): void {
     this.maritimoForma = this.fb.group({
       guiaBLMaritimo: ['', [Validators.maxLength(15)]],
@@ -154,17 +179,16 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
       contenedorMaritimo: ['', Validators.maxLength(600)],
     });
   }
-
-
-
-
   // #Termina seccion de creacion de formularios
 
+  /**
+   * Crea un nuevo formulario de transporte, dependiendo del tipo de transporte seleccionado.
+   */
   tipoTabla(): ItemTransporte[] {
     switch (parseInt(this.tipo, 10)) {
       case 1:
         this.formaSeleccionada = 'carreteroForma';
-        this.anios = AgregarTransporteComponent.obtenerAniosModelo();        
+        this.anios = AgregarTransporteComponent.obtenerAniosModelo();
         this.crearCarreteroForm();
         return this.HEADER_TABLA_CARRETERO;
       case 2:
@@ -202,26 +226,27 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   */
   cerrarModal(): void {
     this.btnCerrarModal.nativeElement.click();
-    // const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
-    // MODAL_AGREGA.hide();
-
     this.tituloModal = '';
     this.mensajeModal = '';
   }
 
+  /**
+   * Limpia el formulario actual.
+   */
   limpiarFormulario(): void {
     this.carreteroForma.reset();
 
   }
 
+  /**
+   * Crea la tabla y agrega un elemento, según el tipo de transporte seleccionado.    
+   */
   agregarTipoTransporte(): void {
     switch (parseInt(this.tipo, 10)) {
       case 1: {
         const TRANSPORTE: TransporteCarretero = this.carreteroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
-
         this.bodyTabla.push(TRANSPORTE);
-
         break;
       }
 
@@ -266,6 +291,11 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     this.cerrarModal();
   }
 
+  /**
+   * Selecciona todos los elementos de la tabla.
+   * @param {Event} event - El evento del checkbox de seleccionar todos.
+   */
+  // eslint-disable-next-line class-methods-use-this
   seleccionarTodos(event: Event): void {
     const CHECKBOXES = document.querySelectorAll('.check-transporte');
     CHECKBOXES.forEach((checkbox) => {
@@ -273,6 +303,10 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * @description Esta función genera un array de años desde 1980 hasta el año actual.
+   * @returns {Catalogo[]} - Devuelve un array de años desde 1980 hasta el año actual.
+   */
   static obtenerAniosModelo(): Catalogo[] {
     const ANIO_ACTUAL = new Date().getFullYear();
     const ANIOS: Catalogo[] = [];
@@ -284,10 +318,16 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
       ANIOS.push(ANIO);
     }
-    
+
     return ANIOS;
   }
 
+
+  /**
+   * Emite los datos de transporte a la tabla.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   enviarTransporteTabla(): void {
     this.datosTabla.emit(this.bodyTabla);
   }
