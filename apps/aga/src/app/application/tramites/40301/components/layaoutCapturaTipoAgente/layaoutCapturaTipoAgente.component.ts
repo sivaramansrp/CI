@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CaatNavieroService } from '../../services/caat_naviero.service';
+import { CATALOGOS_40301_ID } from '../../enum/caat-naviero.enum';
+import { CapturarService } from '../../services/capturar.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-// import { LayaoutCapturaTipoAgenteService } from './layaoutCapturaTipoAgente.service';
+
+import { Subject, map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-layaout-captura-tipo-agente',
@@ -14,25 +16,15 @@ export class LayaoutCapturaTipoAgenteComponent implements OnInit {
   titulo: string = '';
   tipoAgenteLabel: string = "";
   formularioAgente!: FormGroup;
-  tipoAgenteData: Catalogo[] = [{
-    id: 1,
-    clave: 'TIAGN.AN',
-    descripcion: 'Agente naviero',
-  }, {
-    id: 2,
-    clave: 'TIAGN.AIC',
-    descripcion: 'Agente internacional de carga',
-  }, {
-    id: 3,
-    clave: 'TIAGN.CB',
-    descripcion: 'Consignatario de buque',
-  },
-  ];
+  agentCatalog: Catalogo[] = [];
+
+  /**
+   * Subject para destruir notificador.
+   */
+  private destruirNotificador$: Subject<void> = new Subject();
 
   constructor(private fb: FormBuilder,
-    // private layaoutCapturaTipoAgenteService: LayaoutCapturaTipoAgenteService
-    // private capturarService: CapturarService
-    private registroCaatNavieroService: CaatNavieroService
+    private capturarService: CapturarService
   ) { }
 
   ngOnInit(): void {
@@ -42,28 +34,36 @@ export class LayaoutCapturaTipoAgenteComponent implements OnInit {
       tipoAgente: ['', Validators.required],
     });
 
-
-
-
+   
     // Initialize titulo and tipoAgenteLabel if necessary
     this.titulo = 'CAAT Naviero'; // Replace with actual value or service call
     this.tipoAgenteLabel = 'Tipo de Agente'; // Replace with actual value or service call
 
+    this.capturarService
+      .getCatalogo(CATALOGOS_40301_ID.AGENT_CATALOG)
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((agentCatalog: Catalogo[]) => {
+          this.agentCatalog = agentCatalog;
+        })
+      )
+      .subscribe();
   }
 
+  /**
+   * Método para obtener el valor del campo tipoAgente.
+   * @returns string
+   */
   limpiarAgente(): void {
-    this.formularioAgente.patchValue({
-      tipoAgente : '',
-    });
-
-    // this.formularioAgente.get('tipoAgente')?.setValue(null);
     this.formularioAgente.reset();
-
-    console.log(this.formularioAgente.get('tipoAgente'));
   }
+
+  /**
+   * Método para obtener el valor del campo tipoAgente.
+   * @returns string
+   */
   conTipooAgenteData(): Catalogo[] {
-    return this.tipoAgenteData.map((item) => {
-      // console.log(JSON.stringify(item));
+    return this.agentCatalog.map((item) => {
       return {
         id: item.id,
         clave: item.clave,

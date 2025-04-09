@@ -1,21 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CapturarService } from '../../services/capturar.service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { CATALOGOS_40301_ID } from '../../enum/caat-naviero.enum';
 import { CaatSolicitud, RegistroCaatNavieroService, SolicitudCaatNaviero } from '../../services/RegistroCaatNavieroController.service';
+import { LayaoutCapturaTipoAgenteComponent } from '../layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
+import { LayoutDirectorGeneralComponent } from '../layoutDirectorGeneral/layoutDirectorGeneral.component';
 
 @Component({
   selector: 'app-capturar',
   templateUrl: './capturar.component.html',
   styleUrls: ['./capturar.component.scss']
 })
-export class CapturarComponent implements OnInit {
+export class CapturarComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
   titulo!: string;
   idTramite!: string;
   camposMetadata: any;
   rolesUsuario: string[] = [];
+  @ViewChild(LayaoutCapturaTipoAgenteComponent) tipoAgentsComponent!: LayaoutCapturaTipoAgenteComponent
+  @ViewChild(LayoutDirectorGeneralComponent) layoutDirectorGeneral!: LayoutDirectorGeneralComponent
 
   /**
    * Subject para destruir notificador.
@@ -44,6 +48,7 @@ export class CapturarComponent implements OnInit {
       'rol': ['']
     });
 
+
     this.registroCaatNavieroService.getUserRole()
     .pipe(
       takeUntil(this.destruirNotificador$),
@@ -59,9 +64,9 @@ export class CapturarComponent implements OnInit {
     .pipe(
       takeUntil(this.destruirNotificador$),
       map((solicitud: SolicitudCaatNaviero) => {
-        // this.solicitudForm.patchValue({
-        //   'solicitud.cveFolioCaat': solicitud.cveFolioCaat
-        // });
+        this.solicitudForm.patchValue({
+          'cveFolioCaat': solicitud.caatSolicitudes[0]?.cveFolioCaat
+        });
       })
     )
     .subscribe();
@@ -98,16 +103,42 @@ export class CapturarComponent implements OnInit {
       })
     )
     .subscribe();
+    
   }
 
-  aplicarValidacion(): void {
-    // Migrar la validación de jQuery a TypeScript
-    // $(function() { $.fn.stripesValidation('formId', camposMetadata); });
-    // Implementación en TypeScript
-    // this.capturarService.stripesValidation(this.camposMetadata.formId, this.camposMetadata);
-  }
+  // aplicarValidacion(): void {
+  //   // Migrar la validación de jQuery a TypeScript
+  //   // $(function() { $.fn.stripesValidation('formId', camposMetadata); });
+  //   // Implementación en TypeScript
+  //   // this.capturarService.stripesValidation(this.camposMetadata.formId, this.camposMetadata);
+  // }
+
+  /**
+   * @method isFormValid
+   * @description
+   * Verifica si el formulario dentro del componente `CancelarSolicitudComponent` es válido.
+   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
+   */
+    isFormValid(): boolean {
+      // console.log(this.tipoAgentsComponent?.formularioAgente.valid, this.layoutDirectorGeneral?.solicitud.valid);
+      return this.tipoAgentsComponent?.formularioAgente.valid && this.layoutDirectorGeneral?.solicitud.valid;
+    }
 
   onSubmit(): void {
+    if(this.tipoAgentsComponent?.formularioAgente.valid && this.layoutDirectorGeneral?.solicitud.valid){
+      const solicitud: CaatSolicitud = {
+        cveFolioCaat: this.solicitudForm.get('cveFolioCaat')?.value,
+        rol: this.solicitudForm.get('rol')?.value,
+        caatSolicitudes: [
+          {
+            cveFolioCaat: this.solicitudForm.get('cveFolioCaat')?.value,
+            rol: this.solicitudForm.get('rol')?.value,
+            // Otros campos de la solicitud
+          }
+        ]
+      };
+    }
+      
     if (this.solicitudForm.valid) {
     //   this.capturarService.enviarFormulario(this.solicitudForm.value).subscribe( (response: unknown) => {
     //     // Manejar la respuesta del backend
@@ -117,5 +148,12 @@ export class CapturarComponent implements OnInit {
     //     }
     //   });
     }
+  }
+  
+  ngOnDestroy(): void {
+
+    // Destruir el notificador para evitar fugas de memoria
+    this.destruirNotificador$.next();
+    this.destruirNotificador$.complete();
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
@@ -26,6 +27,11 @@ export class CapturarService {
     return this.http.get<string[]>(`${this.baseUrl}/userRoles.json`);
     // return of(["persomanMoral"]);
   }
+
+  getCatalogo(AGENT_CATALOG: string): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(`${this.baseUrl}/tipoAgentoData.json`);
+  }
+
   /**
    * Retrieves the tramite ID.
    * @returns Observable<string>

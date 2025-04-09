@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { LayaoutCapturaTipoAgenteComponent } from '../../components/layaoutCapturaTipoAgente/layaoutCapturaTipoAgente.component';
 import { LayoutDirectorGeneralComponent } from '../../components/layoutDirectorGeneral/layoutDirectorGeneral.component';
+import { CapturarComponent } from '../../components/capturar/capturar.component';
 
 @Component({
   selector: 'app-paso-uno',
@@ -12,8 +13,7 @@ export class PasoUnoComponent {
   
   @Output() pestanaCambiado = new EventEmitter<number>();
   @Output() isValid = new EventEmitter<boolean>();
-  @ViewChild(LayaoutCapturaTipoAgenteComponent) tipoAgentsComponent!: LayaoutCapturaTipoAgenteComponent
-  @ViewChild(LayoutDirectorGeneralComponent) layoutDirectorGeneral!: LayoutDirectorGeneralComponent
+  @ViewChild(CapturarComponent) capturarComponent!: CapturarComponent;
  
   /**
    * @method seleccionaTab
