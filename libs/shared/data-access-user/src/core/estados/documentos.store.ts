@@ -1,7 +1,14 @@
 import { Injectable } from "@angular/core";
 import { Store } from "@datorama/akita";
 
-export interface CatalogoDocumentos {
+/**
+ * Estado para almacenar la información de cada documento
+ */
+
+export interface DocumentosState {
+    catalogoDocumentos: DocumentoState[];
+}
+export interface DocumentoState {
     id: number;
     descripcion: string;
     clave?: string;
@@ -9,21 +16,23 @@ export interface CatalogoDocumentos {
     dpi?: string;
     nuevo?: boolean;
     uniqueId?: string;
-    adicionales?: CatalogoDocumentos[];
+    adicionales?: DocumentoState[];
 }
 
 /**
  * Creación del estado inicial para el catálogo de documentos
  * @returns CatalogoDocumentos
  */
-export function createInitialStateDocumentos(): CatalogoDocumentos[] {
-    return []
+export function createInitialStateDocumentos(): DocumentosState {
+    return {
+        catalogoDocumentos: [],
+    }
 }
 
 @Injectable({
     providedIn: 'root'
 })
-export class DocumentosStore extends Store<any> {
+export class DocumentosStore extends Store<DocumentosState> {
     constructor() {
         super(createInitialStateDocumentos());
     }
@@ -33,7 +42,7 @@ export class DocumentosStore extends Store<any> {
      *
      * @param catalogoDocumentos
      */
-    public establecerCatalogoDocumentos(catalogoDocumentos: CatalogoDocumentos[]) {
+    public establecerCatalogoDocumentos(catalogoDocumentos: DocumentoState[]): void {
         this.update((state) => ({
             ...state,
             catalogoDocumentos,

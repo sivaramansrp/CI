@@ -378,6 +378,9 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
         this.listDocOpcionalesDuplicado = this.listDocOpcionales.map(op => op.id);
       }
     });
+
+    console.log(this.listDocOpcionales);
+
   }
 
   async cargarArchivos(archivosCargando: any[]): Promise<void> {
@@ -439,4 +442,6 @@ export class AnexarDocumentosComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.forEach((sub: Subscription) => sub.unsubscribe());
   }
+
+ 
 }

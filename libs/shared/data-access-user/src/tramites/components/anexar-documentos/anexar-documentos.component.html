@@ -144,7 +144,7 @@
     <div class="col-md-12 border rounded bg-file-container px-4" style="min-height: 15rem">
       <div class="form-group py-3">
         <ng-select [items]="archivosOpcionales" [multiple]="true" bindLabel="descripcion" [closeOnSelect]="false"
-          bindValue="id" [(ngModel)]="listDocOpcionalesAgregar">
+          bindValue="id" [(ngModel)]="listDocOpcionalesAgregar" >
           <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
             <div [class.disabled-option]="item.disabled">
               <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" [disabled]="item.disabled" /> {{
