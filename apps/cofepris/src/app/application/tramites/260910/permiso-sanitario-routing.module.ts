@@ -1,5 +1,5 @@
-import { PermisoSanitarioSolicitanteComponent } from './pages/permiso-sanitario-solicitante/permiso-sanitario-solicitante.component';
 import { NgModule } from '@angular/core';
+import { PermisoSanitarioSolicitanteComponent } from './pages/permiso-sanitario-solicitante/permiso-sanitario-solicitante.component';
 import { RouterModule } from '@angular/router';
 import { Routes } from '@angular/router';
 

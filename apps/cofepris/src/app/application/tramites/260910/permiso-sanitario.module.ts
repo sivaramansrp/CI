@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule } from '@angular/forms';
-import { PermisoSanitarioSolicitanteComponent } from './pages/permiso-sanitario-solicitante/permiso-sanitario-solicitante.component';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ModificarDestinatarioComponent } from './components/modificar-destinatario/modificar-destinatario.component';
@@ -17,8 +16,9 @@ import { PagoDerechosComponent } from './components/pago-derechos/pago-derechos.
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { PermisoSanitarioRoutingModule } from './permiso-sanitario-routing.module';
+import { PermisoSanitarioSolicitanteComponent } from './pages/permiso-sanitario-solicitante/permiso-sanitario-solicitante.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { SolicitudDatosComponent } from './components/solicitud-datos/solicitud-datos.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -27,9 +27,9 @@ import { TercerosRelacionadosComponent } from './components/terceros-relacionado
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
+import { TramitesAsociadosComponent } from './components/tramites-asociados/tramites-asociados.component';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { forwardRef } from '@angular/core';
-import { TramitesAsociadosComponent } from './components/tramites-asociados/tramites-asociados.component';
 
 @NgModule({
   declarations: [

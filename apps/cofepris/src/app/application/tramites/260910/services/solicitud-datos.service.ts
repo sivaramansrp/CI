@@ -1,3 +1,4 @@
+import { Asociados } from '../models/asociados.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { DatosDeSolicitud } from '../models/solicitud-datos.model';
@@ -5,7 +6,6 @@ import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
 import { DestinatarioImitar } from '../models/mercancia.model';
 import { Fabricante } from '../models/fabricante.model';
-import { Proveedor } from '../models/proveedor.model';
 import { Facturador } from '../models/facturador.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -13,9 +13,9 @@ import { Mercancia } from '../models/mercancia.model';
 import { MercanciaCatalogos } from '../models/mercancia.model';
 import { MercanciaCrossList } from '../models/mercancia.model';
 import { Observable } from 'rxjs';
-import { Solicitud } from '../models/solicitud-datos.model';
+import { Proveedor } from '../models/proveedor.model';
 import { SCIAN } from '../models/SCIAN.model';
-import { Asociados } from '../models/asociados.model';
+import { Solicitud } from '../models/solicitud-datos.model';
 /**
  * Servicio `SolicitudDatosService`.
  * Este servicio se encarga de gestionar las operaciones relacionadas con los datos de la solicitud 260910.

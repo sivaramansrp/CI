@@ -3,11 +3,11 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
-import { Proveedor } from '../../models/proveedor.model';
 import { Facturador } from '../../models/facturador.model';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Proveedor } from '../../models/proveedor.model';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { Solicitud260910State } from '../../estados/tramites260910.store';
 import { Solicitud260910Store } from '../../estados/tramites260910.store';
@@ -452,7 +452,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260910State) => {
           this.solicitud260910State = respuesta;
-          console.log('respuesta', respuesta);
           this.destinatarioDatos = this.solicitud260910State.destinatarioDatos;
           this.fabricanteDatos = this.solicitud260910State.fabricanteDatos;
           this.proveedorDatos = this.solicitud260910State.proveedorDatos;

@@ -1,13 +1,12 @@
-import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { Destinatario } from '../models/destinatario.model';
 import { Fabricante } from '../models/fabricante.model';
+import { Facturador } from '../models/facturador.model';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
+import { Proveedor } from '../models/proveedor.model';
+import { SCIAN } from '../models/SCIAN.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { SCIAN } from '../models/SCIAN.model';
-import { Proveedor } from '../models/proveedor.model';
-import { Facturador } from '../models/facturador.model';
 
 /**
  * Interfaz que representa el estado de la solicitud 260910.

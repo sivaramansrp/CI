@@ -1,5 +1,3 @@
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
-
 /**
  * Interfaz que representa la información de una SCIAN.
  */

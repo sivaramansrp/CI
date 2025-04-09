@@ -1,10 +1,10 @@
+import { AVISO_PRIVACIDAD } from '../../constantes/260910-enum';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-import { AVISO_PRIVACIDAD } from '../../constantes/260910-enum';
 
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.

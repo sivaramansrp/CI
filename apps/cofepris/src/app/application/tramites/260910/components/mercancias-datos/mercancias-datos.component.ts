@@ -527,8 +527,8 @@ export class ModificarMercanciasComponent implements OnInit, OnDestroy {
      * returns {void}
      */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud260910Store): void {
-    const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
-    (this.solicitud260910Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
+    (this.solicitud260910Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   

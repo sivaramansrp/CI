@@ -1,12 +1,10 @@
+import { Asociados } from '../../models/asociados.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { Asociados } from '../../models/asociados.model';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -18,7 +16,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './tramites-asociados.component.html',
   styleUrl: './tramites-asociados.component.scss',
 })
-export class TramitesAsociadosComponent implements OnInit, OnDestroy {
+export class TramitesAsociadosComponent implements OnDestroy {
 
   tramitesAsociadosTabla = TablaSeleccion.UNDEFINED;
   
@@ -66,14 +64,6 @@ export class TramitesAsociadosComponent implements OnInit, OnDestroy {
     public solicitudDatosService: SolicitudDatosService
   ) {
     this.obtenerTramitesAsociadosListo();
-  }
-
-  /**
-   * Método del ciclo de vida de Angular.
-   * Se ejecuta cuando el componente se inicializa.
-   * Suscribe a cambios en el estado de la solicitud y actualiza los datos de destinatarios.
-   */
-  ngOnInit(): void {
   }
 
   /**

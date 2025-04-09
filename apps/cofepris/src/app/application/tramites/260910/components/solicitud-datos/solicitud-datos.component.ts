@@ -7,13 +7,13 @@ import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Mercancia } from '../../models/mercancia.model';
-import { SCIAN } from '../../models/SCIAN.model';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_CORREO_ELECTRONICO } from '@libs/shared/data-access-user/src';
 import { REGEX_TELEFONO } from '@libs/shared/data-access-user/src';
 import { RadioOptions } from '../../models/solicitud-datos.model';
+import { SCIAN } from '../../models/SCIAN.model';
 import { Solicitud } from '../../models/solicitud-datos.model';
 import { Solicitud260910Query } from '../../estados/tramites260910.query';
 import { Solicitud260910State } from '../../estados/tramites260910.store';
@@ -28,7 +28,6 @@ import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-declare var bootstrap: any; // Declares Bootstrap globally
 
 /**
  * Componente que representa los datos de la solicitud.
@@ -788,7 +787,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   setTipoOperacion(evento: number | string): void {
     this.solicitud260910Store.setTipoOperacion(evento);
-    if (this.solicitudForm.get('tipoOperacion')?.value == 'PRO') {
+    if (this.solicitudForm.get('tipoOperacion')?.value === 'PRO') {
       this.solicitudForm.get('observaciones')?.disable();
       this.solicitudForm.get('rfcSanitario')?.disable();
       this.solicitudForm.get('razonSocial')?.disable();
@@ -923,7 +922,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   setAvisoDeFuncionamiento(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
     this.solicitud260910Store.setAvisoDeFuncionamiento(VALOR);
-    if (this.solicitudForm.get('avisoDeFuncionamiento')?.value == true) {
+    if (this.solicitudForm.get('avisoDeFuncionamiento')?.value === true) {
       this.solicitudForm.get('licenciaSanitaria')?.disable();
     } else {
       this.solicitudForm.get('licenciaSanitaria')?.enable();
@@ -950,8 +949,8 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
      * returns {void}
      */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud260910Store): void {
-    const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
-    (this.solicitud260910Store[metodoNombre] as (value: any) => void)(valor);
+    const VALOR = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
+    (this.solicitud260910Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /**
