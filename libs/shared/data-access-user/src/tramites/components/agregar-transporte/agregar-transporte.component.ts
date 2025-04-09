@@ -18,10 +18,12 @@ import { CommonModule } from '@angular/common';
 import { Modal } from 'bootstrap';
 import { Subject } from 'rxjs';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
+import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 @Component({
   selector: 'lib-agregar-transporte',
   standalone: true,
   imports: [
+    CatalogoSelectComponent,
     CommonModule,
     ReactiveFormsModule,
     InputHoraComponent,
@@ -67,7 +69,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
   formaSeleccionada!: string;
 
   public observaciones: FormControl = new FormControl('', [Validators.maxLength(500)]);
-  anios!: number[];
+  anios!: Catalogo[];
 
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -93,8 +95,7 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     }
   }
 
-  // Crea formularios 
-
+  // #Seccion de creacion de formularios
   crearCarreteroForm(): void {
     this.carreteroForma = this.fb.group({
       empTransportista: ['', [Validators.maxLength(80)]],
@@ -157,13 +158,13 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
 
 
-  // ----------------------------------------------------------------------------------------------
+  // #Termina seccion de creacion de formularios
 
   tipoTabla(): ItemTransporte[] {
     switch (parseInt(this.tipo, 10)) {
       case 1:
         this.formaSeleccionada = 'carreteroForma';
-        this.anios = this.obtenerAniosModelo();
+        this.anios = AgregarTransporteComponent.obtenerAniosModelo();        
         this.crearCarreteroForm();
         return this.HEADER_TABLA_CARRETERO;
       case 2:
@@ -186,7 +187,6 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
 
     }
   }
-
 
   /**
 * Abre el modal para eliminar un documento.
@@ -273,12 +273,18 @@ export class AgregarTransporteComponent implements OnInit, OnChanges {
     });
   }
 
-  obtenerAniosModelo(): number[] {
+  static obtenerAniosModelo(): Catalogo[] {
     const ANIO_ACTUAL = new Date().getFullYear();
-    const ANIOS: number[] = [];
+    const ANIOS: Catalogo[] = [];
     for (let i = 1980; i <= ANIO_ACTUAL; i++) {
-      ANIOS.push(i);
+      const ANIO: Catalogo = {
+        id: i,
+        descripcion: i.toString(),
+      }
+
+      ANIOS.push(ANIO);
     }
+    
     return ANIOS;
   }
 

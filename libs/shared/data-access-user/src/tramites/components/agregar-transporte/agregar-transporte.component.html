@@ -77,8 +77,7 @@
 
             <div class="form-group">
               <label class="form-label" for="observaciones">Observaciones</label>
-              <textarea class="form-control h-25" rows="3"
-                [formControl]="observaciones" id="observaciones"></textarea>
+              <textarea class="form-control h-25" rows="3" [formControl]="observaciones" id="observaciones"></textarea>
             </div>
           </div>
         </div>
@@ -125,13 +124,8 @@
       </div>
     </div>
     <div class="col-md-6">
-      <label class="form-label" for="modeloTransporte">Modelo:</label>
-      <select class="form-control" id="modeloTransporte" formControlName="modeloTransporte">
-        <option value=-1>Selecciona un año</option>
-        @for (item of anios; track $index) {
-        <option value="{{ item }}">{{ item }}</option>
-        }
-      </select>
+      <app-catalogo-select [catalogo]="anios" formControlName="modeloTransporte" [label]="'Modelo'" [required]="false"
+        name="modeloTransporte"></app-catalogo-select>
     </div>
     <div class="col-md-6">
       <div class="form-group">
