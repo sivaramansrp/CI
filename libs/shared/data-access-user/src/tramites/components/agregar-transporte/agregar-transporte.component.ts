@@ -40,11 +40,13 @@ export class AgregarTransporteComponent implements OnChanges {
    * Datos de la tabla de transporte.
    * @type {any[]}
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() tablaTransporte!: any[];
 
   /**
    * Emisor de eventos para enviar los datos de la tabla.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Output() datosTabla: EventEmitter<any[]> = new EventEmitter<(TransporteAereo | TransporteCarretero | TransporteFerroviario | TransporteMaritimo | TransporteOtro | TransportePeatonal)[]>();
 
   @ViewChild('agregarTransporte') agregarTransporte!: ElementRef;
@@ -140,7 +142,7 @@ export class AgregarTransporteComponent implements OnChanges {
   public observaciones: FormControl = new FormControl('', [Validators.maxLength(500)]);
   anios!: Catalogo[];
 
-  
+
   private destroyNotifier$: Subject<void> = new Subject();
 
 
