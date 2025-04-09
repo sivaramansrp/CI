@@ -2,10 +2,9 @@ import { Catalogo, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_NUMEROS} from '@ng-mf/data
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CompliMentaria } from '../../enums/partidasdela-table.enum';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
@@ -16,6 +15,8 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import fractionValues from '@libs/shared/theme/assets/json/130113/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130113/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130113/unidad_da.json';
+
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 
 
 
@@ -65,13 +66,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
+   tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
-  tableBodyData: { tbodyData: string[] }[] = [];
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * mostrarTabla
@@ -95,7 +96,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * filaSeleccionada
    * Fila seleccionada en la tabla dinámica.
    */
-  filaSeleccionada: CompliMentaria | null = null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    *  Opciones para el campo "producto".
@@ -202,8 +203,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.getEstablecimiento();
-    this.calcularTotales();
+    this.obtenerTablaDatos()
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -215,23 +215,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         this.mostrarTabla = mostrarTabla;
       });
 
-    this.tramite130113Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.partidasDelaMercanciaForm.patchValue({
-            cantidadPartidasDeLaMercancia:
-              seccionState.cantidadPartidasDeLaMercancia,
-            fraccionTigiePartidasDeLaMercancia: seccionState.fraccionTigiePartidasDeLaMercancia,
-            fraccionDescripcionPartidasDeLaMercancia: seccionState.fraccionDescripcionPartidasDeLaMercancia,
-            valorPartidaUSDPartidasDeLaMercancia:
-              seccionState.valorPartidaUSDPartidasDeLaMercancia,
-            descripcionPartidasDeLaMercancia:
-              seccionState.descripcionPartidasDeLaMercancia,
-          });
-        })
-      )
-      .subscribe();
+   
   }
 
   /**
@@ -332,6 +316,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
             valorPartidaUSDPartidasDeLaMercancia: seccionState.valorPartidaUSDPartidasDeLaMercancia,
             descripcionPartidasDeLaMercancia: seccionState.descripcionPartidasDeLaMercancia,
           });
+          
 
           this.formDelTramite.patchValue({
             solicitud: seccionState.solicitud,
@@ -378,39 +363,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * getEstablecimiento
    * Configura los datos de la tabla dinámica a partir de un archivo JSON.
    */
-  getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
-      (header, index) => ({
-        encabezado: header,
-        /* eslint-disable @typescript-eslint/no-explicit-any */
-        clave: (fila: any): string => fila.tbodyData[index],
-        orden: index,
-      })
-    );
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
+ 
+  obtenerTablaDatos(): void {
+    this.importacionEquipoAnticontaminanteService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+      this.tableBodyData = data;
+      this.formForTotalCount.patchValue({
+        cantidadTotal:data[0].cantidad,
+        valorTotalUSD:data[0].totalUSD
+      });
+    });
+}
 
-  /**
-   * calcularTotales
-   * Calcula los totales de cantidad y valor en USD a partir de los datos de la tabla.
-   */
-  calcularTotales(): void {
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[0]),
-      0
-    );
-    const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: { tbodyData: string[] }) =>
-        sum + parseFloat(item.tbodyData[5]),
-      0
-    );
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-    // eslint-disable-next-line dot-notation
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
-  }
-
+  
+ 
   /**
    *  Solicita opciones configurables para los formularios desde archivos JSON.
    */
@@ -449,10 +414,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Lista de filas seleccionadas.
    */
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  manejarlaFilaSeleccionada(filasSeleccionadas: any[]): void {
+  manejarlaFilaSeleccionada(filasSeleccionadas:PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
+      ? [filasSeleccionadas[0]]
+      : [];
     if (this.filaSeleccionada) {
       this.tramite130113Store.storeTableValues(this.filaSeleccionada);
     }

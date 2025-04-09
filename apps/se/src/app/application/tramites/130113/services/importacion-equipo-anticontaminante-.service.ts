@@ -2,7 +2,9 @@ import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+
 
 /**
  * 
@@ -102,4 +104,10 @@ export class ImportacionEquipoAnticontaminanteService {
       '/assets/json/130113/fraccion-descripcion-partidas-de-la-mercancia.json'
     );
   }
+
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+      return this.http.get<PartidasDeLaMercanciaModelo[]>(
+            'assets/json/130113/partidas-de-la.json'
+          );
+    }
 }

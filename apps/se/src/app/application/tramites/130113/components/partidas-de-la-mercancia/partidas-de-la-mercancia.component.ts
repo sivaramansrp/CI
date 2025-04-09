@@ -3,16 +3,21 @@ import { Catalogo, ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+
 import { TituloComponent } from '@ng-mf/data-access-user';
+
 import { UppercaseDirective } from '@ng-mf/data-access-user';
 
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
+
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -52,13 +57,14 @@ export class PartidasDeLaMercanciaComponent {
    * tableHeaderData
    * Configuración de las columnas de la tabla dinámica.
    */
-  @Input() tableHeaderData: ConfiguracionColumna<any>[] = [];
+  @Input() tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] =
+     PARTIDASDELAMERCANCIA_TABLA;
 
   /**
    * tableBodyData
    * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
-  @Input() tableBodyData: any[] = [];
+  @Input() tableBodyData: PartidasDeLaMercanciaModelo[] = [];
 
   /**
    * mostrarTabla
@@ -126,7 +132,7 @@ export class PartidasDeLaMercanciaComponent {
    * Maneja las filas seleccionadas en la tabla dinámica y emite un evento.
    * Lista de filas seleccionadas.
    */
-  handleListaDeFilaSeleccionada(filasSeleccionadas: any[]): void {
+  handleListaDeFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionadaChange.emit(filasSeleccionadas);
   }
 
