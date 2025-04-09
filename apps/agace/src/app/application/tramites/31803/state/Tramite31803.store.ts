@@ -1,0 +1,118 @@
+import { Store, StoreConfig } from '@datorama/akita';
+import { Injectable } from '@angular/core';
+
+/**
+ * Representa un catálogo con un identificador y una descripción.
+ */
+export interface Catalogo {
+  /** Identificador único del catálogo. */
+  id: number;
+  /** Descripción del catálogo. */
+  descripcion: string;
+}
+
+/**
+ * Estado inicial para la interfaz del trámite 31803.
+ */
+export interface Solicitud31803State {
+  /** Número de operación asociado a la solicitud. */
+  numeroOperacion: string;
+  /** Lista de bancos asociados a la solicitud. */
+  banco: Catalogo[] | null;
+  /** Llave única asociada a la solicitud. */
+  llave: string;
+  /** Primer manifiesto asociado a la solicitud. */
+  manifiesto1: string;
+  /** Segundo manifiesto asociado a la solicitud. */
+  manifiesto2: string;
+  /** Fecha de pago asociada a la solicitud. */
+  fechaPago: string;
+}
+
+/**
+ * Crea el estado inicial para la solicitud del trámite 31803.
+ * @returns Estado inicial de tipo `Solicitud31803State`.
+ */
+export function createInitialState(): Solicitud31803State {
+  return {
+    numeroOperacion: '',
+    banco: null,
+    llave: '',
+    manifiesto1: '',
+    manifiesto2: '',
+    fechaPago: '',
+  };
+}
+
+/**
+ * Clase que representa el almacén de estado para el trámite 31803.
+ * Gestiona el estado global de la solicitud y proporciona métodos para actualizarlo.
+ */
+@Injectable({
+  providedIn: 'root',
+})
+@StoreConfig({ name: 'tramite31803', resettable: true })
+export class Tramite31803Store extends Store<Solicitud31803State> {
+  /**
+   * Constructor del almacén.
+   * Inicializa el estado con los valores predeterminados.
+   */
+  constructor() {
+    super(createInitialState());
+  }
+
+  /**
+   * Actualiza la lista de bancos en el estado.
+   * @param banco Lista de bancos de tipo `Catalogo[]`.
+   */
+  public setBanco(banco: Catalogo[]) {
+    this.update((state) => ({ ...state, banco }));
+  }
+
+  /**
+   * Actualiza el número de operación en el estado.
+   * @param numeroOperacion Número de operación de tipo `string`.
+   */
+  public setNumeroOperacion(numeroOperacion: string) {
+    this.update((state) => ({ ...state, numeroOperacion }));
+  }
+
+  /**
+   * Actualiza la llave en el estado.
+   * @param llave Llave única de tipo `string`.
+   */
+  public setLlave(llave: string) {
+    this.update((state) => ({ ...state, llave }));
+  }
+
+  /**
+   * Actualiza el primer manifiesto en el estado.
+   * @param manifiesto1 Primer manifiesto de tipo `string`.
+   */
+  public setManifiesto1(manifiesto1: string) {
+    this.update((state) => ({ ...state, manifiesto1 }));
+  }
+
+  /**
+   * Actualiza el segundo manifiesto en el estado.
+   * @param manifiesto2 Segundo manifiesto de tipo `string`.
+   */
+  public setManifiesto2(manifiesto2: string) {
+    this.update((state) => ({ ...state, manifiesto2 }));
+  }
+
+  /**
+   * Actualiza la fecha de pago en el estado.
+   * @param fechaPago Fecha de pago de tipo `string`.
+   */
+  public setFechaPago(fechaPago: string) {
+    this.update((state) => ({ ...state, fechaPago }));
+  }
+
+  /**
+   * Restaura el estado al valor inicial.
+   */
+  public limpiarSolicitud() {
+    this.reset();
+  }
+}
