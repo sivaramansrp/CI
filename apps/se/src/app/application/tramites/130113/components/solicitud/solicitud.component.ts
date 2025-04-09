@@ -321,62 +321,40 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    *  Configura las suscripciones para actualizar formularios y almacenar estados.
    */
   configuracionFormularioSuscripciones(): void {
-    this.tramite130113Query.solicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((solicitud) => {
-        this.formDelTramite.patchValue({ solicitud }, { emitEvent: false });
-      });
-
-    this.tramite130113Query.regimen$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((regimen) => {
-        this.formDelTramite.patchValue({ regimen }, { emitEvent: false });
-      });
-
-    this.tramite130113Query.clasificacion$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((clasificacion) => {
-        this.formDelTramite.patchValue(
-          { clasificacion },
-          { emitEvent: false }
-        );
-      });
-    this.tramite130113Query.mercanciaState$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((state) => {
-        this.mercanciaForm.patchValue(
-          {
-            producto: state.producto,
-            descripcion: state.descripcion,
-            fraccion: state.fraccion,
-            cantidad: state.cantidad,
-            valorFacturaUSD: state.valorPartidaUSD
-              ? state.valorPartidaUSD.toString()
-              : '',
-            unidadMedida: state.unidadMedida,
-          },
-          { emitEvent: false }
-        );
-      });
-
     this.tramite130113Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
+          this.partidasDelaMercanciaForm.patchValue({
+            cantidadPartidasDeLaMercancia: seccionState.cantidadPartidasDeLaMercancia,
+            fraccionTigiePartidasDeLaMercancia: seccionState.fraccionTigiePartidasDeLaMercancia,
+            fraccionDescripcionPartidasDeLaMercancia: seccionState.fraccionDescripcionPartidasDeLaMercancia,
+            valorPartidaUSDPartidasDeLaMercancia: seccionState.valorPartidaUSDPartidasDeLaMercancia,
+            descripcionPartidasDeLaMercancia: seccionState.descripcionPartidasDeLaMercancia,
+          });
+
+          this.formDelTramite.patchValue({
+            solicitud: seccionState.solicitud,
+            regimen: seccionState.regimen,
+            clasificacion: seccionState.clasificacion,
+          });
+
+          this.mercanciaForm.patchValue({
+            producto: seccionState.producto,
+            descripcion: seccionState.descripcion,
+            fraccion: seccionState.fraccion,
+            cantidad: seccionState.cantidad,
+            valorFacturaUSD: seccionState.valorFacturaUSD,
+            unidadMedida: seccionState.unidadMedida,
+          });
+
           this.paisForm.patchValue({
             bloque: seccionState.bloque,
             usoEspecifico: seccionState.usoEspecifico,
-            justificacionImportacionExportacion:
-              seccionState.justificacionImportacionExportacion,
+            justificacionImportacionExportacion: seccionState.justificacionImportacionExportacion,
             observaciones: seccionState.observaciones,
           });
-        })
-      )
-      .subscribe();
-    this.tramite130113Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
+
           this.frmRepresentacionForm.patchValue({
             entidad: seccionState.entidad,
             representacion: seccionState.representacion,
@@ -384,30 +362,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.formDelTramite.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130113Store.updateState({
-          solicitud: value.solicitud,
-          regimen: value.regimen,
-          clasificacion: value.clasificacion,
-        });
-      });
-
-
-    this.mercanciaForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((value) => {
-        this.tramite130113Store.updateState({
-          producto: value.producto,
-          descripcion: value.descripcion,
-          fraccion: value.fraccion,
-          cantidad: value.cantidad,
-          valorPartidaUSD: parseFloat(value.valorFacturaUSD) || 0,
-          unidadMedida: value.unidadMedida,
-        });
-      });
   }
   /**
    * formularioTotalCount
@@ -611,6 +565,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     setProducto: (valor) => this.tramite130113Store.setProducto(valor),
     setDescripcion: (valor) => this.tramite130113Store.setDescripcion(valor),
     setCantidad: (valor) => this.tramite130113Store.setCantidad(valor),
+    setValorFacturaUSD: (valor) => this.tramite130113Store.setValorFacturaUSD(valor),
     setValorPartidaUSD: (valor) =>
       this.tramite130113Store.setValorPartidaUSD(parseFloat(valor) || 0),
     setUnidadMedida: (valor) => this.tramite130113Store.setUnidadMedida(valor),
