@@ -573,5 +573,15 @@
             "id": 13,
             "descripcion": "Tambo de plástico"
         }
+    ],
+    "requiereEmpresaServicioReciclaje": [
+        {
+            "label": "Si",
+            "value": "Si"
+        },
+        {
+            "label": "No",
+            "value": "No"
+        }
     ]
 }

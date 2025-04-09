@@ -73,4 +73,12 @@
       </div>
     </div>
   </div>
+  <ng-titulo titulo="Datos de la empresa de servicio que realizará el reciclaje"></ng-titulo>
+  <div class="row mb-3">
+    <div class="col-md-8">
+        <label required="true">Orígen de generación de residuos:</label>
+        <app-input-radio [radioOptions]="requiereEmpresaServicioReciclaje" [isRequired]="true"
+            [layout]="'horizontal'"></app-input-radio>
+    </div>
+</div>
 </div>

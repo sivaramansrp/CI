@@ -1,9 +1,13 @@
-import { Catalogo, CatalogoSelectComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json';
+// import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json';
+import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
+import rawData from '@libs/shared/theme/assets/json/231003/solicitud.json';
+const RADIO_OPCIONES = rawData as SolicitudJson;
+
 
 @Component({
   selector: 'app-datos-solicitud',
@@ -11,7 +15,7 @@ import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json
   imports: [CommonModule,
     CatalogoSelectComponent,
     TituloComponent,
-    ReactiveFormsModule, TableComponent],
+    ReactiveFormsModule, TableComponent,InputRadioComponent],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.css',
 })
@@ -20,6 +24,10 @@ export class DatosSolicitudComponent implements OnInit {
   solicitudForm!: FormGroup;
 
   aduanas!: Catalogo[];
+
+  radioOptions: RadioOpcion[] = RADIO_OPCIONES.radioOptions;
+
+  requiereEmpresaServicioReciclaje: RadioOpcion[] = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
 
   public establecimientoHeaderData: string[] = [];
 
@@ -39,9 +47,10 @@ export class DatosSolicitudComponent implements OnInit {
         numeroProgramaImmex: ['', Validators.required],
       }),
     });
-    this.aduanas = SolicitudeJson.Immex;
-    this.establecimientoHeaderData = SolicitudeJson.table[0]?.encabezadoDeTabla || [];
-    this.establecimientoBodyData = SolicitudeJson.table[0]?.cuerpoTabla || [];
+    this.aduanas = RADIO_OPCIONES.Immex;
+    this.establecimientoHeaderData = RADIO_OPCIONES.table[0]?.encabezadoDeTabla || [];
+    this.establecimientoBodyData = RADIO_OPCIONES.table[0]?.cuerpoTabla || [];
+    this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
 
   }
 
