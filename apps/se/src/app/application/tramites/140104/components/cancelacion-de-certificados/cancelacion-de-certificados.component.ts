@@ -182,7 +182,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.mecanismoAsignacionList = mecanismoAsignacionDatos  as Catalogo[];
+    this.mecanismoAsignacionList = mecanismoAsignacionDatos as Catalogo[];
     this.regimenAduaneroList = regimenAduaneroListDatos as Catalogo[];
   }
 

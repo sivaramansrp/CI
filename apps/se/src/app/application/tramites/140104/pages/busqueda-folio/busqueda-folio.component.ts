@@ -7,7 +7,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { REG_X } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
