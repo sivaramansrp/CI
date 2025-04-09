@@ -4,12 +4,13 @@ import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
 import acotacionOptions from '@libs/shared/theme/assets/json/130121/acotacion.json';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
-import PartidasdelaTable from '@libs/shared/theme/assets/json/130121/partidas-de-la.json';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 import { PermisoDeHidrocarburosService } from '../../services/permiso-de-hidrocarburos.service';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
@@ -74,22 +75,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   frmRepresentacionForm!: FormGroup;
 
   /**
-   * Datos de configuración para los encabezados de la tabla.
-   * @type {ConfiguracionColumna<string>[]} Arreglo que contiene la configuración de las columnas para la tabla.
+   * tableHeaderData
+   * Configuración de las columnas de la tabla dinámica.
    */
-  tableHeaderData: ConfiguracionColumna<string>[] = [];
-
- /**
-   * Datos del cuerpo de la tabla.
-   * @type {{ tbodyData: string[] }[]} Arreglo que contiene los datos que se mostrarán en el cuerpo de la tabla.
+  tableHeaderData: ConfiguracionColumna<PartidasDeLaMercanciaModelo>[] = PARTIDASDELAMERCANCIA_TABLA;
+  /**
+   * tableBodyData
+   * Datos que se mostrarán en el cuerpo de la tabla dinámica.
    */
- tableBodyData: string[] = [];
-
- /**
-  * Bandera que controla la visibilidad de la tabla.
-  * @type {boolean} Indica si la tabla se debe mostrar o no.
-  */
- mostrarTabla = false;
+  tableBodyData: PartidasDeLaMercanciaModelo[] = [];
+  /**
+   * mostrarTabla
+   * Bandera para mostrar u ocultar la tabla dinámica.
+   */
+  mostrarTabla = false; 
 
  /**
   * Checkbox de selección de la tabla.
@@ -101,13 +100,13 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Función para obtener los datos de la tabla de establecimiento.
    * @type {any} Datos de la tabla que serán mostrados para el establecimiento.
    */
- public getEstablecimientoTableData = PartidasdelaTable;
+//  public getEstablecimientoTableData = PartidasdelaTable;
 
  /**
   * Fila seleccionada en la tabla.
   * @type {any} Contiene la fila seleccionada de la tabla.
   */
- filaSeleccionada: { [key: string]: unknown } | null = null;
+ filaSeleccionada: PartidasDeLaMercanciaModelo[] = [];
 
  /**
   * Opciones de productos disponibles.
@@ -299,8 +298,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
-    this.getEstablecimiento();
-    this.calcularTotales();
+    this.obtenerTablaDatos();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
@@ -694,125 +692,58 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     valorTotalUSD: [{ value: '', disabled: true }],
   });
 }
-  /**
- * @description
- * Método encargado de obtener los datos de la tabla de establecimiento. 
- * Se extraen tanto los encabezados como los datos del cuerpo de la tabla, los cuales se almacenan en las propiedades `tableHeaderData` y `tableBodyData`, respectivamente.
- * El `tableHeaderData` se mapea a un formato que incluye el nombre del encabezado, la clave que corresponde a cada columna, y su posición dentro de la tabla.
- *
- * @method
- * @name getEstablecimiento
- */
-  getEstablecimiento(): void {
-    /**
-     * @description
-     * Mapea los encabezados de la tabla a un formato más estructurado, asociando cada encabezado con una clave (valor específico de cada fila de datos) 
-     * y el orden del encabezado.
-     * 
-     * @type {Array<{ encabezado: string, clave: (fila: any) => string, orden: number }>}
-     * @default []
-     */
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
-      (header, index) => ({
-        /**
-         * @description
-         * Nombre del encabezado de la columna.
-         * 
-         * @type {string}
-         */
-        encabezado: header,
+ 
+//   getEstablecimiento(): void {
+//     /**
+//      * @description
+//      * Mapea los encabezados de la tabla a un formato más estructurado, asociando cada encabezado con una clave (valor específico de cada fila de datos) 
+//      * y el orden del encabezado.
+//      * 
+//      * @type {Array<{ encabezado: string, clave: (fila: any) => string, orden: number }>}
+//      * @default []
+//      */
+//     this.tableHeaderData = this.getEstablecimientoTableData.tableHeader.map(
+//       (header, index) => ({
+//         /**
+//          * @description
+//          * Nombre del encabezado de la columna.
+//          * 
+//          * @type {string}
+//          */
+//         encabezado: header,
 
-        /**
- * @description Función que obtiene el valor correspondiente de la columna de la fila,
- * basándose en el índice del encabezado. La función convierte la cadena JSON en un objeto
- * que contiene la propiedad `tbodyData` y retorna el elemento en la posición indicada.
- *
- * @param {string} fila - Cadena JSON que representa la fila con la propiedad `tbodyData`.
- * @returns {string} Valor correspondiente a la columna en la fila.
- */
-        clave: (fila: string): string => {
-          const PARSED_FILA = JSON.parse(fila) as { tbodyData: string[] };
-          return PARSED_FILA.tbodyData[index];
-        },
-        orden: index,
-      })
-    );
+//         /**
+//  * @description Función que obtiene el valor correspondiente de la columna de la fila,
+//  * basándose en el índice del encabezado. La función convierte la cadena JSON en un objeto
+//  * que contiene la propiedad `tbodyData` y retorna el elemento en la posición indicada.
+//  *
+//  * @param {string} fila - Cadena JSON que representa la fila con la propiedad `tbodyData`.
+//  * @returns {string} Valor correspondiente a la columna en la fila.
+//  */
+//         clave: (fila: string): string => {
+//           const PARSED_FILA = JSON.parse(fila) as { tbodyData: string[] };
+//           return PARSED_FILA.tbodyData[index];
+//         },
+//         orden: index,
+//       })
+//     );
 
-    /**
-     * @description
-     * Asigna los datos del cuerpo de la tabla a la propiedad `tableBodyData`.
-     * Los datos del cuerpo son extraídos directamente de `getEstablecimientoTableData.tableBody`.
-     * 
-     * @type {any[]}
-     * @default []
-     */
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody.map(row =>
-      JSON.stringify(row)
-    );
-  }
+//     /**
+//      * @description
+//      * Asigna los datos del cuerpo de la tabla a la propiedad `tableBodyData`.
+//      * Los datos del cuerpo son extraídos directamente de `getEstablecimientoTableData.tableBody`.
+//      * 
+//      * @type {any[]}
+//      * @default []
+//      */
+//     this.tableBodyData = this.getEstablecimientoTableData.tableBody.map(row =>
+//       JSON.stringify(row)
+//     );
+//   }
 
  
-  /**
- * @description
- * Método encargado de calcular los totales de la tabla. 
- * Se calculan dos valores:
- * - `CANTITAD_TOTAL`: la suma de los valores de la primera columna (representando la cantidad total).
- * - `VALOR_TOTALUSD`: la suma de los valores de la sexta columna (representando el valor total en USD).
- * 
- * Posteriormente, se actualizan los valores de los campos del formulario (`cantidadTotal` y `valorTotalUSD`) con los totales calculados.
- *
- * @method
- * @name calcularTotales
- */
-  calcularTotales(): void {
-    /**
-     * @description
-     * Calcula el total de la primera columna de la tabla (`tbodyData[0]`), que representa la cantidad total.
-     * Para ello, se usa el método `reduce` para sumar los valores de la primera columna de cada fila de datos.
-     * 
-     * @type {number}
-     * @default 0
-     */
-    const CANTITAD_TOTAL = this.tableBodyData.reduce(
-      (sum: number, item: string) => {
-        const PARSED_ITEM = JSON.parse(item) as { tbodyData: string[] };
-        return sum + parseFloat(PARSED_ITEM.tbodyData[0]);
-      },
-      0
-    );
 
-    /**
-     * @description
-     * Calcula el total de la sexta columna de la tabla (`tbodyData[5]`), que representa el valor total en USD.
-     * Se utiliza el método `reduce` para sumar los valores de la sexta columna de cada fila de datos.
-     * 
-     * @type {number}
-     * @default 0
-     */
-    const VALOR_TOTALUSD = this.tableBodyData.reduce(
-      (sum: number, item: string) => {
-        const PARSED_ITEM = JSON.parse(item) as { tbodyData: string[] };
-        return sum + parseFloat(PARSED_ITEM.tbodyData[5]);
-      },
-      0
-    );
-
-    /**
-     * @description
-     * Actualiza el valor del campo `cantidadTotal` en el formulario con el total calculado en `CANTITAD_TOTAL`.
-     * 
-     * @param {number} CANTITAD_TOTAL Total calculado de la primera columna.
-     */
-    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTITAD_TOTAL);
-
-    /**
-     * @description
-     * Actualiza el valor del campo `valorTotalUSD` en el formulario con el total calculado en `VALOR_TOTALUSD`.
-     * 
-     * @param {number} VALOR_TOTALUSD Total calculado de la sexta columna.
-     */
-    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTALUSD);
-  }
+ 
 
  /**
   * @description
@@ -906,28 +837,33 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   * @param {any[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
   * @returns {void}
   */
-  manejarlaFilaSeleccionada(filasSeleccionadas: { [key: string]: unknown }[]): void {
-    /**
-     * @description
-     * Asigna la primera fila seleccionada a la propiedad `filaSeleccionada`, o `null` si no hay filas seleccionadas.
-     * 
-     * @type {any | null}
-     * @default null
-     */
+  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
     this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas[0]
-      : null;
-
-    /**
-     * @description
-     * Si hay una fila seleccionada, actualiza el estado de la tienda `tramite130121Store` con los valores de la fila seleccionada.
-     * 
-     * @param {any} this.filaSeleccionada Fila seleccionada que contiene los datos a ser almacenados en la tienda.
-     */
+      ? filasSeleccionadas
+      : [];
     if (this.filaSeleccionada) {
       this.tramite130121Store.storeTableValues(this.filaSeleccionada);
     }
   }
+  /**
+ * Método para obtener los datos de la tabla dinámica.
+ * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
+ * de la tabla y actualiza las propiedades relacionadas con la tabla dinámica.
+ * 
+ * - Actualiza `tableBodyData` con los datos obtenidos.
+ * - Asigna valores a las propiedades `cantidad` y `descripcion` del primer elemento de la tabla.
+ * - Actualiza el formulario `formForTotalCount` con los valores totales de cantidad y valor en USD.
+ * 
+ */
+  obtenerTablaDatos(): void {
+    this.permisodehidrocarburosService.getTablaDatos().pipe(takeUntil(this.destroyed$)).subscribe((data) => {
+      this.tableBodyData = data;
+      this.formForTotalCount.patchValue({
+        cantidadTotal:data[0].cantidad,
+        valorTotalUSD:data[0].totalUSD
+      });
+    });
+}
 
   /**
  * @description
@@ -1142,7 +1078,18 @@ enCambioDeBloque(bloqueId: number): void {
       console.error(`Método ${event.metodoNombre} no existe en Tramite130121Store`);
     }
   }
-  
+  /**
+ * Determina si el botón "Modificar" debe estar deshabilitado.
+ * Este método verifica si no hay filas seleccionadas en la tabla dinámica.
+ * 
+ */
+  disabledModificar() : boolean {
+    let disabled = false;
+    if(this.filaSeleccionada.length === 0){
+      disabled = true
+    }
+    return disabled;
+  }
 
  /**
   * Se ejecuta cuando el componente o servicio es destruido.

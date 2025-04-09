@@ -142,10 +142,10 @@ export const MERCANCIAS_DATA = [
   },
 ];
 export interface PermisoModel {
-  Nombre: string;
-  RFC: string;
-  CURP: string;
-  Telefono: number;
-  CorreoElectronico: string;
+  nombre: string;
+  rfc: string;
+  curp: string;
+  telefono: number;
+  correoElectronico: string;
   calle: string;
 }

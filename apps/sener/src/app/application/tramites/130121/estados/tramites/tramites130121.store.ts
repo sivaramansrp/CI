@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 
 /**
  * Interfaz que representa el estado para el trámite 130121.
@@ -62,7 +63,7 @@ export interface Tramite130121State {
   /**
    * Fila seleccionada en la tabla (puede ser nula).
    */
-  filaSeleccionada: { [key: string]: unknown } | null;
+  filaSeleccionada: PartidasDeLaMercanciaModelo[];
   /**
    * Cantidad de partidas de la mercancía.
    */
@@ -116,7 +117,7 @@ export interface Tramite130121State {
  */
 export function createInitialState(): Tramite130121State {
   return {
-    filaSeleccionada: null,
+    filaSeleccionada: [],
     mostrarTabla: false,
     solicitud: '',
     fraccion: '',
@@ -484,7 +485,7 @@ export class Tramite130121Store extends Store<Tramite130121State> {
    * @memberof Tramite130121Store
    */
  
-  public storeTableValues(fila: { [key: string]: unknown } | null): void {
+  public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
     this.update({
       filaSeleccionada: fila,
     });
