@@ -46,6 +46,35 @@ export class TablaDinamicaComponent<T> {
    */
   @Input() datos: T[] = [];
 
+
+  /**
+   * Identificador único para la tabla dinámica.
+   * Este identificador se utiliza para diferenciar y manejar múltiples tablas dinámicas en la aplicación.
+   */
+  @Input() tableId!:string;
+
+   /**
+   * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
+   * 
+   * @private
+   * @type {number}
+   */
+   private _inputSelection!:number;
+   /**
+    * Setter para la propiedad `inputSelection`.
+    * Este método se utiliza para actualizar el valor de `_inputSelection` y sincronizarlo con `idFilaSeleccionada`.
+    *
+    * @param {number} value - El nuevo valor que se asignará a `inputSelection` y `idFilaSeleccionada`.
+    */
+   @Input()
+   set inputSelection(value: number) {
+
+     this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
+     
+     this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
+   
+    }
+
   /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
    * Este evento envía la fila seleccionada (objeto completo) al componente padre.
