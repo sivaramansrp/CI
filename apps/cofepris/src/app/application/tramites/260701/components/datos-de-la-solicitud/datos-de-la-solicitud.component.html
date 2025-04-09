@@ -28,35 +28,15 @@
         <div class="row mt-5">
             <h6>Seleccione el tipo de operación que desea realizar*:</h6>
             <div class="col-md-8">
-                <div class="d-flex justify-content-between">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" 
-                            value="prorroga"
-                            name="flexRadioDefault1" 
-                            id="flexRadioDefault1">
-                        <label class="form-check-label fw-normal" for="flexRadioDefault1">
-                            Prórroga
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" 
-                            value="modificacion"
-                            name="flexRadioDefault2" 
-                            id="flexRadioDefault2">
-                        <label class="form-check-label fw-normal" for="flexRadioDefault2">
-                            Modificación
-                        </label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="radio" 
-                            value="modificacionYProrroga"
-                            name="flexRadioDefault3" 
-                            id="flexRadioDefault3">
-                        <label class="form-check-label fw-normal" for="flexRadioDefault3">
-                            Modificación y prórroga
-                        </label>
-                      </div>
-                </div>
+              <div class="d-flex justify-content-between">                
+                <app-input-radio
+                    [radioOptions]="radioOpcions"
+                    [selectedValue]="valorSeleccionado"
+                    (valueChange)="cambiarRadio($event)"
+                    id="cumplimiento"
+                    [layout]="'horizontal'">
+                </app-input-radio>
+              </div>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1" class="form-label">Justificación*:</label>
                     <textarea class="form-control h-100" id="exampleFormControlTextarea1" rows="6"></textarea>

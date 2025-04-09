@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputFechaComponent, JSONResponse, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFechaComponent, JSONResponse, REGEX_IMPORTE_PAGO, REGEX_LLAVE_DE_PAGO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
@@ -102,9 +102,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         claveDeReferencia: [this.solicitudState.claveDeReferencia,[Validators.maxLength(50)]],
         cadenaDependencia: [this.solicitudState.cadenaDependencia,Validators.maxLength(50)],
         banco: [this.solicitudState.banco],
-        llaveDePago: [this.solicitudState.llaveDePago,[Validators.required,Validators.pattern(/^[A-Z0-9]{10}$/)]],
+        llaveDePago: [this.solicitudState.llaveDePago,[Validators.required,Validators.pattern(REGEX_LLAVE_DE_PAGO)]],
         fechaPago: [this.solicitudState.fechaPago],
-        importePago: [this.solicitudState.importePago,Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        importePago: [this.solicitudState.importePago,Validators.pattern(REGEX_IMPORTE_PAGO)],
       });
     }
   

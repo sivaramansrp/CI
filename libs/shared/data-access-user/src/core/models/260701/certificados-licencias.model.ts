@@ -70,6 +70,17 @@ export interface MercanciasInfo {
     fechaCaducidad: string;
 }
 
+export interface Pedimento {
+  patente: number;
+  pedimento: number;
+  aduana: number;
+  idTipoPedimento: number;
+  descTipoPedimento: string;
+  numero: string;
+  comprobanteValor: string;
+  pedimentoValidado: boolean;
+}
+
 export interface Listaclaves {
     clave: string;
     fecha: string;

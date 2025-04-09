@@ -1,4 +1,4 @@
-import { AlDar, AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlDar, AlertComponent, InputCheckComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
@@ -26,7 +26,8 @@ import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
     TituloComponent,
     DomicilloDelComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent
+    RepresentanteLegalComponent,
+    InputRadioComponent
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.scss',
@@ -38,6 +39,19 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
      * @type {FormGroup}
      */
     public forma!: FormGroup;
+      /**
+    * Opciones de radio.
+    */
+   public radioOpcions = [
+    { label: 'Prórroga', value: 'Prórroga' },
+    { label: 'Modificación', value: 'Modificación' },
+    { label: 'Modificación y prórroga', value: 'Modificación y prórroga' }
+  ];
+
+    /**
+     * Valor seleccionado del radio.
+     */
+      public valorSeleccionado!: string;
    
     /**
      * Indica si la sección es colapsable.
@@ -130,6 +144,14 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
+
+  /**
+   * Cambia el valor seleccionado del radio.
+   * @param value Valor seleccionado.
+   */
+    public cambiarRadio(value: string | number) {
+      this.valorSeleccionado = value as string;
+    }
   
   /**
    * Método para actualizar el banco seleccionado.

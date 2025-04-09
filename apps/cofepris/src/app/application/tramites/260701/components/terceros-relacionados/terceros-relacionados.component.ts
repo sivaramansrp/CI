@@ -1,6 +1,6 @@
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConfiguracionColumna, Destinatario, Fabricante260701,TERCEROS, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConfiguracionColumna, Destinatario, Fabricante260701,Notificacion,NotificacionesComponent,Pedimento,TERCEROS, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
@@ -23,7 +23,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 @Component({
   selector: 'app-terceros-relacionados',
   standalone: true,
-  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, AlertComponent],
+  imports: [CommonModule, TituloComponent, TablaDinamicaComponent, AlertComponent,NotificacionesComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
@@ -35,6 +35,19 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * en el contexto de la aplicación.
    */
   TEXTOS = TERCEROS;
+
+  /**
+   * Representa una nueva instancia de notificación asociada con el componente.
+   * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+   */
+  public nuevaNotificacion!: Notificacion;
+  /**
+   * Representa el identificador de un elemento a eliminar.
+   * Esta propiedad se utiliza para almacenar el ID o índice del elemento específico
+   * que está marcado para ser eliminado dentro de una colección o lista.
+   */
+  public elementoParaEliminar!: number;
+  public pedimentos: Array<Pedimento> = [];
   /**
    * Una referencia a la instancia del modal de Bootstrap.
    * Esto se utiliza para controlar e interactuar con el cuadro de diálogo modal.
@@ -151,33 +164,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   }
 
   /**
-   * Abre un cuadro de diálogo modal utilizando la plantilla proporcionada.
-   *
-   * @param template - Un `TemplateRef<void>` que representa el contenido del modal a mostrar.
-   */
-  public abrirModal(template: TemplateRef<void>): void {
-    this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
-  }
-
-  /**
-   * Elimina la última entrada de los respectivos arreglos de datos si una fila está seleccionada
-   * y oculta el cuadro de diálogo modal.
-   *
-   * @remarks
-   * Este método asume que las propiedades `tieneFilaSeleccionada` y `tieneFilaSeleccionadaFabricante`
-   * se utilizan para determinar si una fila está seleccionada en sus respectivas tablas.
-   */
-  public eliminarDatos(): void {
-    if(this.tieneFilaSeleccionada) {
-      this.destinatarioDatos.pop();
-    }
-    if(this.tieneFilaSeleccionadaFabricante) {
-      this.fabricanteTablaDatos.pop();
-    }
-    this.modalRef?.hide();
-  }
-
-  /**
    * Actualiza el estado de si una fila está seleccionada en la tabla de destinatarios.
    */
   public setTablaSeleccionDestinatario(rowSeleccion: Destinatario[]): void {
@@ -208,6 +194,48 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
       }
     };
     this.modalRef = this.modalService.show(TercerosRelacionadosModalComponent, INITIAL_STATE);
+  }
+
+    /**
+   * Elimina un elemento de la lista de pedimentos en la posición especificada.
+   * 
+   * @param {number} i - El índice del elemento a eliminar.
+   * 
+   * @remarks
+   * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
+   * y se abre el modal para mostrar un aviso al usuario.
+   */
+    public abrirModal(i: number = 0): void {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: '¿Confirma la eliminación?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      }
+  
+      this.elementoParaEliminar = i;
+    }
+
+  /**
+   * Elimina un elemento de la tabla de pedimento, si se confirma la acción.
+   * @param borrar Indica si se debe proceder con la eliminación.
+   * @returns {void}
+   */
+  public eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    if(this.tieneFilaSeleccionada) {
+      this.destinatarioDatos.pop();
+    }
+    if(this.tieneFilaSeleccionadaFabricante) {
+      this.fabricanteTablaDatos.pop();
+    }
   }
 
 
