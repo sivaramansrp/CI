@@ -73,7 +73,7 @@ export class DatosResiduosPeligrososComponent implements OnInit {
     this.formularioResiduo = new FormGroup({
       fraccionArancelaria: new FormControl('', Validators.required),
       nico: new FormControl('', Validators.required),
-      acotacion: new FormControl('', Validators.required),
+      acotacion: new FormControl({value: '', disabled: true }),
       residuoPeligroso: new FormControl('', Validators.required),
       cantidad: new FormControl('', Validators.required),
       cantidadLetra: new FormControl({ value: '', disabled: true }),

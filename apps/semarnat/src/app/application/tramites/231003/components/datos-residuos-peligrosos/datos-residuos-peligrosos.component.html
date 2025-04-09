@@ -94,18 +94,18 @@
         <ng-titulo titulo="Datos de los residuos peligrosos a reciclar" />
         <form [formGroup]="formularioResiduo">
             <div class="row mb-3">
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <app-catalogo-select [catalogo]="fraccion" [label]="'Fracción arancelaria'" [required]="true"
                         formControlName="fraccionArancelaria"></app-catalogo-select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <app-catalogo-select [catalogo]="nico" [label]="'NICO'" [required]="true"
                         formControlName="nico"></app-catalogo-select>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <label class="form-label">Acotación*:</label>
                     <textarea class="form-control textarea-auto-height" rows="2" formControlName="acotacion"></textarea>
                 </div>
