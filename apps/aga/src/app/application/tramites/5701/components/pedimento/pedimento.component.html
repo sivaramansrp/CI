@@ -23,21 +23,14 @@
       </thead>
       <tbody>
         <tr>
-          @for (item of pedimentos; let i = $index; track i) {
-          <td>{{item.patente}}</td>
-          <td>{{item.pedimento}}</td>
-          <td>{{item.aduana}}</td>
-          <td>{{item.descTipoPedimento}}</td>
-          <td>{{item.numero}}</td>
-          <td>{{item.comprobanteValor}}</td>
-          <td>{{item.pedimentoValidado | booleanoSiNo}}</td>
+
           <td>
           <td>
             <button type="button" id="btnEliminar_{{i}}" class="btn btn-link" title="Eliminar" (click)="eliminar(i)">
               <i class="bi bi-trash3 bi-c"></i>
             </button>
           </td>
-          }
+
         </tr>
 
       </tbody>
@@ -45,26 +38,9 @@
   </div>
 </div>
 
-<!-- Modal error -->
-<div class="modal fade modal" #aviso tabindex="-1" aria-labelledby="modalAviso"
-  aria-hidden="true" data-bs-backdrop="static">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">{{ tituloModal }}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <p>{{ mensajeModal }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" data-bs-dismiss="modal" class="btn btn-default" #closeModal>
-          Cerrar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+</section>
+}

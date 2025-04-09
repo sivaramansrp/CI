@@ -1,6 +1,5 @@
 
 {
-  "code": 200,
   "data": [
     {
       "id": 0,
@@ -19,6 +18,5 @@
       "description": "chilpancingo oficina  de inspeccion"
     }
     
-  ],
-  "message": "punto de inspeccion"
+  ]
 }
