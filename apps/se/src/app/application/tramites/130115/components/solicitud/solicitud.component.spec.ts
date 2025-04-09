@@ -7,7 +7,7 @@ import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
-import { ImportacionDeVehiculosService } from '../../services/importacion-de-vehiculos.service';
+import { ImportacionVehiculosNuevosService } from '../../services/importacion-vehiculos-nuevos.service';
 import { HttpClientModule } from '@angular/common/http';
 
 
@@ -44,7 +44,7 @@ describe('SolicitudComponent', () => {
   let mockStore: jest.Mocked<Tramite130111Store>;
   let mockQuery: jest.Mocked<Tramite130111Query>;
   let mockService: jest.Mocked<any>;
-  let mockImportacionDeVehiculosService: Partial<ImportacionDeVehiculosService>;
+  let mockImportacionDeVehiculosService: Partial<ImportacionVehiculosNuevosService>;
 
   const mockProductoOptions: ProductoOpción[] = [
     { label: 'Nuevo', value: 'Nuevo' },
@@ -128,7 +128,7 @@ describe('SolicitudComponent', () => {
         FormBuilder,
         { provide: Tramite130111Store, useValue: mockStore },
         { provide: Tramite130111Query, useValue: mockQuery },
-        { provide: ImportacionDeVehiculosService, useValue: mockImportacionDeVehiculosService },
+        { provide: ImportacionVehiculosNuevosService, useValue: mockImportacionDeVehiculosService },
       ],
     }).compileComponents();
   });
@@ -156,7 +156,7 @@ describe('SolicitudComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudComponent],
       providers: [
-        { provide: ImportacionDeVehiculosService, useValue: mockImportacionDeVehiculosService },
+        { provide: ImportacionVehiculosNuevosService, useValue: mockImportacionDeVehiculosService },
       ],
     }).compileComponents();
   });
