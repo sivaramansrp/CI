@@ -58,7 +58,22 @@ export class RepresentanteLegalComponent implements OnInit,OnDestroy {
       this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.solicitudState = seccionState;
       })).subscribe();
+      this.crearRepresentanteForm();
+    }
 
+
+    /**
+     * Inicializa el grupo de formularios `representante` con controles y validadores predefinidos.
+     * 
+     * El grupo de formularios incluye los siguientes campos:
+     * - `rfc`: Un campo requerido inicializado con el valor `rfc` de `solicitudState`.
+     * - `nombre`: Un campo requerido inicializado con el valor `nombre` de `solicitudState`.
+     * - `apellidoPaterno`: Un campo requerido inicializado con el valor `apellidoPaterno` de `solicitudState`.
+     * - `apellidoMaterno`: Un campo requerido inicializado con el valor `apellidoMaterno` de `solicitudState`.
+     * 
+     * Cada campo está configurado con su valor inicial y reglas de validación respectivas.
+     */
+    public crearRepresentanteForm(): void {
       this.representante = this.fb.group({
         rfc: [this.solicitudState.rfc,Validators.required],
         nombre: [{ value: this.solicitudState.nombre, disabled: false },[Validators.required]],

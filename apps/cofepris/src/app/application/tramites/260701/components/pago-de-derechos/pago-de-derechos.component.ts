@@ -80,15 +80,31 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.solicitudState = seccionState;
       })).subscribe();
+      this.crearFormSolicitudForm();
+    }
 
 
+    /**
+     * Inicializa el FormGroup `formSolicitud` con controles predefinidos y sus validadores.
+     * 
+     * El formulario incluye los siguientes campos:
+     * - `claveDeReferencia`: Un campo de texto con una longitud máxima de 50 caracteres.
+     * - `cadenaDependencia`: Un campo de texto con una longitud máxima de 50 caracteres.
+     * - `banco`: Un campo para la información del banco, sin validación específica aplicada.
+     * - `llaveDePago`: Un campo alfanumérico obligatorio con exactamente 10 caracteres en mayúsculas o dígitos.
+     * - `fechaPago`: Un campo para la fecha de pago, sin validación específica aplicada.
+     * - `importePago`: Un campo para el monto del pago, que permite solo caracteres alfanuméricos.
+     * 
+     * Se aplican validadores para garantizar la integridad de los datos y hacer cumplir formatos de entrada específicos.
+     */
+    public crearFormSolicitudForm(): void {
       this.formSolicitud = this.fb.group({
-          claveDeReferencia: [this.solicitudState.claveDeReferencia,[Validators.maxLength(50)]],
-          cadenaDependencia: [this.solicitudState.cadenaDependencia,Validators.maxLength(50)],
-          banco: [this.solicitudState.banco],
-          llaveDePago: [this.solicitudState.llaveDePago,[Validators.required,Validators.pattern(/^[A-Z0-9]{10}$/)]],
-          fechaPago: [this.solicitudState.fechaPago],
-          importePago: [this.solicitudState.importePago,Validators.pattern(/^[a-zA-Z0-9]*$/)],
+        claveDeReferencia: [this.solicitudState.claveDeReferencia,[Validators.maxLength(50)]],
+        cadenaDependencia: [this.solicitudState.cadenaDependencia,Validators.maxLength(50)],
+        banco: [this.solicitudState.banco],
+        llaveDePago: [this.solicitudState.llaveDePago,[Validators.required,Validators.pattern(/^[A-Z0-9]{10}$/)]],
+        fechaPago: [this.solicitudState.fechaPago],
+        importePago: [this.solicitudState.importePago,Validators.pattern(/^[a-zA-Z0-9]*$/)],
       });
     }
   
