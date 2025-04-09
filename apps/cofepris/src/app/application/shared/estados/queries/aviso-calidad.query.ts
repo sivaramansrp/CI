@@ -3,11 +3,9 @@
  * Este servicio utiliza Akita para manejar el estado de la aplicación.
  */
 
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store'; 
 import { Injectable } from '@angular/core'; // Importa el decorador Injectable de Angular.
 import { Query } from '@datorama/akita'; // Importa Query de Akita para realizar consultas al estado.
-
-import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store'; 
-// Importa el store y el estado relacionado con Aviso de Calidad.
 
 /**
  * @Injectable Marca esta clase como un servicio que puede ser inyectado en otros componentes o servicios.

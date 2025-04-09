@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 
+import { Subject, map, takeUntil } from 'rxjs';
+
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 
-import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
-
-import { Subject, map, takeUntil } from 'rxjs';
 
 /**
  * @description
@@ -85,9 +85,9 @@ export class DatosDelEstablecimientoRFCComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.datosDelForm = this.fb.group({
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
-      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]],
       rfcDel: [this.solicitudState?.rfcDel, [Validators.required, Validators.maxLength(254)]],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial, [Validators.required, Validators.maxLength(254)]],
+      correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(320)]]  
     });
   }
 

@@ -75,7 +75,9 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     private service: AvisoImportacionService, // Inyección del servicio para obtener datos.
     private avisocalidadStore: AvisocalidadStore, // Inyección del store para manejar el estado.
     private avisocalidadQuery: AvisocalidadQuery // Inyección de la query para consultar el estado.
-  ) {}
+  ) {
+    //constructor
+  }
 
   /**
    * method ngOnInit

@@ -11,3 +11,8 @@
 .overflow-auto{
     overflow: auto;
 }
+
+.usoEspecifico{
+    height: 50%;
+    resize: none;
+}
