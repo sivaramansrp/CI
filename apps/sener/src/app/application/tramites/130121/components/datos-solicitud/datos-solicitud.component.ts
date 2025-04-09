@@ -1068,6 +1068,8 @@ enCambioDeBloque(bloqueId: number): void {
       setNico: (val) => this.tramite130121Store.setNico(String(val)),
       setFraccion: (val) => this.tramite130121Store.setFraccion(String(val)),
       setAcotacion: (val) => this.tramite130121Store.setAcotacion(String(val)),
+      setDescripcionNico: (val) => this.tramite130121Store.setDescripcionNico(String(val)),
+
     };
   
     const METODO = METHOD_MAPPING[event.metodoNombre];
