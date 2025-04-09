@@ -1,5 +1,5 @@
 import { ADV_MAXIMO_PERSONAS, ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS, ERR_CAMPOS_OBLIGATORIOS, ERR_INPUT_BUSQUEDA_VACIO, MSG_ELIMINA_ELEMENTO, TITULO_MODAL } from '../../../../core/enums/5701/tramite5701.enum';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -21,7 +21,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
-export class AgregaPersonasComponent implements OnInit {
+export class AgregaPersonasComponent implements OnInit, OnDestroy {
   gafeteRespoDespacho: FormControl = new FormControl('', [Validators.maxLength(25)]);
 
   personaForm: FormGroup = this.fb.group({
@@ -174,7 +174,7 @@ export class AgregaPersonasComponent implements OnInit {
 
     if (responsable !== null) {
       this.personas.push(responsable);
-      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);      
+      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -219,18 +219,27 @@ export class AgregaPersonasComponent implements OnInit {
     this.mensajeModal = '';
   }
 
-    /**
-     * Establece los valores en el store de tramite5701.
-     *
-     * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-     * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-     * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-     * @returns {void}
-     */
-    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
-      const VALOR = form.get(campo)?.value;
-      (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);  
-    }
+  /**
+   * Establece los valores en el store de tramite5701.
+   *
+   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * @returns {void}
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite5701Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.tramite5701Store[metodoNombre] as (value: string) => void)(VALOR);
+  }
 
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Notifica y completa el observable `destroyNotifier$` para limpiar suscripciones.
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
