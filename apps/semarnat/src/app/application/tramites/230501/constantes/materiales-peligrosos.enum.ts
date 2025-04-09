@@ -1,4 +1,4 @@
-import { TablaNumeroCasType } from "../models/materiales-peligrosos.model";
+import { ComposicionMaterial, TablaNumeroCasType } from "../models/materiales-peligrosos.model";
 
 /**
  * Define una constante que representa la lista de pasos para un asistente (wizard).
@@ -48,16 +48,78 @@ export const SECCIONES_TRAMITE_260206 = {
     },
   };
 
-  export const SCIAN_TABLA = [
+  /**
+   * Representa una tabla de configuración para materiales peligrosos con información específica
+   * como el número CAS, descripción no arancelaria, nombre químico y constancia CISEN.
+   * 
+   * Cada objeto en la tabla contiene las siguientes propiedades:
+   * 
+   * - `encabezado`: El título de la columna en la tabla.
+   * - `clave`: Una función que toma un elemento de tipo `TablaNumeroCasType` y devuelve el valor correspondiente
+   *   para esa columna.
+   * - `orden`: El orden de la columna en la tabla.
+   * 
+   * @constant
+   * @type {Array<{ encabezado: string; clave: (ele: TablaNumeroCasType) => string; orden: number }>}
+   */
+  export const NUMERO_CAS_TABLA = [
     {
-      encabezado: 'Clave S.C.I.A.N.',
-      clave: (ele: TablaNumeroCasType): string => ele.clave,
+      encabezado: 'Número CAS',
+      clave: (ele: TablaNumeroCasType): string => ele.numeroCas,
       orden: 1,
     },
     {
-      encabezado: 'Descripcion del S.C.I.A.N.',
-      clave: (ele: TablaNumeroCasType): string => ele.descripcion,
+      encabezado: 'Descripción no arancelaria',
+      clave: (ele: TablaNumeroCasType): string => ele.descripcionNoArancelaria,
+      orden: 1,
+    },
+    {
+      encabezado: 'Nombre químico/Nomenclatura IUPAC del material',
+      clave: (ele: TablaNumeroCasType): string => ele.nombreQuimico,
+      orden: 1,
+    },
+    {
+      encabezado: 'Constancia CISEN',
+      clave: (ele: TablaNumeroCasType): string => ele.constanciaCisen,
       orden: 1,
     },
   ];
 
+  /**
+   * Representa una tabla de configuración para la composición de materiales peligrosos.
+   * 
+   * Cada objeto en la tabla contiene las siguientes propiedades:
+   * 
+   * - `encabezado`: El título de la columna en la tabla.
+   * - `clave`: Una función que toma un elemento de tipo `ComposicionMaterial` y devuelve el valor correspondiente
+   *   para esa columna.
+   * - `orden`: El orden de la columna en la tabla.
+   * 
+   * @constant
+   * @type {Array<{ encabezado: string; clave: (ele: ComposicionMaterial) => string; orden: number }>}}
+   */
+  export const COMPOSICION_TABLA = [
+    {
+      encabezado: 'Componente del material',
+      clave: (ele: ComposicionMaterial): string => ele.componente,
+      orden: 1,
+    },
+    {
+      encabezado: 'Porcentaje de concentración',
+      clave: (ele: ComposicionMaterial): string => ele.porcentajeConcentracion.toString(),
+      orden: 1,
+    },
+  ];
+
+  /**
+ * Constant representing the invoice date field configuration.
+ * 
+ * @property {string} labelNombre - The label for the invoice date field.
+ * @property {boolean} required - Indicates if the invoice date field is required.
+ * @property {boolean} habilitado - Indicates if the invoice date field is enabled.
+ */
+export const FECHA_FACTURA = {
+  labelNombre: 'Fecha de la factura',
+  required: false,
+  habilitado: true,
+};

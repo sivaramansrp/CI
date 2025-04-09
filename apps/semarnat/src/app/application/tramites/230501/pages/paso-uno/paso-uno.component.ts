@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
-import { SECCIONES_TRAMITE_260206 } from '../../constantes/maquila-materias-primas.enum';
+import { SECCIONES_TRAMITE_260206 } from '../../constantes/materiales-peligrosos.enum';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
 @Component({

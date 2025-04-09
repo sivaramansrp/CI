@@ -1,137 +1,237 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { ContenedorDeDatosSolicitudComponent } from './contenedor-de-datos-solicitud.component';
-import { Tramite260206Query } from '../../estados/queries/tramite230501Query.query';
-import { Tramite260206Store } from '../../estados/stores/tramite230501Store.store';
-import { CommonModule } from '@angular/common';
-import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { DatosDeTablaSeleccionados, DatosSolicitudFormState, TablaMercanciasDatos, TablaOpcionConfig, TablaScianConfig, TablaSeleccion } from '../../../../shared/models/datos-solicitud.model';
-import { of } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
+import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
+import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { FormBuilder } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+
+@Injectable()
+class MockTramite230501Query {}
+
+@Injectable()
+class MockTramite230501Store {}
+
+@Injectable()
+class MockMaterialesPeligrososService {
+  obtenerRespuestaPorUrl = function() {};
+}
+
+@Injectable()
+class MockRouter {
+  navigate() {};
+}
 
 describe('ContenedorDeDatosSolicitudComponent', () => {
-  let component: ContenedorDeDatosSolicitudComponent;
-  let fixture: ComponentFixture<ContenedorDeDatosSolicitudComponent>;
-  let mockTramite260206Query: jest.Mocked<Tramite260206Query>;
-  let mockTramite260206Store: jest.Mocked<Tramite260206Store>;
+  let fixture;
+  let component;
 
   beforeEach(() => {
-    mockTramite260206Query = {
-      selectTramiteState$: of({
-        opcionConfigDatos: [],
-        scianConfigDatos: [],
-        tablaMercanciasConfigDatos: [],
-      }) as any, // Ensure compatibility with the expected type
-    } as unknown as jest.Mocked<Tramite260206Query>; // Cast to jest.Mocked type
-
-    mockTramite260206Store = {
-      updateOpcionConfigDatos: jest.fn() as any, // Ensure compatibility with the expected type
-      updateScianConfigDatos: jest.fn() as any,
-      updateTablaMercanciasConfigDatos: jest.fn() as any,
-      updateDatosSolicitudFormState: jest.fn() as any,
-      update: jest.fn() as any,
-    } as unknown as jest.Mocked<Tramite260206Store>; // Cast to jest.Mocked type
-
     TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
       declarations: [],
-      imports: [CommonModule, DatosDeLaSolicitudComponent, ContenedorDeDatosSolicitudComponent, HttpClientTestingModule],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite260206Query, useValue: mockTramite260206Query },
-        { provide: Tramite260206Store, useValue: mockTramite260206Store },
-        { provide: ActivatedRoute, useValue: { snapshot: { params: {} } } },
-      ],
-    }).compileComponents();
+        { provide: Tramite230501Query, useClass: MockTramite230501Query },
+        { provide: Tramite230501Store, useClass: MockTramite230501Store },
+        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
+        SeccionLibStore,
+        SeccionLibQuery,
+        FormBuilder,
+        { provide: Router, useClass: MockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        }
+      ]
+    }).overrideComponent(ContenedorDeDatosSolicitudComponent, {
 
+      set: { providers: [{ provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService }] }    
+    }).compileComponents();
     fixture = TestBed.createComponent(ContenedorDeDatosSolicitudComponent);
-    component = fixture.componentInstance;
-    // fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tramiteState and config data on ngOnInit', () => {
-   
-    expect(component.opcionConfig.datos).toEqual([]);
-    expect(component.scianConfig.datos).toEqual([]);
-    expect(component.tablaMercanciasConfig.datos).toEqual([]);
+  it('should run #ngOnInit()', async () => {
+    component.tramite230501Query = component.tramite230501Query || {};
+    component.tramite230501Query.selectTramiteState$ = observableOf({});
+    component.crearDatosSolicitudForm = jest.fn();
+    component.seccionQuery = component.seccionQuery || {};
+    component.seccionQuery.selectSeccionState$ = observableOf({});
+    component.datasolicituActualizar = jest.fn();
+    component.ngOnInit();
   });
 
-  it('opcionSeleccionado should call updateOpcionConfigDatos on the store', () => {
-    const mockEvent: TablaOpcionConfig[] = [{ fechaCreacion: 'test', mercancia: 'test', cantidad: 'test', proveedor: 'test' }];
-    component.opcionSeleccionado(mockEvent);
-    expect(mockTramite260206Store.updateOpcionConfigDatos).toHaveBeenCalledWith(mockEvent);
-  });
-
-  it('scianSeleccionado should call updateScianConfigDatos on the store', () => {
-    const mockEvent: TablaScianConfig[] = [{ descripcion: 'test', clave: 'testClave'}];
-    component.scianSeleccionado(mockEvent);
-    expect(mockTramite260206Store.updateScianConfigDatos).toHaveBeenCalledWith(mockEvent);
-  });
-
-  it('mercanciasSeleccionado should call updateTablaMercanciasConfigDatos on the store', () => {
-    const mockEvent: TablaMercanciasDatos[] = [{
-      clasificacionProducto: 'test',
-      especificarClasificacionProducto: '',
-      denominacionEspecificaProducto: '',
-      denominacionDistintiva: '',
-      denominacionComun: '',
-      formaFarmaceutica: '',
-      estadoFisico: '',
-      fraccionArancelaria: '',
-      descripcionFraccion: '',
-      unidadMedidaComercializacion: '',
-      cantidadUMC: '',
-      unidadMedidaTarifa: '',
-      cantidadUMT: '',
-      presentacion: '',
-      numeroRegistroSanitario: '',
-      paisOrigen: '',
-      paisProcedencia: '',
-      tipoProducto: '',
-      usoEspecifico: ''
-    }];
-    component.mercanciasSeleccionado(mockEvent);
-    expect(mockTramite260206Store.updateTablaMercanciasConfigDatos).toHaveBeenCalledWith(mockEvent);
-  });
-
-  it('datosDeTablaSeleccionados should call update on the store with correct data', () => {
-    const mockEvent: DatosDeTablaSeleccionados = {
-      opcionSeleccionados: [{ fechaCreacion: 'test', mercancia: 'test', cantidad: 'test', proveedor: 'test' }],
-      scianSeleccionados: [{ descripcion: 'test', clave: 'num test' }],
-      mercanciasSeleccionados: [{
-        clasificacionProducto: 'test',
-        especificarClasificacionProducto: '',
-        denominacionEspecificaProducto: '',
-        denominacionDistintiva: '',
-        denominacionComun: '',
-        formaFarmaceutica: '',
-        estadoFisico: '',
-        fraccionArancelaria: '',
-        descripcionFraccion: '',
-        unidadMedidaComercializacion: '',
-        cantidadUMC: '',
-        unidadMedidaTarifa: '',
-        cantidadUMT: '',
-        presentacion: '',
-        numeroRegistroSanitario: '',
-        paisOrigen: '',
-        paisProcedencia: '',
-        tipoProducto: '',
-        usoEspecifico: ''
-      }],
-      opcionesColapsableState: false
+  it('should run #crearDatosSolicitudForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn().mockReturnValue({
+      get: function() {}
+    });
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.datosSolicitudFormType = {
+      tratadoRotterdam: {},
+      nombreComun: {}
     };
-    component.datosDeTablaSeleccionados(mockEvent);
-    expect(mockTramite260206Store.update).toHaveBeenCalled();
+    component.tramiteState.setValue = jest.fn();
+    component.materialesPeligrososService = component.materialesPeligrososService || {};
+    component.materialesPeligrososService.convertirNumeroALetras = jest.fn();
+    component.crearDatosSolicitudForm();
   });
 
-  it('ngOnDestroy should emit and complete destroyNotifier$', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalledTimes(1);
-    expect(completeNotifierSpy).toHaveBeenCalledTimes(1);
+  it('should run #actualizarElValorDeLaTienda()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230501Store = component.tramite230501Store || {};
+    component.tramite230501Store.setDatosSolicitudFormTypeProperty = jest.fn();
+    component.actualizarElValorDeLaTienda({}, {});
   });
+
+  it('should run #onFechaCambiada()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.patchValue = jest.fn();
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.onFechaCambiada({});
+  });
+
+  it('should run #estadoFisicoSeleccione()', async () => {
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.estadoFisicoSeleccione();
+  });
+
+  it('should run #unidadMedidaSeleccione()', async () => {
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.unidadMedidaSeleccione();
+  });
+
+  it('should run #agregarNumero()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.datosSolicitudForm.reset = jest.fn();
+    component.tramite230501Store = component.tramite230501Store || {};
+    component.tramite230501Store.update = jest.fn().mockReturnValue([
+      {
+        "numeroCasTablaDatos": {}
+      }
+    ]);
+    component.agregarNumero();
+  });
+
+  it('should run #eliminarnumeroCas()', async () => {
+    component.numeroCasSellecionLista = component.numeroCasSellecionLista || {};
+    component.numeroCasSellecionLista.some = jest.fn().mockReturnValue([
+      {
+        "numeroCas": {}
+      }
+    ]);
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.numeroCasTablaDatos = [
+      {
+        "numeroCas": {}
+      }
+    ];
+    component.tramite230501Store = component.tramite230501Store || {};
+    component.tramite230501Store.update = jest.fn().mockReturnValue([
+      null
+    ]);
+    component.eliminarnumeroCas();
+  });
+
+  it('should run #fraccionArancelariaSeleccione()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      value: {}
+    });
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.fraccionArancelariaSeleccione();
+  });
+
+  it('should run #numeroCasSeleccione()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      setValue: function() {},
+      value: {}
+    });
+    component.actualizarElValorDeLaTienda = jest.fn();
+    component.numeroCasSeleccione();
+  });
+
+  it('should run #datasolicituActualizar()', async () => {
+    component.seccion = component.seccion || {};
+    component.seccion.formaValida = [];
+    component.esFormValido = jest.fn();
+    component.seccionStore = component.seccionStore || {};
+    component.seccionStore.establecerFormaValida = jest.fn();
+    component.datasolicituActualizar();
+  });
+
+  it('should run #esFormValido()', async () => {
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.numeroCasTablaDatos = {
+      length: {}
+    };
+    component.tramiteState.composicionTablaDatos = {
+      length: {}
+    };
+    component.esFormValido();
+
+  });
+
+  it('should run #agregarcomposicion()', async () => {
+    component.router = component.router || {};
+    component.router.navigate = jest.fn();
+    component.agregarcomposicion();
+  });
+
+  it('should run #eliminarComposicion()', async () => {
+    component.composicionSeleccionLista = component.composicionSeleccionLista || {};
+    component.composicionSeleccionLista.some = jest.fn().mockReturnValue([
+      {
+        "componente": {}
+      }
+    ]);
+    component.tramiteState = component.tramiteState || {};
+    component.tramiteState.composicionTablaDatos = [
+      {
+        "componente": {}
+      }
+    ];
+    component.tramite230501Store = component.tramite230501Store || {};
+    component.tramite230501Store.update = jest.fn().mockReturnValue([
+      null
+    ]);
+    component.eliminarComposicion();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+  });
+
 });

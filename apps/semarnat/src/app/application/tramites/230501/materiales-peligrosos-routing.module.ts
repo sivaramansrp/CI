@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { ComposicionComponent } from './components/composicion/composicion.component';
 import { NgModule } from '@angular/core';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
@@ -12,6 +13,10 @@ const ROUTES: Routes = [
     pathMatch: 'full',
     redirectTo: 'solicitud',
   },
+  {
+    path: 'composicion',
+    component: ComposicionComponent
+  }
 ];
 
 @NgModule({

@@ -67,4 +67,42 @@ export class MaterialesPeligrososService {
       });
     }
   }
+
+
+  // eslint-disable-next-line class-methods-use-this
+  convertirNumeroALetras(num: number): string {
+    const UNIDADES = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+    const ESPECIALES = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince'];
+    const DECENAS = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+    const CENTENAS = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+  
+    if (num === 0) {return 'cero'}
+    if (num === 100) {return 'cien'}
+  
+    let letras = '';
+  
+    const C = Math.floor(num / 100);
+    const D = Math.floor((num % 100) / 10);
+    const U = num % 10;
+    const DOS_DIGITOS = num % 100;
+  
+    if (C > 0) {
+      letras += CENTENAS[C] + ' ';
+    }
+  
+    if (DOS_DIGITOS < 10) {
+      letras += UNIDADES[DOS_DIGITOS];
+    } else if (DOS_DIGITOS >= 10 && DOS_DIGITOS < 16) {
+      letras += ESPECIALES[DOS_DIGITOS - 10];
+    } else if (DOS_DIGITOS < 30) {
+      letras += 'veinti' + UNIDADES[U];
+    } else {
+      letras += DECENAS[D];
+      if (U > 0) {
+        letras += ' y ' + UNIDADES[U];
+      }
+    }
+  
+    return letras.trim();
+  }
 }

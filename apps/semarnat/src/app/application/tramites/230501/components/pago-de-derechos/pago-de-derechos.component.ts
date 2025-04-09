@@ -1,5 +1,5 @@
 import { CatalogoSelectComponent, SeccionLibQuery, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   delay,
@@ -18,22 +18,60 @@ import { Tramite230501Store } from '../../estados/stores/tramite230501Store.stor
 
 @Component({
   selector: 'app-pago-de-derechos',
-    standalone: true,
-    imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.scss',
   providers: [MaterialesPeligrososService],
 })
-export class PagoDeDerechosComponent implements OnInit {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+  /**
+   * Formulario reactivo utilizado para gestionar los datos relacionados con el pago de derechos.
+   * Este formulario contiene los controles necesarios para capturar y validar la información
+   * requerida en el proceso de pago.
+   */
   public pagoDerechos!: FormGroup;
+  /**
+   * Clasificación asociada al componente.
+   * Esta propiedad almacena una cadena que representa la clasificación actual.
+   */
   public clasificacion: string = '';
+  /**
+   * Sujeto utilizado como notificador para la destrucción de componentes.
+   * Este observable se utiliza para cancelar suscripciones y evitar fugas de memoria
+   * cuando el componente se destruye.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Representa el estado actual del pago de derechos.
+   * Esta propiedad se utiliza para gestionar y almacenar 
+   * la información relacionada con el estado del proceso 
+   * de pago de derechos en el componente.
+   */
   public pagoDerechosState!: PagoDerechosState;
+  /**
+   * Representa el estado de la sección en el componente.
+   * Esta propiedad se utiliza para manejar el estado de la sección
+   * dentro del flujo de trabajo del componente.
+   */
   private seccion!: SeccionLibState;
 
+  /**
+   * Constructor de la clase PagoDeDerechosComponent.
+   * 
+   * @param materialesPeligrososService Servicio para inicializar y gestionar el catálogo de materiales peligrosos.
+   * @param fb Constructor de formularios reactivos para la creación y gestión de formularios.
+   * @param tramite230501Store Almacén para gestionar el estado relacionado con el trámite 230501.
+   * @param tramite230501Query Consultas relacionadas con el estado del trámite 230501.
+   * @param seccionQuery Consultas relacionadas con las secciones de la aplicación.
+   * @param seccionStore Almacén para gestionar el estado de las secciones de la aplicación.
+   * 
+   * @description Este constructor inicializa el componente y llama al servicio de materiales peligrosos
+   * para inicializar el catálogo de pago de derechos.
+   */
   constructor(public materialesPeligrososService: MaterialesPeligrososService, private fb: FormBuilder,
-    public tramite230501Store:Tramite230501Store, public tramite230501Query: Tramite230501Query,
-    private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore
+    public tramite230501Store: Tramite230501Store, public tramite230501Query: Tramite230501Query,
+    private seccionQuery: SeccionLibQuery, private seccionStore: SeccionLibStore
   ) {
     this.materialesPeligrososService.inicializaPagoDerechosCatalogo();
   }
@@ -44,13 +82,13 @@ export class PagoDeDerechosComponent implements OnInit {
    * Los campos 'banco' y 'fecha' son obligatorios.
    */
   ngOnInit(): void {
-     this.tramite230501Query.seletPagoDerechosState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.pagoDerechosState = seccionState;
-          })
-        ).subscribe();
+    this.tramite230501Query.seletPagoDerechosState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.pagoDerechosState = seccionState;
+        })
+      ).subscribe();
     this.createPagoDerechos();
     this.seccionQuery.selectSeccionState$
       .pipe(
@@ -82,7 +120,7 @@ export class PagoDeDerechosComponent implements OnInit {
       .subscribe();
   }
 
-  
+
   /**
    * Este método inicializa el formulario `pagoDerechos` con varios campos predefinidos
    * y sus respectivas validaciones. Algunos campos están deshabilitados y tienen valores
@@ -111,7 +149,7 @@ export class PagoDeDerechosComponent implements OnInit {
     }
   }
 
-  
+
   /**
    * Método para manejar la selección de clasificación.
    */
@@ -120,4 +158,16 @@ export class PagoDeDerechosComponent implements OnInit {
     this.tramite230501Store.setPagoDerechosStateProperty('banco', this.clasificacion);
   }
 
+  /**
+ * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+ *
+ * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+ * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+ *
+ * @returns {void} No retorna ningún valor.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

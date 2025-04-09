@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '../../constantes/maquila-materias-primas.enum';
+import { PASOS } from '../../constantes/materiales-peligrosos.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
