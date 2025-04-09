@@ -53,7 +53,9 @@ export class ServicioDeMensajesService {
    * 
    * @param desistimientoStore Store para gestionar los datos del formulario de desistimiento.
    */
-  constructor(private readonly desistimientoStore: DesistimientoStore) {}
+  constructor(private readonly desistimientoStore: DesistimientoStore) {
+    // Constructor is used for dependency injection
+  }
 
   /**
    * Envía un mensaje general a través del observable `mensaje$`.

@@ -6,9 +6,9 @@ import { OnInit } from '@angular/core';
 import { PASOS } from '../../constants/intropermiso.enum';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { takeUntil } from 'rxjs/operators';
 
 interface AccionBoton {
   accion: string;
@@ -91,7 +91,9 @@ export class IntroPermisoComponent implements OnInit, OnDestroy{
    * Used to handle communication between components.
    * @param {ServicioDeMensajesService} servicioDeMensajesService
    */
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService){}
+  constructor(private servicioDeMensajesService: ServicioDeMensajesService){
+    // Constructor is used for dependency injection
+  }
 /**
    * @description Lifecycle method executed when the component initializes.
    * Subscribes to the message service to update the search display state.
