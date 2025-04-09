@@ -151,6 +151,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-transportista',
+    loadChildren: () =>
+      import('./tramites/40302/registro-transportista.module').then(
+        (m) => m.RegistroTransportistaModule
+      ),
+  },
+  {
     path: 'attention-Of-Renewal',
     loadChildren: () =>
       import('./tramites/40403/attentionOfRenewal.module').then(

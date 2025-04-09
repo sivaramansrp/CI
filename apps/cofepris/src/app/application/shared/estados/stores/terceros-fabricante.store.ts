@@ -76,7 +76,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
    *
    * @param fabricante Arreglo de datos del fabricante.
    */
-  public setFabricante(fabricante: TablaDatos[]) {
+  public setFabricante(fabricante: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Fabricante: fabricante,
@@ -88,7 +88,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
    *
    * @param formulador Arreglo de datos del formulador.
    */
-  public setFormulador(formulador: TablaDatos[]) {
+  public setFormulador(formulador: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Formulador: formulador,
@@ -100,7 +100,7 @@ export class TercerosFabricanteStore extends Store<TercerosFabricanteState> {
    *
    * @param proveedor Arreglo de datos del proveedor.
    */
-  public setProveedor(proveedor: TablaDatos[]) {
+  public setProveedor(proveedor: TablaDatos[]): void {
     this.update((state) => ({
       ...state,
       Proveedor: proveedor,

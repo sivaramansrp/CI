@@ -36,17 +36,20 @@ const ROUTES: Routes = [
         './tramites/260204/permiso-sanitario-importacion-medicamentos.module'
       ).then((m) => m.PermisoSanitarioImportacionMedicamentosModule),
   },
-  
+
   {
     path: 'aviso-exportacion',
-    loadChildren: () => import('./tramites/260604/aviso-exportacion.module').then(m => m.AvisoExportacionModule)  
+    loadChildren: () =>
+      import('./tramites/260604/aviso-exportacion.module').then(
+        (m) => m.AvisoExportacionModule
+      ),
   },
   {
     path: 'maquila-materias-primas',
     loadChildren: () =>
-      import(
-        './tramites/260206/maquila-materias-primas.module'
-      ).then((m) => m.MaquilaMateriasPrimasModule),
+      import('./tramites/260206/maquila-materias-primas.module').then(
+        (m) => m.MaquilaMateriasPrimasModule
+      ),
   },
   {
     path: 'permiso-plaguicidas',
@@ -65,14 +68,16 @@ const ROUTES: Routes = [
   {
     path: 'importacion-psicotropicos',
     loadChildren: () =>
-      import('./tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module').then(
-        (m) => m.CertificadosLicenciasPermisosModule),
+      import(
+        './tramites/260303/certificados-licencias-permisos/certificados-licencias-permisos.module'
+      ).then((m) => m.CertificadosLicenciasPermisosModule),
   },
   {
     path: 'importacion-dispositivos-medicos-uso',
     loadChildren: () =>
-      import('./tramites/260214/importacion-dispositivos-medicos-uso.module').then(
-        (m) => m.ImportacionDispositivosMedicosUsoModule)
+      import(
+        './tramites/260214/importacion-dispositivos-medicos-uso.module'
+      ).then((m) => m.ImportacionDispositivosMedicosUsoModule),
   },
   {
     path: 'permiso-sanitario-importacion',
@@ -82,14 +87,19 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-certificados',
+    loadChildren: () =>
+      import('./tramites/260701/certificados/certificados.module').then(
+        (m) => m.CertificadosModule),
+  },
+  {
     path: 'permiso-importacion-biologica',
     loadChildren: () =>
       import('./tramites/260402/permiso-importacion-biologica.module').then(
         (m) => m.EntradaHumanaModule
-
       ),
-    },
-    {
+  },
+  {
     path: 'permiso-sanitario-medicos-uso-personal',
     loadChildren: () =>
       import(
@@ -147,20 +157,27 @@ const ROUTES: Routes = [
         './tramites/260216/importacion-dispositivos-medicos-donacion.module'
       ).then((m) => m.ImportacionDispositivosMedicosDonacionModule),
   },
- 
+
   {
     path: 'territorio-nacional',
     loadChildren: () =>
       import('./tramites/260401/territorio-nacional-solicitude.module').then(
         (m) => m.TerritorioNacionalSolicitudeModule
       ),
-    },
-    {
+  },
+  {
     path: 'medicamentos-registro-sanitario',
     loadChildren: () =>
-      import('./tramites/260203/permiso-sanitario-importacion-medicamentos.module').then(
-        (m) => m.PermisoSanitarioImportacion260203Module
-      ),
+      import(
+        './tramites/260203/permiso-sanitario-importacion-medicamentos.module'
+      ).then((m) => m.PermisoSanitarioImportacion260203Module),
+  },
+  {
+    path: 'permiso-experimentales-plaguicidas',
+    loadChildren: () =>
+      import(
+        './tramites/260503/permiso-experimentales-plaguicidas.module'
+      ).then((m) => m.PermisoExperimentalesPlaguicidasModule),
   },
   {
     path: 'retiros-cofepris',
@@ -168,7 +185,14 @@ const ROUTES: Routes = [
       import('./tramites/261702/retiros-cofepris.module').then(
         (m) => m.RetirosCofeprisModule
       ),
-  }
+  },
+  {
+    path: 'muestras-plaguicidas',
+    loadChildren: () =>
+      import('./tramites/260502/muestras-plaguicidas.module').then(
+        (m) => m.MuestrasPlaguicidasModule
+      ),
+  },
 ];
 
 @NgModule({
