@@ -523,6 +523,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.tramite130113Store.setFraccionTigiePartidasDeLaMercancia(valor),
     setFraccionDescripcionPartidasDeLaMercancia: (valor) =>
       this.tramite130113Store.setFraccionDescripcionPartidasDeLaMercancia(valor),
+    setFraccion: (valor) =>
+      this.tramite130113Store.setFraccion(valor),
     setValorPartidaUSDPartidasDeLaMercancia: (valor) =>
       this.tramite130113Store.setValorPartidaUSDPartidasDeLaMercancia(valor),
     setregimen: (valor) => this.tramite130113Store.setRegimen(valor),
@@ -545,6 +547,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     setRepresentacion: (valor) =>
       this.tramite130113Store.setRepresentacion(valor),
   };
+  
 
   /**
    * setValoresStore

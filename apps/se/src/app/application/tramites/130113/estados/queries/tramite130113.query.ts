@@ -64,6 +64,14 @@ export class Tramite130113Query extends Query<Tramite130113State> {
     (state) => state.cantidadPartidasDeLaMercancia
   );
 
+   /**
+   * @descripcion
+   * Selector que devuelve la fraccionDescripcionPartidasDeLaMercancia.
+   */
+   fraccionDescripcionPartidasDeLaMercancia$ = this.select(
+    (state) => state.fraccionDescripcionPartidasDeLaMercancia
+  );
+
   /**
    * @descripcion
    * Selector que devuelve el valor de la partida en USD de las partidas de la mercancía.
