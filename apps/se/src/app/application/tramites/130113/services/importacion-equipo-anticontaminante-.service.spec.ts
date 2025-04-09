@@ -111,7 +111,7 @@ describe('ImportacionEquipoAnticontaminanteService', () => {
       expect(data).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/assets/json/130202/fraccion-descripcion-partidas-de-la-mercancia.json');
+    const req = httpMock.expectOne('/assets/json/130113/fraccion-descripcion-partidas-de-la-mercancia.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

@@ -33,7 +33,7 @@ export class ImportacionEquipoAnticontaminanteService {
    * {Observable<Catalogo[]>} Observable que emite la lista de países.
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
+    return this.http.get<Catalogo[]>('/assets/json/130113/pais-procenia.json');
   }
 
   /**
@@ -44,7 +44,7 @@ export class ImportacionEquipoAnticontaminanteService {
    */
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/paises-por-bloque.json'
+      '/assets/json/130113/paises-por-bloque.json'
     );
   }
 
@@ -55,7 +55,7 @@ export class ImportacionEquipoAnticontaminanteService {
    */
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/entidad-federativa.json'
+      '/assets/json/130113/entidad-federativa.json'
     );
   }
 
@@ -66,7 +66,7 @@ export class ImportacionEquipoAnticontaminanteService {
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
-      '/assets/json/130202/representacion-federal.json'
+      '/assets/json/130113/representacion-federal.json'
     );
   }
 
@@ -77,7 +77,7 @@ export class ImportacionEquipoAnticontaminanteService {
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/solicitude-options.json'
+      'assets/json/130113/solicitude-options.json'
     );
   }
 
@@ -88,7 +88,7 @@ export class ImportacionEquipoAnticontaminanteService {
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
-      'assets/json/130202/producto-otions.json'
+      'assets/json/130113/producto-otions.json'
     );
   }
 
