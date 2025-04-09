@@ -1,5 +1,5 @@
-import { CatalogosSelect } from "@libs/shared/data-access-user/src";
-import exp from "constants";
+import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import exp from 'constants';
 
 export interface ColumnasTabla {
   claveScian: string;
@@ -34,100 +34,30 @@ export interface ClavesDeLotes {
   caducidad: string;
 }
 export interface CrossListLable {
-  /** Texto que aparece en la parte izquierda de la etiqueta. */
   tituluDeLaIzquierda: string;
-
-  /** Texto que aparece en la parte derecha de la etiqueta. */
   derecha: string;
 }
 export interface CrossList {
-  /** Etiquetas asociadas a la lista cruzada. */
   label: CrossListLable;
-
-  /** Fechas asociadas con los datos de la lista cruzada. */
   fechas: string[];
 }
 
 export interface MercanciaCatalogos {
-  /** Catálogo de productos disponibles. */
   productosCatalogo: CatalogosSelect;
-
-  /** Catálogo para especificar un producto específico. */
   especificarCatalogo: CatalogosSelect;
-
-  /** Catálogo de tipos de productos disponibles. */
   tipoProductoCatalogo: CatalogosSelect;
-
-  /** Catálogo de Unidades de Medida de Comercialización (UMC). */
   umcCatalogo: CatalogosSelect;
 }
 
 export interface MercanciaCrossList {
-  /** Lista cruzada para los países de origen de la mercancía. */
   paisOrigenCrossList: CrossList;
-
-  /** Lista cruzada para los países de procedencia de la mercancía. */
   paisProcedencisCrossList: CrossList;
-
-  /** Lista cruzada para los usos específicos de la mercancía. */
   usoEspecificoCrossList: CrossList;
 }
 
-export interface Destinatario {
-  /** Nombre completo del destinatario. */
-  nombre: string;
-
-  /** Registro Federal de Contribuyentes (RFC) del destinatario. */
-  rfc: string;
-
-  /** Clave Única de Registro de Población (CURP) del destinatario. */
-  curp: string;
-
-  /** Número telefónico de contacto del destinatario. */
-  telefono: string;
-
-  /** Correo electrónico del destinatario. */
-  correoElectronico: string;
-
-  /** Calle correspondiente al domicilio del destinatario. */
-  calle: string;
-
-  /** Número exterior del domicilio del destinatario. */
-  numeroExterior: string;
-
-  /** Número interior del domicilio del destinatario, si aplica. */
-  numeroInterior: string;
-
-  /** País donde reside el destinatario. */
-  pais: string;
-
-  /** Colonia del domicilio del destinatario. */
-  colonia: string;
-
-  /** Municipio donde reside el destinatario. */
-  municipio: string;
-
-  /** Localidad específica del domicilio del destinatario. */
-  localidad: string;
-
-  /** Estado asociado al domicilio del destinatario. */
-  estado: string;
-
-  /** Estado alternativo (o subdivisión administrativa) asociado al domicilio del destinatario, si aplica. */
-  estado2: string;
-
-  /** Código postal del domicilio del destinatario. */
-  codigo: string;
-}
-
 export interface ClavesDeLotes {
-  /** Identificador único o clave del lote. */
   lotes: string;
-
-  /** Fecha de fabricación del lote. */
   fabricacion: string;
-
-  /** Fecha de caducidad del lote. */
   caducidad: string;
 }
 
@@ -147,53 +77,7 @@ export const FECHAPAGO = {
   labelNombre: 'Fecha de pago',
   required: true,
   habilitado: true,
-}
-export interface Destinatario {
-  /** Nombre completo del destinatario. */
-  nombre: string;
-
-  /** Registro Federal de Contribuyentes (RFC) del destinatario. */
-  rfc: string;
-
-  /** Clave Única de Registro de Población (CURP) del destinatario. */
-  curp: string;
-
-  /** Número telefónico de contacto del destinatario. */
-  telefono: string;
-
-  /** Correo electrónico del destinatario. */
-  correoElectronico: string;
-
-  /** Calle correspondiente al domicilio del destinatario. */
-  calle: string;
-
-  /** Número exterior del domicilio del destinatario. */
-  numeroExterior: string;
-
-  /** Número interior del domicilio del destinatario, si aplica. */
-  numeroInterior: string;
-
-  /** País donde reside el destinatario. */
-  pais: string;
-
-  /** Colonia del domicilio del destinatario. */
-  colonia: string;
-
-  /** Municipio donde reside el destinatario. */
-  municipio: string;
-
-  /** Localidad específica del domicilio del destinatario. */
-  localidad: string;
-
-  /** Estado asociado al domicilio del destinatario. */
-  estado: string;
-
-  /** Estado alternativo (o subdivisión administrativa) asociado al domicilio del destinatario, si aplica. */
-  estado2: string;
-
-  /** Código postal del domicilio del destinatario. */
-  codigo: string;
-}
+};
 
 export interface Asociados {
   folioTramite: string;
@@ -203,48 +87,37 @@ export interface Asociados {
 }
 
 export interface Fabricante {
-  /** Nombre del fabricante. */
   nombre: string;
-
-  /** Registro Federal de Contribuyentes (RFC) del fabricante. */
   rfc: string;
-
-  /** Clave Única de Registro de Población (CURP) del fabricante. */
   curp: string;
-
-  /** Número telefónico de contacto del fabricante. */
   telefono: string;
-
-  /** Dirección de correo electrónico del fabricante. */
   correoElectronico: string;
-
-  /** Nombre de la calle donde se encuentra el fabricante. */
   calle: string;
-
-  /** Número exterior del domicilio del fabricante. */
   numeroExterior: string;
-
-  /** Número interior del domicilio del fabricante, si aplica. */
   numeroInterior: string;
-
-  /** País donde está ubicado el fabricante. */
   pais: string;
-
-  /** Colonia donde se encuentra el fabricante. */
   colonia: string;
-
-  /** Municipio donde se encuentra el fabricante. */
   municipio: string;
-
-  /** Localidad específica del domicilio del fabricante. */
   localidad: string;
-
-  /** Estado donde se encuentra el fabricante. */
   estado: string;
-
-  /** Segundo estado o subdivisión administrativa (si aplica). */
   estado2: string;
+  codigo: string;
+}
 
-  /** Código postal del domicilio del fabricante. */
+export interface Destinatario {
+  nombre: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  correoElectronico: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  pais: string;
+  colonia: string;
+  municipio: string;
+  localidad: string;
+  estado: string;
+  estado2: string;
   codigo: string;
 }

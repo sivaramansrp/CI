@@ -71,6 +71,9 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   fechaFinalInput: InputFecha = FECHAFINAL;
   AVISO_PRIVACIDAD = AVISO_PRIVACIDAD;
   descripcionScian!: Catalogo[];
+  isAvisoFuncionamientoChecked: boolean = false;
+  isCheckboxSelected: boolean = false;
+
 
   radioOpcions = [
     { label: 'Prórroga', value: 'prorroga' },
@@ -212,7 +215,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       .getScianTabla()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        console.log('data', data);
         this.certificadoDisponsiblesTablaDatos = data;
       });
   }
@@ -221,7 +223,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       .getMercanciasTabla()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        console.log('data', data);
         this.mercanciasConfiguracionTabla = data;
       });
   }
@@ -231,7 +232,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       .getListaClaveTabla()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        console.log('data', data);
         this.listaClaveTabla = data;
       });
   }
@@ -269,6 +269,7 @@ export class DatosDeLaSolicitudComponent implements OnInit {
     
     // return this.valorSeleccionado !== 'modificacion'; // Enable fields only if "modificacion" is selected
   }
+
   claveScianSeleccion(): void {
     const CLAVE_SCIAN = this.scianForm.get('cveSCIAN')?.value;
     this.consulta.getDescripcionScian()
@@ -312,12 +313,24 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       MODAL_INSTANCE.show();
     }
   }
+checkCheckboxSelection(event: Event): void {
+  console.log('Selection Change Event:', event);
+  const selectedItems = (event.target as any).selectedItems || []; 
+  this.isCheckboxSelected = selectedItems.length > 0;
+  }
+  eliminarMercanciaGrid(): void {
+    if (this.modalElement) {
+      const MODAL_ELIMINAR_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_ELIMINAR_INSTANCE.show();
+    }
+    }
  
   abrirDialogoAgregarDatosSCIAN(): void {
     // Implementar la lógica para abrir dialogo agregar datos SCIAN.
   }
   setAvisoDeFuncionamiento(evento: Event): void {
     const VALOR = (evento.target as HTMLInputElement).checked;
+    this.isAvisoFuncionamientoChecked = VALOR;
     this.store.setAvisoDeFuncionamiento(VALOR);
   }
   setLicenciaSanitaria(evento: Event): void {

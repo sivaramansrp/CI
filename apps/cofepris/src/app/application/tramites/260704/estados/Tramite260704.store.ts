@@ -418,12 +418,96 @@ export class Tramite260704Store extends Store<Solicitud260704State> {
         mercanciasDatos: [...state.mercanciasDatos, newMercancia],
       }));
     }
+    public setTipoPersona(tipoPersona: string | number): void {
+      this.update((state) => ({
+        ...state,
+        tipoPersona,
+      }));
+    }
+
+    public setModificarRFC(modificarRFC: string): void {
+      this.update((state) => ({
+        ...state,
+        modificarRFC,
+      }));
+    }
   
-    /**
-     * Elimina una mercancía específica del estado.
-     * @param mercanciaToRemove - Objeto de mercancía que será eliminado.
-     */
-    public removeMercanciaDatos(mercanciaToRemove: Mercancia): void {
+    public setDenominacion(denominacion: string): void {
+      this.update((state) => ({
+        ...state,
+        denominacion,
+      }));
+    }
+    public setDomicilioCalle(domiciliCalle: string): void {
+      this.update((state) => ({
+        ...state,
+        domiciliCalle,
+      }));
+    }
+    public setDomicilioNumeroExterior(domiciliNumeroExterior: string): void {
+      this.update((state) => ({
+        ...state,
+        domiciliNumeroExterior,
+      }));
+    }
+
+     public setDomicilioNumeroInterior(domiciliNumeroInterior: string): void {
+        this.update((state) => ({
+          ...state,
+          domiciliNumeroInterior,
+        }));
+      }
+    
+     
+      public setDomicilioLada(domiciliLada: string): void {
+        this.update((state) => ({
+          ...state,
+          domiciliLada,
+        }));
+      }
+    
+      public setDomicilioTelefono(domiciliTelefono: string): void {
+        this.update((state) => ({
+          ...state,
+          domiciliTelefono,
+        }));
+      }
+    
+     
+      public setDomicilioCorreoElectronico(
+        domiciliCorreoElectronioco: string
+      ): void {
+        this.update((state) => ({
+          ...state,
+          domiciliCorreoElectronioco,
+        }));
+      }
+    
+      public setDestinatarioDatos(destinatarioDatos: Destinatario[]): void {
+        this.update((state) => ({
+          ...state,
+          destinatarioDatos,
+        }));
+      }
+    
+      public removeDestinatarioDato(destinatarioToRemove: Destinatario): void {
+        this.update((state) => ({
+          ...state,
+          destinatarioDatos: state.destinatarioDatos.filter(
+            (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
+          ),
+        }));
+      }
+    
+   
+      public addDestinatarioDato(newDestinatario: Destinatario): void {
+        this.update((state) => ({
+          ...state,
+          destinatarioDatos: [...state.destinatarioDatos, newDestinatario],
+        }));
+      }
+    
+      public removeMercanciaDatos(mercanciaToRemove: Mercancia): void {
       this.update((state) => ({
         ...state,
         mercanciasDatos: state.mercanciasDatos.filter(
