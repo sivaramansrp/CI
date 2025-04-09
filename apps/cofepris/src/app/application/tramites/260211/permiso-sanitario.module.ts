@@ -61,6 +61,11 @@ import { TercerosRelacionadoesComponent } from './components/terceros-Relacionad
     FirmaElectronicaComponent,
     AlertComponent
   ],
+
+  exports: [
+    PasoduosComponent,
+    PasotresComponent
+  ],
   
   providers: [
       ToastrService,

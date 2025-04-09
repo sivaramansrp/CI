@@ -61,15 +61,18 @@ export class CrosslistComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['fechas'] && changes['fechas'].currentValue) {
       this.fechas = [...changes['fechas'].currentValue];
-
-      if ( changes['fechasSeleccionadas'].currentValue.length === 0) {
+      if ( changes['fechasSeleccionadas'] && changes['fechasSeleccionadas'].currentValue.length === 0) {
         this.fechasDatos = [...this.fechas];
-      } else {
+      } else if (changes['fechasSeleccionadas'] && changes['fechasSeleccionadas'].currentValue.length > 0) {
         this.fechasSeleccionadas = [...changes['fechasSeleccionadas'].currentValue];
         this.fechasDatos = this.fechas.filter(fecha => !this.fechasSeleccionadas.includes(fecha));
+      } else {
+        this.fechasDatos = [...changes['fechas'].currentValue];
+        this.fechasSeleccionadas = [];
       }
     }
   }
+ 
 
   /**
    * Configura los botones predeterminados para el componente Crosslist.

@@ -160,6 +160,27 @@ export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
  * - "123:45" (formato incorrecto)
  */
 export const REGEX_HORA = /^([01]\d|2[0-3]):[0-5]\d$/;
+
+/**
+ * Expresión regular para validar números enteros o decimales con hasta dos decimales.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - [0-9]+: Coincide con uno o más dígitos enteros.
+ * - (\\.[0-9]{1,2})?: Coincide con un punto seguido de entre 1 y 2 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ *
+ * Ejemplos de cadenas válidas:
+ * - "123" (número entero)
+ * - "123.45" (número decimal con dos decimales)
+ * - "0.5" (número decimal con un decimal)
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "123." (falta un decimal después del punto)
+ * - "123.456" (más de dos decimales)
+ * - "abc" (contiene caracteres no numéricos)
+ */
+export const REGEX_NUMERO_DECIMAL_ENTERO = /^[0-9]+(\\.[0-9]{1,2})?$/;
 /**
  * Expresión regular para encontrar caracteres que no sean números.
  *
@@ -277,3 +298,9 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+
+/** 
+ * Expresión regular para validar números en formato USD. 
+ * Permite dígitos y el punto decimal. 
+ */
+export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
