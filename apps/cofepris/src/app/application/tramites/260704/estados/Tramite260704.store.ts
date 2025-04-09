@@ -424,7 +424,13 @@ export class Tramite260704Store extends Store<Solicitud260704State> {
         tipoPersona,
       }));
     }
+    public setTipoOperacion(tipoOperacion: string | number): void {
+      this.update((state) => ({
+        ...state,
+        tipoOperacion: tipoOperacion
+      }));
   
+    }
 
     public setModificarRFC(modificarRFC: string): void {
       this.update((state) => ({
@@ -473,7 +479,7 @@ export class Tramite260704Store extends Store<Solicitud260704State> {
           domiciliTelefono,
         }));
       }
-    
+     
      
       public setDomicilioCorreoElectronico(
         domiciliCorreoElectronioco: string

@@ -16,6 +16,7 @@ import { ReplaySubject, takeUntil } from "rxjs";
 import { Tramite260704Store } from "../../estados/Tramite260704.store";
 import { InputRadioComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { CatalogoSelectComponent } from "../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component";
+import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 @Component({
   selector: "app-terceros-relacinados",
   standalone: true,
@@ -25,13 +26,15 @@ import { CatalogoSelectComponent } from "../../../../../../../../../libs/shared/
     AlertComponent,
     TablaDinamicaComponent,
     InputRadioComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
 ],
   templateUrl: "./terceros-relacinados.component.html",
   styleUrl: "./terceros-relacinados.component.css",
 })
 export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
   AVISO_PRIVACIDAD = AVISO_PRIVACIDAD;
+  tercerosForm!: FormGroup;
   TablaSeleccion = TablaSeleccion;
   selectedDestinatario: Fabricante[] = [];
   public destinatarioDatos: Destinatario[] = [];
@@ -216,6 +219,6 @@ public estadoCatalogo: CatalogosSelect = {
       }
     }
   ngOnDestroy(): void {
-    throw new Error("Method not implemented.");
+    
   }
 }

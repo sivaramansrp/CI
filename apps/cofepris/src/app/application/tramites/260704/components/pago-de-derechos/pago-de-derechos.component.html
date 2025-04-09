@@ -1,12 +1,13 @@
+<form [formGroup]="pagoDeDerechosForm">
 <ng-titulo titulo="Pago de derechos" />
 <div class="row mt-5">
   <div class="col-md-4 mt-3">
     <label class="form-label" for="claveDeReferencia">Clave de referencia:</label>
-    <input class="form-control" type="text" />
+    <input class="form-control" type="text" formControlName="claveDeReferencia"/>
   </div>
   <div class="col-md-4 mt-3">
     <label class="form-label">Cadena de la dependencia:</label>
-    <input class="form-control" type="text" />
+    <input class="form-control" type="text" formControlName="cadenaDependecia"/>
   </div>
   <div class="col-md-4 mt-3">
     <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" [label]="'Banco'" formControlName="banco"></app-catalogo-select>
@@ -15,15 +16,16 @@
 <div class="row mt-5">
     <div class="col-md-4 mt-3">
       <label class="form-label" for="liaveDePago">Liave de pago:</label>
-      <input class="form-control" type="text" /></div>
+      <input class="form-control" type="text" formControlName="liaveDePago"/></div>
     <div class="col-md-4 mt-3">
       <input-fecha  [datos]="fechaPagoInput"></input-fecha>
 </div>
 <div class="col-md-4 mt-3">
-  <label class="form-label" for="liaveDePago">Importe de pago:</label>
-      <input class="form-control" type="text" /></div>
+  <label class="form-label" for="importeDePago">Importe de pago:</label>
+      <input class="form-control" type="text" formControlName="importeDePago"/></div>
 </div>
 <div class="col-md-12 mt-5 d-flex justify-content-end">
 <button class="btn btn-danger" type="button">
   Borrar datos del pago
 </button></div>
+</form>

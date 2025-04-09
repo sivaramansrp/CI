@@ -7,16 +7,18 @@ import { Catalogo, CatalogosSelect, InputFecha } from '@libs/shared/data-access-
 import { FECHAPAGO } from '../../models/consulta.model';
 import { ConsultaService } from '../../service/consulta.service';
 import { ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
-  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent],
+  imports: [CommonModule, CatalogoSelectComponent, TituloComponent, InputFechaComponent,ReactiveFormsModule],
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   fechaPagoInput: InputFecha = FECHAPAGO;
+  pagoDeDerechosForm !:FormGroup;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   public destroyNotifier$: Subject<void> = new Subject();
   public bancoCatalogo: CatalogosSelect = {

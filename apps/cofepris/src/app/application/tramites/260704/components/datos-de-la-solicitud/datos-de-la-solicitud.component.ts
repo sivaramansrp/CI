@@ -10,7 +10,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { map, Observable, ReplaySubject, Subject, takeUntil } from 'rxjs';
 import { ConsultaService } from '../../service/consulta.service';
@@ -49,7 +49,6 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   valorSeleccionado: string = '';
   hercelosSeleccionados!: string;
   datosDelEstablecimientoForm!: FormGroup;
-  domicilloDelEstablecimientoForm!: FormGroup;
   scianForm!: FormGroup;
   habilitarEstado: boolean = true;
   @ViewChild('modalAlerta') modalElement!: ElementRef;
@@ -73,6 +72,8 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   descripcionScian!: Catalogo[];
   isAvisoFuncionamientoChecked: boolean = false;
   isCheckboxSelected: boolean = false;
+  isDatosSCIANChecked: boolean = false;
+  
 
 
   radioOpcions = [
@@ -202,10 +203,51 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   ];
   constructor(
     private consulta: ConsultaService,
-    public store: Tramite260704Store
+    public store: Tramite260704Store,
+    public fb : FormBuilder
   ) {  }
 
   ngOnInit(): void {
+
+    this.datosDelEstablecimientoForm = this.fb.group({
+      tipoOperacion: [''],  
+      justificacion: [''],
+      establecimiento: [''],
+      razonSocial: [''],
+      correoElectronico: [''],
+      codigoPostal: [''],
+      licenciaSanitaria: [''],
+      estado: [''],
+      aduana: [''],
+      avisoDeFuncionamiento: [''],
+      regimen: [''],
+      telefono: [''],
+      lada: [''],
+      calle: [''],
+      colonia: [''],
+      localidad: [''],
+      municipio: [''],
+      scian: [false],
+      claveScian: [''],
+      descripcionScian: [''],
+      immex: [''],
+      ano: [''],
+      mercancia: [''],
+      clasificacionProducto: [''],
+      especificarClasificacionProducto: [''],
+      denominacionProducto: [''],
+      marca: [''],
+      tipoProducto: [''],
+      especifique: [''],
+      fraccionArancelaria: [''],
+      descripcionFraccionArancelaria: [''],
+      cantidadUMT: [''],
+      umt: [''],
+      cantidadUMC: [''],
+      umc: [''],
+      claveLote: [''],
+      listaClave: [''],
+    });
     this.getScianTabla();
     this.obtenerDatosEstado();
     this.getMercanciasTabla();
@@ -239,15 +281,26 @@ export class DatosDeLaSolicitudComponent implements OnInit {
   }
   aceptar(): void {
     this.datosDelEstablecimientoForm.enable();
-    // Habilitar todos los campos en el formulario Domicilio del Establecimiento
-    this.domicilloDelEstablecimientoForm.enable();
     this.habilitarEstado = false;
   }
 
   limpiarDatosSCIAN(): void {
     // Implementar la lógica para limpiar datos SCIAN.
   }
-
+  setTipoOperacion(evento: number | string): void {
+    this.store.setTipoOperacion(evento);
+    if (this.datosDelEstablecimientoForm.get('tipoOperacion')?.value == 'PRO') {
+      this.datosDelEstablecimientoForm.get('justificacion')?.disable();
+      this.datosDelEstablecimientoForm.get('establecimiento')?.disable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+    } else {
+      this.datosDelEstablecimientoForm.get('justificacion')?.enable();
+      this.datosDelEstablecimientoForm.get('establecimiento')?.enable();
+      this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
+      this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
+    }
+  }
   agregarDatosSCIAN(): void {
     // Implementar la lógica para agregar datos SCIAN.
   }
@@ -295,9 +348,15 @@ export class DatosDeLaSolicitudComponent implements OnInit {
       MODAL_INSTANCE.show();
     }
   }
-checkCheckboxSelection(event: Event): void {
-   const selectedItems = (event.target as any).selectedItems || []; 
-  this.isCheckboxSelected = selectedItems.length > 0;
+checkCheckboxSelection(event: MouseEvent): void {
+
+  const checkbox = (event.target as HTMLInputElement).closest('input[type="checkbox"]');
+  if (checkbox) {
+    this.isCheckboxSelected = (checkbox as HTMLInputElement).checked;
+  } else {
+    this.isCheckboxSelected = false;
+  }
+
   }
   eliminarMercanciaGrid(): void {
     if (this.modalElement) {
@@ -360,7 +419,12 @@ checkCheckboxSelection(event: Event): void {
       // paisDeProcedencia: 'paisDeProcedencia',
       // usoEspecifico: 'usoEspecifico',
     };
-
     // this.store.addMercanciasDatos(OBJETO_JSON);
   }
+
+  AcceptarEliminarScian(){
+    
+    this.isDatosSCIANChecked = true;
+  }
+
 }

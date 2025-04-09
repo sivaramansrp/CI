@@ -1,90 +1,101 @@
-<div class="row mt-5">
-  <label>Seleccione el tipo de operación que desea realizar*:</label>
-</div>
-<div class="row mt-5 radios">
-  <app-input-radio
-    [radioOptions]="radioOpcions"
-    [selectedValue]="valorSeleccionado"
-    [isRequired]="true"
-    [layout]="'horizontal'"
-  ></app-input-radio>
-</div>
-<div class="row mt-5">
-  <div class="col-md-6">
-    <label>Justificación*:</label>
-    <textarea cols="80" rows="5"></textarea>
+<form [formGroup]="datosDelEstablecimientoForm">
+  <div class="row mt-5">
+    <label>Seleccione el tipo de operación que desea realizar*:</label>
   </div>
-</div>
-<!--Datos del establecimiento-->
-<ng-titulo titulo="Datos del establecimiento" />
-<div>
-  <div class="text-end">
-    <button
-      type="button"
-      class="btn btn-primary"
-      name="seleccionarEstablecimiento"
-      id="btnEstablecimiento"
-      title="Selecciona para habilitar los campos del establecimiento"
-      data-bs-toggle="modal"
-      data-bs-target="#modalAlerta"
-      (click)="seleccionarEstablecimiento()"
+  <div class="row mt-5 radios">
+    <app-input-radio
+      [radioOptions]="radioOpcions"
+      [selectedValue]="valorSeleccionado"
+      [isRequired]="true"
+      [layout]="'horizontal'"
+      (valueChange)="setTipoOperacion($event)"
+      formControlName="tipoOperacion"
+    ></app-input-radio>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <label>Justificación*:</label>
+      <textarea cols="80" rows="5" formControlName="justificacion"></textarea>
+    </div>
+  </div>
+  <!--Datos del establecimiento-->
+  <ng-titulo titulo="Datos del establecimiento" />
+  <div>
+    <div class="text-end">
+      <button
+        type="button"
+        class="btn btn-primary"
+        title="Selecciona para habilitar los campos del establecimiento"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAlerta"
+        (click)="seleccionarEstablecimiento()"
+        formControlName="establecimiento"
+      >
+        Seleccionar establecimiento
+      </button>
+    </div>
+    <div
+      class="modal fade"
+      id="modalAlerta"
+      tabindex="-1"
+      aria-labelledby="modalAlertaLabel"
+      aria-hidden="true"
     >
-      Seleccionar establecimiento
-    </button>
-  </div>
-  <div
-    class="modal fade"
-    id="modalAlerta"
-    tabindex="-1"
-    aria-labelledby="modalAlertaLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered" style="width: 300px">
-      <div class="modal-content">
-        <div class="modal-header"></div>
-        <div class="modal-body">
-          <p>
-            Por el momento no hay comunicación con el Sistema de COFEPRIS, favor
-            de capturar su establecimiento.
-          </p>
-        </div>
-        <div class="modal-footer custom-footer">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal"
-            #closeModal
-            (click)="aceptar()"
-          >
-            Aceptar
-          </button>
+      <div class="modal-dialog modal-dialog-centered" style="width: 300px">
+        <div class="modal-content">
+          <div class="modal-header"></div>
+          <div class="modal-body">
+            <p>
+              Por el momento no hay comunicación con el Sistema de COFEPRIS,
+              favor de capturar su establecimiento.
+            </p>
+          </div>
+          <div class="modal-footer custom-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              #closeModal
+              (click)="aceptar()"
+            >
+              Aceptar
+            </button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row mt-5">
-    <div class="col-md-8">
-      <label for="razonSocial" class="form-label"
-        >Denominación o razón social*:</label
-      >
-      <input type="text" class="form-control" size="68" />
+    <div class="row mt-5">
+      <div class="col-md-8">
+        <label for="razonSocial" class="form-label"
+          >Denominación o razón social*:</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          size="68"
+          formControlName="razonSocial"
+        />
+      </div>
+      <div class="col-md-4">
+        <label for="correoElectronico" class="form-label"
+          >Correo electrónico:
+          <span
+            class="bi bi-question-circle-fill"
+            title="ejemplo@dominio.com"
+            data-bs-toggle="tooltip"
+          ></span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          maxlength="320"
+          formControlName="correoElectronico"
+        />
+      </div>
     </div>
-    <div class="col-md-4">
-      <label for="correoElectronico" class="form-label"
-        >Correo electrónico:
-        <span
-          class="bi bi-question-circle-fill"
-          title="ejemplo@dominio.com"
-          data-bs-toggle="tooltip"
-        ></span>
-      </label>
-      <input type="text" class="form-control" maxlength="320" />
-    </div>
   </div>
-</div>
-<!--Domicillo del establecimiento-->
-<ng-titulo titulo="Domicillo del establecimiento"></ng-titulo>
-<div>
+  <!--Domicillo del establecimiento-->
+  <ng-titulo titulo="Domicillo del establecimiento"></ng-titulo>
   <div class="row">
     <div class="col-md-4">
       <label for="codigoPostal" class="form-label">Código postal*:</label>
@@ -93,6 +104,7 @@
         name="codigoPostal"
         class="form-control"
         maxlength="12"
+        formControlName="codigoPostal"
       />
     </div>
     <div class="col-md-4">
@@ -100,8 +112,8 @@
         [catalogo]="estadoCatalogo.catalogos"
         [label]="'Estado'"
         [required]="true"
+        formControlName="estado"
       ></app-catalogo-select>
-      <input type="hidden" name="clave" id="idClaveEntidadFederativa" />
     </div>
     <div class="col-md-4">
       <label for="descripcionMunicipio" class="form-label"
@@ -109,10 +121,9 @@
       >
       <input
         type="text"
-        name="descripcionMunicipio"
-        id="descripcionMunicipio"
         class="form-control"
         maxlength="120"
+        formControlName="municipio"
       />
     </div>
   </div>
@@ -126,9 +137,8 @@
       <label for="informacionExtra" class="form-label">Localidad:</label>
       <input
         type="text"
-        name="informacionExtra"
-        id="informacionExtra"
         class="form-control"
+        formControlName="localidad"
         maxlength="120"
       />
     </div>
@@ -136,9 +146,8 @@
       <label for="descripcionColonia" class="form-label">Colonia:</label>
       <input
         type="text"
-        name="descripcionColonia"
-        id="descripcionColonia"
         class="form-control"
+        formControlName="colonia"
         maxlength="120"
       />
     </div>
@@ -155,9 +164,8 @@
       </label>
       <input
         type="text"
-        name="calle"
-        id="calle"
         class="form-control"
+        formControlName="calle"
         maxlength="90"
       />
     </div>
@@ -165,27 +173,38 @@
   <div class="row">
     <div class="col-md-1">
       <label for="lada" class="form-label">Lada:</label>
-      <input type="text" name="lada" id="lada" class="form-control" />
+      <input type="text" class="form-control" formControlName="lada" />
     </div>
     <div class="col-md-3">
       <label for="telefono" class="form-label">Teléfono*:</label>
       <input
         type="text"
-        name="telefono"
-        id="telefono"
         class="form-control"
+        formControlName="telefono"
         required="required"
       />
     </div>
   </div>
+
   <div class="col-md-12 mt-5">
     <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-      [configuracionTabla]="headers"
-      [datos]="certificadoDisponsiblesTablaDatos"
-      (selectionChange)="checkCheckboxSelection($event)"
-    ></app-tabla-dinamica>
+    <ng-container *ngIf="!isDatosSCIANChecked">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+        [configuracionTabla]="headers"
+        [datos]="certificadoDisponsiblesTablaDatos"
+        (click)="checkCheckboxSelection($event)"
+        formControlName="scian"
+      ></app-tabla-dinamica>
+    </ng-container>
+    <ng-container *ngIf="isDatosSCIANChecked">
+      <app-tabla-dinamica
+        [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+        [configuracionTabla]="headers"
+        (click)="checkCheckboxSelection($event)"
+        formControlName="scian"
+      ></app-tabla-dinamica>
+    </ng-container>
   </div>
   <div class="row">
     <div class="col-md-12 text-end">
@@ -201,8 +220,6 @@
       <button
         type="button"
         class="btn btn-primary ms-2"
-        name="agregarAduana"
-        id="btnagregarAduana"
         data-bs-toggle="modal"
         data-bs-target="#modalClaveScian"
         (click)="agregarMercanciaGrid()"
@@ -230,12 +247,14 @@
               [catalogo]="claveCatalogo.catalogos"
               [label]="'Clave S.C.I.A.N.'"
               [required]="true"
+              formControlName="claveScian"
             ></app-catalogo-select>
             <div class="row">
               <app-catalogo-select
                 [catalogo]="claveCatalogo.catalogos"
                 [label]="'Descripción del S.C.I.A.N.'"
                 [required]="false"
+                formControlName="descripcionScian"
               ></app-catalogo-select>
             </div>
           </div>
@@ -286,13 +305,13 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header"></div>
-        <div class="modal-body">
-          <div *ngIf="isCheckboxSelected; else noSelectionMessage">
+        <div class="modal-body text-center">
+          <ng-container *ngIf="isCheckboxSelected">
             ¿Estás seguro que deseas eliminar los registros marcados?
-          </div>
-          <ng-template #noSelectionMessage>
+          </ng-container>
+          <ng-container *ngIf="!isCheckboxSelected">
             Selecciona un registro.
-          </ng-template>
+          </ng-container>
         </div>
         <div class="modal-footer custom-footer">
           <div class="row">
@@ -304,17 +323,32 @@
                   class="btn btn-default ms-2"
                   data-bs-dismiss="modal"
                   #closeModal
+                  *ngIf="isCheckboxSelected"
                 >
                   Cancelar
                 </button>
-                <button
-                  type="button"
-                  name="agregar"
-                  class="btn btn-primary ms-2"
-                  data-bs-dismiss="modal"
-                >
-                  Acceptar
-                </button>
+                <ng-container *ngIf="!isCheckboxSelected">
+                  <button
+                    type="button"
+                    name="cancelar"
+                    class="btn btn-default ms-2"
+                    data-bs-dismiss="modal"
+                    #closeModal
+                  >
+                    Aceptar
+                  </button>
+                </ng-container>
+                <ng-container *ngIf="isCheckboxSelected">
+                  <button
+                    type="button"
+                    name="agregar"
+                    class="btn btn-primary ms-2"
+                    data-bs-dismiss="modal"
+                    (click)="AcceptarEliminarScian()"
+                  >
+                    Acceptar
+                  </button>
+                </ng-container>
               </div>
             </div>
           </div>
@@ -330,7 +364,6 @@
         <input
           class="form-check-input"
           type="checkbox"
-          id="avisoDeFuncionamiento"
           formControlName="avisoDeFuncionamiento"
           (change)="setAvisoDeFuncionamiento($event)"
           aria-label="Aviso de funcionamiento"
@@ -355,8 +388,6 @@
       </label>
       <input
         class="form-control"
-        id="licenciaSanitaria"
-        placeholder=""
         type="text"
         formControlName="licenciaSanitaria"
         (change)="setLicenciaSanitaria($event)"
@@ -370,6 +401,7 @@
         [label]="'Régimen al que se destinarán la mercancías'"
         [required]="true"
         [tooltipQuestionCircle]="true"
+        formControlName="regimen"
       ></app-catalogo-select>
     </div>
     <div class="col-md-4">
@@ -377,6 +409,7 @@
         [catalogo]="claveCatalogo.catalogos"
         [label]="'Aduana'"
         [required]="true"
+        formControlName="aduana"
       ></app-catalogo-select>
     </div>
   </div>
@@ -386,11 +419,11 @@
   <div class="row mt-5">
     <div class="col-md-4">
       <label>No. Programa IMMEX:</label>
-      <input type="text" class="form-control" />
+      <input type="text" class="form-control" formControlName="immex" />
     </div>
     <div class="col-md-2">
       <label>Año:</label>
-      <input type="text" class="form-control" />
+      <input type="text" class="form-control" formControlName="ano" />
     </div>
   </div>
   <div class="col-md-12 mt-4">
@@ -399,6 +432,7 @@
       [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
       [configuracionTabla]="mercanciasDatos"
       [datos]="mercanciasConfiguracionTabla"
+      formControlName="mercancia"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
@@ -406,8 +440,6 @@
       <button
         type="button"
         class="btn btn-primary ms-2 mb-5"
-        name="agregarAduana"
-        id="btnagregarAduana"
         data-bs-toggle="modal"
         data-bs-target="#modalAgregarMercancia"
         (click)="agregarMercanciaGrid()"
@@ -436,6 +468,7 @@
                 [catalogo]="estadoCatalogo.catalogos"
                 [label]="'Clasificación del producto'"
                 [required]="true"
+                formControlName="clasificacionProducto"
               ></app-catalogo-select>
             </div>
           </div>
@@ -445,6 +478,7 @@
                 [catalogo]="estadoCatalogo.catalogos"
                 [label]="'Especificar clasificación del producto'"
                 [required]="true"
+                formControlName="especificarClasificacionProducto"
               ></app-catalogo-select>
             </div>
           </div>
@@ -453,13 +487,23 @@
               <label class="form-label" for="denominacionProducto"
                 >Denominación especifica del producto*:</label
               >
-              <input class="form-control" placeholder="" type="text" />
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                formControlName="denominacionProducto"
+              />
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
               <label class="form-label">Marca*:</label>
-              <input class="form-control" placeholder="" type="text" />
+              <input
+                class="form-control"
+                placeholder=""
+                type="text"
+                formControlName="marca"
+              />
             </div>
           </div>
           <div class="row mt-5">
@@ -468,13 +512,18 @@
                 [catalogo]="estadoCatalogo.catalogos"
                 [label]="'Tipo de producto'"
                 [required]="true"
+                formControlName="tipoProducto"
               ></app-catalogo-select>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-8">
               <label class="form-label">Especifique*:</label>
-              <input class="form-control" placeholder="" type="text" />
+              <input
+                class="form-control"
+                type="text"
+                formControlName="especifique"
+              />
             </div>
           </div>
           <div class="row mt-5">
@@ -487,7 +536,11 @@
                   data-bs-toggle="tooltip"
                 ></span>
               </label>
-              <input class="form-control" placeholder="" type="text" />
+              <input
+                class="form-control"
+                type="text"
+                formControlName="fraccionArancelaria"
+              />
             </div>
           </div>
           <div class="row mt-5">
@@ -497,16 +550,20 @@
               >
               <input
                 class="form-control gris-color"
-                placeholder=""
                 type="text"
                 readonly
+                formControlName="descripcionFraccionArancelaria"
               />
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
               <label class="form-label">Cantidad UMT*:</label>
-              <input class="form-control" placeholder="" type="text" />
+              <input
+                class="form-control"
+                type="text"
+                formControlName="cantidadUMT"
+              />
             </div>
             <div class="col-md-4">
               <label class="form-label"
@@ -519,22 +576,28 @@
               </label>
               <input
                 class="form-control gris-color"
-                placeholder=""
                 type="text"
                 readonly
+                formControlName="umt"
               />
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
               <label class="form-label">Cantidad UMC*:</label>
-              <input class="form-control" placeholder="" type="text" />
+              <input
+                class="form-control"
+                type="text"
+                formControlName="cantidadUMC"
+              />
             </div>
             <div class="col-md-4">
               <app-catalogo-select
                 [catalogo]="estadoCatalogo.catalogos"
                 [label]="'UMC'"
+                [tooltipQuestionCircle]="true"
                 [required]="true"
+                formControlName="umc"
               ></app-catalogo-select>
             </div>
           </div>
@@ -597,7 +660,11 @@
           <div class="row mt-5">
             <div class="col-md-8 mt-3">
               <label class="form-label">Clave de los lotes*:</label>
-              <input class="form-control" type="text" />
+              <input
+                class="form-control"
+                type="text"
+                formControlName="claveLote"
+              />
             </div>
           </div>
           <div class="row mt-5">
@@ -612,7 +679,6 @@
                 <input-fecha
                   [datos]="fechaFinalInput"
                   class="disabled-input-fecha"
-                  sty
                 ></input-fecha>
               </div>
             </div>
@@ -625,6 +691,7 @@
               [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
               [configuracionTabla]="listaClave"
               [datos]="listaClaveTabla"
+              formControlName="listaClave"
             ></app-tabla-dinamica>
           </div>
           <div class="col-md-12 d-flex justify-content-end align-items-end">
@@ -673,8 +740,12 @@
               <button class="btn btn-default ms-3" type="button">
                 Cancelar
               </button>
-              <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal"
-              (click)="agregarMercanias()">
+              <button
+                type="button"
+                class="btn btn-primary ms-3"
+                data-bs-dismiss="modal"
+                (click)="agregarMercanias()"
+              >
                 Modificar
               </button>
             </div>
@@ -683,54 +754,60 @@
       </div>
     </div>
   </div>
-</div>
-<!-- Datos mercancia popup screen end -->
-<div class="row">
-  <ng-titulo titulo="Manifiestos y declaraciones" />
-</div>
-<div class="alert alert-info">
-  <label style="font-weight: normal">
-    <div class="col-md-1 mt-5">
-      <input type="checkbox" class="mt-5" />
-      <b> *</b>
-    </div>
-    <div class="col-md-11 mt-4">{{ AVISO_PRIVACIDAD.TEXTO_DE_ALERTA }}</div>
-  </label>
-</div>
-<div class="col-md-12 mt-4">
-  <label class="form-label" for=""
-    >Los datos o anexos pueden contener información confidencial ¿Está de
-    acuerdo en hacerlos públicos?*:</label
-  >
-  <app-input-radio
-    [radioOptions]="hacerlosRadioOptions"
-    [selectedValue]="hercelosSeleccionados"
-    [layout]="'horizontal'"
-  ></app-input-radio>
-</div>
-<ng-titulo titulo="Representante legal" />
-<div class="row mt-5">
-  <div class="col-md-4 mt-2">
-    <label class="form-label" for="rfc">RFC*:</label>
-    <input class="form-control" type="text" />
+
+  <!-- Datos mercancia popup screen end -->
+  <div class="row">
+    <ng-titulo titulo="Manifiestos y declaraciones" />
   </div>
-  <div class="col-md-2 mt-5">
-    <button type="button" class="btn btn-primary">Buscar</button>
+  <div class="alert alert-info">
+    <label style="font-weight: normal">
+      <div class="col-md-1 mt-5">
+        <input
+          type="checkbox"
+          class="mt-5"
+          formControlName="manfestosYDeclaraciones"
+        />
+        <b> *</b>
+      </div>
+      <div class="col-md-11 mt-4">{{ AVISO_PRIVACIDAD.TEXTO_DE_ALERTA }}</div>
+    </label>
   </div>
-</div>
-<div class="row mt-5">
-  <div class="col-md-4 mt-4">
-    <label class="form-label" for="legalRazonSocial"
-      >Nombre o Razón Social*:</label
+  <div class="col-md-12 mt-4">
+    <label class="form-label" for=""
+      >Los datos o anexos pueden contener información confidencial ¿Está de
+      acuerdo en hacerlos públicos?*:</label
     >
-    <input class="form-control gris-color" type="text" readonly/>
+    <app-input-radio
+      [radioOptions]="hacerlosRadioOptions"
+      [selectedValue]="hercelosSeleccionados"
+      [layout]="'horizontal'"
+      formControlName="hacerlosPublicos"
+    ></app-input-radio>
   </div>
-  <div class="col-md-4 mt-4">
-    <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-    <input class="form-control gris-color" type="text" readonly/>
+  <ng-titulo titulo="Representante legal" />
+  <div class="row mt-5">
+    <div class="col-md-4 mt-2">
+      <label class="form-label" for="rfc">RFC*:</label>
+      <input class="form-control" type="text" formControlName="rfc" />
+    </div>
+    <div class="col-md-2 mt-5">
+      <button type="button" class="btn btn-primary">Buscar</button>
+    </div>
   </div>
-  <div class="col-md-4 mt-4">
-    <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-    <input class="form-control gris-color" type="text"readonly />
+  <div class="row mt-5">
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="legalRazonSocial"
+        >Nombre o Razón Social*:</label
+      >
+      <input class="form-control gris-color" type="text" readonly />
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+      <input class="form-control gris-color" type="text" readonly />
+    </div>
+    <div class="col-md-4 mt-4">
+      <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+      <input class="form-control gris-color" type="text" readonly />
+    </div>
   </div>
-</div>
+</form>
