@@ -177,7 +177,14 @@ const ROUTES: Routes = [
       import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
         (m) => m.DepositoFiscalManufacturaVehiculosModule
       )
-  }
+  },
+  {
+    path: 'exencion-impuestos',
+    loadChildren: () =>
+      import('./tramites/10302/exencion-impuestos.module').then(
+        (m) => m.ExencionImpuestosModule
+      ),
+  },
 ];
 
 @NgModule({
