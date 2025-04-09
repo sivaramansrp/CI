@@ -62,7 +62,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite260911Query: Tramite260911Query,
     private Servicio: PagoDeDerechosService
   ) {
-     // No se necesita lógica de inicialización adicional.
+    // No se necesita lógica de inicialización adicional.
   }
 
   /**
@@ -133,16 +133,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     };
   }
 
- /**
-   * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
-   */
- obtenerBancoList(): void {
-  this.Servicio.onBancoList()
-    .pipe(takeUntil(this.destroyed$))
-    .subscribe((data: Catalogo[]) => {
-      this.bancoList = data;
-    });
-}
+  /**
+    * Obtiene la lista de bancos del servicio y la asigna a `obtenerBancoList`.
+    */
+  obtenerBancoList(): void {
+    this.Servicio.onBancoList()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Catalogo[]) => {
+        this.bancoList = data;
+      });
+  }
   /**
    * Pasa el valor de un campo del formulario a la tienda para la gestión del estado.
    * @param form - El formulario reactivo.
@@ -175,6 +175,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  public validarFechaFutura(compo: string): void {
+    this.pagoDeDerechosForm.get(compo)?.updateValueAndValidity({ emitEvent: false });
+  }
+
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
    * @param {string} nombreControl - Nombre del control a verificar.
@@ -187,10 +191,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       : false;
   }
 
-   /**
-   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
-   */
-   ngOnDestroy(): void {
+  /**
+  * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+  */
+  ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
   }
