@@ -1,6 +1,7 @@
 import {
   AlertComponent,
   BtnContinuarComponent,
+  FirmaElectronicaComponent,
   SolicitanteComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
@@ -11,6 +12,7 @@ import { NgModule } from '@angular/core';
 import { AvisoDeReciclajeRoutingModule } from './aviso-de-reciclaje-routing.module';
 import { AvisoReciclajeComponent } from './pages/aviso-reciclaje/aviso-reciclaje.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-solicitante/solicitud-datos-solicitante.component';
 
 @NgModule({
@@ -18,6 +20,7 @@ import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-soli
     AvisoReciclajeComponent,
     SolicitudDatosSolicitanteComponent,
     PantallasComponent,
+    PasoDosComponent,
   ],
   imports: [
     CommonModule,
@@ -27,6 +30,7 @@ import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-soli
     DatosSolicitudComponent,
     BtnContinuarComponent,
     AvisoDeReciclajeRoutingModule,
+    FirmaElectronicaComponent
   ],
 })
 export class AvisoDeReciclajeModule {}
