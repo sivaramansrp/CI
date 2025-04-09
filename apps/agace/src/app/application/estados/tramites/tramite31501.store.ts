@@ -5,6 +5,19 @@ import { Injectable } from '@angular/core';
  * Creacion del estado inicial para la interfaz de tramite 31501
  * @returns Solicitud31501
  */
+/**
+ * Representa el estado de la solicitud 31501.
+ * 
+ * @interface Solicitud31501State
+ * 
+ * @property {string} tipoBusqueda - Tipo de búsqueda realizada en la solicitud.
+ * @property {string} rfc - Registro Federal de Contribuyentes asociado a la solicitud.
+ * @property {string} tipoDeTramite - Tipo de trámite que se está gestionando.
+ * @property {string} tipoDeRequerimiento - Tipo de requerimiento relacionado con el trámite.
+ * @property {string} folioDeTramite - Folio único que identifica el trámite.
+ * @property {[]} datosDelContenedor - Información relacionada con los contenedores asociados al trámite.
+ * @property {string} [motivoCancelacion] - Motivo por el cual se cancela la solicitud (opcional).
+ */
 export interface Solicitud31501State {
   tipoBusqueda: string;
   rfc: string;

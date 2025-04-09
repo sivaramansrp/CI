@@ -29,26 +29,54 @@ import { tap } from 'rxjs';
 export class SolicitanteComponent implements OnInit {
   /**
    * @input tabindex
-   * 
-   * Define el índice de tabulación para el componente, 
-   * que determina el orden en el que los elementos son enfocados 
+   *
+   * Define el índice de tabulación para el componente,
+   * que determina el orden en el que los elementos son enfocados
    * al navegar con el teclado.
-   * 
+   *
    * @type {number}
    */
   @Input() tabindex!: number;
 
+  /**
+   * Representa el tipo de persona asociado.
+   * 
+   * @type {number}
+   * - Puede ser utilizado para identificar si la persona es física o moral.
+   */
   tipoPersona!: number;
+  /**
+   * Arreglo que contiene objetos de tipo `FormularioDinamico`.
+   * Representa los datos dinámicos asociados a una persona en el formulario.
+   */
   persona: FormularioDinamico[] = [];
+
+  /**
+   * Arreglo que contiene los formularios dinámicos relacionados con el domicilio fiscal.
+   * Cada elemento del arreglo representa un formulario dinámico que puede ser utilizado
+   * para capturar o mostrar información del domicilio fiscal del solicitante.
+   */
   domicilioFiscal: FormularioDinamico[] = [];
 
+  /**
+   * Formulario reactivo utilizado para gestionar los datos del solicitante.
+   * Este formulario contiene los controles necesarios para capturar y validar
+   * la información relacionada con el solicitante en el trámite.
+   */
   form!: FormGroup;
 
-    folioTramite: any;
+  /**
+   * Representa el folio del trámite asociado.
+   * 
+   * @type {any} - Tipo genérico, se recomienda especificar un tipo más concreto si es posible.
+   */
+  folioTramite: any;
 
-    fechaInicioTramite = new Date().toISOString().split('T')[0]; // Converts current date to 'YYYY-MM-DD'
-
-
+  /**
+   * Fecha de inicio del trámite, inicializada con la fecha actual en formato 'YYYY-MM-DD'.
+   * Se obtiene utilizando el método `toISOString()` de la clase `Date` y dividiendo la cadena resultante.
+   */
+  fechaInicioTramite = new Date().toISOString().split('T')[0];
 
   constructor(
     private solicitanteServicio: SolicitanteService,
@@ -62,8 +90,7 @@ export class SolicitanteComponent implements OnInit {
   }
 
   ngOnInit() {
-       // Retrieve data from state
-    this.folioTramite = history.state.data;
+    this.folioTramite = history?.state?.data;
     this.getDatosGenerales();
   }
 
@@ -75,19 +102,15 @@ export class SolicitanteComponent implements OnInit {
   obtenerTipoPersona(tipo: number): void {
     this.tipoPersona = tipo;
     if (tipo === TIPO_PERSONA.FISICA_NACIONAL) {
-      // Persona fisica nacional
       this.persona = PERSONA_FISICA_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     } else if (tipo === TIPO_PERSONA.MORAL_NACIONAL) {
-      // Persona moral nacional
       this.persona = PERSONA_MORAL_NACIONAL;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     } else if (tipo === TIPO_PERSONA.FISICA_EXTRANJERA) {
-      // Persona fisica extranjera
       this.persona = PERSONA_FISICA_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     } else if (tipo === TIPO_PERSONA.MORAL_EXTRANJERA) {
-      // Persona moral extranjera
       this.persona = PERSONA_MORAL_EXTRANJERO;
       this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_EXTRANJERA;
     }
@@ -146,14 +169,16 @@ export class SolicitanteComponent implements OnInit {
   getValidators(validators: string[]): ValidatorFn[] {
     const FORM_VALIDATORS: ValidatorFn[] = [];
     validators.forEach((validator) => {
-      if (validator === 'required') {
-        FORM_VALIDATORS.push(Validators.required);
-      } else if (validator.includes('maxLength')) {
-        const MAX = validator.split(':')[1];
-        FORM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
-      } else if (validator.includes('pattern')) {
-        const PATTERN = validator.split(':')[1];
-        FORM_VALIDATORS.push(Validators.pattern(PATTERN));
+      if (typeof validator === 'string') {
+        if (validator === 'required') {
+          FORM_VALIDATORS.push(Validators.required);
+        } else if (validator.includes('maxLength')) {
+          const MAX = validator.split(':')[1];
+          FORM_VALIDATORS.push(Validators.maxLength(Number(MAX)));
+        } else if (validator.includes('pattern')) {
+          const PATTERN = validator.split(':')[1];
+          FORM_VALIDATORS.push(Validators.pattern(PATTERN));
+        }
       }
     });
     return FORM_VALIDATORS;

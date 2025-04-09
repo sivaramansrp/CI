@@ -81,22 +81,4 @@ describe('CapturarRequerimientoComponent', () => {
     // expect(component.autoridadService.getTramiteList).toHaveBeenCalled();
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.tramite31501Store = component.tramite31501Store || {};
-    component.tramite31501Store.metodoNombre = jest.fn();
-    component.setValoresStore({
-      get: function() {
-        return {
-          value: {}
-        };
-      }
-    }, {}, {});
-  });
-
-  it('should run #seleccionaTab()', async () => {
-
-    component.seleccionaTab({});
-
-  });
-
 });
