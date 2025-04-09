@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 /**
- * @descripcion
+ * 
  * Servicio que proporciona métodos para obtener datos relacionados con el trámite de importación
  * de material de investigación científica. Este servicio realiza solicitudes HTTP para obtener
  * datos desde archivos JSON estáticos.
@@ -17,9 +17,9 @@ import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados
 })
 export class ImportacionEquipoAnticontaminanteService {
   /**
-   * @descripcion
+   * 
    * Constructor del servicio. Inyecta el cliente HTTP para realizar solicitudes.
-   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
+   * {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient) {
   /**
@@ -28,19 +28,19 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * @descripcion
+   * 
    * Obtiene la lista de países disponibles desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>} Observable que emite la lista de países.
+   * {Observable<Catalogo[]>} Observable que emite la lista de países.
    */
   getListaDePaisesDisponibles(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('/assets/json/130202/pais-procenia.json');
   }
 
   /**
-   * @descripcion
+   * 
    * Obtiene la lista de países por bloque desde un archivo JSON.
-   * @param {number} _bloqueId - El ID del bloque.
-   * @returns {Observable<Catalogo[]>} Observable que emite la lista de países por bloque.
+   * {number} _bloqueId - El ID del bloque.
+   * {Observable<Catalogo[]>} Observable que emite la lista de países por bloque.
    */
   getPaisesPorBloque(_bloqueId: number): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
@@ -49,9 +49,9 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * @descripcion
-   * Obtiene la lista de entidades federativas desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>} Observable que emite la lista de entidades federativas.
+   * 
+   * Obtiene la ista de entidades federativas desde un archivo JSON.
+   * {Observable<Catalogo[]>} Observable que emite la lista de entidades federativas.
    */
   getEntidadFederativa(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
@@ -60,9 +60,9 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * @descripcion
+   * 
    * Obtiene la lista de representaciones federales desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>} Observable que emite la lista de representaciones federales.
+   * {Observable<Catalogo[]>} Observable que emite la lista de representaciones federales.
    */
   getRepresentacionFederal(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
@@ -71,9 +71,9 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * @descripcion
+   * 
    * Obtiene las opciones de solicitud desde un archivo JSON.
-   * @returns {Observable<ProductoResponse>} Observable que emite las opciones de solicitud.
+   * {Observable<ProductoResponse>} Observable que emite las opciones de solicitud.
    */
   getSolicitudeOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
@@ -82,9 +82,9 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * @descripcion
+   * 
    * Obtiene las opciones de producto desde un archivo JSON.
-   * @returns {Observable<ProductoResponse>} Observable que emite las opciones de producto.
+   * {Observable<ProductoResponse>} Observable que emite las opciones de producto.
    */
   getProductoOptions(): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(
@@ -93,9 +93,9 @@ export class ImportacionEquipoAnticontaminanteService {
   }
 
   /**
-   * @descripcion
+   * 
    * Obtiene la lista de fracciones y descripciones de partidas de la mercancía desde un archivo JSON.
-   * @returns {Observable<Catalogo[]>} Observable que emite la lista de fracciones y descripciones.
+   * {Observable<Catalogo[]>} Observable que emite la lista de fracciones y descripciones.
    */
   getFraccionDescripcionPartidasDeLaMercancia(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(

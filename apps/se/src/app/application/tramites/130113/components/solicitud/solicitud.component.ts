@@ -1,11 +1,10 @@
-import { Catalogo, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_NUMEROS} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CompliMentaria } from '../../enums/partidasdela-table.enum';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 
-import { HttpClient } from '@angular/common/http';
 import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
@@ -189,7 +188,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private tramite130113Store: Tramite130113Store,
     private tramite130113Query: Tramite130113Query,
     private importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService,
@@ -261,7 +259,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern(REG_X.SOLO_NUMEROS),
+          Validators.pattern(REGEX_SOLO_NUMEROS),
           Validators.min(1),
         ],
       ],
@@ -270,7 +268,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         '',
         [
           Validators.required,
-          Validators.pattern(REG_X.DECIMALES_DOS_LUGARES),
+          Validators.pattern(REGEX_PATRON_DECIMAL_2),
           Validators.min(0.01),
         ],
       ],

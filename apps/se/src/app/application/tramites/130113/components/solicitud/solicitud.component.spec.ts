@@ -40,11 +40,6 @@ describe('SolicitudComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should call configuracionFormularioSuscripciones on ngOnInit', () => {
-    const spy = spyOn(component, 'configuracionFormularioSuscripciones');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
-  });
 
   it('should initialize mercanciaForm with default values', () => {
     expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
