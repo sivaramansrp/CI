@@ -13,8 +13,9 @@ import { AvisoDeReciclajeRoutingModule } from './aviso-de-reciclaje-routing.modu
 import { AvisoReciclajeComponent } from './pages/aviso-reciclaje/aviso-reciclaje.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
-import { RouterModule } from '@angular/router';
 import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-solicitante/solicitud-datos-solicitante.component';
+import { ToastrModule } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { SolicitudDatosSolicitanteComponent } from './pages/solicitud-datos-soli
     BtnContinuarComponent,
     AvisoDeReciclajeRoutingModule,
     FirmaElectronicaComponent,
-    RouterModule
+    ToastrModule.forRoot(),
   ],
+  providers:[ToastrService]
 })
 export class AvisoDeReciclajeModule {}
