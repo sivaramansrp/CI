@@ -128,8 +128,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Actualiza el estado del almacén con la llave de pago proporcionada.
    */
   manejarCambioLlavePago(): void {
+    const CAPITALIZED_VALUE = this.formularioPagoDerechos.get('llaveDePago')?.value.toUpperCase();
     this.tramite230901Store.setLlaveDePago(
-      this.formularioPagoDerechos.get('llaveDePago')?.value
+      CAPITALIZED_VALUE
     );
   }
 

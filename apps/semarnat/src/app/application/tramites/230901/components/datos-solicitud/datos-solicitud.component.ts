@@ -296,25 +296,24 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.otraFraccionSeleccionada = true;
     }
     this.formularioMercancia.get('fraccionDescripcion')?.disable();
+  }
 
-    this.formularioMercancia
-      .get('otraFraccion')
-      ?.valueChanges.subscribe((checked) => {
-        if (checked) {
-          this.formularioMercancia.addControl(
-            'fraccionVigenteTIGIE',
-            this.formBuilder.control('')
-          );
-          this.formularioMercancia.get('fraccionArancelaria')?.setValue('0');
-          this.formularioMercancia
-            .get('fraccionDescripcion')
-            ?.reset();
-          this.otraFraccionSeleccionada = true;
-        } else {
-          this.otraFraccionSeleccionada = false;
-          this.formularioMercancia.removeControl('fraccionVigenteTIGIE');
-        }
-      });
+  manejarCambioOtraFraccion():void{
+    const CHECKED = this.formularioMercancia.get('otraFraccion')?.value;
+    if (CHECKED) {
+      this.formularioMercancia.addControl(
+        'fraccionVigenteTIGIE',
+        this.formBuilder.control('')
+      );
+      this.formularioMercancia.get('fraccionArancelaria')?.setValue('0');
+      this.formularioMercancia
+        .get('fraccionDescripcion')
+        ?.reset();
+      this.otraFraccionSeleccionada = true;
+    } else {
+      this.otraFraccionSeleccionada = false;
+      this.formularioMercancia.removeControl('fraccionVigenteTIGIE');
+    }
   }
 
   /**
