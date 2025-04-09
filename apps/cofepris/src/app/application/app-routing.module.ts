@@ -64,10 +64,7 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/260206/maquila-materias-primas.module').then(
         (m) => m.MaquilaMateriasPrimasModule
-      ),
-      import('./tramites/260206/maquila-materias-primas.module').then(
-        (m) => m.MaquilaMateriasPrimasModule
-      ),
+      )
   },
   {
     path: 'permiso-plaguicidas',
