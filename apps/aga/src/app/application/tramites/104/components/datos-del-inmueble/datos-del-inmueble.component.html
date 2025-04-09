@@ -1,0 +1,152 @@
+<ng-titulo titulo="Programa de fomento a la exportación" />
+
+<form [formGroup]="fomentoExportacionForm">
+    <div class="row">
+        <div class="col-md-10">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="tipoPrograma"
+                [label]="'Tipo de programa/Autorización'" [required]="true"
+                name="Tipo de programa/Autorización"></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+            <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="folioAutorizacion"
+                [label]="'Folio del programa/Autorización'" [required]="true"
+                name="Folio del programa/Autorización"></app-catalogo-select>
+        </div>
+    </div>
+</form>
+
+<ng-titulo titulo="Datos de la planta para realizar los procesos de ensamble y fabricación" />
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <ng-table [commonTableHeader]="establecimientoHeaderData"
+            [commonTableBody]="establecimientoBodyData"></ng-table>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination d-flex justify-content-center">
+                <li class="page-item"><a class="page-link">1</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class=" text-end mt-5">
+    <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar">Agregar</button>
+    <button class="btn btn-default me-2">Modificar</button>
+    <button class="btn btn-primary">Eliminar</button>
+</div>
+
+<div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
+    [ngStyle]="{'display': mostrarAlerta ? 'block' : 'none'}">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 350px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ mensajeDeAlerta }}</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" (click)="cerrarModal()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-4">
+    <div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Agregar</h4>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="formularioDireccion">
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="calleInput" class="form-label">Calle</label>
+                                    <input type="text" class="form-control" id="calleInput" formControlName="calle"
+                                        placeholder="Ingrese Calle" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="numeroExteriorInput" class="form-label">Número Exterior</label>
+                                    <input type="text" class="form-control" id="numeroExteriorInput"
+                                        formControlName="numeroExterior" placeholder="Ingrese Número Exterior" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="numeroInteriorInput" class="form-label">Número Interior</label>
+                                    <input type="text" class="form-control" id="numeroInteriorInput"
+                                        formControlName="numeroInterior"
+                                        placeholder="Ingrese Número Interior (Opcional)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[0].catalogos"
+                                        formControlName="pais" [label]="'País'" [required]="true">
+                                    </app-catalogo-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[1].catalogos"
+                                        formControlName="entidadFederativa" [label]="'Entidad Federativa'"
+                                        [required]="true">
+                                    </app-catalogo-select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[2].catalogos"
+                                        formControlName="municipioDelegacion" [label]="'Municipio o Delegación'"
+                                        [required]="true">
+                                    </app-catalogo-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[3].catalogos"
+                                        formControlName="colonia" [label]="'Colonia'" [required]="true">
+                                    </app-catalogo-select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[4].catalogos"
+                                        formControlName="localidad" [label]="'Localidad'" [required]="true">
+                                    </app-catalogo-select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="codigoPostalInput" class="form-label">Código Postal</label>
+                                    <input type="text" class="form-control" id="codigoPostalInput"
+                                        formControlName="codigoPostal" placeholder="Ingrese Código Postal" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer custom-footer justify-content-end">
+                    <button type="button" class="btn btn-primary">Agregar</button>
+                    <button type="button" class="btn btn-default btn-space">Limpiar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
