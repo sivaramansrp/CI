@@ -3,6 +3,8 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Destinatario } from '../../models/destinatario.model';
 import { ElementRef } from '@angular/core';
 import { Fabricante } from '../../models/fabricante.model';
+import { Proveedor } from '../../models/proveedor.model';
+import { Facturador } from '../../models/facturador.model';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -37,6 +39,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Utiliza selección con checkbox.
    */
   destinatarioSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * @description Variable que almacena el tipo seleccionado para realizar una acción específica.
+   * Se utiliza principalmente en el contexto de confirmación de eliminación de mercancías.
+   * 
+   * @type {string}
+   */
+  seleccionadoTipo: string = '';
+
+  /**
+   * @description Referencia al elemento del modal de confirmación.
+   * Este modal se utiliza para confirmar la eliminación de mercancías o SCIAN.
+   * 
+   * @type {ElementRef}
+   */
+  @ViewChild('modalConfirmar') modalConfirmarElement!: ElementRef;
 
   /**
    * Configuración de las columnas de la tabla de destinatarios.
@@ -215,10 +233,180 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   fabricanteDatos: Fabricante[] = [];
 
+  proveedorConfiguracionTabla: ConfiguracionColumna<Proveedor>[] = [
+    {
+      encabezado: 'Nombre/denominación o razón social',
+      clave: (item: Fabricante) => item.nombre,
+      orden: 1,
+    },
+    {
+      encabezado: 'R.F.C.',
+      clave: (item: Fabricante) => item.rfc,
+      orden: 2,
+    },
+    {
+      encabezado: 'CURP',
+      clave: (item: Fabricante) => item.curp,
+      orden: 3,
+    },
+    {
+      encabezado: 'Teléfono',
+      clave: (item: Fabricante) => item.telefono,
+      orden: 4,
+    },
+    {
+      encabezado: 'Correo electrónico',
+      clave: (item: Fabricante) => item.correoElectronico,
+      orden: 5,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (item: Fabricante) => item.calle,
+      orden: 6,
+    },
+    {
+      encabezado: 'Número exterior',
+      clave: (item: Fabricante) => item.numeroExterior,
+      orden: 7,
+    },
+    {
+      encabezado: 'Número interior',
+      clave: (item: Fabricante) => item.numeroInterior,
+      orden: 8,
+    },
+    {
+      encabezado: 'País',
+      clave: (item: Fabricante) => item.pais,
+      orden: 9,
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (item: Fabricante) => item.colonia,
+      orden: 10,
+    },
+    {
+      encabezado: 'Municipio o alcaldía',
+      clave: (item: Fabricante) => item.municipio,
+      orden: 11,
+    },
+    {
+      encabezado: 'Localidad',
+      clave: (item: Fabricante) => item.localidad,
+      orden: 12,
+    },
+    {
+      encabezado: 'Estado',
+      clave: (item: Fabricante) => item.estado,
+      orden: 13,
+    },
+    {
+      encabezado: 'Estado',
+      clave: (item: Fabricante) => item.estado2,
+      orden: 14,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (item: Fabricante) => item.codigo,
+      orden: 15,
+    },
+  ];
+
+  proveedorDatos: Proveedor[] = [];
+
+  proveedorSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  facturadorConfiguracionTabla: ConfiguracionColumna<Facturador>[] = [
+    {
+      encabezado: 'Nombre/denominación o razón social',
+      clave: (item: Fabricante) => item.nombre,
+      orden: 1,
+    },
+    {
+      encabezado: 'R.F.C.',
+      clave: (item: Fabricante) => item.rfc,
+      orden: 2,
+    },
+    {
+      encabezado: 'CURP',
+      clave: (item: Fabricante) => item.curp,
+      orden: 3,
+    },
+    {
+      encabezado: 'Teléfono',
+      clave: (item: Fabricante) => item.telefono,
+      orden: 4,
+    },
+    {
+      encabezado: 'Correo electrónico',
+      clave: (item: Fabricante) => item.correoElectronico,
+      orden: 5,
+    },
+    {
+      encabezado: 'Calle',
+      clave: (item: Fabricante) => item.calle,
+      orden: 6,
+    },
+    {
+      encabezado: 'Número exterior',
+      clave: (item: Fabricante) => item.numeroExterior,
+      orden: 7,
+    },
+    {
+      encabezado: 'Número interior',
+      clave: (item: Fabricante) => item.numeroInterior,
+      orden: 8,
+    },
+    {
+      encabezado: 'País',
+      clave: (item: Fabricante) => item.pais,
+      orden: 9,
+    },
+    {
+      encabezado: 'Colonia',
+      clave: (item: Fabricante) => item.colonia,
+      orden: 10,
+    },
+    {
+      encabezado: 'Municipio o alcaldía',
+      clave: (item: Fabricante) => item.municipio,
+      orden: 11,
+    },
+    {
+      encabezado: 'Localidad',
+      clave: (item: Fabricante) => item.localidad,
+      orden: 12,
+    },
+    {
+      encabezado: 'Estado',
+      clave: (item: Fabricante) => item.estado,
+      orden: 13,
+    },
+    {
+      encabezado: 'Estado',
+      clave: (item: Fabricante) => item.estado2,
+      orden: 14,
+    },
+    {
+      encabezado: 'Código postal',
+      clave: (item: Fabricante) => item.codigo,
+      orden: 15,
+    },
+  ];
+
+  facturadorDatos: Facturador[] = [];
+
+  facturadorSeleccionTabla = TablaSeleccion.CHECKBOX;
+
   /**
    * Lista de destinatarios seleccionados.
    */
-  selectedDestinatario: Fabricante[] = [];
+  selectedDestinatario: Destinatario[] = [];
+
+  selectedFabricante: Fabricante[] = [];
+
+  selectedProveedor: Proveedor[] = [];
+
+  selectedFacturador: Facturador[] = [];
 
   /**
    * Controlador para manejar la destrucción del componente.
@@ -233,7 +421,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Referencia al elemento del modal para agregar mercancías.
    */
-  @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+  @ViewChild('modalAgregarDestinatario') modalElement!: ElementRef;
 
   /**
    * Constructor del componente.
@@ -249,6 +437,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   ) {
     this.obtenerDestinatarioListo();
     this.obtenerFabricanteListo();
+    this.obtenerProveedorListo();
+    this.obtenerFacturadorListo();
   }
 
   /**
@@ -262,7 +452,11 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud260910State) => {
           this.solicitud260910State = respuesta;
+          console.log('respuesta', respuesta);
           this.destinatarioDatos = this.solicitud260910State.destinatarioDatos;
+          this.fabricanteDatos = this.solicitud260910State.fabricanteDatos;
+          this.proveedorDatos = this.solicitud260910State.proveedorDatos;
+          this.facturadorDatos = this.solicitud260910State.facturadorDatos;
         })
       )
       .subscribe();
@@ -295,6 +489,31 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: Fabricante[]) => {
           this.fabricanteDatos = respuesta;
+          this.solicitud260910Store.setFabricanteDatos(respuesta);
+        },
+      });
+  }
+
+  obtenerProveedorListo(): void {
+    this.solicitudDatosService
+      .obtenerProveedorListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: Proveedor[]) => {
+          this.proveedorDatos = respuesta;
+          this.solicitud260910Store.setProveedorDatos(respuesta);
+        },
+      });
+  }
+
+  obtenerFacturadorListo(): void {
+    this.solicitudDatosService
+      .obtenerFacturadorListo()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (respuesta: Facturador[]) => {
+          this.facturadorDatos = respuesta;
+          this.solicitud260910Store.setFacturadorDatos(respuesta);
         },
       });
   }
@@ -302,7 +521,38 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Abre el modal para modificar mercancías.
    */
-  openModificarMercancias(): void {
+  openModificarDestinatario(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * Abre el modal para modificar fabricantes.
+   * 
+   * @remarks
+   * Este método utiliza la referencia al elemento del modal (`modalElement`) 
+   * para crear una instancia del modal de Bootstrap y mostrarlo en pantalla.
+   * 
+   * @method
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  openModificarFabricante(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  openModificarProveedor(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  openModificarFacturador(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
@@ -312,7 +562,28 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * Abre el modal para agregar nuevas mercancías.
    */
-  agregarMercancias(): void {
+  agregarDestinatario(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  agregarFabricante(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  agregarProveedor(): void {
+    if (this.modalElement) {
+      const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  agregarFacturador(): void {
     if (this.modalElement) {
       const MODAL_INSTANCE = new Modal(this.modalElement.nativeElement);
       MODAL_INSTANCE.show();
@@ -323,19 +594,91 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos seleccionados de destinatarios desde el evento emitido.
    * @param evento - Lista de fabricantes seleccionados.
    */
-  getDestinatarioDatos(evento: Fabricante[]): void {
+  getDestinatarioDatos(evento: Destinatario[]): void {
     this.selectedDestinatario = evento;
   }
 
   /**
+   * @method getFabricanteDatos
+   * @description Actualiza la propiedad `selectedDestinatario` con los datos proporcionados por el evento.
+   * @param {Fabricante[]} evento - Lista de objetos de tipo `Fabricante` que se utilizarán para actualizar el destinatario seleccionado.
+   */
+  getFabricanteDatos(evento: Fabricante[]): void {
+    this.selectedFabricante = evento;
+  }
+
+  getProveedorDatos(evento: Fabricante[]): void {
+    this.selectedProveedor = evento;
+  }
+
+  getFacturadorDatos(evento: Fabricante[]): void {
+    this.selectedFacturador = evento;
+  }
+  /**
    * Elimina una mercancía seleccionada de la lista almacenada.
    * Si hay destinatarios seleccionados, elimina el primero de la lista.
    */
-  eliminarMercancias(): void {
+  eliminarDestinatario(): void {
     if (this.selectedDestinatario.length > 0) {
       this.solicitud260910Store.removeDestinatarioDato(
         this.selectedDestinatario[0]
       );
+    }
+  }
+
+  /**
+   * Elimina un fabricante seleccionado de la lista.
+   * 
+   * @remarks
+   * Este método verifica si hay un fabricante seleccionado en la lista 
+   * (`selectedFabricante`). Si existe al menos uno, elimina el primer 
+   * elemento seleccionado utilizando el método `removeFabricanteDato` 
+   * del store `solicitud260910Store`.
+   * 
+   * @method
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  eliminarFabricante(): void {
+    if (this.selectedFabricante.length > 0) {
+      this.solicitud260910Store.removeFabricanteDato(
+        this.selectedFabricante[0]
+      );
+    }
+  }
+
+  eliminarProveedor(): void {
+    if (this.selectedProveedor.length > 0) {
+      this.solicitud260910Store.removeProveedorDato(
+        this.selectedProveedor[0]
+      );
+    }
+  }
+
+  eliminarFacturador(): void {
+    if (this.selectedFacturador.length > 0) {
+      this.solicitud260910Store.removeFacturadorDato(
+        this.selectedFacturador[0]
+      );
+    }
+  }
+
+  confirmarEliminar(tipo: string): void {
+    this.seleccionadoTipo = tipo;
+    if (this.modalConfirmarElement) {
+      const MODAL_CONFIRMAR_INSTANCE = new Modal(this.modalConfirmarElement.nativeElement);
+      MODAL_CONFIRMAR_INSTANCE.show();
+    }
+  }
+
+  seleccionaTipo(tipo: string): void {
+    if (tipo === 'fabricante') {
+      this.eliminarFabricante();
+    } else if (tipo === 'destinatario') {
+      this.eliminarDestinatario();
+    } else if (tipo === 'proveedor') {
+      this.eliminarProveedor();
+    } else if (tipo === 'facturador') {
+      this.eliminarFacturador();
     }
   }
 

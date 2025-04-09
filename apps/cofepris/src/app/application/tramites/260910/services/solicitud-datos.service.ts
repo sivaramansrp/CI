@@ -5,6 +5,8 @@ import { Destinatario } from '../models/destinatario.model';
 import { DestinatarioCatalogos } from '../models/destinatario.model';
 import { DestinatarioImitar } from '../models/mercancia.model';
 import { Fabricante } from '../models/fabricante.model';
+import { Proveedor } from '../models/proveedor.model';
+import { Facturador } from '../models/facturador.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
@@ -12,6 +14,8 @@ import { MercanciaCatalogos } from '../models/mercancia.model';
 import { MercanciaCrossList } from '../models/mercancia.model';
 import { Observable } from 'rxjs';
 import { Solicitud } from '../models/solicitud-datos.model';
+import { SCIAN } from '../models/SCIAN.model';
+import { Asociados } from '../models/asociados.model';
 /**
  * Servicio `SolicitudDatosService`.
  * Este servicio se encarga de gestionar las operaciones relacionadas con los datos de la solicitud 260910.
@@ -92,6 +96,16 @@ export class SolicitudDatosService {
   }
 
   /**
+   * Obtiene la lista de mercancías disponibles.
+   * @returns Observable con la lista de mercancías.
+   */
+  obtenerSCIANMesa(): Observable<SCIAN[]> {
+    return this.http
+      .get<SCIAN[]>('../../../assets/json/260910/SCIAN.json')
+      .pipe();
+  }
+
+  /**
    * Obtiene la lista de claves de lotes disponibles.
    * @returns Observable con las claves de lotes.
    */
@@ -121,6 +135,23 @@ export class SolicitudDatosService {
       .pipe();
   }
 
+  obtenerProveedorListo(): Observable<Proveedor[]> {
+    return this.http
+      .get<Proveedor[]>('../../../assets/json/260910/proveedor.json')
+      .pipe();
+  }
+
+  obtenerFacturadorListo(): Observable<Facturador[]> {
+    return this.http
+      .get<Proveedor[]>('../../../assets/json/260910/facturador.json')
+      .pipe();
+  }
+
+  obtenerTramitesAsociadosListo(): Observable<Asociados[]> {
+    return this.http
+      .get<Asociados[]>('../../../assets/json/260910/asociados.json')
+      .pipe();
+  }
   /**
    * Obtiene los catálogos relacionados con los destinatarios.
    * @returns Observable con los catálogos de destinatarios.

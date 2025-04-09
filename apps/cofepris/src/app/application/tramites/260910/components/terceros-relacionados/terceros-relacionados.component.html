@@ -6,65 +6,134 @@
   </div>
 
   <div class="col-md-12">
-    <label class="form-label" for="">Destinatario (destino final)*:</label>
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="destinatarioSeleccionTabla"
-      [configuracionTabla]="destinatarioConfiguracionTabla"
-      [datos]="destinatarioDatos"
-      (listaDeFilaSeleccionada)="getDestinatarioDatos($event)"
-    >
+    <label class="form-label" for="">Fabricante:</label>
+    <app-tabla-dinamica [tipoSeleccionTabla]="fabricanteSeleccionTabla"
+      [configuracionTabla]="fabricanteConfiguracionTabla" [datos]="fabricanteDatos"
+      (listaDeFilaSeleccionada)="getFabricanteDatos($event)">
     </app-tabla-dinamica>
   </div>
 
   <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
     <div class="btn-group">
-      @if (selectedDestinatario.length > 0) {
-      <button
-        class="btn btn-default 3"
-        type="button"
-        (click)="eliminarMercancias()"
-      >
+      @if (selectedFabricante.length > 0) {
+      <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarFabricante" data-bs-toggle="modal"
+        data-bs-target="#modalConfirmar" (click)="confirmarEliminar('fabricante')">
         Eliminar
       </button>
-      <button
-        type="button"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias"
-        class="btn btn-default btn-space ms-3"
-        (click)="openModificarMercancias()"
-      >
+      <button type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarFabricante"
+        class="btn btn-default btn-space ms-3" (click)="openModificarFabricante()">
         Modificar
       </button>
       }
-      <button
-        type="button"
-        class="btn btn-primary ms-3"
-        data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias"
-        (click)="agregarMercancias()"
-      >
+      <button type="button" class="btn btn-primary ms-3">
         Agregar
       </button>
     </div>
   </div>
 
   <div class="col-md-12">
-    <label class="form-label" for="">Fabricante*:</label>
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="fabricanteSeleccionTabla"
-      [configuracionTabla]="fabricanteConfiguracionTabla"
-      [datos]="fabricanteDatos"
-    >
+    <label class="form-label" for="">Destinatario (destino final)*:</label>
+    <app-tabla-dinamica [tipoSeleccionTabla]="destinatarioSeleccionTabla"
+      [configuracionTabla]="destinatarioConfiguracionTabla" [datos]="destinatarioDatos"
+      (listaDeFilaSeleccionada)="getDestinatarioDatos($event)">
     </app-tabla-dinamica>
   </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      @if (selectedDestinatario.length > 0) {
+      <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarDestinatario" data-bs-toggle="modal"
+        data-bs-target="#modalConfirmar" (click)="confirmarEliminar('destinatario')">
+        Eliminar
+      </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarDestinatario"
+        class="btn btn-default btn-space ms-3" (click)="openModificarDestinatario()">
+        Modificar
+      </button>
+      }
+      <button type="button" class="btn btn-primary ms-3">
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label class="form-label" for="">Proveedor:</label>
+    <app-tabla-dinamica [tipoSeleccionTabla]="proveedorSeleccionTabla"
+      [configuracionTabla]="proveedorConfiguracionTabla" [datos]="proveedorDatos"
+      (listaDeFilaSeleccionada)="getProveedorDatos($event)">
+    </app-tabla-dinamica>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      @if (selectedProveedor.length > 0) {
+      <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarProveedor" data-bs-toggle="modal"
+        data-bs-target="#modalConfirmar" (click)="confirmarEliminar('proveedor')">
+        Eliminar
+      </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarProveedor"
+        class="btn btn-default btn-space ms-3" (click)="openModificarProveedor()">
+        Modificar
+      </button>
+      }
+      <button type="button" class="btn btn-primary ms-3">
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <label class="form-label" for="">Facturador:</label>
+    <app-tabla-dinamica [tipoSeleccionTabla]="facturadorSeleccionTabla"
+      [configuracionTabla]="facturadorConfiguracionTabla" [datos]="facturadorDatos"
+      (listaDeFilaSeleccionada)="getFacturadorDatos($event)">
+    </app-tabla-dinamica>
+  </div>
+
+  <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
+    <div class="btn-group">
+      @if (selectedFacturador.length > 0) {
+      <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarFacturador" data-bs-toggle="modal"
+        data-bs-target="#modalConfirmar" (click)="confirmarEliminar('facturador')">
+        Eliminar
+      </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#modalAgregarFacturador"
+        class="btn btn-default btn-space ms-3" (click)="openModificarFacturador()">
+        Modificar
+      </button>
+      }
+      <button type="button" class="btn btn-primary ms-3">
+        Agregar
+      </button>
+    </div>
+  </div>
+
+
 </div>
-<div
-  class="modal fade"
-  id="modalAgregarMercancias"
-  tabindex="-1"
-  aria-labelledby="modalAgregarMercanciasLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="modalConfirmar" tabindex="-1" aria-labelledby="modalConfirmarLabel">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header black">
+      </div>
+      <div class="modal-body">
+        <p>¿Confirma la eliminaci&oacute;n los registros marcados?</p>
+      </div>
+      <div class="modal-footer custom-footer">
+        <div class="btn-group">
+          <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarConfirmar"
+            data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" #closeModal
+            (click)="seleccionaTipo(seleccionadoTipo);">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalAgregarDestinatario" tabindex="-1" aria-labelledby="modalAgregarDestinatarioLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <app-modificar-destinatario></app-modificar-destinatario>

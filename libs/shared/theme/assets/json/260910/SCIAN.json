@@ -1,11 +1,10 @@
-{
-    "tableHeader": ["Clave S.C.I.A.N", "Descripción del S.C.I.A.N."],
-    "tableBody": [
-        {
-            "tbodyData" : ["311321","Deshidratación  de productos agrícolas alimecticios."]
-        },
-        {
-            "tbodyData" : ["614074","Deshidratación  de productos agrícolas alimecticios."]
-        }
-    ]
-}
+[
+    {
+        "claveSCIAN": "311321",
+        "claveSCIANDesc": "Deshidratación  de productos agrícolas alimecticios 1"
+    },
+    {
+        "claveSCIAN": "614074",
+        "claveSCIANDesc": "Deshidratación  de productos agrícolas alimecticios 2"
+    }
+]

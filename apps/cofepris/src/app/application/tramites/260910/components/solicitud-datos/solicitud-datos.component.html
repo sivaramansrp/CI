@@ -9,7 +9,8 @@
               <h6> <a aria-label="Repeat"><i class="bi bi-clipboard2-fill" aria-hidden="true"></i></a> Opciones de
                 pre-llenado de Solicitud</h6>
             </h6>
-            <button type="button" class="collpase-button collapsed" (keydown)="mostrarColapsable()"></button>
+            <button type="button" class="collpase-button {{(!colapsable) ? 'collapsed' : '' }}"
+              (keydown)="mostrarColapsable()"></button>
           </div>
           @if(colapsable){
           <div class="panel-collapse collapse in" id="panel-01">
@@ -23,6 +24,15 @@
                   [configuracionTabla]="solicitudConfiguracionTabla">
                 </app-tabla-dinamica>
               </div>
+              @if(solicitud260910State.tipoOperacion == 'MOD' || solicitud260910State.tipoOperacion == 'MYP') {
+              <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
+                <div class="btn-group">
+                  <button class="btn btn-primary ms-2" type="button">
+                    Copiar datos en una Nueva Solcitud
+                  </button>
+                </div>
+              </div>
+              }
             </div>
           </div>
           }
@@ -48,12 +58,11 @@
     <div class="col-md-12">
       <ng-titulo titulo="Datos del establecimiento" />
     </div>
-
-    <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
-      <div class="btn-group">
-        <button class="btn btn-primary ms-2" type="button">
-          Seleccionar establecimiento
-        </button>
+    <div class="col-md-12">
+      <div class="text-end">
+        <button type="button" class="btn btn-primary" name="seleccionarEstablecimiento" id="btnEstablecimiento"
+          title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal"
+          data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()">Seleccionar establecimiento</button>
       </div>
     </div>
 
@@ -123,13 +132,17 @@
 
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
-      <ng-table [commonTableHeader]="tableDataSCIAN.tableHeader"
-        [commonTableBody]="tableDataSCIAN.tableBody"></ng-table>
+      <app-tabla-dinamica [tipoSeleccionTabla]="SCIANSeleccionTabla" [datos]="SCIANDatos"
+        (listaDeFilaSeleccionada)="getSCIANDatos($event)" [configuracionTabla]="SCIANConfiguracionTabla">
+      </app-tabla-dinamica>
+      <!-- <ng-table [commonTableHeader]="tableDataSCIAN.tableHeader"
+        [commonTableBody]="tableDataSCIAN.tableBody"></ng-table> -->
     </div>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
       <div class="btn-group">
-        <button class="btn btn-default ms-3" type="button" name="aceptar" id="eliminarSCIAN">
+        <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarSCIAN"
+          data-bs-toggle="modal" data-bs-target="#modalConfirmar" (click)="confirmarEliminarMercancias('SCIAN')">
           Eliminar
         </button>
         <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregarSCIAN"
@@ -195,8 +208,8 @@
           data-bs-target="#modalAgregarMercancias" (click)="openModificarMercancias()">
           Modificar
         </button>
-        <button class="btn btn-default ms-3" type="button" name="aceptar" id="agregarAduana"
-          (click)="eliminarMercancias()">
+        <button class="btn btn-default ms-3" type="button" name="eliminar" id="eliminarMercancias"
+          data-bs-toggle="modal" data-bs-target="#modalConfirmar" (click)="confirmarEliminarMercancias('Mercancias')">
           Eliminar
         </button>
         <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal"
@@ -265,53 +278,93 @@
       <input class="form-control" id="apellidoMaterno" placeholder="" type="text" formControlName="apellidoMeterno" />
     </div>
   </div>
-  <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="modalAlerta" tabindex="-1" aria-labelledby="modalAlertaLabel">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <app-mercancias-datos></app-mercancias-datos>
+        <div class="modal-header black">
+        </div>
+        <div class="modal-body">
+          <p>Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su
+            establecimiento.</p>
+        </div>
+        <div class="modal-footer custom-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="modalConfirmar" tabindex="-1" aria-labelledby="modalConfirmarLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header black">
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro que deseas eliminar los registros marcados?</p>
+        </div>
+        <div class="modal-footer custom-footer">
+          <div class="btn-group">
+            <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarConfirmar"
+              data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" #closeModal
+              (click)="seleccionaTipo(seleccionadoTipo);">Aceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="modal fade" id="modalAgregarMercancias" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <app-mercancias-datos></app-mercancias-datos>
+        </div>
       </div>
     </div>
   </div>
 </form>
-<div class="modal fade" id="modalAgregarSCIAN" tabindex="-1" aria-labelledby="SCIANLabel" aria-hidden="true">
+<div class="modal fade" id="modalAgregarSCIAN" tabindex="-1" aria-labelledby="SCIANLabel">
   <form [formGroup]="claveSCIANForm">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="col-md-12">
-          <ng-titulo titulo="Clave S.C.I.A.N." />
-        </div>
-        <div class="col-md-6 mt-4">
-          <app-catalogo-select [id]="'claveSCIAN'" [catalogo]="SCIANCatalogo.catalogos"
-            [label]="SCIANCatalogo.labelNombre" [placeholder]="SCIANCatalogo.primerOpcion"
-            [required]="SCIANCatalogo.required" formControlName="claveSCIAN" (selectionChange)="setClaveSCIAN($event)">
-          </app-catalogo-select>
-        </div>
-        <div class="col-md-6 mt-4">
-          <app-catalogo-select [id]="'descSCIAN'" [catalogo]="SCIANDescCatalogo.catalogos"
-            [label]="SCIANDescCatalogo.labelNombre" [placeholder]="SCIANDescCatalogo.primerOpcion"
-            [required]="SCIANDescCatalogo.required" formControlName="claveSCIANDesc"
-            (selectionChange)="setClaveSCIANDesc($event)">
-          </app-catalogo-select>
-        </div>
-        <div class="col-md-12 mt-5 d-flex justify-content-end align-items-end">
-          <div class="btn-group">
-            <button class="btn btn-default ms-3" type="button" name="limpiar" id="limpiarSCIANModal"
-              data-bs-dismiss="modal">
-              Limpiar
-            </button>
-            <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarSCIANModal"
-              data-bs-dismiss="modal">
-              Cancelar
-            </button>
-            <button type="button" class="btn btn-primary ms-3" name="agregar" id="agregarSCIANModal"
-              data-bs-dismiss="modal">
-              Agregar
-            </button>
+    <div class="col-md-12">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="col-md-12">
+            <ng-titulo titulo="Clave S.C.I.A.N." />
+          </div>
+          <div class="col-md-6 mt-4">
+            <app-catalogo-select [id]="'claveSCIAN'" [catalogo]="SCIANCatalogo.catalogos"
+              [label]="SCIANCatalogo.labelNombre" [placeholder]="SCIANCatalogo.primerOpcion"
+              [required]="SCIANCatalogo.required" formControlName="claveSCIAN"
+              (selectionChange)="setClaveSCIAN($event)">
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-6 mt-4">
+            <app-catalogo-select [id]="'descSCIAN'" [catalogo]="SCIANDescCatalogo.catalogos"
+              [label]="SCIANDescCatalogo.labelNombre" [placeholder]="SCIANDescCatalogo.primerOpcion"
+              [required]="SCIANDescCatalogo.required" formControlName="claveSCIANDesc"
+              (selectionChange)="setClaveSCIANDesc($event)">
+            </app-catalogo-select>
+          </div>
+          <div class="col-md-12 mt-5 mb-5 ml-5 text-end">
+            <div class="btn-group">
+              <button class="btn btn-default ms-3" type="button" name="limpiar" id="limpiarSCIANModal"
+                data-bs-dismiss="modal">
+                Limpiar
+              </button>
+              <button class="btn btn-danger ms-3" type="button" name="eliminar" id="cancelarSCIANModal"
+                data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-primary ms-3" name="agregar" id="agregarSCIANModal"
+                data-bs-dismiss="modal" (click)="agregarSCIAN();">
+                Agregar
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </form>
 </div>

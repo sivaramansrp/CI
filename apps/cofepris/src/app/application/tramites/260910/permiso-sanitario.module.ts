@@ -29,6 +29,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { forwardRef } from '@angular/core';
+import { TramitesAsociadosComponent } from './components/tramites-asociados/tramites-asociados.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { forwardRef } from '@angular/core';
     PagoDerechosComponent,
     TercerosRelacionadosComponent,
     ModificarDestinatarioComponent,
+    TramitesAsociadosComponent
   ],
   imports: [
     CommonModule,

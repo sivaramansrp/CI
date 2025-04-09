@@ -14,7 +14,7 @@ export class PasoUnoComponent {
    * El índice de la pestaña actualmente activa.
    * Valor predeterminado: 2 (lo que indica la tercera pestaña, ya que la indexación comienza desde 0).
    */
-  public indice = 3;
+  public indice = 1;
 
   /**
    * Cambia el índice de la pestaña activa basado en la selección del usuario.

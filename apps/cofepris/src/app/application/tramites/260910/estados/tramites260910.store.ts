@@ -1,9 +1,13 @@
 import { ClavesDeLotes } from '../models/claves-de-lotes.model';
 import { Destinatario } from '../models/destinatario.model';
+import { Fabricante } from '../models/fabricante.model';
 import { Injectable } from '@angular/core';
 import { Mercancia } from '../models/mercancia.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { SCIAN } from '../models/SCIAN.model';
+import { Proveedor } from '../models/proveedor.model';
+import { Facturador } from '../models/facturador.model';
 
 /**
  * Interfaz que representa el estado de la solicitud 260910.
@@ -87,6 +91,9 @@ export interface Solicitud260910State {
 
   /** Lista de mercancías asociadas con la solicitud. */
   mercanciasDatos: Mercancia[];
+
+  /** Lista de SCIAN asociadas con la solicitud. */
+  SCIANDatos: SCIAN[];
 
   /** Indicador sobre si se ha presentado un manifiesto. */
   manifesto: boolean;
@@ -189,6 +196,14 @@ export interface Solicitud260910State {
 
   /** Lista de destinatarios relacionados con la solicitud. */
   destinatarioDatos: Destinatario[];
+
+  /** Lista de fabricante relacionados con la solicitud. */
+  
+  fabricanteDatos: Fabricante[];
+
+  proveedorDatos: Proveedor[];
+
+  facturadorDatos:Facturador[];
 
   /** Clave de referencia asociada al trámite. */
   claveDeReferencia: string;
@@ -295,6 +310,9 @@ export function createInitialState(): Solicitud260910State {
     /** Lista de mercancías asociadas con la solicitud. */
     mercanciasDatos: [],
 
+    /** Lista de SCIAN asociadas con la solicitud. */
+    SCIANDatos: [],
+
     /** Indicador de si se ha presentado un manifiesto. */
     manifesto: false,
 
@@ -396,6 +414,13 @@ export function createInitialState(): Solicitud260910State {
 
     /** Lista de destinatarios relacionados con la solicitud. */
     destinatarioDatos: [],
+
+    /** Lista de fabricante relacionados con la solicitud. */
+    fabricanteDatos: [],
+
+    proveedorDatos: [],
+
+    facturadorDatos: [],
 
     /** Clave de referencia asociada con la solicitud. */
     claveDeReferencia: '',
@@ -721,6 +746,17 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
   }
 
   /**
+   * Actualiza los datos de SCIAN en el estado.
+   * @param SCIANDatos - Nuevo arreglo con los datos de SCIAN.
+   */
+  public setSCIANDatos(SCIANDatos: SCIAN[]): void {
+    this.update((state) => ({
+      ...state,
+      SCIANDatos
+    }));
+  }
+
+  /**
    * Agrega una nueva mercancía al estado.
    * @param newMercancia - Objeto de mercancía que será añadido.
    */
@@ -728,6 +764,17 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
     this.update((state) => ({
       ...state,
       mercanciasDatos: [...state.mercanciasDatos, newMercancia],
+    }));
+  }
+
+  /**
+   * Agrega una nueva SCIAN al estado.
+   * @param newSCIAN - Objeto de SCIAN que será añadido.
+   */
+  public addSCIANDatos(newSCIAN: SCIAN): void {
+    this.update((state) => ({
+      ...state,
+      SCIANDatos: [...state.SCIANDatos, newSCIAN],
     }));
   }
 
@@ -745,6 +792,22 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
       ),
     }));
   }
+
+  /**
+   * Elimina una SCIAN específica del estado.
+   * @param SCIANToELiminar - Objeto de SCIAN que será eliminado.
+   */
+  public eliminarSCAINDatos(eliminarSCIAN: SCIAN): void {
+    this.update((state) => ({
+      ...state,
+      SCIANDatos:state.SCIANDatos.filter(
+        (SCIAN) =>
+          SCIAN !== eliminarSCIAN
+      ),
+    }));
+  }
+
+
 
   /**
    * Actualiza la clasificación de productos en el estado.
@@ -1129,6 +1192,58 @@ export class Solicitud260910Store extends Store<Solicitud260910State> {
       ...state,
       destinatarioDatos: state.destinatarioDatos.filter(
         (destinatario) => destinatario.rfc !== destinatarioToRemove.rfc
+      ),
+    }));
+  }
+
+  /**
+   * Actualiza los datos de fabricante en el estado.
+   * @param fabricanteDatos - Nuevo arreglo con los datos de fabricante.
+   */
+  public setFabricanteDatos(fabricanteDatos: Fabricante[]): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteDatos
+    }));
+  }
+
+  public setProveedorDatos(proveedorDatos: Proveedor[]): void {
+    this.update((state) => ({
+      ...state,
+      proveedorDatos
+    }));
+  }
+
+  public setFacturadorDatos(facturadorDatos: Facturador[]): void {
+    this.update((state) => ({
+      ...state,
+      facturadorDatos
+    }));
+  }
+
+  public removeFabricanteDato(fabricanteToRemove: Fabricante): void {
+    this.update((state) => ({
+      ...state,
+      fabricanteDatos: state.fabricanteDatos.filter(
+        (fabricante) => fabricante !== fabricanteToRemove
+      ),
+    }));
+  }
+
+  public removeProveedorDato(proveedorToRemove: Proveedor): void {
+    this.update((state) => ({
+      ...state,
+      proveedorDatos: state.proveedorDatos.filter(
+        (proveedor) => proveedor !== proveedorToRemove
+      ),
+    }));
+  }
+
+  public removeFacturadorDato(facturadorToRemove: Facturador): void {
+    this.update((state) => ({
+      ...state,
+      facturadorDatos: state.facturadorDatos.filter(
+        (facturador) => facturador !== facturadorToRemove
       ),
     }));
   }

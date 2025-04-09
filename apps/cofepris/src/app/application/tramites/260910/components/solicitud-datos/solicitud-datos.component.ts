@@ -7,6 +7,7 @@ import { ElementRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Mercancia } from '../../models/mercancia.model';
+import { SCIAN } from '../../models/SCIAN.model';
 import { Modal } from 'bootstrap';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -131,6 +132,21 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    */
   selectedMercanciasDatos: Mercancia[] = [];
 
+  seleccionaSCIANDatos: SCIAN[] = [];
+
+  /**
+   * Referencia al elemento del modal.
+   */
+  @ViewChild('modalAlerta') modalAlertaElement!: ElementRef;
+
+  /**
+   * @description Referencia al elemento del modal de confirmación.
+   * Este modal se utiliza para confirmar la eliminación de mercancías o SCIAN.
+   * 
+   * @type {ElementRef}
+   */
+  @ViewChild('modalConfirmar') modalConfirmarElement!: ElementRef;
+
   /**
    * Referencia al elemento del modal para agregar mercancías.
    * Utilizado para manipular el modal mediante su elemento HTML.
@@ -142,6 +158,14 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Utilizado para manipular el modal mediante su elemento HTML.
    */
   @ViewChild('modalAgregarSCIAN') modalElementSCIAN!: ElementRef;
+
+  /**
+   * @description Variable que almacena el tipo seleccionado para realizar una acción específica.
+   * Se utiliza principalmente en el contexto de confirmación de eliminación de mercancías.
+   * 
+   * @type {string}
+   */
+  seleccionadoTipo: string = '';
 
   /**
    * Opciones de botones de selección por radio.
@@ -166,6 +190,12 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
    * Utiliza selección con checkbox.
    */
   mercanciasSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Configuración para la selección de filas en la tabla de SCIANSeleccionTabla.
+   * Utiliza selección con checkbox.
+   */
+  SCIANSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración para la selección de filas en la tabla de solicitudes.
@@ -300,10 +330,33 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Configuración de las columnas de la tabla de SCIAN.
+   * Define las columnas y cómo se obtienen los datos de cada SCIAN.
+   */
+  SCIANConfiguracionTabla: ConfiguracionColumna<SCIAN>[] = [
+    {
+      encabezado: 'Clave S.C.I.A.N',
+      clave: (item: SCIAN) => item.claveSCIAN,
+      orden: 1,
+    },
+    {
+      encabezado: 'Descripción del S.C.I.A.N.',
+      clave: (item: SCIAN) => item.claveSCIANDesc,
+      orden: 2,
+    }
+  ];
+
+  /**
    * Datos de las mercancías.
    * Representados como un arreglo de objetos tipo Mercancia.
    */
   mercanciasDatos: Mercancia[] = [];
+
+  /**
+   * Datos de las SCIAN.
+   * Representados como un arreglo de objetos tipo SCIAN.
+   */
+  SCIANDatos: SCIAN[] = [];
 
   /**
    * Constructor del componente.
@@ -462,6 +515,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
             claveSCIANDesc: this.solicitud260910State.claveSCIANDesc,
           });
           this.mercanciasDatos = this.solicitud260910State.mercanciasDatos;
+          this.SCIANDatos = this.solicitud260910State.SCIANDatos;
         })
       )
       .subscribe();
@@ -473,6 +527,7 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     this.obtenerAduanaListo();
     this.obtenerMercanciaListo();
     this.obtenerSolicitud();
+    this.obtenerSCIANMesa();
     this.obtenerSCIANListo();
     this.obtenerSCIANDescListo();
   }
@@ -563,6 +618,20 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: Mercancia[]) => {
           this.solicitud260910Store.setMercanciasDatos(res);
+        },
+      });
+  }
+
+  /**
+   * Obtiene la lista de mercancías desde el servicio y actualiza el estado en el Store.
+   */
+  obtenerSCIANMesa(): void {
+    this.solicitudDatosService
+      .obtenerSCIANMesa()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (res: SCIAN[]) => {
+          this.solicitud260910Store.setSCIANDatos(res);
         },
       });
   }
@@ -767,6 +836,14 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Obtiene los datos seleccionados de SCIAN desde el eventoo.
+   * @param evento - Lista de SCIAN seleccionadas.
+   */
+  getSCIANDatos(evento: SCIAN[]): void {
+    this.seleccionaSCIANDatos = evento;
+  }
+
+  /**
    * Elimina la primera mercancía seleccionada de la lista en el Store.
    */
   eliminarMercancias(): void {
@@ -774,6 +851,59 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
       this.solicitud260910Store.removeMercanciaDatos(
         this.selectedMercanciasDatos[0]
       );
+    }
+  }
+
+  /**
+   * Elimina la primera SIAN seleccionada de la lista en el Store.
+   */
+  eliminarSCIAN(): void {
+    if (this.seleccionaSCIANDatos.length > 0) {
+      this.solicitud260910Store.eliminarSCAINDatos(
+        this.seleccionaSCIANDatos[0]
+      );
+    }
+  }
+
+  agregarSCIAN(): void {
+    const OBJETO_JSON = {
+      claveSCIAN: this.claveSCIANForm.get(
+        'claveSCIAN'
+      )?.value,
+      claveSCIANDesc: this.claveSCIANForm.get(
+        'claveSCIANDesc'
+      )?.value
+    };
+    this.solicitud260910Store.addSCIANDatos(OBJETO_JSON);
+  }
+
+  /**
+   * Selecciona un tipo específico y realiza acciones basadas en el tipo seleccionado.
+   * 
+   * @param tipo - El tipo seleccionado. Actualmente soporta el valor 'Mercancias'.
+   *               Si el tipo es 'Mercancias', se ejecuta la función `eliminarMercancias`.
+   */
+  seleccionaTipo(tipo: string): void {
+    if(tipo === 'Mercancias') {
+      this.eliminarMercancias();
+    } else if(tipo === 'SCIAN') {
+      this.eliminarSCIAN();
+    }
+  }
+
+  /**
+   * @description Muestra un modal de confirmación para eliminar mercancías.
+   * Si el elemento del modal de confirmación está definido, se crea una instancia
+   * del modal y se muestra al usuario.
+   *
+   * @method confirmarEliminarMercancias
+   * @returns {void} No retorna ningún valor.
+   */
+  confirmarEliminarMercancias(tipo: string): void {
+    this.seleccionadoTipo = tipo;
+    if (this.modalConfirmarElement) {
+      const MODAL_CONFIRMAR_INSTANCE = new Modal(this.modalConfirmarElement.nativeElement);
+      MODAL_CONFIRMAR_INSTANCE.show();
     }
   }
 
@@ -823,6 +953,17 @@ export class SolicitudDatosComponent implements OnInit, OnDestroy {
     const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
     (this.solicitud260910Store[metodoNombre] as (value: any) => void)(valor);
   }
+
+  /**
+   * Muestra el modal para la selección del establecimiento.
+   */
+  seleccionarEstablecimiento(): void {
+    if (this.modalAlertaElement) {
+      const MODAL_ALERTA_INSTANCE = new Modal(this.modalAlertaElement.nativeElement);
+      MODAL_ALERTA_INSTANCE.show();
+    }
+  }
+  
 
   /**
    * Método del ciclo de vida `OnDestroy`.
