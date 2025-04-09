@@ -12,52 +12,52 @@ import {
   VEHICULO
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
+  CATALOGOS_ID,
   Catalogo,
   CatalogoPaises,
-} from '@ng-mf/data-access-user';
-import {
+  CatalogosService,
   DatosAgregarFormulario,
+  FechasService,
+  FormulariosService,
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TIPO_SOLICITUD,
+  ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-
+import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
 import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
 
-import { Observable, Subject, delay, map, merge, takeUntil, tap } from 'rxjs';
-
-import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
-
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-
-import {
-  CATALOGOS_ID,
-  TIPO_SOLICITUD,
-} from '@ng-mf/data-access-user';
-
-
-import { FechasService, FormulariosService } from '@ng-mf/data-access-user';
-
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CatalogosService } from '@ng-mf/data-access-user';
 import { DatosCheckInputText } from '../../../../core/models/shared/check-input-text.model';
+import { DatosComponentePedimento } from '../../../../core/models/5701/tramite5701.model';
 import { Modal } from 'bootstrap';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-
-
 
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent implements OnInit, OnDestroy {
+export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
+
+  /**
+   * Índice de tabulación para el control de enfoque en la interfaz.
+   * @required
+   */
   @Input({ required: true }) tabindex!: number;
+
+  /**
+   * Folio de la solicitud.
+   * @required
+   */
+  @Input() folioSolicitud!: string;
+
   @ViewChild('modalAviso') modalAviso!: ElementRef;
   @ViewChild('closeModal') closeModal!: ElementRef;
 
@@ -139,7 +139,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   colapsable: boolean = false;
 
-
   /**
    * Arreglo de cadenas que representa un rango de días para seleccionar.
    */
@@ -150,35 +149,87 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   mostrarRangoFechas: boolean = false;
 
+  /**
+   * Indica si el usuario es un apoderado.
+   */
   isApoderado: boolean = false;
+
+  /**
+   * Indica si esxiste más de una patente.
+   */
   masDeUnaPatente: boolean = false;
+
+  /**
+   * Indica si el usuario es un apoderado de más de una empresa.
+   */
   masDeUnaEmpresa: boolean = false;
 
+  /**
+   * Arrelgo de patentes de la empresa
+   */
   patentes: string[] = ['3061', '3062', '3063'];
 
-  // Pedimento -crea una señal para validar
+  /**
+   * Pedimento -crea una señal para validar
+   */
   validacionPedimento: boolean = false;
-  datosPedimentoComponente!: DatosComponentePedimento;
 
-  diaMinimo!: string;
+  /**
+   * Almacena los datos que necesita el componente Patente para hacer las validaciones
+   * patente: Número de patente
+   * idAduanaDespacho: Número de aduana elegida
+   */
+  datosPedimentoComponente!: DatosComponentePedimento;
 
   modal: string = '';
   tituloModal!: string;
   mensajeModal!: string;
 
+  /**
+   * Variable que toma el valor true si el tipo de despacho LDA o DD ha sido seleccionado, de lo contrario es false.
+   */
   tipoDespacho: boolean = false;
+
+  /**
+   * Variable que toma el valor de la etiqueta del tipo de despacho LDA o DD.
+   */
   labelTipoDespacho!: string;
 
+  /**
+   * Variable que toma el valor que el id el input que almacena la autorizacion LDA o DD.
+   */
   idNameAutorizacion!: string;
+
+  /**
+   * Variable que toma el valor de la funcion del store que almacena la autorizacion LDA o DD.
+   */
   funcionStoreAutorizacion!: keyof Tramite5701Store;
 
+  /**
+   * Variable que toma el valor que tendra el id del tipo de despacho que ha sido seleccionado LDA o DD.
+   */
   idTipoDespacho!: string;
+
+  /**
+   * Opciones disponibles para empresas certificadas.
+   */
   radioOpciones = EMPRESAS_CERTIFICADAS;
 
+  /**
+   * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @private
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  private seccion!: SeccionLibState;
-  public solicitudState!: Solicitud5701State;
 
+  /**
+   * Estado de la sección utilizado en el componente.
+   */
+  private seccion!: SeccionLibState;
+
+  /**
+   * Estado de la solicitud utilizado en el componente.
+   */
+  public solicitudState!: Solicitud5701State;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -191,7 +242,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogosService,
     private validacionesService: ValidacionesFormularioService,
     private serviciosExtraordinariosService: ServiciosExtraordinariosService
-    // eslint-disable-next-line no-empty-function
   ) { }
 
   ngOnInit(): void {
@@ -259,6 +309,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.desactivarSelectSeccionAduanera = (this.seccionAduanera && this.seccionAduanera.length === 0) ? true : false;
 
     this.verificarDatosExistentesStore();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['folioSolicitud'] && changes['folioSolicitud'].currentValue) {
+      this.FormSolicitud.get('folioSolicitud')?.setValue(this.folioSolicitud);
+      // Se hace la peticion para obtener los datos de la solicitud
+
+    }
   }
 
   /**
@@ -361,7 +419,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     return this.datosServicio.get('fechasSeleccionadas') as FormArray;
   }
 
-
   /**
    * Verifica si la solicitud seleccionada es de tipo individual.
    *
@@ -424,13 +481,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
-
+  /**
+   * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
+   *
+   * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
+   */
   private inicializaCatalogos(): void {
-    /**
-     * Obtiene los tipos de solicitud desde el catálogo y los asigna a `datosTiposSolicitud`.
-     *
-     * Este método realiza una solicitud al servicio `catalogosServices` para obtener el catálogo de tipos de solicitud identificado por `CATALOGOS_ID.CAT_TIPO_SOL`. Una vez que recibe la  respuesta, verifica si la respuesta contiene elementos. Si es así, asigna los datos recibidos a la propiedad `datosTiposSolicitud` con la estructura adecuada.
-     */
+
     const CAT_TIPO_SOLICITUD$ = this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_SOL)
       .pipe(
@@ -530,8 +587,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la patente y la agrega al formulario.
-   * 
    * Este método realiza una búsqueda de la patente en algún endpoint y luego
    * agrega el valor de la patente al formulario utilizando el servicio de formularios.
    * @return {void} No retorna ningún valor.
@@ -553,6 +608,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   crearFormSolicitud(): void {
     this.FormSolicitud = this.fb.group({
+      folioSolicitud: [],
       tipoSolicitud: [
         this.solicitudState?.tipoSolicitud,
         [Validators.required],
@@ -768,8 +824,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  // *Eventos de los componentes hijos
-
   /**
    * Realiza la búsqueda del RFC del importador/exportador y actualiza los campos relacionados.
    * 
@@ -851,8 +905,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   aduanaSeleccion(aduana: Catalogo): void {
-    this.darValorCampoFormulario(this.despacho, 'idAduanaDespacho', aduana.id);
-    this.darValorCampoFormulario(
+    SolicitudComponent.darValorCampoFormulario(this.despacho, 'idAduanaDespacho', aduana.id);
+    SolicitudComponent.darValorCampoFormulario(
       this.despacho,
       'aduanaDespacho',
       aduana.descripcion
@@ -894,8 +948,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param {string | number} valor - El valor que se va a establecer en el campo.
    * @returns {void} No retorna ningún valor.
    */
-  // eslint-disable-next-line class-methods-use-this
-  darValorCampoFormulario(
+  static darValorCampoFormulario(
     form: FormGroup,
     field: string,
     valor: string | number
@@ -1211,7 +1264,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza los valores del formulario y almacena los cambios en el store.
+   * Actualiza los valores del campo Programa Fomento y almacena los cambios en el store.
    * 
    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
    * @returns {void}
@@ -1223,6 +1276,11 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.datosImportadorExportador, 'desProgramaFomento', 'setDesProgramaFomento');
   }
 
+  /**
+   * Actualiza los valores del campo IMMEX y almacena los cambios en el store.
+   *    * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
+   * @returns {void}
+   */
   checkImmex(valores: DatosCheckInputText): void {
     this.datosImportadorExportador.get('checkIMMEX')?.setValue(valores.checkbox);
     this.datosImportadorExportador.get('desImmex')?.setValue(valores.texto);
@@ -1230,6 +1288,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.setValoresStore(this.datosImportadorExportador, 'desImmex', 'setDesImmex');
   }
 
+  /**
+   * Actualiza los valores del campo automutriz y almacena los cambios en el store.
+   * 
+   * @param valores - Objeto que contiene el estado del checkbox y el texto asociado.
+   * @returns {void}
+   */
   checkAutomotriz(valores: DatosCheckInputText): void {
     this.datosImportadorExportador.get('industriaAutomotriz')?.setValue(valores.checkbox);
     this.datosImportadorExportador.get('desIndustrialAutomotriz')?.setValue(valores.texto);

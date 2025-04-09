@@ -63,8 +63,8 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="RFCImpExp">RFC*:</label>
-            <input class="form-control" id="RFCImpExp" placeholder="RFC" type="text"
-              formControlName="RFCImpExp" [ngClass]="
+            <input class="form-control" id="RFCImpExp" placeholder="RFC" type="text" formControlName="RFCImpExp"
+              [ngClass]="
                   isValid(datosImportadorExportador, 'RFCImpExp')
                     ? 'required'
                     : ''
@@ -74,8 +74,8 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="nombre">Nombre:</label>
-            <input class="form-control" id="nombre" formControlName="nombre"
-              placeholder="Nombre" type="text" appUppercase />
+            <input class="form-control" id="nombre" formControlName="nombre" placeholder="Nombre" type="text"
+              appUppercase />
           </div>
         </div>
       </div>
@@ -191,7 +191,7 @@
         <div class="col-md-4">
           <label for="fechaFinal" class="form-label">Fecha final*:</label>
           <input class="form-control" type="date" name="fechaFinal" id="fechaFinal" formControlName="fechaFinal"
-            [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''" [min]="diaMinimo"
+            [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''" 
             (change)="changeFechaFinal()" />
 
           @if (isValid(datosServicio,'fechaFinal')) {
@@ -248,7 +248,7 @@
     <div formGroupName="despachoSeleccion">
       <div class="row">
         <div class="col-md-4">
-        
+
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="lda" (change)="showConfirmDialogLDA_DD('lda')"
               formControlName="lda">
@@ -321,18 +321,14 @@
           <label for="patente" class="form-label">Patente/Número de autorización:</label>
           <input class="form-control" type="text" name="patente" id="patente" formControlName="patente" />
         </div>
-        <div class="col-md-4">
-          <div class="form-check">
-            <div>
-              <label class="form-label" for="relacionSociedad">Relación de sociedad:
-              </label>
-              <input class="form-check-input ms-3" type="checkbox" value="" id="relacionSociedad" />
-            </div>
-            <div>
-              <label class="form-label" for="encargoConferido">Encargo conferido:</label>
-              <input class="form-check-input ms-3" type="checkbox" value="" id="encargoConferido" />
-            </div>
-          </div>
+        <div class="col-md-4 checks">
+          <lib-input-check [id]="'relacionSociedad'" [label]="'Relación de sociedad'" [required]="false"
+            formControlName="relacionSociedad"
+            (change)="setValoresStore(despacho,'relacionSociedad', 'setRelacionSociedad')"></lib-input-check>
+
+          <lib-input-check [id]="'encargoConferido'" [label]="'Encargo conferido'" [required]="false"
+            formControlName="encargoConferido"
+            (change)="setValoresStore(despacho,'encargoConferido', 'setEncargoConferido')"></lib-input-check>
         </div>
       </div>
 
