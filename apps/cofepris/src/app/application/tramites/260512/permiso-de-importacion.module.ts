@@ -12,7 +12,7 @@ import { DatosDelEstablecimientoRFCComponent } from '../../shared/components/dat
 import { DomicilioEstablecimientoAduanasComponent } from '../../shared/components/domicilio-establecimiento-aduanas/domicilio-establecimiento-aduanas.component';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pago-Derechos.component';
-import { RepresentanteLegalComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
+import { RepresentanteLegalRfcComponent } from '../../shared/components/representante-legal-rfc/representante-legal-rfc.component';
 
 import { ExportacionService } from '../../shared/services/exportacion.service';
 
@@ -38,7 +38,7 @@ import { PermisoDeImportacionRoutingModule } from './permiso-de-importacion-rout
     DatosDelEstablecimientoRFCComponent,
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
-    RepresentanteLegalComponent,
+    RepresentanteLegalRfcComponent,
     PagoDerechosComponent,
     AvisoTercerosRelacionadosComponent
   ],
