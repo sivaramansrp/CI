@@ -177,6 +177,20 @@ export class Tramite130121Store extends Store<Tramite130121State> {
     }));
   }
 
+  public setAcotacion(actacion: string): void {
+    this.update((state) => ({
+      ...state,
+      actacion,
+    }));
+  }
+  public setDescripcionNico(descripcionNico: string): void {
+    this.update((state) => ({
+      ...state,
+      descripcionNico,
+    }));
+  }
+  
+
   /**
    * Actualiza la unidad de medida UMT en el estado.
    *

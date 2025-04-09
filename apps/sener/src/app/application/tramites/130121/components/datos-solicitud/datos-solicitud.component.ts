@@ -4,6 +4,8 @@ import { Catalogo, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import acotacionOptions from '@libs/shared/theme/assets/json/130121/acotacion.json';
+
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
@@ -119,6 +121,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   unidadCatalogo: Catalogo[] = unidadOptions;
 
+  acotacionCatalogo: Catalogo[] = acotacionOptions;
+
+  
   /**
    * Datos de los campos de entrada del formulario.
    * @type {Array<{label: string, placeholder: string, required: boolean, controlName: string}>} Arreglo que contiene los datos de los campos del formulario de mercancía.
@@ -432,7 +437,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
          * Es obligatorio.
          */
         nico: ['', Validators.required],
-      });
+        acotacion: [{ value: '', disabled: true }],
+        descripcionNico: [{ value: '', disabled: true }],
+       });
 
      // Formulario para la información relacionada con las partidas de la mercancía
     this.partidasDelaMercanciaForm = this.fb.group({
@@ -985,7 +992,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   fetchEntidadFederativa(): void {
     // Llamada al servicio para obtener los datos del estado
-    this.permisodehidrocarburosService.getEstado().subscribe((data) => {
+    this.permisodehidrocarburosService.getEstado()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
       // Asignamos el resultado al estado
       this.estado = data;
     });
@@ -1122,6 +1131,7 @@ enCambioDeBloque(bloqueId: number): void {
       setUmt: (val) => this.tramite130121Store.setUmt(String(val)),
       setNico: (val) => this.tramite130121Store.setNico(String(val)),
       setFraccion: (val) => this.tramite130121Store.setFraccion(String(val)),
+      setAcotacion: (val) => this.tramite130121Store.setAcotacion(String(val)),
     };
   
     const METODO = METHOD_MAPPING[event.metodoNombre];

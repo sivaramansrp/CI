@@ -262,7 +262,7 @@ export const TABLA_OPCION_DATA: TablaOpcionConfig[] = [
 ];
 
 export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_COLAPSABLE = [
-  260214, 260216, 260205, 260217, 260218, 260102,
+  260214, 260216, 260205, 260217, 260218, 260102,260301
 ];
 
 export const OCULTAR_PROVEEDOR = [260102];
@@ -271,7 +271,13 @@ export const OCULTAR_FACTURADOR = [260102];
 
 export const PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE = [260216];
 
-export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102];
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CORREO_ELECTRONIC = [260102,260301];
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_RFC_DEL_SANITARIO = [260301]
+
+export const PROCEDIMIENTOS_NO_PARA_ELEMENTO_CALLE = [260301]
+
+export const PROCEDIMIENTOS_PARA_DESHABILITAR_MUNICIPIO_ALCALDIA=[260301]
 
 export enum NUMERO_TRAMITE {
   TRAMITE_260205 = 260205,
@@ -301,3 +307,16 @@ export const DETALLE_MERCANCIA_TABLA = [
 ];
 
 export const STR_NACIONAL = 'Nacional';
+
+export const CAMPOS_REQUERIDOS_FORMULARIO_MAP: Map<string, number[]> = new Map([
+  ['colonia', [260301]],
+  ['localidad', [260301]],
+  ['denominacionRazon',[260301]],
+  ['scian', [260301]],
+]);
+
+export const CAMPOS_ADICIONALES_POR_PROCEDIMIENTO_MAP: Map<string, number[]> = new Map([
+  ['calleYNumero', [260301]],
+  ['correoElectronico', [260301]],
+  ['rfcSanitario', [260301]],
+]);

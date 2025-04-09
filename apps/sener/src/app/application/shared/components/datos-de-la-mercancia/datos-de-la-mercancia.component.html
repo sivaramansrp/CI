@@ -58,13 +58,12 @@
       <div class="col-md-6">
         <label for="descripcion_nico" class="form-label">Descripción NICO:</label>
         <textarea id="descripcion_nico" class="form-control descripcion-text-box"
-          placeholder="Aceites de engrase o preparaciones lubricantes a base de aceites minerales derivados del petróleo,"
-          rows="8" [disabled]="true"></textarea>
+          rows="8" formControlName="descripcionNico"></textarea>
 
       </div>
       <div class="col-md-6">
         <label for="acotacion" class="form-label">Acotación:</label>
-        <textarea id="acotacion" class="form-control descripcion-text-box" placeholder="" rows="8" [disabled]="true">
+        <textarea id="acotacion" class="form-control descripcion-text-box" placeholder="" rows="8" formControlName="acotacion">
     </textarea>
 
       </div>
