@@ -106,13 +106,6 @@ export class CapturarComponent implements OnInit, OnDestroy {
     
   }
 
-  // aplicarValidacion(): void {
-  //   // Migrar la validación de jQuery a TypeScript
-  //   // $(function() { $.fn.stripesValidation('formId', camposMetadata); });
-  //   // Implementación en TypeScript
-  //   // this.capturarService.stripesValidation(this.camposMetadata.formId, this.camposMetadata);
-  // }
-
   /**
    * @method isFormValid
    * @description

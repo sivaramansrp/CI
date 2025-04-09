@@ -26,15 +26,6 @@ export class PasoUnoComponent {
     this.pestanaCambiado.emit(this.indice);
   }
 
-  /**
-   * @method isFormValid
-   * @description
-   * Verifica si el formulario dentro del componente `CancelarSolicitudComponent` es válido.
-   * @returns {boolean} `true` si el formulario es válido, `false` en caso contrario.
-   */
-  isFormValid(): boolean {
-    console.log(this.tipoAgentsComponent?.formularioAgente.valid, this.layoutDirectorGeneral?.solicitud.valid);
-    return this.tipoAgentsComponent?.formularioAgente.valid && this.layoutDirectorGeneral?.solicitud.valid;
-  }
+
 }
 
