@@ -7,10 +7,10 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REG_X } from 'libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-
 /**
  * Componente para realizar la búsqueda de folios, visualización de datos de facturas
  * y gestionar formularios relacionados con devoluciones y cancelaciones.
@@ -131,7 +131,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
    */
   public establecerMontoACancelarForm(): void {
     this.montoACancelarForm = this.fb.group({
-      monto: ['', [Validators.compose([Validators.required, Validators.pattern('^[0-9]+$')])]]
+      monto: ['', [Validators.compose([Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)])]]
     });
   }
 
