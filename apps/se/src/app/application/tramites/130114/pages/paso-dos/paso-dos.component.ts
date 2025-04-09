@@ -2,6 +2,7 @@ import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
+
 /**
  * @class PasoDosComponent
  * @description
