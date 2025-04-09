@@ -12,11 +12,6 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
-import { SolicitudService } from './services/solicitud.service';
-
-
-
-
 import { NgModule } from '@angular/core';
 
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
@@ -41,6 +36,6 @@ import { PagoDeDerechosBancoComponent } from '../../shared/components/pago-de-de
     BtnContinuarComponent,
     PagoDeDerechosBancoComponent
   ],
-  providers: [provideHttpClient(), ToastrService,SolicitudService,InicioSesionService,SubirDocumentoService ],
+  providers: [provideHttpClient(), ToastrService,InicioSesionService,SubirDocumentoService ],
 })
 export class ActualizacionImportacionSanitariaModule { }
