@@ -170,6 +170,13 @@ const ROUTES: Routes = [
       import('./tramites/104/deposito-fiscal-manufactura-vehiculos/deposito-fiscal-manufactura-vehiculos.module').then(
         (m) => m.DepositoFiscalManufacturaVehiculosModule
       )
+  },
+  {
+    path: 'junta-tecnica',
+    loadChildren: () =>
+      import('./tramites/6101/junta-tecnica.module').then(
+        (m) => m.JuntaTecnicaModule
+      )
   }
 ];
 

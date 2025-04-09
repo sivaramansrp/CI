@@ -282,3 +282,9 @@ export const REGEX_CURP =
  * Permite dígitos y el punto decimal. 
  */
 export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
+
+/**
+ * Expresión regular para validar números en formato de pesos mexicanos (MXN).
+ * Permite dígitos y el punto decimal.
+ */
+export const REGEX_SIN_DIGITOS = /\D/g;
