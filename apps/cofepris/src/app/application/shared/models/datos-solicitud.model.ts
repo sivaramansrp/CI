@@ -266,6 +266,11 @@ export interface DatosSolicitudFormState {
   representanteNombre: string;
   apellidoPaterno: string;
   apellidoMaterno: string;
+  marca?: string;
+  especifique?: string;
+  claveDeLos?: string;
+  fechaDeFabricacio?: string;
+  fechaDeCaducidad?: string;
   regimenLaMercancia?:string
   aduana?:string
 }

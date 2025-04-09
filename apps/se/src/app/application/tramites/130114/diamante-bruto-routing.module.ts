@@ -1,5 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+
 import { DiamanteBrutoComponent } from './pages/diamante-bruto/diamante-bruto.component';
 
 const ROUTES: Routes = [
