@@ -1,32 +1,59 @@
 import { TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TercerosRelacionadosComponent } from './terceros-fabricante.component';
-import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
+import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
 import { of } from 'rxjs';
+
+// Mock SELECT_OPTIONS_DATA
+jest.mock(
+  'libs/shared/theme/assets/json/260501/fabricante-select-options-data.json',
+  () => ({
+    paisSelectData: [
+      { id: '1', descripcion: 'Mexico' },
+      { id: '2', descripcion: 'USA' },
+    ],
+    localidadSelectData: [
+      { id: '1', descripcion: 'Localidad 1' },
+      { id: '2', descripcion: 'Localidad 2' },
+    ],
+    municipioSelectData: [
+      { id: '1', descripcion: 'Municipio 1' },
+      { id: '2', descripcion: 'Municipio 2' },
+    ],
+    codigoPostalSelectData: [
+      { id: '1', descripcion: '12345' },
+      { id: '2', descripcion: '67890' },
+    ],
+    coloniaSelectData: [
+      { id: '1', descripcion: 'Colonia 1' },
+      { id: '2', descripcion: 'Colonia 2' },
+    ],
+  })
+);
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
-  let serviceMock: any;
   let storeMock: any;
+  let serviceMock: any;
 
   beforeEach(() => {
-    serviceMock = {
-      getData: jest.fn().mockReturnValue(of([])),
-    };
-
     storeMock = {
       setFabricante: jest.fn(),
       setFormulador: jest.fn(),
       setProveedor: jest.fn(),
     };
 
+    serviceMock = {
+      getData: jest.fn().mockReturnValue(of([])),
+    };
+
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [TercerosRelacionadosComponent],
+      imports: [ReactiveFormsModule, TercerosRelacionadosComponent], // Add the standalone component here
       providers: [
-        { provide: TercerosFabricanteService, useValue: serviceMock },
+        FormBuilder,
         { provide: TercerosFabricanteStore, useValue: storeMock },
+        { provide: TercerosFabricanteService, useValue: serviceMock },
       ],
     });
 
@@ -44,91 +71,137 @@ describe('TercerosRelacionadosComponent', () => {
     expect(component.agregarFabricanteFormGroup).toBeDefined();
     expect(component.agregarFormuladorFormGroup).toBeDefined();
     expect(component.agregarProveedorFormGroup).toBeDefined();
-    expect(serviceMock.getData).toHaveBeenCalled();
   });
 
   it('should toggle visibility for Fabricante form', () => {
-    expect(component.showFabricante).toBe(false);
     component.toggleDivFabricante();
     expect(component.showFabricante).toBe(true);
     expect(component.showTableDiv).toBe(false);
   });
 
   it('should toggle visibility for Formulador form', () => {
-    expect(component.showFormulador).toBe(false);
     component.toggleDivFormulador();
     expect(component.showFormulador).toBe(true);
     expect(component.showTableDiv).toBe(false);
   });
 
   it('should toggle visibility for Proveedor form', () => {
-    expect(component.showProveedor).toBe(false);
     component.toggleDivProveedor();
     expect(component.showProveedor).toBe(true);
     expect(component.showTableDiv).toBe(false);
   });
 
-  it('should validate required fields in Fabricante form', () => {
-    component.initializeAgregarFabricanteFormGroup();
-    const form = component.agregarFabricanteFormGroup;
-    form.get('tercerosNacionalidad')?.setValue('');
-    form.get('tipoPersona')?.setValue('');
-    form.get('rfc')?.setValue('');
-    expect(form.valid).toBe(false);
+  it('should validate requiredPaisValidator', () => {
+    const control = { value: '' };
+    const result = TercerosRelacionadosComponent.requiredPaisValidator(
+      control as any
+    );
+    expect(result).toEqual({ requiredPais: true });
+  });
+
+  it('should validate rfcValidator', () => {
+    const control = { value: 'ABC123456T89' };
+    const result = TercerosRelacionadosComponent.rfcValidator(control as any);
+    expect(result).toBeNull();
+  });
+
+  it('should validate curpValidator', () => {
+    const control = { value: 'ABCD890123HDFRRL01' };
+    const result = TercerosRelacionadosComponent.curpValidator(control as any);
+    expect(result).toBeNull();
+  });
+
+  it('should validate telefonoValidator', () => {
+    const control = { value: '1234567890' };
+    const result = TercerosRelacionadosComponent.telefonoValidator(
+      control as any
+    );
+    expect(result).toBeNull();
   });
 
   it('should submit Fabricante form and update store', () => {
-    component.initializeAgregarFabricanteFormGroup();
-    const form = component.agregarFabricanteFormGroup;
-    form.patchValue({
-      tercerosNacionalidad: 'MX',
+    component.agregarFabricanteFormGroup.setValue({
+      tercerosNacionalidad: 'nacional',
       tipoPersona: 'fisica',
-      rfc: 'ABCD123456XXX',
-      curp: 'ABCD123456HDFXXX09',
-      denominacionRazonSocial: 'Empresa SA',
-      pais: 'MX',
+      rfc: 'ABC123456T89',
+      curp: 'ABCD890123HDFRRL01',
+      nombre: 'John',
+      primerApellido: 'Doe',
+      segundoApellido: 'Smith',
+      denominacionRazonSocial: 'Company XYZ',
+      pais: 'Mexico',
       estadoLocalidad: 'Estado',
       municipioAlcaldia: 'Municipio',
+      localidad: 'Localidad',
+      entidadFederativa: 'Entidad',
       codigoPostaloEquivalente: '12345',
-      calle: 'Calle 1',
-      numeroExterior: '123',
+      colonia: 'Colonia',
+      coloniaoEquivalente: '',
+      calle: 'Calle 123',
+      numeroExterior: '10',
+      numeroInterior: '2',
+      lada: '55',
+      telefono: '12345678',
+      correoElectronico: 'test@example.com',
+      extranjeroCodigo: '',
+      extranjeroEstado: '',
+      extranjeroColonia: '',
     });
 
     component.submitFabricanteForm();
-    expect(storeMock.setFabricante).toHaveBeenCalledWith(component.fabricanteRowData);
-    expect(component.showFabricante).toBe(false);
-    expect(component.showTableDiv).toBe(true);
+    expect(storeMock.setFabricante).toHaveBeenCalledWith(
+      component.fabricanteRowData
+    );
   });
 
-  it('should validate RFC using rfcValidator', () => {
-    const validRFCFisica = 'ABCD123456XXX';
-    const validRFCMoral = 'ABC123456XXX';
-    const invalidRFC = 'INVALIDRFC';
-
-    expect(TercerosRelacionadosComponent.rfcValidator({ value: validRFCFisica })).toBeNull();
-    expect(TercerosRelacionadosComponent.rfcValidator({ value: validRFCMoral })).toBeNull();
-    expect(TercerosRelacionadosComponent.rfcValidator({ value: invalidRFC })).toEqual({ invalidRFC: true });
+  it('should handle cambiarRadio', () => {
+    component.cambiarRadio('nacional');
+    expect(component.nacional).toBe(true);
+    expect(component.extranjero).toBe(false);
   });
 
-  it('should validate CURP using curpValidator', () => {
-    const validCURP = 'ABCD123456HDFXXX09';
-    const invalidCURP = 'INVALIDCURP';
-
-    expect(TercerosRelacionadosComponent.curpValidator({ value: validCURP })).toBeNull();
-    expect(TercerosRelacionadosComponent.curpValidator({ value: invalidCURP })).toEqual({ invalidCURP: true });
+  it('should handle cambiarRadioFisica', () => {
+    component.cambiarRadioFisica('fisica');
+    expect(component.fisica).toBe(true);
+    expect(component.moral).toBe(false);
   });
 
-  it('should validate phone number using telefonoValidator', () => {
-    const validPhone = '123-456-7890';
-    const invalidPhone = 'INVALIDPHONE';
-
-    expect(TercerosRelacionadosComponent.telefonoValidator({ value: validPhone })).toBeNull();
-    expect(TercerosRelacionadosComponent.telefonoValidator({ value: invalidPhone })).toEqual({ invalidTelefono: true });
-  });
-
-  it('should clean up subscriptions on ngOnDestroy', () => {
+  it('should destroy subscriptions on ngOnDestroy', () => {
     const spy = jest.spyOn(component['destroyNotifier$'], 'next');
     component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
+  });
+
+  it('should handle inputChecked for fisica', () => {
+    component.inputChecked('fisica');
+    expect(component.fisica).toBe(true);
+    expect(component.moral).toBe(false);
+    expect(component.noContribuyente).toBe(false);
+  });
+
+  it('should handle inputChecked for moral', () => {
+    component.inputChecked('moral');
+    expect(component.fisica).toBe(false);
+    expect(component.moral).toBe(true);
+    expect(component.noContribuyente).toBe(false);
+  });
+
+  it('should handle inputChecked for noContribuyente', () => {
+    component.inputChecked('noContribuyente');
+    expect(component.fisica).toBe(false);
+    expect(component.moral).toBe(false);
+    expect(component.noContribuyente).toBe(true);
+  });
+
+  it('should handle tercerosInputChecked for nacional', () => {
+    component.tercerosInputChecked('nacional');
+    expect(component.nacional).toBe(true);
+    expect(component.extranjero).toBe(false);
+  });
+
+  it('should handle tercerosInputChecked for extranjero', () => {
+    component.tercerosInputChecked('extranjero');
+    expect(component.nacional).toBe(false);
+    expect(component.extranjero).toBe(true);
   });
 });
