@@ -1,4 +1,4 @@
-import { ConfiguracionColumna, Fabricante } from "@libs/shared/data-access-user/src";
+import { ConfiguracionColumna, Fabricante, TipoPersona } from "@ng-mf/data-access-user";
 import { Facturador } from "../../../shared/models/terceros-relacionados.model";
 import { TablaMercanciasDatos } from "../../../shared/models/datos-solicitud.model";
 
@@ -280,4 +280,16 @@ export const PRODUCTO_TABLA_ESTUPEFACIENTES = [
     orden: 25,
   },
  
+];
+
+
+export const TERCEROS_NACIONALIDAD_RADIO_OPCIONS = [
+  { label: 'Nacional', value: 'true' },
+  { label: 'Extranjero', value: 'false' },
+];
+
+export const TERCEROS_PERSONA_RADIO_OPCIONS = [
+  { label: 'Física', value: TipoPersona.FISICA },
+  { label: 'Moral', value: TipoPersona.MORAL },
+  { label: 'No Contribuyente', value: TipoPersona.NO_CONTRIBUYENTE },
 ];

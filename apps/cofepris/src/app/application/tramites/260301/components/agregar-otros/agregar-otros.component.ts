@@ -1,4 +1,4 @@
-import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { Catalogo, InputRadioComponent, TipoPersona } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { TERCEROS_NACIONALIDAD_RADIO_OPCIONS, TERCEROS_PERSONA_RADIO_OPCIONS } from '../../constants/estupefacientes.enum';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Facturador } from '../../../../shared/models/terceros-relacionados.model';
@@ -18,7 +19,7 @@ import { Tramite260301Store } from '../../estados/tramite260301Store.store';
 @Component({
   selector: 'app-agregar-otros',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputRadioComponent],
   templateUrl: './agregar-otros.component.html',
   styleUrl: './agregar-otros.component.scss',
 })
@@ -54,6 +55,9 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * Lista de países obtenida del servicio de datos.
    */
   public paisesDatos: Catalogo[] = [];
+
+  radioOpcions = TERCEROS_NACIONALIDAD_RADIO_OPCIONS;
+  tipoPersonaRadioOpcions= TERCEROS_PERSONA_RADIO_OPCIONS;
 
   /**
    * @constructor
@@ -189,7 +193,7 @@ export class AgregarOtrosComponent implements OnInit, OnDestroy {
    * Realiza una búsqueda para obtener datos de importación y los asigna al formulario.
    * Hace una petición al servicio 'importacionMateriasPrimasService' y actualiza los valores del formulario con los datos obtenidos.
    */
-  buscar(): void {
+  seBuscaRfc(): void {
     this.importacionMateriasPrimasService
       .obtenerOstro()
       .pipe(takeUntil(this.unsubscribe$))
