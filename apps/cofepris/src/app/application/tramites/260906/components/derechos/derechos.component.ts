@@ -9,7 +9,9 @@ import { map, Subject, takeUntil } from 'rxjs'; // Import RxJS operators for rea
 import { Solicitud260906State } from '../../../../estados/tramites/sanitario260906.store'; // Import state interface for the application.
 import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store'; // Import store for managing application state.
 import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query'; // Import query for fetching data from the store.
-
+import { FECHA_DE_PAGO } from '../../models/solicitud-datos.model';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@ng-mf/data-access-user';
 
 /**
  * compondoc
@@ -33,7 +35,7 @@ import { Permiso260906Query } from '../../../../estados/queries/permiso260906.qu
 @Component({
   selector: 'app-derechos', // Define the selector for the component.
   standalone: true, // Mark the component as standalone.
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent], // Import required modules and components.
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, InputFechaComponent], // Import required modules and components.
   templateUrl: './derechos.component.html', // Path to the HTML template.
   styleUrls: ['./derechos.component.css'], // Path to the CSS styles.
 })
@@ -66,6 +68,12 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * description Estado actual de la solicitud.
    */
   public solicitudState!: Solicitud260906State; // Current state of the application.
+
+    /**
+     * @property {InputFecha} fechaInicioInput
+     * Objeto con la configuración de la fecha inicial del componente.
+     */
+    fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
   /**
    * compodoc
@@ -152,8 +160,19 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * Libera los observables y notifica la destrucción del componente para evitar fugas de memoria.
    * returns {void}
    */
-  ngOnDestroy(): void {
+  ngOnDestroy(): void {``
     this.destroyNotifier$.next(); 
     this.destroyNotifier$.complete(); 
   }
+  
+  /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+    onFechaCambiada(fecha: string): void {
+      this.derechosForm.patchValue({ tipoFetch: fecha });
+    }
+
 }

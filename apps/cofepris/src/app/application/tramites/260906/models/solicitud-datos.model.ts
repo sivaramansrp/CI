@@ -112,3 +112,13 @@ export interface Solicitud {
   /** Apellido materno del solicitante. */
   apellidoMeterno: string;
 }
+
+/**
+ * @const FECHA_DE_PAGO
+ * @description Configuración del campo “Fecha de pago” en el formulario.
+ */
+export const FECHA_DE_PAGO = {
+  labelNombre: 'Fecha de pago',
+  required: false,
+  habilitado: true,
+};

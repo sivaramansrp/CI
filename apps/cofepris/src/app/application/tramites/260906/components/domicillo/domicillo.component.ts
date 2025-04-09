@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -126,14 +125,6 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  
-  /**
-   * property {Subject<void>} destroyed$
-   * description Sujeto utilizado para manejar la destrucción de observables.
-   * private
-   */
-  private destroyed$ = new Subject<void>();
- 
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -375,7 +366,7 @@ paisDeProcedenciaBotonsTres = [
  */
 obtenerFormaFarmaceuticaList(): void {
   this.service.obtenerFormaFarmaceuticaList()
-    .pipe(takeUntil(this.destroyed$))
+    .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((data) => {
       const DATOS = data?.data;
       this.formaFarmaceutica = DATOS;
@@ -386,7 +377,7 @@ obtenerFormaFarmaceuticaList(): void {
  */
 obtenerEstadoList(): void {
   this.service.obtenerEstadoList()
-    .pipe(takeUntil(this.destroyed$))
+    .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((data) => {
       const DATOS = data?.data;
       this.estado = DATOS;
@@ -398,7 +389,7 @@ obtenerEstadoList(): void {
  */
 obtenerTablaDatos(): void {
   this.service.obtenerTablaDatos()
-  .pipe(takeUntil(this.destroyed$))
+  .pipe(takeUntil(this.destroyNotifier$))
   .subscribe((data) => {
     const DATOS = data?.datos;
     this.nicoTablaDatos = DATOS;
@@ -410,7 +401,7 @@ obtenerTablaDatos(): void {
  */
 obtenerMercanciasDatos(): void {
   this.service.obtenerMercanciasDatos()
-  .pipe(takeUntil(this.destroyed$))
+  .pipe(takeUntil(this.destroyNotifier$))
   .subscribe((data) => {
     const DATOS = data?.datos;
     this.mercanciasTablaDatos = DATOS;
@@ -477,8 +468,6 @@ mostrar_colapsableTres(): void {
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

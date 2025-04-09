@@ -1,7 +1,3 @@
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/naming-convention */
- 
 import { catchError, map, Subject, takeUntil } from 'rxjs';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';

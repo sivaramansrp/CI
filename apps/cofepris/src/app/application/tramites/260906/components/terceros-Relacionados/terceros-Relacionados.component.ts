@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
 import { SanitarioService } from '../../services/sanitario.service';
 import { tablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
 
@@ -16,12 +15,8 @@ import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.store'
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-
-// eslint-disable-next-line sort-imports
 import { TituloComponent , InputRadioComponent} from '@libs/shared/data-access-user/src';
-
 import { TableComponent } from '@ng-mf/data-access-user';
-
 import { ModalComponent } from '../model/modal.component';
 import nacionalidadRedio from 'libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
 import tipoPersonaoptions from 'libs/shared/theme/assets/json/260906/tipoPersonaoptions.json';
