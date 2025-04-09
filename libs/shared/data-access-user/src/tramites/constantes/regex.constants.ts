@@ -137,7 +137,28 @@ export const REGEX_PATRON_DECIMAL_15_4 = /^\d{0,15}(\.\d{1,4})?$/;
  * - "Hola 123" (contiene un espacio)
  * - "Hola@123" (contiene un carácter especial)
  */
-export const REGEX_PATRON_ALFANUMERICO = /^[A-Za-z0-9Ññ]+$/;
+export const REGEX_PATRON_ALFANUMERICO=/^[A-Za-z0-9Ññ]+$/;
+
+/**
+ * Expresión regular para validar números enteros o decimales con hasta dos decimales.
+ *
+ * Desglose de la expresión regular:
+ * - ^: Aserción para el inicio de la cadena.
+ * - [0-9]+: Coincide con uno o más dígitos enteros.
+ * - (\\.[0-9]{1,2})?: Coincide con un punto seguido de entre 1 y 2 dígitos decimales, opcional.
+ * - $: Aserción para el final de la cadena.
+ *
+ * Ejemplos de cadenas válidas:
+ * - "123" (número entero)
+ * - "123.45" (número decimal con dos decimales)
+ * - "0.5" (número decimal con un decimal)
+ *
+ * Ejemplos de cadenas no válidas:
+ * - "123." (falta un decimal después del punto)
+ * - "123.456" (más de dos decimales)
+ * - "abc" (contiene caracteres no numéricos)
+ */
+export const REGEX_NUMERO_DECIMAL_ENTERO = /^[0-9]+(\\.[0-9]{1,2})?$/;
 /**
  * Expresión regular para encontrar caracteres que no sean números.
  *
@@ -255,3 +276,22 @@ export const REGEX_SOLO_NUMEROS = /^[0-9]*$/;
  */
 export const REGEX_CURP =
   /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
+
+/** 
+ * Expresión regular para validar números en formato USD. 
+ * Permite dígitos y el punto decimal. 
+ */
+export const REGEX_NUMEROS_USD = '^[0-9.]{1,}$';
+
+/**
+ * Constante de expresión regular utilizada para validar cadenas alfanuméricas.
+ * Esta expresión regular asegura que la entrada contenga solo letras (a-z, A-Z) y dígitos (0-9).
+ * @constant
+ */
+export const REGEX_IMPORTE_PAGO = '/^[a-zA-Z0-9]*$/';
+
+/**
+ * Expresión regular para validar una llave de pago.
+ * La llave debe consistir en exactamente 10 caracteres alfanuméricos (letras mayúsculas y dígitos).
+ */
+export const REGEX_LLAVE_DE_PAGO = '/^[A-Z0-9]{10}$/';
