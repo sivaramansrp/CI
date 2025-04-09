@@ -1,6 +1,7 @@
-import {Tramite130110State, Tramite130110Store } from '../tramites/tramites130110.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
+import { Tramite130110State } from '../tramites/tramites130110.store';
+import { Tramite130110Store } from '../tramites/tramites130110.store';
 
 @Injectable({ providedIn: 'root' })
 export class Tramite130110Query extends Query<Tramite130110State> {

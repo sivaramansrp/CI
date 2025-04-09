@@ -1,8 +1,7 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ImportacionNeumaticosComercializarService } from './importacion-neumaticos-comercializar.service';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { ImportacionNeumaticosComercializarService } from './importacion-neumaticos-comercializar.service';
 
 describe('ImportacionNeumaticosComercializarService', () => {
   let service: ImportacionNeumaticosComercializarService;
