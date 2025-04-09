@@ -1,3 +1,4 @@
+import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import {
   CROSLISTA_DE_PAISES,
   INPUT_FECHA_CADUCIDAD_CONFIG,
@@ -19,7 +20,12 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-
+import {
+  DATOS_MERCANCIAS,
+  MercanciasInfo,
+  NICO_TABLA,
+  NicoInfo,
+} from '../../models/datos-domicilio-legal.model';
 import {
   FormBuilder,
   FormControl,
@@ -27,22 +33,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
-import {
-  DATOS_MERCANCIAS,
-  MercanciasInfo,
-  NICO_TABLA,
-  NicoInfo,
-} from '../../models/datos-domicilio-legal.model';
-
 import { Subject, map, takeUntil } from 'rxjs';
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-
-import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';  
-
-import { AvisocalidadStore, SolicitudState} from '../../estados/stores/aviso-calidad.store';
-
 /**
  * Representa la estructura de la respuesta de una tabla.
  */
@@ -297,13 +291,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       muncipio: [this.solicitudState?.muncipio, Validators.required],
       localidad: [this.solicitudState?.localidad],
       colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle],
+      calle: [this.solicitudState?.calle, [Validators.required]],
       lada: [this.solicitudState?.lada],
       telefono: [this.solicitudState?.telefono, [Validators.required, Validators.maxLength(30)]],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox, Validators.required],
       licenciaSanitaria: [
-      { value: this.solicitudState?.licenciaSanitaria, disabled: false },
-      ],
+      { value: this.solicitudState?.licenciaSanitaria, disabled: false },[Validators.required]],
     });
 
     this.formAgente = this.fb.group({

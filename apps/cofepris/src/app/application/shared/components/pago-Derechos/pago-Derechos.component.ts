@@ -1,26 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'; 
-import { CommonModule } from '@angular/common'; 
-
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'; 
-
-
-import { AvisoImportacionService } from '../../services/parmiso-importacion.service'; 
-
-
-import { map, takeUntil } from 'rxjs'; 
-import { Subject } from 'rxjs'; 
-
-import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src'; 
-
-
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src'; 
-import { FECHA_DE_PAGO } from '../../models/pago-derechos.model'; 
-
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store'; 
-
-
-import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query'; 
-
+import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';  
+import { map, takeUntil } from 'rxjs'; 
+import { AvisoImportacionService } from '../../services/parmiso-importacion.service'; 
+import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';  
+import { CommonModule } from '@angular/common'; 
+import { FECHA_DE_PAGO } from '../../models/pago-derechos.model'; 
+import { Subject } from 'rxjs'; 
 
 /**
  * Component Define el componente de Angular.
