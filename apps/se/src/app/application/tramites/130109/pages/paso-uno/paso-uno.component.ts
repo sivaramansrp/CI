@@ -5,17 +5,19 @@ import { Component } from '@angular/core';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent {
-/**
- * @module
- * @description
- * Módulo que contiene la definición de la variable indice.
- */
+  /**
+   * Índice de la pestaña activa.
+   * Representa la pestaña seleccionada en el flujo.
+   * Valor inicial: 1.
+   */
   indice: number = 1;
-/**
- * @module
- * @description
- * Módulo que contiene la definición del método seleccionaTab.
- */
+
+  /**
+   * Método para seleccionar una pestaña.
+   * Actualiza el índice de la pestaña activa.
+   *
+   * Número que representa el índice de la pestaña seleccionada.
+   */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
