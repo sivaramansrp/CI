@@ -1,7 +1,3 @@
-/**
- * paso-uno.component.ts
- * */
-
 import { Component } from '@angular/core';
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
