@@ -76,43 +76,53 @@
     </div>
   </div>
   <ng-titulo titulo="Datos de la empresa de servicio que realizará el reciclaje"></ng-titulo>
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <label required="true">¿Requiere de una empresa de servicio para realizar el reciclaje?*:</label>
-      <app-input-radio [radioOptions]="requiereEmpresaServicioReciclaje" [isRequired]="true"
-        [layout]="'horizontal'"></app-input-radio>
-    </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <div class="form-group mb-3">
-        <label for="nombreEmpresaServicioReciclaje" class="form-label">Nombre de la empresa de servicios que realizará
-          el reciclaje*:</label>
-        <input type="text" class="form-control" id="nombreEmpresaServicioReciclaje">
+  <form [formGroup]="formularioEmpresaReciclaje">
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <label required="true">¿Requiere de una empresa de servicio para realizar el reciclaje?*:</label>
+        <app-input-radio 
+          [radioOptions]="requiereEmpresaServicioReciclaje" 
+          [isRequired]="true"
+          [layout]="'horizontal'"
+          formControlName="requiereEmpresa">
+        </app-input-radio>
       </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-md-8">
-      <div class="form-group mb-3">
-        <label for="nombreRepresentanteLegal" class="form-label">Nombre del representante legal*:</label>
-        <input type="text" class="form-control" id="nombreRepresentanteLegal">
+  
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <div class="form-group mb-3">
+          <label for="nombreEmpresaServicioReciclaje" class="form-label">Nombre de la empresa de servicios que realizará el reciclaje*:</label>
+          <input type="text" class="form-control" id="nombreEmpresaServicioReciclaje" formControlName="nombreEmpresa">
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <div class="form-group mb-3">
-        <label for="telefono" class="form-label">Teléfono*:</label>
-        <input type="text" class="form-control" id="telefono">
+  
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <div class="form-group mb-3">
+          <label for="nombreRepresentanteLegal" class="form-label">Nombre del representante legal*:</label>
+          <input type="text" class="form-control" id="nombreRepresentanteLegal" formControlName="representanteLegal">
+        </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="form-group mb-3">
-        <label for="correoElectronico" class="form-label">Teléfono*:</label>
-        <input type="text" class="form-control" id="correoElectronico">
+  
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="telefono" class="form-label">Teléfono*:</label>
+          <input type="text" class="form-control" id="telefono" formControlName="telefono">
+        </div>
+      </div>
+  
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="correoElectronico" class="form-label">Correo electrónico*:</label>
+          <input type="email" class="form-control" id="correoElectronico" formControlName="correoElectronico">
+        </div>
       </div>
     </div>
+  </form>
   </div>
   <ng-titulo titulo="Información sobre precauciones"></ng-titulo>
   <div class="row mb-3">
@@ -154,5 +164,3 @@
       </div>
     </div>
   </div>
-
-</div>

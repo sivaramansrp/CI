@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 // import SolicitudeJson from '@libs/shared/theme/assets/json/231003/solicitud.json';
@@ -22,6 +22,8 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
 export class DatosSolicitudComponent implements OnInit {
 
   solicitudForm!: FormGroup;
+
+  formularioEmpresaReciclaje!: FormGroup;
 
   aduanas!: Catalogo[];
 
@@ -53,6 +55,8 @@ export class DatosSolicitudComponent implements OnInit {
     this.establecimientoBodyData = RADIO_OPCIONES.table[0]?.cuerpoTabla || [];
     this.requiereEmpresaServicioReciclaje = RADIO_OPCIONES.requiereEmpresaServicioReciclaje;
     this.reciclajeEnInstalaciones = RADIO_OPCIONES.reciclajeEnInstalaciones;
+    this.inicializarFormularioEmpresaReciclaje();
+    // this.suscribirCambioRequiereEmpresa();
 
   }
 
@@ -64,4 +68,32 @@ export class DatosSolicitudComponent implements OnInit {
   navigateToPath(): void {
     this.router.navigate(['pago/aviso-de-reciclaje/datos-residuos']);
   }
+
+  private inicializarFormularioEmpresaReciclaje(): void {
+    this.formularioEmpresaReciclaje = new FormGroup({
+      requiereEmpresa: new FormControl('Si', Validators.required), // default is "Sí"
+      nombreEmpresa: new FormControl('', Validators.required),
+      representanteLegal: new FormControl('', Validators.required),
+      telefono: new FormControl('', Validators.required),
+      correoElectronico: new FormControl('', [Validators.required, Validators.email])
+    });
+  }
+  
+
+  // private suscribirCambioRequiereEmpresa(): void {
+  //   const CAMPO_REQUIERE_EMPRESA = 'requiereEmpresa';
+  //   const CAMPOS_A_CONTROLAR = ['nombreEmpresa', 'representanteLegal', 'telefono', 'correoElectronico'];
+  
+  //   this.formularioEmpresaReciclaje.get(CAMPO_REQUIERE_EMPRESA)?.valueChanges.subscribe((valor: string) => {
+  //     const HABILITAR = valor === 'Sí';
+  
+  //     CAMPOS_A_CONTROLAR.forEach((campo: string) => {
+  //       const CONTROL = this.formularioEmpresaReciclaje.get(campo);
+  //       if (CONTROL) {
+  //         HABILITAR ? CONTROL.enable() : CONTROL.disable();
+  //       }
+  //     });
+  //   });
+  // }
+  
 }
