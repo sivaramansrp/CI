@@ -87,6 +87,12 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'permiso-certificados',
+    loadChildren: () =>
+      import('./tramites/260701/certificados/certificados.module').then(
+        (m) => m.CertificadosModule),
+  },
+  {
     path: 'permiso-importacion-biologica',
     loadChildren: () =>
       import('./tramites/260402/permiso-importacion-biologica.module').then(
