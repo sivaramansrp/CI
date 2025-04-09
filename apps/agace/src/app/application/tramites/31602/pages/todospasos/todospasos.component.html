@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Firmer</h1>
+                <h1>{{titulo}}</h1>
             <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
             </div>
         </div>
@@ -12,10 +12,10 @@
                     <app-paso-uno></app-paso-uno>
                 }
                 @case (2) {
-                    
+                    <app-paso-dos></app-paso-dos>
                 }
                 @case (3) {
-
+                    <app-paso-tres></app-paso-tres>
                 }
             }
             <btn-continuar 

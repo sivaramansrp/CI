@@ -18,3 +18,7 @@ export const PANTA_PASOS = [
         completado: false,
     },
 ];
+
+export const TITULO_PASO_UNO = 'IVA e IEPS A';
+export const TITULO_PASO_DOS = 'Cargar archivos';
+export const TITULO_PASO_TRES = 'Firmar';
