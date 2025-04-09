@@ -89,7 +89,7 @@ export class SolicitanteComponent implements OnInit {
     this.inicializarFormGroup(this.domicilioFiscal, 'domicilioFiscal');
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.folioTramite = history?.state?.data;
     this.getDatosGenerales();
   }
@@ -119,14 +119,14 @@ export class SolicitanteComponent implements OnInit {
   /**
    * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado datosGenerales contenido dentr del formulario principal Form.
    */
-  get datosGeneralesForm() {
+  get datosGeneralesForm(): FormGroup {
     return this.form.get('datosGenerales') as FormGroup;
   }
 
   /**
    * Es un getter que proporciona un acceso más sencillo ala grupo de formularios llamado domicilioFiscal contenido dentr del formulario principal Form.
    */
-  get domicilioFiscalForm() {
+  get domicilioFiscalForm(): FormGroup {
     return this.form.get('domicilioFiscal') as FormGroup;
   }
 
@@ -153,7 +153,7 @@ export class SolicitanteComponent implements OnInit {
   ): void {
     const GRUPO = this.form.get(grupoNombre) as FormGroup;
     config.forEach((campo) => {
-      const VALIDATORS = this.getValidators(campo.validators);
+      const VALIDATORS = SolicitanteComponent.getValidators(campo.validators);
       GRUPO.addControl(
         campo.campo,
         this.fb.control({ value: '', disabled: campo.disabled }, VALIDATORS)
@@ -166,7 +166,7 @@ export class SolicitanteComponent implements OnInit {
    * @param validators - Validadores de los campos de los formularios.
    * @returns ValidatorFn[]
    */
-  getValidators(validators: string[]): ValidatorFn[] {
+  static getValidators(validators: string[]): ValidatorFn[] {
     const FORM_VALIDATORS: ValidatorFn[] = [];
     validators.forEach((validator) => {
       if (typeof validator === 'string') {

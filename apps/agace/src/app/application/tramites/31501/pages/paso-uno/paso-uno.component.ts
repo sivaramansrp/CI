@@ -1,14 +1,14 @@
+import { ActivatedRoute,Router } from '@angular/router';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,TEXTOS, TablaDinamicaComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
-import { Tramite31501Query } from '../../../../estados/queries/tramite31501.query';
-import { CommonModule } from '@angular/common';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TEXTOS, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { datosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { Subject, map, takeUntil } from 'rxjs';
+import { TramiteList,datosDeLaTabla } from '../../models/datos-tramite.model';
 import { AutoridadService } from '../../services/autoridad.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import { map, Subject, takeUntil } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CommonModule } from '@angular/common';
+import { Tramite31501Query } from '../../../../estados/queries/tramite31501.query';
 
 @Component({
   selector: 'app-paso-uno',
@@ -343,7 +343,7 @@ export class PasoUnoComponent implements OnInit {
    * 
    * También registra en la consola el valor de `folioTramite` para fines de depuración.
    */
-  valorDeAlternancia(row: any) {
+  valorDeAlternancia(row: any): void {
     if (row.folioTramite) {
       this.router.navigate(['/pago/autoridad/requiremento'], { state: { data: row } });
     }

@@ -109,7 +109,7 @@ export class CapturarRequerimientoComponent implements OnInit {
    * - `motivoCancelacion`: Campo obligatorio que toma su valor inicial de `solicitud31501State.motivoCancelacion`.
    * - `tipoDeRequerimiento`: Campo obligatorio que toma su valor inicial de `solicitud31501State.tipoDeRequerimiento`.
    */
-  inicializarFormulario() {
+  inicializarFormulario(): void {
     this.capturarRequirementoForm = this.fb.group({
       motivoCancelacion: [
         this.solicitud31501State?.motivoCancelacion,
